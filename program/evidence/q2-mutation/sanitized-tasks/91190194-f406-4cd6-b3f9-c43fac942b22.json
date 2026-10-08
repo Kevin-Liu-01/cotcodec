@@ -1,0 +1,17 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/cola.png",
+      "sha256": "37cc29dd8f063d32f5b563abaacc7d14048c08f5f8b5e01e0348188b447ddc9a",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/91190194-f406-4cd6-b3f9-c43fac942b22/cola.png"
+    }
+  ],
+  "instruction": "Launch GIMP from the command line to edit \"cola.png\" and crop the top 20% off the image for my avatar as \"cropped.png\".",
+  "related_apps": [
+    "gimp",
+    "os"
+  ],
+  "snapshot": "gimp",
+  "task_id": "91190194-f406-4cd6-b3f9-c43fac942b22"
+}

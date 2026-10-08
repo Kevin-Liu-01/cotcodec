@@ -1,0 +1,17 @@
+[
+ {
+  "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+  "kernel_sha256": "ed6e8311266d1717808740c23d13d3885fecdbac2a769443db414f932d162a5e",
+  "pinned": "ed6e8311266d1717808740c23d13d3885fecdbac2a769443db414f932d162a5e"
+ },
+ {
+  "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+  "kernel_sha256": "1b624cd8c05d1d68e07a267a30f16be8af220c9d8f95f7756531a8ef9943988b",
+  "pinned": "1b624cd8c05d1d68e07a267a30f16be8af220c9d8f95f7756531a8ef9943988b"
+ },
+ {
+  "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+  "kernel_sha256": "262acf977b66143414ed0bced831658f0bc44fbc9a39eb7c51f546cd7f491d90",
+  "pinned": "262acf977b66143414ed0bced831658f0bc44fbc9a39eb7c51f546cd7f491d90"
+ }
+]

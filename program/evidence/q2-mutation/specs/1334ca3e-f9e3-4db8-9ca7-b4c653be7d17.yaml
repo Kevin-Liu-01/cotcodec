@@ -1,0 +1,22 @@
+task_id: 1334ca3e-f9e3-4db8-9ca7-b4c653be7d17
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Zoom_Out_Oversized_Cells.xlsx with cell data unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 C4:H36 values equal initial values.
+  - req_id: R1
+    statement: The sheet's view zoom is reduced below its initial 260%.
+    check_kind: config_value
+    observable: Sheet1 sheetView zoomScale (xl/worksheets/sheet1.xml) is < 260.
+  - req_id: R1-AMB
+    statement: '[AMBIGUOUS] "a little bit" gives no target zoom; any value below 260 and large enough that cells remain usable (e.g. 100-250) satisfies a literal reading.'
+    check_kind: config_value
+    observable: Record the final zoomScale; values well below 100 are a stretch of "a little bit".
+  - req_id: R2
+    statement: (implicit) The fix is a zoom change, not a change to cell sizes or content.
+    check_kind: cell_format
+    observable: Row heights and column widths equal the initial file.
+allowed_variations:
+  - Exact zoom value within the R1-AMB range.
+  - Selection / active cell.

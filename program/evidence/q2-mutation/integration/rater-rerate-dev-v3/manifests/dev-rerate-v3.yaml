@@ -1,0 +1,41 @@
+runtime: docker-single-node-discovery-v1
+name: q2m-rater-dev-rerate-v3
+image_id: sha256:33fb48b7204f071264b6649e6023d251d9d7613d9d85137e45278a7431345a6d
+git_sha: 84f23e0de0ab04f6bb921959d799b28918f437e2
+source_sha256: 6a0ceb1cad67f324a0ba6496282bf5742ce00e113eaed1fdb4c5f2dd6f3df0a4
+run_root: /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/dev-rerate-v3
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 20
+budget:
+  max_gpu_hours: 0.334
+randomness_contract: deterministic
+seeds: []
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.6-35b-a3b
+  revision: 995ad96eacd98c81ed38be0c5b274b04031597b0
+  receipt_sha256: 18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9
+  artifact_root_sha256: 8ac6d764b84034f4ed0df3f2388c9180afceab806f7e75f5d1e43a73bdd2736b
+study_artifact:
+  source_id: q2m-audit-packets-dev-audit-smoke-v3
+  revision: 4eba530288464d5129b424d26d8672d20abad7ec
+  license: Apache-2.0
+  host_path: /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/audits/dev-audit-smoke-v3/packets/packets-000.jsonl
+  sha256: 4a56ba5e4fc91dfe9345708690d53ec71438e5a037855726d298931ddb665da7
+  size_bytes: 408821137
+command:
+- python
+- -m
+- harness.q2_mutation.rater_runner
+- open
+- --evidence
+- /inputs/study-artifact.json
+- --expected-evidence-sha256
+- 4a56ba5e4fc91dfe9345708690d53ec71438e5a037855726d298931ddb665da7
+- --output-dir
+- /outputs/rater

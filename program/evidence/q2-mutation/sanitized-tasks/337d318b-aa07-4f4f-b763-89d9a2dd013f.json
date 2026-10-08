@@ -1,0 +1,32 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/invoice TII-20220301-90.pdf",
+      "sha256": "6d116abe3eaac051dfe4f484ab5d3a5b1298601dc6026ffc1c683172463ebcb1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/337d318b-aa07-4f4f-b763-89d9a2dd013f/invoice%20TII-20220301-90.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Invoice # GES-20220215-82.pdf",
+      "sha256": "729939cc631fccecaed8a5583a9beee0971d8d01724afcca899627f7c9b98c6f",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/337d318b-aa07-4f4f-b763-89d9a2dd013f/Invoice%20%23%20GES-20220215-82.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Invoice # 243729.pdf",
+      "sha256": "39c23a5792795583184c3694de5b0187d895e6ef75d2e2cbfbdd16b23f1c3594",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/337d318b-aa07-4f4f-b763-89d9a2dd013f/Invoice%20%23%20243729.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Bank-Statement.pdf",
+      "sha256": "4c2fcda1e52bfd4e6d81d241f8a380aafcb5f6e735a7a9d77ea7e8fb62d7f4e7",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/337d318b-aa07-4f4f-b763-89d9a2dd013f/Bank-Statement.pdf"
+    }
+  ],
+  "instruction": "Cross-check the invoices with the bank statements and identify any discrepancies. Then pull out the invoices that don't match the statements and put them in the \"problematic\" folder.",
+  "related_apps": [
+    "os",
+    "pdf"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "337d318b-aa07-4f4f-b763-89d9a2dd013f"
+}

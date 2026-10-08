@@ -1,0 +1,18 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Unlocking-the-Power-of-ChatGPT.pptx",
+      "sha256": "47badb8dbe2d69e46871c161ff96b8319e640b52a8d17bcddda731abc90183a9",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/bb83cab4-e5c7-42c7-a67b-e46068032b86/Unlocking-the-Power-of-ChatGPT.pptx"
+    }
+  ],
+  "instruction": "I want to convert an Impress file into a document editable in Writer. Simply place all the text from Impress into \"script.docx\" on the Desktop, and I'll handle the reformatting. Thank you!",
+  "related_apps": [
+    "libreoffice_writer",
+    "libreoffice_impress",
+    "os"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "bb83cab4-e5c7-42c7-a67b-e46068032b86"
+}

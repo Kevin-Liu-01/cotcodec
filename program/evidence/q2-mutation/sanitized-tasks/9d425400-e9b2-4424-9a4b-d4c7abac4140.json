@@ -1,0 +1,10 @@
+{
+  "domain": "vs_code",
+  "initial_files": [],
+  "instruction": "I want to make the tabs wrapped over multiple lines when exceeding available space, please help modify the setting of VS Code.",
+  "related_apps": [
+    "vscode"
+  ],
+  "snapshot": "vscode",
+  "task_id": "9d425400-e9b2-4424-9a4b-d4c7abac4140"
+}

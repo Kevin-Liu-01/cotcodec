@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/22_6.pptx",
+      "sha256": "87503abd332bdcd0bd505a3b1a057545b5a6c282a6aafc797111b98a9e8b6cf9",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/08aced46-45a2-48d7-993b-ed3fb5b32302/22_6.pptx"
+    }
+  ],
+  "instruction": "Give the slide 2 the right aligned title, \"Note\".",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "08aced46-45a2-48d7-993b-ed3fb5b32302"
+}

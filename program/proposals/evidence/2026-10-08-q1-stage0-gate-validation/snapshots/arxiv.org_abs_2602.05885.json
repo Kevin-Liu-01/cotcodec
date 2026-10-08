@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2602.05885",
+ "fetched_at": "2026-10-08T07:30:33Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44497,
+ "raw_sha256": "2a9679e8581daafacdf40cb1fabd9fc744861b592cab1e865975c162d9d2eb16",
+ "raw_stored": false,
+ "extract": {
+  "title": "Dr. Kernel: Reinforcement Learning Done Right for Triton Kernel Generations",
+  "authors": [
+   "Liu, Wei",
+   "Xu, Jiawei",
+   "Li, Yingru",
+   "Zheng, Longtao",
+   "Li, Tianjian",
+   "Liu, Qian",
+   "He, Junxian"
+  ],
+  "citation_date": "2026/02/05",
+  "submission_history": [
+   {
+    "version": "v2",
+    "date": "Fri, 6 Feb 2026 07:05:49 UTC"
+   }
+  ],
+  "abstract": "High-quality kernel is critical for scalable AI systems, and enabling LLMs to generate such code would advance AI development. However, training LLMs for this task requires sufficient data, a robust environment, and the process is often vulnerable to reward hacking and lazy optimization. In these cases, models may hack training rewards and prioritize trivial correctness over meaningful speedup. In this paper, we systematically study reinforcement learning (RL) for kernel generation. We first design KernelGYM, a robust distributed GPU environment that supports reward hacking check, data collection from multi-turn interactions and long-term RL training. Building on KernelGYM, we investigate effective multi-turn RL methods and identify a biased policy gradient issue caused by self-inclusion in GRPO. To solve this, we propose Turn-level Reinforce-Leave-One-Out (TRLOO) to provide unbiased advantage estimation for multi-turn RL. To alleviate lazy optimization, we incorporate mismatch correction for training stability and introduce Profiling-based Rewards (PR) and Profiling-based Rejection Sampling (PRS) to overcome the issue. The trained model, Dr Kernel-14B, reaches performance competitive with Claude-4.5-Sonnet in Kernelbench. Finally, we study sequential test-time scaling for Dr Kernel-14B. On the KernelBench Level-2 subset, 31.6% of the generated kernels achieve at least a 1.2x speedup over the Torch reference, surpassing Claude-4.5-Sonnet (26.7%) and GPT-5 (28.6%). When selecting the best candidate across all turns, this 1.2x speedup rate further increases to 47.8%. All resources, including environment, training code, models, and dataset, are included in this https URL .",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Students_Class_Subject_Marks.xlsx",
+      "sha256": "e046cddeab16513e081c6b6573637278b486acabc69b329cf8347a784876ff29",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/eb03d19a-b88d-4de4-8a64-ca0ac66f426b/Students_Class_Subject_Marks.xlsx"
+    }
+  ],
+  "instruction": "Apply matrix transposition to the table in B2:F5 and paste the transposed table at B8 (i.e., the top-left cell of the transposed table should be at B8)",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "eb03d19a-b88d-4de4-8a64-ca0ac66f426b"
+}

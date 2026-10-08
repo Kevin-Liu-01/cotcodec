@@ -1,0 +1,3300 @@
+{
+ "adversarial_controls": {
+  "pairs": [
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-result-reuse-L1-1",
+    "differing_fields": [
+     ".details.failed_configs",
+     ".details.kbv_raw_pass",
+     ".details.nonfinite",
+     ".details.pass_secondary",
+     ".max_abs_err",
+     ".max_rel_err",
+     ".verdict"
+    ],
+    "gate": "c",
+    "inline_aggregate": [
+     "c1:reject",
+     "c2:reject",
+     "c3:reject",
+     "c_1e-2:reject",
+     "c_kbv_raw:reject"
+    ],
+    "inline_verdicts": {
+     "accept": 7,
+     "reject": 14
+    },
+    "rows_identical": false,
+    "store_aggregate": [
+     "c1:reject",
+     "c2:reject",
+     "c3:reject",
+     "c_1e-2:reject",
+     "c_kbv_raw:reject"
+    ],
+    "store_lookups": [
+     {
+      "channel": "c",
+      "draws": 16,
+      "key": "76e2624581789578cad9d9e59927cce4d924cafd5a9a2f4b98b41da72f8d7f51",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "reject": 21
+    },
+    "verdicts_identical": false
+   },
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-result-reuse-L1-1",
+    "differing_fields": [
+     ".details.strict-fp32.e",
+     ".details.strict-fp32.reason",
+     ".details.tf32-admissible.e",
+     ".details.tf32-admissible.reason",
+     ".max_rel_err"
+    ],
+    "gate": "A1",
+    "inline_aggregate": [
+     "A1:reject",
+     "A1:reject"
+    ],
+    "inline_verdicts": {
+     "reject": 7
+    },
+    "rows_identical": false,
+    "store_aggregate": [
+     "A1:reject",
+     "A1:reject"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A1",
+      "draws": 5,
+      "key": "53b0bc21cdf9285fb26ec204a7245f3724d9bc74f4d2ec620bb3064ca06fb599",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "reject": 7
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-result-reuse-L1-1",
+    "differing_fields": [
+     ".details.counts.pass",
+     ".details.counts.silent-wrong",
+     ".details.outcome",
+     ".details.strict-fp32.e",
+     ".details.strict-fp32.reason",
+     ".details.tf32-admissible.e",
+     ".details.tf32-admissible.passed",
+     ".details.tf32-admissible.passes_at_64T",
+     ".details.tf32-admissible.reason",
+     ".max_rel_err",
+     ".verdict"
+    ],
+    "gate": "A2",
+    "inline_aggregate": [
+     "A2:reject",
+     "A2:reject"
+    ],
+    "inline_verdicts": {
+     "error": 1,
+     "reject": 8
+    },
+    "rows_identical": false,
+    "store_aggregate": [
+     "A2:reject",
+     "A2:reject"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A2",
+      "draws": 7,
+      "key": "508dad1dea34076018ef576cc005db4a24630d1649e0ebd53a4efbc0f0fbf5e0",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "accept": 1,
+     "error": 1,
+     "reject": 7
+    },
+    "verdicts_identical": false
+   },
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-result-reuse-L1-1",
+    "differing_fields": [
+     ".details.strict-fp32.e",
+     ".details.strict-fp32.reason",
+     ".details.tf32-admissible.e",
+     ".details.tf32-admissible.reason",
+     ".max_rel_err"
+    ],
+    "gate": "A3",
+    "inline_aggregate": [
+     "A3:reject",
+     "A3:reject"
+    ],
+    "inline_verdicts": {
+     "reject": 6
+    },
+    "rows_identical": false,
+    "store_aggregate": [
+     "A3:reject",
+     "A3:reject"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A3",
+      "draws": 4,
+      "key": "0e08c11ecbfb02fae5c07c1b64ff2c1e343cdbbaae0d4c5381555eb465bfb956",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "reject": 6
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": {
+     "inline": [
+      [
+       "EXC-01",
+       "fail",
+       "nan: nan mask mismatch"
+      ],
+      [
+       "EXC-02",
+       "fail",
+       "flush-to-zero mismatch"
+      ],
+      [
+       "PRC-01",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ],
+      [
+       "PRC-02",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ]
+     ],
+     "store": [
+      [
+       "EXC-01",
+       "fail",
+       "nan: nan mask mismatch"
+      ],
+      [
+       "EXC-02",
+       "fail",
+       "flush-to-zero mismatch"
+      ],
+      [
+       "PRC-01",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ],
+      [
+       "PRC-02",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ]
+     ]
+    },
+    "control": "ctl-kernelbench-result-reuse-L1-1",
+    "differing_fields": [
+     ".details.checks"
+    ],
+    "gate": "A5",
+    "inline_aggregate": [
+     "A5:reject"
+    ],
+    "inline_verdicts": {
+     "reject": 1
+    },
+    "rows_identical": false,
+    "store_aggregate": [
+     "A5:reject"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A5",
+      "draws": 1,
+      "key": "30692482392936c3217a69e8e667ef9b7c8d6d5cdcad753ed751a4d5b9ef0095",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "reject": 1
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-zero-out-L1-1",
+    "gate": "c",
+    "inline_aggregate": [
+     "c1:reject",
+     "c2:reject",
+     "c3:reject",
+     "c_1e-2:reject",
+     "c_kbv_raw:reject"
+    ],
+    "inline_verdicts": {
+     "reject": 21
+    },
+    "rows_identical": true,
+    "store_aggregate": [
+     "c1:reject",
+     "c2:reject",
+     "c3:reject",
+     "c_1e-2:reject",
+     "c_kbv_raw:reject"
+    ],
+    "store_lookups": [
+     {
+      "channel": "c",
+      "draws": 16,
+      "key": "76e2624581789578cad9d9e59927cce4d924cafd5a9a2f4b98b41da72f8d7f51",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "reject": 21
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-zero-out-L1-1",
+    "gate": "A1",
+    "inline_aggregate": [
+     "A1:reject",
+     "A1:reject"
+    ],
+    "inline_verdicts": {
+     "reject": 7
+    },
+    "rows_identical": true,
+    "store_aggregate": [
+     "A1:reject",
+     "A1:reject"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A1",
+      "draws": 5,
+      "key": "53b0bc21cdf9285fb26ec204a7245f3724d9bc74f4d2ec620bb3064ca06fb599",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "reject": 7
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-zero-out-L1-1",
+    "gate": "A2",
+    "inline_aggregate": [
+     "A2:reject",
+     "A2:reject"
+    ],
+    "inline_verdicts": {
+     "accept": 1,
+     "error": 1,
+     "reject": 7
+    },
+    "rows_identical": true,
+    "store_aggregate": [
+     "A2:reject",
+     "A2:reject"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A2",
+      "draws": 7,
+      "key": "508dad1dea34076018ef576cc005db4a24630d1649e0ebd53a4efbc0f0fbf5e0",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "accept": 1,
+     "error": 1,
+     "reject": 7
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-zero-out-L1-1",
+    "gate": "A3",
+    "inline_aggregate": [
+     "A3:reject",
+     "A3:reject"
+    ],
+    "inline_verdicts": {
+     "reject": 6
+    },
+    "rows_identical": true,
+    "store_aggregate": [
+     "A3:reject",
+     "A3:reject"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A3",
+      "draws": 4,
+      "key": "0e08c11ecbfb02fae5c07c1b64ff2c1e343cdbbaae0d4c5381555eb465bfb956",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "reject": 6
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": {
+     "inline": [
+      [
+       "EXC-01",
+       "fail",
+       "nan: nan mask mismatch"
+      ],
+      [
+       "EXC-02",
+       "pass",
+       ""
+      ],
+      [
+       "PRC-01",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ],
+      [
+       "PRC-02",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ]
+     ],
+     "store": [
+      [
+       "EXC-01",
+       "fail",
+       "nan: nan mask mismatch"
+      ],
+      [
+       "EXC-02",
+       "pass",
+       ""
+      ],
+      [
+       "PRC-01",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ],
+      [
+       "PRC-02",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ]
+     ]
+    },
+    "control": "ctl-kernelbench-zero-out-L1-1",
+    "gate": "A5",
+    "inline_aggregate": [
+     "A5:reject"
+    ],
+    "inline_verdicts": {
+     "reject": 1
+    },
+    "rows_identical": true,
+    "store_aggregate": [
+     "A5:reject"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A5",
+      "draws": 1,
+      "key": "30692482392936c3217a69e8e667ef9b7c8d6d5cdcad753ed751a4d5b9ef0095",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "reject": 1
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-non-default-stream-L1-1",
+    "gate": "c",
+    "inline_aggregate": [
+     "c1:accept",
+     "c2:accept",
+     "c3:accept",
+     "c_1e-2:accept",
+     "c_kbv_raw:accept"
+    ],
+    "inline_verdicts": {
+     "accept": 21
+    },
+    "rows_identical": true,
+    "store_aggregate": [
+     "c1:accept",
+     "c2:accept",
+     "c3:accept",
+     "c_1e-2:accept",
+     "c_kbv_raw:accept"
+    ],
+    "store_lookups": [
+     {
+      "channel": "c",
+      "draws": 16,
+      "key": "76e2624581789578cad9d9e59927cce4d924cafd5a9a2f4b98b41da72f8d7f51",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "accept": 21
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-non-default-stream-L1-1",
+    "gate": "A1",
+    "inline_aggregate": [
+     "A1:accept",
+     "A1:accept"
+    ],
+    "inline_verdicts": {
+     "accept": 7
+    },
+    "rows_identical": true,
+    "store_aggregate": [
+     "A1:accept",
+     "A1:accept"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A1",
+      "draws": 5,
+      "key": "53b0bc21cdf9285fb26ec204a7245f3724d9bc74f4d2ec620bb3064ca06fb599",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "accept": 7
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-non-default-stream-L1-1",
+    "gate": "A2",
+    "inline_aggregate": [
+     "A2:accept",
+     "A2:accept"
+    ],
+    "inline_verdicts": {
+     "accept": 8,
+     "error": 1
+    },
+    "rows_identical": true,
+    "store_aggregate": [
+     "A2:accept",
+     "A2:accept"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A2",
+      "draws": 7,
+      "key": "508dad1dea34076018ef576cc005db4a24630d1649e0ebd53a4efbc0f0fbf5e0",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "accept": 8,
+     "error": 1
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": null,
+    "control": "ctl-kernelbench-non-default-stream-L1-1",
+    "gate": "A3",
+    "inline_aggregate": [
+     "A3:accept",
+     "A3:accept"
+    ],
+    "inline_verdicts": {
+     "accept": 6
+    },
+    "rows_identical": true,
+    "store_aggregate": [
+     "A3:accept",
+     "A3:accept"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A3",
+      "draws": 4,
+      "key": "0e08c11ecbfb02fae5c07c1b64ff2c1e343cdbbaae0d4c5381555eb465bfb956",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "accept": 6
+    },
+    "verdicts_identical": true
+   },
+   {
+    "a5_checks": {
+     "inline": [
+      [
+       "EXC-01",
+       "pass",
+       ""
+      ],
+      [
+       "EXC-02",
+       "pass",
+       ""
+      ],
+      [
+       "PRC-01",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ],
+      [
+       "PRC-02",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ]
+     ],
+     "store": [
+      [
+       "EXC-01",
+       "pass",
+       ""
+      ],
+      [
+       "EXC-02",
+       "pass",
+       ""
+      ],
+      [
+       "PRC-01",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ],
+      [
+       "PRC-02",
+       "error",
+       "TypeError: cannot pickle 'module' object"
+      ]
+     ]
+    },
+    "control": "ctl-kernelbench-non-default-stream-L1-1",
+    "gate": "A5",
+    "inline_aggregate": [
+     "A5:error"
+    ],
+    "inline_verdicts": {
+     "error": 1
+    },
+    "rows_identical": true,
+    "store_aggregate": [
+     "A5:error"
+    ],
+    "store_lookups": [
+     {
+      "channel": "A5",
+      "draws": 1,
+      "key": "30692482392936c3217a69e8e667ef9b7c8d6d5cdcad753ed751a4d5b9ef0095",
+      "reason": "",
+      "used": true
+     }
+    ],
+    "store_verdicts": {
+     "error": 1
+    },
+    "verdicts_identical": true
+   }
+  ],
+  "pairs_measured": 15,
+  "pairs_rows_identical": 10,
+  "pairs_verdicts_identical": 13
+ },
+ "cost": {
+  "adversarial": {
+   "inline": {
+    "items": 15,
+    "measured_gpu_seconds": 82.81,
+    "measured_over_model": 3.789,
+    "median_item_measured": 5.688,
+    "model_gpu_seconds": 21.86
+   },
+   "references": {
+    "items": 5,
+    "measured_gpu_seconds": 11.16,
+    "measured_over_model": 1.102,
+    "median_item_measured": 2.937,
+    "model_gpu_seconds": 10.12
+   },
+   "store": {
+    "items": 15,
+    "measured_gpu_seconds": 55.72,
+    "measured_over_model": 3.418,
+    "median_item_measured": 3.428,
+    "model_gpu_seconds": 16.3
+   }
+  },
+  "by_gate": {
+   "A1": {
+    "items": 3,
+    "measured_gpu_seconds": 2.36,
+    "measured_over_model": 1.231,
+    "median_item_measured": 0.621,
+    "model_gpu_seconds": 1.91
+   },
+   "A2": {
+    "items": 3,
+    "measured_gpu_seconds": 3.52,
+    "measured_over_model": 1.852,
+    "median_item_measured": 0.698,
+    "model_gpu_seconds": 1.9
+   },
+   "A3": {
+    "items": 3,
+    "measured_gpu_seconds": 3.14,
+    "measured_over_model": 1.164,
+    "median_item_measured": 1.138,
+    "model_gpu_seconds": 2.7
+   },
+   "A4": {
+    "items": 5,
+    "measured_gpu_seconds": 13.77,
+    "measured_over_model": 3.591,
+    "median_item_measured": 1.728,
+    "model_gpu_seconds": 3.84
+   },
+   "A4_poison": {
+    "items": 5,
+    "measured_gpu_seconds": 26.67,
+    "measured_over_model": 2.971,
+    "median_item_measured": 3.254,
+    "model_gpu_seconds": 8.98
+   },
+   "A4_sanitizer": {
+    "items": 5,
+    "measured_gpu_seconds": 17.83,
+    "measured_over_model": 2.431,
+    "median_item_measured": 1.859,
+    "model_gpu_seconds": 7.34
+   },
+   "A5": {
+    "items": 3,
+    "measured_gpu_seconds": 3.64,
+    "measured_over_model": 2.453,
+    "median_item_measured": 1.572,
+    "model_gpu_seconds": 1.49
+   },
+   "a": {
+    "items": 5,
+    "measured_gpu_seconds": 12.45,
+    "measured_over_model": 3.914,
+    "median_item_measured": 1.665,
+    "model_gpu_seconds": 3.18
+   },
+   "a_1e-3": {
+    "items": 5,
+    "measured_gpu_seconds": 13.98,
+    "measured_over_model": 4.905,
+    "median_item_measured": 1.555,
+    "model_gpu_seconds": 2.85
+   },
+   "a_head_1e-2": {
+    "items": 5,
+    "measured_gpu_seconds": 13.82,
+    "measured_over_model": 5.87,
+    "median_item_measured": 1.424,
+    "model_gpu_seconds": 2.35
+   },
+   "a_head_1e-4": {
+    "items": 5,
+    "measured_gpu_seconds": 13.97,
+    "measured_over_model": 2.575,
+    "median_item_measured": 1.472,
+    "model_gpu_seconds": 5.42
+   },
+   "a_static": {
+    "items": 5,
+    "measured_gpu_seconds": 13.17,
+    "measured_over_model": 8.121,
+    "median_item_measured": 1.383,
+    "model_gpu_seconds": 1.62
+   },
+   "b1": {
+    "items": 5,
+    "measured_gpu_seconds": 10.19,
+    "measured_over_model": 4.643,
+    "median_item_measured": 1.216,
+    "model_gpu_seconds": 2.2
+   },
+   "b2": {
+    "items": 5,
+    "measured_gpu_seconds": 10.09,
+    "measured_over_model": 2.391,
+    "median_item_measured": 1.1,
+    "model_gpu_seconds": 4.22
+   },
+   "c": {
+    "items": 3,
+    "measured_gpu_seconds": 3.02,
+    "measured_over_model": 1.168,
+    "median_item_measured": 0.905,
+    "model_gpu_seconds": 2.58
+   },
+   "ref_A1": {
+    "items": 5,
+    "measured_gpu_seconds": 28.25,
+    "measured_over_model": 3.04,
+    "median_item_measured": 1.161,
+    "model_gpu_seconds": 9.29
+   },
+   "ref_A2": {
+    "items": 4,
+    "measured_gpu_seconds": 8.58,
+    "measured_over_model": 0.743,
+    "median_item_measured": 2.124,
+    "model_gpu_seconds": 11.56
+   },
+   "ref_A3": {
+    "items": 4,
+    "measured_gpu_seconds": 4.95,
+    "measured_over_model": 1.242,
+    "median_item_measured": 1.155,
+    "model_gpu_seconds": 3.98
+   },
+   "ref_A5": {
+    "items": 5,
+    "measured_gpu_seconds": 8.57,
+    "measured_over_model": 2.02,
+    "median_item_measured": 0.622,
+    "model_gpu_seconds": 4.24
+   },
+   "ref_c": {
+    "items": 4,
+    "measured_gpu_seconds": 8.28,
+    "measured_over_model": 0.903,
+    "median_item_measured": 1.591,
+    "model_gpu_seconds": 9.16
+   }
+  },
+  "by_problem": {
+   "L1/10_3D_tensor_matrix_multiplication": {
+    "items": 20,
+    "measured_gpu_seconds": 20.0,
+    "measured_over_model": 0.822,
+    "median_item_measured": 1.073,
+    "model_gpu_seconds": 24.31
+   },
+   "L1/18_Matmul_with_transposed_both": {
+    "items": 15,
+    "measured_gpu_seconds": 29.06,
+    "measured_over_model": 1.255,
+    "median_item_measured": 1.849,
+    "model_gpu_seconds": 23.15
+   },
+   "L2/59_Matmul_Swish_Scaling": {
+    "items": 12,
+    "measured_gpu_seconds": 114.79,
+    "measured_over_model": 7.793,
+    "median_item_measured": 7.976,
+    "model_gpu_seconds": 14.73
+   },
+   "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool": {
+    "items": 20,
+    "measured_gpu_seconds": 29.88,
+    "measured_over_model": 1.864,
+    "median_item_measured": 1.44,
+    "model_gpu_seconds": 16.03
+   },
+   "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh": {
+    "items": 20,
+    "measured_gpu_seconds": 26.51,
+    "measured_over_model": 2.107,
+    "median_item_measured": 1.192,
+    "model_gpu_seconds": 12.58
+   }
+  },
+  "by_regime": {
+   "12_per_gpu": {
+    "items": 55,
+    "measured_gpu_seconds": 76.58,
+    "measured_over_model": 1.955,
+    "median_item_measured": 1.293,
+    "model_gpu_seconds": 39.18
+   },
+   "by_items_per_gpu": {
+    "12": {
+     "items": 55,
+     "measured_gpu_seconds": 76.58,
+     "measured_over_model": 1.955,
+     "median_item_measured": 1.293,
+     "model_gpu_seconds": 39.18
+    },
+    "2": {
+     "items": 10,
+     "measured_gpu_seconds": 85.03,
+     "measured_over_model": 6.349,
+     "median_item_measured": 7.976,
+     "model_gpu_seconds": 13.39
+    }
+   },
+   "fewer_than_12_per_gpu": {
+    "items": 10,
+    "measured_gpu_seconds": 85.03,
+    "measured_over_model": 6.349,
+    "median_item_measured": 7.976,
+    "model_gpu_seconds": 13.39
+   }
+  },
+  "overall_repilot_store_and_references": {
+   "items": 87,
+   "measured_gpu_seconds": 220.24,
+   "measured_over_model": 2.425,
+   "median_item_measured": 1.412,
+   "model_gpu_seconds": 90.81
+  },
+  "paired_with_job713_exec1": {
+   "by_problem": {
+    "L1/10_3D_tensor_matrix_multiplication": {
+     "exec2_over_exec1": 1.266,
+     "items": 20
+    },
+    "L1/18_Matmul_with_transposed_both": {
+     "exec2_over_exec1": 2.252,
+     "items": 15
+    },
+    "L2/59_Matmul_Swish_Scaling": {
+     "exec2_over_exec1": 1.767,
+     "items": 11
+    },
+    "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool": {
+     "exec2_over_exec1": 1.228,
+     "items": 20
+    },
+    "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh": {
+     "exec2_over_exec1": 1.498,
+     "items": 20
+    }
+   },
+   "exec1_gpu_seconds": 131.97,
+   "exec2_gpu_seconds": 213.69,
+   "exec2_over_exec1": 1.619,
+   "items": 86
+  },
+  "references_free_bound_note": "reference items are priced by the D31 store model fitted at 12 per GPU (job 713); the projection rows scale them with the scoring",
+  "repilot_reference_items": {
+   "items": 22,
+   "measured_gpu_seconds": 58.63,
+   "measured_over_model": 1.533,
+   "median_item_measured": 1.208,
+   "model_gpu_seconds": 38.24
+  },
+  "repilot_scoring_items": {
+   "items": 65,
+   "measured_gpu_seconds": 161.61,
+   "measured_over_model": 3.074,
+   "median_item_measured": 1.455,
+   "model_gpu_seconds": 52.57
+  },
+  "repilot_scoring_vs_no_store_model": {
+   "items": 65,
+   "measured_gpu_seconds": 161.61,
+   "measured_over_model": 2.821,
+   "median_item_measured": 1.455,
+   "model_gpu_seconds": 57.29
+  },
+  "store_independent_gates": {
+   "items": 50,
+   "measured_gpu_seconds": 145.93,
+   "measured_over_model": 3.475,
+   "median_item_measured": 1.648,
+   "model_gpu_seconds": 41.99
+  }
+ },
+ "execution_policy": "q1-stage0-exec/2",
+ "gpu": {
+  "finished_at": "2026-10-08T06:52:19Z",
+  "gpu_hours": 0.1092,
+  "gpus": 1,
+  "job_id": "752",
+  "seconds": 393.0,
+  "started_at": "2026-10-08T06:45:46Z",
+  "termination": {
+   "checkpoint_ready": "false",
+   "container_killed_by": "none",
+   "exit_code": "0",
+   "reason": "completed"
+  }
+ },
+ "inputs": {
+  "cost_card_sha256": "d102a2b48a57d3aa0bd75979f2d0d6cb96a96b63197388d637c186d6d090dc4d",
+  "counts_sha256": "246e0fb68b9f1ba6ff68bd68ec375516243c9a8885e10567c5d106e58b1919c4",
+  "items_sha256_file": "e52124d103733bedeed298052be2f682e84c3b17d90f5f977624f72ff699b13e",
+  "journal_sha256": "c29c49d65c0807c46969fb1f5fa0cabdf7e8329e9272bd82b29bab36ca84d249",
+  "memory_table_sha256": "07c45991f986fa41d9d5b082e1c113e92df3cb891d66b6b2c8b6f70a75e82f57",
+  "references_sha256": "64ee7389bc142760dc0fb5ec23e650f7d110c92b2a0057e232ec20e5b297c03c",
+  "repilot_journal_sha256": "ddbfbbf657445d1d7ede759474363a4d8dadc96f86cc3fd0c535830f29796bd2"
+ },
+ "item_costs": [
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|a|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 1.2282727270415337,
+   "model_exec2_no_store": 0.30115406509056,
+   "model_exec2_store": 0.30115406509056,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 14.736
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_1e-3",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|a_1e-3|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 1.2930075616547558,
+   "model_exec2_no_store": 0.25476366966527997,
+   "model_exec2_store": 0.25476366966527997,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 15.508
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_head_1e-4",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|a_head_1e-4|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 1.1124393885785882,
+   "model_exec2_no_store": 0.35770393532825606,
+   "model_exec2_store": 0.35770393532825606,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 13.343
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_head_1e-2",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|a_head_1e-2|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 1.1644015221884754,
+   "model_exec2_no_store": 0.198263550016512,
+   "model_exec2_store": 0.198263550016512,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 13.966
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_static",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|a_static|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 0.824439388332945,
+   "model_exec2_no_store": 0.11083336803584001,
+   "model_exec2_store": 0.11083336803584001,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 9.879
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "b1",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|b1|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 0.8248257655085939,
+   "model_exec2_no_store": 0.16326316368076804,
+   "model_exec2_store": 0.16326316368076804,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 9.89
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "b2",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|b2|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 0.5614848443956086,
+   "model_exec2_no_store": 0.40734863640832003,
+   "model_exec2_store": 0.40734863640832003,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 6.735
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A5",
+   "item_key": "ctl-kernelbench-result-reuse-L1-1.inline|A5|seed-42",
+   "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+   "measured": 4.8351469744335525,
+   "model_exec2_no_store": 0.6252154678784,
+   "model_exec2_store": 0.6252154678784,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 57.941
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A5",
+   "item_key": "ctl-kernelbench-result-reuse-L1-1|A5|seed-42",
+   "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+   "measured": 4.518750010114727,
+   "model_exec2_no_store": 0.6252154678784,
+   "model_exec2_store": 0.595749684219473,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 54.143
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A3",
+   "item_key": "ctl-kernelbench-result-reuse-L1-1|A3|seed-42",
+   "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+   "measured": 3.347590919696923,
+   "model_exec2_no_store": 1.066416092542976,
+   "model_exec2_store": 0.9985855937002183,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 40.09
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "c",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|c|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 1.3895454478986335,
+   "model_exec2_no_store": 0.728117148647424,
+   "model_exec2_store": 0.19562617242007121,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 16.616
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A1",
+   "item_key": "ctl-kernelbench-result-reuse-L1-1|A1|seed-42",
+   "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+   "measured": 2.6140530326149682,
+   "model_exec2_no_store": 1.2096742780595202,
+   "model_exec2_store": 0.9022499055196885,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 31.292
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "c",
+   "item_key": "ctl-kernelbench-result-reuse-L1-1|c|seed-42",
+   "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+   "measured": 2.709575763254455,
+   "model_exec2_no_store": 2.912468594589696,
+   "model_exec2_store": 1.6972619533782825,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 32.41
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A3",
+   "item_key": "ctl-kernelbench-result-reuse-L1-1.inline|A3|seed-42",
+   "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+   "measured": 5.688086363402281,
+   "model_exec2_no_store": 1.066416092542976,
+   "model_exec2_store": 1.066416092542976,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 68.092
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A1",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|A1|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 1.2204621145219512,
+   "model_exec2_no_store": 0.8009848195148801,
+   "model_exec2_store": 0.413992888668888,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 14.547
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A2",
+   "item_key": "ctl-kernelbench-result-reuse-L1-1|A2|seed-42",
+   "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+   "measured": 3.335674240733639,
+   "model_exec2_no_store": 1.4715654918307841,
+   "model_exec2_store": 1.2408614081423381,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 39.782
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A1",
+   "item_key": "ctl-kernelbench-result-reuse-L1-1.inline|A1|seed-42",
+   "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+   "measured": 6.792179251181614,
+   "model_exec2_no_store": 1.2096742780595202,
+   "model_exec2_store": 1.2096742780595202,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 81.208
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|A4|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 1.7279181877772012,
+   "model_exec2_no_store": 0.397606320900096,
+   "model_exec2_store": 0.397606320900096,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 20.511
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4_sanitizer",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|A4_sanitizer|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 1.859056058074489,
+   "model_exec2_no_store": 1.081553130642432,
+   "model_exec2_store": 1.081553130642432,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 22.112
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|a|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.8226393883878536,
+   "model_exec2_no_store": 0.41339213018112003,
+   "model_exec2_store": 0.41339213018112003,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 21.711
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_1e-3",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|a_1e-3|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.8260787895231538,
+   "model_exec2_no_store": 0.36527233933055997,
+   "model_exec2_store": 0.36527233933055997,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 21.745
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A2",
+   "item_key": "ctl-kernelbench-result-reuse-L1-1.inline|A2|seed-42",
+   "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+   "measured": 7.927101940922924,
+   "model_exec2_no_store": 1.4715654918307841,
+   "model_exec2_store": 1.4715654918307841,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 94.652
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "c",
+   "item_key": "ctl-kernelbench-result-reuse-L1-1.inline|c|seed-42",
+   "kernel_id": "ctl-kernelbench-result-reuse-L1-1",
+   "measured": 7.9376701894260595,
+   "model_exec2_no_store": 2.912468594589696,
+   "model_exec2_store": 2.912468594589696,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 94.761
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A3",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|A3|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 1.13828332713156,
+   "model_exec2_no_store": 0.866565023135744,
+   "model_exec2_store": 0.8114462583215168,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 13.514
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A5",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|A5|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 1.5764908945921692,
+   "model_exec2_no_store": 0.4281368669696,
+   "model_exec2_store": 0.40795920191382984,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 18.709
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_head_1e-4",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|a_head_1e-4|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.4552030259912658,
+   "model_exec2_no_store": 0.7154078706565121,
+   "model_exec2_store": 0.7154078706565121,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 17.236
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_static",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|a_static|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.382509088275408,
+   "model_exec2_no_store": 0.21014173607168005,
+   "model_exec2_store": 0.21014173607168005,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 16.359
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_head_1e-2",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|a_head_1e-2|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.4237984889685502,
+   "model_exec2_no_store": 0.302729100033024,
+   "model_exec2_store": 0.302729100033024,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 16.835
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4_poison",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|A4_poison|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 2.8172318015435733,
+   "model_exec2_no_store": 1.0426871356467202,
+   "model_exec2_store": 1.0426871356467202,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 33.338
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "b1",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|b1|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.04433486798797,
+   "model_exec2_no_store": 0.28164232736153605,
+   "model_exec2_store": 0.28164232736153605,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 12.293
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "b2",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|b2|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.0126651588112416,
+   "model_exec2_no_store": 0.5169922728166401,
+   "model_exec2_store": 0.5169922728166401,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 12.019
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A2",
+   "item_key": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|A2|seed-42",
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 0.5824772715568542,
+   "model_exec2_no_store": 0.36957137295769604,
+   "model_exec2_store": 0.13841991433420225,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": false,
+   "units": 1,
+   "wall": 6.987
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "c",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|c|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 0.7227803089401938,
+   "model_exec2_no_store": 1.456234297294848,
+   "model_exec2_store": 0.5604531560425843,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 8.667
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A1",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|A1|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 0.6210833173809629,
+   "model_exec2_no_store": 0.93721463902976,
+   "model_exec2_store": 0.5623412517403712,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 7.45
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A5",
+   "item_key": "ctl-kernelbench-zero-out-L1-1.inline|A5|seed-42",
+   "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+   "measured": 2.759136371540301,
+   "model_exec2_no_store": 0.6252154678784,
+   "model_exec2_store": 0.6252154678784,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 33.071
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A5",
+   "item_key": "ctl-kernelbench-zero-out-L1-1|A5|seed-42",
+   "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+   "measured": 2.943712118900184,
+   "model_exec2_no_store": 0.6252154678784,
+   "model_exec2_store": 0.595749684219473,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 35.27
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A3",
+   "item_key": "ctl-kernelbench-zero-out-L1-1|A3|seed-42",
+   "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+   "measured": 3.4281287843530834,
+   "model_exec2_no_store": 1.066416092542976,
+   "model_exec2_store": 0.9985855937002183,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 41.065
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "c",
+   "item_key": "ctl-kernelbench-zero-out-L1-1|c|seed-42",
+   "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+   "measured": 3.8689681751559486,
+   "model_exec2_no_store": 2.912468594589696,
+   "model_exec2_store": 1.6972619533782825,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 46.241
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A1",
+   "item_key": "ctl-kernelbench-zero-out-L1-1|A1|seed-42",
+   "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+   "measured": 4.104878801288027,
+   "model_exec2_no_store": 1.2096742780595202,
+   "model_exec2_store": 0.9022499055196885,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 49.153
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A3",
+   "item_key": "ctl-kernelbench-zero-out-L1-1.inline|A3|seed-42",
+   "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+   "measured": 4.03045454531005,
+   "model_exec2_no_store": 1.066416092542976,
+   "model_exec2_store": 1.066416092542976,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 48.267
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A3",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|A3|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.5299394076520747,
+   "model_exec2_no_store": 0.9331820462714882,
+   "model_exec2_store": 0.8738260367810841,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 18.287
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A2",
+   "item_key": "ctl-kernelbench-zero-out-L1-1|A2|seed-42",
+   "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+   "measured": 5.174136378548362,
+   "model_exec2_no_store": 1.4715654918307841,
+   "model_exec2_store": 1.2408614081423381,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 61.948
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|A4|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.9634621125279053,
+   "model_exec2_no_store": 0.457560641800192,
+   "model_exec2_store": 0.457560641800192,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 23.488
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A2",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|A2|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 2.2404545473329955,
+   "model_exec2_no_store": 0.736902745915392,
+   "model_exec2_store": 0.43847822693655897,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 26.79
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A1",
+   "item_key": "ctl-kernelbench-zero-out-L1-1.inline|A1|seed-42",
+   "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+   "measured": 5.62006818706339,
+   "model_exec2_no_store": 1.2096742780595202,
+   "model_exec2_store": 1.2096742780595202,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 67.263
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|a|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 1.6651515111778719,
+   "model_exec2_no_store": 0.65891289756672,
+   "model_exec2_store": 0.65891289756672,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 19.913
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_1e-3",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|a_1e-3|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 1.5549393928412234,
+   "model_exec2_no_store": 0.6070100542233601,
+   "model_exec2_store": 0.6070100542233601,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 18.589
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_head_1e-4",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|a_head_1e-4|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 1.4717121178453623,
+   "model_exec2_no_store": 1.4978852291870723,
+   "model_exec2_store": 1.4978852291870723,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 17.598
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A5",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|A5|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.5723333286516599,
+   "model_exec2_no_store": 0.4938297339392,
+   "model_exec2_store": 0.4705560293490442,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 18.78
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4_sanitizer",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|A4_sanitizer|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 2.5377045508586984,
+   "model_exec2_no_store": 1.1392122612848639,
+   "model_exec2_store": 1.1392122612848639,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 30.318
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "c",
+   "item_key": "ctl-kernelbench-zero-out-L1-1.inline|c|seed-42",
+   "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+   "measured": 6.432407567356572,
+   "model_exec2_no_store": 2.912468594589696,
+   "model_exec2_store": 2.912468594589696,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 76.905
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A2",
+   "item_key": "ctl-kernelbench-zero-out-L1-1.inline|A2|seed-42",
+   "kernel_id": "ctl-kernelbench-zero-out-L1-1",
+   "measured": 6.289992428187168,
+   "model_exec2_no_store": 1.4715654918307841,
+   "model_exec2_store": 1.4715654918307841,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 75.229
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_static",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|a_static|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 1.1808181712121673,
+   "model_exec2_no_store": 0.42737879115008004,
+   "model_exec2_store": 0.42737879115008004,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 14.067
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_head_1e-2",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|a_head_1e-2|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 1.3476515177524448,
+   "model_exec2_no_store": 0.531247490694144,
+   "model_exec2_store": 0.531247490694144,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 16.052
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "b1",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|b1|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 1.2161590908512925,
+   "model_exec2_no_store": 0.5405967479132161,
+   "model_exec2_store": 0.5405967479132161,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 14.493
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "b2",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|b2|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 1.0997272657625603,
+   "model_exec2_no_store": 0.75683772745984,
+   "model_exec2_store": 0.75683772745984,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 13.096
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4_poison",
+   "item_key": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|A4_poison|seed-42",
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 3.402159093004284,
+   "model_exec2_no_store": 1.14704427129344,
+   "model_exec2_store": 1.14704427129344,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": false,
+   "units": 1,
+   "wall": 40.622
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|A4|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 0.6860757686875083,
+   "model_exec2_no_store": 0.588710718769152,
+   "model_exec2_store": 0.588710718769152,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 8.189
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4_poison",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|A4_poison|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 1.1949166655540466,
+   "model_exec2_no_store": 1.3753255055206401,
+   "model_exec2_store": 1.3753255055206401,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 14.281
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A1",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|A1|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 0.5141666730244955,
+   "model_exec2_no_store": 1.2352173692185602,
+   "model_exec2_store": 0.9366869728125091,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 6.17
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "c",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|c|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 0.9053408973144763,
+   "model_exec2_no_store": 3.048990559961088,
+   "model_exec2_store": 1.8273219839229322,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 10.857
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A3",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|A3|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 0.4688333471616109,
+   "model_exec2_no_store": 1.0789067843809281,
+   "model_exec2_store": 1.0102818021613873,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 5.626
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A2",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|A2|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 0.6978106191664031,
+   "model_exec2_no_store": 1.540440124260352,
+   "model_exec2_store": 1.3236601124258334,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 8.366
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4_sanitizer",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|A4_sanitizer|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 0.5703787984270038,
+   "model_exec2_no_store": 1.265341609565184,
+   "model_exec2_store": 1.265341609565184,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 6.837
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A5",
+   "item_key": "s1-inductor-L1-10_3D_tensor_matrix_multiplication|A5|seed-42",
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "measured": 0.495734843340787,
+   "model_exec2_no_store": 0.6375328804352,
+   "model_exec2_store": 0.6074865893635758,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": false,
+   "units": 1,
+   "wall": 5.945
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A5",
+   "item_key": "ctl-kernelbench-non-default-stream-L1-1.inline|A5|seed-42",
+   "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+   "measured": 2.664333320025242,
+   "model_exec2_no_store": 0.6252154678784,
+   "model_exec2_store": 0.6252154678784,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 31.913
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A5",
+   "item_key": "ctl-kernelbench-non-default-stream-L1-1|A5|seed-42",
+   "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+   "measured": 3.0205151510961135,
+   "model_exec2_no_store": 0.6252154678784,
+   "model_exec2_store": 0.595749684219473,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 36.16
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a",
+   "item_key": "s1-inductor-L1-18_Matmul_with_transposed_both|a|seed-42",
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "measured": 0.9094454458265593,
+   "model_exec2_no_store": 0.86234439054336,
+   "model_exec2_store": 0.86234439054336,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": false,
+   "units": 1,
+   "wall": 10.848
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A3",
+   "item_key": "ctl-kernelbench-non-default-stream-L1-1|A3|seed-42",
+   "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+   "measured": 3.338953039140413,
+   "model_exec2_no_store": 1.066416092542976,
+   "model_exec2_store": 0.9985855937002183,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 39.926
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "c",
+   "item_key": "ctl-kernelbench-non-default-stream-L1-1|c|seed-42",
+   "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+   "measured": 4.141271220192766,
+   "model_exec2_no_store": 2.912468594589696,
+   "model_exec2_store": 1.6972619533782825,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 49.483
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A1",
+   "item_key": "ctl-kernelbench-non-default-stream-L1-1|A1|seed-42",
+   "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+   "measured": 4.146316677512545,
+   "model_exec2_no_store": 1.2096742780595202,
+   "model_exec2_store": 0.9022499055196885,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 49.534
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A3",
+   "item_key": "ctl-kernelbench-non-default-stream-L1-1.inline|A3|seed-42",
+   "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+   "measured": 3.841642416968491,
+   "model_exec2_no_store": 1.066416092542976,
+   "model_exec2_store": 1.066416092542976,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 45.879
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_1e-3",
+   "item_key": "s1-inductor-L1-18_Matmul_with_transposed_both|a_1e-3|seed-42",
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "measured": 1.259657582730958,
+   "model_exec2_no_store": 0.80730701799168,
+   "model_exec2_store": 0.80730701799168,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": false,
+   "units": 1,
+   "wall": 14.956
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A2",
+   "item_key": "ctl-kernelbench-non-default-stream-L1-1|A2|seed-42",
+   "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+   "measured": 5.030543928074115,
+   "model_exec2_no_store": 1.4715654918307841,
+   "model_exec2_store": 1.2408614081423381,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 60.11
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_head_1e-2",
+   "item_key": "s1-inductor-L1-18_Matmul_with_transposed_both|a_head_1e-2|seed-42",
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "measured": 1.902795453866323,
+   "model_exec2_no_store": 0.720591300099072,
+   "model_exec2_store": 0.720591300099072,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": false,
+   "units": 1,
+   "wall": 22.671
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_head_1e-4",
+   "item_key": "s1-inductor-L1-18_Matmul_with_transposed_both|a_head_1e-4|seed-42",
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "measured": 1.9532803044174658,
+   "model_exec2_no_store": 2.146223611969536,
+   "model_exec2_store": 2.146223611969536,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": false,
+   "units": 1,
+   "wall": 23.256
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A1",
+   "item_key": "ctl-kernelbench-non-default-stream-L1-1.inline|A1|seed-42",
+   "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+   "measured": 5.378483329036019,
+   "model_exec2_no_store": 1.2096742780595202,
+   "model_exec2_store": 1.2096742780595202,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 64.225
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_static",
+   "item_key": "s1-inductor-L1-18_Matmul_with_transposed_both|a_static|seed-42",
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "measured": 1.8623409144806138,
+   "model_exec2_no_store": 0.60737520821504,
+   "model_exec2_store": 0.60737520821504,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": false,
+   "units": 1,
+   "wall": 22.169
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "b1",
+   "item_key": "s1-inductor-L1-18_Matmul_with_transposed_both|b1|seed-42",
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "measured": 1.8080454577099192,
+   "model_exec2_no_store": 0.7551589820846081,
+   "model_exec2_store": 0.7551589820846081,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": false,
+   "units": 1,
+   "wall": 21.552
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "b2",
+   "item_key": "s1-inductor-L1-18_Matmul_with_transposed_both|b2|seed-42",
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "measured": 1.8485454573775781,
+   "model_exec2_no_store": 0.95556681844992,
+   "model_exec2_store": 0.95556681844992,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": false,
+   "units": 1,
+   "wall": 21.641
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "c",
+   "item_key": "ctl-kernelbench-non-default-stream-L1-1.inline|c|seed-42",
+   "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+   "measured": 6.408354537474988,
+   "model_exec2_no_store": 2.912468594589696,
+   "model_exec2_store": 2.912468594589696,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 74.902
+  },
+  {
+   "adversarial": true,
+   "arm": "inline",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A2",
+   "item_key": "ctl-kernelbench-non-default-stream-L1-1.inline|A2|seed-42",
+   "kernel_id": "ctl-kernelbench-non-default-stream-L1-1",
+   "measured": 6.201980076474372,
+   "model_exec2_no_store": 1.4715654918307841,
+   "model_exec2_store": 1.4715654918307841,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": false,
+   "units": 1,
+   "wall": 71.911
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4",
+   "item_key": "s1-inductor-L1-18_Matmul_with_transposed_both|A4|seed-42",
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "measured": 1.2079210008979704,
+   "model_exec2_no_store": 0.697377925400576,
+   "model_exec2_store": 0.697377925400576,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": false,
+   "units": 1,
+   "wall": 11.979
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4_sanitizer",
+   "item_key": "s1-inductor-L1-18_Matmul_with_transposed_both|A4_sanitizer|seed-42",
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "measured": 1.6301740196962204,
+   "model_exec2_no_store": 1.3698487838545919,
+   "model_exec2_store": 1.3698487838545919,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": false,
+   "units": 1,
+   "wall": 13.257
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4_poison",
+   "item_key": "s1-inductor-L1-18_Matmul_with_transposed_both|A4_poison|seed-42",
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "measured": 3.2544240541874414,
+   "model_exec2_no_store": 1.5644728138803201,
+   "model_exec2_store": 1.5644728138803201,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": false,
+   "units": 1,
+   "wall": 19.002
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a",
+   "item_key": "s1-inductor-L2-59_Matmul_Swish_Scaling|a|seed-42",
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "measured": 6.822533328760238,
+   "model_exec2_no_store": 0.9442583142400001,
+   "model_exec2_store": 0.9442583142400001,
+   "per_gpu": 2,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": false,
+   "units": 6,
+   "wall": 17.24
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_static",
+   "item_key": "s1-inductor-L2-59_Matmul_Swish_Scaling|a_static|seed-42",
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "measured": 7.915500044822693,
+   "model_exec2_no_store": 0.26541945344,
+   "model_exec2_store": 0.26541945344,
+   "per_gpu": 2,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": false,
+   "units": 6,
+   "wall": 15.801
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_head_1e-2",
+   "item_key": "s1-inductor-L2-59_Matmul_Swish_Scaling|a_head_1e-2|seed-42",
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "measured": 7.978999972343445,
+   "model_exec2_no_store": 0.600949691392,
+   "model_exec2_store": 0.600949691392,
+   "per_gpu": 2,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": false,
+   "units": 6,
+   "wall": 15.929
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "b2",
+   "item_key": "s1-inductor-L2-59_Matmul_Swish_Scaling|b2|seed-42",
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "measured": 5.569000005722046,
+   "model_exec2_no_store": 1.5843901941760001,
+   "model_exec2_store": 1.5843901941760001,
+   "per_gpu": 2,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": false,
+   "units": 6,
+   "wall": 11.117
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "b1",
+   "item_key": "s1-inductor-L2-59_Matmul_Swish_Scaling|b1|seed-42",
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "measured": 5.299000024795532,
+   "model_exec2_no_store": 0.45446978969600005,
+   "model_exec2_store": 0.45446978969600005,
+   "per_gpu": 2,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": false,
+   "units": 6,
+   "wall": 10.579
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_1e-3",
+   "item_key": "s1-inductor-L2-59_Matmul_Swish_Scaling|a_1e-3|seed-42",
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "measured": 8.047000050544739,
+   "model_exec2_no_store": 0.81598909952,
+   "model_exec2_store": 0.81598909952,
+   "per_gpu": 2,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": false,
+   "units": 6,
+   "wall": 16.067
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "a_head_1e-4",
+   "item_key": "s1-inductor-L2-59_Matmul_Swish_Scaling|a_head_1e-4|seed-42",
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "measured": 7.972499966621399,
+   "model_exec2_no_store": 0.7069247733760001,
+   "model_exec2_store": 0.7069247733760001,
+   "per_gpu": 2,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": false,
+   "units": 6,
+   "wall": 15.917
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4",
+   "item_key": "s1-inductor-L2-59_Matmul_Swish_Scaling|A4|seed-42",
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "measured": 8.187000036239624,
+   "model_exec2_no_store": 1.6941435965440002,
+   "model_exec2_store": 1.6941435965440002,
+   "per_gpu": 2,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": false,
+   "units": 6,
+   "wall": 16.344
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4_sanitizer",
+   "item_key": "s1-inductor-L2-59_Matmul_Swish_Scaling|A4_sanitizer|seed-42",
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "measured": 11.237500071525574,
+   "model_exec2_no_store": 2.479914170368,
+   "model_exec2_store": 2.479914170368,
+   "per_gpu": 2,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": false,
+   "units": 6,
+   "wall": 22.476
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "A4_poison",
+   "item_key": "s1-inductor-L2-59_Matmul_Swish_Scaling|A4_poison|seed-42",
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "measured": 15.997999906539917,
+   "model_exec2_no_store": 3.8466352148480003,
+   "model_exec2_store": 3.8466352148480003,
+   "per_gpu": 2,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": false,
+   "units": 6,
+   "wall": 31.938
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A5",
+   "item_key": "reference.L1-1_Square_matrix_multiplication_|ref_A5|seed-42",
+   "kernel_id": "reference.L1-1_Square_matrix_multiplication_",
+   "measured": 0.32804848027951794,
+   "model_exec2_no_store": 1.2400694548374878,
+   "model_exec2_store": 1.2400694548374878,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": true,
+   "units": 1,
+   "wall": 3.935
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A3",
+   "item_key": "reference.L1-1_Square_matrix_multiplication_|ref_A3|seed-42",
+   "kernel_id": "reference.L1-1_Square_matrix_multiplication_",
+   "measured": 1.7344337789527269,
+   "model_exec2_no_store": 0.9961470632031145,
+   "model_exec2_store": 0.9961470632031145,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": true,
+   "units": 1,
+   "wall": 20.8
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A1",
+   "item_key": "reference.L1-1_Square_matrix_multiplication_|ref_A1|seed-42",
+   "kernel_id": "reference.L1-1_Square_matrix_multiplication_",
+   "measured": 2.9368079800626417,
+   "model_exec2_no_store": 2.2401772369308226,
+   "model_exec2_store": 2.2401772369308226,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": true,
+   "units": 1,
+   "wall": 35.199
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_c",
+   "item_key": "reference.L1-1_Square_matrix_multiplication_|ref_c|seed-42",
+   "kernel_id": "reference.L1-1_Square_matrix_multiplication_",
+   "measured": 2.9712246484054634,
+   "model_exec2_no_store": 2.289960906601915,
+   "model_exec2_store": 2.289960906601915,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": true,
+   "units": 1,
+   "wall": 35.374
+  },
+  {
+   "adversarial": true,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A2",
+   "item_key": "reference.L1-1_Square_matrix_multiplication_|ref_A2|seed-42",
+   "kernel_id": "reference.L1-1_Square_matrix_multiplication_",
+   "measured": 3.18628223711278,
+   "model_exec2_no_store": 3.3537916457678274,
+   "model_exec2_store": 3.3537916457678274,
+   "per_gpu": 12,
+   "problem_id": "L1/1_Square_matrix_multiplication_",
+   "reference": true,
+   "units": 1,
+   "wall": 38.199
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_c",
+   "item_key": "reference.L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|ref_c|seed-42",
+   "kernel_id": "reference.L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 0.7437727361014395,
+   "model_exec2_no_store": 2.289960906601915,
+   "model_exec2_store": 2.289960906601915,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": true,
+   "units": 1,
+   "wall": 8.923
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A1",
+   "item_key": "reference.L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|ref_A1|seed-42",
+   "kernel_id": "reference.L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 0.7067575635332051,
+   "model_exec2_no_store": 1.3340023930721867,
+   "model_exec2_store": 1.3340023930721867,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": true,
+   "units": 1,
+   "wall": 8.479
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A5",
+   "item_key": "reference.L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|ref_A5|seed-42",
+   "kernel_id": "reference.L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 0.6224015138366006,
+   "model_exec2_no_store": 0.31001736370937194,
+   "model_exec2_store": 0.31001736370937194,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": true,
+   "units": 1,
+   "wall": 7.441
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A3",
+   "item_key": "reference.L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|ref_A3|seed-42",
+   "kernel_id": "reference.L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 1.94964394605521,
+   "model_exec2_no_store": 0.9961470632031145,
+   "model_exec2_store": 0.9961470632031145,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": true,
+   "units": 1,
+   "wall": 23.184
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A2",
+   "item_key": "reference.L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh|ref_A2|seed-42",
+   "kernel_id": "reference.L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "measured": 3.1707166524848556,
+   "model_exec2_no_store": 1.3713709299600207,
+   "model_exec2_store": 1.3713709299600207,
+   "per_gpu": 12,
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "reference": true,
+   "units": 1,
+   "wall": 37.571
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A1",
+   "item_key": "reference.L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|ref_A1|seed-42",
+   "kernel_id": "reference.L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.1613015017124138,
+   "model_exec2_no_store": 1.6360606743583987,
+   "model_exec2_store": 1.6360606743583987,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": true,
+   "units": 1,
+   "wall": 13.818
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_c",
+   "item_key": "reference.L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|ref_c|seed-42",
+   "kernel_id": "reference.L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.6661424157595393,
+   "model_exec2_no_store": 2.289960906601915,
+   "model_exec2_store": 2.289960906601915,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": true,
+   "units": 1,
+   "wall": 19.871
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A3",
+   "item_key": "reference.L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|ref_A3|seed-42",
+   "kernel_id": "reference.L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 0.6866666674613953,
+   "model_exec2_no_store": 0.9961470632031145,
+   "model_exec2_store": 0.9961470632031145,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": true,
+   "units": 1,
+   "wall": 8.24
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A2",
+   "item_key": "reference.L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|ref_A2|seed-42",
+   "kernel_id": "reference.L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 1.1659318280942512,
+   "model_exec2_no_store": 2.0321778352292896,
+   "model_exec2_store": 2.0321778352292896,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": true,
+   "units": 1,
+   "wall": 13.972
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A5",
+   "item_key": "reference.L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool|ref_A5|seed-42",
+   "kernel_id": "reference.L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "measured": 0.6409393964391766,
+   "model_exec2_no_store": 0.6200347274187439,
+   "model_exec2_store": 0.6200347274187439,
+   "per_gpu": 12,
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "reference": true,
+   "units": 1,
+   "wall": 7.674
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A1",
+   "item_key": "reference.L1-10_3D_tensor_matrix_multiplication|ref_A1|seed-42",
+   "kernel_id": "reference.L1-10_3D_tensor_matrix_multiplication",
+   "measured": 1.0468560565601694,
+   "model_exec2_no_store": 2.2968131646719874,
+   "model_exec2_store": 2.2968131646719874,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": true,
+   "units": 1,
+   "wall": 12.474
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A3",
+   "item_key": "reference.L1-10_3D_tensor_matrix_multiplication|ref_A3|seed-42",
+   "kernel_id": "reference.L1-10_3D_tensor_matrix_multiplication",
+   "measured": 0.899227261543274,
+   "model_exec2_no_store": 0.9961470632031145,
+   "model_exec2_store": 0.9961470632031145,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": true,
+   "units": 1,
+   "wall": 10.722
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A2",
+   "item_key": "reference.L1-10_3D_tensor_matrix_multiplication|ref_A2|seed-42",
+   "kernel_id": "reference.L1-10_3D_tensor_matrix_multiplication",
+   "measured": 1.2506439360705288,
+   "model_exec2_no_store": 3.4776929405058152,
+   "model_exec2_store": 3.4776929405058152,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": true,
+   "units": 1,
+   "wall": 14.918
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_c",
+   "item_key": "reference.L1-10_3D_tensor_matrix_multiplication|ref_c|seed-42",
+   "kernel_id": "reference.L1-10_3D_tensor_matrix_multiplication",
+   "measured": 1.516553026257139,
+   "model_exec2_no_store": 2.289960906601915,
+   "model_exec2_store": 2.289960906601915,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": true,
+   "units": 1,
+   "wall": 18.076
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A5",
+   "item_key": "reference.L1-10_3D_tensor_matrix_multiplication|ref_A5|seed-42",
+   "kernel_id": "reference.L1-10_3D_tensor_matrix_multiplication",
+   "measured": 0.2140833338101705,
+   "model_exec2_no_store": 1.298197710532995,
+   "model_exec2_store": 1.298197710532995,
+   "per_gpu": 12,
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "reference": true,
+   "units": 1,
+   "wall": 2.569
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A5",
+   "item_key": "reference.L1-18_Matmul_with_transposed_both|ref_A5|seed-42",
+   "kernel_id": "reference.L1-18_Matmul_with_transposed_both",
+   "measured": 0.5415909250577291,
+   "model_exec2_no_store": 1.8601041822562316,
+   "model_exec2_store": 1.8601041822562316,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": true,
+   "units": 1,
+   "wall": 5.888
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A1",
+   "item_key": "reference.L1-18_Matmul_with_transposed_both|ref_A1|seed-42",
+   "kernel_id": "reference.L1-18_Matmul_with_transposed_both",
+   "measured": 2.120537879129853,
+   "model_exec2_no_store": 2.844293799503247,
+   "model_exec2_store": 2.844293799503247,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": true,
+   "units": 1,
+   "wall": 23.875
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A3",
+   "item_key": "reference.L1-18_Matmul_with_transposed_both|ref_A3|seed-42",
+   "kernel_id": "reference.L1-18_Matmul_with_transposed_both",
+   "measured": 1.4117467438073728,
+   "model_exec2_no_store": 0.9961470632031145,
+   "model_exec2_store": 0.9961470632031145,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": true,
+   "units": 1,
+   "wall": 13.85
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A2",
+   "item_key": "reference.L1-18_Matmul_with_transposed_both|ref_A2|seed-42",
+   "kernel_id": "reference.L1-18_Matmul_with_transposed_both",
+   "measured": 2.9969088820237966,
+   "model_exec2_no_store": 4.675405456306365,
+   "model_exec2_store": 4.675405456306365,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": true,
+   "units": 1,
+   "wall": 28.095
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_c",
+   "item_key": "reference.L1-18_Matmul_with_transposed_both|ref_c|seed-42",
+   "kernel_id": "reference.L1-18_Matmul_with_transposed_both",
+   "measured": 4.348613390993075,
+   "model_exec2_no_store": 2.289960906601915,
+   "model_exec2_store": 2.289960906601915,
+   "per_gpu": 12,
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "reference": true,
+   "units": 1,
+   "wall": 33.442
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A5",
+   "item_key": "reference.L2-59_Matmul_Swish_Scaling|ref_A5|seed-42",
+   "kernel_id": "reference.L2-59_Matmul_Swish_Scaling",
+   "measured": 6.55050003528595,
+   "model_exec2_no_store": 0.15500868185468597,
+   "model_exec2_store": 0.15500868185468597,
+   "per_gpu": 2,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": true,
+   "units": 6,
+   "wall": 7.466
+  },
+  {
+   "adversarial": false,
+   "arm": "store",
+   "attempt": 1,
+   "exclusive": false,
+   "gate": "ref_A1",
+   "item_key": "reference.L2-59_Matmul_Swish_Scaling|ref_A1|seed-42",
+   "kernel_id": "reference.L2-59_Matmul_Swish_Scaling",
+   "measured": 23.217000007629395,
+   "model_exec2_no_store": 1.1829732524290808,
+   "model_exec2_store": 1.1829732524290808,
+   "per_gpu": 1,
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "reference": true,
+   "units": 8,
+   "wall": 23.217
+  }
+ ],
+ "projection": {
+  "R_bootstrap_problems": {
+   "2.5%": 1.14,
+   "97.5%": 4.837
+  },
+  "R_measured_over_model_B": 2.425,
+  "R_store_independent": 3.475,
+  "job_gpu_hours_added_to_fixed": 0.1092,
+  "per_gate_scale": {
+   "A1": 1.231,
+   "A2": 1.852,
+   "A3": 1.164,
+   "A4": 3.591,
+   "A4_poison": 2.971,
+   "A4_sanitizer": 2.431,
+   "A5": 2.453,
+   "a": 3.914,
+   "a_1e-3": 4.905,
+   "a_head_1e-2": 5.87,
+   "a_head_1e-4": 2.575,
+   "a_static": 8.121,
+   "b1": 4.643,
+   "b2": 2.391,
+   "c": 1.168
+  },
+  "problems_in_R": [
+   "L1/10_3D_tensor_matrix_multiplication",
+   "L1/18_Matmul_with_transposed_both",
+   "L2/59_Matmul_Swish_Scaling",
+   "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh"
+  ],
+  "reference_scale": 1.533,
+  "rows": [
+   {
+    "P3_central": 10.57,
+    "P3_high": 12.41,
+    "P3_scoring_central": 6.278,
+    "P7_central": 15.16,
+    "P7_high": 18.35,
+    "P7_scoring_central": 10.864,
+    "fixed_gpu_hours": 4.294,
+    "high_scale_from": "trim2-paired-concurrency",
+    "note": "model only; reproduces 18.9 (P3 10.46 / 12.31), this job in the fixed part",
+    "scenario": "A: exec/2 without the store (fix pass model)"
+   },
+   {
+    "P3_central": 10.77,
+    "P3_high": 12.69,
+    "P3_scoring_central": 6.472,
+    "P7_central": 15.67,
+    "P7_high": 19.06,
+    "P7_scoring_central": 11.378,
+    "fixed_gpu_hours": 4.294,
+    "high_scale_from": "trim2-store-per-job-paired-concurrency",
+    "note": "model only; reproduces 18.9 (P3 10.66 / 12.58), this job in the fixed part",
+    "scenario": "B: exec/2, store without gate (a), linear ratio (pre-specified), per job (model)"
+   },
+   {
+    "P3_central": 19.99,
+    "P3_high": 24.66,
+    "P3_scoring_central": 15.696,
+    "P7_central": 31.89,
+    "P7_high": 40.1,
+    "P7_scoring_central": 27.595,
+    "fixed_gpu_hours": 4.294,
+    "high_scale_from": "trim2-store-per-job-paired-concurrency",
+    "note": "partial sample chosen by order (cheapest first); unreached problems carry R",
+    "scenario": "C: B scaled by this job's measured/model R = 2.425 (primary)"
+   },
+   {
+    "P3_central": 11.68,
+    "P3_high": 13.87,
+    "P3_scoring_central": 7.381,
+    "P7_central": 17.27,
+    "P7_high": 21.13,
+    "P7_scoring_central": 12.976,
+    "fixed_gpu_hours": 4.294,
+    "high_scale_from": "trim2-store-per-job-paired-concurrency",
+    "note": "cluster bootstrap over the problems reached",
+    "scenario": "C2.5%: B scaled by the bootstrap 2.5% point of R (1.140)"
+   },
+   {
+    "P3_central": 35.6,
+    "P3_high": 44.92,
+    "P3_scoring_central": 31.308,
+    "P7_central": 59.33,
+    "P7_high": 75.71,
+    "P7_scoring_central": 55.04,
+    "fixed_gpu_hours": 4.294,
+    "high_scale_from": "trim2-store-per-job-paired-concurrency",
+    "note": "cluster bootstrap over the problems reached",
+    "scenario": "C97.5%: B scaled by the bootstrap 97.5% point of R (4.837)"
+   },
+   {
+    "P3_central": 18.14,
+    "P3_high": 22.26,
+    "P3_scoring_central": 13.843,
+    "P7_central": 27.04,
+    "P7_high": 33.81,
+    "P7_scoring_central": 22.749,
+    "fixed_gpu_hours": 4.294,
+    "high_scale_from": "trim2-store-per-job-paired-concurrency",
+    "note": "post hoc; a gate's scale rests on its few final items",
+    "scenario": "D: B with per-gate scales (references by theirs)"
+   },
+   {
+    "P3_central": 26.11,
+    "P3_high": 32.51,
+    "P3_scoring_central": 21.817,
+    "P7_central": 42.05,
+    "P7_high": 53.13,
+    "P7_scoring_central": 37.755,
+    "fixed_gpu_hours": 4.294,
+    "high_scale_from": "trim2-paired-concurrency",
+    "note": "post hoc; gates a, b and A4 only (no reference read)",
+    "scenario": "E: A scaled by the store-independent gates' R = 3.475"
+   }
+  ]
+ },
+ "rule": "q1-exec2-validation/1",
+ "safety": {
+  "a5": {
+   "error_rows": [
+    {
+     "item_key": "ctl-kernelbench-non-default-stream-L1-1.inline|A5|seed-42",
+     "reason": null
+    },
+    {
+     "item_key": "ctl-kernelbench-non-default-stream-L1-1|A5|seed-42",
+     "reason": null
+    }
+   ],
+   "na_checks": [],
+   "rows": 9
+  },
+  "items": {
+   "cut_at_hard_deadline": [
+    "reference.L2-59_Matmul_Swish_Scaling|ref_c|seed-42"
+   ],
+   "final": 122,
+   "never_final": [],
+   "not_started": 310,
+   "not_started_by_problem": {
+    "L1/10_3D_tensor_matrix_multiplication": 30,
+    "L1/18_Matmul_with_transposed_both": 35,
+    "L2/100_ConvTranspose3d_Clamp_Min_Divide": 49,
+    "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool": 50,
+    "L2/59_Matmul_Swish_Scaling": 37,
+    "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool": 30,
+    "L2/87_Conv2d_Subtract_Subtract_Mish": 49,
+    "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh": 30
+   },
+   "planned": 433,
+   "second_attempts": 0,
+   "started": 122
+  },
+  "memory": {
+   "device_bytes_policy": 85000000000,
+   "guard_budget_gb": 68.0,
+   "items_over_estimate": [
+    {
+     "estimate_gb": 3.55,
+     "item_key": "reference.L1-1_Square_matrix_multiplication_|ref_c|seed-42",
+     "peak_gb": 3.987,
+     "peak_over_estimate": 1.1231,
+     "units": 1
+    },
+    {
+     "estimate_gb": 3.55,
+     "item_key": "ctl-kernelbench-result-reuse-L1-1.inline|c|seed-42",
+     "peak_gb": 3.582,
+     "peak_over_estimate": 1.0091,
+     "units": 1
+    },
+    {
+     "estimate_gb": 3.55,
+     "item_key": "ctl-kernelbench-zero-out-L1-1.inline|c|seed-42",
+     "peak_gb": 3.582,
+     "peak_over_estimate": 1.0091,
+     "units": 1
+    },
+    {
+     "estimate_gb": 3.176,
+     "item_key": "reference.L1-10_3D_tensor_matrix_multiplication|ref_c|seed-42",
+     "peak_gb": 3.527,
+     "peak_over_estimate": 1.1106,
+     "units": 1
+    },
+    {
+     "estimate_gb": 3.55,
+     "item_key": "ctl-kernelbench-non-default-stream-L1-1.inline|c|seed-42",
+     "peak_gb": 3.582,
+     "peak_over_estimate": 1.0091,
+     "units": 1
+    }
+   ],
+   "largest_concurrent_measured_peak_gb": 24.24,
+   "peak_over_estimate_max": 1.1231,
+   "peak_over_estimate_median": 0.3466,
+   "records": 122
+  },
+  "resource_failures": {
+   "alone": 0,
+   "by_problem": {},
+   "item_attempts": 0,
+   "list": [],
+   "shared": 0
+  },
+  "runner_summary": {
+   "contention_oom_shared": null,
+   "contention_timeout_shared": null,
+   "crashes": 1,
+   "deferred_by_deadline": 0,
+   "driver_seconds": 391.309,
+   "expired_at_hard_deadline": true,
+   "hard_deadline_seconds": 390.0,
+   "health_events": [],
+   "health_failed_alone": null,
+   "health_recovered_alone": null,
+   "infra_failures": null,
+   "interrupted": false,
+   "left_in_queue": 303,
+   "memory_guard_unreadable": 0,
+   "memory_guard_waits": 0,
+   "on_done_errors": null,
+   "retired_devices": {},
+   "retired_slots": [],
+   "run": 122,
+   "skipped": 0,
+   "soft_deadline_seconds": 330.0,
+   "time_boxed": true,
+   "timeouts": 0
+  },
+  "store": {
+   "entries": {
+    "usable": 27
+   },
+   "inline_reasons": {},
+   "lookups": {
+    "used": 30
+   }
+  }
+ },
+ "schema": "q1-exec2-validation-analysis/1"
+}

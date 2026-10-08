@@ -11,6 +11,16 @@ and finally stops the tap and the probe. Every trial is judged with
 ``action_path.verdict.judge`` after the session, when the whole tap stream is
 in hand (the stream is split at the probe's delimiter requests).
 
+The tap and the probe run in their own transient systemd scope (decision D30), not
+in the guest server's unit: when the server crashes, systemd restarts the unit and
+stops every process in its control group (development run 622), and a scope outside
+that group keeps the oracle channels running, so a restart costs at most the entry
+it hits. Every guard report names the server process that ran it, so the reports'
+server ids (``server_pids``) say which entry a restart hit; ``session_restarts`` counts
+a session's restarts (with the unit's own restart counter) and ``accessibility_calls``
+the ``/accessibility`` calls ``DesktopEnv`` made (the observation-service bound of the
+preregistration, criterion A7).
+
 Layers: ``L0-fixed`` runs a catalog cell's IR actions directly; the harness
 layers (``H-OSW-fixed``, ``H-GA`` and the detection controls ``H-OSW-up``,
 ``H-GA-buggy``) parse each model-response turn of the cell with
@@ -26,6 +36,7 @@ Standard library only; Python 3.10 compatible.
 
 from __future__ import annotations
 
+import base64
 import contextlib
 import json
 import time
@@ -38,10 +49,45 @@ from harness.q2.action_path.ir import IRError
 from harness.q2.vm import desktop
 from harness.q2.vm.guest import probe as probe_mod
 from harness.q2.vm.guest.xrecord_tap import mapping_check
-from harness.q2.vm.guest_http import GuestClient, GuestError
+from harness.q2.vm.guest_http import GUEST_BOOTSTRAP, GuestClient, GuestError
 from harness.q2.vm.marker import MarkerError, read_marker
 
 GUEST_DIR = Path(__file__).resolve().parent / "guest"
+# Decision D30: start a long-running guest script in its own transient systemd scope.
+# ``systemd-run --scope`` registers the scope, moves itself into it and then execs the
+# command, so the scope's one process is the script itself; the launcher returns once that
+# process's control group is the scope's (or with systemd-run's output if it exits first).
+# The guest server (osworld.service, a system unit) runs as the desktop user, so the scope
+# belongs to that user's manager (development run 694: the probe and the tap in
+# user@1000.service/app.slice/q2ap-*.scope, outside system.slice/osworld.service).
+SCOPE_LAUNCHER = """\
+import json, os, subprocess, sys, time
+unit, log = sys.argv[1], sys.argv[2]
+manager = ["--system"] if os.geteuid() == 0 else ["--user"]
+argv = ["/usr/bin/systemd-run", *manager, "--scope", "--quiet", "--collect", "--unit=" + unit,
+        "--", *sys.argv[3:]]
+with open(log, "ab") as out:
+    proc = subprocess.Popen(argv, stdin=subprocess.DEVNULL, stdout=out, stderr=out,
+                            start_new_session=True)
+target = "/" + unit + ".scope"
+cgroup, deadline = "", time.monotonic() + 15.0
+while time.monotonic() < deadline:
+    try:
+        with open("/proc/%d/cgroup" % proc.pid) as handle:
+            cgroup = handle.read().strip()
+    except OSError:
+        cgroup = ""
+    if cgroup.endswith(target) or proc.poll() is not None:
+        break
+    time.sleep(0.05)
+result = {"pid": proc.pid, "unit": unit + ".scope", "manager": manager[0][2:], "cgroup": cgroup}
+if not cgroup.endswith(target):
+    with open(log, "rb") as handle:
+        tail = handle.read()[-600:].decode("utf-8", "replace")
+    result["error"] = "not in its scope (rc %s): %s" % (proc.poll(), tail)
+print(json.dumps(result))
+"""
+SERVER_RESTART_WAIT_S = 60.0
 
 
 def guest_source(name: str) -> str:
@@ -131,7 +177,9 @@ class Session:
         self.baseline_led: int | None = None
         self.relaunches = 0
         self.tap_relaunches = 0
+        self.scopes = 0
         self.server_pid: int | None = None  # the guest server last seen by a guard report
+        self.server_unit_name: str | None = None
         self.guard_src = guest_source("guard.py")
 
     # --- guest helpers -------------------------------------------------------------------
@@ -150,36 +198,73 @@ class Session:
             return None
         return _last_json(result)
 
+    def launch_scoped(self, role: str, source: str, args: list[str]) -> dict[str, Any]:
+        """Start a guest script in a new transient systemd scope (``SCOPE_LAUNCHER``)."""
+        self.scopes += 1
+        unit = f"q2ap-{role}-{self.token}-{self.scopes}"
+        encoded = base64.b64encode(source.encode("utf-8")).decode("ascii")
+        argv = [unit, f"/tmp/{unit}.log", "python3", "-c", GUEST_BOOTSTRAP, encoded, *args]
+        try:
+            scope = self.client.run_script(SCOPE_LAUNCHER, argv)
+        except GuestError as exc:
+            return {"error": f"{role} launch failed: {str(exc)[-400:]}"}
+        if "error" in scope:
+            scope["error"] = f"{role} launch failed: {scope['error']}"
+        return scope
+
     def launch_probe(self) -> dict[str, Any]:
         self.client.execute(["rm", "-f", f"{self.probe_dir}/ready.json"], timeout=30.0)
         args = [self.probe_dir] + ([str(self.reserved)] if self.reserved else [])
-        status, text = self.client.launch_script(guest_source("probe.py"), args)
-        if status != 200:
-            return {"error": f"probe launch failed: {status} {text}"}
+        scope = self.launch_scoped("probe", guest_source("probe.py"), args)
+        if "error" in scope:
+            return {"error": scope["error"], "scope": scope}
         for _ in range(80):
             ready = self.cat_json(f"{self.probe_dir}/ready.json")
             if ready:
-                return ready
+                return dict(ready, scope=scope)
             time.sleep(0.25)
-        return {"error": "probe never became ready"}
+        return {"error": "probe never became ready", "scope": scope}
 
     def launch_tap(self) -> dict[str, Any]:
         """Start the XRecord tap writing to ``self.tap_path`` and wait for its ready record."""
         duration = int(self.config.get("tap_duration_s", 7200))
-        status, text = self.client.launch_script(
-            guest_source("xrecord_tap.py"), [self.tap_path, str(duration), self.tap_stop]
+        scope = self.launch_scoped(
+            "tap", guest_source("xrecord_tap.py"), [self.tap_path, str(duration), self.tap_stop]
         )
-        if status != 200:
-            return {"error": f"tap launch failed: {status} {text}"}
+        if "error" in scope:
+            return {"error": scope["error"], "scope": scope}
         known = len(self.tap_records)
         for _ in range(40):
             self.read_tap()
             ready = next((r for r in self.tap_records[known:] if r.get("kind") == "ready"), None)
             if ready:
                 self.tap_ready = ready
-                return ready
+                return dict(ready, scope=scope)
             time.sleep(0.25)
-        return {"error": "tap never became ready"}
+        return {"error": "tap never became ready", "scope": scope}
+
+    def server_unit(self) -> dict[str, Any]:
+        """The guest server's control group, its systemd unit and the unit's restart count.
+
+        Read at the session's start and end: ``NRestarts`` counts every automatic restart
+        of the unit, so its difference is the session's restart count however the restarts
+        fell between guard reports (``session_restarts``).
+        """
+        out: dict[str, Any] = {"server_pid": self.server_pid}
+        try:
+            if self.server_unit_name is None and isinstance(self.server_pid, int):
+                result = self.client.execute(["cat", f"/proc/{self.server_pid}/cgroup"], 30.0)
+                out["cgroup"] = str(result.get("output", "")).strip()
+                self.server_unit_name = unit_of_cgroup(out["cgroup"])
+            out["unit"] = self.server_unit_name
+            if self.server_unit_name:
+                argv = ["systemctl", "show", "--property=NRestarts", "--value"]
+                result = self.client.execute([*argv, self.server_unit_name], timeout=30.0)
+                value = str(result.get("output", "")).strip()
+                out["n_restarts"] = int(value) if value.isdigit() else None
+        except GuestError as exc:
+            out["error"] = str(exc)[-300:]
+        return out
 
     def tap_alive(self) -> bool | None:
         """Whether the tap process still runs (None when that cannot be read)."""
@@ -193,25 +278,28 @@ class Session:
         return result.get("returncode") == 0
 
     def relaunch_tap(self) -> dict[str, Any]:
-        """A new tap in a new file after the guest server's restart stopped the old one.
+        """A new tap in a new file when the old one is gone.
 
-        The old file keeps what the old tap recorded; the session's stream continues in the
-        new file from its own ready record (a fresh keymap), and ``segment_check`` judges
-        each tap's records against its own keymap.
+        Since decision D30 the tap runs in its own scope and survives a guest-server
+        restart; this path remains for a tap that stopped for any other reason. The old
+        file keeps what the old tap recorded; the session's stream continues in the new
+        file from its own ready record (a fresh keymap), and ``segment_check`` judges each
+        tap's records against its own keymap.
         """
         self.tap_relaunches += 1
         self.tap_path = f"/tmp/q2ap_suite_tap_{self.token}.{self.tap_relaunches}.jsonl"
         self.tap_offset = 0
         ready = self.launch_tap()
-        return {k: ready.get(k) for k in ("error", "pid", "min_keycode", "led_mask") if k in ready}
+        keys = ("error", "pid", "min_keycode", "led_mask", "scope")
+        return {k: ready.get(k) for k in keys if k in ready}
 
     def start(self) -> dict[str, Any]:
         tap_ready = self.launch_tap()
         if "error" in tap_ready:
-            return {"error": tap_ready["error"]}
+            return {"error": tap_ready["error"], "tap_ready": tap_ready}
         self.ready = self.launch_probe()
         if "error" in self.ready:
-            return {"error": self.ready["error"]}
+            return {"error": self.ready["error"], "probe_ready": self.ready}
         self.reserved = int(self.ready["reserved_keycode"])
         check = self.run_guest(
             "guard.py",
@@ -227,10 +315,11 @@ class Session:
             self.guard_src,
         )  # fmt: skip
         out = {
-            "tap_ready": {k: tap_ready.get(k) for k in ("pid", "min_keycode", "led_mask")},
+            "tap_ready": {k: tap_ready.get(k) for k in ("pid", "min_keycode", "led_mask", "scope")},
             "probe_ready": self.ready,
             "baseline_check": check,
             "warmup": warmup,
+            "server_unit": self.server_unit(),
         }
         if not isinstance(warmup.get("keycode"), int):
             out["error"] = f"session warm-up failed: {str(warmup)[:300]}"
@@ -304,8 +393,8 @@ class Session:
             if ((ping.get("check") or {}).get("probe") or {}).get("absent"):
                 self.relaunches += 1
                 if self.tap_alive() is False:
-                    # A guest-server restart stops the tap with the probe (run 622): relaunch
-                    # it first, so it records the relaunched probe's delimiter keycode.
+                    # A tap that stopped with the probe is relaunched first, so it records
+                    # the relaunched probe's delimiter keycode (run 622, before the scopes).
                     out["tap_relaunch"] = self.relaunch_tap()
                 out["relaunch"] = self.launch_probe()
         return out
@@ -335,6 +424,7 @@ class Session:
             "tap_records": len(self.tap_records),
             "probe_relaunches": self.relaunches,
             "tap_relaunches": self.tap_relaunches,
+            "server_unit": self.server_unit(),
         }
 
     # --- trials ------------------------------------------------------------------------
@@ -419,6 +509,12 @@ class Session:
             shot, attempts = desktop.get_screenshot(self.client)
             trial["observation_attempts"] = attempts
             trial["observation_ok"] = shot is not None
+        if seq == self.config.get("kill_guest_server_during_seq"):
+            # Development only: the guest server dies inside the entry, after its last
+            # observation, as run 622's crash inside /accessibility did; the post guard runs
+            # once the restarted server answers.
+            trial["fault_injection"] = kill_guest_server(self.client, seq, "during")
+            trial["fault_injection"]["restart_s"] = wait_for_server(self.client)
         trial["steps"] = steps
         trial["post"] = self.post(seq, cell.get("side_effects") or [])
         self.server_pid = trial["post"].get("server_pid") or trial["server_before"]
@@ -450,6 +546,96 @@ class Session:
             trial["c4"] = verdict.rdev_agreement(cell["expect"], obs["tap_events"] or [])
             trial["tap_window"] = [_compact_tap(r) for r in windows.get(trial["seq"]) or []]
         return check
+
+
+def kill_guest_server(client: GuestClient, seq: int, when: str) -> dict[str, Any]:
+    """Development only: SIGKILL the guest server, as the crash of run 622 ended it.
+
+    Its systemd unit restarts it about 5 s later and, on the way, stops every process left
+    in its control group; the probe and the tap run in their own scopes and are not among
+    them (decision D30). ``when`` is ``during`` (inside an entry, before its post guard) or
+    ``after`` (between two entries). The request that kills the server never answers, so its
+    error is the expected outcome.
+    """
+    out: dict[str, Any] = {"seq": seq, "when": when, "t": time.time()}
+    try:
+        reply = client.execute(["bash", "-c", "kill -KILL $PPID"], timeout=30.0)
+        out["reply"] = {k: reply.get(k) for k in ("returncode", "error")}
+    except GuestError as exc:
+        out["error"] = str(exc)[:200]
+    return out
+
+
+def wait_for_server(client: GuestClient, timeout: float = SERVER_RESTART_WAIT_S) -> float | None:
+    """Seconds until the guest server answers ``/platform`` again (None after ``timeout``)."""
+    started = time.monotonic()
+    while time.monotonic() - started < timeout:
+        try:
+            client.platform()
+            return round(time.monotonic() - started, 3)
+        except GuestError:
+            time.sleep(0.5)
+    return None
+
+
+def unit_of_cgroup(text: str) -> str | None:
+    """The systemd service a ``/proc/PID/cgroup`` text places the process in, if any."""
+    for line in text.splitlines():
+        parts = line.split(":", 2)
+        if len(parts) == 3 and (parts[0] == "0" or parts[1] == "name=systemd"):
+            name = parts[2].rstrip("/").rsplit("/", 1)[-1]
+            if name.endswith(".service"):
+                return name
+    return None
+
+
+def server_pids(result: dict[str, Any]) -> list[int]:
+    """The guest-server process ids a session's guard reports name, in the order they ran.
+
+    The baseline check and the warm-up, each trial's pre and post guard, and the final
+    guard. Every ``/accessibility`` call of a session (the reset observation's and each
+    step's) is followed by at least one of them, so a restart shows as a change of id; the
+    changes say which entry a restart hit, and ``session_restarts`` counts them.
+    """
+    start = result.get("start") or {}
+    reports = [start.get("baseline_check"), start.get("warmup")]
+    for trial in result.get("trials") or []:
+        reports += [trial.get("pre"), trial.get("post")]
+    reports.append((result.get("stop") or {}).get("final_guard"))
+    return [r["server_pid"] for r in reports if isinstance((r or {}).get("server_pid"), int)]
+
+
+def restarts(pids: list[int]) -> int:
+    """Guest-server restarts in a sequence of reported server ids (changes of id)."""
+    return sum(1 for before, after in zip(pids[:-1], pids[1:], strict=True) if before != after)
+
+
+def session_restarts(result: dict[str, Any]) -> int:
+    """Guest-server restarts during a session: the larger of two counts.
+
+    The unit's ``NRestarts`` at the session's end minus at its start (every automatic
+    restart, even two between the same pair of guard reports), and the changes of server
+    id in the guard reports (which also see a restart systemd did not count, should one
+    ever happen). Either count alone is used when the other could not be read.
+    """
+    by_ids = restarts(server_pids(result))
+    first = ((result.get("start") or {}).get("server_unit") or {}).get("n_restarts")
+    last = ((result.get("stop") or {}).get("server_unit") or {}).get("n_restarts")
+    if isinstance(first, int) and isinstance(last, int):
+        return max(by_ids, last - first)
+    return by_ids
+
+
+def accessibility_calls(result: dict[str, Any]) -> int:
+    """``/accessibility`` calls ``DesktopEnv`` made in a session (retries are attempts).
+
+    The reset observation's (screenshot-plus-accessibility setting) and every step's.
+    """
+    reset = result.get("reset_observation") or {}
+    calls = 1 if reset.get("accessibility_attempts") else 0
+    for trial in result.get("trials") or []:
+        calls += sum(1 for step in trial.get("steps") or [] if step.get("accessibility_attempts"))
+    return calls
 
 
 def _compact_tap(record: dict[str, Any]) -> list[Any]:

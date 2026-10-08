@@ -1,0 +1,13 @@
+task_id: 3f28fe4f-5d9d-4994-a456-efd78cfae1a3
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The email account's identity (id1, anonym-x2024@outlook.com) has a signature whose text is exactly two lines, "Anonym" then "XYZ Lab".
+    check_kind: config_value
+    observable: prefs.js has mail.identity.id1.htmlSigText whose value, after unescaping, equals "Anonym\nXYZ Lab" (trailing whitespace ignored).
+  - req_id: R2
+    statement: The signature is plain text (not HTML).
+    check_kind: config_value
+    observable: mail.identity.id1.htmlSigFormat is false or unset (default false); no signature file with HTML is attached via sig_file/attach_signature.
+allowed_variations:
+  - Signature placement options (sig_bottom, sig_on_reply) are not constrained.

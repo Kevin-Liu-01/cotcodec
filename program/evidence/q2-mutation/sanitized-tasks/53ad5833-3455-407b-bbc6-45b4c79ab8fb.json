@@ -1,0 +1,31 @@
+{
+  "domain": "vs_code",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Downloads/vscodeEvalExtension.zip",
+      "sha256": "2c091c00bb63c1fc8724bbbf3fa407429b8e46c6dfe771f7a2656c65b1f88a97",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vs_code/53ad5833-3455-407b-bbc6-45b4c79ab8fb/vscodeEvalExtension.zip"
+    },
+    {
+      "path_in_vm": "/home/user/project/main.py",
+      "sha256": "64e5822301cd230ece61946075bebb2d149c101c9102ea1149415ed92fc69ee1",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vs_code/5e2d93d8-8ad0-4435-b150-1692aacaa994/main.py"
+    },
+    {
+      "path_in_vm": "/home/user/project/README.md",
+      "sha256": "94c262278cbe09e8f4bd8f99a9d989dc6c69e8dfc39ca67c53f20ed24c1fb80a",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vs_code/53ad5833-3455-407b-bbc6-45b4c79ab8fb/README.md"
+    },
+    {
+      "path_in_vm": "/home/user/project/.vscode/settings.json",
+      "sha256": "4ee65ae16e56fe8427ce16368295c4cd0077450756e24374be1a1156cda35efb",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vs_code/53ad5833-3455-407b-bbc6-45b4c79ab8fb/settings.json"
+    }
+  ],
+  "instruction": "Please help me use VS Code to open the \"project\" in the \"user\" folder under \"home\".",
+  "related_apps": [
+    "vscode"
+  ],
+  "snapshot": "vscode",
+  "task_id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb"
+}

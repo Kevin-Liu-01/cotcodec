@@ -1,0 +1,73 @@
+{
+ "what": "Integration check that the blind requirement specs were written without checker access (q2-evaluator-mutation-v1).",
+ "checked_at": "2026-10-07",
+ "specs_branch": "stage0/q2-mut-specs",
+ "specs_head": "287d523374354e40af4c1f54bd06e46c3de6a955",
+ "specs_branch_base_on_main": "48986670c6519090fc64110b2738a693ee8c80da",
+ "specs_commits": [
+  {
+   "sha": "287d523374354e40af4c1f54bd06e46c3de6a955",
+   "subject": "q2-mut-specs: finish blind specs for all 205 tasks, add README and checker"
+  },
+  {
+   "sha": "13c76c6e116bac43118b65fae670fafee217b8ed",
+   "subject": "q2-mut-specs: blind specs for multi_apps tasks (part 1)"
+  },
+  {
+   "sha": "d23e9e3caf390e0dac0aeeab6cac163e33e0ff9a",
+   "subject": "q2-mut-specs: blind specs for gimp, vs_code, thunderbird, vlc tasks"
+  },
+  {
+   "sha": "d367818a0a43a7f001f251a51084d517e09517c3",
+   "subject": "q2-mut-specs: blind specs for libreoffice_writer tasks"
+  },
+  {
+   "sha": "13cf252bbf5cb108a6b04e96b031076c6cafd0ce",
+   "subject": "q2-mut-specs: blind specs for libreoffice_impress tasks"
+  },
+  {
+   "sha": "55dedffe3cefc43c325496020bfa3b8856c2f464",
+   "subject": "q2-mut-specs: copy sanitized tasks + schema, add blind specs for libreoffice_calc tasks"
+  }
+ ],
+ "files_changed_by_category": {
+  "harness/q2_mutation/schema.py": 1,
+  "sanitized-tasks/": 205,
+  "specs/": 207
+ },
+ "files_outside_specs_and_sanitized_tasks": [
+  "harness/q2_mutation/schema.py"
+ ],
+ "schema_blob": {
+  "harness": "3a66717e6c2b7143fed84e7158c80d4ed1d0cf8c",
+  "specs": "3a66717e6c2b7143fed84e7158c80d4ed1d0cf8c",
+  "operators": "3a66717e6c2b7143fed84e7158c80d4ed1d0cf8c"
+ },
+ "sanitized_tasks_tree": {
+  "harness": "5f66b7bcf0b6c91a74b020696c1be7f2686c02f2",
+  "specs": "5f66b7bcf0b6c91a74b020696c1be7f2686c02f2"
+ },
+ "spec_set_sha256": "05d4fb2074a7fa53046dff9f5d075b2b45ac014889eaae23d625c1894056de62",
+ "checker_function_names_scanned": 117,
+ "specs_naming_a_checker_function": [],
+ "readme_declarations": [
+  "did not read any checker or evaluator code or anything under desktop_env/evaluators",
+  "did not read any harness or operator code other than schema.py; the harness branch was not merged",
+  "did not read any research plan, review or probe result",
+  "only sanitized-tasks/ and schema.py were checked out from stage0/q2-mut-harness"
+ ],
+ "readme_disclosures": [
+  "the author model may have seen the public OSWorld repository in pretraining",
+  "for 415ef462 the member names of .projects.tar.xz (an initial file) were listed, including codes/quick_evaluate.py; no member was read",
+  "the author saw docker images output and top-level names of ~/cotcodec-runs on the host"
+ ],
+ "verdict": "No trace of checker access: the specs branch changed only specs/, the copied sanitized tasks and the byte-identical schema.py; no spec names any of the OSWorld metric functions or evaluator fields; the README's read list contains no harness-side file. Pretraining exposure cannot be excluded (disclosed).",
+ "tests": "tests/test_q2_mutation_specs.py",
+ "spec_author": {
+  "model": "Claude Opus 5.5",
+  "provider": "Anthropic",
+  "evidence": "Co-Authored-By: Claude Opus 5.5 trailer on all six specs-branch commits (287d5233, 13c76c6e, d23e9e3c, d367818a, 13cf252b, 55dedffe)",
+  "recorded_at": "2026-10-07",
+  "rater_overlap": "audit rater 1 (claude-opus-5) shares the provider; label error therefore counts an item the raters do not agree on as wrong unless Kevin adjudicates it, and each rater's disagreement with the labels is reported on its own (raters.summarize)"
+ }
+}

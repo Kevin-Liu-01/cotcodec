@@ -1,0 +1,14 @@
+task_id: 5df7b33a-9f77-4101-823e-02f863e1c1ae
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The book is split into one PDF per chapter, named like the chapter-one example "1. Symmetric matrices and adjacency of a graph.pdf".
+    check_kind: file_exists
+    observable: Next to the example (in the extracted "book" folder) exist "2. Graph isomorphism.pdf", "3. Graph polynomials.pdf", "4. Covers and Interlacing families.pdf", "5. Eigenvalues and the structure of graphs.pdf", "6. Optimization for cliques and colourings.pdf", "7. Theta.pdf", "8. The Laplacian matrix.pdf".
+  - req_id: R2
+    statement: Each chapter PDF contains exactly that chapter's pages, as the example does (chapter 1 = book pages 3-17).
+    check_kind: other
+    observable: Page ranges of "Spectral Graph Theory.pdf" - ch2 18-28, ch3 29-43, ch4 44-55, ch5 56-65, ch6 66-78, ch7 79-86, ch8 87-100; each output's pages match those source pages (text equality per page).
+allowed_variations:
+  - '[AMBIGUOUS] Whether trailing matter after chapter 8 belongs to it; whether a PDF for chapter 1 is regenerated.'
+  - '[AMBIGUOUS] Output folder assumed to be the extracted book/ folder on the Desktop.'

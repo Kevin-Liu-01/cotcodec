@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/4_1.pptx",
+      "sha256": "06e8211fd5386b02c902c19657557e38b42fcc533619203b231cccb4bb8eceec",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/4ed5abd0-8b5d-47bd-839f-cacfa15ca37a/4_1.pptx"
+    }
+  ],
+  "instruction": "Set the color of titles in slides 2,3,5 as black and underline them.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a"
+}

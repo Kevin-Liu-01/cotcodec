@@ -1,0 +1,10 @@
+{
+  "domain": "vs_code",
+  "initial_files": [],
+  "instruction": "Please help me change the color theme of VS Code to Visual Studio Dark.",
+  "related_apps": [
+    "vscode"
+  ],
+  "snapshot": "vscode",
+  "task_id": "982d12a5-beab-424f-8d38-d2a48429e511"
+}

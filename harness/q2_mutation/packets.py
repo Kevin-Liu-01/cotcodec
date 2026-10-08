@@ -1,0 +1,413 @@
+"""Candidate artifacts for blind rater packets: structure, difference, render.
+
+A rater sees the instruction, the initial files and the candidate (decision D9,
+``raters.py``). This module turns files into what the rater reads:
+
+* ``structure_lines``: a plain-text listing of a document. Office files are
+  listed from the operators' own snapshot (``operators/_snapshot.py``, the
+  model the purity checks use), one ``location = value`` line per leaf, so
+  every attribute an operator can edit is shown: run formatting (highlight,
+  colour, font, size, shading), paragraph properties (alignment, spacing,
+  indents), styles, headers and footers, notes, cell values, formulas and
+  resolved cell styles, slide shapes with geometry, fills, lines, text-body
+  properties and slide backgrounds. The listing is not built from
+  python-docx, python-pptx or openpyxl, the libraries the checkers read with,
+  so the raters do not share the checkers' blind spots. It is a display aid,
+  not a checker: no rule, no comparison with gold;
+* ``diff_lines``: the alignment-aware structural difference of the
+  candidate against the starting file (``operators/_diff.py``, never against
+  gold); if it reports nothing while the snapshots differ, a unified
+  difference of the two listings is shown instead, so no change is hidden.
+  The starting file it compares with is the *saved* starting file when the
+  audit provides one (``artifacts(..., baseline=...)``): the starting file
+  put through the same LibreOffice save steps as the candidate, so changes
+  the save alone makes (the VM profile's default font and language, document
+  defaults) are not shown as edits; their number against the raw starting
+  file is reported as ``save_only_changes``;
+* ``render_command``: the LibreOffice headless PDF conversion and
+  ``pdftoppm`` page images (100 dpi, up to 20 pages) run in the LO-VM image
+  (the VM's own renderer).
+
+Two registered, label-blind rules of decision D34 shape the difference:
+
+* an end-state file with no starting file (a new file, often in another
+  format, such as a script written from a slide deck) is compared at the text
+  level with the text of the starting files (``text_lines``,
+  ``new_file_text_diff``), so a dropped or misspelt line shows;
+* a shape position or size change of at most ``DRIFT_MAX_EMU`` per coordinate
+  (0.02 mm; LibreOffice stores positions in 0.01 mm and rounds them on every
+  save) is not listed one by one: the difference ends with one line counting
+  such changes (``office_diff_lines``).
+
+Listings are capped so a packet stays readable; a cap is stated in the
+listing.
+"""
+
+from __future__ import annotations
+
+import argparse
+import difflib
+import hashlib
+import json
+from collections.abc import Mapping, Sequence
+from pathlib import Path
+from typing import Any
+
+MAX_STRUCTURE_LINES = 1500
+MAX_DIFF_LINES = 600
+MAX_VALUE_CHARS = 600
+RENDER_DPI = 100
+RENDER_PAGES = 20
+OFFICE_SUFFIXES = frozenset({".xlsx", ".docx", ".pptx"})
+TEXT_SUFFIXES = frozenset({".txt", ".csv", ".json", ".py", ".md", ".html", ".css", ".js", ".xml"})
+_SKIP_KEYS = frozenset({"snapshot_version", "family"})
+# Decision D34: LibreOffice keeps shape positions and sizes in 1/100 mm (360
+# EMU) and rounds them when it saves, so two saves of one deck can differ by up
+# to two units per coordinate. Such changes are counted, not listed.
+DRIFT_MAX_EMU = 720
+DRIFT_NOTE = (
+    "({n} shape position or size changes of at most 0.02 mm are not listed: "
+    "LibreOffice rounds positions and sizes to 0.01 mm when it saves)"
+)
+NEW_FILE_HEAD = (
+    "new file; its text compared with the text of the starting files "
+    "(- only in the starting files, + only in this file):"
+)
+
+
+def _cap(lines: list[str], limit: int) -> list[str]:
+    if len(lines) <= limit:
+        return lines
+    return lines[:limit] + [f"... {len(lines) - limit} more lines (listing capped)"]
+
+
+def _value(value: Any) -> str:
+    text = json.dumps(value, ensure_ascii=False, sort_keys=True)
+    if len(text) <= MAX_VALUE_CHARS:
+        return text
+    return text[:MAX_VALUE_CHARS] + f"... ({len(text)} chars)"
+
+
+def flatten(value: Any, location: str = "") -> list[str]:
+    """One ``location = json value`` line per leaf; ``/key`` for keys, ``[i]`` for items.
+
+    Empty containers are leaves (``{}``, ``[]``), so for keys without ``/``
+    or ``[`` the listing determines the snapshot (the tests invert it).
+    """
+    if isinstance(value, Mapping) and value:
+        lines: list[str] = []
+        for key in sorted(value, key=str):
+            if not location and key in _SKIP_KEYS:
+                continue
+            lines += flatten(value[key], f"{location}/{key}")
+        return lines
+    if isinstance(value, list) and value:
+        return [line for i, item in enumerate(value) for line in flatten(item, f"{location}[{i}]")]
+    return [f"{location or '/'} = {json.dumps(value, ensure_ascii=False, sort_keys=True)}"]
+
+
+def office_snapshot(path: Path) -> dict[str, Any]:
+    from harness.q2_mutation.operators._snapshot import snapshot
+
+    return snapshot(path)
+
+
+def structure_lines(path: Path) -> list[str]:
+    """Plain-text listing of one file; unknown types get size and hash."""
+    suffix = path.suffix.lower()
+    try:
+        if suffix in OFFICE_SUFFIXES:
+            return _cap(flatten(office_snapshot(path)), MAX_STRUCTURE_LINES)
+        if suffix in TEXT_SUFFIXES:
+            text = path.read_text(encoding="utf-8", errors="replace")
+            return _cap(text.splitlines(), MAX_STRUCTURE_LINES)
+    except Exception as exc:  # noqa: BLE001 - an unreadable file is shown as such
+        return [f"unreadable {suffix} file: {type(exc).__name__}: {str(exc)[:200]}"]
+    data = path.read_bytes()
+    return [
+        f"binary {suffix or 'file'}: {len(data)} bytes, sha256 {hashlib.sha256(data).hexdigest()}"
+    ]
+
+
+def diff_lines(initial: Sequence[str], candidate: Sequence[str]) -> list[str]:
+    """Unified difference of the candidate listing against the initial listing."""
+    return _cap(
+        list(
+            difflib.unified_diff(
+                list(initial), list(candidate), "initial", "candidate", lineterm="", n=1
+            )
+        ),
+        MAX_DIFF_LINES,
+    )
+
+
+def is_save_drift(change: Any) -> bool:
+    """A shape offset or extent change of at most ``DRIFT_MAX_EMU`` per coordinate."""
+    if change.op != "changed" or change.kind != "layout":
+        return False
+    if change.loc.rsplit("/", 1)[-1] not in ("off", "ext"):
+        return False
+    before, after = change.before, change.after
+    if not (isinstance(before, list) and isinstance(after, list)) or len(before) != len(after):
+        return False
+    if not all(
+        isinstance(v, int) and not isinstance(v, bool) for v in (*before, *after)
+    ):
+        return False
+    return max((abs(a - b) for a, b in zip(before, after, strict=True)), default=0) <= (
+        DRIFT_MAX_EMU
+    )
+
+
+def office_diff_lines(initial: Path, candidate: Path) -> list[str]:
+    """Structural changes from the initial file to the candidate (snapshot model).
+
+    Save drift (``is_save_drift``) is counted in one closing line instead of
+    being listed (decision D34).
+    """
+    from harness.q2_mutation.operators._diff import diff
+
+    before = office_snapshot(initial)
+    after = office_snapshot(candidate)
+    if before == after:
+        return []
+    changes = diff(before, after)
+    drift = [c for c in changes if is_save_drift(c)]
+    lines = [
+        f"{c.op} {c.loc} [{c.kind}]: {_value(c.before)} -> {_value(c.after)}"
+        for c in changes
+        if not is_save_drift(c)
+    ]
+    if not changes:
+        # The snapshots differ but the structural differ reported nothing:
+        # show the listings' difference so the change is never hidden.
+        lines = diff_lines(flatten(before), flatten(after))
+    lines = _cap(lines, MAX_DIFF_LINES)
+    if drift:
+        lines.append(DRIFT_NOTE.format(n=len(drift)))
+    return lines
+
+
+def _cell_order(address: str) -> tuple[int, int, str]:
+    letters = "".join(ch for ch in address if ch.isalpha())
+    digits = "".join(ch for ch in address if ch.isdigit())
+    column = 0
+    for ch in letters.upper():
+        column = column * 26 + (ord(ch) - 64)
+    return (int(digits) if digits else 0, column, address)
+
+
+def _docx_block_text(block: Mapping[str, Any]) -> list[str]:
+    if block.get("type") == "p":
+        return [str(block.get("text", ""))]
+    lines: list[str] = []
+    for row in block.get("rows") or []:
+        for cell in row:
+            for inner in cell:
+                lines += _docx_block_text(inner)
+    return lines
+
+
+def _pptx_shape_text(shape: Mapping[str, Any]) -> list[str]:
+    lines = str(shape.get("text", "")).split("\n") if shape.get("text") else []
+    for row in (shape.get("table") or {}).get("rows") or []:
+        for cell in row:
+            lines += str(cell.get("text", "")).split("\n")
+    for child in shape.get("children") or []:
+        lines += _pptx_shape_text(child)
+    return lines
+
+
+def text_lines(path: Path) -> list[str]:
+    """The visible text of one file, one non-empty line per paragraph, cell or line.
+
+    docx: body paragraphs and table cells in order, then headers, footers and
+    notes; pptx: each slide's shapes (groups and tables included) in stacking
+    order, then its notes; xlsx: each sheet's cell values row by row; text and
+    configuration files: their lines. Other files have no text.
+    """
+    suffix = path.suffix.lower()
+    lines: list[str] = []
+    if suffix in OFFICE_SUFFIXES:
+        snap = office_snapshot(path)
+        if suffix == ".docx":
+            for block in snap.get("body") or []:
+                lines += _docx_block_text(block)
+            for part in (*(snap.get("headers") or []), *(snap.get("footers") or [])):
+                lines += [str(t) for t in part]
+            lines += [str(t) for t in snap.get("notes") or []]
+        elif suffix == ".pptx":
+            for slide in snap.get("slides") or []:
+                for shape in slide.get("shapes") or []:
+                    lines += _pptx_shape_text(shape)
+                lines += str(slide.get("notes") or "").split("\n")
+        else:
+            for _name, sheet in (snap.get("sheets") or {}).items():
+                rows: dict[int, list[str]] = {}
+                for address in sorted(sheet.get("cells") or {}, key=_cell_order):
+                    value = (sheet["cells"][address] or {}).get("v")
+                    if value is None:
+                        continue
+                    shown = value[1] if isinstance(value, list) and len(value) == 2 else value
+                    rows.setdefault(_cell_order(address)[0], []).append(str(shown))
+                lines += [" | ".join(cells) for _, cells in sorted(rows.items())]
+    elif suffix in TEXT_SUFFIXES:
+        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    return [line.strip() for line in lines if line.strip()]
+
+
+def new_file_text_diff(starting: Sequence[Path], candidate: Path) -> list[str]:
+    """Text-level difference of a new end-state file against the starting files' text.
+
+    Only an office, text or configuration file has text to compare; any other
+    new file (an image, a PDF, a binary) stays ``new file``.
+    """
+    if candidate.suffix.lower() not in OFFICE_SUFFIXES | TEXT_SUFFIXES:
+        return ["new file"]
+    before: list[str] = []
+    try:
+        for path in starting:
+            before += text_lines(path)
+        after = text_lines(candidate)
+    except Exception as exc:  # noqa: BLE001 - an unreadable file is shown as such
+        return ["new file", f"(text comparison unavailable: {type(exc).__name__})"]
+    if not before and not after:
+        return ["new file", "(no text to compare in the starting files or in this file)"]
+    lines = list(
+        difflib.unified_diff(
+            before, after, "starting files (text)", "this file (text)", lineterm="", n=1
+        )
+    )
+    if not lines:
+        lines = ["(the text of this file equals the text of the starting files)"]
+    return [NEW_FILE_HEAD, *_cap(lines, MAX_DIFF_LINES)]
+
+
+def _difference(initial: Path, candidate: Path, lines: list[str]) -> list[str]:
+    same_family = initial.suffix.lower() == candidate.suffix.lower()
+    if candidate.suffix.lower() in OFFICE_SUFFIXES and same_family:
+        try:
+            return office_diff_lines(initial, candidate)
+        except Exception as exc:  # noqa: BLE001 - shown, and the listings are compared
+            return [f"structural difference unavailable: {type(exc).__name__}"] + diff_lines(
+                structure_lines(initial), lines
+            )
+    return diff_lines(structure_lines(initial), lines)
+
+
+def change_count(before: Path, after: Path) -> int:
+    """Number of changes from ``before`` to ``after`` (uncapped; listing lines otherwise)."""
+    same_family = before.suffix.lower() == after.suffix.lower()
+    if after.suffix.lower() in OFFICE_SUFFIXES and same_family:
+        from harness.q2_mutation.operators._diff import diff
+
+        try:
+            first, second = office_snapshot(before), office_snapshot(after)
+            if first == second:
+                return 0
+            return max(1, len(diff(first, second)))
+        except Exception:  # noqa: BLE001 - fall back to the listings
+            pass
+    return sum(
+        1
+        for line in difflib.unified_diff(
+            structure_lines(before), structure_lines(after), lineterm="", n=0
+        )
+        if line[:1] in "+-" and not line.startswith(("+++", "---"))
+    )
+
+
+def artifacts(
+    initial: Mapping[str, str],
+    candidate: Mapping[str, str | None],
+    baseline: Mapping[str, str | None] | None = None,
+) -> dict[str, dict[str, Any]]:
+    """Per VM path: candidate structure and its difference against the starting file.
+
+    ``baseline`` maps a VM path to the saved starting file (the starting file
+    put through the same LibreOffice save steps as the candidate). Where it
+    names the path, the difference is against it and ``save_only_changes``
+    counts the changes the save alone made to the raw starting file;
+    elsewhere the difference is against the raw starting file. A path with no
+    starting file is a new file: its difference is the text-level one against
+    the starting files (saved where ``baseline`` names them).
+    """
+    out: dict[str, dict[str, Any]] = {}
+    starting = [
+        Path((baseline or {}).get(vm) or initial[vm]) for vm in sorted(initial) if initial[vm]
+    ]
+    for vm_path in sorted(candidate):
+        local = candidate[vm_path]
+        if local is None:
+            out[vm_path] = {"structure": ["file absent in the end state"], "diff_vs_initial": []}
+            continue
+        lines = structure_lines(Path(local))
+        saved = (baseline or {}).get(vm_path) if vm_path in initial else None
+        entry: dict[str, Any] = {"structure": lines}
+        if vm_path not in initial:
+            # Decision D34: a new file is compared with the starting files' text.
+            entry["diff_vs_initial"] = new_file_text_diff(starting, Path(local))
+            entry["baseline"] = "none"
+        elif saved:
+            entry["diff_vs_initial"] = _difference(Path(saved), Path(local), lines)
+            entry["baseline"] = "saved"
+            entry["save_only_changes"] = change_count(Path(initial[vm_path]), Path(saved))
+        else:
+            entry["diff_vs_initial"] = _difference(Path(initial[vm_path]), Path(local), lines)
+            entry["baseline"] = "raw"
+        out[vm_path] = entry
+    return out
+
+
+def render_command(document: str, outdir: str, profile_home: str) -> list[list[str]]:
+    """Commands (LO-VM image) that render a document to PNG pages."""
+    stem = Path(document).stem
+    return [
+        [
+            "env",
+            f"HOME={profile_home}",
+            "soffice",
+            "--headless",
+            "--convert-to",
+            "pdf",
+            "--outdir",
+            outdir,
+            document,
+        ],
+        [
+            "pdftoppm",
+            "-r",
+            str(RENDER_DPI),
+            "-l",
+            str(RENDER_PAGES),
+            "-png",
+            f"{outdir}/{stem}.pdf",
+            f"{outdir}/{stem}",
+        ],
+    ]
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--items", type=Path, required=True, help="JSONL: item_id, initial, candidate"
+    )
+    parser.add_argument("--out", type=Path, required=True)
+    args = parser.parse_args(argv)
+    rows = []
+    for line in args.items.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        item = json.loads(line)
+        rows.append(
+            {"item_id": item["item_id"], "candidate": artifacts(item["initial"], item["candidate"])}
+        )
+    args.out.write_text(
+        "".join(json.dumps(r, sort_keys=True) + "\n" for r in rows), encoding="utf-8"
+    )
+    print(json.dumps({"items": len(rows)}))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

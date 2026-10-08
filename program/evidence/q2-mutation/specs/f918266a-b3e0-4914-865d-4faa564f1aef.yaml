@@ -1,0 +1,13 @@
+task_id: f918266a-b3e0-4914-865d-4faa564f1aef
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The TODO in calculator.py (extracted from calculator.zip on the Desktop) is completed so the insertion sort works.
+    check_kind: other
+    observable: The while-loop body assigns arr[j+1] = arr[j]; importing/running the function sorts arbitrary lists ascending.
+  - req_id: R2
+    statement: The script's output is saved as log.txt in the same directory as calculator.py.
+    check_kind: file_exists
+    observable: log.txt next to calculator.py (expected /home/user/Desktop/log.txt) contains "5\n6\n11\n12\n13" (trailing newline tolerated).
+allowed_variations:
+  - '[AMBIGUOUS] Directory depends on where the zip was extracted; the zip has calculator.py at its root.'

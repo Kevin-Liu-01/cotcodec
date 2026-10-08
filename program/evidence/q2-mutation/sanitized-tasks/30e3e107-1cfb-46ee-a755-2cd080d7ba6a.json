@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/DemographicProfile.xlsx",
+      "sha256": "63b02a319f350d65643fe4923ea63f9b50eae7dedd2073a92b4e56e0315107d5",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/30e3e107-1cfb-46ee-a755-2cd080d7ba6a/DemographicProfile.xlsx"
+    }
+  ],
+  "instruction": "Please create a new sheet. Keep its sheet name as \"Sheet2\". Merge cells A1:C1 in the new sheet and write \"Demographic Profile\" with blue (#0000ff) fill and bold white text. Then I want to create three pivot tables to show the percentage of Sex, Civil Status, and Highest Educational Attainment. They should be stacked one by one in Sheet2, each separated with a blank line.",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "30e3e107-1cfb-46ee-a755-2cd080d7ba6a"
+}

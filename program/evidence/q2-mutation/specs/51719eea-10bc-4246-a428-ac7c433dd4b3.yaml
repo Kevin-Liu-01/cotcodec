@@ -1,0 +1,28 @@
+task_id: 51719eea-10bc-4246-a428-ac7c433dd4b3
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/BoomerangSales.xlsx; Sheet1 A1:F36 and the "Retail Price" sheet are unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 A1:F36 and "Retail Price" A1:B23 equal initial values.
+  - req_id: R1
+    statement: A new revenue column is added to Sheet1 (next free column G) with a header identifying it as revenue.
+    check_kind: cell_value
+    observable: G1 is a non-empty header containing "Revenue" (case-insensitive).
+  - req_id: R2
+    statement: Each row's revenue = retail price of its product (looked up in "Retail Price") x Quantity x (1 - Discount).
+    check_kind: cell_value
+    observable: G2 == 21.95*33*(1-0.165) == 604.8323; G3 == 590.3675; G4 == 73.575; sum of G2:G36 == 12985.1686 (tolerance 0.01).
+  - req_id: R3
+    statement: A new sheet "Sheet2" contains a pivot table that summarizes (sums) revenue per product.
+    check_kind: other
+    observable: A pivotTable located on Sheet2 with row field Product and data field sum of the revenue column.
+  - req_id: R4
+    statement: The pivot totals per product are correct.
+    check_kind: cell_value
+    observable: Aspen 2262.9133, Bellen 173.575, Bower Aussie Round 258, Carlota Doublers 590.25, Crested Beaut 651.585, Fire Aspen 1344.75, Fun Fly 508.215, GelFast 24, Manu LD 1000, Manu MTA 117.72, Quad 3233.7128, Sunset 1105, Sunshine 565.08, Sunspot 560, Yanaki 590.3675 (tolerance 0.01).
+allowed_variations:
+  - Exact revenue header text (e.g. "Revenue") is not given by the instruction.
+  - Lookup may be VLOOKUP/INDEX-MATCH formulas or constants.
+  - '[AMBIGUOUS] Discount is a fraction column; reading it as an absolute amount (price*qty - discount) is a different interpretation and yields different numbers.'
+  - Pivot placement, grand totals and number format are not constrained.

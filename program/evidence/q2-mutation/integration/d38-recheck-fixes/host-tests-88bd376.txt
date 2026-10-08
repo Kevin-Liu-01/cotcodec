@@ -1,0 +1,19 @@
+host full suite at 88bd376eddea452d1e24d2c049c1f4d8c9f51a4e (the merge of main a9948ee; worktree rsynced to a fresh ~/cotcodec-scratch/q2m-recheck-88bd376-20261008073813, .venv, .git and caches excluded; uv sync --locked --extra dev, exit 0)
+$ uv run ruff check .
+All checks passed!
+$ uv run python -m pytest -q tests
+FAILED tests/test_q2_acceptance_admission.py::test_the_repository_ledger_refuses_every_acceptance_campaign_before_the_freeze
+1 failed, 2181 passed, 37 skipped in 244.64s (0:04:04)
+
+The one failure is main's own: at a9948ee main froze q2-action-path-v1, -inputs
+and -executor, and this action-path test still asserts that the ledger has no
+row for them. It fails the same way on a clean archive of main a9948ee. It is
+outside the checker-mutation code and is not changed on this branch.
+
+host full suite at a8ea642e (before the second merge of main; fresh
+~/cotcodec-scratch/q2m-recheck-a8ea642-20261008073139, same exclusions;
+uv sync --locked --extra dev, exit 0)
+$ uv run ruff check .
+All checks passed!
+$ uv run python -m pytest -q tests
+2126 passed, 37 skipped in 237.30s (0:03:57)

@@ -1,0 +1,23 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/bubbleSort.zip",
+      "sha256": "cfa765c126fad17527a41bb3e49e1d7acc656573a33c4b3b213d35ac438e6035",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/20236825-b5df-46e7-89bf-62e1d640a897/bubbleSort.zip"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/Bubble_Sort_tutorial.docx",
+      "sha256": "1d0606484884271ba26990372502cf6c7c5031af0f8631137cc752cbc92f922d",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/20236825-b5df-46e7-89bf-62e1d640a897/Bubble_Sort_tutorial.docx"
+    }
+  ],
+  "instruction": "I am currently working on my algorithm practice using the document \"bubble_Sort_tutorial.docx.\" Please assist me in completing the 'bubbleSort' function within the 'bubbleSort.py' file on the Desktop and save the output as 'res.txt' on the Desktop.",
+  "related_apps": [
+    "vscode",
+    "libreoffice_writer",
+    "os"
+  ],
+  "snapshot": "vscode",
+  "task_id": "20236825-b5df-46e7-89bf-62e1d640a897"
+}

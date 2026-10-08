@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/42_2.pptx",
+      "sha256": "01c26359cd9c6eb7c23dea21b55fb9f1557da8b7d437c1c8ece74bab1e8da1e3",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/e4ef0baf-4b52-4590-a47e-d4d464cca2d7/42_2.pptx"
+    }
+  ],
+  "instruction": "The height of picture should be 20cm on slide 3 while the font size of all textboxes should be 40pt on slide 6.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "e4ef0baf-4b52-4590-a47e-d4d464cca2d7"
+}

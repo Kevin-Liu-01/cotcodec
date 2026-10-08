@@ -1,0 +1,1 @@
+{"attempt": 1, "exclusive": false, "item_key": "reference.L2-59_Matmul_Swish_Scaling|ref_c|seed-42", "killed_at": 1791442338.211, "reason": "hard-deadline", "run_id": "30071b7ce003", "slot": "cuda:0", "started_at": 1791442317.768, "units": 8}

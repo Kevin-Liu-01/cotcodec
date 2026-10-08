@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/109_4.pptx",
+      "sha256": "7fe366f2e8115d3a92b027451dca5f698bd21be7320713faab1551b699075d22",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/73c99fb9-f828-43ce-b87a-01dc07faa224/109_4.pptx"
+    }
+  ],
+  "instruction": "Add \"Page 1\" into the content textbox on Slide 2.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "73c99fb9-f828-43ce-b87a-01dc07faa224"
+}

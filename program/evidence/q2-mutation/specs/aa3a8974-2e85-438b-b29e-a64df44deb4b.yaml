@@ -1,0 +1,23 @@
+task_id: aa3a8974-2e85-438b-b29e-a64df44deb4b
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A PDF with the spreadsheet's base name is saved in the home directory.
+    check_kind: file_exists
+    observable: /home/user/Resize_Cells_Fit_Page.pdf exists and is a valid PDF.
+  - req_id: R2
+    statement: The exported PDF fits the sheet content onto exactly one page.
+    check_kind: other
+    observable: The PDF has exactly 1 page.
+  - req_id: R3
+    statement: The single page contains the whole used range (both day blocks B1:D23 and F1:H23), not a truncated part.
+    check_kind: other
+    observable: pdftotext of the page contains "6/21/2023", "6/22/2023", "Benedict Cucum" (twice), "Swan Ronson" (twice) and the "Clock-out" headers.
+  - req_id: R4
+    statement: (implicit) Cell contents are not altered to achieve the fit.
+    check_kind: cell_value
+    observable: If the xlsx is re-saved, its B1:H23 values equal the initial values.
+allowed_variations:
+  - '[AMBIGUOUS] "resize cells to fit onto one page" may be achieved by the page-style "fit to 1 page" scaling option, by reducing column widths/row heights, or by orientation change; only the one-page PDF result is unambiguous.'
+  - Whether the modified xlsx itself is saved is not stated.
+  - Page orientation, margins and headers/footers in the PDF.

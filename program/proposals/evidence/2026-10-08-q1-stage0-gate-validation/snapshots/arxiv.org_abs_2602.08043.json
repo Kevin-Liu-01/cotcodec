@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2602.08043",
+ "fetched_at": "2026-10-08T07:30:36Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44264,
+ "raw_sha256": "aaf17d78ddd1cf9d4dfb6b2b33a55aaa75a61f1890d5f53a4c591cdf283c31b8",
+ "raw_stored": false,
+ "extract": {
+  "title": "V-ABFT: Variance-Based Adaptive Threshold for Fault-Tolerant Matrix Multiplication in Mixed-Precision Deep Learning",
+  "authors": [
+   "Gao, Yiheng",
+   "Hua, Qin",
+   "Chen, Zizhong"
+  ],
+  "citation_date": "2026/02/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 8 Feb 2026 16:21:02 UTC"
+   }
+  ],
+  "abstract": "Algorithm-Based Fault Tolerance (ABFT) is widely adopted to detect silent data corruptions (SDCs) in matrix multiplication, a cornerstone operation in deep learning systems. However, existing threshold determination methods face critical challenges: analytical bounds are overly conservative, while probabilistic approaches like A-ABFT yield thresholds $160$--$4200\\times$ larger than actual rounding errors. We present V-ABFT, a variance-based adaptive threshold algorithm that achieves tighter error bounds by directly modeling the verification difference. By leveraging statistical variance estimation, V-ABFT reduces the threshold-to-actual-error ratio to approximately $7$--$20\\times$ for FP32/FP64 and $48$--$158\\times$ for BF16, representing a \\textbf{6--48$\\times$ improvement} over A-ABFT while maintaining zero false positive rate across BF16, FP16, FP32, and FP64 precisions. Furthermore, we demonstrate that for fused-kernel ABFT implementations that verify before output quantization, low-precision GEMM can use FP32-level thresholds ($e_{\\max} \\approx 10^{-6}$), enabling \\textbf{$\\sim$1000$\\times$ finer detection granularity} compared to offline verification with low-precision output ($e_{\\max} \\approx 10^{-3}$). We reproduce A-ABFT's experimental setup and validate our implementation against the original paper's results. Our method requires only $O(n)$ complexity using max/min/mean statistics, compared to A-ABFT's $O(pn)$ for finding $p$ largest values. Extensive experiments on synthetic data and real model weights (LLaMA-7B, GPT-2, ViT) demonstrate V-ABFT's effectiveness across diverse distributions. V-ABFT is platform-agnostic and has been integrated into fault-tolerant GEMM implementations on both NPUs and GPUs.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

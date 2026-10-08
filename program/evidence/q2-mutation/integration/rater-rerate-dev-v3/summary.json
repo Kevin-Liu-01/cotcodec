@@ -1,0 +1,174 @@
+{
+ "answers": {
+  "accept": 116,
+  "reject": 17
+ },
+ "answers_by_label_class": {
+  "p1_flip": {
+   "accept": 1
+  },
+  "sham_do_nothing": {
+   "reject": 6
+  },
+  "sham_gold": {
+   "accept": 6
+  },
+  "should_fail_extra_change": {
+   "accept": 5,
+   "reject": 1
+  },
+  "should_fail_violation": {
+   "accept": 19,
+   "reject": 7
+  },
+  "should_pass_alt_solution": {
+   "accept": 28
+  },
+  "should_pass_equiv": {
+   "accept": 57,
+   "reject": 3
+  }
+ },
+ "answers_by_operator": {
+  "docx.alt.char_style_for_direct": {
+   "accept": 3
+  },
+  "docx.alt.highlight_as_shading": {
+   "accept": 3
+  },
+  "docx.alt.para_direct_for_style": {
+   "accept": 1
+  },
+  "docx.eq.view_zoom": {
+   "accept": 12
+  },
+  "docx.viol.delete_bound_paragraph": {
+   "accept": 6,
+   "reject": 2
+  },
+  "docx.viol.drop_char_format": {
+   "accept": 3
+  },
+  "docx.viol.text_edit": {
+   "accept": 6,
+   "reject": 3
+  },
+  "pptx.eq.subvisible_nudge": {
+   "accept": 11,
+   "reject": 1
+  },
+  "pptx.eq.zorder_nonoverlap": {
+   "accept": 7,
+   "reject": 2
+  },
+  "pptx.extra.add_textbox": {
+   "accept": 2,
+   "reject": 1
+  },
+  "pptx.viol.delete_bound_shape": {
+   "accept": 4,
+   "reject": 2
+  },
+  "xlsx.alt.absolute_refs": {
+   "accept": 6
+  },
+  "xlsx.alt.literal_for_formula": {
+   "accept": 6
+  },
+  "xlsx.alt.named_style_for_direct": {
+   "accept": 6
+  },
+  "xlsx.alt.plus_chain_to_sum": {
+   "accept": 3
+  },
+  "xlsx.eq.active_sheet": {
+   "accept": 1
+  },
+  "xlsx.eq.view_selection": {
+   "accept": 18
+  },
+  "xlsx.eq.view_zoom": {
+   "accept": 8
+  },
+  "xlsx.extra.edit_unrelated_value": {
+   "accept": 3
+  }
+ },
+ "contradicts_label_by_class": {
+  "should_fail_extra_change": 5,
+  "should_fail_violation": 19,
+  "should_pass_equiv": 3
+ },
+ "if_anthropic_agreed_with_every_label": {
+  "k3_fires": {
+   "should_fail_violation": true,
+   "should_pass_equiv": true
+  },
+  "k3_items": {
+   "should_fail_violation": [
+    26,
+    26.0
+   ],
+   "should_pass_equiv": [
+    60,
+    60.0
+   ]
+  },
+  "k4_fires": false,
+  "kappa": 0.27383863080684606,
+  "kappa_fires": true,
+  "label_error_unresolved_as_wrong": {
+   "should_fail_violation": 0.7307692307692307,
+   "should_pass_equiv": 0.05
+  }
+ },
+ "items": 133,
+ "kappa_9b_vs_earlier_claude_same_items": {
+  "items": 73,
+  "kappa": 0.5430359937402192,
+  "raw_agreement": 0.7808219178082192
+ },
+ "kappa_vs_earlier_claude_answers_matched_real_items": {
+  "items": 109,
+  "kappa": 0.3375690607734805,
+  "note": "the Claude answers were given by one agent over all items (not blind, D27)",
+  "raw_agreement": 0.7981651376146789
+ },
+ "matched_with_smoke_v2": {
+  "items": 121,
+  "real_items": 109
+ },
+ "outcomes": {
+  "ok": 133
+ },
+ "qwen35_9b_vs_qwen36_35b_on_matched_real_items": {
+  "items": 73,
+  "kappa": 0.2596348884381338,
+  "raw_agreement": 0.6575342465753424
+ },
+ "rated": 133,
+ "real_items": 121,
+ "sham_accuracy": {
+  "correct": 12,
+  "shams": 12
+ },
+ "split_share_if_anthropic_agreed_with_every_label": 0.2231404958677686,
+ "statuses": {
+  "ok": 133
+ },
+ "throughput": {
+  "completion_cut_at_max_tokens": 0,
+  "engine_ready_s": [
+   133.5
+  ],
+  "items_per_minute": 37.90973871733967,
+  "prompt_tokens_max": 110505,
+  "prompt_tokens_median": 46294,
+  "prompt_tokens_per_second": 35605.7054631829,
+  "prompt_tokens_total": 7495001,
+  "rating_seconds": 210.5,
+  "seconds_per_call_median": 10.45
+ },
+ "unrated": 0,
+ "unsure_by_class": {}
+}

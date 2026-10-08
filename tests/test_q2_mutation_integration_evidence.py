@@ -1,0 +1,415 @@
+"""Committed end-to-end evidence of the mutation campaign on the development split.
+
+Each ``program/evidence/q2-mutation/integration/dev-mutants-v*`` directory is
+the ``campaign export`` of one host run (spec -> operator -> mutant -> GUI-
+faithful save -> checker verdict -> verdict row). These tests check that the
+committed files are what the export wrote, touch only development-split tasks,
+carry no document text, and agree with each other.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+from collections import Counter
+from pathlib import Path
+
+import pytest
+
+from harness.q2_mutation import campaign
+from harness.q2_mutation.schema import read_verdict_rows
+
+ROOT = Path(__file__).resolve().parents[1]
+INTEGRATION = ROOT / "program" / "evidence" / "q2-mutation" / "integration"
+RUNS = sorted(p for p in INTEGRATION.glob("dev-mutants-v*") if p.is_dir())
+DEV = set(json.loads((ROOT / campaign.SPLITS_PATH).read_text(encoding="utf-8"))["dev"])
+
+
+def _jsonl(path: Path) -> list[dict]:
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+
+
+def test_there_is_committed_end_to_end_evidence() -> None:
+    assert RUNS, "no dev-split campaign export is committed"
+
+
+@pytest.mark.parametrize("run", RUNS, ids=lambda p: p.name)
+def test_export_is_intact_dev_only_and_consistent(run: Path) -> None:
+    manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["split"] == "dev" and manifest["confirmatory"] is False
+    assert manifest["experiment_id"] == campaign.EXPERIMENT_ID
+    for name, digest in manifest["exported_sha256"].items():
+        assert hashlib.sha256((run / name).read_bytes()).hexdigest() == digest, name
+    assert all(p.is_file() for p in run.iterdir()), "an export holds no mutant files"
+
+    released = _jsonl(run / "mutations.release.jsonl")
+    outcomes = _jsonl(run / "outcomes.jsonl")
+    report = json.loads((run / "report.json").read_text(encoding="utf-8"))
+    assert {r["task_id"] for r in released} <= DEV
+    assert [r["mutant_id"] for r in released] == [o["mutant_id"] for o in outcomes]
+    for row in released:
+        assert row["mutant_id"] == (
+            f"{row['task_id']}__{row['operator']}__{row['recipe_sha256'][:12]}"
+        )
+        assert not campaign.free_text_leaves(row["recipe_release"]), row["mutant_id"]
+        assert all(set(check) == {"name", "passed"} for check in row["purity_checks"])
+
+    for arm in ("lock", "scout"):
+        path = run / f"verdicts-{arm}.jsonl"
+        if not path.is_file():
+            continue
+        rows = read_verdict_rows(path.read_text(encoding="utf-8").splitlines())
+        assert {r.task_id for r in rows} <= DEV
+        assert all(r.extras.get("dep_set") == arm for r in rows)
+        scored = {r.mutant_id: r for r in rows}
+        for outcome in outcomes:
+            verdict = scored.get(outcome["mutant_id"])
+            assert outcome[f"{arm}_verdict"] == (verdict.verdict if verdict else None)
+            if outcome[f"{arm}_status"] == "evaluable":
+                assert verdict is not None and verdict.saved_via in {
+                    "gui_faithful_lo_save",
+                    "none",
+                }
+        assert dict(Counter(o[f"{arm}_status"] for o in outcomes)) == report["status"][arm]
+    assert report["planned"] == len(released)
+    assert report["admitted"] == sum(1 for o in outcomes if o["admitted"])
+
+
+@pytest.mark.parametrize("run", RUNS, ids=lambda p: p.name)
+def test_no_evaluable_office_mutant_was_scored_unsaved(run: Path) -> None:
+    """Every evaluable office mutant's verdict row says the GUI-faithful save ran."""
+    released = {r["mutant_id"]: r for r in _jsonl(run / "mutations.release.jsonl")}
+    path = run / "verdicts-lock.jsonl"
+    rows = {r.mutant_id: r for r in read_verdict_rows(path.read_text().splitlines())}
+    for outcome in _jsonl(run / "outcomes.jsonl"):
+        if outcome["lock_status"] != "evaluable":
+            continue
+        if released[outcome["mutant_id"]]["family"] in {"xlsx", "docx", "pptx"}:
+            assert rows[outcome["mutant_id"]].saved_via == "gui_faithful_lo_save"
+
+
+def test_reviewed_run_names_what_each_recipe_was_applied_to() -> None:
+    """From dev-mutants-v4 on, release rows carry the applier input (section 16)."""
+    run = INTEGRATION / "dev-mutants-v4"
+    manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
+    rows = _jsonl(run / "mutations.release.jsonl")
+    assert {r["applied_to"] for r in rows} == {manifest["apply_to"]} == {"gold"}
+    targets = {t["target_id"]: t for t in _jsonl(run / "targets-built.jsonl")}
+    for row in rows:
+        assert len(row["applied_input_sha256"]) == 64
+        if row["family"] != "text":
+            # Office recipes were planned on the base but applied to the gold.
+            assert row["applied_input_sha256"] != row["recipe_release"]["input_sha256"]
+    assert all(t["status"] == "planned" for t in targets.values())
+
+
+SMOKES = sorted(p for p in INTEGRATION.glob("rater-smoke-dev-v*") if p.is_dir())
+
+
+@pytest.mark.parametrize("smoke", SMOKES, ids=lambda p: p.name)
+def test_rater_smoke_evidence_is_intact_dev_only_and_blind(smoke: Path) -> None:
+    """Every file is in SHA256SUMS; the sample is dev-only; no reply text or packet bytes."""
+    sums = {}
+    for line in (smoke / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        sums[name.removeprefix("./")] = digest
+    files = {
+        str(p.relative_to(smoke))
+        for p in smoke.rglob("*")
+        if p.is_file() and p.name != "SHA256SUMS"
+    }
+    assert set(sums) == files
+    for name, digest in sums.items():
+        assert hashlib.sha256((smoke / name).read_bytes()).hexdigest() == digest, name
+    sample = _jsonl(smoke / "audit" / "sample.jsonl")
+    assert sample and {row["task_id"] for row in sample} <= DEV
+    calls = _jsonl(smoke / "open-weight" / "calls.jsonl")
+    items = {row["item_id"] for row in sample}
+    assert calls and {c["item_id"] for c in calls} <= items
+    for call in calls:
+        assert "text" not in call and "content" not in json.dumps(call)
+    for path in smoke.rglob("*.json*"):
+        assert "data_b64" not in path.read_text(encoding="utf-8"), path
+
+
+def test_harness_export_manifest_holds_digests_only() -> None:
+    manifest = json.loads(
+        (
+            INTEGRATION / "rater-smoke-dev-v2" / "harness-export" / "dev-export-manifest.json"
+        ).read_text(encoding="utf-8")
+    )
+    sample = _jsonl(INTEGRATION / "rater-smoke-dev-v2" / "audit" / "sample.jsonl")
+    assert sorted(manifest["order"]) == sorted(row["item_id"] for row in sample)
+    text = json.dumps(manifest)
+    for word in ("should_", "verdict", "label", "operator", "mutant"):
+        assert word not in text
+
+
+RERATE = INTEGRATION / "rater-rerate-dev-v3"
+
+
+def test_d27_rerate_evidence_is_intact_and_holds_no_item_label_or_answer() -> None:
+    """The D27 rerate commits aggregates only until the isolated Claude ingest."""
+    sums = {}
+    for line in (RERATE / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        sums[name.removeprefix("./")] = digest
+    files = {
+        str(p.relative_to(RERATE))
+        for p in RERATE.rglob("*")
+        if p.is_file() and p.name != "SHA256SUMS"
+    }
+    assert set(sums) == files
+    for name, digest in sums.items():
+        assert hashlib.sha256((RERATE / name).read_bytes()).hexdigest() == digest, name
+    # No per-item record: no sample, call file or mutant id is committed yet.
+    assert not list(RERATE.rglob("sample.jsonl")) and not list(RERATE.rglob("calls.jsonl"))
+    manifest = json.loads((RERATE / "isolated-export" / "iso-manifest.json").read_text())
+    items = set(manifest["items"])
+    assert len(items) == 133 and sorted(manifest["order"]) == sorted(items)
+    for path in RERATE.rglob("*"):
+        if not path.is_file() or path.suffix not in {".json", ".jsonl", ".txt", ".md", ".yaml"}:
+            continue
+        text = path.read_text(encoding="utf-8")
+        assert "data_b64" not in text, path
+        assert not re.search(r"__[a-z]+\.(eq|alt|viol|extra)\.[a-z_]+__[0-9a-f]{12}", text), path
+        if "isolated-export" not in str(path) and path.name != "SHA256SUMS":
+            assert not any(item in text for item in items), path
+    text = json.dumps(manifest)
+    for word in ("should_", "verdict", "label", "operator", "mutant", "sham"):
+        assert word not in text
+    receipt = json.loads((RERATE / "open-weight" / "receipt.json").read_text())
+    summary = json.loads((RERATE / "summary.json").read_text())
+    assert receipt["model"]["model_id"] == "qwen3.6-35b-a3b"
+    assert receipt["result"]["unrated"] == [] and receipt["result"]["rated_now"] == 133
+    assert summary["rated"] == 133 and summary["sham_accuracy"] == {"correct": 12, "shams": 12}
+    termination = (RERATE / "open-weight" / "lane" / "termination.env").read_text()
+    assert "reason=completed" in termination and "exit_code=0" in termination
+    ledger = [
+        json.loads(line)
+        for line in (RERATE / "manifests" / "gpu-ledger.jsonl").read_text().splitlines()
+    ]
+    assert sum(row["max_gpu_hours"] for row in ledger if row["audit_id"] == "dev-rerate-v3") <= 0.5
+
+
+ISOLATED = INTEGRATION / "rater-isolated-dev-v3"
+
+
+def test_isolated_claude_ingest_evidence_is_intact_and_carries_no_document_text() -> None:
+    """Released held files match their committed digests; answers carry digests, not text."""
+    sums = {}
+    for line in (ISOLATED / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        sums[name.removeprefix("./")] = digest
+    files = {
+        str(p.relative_to(ISOLATED))
+        for p in ISOLATED.rglob("*")
+        if p.is_file() and p.name != "SHA256SUMS"
+    }
+    assert set(sums) == files
+    for name, digest in sums.items():
+        assert hashlib.sha256((ISOLATED / name).read_bytes()).hexdigest() == digest, name
+    # The held files are exactly the ones whose digests were committed before the ingest.
+    held = {}
+    for line in (RERATE / "held" / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        held[name.removeprefix("./")] = digest
+    released = {
+        "dev-audit-smoke-v3/sample.jsonl": ISOLATED / "audit" / "sample.jsonl",
+        "dev-audit-smoke-v3/spot-check.jsonl": ISOLATED / "audit" / "spot-check.jsonl",
+        "dev-audit-smoke-v3/items.jsonl": ISOLATED / "audit" / "items.jsonl",
+        "dev-audit-smoke-v3/baseline-jobs.jsonl": ISOLATED / "audit" / "baseline-jobs.jsonl",
+        "open-weight/calls.jsonl": ISOLATED / "open-weight" / "calls.jsonl",
+    }
+    for name in held:
+        if name.startswith("dev-mutants-v8/"):
+            released[name] = INTEGRATION / name
+    assert set(released) == set(held)
+    for name, path in released.items():
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == held[name], name
+
+    manifest = json.loads((RERATE / "isolated-export" / "iso-manifest.json").read_text())
+    sample = _jsonl(ISOLATED / "audit" / "sample.jsonl")
+    assert {row["task_id"] for row in sample} <= DEV
+    assert {row["item_id"] for row in sample} == set(manifest["items"])
+    claude = _jsonl(ISOLATED / "claude-isolated" / "calls.jsonl")
+    audit = json.loads((ISOLATED / "claude-isolated" / "transcript-audit.json").read_text())
+    receipt = json.loads((ISOLATED / "claude-isolated" / "receipt.json").read_text())
+    manifest_bytes = (RERATE / "isolated-export" / "iso-manifest.json").read_bytes()
+    assert receipt["manifest_sha256"] == hashlib.sha256(manifest_bytes).hexdigest()
+    assert receipt["calls_sha256"] == sums["claude-isolated/calls.jsonl"]
+    assert {c["item_id"] for c in claude} == set(manifest["items"])
+    by_item = {r["item_id"]: r for r in audit["raters"]}
+    assert len(by_item) == len(audit["raters"]) == 133
+    for call in claude:
+        extra = call["extra"]
+        assert "reason" not in call and "text" not in call
+        assert extra["transcript_sha256"] == by_item[call["item_id"]]["transcript_sha256"]
+        assert extra["tree_sha256"] == extra["tree_rehashed_sha256"]
+        assert call["answer"] == by_item[call["item_id"]]["answer"] or call["outcome"] != "ok"
+    for row in audit["raters"]:
+        assert set(row["tool_counts"]) <= {"Read", "StructuredOutput"} or row["strict_void"]
+        assert row["reads_outside_item_dir"] == 0 or row["strict_void"]
+    for path in ISOLATED.rglob("*"):
+        if path.is_file() and path.suffix in {".json", ".jsonl", ".txt", ".md"}:
+            text = path.read_text(encoding="utf-8")
+            assert "data_b64" not in text and '"reason":' not in text, path
+    summary = json.loads((ISOLATED / "summary.json").read_text())
+    registered = json.loads((ISOLATED / "audit-summary" / "audit-summary.json").read_text())
+    assert summary["registered"]["kappa"] == registered["kappa"]
+    assert summary["registered"]["kappa_fires"] == (registered["kappa"] < 0.6)
+
+
+RERATE_V4 = INTEGRATION / "rater-rerate-dev-v4"
+
+
+def test_d34_rerate_evidence_is_intact_and_holds_no_item_label_or_answer() -> None:
+    """The D34 rerate commits aggregates, the salt's digest and the export manifest only."""
+    from harness.q2_mutation import rater_runner
+
+    sums = {}
+    for line in (RERATE_V4 / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        sums[name.removeprefix("./")] = digest
+    files = {
+        str(p.relative_to(RERATE_V4))
+        for p in RERATE_V4.rglob("*")
+        if p.is_file() and p.name != "SHA256SUMS"
+    }
+    assert set(sums) == files
+    for name, digest in sums.items():
+        assert hashlib.sha256((RERATE_V4 / name).read_bytes()).hexdigest() == digest, name
+    assert not list(RERATE_V4.rglob("sample.jsonl")) and not list(RERATE_V4.rglob("calls.jsonl"))
+    manifest = json.loads((RERATE_V4 / "isolated-export" / "iso-manifest.json").read_text())
+    items = set(manifest["items"])
+    assert len(items) == 142 and sorted(manifest["order"]) == sorted(items)
+    assert manifest["prompt_template_sha256"] == rater_runner.ISOLATED_PROMPT_TEMPLATE_SHA256
+    for item, entry in manifest["items"].items():
+        rendered = rater_runner.render_isolated_prompt(f"{manifest['iso_root']}/{item}", item)
+        assert entry["prompt_sha256"] == hashlib.sha256(rendered.encode()).hexdigest()
+    for path in RERATE_V4.rglob("*"):
+        if not path.is_file() or path.suffix not in {".json", ".jsonl", ".txt", ".md", ".yaml"}:
+            continue
+        text = path.read_text(encoding="utf-8")
+        assert "data_b64" not in text, path
+        assert not re.search(r"__[a-z]+\.(eq|alt|viol|extra)\.[a-z_]+__[0-9a-f]{12}", text), path
+        if "isolated-export" not in str(path) and path.name != "SHA256SUMS":
+            assert not any(item in text for item in items), path
+    text = json.dumps(manifest)
+    for word in ("should_", "verdict", "label", "operator", "mutant", "sham"):
+        assert word not in text
+    sample_summary = json.loads((RERATE_V4 / "audit" / "sample-summary.json").read_text())
+    assert re.fullmatch(r"[0-9a-f]{64}", sample_summary["salt_sha256"])
+    assert sample_summary["shams"] == {"gold": 15, "do_nothing": 6}
+    receipt = json.loads((RERATE_V4 / "open-weight" / "receipt.json").read_text())
+    assert receipt["params"]["enable_thinking"] is True and receipt["params"]["max_tokens"] == 8192
+    assert receipt["result"]["unrated"] == [] and receipt["result"]["rated_now"] == 142
+    summary = json.loads((RERATE_V4 / "summary.json").read_text())
+    assert summary["rated"] == 142 and summary["unrated"] == 0
+    termination = (RERATE_V4 / "open-weight" / "lane" / "termination.env").read_text()
+    assert "reason=completed" in termination and "exit_code=0" in termination
+    ledger = [
+        json.loads(line)
+        for line in (RERATE_V4 / "manifests" / "gpu-ledger.jsonl").read_text().splitlines()
+    ]
+    assert sum(row["max_gpu_hours"] for row in ledger if row["audit_id"] == "dev-rerate-v4") <= 0.5
+    held = (RERATE_V4 / "held" / "SHA256SUMS").read_text(encoding="utf-8")
+    for name in ("dev-audit-v4/sample.jsonl", "open-weight/calls.jsonl"):
+        assert name in held
+
+
+ISOLATED_V4 = INTEGRATION / "rater-isolated-dev-v4"
+
+
+def test_d34_isolated_ingest_evidence_is_intact_salted_and_carries_no_document_text() -> None:
+    """Held files match their pre-ingest digests, the salt matches its committed hash, and
+    the registered and relay-excepted ingests agree with the strict transcript audit."""
+    from harness.q2_mutation import rater_runner, raters
+
+    sums = {}
+    for line in (ISOLATED_V4 / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        sums[name.removeprefix("./")] = digest
+    files = {
+        str(p.relative_to(ISOLATED_V4))
+        for p in ISOLATED_V4.rglob("*")
+        if p.is_file() and p.name != "SHA256SUMS"
+    }
+    assert set(sums) == files
+    for name, digest in sums.items():
+        assert hashlib.sha256((ISOLATED_V4 / name).read_bytes()).hexdigest() == digest, name
+    # The released files are exactly the ones whose digests were committed before the ingest.
+    held = {}
+    for line in (RERATE_V4 / "held" / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        held[name.removeprefix("./")] = digest
+    released = {
+        f"dev-audit-v4/{name}": ISOLATED_V4 / "audit" / name
+        for name in ("sample.jsonl", "spot-check.jsonl", "items.jsonl", "baseline-jobs.jsonl")
+    }
+    released["open-weight/calls.jsonl"] = ISOLATED_V4 / "open-weight" / "calls.jsonl"
+    for name in held:
+        if name.startswith("dev-mutants-v9/"):
+            released[name] = INTEGRATION / name
+    assert set(released) == set(held)
+    for name, path in released.items():
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == held[name], name
+
+    # The revealed salt is the one committed as a hash, and it makes every item id.
+    salt = (ISOLATED_V4 / "audit" / "salt.hex").read_text(encoding="ascii").strip()
+    sample_summary = json.loads((RERATE_V4 / "audit" / "sample-summary.json").read_text())
+    assert raters.salt_sha256(salt) == sample_summary["salt_sha256"]
+    sample = _jsonl(ISOLATED_V4 / "audit" / "sample.jsonl")
+    assert {row["task_id"] for row in sample} <= DEV
+    assert all(raters.opaque_item_id(r["mutant_id"], salt) == r["item_id"] for r in sample)
+    manifest_bytes = (RERATE_V4 / "isolated-export" / "iso-manifest.json").read_bytes()
+    manifest = json.loads(manifest_bytes)
+    assert {row["item_id"] for row in sample} == set(manifest["items"])
+
+    audit = json.loads((ISOLATED_V4 / "claude-isolated" / "transcript-audit.json").read_text())
+    assert audit["prompt_template_sha256"] == rater_runner.ISOLATED_PROMPT_TEMPLATE_SHA256
+    assert audit["manifest_sha256"] == hashlib.sha256(manifest_bytes).hexdigest()
+    done = {a["item_id"]: a for a in audit["agents"] if a["completed"]}
+    assert set(done) == set(manifest["items"]) and len(done) == 142
+    for agent in audit["agents"]:
+        assert set(agent["tool_counts"]) <= {"Read", "StructuredOutput"}
+        assert agent["reads_outside_item_dir"] == 0 and not agent["problems"]
+        assert agent["task_turn_exact"] and set(agent["models"]) == {"claude-opus-5-5"}
+        assert agent["completed"] or "StructuredOutput" not in agent["tool_counts"]
+    assert not any(item["strict_void"] for item in audit["items"])
+
+    receipt = json.loads((ISOLATED_V4 / "claude-isolated" / "receipt.json").read_text())
+    assert receipt["manifest_sha256"] == hashlib.sha256(manifest_bytes).hexdigest()
+    assert receipt["calls_sha256"] == sums["claude-isolated/calls.jsonl"]
+    registered = _jsonl(ISOLATED_V4 / "claude-isolated" / "calls.jsonl")
+    excepted = {
+        c["item_id"]: c
+        for c in _jsonl(ISOLATED_V4 / "claude-isolated-relay-excepted" / "calls.jsonl")
+    }
+    assert {c["item_id"] for c in registered} == set(excepted) == set(manifest["items"])
+    for call in registered:
+        extra = call["extra"]
+        agent = done[call["item_id"]]
+        assert extra["transcript_sha256"] == agent["transcript_sha256"]
+        assert extra["tree_sha256"] == extra["tree_rehashed_sha256"]
+        assert excepted[call["item_id"]]["outcome"] == "ok"
+        assert excepted[call["item_id"]]["answer"] == agent["answer"]
+        if agent["first_turn_is_task"]:
+            assert call["outcome"] == "ok" and call["answer"] == agent["answer"]
+        else:
+            # The resumed harness's relay turn came first: void under the registered rule.
+            assert call["outcome"] == "isolation_void" and call["answer"] == "unsure"
+    assert Counter(c["outcome"] for c in registered) == {"ok": 32, "isolation_void": 110}
+    for path in ISOLATED_V4.rglob("*"):
+        if path.is_file() and path.suffix in {".json", ".jsonl", ".txt", ".md"}:
+            text = path.read_text(encoding="utf-8")
+            assert "data_b64" not in text and '"reason":' not in text, path
+    summary = json.loads((ISOLATED_V4 / "summary.json").read_text())
+    for name, folder in (
+        ("registered", "audit-summary"),
+        ("relay_excepted", "audit-summary-relay-excepted"),
+    ):
+        result = json.loads((ISOLATED_V4 / folder / "audit-summary.json").read_text())
+        assert summary[f"summary_{name}"]["kappa"] == result["kappa"]
+        assert summary["d34_i"][f"fires_{name}"] == (result["kappa"] < 0.6)

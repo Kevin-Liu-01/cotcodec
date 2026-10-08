@@ -1,0 +1,5 @@
+host full suite at cbf896deaad6566dffb2d510b4a63036aa27ffb4 (raters/wt-34046e0 clone, uv sync --locked --extra dev)
+$ uv run --locked ruff check .
+All checks passed!
+$ uv run --locked pytest -q -p no:cacheprovider tests
+2060 passed, 33 skipped in 229.63s (0:03:49)

@@ -1,0 +1,14 @@
+task_id: f723c744-e62c-4ae6-98d1-750d3cd7d79d
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The picture's contrast is increased and saved to /home/user/Desktop/berries.png.
+    check_kind: image_property
+    observable: Standard deviation of luminance of the saved image is noticeably higher than the original's (initially about 48; e.g. +5% or more).
+  - req_id: R2
+    statement: (implicit) Same photo and geometry.
+    check_kind: image_property
+    observable: Size 1280 x 851; structurally similar to the original.
+allowed_variations:
+  - Tool and amount.
+  - '[AMBIGUOUS] Output location not stated; overwriting the source (JPEG data named .png) is assumed.'

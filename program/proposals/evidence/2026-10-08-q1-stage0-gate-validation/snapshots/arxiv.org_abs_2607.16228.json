@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2607.16228",
+ "fetched_at": "2026-10-08T07:31:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41862,
+ "raw_sha256": "a097f5e3acda3540a79108f8677998524e80941335a9c599dbbe29e6b4dda418",
+ "raw_stored": false,
+ "extract": {
+  "title": "Operator-Aware Mixed-Precision Tolerance Calibration for Tensor Kernels",
+  "authors": [
+   "Sarkar, Dipankar"
+  ],
+  "citation_date": "2026/06/23",
+  "submission_history": [
+   {
+    "version": "v2",
+    "date": "Tue, 21 Jul 2026 16:12:17 UTC"
+   }
+  ],
+  "abstract": "Most tensor-kernel correctness tests go through a fixed-shape all close-style check with hand-picked absolute and relative tolerances. The thresholds are copied across the corpus and rarely revisited. We mine the element-wise error distribution of every test case from accumulated cloud GPU runs across the 26-entry gpuemu corpus and 2 dtypes (8,076 result rows). We then ask one empirical question: what absolute tolerance would the kernel itself, observed under its correct implementation, justify? The answer is much tighter than the current hand-picked atol. The largest tightening is attention_triton fp16 at $2{,}184\\times$. Restricted to the seven LLM-style buggy variants for which the corpus ships a paired correct counterpart, calibrated per-(op, dtype) tolerances raise bug-detection recall from 73.2% (1,805 of 2,467) to 82.4% (2,034 of 2,467), an absolute gain of 9.3 percentage points (+229 new detections). The control false-positive count rises from 0 to 20 out of 1,882 correct-control cases (+1.1 percentage points).",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/BoomerangSales.xlsx",
+      "sha256": "9962eddeb2e47c89d67374922dce5065a65e233bd806eb024506b4c6647bd6b2",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/51719eea-10bc-4246-a428-ac7c433dd4b3/BoomerangSales.xlsx"
+    }
+  ],
+  "instruction": "Sort the data according to column A in an ascending order and then create a line chart with the \"Date Time\" column on the X-axis and quantity on the Y-axis.",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "3a7c8185-25c1-4941-bd7b-96e823c9f21f"
+}

@@ -438,3 +438,113 @@ time plus start-up, with the one continuation kept. Both lanes run under
 v2; v1's 0.6B receipt is reported beside v2's. The v2 cap is 1.5 GPU-h,
 timing job included, which with v1 stays far below 8 GPU-h. Any K1 v3 still
 needs a new id and the gauntlet (D26).
+
+**D37. Q1 Stage 0 after D31: safe execution, one validation job, then the
+gauntlet.** The D31 re-pilot (job 713, 0.33 GPU-h) and its review confirm
+that Stage 0 is not admitted: through bucket P3 the high estimate is 9.03
+GPU-h without the reference store and 9.15-9.66 with it, no registered
+execution change brings it under 8, and the pilot cost model under-predicts
+the re-pilot's own items by 1.72x, so every projection is biased low. The
+re-pilot also showed that the registered 12-items-per-GPU rule (trim/2 item
+6) is unsafe: out-of-memory failures on 3 of 8 problems, healthy slots
+retired under contention, and silent `na` results in A5. Decided: (i) the
+execution policy `q1-stage0-exec/2` (memory-sized items per GPU, a free-memory
+guard, a health check that drains and retries before retiring a slot, one
+resource-failure marker list) replaces trim/2 item 6; it changes execution
+only, never a gate, tolerance, family, tier, sample or rule; (ii) the
+reference store serves gate (c) and A1-A5 but not gate (a), whose fidelity to
+upstream KernelBench needs the reference in the candidate's process; one
+shared realization per problem and draw of a nondeterministic reference is
+accepted and disclosed; (iii) one validation job under exec/2, on the
+re-pilot's non-evaluation kernels plus the three KernelBench adversarial
+controls under the store, within the 0.17 GPU-h left of D31's 0.5, measures
+the policy's safety and cost; (iv) D31 stands: Stage 0 waits on the gauntlet
+under D24, and a gauntlet wave on the Stage 0 design runs now, so the
+admission ruling (Kevin's) has a scored, reviewed package. D14's audit policy
+stays as registered (D31).
+
+**D38. Checker-mutation protocol: the eighth draft's choices, and the minor
+items fixed before the freeze.** The sixth review scored the D35 protocol 80
+(scores 55, 62, 56, 57, 64, 80) and its one blocker, user messages delivered
+as harness attachments, is fixed by a registered allow-list of entry and
+attachment types that fails closed. Accepted as implemented: the census audit
+with its seeded stratified fallback; gold shams for every audited task (wider
+than D34's K3 tasks); the relay frame registered under D35's constraints; and
+the difference-first packet order. Because a freeze pins this code, the
+review's minor items are fixed rather than recorded: the fallback takes the
+largest budget that fits; a registered collector maps every transcript of the
+rating run to its item and refuses any it cannot map; audit summarize refuses
+calls files whose relay frames differ, and the receipt records the relayed
+text verbatim; concordant contradictions join the adjudication pool for every
+candidate kind, not only the K3 groups; an interrupted attempt counts as
+answering only through a structured answer; and stale text is corrected. The
+confirm rating runs as one workflow session; if a resume brings a different
+relay frame, the items it voids are re-rated once in a fresh, unresumed run,
+answer-blind, and both results are reported. Kevin's own items stay his: the
+adjudication pool (about 16 items) and the human spot check (about 35 items,
+D9).
+
+**D39. Action-path freeze details: D33's limit is per entry, and C3
+equivalence fails closed.** D33's A1-A3 limit counts excused trials per
+entry, over both observation settings, every rerun and, in A1, both seeds'
+shuffles; D33's author confirms that reading here, as the registrations now
+state. The final pre-freeze verifier found that C3 could turn a surviving
+mutant into an equivalent one by cancelling and rerunning: equivalence was
+read from the counting attempt alone. Decided: a mutant is equivalent only if
+its counting attempt's stream signature equals the reference's and so does
+every earlier attempt's on each cell whose earlier trial had no
+infrastructure failure; kills stay read from the counting attempt. The three
+status lines are rewritten to the frozen wording before the freeze (as D32
+required for Q3), and the analysis treats an unparseable record file like a
+missing one, so a write cut short by a kill cannot block a verdict.
+
+**D40. Action-path suite: v1 is invalid on C2; a v2 that reports the miss
+and re-tests the prediction honestly.** `q2-action-path-v1`'s first scored
+campaign, C2 (job 768, L0-raw, 500 trials, counted), failed: `chord_super_d`
+was predicted to pass under raw PyAutoGUI and failed 5 of 5, because the `d`
+press reached X without the Super modifier within 1 ms of the Super press.
+The other 99 entries matched the prediction. The X event record shows the
+loss is real, so the oracle detected a genuine transport defect and the
+miss is in the authors' prediction, not in the oracle. Under sections 8 and
+11, v1 is invalid: no v1 acceptance criterion may be claimed, and C1, C3
+and A1-A7 did not run. This result is reported as it stands. Decided: a
+successor `q2-action-path-v2` (with its own `-inputs` and `-executor`)
+keeps v1's catalog, oracles, guard, executor, acceptance rules and
+development evidence. It changes three things: (i) the L0-raw prediction
+lists `chord_super_d` as a failure, with the mechanism (a shell keyboard
+grab on a Super chord sent without key holds), and says plainly that this
+entry is informed by v1's C2 run; (ii) v2's C2 is therefore read as a
+reproduction test of the L0-raw failing set on a new order seed, not as an
+a-priori prediction test, and v1's C2 outcome (one unpredicted failure,
+verified real) is reported as the a-priori result; (iii) the manifest
+renderer takes the run root as a parameter instead of hard-coding the
+development host root. Development may characterise the mechanism, and
+whether L0-fixed is exposed under Stage-1 conditions, on seed 42 only; A1
+then tests L0-fixed on `chord_super_d` as registered. No other rule
+changes, and no v1 data enters a v2 verdict.
+
+**D41. Q1 Stage 0 withdrawn after its gauntlet exit; the audit metric is the
+blocking problem.** Gauntlet wave 1 on the Stage 0 design ended at an honest
+exit (score 45, the lower of 47 and 45; all three refuters refuted; the
+declared query budget spent). Both reviewers named the same fatal defect:
+under the TF32-admissible policy, the registered audit's A1-A3 metric cannot
+separate a correct TF32 matmul or convolution from a destroyed output on most
+measured L2 problems (on L2/46 a correct Inductor convolution scores 0.83 and
+an all-zeros output 0.999), so it cannot serve as ground truth for Stage 0's
+false-accept and false-reject rates, nor for Stage 1. The D37 validation job
+(752, 0.11 GPU-h) showed the memory-aware policy is safe (no resource
+failures, no retired slots) but that items cost about 2.4 times the model, so
+Stage 0 as drafted projects to 20-25 GPU-h at the high point. The refuters
+also found its measurement design largely occupied by "Measuring the
+Checker" (2609.22220); that matters less for an instrument check than for a
+claim, but it removes any case for spending above 8 GPU-h on it. Decided:
+(i) `q1-stage0-gate-validation` as drafted is withdrawn; any successor is a
+new id with a fresh gauntlet (D24 still applies); (ii) the audit metric is
+studied first, on CPU only, from the stored journals of S1-cal and other
+non-evaluation units (jobs 474, 518, 548, 713 and 752; D28: no evaluation
+unit), to characterise where tolerance-based audits are vacuous and to
+design a metric that separates correct reduced-precision outputs from
+destroyed ones, or else to restrict the audit to problems and draws where it
+can; (iii) the per-item process overhead that dominates cost is designed
+for, not yet built; (iv) Q1 Stage 1 still needs the R580 driver upgrade or
+written risk acceptance.

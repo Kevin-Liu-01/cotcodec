@@ -1,0 +1,13 @@
+task_id: 6ed0a554-cbee-4b44-84ea-fd6c042f4fe1
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The workspace /home/user/project.code-workspace includes folders /home/user/data1 and /home/user/data2.
+    check_kind: config_value
+    observable: The saved workspace JSON "folders" array contains entries whose path resolves (relative to /home/user) to /home/user/data1 and /home/user/data2 (e.g. "data1"/"data2" or absolute paths).
+  - req_id: R2
+    statement: (implicit) The existing "project" folder entry is kept.
+    check_kind: config_value
+    observable: '"folders" still contains {"path": "project"}; total 3 folders.'
+allowed_variations:
+  - Relative vs absolute paths; folder order after the existing one.

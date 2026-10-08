@@ -1,0 +1,14 @@
+task_id: 4188d3a4-077d-46b7-9c86-23e1a036f6c1
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Freeze_row_column.xlsx with cell contents unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 values and merged ranges equal the initial file.
+  - req_id: R1
+    statement: Panes are frozen so that row 1 and columns A:B (the range A1:B1 header block) stay visible, i.e. the freeze split is at C2.
+    check_kind: config_value
+    observable: Sheet1 sheetView pane has state="frozen", xSplit=2, ySplit=1, topLeftCell="C2" (openpyxl ws.freeze_panes == "C2").
+allowed_variations:
+  - Active cell / selection after freezing.
+  - '[AMBIGUOUS] "freeze the range A1:B1" is read as freezing the first row and the first two columns; freezing only row 1 (A2) would satisfy "headers visible" for vertical scrolling but ignores the column part of the range.'

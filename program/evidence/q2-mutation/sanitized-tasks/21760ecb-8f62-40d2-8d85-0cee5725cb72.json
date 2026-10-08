@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Ch4 Video Effect.pptx",
+      "sha256": "fb28830a3099cc79abd097e70b2036493ad478fcb6af32a240c6002e0f475520",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/21760ecb-8f62-40d2-8d85-0cee5725cb72/Ch4%20Video%20Effect.pptx"
+    }
+  ],
+  "instruction": "Could you help me add slide transition \"dissolve\" to my first page?",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "21760ecb-8f62-40d2-8d85-0cee5725cb72"
+}

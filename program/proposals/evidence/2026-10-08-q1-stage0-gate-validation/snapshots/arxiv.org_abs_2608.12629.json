@@ -1,0 +1,37 @@
+{
+ "url": "https://arxiv.org/abs/2608.12629",
+ "fetched_at": "2026-10-08T07:31:12Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43947,
+ "raw_sha256": "9dadd6f0dbc66dc3dd676c77e576070b0728f7398137ce049b51de5a6d907e5c",
+ "raw_stored": false,
+ "extract": {
+  "title": "CAKE: Compiler-Agent Co-Design for Frontier Kernel Evolution",
+  "authors": [
+   "Ye, Zihao",
+   "Huang, Yingyi",
+   "Jin, Hongyi",
+   "Hou, Bohan",
+   "Shao, Junru",
+   "Yu, Zhongming",
+   "Chen, Jinqi",
+   "Cowan, Meghan",
+   "Cao, Shiyi",
+   "Xing, Shanli",
+   "Chen, Hanfeng",
+   "Grover, Vinod",
+   "Chen, Tianqi",
+   "Ceze, Luis"
+  ],
+  "citation_date": "2026/08/12",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 12 Aug 2026 22:31:32 UTC"
+   }
+  ],
+  "abstract": "GPU kernel agents and GPU programming languages have advanced separately, leaving expert kernels difficult to reproduce. Agents usually treat the compiler as a fixed black box and receive only errors, correctness outcomes, and timing, while existing DSLs either hide critical scheduling decisions or expose them through difficult layout abstractions. We present CAKE, a compiler-agent co-design in which agents author CAKE IR, a typed, hardware-explicit schedule representation. CAKE exposes warp roles, memory movement, synchronization, and pipelines while supporting verification, cost modeling, and localized diagnostics. The harness itself evolves: recurring failures become verifier rules, IR primitives, model calibrations, and reusable optimization tactics. In matched implementation-hidden Flash-KMeans clean starts on B200, the best CAKE IR candidate at an 80-million-token budget runs at 1.144x the tuned FlashML baseline, compared with 0.928x for direct CUDA/PTX. Beyond this benchmark, agent-generated Kimi Delta Attention achieves a 2.05x geometric-mean speedup over official FlashKDA and passes end-to-end serving validation. Dispatcher-backed KNN and KMeans improve performance by 1.42x to 2.12x across more than 400 shapes, and four kernel changes are available as upstream PRs. CAKE targets NVIDIA GPUs from Ampere through Blackwell and separates single-shape evolution from library generalization and dispatch.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

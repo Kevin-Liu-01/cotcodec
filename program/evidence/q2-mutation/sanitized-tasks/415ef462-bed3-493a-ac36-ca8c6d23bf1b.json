@@ -1,0 +1,53 @@
+{
+  "domain": "multi_apps",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Documents/Finance/receipts/aws-invoice-2308.pdf",
+      "sha256": "5dcdb52ccc71ed241a5c8e5dbaeded0c4f04a55afb9a3bf016ccd482d6e3bbc0",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/415ef462-bed3-493a-ac36-ca8c6d23bf1b/invoice0123456789-2308.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Finance/receipts/aws-invoice-2309.pdf",
+      "sha256": "c7d46f7959877d7c2328dab589e50e78067835a4260f42c14c7c215eff64642d",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/415ef462-bed3-493a-ac36-ca8c6d23bf1b/invoice0123456789-2309.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Finance/receipts/aws-invoice-2310.pdf",
+      "sha256": "ef7f60c837150b49bb0a44b35491fb6750113ee27e64b7825899b1f1585122f2",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/415ef462-bed3-493a-ac36-ca8c6d23bf1b/invoice0123456789-2310.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Finance/receipts/aws-invoice-2311.pdf",
+      "sha256": "6c4e360ccf903d419ee81b490189aaa1c047699b82c5fd36c6f6d3193804e755",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/415ef462-bed3-493a-ac36-ca8c6d23bf1b/invoice0123456789-2311.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Finance/receipts/X-receipt-2312.pdf",
+      "sha256": "2e68601ee2812206fe2619704c9f0aac929b631b6e322413d12c58d69ba0c36c",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/415ef462-bed3-493a-ac36-ca8c6d23bf1b/Receipt-0123-4567.pdf"
+    },
+    {
+      "path_in_vm": "/home/user/Documents/Finance/tally_book.xlsx",
+      "sha256": "4eec560f126c0774ce891bf405f3a63de83e1005d41963f714b5ad2af7ff4a6f",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/415ef462-bed3-493a-ac36-ca8c6d23bf1b/tally_book.xlsx"
+    },
+    {
+      "path_in_vm": "/home/user/.projects.tar.xz",
+      "sha256": "adadd814627cf0a9c70d2edd8a034b026decd2f89902498cc173378c33b6d7c2",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/415ef462-bed3-493a-ac36-ca8c6d23bf1b/projects.tar.xz"
+    },
+    {
+      "path_in_vm": "/home/user/thunderbird-profile.tar.gz",
+      "sha256": "e8dd64f3b8c80a5a1b30561b2ed4e44b91dd0a98a836f69e2d9ba36661e01320",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/multi_apps/415ef462-bed3-493a-ac36-ca8c6d23bf1b/thunderbird-profile.tar.gz"
+    }
+  ],
+  "instruction": "There's an e-mail containing the AWS invoice for December saved in local \"Bills\" folder. Extract the invoice PDF to the my receipts folder. Follow the file name pattern of the old files and append a record at the end of my tally book.",
+  "related_apps": [
+    "thunderbird",
+    "libreoffice_calc",
+    "os"
+  ],
+  "snapshot": "thunderbird",
+  "task_id": "415ef462-bed3-493a-ac36-ca8c6d23bf1b"
+}
