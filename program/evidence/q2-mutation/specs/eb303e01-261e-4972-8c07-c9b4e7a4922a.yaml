@@ -1,0 +1,20 @@
+task_id: eb303e01-261e-4972-8c07-c9b4e7a4922a
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) /home/user/Desktop/lecture1-2021-with-ink.pptx is saved in place with 7 slides and unchanged slide content.
+    check_kind: file_exists
+    observable: File loads; slide texts unchanged.
+  - req_id: R1
+    statement: Slides without notes get the remarks from notes.docx for that slide.
+    check_kind: slide_object
+    observable: >-
+      Notes text (whitespace-normalized) - slide 1 "Lecture 1"; slide 2 "Lecture slides DO NOT contain everything that is said in class, but you are still responsible for this content. So, make sure you bring yourself up-to-date if you miss a class";
+      slide 3 the same two sentences (without the first period); slide 6 "moderate illness, conflicts with other courses, travel, extracurricular obligations, job interviews, etc."
+  - req_id: R2
+    statement: Slides that already had notes (4, 5, 7) keep them unchanged.
+    check_kind: slide_object
+    observable: >-
+      Slide 4 notes "You should also try to answer!", slide 5 "To pass: at least 50% in both your overall grade and  your final  exam grade", slide 7 the academic-integrity list, each unchanged.
+allowed_variations:
+  - Line breaks between the two sentences of slides 2-3; leading tab characters from notes.docx dropped.

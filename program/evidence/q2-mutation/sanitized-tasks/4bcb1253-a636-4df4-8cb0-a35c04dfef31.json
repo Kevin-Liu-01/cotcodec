@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/View_Person_Organizational_Summary.docx",
+      "sha256": "7500009b2c15e5f3097a39dfc683ee34cc4f5bcd621c94fb4ceaa937d44cb9fc",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/4bcb1253-a636-4df4-8cb0-a35c04dfef31/View_Person_Organizational_Summary.docx"
+    }
+  ],
+  "instruction": "Export the current document into PDF, keep the file name",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "4bcb1253-a636-4df4-8cb0-a35c04dfef31"
+}

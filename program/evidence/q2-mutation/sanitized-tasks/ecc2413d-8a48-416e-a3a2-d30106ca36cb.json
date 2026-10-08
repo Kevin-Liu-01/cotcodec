@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Sample_Statutory_Declaration.docx",
+      "sha256": "82f131afdd70eff51751bdb433846f9fcd62728c5293bec7c962836eab7ec2db",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/ecc2413d-8a48-416e-a3a2-d30106ca36cb/Sample_Statutory_Declaration.docx"
+    }
+  ],
+  "instruction": "Hey, can you throw in a blank page right after this one?",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "ecc2413d-8a48-416e-a3a2-d30106ca36cb"
+}

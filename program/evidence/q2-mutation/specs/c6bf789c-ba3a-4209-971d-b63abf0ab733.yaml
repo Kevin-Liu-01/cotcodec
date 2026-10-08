@@ -1,0 +1,14 @@
+task_id: c6bf789c-ba3a-4209-971d-b63abf0ab733
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: All "__pycache__" folders are hidden in the Explorer view.
+    check_kind: config_value
+    observable: >-
+      User settings.json "files.exclude" contains a glob matching __pycache__ folders at any depth (e.g. "**/__pycache__": true).
+  - req_id: R2
+    statement: (implicit) Default exclusions are not lost in a way that unhides other folders.
+    check_kind: config_value
+    observable: If files.exclude is overridden, the default entries (e.g. **/.git) remain or their loss is noted.
+allowed_variations:
+  - '[AMBIGUOUS] Placing the exclusion in workspace settings for the unzipped project instead of user settings.'

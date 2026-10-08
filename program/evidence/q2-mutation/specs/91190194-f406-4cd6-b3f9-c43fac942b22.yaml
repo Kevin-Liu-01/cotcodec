@@ -1,0 +1,17 @@
+task_id: 91190194-f406-4cd6-b3f9-c43fac942b22
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A cropped image cropped.png is saved (next to cola.png on the Desktop).
+    check_kind: file_exists
+    observable: /home/user/Desktop/cropped.png exists and is a valid PNG.
+  - req_id: R2
+    statement: The top 20% of cola.png is removed and nothing else.
+    check_kind: image_property
+    observable: cola.png is 1233 x 1280; cropped.png is 1233 x 1024 (+-1 row) and equals cola.png rows 256..1279 (pixel-identical or near-identical).
+  - req_id: R3
+    statement: (implicit) cola.png itself is not modified.
+    check_kind: file_exists
+    observable: cola.png unchanged.
+allowed_variations:
+  - Using GIMP batch mode from the command line is the requested route; the end state is what is checked.

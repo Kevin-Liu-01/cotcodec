@@ -1,0 +1,13 @@
+task_id: f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The yellow triangle is positioned at the center of the picture.
+    check_kind: image_property
+    observable: The triangle's bounding box center equals the image center (400, 400) within 5 px - in the XCF the triangle layer (348 x 203) has offset about (226, 298); in an exported PNG the yellow pixels' bbox center is about (400, 400).
+  - req_id: R2
+    statement: (implicit) The triangle keeps its size and shape; the white background stays.
+    check_kind: image_property
+    observable: Triangle layer still 348 x 203 with identical pixels; background layer unchanged.
+allowed_variations:
+  - '[AMBIGUOUS] Result file: Triangle_On_The_Side.xcf saved and/or Triangle_On_The_Side.png exported.'

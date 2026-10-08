@@ -1,0 +1,16 @@
+{
+  "domain": "vs_code",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/vscode_replace_text.txt",
+      "sha256": "fddd104baad484309a4dec480879bfa5ea452e6aef9131024f06132a931cfd58",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vs_code/0ed39f63-6049-43d4-ba4d-5fa2fe04a951/vscode_replace_text.txt"
+    }
+  ],
+  "instruction": "Please help me change all the places in this document that say \"text\" to \"test\".",
+  "related_apps": [
+    "vscode"
+  ],
+  "snapshot": "vscode",
+  "task_id": "0ed39f63-6049-43d4-ba4d-5fa2fe04a951"
+}

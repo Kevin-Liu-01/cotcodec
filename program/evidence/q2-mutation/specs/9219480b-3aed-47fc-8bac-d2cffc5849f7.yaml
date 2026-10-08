@@ -1,0 +1,13 @@
+task_id: 9219480b-3aed-47fc-8bac-d2cffc5849f7
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: Rotating a block can no longer crash the game - rotation that would leave the board or overlap blocks is rejected (or the block is kicked into a valid position).
+    check_kind: other
+    observable: In /home/user/Desktop/tetris/tetris.py, after Tetris.rotate() the block never intersects (intersect() is False); e.g. a vertical I block at the right edge rotated stays valid, and subsequent go_down()/go_space() calls raise no IndexError.
+  - req_id: R2
+    statement: The game still runs and other behavior is preserved.
+    check_kind: other
+    observable: Running main.py headless for a while with random UP/LEFT/RIGHT/DOWN/SPACE inputs raises no exception; movement, line clearing and scoring logic unchanged.
+allowed_variations:
+  - Fix style (undo rotation on collision, wall kicks).

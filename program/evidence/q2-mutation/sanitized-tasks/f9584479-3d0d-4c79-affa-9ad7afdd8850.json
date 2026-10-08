@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Quarterly_Product_Sales_by_Zone.xlsx",
+      "sha256": "b3f924e716a00b7eb3f9baf8e4138aaa7993026c1036b5211a11ad889606b44f",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/f9584479-3d0d-4c79-affa-9ad7afdd8850/Quarterly_Product_Sales_by_Zone.xlsx"
+    }
+  ],
+  "instruction": "Fill the missing rows and columns which show the total value",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "f9584479-3d0d-4c79-affa-9ad7afdd8850"
+}

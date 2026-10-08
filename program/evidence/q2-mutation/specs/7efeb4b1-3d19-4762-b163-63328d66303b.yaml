@@ -1,0 +1,17 @@
+task_id: 7efeb4b1-3d19-4762-b163-63328d66303b
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Order_Sales_Serial#.xlsx.
+    check_kind: file_exists
+    observable: File exists and loads.
+  - req_id: R1
+    statement: The "Seq No." column is filled for every record with "No. <n>", n counting from 1.
+    check_kind: cell_value
+    observable: B2:B29 displayed values == "No. 1", "No. 2", ..., "No. 28" (single space after "No.").
+  - req_id: R2
+    statement: Existing data is unchanged and no irrelevant cells are touched, even blank ones (explicit).
+    check_kind: cell_value
+    observable: B1:E1 and C2:E29 equal the initial values; B30, B31, column A, columns F+ and rows 32+ remain empty.
+allowed_variations:
+  - Values may be text constants, formulas (="No. "&ROW()-1) or numbers 1..28 with a custom format "No. "0 — the displayed text is what the instruction specifies.

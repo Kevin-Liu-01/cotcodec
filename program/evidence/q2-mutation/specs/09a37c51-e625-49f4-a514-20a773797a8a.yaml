@@ -1,0 +1,18 @@
+task_id: 09a37c51-e625-49f4-a514-20a773797a8a
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The edited picture is saved as /home/user/Desktop/pic.jpg.
+    check_kind: file_exists
+    observable: The file exists and is a valid JPEG.
+  - req_id: R2
+    statement: The person (hiker with backpack) is kept.
+    check_kind: image_property
+    observable: The person's region (central figure) matches the original pixels closely (same geometry, 320 x 510 or same aspect).
+  - req_id: R3
+    statement: The original scenic background (sky, clouds, mountains) is removed and replaced by clean white.
+    check_kind: image_property
+    observable: Pixels outside the person's silhouette are near-white (e.g. all channels >= 240), covering the former sky/mountain area.
+allowed_variations:
+  - Edge quality of the cutout.
+  - '[AMBIGUOUS] requirment.docx asks for a transparent background, but the chat instruction asks for a white background in a JPG (which cannot store transparency); the chat instruction takes precedence.'

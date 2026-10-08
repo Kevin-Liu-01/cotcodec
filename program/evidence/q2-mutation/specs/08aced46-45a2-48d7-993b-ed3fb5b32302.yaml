@@ -1,0 +1,18 @@
+task_id: 08aced46-45a2-48d7-993b-ed3fb5b32302
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/22_6.pptx with 2 slides; slide 1 unchanged.
+    check_kind: file_exists
+    observable: File loads; 2 slides; slide 1 texts and formatting unchanged.
+  - req_id: R1
+    statement: Slide 2's title is "Note".
+    check_kind: slide_object
+    observable: The title placeholder of slide 2 (initially empty) has text exactly "Note".
+  - req_id: R2
+    statement: The title text is right-aligned.
+    check_kind: paragraph_format
+    observable: The title paragraph alignment is RIGHT (a:pPr algn="r").
+allowed_variations:
+  - Title font, size and color.
+  - '[AMBIGUOUS] Placing "Note" in a new text box instead of the existing title placeholder is a weaker reading of "title".'

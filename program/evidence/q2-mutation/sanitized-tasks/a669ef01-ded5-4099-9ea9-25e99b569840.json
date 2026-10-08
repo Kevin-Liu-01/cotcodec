@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Writing-Outlines.pptx",
+      "sha256": "d9aa9dbb713d739ca75623949a8b8b846610746dc24ecc0609011e456a7f4ccb",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/a669ef01-ded5-4099-9ea9-25e99b569840/Writing-Outlines.pptx"
+    }
+  ],
+  "instruction": "I want to do something like the following on Page 3 of the current LibreOffice Impress file: make the \"continuation of the sub topics\" indented the same as \"main idea\" and \"sub topics\" without a bullet in front of it. Could you help me with it?",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "a669ef01-ded5-4099-9ea9-25e99b569840"
+}

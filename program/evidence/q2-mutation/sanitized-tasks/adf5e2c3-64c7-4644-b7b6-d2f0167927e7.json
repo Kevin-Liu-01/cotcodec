@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Essay_Writing_English_for_uni.docx",
+      "sha256": "245f3064d64dead11e37b341ca5ab42e4435c6ac63ad0fe14c3f7513a37e249a",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/adf5e2c3-64c7-4644-b7b6-d2f0167927e7/Essay_Writing_English_for_uni.docx"
+    }
+  ],
+  "instruction": "Help me adding \"Steinberg, F. M., Bearden, M. M., & Keen, C. L. (2003). Cocoa and chocolate flavonoids: Implications for cardiovascular health. Journal of the American Dietetic Association, 103(2), 215-223. doi: 10.1053/jada.2003.50028\" to my reference list, and add a cross reference (using reference number) in the fourth paragraph where I marked \"<add here>\".",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "adf5e2c3-64c7-4644-b7b6-d2f0167927e7"
+}

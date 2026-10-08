@@ -1,0 +1,14 @@
+task_id: 2a729ded-3296-423d-aec4-7dd55ed5fbb3
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The image is saved with an alpha channel where the background is transparent, at /home/user/Desktop/dog_with_background.png.
+    check_kind: image_property
+    observable: The PNG has mode RGBA (or LA/P with transparency); a large share of pixels (the sky/water background, roughly the left and top areas) have alpha 0.
+  - req_id: R2
+    statement: The subject (the husky dog) stays opaque and unchanged.
+    check_kind: image_property
+    observable: Pixels inside the dog's region (right-center of the 1578x948 frame) keep alpha 255 and their original RGB values; image size remains 1578 x 948.
+allowed_variations:
+  - Edge quality / anti-aliasing of the cutout.
+  - '[AMBIGUOUS] Output location not stated; overwriting the source PNG is the natural reading, exporting under a new name is a different deliverable.'

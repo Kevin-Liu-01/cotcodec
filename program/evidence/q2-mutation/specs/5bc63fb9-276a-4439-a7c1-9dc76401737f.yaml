@@ -1,0 +1,18 @@
+task_id: 5bc63fb9-276a-4439-a7c1-9dc76401737f
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A Word document /home/user/Desktop/gemini_results.docx exists.
+    check_kind: file_exists
+    observable: The file exists and opens with python-docx.
+  - req_id: R2
+    statement: It contains all of Gemini's responses (values of every "GEMINI" key in the JSON - 6 responses under Multi_Hop, Date_modification and Word_Replacement, declare_ans and question_ans), in JSON order, each as its own paragraph(s) separated by a new line.
+    check_kind: text_run
+    observable: Whitespace-normalized document text contains the 6 GEMINI strings in order; no GPT3/GPT4/other model responses appear.
+  - req_id: R3
+    statement: Every occurrence of the word "Iliad" is highlighted.
+    check_kind: text_run
+    observable: All 33 occurrences of "Iliad" are in runs with character highlight (w:highlight or shading); text other than "Iliad" is not highlighted.
+allowed_variations:
+  - '[AMBIGUOUS] Multi-line responses (markdown with internal newlines) may span several paragraphs.'
+  - Highlight color is not specified (yellow is the default).

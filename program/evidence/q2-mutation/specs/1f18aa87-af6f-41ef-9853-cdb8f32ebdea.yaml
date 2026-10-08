@@ -1,0 +1,18 @@
+task_id: 1f18aa87-af6f-41ef-9853-cdb8f32ebdea
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The answer document /home/user/Desktop/Answer.docx is saved with the Test 2 answers in the same format as Test 1.
+    check_kind: text_run
+    observable: The paragraph right after "Grammar test 2:" is "baaad" (Q1 b gerund, Q2 a conditional perfect, Q3 a subjunctive, Q4 a passive, Q5 d modal).
+  - req_id: R2
+    statement: The Test 3 answers are written in the same format.
+    check_kind: text_run
+    observable: The paragraph right after "Grammar test 3:" is "aaaaa".
+  - req_id: R3
+    statement: The existing Test 1 answer and headings are unchanged.
+    check_kind: text_run
+    observable: Paragraphs "Grammar test 1:", "bbbad", "Grammar test 2:", "Grammar test 3:" are still present in order.
+allowed_variations:
+  - A blank paragraph between the Test 2 answer and the Test 3 heading (mirroring Test 1's layout) is optional.
+  - Only multiple-choice (Part 1) answers are expected, as for Test 1.

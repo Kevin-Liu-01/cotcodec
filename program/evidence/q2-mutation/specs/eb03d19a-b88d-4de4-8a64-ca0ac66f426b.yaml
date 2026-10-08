@@ -1,0 +1,20 @@
+task_id: eb03d19a-b88d-4de4-8a64-ca0ac66f426b
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/Students_Class_Subject_Marks.xlsx with the source table B2:F5 unchanged.
+    check_kind: file_exists
+    observable: File loads; B2:F5 equal initial values.
+  - req_id: R1
+    statement: The transposed table (5 rows x 4 columns) is placed with its top-left cell at B8.
+    check_kind: cell_value
+    observable: >-
+      B8:E8 == Student, Class, Subject, Marks; B9:E9 == Clint, Primary, English, 36; B10:E10 == Olivia, Secondary, Urdu, 83;
+      B11:E11 == Parah, H. School, Math, 35; B12:E12 == Elijah, College, English, 30.
+  - req_id: R2
+    statement: (implicit) Nothing else is written around the transposed table.
+    check_kind: cell_value
+    observable: Rows 6-7, column F+ for rows 8-12, and rows 13+ are empty.
+allowed_variations:
+  - Paste-special transpose (constants) or TRANSPOSE() array formula with the same computed values.
+  - Cell formatting of the pasted block.

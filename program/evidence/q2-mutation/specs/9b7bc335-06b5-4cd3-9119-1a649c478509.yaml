@@ -1,0 +1,13 @@
+task_id: 9b7bc335-06b5-4cd3-9119-1a649c478509
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A local Thunderbird filter on the anonym-x2024@outlook.com account forwards every incoming email to anonym-x2024@gmail.com.
+    check_kind: config_value
+    observable: ~/.thunderbird/t5q2a5hp.default-release/ImapMail/outlook.office365.com/msgFilterRules.dat contains an enabled filter with action "Forward" and actionValue "anonym-x2024@gmail.com", a match-all condition (condition="ALL") and type covering new mail (getting new mail).
+  - req_id: R2
+    statement: The online (Outlook server) account settings are not touched.
+    check_kind: other
+    observable: No server-side forwarding is configured; only the local filter file changes. Account prefs unchanged.
+allowed_variations:
+  - Filter name; an equivalent always-true condition instead of ALL.

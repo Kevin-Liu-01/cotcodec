@@ -1,0 +1,22 @@
+task_id: 8e116af7-7db7-4e35-a68b-b0939c066c78
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) /home/user/Desktop/my_bookkeeping.xlsx is saved in place; rows 1-8 unchanged.
+    check_kind: file_exists
+    observable: File loads; A1:E8 equal the initial values/formulas.
+  - req_id: R1
+    statement: One new record per receipt (5 receipts) is appended below row 8 with Description, Category, Type and Amount.
+    check_kind: cell_value
+    observable: Rows 9-13 are filled; amounts (absolute values) are 186.93 (grocery receipt_0), 3670.00 (Cash Out receipt_1), 5.70 (soup receipt_2), 154.06 (East Repair receipt_3), 8.10 (McDonald's receipt_4), in this order.
+  - req_id: R2
+    statement: Expenses are negative with Type "Expense", following the sheet's convention.
+    check_kind: cell_value
+    observable: Rows for receipts 0, 2, 3, 4 have Type "Expense" and Amount -186.93, -5.70, -154.06, -8.10.
+  - req_id: R3
+    statement: Balance continues the running total.
+    check_kind: cell_value
+    observable: E_r == E_{r-1} + D_r for r = 9..13 (E8 = 790), via formula or value.
+allowed_variations:
+  - '[AMBIGUOUS] receipt_1 is a Cash App "Cash Out to Bank of America" of $3,670.00 - a transfer, not a purchase; recording it as Income (+3670) or Expense (-3670) are both defensible; record which.'
+  - Description and Category wording (e.g. "Groceries", "Food", "Car Repair").

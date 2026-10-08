@@ -1,0 +1,16 @@
+{
+  "domain": "vs_code",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Downloads/HW-8-main-20240207T164539Z-001.zip",
+      "sha256": "aa1beb5f2d74bb06dd8c2ca21b7a47315de13cfa373c5ea53b09e32f0eaba38b",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vs_code/70745df8-f2f5-42bd-8074-fbc10334fcc5/HW-8-main-20240320T121653Z-001.zip"
+    }
+  ],
+  "instruction": "Please help me open the autosave feature of VS Code and delay AutoSave operations for 500 milliseconds in the VS Code setting.",
+  "related_apps": [
+    "vscode"
+  ],
+  "snapshot": "vscode",
+  "task_id": "70745df8-f2f5-42bd-8074-fbc10334fcc5"
+}

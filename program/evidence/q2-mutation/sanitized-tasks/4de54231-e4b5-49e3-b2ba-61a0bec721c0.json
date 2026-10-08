@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/RampUpAndDown.xlsx",
+      "sha256": "d86f02749766e1c33512b521eca32aed4222a21bafc6c8f28f546ffcdcd10f40",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/4de54231-e4b5-49e3-b2ba-61a0bec721c0/RampUpAndDown.xlsx"
+    }
+  ],
+  "instruction": "I have compute the acceleration in row 2 and I want you to fill out other rows for column B and D. Next concatenate the values from columns A to D, including their headers (the pattern is \"Header: cell value, ..., Header: cell value\"), into a new column named \"Combined Data\" for all rows. In the new column, only keep 2 decimal digits.",
+  "related_apps": [
+    "libreoffice_calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "4de54231-e4b5-49e3-b2ba-61a0bec721c0"
+}

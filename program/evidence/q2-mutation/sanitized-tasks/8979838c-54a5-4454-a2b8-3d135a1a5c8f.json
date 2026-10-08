@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/186_3.pptx",
+      "sha256": "2ada7eadb4250532b93db461592235b85c51e978c04676584b370f34f225ab4e",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/8979838c-54a5-4454-a2b8-3d135a1a5c8f/186_3.pptx"
+    }
+  ],
+  "instruction": "Give the slide a purple background color. Add the title to note.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "8979838c-54a5-4454-a2b8-3d135a1a5c8f"
+}

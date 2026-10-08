@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_writer",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx",
+      "sha256": "69550c72aca332f946ceb368fe369cca8ab611ad949c4142b971f9ef3ed42678",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_writer/66399b0d-8fda-4618-95c4-bfc6191617e9/Table_Of_Work_Effort_Instructions.docx"
+    }
+  ],
+  "instruction": "Could you help me insert a 7(columns)*5(rows) empty table at the point of cursor?",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "snapshot": "libreoffice_writer",
+  "task_id": "66399b0d-8fda-4618-95c4-bfc6191617e9"
+}

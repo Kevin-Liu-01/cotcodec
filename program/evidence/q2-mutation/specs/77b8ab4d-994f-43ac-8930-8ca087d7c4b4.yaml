@@ -1,0 +1,13 @@
+task_id: 77b8ab4d-994f-43ac-8930-8ca087d7c4b4
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The photo exists on the Desktop under the name export.jpg.
+    check_kind: file_exists
+    observable: /home/user/Desktop/export.jpg exists and is a valid JPEG.
+  - req_id: R2
+    statement: export.jpg contains the same photo (the "The Lost River of Dreams" cover).
+    check_kind: image_property
+    observable: Size == 530 x 894 and pixels match the original within JPEG re-encoding tolerance (mean abs diff < 5).
+allowed_variations:
+  - '[AMBIGUOUS] "renaming" suggests the original name may disappear, while exporting from GIMP leaves The_Lost_River_Of_Dreams.jpg in place; both satisfy R1-R2.'

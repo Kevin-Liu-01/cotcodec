@@ -1,0 +1,18 @@
+task_id: e528b65e-1107-4b8c-8988-490e4fece599
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The document is saved in place at /home/user/Desktop/Geography_And_Magical_Realism.docx; text is unchanged except for capitalization.
+    check_kind: file_exists
+    observable: For each paragraph, end_text.lower() == initial_text.lower().
+  - req_id: R1
+    statement: The first letter of each word is uppercase.
+    check_kind: text_run
+    observable: For every whitespace-separated word whose first character is a letter, that character is uppercase (204 of 244 words were lowercase-initial, e.g. "and", "is", "a", "lot", "of" become "And", "Is", "A", "Lot", "Of").
+  - req_id: R2
+    statement: Letters other than the first of each word are not forced to change.
+    check_kind: text_run
+    observable: Non-initial letters keep their original case (e.g. "Marquez’s" stays "Marquez’s", "Garcia" unchanged).
+allowed_variations:
+  - '[AMBIGUOUS] Words after hyphens or apostrophes (e.g. "self-contained") may or may not have their second part capitalized.'
+  - Applying LibreOffice "Capitalize Every Word" (which edits the characters) is the expected route; a character-attribute-only capitalization is a gray zone.

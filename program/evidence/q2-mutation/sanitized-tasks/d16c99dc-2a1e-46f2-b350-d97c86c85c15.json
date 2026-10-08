@@ -1,0 +1,21 @@
+{
+  "domain": "gimp",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/dog_with_background.png",
+      "sha256": "e08ef7f647e9394682f3ee4858137c69cc931d2ace8b7bc618e25da83618d581",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/d16c99dc-2a1e-46f2-b350-d97c86c85c15/dog_with_background.png"
+    },
+    {
+      "path_in_vm": "/home/user/Desktop/dog_with_background_two_layers.xcf",
+      "sha256": "ce178e548eea89d31c6836873ede95774f59f55284cb9dc9355e13fb8be214c2",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/d16c99dc-2a1e-46f2-b350-d97c86c85c15/dog_with_background_two_layers.xcf"
+    }
+  ],
+  "instruction": "Could you assist me with resizing the dog layer of an image? I need to adjust the height to 512 pixels while maintaining the original aspect ratio?",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "d16c99dc-2a1e-46f2-b350-d97c86c85c15"
+}

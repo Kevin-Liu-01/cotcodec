@@ -1,0 +1,26 @@
+task_id: 05dd4c1d-c489-4c85-8389-a7836c4f0567
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/38_1.pptx with 6 slides and unchanged text.
+    check_kind: file_exists
+    observable: File loads; 6 slides; shape texts unchanged.
+  - req_id: R1
+    statement: On slide 3 the first text box is right-aligned.
+    check_kind: paragraph_format
+    observable: All paragraphs of the first text-bearing shape on slide 3 in shape-tree order (shape "Google Shape;135;p16", text "I'm Rain. / Welcome to my education presentation ...", initially centered) have alignment RIGHT.
+  - req_id: R2
+    statement: On slide 4 the first text box is centered.
+    check_kind: paragraph_format
+    observable: All paragraphs of the first text-bearing shape on slide 4 (inside the group, "Google Shape;152;p17", "WRITE YOUR / TOPIC OR IDEA", initially right) have alignment CENTER.
+  - req_id: R3
+    statement: On slide 5 the first text box is left-aligned.
+    check_kind: paragraph_format
+    observable: All paragraphs of the first text-bearing shape on slide 5 ("Google Shape;162;p18", "Include a credit, citation, or supporting message", initially right) have alignment LEFT.
+  - req_id: R4
+    statement: (implicit) Other text boxes on these slides and other slides keep their alignment.
+    check_kind: paragraph_format
+    observable: Alignment of every other paragraph equals the initial file.
+allowed_variations:
+  - '[AMBIGUOUS] "first textbox" is read as the first text-bearing shape in the slide shape-tree (z) order; a reader using visual top-to-bottom order would pick "HELLO THERE!" on slide 3 and "WRITE AN ORIGINAL ..." on slide 5 instead. Slide 4 is the same under both readings. Record which shapes were changed.'
+  - Text box geometry is not constrained.

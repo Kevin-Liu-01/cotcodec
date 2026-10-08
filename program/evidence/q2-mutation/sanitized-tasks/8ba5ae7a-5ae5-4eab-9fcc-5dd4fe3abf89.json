@@ -1,0 +1,10 @@
+{
+  "domain": "vlc",
+  "initial_files": [],
+  "instruction": "Help me modify the folder used to store my recordings to Desktop",
+  "related_apps": [
+    "vlc"
+  ],
+  "snapshot": "base_setup",
+  "task_id": "8ba5ae7a-5ae5-4eab-9fcc-5dd4fe3abf89"
+}

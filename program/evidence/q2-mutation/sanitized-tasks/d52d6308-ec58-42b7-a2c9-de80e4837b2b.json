@@ -1,0 +1,10 @@
+{
+  "domain": "gimp",
+  "initial_files": [],
+  "instruction": "Could you help me remove the dock on the left side of the screen in the GIMP?",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "d52d6308-ec58-42b7-a2c9-de80e4837b2b"
+}

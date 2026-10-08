@@ -1,0 +1,23 @@
+task_id: 26a8440e-c166-4c50-aef4-bfb77314b46b
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The workbook is persisted at /home/user/SalesRep.xlsx with Sheet1 unchanged.
+    check_kind: file_exists
+    observable: File loads; Sheet1 A1:G11 equal initial values.
+  - req_id: R1
+    statement: A new sheet named "Sheet2" exists.
+    check_kind: other
+    observable: Sheet names include "Sheet2".
+  - req_id: R2
+    statement: Sheet2 has two column headers "Month" and "Total".
+    check_kind: cell_value
+    observable: Sheet2 A1 == "Month", B1 == "Total".
+  - req_id: R3
+    statement: Below the headers, one row per month Jan..Jun with the total sales of all reps.
+    check_kind: cell_value
+    observable: A2:A7 == "Jan","Feb","Mar","Apr","May","Jun"; B2:B7 computed == 4852, 4587, 3943, 3857, 4677, 4243.
+allowed_variations:
+  - Totals may be formulas referencing Sheet1 or constants.
+  - Month labels must read Jan..Jun; using full names ("January") is a gray zone not covered by the instruction.
+  - Table formatting (borders, bold header) is not constrained.

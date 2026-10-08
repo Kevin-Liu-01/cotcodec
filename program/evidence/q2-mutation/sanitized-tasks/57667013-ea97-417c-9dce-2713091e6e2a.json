@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_impress",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/1_2.pptx",
+      "sha256": "94e039afca1b6088d72158aa16b8222c8a1fef0d48926c971cf6f420e7db56c5",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_impress/57667013-ea97-417c-9dce-2713091e6e2a/1_2.pptx"
+    }
+  ],
+  "instruction": "Navigate to slide 5 and set the font color of all textboxes to yellow. Use exactly 'yellow'—no variations such as light yellow, dark yellow, or any other color.",
+  "related_apps": [
+    "libreoffice_impress"
+  ],
+  "snapshot": "libreoffice_impress",
+  "task_id": "57667013-ea97-417c-9dce-2713091e6e2a"
+}

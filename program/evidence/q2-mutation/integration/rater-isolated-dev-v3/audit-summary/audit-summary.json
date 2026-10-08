@@ -1,0 +1,184 @@
+{
+ "answer_status": {
+  "model-rater-anthropic": {
+   "ok": 133
+  },
+  "model-rater-open-weight": {
+   "ok": 133
+  }
+ },
+ "by_label_class": {
+  "should_fail_extra_change": {
+   "accept": 0,
+   "agrees_with_label": 0.16666666666666666,
+   "gate": "reject",
+   "gate_share": 0.16666666666666666,
+   "n": 6,
+   "reject": 1,
+   "unresolved": 5,
+   "unresolved_share": 0.8333333333333334
+  },
+  "should_fail_violation": {
+   "accept": 3,
+   "agrees_with_label": 0.2692307692307692,
+   "n": 26,
+   "reject": 7,
+   "unresolved": 16,
+   "unresolved_share": 0.6153846153846154
+  },
+  "should_pass_alt_solution": {
+   "accept": 28,
+   "agrees_with_label": 1.0,
+   "gate": "accept",
+   "gate_share": 1.0,
+   "n": 28,
+   "reject": 0,
+   "unresolved": 0,
+   "unresolved_share": 0.0
+  },
+  "should_pass_equiv": {
+   "accept": 52,
+   "agrees_with_label": 0.8666666666666667,
+   "n": 60,
+   "reject": 0,
+   "unresolved": 8,
+   "unresolved_share": 0.13333333333333333
+  }
+ },
+ "calls_files": {
+  "model-rater-anthropic": [
+   {
+    "path": "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2m-iso-ingest/claude-calls/calls.jsonl",
+    "records": 133,
+    "sha256": "bd364efbfc52bb7d3dbcf949f80b8746c6fefecb9e32d9a22e58f0f3c4cb75f9"
+   }
+  ],
+  "model-rater-open-weight": [
+   {
+    "path": "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2m-iso-ingest/held/open-weight/calls.jsonl",
+    "records": 133,
+    "sha256": "d6f7346dffb0b10c0293ee2a282295906356e9aeb831059a1dab4548e49b6991"
+   }
+  ]
+ },
+ "human_spot_check": "pending",
+ "k3": {
+  "should_fail_violation": {
+   "bootstrap_high": 1.0,
+   "estimate": 0.7307692307692307,
+   "exact_high": 0.8662258743554812,
+   "kish_n": 26.0,
+   "n_items": 26,
+   "n_tasks": 5,
+   "sufficient": false,
+   "upper": 1.0
+  },
+  "should_pass_equiv": {
+   "bootstrap_high": 0.2549019607843137,
+   "estimate": 0.13333333333333333,
+   "exact_high": 0.22773994566432548,
+   "kish_n": 60.0,
+   "n_items": 60,
+   "n_tasks": 15,
+   "sufficient": true,
+   "upper": 0.2549019607843137
+  }
+ },
+ "k3_fires": {
+  "should_fail_violation": true,
+  "should_pass_equiv": true
+ },
+ "k4_fires": true,
+ "kappa": 0.27002288329519475,
+ "kappa_fires": true,
+ "label": "model raters (decisions D9, D23); the human spot check is pending",
+ "label_error": {
+  "should_fail_violation": {
+   "estimate": 0.7307692307692307,
+   "high": 1.0,
+   "low": 0.2631578947368421,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 5,
+   "n_units": 26
+  },
+  "should_pass_equiv": {
+   "estimate": 0.13333333333333333,
+   "high": 0.2857142857142857,
+   "low": 0.0,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 15,
+   "n_units": 60
+  }
+ },
+ "label_error_resolved_only": {
+  "should_fail_violation": {
+   "estimate": 0.3,
+   "high": 1.0,
+   "low": 0.0,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 4,
+   "n_units": 10
+  },
+  "should_pass_equiv": {
+   "estimate": 0.0,
+   "high": 0.0,
+   "low": 0.0,
+   "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+   "n_clusters": 14,
+   "n_units": 52
+  }
+ },
+ "label_error_unresolved_as_wrong": {
+  "should_fail_violation": 0.7307692307692307,
+  "should_pass_equiv": 0.13333333333333333
+ },
+ "n_adjudicated": 0,
+ "n_items": 121,
+ "n_unresolved": 29,
+ "p1_flips": {
+  "af23762e-2bfd-4a1d-aada-20fa8de9ce07__p1_flip": "accept"
+ },
+ "per_rater": {
+  "model-rater-anthropic": {
+   "should_fail_violation": {
+    "contradicts_label": 0.11538461538461539,
+    "unsure": 0.0
+   },
+   "should_pass_equiv": {
+    "contradicts_label": 0.08333333333333333,
+    "unsure": 0.016666666666666666
+   }
+  },
+  "model-rater-open-weight": {
+   "should_fail_violation": {
+    "contradicts_label": 0.7307692307692307,
+    "unsure": 0.0
+   },
+   "should_pass_equiv": {
+    "contradicts_label": 0.05,
+    "unsure": 0.0
+   }
+  }
+ },
+ "raters": [
+  {
+   "provider": "anthropic",
+   "rater_id": "model-rater-anthropic",
+   "registry_id": "claude-opus-5-5",
+   "role": "same provider as the spec author"
+  },
+  {
+   "provider": "qwen-open-weight-self-hosted",
+   "rater_id": "model-rater-open-weight",
+   "receipt_sha256": "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9",
+   "registry_id": "qwen3.6-35b-a3b",
+   "repo_id": "Qwen/Qwen3.6-35B-A3B",
+   "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+   "role": "independent"
+  }
+ ],
+ "sham_accuracy": {
+  "model-rater-anthropic": 1.0,
+  "model-rater-open-weight": 1.0
+ }
+}

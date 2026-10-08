@@ -1,0 +1,11 @@
+task_id: 930fdb3b-11a8-46fe-9bac-577332e2640e
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A keyboard shortcut ctrl+j moves focus from the terminal to the editor.
+    check_kind: config_value
+    observable: >-
+      ~/.config/Code/User/keybindings.json contains an entry {"key": "ctrl+j", "command": "workbench.action.focusActiveEditorGroup" (or an equivalent focus-editor command such as workbench.action.focusFirstEditorGroup), "when": "terminalFocus"}.
+allowed_variations:
+  - '[AMBIGUOUS] The "when" clause may be "terminalFocus" or omitted; scoping it to terminalFocus matches "from terminal".'
+  - Other default ctrl+j bindings (toggle panel) may remain or be removed.

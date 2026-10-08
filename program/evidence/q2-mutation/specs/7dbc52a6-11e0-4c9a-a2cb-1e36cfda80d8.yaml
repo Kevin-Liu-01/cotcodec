@@ -1,0 +1,21 @@
+task_id: 7dbc52a6-11e0-4c9a-a2cb-1e36cfda80d8
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/164_3.pptx with 2 slides.
+    check_kind: file_exists
+    observable: File loads; 2 slides.
+  - req_id: R1
+    statement: Slide 2 has speaker notes whose text equals its title, "Team Members".
+    check_kind: slide_object
+    observable: slides[1].notes_slide.notes_text_frame.text.strip() == "Team Members".
+  - req_id: R2
+    statement: Slide 2's title is bold.
+    check_kind: text_run
+    observable: All runs of the slide 2 title placeholder have bold == true.
+  - req_id: R3
+    statement: (implicit) The title text itself is unchanged.
+    check_kind: text_run
+    observable: Title text == "Team Members".
+allowed_variations:
+  - Notes formatting is not constrained.

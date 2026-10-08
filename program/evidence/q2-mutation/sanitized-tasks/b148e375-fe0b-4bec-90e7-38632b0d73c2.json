@@ -1,0 +1,16 @@
+{
+  "domain": "gimp",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/white_background.xcf",
+      "sha256": "413858462dcf5e9c808847565f48985efb556851feb9b555e5eda6ed0ff1c37c",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/b148e375-fe0b-4bec-90e7-38632b0d73c2/white_background.xcf"
+    }
+  ],
+  "instruction": "Could you assist me in adding a new layer and naming it 'Square'?",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "b148e375-fe0b-4bec-90e7-38632b0d73c2"
+}

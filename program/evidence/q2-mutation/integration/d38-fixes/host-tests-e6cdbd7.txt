@@ -1,0 +1,5 @@
+host full suite at e6cdbd732c3174f2ba01f06fac7a6f1eeb7da212 (worktree rsynced to a fresh ~/cotcodec-scratch/q2m-d38-e6cdbd7-20261008065436, .venv, .git, caches and the untracked d38-fixes evidence directory excluded; uv sync --locked --extra dev, exit 0)
+$ uv run ruff check .
+All checks passed!
+$ uv run python -m pytest -q tests
+2124 passed, 37 skipped in 236.36s (0:03:56)

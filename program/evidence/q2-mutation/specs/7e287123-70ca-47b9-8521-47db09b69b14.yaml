@@ -1,0 +1,23 @@
+task_id: 7e287123-70ca-47b9-8521-47db09b69b14
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: A spreadsheet GRF-p5y.xlsx is saved on the Desktop.
+    check_kind: file_exists
+    observable: /home/user/Desktop/GRF-p5y.xlsx exists and loads with openpyxl.
+  - req_id: R2
+    statement: The table has headers "Year", "#Applied", "#Supported", "Success Rate".
+    check_kind: cell_value
+    observable: A1:D1 == "Year", "#Applied", "#Supported", "Success Rate".
+  - req_id: R3
+    statement: One row per year 2019-2023 with HKU's application and supported counts for "Computing Science & Information Technology" from grf19.pdf ... grf23.pdf.
+    check_kind: cell_value
+    observable: >-
+      Rows (Year, #Applied, #Supported) == (2019, 25, 7), (2020, 17, 7), (2021, 23, 7), (2022, 23, 9), (2023, 20, 5).
+  - req_id: R4
+    statement: Success Rate = supported / applied, shown as a percentage with 2 decimal places.
+    check_kind: cell_format
+    observable: Displayed D2:D6 == "28.00%", "41.18%", "30.43%", "39.13%", "25.00%" (numeric fraction with 0.00% format, or equivalent text).
+allowed_variations:
+  - '[AMBIGUOUS] Success Rate may be stored as a fraction with a percent format or as text "28.00%"; the displayed value is what is specified.'
+  - Year ordering ascending is expected; sheet name not constrained.

@@ -1,0 +1,30 @@
+{
+ "images_per_file": {
+  "0": 40,
+  "1": 156,
+  "2": 7,
+  "3": 20,
+  "4": 13,
+  "5": 23,
+  "6": 46,
+  "12": 1,
+  "13": 1,
+  "19": 4,
+  "20": 17
+ },
+ "items": 133,
+ "render": {
+  "dpi": 100,
+  "images_per_packet": 40,
+  "pages_per_file": 20
+ },
+ "schema": "q2m-audit-packet-v1",
+ "shards": [
+  {
+   "bytes": 409982276,
+   "items": 133,
+   "path": "packets-000.jsonl",
+   "sha256": "a7f1e678e4ed1624222f59e8cb43f52fd7076793315d23d18a62bdb497151193"
+  }
+ ]
+}

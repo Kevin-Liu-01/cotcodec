@@ -1,0 +1,16 @@
+{
+  "domain": "vlc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/Baby Justin Bieber.mp4",
+      "sha256": "b1c90b75d950875962f324c2224d62cc251c60925cd049f04571d6c07d6ac2cd",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/vlc/8f080098-ddb1-424c-b438-4e96e5e4786e/Baby%20Justin%20Bieber.mp4"
+    }
+  ],
+  "instruction": "Could you convert the song from this music video as an MP3 file? I'd like to have it on my device to play whenever I want. Please save the file just on the desktop and title the file \"Baby Justin Bieber.mp3.\" I really appreciate your help!",
+  "related_apps": [
+    "vlc"
+  ],
+  "snapshot": "base_setup",
+  "task_id": "8f080098-ddb1-424c-b438-4e96e5e4786e"
+}

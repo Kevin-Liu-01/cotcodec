@@ -1,0 +1,18 @@
+task_id: af23762e-2bfd-4a1d-aada-20fa8de9ce07
+author: blind-model-author-v1
+requirements:
+  - req_id: R0
+    statement: (implicit) The presentation is saved in place at /home/user/Desktop/Forests.pptx; the 12 original slides are kept unchanged and in order.
+    check_kind: file_exists
+    observable: File loads; the original slides' texts appear in the original order.
+  - req_id: R1
+    statement: A summary slide created by Impress's "Summary Slide" feature is added (13 slides total).
+    check_kind: slide_object
+    observable: len(slides) == 13; exactly one new slide whose title is "Summary Slide" (LibreOffice default title).
+  - req_id: R2
+    statement: The summary slide's body lists the titles of the presentation's slides.
+    check_kind: text_run
+    observable: Body paragraphs of the new slide equal, in order, the titles of the original slides that have titles (e.g. "Forests", "Today’s lesson:", "Discuss:", "QUIZ - FORESTS", ...).
+allowed_variations:
+  - Position of the summary slide in the deck (LibreOffice inserts it after the last selected slide).
+  - '[AMBIGUOUS] Which slides are summarized depends on the selection at invocation (all slides vs. current selection); all titled slides is the natural reading.'

@@ -269,7 +269,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass; press-state loss verified real at the X event level). Build q2-action-path-v2 (prediction corrected and disclosed, C2 read as a reproduction test on a new order seed, renderer run-root parameter), review, freeze, then C2, C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation descriptive protocol (D35, D38) is being finalised for its freeze. Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
+      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass; press-state loss verified real at the X event level). Build q2-action-path-v2 (prediction corrected and disclosed, C2 read as a reproduction test on a new order seed, renderer run-root parameter), review, freeze, then C2, C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation study is a descriptive protocol (D34, D35, D38; reviews 55, 62, 56, 57, 64, 80, 90): freeze q2-evaluator-mutation-v1, then its confirm campaign, which needs Kevin's adjudication of the pool and the human spot check (D9). Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -317,12 +317,13 @@
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check a sample of the Q2 checker-mutation audit as the human rater (decision D9)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
+    "Q2 checker-mutation (q2-evaluator-mutation-v1, ninth draft, D35 and D38): D34 (i) fired after the one rater retry (dev kappa 0.066 under the registered ingest, 0.575 with the resumed harness's relay turn excepted), so the study is a pre-specified descriptive protocol (D35) implemented on stage0/q2-evaluator-mutation. The sixth review scored the eighth draft 80/100; D38 accepted its choices (census audit with seeded stratified fallback, gold shams for every audited task, the relay frame registered under D35's constraints, difference-first packets, the registered transcript entry and attachment types) and had its minor items fixed in the ninth draft (fallback at the largest budget that fits; a registered collector of every rating transcript; relay frames checked across calls files and recorded verbatim; one workflow session with one fresh, answer-blind re-rate of relay-voided items, both results reported; concordant contradictions of every candidate kind to the pool; interrupted attempts answer only through a structured answer). Kevin's remaining items (prereg section 17): adjudicate the pool (about 16 items, 10-40, 0.5-3.5 h; if a resume brings a different relay frame, every relay-voided item joins it, 113 against 24 on the development analogue), the human spot check (about 35 items, D9), the outward actions, and the carried-over sign-offs (the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, P1 with reserve-split golds, the spec release, the D34 rules as implemented). The narrow re-check scored the ninth draft 90 (ready to freeze, no blocking defect) and its minor items are fixed; then re-merge main and freeze",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
-    "Q1 Stage 0 after D31 and its review: not admitted (preregistration sections 18.8-18.9). Under the corrected, memory-aware execution q1-stage0-exec/2 the model-based estimate through P3 is 10.46 GPU-h central and 12.31 high without the store (11.10 high at the references-free bound, post hoc ratio). Choose: the gauntlet (blocked by D24 until the trust store exists or you rule on admission), a scope reduction that acts on P1-P3 (test quota, FRR core, hack fraction, control replicates; a 30-per-family quota still projects 9.10 central, 10.51 high), or a new engineering pass and re-pilot beyond D31 (for example one process per kernel for its gates). Before any Stage 0 job: sign off q1-stage0-exec/2 (it amends trim/2 item 6) and the store policy (on or off for c and A1-A5; L2/77's shared realization of a nondeterministic cuDNN reference; a GPU check of the three KernelBench adversarial controls under the store), and fund a re-measurement under q1-stage0-exec/2 Update 2026-10-08 (D37 iii, Slurm 752): the validation job under q1-stage0-exec/2 measured cost at 2.4x the exec/2 model (6.3x on the parameter-heavy L2/59), so the primary projection through P3 is 19.99 GPU-h central and 24.66 high (11.68 central at the bootstrap lower point); it reached only 12 and 2 items per GPU (no failure there) and found that the three KernelBench adversarial controls share one CUDA extension name, so Stage 0 must chain them or give each item its own extension directory",
-    "Review the decisions taken on your behalf since the restart, D1-D37 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30 and D33 (action-path guest-server restarts), D31 and D37 (Q1 Stage 0 budget path), D32 and D36 (Q3 dense pre-check), D34 and D35 (checker-mutation raters; the study became descriptive)"
+    "Q1 after D41: Stage 0 as drafted is withdrawn (gauntlet wave 1 honest exit at 45; the TF32-admissible audit metric cannot separate correct TF32 matmul/conv outputs from destroyed ones; projected 20-25 GPU-h high under the safe execution policy). A CPU-only audit-metric study on stored non-evaluation data is running; its recommendation, a small S1-cal GPU pilot and any successor Stage 0 (new id, fresh gauntlet, D24) are yours to approve. Stage 1 also needs the R580 driver upgrade or risk acceptance",
+    "Review the decisions taken on your behalf since the restart, D1-D41 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30, D33, D39 and D40 (action path: guest-server restarts, freeze details, v1 invalid on C2 and its v2), D31, D37 and D41 (Q1 Stage 0 budget path and withdrawal), D32 and D36 (Q3 dense pre-check and its v2), D34, D35 and D38 (checker-mutation raters; the study became descriptive)"
   ],
-  "gpu_hours_spent_this_program": 3.3521,
+  "gpu_hours_spent_this_program": 3.9261,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -388,6 +389,24 @@
       "outcome": "PROBE_COMPLETE; v2 caps plus probe 8.05 GPU-h under D22: gauntlet applies"
     },
     {
+      "experiment": "q2-evaluator-mutation-v1 rater dev smoke (unregistered dev work, second-review fix)",
+      "gpu_hours": 0.1228,
+      "jobs": [
+        "566 overlay build",
+        "582 open-weight rater smoke (133 dev packets)"
+      ],
+      "outcome": "runner works end to end on dev packets: 133 calls, all parsed, 0.110 GPU-h of the 0.2 smoke cap; Anthropic arm blocked by an invalid API key"
+    },
+    {
+      "experiment": "q2-evaluator-mutation-v1 rater dev smoke v2 (unregistered dev work, third-review fix)",
+      "gpu_hours": 0.0947,
+      "jobs": [
+        "646 overlay build",
+        "650 open-weight rater smoke (133 dev packets, 90 rated)"
+      ],
+      "outcome": "saved-start packets built (Slurm 644, CPU); 90 of 133 items rated before the lane's USR1 checkpoint signal (8-min limit); 0.083 GPU-h rater + 0.012 overlay, inside the 0.15 allowance"
+    },
+    {
       "experiment": "open-weight reviewer tooling smoke (D23, D24)",
       "gpu_hours": 0.1589,
       "jobs": [
@@ -396,6 +415,15 @@
         "629 overlay build of the exit fix"
       ],
       "outcome": "review PARSED in 71 s; process hung at exit, smoke over its 0.1 GPU-h cap (0.132 physical); exit fix 37f4f2a CPU-validated as PID 1, GPU re-smoke not run"
+    },
+    {
+      "experiment": "q2-evaluator-mutation-v1 D27 dev rerate (unregistered dev work, third-review fix)",
+      "gpu_hours": 0.1284,
+      "jobs": [
+        "686 overlay build",
+        "702 open-weight rater Qwen3.6-35B-A3B (133 dev items, all rated)"
+      ],
+      "outcome": "every dev item rated in one 6 min 56 s job that ended on its own (0.116 GPU-h rater + 0.013 overlay, inside D27's 0.5); shams 12/12, but 19 of 26 violation mutants accepted: kappa 0.27 if Claude matched every label, 0.34 against the earlier non-blind Claude answers"
     },
     {
       "experiment": "q1-stage0 pilot pass (stage0/q1-gates)",
@@ -425,6 +453,15 @@
         "655 qwen3.6-35b-a3b load check"
       ],
       "outcome": "clean exits on GPU; 35B verify 52 s, load 97 s"
+    },
+    {
+      "experiment": "q2-evaluator-mutation-v1 D34 dev rerate, thinking on (unregistered dev work, fourth-review fix)",
+      "gpu_hours": 0.2281,
+      "jobs": [
+        "718 overlay build",
+        "722 open-weight rater Qwen3.6-35B-A3B, thinking on (142 dev items, all rated)"
+      ],
+      "outcome": "every dev item rated in one 12 min 57 s job that ended on its own (0.216 GPU-h rater + 0.012 overlay, inside D34's 0.5); 14.4 items per minute; shams 20/21; violations 14 accept / 12 reject (thinking off 19 / 7); kappa 0.578 if Claude matched every label, 0.486 against the D27 isolated Claude answers on 119 matched items; with the isolated Claude ratings of the new packets, dev kappa 0.066 under the registered ingest (110 relay-turn voids) and 0.575 with the relay turn excepted: D34 (i) fired (D35)"
     },
     {
       "experiment": "q3-dense-headroom-precheck-v1, Qwen3-0.6B-Base lane",

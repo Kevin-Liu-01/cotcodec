@@ -1,0 +1,15 @@
+{
+  "engines": {
+    "a-dummy": {
+      "problems": []
+    },
+    "a-real": {
+      "problems": []
+    }
+  },
+  "pass": true,
+  "payload_thinking_False": true,
+  "payload_thinking_True": true,
+  "v2_payload_thinking_False": true,
+  "v2_payload_thinking_True": true
+}

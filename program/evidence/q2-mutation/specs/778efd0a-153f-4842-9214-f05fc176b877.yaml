@@ -1,0 +1,14 @@
+task_id: 778efd0a-153f-4842-9214-f05fc176b877
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: The soundtrack of planet.mp4 is extracted to planet.wav (on the Desktop, next to the video).
+    check_kind: file_exists
+    observable: /home/user/Desktop/planet.wav exists, is a RIFF/WAVE audio file, duration about 235 s (within 2 s of the video's audio track), 2 channels.
+  - req_id: R2
+    statement: planet.wav is used as background music for the slideshow Minimalist_Business_Slides.pptx.
+    check_kind: slide_object
+    observable: The saved presentation (16 slides) contains an audio object/media reference to planet.wav (embedded media part or link) on the first slide, configured to start automatically and continue across slides (e.g. timing with numSld covering the deck / "play across slides" / loop).
+allowed_variations:
+  - '[AMBIGUOUS] LibreOffice may store background music as a linked audio object with slideshow-wide playback settings that differ from PowerPoint''s "play across slides" XML; any configuration that plays planet.wav for the whole show satisfies the intent. Record the mechanism.'
+  - WAV sample format (PCM 16-bit expected).

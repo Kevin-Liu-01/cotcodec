@@ -1,0 +1,16 @@
+{
+  "domain": "libreoffice_calc",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Arrang_Value_min_to_max.xlsx",
+      "sha256": "cfe3f5f1f6b91636b9b816cf447418bbb183767f42045206c011b47f4dbac4e0",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/libreoffice_calc/51b11269-2ca8-4b2a-9163-f21758420e78/Arrang_Value_min_to_max.xlsx"
+    }
+  ],
+  "instruction": "Could you help me to sort the records accoring to the amounts ascendingly?",
+  "related_apps": [
+    "libreoffice calc"
+  ],
+  "snapshot": "libreoffice_calc",
+  "task_id": "51b11269-2ca8-4b2a-9163-f21758420e78"
+}

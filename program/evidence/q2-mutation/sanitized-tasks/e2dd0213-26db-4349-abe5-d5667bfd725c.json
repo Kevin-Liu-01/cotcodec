@@ -1,0 +1,16 @@
+{
+  "domain": "gimp",
+  "initial_files": [
+    {
+      "path_in_vm": "/home/user/Desktop/orange_background.xcf",
+      "sha256": "ed1466b3fe6f3f59fd3ff73b284b33775b2411d9a5a69777e4eefa7afebe703b",
+      "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/1e112283c4ecb08d6fed8069bca7de74fa2f12aa/gimp/e2dd0213-26db-4349-abe5-d5667bfd725c/orange_background.xcf"
+    }
+  ],
+  "instruction": "Can you assist me in moving the text box to the left side? I keep accidentally selecting the image layer beneath it.",
+  "related_apps": [
+    "gimp"
+  ],
+  "snapshot": "gimp",
+  "task_id": "e2dd0213-26db-4349-abe5-d5667bfd725c"
+}

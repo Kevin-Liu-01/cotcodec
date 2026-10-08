@@ -1,0 +1,14 @@
+task_id: ec71221e-ac43-46f9-89b8-ee7d80f7e1c5
+author: blind-model-author-v1
+requirements:
+  - req_id: R1
+    statement: Lines 2-10 of /home/user/Desktop/test.py are indented by one additional level (one tab) and the file is saved.
+    check_kind: other
+    observable: For each line 2..10, new_line == indent_unit + old_line, where indent_unit is one tab character or the editor's one-level indent (4 spaces); e.g. line 2 becomes "\tn = len(alist)" (or "    n = len(alist)") and line 10 "\t    break" (or 8 spaces + "break").
+  - req_id: R2
+    statement: Line 1 ("def bubble_sort(alist):") is unchanged.
+    check_kind: other
+    observable: First line identical; no lines added or removed.
+allowed_variations:
+  - '[AMBIGUOUS] VS Code "Indent Line" inserts spaces when insertSpaces is on (detected 4-space indentation); a literal tab character is the stricter reading of "one tab". Record which.'
+  - Trailing newline at EOF.
