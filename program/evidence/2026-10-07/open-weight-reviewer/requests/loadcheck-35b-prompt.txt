@@ -1,0 +1,2 @@
+This is a load check of the reviewer lane, not a review: there is no proposal to assess.
+Answer with falsifiability_score 0, has_falsifier false and largest_defect "no proposal was given".

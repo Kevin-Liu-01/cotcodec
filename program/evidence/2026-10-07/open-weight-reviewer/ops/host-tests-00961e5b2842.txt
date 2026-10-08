@@ -1,0 +1,8 @@
+# host tests of an rsync of the worktree at 00961e5b2842 (.venv, .git pointer and caches excluded)
+uv_sync_exit=0
+ruff_exit=0
+pytest_exit=0
+-- ruff
+All checks passed!
+-- pytest (last line)
+1150 passed, 17 skipped in 152.83s (0:02:32)

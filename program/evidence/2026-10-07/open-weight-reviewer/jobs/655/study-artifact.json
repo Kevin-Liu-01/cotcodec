@@ -1,0 +1,10 @@
+{
+  "kind": "open-weight-review-request",
+  "label": "loadcheck-35b",
+  "prompt": "This is a load check of the reviewer lane, not a review: there is no proposal to assess.\nAnswer with falsifiability_score 0, has_falsifier false and largest_defect \"no proposal was given\".\n",
+  "prompt_bytes": 189,
+  "prompt_sha256": "57aa5a523845602fc824a9ed1387ef67f4d5c81e7814c4c2882f6352cdb81f14",
+  "response_schema_sha256": "0430f51410d25ec19c9649ccec2ef951b3d28c65792b2bb2d88d5424816d2eff",
+  "response_schema_text": "{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"title\": \"Open-weight reviewer smoke answer\",\n  \"type\": \"object\",\n  \"additionalProperties\": false,\n  \"required\": [\"falsifiability_score\", \"has_falsifier\", \"largest_defect\"],\n  \"properties\": {\n    \"falsifiability_score\": {\"type\": \"integer\", \"minimum\": 0, \"maximum\": 10},\n    \"has_falsifier\": {\"type\": \"boolean\"},\n    \"largest_defect\": {\"type\": \"string\", \"minLength\": 1, \"maxLength\": 400}\n  }\n}\n",
+  "schema_version": 1
+}
