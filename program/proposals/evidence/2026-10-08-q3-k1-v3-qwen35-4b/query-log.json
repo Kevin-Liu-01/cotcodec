@@ -3524,5 +3524,301 @@
   "synthesis": 2
  },
  "queries_against_budget": 148,
- "budget_note": "148 of 150 counted queries used through synthesis; 2 remain for the blind critic, the refute-first triad and two reviewers, so the triad cannot each run the six-query minimum inside the declared budget."
+ "budget_note": "148 of 150 counted queries used through synthesis; 2 remain for the blind critic, the refute-first triad and two reviewers, so the triad cannot each run the six-query minimum inside the declared budget.",
+ "repair_run": {
+  "run": "fresh gauntlet run after D48 (single-owner repair of the K1 v3 draft)",
+  "declared_query_budget": 60,
+  "convention": "A counted query is one orx discover call that reached its backend. Paper reads, version checks, citation lookups and dataset-row reads are recorded and not counted (K1 v2 convention).",
+  "rows": [
+   {
+    "id": "RP-Q1",
+    "timestamp": "2026-10-08T16:29:57Z",
+    "tool": "orx discover keyword --limit 15",
+    "query": "スパースアテンション 多言語 長文脈 検索",
+    "returned_ids": [
+     "2602.17221",
+     "2608.enterprise-ai-decision-support-systems",
+     "2608.ai-wireless-network-penetration-testing",
+     "2609.06970",
+     "2608.enterprise-information-systems-lifecycle-management",
+     "2510.13400",
+     "2512.21858",
+     "2608.10021",
+     "2608.10692",
+     "2607.13533",
+     "2604.18919",
+     "2601.10033",
+     "2511.07445",
+     "2508.18791",
+     "2604.14180"
+    ],
+    "counted": true,
+    "raw_sha256": "5389e1bb9f79dbfe5e6ef21cd4f9efb78006be9cb142f46e976f8238a13f7ab6"
+   },
+   {
+    "id": "RP-Q2",
+    "timestamp": "2026-10-08T16:29:58Z",
+    "tool": "orx discover keyword --limit 15",
+    "query": "희소 어텐션 다국어 긴 문맥 검색",
+    "returned_ids": [
+     "2512.08943",
+     "2608.04397",
+     "2606.09204",
+     "2605.07446",
+     "2605.01277",
+     "2605.29742",
+     "2609.19916",
+     "2607.20062",
+     "2608.15107",
+     "2311.14342",
+     "2512.00050",
+     "2412.12111",
+     "2504.13216",
+     "2606.02404",
+     "2506.21595"
+    ],
+    "counted": true,
+    "raw_sha256": "b58eabb67bc84f2fb7e0273b53ad4a7cef5602332076e1a3b2449b0bb8957d23"
+   },
+   {
+    "id": "RP-Q3",
+    "timestamp": "2026-10-08T16:29:59Z",
+    "tool": "orx discover keyword --limit 20 --published-after 2026-10-05 --prioritize recency",
+    "query": "sparse attention indexer",
+    "returned_ids": [
+     "2610.09025",
+     "2610.06801",
+     "2610.08772",
+     "2610.07301",
+     "2610.08527",
+     "2610.10135",
+     "2610.09496",
+     "2610.05842",
+     "2610.09771",
+     "2610.08578",
+     "2610.07446",
+     "2610.07993",
+     "2610.09090",
+     "2610.09274",
+     "2610.10303",
+     "2610.06049",
+     "2610.08211",
+     "2610.08403",
+     "2610.10521",
+     "2610.09051"
+    ],
+    "counted": true,
+    "raw_sha256": "433afdb46987c16333ad09ed22e86db2873fc83cb2606c4419e15b2dffd46eda"
+   },
+   {
+    "id": "RP-Q4",
+    "timestamp": "2026-10-08T16:29:59Z",
+    "tool": "orx discover embedding --limit 15",
+    "query": "A learned selector distilled from a frozen language model's attention is audited per language: its recall of evidence is compared with the model's own dense top-k selection when the question is in a different script from the passage, with literal word matches, their neighbouring tokens and the passage text after them excluded from the evidence, and with the query script and passage script effects separated by translation direction.",
+    "returned_ids": [
+     "2610.08037",
+     "2610.08159",
+     "2609.37700",
+     "2609.28784",
+     "2609.33691",
+     "2608.23296",
+     "2609.11859",
+     "2609.09048",
+     "2609.16501",
+     "2608.20768",
+     "2609.08322",
+     "2609.11365",
+     "2609.04579",
+     "2608.30541",
+     "2608.20290"
+    ],
+    "counted": true,
+    "raw_sha256": "1f533fe7b4b545a54e158d1108b0e7a972d023399c8dd1b867eb3182db1be9e8"
+   },
+   {
+    "id": "RP-Q5",
+    "timestamp": "2026-10-08T16:30:00Z",
+    "tool": "orx discover keyword --limit 15",
+    "query": "KV cache eviction cross-lingual question language passage language evaluation",
+    "returned_ids": [
+     "2610.06996",
+     "2609.03430",
+     "2608.28293",
+     "2610.06286",
+     "2610.07643",
+     "2609.27470",
+     "2610.03007",
+     "2608.23296",
+     "2609.08131",
+     "2609.27981",
+     "2609.06663",
+     "2610.06479",
+     "2608.25230",
+     "2609.39329",
+     "2609.23314"
+    ],
+    "counted": true,
+    "raw_sha256": "5fc949d8c989f27b01a27cd6a7e58e11d660dfb5608dd26367701a983e3cd585"
+   },
+   {
+    "id": "RP-Q6",
+    "timestamp": "2026-10-08T16:30:02Z",
+    "tool": "orx discover openalex --limit 15",
+    "query": "cross-lingual evaluation of sparse attention token selection query language script",
+    "returned_ids": [
+     "10.48550/arxiv.2610.00606",
+     "10.48550/arxiv.2211.00106",
+     "W7197979335",
+     "10.3390/make8030065",
+     "10.18653/v1/2022.mia-1.11",
+     "10.1162/coli_a_00482",
+     "10.18653/v1/2021.eacl-main.53",
+     "10.5281/zenodo.22234565",
+     "10.48550/arxiv.2207.00758",
+     "10.15168/11572_369166",
+     "10.1007/s44163-026-01750-x",
+     "10.48550/arxiv.2607.19243",
+     "10.48550/arxiv.2005.00171",
+     "10.48550/arxiv.2607.15555",
+     "10.1162/coli_a_00451"
+    ],
+    "counted": true,
+    "raw_sha256": "b5cb6a3165c26e6d0ee354dc45428d875ece23ae70a8ad5a589499828e9d5cfe"
+   }
+  ],
+  "not_counted": [
+   {
+    "tool": "orx paper --full",
+    "query": "2608.26175",
+    "returned_ids": [
+     "2608.26175"
+    ],
+    "counted": false,
+    "raw_sha256": "143912003bb831070cbe105ef57b59c6762772eb5e437dfdf97bdcb51e079e6e"
+   },
+   {
+    "tool": "orx paper --full",
+    "query": "2606.07703",
+    "returned_ids": [
+     "2606.07703"
+    ],
+    "counted": false,
+    "raw_sha256": "5b55e9c0c7432d658b2382909d8193867772f8b560026be2e337d9e9a1f40ca4"
+   },
+   {
+    "tool": "orx paper",
+    "query": "2211.02738",
+    "returned_ids": [
+     "2211.02738"
+    ],
+    "counted": false,
+    "raw_sha256": "092d259d3e564aee4add143f0f5aa7f53a2b591e2b2211d95fcf7b9ac4c44003"
+   },
+   {
+    "tool": "orx paper",
+    "query": "2407.03211",
+    "returned_ids": [
+     "2407.03211"
+    ],
+    "counted": false,
+    "raw_sha256": "2fda7fc9468b8457062849df3c13a042ee49a6a70d34ee66e715b1d6e399cce4"
+   },
+   {
+    "tool": "orx paper",
+    "query": "2505.20276",
+    "returned_ids": [
+     "2505.20276"
+    ],
+    "counted": false,
+    "raw_sha256": "1b4f4ae7cab5e14a8c9e2f8a03f5c59b89ff95240625884751474d53e68e298c"
+   },
+   {
+    "tool": "orx paper",
+    "query": "2607.01002",
+    "returned_ids": [
+     "2607.01002"
+    ],
+    "counted": false,
+    "raw_sha256": "291c6fa21f718eae6652ef21f9ee5b638a464c5a5a1b5170a1eca10790693395"
+   },
+   {
+    "tool": "orx paper",
+    "query": "2602.22453",
+    "returned_ids": [
+     "2602.22453"
+    ],
+    "counted": false,
+    "raw_sha256": "d6b68de1a53a99377bf65ff7f9530e31f66a5d153ce31eadb063d4f491bdf279"
+   },
+   {
+    "tool": "orx paper",
+    "query": "2609.36322",
+    "returned_ids": [
+     "2609.36322"
+    ],
+    "counted": false,
+    "raw_sha256": "93974d087a864fd21d02f4b4f01ab0130821f38ba0160472f4dca3b435db794f"
+   },
+   {
+    "tool": "orx paper",
+    "query": "2610.02875",
+    "returned_ids": [
+     "2610.02875"
+    ],
+    "counted": false,
+    "raw_sha256": "d6c4449831b7ebd3e79d5f0538aae93e05be23a9f2044d0831c022737e91ba92"
+   },
+   {
+    "tool": "orx paper",
+    "query": "2610.02953",
+    "returned_ids": [
+     "2610.02953"
+    ],
+    "counted": false,
+    "raw_sha256": "2b7b8db330b62f5c49e33de2e4db60677b313873efcd62bbde90f07eecff9626"
+   },
+   {
+    "tool": "orx paper",
+    "query": "2610.03198",
+    "returned_ids": [
+     "2610.03198"
+    ],
+    "counted": false,
+    "raw_sha256": "e4a100a6305f1963a8f5d1599045227e0af8cf267ced54b6843473386a9d0730"
+   },
+   {
+    "tool": "orx paper",
+    "query": "2610.08037",
+    "returned_ids": [
+     "2610.08037"
+    ],
+    "counted": false,
+    "raw_sha256": "60322f504eda109bb7ea17e53577b1651b5311a60b434a6a877f7f0642e3c6a9"
+   },
+   {
+    "tool": "orx paper",
+    "query": "2607.15555",
+    "returned_ids": [
+     "2607.15555"
+    ],
+    "counted": false,
+    "raw_sha256": "88cfc8c14a66892b2f175c06825bf4377693d2af5a5f0c42194f078b2674ff35"
+   }
+  ],
+  "screening": {
+   "2211.02738": "multilingual compression audit of a whole model (mBERT sparsification, 40 languages); C42; not an in-model selector audit",
+   "2407.03211": "quantization of multilingual LLMs; non-Latin scripts hurt more; C43; not a selector audit",
+   "2505.20276": "quantization in long-context tasks; non-English up to five times larger drops; C44; not a selector audit",
+   "2607.01002": "LOCOS, non-literal retrieval heads; C45; head detection, not a selector audit",
+   "2602.22453": "retrieval and retrieval-transition heads with a cross-lingual needle task; C46; head-level, not a selector audit",
+   "2609.36322": "phase sensitivity of chunked KV compression; not cross-lingual",
+   "2610.02875": "query-aware routing for cross-lingual retrieval in encoders; not an in-model selector",
+   "2610.02953": "SlimKV, question-agnostic KV compression; not cross-lingual",
+   "2610.03198": "KV2 self-refining query-agnostic KV cache; no cross-lingual evaluation found in the report",
+   "2610.08037": "script awareness of output generation; not selection",
+   "2607.15555": "layer-wise linear decodability of relevance and partial cross-language transfer; C49; probing, not a selector audit"
+  },
+  "queries_against_budget": 6,
+  "note": "Wave 1 counted 171 queries against its own 150 (cells 146, synthesis 2, refuters 17, reviewer 6), recorded in program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl. This run's budget is fresh: 6 used by the repair, 54 left for the blind critic, the refuters (at least six each) and the reviewers."
+ }
 }

@@ -408,7 +408,7 @@
     "Q3: q3-dense-headroom-precheck-v2 read NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base (development partition; program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md). Decide whether to open a K1 v3 on that base (new experiment id and the research gauntlet, D26), with the read's requirements: a seen-script cross-script condition, an entity-controlled question set, the non-literal floor (99% lower bound of G(MN) on controlled families at least 0.5), GO and NEGATIVE statistics computed on the entity-controlled set, anchor masking or a lexical-overlap covariate, and H2 re-tested under K1's bounds on the audit read",
     "Q2 Stage 1 S1a draft (q2-stage1-rescoped-v1, branch stage0/q2-stage1-rescope, revised after three pre-freeze reviews): sign off section 18 items 17 (DR1 as a ladder decision in place of the 122B-A10B swap, and DR5 with M frozen at 0.13 in place of the 'paired MDE about 7-8 pp' kill line) and 18 (amend D47's 'at least 32 confirm tasks' to at least 24 by the A0 rule: with the OpenCUA anchor running, the corrected caps give 24 at the card's high price; without the amendment S1a can freeze only when the anchor is unavailable). The program must also admit the pre-freeze jobs O1, A0a and A0b (as D36) and decide on OpenCUA-7B's --trust-remote-code (D29-style)"
   ],
-  "gpu_hours_spent_this_program": 4.6816,
+  "gpu_hours_spent_this_program": 4.738,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -700,6 +700,15 @@
       ],
       "outcome": "review PARSED on attempt 1, total 55, replicates token-identical; wave score 51 (lower of 51 and 55); honest exit (query budget 171 of 150, triad 3/3 refuted); reviewer inference only, not K1 v3 screen work",
       "basis": "physical (scontrol RunTime 00:03:25 on 1 H100; 0.25 GPU-h cap; no leftover container, GPUs at 0 MiB after the job)"
+    },
+    {
+      "experiment": "K1 v3 gauntlet wave 2 (fresh run under D48) open-weight review (D24)",
+      "gpu_hours": 0.0564,
+      "jobs": [
+        "1002 qwen3.6-35b-a3b review"
+      ],
+      "outcome": "review PARSED on attempt 1, total 70, replicates token-identical; wave score 55 (lower of 55 and 70), best 55; honest exit (wave cap 1 of 1, token counter over the declared 8M, triad 3/3 refuted); reviewer inference only, not K1 v3 screen work",
+      "basis": "physical (scontrol RunTime 00:03:23 = 203 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, GPUs at 0 MiB after the job)"
     }
   ],
   "results": [
