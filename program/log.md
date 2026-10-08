@@ -1773,3 +1773,52 @@ they say so.)
   control run, the overlay and the open-weight rater within the 3.0 GPU-h
   cap, the isolated Claude rating as one workflow session, collector,
   ingest, summary), then the registered analysis and Kevin's pool.
+
+## 2026-10-08 — Q2 action path v2: D43's judge rule implemented and developed (branch `stage0/q2-action-path-v2`)
+
+- Merged main (D41-D43 and the checker-mutation confirm stage A1) at
+  `c450d79`. `program/decisions.md` is main's file exactly (D40 unedited;
+  D42 is Q3's); the branch's own draft decision, superseded by D43, does not
+  survive, and every action-path reference to it on the branch now names
+  D43. `state.json` is main's plus the branch's Q2 entries; the GPU total
+  stays 3.9261 (a 0.0 GPU-h row for the CPU-only v2 development added).
+- The bit: a read-only scan of every run directory of the lane (424
+  sessions; `program/evidence/2026-10-08/q2-action-path-v2-d43/`) found the
+  Num Lock LED on, Num_Lock on Mod2 and Mod2 set at every session's start
+  and in every guard check with no key pressed; of 519,344 tap key events
+  172 lacked Mod2, every one after a shell grab key, every one with state 0;
+  no probe or QEMU-monitor key event lacked it. The guard checked only the
+  LED; condition (f) now requires Mod2.
+- The rule (`126ff8b`): `verdict.modifier_state_observable` reads a key
+  event the tap recorded without Mod2 on kind, keycode, keysym and order
+  only (trial verdict and C4; C2's reading of the tap window too); every
+  other event and the probe's channel as before; each verdict reports
+  `state_not_observed`. A development-only executor fault
+  (`fault_drop_modifier`) gives the negative case. Re-judged real records:
+  v1's C2 and job 784's 15 L0-raw `chord_super_d` trials pass, the
+  ungrabbed chords and jobs 785-787 are unchanged, run 572 (Super_L
+  dropped) still fails. The L0-raw prediction keeps v1's failing set;
+  `chord_super_d`'s pass is disclosed as informed by v1's C2 and D43, and
+  C2 stays a reproduction test on seed 45.
+- Development at `126ff8b` (seed 42, CPU only, jobs 830-839, 2.4 VM-h, all
+  COMPLETED 0:0 with gates passed): L0-raw sample 151/180 (the four shell
+  chords pass with queued events read without state; only the predicted
+  `key_kp_enter` and `type_unicode_bmp` and the marker-only
+  `seq_type_chord_type` fail); L0-fixed sample on 8 VMs 180/180; negative
+  case (`omit`, `release_first`) 0/140 with nothing read without state; v1's
+  final runs 703-708 repeated as 834-839 with the same outcomes (52/56,
+  400/400, 800/800, 194/198, 178/186, 60/60). Registrations: sections 4.4,
+  5, 6.2, 8, 10, 12 and 24-26 restated, design decisions 47-48, new section
+  27; the executor addendum's byte-identity rule now requires every executed
+  file to equal `126ff8b` and names each file that differs from `7653799`
+  and `e66bf16`, and why.
+- Checks at `31942e8`: ruff clean; Q2 tests 625 passed, 1 skipped; full
+  suite on the host from a fresh `~/cotcodec-scratch/` copy 2232 passed, 38
+  skipped. Freeze-linted v2, then `-inputs`, then `-executor` against a
+  scratch copy of the ledger: the rows chain onto row 11, the chain checks
+  at 14 rows, v1's, the checker-mutation and v2's rows verify; the
+  repository ledger is unchanged (11 rows). Nothing frozen, pushed or merged
+  to main. No GPU.
+- Next: review of D43's implementation, then freeze v2, `-inputs`,
+  `-executor`, and run C2 (seed 45), C1, C3, A1-A6, the ladder on a quiet
+  host, A4 and A7.
