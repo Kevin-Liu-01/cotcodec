@@ -339,8 +339,50 @@ def test_a7_keeps_the_restarts_of_an_attempt_that_did_not_count():
         session["restarts"] = 1
     rerun[0]["earlier"] = [earlier]
     result = acc.a7(rerun, 8)
-    assert result["restarts"] == 15 and result["accessibility_calls"] == 39216 + 3 * 76
+    # k over every attempt; n over the counting attempt only (the earlier one's calls are
+    # reported, never added to the denominator).
+    assert result["restarts"] == 15 and result["accessibility_calls"] == 39216
+    assert result["accessibility_calls_every_attempt"] == 39216 + 3 * 76
+    assert result["per_session"]["sessions"] == 516
+    assert result["per_session"]["sessions_with_restart"] == 15
     assert not result["pass"]
+
+
+def test_a7_cancelling_a_failing_run_and_rerunning_it_cannot_help():
+    """Optional continuation (design decision 37): an operator who cancels a run once its
+    13th restart arrives and reruns the plan must not gain from it. Pooling the calls of
+    both attempts would pass this record (19 restarts in 74,216 calls: bound 3.8e-4); the
+    registered rule judges 19 restarts against the counting attempt's 39,216 calls."""
+    rerun = _a7({i: 1 for i in range(6)})
+    assert acc.a7(rerun, 8)["pass"]
+    cancelled = copy.deepcopy(rerun[0])
+    cancelled["job"], cancelled["batch"] = "6", None
+    cancelled["slurm"] = {"state": "CANCELLED", "exit_code": "0:15"}
+    cancelled["sessions"] = cancelled["sessions"][:460]
+    for index, session in enumerate(cancelled["sessions"]):
+        session["restarts"] = 1 if index < 13 else 0
+    rerun[0]["earlier"] = [cancelled]
+    pooled = acc.poisson_upper(19) / (39216 + 460 * 76)
+    assert pooled < acc.OBSERVATION_BOUND  # what pooling would have allowed
+    result = acc.a7(rerun, 8)
+    assert result["restarts"] == 19 and result["accessibility_calls"] == 39216
+    assert result["upper_95"] == pytest.approx(acc.poisson_upper(19) / 39216)
+    assert not result["pass"]
+    # Without a restart in the cancelled attempt, the rerun stands as it would alone.
+    for session in cancelled["sessions"]:
+        session["restarts"] = 0
+    assert acc.a7(rerun, 8)["pass"] and acc.a7(rerun, 8)["restarts"] == 6
+
+
+def test_a7_runs_under_attempt_one_only():
+    """Section 11: A7 has no repair attempt; the analysis refuses one as manifest.py does."""
+    repaired = _a7({})
+    repaired[0]["manifest"]["workload"]["attempt"] = 2
+    result = acc.a7(repaired, 8)
+    assert not result["pass"] and any("attempt 1" in p for p in result["problems"])
+    first = _a7({})
+    first[0]["manifest"]["workload"]["attempt"] = 1
+    assert acc.a7(first, 8)["pass"]
 
 
 def test_foreign_load_aborts_a_rung():
@@ -703,6 +745,8 @@ def test_load_reads_the_batch_record_and_charges_an_undelivered_reset_observatio
     assert loaded["batch"] == {"driver_exit": 0, "labelled_containers_left": 0}
     first, second = loaded["sessions"][0]["trials"]
     assert not first["pass"] and first["infra"] == ["reset_observation"]
+    # The charge is a reason of the trial too, as verdict.judge writes every other one.
+    assert first["reasons"] == ["infra: reset_observation"] and not acc.restart_only(first)
     assert second["pass"]
     # A retry that delivers is reported, not charged; older records infer delivery.
     cycle["reset_observation"] = {
@@ -717,6 +761,7 @@ def test_load_reads_the_batch_record_and_charges_an_undelivered_reset_observatio
     assert loaded["sessions"][0]["reset_observation"] == {
         "delivered": True,
         "retried": ["screenshot"],
+        "failed": [],
     }
     assert loaded["sessions"][0]["trials"][0]["pass"]
 
@@ -750,6 +795,129 @@ def test_load_counts_restarts_and_accessibility_calls(tmp_path):
     session = acc.load(run)["sessions"][0]
     assert session["restarts"] == 1 and session["accessibility_calls"] == 4
     assert acc.restart_only(session["trials"][1]) and not acc.restart_only(session["trials"][0])
+
+
+def _reset_cycle(reset: dict, first: dict, warmup_pid: int = 10) -> dict:
+    """A screenshot-plus-accessibility session whose first trial is ``first``."""
+    passing = {"pass": True, "infra": [], "reasons": []}
+    return {
+        "cycle": 4,
+        "setting": "screenshot+a11y",
+        "boot": {"t_screenshot_200": 20.0},
+        "start": {
+            "baseline_check": {"server_pid": 10},
+            "warmup": {"server_pid": warmup_pid},
+            "server_unit": {"n_restarts": 1},
+        },
+        "reset_observation": reset,
+        "trials": [
+            first,
+            {"seq": 1, "cell": "type_plain", "verdict": passing, "steps": [],
+             "pre": {"server_pid": 11}, "post": {"server_pid": 11}},
+        ],
+        "stop": {"final_guard": {"server_pid": 11}, "server_unit": {"n_restarts": 2}},
+    }  # fmt: skip
+
+
+TREE_LOST = {
+    "screenshot_attempts": [{"status": 200}],
+    "screenshot_ok": True,
+    "accessibility_attempts": [{"error": "reset"}, {"error": "refused"}, {"error": "refused"}],
+    "accessibility_ok": False,
+}
+
+
+def test_restart_only_never_excuses_a_trial_that_also_lost_its_reset_observation(tmp_path):
+    """Review of 13c6790: the reset charge was in ``infra`` only, so a restart-only trial
+    that also carried an undelivered reset observation (with no restart across it) was
+    excused. It now counts, by its reasons and by its infrastructure types alike."""
+    hit = {"seq": 0, "cell": "key_enter", "steps": [], "pre": {"server_pid": 10},
+           "post": {"server_pid": 11},
+           "verdict": {"pass": False, "infra": ["guest_server_restart"],
+                       "reasons": ["infra: guest_server_restart"]}}  # fmt: skip
+    done = "driver_exit=0 labelled_containers_left=0\n"
+    loaded = acc.load(_write_run(tmp_path, _reset_cycle(TREE_LOST, hit), done))
+    first = loaded["sessions"][0]["trials"][0]
+    assert first["infra"] == ["guest_server_restart", "reset_observation"]
+    assert "infra: reset_observation" in first["reasons"] and not first["reset_restart"]
+    assert not acc.restart_only(first)
+    # Either check alone refuses it: a record whose reasons omit the charge still counts.
+    stale = dict(first, reasons=["infra: guest_server_restart"])
+    assert not acc.restart_only(stale)
+
+
+def test_a_restart_across_the_reset_observation_is_excused_only_for_its_tree(tmp_path):
+    """Decision D30 (design decision 40): the server restarted between the warm-up and the
+    first pre guard and only the reset observation's tree was lost: the same fault A4
+    excuses inside an entry. A lost screenshot, an unknown server id or any other reason
+    in that trial still counts."""
+    clean = {
+        "seq": 0,
+        "cell": "key_enter",
+        "steps": [],
+        "pre": {"server_pid": 11},
+        "post": {"server_pid": 11},
+        "verdict": {"pass": True, "infra": [], "reasons": []},
+    }
+    done = "driver_exit=0 labelled_containers_left=0\n"
+
+    def first(tmp, reset, trial, warmup_pid=10):
+        tmp.mkdir()
+        session = acc.load(_write_run(tmp, _reset_cycle(reset, trial, warmup_pid), done))
+        return session["sessions"][0]["trials"][0], session["sessions"][0]
+
+    excused, session = first(tmp_path / "a", TREE_LOST, clean)
+    assert excused["reset_restart"] and excused["reasons"] == ["infra: reset_observation"]
+    assert acc.restart_only(excused)
+    report = acc._restart_report([{"job": "9", "sessions": [session], "earlier": []}])
+    assert report["trials_hit"][0]["where"] == ["reset_observation"]
+    assert report["trials_hit"][0]["cycle"] == 4 and not report["trials_hit"][0]["counted"]
+    # No restart across it (the warm-up already saw the new server): counted.
+    same, _ = first(tmp_path / "b", TREE_LOST, clean, warmup_pid=11)
+    assert not same["reset_restart"] and not acc.restart_only(same)
+    # The screenshot was lost too: a restart does not excuse a lost screenshot.
+    both = dict(TREE_LOST, screenshot_attempts=[{"error": "x"}] * 3, screenshot_ok=False)
+    lost, _ = first(tmp_path / "c", both, clean)
+    assert not lost["reset_restart"] and not acc.restart_only(lost)
+    # The first pre guard could not run: decision 39's charge, never excused here.
+    blind = dict(clean, pre={"error": "connection refused"})
+    unknown, _ = first(tmp_path / "d", TREE_LOST, blind)
+    assert not unknown["reset_restart"] and not acc.restart_only(unknown)
+    # Any other reason in the trial still counts.
+    wrong = dict(clean, verdict={"pass": False, "infra": [], "reasons": ["text 'a' != 'b'"]})
+    other, _ = first(tmp_path / "e", TREE_LOST, wrong)
+    assert other["reset_restart"] and not acc.restart_only(other)
+    # A restart inside the entry as well: both are excused together.
+    twice = dict(
+        clean,
+        post={"server_pid": 12},
+        verdict={
+            "pass": False,
+            "infra": ["accessibility", "guest_server_restart"],
+            "reasons": ["infra: accessibility", "infra: guest_server_restart"],
+        },
+    )
+    both_hits, _ = first(tmp_path / "f", TREE_LOST, twice)
+    assert acc.restart_only(both_hits)
+
+
+def test_restart_report_names_sessions_and_restarts_that_hit_no_trial():
+    """Section 12: every trial hit with its session, and every session whose restarts
+    exceed the ones attributed to its trials."""
+    halves = _a4_halves()
+    halves[0]["sessions"][2]["restarts"] = 1  # e.g. during the session's start
+    halves[1]["sessions"][60]["restarts"] = 2
+    _hit(halves[1]["sessions"][60]["trials"][7], "infra: guest_server_restart")
+    report = acc.a4(halves, 8)["guest_server"]
+    assert report["restarts"] == 3
+    row = report["trials_hit"][0]
+    assert row["job"] == "2" and row["cycle"] == 60 and row["where"] == ["entry"]
+    assert report["sessions_with_unattributed_restarts"] == [
+        {"job": "1", "cycle": 2, "setting": halves[0]["sessions"][2]["setting"],
+         "restarts": 1, "attributed": 0},
+        {"job": "2", "cycle": 60, "setting": halves[1]["sessions"][60]["setting"],
+         "restarts": 2, "attributed": 1},
+    ]  # fmt: skip
 
 
 def test_load_uses_the_watchers_slurm_record(tmp_path):
