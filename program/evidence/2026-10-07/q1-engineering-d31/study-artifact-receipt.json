@@ -1,0 +1,28 @@
+{
+ "manifest_sha256": "e7d81496ab659ad0d61d6224c3b9cbb47354602efa90ba95eae5c6144dc5965b",
+ "path": "/artifacts/repilot-corpus-8e9d2574/q1-repilot-inputs.json",
+ "sha256": "391d60f5b1dce56e1ee8d76d16ab581b073043000ddada9b714b3908f2d19a52",
+ "size_bytes": 1197701,
+ "trees": {
+  "controls": {
+   "files": 16,
+   "revision": null,
+   "tree_sha256": "88c662b67508ff73fed56898859aa366550168c2d109a97a2f17c33e271f293b"
+  },
+  "mutants": {
+   "files": 48,
+   "revision": null,
+   "tree_sha256": "3aeaf166a6873ef8f1f45177a502ac965b4c9bba3c67f066d878f23a90470c7c"
+  },
+  "selection": {
+   "files": 1,
+   "revision": null,
+   "tree_sha256": "21e9c9e6ebcf23104fe5b439ab5dfe8a51e1e12c77c6e8d31f11a481140ff787"
+  },
+  "substrates": {
+   "files": 40,
+   "revision": null,
+   "tree_sha256": "607be5b90957380fc8b2a4fbf8552748b20097be9b18aec4415b9a6af102bd18"
+  }
+ }
+}

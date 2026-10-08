@@ -58,6 +58,12 @@ deterministic mutants. The draft preregistration is
 - Pilot-exposed kernels (`data/pilot_exposed.json`, hash-pinned in
   `trim.PILOT_EXPOSED_SHA256`) never enter a sampling frame; regenerate the file
   only with `scripts/q1_pilot_records.py` and update the pin (decision D28).
+- The reference store (`refstore.py`, decision D31) must never change a verdict
+  row: reference-side code lives in one function per channel that both the
+  inline path and the reference item call; a consumer adds no row keys and
+  computes inline whenever an entry is missing, unusable or unreadable. Rerun
+  `tests/test_q1_refstore_equivalence.py` and the integration CPU test after
+  any change to a gate's or channel's reference side.
 - An audit change chosen after seeing a pilot verdict is data-motivated: design
   and validate it on S1-cal and non-evaluation kernels only, and name the units
   it affects in `pilot_exposed.json["data_motivated_units"]`.
@@ -74,6 +80,7 @@ deterministic mutants. The draft preregistration is
 | Calibrate the audit (M, audit v1) | `scripts/q1_calibrate_audit.py --journal CAL --corpus C --output audit-v1.json` |
 | Adjudicate gate rejections of audit-accepted kernels | `scripts/q1_audit_hole_replay.py --journal J --corpus C --output O --multiplier M --seeds 42 43 44` |
 | Write the Stage 0 report | `scripts/report_q1_stage0.py --journal J --corpus C --replay-journal O/journal.jsonl --calibration audit-v1.json --plan PLAN.json --output R` |
+| Measure the reference store (re-pilot, D31) | `scripts/q1_prepare_repilot_corpus.py` (CPU), then `experiments/manifests/q1-core/q1-repilot-d31.template.yaml`, then `scripts/q1_pilot_cost_card.py ... --repilot-job RUNS/JOB` |
 | Plan Stage 0 (CPU) | `scripts/run_q1_stage0.py --corpus C ... --output OUT --seeds 42 43 44 --plan-only` (records `plan_sha256`) |
 | Run a Stage 0 job | `experiments/manifests/q1-core/q1-stage0-trim-job.template.yaml` (buckets, plan hash, spent GPU-h and caps filled from the ledger) |
 | Bind pilot run records / list exposure | `scripts/q1_pilot_records.py --job RUNS/474 --job RUNS/518 --job RUNS/548 --corpus ... --records R --exposed E` |

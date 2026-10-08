@@ -606,3 +606,32 @@ Append-only. Newest entries at the bottom.
   values replaced. The summariser applies the void rules from each job's files
   and the saved orx logs and hashes receipts over their bytes.
 - Waiting on Kevin: the draft's design decisions 1-15.
+
+## 2026-10-07 — Q1 Stage 0 engineering pass and re-pilot (D31)
+
+- Branch `stage0/q1-engineering-d31` (not merged, not pushed). Reference store
+  (`harness/q1/refstore.py`, `refschedule.py`): reference items compute the
+  fp32 device, TF32, CPU fp32 and fp64 references, gate (c)'s validity gate and
+  A5's reference calls once per problem, replicate and channel; consumers read
+  the entry or compute inline. No registered quantity changed (plan hash
+  untouched). The runner gained item requirements and per-item journals.
+- Equivalence: identical rows on the doctor's synthetic corpus (except a kernel
+  that reads unwritten memory, whose rows main does not reproduce either) and
+  on the committed integration fixtures; a differential against main@47f5fbc
+  agrees.
+- Re-pilot `q1-repilot/1` (Slurm 713, image `:8e9d2574` from CPU-only build
+  710; 0.330 GPU-h of the 0.5 cap): 8 S1-cal problems without evaluation
+  units, 24 kernels, inline and store twins of every scoring item. 843 twin
+  rows compared, 828 same verdict; every difference explained (inline cuDNN
+  nondeterminism on L2/77, mutants A4 finds faulty, A4 probes, memory
+  contention), none by the store.
+- Cost: the store saves on gate c (42%), A1 (25%), A2 (17%), A3, A5; reference
+  items cost about as much at in-scope sizes (store arm plus references 1.19x
+  inline at three kernels per problem). Trim/2 high through P3: 8.81-9.85 with
+  the store, 9.03 without, 8.56 at the bound of any store design. Stage 0 is
+  not admitted under D31; it waits on the gauntlet (D24) or Kevin.
+- Finding: at 12 units per GPU, 97 items on 3 of 8 problems (parameters and
+  activations, not inputs) ran out of GPU memory in both arms, and failed
+  health checks under contention retired 5 of 12 slots. The projections are
+  lower bounds for such problems; a memory-aware unit rule is needed first.
+

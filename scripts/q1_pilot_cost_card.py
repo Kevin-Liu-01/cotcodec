@@ -248,7 +248,7 @@ def bootstrap_trimmed(
     factors: dict[str, float] | None,
     args: argparse.Namespace,
     seed: int = 0,
-    store_inputs: tuple[list[dict[str, Any]], list[dict[str, Any]]] | None = None,
+    store_inputs: tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]] | None = None,
     **extra: Any,
 ) -> dict[str, Any]:
     """Cluster bootstrap of the trimmed scoring projection over pilot parents
@@ -285,7 +285,7 @@ def bootstrap_trimmed(
             drawn = [store_rng.choice(problems) for _ in problems]
             pairs = [p for name in drawn for p in store_inputs[0] if p["problem_id"] == name]
             refs = [r for name in drawn for r in store_inputs[1] if r["problem_id"] == name]
-            options["store"] = cc.fit_store_model(pairs, refs)
+            options["store"] = cc.fit_store_model(pairs, refs, **store_inputs[2])
         projection = cc.project_trimmed(
             counts, fits, survival=survival, rule=rule, factors=factors, **options
         )
@@ -679,6 +679,10 @@ def main(argv: list[str] | None = None) -> int:
             "store_model": {
                 "ratio_fits": store_model.ratio_fits,
                 "reference_fits": store_model.reference_fits,
+                "constant_ratios_same_mode_pairs": cc.fit_store_model(
+                    pairs, refs, ratio_mode="constant"
+                ).constant_ratios,
+                "pairs_same_mode": sum(1 for p in pairs if p["same_mode"]),
             },
             "per_gate_items": cc.gate_stats(rp["items"]),
             "twin_rows": repilot_rule.compare_twins(rows),
@@ -706,20 +710,32 @@ def main(argv: list[str] | None = None) -> int:
             True,
         ),
     )
+    store_variants: dict[str, dict[str, Any]] = {
+        # written before the re-pilot ran
+        "store": {"ratio_mode": "linear"},
+        # after: one ratio per gate over same-mode pairs; and the bound of any store design
+        "store-constant": {"ratio_mode": "constant"},
+        "store-free-references": {"ratio_mode": "constant", "free_references": True},
+    }
     if store_model is not None:
-        scenarios_trim += (
-            ("trim2-store-per-bucket-paired-concurrency", cc.TRIM_RULE, factors, True),
-            ("trim2-store-per-job-paired-concurrency", cc.TRIM_RULE, factors, True),
-        )
+        for variant in store_variants:
+            for mode in ("per-bucket", "per-job"):
+                if variant == "store-free-references" and mode == "per-bucket":
+                    continue
+                scenarios_trim += (
+                    (f"trim2-{variant}-{mode}-paired-concurrency", cc.TRIM_RULE, factors, True),
+                )
     for label, rule, fac, corrected in scenarios_trim:
         if label.endswith("paired-concurrency") and not factors:
             continue
         extra = {"anchors": anchors, "exposed": exposed} if corrected else {}
         boot_store = None
-        if "-store-" in label:
-            extra["store"] = store_model
+        if "-store" in label:
+            variant = label.removeprefix("trim2-").split("-per-")[0]
+            options = store_variants[variant]
+            extra["store"] = cc.fit_store_model(*store_inputs, **options)
             extra["store_mode"] = "per-bucket" if "per-bucket" in label else "per-job"
-            boot_store = store_inputs
+            boot_store = (*store_inputs, options)
         projection = cc.project_trimmed(
             counts,
             fits,

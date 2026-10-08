@@ -241,3 +241,17 @@ def test_reference_rows_are_loaded_and_charged_with_scoring_rows(tmp_path) -> No
     job = cc.load_job(q1)
     charged = {i["gate"]: i["gpu_seconds"] for i in job["items"]}
     assert charged == {"c": 5.0, "ref_c": 5.0}
+
+
+def test_constant_ratio_and_free_reference_variants() -> None:
+    pairs, refs = _pairs_and_refs()
+    pairs.append({**pairs[0], "gate": "c", "inline": 100.0, "store": 1.0, "same_mode": False})
+    model = cc.fit_store_model(pairs, refs, ratio_mode="constant")
+    rows = [p for p in pairs if p["gate"] == "c" and p.get("same_mode", True)]
+    expected = sum(p["store"] for p in rows) / sum(p["inline"] for p in rows)
+    assert model.ratio("c", 0.1) == pytest.approx(expected) == model.ratio("c", 0.5)
+    assert model.ratio("b1", 0.1) == 1.0
+    free = cc.fit_store_model(pairs, refs, ratio_mode="constant", free_references=True)
+    assert free.reference_seconds(0.3) == 0.0 and model.reference_seconds(0.3) > 0
+    with pytest.raises(ValueError):
+        cc.fit_store_model(pairs, refs, ratio_mode="other")

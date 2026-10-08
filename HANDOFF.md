@@ -100,13 +100,22 @@ caps, and a corrected projection: 7.60 GPU-h through bucket P3 and 10.99
 through P7 centrally (8.70 and 13.09 at the high point), kept under 8 by the
 caps. No GPU was used in the fix pass. Next, in order:
 
-1. Kevin decides the budget path: adopt `q1-stage0-trim/2` (section 18.7;
-   mutant metrics on problems below 1 GB only, about 155 witnessed test
-   mutants, criterion 3 likely "not met (under-powered)" at about 73 admitted
-   units, KBV H.1 and hack-emulating mutant controls not scheduled), or an
-   engineering pass that computes references once per problem and draw, then
-   a new paired pilot, or the gauntlet, which under D24 cannot reach 100 until
-   the trust store exists.
+1. Kevin decides the budget path. The engineering pass of D31 is done
+   (branch `stage0/q1-engineering-d31`, preregistration section 18.8, evidence
+   `program/evidence/2026-10-07/q1-engineering-d31/`): a reference store
+   computes references once per problem, replicate and draw with identical
+   verdict rows (CPU tests; a differential against main; on the GPU every twin
+   difference is explained and none is the store's), and the non-evaluation
+   re-pilot (Slurm 713, 0.330 GPU-h) measured it. The store saves where
+   references are expensive (gate c 42%, A1 25%, A2 17%) but its reference
+   items cost about as much at in-scope sizes, so `q1-stage0-trim/2`'s high
+   estimate through P3 is 8.81-9.85 GPU-h with it, 9.03 without, and 8.56 at
+   the bound of any store design: **Stage 0 is not admitted under D31.** The
+   remaining paths are the gauntlet (D24) or a registered scope reduction.
+   Before any Stage 0 job, the 12-per-GPU execution needs a memory-aware unit
+   rule and a health check that does not retire slots on contention: the
+   re-pilot ran out of GPU memory on 3 of 8 in-scope-sized problems (97 items
+   in both arms) and retired 5 of 12 slots.
 2. Kevin decides the D14 findings (section 18.3, items 6-8): the TF32 `tl.dot`
    threshold, A5's dtype refusals, and the TF32 convolution tolerance above 1.
    Any change is data-motivated under D28: design and validate it on S1-cal
@@ -130,8 +139,9 @@ upgrade or written risk acceptance (Q1 Stage 1 scoring), outward disclosures
 policy, a git-history purge, rotating the Moonshot key, and a human spot check
 of the model-rated mutation audit.
 
-Also for Q1: the Stage 0 budget decision (`q1-stage0-trim/2`, an engineering
-pass, or the gauntlet, blocked under D24), the three open audit findings
+Also for Q1: the Stage 0 budget decision (not admitted under D31 after the
+engineering pass and re-pilot: the gauntlet, blocked under D24, or a registered
+scope reduction), the three open audit findings
 (section 18.3, items 6-8), decisions D28 and D29, then review and freeze the
 integrated Q1 Stage 0 preregistration (`stage0/q1-gates`); see the gate (b)
 licence note before it is pushed.
