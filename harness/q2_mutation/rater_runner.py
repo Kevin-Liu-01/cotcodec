@@ -70,7 +70,20 @@ item, each confined to its own directory)
     than Read (and the path-free answer and bookkeeping tools), a path outside
     the item's directory, or two transcripts that answer voids that item's
     answer to ``unsure`` (``isolation_void``). Each call record keeps the
-    SHA-256 of every transcript and of the relay frame.
+    SHA-256 of every transcript and of the relay frame; the receipt keeps
+    each relay frame verbatim (decision D38).
+``collect-transcripts`` (decision D38)
+    Maps every ``agent-<id>.jsonl`` of the rating workflow run to its item by
+    its rendered task turn, refuses any it cannot map (and an agent the run's
+    journal never started, or a started agent without a transcript), copies
+    each byte-exact into the layout ``ingest-isolated`` reads and writes the
+    collection manifest (every agent, item, SHA-256, and whether the journal
+    has its result), which ``ingest-isolated --collection`` checks the
+    transcript directories against. An attempt without a journal result
+    answers only through a ``StructuredOutput`` call. The items an ingest
+    voided only because the run's relay frames differ are listed in
+    ``rerate.json`` for one fresh, unresumed re-rate (``export-isolated
+    --rerate-list``), reported beside the registered result.
 
 Rules shared by both raters (preregistration section 9):
 
@@ -668,6 +681,43 @@ def merged_answers(
     return out
 
 
+def relay_digests(row: Mapping[str, Any]) -> list[str]:
+    """The relay-frame digests one call record carries (none, one, or a list)."""
+    extra = row.get("extra")
+    value = extra.get("relay_frame_sha256") if isinstance(extra, Mapping) else None
+    if value is None:
+        return []
+    return [str(v) for v in value] if isinstance(value, list) else [str(value)]
+
+
+def check_relay_frames(paths: Sequence[Path]) -> dict[str, int]:
+    """One relay frame across every calls file of an audit summary (decision D38).
+
+    ``ingest-isolated`` checks that the relay frames of one run are
+    byte-identical; this check spans the calls files ``audit summarize`` merges,
+    so two ingests with different frames cannot both count. Every record's
+    relay-frame digests are collected, except those of a record the ingest
+    already voided for differing frames (its answer is ``unsure``, and D38
+    re-rates it); more than one distinct digest refuses the summary. Returns
+    the count of records per digest.
+    """
+    seen: Counter[str] = Counter()
+    where: dict[str, str] = {}
+    for path in paths:
+        for row in read_calls(path).values():
+            extra = row.get("extra")
+            reasons = extra.get("void_reasons", []) if isinstance(extra, Mapping) else []
+            if RELAY_MISMATCH in reasons:
+                continue
+            for digest in relay_digests(row):
+                seen[digest] += 1
+                where.setdefault(digest, str(path))
+    if len(seen) > 1:
+        detail = ", ".join(f"{d[:12]} ({where[d]})" for d in sorted(seen))
+        raise SystemExit(f"the calls files carry different harness relay frames: {detail}")
+    return dict(seen)
+
+
 def calls_files_record(paths: Sequence[Path]) -> list[dict[str, Any]]:
     """SHA-256 and record count of each shard's calls file (for the audit summary)."""
     return [
@@ -675,6 +725,9 @@ def calls_files_record(paths: Sequence[Path]) -> list[dict[str, Any]]:
             "path": str(path),
             "sha256": sha256_file(path) if path.is_file() else None,
             "records": len(read_calls(path)),
+            "relay_frames_sha256": sorted(
+                {d for row in read_calls(path).values() for d in relay_digests(row)}
+            ),
         }
         for path in paths
     ]
@@ -1373,20 +1426,31 @@ def _normalized_prompt(text: str) -> str:
     return "\n".join(lines)
 
 
-def prompt_matches(prompt: str, expected: str) -> bool:
-    """The agent's first prompt is ``expected``, bare or in the workflow harness's wrapper.
+def task_text(prompt: str) -> str | None:
+    """A user turn's task text: unwrapped from the workflow wrapper, then normalized.
 
     The wrapper is ``WORKFLOW_PREAMBLE`` followed by the task text with every
     line indented by ``WORKFLOW_INDENT`` (a blank line may carry the indent or
-    not). Both sides are compared after ``_normalized_prompt``.
+    not); a turn that starts with the preamble but has an unindented line is
+    no task text (None). A turn without the preamble is taken bare. The result
+    is ``_normalized_prompt`` of the text.
     """
     body = prompt
     if prompt.startswith(WORKFLOW_PREAMBLE):
         lines = prompt[len(WORKFLOW_PREAMBLE) :].split("\n")
         if any(line.strip() and not line.startswith(WORKFLOW_INDENT) for line in lines):
-            return False
+            return None
         body = "\n".join(line[len(WORKFLOW_INDENT) :] if line.strip() else "" for line in lines)
-    return _normalized_prompt(body) == _normalized_prompt(expected)
+    return _normalized_prompt(body)
+
+
+def prompt_matches(prompt: str, expected: str) -> bool:
+    """The agent's prompt is ``expected``, bare or in the workflow harness's wrapper.
+
+    Both sides are compared after ``_normalized_prompt`` (``task_text``).
+    """
+    body = task_text(prompt)
+    return body is not None and body == _normalized_prompt(expected)
 
 
 def is_relay_frame(text: str) -> bool:
@@ -1707,7 +1771,8 @@ def audit_transcript(
         if not packet_read:
             void.append(f"the agent never read {ISOLATED_TEXT}")
     final_text = "".join(final_texts)
-    relay_shas = sorted({sha256_bytes(turns[i][0].encode("utf-8")) for i in relay_turns})
+    relay_texts = {sha256_bytes(turns[i][0].encode("utf-8")): turns[i][0] for i in relay_turns}
+    relay_shas = sorted(relay_texts)
     return {
         "models": dict(models),
         "tool_calls": dict(tools),
@@ -1723,6 +1788,7 @@ def audit_transcript(
         "other_user_turns": len(other_turns),
         "relay_frame_sha256": relay_shas[0] if len(relay_shas) == 1 else None,
         "relay_frames_sha256": relay_shas,
+        "relay_frame_texts": relay_texts,
         "relay_frames": len(relay_turns),
         "prompt_matches_template": (
             None if expected_prompt is None else len(task_turns) == 1 and not other_turns
@@ -1787,7 +1853,258 @@ def item_transcripts(directories: Sequence[Path], item: str) -> list[Path]:
     return found
 
 
+# --- transcript collector (decision D38) ------------------------------------
+
+COLLECTION_SCHEMA = "q2m-transcript-collection-v1"
+AGENT_TRANSCRIPT = re.compile(r"^agent-([A-Za-z0-9]+)\.jsonl$")
+JOURNAL = "journal.jsonl"
+
+
+def _text_user_turns(transcript: bytes) -> list[str]:
+    """The text of every user turn of a transcript that holds only text (for mapping)."""
+    turns: list[str] = []
+    for line in transcript.decode("utf-8", errors="replace").splitlines():
+        try:
+            entry = json.loads(line)
+        except ValueError:
+            continue
+        if not isinstance(entry, Mapping):
+            continue
+        message = entry.get("message")
+        if isinstance(message, Mapping) and (
+            entry.get("type") == "user" or message.get("role") == "user"
+        ):
+            turn = _user_turn(message.get("content"))
+            if turn is not None and turn[1]:
+                turns.append(turn[0])
+    return turns
+
+
+def read_journal(path: Path) -> tuple[list[str], set[str]]:
+    """(agents started, in order; agents with a result line) of a workflow run's journal.
+
+    A line that is not a JSON object, a started or result line without an
+    ``agentId``, an agent started twice and a result for an agent the journal
+    never started are refused.
+    """
+    started: list[str] = []
+    results: set[str] = set()
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            entry = json.loads(line)
+        except ValueError as exc:
+            raise SystemExit(f"{path}:{number}: not JSON: {exc}") from exc
+        if not isinstance(entry, Mapping):
+            raise SystemExit(f"{path}:{number}: not a journal entry")
+        kind = entry.get("type")
+        if kind not in ("started", "result"):
+            continue
+        agent = entry.get("agentId")
+        if not isinstance(agent, str) or not agent:
+            raise SystemExit(f"{path}:{number}: a {kind} line without an agentId")
+        if kind == "started":
+            if agent in started:
+                raise SystemExit(f"{path}:{number}: agent {agent} started twice")
+            started.append(agent)
+        else:
+            if agent not in started:
+                raise SystemExit(f"{path}:{number}: a result for agent {agent}, never started")
+            results.add(agent)
+    return started, results
+
+
+def collect_transcripts(
+    run_dir: Path, manifest: Mapping[str, Any], out_dir: Path
+) -> dict[str, Any]:
+    """Copy every transcript of a rating workflow run into the ingest layout (decision D38).
+
+    ``run_dir`` is the agent harness's directory of one workflow run: one
+    ``agent-<id>.jsonl`` per agent the run started and the run's
+    ``journal.jsonl``. Each transcript is mapped to its item by its rendered
+    task turn: a user turn whose task text (``task_text``: bare or in the
+    workflow wrapper) is the registered template (its SHA-256 checked by
+    ``isolated_prompt_template``) rendered for an exported item, with that
+    item's directory and id. Refused, and nothing written: an export manifest
+    of another schema or template, a transcript whose turns are the rendered
+    prompt of no exported item or of two, an agent the journal never started,
+    a started agent without a transcript, and an output directory that is not
+    new. An agent answered if the journal has a result line for it. The copies
+    are byte-exact: the agent that answered for an item is ``{item}.jsonl``,
+    every other agent of the item (an interrupted attempt, a second answer) is
+    ``{item}.{agent}.jsonl``; if two agents answered for one item, both keep
+    their agent id (``ingest-isolated`` voids the item). Returns the
+    collection manifest: every agent with its item, file, SHA-256, size and
+    whether it answered.
+    """
+    if manifest.get("schema") != ISOLATED_SCHEMA:
+        raise SystemExit("not a q2m isolated export manifest")
+    if manifest.get("prompt_template_sha256") not in (None, ISOLATED_PROMPT_TEMPLATE_SHA256):
+        raise SystemExit("the export registered another rater prompt template")
+    by_text: dict[str, str] = {}
+    for item, entry in manifest["items"].items():
+        rendered = render_isolated_prompt(f"{manifest['iso_root']}/{entry['dir']}", str(item))
+        if entry.get("prompt_sha256") not in (None, sha256_bytes(rendered.encode("utf-8"))):
+            raise SystemExit(f"item {item}: the rendered prompt differs from the export's")
+        by_text[_normalized_prompt(rendered)] = str(item)
+    journal = run_dir / JOURNAL
+    if not journal.is_file():
+        raise SystemExit(f"{journal}: the run's journal is missing")
+    started, answered = read_journal(journal)
+    files: dict[str, Path] = {}
+    for path in sorted(run_dir.rglob("agent-*.jsonl")):
+        match = AGENT_TRANSCRIPT.match(path.name)
+        if match is None or not path.is_file():
+            raise SystemExit(f"{path}: not an agent transcript of the run")
+        agent = match.group(1)
+        if agent in files:
+            raise SystemExit(f"agent {agent} has two transcripts: {files[agent]} and {path}")
+        files[agent] = path
+    unstarted = sorted(set(files) - set(started))
+    if unstarted:
+        raise SystemExit(f"transcripts of agents the journal never started: {unstarted[:5]}")
+    missing = [agent for agent in started if agent not in files]
+    if missing:
+        raise SystemExit(f"agents started by the run without a transcript: {missing[:5]}")
+    agents: list[dict[str, Any]] = []
+    for agent in started:
+        path = files[agent]
+        data = path.read_bytes()
+        bodies = (task_text(turn) for turn in _text_user_turns(data))
+        items = sorted({by_text[body] for body in bodies if body in by_text})
+        if len(items) != 1:
+            what = "no exported item" if not items else f"items {items[:3]}"
+            raise SystemExit(
+                f"agent {agent} ({path.name}): its user turns are the rendered prompt of {what}; "
+                "every transcript of the run must map to one item"
+            )
+        agents.append(
+            {
+                "agent_id": agent,
+                "item_id": items[0],
+                "source": path.relative_to(run_dir).as_posix(),
+                "sha256": sha256_bytes(data),
+                "bytes": len(data),
+                "answered": agent in answered,
+            }
+        )
+    by_item: dict[str, list[dict[str, Any]]] = {}
+    for row in agents:
+        by_item.setdefault(row["item_id"], []).append(row)
+    for rows in by_item.values():
+        answering = [row for row in rows if row["answered"]]
+        for row in rows:
+            alone = len(answering) == 1 and row is answering[0]
+            row["file"] = (
+                f"{row['item_id']}.jsonl" if alone else f"{row['item_id']}.{row['agent_id']}.jsonl"
+            )
+    if out_dir.exists() and any(out_dir.iterdir()):
+        raise SystemExit(f"{out_dir} is not empty; collect into a new directory")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for row in agents:
+        data = files[row["agent_id"]].read_bytes()
+        if sha256_bytes(data) != row["sha256"]:
+            raise SystemExit(f"{files[row['agent_id']]} changed while it was collected")
+        target = out_dir / row["file"]
+        target.write_bytes(data)
+        if sha256_file(target) != row["sha256"]:
+            raise SystemExit(f"{target}: the copy differs from its source")
+    return {
+        "schema": COLLECTION_SCHEMA,
+        "rule": (
+            "decision D38: every agent-*.jsonl of the rating workflow run, mapped to its item by "
+            "its rendered task turn (registered template, item directory and id), copied "
+            "byte-exact; the answering agent (a result line in the run's journal) is "
+            "{item}.jsonl, every other agent of the item {item}.{agent}.jsonl"
+        ),
+        "run_dir": str(run_dir),
+        "journal_sha256": sha256_file(journal),
+        "iso_root": manifest["iso_root"],
+        "prompt_template_sha256": ISOLATED_PROMPT_TEMPLATE_SHA256,
+        "agents": agents,
+        "transcripts": len(agents),
+        "answered": sum(1 for row in agents if row["answered"]),
+        "items": len(by_item),
+        "exported_items_without_transcript": sorted(
+            set(map(str, manifest["items"])) - set(by_item)
+        ),
+        "collected_at": utc_now(),
+    }
+
+
+def _collected(
+    collection: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+    directories: Sequence[Path],
+    exported: Iterable[str],
+) -> dict[str, Mapping[str, Any]]:
+    """The collection's entries by file name, checked against the transcript directories.
+
+    Refused: a manifest of another schema or of another export, an entry of an
+    item outside the export or under a file name that is not its item's, two
+    entries with one file name, a listed transcript missing from the
+    directories or differing from its collected copy, and a transcript in the
+    directories that the collection does not list.
+    """
+    if collection.get("schema") != COLLECTION_SCHEMA:
+        raise SystemExit("not a q2m transcript collection manifest")
+    if collection.get("iso_root") != manifest.get("iso_root"):
+        raise SystemExit("the transcript collection belongs to another export")
+    items = set(map(str, exported))
+    listed: dict[str, Mapping[str, Any]] = {}
+    for row in collection.get("agents", []):
+        name, item = str(row.get("file")), str(row.get("item_id"))
+        if item not in items:
+            raise SystemExit(f"the collection maps {name} to item {item}, not exported")
+        if name not in (f"{item}.jsonl", f"{item}.{row.get('agent_id')}.jsonl"):
+            raise SystemExit(f"the collection's file {name} is not named for item {item}")
+        if name in listed:
+            raise SystemExit(f"the collection lists {name} twice")
+        listed[name] = row
+    found: dict[str, Path] = {}
+    for folder in directories:
+        for path in sorted(folder.glob("*.jsonl")) if folder.is_dir() else []:
+            if path.name in found:
+                raise SystemExit(f"{path.name} is in two transcript directories")
+            found[path.name] = path
+    unlisted = sorted(set(found) - set(listed))
+    if unlisted:
+        raise SystemExit(f"transcripts the collection does not list: {unlisted[:5]}")
+    missing = sorted(set(listed) - set(found))
+    if missing:
+        raise SystemExit(f"transcripts the collection lists are missing: {missing[:5]}")
+    for name, row in listed.items():
+        if sha256_file(found[name]) != row.get("sha256"):
+            raise SystemExit(f"{found[name]} differs from its collected copy")
+    return listed
+
+
 ANSWER_ONLY_REASONS = (NO_MODEL, f"the agent never read {ISOLATED_TEXT}")
+RELAY_MISMATCH = "the harness relay frames differ across the run"
+RERATE_SCHEMA = "q2m-relay-rerate-v1"
+RERATE_RULE = (
+    "decision D38: the items whose only void reason is that the run's relay frames differ "
+    "are re-rated once in a fresh, unresumed workflow run, chosen by that reason alone "
+    "(answer-blind); the registered result and the re-rated one are both reported"
+)
+
+
+def _relay_record(sha: str, count: int, text: str, item_ids: Iterable[str]) -> dict[str, Any]:
+    """One relay frame for the receipt, verbatim (decision D38).
+
+    The frame is harness text, the session user's request relayed under
+    ``RELAY_PREAMBLE``, not document text, so the receipt records it as the
+    transcript holds it (its SHA-256 is the digest). A frame that names an
+    exported item id (whose items the audit voids) is recorded by digest only.
+    """
+    names = any(item and item in text for item in item_ids)
+    return {
+        "sha256": sha,
+        "transcripts": count,
+        "names_item_id": names,
+        "text": None if names else text,
+    }
 
 
 def ingest_isolated(
@@ -1797,23 +2114,33 @@ def ingest_isolated(
     records: Sequence[Mapping[str, Any]],
     transcripts: Path | Sequence[Path],
     out_dir: Path,
+    *,
+    collection: Mapping[str, Any],
 ) -> dict[str, Any]:
     """Call records of the isolated Claude rater (one agent per item).
 
     Refused, and nothing written: a manifest of another schema, a packet that
     differs from its export, an answer for an item outside the export, a second
-    answer for an item, a record with other keys, or a transcript whose agent
-    turns name a model other than ``ANTHROPIC["model"]``. Void (``unsure``,
+    answer for an item, a record with other keys, a transcript whose agent
+    turns name a model other than ``ANTHROPIC["model"]``, and transcript
+    directories that do not hold exactly the transcripts of ``collection``
+    (the manifest of ``collect_transcripts``, decision D38: a listed
+    transcript missing or changed, or one it does not list). Void (``unsure``,
     outcome ``isolation_void``), each with its reasons: an item whose directory
     no longer matches its export, that has no transcript, any of whose
     transcripts fails the transcript audit (``audit_transcript``), more than
-    one of whose transcripts answers (a ``StructuredOutput`` call or an answer
-    word in the final text), whose answering transcript names no model or
-    never read the packet, or whose answer is not the one that transcript
+    one of whose transcripts answers, whose answering transcript names no model
+    or never read the packet, or whose answer is not the one that transcript
     returned; and every item with a relay frame when the run's relay frames are
-    not byte-identical. Every transcript of an item is read
+    not byte-identical. A transcript answers through a ``StructuredOutput``
+    call, or, if its agent has a result in the run's journal, an answer word in
+    its final text; an interrupted attempt (no result) answers only through a
+    ``StructuredOutput`` call (D38). Every transcript of an item is read
     (``item_transcripts``, interrupted attempts included; decision D35). An
-    exported item without an answer stays unrated.
+    exported item without an answer stays unrated. The items voided only
+    because the relay frames differ are listed for the re-rate of D38
+    (``rerate.json``), and every relay frame is returned verbatim with whether
+    it names an exported item id.
     """
     if manifest.get("schema") != ISOLATED_SCHEMA:
         raise SystemExit("not a q2m isolated export manifest")
@@ -1829,6 +2156,23 @@ def ingest_isolated(
             raise SystemExit(f"item {item}: the packet differs from the exported file")
     order = {item: index for index, item in enumerate(manifest["order"])}
     root_entries = sorted(p.name for p in iso_root.iterdir()) if iso_root.is_dir() else []
+    collected = _collected(collection, manifest, directories, exported)
+
+    def audited_file(path: Path, data: bytes, folder: Path, item: str, expected: str) -> dict:
+        result = audit_transcript(
+            data, folder, item_id=item, expected_prompt=expected, item_ids=exported
+        )
+        row = collected[path.name]
+        if str(row["item_id"]) != item:
+            raise SystemExit(f"{path.name}: the collection maps it to item {row['item_id']}")
+        result["journal_result"] = bool(row["answered"])
+        result["agent_id"] = row.get("agent_id")
+        if not result["journal_result"]:
+            # An interrupted attempt answers only through a structured answer (D38).
+            result["answers"] = bool(result["structured_answers"])
+        return result
+
+    relay_texts: dict[str, str] = {}
     seen: set[str] = set()
     staged: list[dict[str, Any]] = []
     relay_frames: Counter[str] = Counter()
@@ -1856,9 +2200,7 @@ def ingest_isolated(
         audited: list[tuple[Path, bytes, dict[str, Any]]] = []
         for path in item_transcripts(directories, item):
             data = path.read_bytes()
-            result = audit_transcript(
-                data, folder, item_id=item, expected_prompt=expected, item_ids=exported
-            )
+            result = audited_file(path, data, folder, item, expected)
             others = sorted(set(result["models"]) - {ANTHROPIC["model"]})
             if others:
                 raise SystemExit(
@@ -1867,6 +2209,7 @@ def ingest_isolated(
                 )
             audited.append((path, data, result))
             relay_frames.update(result["relay_frames_sha256"])
+            relay_texts.update(result["relay_frame_texts"])
             attachment_types.update(result["attachment_types"])
         answering = [a for a in audited if a[2]["answers"]]
         primary = answering[0] if answering else (audited[0] if len(audited) == 1 else None)
@@ -1917,15 +2260,12 @@ def ingest_isolated(
         entry = exported[item]
         expected = render_isolated_prompt(f"{manifest['iso_root']}/{entry['dir']}", item)
         for path in item_transcripts(directories, item):
-            result = audit_transcript(
-                path.read_bytes(),
-                iso_root / entry["dir"],
-                item_id=item,
-                expected_prompt=expected,
-                item_ids=exported,
+            result = audited_file(
+                path, path.read_bytes(), iso_root / entry["dir"], item, expected
             )
             unanswered += 1
             relay_frames.update(result["relay_frames_sha256"])
+            relay_texts.update(result["relay_frame_texts"])
             attachment_types.update(result["attachment_types"])
     calls: list[dict[str, Any]] = []
     responses: dict[str, bytes] = {}
@@ -1933,7 +2273,7 @@ def ingest_isolated(
         void = row["void"]
         shas = sorted({sha for a in row["audited"] for sha in a[2]["relay_frames_sha256"]})
         if shas and len(relay_frames) > 1:
-            void.append("the harness relay frames differ across the run")
+            void.append(RELAY_MISMATCH)
         item, entry, rec, audit = row["item"], row["entry"], row["rec"], row["audit"]
         primary, current, answer_text = row["primary"], row["current"], row["answer_text"]
         outcome = "isolation_void" if void else "ok"
@@ -1983,6 +2323,8 @@ def ingest_isolated(
                             "attachment_types": result["attachment_types"],
                             "task_turns": result["task_turns"],
                             "relay_frame_sha256": result["relay_frame_sha256"],
+                            "agent_id": result["agent_id"],
+                            "journal_result": result["journal_result"],
                             "answers": result["answers"],
                         }
                         for path, data, result in row["audited"]
@@ -2011,6 +2353,24 @@ def ingest_isolated(
     calls_path.write_text(
         "".join(json.dumps(c, sort_keys=True) + "\n" for c in calls), encoding="utf-8"
     )
+    rerate = sorted(
+        c["item_id"] for c in calls if c["extra"]["void_reasons"] == [RELAY_MISMATCH]
+    )
+    (out_dir / "rerate.json").write_text(
+        json.dumps(
+            {
+                "schema": RERATE_SCHEMA,
+                "rule": RERATE_RULE,
+                "calls_sha256": sha256_file(calls_path),
+                "relay_frames_sha256": dict(sorted(relay_frames.items())),
+                "items": rerate,
+            },
+            indent=1,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     voided = [c for c in calls if c["outcome"] == "isolation_void"]
     on_disk = {
         p.name
@@ -2035,6 +2395,12 @@ def ingest_isolated(
         "transcripts": sum(len(row["audited"]) for row in staged),
         "transcripts_of_unrated_items": unanswered,
         "relay_frames": dict(sorted(relay_frames.items())),
+        "relay_frames_verbatim": [_relay_record(sha, relay_frames[sha], relay_texts[sha], exported)
+                                  for sha in sorted(relay_frames)],
+        "relay_rerate_items": rerate,
+        "transcripts_answering": sum(
+            1 for row in staged for _, _, result in row["audited"] if result["answers"]
+        ),
         "attachment_types": dict(sorted(attachment_types.items())),
         "transcripts_not_exported": sorted(on_disk - named),
         "root_entries_not_exported": sorted(set(root_entries) - set(exported)),
@@ -2047,8 +2413,30 @@ def cmd_export_isolated(args: argparse.Namespace) -> int:
     if manifest_out == iso_root or iso_root in manifest_out.parents:
         raise SystemExit("the manifest must be written outside the isolation root")
     packets = _load_shards(args.packets)
+    rerate = None
+    if args.rerate_list is not None:
+        # Decision D38: the re-rate of the items a relay-frame mismatch voided.
+        data = args.rerate_list.read_bytes()
+        rerate = json.loads(data)
+        if not isinstance(rerate, dict) or rerate.get("schema") != RERATE_SCHEMA:
+            raise SystemExit(f"{args.rerate_list}: not a q2m relay re-rate list")
+        wanted = [str(item) for item in rerate["items"]]
+        known = {str(p["item_id"]) for p in packets}
+        absent = sorted(set(wanted) - known)
+        if absent or not wanted:
+            raise SystemExit(
+                f"the re-rate list names no item, or items outside the packets: {absent[:5]}"
+            )
+        packets = [p for p in packets if str(p["item_id"]) in set(wanted)]
+        rerate = {
+            "list_sha256": sha256_bytes(data),
+            "calls_sha256": rerate["calls_sha256"],
+            "items": sorted(wanted),
+        }
     manifest = export_isolated(packets, iso_root)
     manifest["packets"] = [_packets_record(p, load_packets(p)) for p in args.packets]
+    if rerate is not None:
+        manifest["rerate"] = rerate
     manifest_out.parent.mkdir(parents=True, exist_ok=True)
     manifest_out.write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     print(
@@ -2064,13 +2452,42 @@ def cmd_export_isolated(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_collect_transcripts(args: argparse.Namespace) -> int:
+    out = args.out.resolve()
+    collection_out = args.collection_out.resolve()
+    if collection_out == out or out in collection_out.parents:
+        raise SystemExit("the collection manifest must be written outside the transcript directory")
+    manifest_bytes = args.manifest.read_bytes()
+    collection = collect_transcripts(args.run_dir, json.loads(manifest_bytes), out)
+    collection["export_manifest_sha256"] = sha256_bytes(manifest_bytes)
+    collection_out.parent.mkdir(parents=True, exist_ok=True)
+    collection_out.write_text(
+        json.dumps(collection, indent=1, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(
+        json.dumps(
+            {
+                key: collection[key]
+                for key in ("transcripts", "answered", "items", "exported_items_without_transcript")
+            }
+            | {"collection_sha256": sha256_file(collection_out)},
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
 def cmd_ingest_isolated(args: argparse.Namespace) -> int:
     packets = _load_shards(args.packets)
     manifest_bytes = args.manifest.read_bytes()
     manifest = json.loads(manifest_bytes)
+    collection_bytes = args.collection.read_bytes()
+    collection = json.loads(collection_bytes)
+    if collection.get("export_manifest_sha256") != sha256_bytes(manifest_bytes):
+        raise SystemExit("the transcript collection was made for another export manifest")
     records, answer_digests = isolated_answers(args.answers)
     result = ingest_isolated(
-        packets, manifest, args.iso_root, records, args.transcripts, args.out
+        packets, manifest, args.iso_root, records, args.transcripts, args.out, collection=collection
     )
     receipt = write_receipt(
         args.out,
@@ -2099,8 +2516,14 @@ def cmd_ingest_isolated(args: argparse.Namespace) -> int:
                     "voids it; it also voids an "
                     "answer naming another item, an unread packet, a shell call, a tool other "
                     "than Read and the path-free answer tools, or a path outside the item "
-                    "directory (decisions D27, D34, D35)"
+                    "directory; the transcripts are exactly those the registered collector "
+                    "copied from the rating workflow run, and an attempt without a journal "
+                    "result answers only through a structured answer (decisions D27, D34, "
+                    "D35, D38)"
                 ),
+                "collection_sha256": sha256_bytes(collection_bytes),
+                "collection_run_dir": collection.get("run_dir"),
+                "collection_journal_sha256": collection.get("journal_sha256"),
                 "prompt_template_sha256": ISOLATED_PROMPT_TEMPLATE_SHA256,
                 "relay_preamble_sha256": sha256_bytes(RELAY_PREAMBLE.encode("utf-8")),
                 "relay_frames_sha256": result["relay_frames"],
@@ -2598,6 +3021,27 @@ def build_parser() -> argparse.ArgumentParser:
     iso.add_argument(
         "--manifest-out", type=Path, required=True, help="outside the isolation root"
     )
+    iso.add_argument(
+        "--rerate-list",
+        type=Path,
+        help="rerate.json of an isolated ingest: export only its items for the D38 re-rate",
+    )
+    collect = sub.add_parser("collect-transcripts", allow_abbrev=False)
+    collect.add_argument(
+        "--run-dir",
+        type=Path,
+        required=True,
+        help="the rating workflow run's directory: agent-<id>.jsonl and journal.jsonl",
+    )
+    collect.add_argument(
+        "--manifest", type=Path, required=True, help="the isolated export manifest"
+    )
+    collect.add_argument(
+        "--out", type=Path, required=True, help="new transcript directory (ingest layout)"
+    )
+    collect.add_argument(
+        "--collection-out", type=Path, required=True, help="the collection manifest, outside --out"
+    )
     ingest_iso = sub.add_parser("ingest-isolated", allow_abbrev=False)
     ingest_iso.add_argument("--packets", type=Path, nargs="+", required=True)
     ingest_iso.add_argument("--manifest", type=Path, required=True)
@@ -2614,7 +3058,14 @@ def build_parser() -> argparse.ArgumentParser:
         nargs="+",
         required=True,
         help="directories of <item_id>.jsonl and <item_id>.<agent>.jsonl: every harness "
-        "transcript of every agent started for an item (decision D35)",
+        "transcript of every agent started for an item (decision D35), as collect-transcripts "
+        "wrote them",
+    )
+    ingest_iso.add_argument(
+        "--collection",
+        type=Path,
+        required=True,
+        help="the collect-transcripts manifest of the rating run (decision D38)",
     )
     ingest_iso.add_argument("--out", type=Path, required=True)
     ingest = sub.add_parser("ingest-harness", allow_abbrev=False)
@@ -2636,6 +3087,7 @@ def main(argv: list[str] | None = None) -> int:
         "ingest-harness": cmd_ingest_harness,
         "export-isolated": cmd_export_isolated,
         "ingest-isolated": cmd_ingest_isolated,
+        "collect-transcripts": cmd_collect_transcripts,
     }
     if args.command != "open":
         return handlers[args.command](args)

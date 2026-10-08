@@ -30,8 +30,9 @@ This module fixes, before any rating exists:
   widened by D35), and every P1 gold fixed-point flip (``p1_flip``). If that
   census would not fit the registered rater GPU cap at the planning rate
   (``audit_capacity``), the mutants are a seeded stratified sample over
-  candidate type x checker family (``allocate``), each item carrying its
-  inclusion probability, and the sample summary says so (``audit_scope``);
+  candidate type x checker family (``allocate``) at the largest mutant
+  budget that fits (D38), each item carrying its inclusion probability, and
+  the sample summary says so (``audit_scope``);
 * opaque item ids under a secret per-audit salt (``opaque_item_id``, D34);
 * the answer rule (``parse_first_token``): the first word of the reply, and
   ``unsure`` for a refusal, an empty or unparseable reply, a timeout, a
@@ -45,10 +46,10 @@ This module fixes, before any rating exists:
   bound is the larger of the task-cluster bootstrap limit and an exact bound
   at the Kish effective size, with a minimum audited size
   (``stats.label_error_bound``);
-* Kevin's blind adjudication pool (``adjudication_pool``, D34): the real items
-  on which the raters split, the real K3 items on which both raters agree
-  against the label, and the gold shams on which the raters split, mixed in
-  one seeded order;
+* Kevin's blind adjudication pool (``adjudication_pool``, D34, widened by
+  D38): the real items on which the raters split, the mutants of every label
+  class (every candidate kind) on which both raters agree against the label,
+  and the gold shams on which the raters split, mixed in one seeded order;
 * gold defects (D34): a task whose gold sham is decided reject has its
   equivalence items taken out of the equivalence K3 group and reported as
   gold defects; labels stay relative to the gold.
@@ -328,6 +329,52 @@ def _cells(candidates: Sequence[Candidate]) -> dict[tuple[str, str], list[Candid
     return cells
 
 
+def stratified_sample(
+    candidates: Sequence[Candidate],
+    budget: int | None,
+    *,
+    seed: int = 42,
+    sham_tasks: Sequence[str] = (),
+    p1_flip_tasks: Sequence[str] = (),
+) -> list[Sampled]:
+    """The audit items for one mutant ``budget`` (None: the census), shams and flips added.
+
+    The mutants of every (stratum, checker family) cell are taken whole when the
+    budget covers them all, else ``allocate`` shares ``budget`` over the cells
+    and each cell is drawn with ``random.Random(f"{seed}:audit:{stratum}:{family}")``,
+    its items carrying the cell's inclusion probability. Then the shams
+    (``_shams``) and every P1 flip.
+    """
+    return _draw(_cells(candidates), budget, seed, sham_tasks, p1_flip_tasks)
+
+
+def _draw(
+    cells: Mapping[tuple[str, str], Sequence[Candidate]],
+    budget: int | None,
+    seed: int,
+    sham_tasks: Sequence[str],
+    p1_flip_tasks: Sequence[str],
+) -> list[Sampled]:
+    sizes = {cell: len(pool) for cell, pool in cells.items()}
+    alloc = sizes if budget is None else allocate(sizes, budget)
+    real: list[Sampled] = []
+    for cell in sorted(cells):
+        pool = cells[cell]
+        n = alloc[cell]
+        chosen = (
+            pool
+            if n >= len(pool)
+            else random.Random(f"{seed}:audit:{cell[0]}:{cell[1]}").sample(pool, n)
+        )
+        probability = 1.0 if n >= len(pool) else n / len(pool)
+        for c in sorted(chosen, key=lambda c: c.mutant_id):
+            real.append(Sampled(c.mutant_id, c.task_id, cell[0], probability, family=c.family))
+    flips = [
+        Sampled(p1_flip_id(task), task, "p1_flip", 1.0) for task in sorted(set(p1_flip_tasks))
+    ]
+    return real + _shams(real, sham_tasks) + flips
+
+
 def draw_audit_sample(
     candidates: Sequence[Candidate],
     *,
@@ -347,43 +394,30 @@ def draw_audit_sample(
     its gold. Every P1 flip is added. If the census holds more items than
     ``capacity`` (default ``audit_capacity()``: the registered GPU cap at the
     planning rate), the mutants are instead a stratified sample over (stratum,
-    checker family) cells: the largest mutant budget whose sample, shams and
-    flips fit, allocated by ``allocate``, each cell drawn with
-    ``random.Random(f"{seed}:audit:{stratum}:{family}")`` and its items
-    carrying the cell's inclusion probability.
+    checker family) cells (``stratified_sample``) at the largest mutant budget
+    whose sample, shams and flips fit the capacity (decision D38). The budget
+    is searched, not derived: each mutant adds one item and the shams and
+    flips only add, so no budget above ``capacity`` minus the flips can fit,
+    and the budgets are tried downward from there until one fits (the number
+    of shams depends on the tasks a draw happens to reach, so the size is not
+    a monotone function of the budget and one subtraction can stop short).
     """
     capacity = audit_capacity() if capacity is None else capacity
     cells = _cells(candidates)
-    flips = [
-        Sampled(p1_flip_id(task), task, "p1_flip", 1.0) for task in sorted(set(p1_flip_tasks))
-    ]
-
-    def build(alloc: Mapping[tuple[str, str], int]) -> list[Sampled]:
-        real: list[Sampled] = []
-        for cell in sorted(cells):
-            pool = cells[cell]
-            n = alloc[cell]
-            chosen = (
-                pool
-                if n >= len(pool)
-                else random.Random(f"{seed}:audit:{cell[0]}:{cell[1]}").sample(pool, n)
-            )
-            probability = 1.0 if n >= len(pool) else n / len(pool)
-            for c in sorted(chosen, key=lambda c: c.mutant_id):
-                real.append(
-                    Sampled(c.mutant_id, c.task_id, cell[0], probability, family=c.family)
-                )
-        return real + _shams(real, sham_tasks) + flips
-
-    sizes = {cell: len(pool) for cell, pool in cells.items()}
-    sample = build(sizes)
-    budget = sum(sizes.values())
-    while len(sample) > capacity:
-        budget -= max(1, len(sample) - capacity)
-        if budget <= 0:
-            raise ValueError(f"the shams and P1 flips alone exceed the audit capacity {capacity}")
-        sample = build(allocate(sizes, budget))
-    return sample
+    sample = _draw(cells, None, seed, sham_tasks, p1_flip_tasks)
+    if len(sample) <= capacity:
+        return sample
+    mutants = sum(len(pool) for pool in cells.values())
+    budget = min(mutants - 1, capacity - len(set(p1_flip_tasks)))
+    while budget >= len(cells):
+        sample = _draw(cells, budget, seed, sham_tasks, p1_flip_tasks)
+        if len(sample) <= capacity:
+            return sample
+        budget -= 1
+    raise ValueError(
+        f"the shams and P1 flips alone exceed the audit capacity {capacity}, or leave too "
+        "little for one item per audit cell"
+    )
 
 
 def audit_scope(
@@ -593,7 +627,7 @@ def final_decision(
     """Consensus, else Kevin's blind adjudication, else ``unresolved``.
 
     ``in_pool``: the item is in Kevin's adjudication pool although its raters
-    agree (decision D34: a real K3 item on which both raters contradict the
+    agree (decisions D34 and D38: a mutant on which both raters contradict its
     label); his answer then decides it, and until he gives one the consensus
     stands (and counts as the label error it is).
     """
@@ -619,11 +653,14 @@ def adjudication_pool(
 
     Three kinds of item enter it, mixed in one seeded order (``seed``) so the
     order does not tell them apart: every real item (mutant or P1 flip) on
-    which the raters do not both accept or both reject (``split``); every real
-    item of a K3 group on which both raters agree against its label
-    (``concordant_contradicts_label``: a violation both accept, an equivalence
-    mutant both reject), which a consensus alone would count as a label error;
-    and every gold sham on which the raters split (``gold_sham_split``), whose
+    which the raters do not both accept or both reject (``split``); every
+    mutant of any label class (``LABEL_CLASSES``, so every candidate kind of
+    the D35 census: ``fn_equiv``, ``fn_alt``, ``alt_gate``, ``fp_violation``
+    and ``fp_extra``) on which both raters agree against its label
+    (``concordant_contradicts_label``: a should-fail mutant both accept, a
+    should-pass mutant both reject), which a consensus alone would read as a
+    contradicted label (D34 sent only the K3 groups' items; D38 widens it to
+    every kind); and every gold sham on which the raters split (``gold_sham_split``), whose
     decision can make its task a gold defect. Kevin sees each item's packet
     only, blind to its label, verdict, operator, sham status, reason for being
     in the pool and the raters' answers; the reasons are disclosed as counts.
@@ -642,7 +679,7 @@ def adjudication_pool(
             pool.append((source.mutant_id, "split"))
             continue
         label = labels.get(source.mutant_id)
-        if label in K3_GROUPS and label_is_wrong(label, decision):
+        if label in LABEL_CLASSES and label_is_wrong(label, decision):
             pool.append((source.mutant_id, "concordant_contradicts_label"))
     random.Random(f"{seed}:adjudication").shuffle(pool)
     return pool
@@ -656,8 +693,9 @@ class AuditSummary:
     consensus, else by Kevin's adjudication; an item still unresolved counts
     as a label error (the spec author and one rater share a provider, so
     dropping the other rater's dissents would bias label error down). Kevin's
-    pool (``adjudication_pool``) also holds the K3 items both raters decide
-    against the label; his answer decides those too. A task whose gold sham is
+    pool (``adjudication_pool``) also holds the mutants of every label class
+    that both raters decide against the label (D38); his answer decides those
+    too. A task whose gold sham is
     decided reject is a gold defect (decision D34): its equivalence items leave
     the equivalence K3 group (``gold_defects``) and are reported on their own;
     their labels, kappa, S6 and the metrics stay relative to the gold.

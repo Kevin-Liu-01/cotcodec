@@ -509,6 +509,37 @@ def test_census_over_capacity_becomes_a_seeded_stratified_sample() -> None:
         raters.draw_audit_sample(cands, p1_flip_tasks=[f"p{i}" for i in range(30)], capacity=20)
 
 
+def test_fallback_takes_the_largest_budget_that_fits() -> None:
+    """Decision D38: the sixth review's synthetic pool (1,800 candidates on 60 tasks, two P1
+    flips) fills every capacity; one subtraction of the overshoot stopped at 251, 462, 672."""
+    kinds = [
+        ("should_pass_equiv", "fail"),
+        ("should_pass_alt_solution", "fail"),
+        ("should_pass_alt_solution", "pass"),
+        ("should_fail_violation", "pass"),
+        ("should_fail_extra_change", "pass"),
+    ]
+    families = ["compare_table", "compare_pptx_files", "compare_docx_files", "check_cell"]
+    cands = [
+        raters.Candidate(f"m{i:04d}", f"t{i % 60:02d}", *kinds[i % 5], families[(i // 5) % 4])
+        for i in range(1800)
+    ]
+    flips = ["f1", "f2"]
+    for capacity, budget in ((300, 227), (500, 417), (700, 608)):
+        sample = raters.draw_audit_sample(cands, p1_flip_tasks=flips, capacity=capacity)
+        real = [s for s in sample if s.stratum in raters.STRATA]
+        assert len(sample) == capacity and len(real) == budget
+        assert sample == raters.stratified_sample(cands, budget, p1_flip_tasks=flips)
+        # Largest: the next budgets overshoot (the shams grow with the tasks a draw reaches).
+        for larger in (budget + 1, budget + 2):
+            assert len(raters.stratified_sample(cands, larger, p1_flip_tasks=flips)) > capacity
+        assert raters.audit_scope(cands, sample, capacity)["scope"] == "stratified_sample"
+    # At the registered capacity it fills to 1,139; with room, it is the census.
+    assert len(raters.draw_audit_sample(cands, p1_flip_tasks=flips)) == 1139
+    census = raters.draw_audit_sample(cands, p1_flip_tasks=flips, capacity=10_000)
+    assert len(census) == 1800 + 120 + 2  # the quota's 120 shams already give every task a gold
+
+
 def test_allocation_keeps_a_minimum_per_cell_and_shares_the_rest_in_proportion() -> None:
     sizes = {("a", "x"): 100, ("a", "y"): 10, ("b", "x"): 2, ("b", "y"): 50}
     assert raters.allocate(sizes, 500) == sizes
@@ -688,21 +719,44 @@ def test_adjudication_pool_mixes_splits_concordant_contradictions_and_gold_shams
     ratings["e2_0"] = ("reject", "reject")  # both reject an equivalence mutant
     ratings["t3__sham_gold"] = ("reject", "accept")  # split gold sham
     ratings["v4"] = ("reject", "reject")  # concordant with the label: not in the pool
+    # Every candidate kind, not only the K3 groups (D38): an alternative solution both
+    # reject (fn_alt and alt_gate) and an extra change both accept (fp_extra) join too.
+    for key, label, stratum, pair in (
+        ("alt_f", "should_pass_alt_solution", "fn_alt", ("reject", "reject")),
+        ("alt_p", "should_pass_alt_solution", "alt_gate", ("reject", "reject")),
+        ("alt_ok", "should_pass_alt_solution", "alt_gate", ("accept", "accept")),
+        ("x_p", "should_fail_extra_change", "fp_extra", ("accept", "accept")),
+        ("x_ok", "should_fail_extra_change", "fp_extra", ("reject", "reject")),
+    ):
+        sample.append(raters.Sampled(key, "t5", stratum, 1.0))
+        labels[key], ratings[key] = label, pair
+    # A P1 flip has no label: both raters agreeing never sends it to the pool.
+    sample.append(raters.Sampled("t6__p1_flip", "t6", "p1_flip", 1.0))
+    ratings["t6__p1_flip"] = ("reject", "reject")
     pool = raters.adjudication_pool(sample, labels, ratings)
     assert dict(pool) == {
         "e0_0": "split",
         "v1": "concordant_contradicts_label",
         "e2_0": "concordant_contradicts_label",
+        "alt_f": "concordant_contradicts_label",
+        "alt_p": "concordant_contradicts_label",
+        "x_p": "concordant_contradicts_label",
         "t3__sham_gold": "gold_sham_split",
     }
     assert pool == raters.adjudication_pool(sample, labels, ratings)
     summary = raters.summarize(sample, labels, ratings, n_boot=200)
-    assert summary.adjudication["pool"] == 4 and summary.adjudication["pending"] == 4
+    assert summary.adjudication["pool"] == 7 and summary.adjudication["pending"] == 7
     assert summary.adjudication["pool_by_reason"] == {
         "split": 1,
-        "concordant_contradicts_label": 2,
+        "concordant_contradicts_label": 5,
         "gold_sham_split": 1,
     }
+    # Kevin's answer decides an alternative-solution or extra-change item as well.
+    gated = raters.summarize(
+        sample, labels, ratings, adjudicated={"alt_p": "accept", "x_p": "reject"}, n_boot=200
+    )
+    assert gated.decisions["alt_p"] == "accept" and gated.decisions["x_p"] == "reject"
+    assert summary.decisions["alt_p"] == "reject" and summary.decisions["x_p"] == "accept"
     # Unadjudicated, a concordant contradiction is a label error (the consensus).
     assert summary.decisions["v1"] == "accept" and summary.decisions["e2_0"] == "reject"
     # Kevin's answer decides every pool item, concordant ones included.
