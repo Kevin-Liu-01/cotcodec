@@ -16,7 +16,7 @@
       "doc": "program/questions/q1-kernel-gate-strength.md",
       "dossier_key": "C2-kernel-verification-rl",
       "status": "stage-0: not admitted under D31; waiting on the gauntlet (D24)",
-      "next_action": "D37: the memory-aware execution policy q1-stage0-exec/2 replaces trim/2 item 6; one validation job under it (<=0.17 GPU-h, non-evaluation kernels and the KernelBench adversarial controls); a gauntlet wave on the Stage 0 design. Stage 0 stays not admitted under D31 and waits on the gauntlet (D24: Kevin's trust store or admission ruling). Stage 1 also needs the R580 driver upgrade or written risk acceptance.",
+      "next_action": "D37: the validation job under q1-stage0-exec/2 ran (Slurm 752, 0.109 GPU-h; branch stage0/q1-exec2-validation, not merged): no resource failure, health-check failure or slot retirement where it ran (12 and 2 items per GPU), but the time box did not reach L2/87, L2/100, L2/46 or any 4-11-unit item, and measured cost is 2.4x the exec/2 model (6.3x on L2/59), so Stage 0 through P3 projects to 19.99 central / 24.66 high (primary). Remaining under D37: a gauntlet wave on the Stage 0 design. Stage 0 stays not admitted under D31 and waits on the gauntlet (D24) or Kevin. Stage 1 also needs the R580 driver upgrade or written risk acceptance.",
       "first_gpu_experiment": {
         "name": "on-policy false-accept audit",
         "estimated_gpu_hours": 12,
@@ -114,6 +114,153 @@
             "high": 12.83
           }
         }
+      },
+      "stage0_exec2_validation_branch": "stage0/q1-exec2-validation",
+      "stage0_exec2_validation_evidence": "program/evidence/2026-10-08/q1-exec2-validation/README.md",
+      "stage0_exec2_validation": {
+        "job": "752",
+        "image_build": "746 (CPU-only)",
+        "gpu_hours_physical": 0.1092,
+        "d31_budget_used_of_0_5": 0.4392,
+        "items": {
+          "planned": 433,
+          "started": 122,
+          "final": 122,
+          "never_final": 0,
+          "cut_at_hard_deadline": 1,
+          "never_started": 310
+        },
+        "safety": {
+          "resource_failures": 0,
+          "contention_retries": 0,
+          "health_check_failures": 0,
+          "slots_retired": 0,
+          "a5_na": 0,
+          "memory_guard_waits": 0,
+          "largest_concurrent_measured_peak_gb": 24.2,
+          "peak_over_estimate_max": 1.12,
+          "regimes_covered_items_per_gpu": [
+            12,
+            2,
+            1
+          ],
+          "items_at_one_per_gpu": 1,
+          "not_reached": [
+            "L2/87",
+            "L2/100",
+            "L2/46",
+            "L2/59 consumers",
+            "identity controls",
+            "mutants"
+          ]
+        },
+        "adversarial_controls_store_vs_inline": "15 of 15 consumer-gate aggregates equal; rows differ only for result_reuse (allocator history): inline gate c accepted 7 of 16 configurations, store rejected all 16",
+        "cost_measured_over_exec2_model": {
+          "R_all": 2.425,
+          "R_bootstrap_2_5_97_5": [
+            1.14,
+            4.837
+          ],
+          "twelve_per_gpu": 1.955,
+          "two_per_gpu_L2_59": 6.349,
+          "references": 1.533,
+          "exec2_over_job713_exec1_same_items": 1.619
+        },
+        "projection_gpu_hours_fixed_includes_this_job": {
+          "A_exec2_no_store_model": {
+            "P3": [
+              10.57,
+              12.41
+            ],
+            "P7": [
+              15.16,
+              18.35
+            ]
+          },
+          "B_exec2_store_model": {
+            "P3": [
+              10.77,
+              12.69
+            ],
+            "P7": [
+              15.67,
+              19.06
+            ]
+          },
+          "C_primary_B_times_R": {
+            "P3": [
+              19.99,
+              24.66
+            ],
+            "P7": [
+              31.89,
+              40.1
+            ]
+          },
+          "C_at_R_2_5pct": {
+            "P3": [
+              11.68,
+              13.87
+            ],
+            "P7": [
+              17.27,
+              21.13
+            ]
+          },
+          "C_at_R_97_5pct": {
+            "P3": [
+              35.6,
+              44.92
+            ],
+            "P7": [
+              59.33,
+              75.71
+            ]
+          },
+          "D_per_gate": {
+            "P3": [
+              18.14,
+              22.26
+            ],
+            "P7": [
+              27.04,
+              33.81
+            ]
+          },
+          "E_store_independent": {
+            "P3": [
+              26.11,
+              32.51
+            ],
+            "P7": [
+              42.05,
+              53.13
+            ]
+          },
+          "F_post_hoc_regime_split": {
+            "P3": [
+              35.33,
+              44.56
+            ],
+            "P7": [
+              51.69,
+              65.79
+            ]
+          },
+          "G_post_hoc_low_regime_only": {
+            "P3": [
+              34.26,
+              43.17
+            ],
+            "P7": [
+              50.12,
+              63.75
+            ]
+          },
+          "format": "[central, high]",
+          "cap": 8.0,
+          "admitted_under_D31": false
+        }
       }
     },
     {
@@ -172,10 +319,10 @@
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
-    "Q1 Stage 0 after D31 and its review: not admitted (preregistration sections 18.8-18.9). Under the corrected, memory-aware execution q1-stage0-exec/2 the model-based estimate through P3 is 10.46 GPU-h central and 12.31 high without the store (11.10 high at the references-free bound, post hoc ratio). Choose: the gauntlet (blocked by D24 until the trust store exists or you rule on admission), a scope reduction that acts on P1-P3 (test quota, FRR core, hack fraction, control replicates; a 30-per-family quota still projects 9.10 central, 10.51 high), or a new engineering pass and re-pilot beyond D31 (for example one process per kernel for its gates). Before any Stage 0 job: sign off q1-stage0-exec/2 (it amends trim/2 item 6) and the store policy (on or off for c and A1-A5; L2/77's shared realization of a nondeterministic cuDNN reference; a GPU check of the three KernelBench adversarial controls under the store), and fund a re-measurement under q1-stage0-exec/2",
+    "Q1 Stage 0 after D31 and its review: not admitted (preregistration sections 18.8-18.9). Under the corrected, memory-aware execution q1-stage0-exec/2 the model-based estimate through P3 is 10.46 GPU-h central and 12.31 high without the store (11.10 high at the references-free bound, post hoc ratio). Choose: the gauntlet (blocked by D24 until the trust store exists or you rule on admission), a scope reduction that acts on P1-P3 (test quota, FRR core, hack fraction, control replicates; a 30-per-family quota still projects 9.10 central, 10.51 high), or a new engineering pass and re-pilot beyond D31 (for example one process per kernel for its gates). Before any Stage 0 job: sign off q1-stage0-exec/2 (it amends trim/2 item 6) and the store policy (on or off for c and A1-A5; L2/77's shared realization of a nondeterministic cuDNN reference; a GPU check of the three KernelBench adversarial controls under the store), and fund a re-measurement under q1-stage0-exec/2 Update 2026-10-08 (D37 iii, Slurm 752): the validation job under q1-stage0-exec/2 measured cost at 2.4x the exec/2 model (6.3x on the parameter-heavy L2/59), so the primary projection through P3 is 19.99 GPU-h central and 24.66 high (11.68 central at the bootstrap lower point); it reached only 12 and 2 items per GPU (no failure there) and found that the three KernelBench adversarial controls share one CUDA extension name, so Stage 0 must chain them or give each item its own extension directory",
     "Review the decisions taken on your behalf since the restart, D1-D37 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30 and D33 (action-path guest-server restarts), D31 and D37 (Q1 Stage 0 budget path), D32 and D36 (Q3 dense pre-check), D34 and D35 (checker-mutation raters; the study became descriptive)"
   ],
-  "gpu_hours_spent_this_program": 3.1857,
+  "gpu_hours_spent_this_program": 3.2949,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -305,6 +452,16 @@
         "713 q1-repilot-d31"
       ],
       "outcome": "COMPLETED 0:0 in 19 min 48 s of the 0.5 GPU-h cap; S1-cal and controls only (D28); 843 twin rows, 828 same verdict, every difference explained and none by the store; store saves c 42%, A1 25%, A2 17% but its reference items cost about as much at in-scope sizes; trim/2 high through P3 stays above 8 in every scenario; CUDA OOM on 3 of 8 problems at 12 per GPU"
+    },
+    {
+      "experiment": "q1-stage0 D37 exec/2 validation job (stage0/q1-exec2-validation)",
+      "gpu_hours": 0.1092,
+      "jobs": [
+        "746 image build (CPU)",
+        "752 q1-exec2-validation"
+      ],
+      "outcome": "COMPLETED 0:0 in 6 min 33 s (cap 10 min, 0.1667 GPU-h); 122 of 433 items, all final; no resource failure, health-check failure or retirement at 12 and 2 per GPU; L2/87, L2/100, L2/46 not reached; adversarial controls' store and inline aggregates equal; measured cost 2.4x the exec/2 model; Stage 0 through P3 19.99 central / 24.66 high (primary)",
+      "basis": "physical (job.env start to termination.env finish, 393 s)"
     }
   ],
   "results": [
