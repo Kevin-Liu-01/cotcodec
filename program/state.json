@@ -15,8 +15,8 @@
       "title": "Kernel correctness-gate strength",
       "doc": "program/questions/q1-kernel-gate-strength.md",
       "dossier_key": "C2-kernel-verification-rl",
-      "status": "stage-0: not admitted under D31; waiting on the gauntlet (D24)",
-      "next_action": "D37: the validation job under q1-stage0-exec/2 ran (Slurm 752, 0.109 GPU-h; branch stage0/q1-exec2-validation, not merged): no resource failure, health-check failure or slot retirement where it ran (12 and 2 items per GPU), but the time box did not reach L2/87, L2/100, L2/46 or any 4-11-unit item, and measured cost is 2.4x the exec/2 model (6.3x on L2/59), so Stage 0 through P3 projects to 19.99 central / 24.66 high (primary). Remaining under D37: a gauntlet wave on the Stage 0 design. Stage 0 stays not admitted under D31 and waits on the gauntlet (D24) or Kevin. Stage 1 also needs the R580 driver upgrade or written risk acceptance.",
+      "status": "stage-0-closed (D46)",
+      "next_action": "D46: Q1 Stage 0 closed on the audit-metric study (under TF32 a tolerance audit certifies 'not grossly wrong', not 1% correctness; rule q1-audit-metric/2 designed). No Q1 GPU job until Stage 1 can run (R580 driver or written risk acceptance; a licensed policy, D5). Revival path: Kevin's D14 ruling on TF32 truncation, an S1-cal-only GPU pilot of rule /2 (about 1.2 GPU-h), then a reduced Stage 0 under a new id and a fresh gauntlet.",
       "first_gpu_experiment": {
         "name": "on-policy false-accept audit",
         "estimated_gpu_hours": 12,
@@ -283,7 +283,7 @@
       "action_path_suite": {
         "registration": "q2-action-path-v2 (+ -inputs, -executor addenda), successor of q2-action-path-v1 (D40)",
         "status": "v1 frozen 2026-10-08 (ledger rows 8-10) and invalid: C2 failed (job 768; chord_super_d unpredicted). v2 drafted under D40 (code e66bf16); D43 implemented at 126ff8b: the judge reads a key event the XRecord tap recorded without the guard-guaranteed Mod2 (Num Lock) on kind, keycode, keysym and order only, the guard checks Mod2 (condition f), C2's prediction keeps v1's failing set (chord_super_d passes under the rule, disclosed as informed by v1's C2), and seed-42 development (jobs 830-839) passed the positive and negative cases and repeated v1's final runs 703-708 with the same outcomes. D45 implemented at c74eae0: such an event is read without its state only after a key press recorded with Mod2 in its window (a grab already active before an entry now fails a chord), C3's equivalence comparison reads the state the same way (a slow shell answer leaves M12 and M13 equivalent), and the analysis reports every event read without state (section 12); the D43 development set repeated at c74eae0 (jobs 845-854) with the same outcomes but one restart-only trial (job 851, unprovoked guest-server restart). The executor addendum's byte-identity rule names c74eae0. Freeze-linted in order against a scratch copy of the ledger; not frozen",
-        "branch": "stage0/q2-action-path-v2 (from main at 124573a; main merged in at 65bc2e2, 692b83d and 1d2cbe0)",
+        "branch": "stage0/q2-action-path-v2 (from main at 124573a; main merged in at 65bc2e2, 692b83d, 1d2cbe0 and ed5d5a9)",
         "development_jobs": "482-637, 662-667 and 694-708 (v1, seed 42, CPU only, never evidence; 703-708 at the D30 runtime commit 7653799, 694 at 34f79e4, 695-699 cancelled while booting); 784-787 (v2 development under D40 at e66bf16, seed 42, CPU only, 1.0 VM-h: L0-raw on the 13 chords, L0-fixed on chord_super_d at 8 and 16 VMs); 830-839 (D43 development at 126ff8b, seed 42, CPU only, 2.4 VM-h: L0-raw and L0-fixed samples, the drop-modifier negative case, v1's final runs 703-708 repeated as 834-839); 845-854 (D45 development at c74eae0, seed 42, CPU only, 2.4 VM-h: 830-839 repeated with their workloads unchanged)"
       },
       "checker_mutation_confirm": {
@@ -358,19 +358,28 @@
       "title": "Cross-script sparse-indexer recall",
       "doc": "program/questions/q3-cross-script-indexer.md",
       "dossier_key": "E6-d21-translation-supervised-indexer",
-      "status": "stage-0-precheck-incomplete",
-      "next_action": "D36: successor q3-dense-headroom-precheck-v2 (same design and decision rules; receipts bound to their Slurm job; SIGUSR1 honoured on the 4B path; CPU bottleneck removed without changing results, gated by reproducing v1 job 727 to 1e-6; 4B lane limit from a <=0.1 GPU-h timing job; cap 1.5 GPU-h) is being built on stage0/q3-dense-v2; then freeze, operate, combined read. v1 ended INCOMPLETE (no combined read); its 0.6B receipt stays as evidence.",
+      "status": "stage-0-precheck-v2-draft",
+      "next_action": "q3-dense-headroom-precheck-v2 (draft on stage0/q3-dense-v2): D42 accepted decisions 16-21 as amended by it, after a narrow re-check of the measured limits, amended D36 (iii) for the 4B lane and authorised a second timing job of the fixed 4B path. That job ran (Slurm 810, 0.045 GPU-h, image from 87242fa): the fixed path runs on the GPU from the lane's own start-up (attention_backend_check 47.4 s; recall within 1.15 points, option scores within 0.011 of cuDNN's, same answer), memory-efficient attention, 0.16-0.43 s per unit by stage, v1's path bit-equal on five units, SIGUSR1 answered. The narrow re-check found that the registered stage-mean scaling (30 minutes) was chosen after a first analysis pass came out over the cap and that a per-stage line fit gives 31 minutes and the larger of the two in every stage 32 (disclosed at ddb3d02). D44 closed the re-check: the 4B lane is 32 minutes (cap 32/60 GPU-h), the largest of the three estimates, so D36's 'at least twice the measured time' holds under each; decisions 16-21 accepted as amended by D42 and D44. Implemented at da31db7 (lanes module records all three estimates and takes their maximum; cap exactly 32/60, since a rounded 0.5333 would be refused by the submitter; 4B template, registration, tests, code table); the 0.6B lane stays 12; caps with both timing jobs 0.933 of 1.5 GPU-h. Host suite 2,218 passed, 40 skipped (at da31db7 and again after main's D45 merge, 85cf0f5); torch tests in image 825 with the new code mounted 57 passed, doctor 12/12; freeze simulated on scratch clones naming D42 and D44 (check-chain 12 rows PASS, frozen-mode tests 31 passed, full suite in the frozen clone 2,171 passed; status-only, D41-for-D42 and D42-only fail). Next: freeze with the status paragraph and the design-decision lead-in rewritten to the frozen wording naming D42 and D44 (freeze step 1), image from the frozen commit, doctor, run the 0.6B lane (must reproduce v1 job 727 to 1e-6 and smoke 452), then the 4B lane (32 minutes), and the combined read. v1 ended INCOMPLETE; its 0.6B receipt stays as evidence.",
       "first_gpu_experiment": {
         "name": "dense headroom pre-check",
-        "registration": "q3-dense-headroom-precheck-v1 (frozen 2026-10-08, D32; operated 2026-10-08: 0.6B lane complete with smoke 452 REPRODUCED, 4B lane void, read INCOMPLETE)",
-        "cap_gpu_hours": 0.5,
+        "registration": "q3-dense-headroom-precheck-v2 (DRAFT, not frozen; D36, D42, D44; branch stage0/q3-dense-v2), successor of q3-dense-headroom-precheck-v1 (frozen 2026-10-08, D32; operated 2026-10-08: 0.6B lane complete with smoke 452 REPRODUCED, 4B lane void, read INCOMPLETE)",
+        "cap_gpu_hours": 1.5,
+        "registered_caps_gpu_hours": 0.9333,
         "gauntlet_required": false,
-        "gpu_hours_used": 0.4189,
-        "gpu_hours_charged": 0.4667,
-        "evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck/README.md"
+        "gpu_hours_used": 0.1019,
+        "gpu_hours_charged": 0.15,
+        "v1_gpu_hours_used": 0.4189,
+        "v1_gpu_hours_charged": 0.4667,
+        "evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/README.md",
+        "v1_evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck/README.md",
+        "timing_jobs": [
+          "766 (D36; the 4B path before the fix; 0.0569 GPU-h physical, 5 min charged)",
+          "810 (D42 (ii); the fixed 4B path at 87242fa; 0.045 GPU-h physical, 4 min charged)"
+        ],
+        "evidence_timing_2": "program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/timing-2/README.md"
       },
       "blocked_by": [
-        "program owner decision on the successor of q3-dense-headroom-precheck-v1, whose combined read is INCOMPLETE and was not written: the frozen summariser refuses every lane receipt (slurm_job_id is null inside the container) and the 4B lane needs several times its 21 minutes"
+        "the freeze of q3-dense-headroom-precheck-v2 (freeze step 1: the status paragraph and the design-decision lead-in rewritten to the frozen wording naming D42 and D44; 4B 32 min and 0.6B 12 min, caps 0.933 of 1.5 GPU-h)"
       ]
     }
   ],
@@ -386,12 +395,12 @@
     "Q2 checker-mutation (q2-evaluator-mutation-v1, frozen at 65bc2e2, descriptive under D35 and D38): the confirm audit and the registered analysis have run (program/evidence/2026-10-08/q2-mutation-confirm/results/README.md). Adjudicate the 34-item blind pool (24 splits, 6 concordant contradictions, 4 split gold shams; ids only in audit/audit-summary/adjudication-pool.jsonl), answering from the packets before reading the released sample, decisions or results (they name labels and decisions); your answers decide 6 unresolved false-negative candidates (30-36 confirmed), 3 false-positive candidates the raters both accepted (2-5 confirmed), 21 alternative solutions at P2's gate (72-93 in P2) and 4 split gold shams (0-4 gold-defect tasks); kappa (0.343), P1 (3/92 confirmed), P3-P5 do not change. Then audit summarize --adjudications and the analysis are rerun. Still yours as well: the outward actions and the carried-over sign-offs of prereg section 17 (the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, P1 with reserve-split golds, the spec release, the D34 rules as implemented)",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
-    "Q1 after D41: Stage 0 as drafted is withdrawn (gauntlet wave 1 honest exit at 45; the TF32-admissible audit metric cannot separate correct TF32 matmul/conv outputs from destroyed ones; projected 20-25 GPU-h high under the safe execution policy). A CPU-only audit-metric study on stored non-evaluation data is running; its recommendation, a small S1-cal GPU pilot and any successor Stage 0 (new id, fresh gauntlet, D24) are yours to approve. Stage 1 also needs the R580 driver upgrade or risk acceptance",
-    "Review the decisions taken on your behalf since the restart, D1-D45 in program/decisions.md; the recent ones are D28-D29 (Q1 pilot exposure, upstream test code on GPUs), D30, D33, D39, D40, D43 and D45 (action path: restarts, freeze details, v1 invalid on C2, the corrected cause and the v2 judge rule, narrowed and applied to C3), D31, D37 and D41 (Q1 Stage 0 budget path and withdrawal), D32, D36, D42 and D44 (Q3 dense pre-check and its v2), D34, D35 and D38 (checker-mutation raters; the study became descriptive)",
+    "Q1 after D46: Stage 0 is closed on the audit-metric study (program/evidence/2026-10-08/q1-audit-metric-study/). To revive Q1: approve the R580 upgrade or accept the risk in writing, choose a licensed policy (D5), rule on D14 (is TF32 truncation admissible, and is 'never grossly wrong' an acceptable primary contract), and fund a 1.2 GPU-h S1-cal pilot of rule q1-audit-metric/2",
+    "Review the decisions taken on your behalf since the restart, D1-D46 in program/decisions.md; the recent ones are D28-D29 (Q1 pilot exposure, upstream test code on GPUs), D30, D33, D39, D40, D43 and D45 (action path: restarts, freeze details, v1 invalid on C2, the corrected cause and the v2 judge rule), D31, D37, D41 and D46 (Q1 Stage 0 budget path, withdrawal and closure), D32, D36, D42 and D44 (Q3 dense pre-check and its v2), D34, D35 and D38 (checker-mutation raters; the study became descriptive)",
     "The checker-mutation blind specs (program/evidence/q2-mutation/specs/, public on main since 2026-10-07) quote short passages of OSWorld file-cache documents. The registration lists their release as your sign-off, but they were published with the integration branch before that sign-off. Confirm the release, or ask for removal (a history purge needs a force-push, as with the other purge item)",
     "Q2 action path (D43, D45; q2-action-path-v2 sections 26-27): v1's C2 failure of chord_super_d is in the XRecord tap's record, not in delivery: GNOME Shell grabs Super_L and its keybindings synchronously, the X server queues the next key, and RECORD reports a queued event before its state is computed (state 0, without Num Lock's Mod2); the shell still showed the desktop. D43 (126ff8b) and D45 (c74eae0) are implemented on stage0/q2-action-path-v2: the judge reads such an event on kind, keycode, keysym and order only when a key press recorded with Mod2 comes before it in its window, C2, C3 and C4 read the tap the same way, every criterion reports the events read without state, the guard guarantees Mod2, and seed-42 development at c74eae0 passed the positive and negative cases (jobs 845-854). What the rule still does not check: that a grab activating inside an entry after a processed press is the shell's (section 27, case 6). Job 851 had an unprovoked guest-server restart during an observation call (the lane's second after run 622; restart-only, excused in A1-A4 and the ladder, bounded by A7). Review D45's implementation before v2's freeze, and decide whether a later registration should observe the shell's side of a grabbed chord directly."
   ],
-  "gpu_hours_spent_this_program": 4.2911,
+  "gpu_hours_spent_this_program": 4.393,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -580,6 +589,33 @@
       ],
       "outcome": "review PARSED on attempt 1, total 45, replicates token-identical; wave score 45 (lower of 47 and 45); honest exit (query budget, triad 3/3 refuted); reviewer inference only, not Stage 0 work",
       "basis": "physical (scontrol RunTime 00:03:26 on 1 H100; 0.25 GPU-h cap)"
+    },
+    {
+      "experiment": "q3-dense-headroom-precheck-v2 development timing job (D36)",
+      "gpu_hours": 0.0569,
+      "jobs": [
+        "763 image build (CPU)",
+        "766 timing job, qwen3.5-4b-base",
+        "770 image build (CPU)",
+        "776 image build (CPU)",
+        "778 CPU doctor (CPU)"
+      ],
+      "outcome": "TIMING_INTERRUPTED by Slurm's SIGUSR1 three minutes before the 6-minute limit, checkpoint confirmed, exit 75, receipt bound to job 766 from job.env; 2 of 8 subset chunks (A-main 108 s, B-absent 54 s; cold units 3.6-4.1 s); cost located: a cuDNN attention graph per new sequence length (about 0.7 s of CPU per forward); v1-path reference units bit-equal",
+      "basis": "physical (job.env start 07:32:07 to termination.env finish 07:35:32, 205 s on 1 H100); charged under v1's rule 5 minutes (0.0833 GPU-h)"
+    },
+    {
+      "experiment": "q3-dense-headroom-precheck-v2 second development timing job (D42 (ii))",
+      "gpu_hours": 0.045,
+      "jobs": [
+        "806 image build (CPU)",
+        "810 timing job, qwen3.5-4b-base (the fixed path)",
+        "813 image build (CPU)",
+        "825 image build (CPU)",
+        "814 and 826 host suites (CPU)",
+        "CPU doctor, analysis and test steps (srun, CPU)"
+      ],
+      "outcome": "TIMING_INTERRUPTED by Slurm's SIGUSR1, checkpoint confirmed, exit 75, receipt bound to job 810 from job.env; the lane's start-up with attention_backend_check ran on the GPU (47.4 s; cuDNN left off); subset complete plus two chunks; first evaluations 0.16-0.43 s per unit by stage (memory-efficient attention); v1-path reference units bit-equal; 4B limit by D36's rule 30 minutes (stage-mean scaling; D44 later set 32, the largest of three estimates)",
+      "basis": "physical (job.env start 10:12:46 to termination.env finish 10:15:28, 162 s on 1 H100); charged under the run-root rule 4 minutes (0.0667 GPU-h)"
     },
     {
       "experiment": "q2-evaluator-mutation-v1 confirm campaign stage A1 (K1, P1, confirm mutants; CPU only)",

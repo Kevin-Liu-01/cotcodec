@@ -1,0 +1,21 @@
+clone of b8977d9d188cb7aa8c72414fe8ddd566627c614f mode=full
+ledger rows before:       11
+full rewritten
+{
+  "experiment_id": "q3-dense-headroom-precheck-v2",
+  "frozen_at": "2026-10-08T09:30:19.746847+00:00",
+  "git_head_at_freeze": "210235537df7d7a692c1da0200ea5a9cc61c3abf",
+  "hash": "03a0d6da5dda33aa88bd8a83792584a95be2fb9ca41cf56c009bc10bc5bcae3d",
+  "path": "program/preregistrations/q3-dense-headroom-precheck-v2.md",
+  "previous_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439",
+  "sha256": "0c60a3db6fd4697da6a35707584a6986aa8ed41cd0ecdf8108a7e694c7ecc5c1"
+}
+freeze exit=0
+verify exit=0
+{"rows": 12, "status": "PASS"}
+check-chain exit=0
+simulated freeze commit a4b748c8da40d796966e1f48252eb524581913f4
+frozen file contains 'DRAFT': False
+frozen file contains 'wait for the program owner': False
+26 passed in 24.65s
+pytest exit=0

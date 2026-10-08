@@ -1,0 +1,11 @@
+2026-10-08T10:12:43Z
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+               796  research cotcodec    kevin  R      58:48      1 fal-h100-01
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB

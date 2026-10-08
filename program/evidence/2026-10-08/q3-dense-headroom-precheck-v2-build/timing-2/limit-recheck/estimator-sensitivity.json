@@ -1,0 +1,134 @@
+{
+ "rows": {
+  "A-main": {
+   "lane_units": 440,
+   "lane_tokens_mean": 6606.968181818182,
+   "regular_n": 47,
+   "regular_tokens_min": 3614,
+   "regular_tokens_max": 3825,
+   "regular_mean_s": 0.4346445005664483,
+   "regular_tokens_mean": 3723.446808510638,
+   "registered_unit_s": 0.7712430265100091,
+   "line_slope_ms_per_token": 0.15989646824731074,
+   "line_unit_s": 0.8957093842739599,
+   "line_minus_registered_stage_s": 54.765197416138335,
+   "first_pass_slope_ms_per_token": 0.15989646824731074,
+   "first_pass_unit_s": 0.8957093842739599
+  },
+  "B-absent": {
+   "lane_units": 280,
+   "lane_tokens_mean": 6973.685714285714,
+   "regular_n": 47,
+   "regular_tokens_min": 3551,
+   "regular_tokens_max": 8313,
+   "regular_mean_s": 0.41596039963212417,
+   "regular_tokens_mean": 4412.255319148936,
+   "registered_unit_s": 0.6574363645806973,
+   "line_slope_ms_per_token": 0.0479377291939178,
+   "line_unit_s": 0.5387495562632609,
+   "line_minus_registered_stage_s": -33.23230632888219,
+   "first_pass_slope_ms_per_token": 0.23956331866802594,
+   "first_pass_unit_s": 1.1605342563411798
+  },
+  "C-literal": {
+   "lane_units": 160,
+   "lane_tokens_mean": 5990.2125,
+   "regular_n": 31,
+   "regular_tokens_min": 3607,
+   "regular_tokens_max": 3922,
+   "regular_mean_s": 0.15620819956905418,
+   "regular_tokens_mean": 3763.0967741935483,
+   "registered_unit_s": 0.24865698806312864,
+   "line_slope_ms_per_token": 0.03716757452125475,
+   "line_unit_s": 0.2389846892754238,
+   "line_minus_registered_stage_s": -1.5475678060327747,
+   "first_pass_slope_ms_per_token": 3.276894432529229,
+   "first_pass_unit_s": 7.674132629316958
+  },
+  "D-nohaystack": {
+   "lane_units": 280,
+   "lane_tokens_mean": 181.15714285714284,
+   "regular_n": 32,
+   "regular_tokens_min": 127,
+   "regular_tokens_max": 426,
+   "regular_mean_s": 0.3387381648644805,
+   "regular_tokens_mean": 239.5,
+   "registered_unit_s": 0.3387381648644805,
+   "line_slope_ms_per_token": 0.0,
+   "line_unit_s": 0.3387381648644805,
+   "line_minus_registered_stage_s": 0.0,
+   "first_pass_slope_ms_per_token": 0.0,
+   "first_pass_unit_s": 0.3387381648644805
+  }
+ },
+ "b_absent_length": {
+  "short (< 5,000 tokens)": {
+   "n": 40,
+   "tokens_mean": 3730.3,
+   "unit_s": 0.38318491212558004,
+   "parts_s": {
+    "inputs": 0.0002396728377789259,
+    "mc_cache_copy": 0.006057861470617354,
+    "mc_option_forward": 0.2605830615386367,
+    "prefill_forward": 0.11618631358724088
+   },
+   "chunks": [
+    "continue:2",
+    "subset:0",
+    "subset:1"
+   ]
+  },
+  "long (> 8,000 tokens)": {
+   "n": 7,
+   "tokens_mean": 8309.142857142857,
+   "unit_s": 0.6032488996695194,
+   "parts_s": {
+    "inputs": 0.0003442680463194847,
+    "mc_cache_copy": 0.00878912050809179,
+    "mc_option_forward": 0.34671995136886835,
+    "prefill_forward": 0.2472596957481333
+   },
+   "chunks": [
+    "continue:2"
+   ]
+  },
+  "proportional_at_long_mean_s": 0.7833350822781083
+ },
+ "start_up_s": 78.74972356017679,
+ "compile_allowance_s": 106.11389799325069,
+ "statistics_bound_s": 5.0,
+ "estimators": {
+  "registered": {
+   "stages_s": 658.0609179991544,
+   "evaluation_s": 764.1748159924051,
+   "evaluation_and_statistics_s": 769.1748159924051,
+   "minutes_before_rounding_and_lead": 26.951655925749783,
+   "minutes": 30,
+   "one_pass_with_start_up_min": 14.132075659209699
+  },
+  "line_fit_compiles_as_registered": {
+   "stages_s": 678.0462412803777,
+   "evaluation_s": 784.1601392736284,
+   "evaluation_and_statistics_s": 789.1601392736284,
+   "minutes_before_rounding_and_lead": 27.617833368457227,
+   "minutes": 31,
+   "one_pass_with_start_up_min": 14.465164380563419
+  },
+  "larger_of_the_two_per_stage": {
+   "stages_s": 712.8261154152927,
+   "evaluation_s": 818.9400134085435,
+   "evaluation_and_statistics_s": 823.9400134085435,
+   "minutes_before_rounding_and_lead": 28.777162506287727,
+   "minutes": 32,
+   "one_pass_with_start_up_min": 15.04482894947867
+  },
+  "first_pass_as_run": {
+   "stages_s": 2041.7696277088405,
+   "evaluation_s": 2041.7696277088405,
+   "evaluation_and_statistics_s": 2046.7696277088405,
+   "minutes_before_rounding_and_lead": 69.53814964963097,
+   "minutes": 73,
+   "one_pass_with_start_up_min": 35.42532252115029
+  }
+ }
+}

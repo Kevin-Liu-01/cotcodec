@@ -1,0 +1,6 @@
+run L1/10 A3/lead5/seed-5043
+done L1/10 A3/lead5/seed-5043 13.7s
+run L1/10 A3/inner37/seed-5044
+done L1/10 A3/inner37/seed-5044 5.6s
+run L1/10 A3/allprime/seed-5046
+done L1/10 A3/allprime/seed-5046 0.6s

@@ -1,0 +1,4 @@
+slurmstepd-fal-h100-01: error: *** STEP 814.0 ON fal-h100-01 CANCELLED AT 2026-10-08T10:44:43 ***
+...................................srun: error: fal-h100-01: task 0: Killed
+exit=137
+end=2026-10-08T10:45:13Z
