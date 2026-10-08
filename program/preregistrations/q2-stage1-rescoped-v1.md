@@ -1332,9 +1332,9 @@ row (the test fails otherwise), and the freeze pins them.
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.json` | `e3c52beb5c6160e5e364ef307fb3c6353c226ffb7b762d9cc534f8fc86239d9e` |
 | `harness/q2_stage1/driver.py` | `7131925d7001a97430f3f2fd4a3282c465d642c2479bc29037476e88e2aaa5ce` |
 | `harness/q2_stage1/agents.py` | `35dad1f17b581c3555dd8f82f50a5f475f94b1bf4506d141c26c04fdf3430a05` |
-| `harness/q2_stage1/engine.py` | `03c0a23c37d4bad40bf2c257aca4992277117d1e4780eaee318ecdd5d0767814` |
+| `harness/q2_stage1/engine.py` | `3e0942349a8fc5b2aef5294a28c029ca318acff88f4cd897df274bb6e3b51bf9` |
 | `harness/q2_stage1/bridge.py` | `dceacda3d6882223b0f0cfe54dd28f1674d1bf99527083420c0f29976a68692d` |
-| `harness/q2_stage1/fake_engine.py` | `76bf096a231701a2d00b11ee7946599b683598754bc4c45408c008fdfbdd1239` |
+| `harness/q2_stage1/fake_engine.py` | `02e0b66e7b67b3647dc853c4069de21ce3e6234ed01ec4e3842afbd42cd89a00` |
 | `harness/q2_stage1/osworld_live.py` | `c6f27a7c0485fb956460658670ef0720bce641681a141a20941981a208003c70` |
 | `harness/q2_stage1/lane.py` | `2dfeb6ab3858b74567798002bb212732ac9331d7ad1d048ad222d7eb7f39f07e` |
 | `harness/q2_stage1/rescore.py` | `d240db03e969c8aa5bb97403c5005cd4c9e96016599a78f70e97850415893737` |
@@ -1342,7 +1342,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |
 | `harness/q2_stage1/glmm.py` | `73e4d0f9100262eb0efe828a14308d2b45c17a3c827b476392b5045dfe1377e8` |
 | `harness/q2_stage1/glmm.R` | `e3ea337c77bf6a8b9289047b62cfc51053a5f666fe51795071a1ae317f36681d` |
-| `harness/q2_stage1/design_diffs.md` | `47c48da9ac8f724352ba8553ef1922c513870b456e111d083256c2ef22f3e746` |
+| `harness/q2_stage1/design_diffs.md` | `53a68cfd37d956942f1478e16f63c1555448e456c3696f3c50d5bb6678dd5e22` |
 | `infra/slurm/host-single-node/s1a-vm.sbatch` | `53fcd31d87678c6f5b4c929e6d843e5bc3177cac122842876f563e5191b09d45` |
 | `infra/slurm/host-single-node/s1a-cpu.sbatch` | `3880d337ad5bb0dc3c0edfc39f41811028118ef574c75efb08faa023dc6dee33` |
 | `infra/slurm/host-single-node/fetch-model-cpu.sbatch` | `22685e5e4dc9f88cd9d6ba7aec7189a89500a4f80d2464b8df86e08e76e33c6d` |

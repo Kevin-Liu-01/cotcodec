@@ -10,7 +10,8 @@ number of assistant turns in its messages (turn ``k`` gets ``replies[min(k, n - 
 concurrent episodes each walk the script from the start. A REPLY is either a string (the
 completion text) or an object with any of ``text``, ``finish_reason`` (default ``stop``),
 ``completion_tokens``, ``status`` and ``message`` (an HTTP error instead of a completion),
-``stream_error`` (an error object inside the stream) and ``sleep_s`` (before answering).
+``stream_error`` (an error object inside the stream), ``cut_stream`` (the stream stops before
+``[DONE]``) and ``sleep_s`` (before answering).
 
 Like vLLM v0.31.0 with ``return_token_ids``, the first chunk carries ``prompt_token_ids``
 (here: 16 integers derived from the SHA-256 of the canonical request messages), and the
@@ -185,6 +186,9 @@ class FakeEngine:
                 ids = fake_prompt_ids(messages)
                 send({"id": "fake", "choices": [{"index": 0, "delta": {"role": "assistant"}}],
                       "prompt_token_ids": ids})  # fmt: skip
+                if reply.get("cut_stream"):
+                    send({"choices": [{"index": 0, "delta": {"content": "partial"}}]})
+                    return
                 if reply.get("stream_error"):
                     send({"error": {"message": reply["stream_error"]}})
                     send("[DONE]")
