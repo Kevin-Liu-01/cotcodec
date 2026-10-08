@@ -11,7 +11,9 @@
 # CPU-only Slurm entry point for the Q2 S1a (q2-stage1-rescoped-v1) G0 tools (decision D12):
 # image builds (the GLMM container), the comparator validation, the GLMM run, the anchor's
 # CPU load-and-validate step and offline rescoring. A copy of q2-mutation-cpu.sbatch with its
-# own run root, receipts and tag prefix; every guard is unchanged.
+# own run root, receipts and tag prefix and every guard unchanged, plus two: read-only mounts
+# may also come from the model cache (the anchor's snapshot), and the container sees
+# CUDA_VISIBLE_DEVICES and NVIDIA_VISIBLE_DEVICES emptied.
 #
 # * No GRES is requested; the job refuses to start if Slurm assigned a GPU.
 # * Containers are launched without --gpus and without --device. A preflight
@@ -50,10 +52,20 @@ for var in SLURM_JOB_GPUS SLURM_STEP_GPUS SLURM_GPUS SLURM_GPUS_ON_NODE CUDA_VIS
   fi
 done
 
+# Read-only mounts may come from the stage0 run root or the model cache; the one read-write
+# mount (the run directory) only from the stage0 run root.
 check_path() {
   local value="$1"
   if [[ ! "${value}" =~ ^/home/kevin/cotcodec-runs/(stage0|hf-cache)/[A-Za-z0-9._/-]+$ ]] || [[ "${value}" == *..* ]]; then
     echo "path outside the stage0 run root and the model cache, or unsafe: ${value}" >&2
+    exit 2
+  fi
+}
+check_rw_path() {
+  local value="$1"
+  check_path "${value}"
+  if [[ ! "${value}" =~ ^/home/kevin/cotcodec-runs/stage0/ ]]; then
+    echo "the read-write run directory must be under the stage0 run root: ${value}" >&2
     exit 2
   fi
 }
@@ -105,7 +117,7 @@ if [[ ! "${Q2M_IMAGE_ID}" =~ ^sha256:[0-9a-f]{64}$ ]]; then
   exit 2
 fi
 check_path "${Q2M_SOURCE}"
-check_path "${Q2M_RUN_DIR}"
+check_rw_path "${Q2M_RUN_DIR}"
 mkdir -p "${Q2M_RUN_DIR}"
 
 mapfile -d '' -t argv < <(python3 - "${Q2M_ARGV_JSON_HEX}" <<'PY'

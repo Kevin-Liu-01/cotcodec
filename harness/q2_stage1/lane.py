@@ -1,0 +1,774 @@
+"""The S1a VM lane: the host side of a CPU-only VM job (registration sections 5.5-5.7, 7, 14).
+
+Run by ``infra/slurm/host-single-node/s1a-vm.sbatch`` as a bare host process (standard
+library only, D12). For each slot it boots a fresh VM container from the read-only qcow2
+(the action-path suite's VM settings and ``docker run`` arguments,
+``harness.q2.vm.driver.vm_run_argv``), starts one GPU-less episode container in that VM's
+``--network none`` namespace (D13), waits for its record, and tears the VM down:
+
+* the episode container is the checker-mutation study's metric image (OSWorld's locked
+  environment) running ``harness.q2_stage1.driver`` as the host user, read-only root, no
+  capabilities, no GPU variables; it mounts the source tree, the OSWorld tree and the
+  pinned file cache read-only, the engine bridge's directory read-only and its own output
+  directory read-write;
+* **continuous dispatch** (section 5.6): ``V`` workers each take the next queued slot as
+  soon as their previous VM is gone; a block is queued only after every slot of the
+  previous block has been dispatched;
+* **re-queue** (section 7.2): a slot lost to infrastructure on attempt 1 is queued once
+  more, at the end of its block (or next, if its block is fully dispatched); a second loss
+  leaves it missing;
+* **stop** (section 14): on USR1 to the lane, or when the engine bridge writes ``usr1.json``
+  (the GPU job's USR1), nothing new is dispatched; episodes in flight are cut and recorded
+  ``cap_truncated``, and every slot never dispatched is recorded ``cap_truncated`` too;
+* **fill rule** (section 5.6, session-1 A1 jobs only): extension blocks are queued after the
+  base only while ``plan.fill_allowed`` holds; it reads the job's cost, never an outcome;
+* **host snapshots** (section 5.5) at the start, before every block and at the end.
+
+``validate_manifest`` keeps the lane inside the registration: the VM settings are the
+action-path v2 runtime, the fake engine is for development only, a setup check runs no
+model and no checker, and before the freeze no episode may touch a confirm task (G0 item 5's
+setup-only check is the sole confirm contact, section 3.2).
+"""
+
+from __future__ import annotations
+
+import argparse
+import collections
+import hashlib
+import json
+import os
+import re
+import signal
+import subprocess
+import sys
+import threading
+import time
+from collections.abc import Callable, Mapping, Sequence
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any
+
+SCHEMA = "q2-stage1a-lane-v1"
+EXPERIMENT_ID = "q2-stage1-rescoped-v1"
+PURPOSES = ("development", "setup-check", "a0a", "a0b", "anc", "a1")
+PRE_FREEZE_PURPOSES = ("development", "setup-check", "a0a", "a0b")
+DEV_ONLY_PURPOSES = ("development", "a0a", "a0b")
+OSWORLD_COMMIT = "b138d348256078fa634fc3b73567a7337c793e6b"
+SPLITS = "program/evidence/q2-mutation/splits.json"
+LEDGER = "program/preregistrations/ledger.jsonl"
+# Action-path v2 section 2.1 (the runtime S1a inherits; registration section 4).
+VM_PINS = {
+    "image": "happysixd/osworld-docker@sha256:"
+    "0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+    "image_id": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+    "ram_size": "4G",
+    "cpu_cores": 4,
+    "disk_size": "32G",
+    "memory_gb": 6,
+    "network": "none-netns",
+    "server_port": 5000,
+}
+QCOW2_SHA256 = "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313"
+QCOW2_BYTES = 24_460_197_888
+SETTLE_AFTER_RESET_S = 60.0
+SETTLE_BEFORE_EVAL_S = 20.0
+STEP_CAP = 15
+SLOT_FIELDS = ("slot", "job", "size", "session", "task_id", "harness", "rerun", "block")
+HEX64 = re.compile(r"^[0-9a-f]{64}$")
+IMAGE_ID = re.compile(r"^sha256:[0-9a-f]{64}$")
+SAFE = re.compile(r"^[A-Za-z0-9._:-]{1,96}$")
+RUN_ROOT = "/home/kevin/cotcodec-runs/"
+
+
+class LaneError(ValueError):
+    """The manifest or a host input is outside the registration; nothing may start."""
+
+
+def _require(condition: bool, message: str) -> None:
+    if not condition:
+        raise LaneError(message)
+
+
+def frozen(source_dir: Path) -> bool:
+    ledger = source_dir / LEDGER
+    if not ledger.is_file():
+        return False
+    return any(
+        json.loads(line).get("experiment_id") == EXPERIMENT_ID
+        for line in ledger.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    )
+
+
+def task_sets(source_dir: Path) -> dict[str, set[str]]:
+    from harness.q2_stage1.plan import task_pool
+
+    splits = json.loads((source_dir / SPLITS).read_text(encoding="utf-8"))
+    return {"dev": set(splits["dev"]), "pool": set(task_pool(splits["confirm"]))}
+
+
+def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any]:
+    """The lane's manifest, checked against the registration (raises ``LaneError``)."""
+    m = json.loads(json.dumps(raw))
+    _require(m.get("schema") == SCHEMA, f"schema must be {SCHEMA}")
+    _require(m.get("experiment_id") == EXPERIMENT_ID, f"experiment_id must be {EXPERIMENT_ID}")
+    purpose = m.get("purpose")
+    _require(purpose in PURPOSES, f"purpose must be one of {PURPOSES}")
+    _require(isinstance(m.get("name"), str) and SAFE.fullmatch(m["name"]), "unsafe name")
+    is_frozen = frozen(source_dir)
+    _require(
+        purpose in PRE_FREEZE_PURPOSES or is_frozen,
+        f"{purpose} runs only after the freeze (no ledger row for {EXPERIMENT_ID})",
+    )
+    vm = m.get("vm") or {}
+    for key, value in VM_PINS.items():
+        _require(vm.get(key) == value, f"vm.{key} must be {value!r} (action-path v2 2.1)")
+    qcow2 = vm.get("qcow2") or {}
+    _require(qcow2.get("sha256") == QCOW2_SHA256, "vm.qcow2.sha256 is not the pinned guest disk")
+    _require(qcow2.get("size_bytes") == QCOW2_BYTES, "vm.qcow2.size_bytes differs")
+    _require(str(qcow2.get("host_path", "")).startswith(RUN_ROOT), "qcow2 outside the run root")
+    _require(isinstance(vm.get("guest_ip"), str), "vm.guest_ip is required")
+    v = vm.get("concurrency")
+    _require(isinstance(v, int) and 1 <= v <= 40, "vm.concurrency must be 1-40")
+    _require(bool(IMAGE_ID.fullmatch(str(m.get("episode_image_id")))), "episode_image_id")
+    osworld = m.get("osworld") or {}
+    _require(osworld.get("commit") == OSWORLD_COMMIT, f"osworld.commit must be {OSWORLD_COMMIT}")
+    for key in ("host_dir",):
+        _require(str(osworld.get(key, "")).startswith(RUN_ROOT), f"osworld.{key} outside root")
+    _require(str((m.get("file_cache") or {}).get("host_dir", "")).startswith(RUN_ROOT),
+             "file_cache.host_dir outside the run root")  # fmt: skip
+    mode = m.get("mode")
+    engine = m.get("engine") or {}
+    if purpose == "setup-check":
+        _require(mode == "setup-only", "a setup check runs mode setup-only")
+        _require(engine.get("kind") == "none", "a setup check runs no engine")
+    else:
+        _require(mode == "episode", "this purpose runs mode episode")
+        _require(engine.get("kind") in ("fake", "bridge"), "engine.kind must be fake or bridge")
+        if engine["kind"] == "fake":
+            _require(purpose == "development", "the fake engine is for development only")
+            _require(isinstance(engine.get("script"), dict), "engine.script is required")
+        else:
+            _require(str(engine.get("bridge_dir", "")).startswith(RUN_ROOT), "bridge_dir")
+            _require(isinstance(engine.get("gpu_cap_min"), int), "engine.gpu_cap_min")
+    _require(m.get("step_cap", STEP_CAP) == STEP_CAP, "step_cap is 15 (section 5.3)")
+    _require(m.get("settle_after_reset_s", 60) == SETTLE_AFTER_RESET_S, "settle after reset 60 s")
+    _require(m.get("settle_before_eval_s", 20) == SETTLE_BEFORE_EVAL_S, "settle before eval 20 s")
+    sets = task_sets(source_dir)
+    slots = m.get("slots") or []
+    _require(bool(slots), "no slots")
+    seen = set()
+    for slot in slots:
+        for key in SLOT_FIELDS:
+            _require(key in slot, f"slot lacks {key}")
+        _require(bool(SAFE.fullmatch(str(slot["slot"]))), f"unsafe slot id {slot['slot']}")
+        _require(slot["slot"] not in seen, f"duplicate slot {slot['slot']}")
+        seen.add(slot["slot"])
+        task = slot["task_id"]
+        if purpose == "setup-check":
+            _require(task in sets["dev"] | sets["pool"], f"{task} is not a pool or dev task")
+        elif not is_frozen or purpose in DEV_ONLY_PURPOSES:
+            _require(task in sets["dev"], f"{task} is not a dev-split task (section 3.2)")
+        else:
+            _require(task in sets["pool"], f"{task} is outside the pool")
+    fill = m.get("fill")
+    if fill is not None:
+        _require(purpose == "a1", "only an A1 job fills")
+        _require(isinstance(fill.get("blocks"), list), "fill.blocks")
+    return m
+
+
+# --------------------------------------------------------------------------- queue
+
+
+@dataclass
+class Slot:
+    data: dict[str, Any]
+    attempt: int = 1
+
+    @property
+    def id(self) -> str:
+        return str(self.data["slot"])
+
+    @property
+    def block(self) -> str:
+        return str(self.data["block"])
+
+
+class Dispatcher:
+    """Blocks in order; a block opens when the previous one is fully dispatched."""
+
+    def __init__(self, slots: Sequence[Mapping[str, Any]]):
+        self.blocks: list[str] = []
+        self.pending: dict[str, collections.deque[Slot]] = {}
+        for raw in slots:
+            block = str(raw["block"])
+            if block not in self.pending:
+                self.blocks.append(block)
+                self.pending[block] = collections.deque()
+            self.pending[block].append(Slot(dict(raw)))
+        self.current = 0
+        self.lock = threading.Lock()
+        self.dispatched: list[str] = []
+
+    def add_block(self, block: str, slots: Sequence[Mapping[str, Any]]) -> None:
+        with self.lock:
+            self.blocks.append(block)
+            self.pending[block] = collections.deque(Slot(dict(s)) for s in slots)
+
+    def next(self) -> Slot | None:
+        with self.lock:
+            while self.current < len(self.blocks):
+                queue = self.pending[self.blocks[self.current]]
+                if queue:
+                    slot = queue.popleft()
+                    self.dispatched.append(f"{slot.id}#{slot.attempt}")
+                    return slot
+                self.current += 1
+            return None
+
+    def requeue(self, slot: Slot) -> None:
+        """Attempt 2 at the end of its block, or next if its block is fully dispatched."""
+        with self.lock:
+            again = Slot(slot.data, attempt=2)
+            index = self.blocks.index(slot.block)
+            if index >= self.current and self.pending[slot.block]:
+                self.pending[slot.block].append(again)
+            elif self.current < len(self.blocks):
+                self.pending[self.blocks[self.current]].appendleft(again)
+            else:
+                self.blocks.append(f"{slot.block}:requeue")
+                self.pending[self.blocks[-1]] = collections.deque([again])
+
+    def has_pending(self) -> bool:
+        with self.lock:
+            return any(self.pending[b] for b in self.blocks)
+
+    def base_exhausted(self, base_blocks: set[str]) -> bool:
+        with self.lock:
+            return all(not self.pending[b] for b in base_blocks if b in self.pending)
+
+    def remaining(self) -> list[Slot]:
+        with self.lock:
+            out = []
+            for block in self.blocks:
+                out.extend(self.pending[block])
+                self.pending[block].clear()
+            return out
+
+
+# --------------------------------------------------------------------------- docker
+
+
+class DockerOps:
+    """The few Docker operations the lane needs (a fake replaces it in tests)."""
+
+    def run(self, argv: list[str], timeout: float) -> subprocess.CompletedProcess:
+        return subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
+
+    def start_vm(self, argv: list[str]) -> None:
+        completed = self.run(argv, 120)
+        if completed.returncode != 0:
+            raise RuntimeError(f"vm start failed: {completed.stderr[-300:]}")
+
+    def run_episode(self, argv: list[str], name: str, timeout: float,
+                    stop: threading.Event, log: Path) -> int | None:  # fmt: skip
+        """Run the episode container to completion; None when it was stopped or timed out."""
+        with log.open("ab") as handle:
+            proc = subprocess.Popen(argv, stdout=handle, stderr=subprocess.STDOUT)
+            deadline = time.time() + timeout
+            while proc.poll() is None:
+                if stop.is_set() or time.time() > deadline:
+                    subprocess.run(["docker", "kill", name], capture_output=True, timeout=60)
+                    proc.wait(60)
+                    return None
+                time.sleep(1.0)
+        return proc.returncode
+
+    def remove(self, name: str) -> dict[str, Any]:
+        from harness.q2.vm.driver import remove_container
+
+        return remove_container(name)
+
+
+# --------------------------------------------------------------------------- lane
+
+
+@dataclass
+class LaneConfig:
+    manifest: dict[str, Any]
+    job_id: str
+    run_dir: Path
+    source_dir: Path
+    uid: int = field(default_factory=os.getuid)
+    gid: int = field(default_factory=os.getgid)
+
+
+def episode_argv(cfg: LaneConfig, name: str, vm: str, out_dir: Path, engine_dir: Path | None,
+                 cpuset: str | None) -> list[str]:  # fmt: skip
+    m = cfg.manifest
+    argv = [
+        "docker", "run", "--rm", "--name", name,
+        "--label", f"cotcodec.slurm_job={cfg.job_id}", "--label", "cotcodec.q2s1a=1",
+        "--label", "cotcodec.role=episode",
+        "--runtime", "runc", "--network", f"container:{vm}",
+        "--user", f"{cfg.uid}:{cfg.gid}", "--read-only",
+        "--tmpfs", "/tmp:rw,nosuid,nodev,size=2g", "--cap-drop", "ALL",
+        "--security-opt", "no-new-privileges", "--memory", "6g", "--pids-limit", "2048",
+        "--env", "CUDA_VISIBLE_DEVICES=", "--env", "NVIDIA_VISIBLE_DEVICES=void",
+        "--env", "PYTHONDONTWRITEBYTECODE=1", "--env", "HOME=/tmp/home",
+        "--env", "MPLCONFIGDIR=/tmp/mpl", "--env", "XDG_CACHE_HOME=/tmp/cache",
+        "--volume", f"{cfg.source_dir}:/src:ro",
+        "--volume", f"{m['osworld']['host_dir']}:/inputs/OSWorld:ro",
+        "--volume", f"{m['file_cache']['host_dir']}:/inputs/file_cache/files:ro",
+        "--volume", f"{out_dir}:/out",
+        "--workdir", "/src",
+    ]  # fmt: skip
+    if engine_dir is not None:
+        argv += ["--volume", f"{engine_dir}:/engine:ro"]
+    if cpuset:
+        argv += ["--cpuset-cpus", cpuset]
+    argv += [m["episode_image_id"], m.get("episode_python", "/opt/venv-lock/bin/python"),
+             "-m", "harness.q2_stage1.driver", "--config", "/out/config.json"]  # fmt: skip
+    return argv
+
+
+def vm_manifest_view(cfg: LaneConfig) -> dict[str, Any]:
+    """What ``harness.q2.vm.driver.vm_run_argv`` reads, from the lane manifest."""
+    return {"campaign_id": f"q2s1a-{cfg.manifest['name']}", "vm": cfg.manifest["vm"]}
+
+
+class Lane:
+    def __init__(
+        self,
+        cfg: LaneConfig,
+        *,
+        docker: DockerOps | None = None,
+        clock: Callable[[], float] = time.time,
+        cpusets: Sequence[dict[str, Any]] | None = None,
+        snapshot: Callable[[str], dict[str, Any]] | None = None,
+        certified: Sequence[str] | None = None,
+    ):
+        self.cfg = cfg
+        self.m = cfg.manifest
+        self.docker = docker or DockerOps()
+        self.clock = clock
+        self.stop = threading.Event()
+        self.lock = threading.Lock()
+        self.records: list[dict[str, Any]] = []
+        self.cpusets = list(cpusets) if cpusets is not None else None
+        self.snapshot = snapshot or (lambda job: {"t": self.clock()})
+        self.certified = list(certified) if certified is not None else certified_keysyms()
+        self.dispatcher = Dispatcher(self.m["slots"])
+        self.base_blocks = set(self.dispatcher.blocks)
+        self.engine_dir: Path | None = None
+        self.engine_proc: subprocess.Popen | None = None
+        self.usr1_epoch: float | None = None
+        self.first_dispatch: float | None = None
+        self.fill_log: list[dict[str, Any]] = []
+        self.snapshots: list[dict[str, Any]] = []
+        self.seen_blocks: set[str] = set()
+        self.cycle = -1
+        self.cycle_lock = threading.Lock()
+        self.fill_lock = threading.Lock()
+        (cfg.run_dir / "episodes").mkdir(parents=True, exist_ok=True)
+
+    # ---------------------------------------------------------------- engine
+    def start_engine(self) -> None:
+        engine = self.m["engine"]
+        if engine["kind"] == "none":
+            return
+        if engine["kind"] == "fake":
+            self.engine_dir = self.cfg.run_dir / "bridge"
+            self.engine_dir.mkdir(exist_ok=True)
+            script = self.engine_dir / "script.json"
+            script.write_text(json.dumps(engine["script"]), encoding="utf-8")
+            self.engine_proc = subprocess.Popen(
+                [sys.executable, "-E", "-s", "-m", "harness.q2_stage1.fake_engine",
+                 "--socket", str(self.engine_dir / "engine.sock"), "--script", str(script),
+                 "--log", str(self.engine_dir / "requests.jsonl"),
+                 "--stop-file", str(self.engine_dir / "vm.done")],
+                cwd=self.cfg.source_dir,
+            )  # fmt: skip
+            self._wait_for(self.engine_dir / "engine.sock", 60)
+            return
+        self.engine_dir = Path(engine["bridge_dir"])
+        ready = self.engine_dir / "ready.json"
+        self._wait_for(ready, float(engine.get("ready_timeout_s", 1800)))
+        status = json.loads(ready.read_text(encoding="utf-8"))
+        self.usr1_epoch = float(status["t_start"]) + engine["gpu_cap_min"] * 60 - 180
+
+    def _wait_for(self, path: Path, seconds: float) -> None:
+        end = self.clock() + seconds
+        while not path.exists():
+            if self.clock() > end or self.stop.is_set():
+                raise RuntimeError(f"{path} did not appear within {seconds} s")
+            time.sleep(0.5)
+
+    def stop_engine(self) -> None:
+        if self.engine_dir is not None and self.m["engine"]["kind"] in ("fake", "bridge"):
+            (self.engine_dir / "vm.done").write_text(str(self.clock()), encoding="utf-8")
+        if self.engine_proc is not None:
+            try:
+                self.engine_proc.wait(30)
+            except subprocess.TimeoutExpired:
+                self.engine_proc.kill()
+
+    def engine_stopped(self) -> bool:
+        return self.engine_dir is not None and (self.engine_dir / "usr1.json").exists()
+
+    # ---------------------------------------------------------------- slots
+    def episode_config(self, slot: Slot, out_dir: Path, t_vm_start: float) -> dict[str, Any]:
+        data = slot.data
+        return {
+            "job": data["job"], "size": data["size"], "session": data["session"],
+            "task_id": data["task_id"], "harness": data["harness"], "rerun": data["rerun"],
+            "attempt": slot.attempt, "extension_block": data.get("extension_block"),
+            "block": data["block"], "slot": slot.id, "out_dir": "/out",
+            "guest_ip": self.m["vm"]["guest_ip"], "server_port": self.m["vm"]["server_port"],
+            "osworld_dir": "/inputs/OSWorld", "file_cache_dir": "/inputs/file_cache/files",
+            "engine_socket": "/engine/engine.sock", "mode": self.m["mode"],
+            "certified_keysyms": self.certified, "t_vm_start": t_vm_start,
+            "date": self.m.get("date"),
+        }  # fmt: skip
+
+    def run_slot(self, slot: Slot, worker: int, cycle: int) -> dict[str, Any]:
+        from harness.q2.vm.driver import vm_name, vm_run_argv
+
+        cpus = self.cpusets[worker] if self.cpusets else {"vm": None, "vm_mems": None,
+                                                          "runner": None}  # fmt: skip
+        name = vm_name(self.cfg.job_id, cycle)
+        episode_name = f"cotcodec-q2s1a-{self.cfg.job_id}-e{cycle:03d}"
+        out_dir = self.cfg.run_dir / "episodes" / f"{slot.id.replace(':', '_')}.a{slot.attempt}"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        t_dispatch = self.clock()
+        if self.first_dispatch is None:
+            self.first_dispatch = t_dispatch
+        host: dict[str, Any] = {"t_dispatch": t_dispatch, "vm": name, "worker": worker,
+                                "cpus": cpus}  # fmt: skip
+        record: dict[str, Any] | None = None
+        started_vm = False
+        try:
+            argv = vm_run_argv(vm_manifest_view(self.cfg), self.cfg.job_id, cycle, cpus["vm"],
+                               cpus["vm_mems"])  # fmt: skip
+            t_vm = self.clock()
+            try:
+                started_vm = True
+                self.docker.start_vm(argv)
+            except Exception as exc:  # noqa: BLE001 - a VM that will not start is a boot loss
+                record = self.loss(slot, "vm_boot", f"{exc}")
+            if record is None:
+                record = self.episode(slot, out_dir, t_vm, episode_name, name, cpus, host)
+        except Exception as exc:  # noqa: BLE001 - a lane-side fault loses the slot, not the job
+            record = self.loss(slot, "runner_crash", f"lane: {type(exc).__name__}: {exc}")
+        finally:
+            if started_vm:
+                host["teardown"] = self.docker.remove(name)
+            host["t_teardown"] = self.clock()
+        return self.finish_slot(record, host, t_dispatch)
+
+    def episode(self, slot: Slot, out_dir: Path, t_vm: float, episode_name: str, vm: str,
+                cpus: Mapping[str, Any], host: dict[str, Any]) -> dict[str, Any]:  # fmt: skip
+        config = self.episode_config(slot, out_dir, t_vm)
+        (out_dir / "config.json").write_text(json.dumps(config, indent=1), encoding="utf-8")
+        argv = episode_argv(self.cfg, episode_name, vm, out_dir, self.engine_dir, cpus["runner"])
+        timeout = float(self.m.get("episode_timeout_s", 3600))
+        rc = self.docker.run_episode(argv, episode_name, timeout, self.stop,
+                                     out_dir / "container.log")  # fmt: skip
+        host["episode_rc"] = rc
+        path = out_dir / "episode.json"
+        if rc is None:
+            if self.stop.is_set():
+                return self.truncated(slot, "cut at the stop signal")
+            return self.loss(slot, "runner_crash", f"episode exceeded {timeout} s")
+        if path.exists():
+            return json.loads(path.read_text(encoding="utf-8"))
+        return self.loss(slot, "runner_crash", f"episode container exited {rc}")
+
+    def base_record(self, slot: Slot) -> dict[str, Any]:
+        from harness.q2_stage1.records import SCHEMA as EPISODE_SCHEMA
+
+        d = slot.data
+        return {
+            "schema": EPISODE_SCHEMA, "job": d["job"], "size": d["size"],
+            "session": d["session"], "task_id": d["task_id"], "harness": d["harness"],
+            "rerun": d["rerun"], "extension_block": d.get("extension_block"),
+            "attempt": slot.attempt, "block": d["block"], "slot": slot.id, "score": None,
+            "steps": 0, "truncated_steps": 0, "ir_errors": 0, "uncertified_key_actions": 0,
+            "context_fallbacks": 0,
+        }  # fmt: skip
+
+    def loss(self, slot: Slot, kind: str, detail: str) -> dict[str, Any]:
+        status = "setup_failed" if self.m["mode"] == "setup-only" else "infrastructure"
+        return {**self.base_record(slot), "status": status, "infrastructure_type": kind,
+                "infrastructure_detail": detail[:500], "ended": "infra"}  # fmt: skip
+
+    def truncated(self, slot: Slot, detail: str) -> dict[str, Any]:
+        return {**self.base_record(slot), "status": "cap_truncated", "infrastructure_type": None,
+                "cap_detail": detail}  # fmt: skip
+
+    def finish_slot(self, record: dict[str, Any], host: dict[str, Any], t0: float) -> dict:
+        if "t_teardown" in host:
+            host["slot_occupancy_s"] = round(host["t_teardown"] - t0, 3)
+        record["host"] = host
+        with self.lock:
+            self.records.append(record)
+            with (self.cfg.run_dir / self.records_name()).open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(record, sort_keys=True) + "\n")
+        return record
+
+    def records_name(self) -> str:
+        return "setup.jsonl" if self.m["mode"] == "setup-only" else "episodes.jsonl"
+
+    # ---------------------------------------------------------------- fill rule
+    def maybe_fill(self) -> None:
+        from harness.q2_stage1 import plan
+
+        fill = self.m.get("fill")
+        if not fill or not self.dispatcher.base_exhausted(self.base_blocks):
+            return
+        with self.fill_lock:
+            self._fill(plan, fill)
+
+    def _fill(self, plan: Any, fill: dict[str, Any]) -> None:
+        if self.dispatcher.has_pending():
+            return
+        blocks = fill["blocks"]
+        while blocks and self.usr1_epoch is not None:
+            scored = [r for r in self.records if r.get("status") in ("scored", "infrastructure")]
+            if not scored or self.first_dispatch is None:
+                return
+            c_job_h = (self.clock() - self.first_dispatch) / 3600 / len(scored)
+            minutes = (self.usr1_epoch - self.clock()) / 60
+            allowed = plan.fill_allowed(c_job_h, minutes, int(fill.get("block_episodes", 32)))
+            self.fill_log.append({"t": self.clock(), "c_job_h": c_job_h,
+                                  "minutes_to_usr1": minutes, "allowed": allowed,
+                                  "block": blocks[0]["label"]})  # fmt: skip
+            if not allowed:
+                blocks.clear()
+                return
+            block = blocks.pop(0)
+            for sub in block["sub_blocks"]:
+                self.dispatcher.add_block(sub["label"], sub["slots"])
+            return
+
+    # ---------------------------------------------------------------- run
+    def next_cycle(self) -> int:
+        with self.cycle_lock:
+            self.cycle += 1
+            return self.cycle
+
+    def worker(self, index: int) -> None:
+        while not self.stop.is_set():
+            if self.engine_stopped():
+                self.stop.set()
+                break
+            self.maybe_fill()
+            slot = self.dispatcher.next()
+            if slot is None:
+                break
+            if slot.block not in self.seen_blocks:
+                with self.lock:
+                    if slot.block not in self.seen_blocks:
+                        self.seen_blocks.add(slot.block)
+                        self.snapshots.append(
+                            {"block": slot.block, **self.snapshot(self.cfg.job_id)}
+                        )
+            try:
+                record = self.run_slot(slot, index, self.next_cycle())
+            except Exception as exc:  # noqa: BLE001 - the lane keeps going; the slot is lost
+                record = self.finish_slot(
+                    self.loss(slot, "runner_crash", f"lane: {type(exc).__name__}: {exc}"),
+                    {"t_dispatch": self.clock()}, self.clock(),
+                )  # fmt: skip
+            infra = record.get("status") in ("infrastructure", "setup_failed")
+            if infra and slot.attempt == 1 and self.m.get("requeue", True):
+                self.dispatcher.requeue(slot)
+
+    def run(self) -> dict[str, Any]:
+        started = self.clock()
+        self.snapshots.append({"block": "start", **self.snapshot(self.cfg.job_id)})
+        receipt: dict[str, Any] = {"schema": "q2-stage1a-lane-receipt-v1",
+                                   "job_id": self.cfg.job_id, "name": self.m["name"],
+                                   "purpose": self.m["purpose"], "t_start": started}  # fmt: skip
+        try:
+            self.start_engine()
+            if self.m["mode"] == "episode" and not self.certified:
+                raise LaneError("the certified keysym set is unavailable; exposure is required")
+            workers = [
+                threading.Thread(target=self.worker, args=(i,), daemon=True)
+                for i in range(self.m["vm"]["concurrency"])
+            ]
+            for thread in workers:
+                thread.start()
+            for thread in workers:
+                while thread.is_alive():
+                    thread.join(1.0)
+                    if self.engine_stopped():
+                        self.stop.set()
+        except Exception as exc:  # noqa: BLE001 - recorded in the receipt
+            receipt["error"] = f"{type(exc).__name__}: {exc}"[:500]
+            self.stop.set()
+        finally:
+            for slot in self.dispatcher.remaining():
+                self.finish_slot(self.truncated(slot, "never dispatched"), {}, self.clock())
+            self.stop_engine()
+            self.snapshots.append({"block": "end", **self.snapshot(self.cfg.job_id)})
+        receipt.update(
+            t_end=self.clock(), stopped=self.stop.is_set(), dispatched=self.dispatcher.dispatched,
+            records=len(self.records), fill=self.fill_log, snapshots=self.snapshots,
+            statuses=dict(collections.Counter(r.get("status") for r in self.records)),
+        )  # fmt: skip
+        (self.cfg.run_dir / "lane-receipt.json").write_text(
+            json.dumps(receipt, indent=1, sort_keys=True), encoding="utf-8"
+        )
+        return receipt
+
+
+def certified_keysyms() -> list[str]:
+    try:
+        from harness.q2_stage1.records import certified_keysym_set
+
+        return sorted(certified_keysym_set())
+    except Exception:  # noqa: BLE001 - recorded as unknown: exposure is then not counted
+        return []
+
+
+def plan_cpusets(allocated: Sequence[int], concurrency: int, cores: int) -> list[dict[str, Any]]:
+    """One CPU set per VM (``cores`` each); the episode containers share the rest."""
+    from harness.q2.vm.driver import format_cpuset
+
+    pool = sorted(allocated)
+    need = concurrency * cores
+    if len(pool) < need + 1:
+        raise LaneError(f"the allocation has {len(pool)} CPUs; {need} VM CPUs and 1 more needed")
+    runner = format_cpuset(pool[need:])
+    return [
+        {"vm": format_cpuset(pool[i * cores : (i + 1) * cores]), "vm_mems": None, "runner": runner}
+        for i in range(concurrency)
+    ]
+
+
+def tree_sha256(source_dir: Path) -> str:
+    from harness.q2.vm.manifest import source_tree_sha256
+
+    return source_tree_sha256(str(source_dir))
+
+
+BATCH = "infra/slurm/host-single-node/s1a-vm.sbatch"
+MAX_JOB_CPUS = 8  # while the action-path v2 acceptance campaigns run (host-load rule)
+
+
+def canonical(manifest: Mapping[str, Any]) -> str:
+    return json.dumps(manifest, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def check_host(m: Mapping[str, Any]) -> dict[str, Any]:
+    """Host inputs exist and match the manifest (run on the host before submitting)."""
+    qcow2 = Path(m["vm"]["qcow2"]["host_path"])
+    _require(qcow2.is_file() and not qcow2.is_symlink(), "qcow2 missing")
+    _require(qcow2.stat().st_size == QCOW2_BYTES, "qcow2 size differs")
+    _require(not qcow2.stat().st_mode & 0o222, "qcow2 must be read-only")
+    for image in (m["vm"]["image_id"], m["episode_image_id"]):
+        out = subprocess.run(["docker", "image", "inspect", "--format", "{{.Id}}", image],
+                             capture_output=True, text=True, timeout=60)  # fmt: skip
+        _require(out.stdout.strip() == image, f"image {image} is not present")
+    head = subprocess.run(["git", "-C", m["osworld"]["host_dir"], "rev-parse", "HEAD"],
+                          capture_output=True, text=True, timeout=60).stdout.strip()  # fmt: skip
+    _require(head == OSWORLD_COMMIT, f"OSWorld checkout is at {head}")
+    _require(Path(m["file_cache"]["host_dir"]).is_dir(), "file cache directory missing")
+    return {"qcow2_bytes": QCOW2_BYTES, "osworld_head": head}
+
+
+def submit(manifest_path: Path, source_dir: Path, dry_run: bool) -> dict[str, Any]:
+    m = validate_manifest(json.loads(manifest_path.read_text(encoding="utf-8")), source_dir)
+    slurm = m.get("slurm") or {}
+    cpus, memory, minutes = slurm.get("cpus"), slurm.get("memory_gb"), slurm.get("minutes")
+    v, cores = m["vm"]["concurrency"], m["vm"]["cpu_cores"]
+    _require(isinstance(cpus, int) and v * cores + 1 <= cpus <= MAX_JOB_CPUS,
+             f"slurm.cpus must fit {v} VMs and the runners within {MAX_JOB_CPUS}")  # fmt: skip
+    _require(isinstance(memory, int) and memory >= 6 * v + 6, "slurm.memory_gb too small")
+    _require(isinstance(minutes, int) and 1 <= minutes <= 720, "slurm.minutes 1-720")
+    host = check_host(m)
+    text = canonical(m)
+    digest = hashlib.sha256(text.encode()).hexdigest()
+    run_root = Path(m["run_root"])
+    _require(str(run_root).startswith(RUN_ROOT), "run_root outside the run root")
+    stored = run_root / "manifests" / f"{digest}.json"
+    stored.parent.mkdir(parents=True, exist_ok=True)
+    stored.write_text(text, encoding="utf-8")
+    batch = source_dir / BATCH
+    env = {
+        "COTCODEC_S1A_MANIFEST_PATH_HEX": str(stored).encode().hex(),
+        "COTCODEC_S1A_MANIFEST_SHA256": digest,
+        "COTCODEC_BATCH_SHA256": sha256_file(batch),
+        "COTCODEC_SOURCE_HOST_HEX": str(source_dir.resolve()).encode().hex(),
+        "COTCODEC_SOURCE_TREE_SHA256": tree_sha256(source_dir),
+        "COTCODEC_RUN_ROOT_HEX": str(run_root).encode().hex(),
+    }
+    hours, mins = divmod(minutes, 60)
+    argv = ["sbatch", "--parsable", f"--cpus-per-task={cpus}", f"--mem={memory}G",
+            f"--time={hours:02d}:{mins:02d}:00", f"--job-name=s1a-{m['name']}"[:60],
+            "--export=ALL," + ",".join(f"{k}={v}" for k, v in env.items()),
+            str(batch)]  # fmt: skip
+    out = {"manifest_sha256": digest, "manifest": str(stored), "host": host, "argv": argv}
+    if not dry_run:
+        done = subprocess.run(argv, capture_output=True, text=True, timeout=60, check=True)
+        out["job_id"] = done.stdout.strip()
+    return out
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    sub = parser.add_subparsers(dest="command", required=True)
+    run = sub.add_parser("run", help="run a validated manifest (inside s1a-vm.sbatch)")
+    run.add_argument("--manifest", type=Path, required=True)
+    run.add_argument("--run-dir", type=Path, required=True)
+    run.add_argument("--source-dir", type=Path, required=True)
+    run.add_argument("--job-id", required=True)
+    check = sub.add_parser("validate", help="validate a manifest against a source tree")
+    check.add_argument("manifest", type=Path)
+    check.add_argument("--source-dir", type=Path, default=Path("."))
+    sbatch = sub.add_parser("submit", help="validate, check the host and submit (on the host)")
+    sbatch.add_argument("manifest", type=Path)
+    sbatch.add_argument("--source-dir", type=Path, default=Path("."))
+    sbatch.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args(argv)
+    if args.command == "submit":
+        print(json.dumps(submit(args.manifest, args.source_dir, args.dry_run), indent=1))
+        return 0
+    if args.command == "validate":
+        manifest = validate_manifest(json.loads(args.manifest.read_text()), args.source_dir)
+        digest = hashlib.sha256(
+            json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+        print(json.dumps({"ok": True, "manifest_sha256": digest, "slots": len(manifest["slots"])}))
+        return 0
+    if not re.fullmatch(r"[1-9][0-9]{0,19}", args.job_id):
+        raise SystemExit("job id must be numeric")
+    manifest = validate_manifest(json.loads(args.manifest.read_text()), args.source_dir)
+    from harness.q2.vm.driver import slurm_cpu_ids, snapshot_host
+
+    cpusets = plan_cpusets(slurm_cpu_ids(args.job_id), manifest["vm"]["concurrency"],
+                           manifest["vm"]["cpu_cores"])  # fmt: skip
+    lane = Lane(
+        LaneConfig(manifest, args.job_id, args.run_dir, args.source_dir),
+        cpusets=cpusets,
+        snapshot=snapshot_host,
+    )
+    signal.signal(signal.SIGUSR1, lambda *_: lane.stop.set())
+    receipt = lane.run()
+    print(json.dumps({k: receipt[k] for k in ("records", "statuses", "stopped")}))
+    return 0 if "error" not in receipt else 3
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
