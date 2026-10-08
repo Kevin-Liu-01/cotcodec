@@ -5619,8 +5619,545 @@
    },
    "trials": 60,
    "wall_s": 648.2
+  },
+  {
+   "accessibility_calls": 38,
+   "boot_s": {
+    "max": 17.986,
+    "n": 2,
+    "p50": 17.963,
+    "p95": 17.986
+   },
+   "boots_ok": 2,
+   "campaign_id": "q2ap-dev-l0-restart-v2",
+   "cell_counts": {
+    "FAIL": 4,
+    "FLAKY": 0,
+    "PASS": 52
+   },
+   "concurrency": 1,
+   "cycles": 2,
+   "driver_exit": "0",
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "guest_server_restarts": 4,
+   "infra_failures": {
+    "channel_missing": 2,
+    "execute": 2,
+    "guard_script": 2,
+    "guest_server_restart": 4,
+    "probe_absent": 2,
+    "tap_window_missing": 2
+   },
+   "infra_gates_pass": true,
+   "job": 694,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "labelled_containers_left": 0,
+   "layer": "L0-fixed",
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [
+    "screenshot+a11y|chord_ctrl_c",
+    "screenshot+a11y|drag_short",
+    "screenshot|chord_ctrl_c",
+    "screenshot|drag_short"
+   ],
+   "observation_retries": {},
+   "probe_relaunches": 0,
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "d4191ead8ed872f94af7f84c2365924748e8a3c54d748c1953ebe156d6118797",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 74,
+    "p50": 1.8904,
+    "p95": 3.406
+   },
+   "tap_relaunches": 0,
+   "trial_s": {
+    "n": 56,
+    "p50": 2.2166,
+    "p95": 11.0376,
+    "sum": 164.04
+   },
+   "trials": 56,
+   "wall_s": 246.2
+  },
+  {
+   "campaign_id": "q2ap-dev-l0-fixed-v13",
+   "concurrency": 1,
+   "driver_exit": "not written (cancelled before the driver finished)",
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "job": 695,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "purpose": "development",
+   "receipt": null,
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "143:0",
+    "JobState": "CANCELLED"
+   }
+  },
+  {
+   "campaign_id": "q2ap-dev-l0-fixed-n8-v5",
+   "concurrency": 8,
+   "driver_exit": "not written (cancelled before the driver finished)",
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "job": 696,
+   "job_tres": "TRES=cpu=36,mem=58G,node=1,billing=36",
+   "kind": "suite-development",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "purpose": "development",
+   "receipt": null,
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "143:0",
+    "JobState": "CANCELLED"
+   }
+  },
+  {
+   "campaign_id": "q2ap-dev-hosw-fixed-v9",
+   "concurrency": 1,
+   "driver_exit": "not written (cancelled before the driver finished)",
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "job": 697,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "layer": "H-OSW-fixed",
+   "mutant": null,
+   "purpose": "development",
+   "receipt": null,
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "143:0",
+    "JobState": "CANCELLED"
+   }
+  },
+  {
+   "campaign_id": "q2ap-dev-hga-v9",
+   "concurrency": 1,
+   "driver_exit": "not written (cancelled before the driver finished)",
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "job": 698,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "layer": "H-GA",
+   "mutant": null,
+   "purpose": "development",
+   "receipt": null,
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "143:0",
+    "JobState": "CANCELLED"
+   }
+  },
+  {
+   "campaign_id": "q2ap-dev-canary-v11",
+   "concurrency": 1,
+   "driver_exit": "not written (cancelled before the driver finished)",
+   "git_sha": "34f79e42a9bdab4b2e00304d6248f0228942d5e2",
+   "job": 699,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "canary-development",
+   "layer": null,
+   "mutant": null,
+   "purpose": "development",
+   "receipt": null,
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "143:0",
+    "JobState": "CANCELLED"
+   }
+  },
+  {
+   "accessibility_calls": 38,
+   "boot_s": {
+    "max": 19.19,
+    "n": 2,
+    "p50": 18.709,
+    "p95": 19.19
+   },
+   "boots_ok": 2,
+   "campaign_id": "q2ap-dev-l0-restart-v3",
+   "cell_counts": {
+    "FAIL": 4,
+    "FLAKY": 0,
+    "PASS": 52
+   },
+   "concurrency": 1,
+   "cycles": 2,
+   "driver_exit": "0",
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "guest_server_restarts": 4,
+   "infra_failures": {
+    "channel_missing": 2,
+    "execute": 2,
+    "guard_script": 2,
+    "guest_server_restart": 4,
+    "probe_absent": 2,
+    "tap_window_missing": 2
+   },
+   "infra_gates_pass": true,
+   "job": 703,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "labelled_containers_left": 0,
+   "layer": "L0-fixed",
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [
+    "screenshot+a11y|chord_ctrl_c",
+    "screenshot+a11y|drag_short",
+    "screenshot|chord_ctrl_c",
+    "screenshot|drag_short"
+   ],
+   "observation_retries": {},
+   "probe_relaunches": 0,
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "7a7bf801aa8850a0f4782cda5d824de0eaaf395235601ed1a7cbf89534841e8f",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 74,
+    "p50": 2.135,
+    "p95": 3.4432
+   },
+   "tap_relaunches": 0,
+   "trial_s": {
+    "n": 56,
+    "p50": 2.4446,
+    "p95": 11.1885,
+    "sum": 177.74
+   },
+   "trials": 56,
+   "wall_s": 264.5
+  },
+  {
+   "accessibility_calls": 260,
+   "boot_s": {
+    "max": 19.801,
+    "n": 8,
+    "p50": 18.609,
+    "p95": 19.801
+   },
+   "boots_ok": 8,
+   "campaign_id": "q2ap-dev-l0-fixed-v14",
+   "cell_counts": {
+    "FAIL": 0,
+    "FLAKY": 0,
+    "PASS": 200
+   },
+   "concurrency": 1,
+   "cycles": 8,
+   "driver_exit": "0",
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "guest_server_restarts": 0,
+   "infra_failures": {},
+   "infra_gates_pass": true,
+   "job": 704,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "labelled_containers_left": 0,
+   "layer": "L0-fixed",
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [],
+   "observation_retries": {},
+   "probe_relaunches": 0,
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "6d0ddb65376e52f5f23e0f759b3d83f16c7e0afaf7d9b467e9c9ae7f3ece4b8e",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 512,
+    "p50": 1.9624,
+    "p95": 2.9223
+   },
+   "tap_relaunches": 0,
+   "trial_s": {
+    "n": 400,
+    "p50": 2.2972,
+    "p95": 5.2695,
+    "sum": 938.76
+   },
+   "trials": 400,
+   "wall_s": 1178.1
+  },
+  {
+   "accessibility_calls": 519,
+   "boot_s": {
+    "max": 19.632,
+    "n": 14,
+    "p50": 19.171,
+    "p95": 19.632
+   },
+   "boots_ok": 14,
+   "campaign_id": "q2ap-dev-l0-fixed-n8-v6",
+   "cell_counts": {
+    "FAIL": 0,
+    "FLAKY": 0,
+    "PASS": 200
+   },
+   "concurrency": 8,
+   "cycles": 14,
+   "driver_exit": "0",
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "guest_server_restarts": 0,
+   "infra_failures": {},
+   "infra_gates_pass": true,
+   "job": 705,
+   "job_tres": "TRES=cpu=36,mem=58G,node=1,billing=36",
+   "kind": "suite-development",
+   "labelled_containers_left": 0,
+   "layer": "L0-fixed",
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [],
+   "observation_retries": {},
+   "probe_relaunches": 0,
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "3ab85adb1aaca42f89dc466e0722b6849d6248e05971225694d73272d7ea141f",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 1024,
+    "p50": 2.069,
+    "p95": 3.0201
+   },
+   "tap_relaunches": 0,
+   "trial_s": {
+    "n": 800,
+    "p50": 2.4686,
+    "p95": 5.4469,
+    "sum": 1978.05
+   },
+   "trials": 800,
+   "wall_s": 383.9
+  },
+  {
+   "accessibility_calls": 152,
+   "boot_s": {
+    "max": 19.319,
+    "n": 4,
+    "p50": 19.071,
+    "p95": 19.319
+   },
+   "boots_ok": 4,
+   "campaign_id": "q2ap-dev-hosw-fixed-v10",
+   "cell_counts": {
+    "FAIL": 4,
+    "FLAKY": 0,
+    "PASS": 194
+   },
+   "concurrency": 1,
+   "cycles": 4,
+   "driver_exit": "0",
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "guest_server_restarts": 0,
+   "infra_failures": {},
+   "infra_gates_pass": true,
+   "job": 706,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "labelled_containers_left": 0,
+   "layer": "H-OSW-fixed",
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [
+    "screenshot+a11y|R03",
+    "screenshot+a11y|R09",
+    "screenshot|R03",
+    "screenshot|R09"
+   ],
+   "observation_retries": {},
+   "probe_relaunches": 0,
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "dceba8243e7294e5a2834e26f3eec40ca161d2f88882ec73189712829356a1dc",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 300,
+    "p50": 1.7867,
+    "p95": 2.7222
+   },
+   "tap_relaunches": 0,
+   "trial_s": {
+    "n": 198,
+    "p50": 2.3376,
+    "p95": 6.9568,
+    "sum": 536.32
+   },
+   "trials": 198,
+   "wall_s": 671.8
+  },
+  {
+   "accessibility_calls": 139,
+   "boot_s": {
+    "max": 19.142,
+    "n": 4,
+    "p50": 18.585,
+    "p95": 19.142
+   },
+   "boots_ok": 4,
+   "campaign_id": "q2ap-dev-hga-v10",
+   "cell_counts": {
+    "FAIL": 8,
+    "FLAKY": 0,
+    "PASS": 178
+   },
+   "concurrency": 1,
+   "cycles": 4,
+   "driver_exit": "0",
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "guest_server_restarts": 0,
+   "infra_failures": {},
+   "infra_gates_pass": true,
+   "job": 707,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "suite-development",
+   "labelled_containers_left": 0,
+   "layer": "H-GA",
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [
+    "screenshot+a11y|R02",
+    "screenshot+a11y|R04",
+    "screenshot+a11y|R06",
+    "screenshot+a11y|R10",
+    "screenshot|R02",
+    "screenshot|R04",
+    "screenshot|R06",
+    "screenshot|R10"
+   ],
+   "observation_retries": {},
+   "probe_relaunches": 0,
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "b21bc767520db080925357246015cfc565958fa5c7018d1a8adfc9e15731e770",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 274,
+    "p50": 1.9409,
+    "p95": 2.8529
+   },
+   "tap_relaunches": 0,
+   "trial_s": {
+    "n": 186,
+    "p50": 2.305,
+    "p95": 7.347,
+    "sum": 494.21
+   },
+   "trials": 186,
+   "wall_s": 630.8
+  },
+  {
+   "accessibility_calls": 0,
+   "boot_s": {
+    "max": 19.167,
+    "n": 1,
+    "p50": 19.167,
+    "p95": 19.167
+   },
+   "boots_ok": 1,
+   "campaign_id": "q2ap-dev-canary-v12",
+   "cell_counts": {
+    "FAIL": 0,
+    "FLAKY": 0,
+    "PASS": 60
+   },
+   "concurrency": 1,
+   "cycles": 1,
+   "driver_exit": "0",
+   "git_sha": "7653799bd89ec2d44ee19064da23081c7bb66236",
+   "guest_server_restarts": 0,
+   "infra_failures": {},
+   "infra_gates_pass": true,
+   "job": 708,
+   "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+   "kind": "canary-development",
+   "labelled_containers_left": 0,
+   "layer": null,
+   "mutant": null,
+   "no_gpu_all": true,
+   "not_pass": [],
+   "observation_retries": {},
+   "probe_relaunches": 0,
+   "purpose": "development",
+   "qcow2_unchanged": true,
+   "receipt_sha256": "0293d1a8f88ff659fa9bb3533474cc0e9d6d7a14744fbd076ccb3e8041078e15",
+   "seeds": [
+    42
+   ],
+   "slurm": {
+    "ExitCode": "0:0",
+    "JobState": "COMPLETED"
+   },
+   "step_s": {
+    "n": 0,
+    "p50": null,
+    "p95": null
+   },
+   "tap_relaunches": 0,
+   "trial_s": {
+    "n": 60,
+    "p50": 8.64,
+    "p95": 17.631,
+    "sum": 609.51
+   },
+   "trials": 60,
+   "wall_s": 667.5
   }
  ],
- "note": "Development runs of q2-action-path-v1 (jobs 482-637, and 662-667 after the review of 2b492cd) (seed 42, never evidence), one row per Slurm job, extracted from each run directory's manifest.json, preflight.txt and receipt.json under ~/cotcodec-runs/stage0/q2-action-path/runs/<job>/ on the H100 host; receipt_sha256 is the SHA-256 of that receipt. not_pass lists setting|cell pairs that were not PASS in every repetition (outside-spec R cells of the harness layers fail by design).",
+ "note": "Development runs of q2-action-path-v1 (jobs 482-637, 662-667 after the review of 2b492cd, and 694-708 applying decision D30: 694 and 703-708 ran, 695-699 were cancelled while booting) (seed 42, never evidence), one row per Slurm job, extracted from each run directory's manifest.json, preflight.txt and receipt.json under ~/cotcodec-runs/stage0/q2-action-path/runs/<job>/ on the H100 host; receipt_sha256 is the SHA-256 of that receipt. not_pass lists setting|cell pairs that were not PASS in every repetition (outside-spec R cells of the harness layers fail by design). Rows from job 694 on also carry guest_server_restarts and accessibility_calls (summed over sessions, decision D30) and probe_relaunches and tap_relaunches.",
  "schema": "cotcodec-q2-development-runs-v1"
 }
