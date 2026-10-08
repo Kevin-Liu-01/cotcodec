@@ -244,6 +244,72 @@ def test_jobs_are_sequential_and_paired(inputs):
     assert P.gpu_sbatch_time(91) == "01:31:00"
 
 
+def a0a_run(tmp: Path, *, seconds=640.0, start=10_000.0, first=10_300.0, statuses=None,
+            truncated_steps=0) -> tuple[Path, Path]:  # fmt: skip
+    """A finished A0a lane run directory and its GPU job's bridge directory: V = 20 slots
+    from ``plan.a0a_slots``, each scored after ``seconds`` of slot occupancy unless
+    ``statuses`` (slot index -> list of attempt statuses) says otherwise."""
+    inputs = renderer.load_inputs(ROOT)
+    slots = P.a0a_slots(inputs["dev_ids"], P.dev_setup_ok(P.load_setup_check(ROOT)), 20)
+    run = tmp / "run"
+    (run / "episodes").mkdir(parents=True)
+    (run / "manifest.json").write_text(json.dumps({"purpose": "a0a", "vm": {"concurrency": 20},
+                                                   "slots": slots}))  # fmt: skip
+    rows = []
+    for i, slot in enumerate(slots):
+        for attempt, status in enumerate((statuses or {}).get(i, ["scored"]), start=1):
+            rows.append({**slot, "attempt": attempt, "status": status,
+                         "host": {"slot_occupancy_s": seconds + i}})  # fmt: skip
+            out = run / "episodes" / f"{slot['slot'].replace(':', '_')}.a{attempt}"
+            out.mkdir()
+            steps = [turn(k < truncated_steps, k >= truncated_steps, 2.0) for k in range(5)]
+            (out / "steps.jsonl").write_text("".join(json.dumps(t) + "\n" for t in steps))
+    (run / "episodes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    (run / "lane-receipt.json").write_text(json.dumps(
+        {"gpu_job": {"job_id": "77", "start_epoch": start, "time_limit_min": 25},
+         "first_dispatch": first, "t_end": start + 1400}))  # fmt: skip
+    bridge = tmp / "bridge"
+    bridge.mkdir()
+    (bridge / "stopped.json").write_text(json.dumps({"t_first_request": first + 75}))
+    return run, bridge
+
+
+def test_a0a_measurements_come_from_the_records(tmp_path):
+    """Section 6.2: c_A0a's slots, L_A0a (Slurm start to the first dispatch) and both gates
+    over the same V episodes, all from A0a's records; nothing typed."""
+    run, bridge = a0a_run(tmp_path / "ok", statuses={3: ["infrastructure", "scored"]})
+    got = P.a0a_measurements(run, bridge, action_path_step_p95_s=2.71)
+    assert len(got["a0a_slot_seconds"]) == 20 and got["a0a_slot_seconds"][0] == 640.0
+    assert got["launch_a0a_min"] == 5.0  # (10,300 - 10,000) / 60
+    assert got["measured"]["launch_to_first_request_min"] == 6.25
+    assert got["a0a_gates"]["problems"] == [] and got["a0a_gates"]["turns"]["H-GA"] == 50
+    assert set(got["measured"]["files_sha256"]) == {
+        "manifest.json",
+        "episodes.jsonl",
+        "lane-receipt.json",
+        "bridge/stopped.json",
+    }
+    fc = P.freeze_constants(**P.freeze_inputs(got, n_star=40, prefreeze_jobs=["O1", "A0a"]))
+    assert fc.a1_cap_min == 111 and fc.k_base == 32 and fc.launch_a0a_min == 5.0
+    for name, kwargs, message in (
+        ("cut", {"statuses": {7: ["cap_truncated"]}}, "cut at the cap or never dispatched"),
+        ("lost", {"statuses": {7: ["infrastructure", "infrastructure"]}}, "completed 19 of V"),
+        ("long", {"seconds": 760.0}, None),
+    ):
+        run, bridge = a0a_run(tmp_path / name, **kwargs)
+        if message is None:  # the longest episodes count: a mean slot of 769.5 s gives 24
+            got = P.a0a_measurements(run, bridge, action_path_step_p95_s=2.71)
+            with pytest.raises(P.PlanError, match="K_base 24 is below the floor 32"):
+                P.freeze_constants(**P.freeze_inputs(got, n_star=40, prefreeze_jobs=["O1", "A0a"]))
+            continue
+        with pytest.raises(P.PlanError, match=message):
+            P.a0a_measurements(run, bridge, action_path_step_p95_s=2.71)
+    with pytest.raises(P.PlanError, match="not \\['O2'\\]"):
+        P.freeze_inputs(got, n_star=40, prefreeze_jobs=["O1", "A0a", "O2"])
+    assert P.freeze_inputs(got, n_star=40, prefreeze_jobs=["O1", "A0a", "A0a"])[
+        "prefreeze_caps"] == [3, 25, 25]  # fmt: skip
+
+
 def test_renderer_draft_and_freeze_modes(tmp_path):
     out = tmp_path / "plan.json"
     script = ROOT / "scripts/render_q2_stage1_plan.py"
@@ -254,33 +320,26 @@ def test_renderer_draft_and_freeze_modes(tmp_path):
     plan = json.loads(out.read_text())
     assert plan["status"] == "draft" and len(plan["base"]) == 32
     assert plan["plan_sha256"] == run.stdout.strip()
+    assert plan["dev_order"][:5] == P.dev_tasks(
+        renderer.load_inputs(ROOT)["dev_ids"], P.dev_setup_ok(P.load_setup_check(ROOT)), 5
+    )
     again = subprocess.run(
         [sys.executable, str(script), "--out", str(out)], capture_output=True, text=True
     )
     assert again.returncode != 0
-    constants = tmp_path / "c.json"
-    constants.write_text(
-        json.dumps(
-            {
-                "n_star": 40, "a0a_slot_seconds": [640.0] * 20, "launch_a0a_min": 4,
-                "prefreeze_caps": [3, 25, 26], "anchor_available": True,
-                "launch_a0b_min": 5, "longest_a0b_slot_min": 10.0, "k_floor": 24,
-                "a0a_gates": GATES,
-            }
-        )
-    )  # fmt: skip
-    dev = tmp_path / "dev.json"
-    dev.write_text(json.dumps(dict.fromkeys(renderer.load_inputs(ROOT)["dev_ids"], True)))
+    a0a, bridge = a0a_run(tmp_path / "a0a", first=10_240.0)
     frozen = tmp_path / "frozen.json"
     run = subprocess.run(
-        [sys.executable, str(script), "--constants", str(constants), "--dev-setup", str(dev),
-         "--out", str(frozen)], capture_output=True, text=True,
+        [sys.executable, str(script), "--a0a-run-dir", str(a0a), "--a0a-bridge-dir", str(bridge),
+         "--n-star", "40", "--action-path-step-p95", "2.71", "--out", str(frozen)],
+        capture_output=True, text=True,
     )  # fmt: skip
     assert run.returncode == 0, run.stderr
     plan = json.loads(frozen.read_text())
-    assert plan["constants"]["k_base"] == 24 and len(plan["base"]) == 24
-    assert len(plan["anchor_tasks"]) == 96 and len(plan["dev_tasks_a0a"]) == 5
-    assert set(plan["dev_tasks_a0b"]) <= set(plan["dev_tasks_a0a"])
+    assert plan["constants"]["k_base"] == 32 and len(plan["base"]) == 32
+    assert plan["constants"]["launch_a0a_min"] == 4.0 and plan["constants"]["a1_cap_min"] == 111
+    assert plan["a0a_measurements"]["measured"]["files_sha256"]["episodes.jsonl"]
+    assert plan["anchor_tasks"] == [] and [j["job"] for j in plan["jobs"]][1:] == P.a1_job_order()
     assert all(t in plan["anchor_order"] for t in plan["flagged_tasks"])
 
 
@@ -337,11 +396,12 @@ def test_a0a_gates_from_a_lane_run_directory(tmp_path):
             (out / "steps.jsonl").write_text(json.dumps(turn(False, True, 2.0)) + "\n")
     episodes = P.load_a0a_episodes(run)
     assert sorted(e["harness"] for e in episodes) == ["H-GA", "H-OSW-fixed"]  # scored only
-    script = [sys.executable, "-m", "harness.q2_stage1.plan", "a0a-gates", "--run-dir",
-              str(run), "--action-path-step-p95", "2.71"]  # fmt: skip
+    run, bridge = a0a_run(tmp_path / "cli")
+    script = [sys.executable, "-m", "harness.q2_stage1.plan", "a0a-measurements", "--run-dir",
+              str(run), "--bridge-dir", str(bridge), "--action-path-step-p95", "2.71"]  # fmt: skip
     done = subprocess.run(script, capture_output=True, text=True, cwd=ROOT)
     assert done.returncode == 0, done.stderr
-    assert json.loads(done.stdout)["steps_timed"] == 2
+    assert json.loads(done.stdout)["a0a_gates"]["steps_timed"] == 100
 
 
 # --------------------------------------------------------------------------- offline setup

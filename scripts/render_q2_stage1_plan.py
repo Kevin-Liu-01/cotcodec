@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Render the q2-stage1-rescoped-v1 (S1a) plan file from committed inputs and A0 records.
 
-Draft mode (no ``--constants``) writes the K = 32 draw, the orders and the engine and
-sampling arguments. Freeze mode reads the A0 measurements (``--constants``, a JSON object
-with n_star, a0a_slot_seconds, launch_a0a_min, prefreeze_caps, anchor_available, a0a_gates
-(``python -m harness.q2_stage1.plan a0a-gates``) and, when the anchor is available,
-launch_a0b_min and longest_a0b_slot_min), applies the registered rules of preregistration
-section 6.2 (gates, floor, K-rule) and writes the frozen constants, the base and the job
-list. Nothing is submitted; the output is never overwritten.
+Draft mode (no ``--a0a-run-dir``) writes the K = 32 draw on the eligible pool, the orders
+and the engine and sampling arguments. Freeze mode (on the host) reads A0a's records itself
+(``plan.a0a_measurements``: its lane run directory and its GPU job's bridge directory),
+takes N* and the action path's A1 step p95 from the accepted attempt and the list of
+pre-freeze GPU jobs that ran, applies the registered rules of preregistration section 6.2
+(gates, floor, K-rule) and writes the frozen constants, the measurements with the digests of
+the files they came from, the base and the job list. No constant is typed by hand. Nothing
+is submitted; the output is never overwritten.
 """
 
 from __future__ import annotations
@@ -44,24 +45,39 @@ def load_inputs(root: Path) -> dict:
     }
 
 
+def load_setup_records(root: Path) -> list[dict]:
+    """G0 item 5's registered setup-check records (refused unless their SHA-256 matches)."""
+    return P.load_setup_check(root)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--root", type=Path, default=PROJECT_ROOT)
-    parser.add_argument("--constants", type=Path)
-    parser.add_argument("--dev-setup", type=Path, help="JSON map task id -> setup ok (G0 5)")
+    parser.add_argument("--a0a-run-dir", type=Path, help="A0a's lane run directory (freeze)")
+    parser.add_argument("--a0a-bridge-dir", type=Path, help="A0a's GPU job bridge directory")
+    parser.add_argument("--n-star", type=int, help="the accepted action-path attempt's N*")
+    parser.add_argument("--action-path-step-p95", type=float,
+                        help="the accepted attempt's step_p95_n1_s (seconds)")  # fmt: skip
+    parser.add_argument("--prefreeze-jobs", nargs="+", default=["O1", "A0a"],
+                        help="pre-freeze GPU jobs that ran, repeats listed again")  # fmt: skip
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.out.exists():
         raise SystemExit(f"{args.out} exists; plan files are never overwritten")
     inputs = load_inputs(args.root)
-    constants = None
-    if args.constants:
-        raw = json.loads(args.constants.read_text(encoding="utf-8"))
-        constants = P.freeze_constants(**raw)
-    dev_ok = None
-    if args.dev_setup:
-        dev_ok = json.loads(args.dev_setup.read_text(encoding="utf-8"))
-    plan = P.render_plan(**inputs, constants=constants, dev_setup_ok=dev_ok)
+    constants = measured = None
+    if args.a0a_run_dir:
+        if not (args.a0a_bridge_dir and args.n_star and args.action_path_step_p95):
+            raise SystemExit("freeze mode needs --a0a-bridge-dir, --n-star, --action-path-step-p95")
+        measured = P.a0a_measurements(
+            args.a0a_run_dir, args.a0a_bridge_dir,
+            action_path_step_p95_s=args.action_path_step_p95,
+        )  # fmt: skip
+        constants = P.freeze_constants(
+            **P.freeze_inputs(measured, n_star=args.n_star, prefreeze_jobs=args.prefreeze_jobs)
+        )
+    dev_ok = P.dev_setup_ok(load_setup_records(args.root))
+    plan = P.render_plan(**inputs, constants=constants, dev_setup_ok=dev_ok, measured=measured)
     args.out.write_text(json.dumps(plan, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     print(plan["plan_sha256"])
     return 0

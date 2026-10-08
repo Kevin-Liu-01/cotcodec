@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import re
@@ -57,6 +58,30 @@ def test_the_draft_cannot_be_frozen_until_every_slot_is_filled(tmp_path):
         preregister.freeze(copy, P.EXPERIMENT_ID, ledger=tmp_path / "ledger.jsonl", root=tmp_path)
 
 
+def test_only_the_open_slots_keep_the_draft_from_freezing(tmp_path):
+    """With every open slot filled on a scratch copy the guard freezes the file: no prose
+    use of the placeholder and no angle-bracket text is left to be edited under pressure at
+    the freeze."""
+    if _frozen():
+        pytest.skip("frozen: the ledger row binds the file")
+    filled = re.sub(r"\bTBD\b", "filled", _text())
+    copy = tmp_path / "program/preregistrations" / PREREG.name
+    copy.parent.mkdir(parents=True)
+    copy.write_text(filled, encoding="utf-8")
+    row = preregister.freeze(copy, P.EXPERIMENT_ID, ledger=tmp_path / "ledger.jsonl", root=tmp_path)
+    assert row["experiment_id"] == P.EXPERIMENT_ID
+
+
+def test_sign_offs_are_open_slots():
+    """Kevin's rulings and the program's sign-off are slots the freeze guard checks."""
+    section = _text().split("## 18. Design decisions for sign-off", 1)[1].split("\n## ", 1)[0]
+    joined = " ".join(section.split())
+    assert "Kevin: item 17" in joined and "without the D11 runtime check" in joined
+    assert "Kevin: G0 item 5's decisions" in joined and "`26150609`" in joined
+    assert "Program sign-off of items 1-16 and 19-27 (decision id): TBD" in joined
+    assert joined.count(": TBD") == 3
+
+
 def test_code_of_record_matches_the_tree():
     rows = _code_table()
     assert len(rows) >= 12
@@ -67,6 +92,63 @@ def test_code_of_record_matches_the_tree():
         assert actual == digest, f"{path} changed: refresh section 20 of the registration"
     for module in ("estimators", "records", "rules", "plan", "analysis"):
         assert rows[f"harness/q2_stage1/{module}.py"] is not None
+
+
+# Files the S1a code reads as data at run time (not imports): the executor's guest program,
+# the guard, the catalog the certified keysyms come from and the IR's keysym table.
+LOADED_DATA = (
+    "harness/q2/vm/guest/l0_fixed.py",
+    "harness/q2/vm/guest/guard.py",
+    "harness/q2/action_path/catalog.yaml",
+    "harness/q2/action_path/keysyms.json",
+)
+
+
+def _module_file(name: str) -> Path | None:
+    path = ROOT.joinpath(*name.split("."))
+    if path.with_suffix(".py").is_file():
+        return path.with_suffix(".py")
+    if (path / "__init__.py").is_file():
+        return path / "__init__.py"
+    return None
+
+
+def _imports(path: Path) -> set[Path]:
+    """In-repo modules a file imports anywhere (lazy imports included), with their packages."""
+    out: set[Path] = set()
+    for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+        names: list[str] = []
+        if isinstance(node, ast.Import):
+            names = [a.name for a in node.names]
+        elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+            names = [node.module] + [f"{node.module}.{a.name}" for a in node.names]
+        for name in names:
+            parts = name.split(".")
+            if parts[0] not in ("harness", "scripts"):
+                continue
+            for i in range(1, len(parts) + 1):
+                found = _module_file(".".join(parts[:i]))
+                if found is not None:
+                    out.add(found)
+    return out
+
+
+def test_code_of_record_lists_everything_the_s1a_code_runs():
+    """Section 20 names every in-repo module the S1a code imports, transitively, and every
+    file it loads as code or data, so no file the episodes run is left unpinned."""
+    rows = _code_table()
+    start = [ROOT / p for p in rows if p.endswith(".py") and p.startswith(("harness/", "scripts/"))]
+    seen: set[Path] = set()
+    stack = list(start)
+    while stack:
+        path = stack.pop()
+        if path in seen:
+            continue
+        seen.add(path)
+        stack += list(_imports(path))
+    needed = {p.relative_to(ROOT).as_posix() for p in seen} | set(LOADED_DATA)
+    missing = sorted(needed - set(rows))
+    assert not missing, f"section 20 lacks {missing}"
 
 
 def test_registered_numbers_equal_the_code():
