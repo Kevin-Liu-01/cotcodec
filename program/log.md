@@ -2473,3 +2473,47 @@ they say so.)
   DR5 replacing the question file's kill lines (pending in
   `program/state.json`). The program must still admit O1, A0a and A0b and
   decide on OpenCUA's remote code; the action-path acceptance must pass first.
+
+## 2026-10-08 — Q2 S1a G0 build (branch `stage0/q2-stage1-rescope`, draft, not frozen; D49 iv)
+
+- Built and tested on CPU every G0 item of `q2-stage1-rescoped-v1` the draft listed as TBD,
+  in `harness/q2_stage1/` (nothing under `harness/q2/` changed): the episode runner
+  (`driver.py`; harness clients in `agents.py`, checked against message lists recorded from
+  the unmodified upstream agents), the engine client and the D13 bridge (`engine.py`,
+  `bridge.py`), the VM lane (`lane.py`, `infra/slurm/host-single-node/s1a-vm.sbatch`), live
+  OSWorld setup and evaluation with final-state capture (`osworld_live.py`), offline
+  rescoring and the comparator validation (`rescore.py`), the reworked
+  `compare_pptx_files_zinv` (`zinv.py`), the anchor's CPU checks (`anchor.py`) and the
+  GLMM input (`glmm.py`). 191 S1a tests (140 new); `design_diffs.md` lists every difference from
+  the upstream harnesses.
+- Reviewed the stopped attempt's work line by line: kept `fetch-model-cpu.sbatch` (it had
+  run as job 971: Qwen3.5-4B re-receipted, OpenCUA-7B fetched, 16.6 GB, D1), the GLMM
+  Dockerfile (built as job 972) and the `opencua-7b` registry entry; fixed
+  `s1a-cpu.sbatch` (the read-write mount may no longer come from the model cache) and
+  `glmm.R` (a binomial `simulate` returns a successes-failures matrix); kept the
+  python-pptx dev dependency; reworked `zinv.py`. No job of that attempt was still running.
+- Host jobs, all CPU only (no GRES, GPU-less containers), at most one VM job at a time, at
+  most 8 CPUs each, next to the running action-path v2 campaigns: 978 (dev smoke with the
+  scripted fake engine: 3/3 episodes scored end to end), 982 (G0 item 5: 148/148 setups
+  completed offline; the only confirm-task contact), 983 (offline rescoring of the smoke:
+  3/3 match live), 980/995/1000 (zinv validation: 0/29, 26/29, then 29/29 confirmed
+  mutants with 256/256 other items unchanged; the first two runs are kept and the 29 were
+  development set as well as gate), 984 (GLMM acceptance on synthetic data, 200 refits),
+  987/998 (anchor dry run in the existing overlay image), several small diagnostic jobs
+  (979, 981, 985, 986, 988, 989, 992-994, 999) and the anchor's git reads under srun.
+  One 2-second version check (`python3 -c "import vllm"`) ran as a bare `docker run
+  --network none` outside Slurm; no GPU was requested.
+- Findings that change the plan: the OpenCUA-7B anchor is UNAVAILABLE before any GPU job
+  (G0 9.6: the public runs predate `b138d348` by 14 months; 110 of 116 tasks differ in
+  config or checker, at most 6 remain readable against the 58 required; also 9.3's dry
+  run: vLLM 0.31.0 with transformers 5.17.0 cannot load its remote tokenizer, and 9.5:
+  the pinned agent cannot reproduce the public runs' L2 prompt). So A0b and ANC are not
+  submitted, T_A1 is 111 minutes and K_base 32 at the card's high price, and D47's floor
+  of 32 holds without the item 18 amendment. The episode container is the checker-mutation
+  metric image (the stdlib runner image lacks Pillow and OSWorld).
+- Registration: G0 items 2-6, 8, 9 and 12 filled; section 4's runner row replaced; section
+  5.7's status; section 20 code table filled for the G0 files; section 22 gains a "G0
+  build" table for the fresh audit. Still TBD: the status line, G0 item 1, the frozen plan,
+  the executor row, the section 6.2 constants and the v2 acceptance evidence.
+- Not done: no freeze, no push, no GPU job. Next: the fresh pre-freeze audit (D49 iv), then
+  O1 and A0a after the action-path suite passes.

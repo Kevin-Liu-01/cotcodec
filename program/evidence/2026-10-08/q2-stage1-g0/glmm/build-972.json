@@ -1,0 +1,13 @@
+{
+  "job_id": "972",
+  "mode": "build",
+  "lane": "s1a-cpu",
+  "tag": "cotcodec-s1a-glmm:9d4205a4",
+  "image_id": "sha256:b15584f3954f1c83fc3e5067e29c57c5c55e3b2a50ef28e4e68a394e595aabed",
+  "dockerfile_sha256": "e4a09458264a58a783ec91fed91b8e500c83a91c826fbaaa10b9ceb998df86b4",
+  "context_files_sha256": "1c13da218da08d507c22af86e6ea17b4f212b20bb0097277497190fbae6ae57b",
+  "batch_sha256": "76f5a987ed618e0799649b36ba7b88bbd337585f018caf7e94a2d3b42f5fc2d6",
+  "network_during_build": "host",
+  "started_at": "2026-10-08T16:44:14Z",
+  "finished_at": "2026-10-08T16:44:39Z"
+}

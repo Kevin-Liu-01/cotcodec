@@ -1,0 +1,16 @@
+{
+  "job_id": "984",
+  "mode": "run",
+  "lane": "s1a-cpu",
+  "image_id": "sha256:b15584f3954f1c83fc3e5067e29c57c5c55e3b2a50ef28e4e68a394e595aabed",
+  "argv_json_hex_sha256": "6b92bc5c0aa620b53a99348e14988991d9b789d9792fffa2e34f7cc61807e732",
+  "argv_json_hex": "5b227368222c20222d63222c20226370202f6f70742f71322f722d7061636b616765732e6a736f6e202f6f70742f71322f722d7061636b616765732e736861323536202f6f75742f2026262052736372697074202f7372632f6861726e6573732f71325f7374616765312f676c6d6d2e52202f696e707574732f73796e7468657469632d6b33322e637376202f6f75742f676c6d6d2d73796e7468657469632d6b33322e6a736f6e20323030203432225d",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/q2-stage1/src/ac6c7cd3b22666591bbe4f9d02f76e2b7e69ef04:/src:ro /home/kevin/cotcodec-runs/stage0/q2-stage1/g0/glmm-synthetic-v2:/out:rw /home/kevin/cotcodec-runs/stage0/q2-stage1/g0/glmm-inputs:/inputs:ro",
+  "network": "none",
+  "gpus_requested": 0,
+  "container_dev_nvidia": [],
+  "batch_sha256": "3880d337ad5bb0dc3c0edfc39f41811028118ef574c75efb08faa023dc6dee33",
+  "exit_status": 0,
+  "started_at": "2026-10-08T17:52:10Z",
+  "finished_at": "2026-10-08T17:57:59Z"
+}

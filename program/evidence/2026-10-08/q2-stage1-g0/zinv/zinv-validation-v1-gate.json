@@ -1,0 +1,63 @@
+{
+ "comparator_sha256": "561d2169dcdc548cc08ff6f26c90fd3db555cbc354de204c6f1d3f0692c719d9",
+ "gate": {
+  "by_operator": {
+   "None": 42,
+   "pptx.alt.textbox_for_placeholder": 6,
+   "pptx.eq.doc_property": 48,
+   "pptx.eq.subvisible_nudge": 46,
+   "pptx.eq.zorder_nonoverlap": 39,
+   "pptx.extra.add_textbox": 43,
+   "pptx.extra.delete_unrelated_slide": 3,
+   "pptx.extra.edit_unrelated_text": 3,
+   "pptx.viol.delete_bound_shape": 32,
+   "pptx.viol.drop_char_format": 5,
+   "pptx.viol.move_shape": 2,
+   "pptx.viol.text_edit": 22
+  },
+  "confirmed_zorder": 29,
+  "confirmed_zorder_pass_under_zinv": 0,
+  "golds": 21,
+  "initial_states": 21,
+  "mutants": 249,
+  "others": 256,
+  "others_differing": [],
+  "others_equal_original": 256,
+  "pass": false,
+  "raw_differs_from_stored": [],
+  "raw_reproduces_stored": 291,
+  "scoring_errors": [],
+  "unresolved_reported": [
+   {
+    "id": "57667013-ea97-417c-9dce-2713091e6e2a__pptx.eq.zorder_nonoverlap__926fb07e55c5",
+    "raw": 0.0,
+    "zinv": 0.0
+   },
+   {
+    "id": "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1__pptx.eq.zorder_nonoverlap__090e738d84f6",
+    "raw": 0.0,
+    "zinv": 0.0
+   },
+   {
+    "id": "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1__pptx.eq.zorder_nonoverlap__1da3c9ea434e",
+    "raw": 0.0,
+    "zinv": 0.0
+   },
+   {
+    "id": "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1__pptx.eq.zorder_nonoverlap__d4924372f943",
+    "raw": 0.0,
+    "zinv": 0.0
+   },
+   {
+    "id": "70bca0cc-c117-427e-b0be-4df7299ebeb6__pptx.eq.zorder_nonoverlap__a966f392a31a",
+    "raw": 0.0,
+    "zinv": 0.0
+   },
+   {
+    "id": "eb303e01-261e-4972-8c07-c9b4e7a4922a__pptx.eq.zorder_nonoverlap__26df4a784ee3",
+    "raw": 0.0,
+    "zinv": 0.0
+   }
+  ]
+ }
+}
