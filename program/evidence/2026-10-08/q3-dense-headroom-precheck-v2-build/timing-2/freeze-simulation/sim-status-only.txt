@@ -1,26 +1,26 @@
 real ledger before: 1052d58b5b6648dd
-clone of 8c3f076f387f55b375ab05a3624a7dea606d71f1 mode=status-only
+clone of 57f3cc25f418d79da64849d63999442dbbab29e7 mode=status-only
 ledger rows before:       11 head q2-evaluator-mutation-v1 dc39bfa2f68e0fd5
 status-only rewritten with D42
 {
   "experiment_id": "q3-dense-headroom-precheck-v2",
-  "frozen_at": "2026-10-08T11:03:53.645947+00:00",
-  "git_head_at_freeze": "dcbb8e88d198230ee2693be9ae8c595d3d32164e",
-  "hash": "f1202ff39f40306cbc0f505bf2e63f329ad1c698fab86c9a8498af02f21a8d3f",
+  "frozen_at": "2026-10-08T11:19:23.414164+00:00",
+  "git_head_at_freeze": "830df1917f3fb941fdd5f39c5fd1cdf62e35a299",
+  "hash": "5b0f3d08f4f893596f957175218f556e47de9fd5495f055c798f0e76742a0b40",
   "path": "program/preregistrations/q3-dense-headroom-precheck-v2.md",
   "previous_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439",
-  "sha256": "ad6f3da3065f354202e44d37520b42fbb0409e508de0b512b4ec68078bb52254"
+  "sha256": "0f48e588783071b133ba7aeafa06fe91560f279ae35555536aa84cf72dfbf035"
 }
 freeze exit=0
 verify exit=0
 {"rows": 12, "status": "PASS"}
 check-chain exit=0
-simulated freeze commit 1dc882f90693e1c6d23292aadd08dd54f0b44649
+simulated freeze commit 08468311d5f8e62621e64617f68e5d3be9682382
 frozen file contains 'DRAFT': False
 frozen file contains 'wait for the program owner': False
 frozen file contains 'still to be done': True
 E               AssertionError: the frozen file still says 'still to be done'
 FAILED tests/test_dense_headroom_v2_prereg.py::test_status_and_decisions - As...
-1 failed, 28 passed in 18.78s
+1 failed, 28 passed in 22.03s
 pytest exit=1
 real ledger after: 1052d58b5b6648dd

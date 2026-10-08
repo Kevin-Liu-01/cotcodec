@@ -16,8 +16,8 @@
 runtime: docker-single-node-discovery-v1
 name: q3-dense-headroom-v2-4b
 image_id: sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-git_sha: 249b8d351b04a620f2e4aa79b1a9b6da128cfe6a
-source_sha256: ec190ed482e46a2d5fc1f2e5cb3ad18dd8318a97b335db083880a5d5712eb003
+git_sha: ae3c3f3b6cbe1749661ce41a00480b039a0e5ab3
+source_sha256: 3566d88d105b01c82b58c2405130fe409f33f0f14ad355382cd96c2439996c42
 container_profile: large-cpu-mem
 resources:
   gpu_type: h100
@@ -67,7 +67,7 @@ command:
   - "--preregistration"
   - program/preregistrations/q3-dense-headroom-precheck-v2.md
   - "--expected-preregistration-sha256"
-  - "7ac6419512d7f96d3505677b6915bf8043488be2d21b434dd20e85b655327555"
+  - "bd9d79f7ed63e281305f7c6c8b4f9f9e59af557fa641eabeda5f25ce2ec5cd41"
   - "--seeds"
   - "42"
   - "43"
