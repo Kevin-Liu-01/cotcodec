@@ -46,5 +46,10 @@ local         freeze simulations (full, status-only, wrong-dec) on scratch clone
               and 8c3f076; full suite in the frozen clone of 8c3f076 (macOS) 2,169 passed,
               87 skipped, 0 failed. Real ledger 1052d58b... before and after.
 
+~11:20         main (692b83d, D43) merged in again (436f038; log.md both sides in time order,
+              state.json both ledger sides, total 4.028); host suite at 436f038 in a fresh
+              scratch clone: 2,216 passed, 40 skipped, 0 failed; full-mode freeze simulation
+              at 436f038: check-chain 12 rows PASS, frozen-mode tests 29 passed.
+
 GPU use: Slurm 810 only, 162 s physical on one GPU (0.045 GPU-h); charged 4 minutes under the
 run-root rule (0.0667 GPU-h). Every other job above was CPU only.
