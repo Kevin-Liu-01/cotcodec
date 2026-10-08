@@ -145,11 +145,20 @@ sample, label or rater output on the rating side before the ingest. The run
 directories (mutant files, recipes, saved files) stay on the host as
 registered (section 16).
 
+## Stage A2: the audit (`audit/`)
+
+`audit/README.md`: the salt (SHA-256 committed), the census sample of 178
+items with every P1 flip of both runs (Slurm 815, CPU), the packets (two
+shards), the cu129 overlay of `65bc2e2` (Slurm 817; 816 refused before any
+build), the CPU args and image-input doctor (819), the open-weight rater
+(Slurm 823 and 824: 178 of 178 items rated, 172 `ok` and 6
+`thinking_unfinished`, clean exits; 0.365 GPU-h physical in all) and the
+isolated export for the Claude rater.
+
 ## Not done here
 
-The audit (sample, saved baselines, packets, the open-weight rater within
-the 3.0 GPU-h cap, the isolated Claude rating as one workflow session, the
-collector, the ingest, the summary), the registered analysis, Kevin's
-adjudication pool and spot check, and K2.
+The isolated Claude rating as one workflow session, the collector, the
+ingest, the summary, the registered analysis, Kevin's adjudication pool and
+spot check, and K2.
 
 `SHA256SUMS` covers every file here.

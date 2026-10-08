@@ -1,0 +1,130 @@
+{
+ "answer_line_sha256": "7ab894f2f3f42459d6855b1844a4b3d7d98510f5b4569034f8867a7ad89eff1a",
+ "answer_rule": "first word after the reply's last </think> (raters.split_thinking, raters.parse_first_token); no </think>: thinking_unfinished (unsure)",
+ "calls_sha256": "8c8db1721edc3729e33fb5c6fae30d0ee3c3282b1d33b8563569c5851f2b4b43",
+ "code_sha256": {
+  "rater_runner.py": "1b0ae794b0c0df6c9477d865c24431725171b0c504b90311e823567914ab0eef",
+  "raters.py": "da722c97df217af37bcf8cee1821ee332240d8891065fbd17f7fcf134d6100c2"
+ },
+ "engine": {
+  "argv": [
+   "vllm",
+   "serve",
+   "/model-cache/cotcodec-models/qwen3.6-35b-a3b",
+   "--served-model-name",
+   "q2m-rater",
+   "--host",
+   "127.0.0.1",
+   "--port",
+   "8000",
+   "--disable-uvicorn-access-log",
+   "--dtype",
+   "bfloat16",
+   "--seed",
+   "42",
+   "--tensor-parallel-size",
+   "1",
+   "--max-model-len",
+   "139264",
+   "--gpu-memory-utilization",
+   "0.95",
+   "--max-num-seqs",
+   "8",
+   "--no-enable-prefix-caching",
+   "--generation-config",
+   "vllm",
+   "--limit-mm-per-prompt",
+   "{\"image\":{\"count\":40,\"height\":2200,\"width\":1700},\"video\":0}"
+  ],
+  "env": {
+   "DO_NOT_TRACK": "1",
+   "HF_HUB_OFFLINE": "1",
+   "PYTHONUNBUFFERED": "1",
+   "TRANSFORMERS_OFFLINE": "1",
+   "VLLM_DO_NOT_TRACK": "1",
+   "VLLM_ENABLE_CUDA_COMPATIBILITY": "0",
+   "VLLM_HOST_IP": "127.0.0.1",
+   "VLLM_LOGGING_LEVEL": "INFO",
+   "VLLM_NO_USAGE_STATS": "1"
+  },
+  "exit_code": 0,
+  "models": [
+   "q2m-rater"
+  ],
+  "models_response_sha256": "353a72bea9efd6130c4910ea5a5aa6e798d8f0daf5d643bddd6cead28404e316",
+  "rating_s": 699.8,
+  "ready": true,
+  "ready_s": 119.0,
+  "stop_s": 1.1,
+  "vllm_version": "0.31.0"
+ },
+ "finished_at": "2026-10-08T11:01:29Z",
+ "git_sha": "65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1",
+ "lane_model_id": "qwen3.6-35b-a3b",
+ "model": {
+  "artifact_root_sha256": "8ac6d764b84034f4ed0df3f2388c9180afceab806f7e75f5d1e43a73bdd2736b",
+  "model_id": "qwen3.6-35b-a3b",
+  "receipt_sha256": "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9",
+  "repo_id": "Qwen/Qwen3.6-35B-A3B",
+  "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0"
+ },
+ "packets": {
+  "items": 133,
+  "path": "/inputs/study-artifact.json",
+  "sha256": "47d17b52f48279e876480dd476b5e5a6f5aa780b931342846db1e3b118fb37b9"
+ },
+ "params": {
+  "enable_thinking": true,
+  "max_tokens": 8192,
+  "min_p": 0.0,
+  "presence_penalty": 1.5,
+  "repetition_penalty": 1.0,
+  "seed": 42,
+  "temperature": 1.0,
+  "timeout_s": 600.0,
+  "top_k": 20,
+  "top_p": 0.95,
+  "workers": 8
+ },
+ "prompt_sha256": "c4cf81c995533be83e14c5ce04f772d11fbaaa951d86f7ba6444027cfb9dfa55",
+ "rater": {
+  "provider": "qwen-open-weight-self-hosted",
+  "rater_id": "model-rater-open-weight",
+  "receipt_sha256": "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9",
+  "registry_id": "qwen3.6-35b-a3b",
+  "repo_id": "Qwen/Qwen3.6-35B-A3B",
+  "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+  "role": "independent"
+ },
+ "result": {
+  "answers": {
+   "accept": 117,
+   "reject": 10,
+   "unsure": 6
+  },
+  "dropped_after_stop": [],
+  "fatal": null,
+  "in_flight_abandoned": 0,
+  "items": 133,
+  "models_returned": {
+   "q2m-rater": 133
+  },
+  "outcomes": {
+   "ok": 127,
+   "thinking_unfinished": 6
+  },
+  "rated_before": 0,
+  "rated_now": 133,
+  "stopped": false,
+  "unrated": []
+ },
+ "run_error": null,
+ "runner_version": "q2m-rater-runner-v1",
+ "schema": "q2m-rater-receipt-v1",
+ "started_at": "2026-10-08T10:47:40Z",
+ "stop": {
+  "engine_stop_s": 30.0,
+  "grace_s": 60.0,
+  "signalled": false
+ }
+}
