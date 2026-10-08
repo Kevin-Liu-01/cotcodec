@@ -614,3 +614,23 @@ under each of them; the registered caps total 0.933 GPU-h within D36's 1.5.
 Decisions 16-21 of `q3-dense-headroom-precheck-v2` are accepted as amended by
 D42 and this decision (D42 (iii)); its status line and decisions' lead-in
 name D42 and D44 when it is frozen.
+
+**D45. Action-path v2: D43's rule narrowed, and applied to C3.** The two
+adversarial reviews of D43's implementation found that the rule (read a
+key event without its modifier state when it lacks the guard-guaranteed
+Mod2) rests on a precondition nothing checks: that the event was queued by a
+grab its own entry activated. A synchronous grab already active when an
+entry's first key arrives would make every event of the entry read without
+state, so a raw-only trial in which the server processed nothing could pass;
+the guard cannot see such a freeze. They also found that C3's equivalence
+comparison still reads the recorded state byte for byte, so one slow shell
+answer could make a no-op mutant non-equivalent and fail C3 (up to about
+7%), the kind of oracle artifact D43 removed elsewhere. Decided: (i) an event
+is read without its state only when a key press recorded with Mod2 comes
+before it in the same window; otherwise its state is judged as recorded. None
+of the 280 development events changes. (ii) The same narrowed rule applies
+inside C3's stream signature and earlier-attempt comparison. (iii) The
+reports section 12 promises (each event read without its state, its offset
+from the preceding processed press) are produced by the analysis. Because
+the judge changes, the seed-42 final development runs are repeated at the
+new commit and the executor addendum's byte-identity statement names it.
