@@ -1,45 +1,63 @@
 # q2-evaluator-mutation-v1: OSWorld-Verified checker mutation audit
 
-**Status: DRAFT (fifth draft) for a fourth review, not frozen.** Every pin
+**Status: DRAFT (sixth draft) for a fifth review, not frozen.** Every pin
 below is filled from the integration branch `stage0/q2-evaluator-mutation`,
 and no value is left open. The first adversarial review (2026-10-07) was
-answered in the second draft, the second review (55/100) in the third, and the
-re-audit of the third draft (62/100) in the fourth. The third review of the
-fourth draft (2026-10-07, 56/100, not ready to freeze) found three blocking
-defects; this draft answers them under decision D27 (program/decisions.md),
-which keeps the κ rule as registered:
+answered in the second draft, the second review (55/100) in the third, the
+re-audit of the third draft (62/100) in the fourth, and the third review of
+the fourth draft (56/100) in the fifth, under decision D27. The fourth review
+(of the fifth draft, 2026-10-07, 57/100, not ready to freeze) found that D27's
+consequence had fired: with the upgraded open-weight rater (Qwen3.6-35B-A3B,
+thinking off) and the isolated per-item Claude rater, development κ was 0.270
+on 121 real items against the registered 0.6, and its confirm-scale
+projection put P(κ ≥ 0.6) near 0. As D27 requires, the design went back to
+review; the κ rule and its consequence stay as registered. Decision D34
+(program/decisions.md) allows one rater retry and then an honest exit; this
+draft implements it:
 
-1. Rater quality (κ): the open-weight rater is upgraded from Qwen3.5-9B to
-   Qwen3.6-35B-A3B, which vLLM 0.31.0 serves with image input on one H100
-   (the CPU image-input doctor and the full development rerate of section
-   15). If κ still falls below 0.6 with this rater, the design goes back to
-   review; the rule is not changed to make it pass (sections 2, 9, 10, 15).
-2. Isolation of the agent-harness Claude rater: one agent per item, each
-   given a fresh directory that holds only its item's packet text and page
-   images, read-only, without a shell; the ingest re-hashes every item
-   directory, takes the model id from the harness transcript and voids
-   (`unsure`) any answer whose transcript shows a shell call, a tool that is
-   not read-only, or a path outside the item's directory. The development
-   Claude answers rated before this protocol are exploratory and not blind
-   (sections 9, 14, 15).
-3. `pptx.eq.zorder_nonoverlap` swaps a pair only when neither shape comes
-   within 2 mm of the other or of any shape stacked between them, so it
-   cannot change the rendered order, and `pptx.viol.delete_bound_shape` no
-   longer deletes a shape that lies 90% or more under the shapes above it;
-   the operators were revalidated, the catalog digest refreshed and the dev
-   campaign rebuilt (sections 2, 10, 15, Appendix A).
+1. One retry of the open-weight rater (sections 2, 9, 15): the same model
+   with thinking on, `max_tokens` 8,192 and the model card's sampling for
+   thinking on general tasks, one configuration only; the development audit
+   was rebuilt and rerated by it, every item rated, inside D34's 0.5 GPU-h,
+   and is exported for the isolated Claude rater. If development κ with both
+   raters is still below 0.6, no other rater is tried: P2-P5 leave the
+   confirmatory headline before the confirm campaign runs, and the campaign
+   reports P1 and the checker false-negative candidates descriptively
+   (section 10).
+2. Gold defects (sections 9, 10): every task with an audited K3 item gets a
+   gold sham; a task whose gold sham is decided reject has its equivalence
+   items taken out of the equivalence K3 group and reported as gold defects;
+   labels stay relative to the gold.
+3. Violation misses (sections 9, 15, Appendix A): K3 items on which both
+   raters agree against the label join Kevin's blind adjudication pool, mixed
+   with the splits and disclosed; an end-state file with no starting file gets
+   a text-level difference against the starting files' text;
+   `pptx.viol.delete_bound_shape` skips shapes whose frame lies at least 50%
+   off the slide; and shape position or size changes of at most 0.02 mm (the
+   LibreOffice save's rounding) are counted in one line, not listed.
+4. Audit integrity (sections 2, 9, 16): the registered transcript audit ties
+   each transcript to its item (the first prompt is the committed template
+   rendered for that item, the answer names the item, the packet was read),
+   and its final-text fallback needs exactly one answer word; opaque item ids
+   take a secret per-audit salt, committed as a SHA-256 and revealed after the
+   isolated ingest; the agent prompt template is committed and its SHA-256
+   registered; the context the agent harness injects into every rater is
+   disclosed.
+5. GPU (section 9): the rater cap is re-measured with thinking on and
+   re-registered (3.0 GPU-h, from 1.0) so the largest confirmatory audit (841 items,
+   up from 807 with the added gold shams) fits with margin; the
+   registration's GPU total stays under 8 GPU-h.
 
-and the review's minor items: K6's adequacy claim requires P5 to stay in the
-headline and no K4 stop; the agent-harness ingest accepts the rater
-workflow's wrapper; a calls file with a second record for an item, or a
-record without a rater id, is refused; the audit's GPU cap reads earlier
-jobs from a ledger; the open-weight rater ends cleanly on the lane's signals;
-stale text corrected (this note, the pins block, the spot-check
-recommendation).
+and the review's minor items: stale text corrected (section 2's operator row,
+the held-files and pending-answers notes of section 15, section 17) and the
+adjudication workload re-estimated from the review's projection (section 9).
+The isolated Claude answers on the rebuilt development audit are pending, so
+D34's development κ condition is still open (section 17).
 
 The registered analysis is code (`harness/q2_mutation/analysis.py`), so no
-choice is left to make after a confirmatory verdict is read. After a fourth
-review that finds no blocking defect and Kevin's sign-offs (section 17),
+choice is left to make after a confirmatory verdict is read. After the
+isolated Claude ingest of the D34 rerate, a fifth review that finds no
+blocking defect and Kevin's sign-offs (section 17),
 merge main once more (so the ledger does not fork) and freeze with
 
 ```bash
@@ -81,11 +99,11 @@ web and infeasible tasks are out of scope.
 | Task export | `program/evidence/q2-mutation/sanitized-tasks.manifest.json` (205 tasks), SHA-256 in the pins block |
 | Splits | `program/evidence/q2-mutation/splits.json`, seed 42, stratified by domain × task class: dev 32, confirm 120, reserve 53 |
 | Requirement specs | `program/evidence/q2-mutation/specs/` from `stage0/q2-mut-specs` at `287d523374354e40af4c1f54bd06e46c3de6a955`: 205 YAML specs, 598 requirements, author `blind-model-author-v1`. Set SHA-256 = SHA-256 of the sorted lines `{file sha256}  {file name}` (`campaign.spec_set_sha256`). Blindness check: `program/evidence/q2-mutation/integration/blind-spec-provenance.json` |
-| Operator catalog | `q2-mut-operators-v1`, `catalog_sha256` (hash over the operator descriptions and the sources of `harness/q2_mutation/operators/`), 64 operators listed in Appendix A; validated at `7c429bcb793369649bc7970ccad0fba290ad2772` and merged from `stage0/q2-mut-operators` at `0d7f0857cc0a6d0007466a05ee08a44a467cf957`; on the integration branch the snapshot gained version-2 fields, and after the third review (D27) `pptx.eq.zorder_nonoverlap` and `pptx.viol.delete_bound_shape` gained the site rules of Appendix A, revalidated on the synthetic documents at `4eba530` (Slurm 684: 131 planned, 131 applied, 130 admitted, as job 431) and on the dev split (`dev-mutants-v7`, section 15) |
+| Operator catalog | `q2-mut-operators-v1`, `catalog_sha256` (hash over the operator descriptions and the sources of `harness/q2_mutation/operators/`), 64 operators listed in Appendix A; validated at `7c429bcb793369649bc7970ccad0fba290ad2772` and merged from `stage0/q2-mut-operators` at `0d7f0857cc0a6d0007466a05ee08a44a467cf957`; on the integration branch the snapshot gained version-2 fields, and after the third review (D27) `pptx.eq.zorder_nonoverlap` and `pptx.viol.delete_bound_shape` gained the site rules of Appendix A, revalidated on the synthetic documents at `4eba530` (Slurm 684: 131 planned, 131 applied, 130 admitted, as job 431) and on the dev split (`dev-mutants-v8`; `dev-mutants-v7` lost two targets to a UNO fault and was not scored, section 15); after the fourth review (D34) `pptx.viol.delete_bound_shape` also skips shapes at least 50% off the slide, revalidated at `34046e0` (Slurm 717) and on the dev split (`dev-mutants-v9`, section 15) |
 | Harness and campaign code | code-tree SHA-256 over every file of `harness/q2_mutation/` (README and SKILL files excepted), `infra/q2-mutation/`, `infra/slurm/host-single-node/q2-mutation-cpu.sbatch`, `scripts/q2_mutation_export_tasks.py` and `scripts/q2_mutation_operators.py` (`campaign.code_tree_sha256`); schema `q2-mutation-schema-v1`; operator snapshot version 2 (pptx slide backgrounds, shape outlines and text-body properties added after the review) |
 | Mounted inputs | `osworld_tree_sha256` over `desktop_env/` and `evaluation_examples/` of the host's clean checkout at `b138d348` (git status clean, 537 files); `vm_baseline_tree_sha256` over the 75 VM config-baseline files; every file-cache file re-hashed against `program/evidence/q2-mutation/harness/file-cache-receipts.tsv` (447 files, its SHA-256 pinned); the probe map input `probe_touched.json` (SHA-256 pinned) |
-| Raters (decisions D23, D25, D27) | Anthropic rater, model `claude-opus-5-5`, by one of two registered paths: the Messages API once a valid key exists (the id the API names recorded by `rater_runner` before the first call, the run stops if it differs, and from every response), and until then the Claude Code agent harness with one isolated agent per item (D25, D27: `rater_runner export-isolated` / `ingest-isolated`; the model id is the one the harness transcript records for the agent's turns, a transcript naming another model refuses the ingest, and the transcript audit of section 9 voids a breached item). Open-weight rater (the independent one, D27): `Qwen/Qwen3.6-35B-A3B` at Hugging Face revision `995ad96eacd98c81ed38be0c5b274b04031597b0`, model receipt SHA-256 `18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9` (artifact root `8ac6d764b84034f4ed0df3f2388c9180afceab806f7e75f5d1e43a73bdd2736b`, 71.9 GB, Apache-2.0), verified by the lane in every job; vLLM 0.31.0 resolves its architecture (`Qwen3_5MoeForConditionalGeneration`) as multimodal and its processor turns a 100-dpi page into 918 image tokens, under the registered estimate of 947 (CPU image-input doctor, Slurm 685). The development smokes of section 15 used Qwen3.5-9B (`c2022362…`, receipt `0a9e052d…`) |
-| Rater runner and serving | `harness/q2_mutation/rater_runner.py` (inside the code-tree pin), prompt `RATER_PROMPT_V1`, isolated-harness instructions `ISOLATED_INSTRUCTIONS` (the prompt plus a fixed note: read only this item's file and images, with the Read tool, run nothing); vLLM 0.31.0 (commit `db9527a46873454610df6dbedf79a36d6bf1a7f6`) in the cu129 overlay of `vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f` (image ID `sha256:423783aac4fefebfe6b67d6fc2810b88a1d4dc08ed8bba587c80b0d8973e0b8b`), built by `scripts/build_vllm_overlay_on_h100.sh` from a source capsule of the frozen commit; the serving probes validated this base, variant and checkpoint (`program/evidence/2026-10-07/serving-throughput-probe-v2/`) |
+| Raters (decisions D23, D25, D27, D34) | Anthropic rater, model `claude-opus-5-5`, by one of two registered paths: the Messages API once a valid key exists (the id the API names recorded by `rater_runner` before the first call, the run stops if it differs, and from every response), and until then the Claude Code agent harness with one isolated agent per item (D25, D27: `rater_runner export-isolated` / `ingest-isolated`; the model id is the one the harness transcript records for the agent's turns, a transcript naming another model refuses the ingest, and the transcript audit of section 9 voids a breached item). Open-weight rater (the independent one, D27): `Qwen/Qwen3.6-35B-A3B` at Hugging Face revision `995ad96eacd98c81ed38be0c5b274b04031597b0`, model receipt SHA-256 `18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9` (artifact root `8ac6d764b84034f4ed0df3f2388c9180afceab806f7e75f5d1e43a73bdd2736b`, 71.9 GB, Apache-2.0), verified by the lane in every job; vLLM 0.31.0 resolves its architecture (`Qwen3_5MoeForConditionalGeneration`) as multimodal and its processor turns a 100-dpi page into 918 image tokens, under the registered estimate of 947 (CPU image-input doctor, Slurm 685). Since D34 it rates with thinking on (section 9). The development smokes of section 15 used Qwen3.5-9B (`c2022362…`, receipt `0a9e052d…`), and the D27 rerate this model with thinking off |
+| Rater runner and serving | `harness/q2_mutation/rater_runner.py` (inside the code-tree pin), prompt `RATER_PROMPT_V1`, isolated-harness instructions `ISOLATED_INSTRUCTIONS` (the prompt plus a fixed note: read only this item's file and images, with the Read tool, run nothing), and the isolated agent's task prompt `harness/q2_mutation/templates/isolated_rater_prompt.txt` (D34; SHA-256 `0e9d4eb6597c347d40db7f8ae150e3345fc8a88820d6e8501d02543c9ccbed44`, in the pins block and checked by `rater_runner`; placeholders `{ITEM_DIR}` and `{ITEM_ID}`); vLLM 0.31.0 (commit `db9527a46873454610df6dbedf79a36d6bf1a7f6`) in the cu129 overlay of `vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f` (image ID `sha256:423783aac4fefebfe6b67d6fc2810b88a1d4dc08ed8bba587c80b0d8973e0b8b`), built by `scripts/build_vllm_overlay_on_h100.sh` from a source capsule of the frozen commit; the serving probes validated this base, variant and checkpoint (`program/evidence/2026-10-07/serving-throughput-probe-v2/`) |
 
 Machine-readable pins. Before any job is submitted, `check_frozen.py` on the
 host refuses a staged tree whose `.git_sha` is not the submitted commit, and,
@@ -102,7 +120,7 @@ differ from the pins:
 {
  "q2m_pins": 1,
  "experiment_id": "q2-evaluator-mutation-v1",
- "code_tree_sha256": "528b79851daa719037e6cdc213aea1d068296179d5734b18db614d3ee6201bde",
+ "code_tree_sha256": "0ec98ad35598c7294b2e509595c94b4df807e995844d4c2ad4511203f112f9d8",
  "operator_catalog_sha256": "3a5ff94953f7b672059b0f6b063064b97a438de166fd664903e239a12f65b46f",
  "operator_catalog_version": "q2-mut-operators-v1",
  "operators": 64,
@@ -134,7 +152,7 @@ differ from the pins:
   "vllm_base_image_id": "sha256:423783aac4fefebfe6b67d6fc2810b88a1d4dc08ed8bba587c80b0d8973e0b8b",
   "open_weight_enable_thinking": true,
   "open_weight_max_tokens": 8192,
-  "open_weight_gpu_hours_cap": 1.0,
+  "open_weight_gpu_hours_cap": 3.0,
   "isolated_prompt_template_sha256": "0e9d4eb6597c347d40db7f8ae150e3345fc8a88820d6e8501d02543c9ccbed44"
  }
 }
@@ -519,7 +537,7 @@ first that applies in this order:
 
 A checker exception is not an infrastructure failure; it is verdict `error`.
 
-## 9. Audit (decisions D9, D23 and D25)
+## 9. Audit (decisions D9, D23, D25, D27 and D34)
 
 - Raters (D23), labelled "model raters" in every result:
   - Anthropic rater (`model-rater-anthropic`), model `claude-opus-5-5`, by
@@ -553,25 +571,50 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
       sample, label or rater output is placed on the rating side before the
       ingest.
       - Protocol: one Claude subagent per item, started fresh for that item
-        alone and given only its directory; it may read that directory and
-        nothing else (read-only tools: Read, Glob, Grep, LS, each with an
-        absolute path inside the directory), may not run a shell or any
-        other tool except the path-free ones that return its answer or
-        manage its own context (StructuredOutput, ToolSearch, TodoWrite),
-        and returns `{item_id, answer, reason}`. The harness transcript of
-        each agent is kept as `{item_id}.jsonl` outside the root.
+        alone. Its task prompt is the registered template
+        `harness/q2_mutation/templates/isolated_rater_prompt.txt` (D34;
+        SHA-256 `0e9d4eb6597c347d40db7f8ae150e3345fc8a88820d6e8501d02543c9ccbed44`,
+        in the pins block; `rater_runner` refuses a file with another
+        digest) rendered for that item by `rater_runner.render_isolated_prompt`:
+        `{ITEM_DIR}` is the export manifest's `iso_root`, a slash and the
+        item id (absolute, no trailing slash), and `{ITEM_ID}` is the item
+        id. The template tells the agent that this task overrides any
+        CLAUDE.md, AGENTS.md or memory instruction to load files at startup
+        (reading anything outside the item directory voids the rating); to
+        read only files inside its item directory, with the Read tool only
+        (no Bash, Grep, Glob or other tool, no search); that the packet is
+        `packet.txt` and the page images are in `pages/` there; to read the
+        packet and every page image; to follow the rater instructions in the
+        packet; and to answer accept, reject or unsure with a one-sentence
+        reason through the structured output with its item id. The agent
+        returns `{item_id, answer, reason}`; the harness transcript of each
+        agent is kept as `{item_id}.jsonl` outside the root.
       - Transcript audit (`rater_runner.audit_transcript`, applied by
         `ingest-isolated` to every item): any shell call (any tool whose name
-        contains bash, shell, terminal or powershell), any tool call naming a
-        path outside the item's directory (relative paths and a missing
-        path count as outside, since the session's working directory is
-        not the item's), and any tool that is not one of the above voids
-        that item's answer: it becomes `unsure` with outcome
-        `isolation_void`, and its reasons are recorded. So does an item
-        whose directory no longer hashes to its export, an item without a
+        contains bash, shell, terminal or powershell), any Read of a path
+        outside the item's directory (relative paths and a missing path
+        count as outside, since the session's working directory is not the
+        item's), and any tool other than Read and the path-free ones that
+        return the answer or manage the agent's context (StructuredOutput,
+        ToolSearch, TodoWrite; Glob, Grep and LS are void since D34, as the
+        template forbids them) voids that item's answer: it becomes `unsure`
+        with outcome `isolation_void`, and its reasons are recorded. The
+        transcript must also belong to its item (D34): its first user
+        prompt (the first user turn that is not a tool result) must be the
+        template rendered for that item, either bare or in the workflow
+        harness's fixed wrapper (`rater_runner.WORKFLOW_PREAMBLE`, then the
+        prompt with every line indented by two spaces; compared after
+        dropping trailing spaces and leading or trailing blank lines,
+        `rater_runner.prompt_matches`); every `StructuredOutput` call must
+        name the item's id; and the agent must have read the item's
+        `packet.txt`. Otherwise the item is void. So is an item whose
+        directory no longer hashes to its export, an item without a
         transcript, a transcript that names no model, and an answer that is
-        not the one the transcript returned (the last `StructuredOutput`
-        answer, else the agent's final text). The model id of every record is
+        not the one the transcript returned: the last `StructuredOutput`
+        answer, or, with no `StructuredOutput` call, the agent's final text,
+        which must hold exactly one of the words accept, reject and unsure
+        as a standalone word, the record's answer (a final text that names
+        two answer words matches neither). The model id of every record is
         the one the harness recorded on the agent's turns, not one the agent
         reports; a transcript that names any model other than
         `claude-opus-5-5` refuses the whole ingest. Each call record keeps
@@ -581,24 +624,57 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
         digest: the canonical answer record). An exported item without an
         answer is `unrated` (`unsure`). Transcripts and reasons quote document
         text and are never committed.
+      - Item ids (D34): `raters.opaque_item_id` is the first 16 hex
+        characters of SHA-256 of `q2-audit:{salt}:{key}`, where the salt is
+        32 random bytes (64 hex characters) generated on the host for each
+        audit, kept outside every repository (file mode 600 in a mode-700
+        directory under the run root's `scratch/audit-salts/`, the only
+        thing `submit_audit.sh` mounts from there), recorded in the sample
+        summary only as its SHA-256 (committed) and revealed in the
+        evidence after the isolated ingest. With the public seed as the salt
+        (the earlier rule) a sham's or P1 flip's id was a function of its
+        public task id.
       - Disclosure: on this path the harness, not the registration, sets the
         model's sampling and thinking, so the Claude rater's sampling is not
-        fixed; the open-weight rater stays seeded and greedy. The shared-
+        fixed; the open-weight rater stays seeded. The agent harness also
+        puts the same context into every rater agent before its task prompt
+        (D34 disclosure): the user's and the project's CLAUDE.md files, the
+        index of the harness's memory (MEMORY.md), the repository's git
+        status, and the listings of the skills and tools available, with
+        other session reminders (date, environment, model id). None of it
+        names an item, label, verdict or other rater's answer; the agent is
+        not "given only its directory" in the sense of an empty context, but
+        the transcript audit shows what it read and ran. The shared-
         directory form of D25 (`export-harness` / `ingest-harness`, which
         now also accepts the rater workflow's wrapper `{rater, model_id,
         items}`) is kept for the record of the development smoke but is not
         a registered path for the confirmatory audit: its development answers
         (section 15) were given by one agent over all items with state shared
         across them, are not blind, and are exploratory.
-  - Open-weight rater (`model-rater-open-weight`, the independent one; D27):
-    Qwen3.6-35B-A3B at the revision and receipt of section 2, image input
-    on, served by `vllm serve` on 127.0.0.1 inside the network-less lane
-    container with fixed flags (`rater_runner.ENGINE_FLAGS`: bf16, seed 42,
-    tensor parallel 1, `max_model_len` 131,072, GPU memory utilization 0.95,
-    8 sequences, no prefix caching, `generation_config vllm`, up to 40 images
-    per request); greedy decoding (temperature 0, top_p 1, seed 42),
-    `max_tokens` 256, thinking off through the chat template, timeout 600 s,
-    at most 8 requests in flight. An args doctor checks the engine argv and
+  - Open-weight rater (`model-rater-open-weight`, the independent one; D27,
+    D34): Qwen3.6-35B-A3B at the revision and receipt of section 2, image
+    input on, served by `vllm serve` on 127.0.0.1 inside the network-less
+    lane container with fixed flags (`rater_runner.ENGINE_FLAGS`: bf16, seed
+    42, tensor parallel 1, `max_model_len` 139,264, GPU memory utilization
+    0.95, 8 sequences, no prefix caching, `generation_config vllm`, no
+    reasoning parser, up to 40 images per request). Since D34 (one retry,
+    one configuration) it thinks before it answers: `enable_thinking` true
+    through the chat template, which opens the thinking in the prompt; the
+    sampling is the model card's for thinking on general tasks (temperature
+    1.0, top_p 0.95, top_k 20, min_p 0, presence penalty 1.5, repetition
+    penalty 1.0) with the per-request seed 42, `max_tokens` 8,192 (thinking
+    and answer; `max_model_len` grew by the same 7,936 tokens so the packet
+    budget below still fits), timeout 600 s, at most 8 requests in flight.
+    Answer rule with thinking (`raters.split_thinking`, then the first-token
+    rule): the answer is read from the text after the reply's last
+    `</think>` (the chat template's own split); a reply without `</think>`
+    (thinking cut at `max_tokens` or never closed) holds no answer and is
+    `thinking_unfinished` (`unsure`); if the engine returned the thinking in a
+    separate reasoning field, the reply's content is the answer text. The
+    rater is seeded but not bitwise reproducible at temperature 1.0 (batch
+    composition changes the arithmetic); one call per item is still the
+    rule. Before D34 it decoded greedily with thinking off and `max_tokens`
+    256 (the D27 rerate, section 15). An args doctor checks the engine argv and
     the request payload with vLLM's own parsers before the engine starts; the
     image-input doctor (`args-doctor --model-dir`, CPU only, on the model's
     configuration, tokenizer and processor files, whose digests match the
@@ -614,21 +690,37 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
     requests in flight 60 s (a second signal ends the wait), stops the engine
     (TERM, then KILL after 30 s), writes its receipt and leaves with
     `os._exit`, so its container ends inside the lane's 120 s window; an item
-    the stop cut off gets no record. A job's limit covers the engine start,
-    its shard's items at the measured rate (section 15) and those 180 s; an
-    item not reached is `unrated` and goes to a rerun of the rest (section 8).
-  - GPU cap: every open-weight rater job of the confirmatory audit together
-    (all shards and any rerun) at most 1.0 GPU-h of allocation. The caps of
+    the stop cut off gets no record. A job's limit is 4 minutes of start
+    (container, model check, engine; 3.1 minutes measured with thinking on),
+    plus its shard's items at a planning rate of 10 items per minute (14.4
+    measured with thinking on, section 15), plus 4 minutes for the USR1 lead
+    (180 to 240 s); an item not reached is `unrated` and goes to a rerun of
+    the rest (section 8).
+  - GPU cap (re-registered under D34 from the thinking-on measurement): every
+    open-weight rater job of the confirmatory audit together (all shards and
+    any rerun) at most 3.0 GPU-h of allocation (`render_rater_manifest.AUDIT_GPU_HOURS`,
+    the pins block). The largest audit (841 items; at 3.2 MB per packet on
+    the dev audit, six shards of at most 480 MiB: five of about 157 items and
+    one of about 56) needs five 24-minute jobs and one 14-minute job at the
+    planning rate, 2.23 GPU-h, or about 1.6 GPU-h at the measured rate; the
+    expected audit (about 420 items, three shards) about 1.1 GPU-h of
+    allocation at the planning rate. The 3.0 GPU-h cap leaves 0.77 GPU-h (35% of the planned need)
+    for slower thinking or a rerun of unrated items. Thinking off, the
+    earlier 1.0 GPU-h cap covered the expected audit but not the 807-item
+    maximum (fourth review). The caps of
     the audit's earlier jobs are read from a GPU ledger, not typed by hand:
     `render_rater_manifest.py --audit-id {audit} --gpu-ledger {ledger}` sums
     the ledger's rows for that audit, refuses a job whose cap would take the
     total over the registered cap, and appends its own row whether or not
     the job is submitted (so the count can only overstate). Plus the overlay
     build at the frozen commit, at most 10 minutes of one H100 (0.167 GPU-h,
-    as for the serving probes, D8 and D19). The development smokes (section
-    15) were capped at 0.2 and 0.15 GPU-h, and the D27 development rerate at
-    0.5 GPU-h including its overlay build. The registration's GPU total is
-    therefore at most 1.17 GPU-h, below the 8 GPU-h gauntlet threshold.
+    as for the serving probes, D8 and D19). The registration's GPU total is
+    therefore at most 3.17 GPU-h. The development rater work before the
+    freeze was capped at 0.2 and 0.15 GPU-h (the smokes), 0.5 GPU-h (the D27
+    rerate) and 0.5 GPU-h (the D34 rerate), each including its overlay
+    build (used: 0.123, 0.095, 0.128 and 0.228 GPU-h); with it the
+    experiment's total is at most 4.52 GPU-h, below the 8 GPU-h gauntlet
+    threshold (D24), so no gauntlet is needed.
   - Data sent to the Anthropic model: only the packet text (the task
     instruction, structure listings and differences) and page renders of the
     task's starting files and of the candidate end-state files, on either
@@ -637,10 +729,13 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
     (task configs Apache-2.0; file-cache documents under the dataset's
     apache-2.0 card, third-party content) and edits of them made by the
     operators; no credential, private data or other material is sent.
-    Volume for the confirmatory audit: at most 807 items (650 mutants under
-    the stratum caps, 65 shams, at most 92 P1 flips) and about 375 expected
-    (the simulation of section 10 at the expected sizes: about 365 mutants
-    and shams, plus the P1 flips), one request each, with up to 40 page
+    Volume for the confirmatory audit: at most 841 items (650 mutants under
+    the stratum caps; at most 99 shams: the quota's 65 on 33 tasks plus a
+    gold sham for each of the other K3 tasks among the 67 mutation tasks,
+    D34; at most 92 P1 flips) and about 420 expected (about 330 mutants at
+    the expected sizes of section 10, about 75 shams with a gold sham for
+    each of the about 59 K3 tasks, and the P1 flips; the earlier rule's
+    figures were 807 and about 375), one request each, with up to 40 page
     images per request.
 - Runner rules (`harness/q2_mutation/rater_runner.py`): one call per rater per
   item (an item with any record in `calls.jsonl` is never sent again, so a
@@ -649,7 +744,9 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   after 5, 20 and 60 s; the answer is the first word of the reply after
   leading whitespace, markdown emphasis, quotes, list markers and brackets,
   case-folded, and counts only if it is `accept`, `reject` or `unsure`
-  (`raters.parse_first_token`); a refusal (`stop_reason` `refusal`), an empty
+  (`raters.parse_first_token`; for the open-weight rater with thinking on,
+  the reply's text after its last `</think>`, and a reply without one is
+  `thinking_unfinished`, D34); a refusal (`stop_reason` `refusal`), an empty
   or unparseable reply, a timeout that survived its retries, an exhausted
   transport, a request the provider rejected (HTTP 400 or 413, for example a
   packet over the context window) or a 200 response whose body is not the
@@ -702,12 +799,38 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
     made to the raw starting file (`save_only_changes`); this count is the
     only raw-baseline view. Where the baseline save failed (by the rule of
     `reachability.save_failures`) the difference is against the raw starting
-    file and the packet says so; end-state files with no starting file are
-    shown as new files.
+    file and the packet says so.
+  - New files (D34): an end-state office, text or configuration file with no
+    starting file (a script written from a slide deck, a report from a
+    workbook) is shown as a new file with a text-level difference against
+    the starting files' text (`packets.new_file_text_diff`): the visible text
+    of every starting file (saved where one exists) in VM-path order, one
+    non-empty line per paragraph, table cell, shape text line, slide note or
+    worksheet row (`packets.text_lines`), against the same lines of the new
+    file, as a unified difference with one line of context (at most 600
+    lines). Any other new file (an image, a PDF) is shown as `new file`. The
+    fourth review found two violation mutants of a deck-to-script task (a
+    deleted title paragraph, a one-letter typo) that both raters accepted
+    because the packet said only "new file".
+  - Save drift (D34): LibreOffice stores shape positions and sizes in
+    1/100 mm (360 EMU) and rounds them on every save. A `changed` layout
+    entry of a shape's offset or extent whose every coordinate moved by at
+    most 720 EMU (0.02 mm, two such units) is not listed one by one; the
+    difference ends with one line counting such changes
+    (`packets.is_save_drift`, `DRIFT_NOTE`). On the D27 dev packets 5,335 of
+    the 5,417 position and size changes were within 720 EMU and none lay
+    between 721 and 36,000 EMU; 26 packets had up to 335 such lines. The
+    rule is label-blind (it reads only the difference). It also covers the
+    one operator edit of that size, `pptx.eq.subvisible_nudge` (360 EMU), whose
+    edit then shows only in the count line; it is an equivalence operator,
+    so the rule can only make its mutants look more like what they are
+    labelled.
   - Token budget (`audit.fit_packet`): every packet must fit the
-    open-weight rater's 131,072-token window less 256 answer tokens and a
-    2,048-token allowance for the system prompt, chat template and answer
-    line (128,768 tokens), estimated before any rater sees it at 0.55
+    open-weight rater's 139,264-token window less its 8,192-token reply
+    (thinking and answer, D34) and a 2,048-token allowance for the system
+    prompt, chat template and answer line (129,024 tokens; 128,768 before
+    D34 with a 131,072 window and 256 answer tokens), estimated before any
+    rater sees it at 0.55
     tokens per UTF-8 byte of text (the dev smoke measured at most 0.49) and
     one token per 32 x 32 pixel cell of each image plus two. A packet over
     the budget is shortened in a fixed order (starting-file listings, then
@@ -728,9 +851,13 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   other label-verdict disagreements (`disagreement`, cap 200), 100 random
   agreements among the rest (`agreement`), each with its inclusion
   probability; plus 10% sham items (the target's LibreOffice-saved null
-  mutant as the saved gold, and the task's saved do-nothing; at most two per
-  task); plus every P1 flip of the confirm and reserve control runs (stratum
-  `p1_flip`). Mutants labelled `ambiguous` and `error` verdicts are outside
+  mutant as the saved gold, and the task's saved do-nothing; alternating
+  gold and do-nothing over the sorted tasks, at most two per task); plus a
+  gold sham for every task with a sampled item in a K3 group
+  (`should_pass_equiv` or `should_fail_violation`) that the 10% quota gave
+  none (D34), so the gold-defect rule below applies to every task whose
+  items enter K3; plus every P1 flip of the confirm and reserve control runs
+  (stratum `p1_flip`). Mutants labelled `ambiguous` and `error` verdicts are outside
   the sample (`raters.stratum_of`); ambiguous mutants are reported as counts
   per witness rule and verdict, never as rates. `submit_audit.sh` builds the
   sample, the items, the saved baselines and the packets in one CPU-only
@@ -742,12 +869,39 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   (`per_rater`), and an item on which the raters do not agree is decided by
   Kevin or counted as a label error, never dropped.
 - Decision per item (`raters.final_decision`): both raters accept → accept;
-  both reject → reject; otherwise unresolved. Kevin adjudicates unresolved
-  items on the same packet, blind to the label, the verdict, the operator and
-  the raters' answers; his answer (accept or reject) decides it. Label error
-  uses Hajek weights; an item still unresolved at analysis counts as a label
-  error. The estimate with unresolved items dropped is a sensitivity
-  analysis only. Adjudication changes label error, never kappa.
+  both reject → reject; otherwise unresolved. Kevin's blind adjudication pool
+  (`raters.adjudication_pool`, D34) holds three kinds of item: every real
+  item (mutant or P1 flip) on which the raters split; every real item of a
+  K3 group on which both raters agree against its label (a violation both
+  accept, an equivalence mutant both reject; on the D27 rerate 3 of 26
+  violation items were both-accept, which no rule sent to Kevin); and every
+  gold sham on which the raters split. The pool is mixed in one seeded order
+  (`random.Random("42:adjudication")`) and written as item ids only
+  (`adjudication-pool.jsonl`); Kevin sees each item's packet, blind to the
+  label, the verdict, the operator, whether it is a sham, why it is in the
+  pool and the raters' answers. His answer (accept or reject) decides every
+  pool item, concordant ones included; an answer for an item outside the
+  pool is refused. The pool's composition by reason is disclosed as counts
+  in the audit summary. Label error uses Hajek weights; an item still
+  unresolved at analysis counts as a label error, and a concordant item
+  Kevin has not adjudicated keeps the consensus (a label error). The
+  estimate with unresolved items dropped is a sensitivity analysis only.
+  Adjudication changes label error, never kappa.
+- Gold defects (D34): labels are relative to the gold, but the audit asks
+  whether the user would accept the result, so where the gold is itself
+  flawed a correct rater rejects the task's equivalence mutants for the
+  gold's flaw. A task whose gold sham is decided reject (both raters reject
+  it, or they split and Kevin rejects it) is a gold-defect task: its
+  equivalence items leave the equivalence K3 group (label error, the K3
+  bound and its minimum audited size are computed without them) and are
+  reported as gold defects with their decisions (`AuditSummary.gold_defects`).
+  They stay in kappa, in S6 and in P2, which stays defined relative to the
+  gold; the analysis also reports P2 without those tasks' equivalence
+  mutants as a sensitivity (`analysis.headline` `gold_defects`). The
+  violation items of a gold-defect task stay in their group. A split gold
+  sham that Kevin has not adjudicated decides nothing. On the D27 rerate the
+  fourth review traced 6 of the Claude rater's 9 label contradictions to the
+  gold (e528b65e, bf4e9888, e4ef0baf), none of which had a gold sham.
 - K3 and K4 groups: `should_pass_equiv` (enters P2 and P5) and
   `should_fail_violation` (enters P3 and P5), the label classes that enter the
   metrics without an audit gate. Alternative-solution and extra-change items
@@ -755,21 +909,23 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   rates are S6 results and never fire K3. Their operating characteristics
   under the registered sampler and summary are in section 10.
 - Adjudication workload (an estimate, before any confirm item exists): the
-  split items Kevin adjudicates are those on which the two raters do not
-  both accept or both reject. At the expected audit size (about 365 real
-  and sham items), raters that are each right 90% of the time and unsure 5%
-  of the time split on about 61 items (17%; simulation of section 10). If
-  the Anthropic rater agreed with every label and the open-weight rater
-  answered as on the dev packets, the split share would be the open-weight
-  rater's disagreement with the labels: 29% on the first dev smoke (38 of
-  133, raw baseline), 24% on the 90 items the second rated (22 of 90; saved
-  baseline) and 22% for Qwen3.6-35B-A3B on the D27 rerate (27 of 121 real
-  items, mostly accepted violations; section 15), about 80-90 confirm items.
-  At an assumed 3 to 5
-  minutes per item (packets of up to 1,500 listing lines per file and up to
-  40 page renders), that is roughly 3 to 7.5 hours (61 to 90 items) of blind
-  adjudication. Unadjudicated splits count as label errors, so K4 fires
-  whenever about 10% of a K3 group stays split (section 10).
+  pool above. The fourth review projected the D27 rerate's answers (the
+  isolated Claude rater and Qwen3.6-35B-A3B with thinking off; κ 0.27, 29 of
+  121 real items split) to confirm scale with a task-cluster bootstrap within
+  label class at the registered sampler's expected composition: a split
+  share of 19-34% (median 25%) across 8 to 40 violation tasks, about 65 to
+  155 confirm items. Concordant contradictions of a K3 label were 3 of the
+  86 dev K3 items (3.5%), about 5 to 15 at the expected 200 or so confirm K3
+  items, and split gold shams a few more (about 60 gold shams expected).
+  So the pool is about 70 to 175 items; at an assumed 3 to 5 minutes per
+  item (packets of up to 1,500 listing lines per file and up to 40 page
+  renders) that is roughly 3.5 to 15 hours of blind adjudication, against
+  61 to 90 items (3 to 7.5 hours) estimated before the review. A
+  thinking-on open-weight rater that agrees better with the Claude rater
+  (the D34 retry) would shrink the split share; raters that are each right
+  90% of the time and unsure 5% split on about 17% (simulation of section
+  10). Unadjudicated pool items count as label errors, so K4 fires whenever
+  about 10% of a K3 group stays unadjudicated (section 10).
 - Human spot check: a stratified sample (max(5, 10%) per stratum plus 5 shams)
   for Kevin. Results state that the human check is pending until it is done.
 
@@ -834,7 +990,10 @@ pre-freeze evidence already makes a criterion unlikely to fire, it says so.
   for 40 equally weighted items without an error and 11.3% with one). A group
   with fewer than 30 audited items, fewer than 8 tasks or a Kish effective
   size below 29 (the smallest size whose zero-error bound is under 10%) is
-  insufficiently audited. Consequence: when K3 fires for `should_pass_equiv`,
+  insufficiently audited. The equivalence items of a gold-defect task (its
+  gold sham decided reject; section 9, D34) are not in the equivalence
+  group: its error, bound and minimum size are computed without them, and
+  they are reported as gold defects. Consequence: when K3 fires for `should_pass_equiv`,
   P2 and P5 leave the headline; for `should_fail_violation`, P3 and P5; when
   κ is below 0.6, P2-P5. A metric that leaves the headline is reported as
   exploratory with the same tables; nothing is relabelled
@@ -871,7 +1030,20 @@ pre-freeze evidence already makes a criterion unlikely to fire, it says so.
     put κ at 0.22-0.46 with the Qwen3.5-9B rater: the open-weight rater was
     upgraded instead (section 9). If κ on the development rerate with the
     stronger rater is still below 0.6, the design returns to review; the rule
-    is not relaxed to make the design pass.
+    is not relaxed to make the design pass. That consequence fired (κ 0.270
+    with the isolated Claude rater and Qwen3.6-35B-A3B, thinking off; section
+    15), and the design returned to review.
+  - Decision D34 (after the fourth review) keeps the rule and its
+    consequence and allows one rater retry: the same open-weight model with
+    thinking on, one configuration, the development audit rebuilt and rated
+    by both raters under the isolated protocol. If development κ with both
+    raters is still below 0.6, no other rater is tried, and P2-P5 leave the
+    confirmatory headline before the confirm campaign runs (the registered
+    analysis still computes and reports them, labelled exploratory, as for
+    any metric that leaves the headline); the campaign then reports P1 and
+    the checker false-negative candidates descriptively. The retry's
+    development κ is a condition of the freeze (section 17), not a
+    confirmatory result.
 - **K4 Operator design.** If audited label error (the Hajek estimate after
   Kevin's adjudication, with unresolved items counted as errors) exceeds 10%
   in both K3 groups, stop and redesign under a new id.
@@ -996,8 +1168,10 @@ section 7 per operator and per checker family; every quarantine, error and
 infrastructure-failure count with reasons, including every job excluded at
 `merge` and every task excluded as `unemulated`; each rater's answers and
 disagreement with the labels, every call outcome (refusals, unparseable and
-empty replies, timeouts, rejected requests, unrated items) and the number of
-items Kevin adjudicated; the audit gate counts of P2 and P4
+empty replies, unfinished thinking, timeouts, rejected requests, unrated items) and the number of
+items Kevin adjudicated, with the adjudication pool's composition by
+reason; the gold-defect tasks and items and P2 without them (D34); the
+audit gate counts of P2 and P4
 (`analysis.headline` `audit_gate`) and P4 with unresolved items counted as
 events; the family-floor flags, K6b and K7 per family; which metrics left
 the headline under K2 or K3, and the K2 label; the excluded-task,
@@ -1031,12 +1205,22 @@ and the deviations below.
   Qwen3.6-35B-A3B (κ 0.22-0.46 against the registered 0.6) and confined the
   harness rater to one agent per item in its own directory with a transcript
   audit; the shared-directory development answers are exploratory.
+- After the fourth review (D34), the open-weight rater thinks before it
+  answers (`max_tokens` 8,192, the model card's thinking sampling, seeded but
+  not greedy), every task with an audited K3 item gets a gold sham, a task
+  whose gold sham is decided reject leaves its equivalence items out of the
+  equivalence K3 group (gold defects), the K3 items both raters decide
+  against the label join Kevin's adjudication pool, new-file end states get
+  a text-level difference, save drift of at most 0.02 mm is counted and not
+  listed, item ids take a secret per-audit salt, and the isolated rater's
+  task prompt is a registered template that the transcript audit checks.
 - Two operators were restricted after the third review (D27):
   `pptx.eq.zorder_nonoverlap` (a swap could move a shape above or below an
   overlapping shape stacked between the pair) and
   `pptx.viol.delete_bound_shape` (a shape hidden under the shapes above it
-  could vanish without a visible change). The catalog keeps its version and
-  64 operators; its digest changed.
+  could vanish without a visible change); after the fourth review (D34) the
+  latter also skips shapes at least 50% off the slide. The catalog keeps its
+  version and 64 operators; its digest changed.
 - The audit packet compares an end state with the starting file saved
   through the same LibreOffice steps, not with the raw starting file, and
   the violation label class is audited as a census (section 9).
@@ -1187,10 +1371,11 @@ redacted, are committed under `program/evidence/q2-mutation/integration/` and ch
   revalidation (Slurm 684) planned, applied and admitted the same 131 / 131 /
   130 mutants as the operators' own validation (job 431); both operators
   admitted every synthetic mutant. The label-bearing export of v8 (release
-  rows and outcomes) is held on the host until the isolated Claude answers
-  on the audit drawn from it are ingested (section 9: no sample or label on
-  the rating side before the ingest); its SHA256SUMS are committed
-  (`integration/rater-rerate-dev-v3/held/`).
+  rows and outcomes) was held on the host until the isolated Claude answers
+  on the audit drawn from it were ingested (section 9: no sample or label on
+  the rating side before the ingest) and is now committed
+  (`integration/dev-mutants-v8/`; its SHA-256 matched
+  `integration/rater-rerate-dev-v3/held/SHA256SUMS`).
 - Rater smoke on dev packets (`integration/rater-smoke-dev-v1/`, code
   `ba840b4`): `submit_audit.sh` (Slurm 559, CPU only, LO-VM image) drew the
   dev audit from `dev-mutants-v4` and `dev-controls-v7` (pool 120 evaluable
@@ -1307,21 +1492,110 @@ redacted, are committed under `program/evidence/q2-mutation/integration/` and ch
   against the earlier shared-directory Claude answers (one agent over all
   items; not blind, so exploratory) on the 109 real items matched by task,
   operator and site, κ is 0.34 with raw agreement 0.80 (the 9B rater: 0.54
-  on the 73 of them it rated). Unless the isolated Claude answers on these
-  items differ greatly from the earlier ones, κ stays below 0.6 with the
-  stronger rater, and under D27 the design returns to review (open item,
-  section 17). Throughput at confirm scale: a shard of about 156 items (480
-  MiB) needs about 1 min of container start, 2.2 min of engine start and 4.1
-  min of rating, so a job of about 11 min with the 180 s USR1 lead; the
-  expected 375-item audit (3 shards) fits in about 0.55-0.6 GPU-h of
-  allocation, but the 807-item maximum (6 shards) needs about 1.1-1.2 GPU-h,
-  over the 1.0 GPU-h cap (the items left would be `unrated`).
-- Items exported for the isolated Claude rater: `rater_runner
-  export-isolated` wrote the 133 rerate items into their own directories
-  outside the repository (`integration/rater-rerate-dev-v3/isolated-export/`
-  holds the manifest: ids in the Anthropic rater's order and digests only; a
-  scan of every exported file found no label, verdict, operator, sham or
-  checker term). Their answers, transcripts and ingest are pending.
+  on the 73 of them it rated). Throughput at confirm scale (thinking off): a
+  shard of about 156 items (480 MiB) needed about 1 min of container start,
+  2.2 min of engine start and 4.1 min of rating; the 807-item maximum (6
+  shards) needed about 1.1-1.2 GPU-h, over the 1.0 GPU-h cap of the fifth
+  draft (re-registered under D34, section 9).
+- Isolated Claude rater on the D27 rerate (`integration/rater-isolated-dev-v3/`):
+  `rater_runner export-isolated` wrote the 133 rerate items into their own
+  directories outside the repository; one Claude agent per item rated them
+  (workflow run `wf_2301520e-159`, 1,711 Read calls all inside the agents'
+  own directories, one StructuredOutput answer each, no other tool, every
+  turn `claude-opus-5-5`; an independent strict audit found 0 voids), and
+  `ingest-isolated` at `2dad9e1` recorded 133 `ok`, 0 `isolation_void`.
+  With the held files released, `audit summarize` (both raters, 10,000
+  draws) gave κ 0.270 on 121 real items (raw agreement 0.76), below 0.6:
+  the D27 consequence fired and the design returned to review. Shams 12 of
+  12 for each rater; the P1 flip accepted by both; 29 split items (26 of
+  them Claude reject, Qwen accept); label error (unresolved as errors)
+  0.133 for the equivalence group (K3 bound 0.255, 60 items, 15 tasks) and
+  0.731 for the violation group (26 items, 5 tasks, insufficiently audited);
+  K4 fired. The Claude rater contradicted 9 labels: by the fourth review's
+  reading 6 judged the gold (e528b65e, bf4e9888, e4ef0baf) and 3 missed
+  violations (two on bb83cab4's new-file script, one on 4ed5abd0). These
+  findings motivated D34. The agent prompt of that run was not committed (it
+  named a nonexistent `packet.md`, which every agent tried first) and its
+  item ids used the public seed; both are fixed under D34.
+- D34 development rerate (`integration/rater-rerate-dev-v4/`, code
+  `34046e0`, all on the dev split, exploratory):
+  - Operators: the synthetic revalidation (Slurm 717, LO-VM image) planned,
+    applied and admitted the same 131 / 131 / 130 mutants (catalog
+    `3a5ff949`). `dev-mutants-v9` (Slurm 714-716) built all 17 targets: 275
+    planned, 271 admitted (the same label counts as v8), 288 save jobs, no
+    save failure, post-save purity 270 of 271, no venv disagreement, no S1
+    candidate; 215 evaluable under the lock-exact venv (120 outside probe
+    cells), 27 ambiguous, 28 `null_not_pass` (af23762e); the restricted
+    z-order swaps fail `compare_pptx_files` on 8 of 9 evaluable mutants as in
+    v8; task escapes 4 of 15. On 4ed5abd0 the off-slide rule makes the
+    shapes of the bound slide 2 that lie at least half off the slide
+    ineligible (shape 0, 70.6% off, and the rotated shape 20, 77.6% off), so
+    the operator's seeded choice of three sites changed (v8's shapes 9 and
+    23 were replaced by 18 and 21).
+    The fourth review's item afb440d9, however, deleted shape 19 ('Google
+    Shape;119;p12'), a small shape wholly on the slide (0% off, 0% covered);
+    the 78% figure matches shape 20. Shape 19 is still deleted in v9
+    (`c68de1eb2a4f`), so that violation miss is not removed by the new rule;
+    whether it is a visible violation is for the raters and Kevin.
+  - Audit `dev-audit-v4` (Slurm 720, CPU, LO-VM image, from `dev-mutants-v9`
+    and `dev-controls-v9`; salt SHA-256
+    `1660a49d31a31deb77017852508c9e81ef588fe0d5b842c7e0277a626f803f51`):
+    pool 120 (60 equivalence, 26 violation, 28 alternative, 6 extra
+    change), 142 items: 28 alternative, 26 violation census, 8
+    disagreement, 58 agreement, 21 shams (15 gold: one for each of the 15
+    tasks with a K3 item, 9 of them added by D34's rule; 6 do-nothing) and
+    the af23762e P1 flip. One 455 MB shard (`5598e755...`); 106 items on a
+    saved start, 36 with new files; 51 new-file end-state entries, all with a
+    text-level difference (median 123 lines, at most 602); 28 packets end
+    with the save-drift count line (5,833 changes counted, not listed); 16
+    packets shortened to the token budget, every cut in a starting-file
+    listing (1,933 lines; largest estimate 143,292 before and 128,957 after
+    against 129,024), none dropping a page.
+  - Open-weight rater, thinking on (overlay Slurm 718, 44 s, image
+    `sha256:d5fd5cd774046e3021934827b59e633324122c80300e9e9992db6d74f821a3c7`;
+    args and image-input doctor Slurm 719, CPU, pass, 918 tokens per page;
+    lane job Slurm 722, limit 28 min, cap 0.467 GPU-h in the GPU ledger):
+    engine ready 115 s after the workload started (KV cache 409,539 tokens),
+    all 142 items rated in 590 s (14.4 items per minute; median call 28 s,
+    longest 134 s; 334.7 generated and 13,685 prompt tokens per second),
+    then a clean end (`reason=completed`, exit 0, engine stopped in 1.2 s,
+    no container left). 12 min 57 s on one H100: 0.216 GPU-h, 0.228 with the
+    overlay, inside D34's 0.5. Replies: 141 `ok`, 1 `thinking_unfinished`
+    (cut at 8,192 tokens, an equivalence item, `unsure`); generated tokens
+    per reply median 1,042, 90th percentile 2,822; prompts up to 102,944
+    tokens (median 57,748); no retry.
+  - Answers (exploratory, one rater): shams 20 of 21 right (gold 14 of 15,
+    do-nothing 6 of 6); the P1 flip accepted; equivalence 57 accept / 2
+    reject / 1 unsure; alternative 27 / 1; violation 14 accept / 12 reject
+    (thinking off: 19 / 7); extra change 0 / 6 (thinking off: 5 / 1). If the
+    Claude rater agreed with every label, κ would be 0.578 (thinking off:
+    0.27) with 18 of 121 real items split (14.9%), still below 0.6. Against
+    the D27 isolated Claude answers on the 119 real items matched by task,
+    operator and site (a projection only: those answers were given on the
+    D27 packets, without the new-file text differences and the drift rule),
+    κ is 0.486 with raw agreement 0.815 (thinking off on the same items:
+    0.289 and 0.773); 16 of the 22 splits are Claude reject / Qwen accept.
+    The registered κ condition of D34 is decided only by the isolated Claude
+    answers on these packets.
+  - Throughput and the GPU cap: with thinking on, a job needs about 3.1
+    minutes of start (container, model check, engine) and rates about 14.4
+    items per minute; section 9 registers the confirm cap from these figures
+    (3.0 GPU-h).
+  - Isolated export: `rater_runner export-isolated` (code `34046e0`) wrote
+    the 142 items into their own read-only directories outside the
+    repository, one `packet.txt` and `pages/` each, no index; the manifest
+    (`integration/rater-rerate-dev-v4/isolated-export/`, ids in the Anthropic
+    rater's seeded order, digests and each item's rendered-prompt SHA-256)
+    lies outside the isolation root. A scan of every exported packet found no
+    label, verdict, operator, sham, witness or checker term; nine packets
+    show the cell style name `Q2M Style ...` that
+    `xlsx.alt.named_style_for_direct` creates, a mark of the harness but not
+    of a label (disclosed; the operator is unchanged). The isolated Claude
+    answers, their ingest and the salt's release are pending (section 17).
+  - Held on the host until that ingest: the audit's sample, items, baseline
+    jobs and spot-check list, the open-weight call records and the
+    label-bearing export of `dev-mutants-v9`; their SHA-256 are in
+    `integration/rater-rerate-dev-v4/held/SHA256SUMS`.
 
 These numbers size the confirmatory design; they are never pooled with it.
 
@@ -1343,7 +1617,9 @@ so a fresh base save yields new ids with the same sites and labels (section
 15). The audit's released evidence is the sample summary, each rater's call
 records (answer, status, outcome, request, body and response SHA-256, model
 id, usage) and receipt, the agent-harness export manifest (digests only),
-the decisions and the audit summary. Not released: mutant documents, base
+the decisions, the audit summary, Kevin's adjudication pool (item ids only)
+and, after the isolated ingest, the audit's salt (its SHA-256 is committed
+before). Not released: mutant documents, base
 files, full recipes, gold or initial files, saved baselines, audit packets,
 exported harness files and renders, and raw rater responses and reasons
 (they may quote document text).
@@ -1386,12 +1662,23 @@ exported harness files and renders, and raw rater responses and reasons
       and the dev campaign rebuilt; the minor items fixed (K6 gating, the
       answers wrapper, duplicate and anonymous call records, the GPU ledger,
       the clean exit, stale text).
-- [ ] Isolated Claude rater on the rebuilt dev audit: one agent per exported
-      item, transcripts kept, `ingest-isolated`, then `audit summarize`
-      with both raters (κ, sham accuracy, split share, label error). If κ is
-      below 0.6 with the stronger rater, the design returns to review (D27).
-- [ ] Fourth adversarial review; record its score next to 55, 62 and 56 and
-      use the lowest.
+- [x] Isolated Claude rater on the rebuilt dev audit (D27): one agent per
+      exported item, no void, `ingest-isolated`, `audit summarize` with both
+      raters: κ 0.270 on 121 real items, below 0.6, so the D27 consequence
+      fired and the design returned to review
+      (`integration/rater-isolated-dev-v3/`).
+- [x] Fourth adversarial review (57/100, not ready to freeze); scores so far
+      55, 62, 56 and 57; the lowest is 55. Its three blocking defects and
+      minor items are answered under D34 in this draft (status note).
+- [x] D34 development rerate with the open-weight rater, thinking on, one
+      configuration, inside 0.5 GPU-h, every item rated (section 15).
+- [ ] D34 isolated Claude rater on the same dev audit (`dev-audit-v4`): one
+      agent per exported item started with the registered prompt template,
+      transcripts kept, `ingest-isolated`, reveal the audit salt, then `audit
+      summarize` with both raters. If development κ is below 0.6, no other
+      rater is tried and P2-P5 leave the confirmatory headline before the
+      confirm campaign runs (section 10).
+- [ ] Fifth adversarial review; record its score and use the lowest.
 - [ ] Kevin's sign-offs: D2 (upstream defect reports and other outward
       disclosures stay unsent while this runs); the D23/D25/D27 rater lineup,
       including the agent-harness path with unfixed sampling, the isolation
@@ -1405,7 +1692,13 @@ exported harness files and renders, and raw rater responses and reasons
       reserve-split golds; release of the specs, which quote short passages
       of file-cache documents; the adjudication workload (section 9) and
       ownership and size of the human spot check, whose result stays pending
-      until done. Recommendation for the spot check: the registered
+      until done; and, under D34, the thinking-on rater configuration, the
+      gold-defect rule, the concordant-contradiction pool, the new-file text
+      difference, the save-drift rule (which also hides
+      `pptx.eq.subvisible_nudge`'s edit in the count line), the off-slide
+      rule, the transcript-to-item audit, the salted ids, the injected
+      harness context, the re-registered GPU cap and the 3.5-15 hour
+      adjudication estimate. Recommendation for the spot check: the registered
       stratified sample (max(5, 10%) per stratum plus 5 shams) drawn first
       from the two K3 groups, that is the violation census stratum and the
       equivalence items wherever they fall, with every item of those groups
@@ -1440,8 +1733,8 @@ Planning, binding, sites and admission follow
 `program/evidence/q2-mutation/operators/prereg-operators-section.md`, which
 this registration adopts with three changes: recipes are applied to the raw
 gold (section 3), ambiguous mutants are counted but not audited (section 9),
-and two pptx operators carry stricter site rules (D27, after the third
-review):
+and two pptx operators carry stricter site rules (D27 after the third
+review, D34 after the fourth):
 
 - `pptx.eq.zorder_nonoverlap` swaps shapes `a < b` on a slide only when every
   shape from `a` to `b` has a frame (an offset and an extent; a placeholder
@@ -1455,4 +1748,8 @@ review):
 - `pptx.viol.delete_bound_shape` leaves out a bound shape whose frame lies at
   least 90% under the union of the frames of the shapes stacked above it on
   its slide (`pptx.covered_share`): such a shape may be hidden, so deleting it
-  may not change what the slide shows.
+  may not change what the slide shows. Since D34 it also leaves out a bound
+  shape whose frame (the bounding box of its rotation) lies at least 50%
+  outside the slide (`pptx.offslide_share`, slide size from the
+  presentation; a shape without a frame, or a deck without a slide size,
+  is not left out by this rule): such a shape is mostly not shown.

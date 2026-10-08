@@ -778,3 +778,45 @@ Append-only. Newest entries at the bottom.
 - Under D27 the design goes back to review; the κ rule is unchanged.
   Evidence: `program/evidence/q2-mutation/integration/rater-isolated-dev-v3/`
   and `dev-mutants-v8/`. No GPU used. Not frozen.
+
+## 2026-10-07 — Q2 evaluator-mutation: D34 retry implemented (sixth draft, thinking-on dev rerate, not frozen)
+
+- Merged main (D28-D34, Q1 gates, action path, Q3 pre-check) into
+  `stage0/q2-evaluator-mutation`; log, state, HANDOFF and SKILL conflicts
+  kept both sides; GPU total recomputed from the ledger.
+- D34 rules in code (`34046e0`): a gold sham for every task with an audited K3
+  item and the gold-defect rule (a task whose gold sham is decided reject
+  leaves its equivalence items out of the equivalence K3 group; labels stay
+  relative to the gold; the analysis reports P2 without them as a
+  sensitivity); Kevin's blind adjudication pool now also holds K3 items both
+  raters decide against the label and split gold shams; new-file end states
+  get a text-level difference against the starting files' text; shape
+  position or size changes of at most 0.02 mm are counted, not listed;
+  `pptx.viol.delete_bound_shape` skips shapes at least 50% off the slide;
+  the registered transcript audit checks the rendered prompt, the answer's
+  item id and that the packet was read, and its final-text fallback needs one
+  exact answer word; item ids take a secret per-audit salt; the agent prompt
+  template is committed (`harness/q2_mutation/templates/isolated_rater_prompt.txt`,
+  SHA-256 `0e9d4eb6...`); the open-weight rater thinks (`max_tokens` 8,192,
+  the model card's thinking sampling, seed 42, `max_model_len` 139,264).
+- Dev rebuild `dev-mutants-v9` (Slurm 714-716) reproduced v8's counts (271
+  admitted, 215 evaluable); revalidation Slurm 717 as before. Audit
+  `dev-audit-v4` (Slurm 720): 142 items (15 gold shams, 9 added by D34), one
+  455 MB shard, 51 new-file text differences, 5,833 drift changes counted.
+- Thinking-on rater (overlay 718, doctor 719, lane job 722): all 142 items in
+  12 min 57 s, 14.4 items per minute, clean exit, 0.228 GPU-h with the
+  overlay. Violations 14 accept / 12 reject (thinking off 19 / 7); extra
+  change 0 / 6; shams 20/21. κ 0.578 if Claude matched every label; 0.486
+  against the D27 isolated Claude answers on 119 matched items (a
+  projection; the packets changed).
+- The off-slide rule does not reach the review's item afb440d9: it deleted
+  shape 19, which is wholly on the slide; the 78% figure matches shape 20,
+  now excluded. Shape 19 is deleted again in v9.
+- Confirm rater cap re-registered at 3.0 GPU-h (841-item maximum about 2.2
+  GPU-h at a 10 items/min planning rate); the experiment's total stays at
+  most 4.52 GPU-h, under 8, so no gauntlet.
+- 142 items exported for the isolated Claude rater (`q2m-iso-v5/`, manifest
+  outside); answers, ingest and the salt's release are pending. Held on the
+  host: sample, items, open-weight calls, v9 export (`held/SHA256SUMS`).
+  Evidence: `program/evidence/q2-mutation/integration/rater-rerate-dev-v4/`.
+  GPU 0.2281 GPU-h (program total 3.0108). Not frozen.
