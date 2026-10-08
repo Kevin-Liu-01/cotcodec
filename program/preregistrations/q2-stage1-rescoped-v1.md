@@ -292,7 +292,7 @@ S1a does **not** answer:
     section 20) writes the draw, the seeded orders, the anchor order, the
     engine and sampling arguments and, at the freeze, the constants and the job
     list. Draft plan SHA-256 (K = 32, no constants):
-    `c2ada66080d0fc69670bfc1d52640b440b00e2321062428fa6cd9a1053d3a555`. Frozen plan SHA-256: TBD.
+    `671f2b143c6036a98895f6f0edab242e758ce82718c2b9908650a937642a9a86`. Frozen plan SHA-256: TBD.
 11. **Analysis code** (`harness/q2_stage1/`: `estimators.py`, `records.py`,
     `rules.py`, `plan.py`, `analysis.py`), committed and tested on CPU
     (section 20).
@@ -394,6 +394,7 @@ unless the last column says S1a matches them:
 | Upstream token budget | 32,768 | 2,048 | matched: 2,048 |
 | Upstream settle | 60 s after reset, 20 s before evaluation | none (`post_reset_observation_delay` 0.0) | matched: 60 s and 20 s for both |
 | Upstream step cap | 50 | task-dependent | matched: 15 |
+| Date in the system prompt | today (the runner's clock) | today | matched and pinned: Thursday, October 08, 2026 for every A0a, ANC and A1 episode (`plan.PROMPT_DATE`, the lane manifest's `date`), so no pair differs in prompt text |
 
 The full list is `harness/q2/action_path/harness_design_diffs.md`.
 
@@ -856,6 +857,10 @@ Every quantity is task-weighted over the analysis set. The code is
    - D_b is also reported on same-block pairs (block 1 with 1, 2 with 2) and on
      cross-block pairs. Block 1 always precedes block 2, so a drift within a
      job falls fully in D_w but only partly in D_b.
+   - The system-prompt date is pinned (section 5.2), so no pair differs in
+     prompt text. The guest's own clock is not pinned: whatever the desktop
+     shows of the date and time can differ in every pair, and the date part of
+     it only between sessions. That is part of the environment D_b includes.
 2. **Harness main effect.** d̄_t is the mean over the available (size,
    session) cells of d_zts; δ = mean_t d̄_t. Per size, δ_z = mean_t mean_s d_zts.
 3. **Mean squared per-task harness effect.**
@@ -1321,6 +1326,11 @@ floor.
   card's high price; 32 needs the anchor's minutes. Without the anchor the floor is
   32, and a mean A0a slot above about 728 s (the card's high slot is 743 s) sends the
   draft back to review rather than to a smaller base.
+- **Prompt date pinned.** Both upstream agents put today's date in the system
+  prompt; S1a pins it to Thursday, October 08, 2026 for every A0a and A1
+  episode, so the session excess (P1) is not confounded with a calendar change
+  in the prompt. The model may see a prompt date that differs from the date on
+  the guest's own clock.
 - **Upstream defaults lowered.** max_tokens 2,048 departs from H-OSW's
   upstream default, and greedy thinking can loop and truncate. Truncation is
   logged; the A0 gate covers 9B only.
@@ -1356,7 +1366,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/estimators.py` | `b43334b0511d17505a24893d65ce79cd55a58351a2a056075ed5b002007d36b3` |
 | `harness/q2_stage1/records.py` | `8605320d5968d671cebbd9f6212adf89244c76ec74566ab92c470930886fd614` |
 | `harness/q2_stage1/rules.py` | `a671d2c3871bc18d255af8e8efe86f823aa7e54640c5c75cf9d95c39b587a225` |
-| `harness/q2_stage1/plan.py` | `ddd6e7fe7aa7cde432c521ff3339c643e2ec2821dacf86507033676ee8c921a1` |
+| `harness/q2_stage1/plan.py` | `d865b73637b24b548af466c0fe114543d2301d07285b57092c58216f2736b4a2` |
 | `harness/q2_stage1/analysis.py` | `f5b1ce8f3c6bf7366f3114180696859e3226bde6d405df7ce2b3122861cde401` |
 | `scripts/render_q2_stage1_plan.py` | `3c9ef228e5df0b8a6b5e7f927f37689cc5d9a41b6ce8294737a39674089fbfac` |
 | `scripts/submit_docker_research_job.py` | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
@@ -1371,13 +1381,13 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/bridge.py` | `dceacda3d6882223b0f0cfe54dd28f1674d1bf99527083420c0f29976a68692d` |
 | `harness/q2_stage1/fake_engine.py` | `02e0b66e7b67b3647dc853c4069de21ce3e6234ed01ec4e3842afbd42cd89a00` |
 | `harness/q2_stage1/osworld_live.py` | `18511ebbf19ab36cb2060228355ea1cd7387dce7023835965341871228205f4f` |
-| `harness/q2_stage1/lane.py` | `bc351e1a0a7a8e519fad697954a8fd5d3716e21e7a7bb815cf07b8f424c96619` |
+| `harness/q2_stage1/lane.py` | `d566af005e5cbf2f47eaadb07bbff3116b585e92a12a8f6fbf35ad07261e88b1` |
 | `harness/q2_stage1/rescore.py` | `d240db03e969c8aa5bb97403c5005cd4c9e96016599a78f70e97850415893737` |
 | `harness/q2_stage1/zinv.py` | `64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655` |
 | `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |
 | `harness/q2_stage1/glmm.py` | `73e4d0f9100262eb0efe828a14308d2b45c17a3c827b476392b5045dfe1377e8` |
 | `harness/q2_stage1/glmm.R` | `e3ea337c77bf6a8b9289047b62cfc51053a5f666fe51795071a1ae317f36681d` |
-| `harness/q2_stage1/design_diffs.md` | `0663e4e8bbbe33947d76e3d3a584eb228b462ce13e111b3d78a3f6f5696eb2f0` |
+| `harness/q2_stage1/design_diffs.md` | `ef0ab3e8f4285cab130bb855dc4e082a5ea73adea6ede68c697ed2177f888309` |
 | `infra/slurm/host-single-node/s1a-vm.sbatch` | `53fcd31d87678c6f5b4c929e6d843e5bc3177cac122842876f563e5191b09d45` |
 | `infra/slurm/host-single-node/s1a-cpu.sbatch` | `3880d337ad5bb0dc3c0edfc39f41811028118ef574c75efb08faa023dc6dee33` |
 | `infra/slurm/host-single-node/fetch-model-cpu.sbatch` | `22685e5e4dc9f88cd9d6ba7aec7189a89500a4f80d2464b8df86e08e76e33c6d` |
@@ -1472,7 +1482,7 @@ of it has had the fresh pre-freeze audit D49 (iv) requires; each row is for that
 |---|---|---|
 | Every file under `harness/q2/` is pinned by a frozen action-path table, so S1a's differences from upstream cannot go in `harness_design_diffs.md` there | They are in `harness/q2_stage1/design_diffs.md` | 3.1 item 3 |
 | The harness clients need Pillow (upstream image processing) and the checker needs OSWorld's locked environment; the stdlib runner image has neither | The episode container is the checker-mutation metric image; the certified transport code runs in it unchanged (Python 3.12 instead of 3.10) | 4 |
-| The upstream system prompts carry today's date, so between-session pairs on different days differ in their first prompt | Kept as upstream and recorded per episode (`date_line`); the first-divergence analysis (section 9 item 11) reads a changed date as an environment divergence. Pinning the date is the alternative, for the audit | 9 |
+| The upstream system prompts carry today's date, so between-session pairs on different days differ in their first prompt | Kept as upstream and recorded per episode (`date_line`); the first-divergence analysis (section 9 item 11) reads a changed date as an environment divergence. Pinning the date is the alternative, for the audit. Superseded by C8 below: the date is pinned | 9 |
 | H-GA reports `terminate(failure)` in metadata; S1a scores with OSWorld's evaluator | `FAIL` in OSWorld's action history for both harnesses (0 for a feasible task); the state's verdict is still captured and rescored offline | `design_diffs.md` |
 | The certified IR refuses a `wait` over 10 s (`ir.MAX_WAIT_MS`) | Handled as the harness's unparseable reply (agent-caused, `ir_errors`) | 7.2 |
 | The action-path rule counts a first `/execute` answered after 30 s as a loss; a long `type` is agent behaviour | Under S1a only a failed or retried `/execute`, or a missing screenshot, is a transport loss; a slow one is recorded (`slow_execute`) | 7.2 |
@@ -1499,6 +1509,7 @@ the fresh audit D49 (iv) requires.
 | C4 | The pinned GPU-engine template declared `randomness_contract: deterministic` with `seeds: [42]`, which the docker submitter refuses once the `FILL_*` slots are filled, so no GPU half of a pair could be submitted | Fixed: `seeds: []` (the engine seed reaches vLLM through `plan.CARD_ENGINE_FLAGS`, `--seed 42`); hex fields quoted so YAML cannot read one as a number; a test fills the template for 9B, 4B and the anchor and passes it through the submitter's `validate_manifest` and `sbatch_argv` (`--gres=gpu:h100:1`, 32 CPUs, `--signal=B:USR1@180`, `--dependency=after:<VM job>`) | `gpu-engine.template.yaml` |
 | C5 | The K_base floor in the branch S1a is in (anchor unavailable before A0b) was 24 in code (`freeze_constants` defaulted to `K_FLOOR`), 32 in D49 (i), and ambiguous in section 6.2 and item 18's note, so the documented procedure would have frozen K = 24 without the anchor | Fixed: the floor follows the branch (32 without the anchor, whatever is signed; 24 only with the anchor running and `k_floor=24` passed after item 18); `freeze_constants` defaults to 32 and records the floor applied; section 6.2, item 18 and section 19 state D49 (i) and that K = 32 needs a mean A0a slot of at most about 728 s, below the card's high slot of 743 s, so going back to review after A0a is a live outcome; a test runs the issue's case | 6.2, 18, 19; `plan.py` |
 | C6 | The truncation and concurrency gates of section 6.2 existed only as text: `freeze_constants` read neither, episode records could not tell a cap hit without a tool call, and section 15's label counted any cap hit | Fixed: `plan.a0a_gates` computes both from A0a's step logs (per-harness share of turns at the cap without a complete tool call; the action path's p95 statistic over every `DesktopEnv.step`), `freeze_constants` requires the result and refuses a failed or unreadable gate; records gain `truncated_no_tool_call_steps`, and section 15's label uses the gate's definition beside the plain cap-hit rate; a CLI reads the host run directory | 6.2, 7.3, 15; `plan.py`, `driver.py`, `records.py`, `analysis.py`, `lane.py` |
+| C8 | Today's date in the system prompt was left open: between-session pairs (at least 12 h apart) almost always see a different date and weekday and within-session pairs the same one, so D_b, the session excess (P1), u_zt and ρ were confounded with a deterministic prompt change | Fixed, option (a): one date, `plan.PROMPT_DATE` = 2026-10-08, for every A0a, A0b, ANC and A1 episode through the lane manifest's `date`, which `validate_manifest` requires for those purposes; the plan file records it; the guest's own clock stays unpinned and is disclosed | 5.2, 9, 19, 3.1 item 10 (draft plan digest); `plan.py`, `lane.py`, `design_diffs.md` |
 
 Slots read TBD until the freeze: the status line; G0 item 1 (accepted attempt); item 10
 (frozen plan); section 4's executor row; section 6.2's constants; section 21's v2

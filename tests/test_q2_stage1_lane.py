@@ -373,3 +373,24 @@ def test_host_load_limit_is_an_operator_flag_for_development_and_setup_checks():
     for name in ("dev-smoke-v1", "setup-check-v1"):
         m = json.loads((ROOT / f"experiments/manifests/q2-stage1/{name}.json").read_text())
         assert lane.check_slurm(m, host_load_cpus=8)["cpus"] == 8
+
+
+def test_registered_purposes_pin_the_prompt_date(tmp_path):
+    """Every A0a/A0b/ANC/A1 episode sees one system-prompt date (plan.PROMPT_DATE), so
+    between- and within-session pairs do not differ by a calendar change in the prompt."""
+    from harness.q2_stage1 import plan
+
+    bridge = {"kind": "bridge", "gpu_cap_min": 25, "bridge_dir": f"{RUNS}/gpu/1/bridge"}
+    for date in (None, "2026-10-09"):
+        m = manifest(purpose="a0a", engine=bridge)
+        if date:
+            m["date"] = date
+        with pytest.raises(lane.LaneError, match="pinned prompt date 2026-10-08"):
+            lane.validate_manifest(m, ROOT)
+    with pytest.raises(lane.LaneError, match="YYYY-MM-DD"):
+        lane.validate_manifest(manifest(date="today"), ROOT)
+    m = manifest(date=plan.PROMPT_DATE)
+    docker = FakeDocker({})
+    make_lane(tmp_path, m, docker).run()
+    out = Path(next(v.split(":")[0] for v in docker.episodes[0] if v.endswith(":/out")))
+    assert json.loads((out / "config.json").read_text())["date"] == "2026-10-08"

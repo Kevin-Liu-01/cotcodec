@@ -60,6 +60,14 @@ PRICE_HIGH = {16: 0.012901, 20: 0.011274}
 ANCHOR_SLOT_MIN = {"central": 11.29, "high": 13.17}
 A0A_SLOT_HIGH_MIN = 12.39  # 9B slot at the high price, V = 16
 
+# ---- Prompt date (sections 5.2, 9; design_diffs.md) -------------------------------- #
+# Both upstream agents put today's date in the system prompt. S1a pins one date for every
+# A0a, ANC and A1 episode, so between-session pairs (at least 12 h apart, usually on
+# different days) and within-session pairs see the same prompt; a date change would
+# otherwise be a deterministic prompt change confounded with the session.
+PROMPT_DATE = "2026-10-08"  # a Thursday; the draft date
+PINNED_DATE_PURPOSES = ("a0a", "a0b", "anc", "a1")
+
 # ---- CPUs (section 5.5) ------------------------------------------------------------ #
 GPU_JOB_CPUS = 32
 VM_CORES = 4
@@ -630,6 +638,7 @@ def render_plan(
         "engine_argv": {size: engine_argv(MODEL_DIRS[size], SERVED_NAME) for size in SIZES},
         "anchor_engine_argv": engine_argv(MODEL_DIRS["anchor"], SERVED_NAME, anchor=True),
         "sampling": {h: sampling(h) for h in HARNESSES},
+        "prompt_date": PROMPT_DATE,
         "caps_minutes": dict(CAP_MINUTES),
     }
     if dev_setup_ok is not None:
