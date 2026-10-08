@@ -18,6 +18,7 @@ import signal
 import subprocess
 import sys
 import textwrap
+import threading
 import time
 from pathlib import Path
 
@@ -94,6 +95,15 @@ def test_the_guard_sees_usr1_after_its_handler_was_replaced() -> None:
 
 @POSIX
 def test_poll_restores_a_replaced_handler_and_records_it() -> None:
+    # The signals go to this thread (pthread_kill), not to the process: the
+    # block below covers only this thread, and pytest's process already has
+    # other threads (BLAS workers among them) that do not block them, so a
+    # process-directed signal could be taken by one of them between poll's
+    # sigpending and its sigwait, leaving the sigwait to wait forever (this
+    # hung the host suite once, at 7ab5b8b). The entry point blocks both
+    # signals before any thread exists, so every thread inherits the block
+    # and only its guard can take them (decision 17).
+    me = threading.get_ident()
     previous = {s: signal.getsignal(s) for s in dv2.GUARDED_SIGNALS}
     old_mask = signal.pthread_sigmask(signal.SIG_BLOCK, set(dv2.GUARDED_SIGNALS))
     try:
@@ -107,9 +117,9 @@ def test_poll_restores_a_replaced_handler_and_records_it() -> None:
         if reference is not None:
             assert dv2.os_handler_address(signal.SIGUSR1) == reference
             assert guard.as_dict()["handler_replacement_count"] == 1
-        os.kill(os.getpid(), signal.SIGUSR1)
+        signal.pthread_kill(me, signal.SIGUSR1)
         assert guard.poll("after-signal") == "SIGUSR1"
-        os.kill(os.getpid(), signal.SIGTERM)
+        signal.pthread_kill(me, signal.SIGTERM)
         guard.poll("again")
         assert guard.received == "SIGUSR1"  # the first signal is kept
         assert not (signal.sigpending() & set(dv2.GUARDED_SIGNALS))
