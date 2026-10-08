@@ -42,11 +42,10 @@ Other sessions' Slurm jobs ran beside these (796, 815, 817, 823, 824: CPU and q2
 10:57-11:00   in image 825 (srun CPU, network none): torch-dependent dense tests 55 passed;
               PID-1 SIGUSR1 test from the scratch clone at 8c3f076: 1 passed.
 11:00-11:03   v2 CPU doctor in image 825: DENSE_V2_DOCTOR_PASS 12/12.
-local         freeze simulations (full, status-only, wrong-dec) on scratch clones of 7ab5b8b
-              and 8c3f076; full suite in the frozen clone of 8c3f076 (macOS) 2,169 passed,
-              87 skipped, 0 failed. Real ledger 1052d58b... before and after.
-
-~11:20         main (692b83d, D43) merged in again (436f038; log.md both sides in time order,
+local         freeze simulations (full, status-only, wrong-dec) on scratch clones of 7ab5b8b,
+              8c3f076 and 57f3cc2; full suite in the frozen clone of 8c3f076 (macOS) 2,169
+              passed, 87 skipped, 0 failed. Real ledger 1052d58b... before and after.
+~11:20        main (692b83d, D43) merged in again (436f038; log.md both sides in time order,
               state.json both ledger sides, total 4.028); host suite at 436f038 in a fresh
               scratch clone: 2,216 passed, 40 skipped, 0 failed; full-mode freeze simulation
               at 436f038: check-chain 12 rows PASS, frozen-mode tests 29 passed.
