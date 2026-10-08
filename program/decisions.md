@@ -678,3 +678,21 @@ observation factor and the 27B and 35B rungs move to S1b, which runs only if
 S1a's preregistered GO rule holds and then goes through the gauntlet (D24).
 S1a, like every GPU episode, runs only after the action-path suite passes; its
 draft gets an adversarial pre-freeze review first.
+
+**D48. Q3 K1 v3: wave 1 exited at 51; repair the NEGATIVE's identification,
+then one fresh wave.** Gauntlet wave 1 on a K1 v3 for Qwen3.5-4B-Base
+(`program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl`) scored 51 (reviewers
+51 and 55; the K1 v2 wave scored 45) and exited honestly: all three refuters
+refuted and the declared query budget was overrun. Blind discrimination
+passed: the closest prior, SpotAttention (2606.22874), fits the same
+KL-distilled selector to the same frozen 4B model, English-only, so the
+cross-script measurement stays open while the apparatus is published. The
+largest defect is in the draft, not the idea: the NEGATIVE verdict, which
+would stop Q3, is not identified, because the overlap mask and the literal
+selector share one token rule (so the literal gate sees only one direction),
+the NEGATIVE region has no lower bound (opposite biases can cancel into a
+false kill), and seed variance is unmeasured. Decided: one repair pass on the
+draft `q3-k1-localization-screen-v3` (a literal check that can see a positive
+channel, a two-sided NEGATIVE region, a measured or bounded seed SD, and the
+per-layer veto where headroom is small), then a fresh gauntlet run with newly
+declared budgets. Whatever it scores, admission stays Kevin's under D24.
