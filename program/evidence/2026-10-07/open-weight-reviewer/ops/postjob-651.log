@@ -1,0 +1,88 @@
+state 2026-10-07T22:06:06.917Z RUNNING
+state 2026-10-07T22:06:20.097Z COMPLETED
+terminal job=651 state=COMPLETED detected_at=2026-10-07T22:06:20.099Z
+-- sample 0 at 2026-10-07T22:06:20.101Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 1 at 2026-10-07T22:06:21.375Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 2 at 2026-10-07T22:06:22.649Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 3 at 2026-10-07T22:06:23.925Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 4 at 2026-10-07T22:06:25.198Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 5 at 2026-10-07T22:06:26.479Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 6 at 2026-10-07T22:06:27.748Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 7 at 2026-10-07T22:06:29.017Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 8 at 2026-10-07T22:06:30.289Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 9 at 2026-10-07T22:06:31.560Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 10 at 2026-10-07T22:06:32.835Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 11 at 2026-10-07T22:06:34.108Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 12 at 2026-10-07T22:06:35.380Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 13 at 2026-10-07T22:06:36.653Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 14 at 2026-10-07T22:06:37.934Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 15 at 2026-10-07T22:06:39.203Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 16 at 2026-10-07T22:06:40.479Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 17 at 2026-10-07T22:06:41.747Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 18 at 2026-10-07T22:06:43.020Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 19 at 2026-10-07T22:06:44.299Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+-- sample 20 at 2026-10-07T22:06:45.566Z
+compute-apps: 
+gpu-memory: 0, 0 MiB;1, 0 MiB;2, 0 MiB;3, 0 MiB;4, 0 MiB;5, 0 MiB;6, 0 MiB;7, 0 MiB;
+docker: 
+done 2026-10-07T22:06:46.836Z

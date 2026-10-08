@@ -1,0 +1,14 @@
+{
+  "model_id": "qwen3.6-35b-a3b",
+  "model_receipt_sha256": "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9",
+  "ok": true,
+  "output_sha256": "cb4c30698980b59fd55ee4385c874441060dda55a2b28f423a3d0a67cdd58254",
+  "parsed_sha256": "9c785cd7ae724c8304eb0fc6fb628d8fd9b184832ab30b956e0703a003f809be",
+  "problems": [],
+  "prompt_sha256": "57aa5a523845602fc824a9ed1387ef67f4d5c81e7814c4c2882f6352cdb81f14",
+  "receipt_sha256": "99f7e41a0623d28d11ee7f7084ffc3528c81e3e7b7bd5d42b62acafb8d8b12c2",
+  "replicates_identical": true,
+  "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+  "status": "PARSED",
+  "vllm_version": "0.31.0"
+}
