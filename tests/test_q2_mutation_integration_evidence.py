@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -143,3 +144,50 @@ def test_harness_export_manifest_holds_digests_only() -> None:
     text = json.dumps(manifest)
     for word in ("should_", "verdict", "label", "operator", "mutant"):
         assert word not in text
+
+
+RERATE = INTEGRATION / "rater-rerate-dev-v3"
+
+
+def test_d27_rerate_evidence_is_intact_and_holds_no_item_label_or_answer() -> None:
+    """The D27 rerate commits aggregates only until the isolated Claude ingest."""
+    sums = {}
+    for line in (RERATE / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        sums[name.removeprefix("./")] = digest
+    files = {
+        str(p.relative_to(RERATE))
+        for p in RERATE.rglob("*")
+        if p.is_file() and p.name != "SHA256SUMS"
+    }
+    assert set(sums) == files
+    for name, digest in sums.items():
+        assert hashlib.sha256((RERATE / name).read_bytes()).hexdigest() == digest, name
+    # No per-item record: no sample, call file or mutant id is committed yet.
+    assert not list(RERATE.rglob("sample.jsonl")) and not list(RERATE.rglob("calls.jsonl"))
+    manifest = json.loads((RERATE / "isolated-export" / "iso-manifest.json").read_text())
+    items = set(manifest["items"])
+    assert len(items) == 133 and sorted(manifest["order"]) == sorted(items)
+    for path in RERATE.rglob("*"):
+        if not path.is_file() or path.suffix not in {".json", ".jsonl", ".txt", ".md", ".yaml"}:
+            continue
+        text = path.read_text(encoding="utf-8")
+        assert "data_b64" not in text, path
+        assert not re.search(r"__[a-z]+\.(eq|alt|viol|extra)\.[a-z_]+__[0-9a-f]{12}", text), path
+        if "isolated-export" not in str(path) and path.name != "SHA256SUMS":
+            assert not any(item in text for item in items), path
+    text = json.dumps(manifest)
+    for word in ("should_", "verdict", "label", "operator", "mutant", "sham"):
+        assert word not in text
+    receipt = json.loads((RERATE / "open-weight" / "receipt.json").read_text())
+    summary = json.loads((RERATE / "summary.json").read_text())
+    assert receipt["model"]["model_id"] == "qwen3.6-35b-a3b"
+    assert receipt["result"]["unrated"] == [] and receipt["result"]["rated_now"] == 133
+    assert summary["rated"] == 133 and summary["sham_accuracy"] == {"correct": 12, "shams": 12}
+    termination = (RERATE / "open-weight" / "lane" / "termination.env").read_text()
+    assert "reason=completed" in termination and "exit_code=0" in termination
+    ledger = [
+        json.loads(line)
+        for line in (RERATE / "manifests" / "gpu-ledger.jsonl").read_text().splitlines()
+    ]
+    assert sum(row["max_gpu_hours"] for row in ledger if row["audit_id"] == "dev-rerate-v3") <= 0.5
