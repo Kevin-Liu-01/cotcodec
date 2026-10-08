@@ -570,3 +570,32 @@ not from the projection. The v2 cap stays 1.5 GPU-h. (iii) Decisions 16-21 of
 the v2 registration are accepted as amended by this decision, after a narrow
 re-check of the measured limits; the status line and the decisions' lead-in
 name D42 when frozen.
+
+**D43. Action-path v2: D40's stated cause is corrected, and the judge stops
+reading a state the tap cannot observe.** The seed-42 development D40 allowed
+(jobs 784-787; `q2-action-path-v2.md` section 26, branch
+`stage0/q2-action-path-v2`) shows that D40's reading was wrong. GNOME Shell
+grabs its overlay key and keybindings synchronously, so the X server queues
+later key events until the shell answers, and the RECORD extension reports a
+queued event before the server computes its state. The tap therefore records
+the `d` press of a Super chord sent within a few milliseconds of Super_L with
+state 0, and without the locked NumLock bit that every processed event
+carries, while the shell did receive Super+d (15 of 15 L0-raw trials showed
+the desktop). v1's C2 failure is in what the oracle channel records, not in
+delivery; v1's a-priori prediction was right about delivery. v1 stays invalid
+under its own section 8, which judges the record, and that result stands as
+reported. The branch's draft decision accepted the remaining exposure (a slow
+shell answer would fail L0-fixed trials whose chord was delivered: at the
+bound of 2.3% per trial, A4's 276 such trials would almost surely meet one),
+which would let the suite fail, after three repair attempts, on an artifact
+of the oracle. Decided instead: v2's judge treats the modifier state of a key
+event recorded without the guard-guaranteed locked lock bits as unobservable
+(such an event was recorded while queued, which requires an active shell
+grab, which requires the grab key to have been pressed) and judges it on
+kind, keycode, keysym and order only; every other event is judged as before.
+The L0-raw prediction for `chord_super_d` follows from the new rule, and
+v2's C2 stays a reproduction test, disclosed as informed by v1's C2. The
+change is developed on seed 42 (positive and negative cases, including a
+dropped modifier on grabbed and ungrabbed chords) and reviewed before v2's
+freeze. Whether a later registration should observe the shell's side of a
+grabbed chord directly stays with Kevin.

@@ -1,0 +1,12 @@
+{
+ "computation": "harness.q2_mutation.analysis.p1_over_controls([('confirm', confirm-controls-v1 summary), ('reserve', reserve-controls-v1 summary)], decisions=None, primary='lock', splits=splits.json) at 65bc2e2, run on the host",
+ "role": "pre-specified replication of the scoping round trip (no confirmatory part); the audit-confirmed share waits on the audit (every flip is an audit item, stratum p1_flip)",
+ "held_output": "scratch/confirm-v1-ops/p1-raw-over-controls.json on the host (lists the flip task ids; held until the isolated ingest)",
+ "held_output_sha256": "b64dbac9715f862a1fd0103cf3028c2efea31864ece0c8d002434c688f9b5914",
+ "runs": {"confirm": {"counted_golds": 67, "raw_flips": 3}, "reserve": {"counted_golds": 25, "raw_flips": 1}},
+ "raw_flips": {"events": 4, "n": 92, "share": 0.043478260869565216, "clopper_pearson95_low": 0.011971594171927391, "clopper_pearson95_high": 0.10759345090975891},
+ "audit_confirmed_flips": "pending (no audit decision exists yet; the function returns 0 of 92 without decisions, which is not a result)",
+ "not_exposed": 14,
+ "not_counted": 0,
+ "registered_population": "92 tasks (67 confirm, 25 reserve), prereg section 4"
+}
