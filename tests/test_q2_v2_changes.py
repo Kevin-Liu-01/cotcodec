@@ -128,3 +128,28 @@ def test_seed_45_is_reserved_and_c2s_only():
     with pytest.raises(order.OrderError):
         order.check_seed(45, acceptance=True)
     order.check_seed(45, criterion="C2")
+
+
+def test_v2_development_manifests_are_seed_42_development():
+    """The four development runs of v2 (decision D40; main section 26) as submitted."""
+    import yaml
+
+    from harness.q2.vm.manifest import validate_manifest
+
+    folder = ROOT / "experiments/manifests/q2-action-path-v2"
+    manifests = sorted(folder.glob("dev-*.yaml"))
+    assert len(manifests) == 4
+    layers = []
+    for path in manifests:
+        manifest = yaml.safe_load(path.read_text(encoding="utf-8"))
+        validate_manifest(manifest)
+        assert manifest["purpose"] == "development"
+        assert manifest["randomness"]["seeds"] == [42]
+        assert manifest["experiment_id"] == "q2-action-path-v2"
+        assert manifest["git_sha"].startswith("e66bf16")
+        assert manifest["run_root"].startswith("/home/kevin/cotcodec-runs/q2-action-path-v2/dev")
+        plan = driver.session_plan(manifest, CELLS)
+        assert manifest["workload"]["sessions"] == len(plan)
+        assert manifest["workload"]["trials"] == sum(len(s["trials"]) for s in plan)
+        layers.append(manifest["workload"]["layer"])
+    assert sorted(layers) == ["L0-fixed", "L0-fixed", "L0-fixed", "L0-raw"]

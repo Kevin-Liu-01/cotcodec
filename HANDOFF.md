@@ -27,19 +27,25 @@ the Q3 dense pre-check lanes (`ops/q3-dense`) are not yet merged.
   receipt reproduces K1 smoke 452 (cap 0.35), then the combined read, which
   says whether a K1 v3 can register a NEGATIVE, on which base, and with which
   controls. Any K1 v3 takes a new id and the gauntlet.
-- **Q2 action path** (`stage0/q2-action-path-d30`): D30 (A4 restart exclusion,
-  A7 observation-service bound, scoped probe and tap), D33 (the exclusion
-  extends to A1-A3 and the ladder within per-entry and per-rung limits, A7
-  call cap) and the fixes after their reviews are done in `acceptance.py` and
-  the text (main preregistration sections 18-22). D39 is applied too
-  (section 23, `acceptance.py` at `280ccbf`): a C3 mutant is equivalent only
-  if the counting attempt's streams match the reference's on every cell and
-  each earlier attempt's on the cells it ran without an infrastructure
-  failure, an unparseable receipt, cycle or record
-  file reads as missing and its attempt does not count, and the three status
-  lines carry the frozen wording. Nothing is frozen. Next: merge to main,
-  freeze v1, then `-inputs`, then `-executor`, and run the CPU-only
-  acceptance campaigns (98.4 VM-hours; the ladder needs a quiet host).
+- **Q2 action path** (`stage0/q2-action-path-v2`): v1 is frozen (ledger
+  rows 8-10) and invalid: its C2 (job 768) failed on `chord_super_d` (D40).
+  `q2-action-path-v2`, `-inputs` and `-executor` are drafted from v1's frozen
+  text with D40's three changes (main section 24): the prediction lists
+  `chord_super_d` as a failure, informed by job 768; C2 is a reproduction
+  test on its own seed 45 (`order.py` and `manifest.py` admit it for C2
+  only); the renderer takes `--host-root` and refuses the development root.
+  Every other order is v1's byte for byte (`tests/test_q2_v2_changes.py`).
+  Seed-42 development (jobs 784-787, 1.0 VM-h, section 26) reproduced the
+  failure and found its mechanism: GNOME Shell grabs Super_L and its
+  keybindings synchronously, so a key sent within about 1 ms is queued, and
+  RECORD reports a queued event with state 0; the shell still received
+  Super+d. L0-fixed (10 ms gap) passed `chord_super_d` 127/127 with the
+  warm-up. The three files a campaign executes that changed (`order.py`,
+  `manifest.py`, `driver.py`) must equal `e66bf16` at the freeze (executor
+  addendum section 9). Freeze-linted v2, then `-inputs`, then `-executor`
+  against a scratch ledger; nothing is frozen. Next: review, merge, freeze
+  in that order, then C2 at seed 45. The oracle question (does a key queued
+  under a shell grab need a different reading?) is with Kevin.
 - **Q2 checker mutation** (`stage0/q2-evaluator-mutation`): D27's kappa rule
   fired (dev kappa 0.27 with Qwen3.6-35B-A3B, thinking off). Fix 5 under D34:
   gold shams per task, concordant contradictions to adjudication, packet text

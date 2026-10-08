@@ -122,7 +122,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass; press-state loss verified real at the X event level). Build q2-action-path-v2 (prediction corrected and disclosed, C2 read as a reproduction test on a new order seed, renderer run-root parameter), review, freeze, then C2, C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation descriptive protocol (D35, D38) is being finalised for its freeze. Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
+      "next_action": "D40: q2-action-path-v1 is invalid (C2 job 768: chord_super_d failed 5/5 under L0-raw, predicted to pass). q2-action-path-v2 (+ -inputs, -executor) is drafted on stage0/q2-action-path-v2 and freeze-linted against a scratch ledger: the prediction lists chord_super_d (informed by job 768), C2 is a reproduction test on its own seed 45, the renderer takes --host-root. Seed-42 development (jobs 784-787) reproduced the failure and found that the shell received Super+d: the tap records a key event queued during the shell's synchronous grab with state 0. Review and merge, freeze v2, then -inputs, then -executor; then C2 (seed 45), C1, C3, A1-A6, the ladder on a quiet host, A4 and A7. The checker-mutation descriptive protocol (D35, D38) is being finalised for its freeze. Stage 1 must be rescoped (431.5 GPU-h as designed) and go through the gauntlet (D24).",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -134,10 +134,10 @@
         "Stage 1 noise anchor reworded to OpenCUA (D11) before the gauntlet"
       ],
       "action_path_suite": {
-        "registration": "q2-action-path-v1 (+ -inputs, -executor addenda)",
-        "status": "v1 frozen 2026-10-08 (ledger rows 8-10) and invalid: C2 failed (job 768; chord_super_d unpredicted); v2 under D40",
-        "branch": "stage0/q2-action-path-d30 (from main, which holds stage0/q2-action-path)",
-        "development_jobs": "482-637, 662-667 and 694-708 (seed 42, CPU only, never evidence; 703-708 at the D30 runtime commit 7653799, 694 at 34f79e4, 695-699 cancelled while booting)"
+        "registration": "q2-action-path-v2 (+ -inputs, -executor addenda), successor of q2-action-path-v1 (D40)",
+        "status": "v1 frozen 2026-10-08 (ledger rows 8-10) and invalid: C2 failed (job 768; chord_super_d unpredicted). v2 drafted under D40 (code e66bf16), freeze-linted in order against a scratch copy of the ledger; not frozen",
+        "branch": "stage0/q2-action-path-v2 (from main at 124573a)",
+        "development_jobs": "482-637, 662-667 and 694-708 (v1, seed 42, CPU only, never evidence; 703-708 at the D30 runtime commit 7653799, 694 at 34f79e4, 695-699 cancelled while booting); 784-787 (v2 development under D40 at e66bf16, seed 42, CPU only, 1.0 VM-h: L0-raw on the 13 chords, L0-fixed on chord_super_d at 8 and 16 VMs)"
       }
     },
     {
@@ -173,7 +173,8 @@
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
     "Q1 Stage 0 after D31 and its review: not admitted (preregistration sections 18.8-18.9). Under the corrected, memory-aware execution q1-stage0-exec/2 the model-based estimate through P3 is 10.46 GPU-h central and 12.31 high without the store (11.10 high at the references-free bound, post hoc ratio). Choose: the gauntlet (blocked by D24 until the trust store exists or you rule on admission), a scope reduction that acts on P1-P3 (test quota, FRR core, hack fraction, control replicates; a 30-per-family quota still projects 9.10 central, 10.51 high), or a new engineering pass and re-pilot beyond D31 (for example one process per kernel for its gates). Before any Stage 0 job: sign off q1-stage0-exec/2 (it amends trim/2 item 6) and the store policy (on or off for c and A1-A5; L2/77's shared realization of a nondeterministic cuDNN reference; a GPU check of the three KernelBench adversarial controls under the store), and fund a re-measurement under q1-stage0-exec/2",
-    "Review the decisions taken on your behalf since the restart, D1-D37 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30 and D33 (action-path guest-server restarts), D31 and D37 (Q1 Stage 0 budget path), D32 and D36 (Q3 dense pre-check), D34 and D35 (checker-mutation raters; the study became descriptive)"
+    "Review the decisions taken on your behalf since the restart, D1-D37 in program/decisions.md; the recent ones are D28 (Q1 pilot exposure), D29 (upstream test code on GPUs), D30 and D33 (action-path guest-server restarts), D31 and D37 (Q1 Stage 0 budget path), D32 and D36 (Q3 dense pre-check), D34 and D35 (checker-mutation raters; the study became descriptive)",
+    "Q2 action path (D40 development, q2-action-path-v2 section 26): v1's C2 failure of chord_super_d is real in the XRecord record but not in delivery. GNOME Shell grabs Super_L and its keybindings synchronously, the X server queues the next key, and RECORD reports a queued event before its state is computed (state 0); the shell still showed the desktop in 15/15 L0-raw trials, as under L0-fixed. v2 keeps the oracle and C2's rule (D40). Decide whether D40's wording ('a genuine transport defect') should be corrected in the record, and whether a later registration should read events queued under a shell grab differently. L0-fixed was not exposed in development (127/127 with the warm-up), but A1/A4 could still fail chord_super_d on this artifact if the shell is ever slower than L0-fixed's 10 ms gap."
   ],
   "gpu_hours_spent_this_program": 3.1857,
   "frozen_registrations": [

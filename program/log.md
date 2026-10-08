@@ -1089,3 +1089,37 @@ Append-only. Newest entries at the bottom.
   records, the verdict JSON, the campaign summary, the SHA-256 of the 49
   raw files left on the host, and the operator scripts). 0.17 VM-hours, no
   GPU. Nothing pushed or merged.
+
+## 2026-10-08 — Q2 action path v2 drafted under D40 (branch `stage0/q2-action-path-v2`)
+
+- `q2-action-path-v2`, `-inputs` and `-executor` are generated from v1's
+  frozen text with D40's three changes and nothing else (main section 24;
+  v2's frozen tables equal v1's except the rows it names, and a test checks
+  it): `l0_raw_prediction_v2.yaml` lists `chord_super_d` as a failure and
+  says it is informed by v1's C2 (job 768); C2 is a reproduction test on its
+  own order seed, 45, which no v1 campaign or development run used
+  (`order.py` builds it and `manifest.py` admits it for C2 only), and v1's C2
+  is reported as the a-priori result (section 25); the manifest renderer
+  takes `--host-root`, with no default and the development root refused.
+  Every other realized order equals v1's code's, digest for digest. L0-raw
+  is admitted in development at seed 42 so the mechanism can be
+  characterised. v1's ledger rows and files are unchanged.
+- Development (seed 42, CPU-only `vm-campaign.sbatch`, jobs 784-787 at
+  `e66bf16`, 1.0 VM-h, all COMPLETED 0:0 with gates passed): L0-raw failed
+  `chord_super_d` 10/10, the `d` press 1-2 ms after Super_L recorded with
+  state 0. Only the four chords GNOME Shell grabs failed (each event after
+  the grab-activating key recorded with state 0, without even NumLock's
+  Mod2); the nine others, at the same speed, passed 10/10 with every state
+  right. mutter 42.9 grabs synchronously, so the X server queues the next
+  key, and RECORD reports a queued event before its state is computed. The
+  shell still received Super+d: under L0-raw the desktop was shown and no key
+  reached the probe in 15/15 trials, as under L0-fixed in 30/30. So the
+  failure D40 records is in the tap's record, not in delivery. L0-fixed
+  (10 ms between presses) passed `chord_super_d` 127/127 with the warm-up
+  across v1 and v2 development (upper 95% bound 2.3% per trial); its only
+  failures were runs 549 and 574 before the warm-up, the same artifact.
+  Raised with Kevin as a pending decision (state.json); no rule changed.
+- Freeze-linted v2, then `-inputs`, then `-executor` against a scratch copy
+  of the ledger (chain intact); the repository ledger is unchanged.
+  Q2 tests pass locally and the full suite on the host. Nothing frozen,
+  pushed or merged. No GPU.

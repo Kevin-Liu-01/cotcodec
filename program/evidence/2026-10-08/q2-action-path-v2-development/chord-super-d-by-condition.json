@@ -1,0 +1,273 @@
+{
+ "source": "chord_timing.py over v1's development runs (482-708), v1's C2 (768) and v2's development runs (784-787)",
+ "runs_scanned": 129,
+ "excluded": [
+  {
+   "job": "572",
+   "cycle": "00",
+   "mutant": "M11-unknown-key-dropped",
+   "infra": []
+  },
+  {
+   "job": "622",
+   "cycle": "14",
+   "mutant": null,
+   "infra": [
+    "channel_missing",
+    "tap_window_missing"
+   ]
+  }
+ ],
+ "groups": {
+  "L0-fixed | no warm-up | first key of the session": {
+   "trials": 4,
+   "pass": 0,
+   "second_key_event_offset_ms": {
+    "12": 1,
+    "15": 1,
+    "16": 1,
+    "17": 1
+   },
+   "second_key_event_state": {
+    "0": 4
+   },
+   "shell_response": {
+    "probe_events=0 probe_focused_after=False marker_on_screen=False": 4
+   },
+   "jobs": [
+    549,
+    574
+   ],
+   "upper95_failure_rate_if_none_failed": null
+  },
+  "L0-fixed | no warm-up | not the first key": {
+   "trials": 63,
+   "pass": 63,
+   "second_key_event_offset_ms": {
+    "10": 4,
+    "11": 58,
+    "12": 1
+   },
+   "second_key_event_state": {
+    "80": 63
+   },
+   "shell_response": {
+    "probe_events=0 probe_focused_after=False marker_on_screen=False": 63
+   },
+   "jobs": [
+    486,
+    489,
+    491,
+    493,
+    495,
+    497,
+    499,
+    504,
+    509,
+    511,
+    513,
+    526,
+    537,
+    540,
+    541,
+    546,
+    549,
+    550,
+    551,
+    574
+   ],
+   "upper95_failure_rate_if_none_failed": 0.0464
+  },
+  "L0-fixed | warm-up | first key of the session": {
+   "trials": 18,
+   "pass": 18,
+   "second_key_event_offset_ms": {
+    "10": 1,
+    "11": 12,
+    "12": 5
+   },
+   "second_key_event_state": {
+    "80": 18
+   },
+   "shell_response": {
+    "probe_events=0 probe_focused_after=False marker_on_screen=False": 18
+   },
+   "jobs": [
+    609,
+    610,
+    634,
+    664,
+    705,
+    785,
+    786
+   ],
+   "upper95_failure_rate_if_none_failed": 0.1533
+  },
+  "L0-fixed | warm-up | not the first key": {
+   "trials": 109,
+   "pass": 109,
+   "second_key_event_offset_ms": {
+    "10": 10,
+    "11": 83,
+    "12": 15,
+    "14": 1
+   },
+   "second_key_event_state": {
+    "80": 109
+   },
+   "shell_response": {
+    "probe_events=0 probe_focused_after=False marker_on_screen=False": 109
+   },
+   "jobs": [
+    609,
+    610,
+    611,
+    612,
+    619,
+    622,
+    633,
+    634,
+    635,
+    636,
+    662,
+    663,
+    664,
+    665,
+    666,
+    694,
+    703,
+    704,
+    705,
+    706,
+    707,
+    785,
+    786,
+    787
+   ],
+   "upper95_failure_rate_if_none_failed": 0.0271
+  },
+  "L0-raw | warm-up | not the first key": {
+   "trials": 15,
+   "pass": 0,
+   "second_key_event_offset_ms": {
+    "0": 1,
+    "1": 13,
+    "2": 1
+   },
+   "second_key_event_state": {
+    "0": 15
+   },
+   "shell_response": {
+    "probe_events=0 probe_focused_after=False marker_on_screen=False": 15
+   },
+   "jobs": [
+    768,
+    784
+   ],
+   "upper95_failure_rate_if_none_failed": null
+  },
+  "QEMU monitor | no warm-up | not the first key": {
+   "trials": 2,
+   "pass": 2,
+   "second_key_event_offset_ms": {
+    "99": 2
+   },
+   "second_key_event_state": {
+    "80": 2
+   },
+   "shell_response": {
+    "probe_events=0 probe_focused_after=False marker_on_screen=False": 2
+   },
+   "jobs": [
+    484
+   ],
+   "upper95_failure_rate_if_none_failed": 0.7764
+  }
+ },
+ "l0_fixed_path_with_warmup": {
+  "trials": 127,
+  "pass": 127,
+  "second_key_event_offset_ms": {
+   "10": 11,
+   "11": 95,
+   "12": 20,
+   "14": 1
+  },
+  "second_key_event_state": {
+   "80": 127
+  },
+  "shell_response": {
+   "probe_events=0 probe_focused_after=False marker_on_screen=False": 127
+  },
+  "jobs": [
+   609,
+   610,
+   611,
+   612,
+   619,
+   622,
+   633,
+   634,
+   635,
+   636,
+   662,
+   663,
+   664,
+   665,
+   666,
+   694,
+   703,
+   704,
+   705,
+   706,
+   707,
+   785,
+   786,
+   787
+  ],
+  "upper95_failure_rate_if_none_failed": 0.0233
+ },
+ "l0_fixed_path_with_warmup_not_first_key": {
+  "trials": 109,
+  "pass": 109,
+  "second_key_event_offset_ms": {
+   "10": 10,
+   "11": 83,
+   "12": 15,
+   "14": 1
+  },
+  "second_key_event_state": {
+   "80": 109
+  },
+  "shell_response": {
+   "probe_events=0 probe_focused_after=False marker_on_screen=False": 109
+  },
+  "jobs": [
+   609,
+   610,
+   611,
+   612,
+   619,
+   622,
+   633,
+   634,
+   635,
+   636,
+   662,
+   663,
+   664,
+   665,
+   666,
+   694,
+   703,
+   704,
+   705,
+   706,
+   707,
+   785,
+   786,
+   787
+  ],
+  "upper95_failure_rate_if_none_failed": 0.0271
+ }
+}

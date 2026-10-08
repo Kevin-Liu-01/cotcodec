@@ -119,7 +119,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/volume_plan.json` | `9567d257b769273788153c4193981f1c7eb1e8664b4d1ef36389b4fbd211802a` |
 | `harness/q2/action_path/mutation_operators.yaml` | `429cbc389238404b1b6c345b883db9ada5b470ebad3594a8895187aa377e1259` |
 | `harness/q2/action_path/l0_raw_prediction.yaml` | `8b947acafeae1d2bf4fda5a715888556d9ca672e57d488a4c31dadc420f9302a` |
-| `harness/q2/action_path/l0_raw_prediction_v2.yaml` | `b1b4a129d9719f9d44136920843bbf17d67dcf74b5240d6bfa3de6dc24784258` |
+| `harness/q2/action_path/l0_raw_prediction_v2.yaml` | `130a6e6beeb7ce64165142aab08d80e93b54ed304f1d4c186b9c81ebccee6daa` |
 | `harness/q2/action_path/canary.yaml` | `16e15b6a48a6a560958500b1e6507e1be7368fd0fff2348cb5ed7188e66881ff` |
 | `harness/q2/action_path/keysyms.json` | `a1ea436d9bd4ae8d9fbc8305772f7dca776858b023092ce1cea059a693924acb` |
 | `harness/q2/action_path/ir.py` | `33dc24771b823597eef453a4994faf730d0364bd090488aa13e9de5e3498d305` |
@@ -1010,10 +1010,10 @@ and never loads more than 18 VMs, so no rung above N = 1 could have qualified
 - **Seed 45: C2 only** (decision D40). No v1 campaign and no development run
   used it: v1's one scored campaign (C2, job 768) and the 124 run manifests
   of v1's development root used seed 42 or none, and 43 and 44 are the
-  acceptance seeds. `order.py` builds an order from it
-  only for criterion C2, and `manifest.py` admits it only in a C2 campaign
-  (`CRITERIA`), refusing it, like 43 and 44, in every manifest that is not a
-  scored campaign.
+  acceptance seeds. `order.py` builds an order from it only for criterion
+  C2, and `manifest.py` admits it only in a C2 campaign (`CRITERIA`),
+  refusing it, like 43 and 44, in every manifest that is not a scored
+  campaign.
 - **Freeze of the executor.** When development ends, the git SHA of L0-fixed
   and the adapters is frozen in `q2-action-path-v2-executor`. The ledger row
   is written after that commit, so scored campaigns run from an export of the
@@ -1533,7 +1533,7 @@ here with its reason.
     by design, so one C1-C3 campaign that did not count (a boot over 300 s,
     a runner error, a time limit or a node failure, among about 50) would
     have invalidated the suite, and a failed control is not repaired within
-    v1 (section 11). Each control now reads an earlier attempt by its own
+    v2 (section 11). Each control now reads an earlier attempt by its own
     rule: a C1 defect that passed in any attempt fails C1, an unpredicted C2
     failure in any attempt fails C2, and a cell the C3 reference did not
     pass cleanly in any attempt cannot kill, while C1's and C2's required
@@ -2208,12 +2208,12 @@ the freeze, with no scored data (code in `acceptance.py`, with
 
 ## 24. Changes from v1 (D40)
 
-Decision D40 (`program/decisions.md`; D30, D33 and D39 carry over) makes v2
-v1 with three changes. Each change, and each file it touches, is listed here;
+Decision D40 (`program/decisions.md`; D30, D33 and D39 carry over) makes v2 v1
+with three changes. Each change, and each file it touches, is listed here;
 every other rule, number and file is v1's (the frozen tables of the three v2
 registrations equal v1's except for the rows this section names, and
-`tests/test_q2_prereg_inputs.py` checks that). v1 itself (ledger rows 8-10)
-is unchanged.
+`tests/test_q2_prereg_inputs.py` checks that). v1 itself (ledger rows 8-10) is
+unchanged.
 
 1. **The L0-raw prediction lists `chord_super_d` as a failure** (D40 i).
    `harness/q2/action_path/l0_raw_prediction_v2.yaml` is v1's prediction file
@@ -2221,109 +2221,109 @@ is unchanged.
    failures, its reason replaced by the mechanism (the shell's synchronous
    keyboard grab on Super_L, its overlay key, when the chord is sent without
    key holds or a gap between the presses), and two basis notes (v1's C2
-   result and the grab). The file says plainly that this entry is informed
-   by v1's C2 run (job 768) and by seed-42 development, not predicted a
-   priori; every other line is v1's. v1's file, `l0_raw_prediction.yaml`,
-   is kept unchanged as v1's record; no v2 code reads it, and it stays in
-   this file's table only so that every file under `harness/q2/` is pinned
-   (design decision 35). `acceptance.c2` reads the v2 file
-   (`acceptance.PREDICTION`). The translator `l0_raw.py` is unchanged (its
-   docstring still names v1's file).
+   result and the grab). The file says plainly that this entry is informed by
+   v1's C2 run (job 768) and by seed-42 development, not predicted a priori;
+   every other line is v1's. v1's file, `l0_raw_prediction.yaml`, is kept
+   unchanged as v1's record; no v2 code reads it, and it stays in this file's
+   table only so that every file under `harness/q2/` is pinned (design
+   decision 35). `acceptance.c2` reads the v2 file (`acceptance.PREDICTION`).
+   The translator `l0_raw.py` is unchanged (its docstring still names v1's
+   file).
 2. **C2 is a reproduction test on its own order seed** (D40 ii). Section 8
-   states that v2's C2 is not an a-priori prediction test and reports v1's
-   C2 as the a-priori result (one unpredicted failure, verified real at the
-   X event level; section 25), and section 12 reports v1's result beside
-   v2's. C2 runs the 100 entries in the seed-45 shuffle, an order seed no v1
+   states that v2's C2 is not an a-priori prediction test and reports v1's C2
+   as the a-priori result (one unpredicted failure, verified real at the X
+   event level; section 25), and section 12 reports v1's result beside v2's.
+   C2 runs the 100 entries in the seed-45 shuffle, an order seed no v1
    campaign and no development run used (section 10): v1's C2 ran seed 42,
-   whose order v1's development also used. Code: `order.py` adds `C2_SEED =
-   45`, built only for `criterion="C2"` (`check_seed`, `shuffle_order` and
-   `plan` take the criterion); `manifest.py`'s `CRITERIA` gives C2 seed 45
-   only, and seed 45 joins 43 and 44 as a seed only a scored campaign may
-   declare (`RESERVED_SEEDS`); `driver.acceptance_plan` passes the criterion
-   to the order; `acceptance.c2` checks the realized order against the
-   seed-45 plan. Every other campaign's realized order is v1's, byte for
-   byte (a test checks the order digests of A1-A7, the ladder rungs, C1, C3
-   and a development plan against v1's code's).
+   whose order v1's development also used. Code: `order.py` adds
+   `C2_SEED = 45`, built only for `criterion="C2"` (`check_seed`,
+   `shuffle_order` and `plan` take the criterion); `manifest.py`'s `CRITERIA`
+   gives C2 seed 45 only, and seed 45 joins 43 and 44 as a seed only a scored
+   campaign may declare (`RESERVED_SEEDS`); `driver.acceptance_plan` passes
+   the criterion to the order; `acceptance.c2` checks the realized order
+   against the seed-45 plan. Every other campaign's realized order is v1's,
+   byte for byte (a test checks the order digests of A1-A7, the ladder rungs,
+   C1, C3 and a development plan against v1's code's).
 3. **The manifest renderer takes the host run root** (D40 iii).
-   `scripts/render_q2_action_path_manifest.py --host-root ROOT` puts the
-   export at `ROOT/src/` followed by the git SHA and the run directories under `ROOT/runs`.
-   There is no default: a rendering without `--host-root` is refused, and so
-   is the development root that v1's renderer hard-coded
+   `scripts/render_q2_action_path_manifest.py --host-root ROOT` names the
+   export at `ROOT/src/` followed by the git SHA and puts the run directories
+   under `ROOT/runs`. There is no default: a rendering without `--host-root`
+   is refused, and so is the development root that v1's renderer hard-coded
    (`~/cotcodec-runs/stage0/q2-action-path`), so the operator step v1's C2
-   needed (moving two manifest fields after rendering; evidence README of
-   job 768) is no longer needed. The renderer's only other changes are the
-   v2 registration paths and ids. It is not a file any campaign executes.
+   needed (moving two manifest fields after rendering; evidence README of job
+   768) is no longer needed. The renderer's only other changes are the v2
+   registration paths and ids. It is not a file any campaign executes.
 4. **Development may characterise the mechanism, on seed 42 only** (D40).
    `manifest.py` admits L0-raw as a development layer, at seed 42 like every
    development run (section 10; the detection controls stay refused), and
-   `driver.session_plan` gives an L0-raw development run the L0-fixed
-   cells, as `acceptance_plan` and the runner already did for C2. Section 26
-   reports the runs; they are development evidence only and change no rule.
-   A1 then tests L0-fixed on `chord_super_d` as registered.
+   `driver.session_plan` gives an L0-raw development run the L0-fixed cells,
+   as `acceptance_plan` and the runner already did for C2. Section 26 reports
+   the runs; they are development evidence only and change no rule. A1 then
+   tests L0-fixed on `chord_super_d` as registered.
 5. **Ids, paths and cross-references.** The three registrations are
    `q2-action-path-v2`, `q2-action-path-v2-inputs` and
    `q2-action-path-v2-executor` (repair attempts `-executor-a2`, `-a3`);
    `manifest.py` (`PREREG_ID`, `ADDENDA_IDS`, `executor_addendum`), the
    renderer, `acceptance.py`'s docstring and the tests name them. Files that
    no change touches keep their v1 wording (for example the comments of
-   `canary.yaml`, `mutation_operators.yaml` and `harness_design_diffs.md`,
-   and `osworld_bfd62bdc_fixed.py`'s header), so their digests stay v1's.
+   `canary.yaml`, `mutation_operators.yaml` and `harness_design_diffs.md`, and
+   `osworld_bfd62bdc_fixed.py`'s header), so their digests stay v1's.
 6. **Text added without a rule change.** Section 4.4 states the limit of the
    XRecord channel that development found (section 26), design decision 31
-   notes what runs 549 and 574 show when reread, and design decisions 14 and
-   26 name v2. The oracle, the C2 judging rule (design decision 34) and every
-   other criterion are unchanged.
+   notes what runs 549 and 574 show when reread, and design decisions 14, 26
+   and 45 name v2. The oracle, the C2 judging rule (design decision 34) and
+   every other criterion are unchanged.
 7. **Frozen tables.** Rows that differ from v1's: here,
    `l0_raw_prediction_v2.yaml` (added); in the inputs addendum, `order.py`,
    `manifest.py`, `driver.py` and `acceptance.py`; in the executor addendum,
-   `acceptance.py`, `scripts/render_q2_action_path_manifest.py`,
-   `driver.py` and `manifest.py`. Three of these are files a campaign
-   executes (`order.py`, `manifest.py`, `driver.py`); the executor
-   addendum's byte-identity rule names them and why (its section 9).
+   `acceptance.py`, `scripts/render_q2_action_path_manifest.py`, `driver.py`
+   and `manifest.py`. Three of these are files a campaign executes
+   (`order.py`, `manifest.py`, `driver.py`); the executor addendum's
+   byte-identity rule names them and why (its section 9).
 8. **What does not change.** The catalog, R-dev reference and every oracle;
-   the guard, probe, tap and judge; L0-fixed, the adapters and the corpus;
-   G (86 entries), the volume plan, the canary; the session, concurrency and
+   the guard, probe, tap and judge; L0-fixed, the adapters and the corpus; G
+   (86 entries), the volume plan, the canary; the session, concurrency and
    ladder rules; A1-A7, C1, C3 and C4 with their seeds; the infrastructure,
    restart and rerun rules of decisions D30, D33 and D39; the VM-hour sizing
-   (C2's 0.25 VM-hours do not depend on the order seed: the same 500 trials
-   in 9 sessions); and v1's development evidence, which v2 keeps. No v1 data
-   enters a v2 verdict: v2's C2, C1, C3 and A1-A7 run afresh from v2's
-   frozen code.
+   (C2's 0.25 VM-hours do not depend on the order seed: the same 500 trials in
+   9 sessions); and v1's development evidence, which v2 keeps. No v1 data
+   enters a v2 verdict: v2's C2, C1, C3 and A1-A7 run afresh from v2's frozen
+   code.
 
 ## 25. v1's outcome (C2, job 768)
 
 Evidence: `program/evidence/2026-10-08/q2-action-path-acceptance/` (README,
 `acceptance/c2-verdict.json`, `independent-verification.json`).
 
-- **What ran.** `q2-action-path-v1`, `-inputs` and `-executor` were frozen
-  on 2026-10-08 (ledger rows 8-10). C2 ran once, as registered: job 768,
-  L0-raw, the 100 entries in the seed-42 shuffle, 5 repetitions, screenshot
-  setting, N = 1, attempt 1, from a content-checked export of `a9948ee`; 500
-  trials in 9 cold boots, CPU only, 0.17 VM-hours. The campaign counted
-  (COMPLETED 0:0 from the batch record and Slurm, gates passed,
-  `System.qcow2` unchanged, nothing leaked), with no infrastructure failure,
-  observation retry or guest-server restart.
+- **What ran.** `q2-action-path-v1`, `-inputs` and `-executor` were frozen on
+  2026-10-08 (ledger rows 8-10). C2 ran once, as registered: job 768, L0-raw,
+  the 100 entries in the seed-42 shuffle, 5 repetitions, screenshot setting, N
+  = 1, attempt 1, from a content-checked export of `a9948ee`; 500 trials in 9
+  cold boots, CPU only, 0.17 VM-hours. The campaign counted (COMPLETED 0:0
+  from the batch record and Slurm, gates passed, `System.qcow2` unchanged,
+  nothing leaked), with no infrastructure failure, observation retry or
+  guest-server restart.
 - **Result: C2 failed, and v1 is invalid.** The frozen `acceptance.c2` gave
   `pass: false`: unpredicted failures `['chord_super_d']`, predicted but
-  passing `[]`. All 8 predicted failures failed 5 of 5 by the mechanisms
-  the prediction file names, and the other 91 entries passed 5 of 5 under
-  C2's rule. Under sections 8 and 11 no v1 acceptance criterion may be
-  claimed; C1, C3 and A1-A7 did not run, and no v1 campaign will.
+  passing `[]`. All 8 predicted failures failed 5 of 5 by the mechanisms the
+  prediction file names, and the other 91 entries passed 5 of 5 under C2's
+  rule. Under sections 8 and 11 no v1 acceptance criterion may be claimed; C1,
+  C3 and A1-A7 did not run, and no v1 campaign will.
 - **The a-priori result.** This is the only a-priori test of the L0-raw
   prediction: one unpredicted failure, `chord_super_d` (predicted to pass
-  because `'winleft'` maps to Super_L), in 5 of 5 repetitions. It was
-  verified real at the X event level: in every repetition the tap recorded
-  the right four key events on the right keycodes, but the `d` press, 0 to
-  1 ms after the Super_L press (server time), with core state 0, without
-  Mod4 (and without Mod2, the NumLock bit the Super_L press carried), where
-  the R-dev reference has Mod4; C2 compares key presses with their state.
-  An independent verifier reproduced the verdict byte for byte from the
-  frozen code and the raw records. `chord_super_d` was never a session's
-  first trial, and every session ran the keyboard warm-up.
+  because `'winleft'` maps to Super_L), in 5 of 5 repetitions. It was verified
+  real at the X event level: in every repetition the tap recorded the right
+  four key events on the right keycodes, but the `d` press, 0 to 1 ms after
+  the Super_L press (server time), with core state 0, without Mod4 (and
+  without Mod2, the NumLock bit the Super_L press carried), where the R-dev
+  reference has Mod4; C2 compares key presses with their state. An independent
+  verifier reproduced the verdict byte for byte from the frozen code and the
+  raw records. `chord_super_d` was never a session's first trial, and every
+  session ran the keyboard warm-up.
 - **Reported, not judged.** Under section 5 as written, 435 of 500 trials
   passed: the three other shell chords (`chord_alt_f4`, `chord_alt_tab`,
-  `chord_ctrl_alt_shift_r`) failed on key-release states only, which C2's
-  rule leaves out, and `seq_type_chord_type`, `type_shell_hostile` and
+  `chord_ctrl_alt_shift_r`) failed on key-release states only, which C2's rule
+  leaves out, and `seq_type_chord_type`, `type_shell_hostile` and
   `type_symbols_shifted` were FLAKY on stale markers only. Two disclosed
   operator deviations (the manifest's host paths moved after rendering, which
   v2's renderer parameter removes; the C2 manifest pinned the executor
@@ -2331,7 +2331,124 @@ Evidence: `program/evidence/2026-10-08/q2-action-path-acceptance/` (README,
 
 ## 26. Development characterisation of v1's C2 failure (seed 42, D40)
 
-Development evidence only; it changes no rule (decision D40). Development
-runs for v2 are seed 42, CPU-only jobs through `vm-campaign.sbatch`, at the
-commits named below; the summaries are in
-`program/evidence/2026-10-08/q2-action-path-v2-development/`.
+Development evidence only. It changes no rule (decision D40): it informs the
+mechanism text of `chord_super_d` in `l0_raw_prediction_v2.yaml`, and it is
+reported with v2's C2. Summaries, the scripts that made them and each run's
+records: `program/evidence/2026-10-08/q2-action-path-v2-development/`; the
+manifests: `experiments/manifests/q2-action-path-v2/`.
+
+**Runs.** Four CPU-only jobs through `vm-campaign.sbatch`, seed 42, at
+`e66bf16` (the commit that holds v2's code), from a read-only export under
+`~/cotcodec-runs/q2-action-path-v2/dev/` on the host. Each ended COMPLETED 0:0
+by both the batch record and Slurm, with its infrastructure gates passed,
+`System.qcow2` unchanged, no GPU and nothing left behind; no trial had an
+infrastructure failure.
+
+| Job | Campaign | What ran | Trials |
+|---|---|---|---:|
+| 784 | `q2ap-v2-dev-l0raw-chords-v1` | L0-raw on the 13 chord entries, 5 repetitions per setting, one VM | 130 |
+| 785 | `q2ap-v2-dev-l0fixed-superd-n8-v1` | L0-fixed on `chord_super_d`, the three other shell chords, `type_unicode_bmp` and `type_emoji` (which remap keycodes, so the shell rebuilds its keymap), `key_menu` and `type_plain`; 5 repetitions per setting, 10 trials per session, 8 VMs | 80 |
+| 786 | `q2ap-v2-dev-l0fixed-superd-n16-v1` | the same, 5 trials per session, 16 VMs | 80 |
+| 787 | `q2ap-v2-dev-l0fixed-superd-n8-v2` | the same, 8 trials per session, 8 VMs | 80 |
+
+Jobs 785-787 ran at the same time (32 VMs at once). In all, about 1.0 VM-hours
+(each job's run time times its VMs). The same read-only script also read the
+records of v1's development runs (482-708) and of job 768.
+
+**The failure reproduces, and only on chords the shell grabs.** Under L0-raw
+`chord_super_d` failed 10 of 10 (both settings): the `d` press 1 to 2 ms after
+the Super_L press, recorded with core state 0, then the `d` and Super_L
+releases with state 0, as in job 768 (5 of 5). Of the 13 chord entries, sent
+by L0-raw at the same speed (each next key 0 to 2 ms after the one before),
+the nine the shell does not grab (`chord_ctrl_c`, `chord_ctrl_a`,
+`chord_ctrl_shift_t`, `chord_ctrl_shift_arrow`, `chord_shift_tab`,
+`chord_ctrl_home`, `chord_shift_arrow_left`, `chord_shift_alone`,
+`chord_ctrl_alone`) passed 10 of 10 with every state right (Control+Mod2 on
+every event of `chord_ctrl_c`, for example). The four it grabs (Super+d, show
+desktop; Alt+F4; Alt+Tab; Ctrl+Alt+Shift+R) failed 10 of 10, each the same
+way: every key event after the key that activates the shell's grab (Super_L,
+F4, Tab, r) was recorded with state 0, without even Mod2, the NumLock bit that
+every other event in these sessions carries (in 1 of 15 `chord_alt_f4` trials
+the last release came after the shell's answer and kept its state). For the
+three other shell chords only release states differ, which C2's rule leaves
+out, so they pass C2, as in job 768.
+
+**The mechanism.** GNOME Shell 42.9 (mutter 42.9, `src/core/keybindings.c`)
+grabs its overlay key, Super_L, and every keybinding with `XIGrabKeycode` in
+`XIGrabModeSync`: when the grab activates, the X server freezes the keyboard
+and queues every later key event until the shell calls `XIAllowEvents` (on the
+overlay key it answers `XISyncDevice`, which releases one event and freezes
+again). The X server's RECORD extension reports a device event that arrives
+while the device is frozen when it is queued (`EnqueueEvent` in
+`dix/events.c`), before the server has computed the event's state (in
+`ProcessDeviceEvent`, `Xi/exevents.c`), and does not report it again when the
+queue is replayed. The tap therefore records such an event with core state 0.
+The server source was read at the GitHub mirror `mirror/xserver` (master); the
+guest runs Ubuntu 22.04's Xorg 21.1 release, which was not read, but the
+guest's records show the same behaviour: a processed event could not lack the
+locked NumLock bit.
+
+**The shell received Super+d.** Under L0-raw the probe received no key event,
+lost the focus and left the screen (its marker was not in the step's
+screenshot) in 15 of 15 trials (jobs 768 and 784), exactly as under L0-fixed
+in 30 of 30 (jobs 785-787), where the `d` press carries Mod4. Had the shell
+received `d` without Mod4, it would have found no keybinding and replayed `d`
+to the probe, which logs every key it receives. So the press-state loss that
+decision D40 records is real in the X event record and is not a loss on the
+way to the shell: the chord was delivered, and C2 failed on what the tap
+records for an event queued during the shell's grab. (For Alt+Tab and
+Ctrl+Alt+Shift+R the shell's response does differ between the executors: under
+L0-raw the releases arrive before the window switcher or the screen recorder
+takes its own grab, so the probe saw one more key release. C2 leaves release
+states out.)
+
+**Timing.** The `d` press is recorded with Mod4 when it comes after the
+shell's answer and with state 0 when it comes before:
+
+| Executor and condition | Second key after Super_L (server ms) | `d` press state | `chord_super_d` passed |
+|---|---|---|---:|
+| L0-raw (`pyautogui.hotkey`, no interval or hold; jobs 768, 784) | 0-2 | 0 | 0 of 15 |
+| L0-fixed (10 ms between presses, 0.1 s hold; directly or under H-OSW-fixed or H-GA), keyboard warmed up (v1 development and jobs 785-787) | 10-14 | Mod4 | 127 of 127 |
+| L0-fixed, no warm-up, not the session's first key event (v1 development before the warm-up) | 10-12 | Mod4 | 63 of 63 |
+| L0-fixed, no warm-up, the session's first key event (runs 549, 574) | 12-17 | 0 | 0 of 4 |
+| QEMU monitor (`sendkey`, the R-dev reference's device) | 99 | Mod4 | 2 of 2 |
+
+In runs 549 and 574 the shell acted on the chord in every trial too (no key
+reached the probe, which lost the focus): the master keyboard's switch to the
+XTest device, which re-sends the keymap, delayed the shell's answer past
+L0-fixed's 10 ms gap. Design decision 31's warm-up moves that switch outside
+every entry, which is why it works; its reading (the modifier state recomputed
+at the switch) describes the same record. No `xinput` trace was taken: the
+lane has no hook to run a command in the guest during a session, and adding
+one would change files a campaign executes; the tap's server timestamps give
+the timing. The catalog has no other Super chord, so the three other shell
+chords (each with the same signature after its own grab-activating key) and
+the nine ungrabbed chords (the same speed, no grab) are the comparisons. No
+held chord can be sent through L0-raw without a new catalog entry; L0-fixed is
+that chord (10 ms between the presses, held 0.1 s), and its second key comes
+after the shell's answer.
+
+**L0-fixed's exposure.** With the keyboard warmed up, as A1-A7 and Stage 1 run
+it, `chord_super_d` on the L0-fixed path passed 127 of 127 trials (L0-fixed
+107, under H-OSW-fixed 10 and under H-GA 10; v1's development runs 97 and v2's
+30), 109 of them not the session's first key event and 18 the first after the
+warm-up; in v2's runs, on 8 and 16 concurrent VMs with 32 running at once, 22
+were not the first key event and 8 were. The `d` press came 10 to 14 ms after
+Super_L, with Mod4, in every one. So L0-fixed was not exposed in development
+when `chord_super_d` was not a session's first key event (0 of 109; one-sided
+95% upper bound 2.7% per trial), nor in any trial with the warm-up (0 of 127;
+2.3%). Development cannot exclude a rare slow answer from the shell, though:
+at the 2.3% bound A1's 20 `chord_super_d` trials would meet one with
+probability up to 0.38 and A4's 276 almost surely, and at the observed rate
+(none) neither would. A slow answer would fail an L0-fixed trial whose chord
+the shell received correctly, and the failure would count; D40 keeps that: A1
+tests L0-fixed on `chord_super_d` as registered. Only `chord_super_d` sends a
+key that soon after a grab activates: the other shell chords release their
+keys 0.1 s after the key that activates the grab, and passed 30 of 30 each in
+jobs 785-787.
+
+**What this does not decide.** Whether the oracle should read a key event
+queued during a shell grab differently (its recorded state is not the state
+the server delivered) is not decided here: D40 keeps the oracle and C2's rule,
+and the question goes to the owner (`program/state.json`, pending decisions).
+The answer could only enter a later registration.

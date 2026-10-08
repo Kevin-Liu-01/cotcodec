@@ -222,7 +222,8 @@ file equals it), so freezing the catalog fixes them.
   C2 (decision D40; `order.py` builds the seed-45 order only for C2). It
   admits A7 at N* with no repair attempt. It admits L0-raw in development at
   seed 42 (decision D40; the driver gives it the L0-fixed cells); the
-  detection controls are never admitted in development. Development manifests may name a trial after which the runner
+  detection controls are never admitted in development. Development
+  manifests may name a trial after which the runner
   SIGKILLs the guest server (`kill_guest_server_after_seq`) or a trial inside
   which it does so before the post guard (`kill_guest_server_during_seq`), to
   exercise the restart handling; no scored campaign can.
@@ -291,10 +292,10 @@ rows up to `280ccbf` are v1's, the rows after it v2's (decision D40):
 | `c9b4771` | `acceptance.py` | Found while fixing the above: C4 read the counting A1 attempts only, though it judges the tap's stream, which A1 does not judge for an entry the probe observes; it now reads every attempt (main section 21). A test drives it. No file a campaign executes changed. |
 | `2518241` | `acceptance.py` | Closing the reviews' non-blocking notes before the freeze, with no scored data (main section 22, design decision 46). `load` opened `receipt.json` unconditionally, and the driver writes it last, so an attempt killed by a signal, a time limit or a node failure (development runs 695-699 have no receipt) could not be read; it is now read from its manifest, its batch record (`job_id=` in `preflight.txt`) and its finished sessions, and does not count. Reported, not judged: `entries_over_restart_limit` lists every entry with two or more excused trials whatever its status, with its excused repetitions (it had listed `RESTART_LIMIT` entries by name only); A4's `restart_only_trials` counts every rerun (it had counted the counting attempts only); under a repair attempt A4 gives its restarts per accessibility call against A7's bound (`repair_restart_rate`); A5 lists each earlier attempt's receipt and stays judged on the counting attempts. `foreign_abort` documents that a failed `squeue` in a host snapshot cannot be detected (main section 9). `tests/test_q2_acceptance_analysis.py` drives each case. No file a campaign executes changed. |
 | `280ccbf` | `acceptance.py` | Decision D39, recorded in `program/decisions.md` before the freeze on the final pre-freeze verifier's finding, with no scored data (main section 23). C3 read a mutant's equivalence from its counting attempt alone, so a mutant that survived in an attempt that did not count came out equivalent when its rerun matched the reference; a mutant is now equivalent only if its counting attempt's streams equal the reference's and every earlier attempt's do on each cell it ran without an infrastructure failure, and kills stay the counting attempt's. `load` raised on a receipt, cycle or record file a kill cut short (the driver and the runner write them non-atomically); such a file now reads as missing (`unreadable`), and the attempt does not count. `tests/test_q2_acceptance_analysis.py` drives both, with the verifier's probe; the final loader read runs 694, 695-699 and 703-708 again with nothing changed but the new, empty list. No file a campaign executes changed. |
-| `this-branch` | `action_path/order.py` | Decision D40, recorded in `program/decisions.md` after v1's C2 (job 768): C2 gets its own order seed, `C2_SEED = 45`, which no v1 campaign or development run used; `check_seed` admits it only for criterion C2 (`shuffle_order` and `plan` take the criterion). Every other order is v1's, byte for byte (`tests/test_q2_v2_changes.py` checks the order digests of every scored campaign and a development plan against v1's code's). |
-| `this-branch` | `manifest.py` | Decision D40: the registrations it admits are `q2-action-path-v2`, `-inputs` and `-executor` (repair attempts `-executor-a2`, `-a3`); C2 runs seed 45 (`CRITERIA`), and seed 45 joins 43 and 44 among the seeds only a scored campaign may declare (`RESERVED_SEEDS`); L0-raw is admitted as a development layer at seed 42, to characterise the mechanism of v1's C2 failure (main section 26); the detection controls stay refused in development. No other admission rule changed. |
-| `this-branch` | `driver.py` | Decision D40: `session_plan` gives an L0-raw development run the L0-fixed cells, as `acceptance_plan` and the runner already did for C2, and `acceptance_plan` passes the criterion to the order (so seed 45 builds only for C2). Every other plan is v1's. |
-| `this-branch` | `acceptance.py` | Decision D40: `c2` reads `l0_raw_prediction_v2.yaml` (`PREDICTION`) and checks the realized order against the seed-45 plan (`C2_SEED`); the docstring names v2. No rule changed; `tests/test_q2_acceptance_analysis.py` drives C2 on the seed-45 order and refuses a campaign that ran v1's seed-42 order. No file a campaign executes reads it. |
+| `e66bf16` | `action_path/order.py` | Decision D40, recorded in `program/decisions.md` after v1's C2 (job 768): C2 gets its own order seed, `C2_SEED = 45`, which no v1 campaign or development run used; `check_seed` admits it only for criterion C2 (`shuffle_order` and `plan` take the criterion). Every other order is v1's, byte for byte (`tests/test_q2_v2_changes.py` checks the order digests of every scored campaign and a development plan against v1's code's). |
+| `e66bf16` | `manifest.py` | Decision D40: the registrations it admits are `q2-action-path-v2`, `-inputs` and `-executor` (repair attempts `-executor-a2`, `-a3`); C2 runs seed 45 (`CRITERIA`), and seed 45 joins 43 and 44 among the seeds only a scored campaign may declare (`RESERVED_SEEDS`); L0-raw is admitted as a development layer at seed 42, to characterise the mechanism of v1's C2 failure (main section 26); the detection controls stay refused in development. No other admission rule changed. |
+| `e66bf16` | `driver.py` | Decision D40: `session_plan` gives an L0-raw development run the L0-fixed cells, as `acceptance_plan` and the runner already did for C2, and `acceptance_plan` passes the criterion to the order (so seed 45 builds only for C2). Every other plan is v1's. |
+| `e66bf16` | `acceptance.py` | Decision D40: `c2` reads `l0_raw_prediction_v2.yaml` (`PREDICTION`) and checks the realized order against the seed-45 plan (`C2_SEED`); the docstring names v2. No rule changed; `tests/test_q2_acceptance_analysis.py` drives C2 on the seed-45 order and refuses a campaign that ran v1's seed-42 order. No file a campaign executes reads it. |
 
 The probe change makes the no-action entry's screenshot start from a settled
 screen, the canary changes make the read-back report what the app holds, and
@@ -420,24 +421,24 @@ entries) is stated with A4 and accepted (main sections 6.1, 9 and 20).
 Decision D40 changes three things in the main preregistration (its section
 24). In this addendum:
 
-1. **Ids and paths.** This file is `q2-action-path-v2-inputs`, an addendum
-   to `q2-action-path-v2`, frozen after it and before
+1. **Ids and paths.** This file is `q2-action-path-v2-inputs`, an addendum to
+   `q2-action-path-v2`, frozen after it and before
    `q2-action-path-v2-executor`.
-2. **Frozen rows that differ from v1's** (section 1), each with its reason
-   in section 5: `harness/q2/action_path/order.py` (C2's own seed, 45, built
-   only for C2), `harness/q2/vm/manifest.py` (v2's ids, C2's seed, L0-raw in
-   development at seed 42), `harness/q2/vm/driver.py` (the L0-raw
-   development plan, the criterion passed to the order) and
-   `harness/q2/action_path/acceptance.py` (C2 reads v2's prediction and
-   seed). Every other row is v1's digest. Of the four, `order.py`,
-   `manifest.py` and `driver.py` are files a campaign executes; the executor
-   addendum's byte-identity rule names them (its section 9).
+2. **Frozen rows that differ from v1's** (section 1), each with its reason in
+   section 5: `harness/q2/action_path/order.py` (C2's own seed, 45, built only
+   for C2), `harness/q2/vm/manifest.py` (v2's ids, C2's seed, L0-raw in
+   development at seed 42), `harness/q2/vm/driver.py` (the L0-raw development
+   plan, the criterion passed to the order) and
+   `harness/q2/action_path/acceptance.py` (C2 reads v2's prediction and seed).
+   Every other row is v1's digest. Of the four, `order.py`, `manifest.py` and
+   `driver.py` are files a campaign executes; the executor addendum's
+   byte-identity rule names them (its section 9).
 3. **Text.** Section 2's lane paragraph states the seed-45 and L0-raw
    development rules; section 5 adds v2's rows after v1's.
 4. **Unchanged.** The probe, the entry delimiters, the marker decoder, the
-   guard (pointer park, side-effect restorations, warm-up), the canary
-   driver, the detection-control translators and their vendored parsers,
-   the judging code and the acceptance analysis's rules, apart from C2's
-   prediction file and seed. v1's validation before its freeze (section 3,
-   job 484) and its decision record on guest-server restarts (section 6,
-   decisions D30 and D33) carry over unchanged.
+   guard (pointer park, side-effect restorations, warm-up), the canary driver,
+   the detection-control translators and their vendored parsers, the judging
+   code and the acceptance analysis's rules, apart from C2's prediction file
+   and seed. v1's validation before its freeze (section 3, job 484) and its
+   decision record on guest-server restarts (section 6, decisions D30 and D33)
+   carry over unchanged.
