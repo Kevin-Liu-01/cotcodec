@@ -430,3 +430,26 @@ Append-only. Newest entries at the bottom.
     rater GPU cap is read from a ledger; stale text fixed.
 - GPU time 0.1284 GPU-h (program total 1.7558). Evidence:
   `program/evidence/q2-mutation/integration/rater-rerate-dev-v3/`. Not frozen.
+
+## 2026-10-07 — Q2 evaluator-mutation: isolated Claude ratings ingested on the D27 dev rerate (κ 0.27, back to review under D27)
+
+- 133 isolated Claude agents, one per dev item (workflow run
+  `wf_2301520e-159`), each confined to its own directory under the isolation
+  root. A strict transcript audit found 1,711 Read calls, all inside the
+  agent's own item directory, and 133 StructuredOutput answers. No other
+  tool was called and only claude-opus-5-5 appears: 0 voids. The registered
+  `ingest-isolated` gave 133 `ok` and 0 `isolation_void`; every item tree
+  re-hashed equal to its export. After the ingest, the held label files were
+  released; their digests match the committed `held/SHA256SUMS`.
+- Registered dev summary with both raters (121 real items, 12 shams, 1 P1
+  flip): κ 0.270, below 0.6, so κ fires. Shams were 12/12 for each rater.
+  Label error, with unresolved items counted as errors: equivalence 0.133
+  (K3 bound 0.255) and violation 0.731 (5 tasks, too few for the bound).
+  Both K3 groups fire, and K4 fires. 29 split items (24%; 26 of them are
+  Claude reject / Qwen accept, mostly violation mutants), about 1.5-2.4 h of
+  blind adjudication; 51 items with the spot check. Claude agrees with the
+  labels on 112 of 121 real items, Qwen on 94. Isolated and earlier
+  non-blind Claude answers agree on 93.6% of 109 matched items (κ 0.84).
+- Under D27 the design goes back to review; the κ rule is unchanged.
+  Evidence: `program/evidence/q2-mutation/integration/rater-isolated-dev-v3/`
+  and `dev-mutants-v8/`. No GPU used. Not frozen.

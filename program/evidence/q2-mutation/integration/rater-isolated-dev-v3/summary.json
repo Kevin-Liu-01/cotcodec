@@ -1,0 +1,333 @@
+{
+ "adjudication_workload": {
+  "hours_at_3_to_5_minutes": [
+   1.45,
+   2.4166666666666665
+  ],
+  "split_by_class": {
+   "should_fail_extra_change": 5,
+   "should_fail_violation": 16,
+   "should_pass_equiv": 8
+  },
+  "split_items": 29,
+  "split_or_spot_check_items": 51,
+  "split_pattern_claude_over_open": {
+   "accept/reject": 2,
+   "reject/accept": 26,
+   "unsure/reject": 1
+  },
+  "spot_check_also_split": 4,
+  "spot_check_items": 26
+ },
+ "against_labels": {
+  "claude_isolated": {
+   "contradicts_label_by_class": {
+    "should_fail_violation": 3,
+    "should_pass_equiv": 5
+   },
+   "label_consistent": 112,
+   "real_items": 121,
+   "shams": 12,
+   "shams_right": 12,
+   "unsure_by_class": {
+    "should_pass_equiv": 1
+   }
+  },
+  "open_weight": {
+   "contradicts_label_by_class": {
+    "should_fail_extra_change": 5,
+    "should_fail_violation": 19,
+    "should_pass_equiv": 3
+   },
+   "label_consistent": 94,
+   "real_items": 121,
+   "shams": 12,
+   "shams_right": 12,
+   "unsure_by_class": {}
+  }
+ },
+ "answers_by_label_class": {
+  "claude_isolated": {
+   "p1_flip": {
+    "accept": 1
+   },
+   "sham_do_nothing": {
+    "reject": 6
+   },
+   "sham_gold": {
+    "accept": 6
+   },
+   "should_fail_extra_change": {
+    "reject": 6
+   },
+   "should_fail_violation": {
+    "accept": 3,
+    "reject": 23
+   },
+   "should_pass_alt_solution": {
+    "accept": 28
+   },
+   "should_pass_equiv": {
+    "accept": 54,
+    "reject": 5,
+    "unsure": 1
+   }
+  },
+  "open_weight": {
+   "p1_flip": {
+    "accept": 1
+   },
+   "sham_do_nothing": {
+    "reject": 6
+   },
+   "sham_gold": {
+    "accept": 6
+   },
+   "should_fail_extra_change": {
+    "accept": 5,
+    "reject": 1
+   },
+   "should_fail_violation": {
+    "accept": 19,
+    "reject": 7
+   },
+   "should_pass_alt_solution": {
+    "accept": 28
+   },
+   "should_pass_equiv": {
+    "accept": 57,
+    "reject": 3
+   }
+  }
+ },
+ "earlier_nonblind_claude_vs_open_weight_matched_real_items": {
+  "items": 109,
+  "kappa": 0.3375690607734805
+ },
+ "ids_shared_with_committed_smoke_v2_sample": {
+  "claude_label_consistent": 13,
+  "items": 13,
+  "kinds": {
+   "p1_flip": 1,
+   "sham_do_nothing": 6,
+   "sham_gold": 6
+  }
+ },
+ "inputs_sha256": {
+  "claude-calls": "bd364efbfc52bb7d3dbcf949f80b8746c6fefecb9e32d9a22e58f0f3c4cb75f9",
+  "open-calls": "d6f7346dffb0b10c0293ee2a282295906356e9aeb831059a1dab4548e49b6991",
+  "registered": "9e2bf69a4feab941833daf3a907f0f8c6ef98e05fafbf35ba213b8125ecc710e",
+  "sample": "9b143809da1a1a809c009da62522f8dc178269d09d7b817b1fa9135e3c23b1c1",
+  "spot-check": "e1ea119f56e52d3f22f4952afd0f9199410fc3c038ce03436ed96593234ec02e",
+  "transcript-audit": "72e6a2561529f951720a82cf7d87615a82d255ceeef2b34b90c548ad82db66f7",
+  "v2-sample": "c81ab1b684005acf908d229537c8d433e2b831b227d7c95644ced41144613330",
+  "v4-release": "325323bb6e7f65a4d265629d9372ae166e43b0ba24842651eb726c1547f73f74",
+  "v8-release": "38f2a297b9f0f9b49907c04733064513573b41c43eb0e55816f848e04782f928"
+ },
+ "isolated_vs_earlier_nonblind_claude_matched_real_items": {
+  "changes_earlier_to_isolated": {
+   "accept->reject": 5,
+   "reject->accept": 2
+  },
+  "earlier_answers_sha256": "24876fe299802df7f2f4b409a6317b37b29b6a331253ea5923e03933b100c694",
+  "items": 109,
+  "kappa": 0.8408095138744003,
+  "note": "the earlier answers came from one agent over all items in a shared directory (not blind, D27)",
+  "raw_agreement": 0.9357798165137615
+ },
+ "items": 133,
+ "kappa_rule_d27": "kappa below 0.6 with the stronger open-weight rater: under D27 the design goes back to review; the kappa rule is not changed",
+ "label": "exploratory development evidence (dev split); not a result of the registration",
+ "raters": {
+  "model-rater-anthropic": "claude-opus-5-5 through the agent harness, one isolated agent per item",
+  "model-rater-open-weight": "Qwen3.6-35B-A3B, lane job 702"
+ },
+ "real_item_agreement": {
+  "confusion_claude_over_open": {
+   "accept/accept": 84,
+   "accept/reject": 2,
+   "reject/accept": 26,
+   "reject/reject": 8,
+   "unsure/reject": 1
+  },
+  "kappa": 0.27002288329519475,
+  "raw_agreement": 0.7603305785123967
+ },
+ "real_items": 121,
+ "registered": {
+  "by_label_class": {
+   "should_fail_extra_change": {
+    "accept": 0,
+    "agrees_with_label": 0.16666666666666666,
+    "gate": "reject",
+    "gate_share": 0.16666666666666666,
+    "n": 6,
+    "reject": 1,
+    "unresolved": 5,
+    "unresolved_share": 0.8333333333333334
+   },
+   "should_fail_violation": {
+    "accept": 3,
+    "agrees_with_label": 0.2692307692307692,
+    "n": 26,
+    "reject": 7,
+    "unresolved": 16,
+    "unresolved_share": 0.6153846153846154
+   },
+   "should_pass_alt_solution": {
+    "accept": 28,
+    "agrees_with_label": 1.0,
+    "gate": "accept",
+    "gate_share": 1.0,
+    "n": 28,
+    "reject": 0,
+    "unresolved": 0,
+    "unresolved_share": 0.0
+   },
+   "should_pass_equiv": {
+    "accept": 52,
+    "agrees_with_label": 0.8666666666666667,
+    "n": 60,
+    "reject": 0,
+    "unresolved": 8,
+    "unresolved_share": 0.13333333333333333
+   }
+  },
+  "k3": {
+   "should_fail_violation": {
+    "bootstrap_high": 1.0,
+    "estimate": 0.7307692307692307,
+    "exact_high": 0.8662258743554812,
+    "kish_n": 26.0,
+    "n_items": 26,
+    "n_tasks": 5,
+    "sufficient": false,
+    "upper": 1.0
+   },
+   "should_pass_equiv": {
+    "bootstrap_high": 0.2549019607843137,
+    "estimate": 0.13333333333333333,
+    "exact_high": 0.22773994566432548,
+    "kish_n": 60.0,
+    "n_items": 60,
+    "n_tasks": 15,
+    "sufficient": true,
+    "upper": 0.2549019607843137
+   }
+  },
+  "k3_fires": {
+   "should_fail_violation": true,
+   "should_pass_equiv": true
+  },
+  "k3_threshold": 0.1,
+  "k4_fires": true,
+  "kappa": 0.27002288329519475,
+  "kappa_fires": true,
+  "kappa_min": 0.6,
+  "label_error": {
+   "should_fail_violation": {
+    "estimate": 0.7307692307692307,
+    "high": 1.0,
+    "low": 0.2631578947368421,
+    "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+    "n_clusters": 5,
+    "n_units": 26
+   },
+   "should_pass_equiv": {
+    "estimate": 0.13333333333333333,
+    "high": 0.2857142857142857,
+    "low": 0.0,
+    "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+    "n_clusters": 15,
+    "n_units": 60
+   }
+  },
+  "label_error_resolved_only": {
+   "should_fail_violation": {
+    "estimate": 0.3,
+    "high": 1.0,
+    "low": 0.0,
+    "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+    "n_clusters": 4,
+    "n_units": 10
+   },
+   "should_pass_equiv": {
+    "estimate": 0.0,
+    "high": 0.0,
+    "low": 0.0,
+    "method": "Hajek IPW, task-cluster bootstrap 10000, seed 42",
+    "n_clusters": 14,
+    "n_units": 52
+   }
+  },
+  "n_adjudicated": 0,
+  "n_items": 121,
+  "n_unresolved": 29,
+  "p1_flips_decision": [
+   "accept"
+  ],
+  "per_rater": {
+   "model-rater-anthropic": {
+    "should_fail_violation": {
+     "contradicts_label": 0.11538461538461539,
+     "unsure": 0.0
+    },
+    "should_pass_equiv": {
+     "contradicts_label": 0.08333333333333333,
+     "unsure": 0.016666666666666666
+    }
+   },
+   "model-rater-open-weight": {
+    "should_fail_violation": {
+     "contradicts_label": 0.7307692307692307,
+     "unsure": 0.0
+    },
+    "should_pass_equiv": {
+     "contradicts_label": 0.05,
+     "unsure": 0.0
+    }
+   }
+  },
+  "sham_accuracy": {
+   "model-rater-anthropic": 1.0,
+   "model-rater-open-weight": 1.0
+  }
+ },
+ "shams": 12,
+ "transcript_audit": {
+  "answer_source": {
+   "structured_output": 133
+  },
+  "raters": 133,
+  "raters_not_opening_every_page": 12,
+  "reads_outside": 0,
+  "registered_isolation_void": 0,
+  "strict_void": 0,
+  "tool_totals": {
+   "Read": 1711,
+   "StructuredOutput": 133
+  },
+  "tree_rehash_matches_export": 133
+ },
+ "unresolved_share_real_items": 0.2396694214876033,
+ "violation_operators_claude_over_open": {
+  "docx.viol.delete_bound_paragraph": {
+   "accept/accept": 1,
+   "reject/accept": 5,
+   "reject/reject": 2
+  },
+  "docx.viol.drop_char_format": {
+   "reject/accept": 3
+  },
+  "docx.viol.text_edit": {
+   "accept/accept": 1,
+   "reject/accept": 5,
+   "reject/reject": 3
+  },
+  "pptx.viol.delete_bound_shape": {
+   "accept/accept": 1,
+   "reject/accept": 3,
+   "reject/reject": 2
+  }
+ }
+}
