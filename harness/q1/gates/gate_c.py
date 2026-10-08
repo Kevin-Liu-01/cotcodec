@@ -225,7 +225,11 @@ def run_gate_c(
     configuration's reference output and validity result are read from the entry
     a reference item wrote for this problem and replicate (``harness.q1.refstore``,
     decision D31; :func:`reference_configs`) instead of being recomputed; without
-    a usable entry they are computed here as always.
+    a usable entry they are computed here as always. A configuration whose inputs
+    differ from the entry's fingerprint, or that follows a switch change, is
+    computed inline with every later one; before the first such configuration the
+    reference forwards the store skipped are replayed (RNG state kept), so a
+    reference with state reaches the state it has on the inline path.
     """
     if validity not in {"inline", "table", "off"}:
         raise ValueError("validity must be inline, table or off")
@@ -291,9 +295,12 @@ def run_gate_c(
                 "overrides": dict(spec.overrides),
                 "kbv_compat": kbv_compat,
             }
-            taken = stored.take(position, dev) if stored is not None else None
-            if taken is None:
+            taken = stored.take(position, dev, inputs) if stored is not None else None
+            if stored is not None and taken is None:
                 stored = None
+                if position:
+                    _replay(reference, specs[:position], variants, dev)
+                    refstore.note(replayed_reference_forwards=position)
             rows.append(
                 _one_config(
                     spec,
@@ -314,6 +321,36 @@ def run_gate_c(
         loaded.cleanup()
     rows.extend(aggregate(rows, families, tolerance, secondary_tolerance))
     return rows
+
+
+def _replay(
+    reference: torch.nn.Module,
+    specs: Sequence[ConfigSpec],
+    variants: Mapping[tuple[tuple[str, int], ...], Any],
+    device: torch.device,
+) -> None:
+    """Run the reference forwards of ``specs`` (drawn as the gate draws them) for their
+    effect on the module's state only; outputs and exceptions are discarded and the
+    CPU and CUDA RNG states are restored afterwards."""
+    from harness.q1 import refstore
+
+    states = refstore.rng_state(device)
+    try:
+        with torch.no_grad():
+            for spec in specs:
+                set_seed(spec.seed)
+                raw = transform_inputs(
+                    list(variants[tuple(sorted(spec.overrides.items()))]()), spec.draw
+                )
+                try:
+                    reference(*process_inputs(raw, device, "preserve"))
+                    synchronize(device)
+                except Exception:  # a usable entry has no raising configuration
+                    pass
+    finally:
+        torch.set_rng_state(states[0])
+        if len(states) > 1:
+            torch.cuda.set_rng_state(states[1], device)
 
 
 def _kbv_compat_draws(specs: Sequence[ConfigSpec], get_inputs: Any) -> list[list[Any]]:
@@ -370,8 +407,6 @@ def _one_config(
                 synchronize(device)
             except Exception as exc:
                 return raised(exception_details(exc))
-        elif stored.kind == "raised":
-            return raised(stored.error)
         else:
             ref_out = stored.value
         if stored is not None:
@@ -456,9 +491,10 @@ def reference_configs(
     """The reference side of :func:`run_gate_c` without a candidate: the same model
     construction and move, the same configurations, draws and transforms, and per
     configuration the same reference call and validity gate, in the same order on
-    the same module. A configuration whose reference raises is stored as raised
-    (the gate records it and continues); a validity gate that raises leaves the
-    entry unusable (inline, that exception ends the item)."""
+    the same module, with each configuration's input fingerprint. A reference or
+    validity gate that raises makes the entry unusable (consumers compute inline)
+    and ends the work; a resource failure raises ``refstore.ResourceFailure`` (no
+    entry)."""
     from harness.q1 import refstore
 
     analysis = problem_lib.analyze_problem(problem_id, problem_source)
@@ -484,33 +520,36 @@ def reference_configs(
         set_seed(spec.seed)
         raw = transform_inputs(list(variants[key]()), spec.draw)
         inputs = process_inputs(raw, device, "preserve")
-        meta: dict[str, Any] = {"config_id": spec.config_id}
+        meta: dict[str, Any] = {
+            "config_id": spec.config_id,
+            "inputs_fp": refstore.safe_fingerprint(inputs),
+        }
         with torch.no_grad():
             probe = refstore.Probe(inputs, device)
             try:
                 ref_out = reference(*inputs)
                 synchronize(device)
             except Exception as exc:
-                # Inline, the configuration ends here (no candidate call), and the next
-                # one reseeds and redraws, so nothing the reference changed carries over.
-                if refstore.resource_failure(exc):
-                    built.problems.append(f"{spec.config_id}: resource failure")
-                built.draws.append(
-                    refstore.Draw({**meta, "kind": "raised", "error": exception_details(exc)})
-                )
-                continue
+                refstore.reraise_resource(spec.config_id, exc)
+                built.problems.append(f"{spec.config_id}: reference-raised {type(exc).__name__}")
+                break
             try:
                 check = validity_check(
                     reference, inputs, ref_out, device=device, tolerance=tolerance
                 )
             except Exception as exc:
+                refstore.reraise_resource(f"{spec.config_id} validity", exc)
                 built.problems.append(f"validity-raised: {type(exc).__name__}")
                 break
             built.problems.extend(probe.changes())
+            if meta["inputs_fp"] is None:
+                built.problems.append("inputs-fingerprint-failed")
             if not refstore.storable(ref_out):
                 built.problems.append("reference-output-not-storable")
             elif refstore.aliases(ref_out, inputs):
                 built.problems.append("reference-output-aliases-input")
+        if built.problems:
+            break
         built.draws.append(
             refstore.Draw({**meta, "kind": "ok", "check": check}, refstore.to_cpu(ref_out))
         )

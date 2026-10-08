@@ -681,3 +681,55 @@ Append-only. Newest entries at the bottom.
   untouched. No GPU time, no host access.
 - Next: freeze (steps 2-5). The binding doctor run is still the one in the
   image built from the freeze commit.
+
+## 2026-10-07 — Q1 D31 review fix pass: memory-aware execution, contention-safe health check, store narrowed (branch `stage0/q1-engineering-d31`, not merged, not frozen)
+
+- Main (D32-D35, the Q3 dense pre-check freeze) merged into the branch; the GPU
+  total equals the ledger sum (2.7668 GPU-h). No GPU was used in this pass.
+- Review of `@f7373aa` (not ready to freeze; D31 verdict computed as
+  registered). Every finding was checked against job 713's journals, reference
+  journal and the store's use records, and reproduced: 97 shared out-of-memory
+  items, 93 never final, 5 slots retired; A5's `na` path dropped the
+  reference's out-of-memory text; 10 of 13 failed reference items left
+  permanent unusable entries (37 of 189 lookups fell back inline); the pilot
+  size model under-predicts the re-pilot's own inline items x1.72 (x0.95
+  without L2/59, L2/87, L2/100); 124.6 GB written to the store; the
+  references-free bound used the post hoc ratio (9.08 with the pre-specified
+  one). One correction to the record: L2/46 was cut after 21 items (10 twin
+  pairs), not left unstarted.
+- Execution policy `q1-stage0-exec/2` (`harness/q1/memory.py`, meta-device
+  `memory_table.json`): units per item from estimated (or measured) peak GPU
+  memory with gate profiles, never below the old native-input rule; a
+  free-memory guard before an item starts; the runner records each worker's
+  peak memory. Health check: a failed check drains the GPU and repeats alone;
+  only a failure alone stops the GPU (`gpu-health-fault`, `gpu-memory-held`).
+  One resource-failure list (`faults.py`, cuBLAS/cuDNN allocation included).
+- Store: gate (a) is no longer a consumer (gate_a.py back to pre-D31); a raised
+  reference makes the entry unusable; a resource failure writes no entry and
+  is retried alone while consumers wait; input fingerprints per draw (A5 per
+  reference call); gate (c) replays skipped reference forwards on a mid-item
+  fallback; no tensors for unusable entries; entry cap 50 GB, live cap 400 GB,
+  tensors deleted after the last consumer. The documented residual difference:
+  a candidate that changes process-global state at import is judged against a
+  clean reference by c and A1-A5.
+- Projection through P3 (`fixpass/projection-fixpass.json`): the registered
+  table reproduces; store without gate (a) 9.15 high (pre-specified), 8.76
+  (post hoc); under `q1-stage0-exec/2` (model-based) 10.46 central and 12.31
+  high without the store, 11.10 high at the references-free bound. The exec/2
+  model predicts the re-pilot's items at x0.81 of measured cost. **D31 verdict
+  unchanged: not admitted**; Q1 waits on the gauntlet (D24) or Kevin.
+- Exposure ledger entry for job 713 (`repilot-713-exposure.json`): 24 S1-cal
+  kernels, no evaluation unit. Registration sections 2.1 (version card), 10,
+  18.7 items 6-7, 18.8 and new 18.9 updated.
+- Checks: host (rsync of the worktree into a fresh scratch dir, `uv sync
+  --locked --extra dev`): full suite 1834 passed, 37 skipped; `ruff check .`
+  passes. Every `tests/test_q1_*.py` in a CPU-only, network-less container of
+  image `cotcodec-q1-gates:8e9d2574` (CPU-only Slurm steps, no GPU requested;
+  KernelGYM and KBV clones mounted read-only): 402 passed. A first container
+  run found two test faults, both fixed: the integration test still passed
+  0.899 spent hours (now refused by the ledger guard), and the equivalence
+  comparison was sensitive to the static checker's set order (a hash-seed
+  effect, not the store's). The new tests fail without the fixes (checked by
+  disabling the gate (c) replay and A5's per-call check).
+- Waiting on Kevin: sign-off of `q1-stage0-exec/2` and the store policy, the
+  budget path, D14 findings 18.3 items 6-8, D28/D29.

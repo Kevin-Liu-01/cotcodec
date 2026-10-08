@@ -6,9 +6,10 @@ The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 7 rows). Decisions taken on
 Kevin's behalf are D1-D34 in `program/decisions.md`. GPU-hours are in
-`program/state.json` (`gpu_hours_ledger`): 2.44 on main, plus 0.33 (Q1
-re-pilot, branch `stage0/q1-engineering-d31`) and 0.13 (checker-mutation
-rater, branch `stage0/q2-evaluator-mutation`) not yet merged.
+`program/state.json` (`gpu_hours_ledger`): 2.44 on main; 2.77 on branch
+`stage0/q1-engineering-d31` (main merged in, plus the Q1 re-pilot's 0.33);
+the checker-mutation rater's 0.13 (branch `stage0/q2-evaluator-mutation`) and
+the Q3 dense pre-check lanes (`ops/q3-dense`) are not yet merged.
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -37,12 +38,13 @@ rater, branch `stage0/q2-evaluator-mutation`) not yet merged.
   diffs, a registered prompt template and transcript audit tied to items, a
   secret id salt, and one thinking-on rerate. If dev kappa stays below 0.6,
   P2-P5 leave the confirmatory headline and no other rater is tried.
-- **Q1 Stage 0** (`stage0/q1-engineering-d31`): the reference store gives the
-  same verdicts but saves little; the high projection is 8.56-9.66 GPU-h, so
-  under D31 Stage 0 is not admitted and waits on the gauntlet (D24). The
-  re-pilot also found out-of-memory failures at 12 items per GPU and a health
-  check that retires healthy slots under contention; both need fixing before
-  any Stage 0 job. A review and fix pass is running.
+- **Q1 Stage 0** (`stage0/q1-engineering-d31`): not admitted under D31; waits
+  on the gauntlet (D24) or Kevin. The D31 review's fix pass is done (section
+  18.9, no GPU): memory-aware execution `q1-stage0-exec/2`, a health check that
+  never retires a slot on contention, gate (a) out of the reference store, a
+  tighter store. Under the safe execution the projection through P3 is 10.46
+  GPU-h central and 12.31 high without the store (model-based). Not merged,
+  not pushed, not frozen.
 - **Q2 Stage 1**: must be rescoped from the serving cost card and the Stage 0
   results, then go through the gauntlet.
 
@@ -56,7 +58,7 @@ and the human spot check (D9), and review of D28-D34. Outward actions
 (disclosures to Letta and xlang-ai, licence requests, a history purge, key
 rotation) stay his.
 
-## Q1 Stage 0 (2026-10-07, branch `stage0/q1-gates`)
+## Q1 Stage 0 (2026-10-07, branches `stage0/q1-gates` and `stage0/q1-engineering-d31`)
 
 The Q1 gate stack, mutator and substrate builders are integrated on
 `stage0/q1-gates` (not merged, not pushed). The unified draft
@@ -96,12 +98,25 @@ caps. No GPU was used in the fix pass. Next, in order:
    references are expensive (gate c 42%, A1 25%, A2 17%) but its reference
    items cost about as much at in-scope sizes, so `q1-stage0-trim/2`'s high
    estimate through P3 is 8.81-9.85 GPU-h with it, 9.03 without, and 8.56 at
-   the bound of any store design: **Stage 0 is not admitted under D31.** The
-   remaining paths are the gauntlet (D24) or a registered scope reduction.
-   Before any Stage 0 job, the 12-per-GPU execution needs a memory-aware unit
-   rule and a health check that does not retire slots on contention: the
-   re-pilot ran out of GPU memory on 3 of 8 in-scope-sized problems (97 items
-   in both arms) and retired 5 of 12 slots.
+   the references-free bound (post hoc ratio): **Stage 0 is not admitted under
+   D31.** The D31 review then found the 12-per-GPU execution unsafe (97 items
+   out of GPU memory, 93 never final, 5 of 12 slots retired; A5 dropped the
+   out-of-memory text; failed reference items left permanent unusable
+   entries), the projection built on a size model the re-pilot contradicts
+   (x1.72), and the store's equivalence overstated. Its fix pass (section 18.9,
+   evidence `.../q1-engineering-d31/fixpass/`, no GPU) registers
+   `q1-stage0-exec/2` (units from each item's estimated or measured peak GPU
+   memory, a free-memory guard, a health check that drains the GPU and repeats
+   alone before anything is retired), one resource-failure list, gate (a) out
+   of the store, raised references unusable, no entry after a resource
+   failure, input fingerprints, a replay of skipped reference forwards, and
+   disk caps. Under `q1-stage0-exec/2` the model-based projection through P3 is
+   10.46 GPU-h central and 12.31 high without the store (11.10 high at the
+   references-free bound): still not admitted. The remaining paths are the
+   gauntlet (D24), a scope reduction that acts on P1-P3 (a 30-per-family test
+   quota still projects 9.10 central, 10.51 high), or a new engineering pass
+   beyond D31. Before any Stage 0 job, Kevin signs off `q1-stage0-exec/2` and
+   the store policy, and a re-measurement under it replaces the model.
 2. Kevin decides the D14 findings (section 18.3, items 6-8): the TF32 `tl.dot`
    threshold, A5's dtype refusals, and the TF32 convolution tolerance above 1.
    Any change is data-motivated under D28: design and validate it on S1-cal

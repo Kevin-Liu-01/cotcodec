@@ -6,7 +6,8 @@ identifiers its own owner already records:
 
 - ``schema``: ``harness/q1/schema.py`` (binding on all components);
 - ``gate_code``: gates (a)-(c), problem access, shape rules, runner, worker,
-  journal, timing and the reference store (``refstore.py``, decision D31);
+  journal, timing, the reference store (``refstore.py``, decision D31) and the
+  shared resource-failure text (``faults.py``);
 - ``gate_data``: the vendored KernelBench files, problem hashes, KBV
   configuration table and committed shape manifest;
 - ``audit_code``: :data:`harness.q1.audit.tiers.AUDIT_FILES`, the files
@@ -17,7 +18,9 @@ identifiers its own owner already records:
   preregistered metric, and the audit-hole replay and calibration drivers;
 - ``driver``: what decides what Stage 0 scores and how it runs (second review):
   the trimming rule and its sampler (``trim.py``), the reference-item schedule
-  (``refschedule.py``, decision D31), the pilot module whose size rules it uses
+  (``refschedule.py``, decision D31), the memory-aware execution policy with its
+  memory table and builder (``memory.py``, ``memory_table.json``,
+  ``q1_memory_table.py``), the pilot module whose size rules it uses
   (``pilot.py``: watchdog limits, the exclusive class), the cost card that
   projects it (``cost_card.py`` and its script), the Stage 0, pilot and re-pilot
   drivers with the re-pilot rule (``repilot.py``) and corpus script, and the
@@ -57,6 +60,7 @@ GATE_CODE_PATHS = (
     "versions.py",
     "controls.py",
     "refstore.py",
+    "faults.py",
     "gates",
 )
 #: Data the gates read: vendored KernelBench, problem hashes, KBV and shape tables.
@@ -74,6 +78,9 @@ SUBSTRATE_PATHS = ("substrates",)
 DRIVER_PATHS = (
     "harness/q1/trim.py",
     "harness/q1/refschedule.py",
+    "harness/q1/memory.py",
+    "harness/q1/memory_table.json",
+    "scripts/q1_memory_table.py",
     "harness/q1/pilot.py",
     "harness/q1/cost_card.py",
     "harness/q1/data/pilot_exposed.json",

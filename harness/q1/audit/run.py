@@ -212,8 +212,6 @@ def _judge(
                 "validity_reasons": ["reference-raised"],
                 **exception_details(exc),
             }
-    elif stored.kind == "raised":
-        return {"admissible": False, "validity_reasons": ["reference-raised"], **stored.error}
     else:
         ref = _stored_reference(stored)
     result: dict[str, Any] = {
@@ -418,7 +416,9 @@ def _run_channel(
     for index, draw in enumerate(plan):
         start = time.perf_counter()
         inputs = process_inputs(draw["raw"](), subject.device, "preserve")
-        taken = stored.take(index, subject.device) if stored is not None else None
+        # The original reference module never runs here (``oracle.build_reference``
+        # works on copies), so computing a draw inline after a fallback needs no replay.
+        taken = stored.take(index, subject.device, inputs) if stored is not None else None
         if taken is None:
             stored = None
         judged = _judge(
@@ -538,13 +538,10 @@ def run_a5(subject: AuditSubject, *, reference_store: str | None = None) -> list
             draws=1,
         )
     inputs = draw_inputs(subject.get_inputs, seed, subject.device)
-    taken = stored.take(0, subject.device) if stored is not None else None
+    taken = stored.take(0, subject.device, inputs) if stored is not None else None
     refs = None
     if taken is not None:
-        refs = {}
-        for tag, status in taken.meta["tags"].items():
-            ok = status["status"] == "ok"
-            refs[tag] = (status["status"], taken.value[tag] if ok else status["message"])
+        refs = _checked_refs(taken, inputs)
     results = lethe_contracts.run_a5(
         subject.reference, subject.candidate, inputs, device=subject.device, refs=refs
     )
@@ -564,6 +561,30 @@ def run_a5(subject: AuditSubject, *, reference_store: str | None = None) -> list
             wall_seconds=time.perf_counter() - start,
         )
     ]
+
+
+def _checked_refs(taken: Any, inputs: Sequence[Any]) -> Any:
+    """A5's stored reference calls, each released only while the draw's inputs still
+    match the entry's fingerprint. A5 passes integer inputs to the candidate by
+    identity, so a candidate can write them in place between checks; inline, the
+    later reference calls would see the written values, so from the first mismatch
+    every remaining reference call is computed inline (``None``)."""
+    from harness.q1 import refstore
+
+    table = {tag: ("ok", taken.value[tag]) for tag in taken.meta["tags"]}
+    expected = taken.meta.get("inputs_fp")
+    state = {"inline": False}
+
+    def refs(tag: str) -> tuple[str, Any] | None:
+        if state["inline"]:
+            return None
+        if expected is not None and refstore.safe_fingerprint(list(inputs)) != expected:
+            state["inline"] = True
+            refstore.note(inline_from_tag=tag, inline_reason="inputs-differ")
+            return None
+        return table[tag]
+
+    return refs
 
 
 CHANNELS = {"A1": run_a1, "A2": run_a2, "A3": run_a3, "A4": run_a4, "A5": run_a5}
@@ -653,7 +674,10 @@ def reference_draws(
     manifest_entry: Mapping[str, Any] | None = None,
 ) -> Any:
     """The reference side of A1, A2, A3 or A5 without a candidate, draw by draw in
-    the channel's order, on the reference :func:`prepare` would build."""
+    the channel's order, on the reference :func:`prepare` would build, with each
+    draw's input fingerprint. A reference that raises makes the entry unusable
+    (consumers compute inline) and ends the work; a resource failure raises
+    ``refstore.ResourceFailure`` (no entry)."""
     from harness.q1 import refstore
 
     reference, get_inputs = _reference_module(problem_source, replicate_seed, device)
@@ -661,15 +685,18 @@ def reference_draws(
     if channel == "A5":
         seed = channel_seed(lethe_contracts.A5_BASE, replicate_seed, 0)
         inputs = draw_inputs(get_inputs, seed, device)
+        fp = refstore.safe_fingerprint(inputs)
         results, problems = lethe_contracts.reference_results(reference, inputs, device=device)
         built.problems.extend(problems)
-        tags = {
-            tag: {"status": status, "message": value if status == "na" else ""}
-            for tag, (status, value) in results.items()
-        }
+        if fp is None:
+            built.problems.append("inputs-fingerprint-failed")
+        tags = {tag: {"status": status} for tag, (status, _value) in results.items()}
         outputs = {tag: value for tag, (status, value) in results.items() if status == "ok"}
         built.draws.append(
-            refstore.Draw({"kind": "ok", "seed": seed, "tags": tags}, refstore.to_cpu(outputs))
+            refstore.Draw(
+                {"kind": "ok", "seed": seed, "tags": tags, "inputs_fp": fp},
+                refstore.to_cpu(outputs),
+            )
         )
         return built
     plan = _draw_plan(
@@ -677,26 +704,31 @@ def reference_draws(
     )
     for draw in plan:
         inputs = process_inputs(draw["raw"](), device, "preserve")
-        meta: dict[str, Any] = {"config_id": draw["config_id"]}
+        meta: dict[str, Any] = {
+            "config_id": draw["config_id"],
+            "inputs_fp": refstore.safe_fingerprint(inputs),
+        }
         probe = refstore.Probe(inputs, device)
         try:
             ref = oracle.build_reference(reference, inputs, device=device)
         except Exception as exc:
-            if refstore.resource_failure(exc):
-                built.problems.append(f"{draw['config_id']}: resource failure")
-            built.draws.append(
-                refstore.Draw({**meta, "kind": "raised", "error": exception_details(exc)})
-            )
-            continue
+            refstore.reraise_resource(draw["config_id"], exc)
+            built.problems.append(f"{draw['config_id']}: reference-raised {type(exc).__name__}")
+            break
         try:
             reasons = validity_reasons(ref) if channel != "A1" else []
         except Exception as exc:
+            refstore.reraise_resource(f"{draw['config_id']} validity", exc)
             built.problems.append(f"validity-raised: {type(exc).__name__}")
             break
         built.problems.extend(probe.changes())
+        if meta["inputs_fp"] is None:
+            built.problems.append(f"{draw['config_id']}: inputs-fingerprint-failed")
         held = [*ref.r64, *ref.r32_device, *(ref.r32_cpu or []), *(ref.r32_tf32 or [])]
         if refstore.aliases(held, inputs):
             built.problems.append(f"{draw['config_id']}: reference-output-aliases-input")
+        if built.problems:
+            break
         payload = {
             "r64": ref.r64,
             "r32_device": _integer_only(ref.r32_device, ref.r64),

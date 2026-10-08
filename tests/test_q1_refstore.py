@@ -55,7 +55,7 @@ def _built(problems: list[str] | None = None) -> refstore.Built:
     return refstore.Built(
         draws=[
             refstore.Draw({"kind": "ok", "n": 0}, torch.arange(4.0)),
-            refstore.Draw({"kind": "raised", "error": {"error_name": "x.Y", "error": "Y: no"}}),
+            refstore.Draw({"kind": "ok", "n": 1}, (torch.ones(2), torch.zeros(3))),
         ],
         problems=list(problems or []),
         facts=refstore.environment_facts(),
@@ -72,7 +72,7 @@ def test_write_lookup_take_roundtrip(tmp_path: Path) -> None:
     first = entry.take(0, CPU)
     assert first.kind == "ok" and torch.equal(first.value, torch.arange(4.0))
     second = entry.take(1, CPU)
-    assert second.kind == "raised" and second.error["error_name"] == "x.Y"
+    assert second.kind == "ok" and torch.equal(second.value[1], torch.zeros(3))
     # A second writer keeps the first entry.
     again = refstore.write_entry(tmp_path, payload, _built(["other"]))
     assert again["usable"] and again["written_at"] == manifest["written_at"]
@@ -94,6 +94,8 @@ def test_lookup_refuses_entries_it_cannot_trust(tmp_path: Path, change: str, rea
     if change != "missing":
         refstore.write_entry(tmp_path, payload, _built(["x"] if change == "unusable" else None))
     path = refstore.entry_dir(tmp_path, "A1", refstore.key_of(payload))
+    if change == "unusable":
+        assert not list(path.glob("draw-*.pt"))  # an unusable entry keeps no tensors
     if change == "truncated":
         data = (path / "draw-000.pt").read_bytes()
         (path / "draw-000.pt").write_bytes(data[:-10])
@@ -111,11 +113,18 @@ def test_lookup_refuses_entries_it_cannot_trust(tmp_path: Path, change: str, rea
     }
 
 
-def test_short_entry_is_complete_only_when_it_ends_at_a_raise(tmp_path: Path) -> None:
+def test_a_raised_or_short_entry_is_never_served(tmp_path: Path) -> None:
+    """D31 review, finding 4: a raised draw is recomputed inline, never served."""
     payload = _payload()
     refstore.write_entry(tmp_path, payload, _built())
-    assert refstore.lookup(tmp_path, payload, draws=5) is None
-    assert refstore.lookup(tmp_path, payload, draws=5, ends_at_raise=True) is not None
+    assert refstore.lookup(tmp_path, payload, draws=5) is None  # short
+    path = refstore.entry_dir(tmp_path, "A1", refstore.key_of(payload))
+    manifest = json.loads((path / "entry.json").read_text())
+    manifest["draws"][1] = {"kind": "raised", "error": {"error_name": "x.Y"}}
+    (path / "entry.json").write_text(json.dumps(manifest))
+    refstore.USES.clear()
+    assert refstore.lookup(tmp_path, payload, draws=2) is None
+    assert refstore.USES[-1]["reason"] == "entry-incomplete"
 
 
 def test_switch_change_means_inline_from_that_draw(tmp_path: Path) -> None:
@@ -158,8 +167,12 @@ def test_probe_sees_input_writes_rng_use_and_aliasing() -> None:
 
 def test_resource_failures_are_never_stored_as_outcomes() -> None:
     assert refstore.resource_failure(RuntimeError("CUDA out of memory. Tried to allocate"))
+    assert refstore.resource_failure(RuntimeError("CUBLAS_STATUS_ALLOC_FAILED"))
     assert refstore.resource_failure(MemoryError())
     assert not refstore.resource_failure(ValueError("shape mismatch"))
+    with pytest.raises(refstore.ResourceFailure, match="cfg: RuntimeError"):
+        refstore.reraise_resource("cfg", RuntimeError("cuDNN error: CUDNN_STATUS_INTERNAL_ERROR"))
+    refstore.reraise_resource("cfg", ValueError("not a resource failure"))
 
 
 # --- scheduling ---------------------------------------------------------------------
@@ -193,35 +206,25 @@ def test_with_references_groups_places_and_requires() -> None:
     ]
     out = refschedule.with_references(items, root="/store")
     gates = [i["gate"] for i in out]
-    # ref_a before k1|a, ref_c before k1|c; a_head, A1@43 and the row-sum A2 have
-    # one kernel each (inline); A1@42 has only k2 (inline as well)
-    assert gates == [
-        "ref_a",
-        "a",
-        "a_head_1e-4",
-        "b1",
-        "ref_c",
-        "c",
-        "a_1e-3",
-        "c",
-        "A1",
-        "A1",
-        "A2",
-    ]
-    ref_a = out[0]
-    assert ref_a["kernel_id"] == "reference.L1-9001_SyntheticReLU"
-    assert ref_a["journal"] == refstore.REFERENCE_JOURNAL and ref_a["units"] == 3
-    assert ref_a["timeouts"]["compile"] == 130.0 + 230.0
-    assert ref_a["options"] == {refstore.OPTION: "/store"}
+    # ref_c before k1|c; gate (a) never reads the store (D31 review, finding 3); A1@43
+    # and the row-sum A2 have one kernel each (inline); A1@42 has only k2 (inline too)
+    assert gates == ["a", "a_head_1e-4", "b1", "ref_c", "c", "a_1e-3", "c", "A1", "A1", "A2"]
+    ref_c = out[3]
+    assert ref_c["kernel_id"] == "reference.L1-9001_SyntheticReLU"
+    assert ref_c["journal"] == refstore.REFERENCE_JOURNAL and ref_c["units"] == 3
+    assert ref_c["timeouts"]["compile"] == 130.0 + 230.0
+    assert ref_c["options"] == {refstore.OPTION: "/store"}
     by_key = {item_key(i["kernel_id"], i["gate"], i["seed"]): i for i in out}
-    assert by_key["k1|a|seed-42"]["requires"] == ["reference.L1-9001_SyntheticReLU|ref_a|seed-42"]
-    assert by_key["k2|a_1e-3|seed-42"]["options"][refstore.OPTION] == "/store"
+    assert by_key["k1|c|seed-42"]["requires"] == ["reference.L1-9001_SyntheticReLU|ref_c|seed-42"]
+    assert by_key["k2|c|seed-42"]["options"][refstore.OPTION] == "/store"
+    assert not by_key["k1|a|seed-42"].get("requires")
+    assert refstore.OPTION not in by_key["k2|a_1e-3|seed-42"]["options"]
     assert not by_key["k1|b1|seed-42"].get("requires")
     assert not by_key["k2|A1|seed-42"].get("requires")
     assert refstore.OPTION not in by_key["solo|A2|seed-42"]["options"]
     assert refschedule.summary(out) == {
-        "reference_items": {"ref_a": 1, "ref_c": 1},
-        "consumers_with_store": 4,
+        "reference_items": {"ref_c": 1},
+        "consumers_with_store": 2,
     }
 
 
@@ -292,13 +295,13 @@ def _doctor_items(tmp_path: Path, names: list[str], gates: tuple[str, ...]) -> l
 
 
 def test_runner_runs_references_first_and_keeps_them_out_of_the_journal(tmp_path: Path) -> None:
-    items = _doctor_items(tmp_path, ["relu_correct", "relu_removed"], ("a", "A1"))
+    items = _doctor_items(tmp_path, ["relu_correct", "relu_removed"], ("c", "A1"))
     store = tmp_path / "store"
     scheduled = [
         WorkItem(**e)
         for e in refschedule.with_references([asdict(i) for i in items], root=str(store))
     ]
-    assert [i.gate for i in scheduled][:2] == ["ref_a", "a"]
+    assert [i.gate for i in scheduled][:2] == ["ref_c", "c"]
     (tmp_path / "w").mkdir()
     config = RunnerConfig(
         journal_path=tmp_path / "journal.jsonl",
@@ -311,7 +314,7 @@ def test_runner_runs_references_first_and_keeps_them_out_of_the_journal(tmp_path
     assert summary["left_in_queue"] == 0
     main = Journal(config.journal_path).final_rows()
     refs = Journal(tmp_path / refstore.REFERENCE_JOURNAL).final_rows()
-    assert {r["gate"] for r in refs} == {"ref_a", "ref_A1"}
+    assert {r["gate"] for r in refs} == {"ref_c", "ref_A1"}
     assert all(r["verdict"] == "accept" for r in refs)
     assert not any(refstore.is_reference_gate(r["gate"]) for r in main)
     # every consumer started after its reference item ended
@@ -327,7 +330,7 @@ def test_runner_runs_references_first_and_keeps_them_out_of_the_journal(tmp_path
 
 
 def test_a_failed_reference_item_does_not_block_its_consumers(tmp_path: Path) -> None:
-    items = _doctor_items(tmp_path, ["relu_correct", "relu_removed"], ("a",))
+    items = _doctor_items(tmp_path, ["relu_correct", "relu_removed"], ("A1",))
     store = tmp_path / "store"
     scheduled = [
         WorkItem(**e)
@@ -346,8 +349,12 @@ def test_a_failed_reference_item_does_not_block_its_consumers(tmp_path: Path) ->
     )
     summary = Runner(config).run(scheduled)
     assert summary["left_in_queue"] == 0
-    verdicts = {r["kernel_id"]: r["verdict"] for r in Journal(config.journal_path).final_rows()}
-    # relu_removed is the identity on torch.rand inputs, which gate (a) accepts
+    verdicts = {
+        r["kernel_id"]: r["verdict"]
+        for r in Journal(config.journal_path).final_rows()
+        if r["config_id"] == "aggregate"
+    }
+    # relu_removed is the identity on torch.rand inputs (A1's native draws): accepted
     assert verdicts == {"t-relu_correct": "accept", "t-relu_removed": "accept"}
     reasons = {lk["reason"] for u in refstore.read_uses(store) for lk in u["lookups"]}
     assert reasons == {"no-entry"}
