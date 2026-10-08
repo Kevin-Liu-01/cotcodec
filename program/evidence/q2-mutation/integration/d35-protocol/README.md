@@ -12,3 +12,24 @@ nothing was frozen.
   The registration's SHA-256 at that commit is in `scratch_row.sha256`.
 
 `SHA256SUMS` covers every file here.
+
+## Sixth-review fix (eighth draft, commit `1242da7`)
+
+The sixth review (80/100) found that the transcript audit read only entries
+of type user, so a message queued into a running rater (a `queued_command`
+attachment) passed it. `rater_runner.audit_transcript` now registers the
+entry types (`TRANSCRIPT_ENTRY_TYPES`) and the fifteen harness attachment
+types of the D34 development rating (`HARNESS_ATTACHMENT_TYPES`) and voids
+any other. Records of that pass, also exploratory, no GPU:
+
+- `transcript-audit-dev-1242da7.json`: the audit at `1242da7` rerun over
+  copies of the 158 development transcripts (142 answering agents, 16
+  interrupted attempts) by `audit_dev_attachments.py`, counts only: no void
+  reason, 3,304 attachments, all of the fifteen registered types, none
+  outside the list, one relay digest (`8e7dbd00`) in 110. Nothing was
+  ingested; the registered dev result stays as recorded.
+- `host-tests-1242da7.txt`: ruff and the full test suite on the host at
+  `1242da7`, from a fresh scratch copy of the worktree.
+- `freeze-lint-1242da7.json`: the freeze-lint at `1242da7` into a scratch
+  copy of the ledger (equal to main's, 7 rows); the real ledger is
+  untouched.

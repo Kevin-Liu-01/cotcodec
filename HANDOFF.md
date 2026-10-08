@@ -44,9 +44,13 @@ sum to 3.01) not yet merged.
   output, a census audit (candidates, P2's gate, shams, P1 flips; about 205
   items, 0.62 GPU-h planned; stratified fallback above 1,139), a transcript
   audit of every user turn and transcript with the relay frame registered,
-  difference-first packets, and the lane memory per model. Next: a fresh
-  review of the seventh draft, Kevin's sign-offs (section 17), re-merge main,
-  freeze. The registered dev result (κ 0.066) stays as recorded.
+  difference-first packets, and the lane memory per model. The sixth review
+  (80/100) found one blocker: harness attachments were outside the transcript
+  audit, so a message queued into a running rater (`queued_command`) passed.
+  The eighth draft registers the entry types and the fifteen dev attachment
+  types and voids any other; the rerun over the 158 dev transcripts finds no
+  void. Next: a narrow re-check, Kevin's sign-offs (section 17), re-merge
+  main, freeze. The registered dev result (κ 0.066) stays as recorded.
 - **Q1 Stage 0** (`stage0/q1-engineering-d31`): the reference store gives the
   same verdicts but saves little; the high projection is 8.56-9.66 GPU-h, so
   under D31 Stage 0 is not admitted and waits on the gauntlet (D24). The
