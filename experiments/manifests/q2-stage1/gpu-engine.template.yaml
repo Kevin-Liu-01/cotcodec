@@ -10,11 +10,12 @@
 # "bridge", bridge_dir "<run_root>/{gpu_job_id}/bridge", gpu_job_id_file in the pair's
 # directory), then this job with start_after_job_id = the VM job's id, then write this job's
 # id into gpu_job_id_file. The VM job's limit is this job's cap plus 10 minutes.
+# Hex digests are quoted: YAML would read an all-digit or 1e5-shaped one as a number.
 runtime: docker-single-node-discovery-v1
 name: q2s1a-FILL_JOB
 image_id: FILL_OVERLAY_IMAGE_ID  # O1's (pre-freeze) or O2's (post-freeze) cu129 overlay
-git_sha: FILL_GIT_SHA
-source_sha256: FILL_SOURCE_SHA256
+git_sha: "FILL_GIT_SHA"
+source_sha256: "FILL_SOURCE_SHA256"
 run_root: /home/kevin/cotcodec-runs/stage0/q2-stage1/gpu
 container_profile: vllm
 start_after_job_id: FILL_VM_JOB_ID
@@ -26,14 +27,16 @@ resources:
   minutes: FILL_CAP_MINUTES  # plan.CAP_MINUTES, or the A1 cap of the remainder rule
 budget:
   max_gpu_hours: FILL_CAP_HOURS
+# The engine seed (42) reaches vLLM through plan.CARD_ENGINE_FLAGS (--seed 42) in the
+# bridge's argv; the submitter's deterministic contract takes no seed list.
 randomness_contract: deterministic
-seeds: [42]
+seeds: []
 model:
   cache_host_path: /home/kevin/cotcodec-runs/hf-cache
   model_id: FILL_MODEL_ID  # qwen3.5-9b, qwen3.5-4b or opencua-7b
-  revision: FILL_REVISION
-  receipt_sha256: FILL_RECEIPT_SHA256
-  artifact_root_sha256: FILL_ARTIFACT_ROOT_SHA256
+  revision: "FILL_REVISION"
+  receipt_sha256: "FILL_RECEIPT_SHA256"
+  artifact_root_sha256: "FILL_ARTIFACT_ROOT_SHA256"
 command:
   - python
   - -m

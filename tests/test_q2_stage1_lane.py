@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import copy
 import json
+import math
+import re
 import threading
 from pathlib import Path
 from typing import Any
@@ -273,3 +275,62 @@ def test_bridge_dir_waits_for_the_gpu_job_id(tmp_path):
                  "bridge_dir": f"{RUNS}/gpu/{{gpu_job_id}}/bridge"})  # fmt: skip
     with pytest.raises(lane.LaneError, match="gpu_job_id_file"):
         lane.validate_manifest(m, ROOT)
+
+
+GPU_TEMPLATE = ROOT / "experiments/manifests/q2-stage1/gpu-engine.template.yaml"
+GPU_FILLS = {
+    "9B": {"FILL_MODEL_ID": "qwen3.5-9b",
+           "FILL_REVISION": "c202236235762e1c871ad0ccb60c8ee5ba337b9a"},
+    "4B": {"FILL_MODEL_ID": "qwen3.5-4b",
+           "FILL_REVISION": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"},
+    "anchor": {"FILL_MODEL_ID": "opencua-7b",
+               "FILL_REVISION": "a2efb7d2b104d477a4a2666a357e79550a28aafc"},
+}  # fmt: skip
+
+
+def fill_gpu_template(size: str, minutes: int, vm_job: str) -> dict[str, Any]:
+    import yaml
+
+    text = GPU_TEMPLATE.read_text()
+    values = {
+        "FILL_JOB": f"a1-{size.lower()}-s1",
+        "FILL_OVERLAY_IMAGE_ID": "sha256:" + "3" * 64,
+        "FILL_GIT_SHA": "4" * 40,
+        "FILL_SOURCE_SHA256": "5" * 64,
+        "FILL_VM_JOB_ID": vm_job,
+        "FILL_CAP_MINUTES": str(minutes),
+        "FILL_CAP_HOURS": f"{math.ceil(minutes / 60 * 1e4) / 1e4:.4f}",  # never below the cap
+        "FILL_RECEIPT_SHA256": "6" * 64,
+        "FILL_ARTIFACT_ROOT_SHA256": "7" * 64,
+        "FILL_SIZE": size,
+        **GPU_FILLS[size],
+    }
+    for key in sorted(values, key=len, reverse=True):
+        text = text.replace(key, values[key])
+    assert not re.search(r"FILL_[A-Z]", text)
+    return yaml.safe_load(text)
+
+
+@pytest.mark.parametrize(("size", "minutes"), [("9B", 111), ("4B", 111), ("anchor", 26)])
+def test_filled_gpu_template_passes_the_docker_submitter(size, minutes):
+    """The GPU half of a pair: the submitter accepts the filled template and holds the job
+    until its VM job starts (section 5.5)."""
+    from scripts.submit_docker_research_job import sbatch_argv
+    from scripts.submit_docker_research_job import validate_manifest as validate_gpu
+
+    manifest = validate_gpu(fill_gpu_template(size, minutes, "4321"))
+    assert manifest["seeds"] == [] and manifest["start_after_job_id"] == "4321"
+    argv = sbatch_argv(manifest, test_only=False)
+    for flag in (
+        "--gres=gpu:h100:1",
+        "--cpus-per-task=32",
+        "--signal=B:USR1@180",
+        "--dependency=after:4321",
+        f"--time=0{minutes // 60}:{minutes % 60:02d}:00",
+    ):
+        assert flag in argv, flag  # fmt: skip
+    assert manifest["command"][-6:-4] == ["--size", size]
+    raw = fill_gpu_template(size, minutes, "4321")
+    raw["seeds"] = [42]
+    with pytest.raises(ValueError, match="deterministic jobs cannot declare seeds"):
+        validate_gpu(raw)
