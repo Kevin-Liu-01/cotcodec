@@ -1,0 +1,735 @@
+{
+ "admission_rows": [
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s1-inductor-L1-15_Matmul_for_lower_triangular_matrices",
+   "verdict": "accept",
+   "wall_seconds": 0.8618491217494011
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s1-inductor-L1-15_Matmul_for_lower_triangular_matrices",
+   "verdict": "accept",
+   "wall_seconds": 0.0118565633893013
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s1-inductor-L1-25_Swish",
+   "verdict": "accept",
+   "wall_seconds": 0.5470655942335725
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s1-inductor-L1-25_Swish",
+   "verdict": "accept",
+   "wall_seconds": 0.009004829451441765
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s1-inductor-L1-3_Batched_matrix_multiplication",
+   "verdict": "accept",
+   "wall_seconds": 0.5247014835476875
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s1-inductor-L1-3_Batched_matrix_multiplication",
+   "verdict": "accept",
+   "wall_seconds": 0.02292666956782341
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s1-inductor-L1-47_Sum_reduction_over_a_dimension",
+   "verdict": "accept",
+   "wall_seconds": 0.5750463381409645
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s1-inductor-L1-47_Sum_reduction_over_a_dimension",
+   "verdict": "accept",
+   "wall_seconds": 0.006122238002717495
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "verdict": "accept",
+   "wall_seconds": 0.9768349137157202
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "verdict": "accept",
+   "wall_seconds": 0.005643922835588455
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s1-inductor-L2-52_Conv2d_Activation_BatchNorm",
+   "verdict": "accept",
+   "wall_seconds": 1.6726384116336703
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s1-inductor-L2-52_Conv2d_Activation_BatchNorm",
+   "verdict": "accept",
+   "wall_seconds": 0.005905473604798317
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s1-inductor-L2-60_ConvTranspose3d_Swish_GroupNorm_HardSwish",
+   "verdict": "accept",
+   "wall_seconds": 1.2333791414275765
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s1-inductor-L2-60_ConvTranspose3d_Swish_GroupNorm_HardSwish",
+   "verdict": "accept",
+   "wall_seconds": 0.015213659033179283
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "verdict": "accept",
+   "wall_seconds": 0.8959797704592347
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "verdict": "accept",
+   "wall_seconds": 0.0021500419825315475
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s2-flaggems-cumsum-L1-89_cumsum",
+   "verdict": "accept",
+   "wall_seconds": 69.7640738086775
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s2-flaggems-cumsum-L1-89_cumsum",
+   "verdict": "accept",
+   "wall_seconds": 0.14738081116229296
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s2-flaggems-mul-scalar-L1-5_Matrix_scalar_multiplication",
+   "verdict": "accept",
+   "wall_seconds": 0.5475716236978769
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s2-flaggems-mul-scalar-L1-5_Matrix_scalar_multiplication",
+   "verdict": "accept",
+   "wall_seconds": 0.006145411171019077
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+   "verdict": "accept",
+   "wall_seconds": 0.6773843020200729
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+   "verdict": "accept",
+   "wall_seconds": 0.0023810118436813354
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": "OutOfResources: out of resource: shared memory, Required: 6291488, Hardware limit: 232448. Reducing block sizes or `num_stages` may help.",
+   "substrate_id": "s2-tutorial-fused-softmax-L1-23_Softmax",
+   "verdict": "error",
+   "wall_seconds": 33.26035898178816
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": "OutOfResources: out of resource: shared memory, Required: 6291488, Hardware limit: 232448. Reducing block sizes or `num_stages` may help.",
+   "substrate_id": "s2-tutorial-fused-softmax-L1-23_Softmax",
+   "verdict": "error",
+   "wall_seconds": 0.002118811011314392
+  },
+  {
+   "config_id": "native-seed42-inference_mode",
+   "exception": null,
+   "substrate_id": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+   "verdict": "accept",
+   "wall_seconds": 0.9679636433720589
+  },
+  {
+   "config_id": "native-seed42-enable_grad",
+   "exception": null,
+   "substrate_id": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+   "verdict": "accept",
+   "wall_seconds": 0.008900461718440056
+  }
+ ],
+ "codegen_log": [
+  {
+   "mode": "cuda",
+   "problem_id": "L1/3_Batched_matrix_multiplication",
+   "returncode": 0,
+   "seconds": 9.52,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L1/8_Matmul_with_irregular_shapes_",
+   "returncode": 0,
+   "seconds": 9.76,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L1/15_Matmul_for_lower_triangular_matrices",
+   "returncode": 0,
+   "seconds": 9.41,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L1/22_Tanh",
+   "returncode": 0,
+   "seconds": 9.07,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L1/25_Swish",
+   "returncode": 0,
+   "seconds": 8.56,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L1/30_Softsign",
+   "returncode": 0,
+   "seconds": 9.5,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L1/46_Average_Pooling_3D",
+   "returncode": 0,
+   "seconds": 9.35,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L1/47_Sum_reduction_over_a_dimension",
+   "returncode": 0,
+   "seconds": 9.6,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L1/72_conv_transposed_3D_asymmetric_input_asymmetric_kernel___strided_padded_grouped_",
+   "returncode": 0,
+   "seconds": 8.82,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L1/74_conv_transposed_1D_dilated",
+   "returncode": 0,
+   "seconds": 9.02,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L1/90_cumprod",
+   "returncode": 0,
+   "seconds": 8.6,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L1/95_CrossEntropyLoss",
+   "returncode": 0,
+   "seconds": 8.98,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "returncode": 0,
+   "seconds": 10.41,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/9_Matmul_Subtract_Multiply_ReLU",
+   "returncode": 0,
+   "seconds": 9.45,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/52_Conv2d_Activation_BatchNorm",
+   "returncode": 0,
+   "seconds": 11.92,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "returncode": 0,
+   "seconds": 17.5,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/60_ConvTranspose3d_Swish_GroupNorm_HardSwish",
+   "returncode": 0,
+   "seconds": 15.81,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/61_ConvTranspose3d_ReLU_GroupNorm",
+   "returncode": 0,
+   "seconds": 19.91,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/62_Matmul_GroupNorm_LeakyReLU_Sum",
+   "returncode": 0,
+   "seconds": 9.44,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/69_Conv2d_HardSwish_ReLU",
+   "returncode": 0,
+   "seconds": 9.64,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "returncode": 0,
+   "seconds": 10.03,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/88_Gemm_GroupNorm_Swish_Multiply_Swish",
+   "returncode": 0,
+   "seconds": 9.48,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/90_Conv3d_LeakyReLU_Sum_Clamp_GELU",
+   "returncode": 0,
+   "seconds": 10.11,
+   "status": "ok"
+  },
+  {
+   "mode": "cuda",
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "returncode": 0,
+   "seconds": 9.11,
+   "status": "ok"
+  }
+ ],
+ "environment": {
+  "capability": [
+   9,
+   0
+  ],
+  "compute_sanitizer": "/usr/local/cuda/bin/compute-sanitizer",
+  "device": "NVIDIA H100 80GB HBM3",
+  "dry_run": false,
+  "poison_alloc_so": "/opt/q1/libq1_poison_alloc.so",
+  "torch": "2.11.0+cu128"
+ },
+ "lane": {
+  "gpu-prolog.env:decision": "exclusive",
+  "gpu-prolog.env:foreign_compute_processes": "0",
+  "job.env:batch_script_sha256": "7c4603babe1af27dd780d65b6812115c9b8e63844570ed5028865b2c4fa4de12",
+  "job.env:container_profile": "large-cpu-mem",
+  "job.env:git_sha": "74540542c05ac1ce6bbee79a80ae5307743d3d9b",
+  "job.env:gpu_devices": "0",
+  "job.env:image_id": "sha256:de76c4ee6b9052f3bd352426ff8a03f985a9c3bdecfaf14dc4573bdca77c3d76",
+  "job.env:memory_limit_mb": "262144",
+  "job.env:model_kind": "none",
+  "job.env:randomness_contract": "assignment-seed-matrix",
+  "job.env:seeds": "42:43:44",
+  "job.env:source_sha256": "5652d3538222a8503d814dc07ecb39607eb2d791b3a2a64dba8bce6b592667d6",
+  "job.env:started_at": "2026-10-07T16:14:32Z",
+  "termination.env:checkpoint_marker_present": "false",
+  "termination.env:checkpoint_ready": "false",
+  "termination.env:exit_code": "0",
+  "termination.env:finished_at": "2026-10-07T16:27:09Z",
+  "termination.env:reason": "signal_USR1_checkpoint_missing"
+ },
+ "manifest": {
+  "batch_script_sha256": "7c4603babe1af27dd780d65b6812115c9b8e63844570ed5028865b2c4fa4de12",
+  "command": [
+   "env",
+   "TRITON_CACHE_DIR=/outputs/cache/triton",
+   "TORCHINDUCTOR_CACHE_DIR=/outputs/cache/inductor",
+   "python",
+   "scripts/run_q1_gpu_pilot.py",
+   "--job",
+   "smoke",
+   "--output",
+   "/outputs/q1",
+   "--budget-minutes",
+   "11",
+   "--slots-per-gpu",
+   "4",
+   "--seeds",
+   "42",
+   "43",
+   "44"
+  ],
+  "container_profile": "large-cpu-mem",
+  "cpus": 32,
+  "git_sha": "74540542c05ac1ce6bbee79a80ae5307743d3d9b",
+  "gpu_type": "h100",
+  "gpus": 1,
+  "image_id": "sha256:de76c4ee6b9052f3bd352426ff8a03f985a9c3bdecfaf14dc4573bdca77c3d76",
+  "max_gpu_hours": 0.25,
+  "memory_gb": 256,
+  "minutes": 15,
+  "model": {
+   "kind": "none",
+   "reason": "Q1 pilot admission and gate smoke on compiler and pre-2025 human kernels; no checkpoint"
+  },
+  "name": "q1-pilot-smoke",
+  "randomness_contract": "assignment-seed-matrix",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/q1-gates/pilot/runs",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seed_binding": {
+   "flag": "--seeds"
+  },
+  "seeds": [
+   42,
+   43,
+   44
+  ],
+  "source_sha256": "5652d3538222a8503d814dc07ecb39607eb2d791b3a2a64dba8bce6b592667d6"
+ },
+ "phases": {
+  "elapsed_seconds": 752.991,
+  "job": "smoke",
+  "phases": [
+   {
+    "codegen_problems": [
+     "L1/25_Swish",
+     "L1/22_Tanh",
+     "L1/30_Softsign",
+     "L1/72_conv_transposed_3D_asymmetric_input_asymmetric_kernel___strided_padded_grouped_",
+     "L1/3_Batched_matrix_multiplication",
+     "L1/90_cumprod",
+     "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+     "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+     "L2/9_Matmul_Subtract_Multiply_ReLU",
+     "L2/62_Matmul_GroupNorm_LeakyReLU_Sum",
+     "L2/90_Conv3d_LeakyReLU_Sum_Clamp_GELU",
+     "L2/69_Conv2d_HardSwish_ReLU",
+     "L1/15_Matmul_for_lower_triangular_matrices",
+     "L1/46_Average_Pooling_3D",
+     "L1/47_Sum_reduction_over_a_dimension",
+     "L1/74_conv_transposed_1D_dilated",
+     "L1/95_CrossEntropyLoss",
+     "L1/8_Matmul_with_irregular_shapes_",
+     "L2/52_Conv2d_Activation_BatchNorm",
+     "L2/60_ConvTranspose3d_Swish_GroupNorm_HardSwish",
+     "L2/88_Gemm_GroupNorm_Swish_Multiply_Swish",
+     "L2/61_ConvTranspose3d_ReLU_GroupNorm",
+     "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+     "L2/59_Matmul_Swish_Scaling"
+    ],
+    "phase": "admission",
+    "seconds": 202.621,
+    "selection": {
+     "calibration": [
+      "s1-inductor-L1-15_Matmul_for_lower_triangular_matrices",
+      "s1-inductor-L1-47_Sum_reduction_over_a_dimension",
+      "s1-inductor-L2-52_Conv2d_Activation_BatchNorm",
+      "s1-inductor-L2-60_ConvTranspose3d_Swish_GroupNorm_HardSwish"
+     ],
+     "evaluation": [
+      "s1-inductor-L1-25_Swish",
+      "s1-inductor-L1-3_Batched_matrix_multiplication",
+      "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+      "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+      "s2-flaggems-cumsum-L1-89_cumsum",
+      "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+      "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+      "s2-flaggems-mul-scalar-L1-5_Matrix_scalar_multiplication"
+     ]
+    },
+    "start_offset_seconds": 0.035,
+    "status": "ok",
+    "steps": [
+     {
+      "exit": 0,
+      "step": "s1-codegen"
+     },
+     {
+      "exit": 0,
+      "step": "s1-convert"
+     },
+     {
+      "exit": 0,
+      "step": "s2-build"
+     },
+     {
+      "exit": 0,
+      "step": "check-static"
+     },
+     {
+      "exit": 0,
+      "step": "split"
+     }
+    ]
+   },
+   {
+    "exit": 0,
+    "phase": "specializations",
+    "seconds": 74.039,
+    "start_offset_seconds": 202.656,
+    "status": "ok"
+   },
+   {
+    "core_controls": 13,
+    "hack_controls": 37,
+    "phase": "controls",
+    "seconds": 0.387,
+    "start_offset_seconds": 276.696,
+    "status": "ok"
+   },
+   {
+    "phase": "smoke",
+    "runs": [
+     {
+      "budget_seconds": 142.9,
+      "crashes": 1,
+      "left_in_queue": 71,
+      "name": "smoke",
+      "planned": 75,
+      "retired_slots": [],
+      "run": 2,
+      "run_id": "0c44c0872796",
+      "skipped": 0,
+      "time_boxed": true,
+      "timeouts": 2
+     }
+    ],
+    "seconds": 475.903,
+    "start_offset_seconds": 277.083,
+    "status": "ok"
+   },
+   {
+    "phase": "timing",
+    "runs": [
+     {
+      "budget_seconds": 0.0,
+      "crashes": 0,
+      "left_in_queue": 3,
+      "name": "timing",
+      "planned": 3,
+      "retired_slots": [],
+      "run": 0,
+      "run_id": "a493b0cc1810",
+      "skipped": 0,
+      "time_boxed": true,
+      "timeouts": 0
+     }
+    ],
+    "seconds": 0.003,
+    "start_offset_seconds": 752.987,
+    "status": "ok"
+   }
+  ],
+  "slots": [
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0"
+  ],
+  "slots_per_gpu": 4
+ },
+ "pilot_selection": {
+  "admission_rows": "/outputs/q1/substrates-built/admission_hook.jsonl",
+  "calibration": [
+   "s1-inductor-L1-15_Matmul_for_lower_triangular_matrices",
+   "s1-inductor-L1-47_Sum_reduction_over_a_dimension",
+   "s1-inductor-L2-52_Conv2d_Activation_BatchNorm",
+   "s1-inductor-L2-60_ConvTranspose3d_Swish_GroupNorm_HardSwish"
+  ],
+  "evaluation": [
+   "s1-inductor-L1-25_Swish",
+   "s1-inductor-L1-3_Batched_matrix_multiplication",
+   "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "s2-flaggems-cumsum-L1-89_cumsum",
+   "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+   "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+   "s2-flaggems-mul-scalar-L1-5_Matrix_scalar_multiplication"
+  ],
+  "pilot_version": "q1-pilot/1",
+  "refused_by_admission": [
+   "s2-tutorial-fused-softmax-L1-23_Softmax"
+  ],
+  "rule": "per stratum, ascending sha256('q1-pilot/v1/' + substrate_id); ineligible candidates are skipped and listed",
+  "strata": [
+   {
+    "candidates": 3,
+    "chosen": [
+     "s1-inductor-L1-25_Swish"
+    ],
+    "replaced_ineligible": [],
+    "role": "evaluation",
+    "stratum": "s1-eval-l1-activation",
+    "wanted": 1
+   },
+   {
+    "candidates": 2,
+    "chosen": [
+     "s1-inductor-L1-3_Batched_matrix_multiplication"
+    ],
+    "replaced_ineligible": [],
+    "role": "evaluation",
+    "stratum": "s1-eval-l1-other",
+    "wanted": 1
+   },
+   {
+    "candidates": 6,
+    "chosen": [
+     "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+     "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU"
+    ],
+    "replaced_ineligible": [],
+    "role": "evaluation",
+    "stratum": "s1-eval-l2",
+    "wanted": 2
+   },
+   {
+    "candidates": 16,
+    "chosen": [
+     "s2-flaggems-cumsum-L1-89_cumsum"
+    ],
+    "replaced_ineligible": [],
+    "role": "evaluation",
+    "stratum": "s2-flaggems",
+    "wanted": 1
+   },
+   {
+    "candidates": 4,
+    "chosen": [
+     "s2-liger-cross-entropy-L1-95_CrossEntropyLoss"
+    ],
+    "replaced_ineligible": [],
+    "role": "evaluation",
+    "stratum": "s2-liger",
+    "wanted": 1
+   },
+   {
+    "candidates": 5,
+    "chosen": [
+     "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_"
+    ],
+    "replaced_ineligible": [
+     "s2-tutorial-fused-softmax-L1-23_Softmax"
+    ],
+    "role": "evaluation",
+    "stratum": "s2-triton-tutorial",
+    "wanted": 1
+   },
+   {
+    "candidates": 25,
+    "chosen": [
+     "s2-flaggems-mul-scalar-L1-5_Matrix_scalar_multiplication"
+    ],
+    "replaced_ineligible": [],
+    "role": "evaluation",
+    "stratum": "s2-any",
+    "wanted": 1
+   },
+   {
+    "candidates": 4,
+    "chosen": [
+     "s1-inductor-L1-15_Matmul_for_lower_triangular_matrices",
+     "s1-inductor-L1-47_Sum_reduction_over_a_dimension"
+    ],
+    "replaced_ineligible": [],
+    "role": "calibration",
+    "stratum": "s1-cal-l1",
+    "wanted": 2
+   },
+   {
+    "candidates": 6,
+    "chosen": [
+     "s1-inductor-L2-52_Conv2d_Activation_BatchNorm",
+     "s1-inductor-L2-60_ConvTranspose3d_Swish_GroupNorm_HardSwish"
+    ],
+    "replaced_ineligible": [],
+    "role": "calibration",
+    "stratum": "s1-cal-l2",
+    "wanted": 2
+   }
+  ]
+ },
+ "slurm_job": 474,
+ "smoke_rows": [
+  {
+   "gate": "a",
+   "item_wall_seconds": 181.563,
+   "kernel": "ctl-identity-L1-19_ReLU",
+   "phase": "correctness",
+   "reason": "watchdog-correctness",
+   "verdict": "timeout"
+  },
+  {
+   "gate": "a_head_1e-2",
+   "item_wall_seconds": 181.559,
+   "kernel": "ctl-identity-L1-19_ReLU",
+   "phase": "correctness",
+   "reason": "watchdog-correctness",
+   "verdict": "timeout"
+  }
+ ],
+ "smoke_summary": {
+  "budget_seconds": 142.9,
+  "crashes": 1,
+  "left_in_queue": 71,
+  "planned": 75,
+  "retired_slots": [],
+  "run": 2,
+  "run_id": "0c44c0872796",
+  "skipped": 0,
+  "time_boxed": true,
+  "timeouts": 2
+ },
+ "specializations": {
+  "failures": [],
+  "recorded": 8
+ },
+ "what": "Q1 Stage 0 pilot job 1 of 2 (q1-pilot-smoke): pilot admission with device codegen, specialization recording, controls, gate smoke. Infrastructure and cost measurement only; no confirmatory data."
+}

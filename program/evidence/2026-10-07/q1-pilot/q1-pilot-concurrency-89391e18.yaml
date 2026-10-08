@@ -1,0 +1,75 @@
+# Filled from the template written in this pass with the image build receipt of Slurm job 544
+# (CPU-only build of stage0/q1-gates@89391e18 from a fresh clone) and the job 518 study artifact.
+# Q1 Stage 0 pilot, job 3 (scripts/run_q1_gpu_pilot.py --job pilot --phases timing scoring):
+# a paired re-measurement of job 518 on the same study artifact. It re-scores the first
+# 240 items of the registered scoring schedule (pilot.schedule order: the four
+# shared-class pilot substrates, their reference-identity controls and two mutants each,
+# every gate and audit channel, replicate 42; exactly the items job 518 scored first) at
+# 12 items per GPU instead of 4, with the image of this pass (compute-sanitizer probe that
+# skips refused A3 shapes, b2 profile attempts recorded). It measures GPU-seconds per item
+# at higher concurrency item by item, checks that every verdict matches job 518 except
+# the sanitizer rows the fix changes, validates the sanitizer fix on the S1 substrates
+# and mutants, and runs the timing phase job 518's time box skipped (two substrates).
+# Trusted code only (D3, D7); model kind none; one GPU for at most 10 minutes (0.167 GPU-h).
+runtime: docker-single-node-discovery-v1
+name: q1-pilot-concurrency
+image_id: sha256:c05fc537bbadd4f03b17f5e10f57efbbe01d24effa342475234b9ff503ade807
+git_sha: 89391e18a5dcf28863a9c8c02a548373401c14a5
+source_sha256: 8b6c1593d8c599613f7b338d966c36e66429d72fe329a4c78d09971e1cd46d2b
+container_profile: large-cpu-mem
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 32
+  memory_gb: 256
+  minutes: 10
+budget:
+  max_gpu_hours: 0.167
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+run_root: /home/kevin/cotcodec-runs/stage0/q1-gates/pilot/runs
+model:
+  kind: none
+  reason: "Q1 pilot paired concurrency re-measurement and sanitizer-fix check on compiler and pre-2025 human kernels; no checkpoint"
+study_artifact:
+  source_id: q1-pilot-inputs
+  revision: fef945dd4a49b508cd93a179da4f12b605d517d4
+  license: LicenseRef-q1-mixed
+  host_path: /home/kevin/cotcodec-runs/stage0/q1-gates/pilot/out/artifacts/q1-pilot-inputs-fef945dd.json
+  sha256: 144df1afebcdd4b9bdb0829c3f79740bc1f339ac3b0b160a5c6f5c646076a3ad
+  size_bytes: 28092379
+command:
+  - env
+  - TRITON_CACHE_DIR=/outputs/cache/triton
+  - TORCHINDUCTOR_CACHE_DIR=/outputs/cache/inductor
+  - python
+  - scripts/run_q1_gpu_pilot.py
+  - "--job"
+  - pilot
+  - "--output"
+  - /outputs/q1
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - 144df1afebcdd4b9bdb0829c3f79740bc1f339ac3b0b160a5c6f5c646076a3ad
+  - "--budget-minutes"
+  - "6.2"
+  - "--slots-per-gpu"
+  - "12"
+  - "--size-scaled-watchdog"
+  - "--phases"
+  - timing
+  - scoring
+  - "--timing-kernels"
+  - "2"
+  - "--timing-minutes"
+  - "1.5"
+  - "--scoring-prefix"
+  - "240"
+  - "--scoring-shared-only"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"

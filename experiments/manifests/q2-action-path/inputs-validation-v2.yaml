@@ -1,0 +1,64 @@
+# Q2 Stage 0b inputs-addendum validation (infrastructure only, no system under test): HMP input into the
+# probe for the 35 R-dev entries, typed text, buttons and a no-input trial (2 repetitions), judged on
+# the probe and tap channels with the marker; then every canary fixture read back with no input.
+# v2: v1 (job 482) stopped in the driver before any container started (sessions/cycles key).
+schema: cotcodec-vm-campaign-v1
+name: q2ap-inputs
+campaign_id: q2ap-inputs-validation-v2
+experiment_id: q2-action-path-v1
+purpose: infrastructure-validation
+preregistration:
+  path: program/preregistrations/q2-action-path-v1.md
+  status: draft
+  sha256: 6682638f0e50128613823bff090a660787e996b33e646e05131fc6c999855246
+git_sha: bd1002d9bacb2bb8ba1c092d4464ccf03d5125f5
+source:
+  host_dir: /home/kevin/cotcodec-runs/stage0/q2-action-path/src/bd1002d9bacb2bb8ba1c092d4464ccf03d5125f5
+  tree_sha256: 3c56a0a794ebfa5b4fc8e5d855798b0dc17a3932cda81ba798278bf03230bdfa
+run_root: /home/kevin/cotcodec-runs/stage0/q2-action-path/runs
+slurm:
+  cpus: 8
+  memory_gb: 12
+  minutes: 120
+container_profile: default
+model:
+  kind: none
+  reason: infrastructure validation of the probe, guard, marker and canary read-back runs no model
+randomness:
+  contract: deterministic
+  seeds: []
+vm:
+  image: happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9
+  image_id: sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4
+  qcow2:
+    host_path: /home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2
+    sha256: 6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313
+    size_bytes: 24460197888
+    source_url: https://huggingface.co/datasets/xlangai/ubuntu_osworld/resolve/a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133/Ubuntu.qcow2.zip
+    archive_sha256: b795b6cd4c69b252c1b4f10150a347795555032501b60fd031751ed09b896712
+    revision: a5d9c3eaae98eebf6e3a0beb84e7e47cf72ae133
+    license: apache-2.0
+  ram_size: 4G
+  cpu_cores: 4
+  disk_size: 32G
+  memory_gb: 6
+  network: none-netns
+  guest_ip: 20.20.20.21
+  server_port: 5000
+  hmp_port: 7100
+  concurrency: 1
+runner:
+  image_id: sha256:ac2b5815bcc2ed193116aa2d4bdee773b5a457c545453a6c91956768634a6002
+  memory_gb: 1
+  cpus: 1
+workload:
+  kind: inputs-validation
+  reps: 2
+  canary_readback: true
+  plan_sha256: 5c9b7215c89aadfa6308bdd94c629a716c7c822a8ca626315157e84bd1495d89
+  boot_timeout_s: 300
+  settle_timeout_s: 60
+  cells_sha256: e1aa180a3d8f8384141bd4714a6dfcc42a71f953613133c526fbe0cad57baad0
+  sessions: 1
+  trials: 92
+  max_trial_s: 40

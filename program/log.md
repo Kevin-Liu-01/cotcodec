@@ -200,6 +200,58 @@ Append-only. Newest entries at the bottom.
   (9-10 GPU-h) is above the gauntlet threshold, so a measured pilot decides
   between a registered trimming rule and the gauntlet.
 
+## 2026-10-07 — Q1 gate stack integrated (branch `stage0/q1-gates`, not merged)
+
+- Merged the Q1 core (gates, audit, runner, analysis), mutator and substrate
+  branches. The shared schema was byte-identical on all three
+  (`c9bae9d5...3256`). No GPU job ran.
+- Reconciled what the components disagreed on: the analysis now uses the
+  substrate corpus's S1 split (`b773f218...`) and the mutator's content-hash
+  dev/test split; one exclusion list serves every component; every control's
+  `expected` map is checked by `analysis.control_checks`.
+- Gate (c) no longer sets a free root below 2. The S1 converter refuses sizes
+  below 2 (Dynamo's 0/1 specialisation), so 19 size-1 configurations would have
+  made gate (c) reject correct S1 substrates; two of them (L1/9, L1/11) are in
+  the evaluation half. Audit A3 keeps size 1, where a refusal is classified.
+  The shape manifest was regenerated.
+- The integration tests found three more defects: the mutant compile filter
+  broke when `TRITON_INTERPRET=1` was set in the process (fixed), and the
+  specialization manifest lacked `seeds: []` and asked for 1.0 GPU-h against a
+  0.5 GPU-h budget (fixed).
+- A CPU end-to-end test runs an Inductor ReLU and a Triton-tutorial softmax,
+  five mutants and 15 controls through the real runner. It also showed that
+  gate (a)'s 1e-2 absolute tolerance accepts a negated softmax over 1,024
+  columns; this is recorded as a prediction in the draft.
+- The two component preregistration drafts were merged into
+  `program/preregistrations/q1-stage0-gate-validation.md`, which now names the
+  version card it will freeze. It is a draft; freezing is the program owner's
+  step. Evidence: `program/evidence/2026-10-07/q1-integration-validation.json`
+  (253 Q1 tests in a GPU-less container, 651 passed and 8 skipped on the host,
+  CPU doctor PASS).
+
+## 2026-10-07 — Q1 gate stack fix pass after adversarial review (branch `stage0/q1-gates`, not merged)
+
+- An adversarial review of `stage0/q1-gates@acb3bc8` reported 8 findings. All
+  were verified; 7 are fixed in `c6ef3a9` and 1 (candidates can see the gate
+  id and seeds) is recorded as a Stage 1 threat-model limit.
+- Critical: c3 config ids built from `input_shape[0]` failed the verdict schema
+  inside the worker after the candidate ran, so gate (c) rejected every kernel
+  on 10 L1 problems. Ids now use `input_shape.0`; gate (c) checks ids before a
+  candidate loads; row-building failures are infrastructure errors, retried
+  once.
+- Analysis: parent filter for mutants; unrefereeable components vacuous per
+  problem; one kernel set across gates; S1 calibration parents' mutants out of
+  the primary metrics; and code for every preregistered quantity that had none
+  (audit-hole replay, calibration driver, weighting, breakdowns, c-lite, cost,
+  FRR over independent units).
+- `gate_b.py` was rewritten from the spec after the review found it
+  transliterated parts of unlicensed KernelGYM code (never pushed). b1 and b2
+  now replay b0's five calls first, as released.
+- Infrastructure validation only: 280 Q1 tests in a GPU-less container, 669
+  passed and 8 skipped on the host, CPU doctor PASS (195 items). Evidence:
+  `program/evidence/2026-10-07/q1-gates-fix-pass.json`. The draft is not
+  frozen.
+
 ## 2026-10-07 — Serving probe v2 run: X1 pass, Q2 rescope before the gauntlet
 
 - Ran the frozen `serving-throughput-probe-v2` from a fresh host clone of the
@@ -396,6 +448,279 @@ Append-only. Newest entries at the bottom.
   vLLM teardown and overran its 0.1 GPU-h cap (0.11 by Slurm); a fix exists
   but is validated on CPU only. The lane leaves a container alive if Slurm
   kills the batch script at the time limit; to be fixed.
+
+## 2026-10-07 — Action-path suite: development complete, one decision before the freeze
+
+- Q2 Stage 0b (branch `stage0/q2-action-path`), development only (seed 42,
+  never evidence), every job CPU-only through `vm-campaign.sbatch` with the
+  VM in its own network namespace (D12, D13): jobs 482-637, driver exit 0
+  for every job after 482, no GPU in any job's TRES, `System.qcow2`
+  unchanged, no labelled container or volume left.
+- Found and fixed in development: the compositor sometimes never painted the
+  probe's last drawing (31 of 941 typing trials, 3.3%; L0-fixed now
+  re-damages the top-level windows after each action, and 2,114 typing
+  trials since showed none); a session's first XTest key changes the master
+  keyboard device and stripped `chord_super_d`'s modifier (runs 549 and 574,
+  the same sessions on 8 VMs and on one; every session now warms the
+  keyboard up first); Chrome's outdated-build bubble (a launch flag); VS
+  Code dropping its first keys while loading on a busy host (the canary waits
+  until the app is idle); the boot's first `/accessibility` call answering
+  500 (Stage 1's reset observation is reproduced; recovered retries are
+  reported, not failures, as section 6.1 says).
+- Found while writing the acceptance code: the concurrency ladder could never
+  qualify a rung above N = 1 (18 sessions against 20 required boots); rungs
+  now repeat the seed-43 order until every VM is busy. Added the acceptance
+  analysis as code (`acceptance.py`), a manifest renderer that refuses
+  before the freeze, and tests that freeze a scratch ledger to exercise
+  admission; the repository ledger still refuses every acceptance campaign
+  and seeds 43 and 44.
+- Open, for Kevin before the freeze: the OSWorld guest server crashed once in
+  7,969 `/accessibility` calls (thread-pool tree walk; systemd then stops
+  everything it launched). A4 as registered (zero failures over 36,550
+  accessibility calls) would pass with probability about 0.01; options in the
+  inputs addendum's section 6. Writer once swapped a space and the emoji
+  after it (1 of 336 Writer trials), reported.
+- At the final runtime commit every in-spec cell of L0-fixed (one VM and 8
+  VMs), H-OSW-fixed, H-GA and the canary passed in every repetition and
+  setting (jobs 633-637); the stress and volume samples at `81fd5f3` (jobs
+  618-622, 2,600 trials on 8 VMs) failed only in the one session the
+  guest-server crash broke.
+- The 44 scored mutants on their predicted kill cells (informative): 42
+  killed, M12 and M13 on H-OSW-fixed unchanged (predicted equivalent).
+- VM time from measured trial times (`vm_hours.json`): A4 44.0 VM-hours,
+  all scored campaigns 67.3 VM-hours, CPU only.
+- Nothing frozen. Next: Kevin's A4 decision, then the owner freezes
+  `q2-action-path-v1`, `-inputs` and `-executor`; C2, then C1 and C3, then
+  A1-A6 and the ladder.
+
+## 2026-10-07 — Action-path suite: review of `2b492cd` answered
+
+- An independent review found the branch not ready to freeze: C2's L0-raw
+  prediction ignored the timing failures development had found (stale
+  screenshots, chord releases losing their modifier state), so C2 would very
+  likely have failed v1 for a reason unrelated to the names it tests; and the
+  A4 guest-server decision was still open. Fixed at `30d8c7f` (registration
+  section 17, design decisions 34-39): C2 is judged on the event and text
+  channels (marker reported; key-release state not compared); C3 counts only
+  clean kills against a clean reference; admission checks every file the
+  frozen tables pin and refuses unpinned files; end states come from the
+  batch script's own record or a Slurm watcher
+  (`scripts/record_slurm_end_states.sh`), a campaign is rerun at most once and
+  never loses its failures; an undelivered reset observation charges the
+  session's first trial; ladder runner CPUs are registered; repair attempts
+  name their executor addenda; `acceptance.py` is frozen with the inputs
+  addendum, before C2 runs. Found while fixing: C2 could not have been
+  submitted before the executor freeze, and a restart between two entries
+  went untyped; both fixed.
+- A guest-server restart now relaunches the tap with the probe. Development
+  run 662 SIGKILLed the server after the tenth trial of each session: only
+  that next trial failed (27 of 28 per session passed), against 55 trials
+  charged in run 622.
+- Final development runs at `30d8c7f` (seed 42, CPU only, COMPLETED 0:0,
+  no GPU, `System.qcow2` unchanged): L0-fixed on one VM (663, 400 trials) and
+  on 8 VMs (664, 800 trials), 200 of 200 cells each; H-OSW-fixed (665, fails
+  only R03 and R09, outside spec); H-GA (666, fails only R02, R04, R06 and
+  R10, outside spec); canary (667, 60 of 60).
+- Recounted from the receipts: the guest server crashed once in 8,114
+  `/accessibility` calls (the first count said 7,969); A4 as registered would
+  pass with probability about 0.01, with a single-event 95% range of 0.89 to
+  0. The A4 decision remains Kevin's (inputs addendum, section 6, options
+  1-5). jinja2 is in the dev extra, so the template check runs.
+- Nothing frozen, nothing pushed. GPU time 0.
+
+## 2026-10-07 — Q1 Stage 0 pilot pass: GPU paths validated, cost card measured (branch `stage0/q1-gates`, not merged)
+
+- Three one-GPU lane jobs on trusted code only (KernelBench references,
+  TorchInductor output, pre-2025 human-written kernels and harness-derived
+  mutants and controls; model kind none): 474 smoke and admission, 518 pilot
+  cost, 548 paired concurrency re-measurement. 0.899 GPU-h of the pass's 1.0;
+  image builds 472, 487, 507 and 544 CPU-only from fresh clones.
+- Corpus hand-off: S2 sources vendored with their licences (22 files
+  re-verified against the pinned commits), the corpus recipe committed, and one
+  hash-bound study artifact per job (28 MB, host-only; it carries the
+  unmodified KernelGYM and KBV clones for fidelity).
+- Validated on the GPU: admission and device codegen, specializations, the
+  identity control through all 15 gates and channels, fidelity against
+  unmodified KernelBench (a 11/11; a_head_1e-4 9/11 plus 2 listed in
+  advance), KernelGYM (decoy 5/5 comparable) and KBV (c1 11/11), calibration
+  on S1-cal (M stays 16), the poison allocator, compute-sanitizer, b2 and the
+  timing harness.
+- Found and fixed: compute-sanitizer never ran on S1 kernels (they refuse
+  `A3/lead1`), so A4 and every tier were `error` for all S1 kernels; the probe
+  now skips refused shapes (job 548: 6/6 S1 kernels accepted at `A3/lead5`).
+  b2 rows record profile attempts (the retry is unreachable on a working
+  GPU); timing now runs before scoring.
+- Open (owner): the TF32-admissible threshold rejects the TF32 tutorial
+  matmul at every held-out shape; A5 counts S1 dtype refusals as failures.
+- Cost card: c/b = 1.64 (no c-lite). Stage 0 as drafted projects to about
+  1,056 GPU-h (scoring 95% interval 671-1,359), far above the 8 GPU-h cap and
+  a lower bound (gate (c) on a 4.3 GB problem ran over 676 s). 12 items per
+  GPU halve small-problem cost with identical verdicts (ratio 0.493 on 240
+  paired items). Proposed rule `q1-stage0-trim/1` (preregistration section
+  18.5): 7.37 GPU-h through its last fixed bucket, a hard stop at 8, every gate,
+  family, tier and policy kept, mutant metrics narrowed to problems under 1 GB
+  with about 2.5 times wider intervals; or the gauntlet. Evidence:
+  `program/evidence/2026-10-07/q1-pilot/`.
+
+## 2026-10-07 — Q1 Stage 0 second review fix pass: trimming rule /2 in code, pilot exposure registered (branch `stage0/q1-gates`, not merged)
+
+- Merged main@36af438 (D22-D25; conflicts in this log and `state.json`, both
+  sides kept; ledger 2.150 GPU-h). No GPU was used in this pass; host work ran
+  in GPU-less, network-less containers of `cotcodec-q1-gates:5af03757` from a
+  fresh clone of the branch.
+- Verified all 13 findings of the second adversarial review of `@04c2934`;
+  12 fixed, the c-lite one partly rejected (the ratio of medians has been the
+  analysis code's statistic since before the pilot; it is now named in
+  sections 5.5 and 12 with its interval, 1.64 (1.52-2.32), and the other
+  readings, 2.11 and 2.38, reported). Evidence:
+  `program/evidence/2026-10-07/q1-pilot/second-review-fix-pass.json`.
+- Pilot exposure (D26): the pilot had scored five evaluation substrates, part
+  of a sixth, eight mutants (three test) and ten controls. Listed and
+  hash-bound (`harness/q1/data/pilot_exposed.json`); exposed mutants leave
+  every sampling frame; a pre-specified sensitivity analysis drops every
+  exposed unit; data-motivated audit changes drop the units they affect.
+- `q1-stage0-trim/2` is code (`harness/q1/trim.py`, run by
+  `scripts/run_q1_stage0.py`): seeded frames and samples, FRR set with a
+  margin, per-kind control sample, buckets P1-P8, 12 capacity units per GPU,
+  shared-item timeouts and CUDA out-of-memory errors retried alone, stop by
+  Slurm job caps; `driver_sha256` in the version card. Criterion 5 amended
+  for the unscheduled KBV H.1 and hack-emulating mutant controls (at least
+  6.2 GPU-h to score at one replicate).
+- Corrected projection (fidelity at its measured allocation, timing floor at
+  its 8-GPU allocation, anchors for problems of 1 GB or more): 7.60 GPU-h
+  through P3 and 10.99 through P7 centrally, 8.70 and 13.09 at the high point;
+  the stop keeps the run under 8 (centrally P1-P3 complete, one margin unit).
+  The pilot pass's /1 was 7.37 with lower charges.
+- Also: TF32 identity timing bias 0.907 (0.886-1.044) reported; TF32
+  convolution tolerance above 1 (L2/3 T = 2.67) recorded as finding 18.3.8;
+  run records hashed (`run-records.json`), killed items recorded by the
+  runner; sanitizer row memcheck-only; Apache-2.0 text with the Liger
+  substrates that carry Unsloth code; D27 for upstream test code on GPUs.
+
+## 2026-10-07 — Action-path suite and Q1 gate stack merged (not frozen)
+
+- Merged `stage0/q2-action-path`: the 100-entry action-path suite, its
+  device-level references, adapters, acceptance rules and three draft
+  registrations. Final development runs (seed 42, CPU only) passed every
+  in-spec cell for L0-fixed on 1 and 8 VMs, H-OSW-fixed, H-GA and the canary;
+  42 of 44 suite mutants were killed and the two predicted-equivalent ones
+  survived. Scored campaigns need about 67 VM-hours, CPU only.
+- Merged `stage0/q1-gates`: gates (a)/(b)/(c), the independent audit,
+  mutator, substrates, the trimmed Stage 0 driver and the pilot (Slurm 474,
+  518, 548; 0.90 GPU-h). The pilot scored a few evaluation units before the
+  freeze; D28 (branch D26) hash-pins and fences them. D29 (branch D27) admits
+  pinned upstream benchmark test code on GPUs.
+- D30: guest-server restarts are bounded separately from A4. D31: Q1 Stage 0
+  gets an engineering pass and a non-evaluation re-pilot before admission.
+- Full suite on the host after the merges: 1,681 passed, 28 skipped.
+
+## 2026-10-07 — Lane: container lifetime bounded by the job
+
+- Fixed the lane gap found by the open-weight reviewer smoke (Slurm 617) on
+  branch `stage0/lane-container-lifetime`: `docker-research.sbatch` removed its
+  container only from its exit trap, so a workload that ignored TERM outlived a
+  timed-out job (Slurm's KILL, KillWait 30 s after TERM, skips every trap).
+- The batch script now reads the time left (`squeue -o %L`, exit 2 if not
+  finite or above the manifest minutes), SIGKILLs the container 30 s before the
+  limit from a background timer (after USR1's 120 s checkpoint window), and on
+  TERM waits at most KillWait minus 20 s (10 s here) for a `trigger=SIGTERM`
+  checkpoint before `docker kill` and removal. A TERM before start starts no
+  container; `docker create` gets `--stop-timeout`. `termination.env` adds
+  `hard_stop_at`, `container_killed_by` and `container_killed_at`.
+- Stub-docker tests: a container ignoring USR1 and TERM is killed before the
+  job's end (hard stop) and within KillWait (TERM); all 8 new runtime tests
+  fail against the previous script. No GPU time used.
+- `vm-campaign.sbatch` (branch `stage0/q2-action-path`, not on main) does not
+  have this gap: its USR1/TERM handler kills the driver and force-removes every
+  job-labelled container without waiting on them.
+
+## 2026-10-07 — Lane: container lifetime review fixes
+
+- An independent review of the lifetime fix found one fail-open path and six
+  smaller defects, all reproduced with stub-docker tests before fixing:
+  - the hard-stop timer inherited `set -e`, so a failed `hard-stop.env` write
+    (full or failing disk) ended it before its kill; it now runs `set +e` and
+    the record is best-effort;
+  - the timer looped forever after its kill, and outlived a batch shell killed
+    alone; it now ends after its kill, and if the shell is gone it SIGKILLs the
+    container at once (`cause=batch_script_gone`) and exits;
+  - a requeued job reused its run directory and read the earlier attempt's
+    records; the submitter passes `--no-requeue` and the batch script refuses
+    an existing run directory (exit 2);
+  - a TERM that killed the `docker create` client before it printed the ID
+    leaked the container dockerd still created; the exit trap watches 5 s;
+  - a TERM sent to the whole job reached the container through the attached
+    client before the trap's marker record, so a TERM checkpoint never
+    confirmed (also on main); the TERM record is now taken at container start;
+  - a confirmed TERM checkpoint was SIGKILLed at once; it now gets the grace;
+  - `docs/operations.md` overstated the hard stop: a workload must exit within
+    150 s of USR1, and the hard stop does not follow `TimeLimit` changes.
+- The q2 evaluator-mutation draft preregistration (other branch) sizes its
+  rater stop on the 180 s USR1 lead; it needs a note on the 150 s bound before
+  it is frozen. No GPU time used.
+
+## 2026-10-07 — Q3 dense headroom pre-check built (D26), not run
+
+- Branch `stage0/q3-dense-precheck`: draft registration
+  `program/preregistrations/q3-dense-headroom-precheck-v1.md` (not frozen) and
+  its code. Dense only, no indexer; the development partition of the K1
+  bundle (`919d016b...`) only; two lanes, Qwen3-0.6B-Base (1 GPU x 9 min, cap
+  0.15) and Qwen3.5-4B-Base (1 GPU x 21 min, cap 0.35), caps summing to D26's
+  0.5 GPU-h. The 4B lane re-tokenizes the bundle's Qwen3 tokens segment by
+  segment (needle spans exact) and reads its 8 full-attention layers.
+- Measures H1 on MN, CX and ML (development literal prompts built with the K1
+  builder's rule), H2a and H2b, a non-literal floor candidate, English entity
+  anchors with the entity-controlled subset, a literal (lexical) selector and
+  a block-score null (target log-scores plus noise, seeds 42/43/44) read with
+  K1's xi and xi_rel, recall by tokenizer fertility, and a reproduction of K1
+  smoke 452's dense numbers on the 0.6B lane. Lane decisions
+  (NEGATIVE_CAPABLE needs H1_CX >= 20 with lower bound >= 10) and a combined
+  read say which K1 v3 designs are viable.
+- New modules beside the frozen K1 files (none edited):
+  `harness/dense_headroom_{data,stats,torch}.py`,
+  `scripts/run_dense_headroom_precheck{,_doctor}.py`,
+  `scripts/fill_dense_headroom_precheck_manifests.py`,
+  `scripts/summarise_dense_headroom_precheck.py`, lane templates in
+  `experiments/manifests/q3-dense-headroom-precheck-v1/`.
+- CPU doctor in the research image (`e59d9cc1`, network none, Slurm CPU
+  steps): DENSE_DOCTOR_PASS, including both tiny lanes end to end, a SIGUSR1
+  interrupt (exit 75 with the marker) and its continuation. No GPU time used.
+- Waiting on Kevin: the draft's design decisions 1-14.
+
+## 2026-10-07 — Q3 dense headroom pre-check: review fix pass (draft, not run)
+
+- An independent review of the draft (`stage0/q3-dense-precheck` at 9f9e735)
+  asked for changes before freeze; all nine findings were reproduced and
+  fixed, with regression tests. Still a draft, still no GPU time.
+- Continuations could never run: the entry point required the lane's full
+  minutes. It now checks the job's kind from `manifest.json`: a fresh job (at
+  most the lane's minutes, no checkpoints), or a continuation naming its
+  predecessor with the batch script's resume receipt and the predecessor's
+  pinned artifact (at most the lane's minutes minus two). A time-limit
+  interrupt still leaves no room for one (SIGUSR1 comes three minutes early),
+  so a lane that overruns ends INCOMPLETE; this is now stated.
+- The combined read failed open on an INVALID lane; any INVALID lane now
+  makes it INVALID, and the 4B lane is submitted only after the 0.6B smoke
+  reproduction is REPRODUCED.
+- D26's requirements of a K1 v3 (entity-controlled question set, non-literal
+  floor, seen-script cross-script condition, new id and gauntlet) are always
+  required; the measured flags only add. `anchor_confound` is renamed
+  `lexical_confound` (the literal selector reads all lexical overlap), and the
+  literal selector now drops the query language's stop ids as well as the
+  needle language's.
+- The floor candidate is VIABLE only when a V1-adequate null's 99 percent
+  lower bound of G(MN) reaches 0.5. The null is CENTRED only if an adequate
+  noise scale loses at least 2.5 points of English ML recall; the sigma grid
+  is now 0.25 to 4 in steps of about 1.4 (9 scales, 54 null columns).
+- Budget: every job of a lane (re-runs, the one continuation) is charged
+  against the lane's minutes from the run root's `job.env` and
+  `termination.env` timestamps; the filler claims each later job's slot in the
+  run root once; no budget amendment is possible under this id.
+- The lane templates and `scripts/preregister.py` are tabled; the filler
+  refuses a filled manifest that is not the template with only its `FILL-*`
+  values replaced. The summariser applies the void rules from each job's files
+  and the saved orx logs and hashes receipts over their bytes.
+- Waiting on Kevin: the draft's design decisions 1-15.
 
 ## 2026-10-07 — Q2 evaluator-mutation: third review of the fourth draft answered under D27 (fifth draft, not frozen)
 

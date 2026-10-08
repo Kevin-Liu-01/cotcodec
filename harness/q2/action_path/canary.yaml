@@ -1,0 +1,166 @@
+# Cross-app canary for q2-action-path-v1 (acceptance criterion A6), frozen with
+# the main preregistration. It fixes, before any canary trial: each app's
+# configuration, each fixture's initial text, each entry's actions and the exact
+# final text expected, and how that text is read back. Review of 2026-10-07: the
+# draft named composite entries ("triple-click a line", "drag-select a word")
+# without fixtures or expected states.
+#
+# Text is compared by code-point equality with no normalization. Apps are
+# configured so they do not rewrite typed text (autocorrect, auto-closing
+# brackets, auto-indent, completion); a canary failure therefore means the input
+# path or the app's handling of raw input, not an app feature.
+schema: cotcodec-q2-canary-v1
+status: draft
+setting: screenshot (require_a11y_tree = false); read-back calls are separate from observations
+reps: 5
+procedure: >-
+  For each (app, entry, repetition), in the seed-43 shuffle of the (app, entry)
+  pairs: write the entry's fixture file, start a fresh instance of the app on it
+  (a new process; the previous one is closed), wait until its window is mapped
+  and focused, run the entry's actions through the frozen L0-fixed executor, run
+  the app's finish keys, read the text back, and compare it with `expect`.
+  Infrastructure failures (app does not start, read-back fails) count as
+  failures, as everywhere in this preregistration.
+targeting: >-
+  Two entries need screen coordinates of fixture text (triple_click_line,
+  drag_select_word). The coordinates are measured during development on the
+  frozen app configuration and frozen, with the app launch and read-back code,
+  in the q2-action-path-v1-executor addendum. The expected text below is frozen
+  now and does not depend on them.
+readback_validation: >-
+  Before that addendum is frozen, each app's read-back is validated with no
+  input at all: every fixture, opened and read back unchanged, must equal its
+  initial text exactly. This exercises no system under test.
+apps:
+  writer:
+    program: LibreOffice Writer (as installed in the guest image)
+    open: the fixture as a plain-text file (.txt, UTF-8, LF), Text import filter
+    config:
+      - AutoCorrect while typing off (replacement table, capitalize first letter, two initial capitals, automatic bold and italic, URL recognition, dash replacement, accidental Caps Lock correction)
+      - Localized options off (typographic single and double quotes, ordinal suffixes)
+      - Word completion off; automatic spell checking off; ignore double spaces off
+      - Apply styles and automatic bullets or numbering off
+    readback: the text of every paragraph of the document, in order, joined with "\n" (no trailing newline added), from the accessibility tree
+    finish_keys: []
+    entries: all
+  chrome:
+    program: Google Chrome (as installed) with the flags below, a new profile directory per trial
+    flags:
+      - --no-first-run
+      - --no-default-browser-check
+      - --force-renderer-accessibility
+      - --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT
+    flags_note: >-
+      the last flag sets the build date Chrome's outdated-build check compares with the clock
+      to 2099, so the "Can't update Chrome" bubble never opens. Added before the freeze:
+      development run 522 showed the bubble opening mid-trial (the guest image's Chrome build
+      is older than the guest clock allows) and taking the keyboard focus; its default button
+      took the typed Enter or space and opened a reinstall tab
+    open: file:///home/user/canary/textarea.html
+    page: >-
+      <!doctype html><meta charset="utf-8"><textarea id="t" spellcheck="false"
+      autocomplete="off" autocorrect="off" autocapitalize="off" autofocus
+      style="position:fixed;inset:0;font:24px monospace"></textarea><script>
+      const t=document.getElementById("t");t.value=FIXTURE;t.addEventListener("keydown",
+      e=>{if(e.key==="Tab"){e.preventDefault();document.execCommand("insertText",false,"\t")}});
+      const show=()=>{document.title="Q2AP:"+encodeURIComponent(t.value)};show();
+      t.addEventListener("input",show);
+      </script>
+    page_note: >-
+      FIXTURE is the fixture text as a JSON string literal; Tab inserts a tab instead of moving
+      focus; the page mirrors the textarea's value into its title on every input event
+    readback: >-
+      the textarea's value as the page mirrors it into the window title (_NET_WM_NAME
+      "Q2AP:" + encodeURIComponent(value) + " - Google Chrome", percent-decoded as UTF-8),
+      read when it has been stable for 0.5 s. Changed before the freeze: development runs
+      501 and 506 showed the accessibility tree's text stale after edits and missing right
+      after typing, while the screen showed the edit; run 515 showed that a JSON title loses
+      runs of spaces (document.title collapses whitespace), so the value is percent-encoded
+    finish_keys: []
+    entries: all
+  vscode:
+    program: Visual Studio Code (as installed), a new user-data directory per trial
+    open: the fixture as a .txt file (plain text language mode)
+    settings:
+      editor.acceptSuggestionOnEnter: "off"
+      editor.autoClosingBrackets: never
+      editor.autoClosingDelete: never
+      editor.autoClosingOvertype: never
+      editor.autoClosingQuotes: never
+      editor.autoIndent: none
+      editor.autoSurround: never
+      editor.detectIndentation: false
+      editor.emptySelectionClipboard: false
+      editor.formatOnType: false
+      editor.inlineSuggest.enabled: false
+      editor.insertSpaces: false
+      editor.linkedEditing: false
+      editor.parameterHints.enabled: false
+      editor.quickSuggestions: {other: "off", comments: "off", strings: "off"}
+      editor.suggestOnTriggerCharacters: false
+      editor.tabCompletion: "off"
+      editor.trimAutoWhitespace: false
+      editor.wordBasedSuggestions: "off"
+      files.encoding: utf8
+      files.eol: "\n"
+      files.insertFinalNewline: false
+      files.trimFinalNewlines: false
+      files.trimTrailingWhitespace: false
+      security.workspace.trust.enabled: false
+      workbench.startupEditor: none
+      workbench.welcomePage.walkthroughs.openOnInstall: false
+      workbench.tips.enabled: false
+      telemetry.telemetryLevel: "off"
+    readback: the saved file's bytes decoded as UTF-8, once the file has changed and is stable
+    ready: >-
+      the window is active and its status bar shows the text editor's items (development run
+      506: a fresh user-data directory opened the first-run walkthrough over the file, so the
+      walkthrough is turned off above and the driver waits for the editor)
+    finish_keys: [[Control_L, s]]
+    entries: all
+  terminal:
+    program: GNOME Terminal (as installed), a new window running `cat > /home/user/canary/out.txt` in bash
+    open: the empty fixture only (the editing composites mean something else in a shell)
+    readback: /home/user/canary/out.txt decoded as UTF-8 after cat exits
+    finish_keys_rule: Control_L+d once if the expected text is empty or ends with "\n", otherwise twice (the first flushes the partial line, the second is end of file)
+    entries: [type_plain, type_symbols_shifted, type_unicode_bmp, type_emoji, type_combining, type_rtl, type_multiline_tabs, type_with_correction, type_long_200, type_spaces, type_digits, key_kp_enter]
+fixtures:
+  empty: ""
+  copy_paste: "copy me"
+  triple_line: "replace this line"
+  drag_word: "keep word keep"
+  home_insert: "line a\nline b"
+entries:
+  # Text entries: the actions and expected text are those of the named catalog
+  # entry (a test checks expect equals the catalog's text).
+  - {id: type_plain, fixture: empty, actions: catalog, expect_from: catalog}
+  - {id: type_symbols_shifted, fixture: empty, actions: catalog, expect_from: catalog}
+  - {id: type_unicode_bmp, fixture: empty, actions: catalog, expect_from: catalog}
+  - {id: type_emoji, fixture: empty, actions: catalog, expect_from: catalog}
+  - {id: type_combining, fixture: empty, actions: catalog, expect_from: catalog}
+  - {id: type_rtl, fixture: empty, actions: catalog, expect_from: catalog}
+  - {id: type_multiline_tabs, fixture: empty, actions: catalog, expect_from: catalog}
+  - {id: type_with_correction, fixture: empty, actions: catalog, expect_from: catalog}
+  - {id: type_long_200, fixture: empty, actions: catalog, expect_from: catalog}
+  - {id: type_spaces, fixture: empty, actions: catalog, expect_from: catalog}
+  - {id: type_digits, fixture: empty, actions: catalog, expect_from: catalog}
+  - id: key_kp_enter
+    fixture: empty
+    actions: [{op: key, keys: [KP_Enter]}]
+    expect: "\n"
+  - id: select_all_copy_end_paste
+    fixture: copy_paste
+    actions: [{op: key, keys: [Control_L, a]}, {op: key, keys: [Control_L, c]}, {op: key, keys: [End]}, {op: key, keys: [Control_L, v]}]
+    expect: "copy mecopy me"
+  - id: triple_click_line
+    fixture: triple_line
+    actions: [{op: click, count: 3, target: "the middle of the word 'this'"}, {op: type, text: X}]
+    expect: "X"
+  - id: drag_select_word
+    fixture: drag_word
+    actions: [{op: drag, target: "from the left edge of 'w' to the right edge of 'd' in 'word', 500 ms"}, {op: type, text: Y}]
+    expect: "keep Y keep"
+  - id: ctrl_home_insert
+    fixture: home_insert
+    actions: [{op: key, keys: [Control_L, Home]}, {op: type, text: Z}]
+    expect: "Zline a\nline b"

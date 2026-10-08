@@ -1,0 +1,137 @@
+{
+  "gating": [
+    "click_left_center",
+    "click_right",
+    "click_middle",
+    "click_double_left",
+    "click_triple_left",
+    "click_ctrl_left",
+    "click_shift_left",
+    "click_alt_left",
+    "click_ctrl_shift_right",
+    "click_corner_topleft",
+    "click_corner_bottomright",
+    "move_only",
+    "click_burst_5",
+    "click_double_slow",
+    "drag_short",
+    "drag_long_diagonal",
+    "drag_slow_small",
+    "drag_vertical",
+    "drag_to_corner",
+    "key_enter",
+    "key_esc",
+    "key_tab",
+    "key_f5",
+    "key_arrow_up",
+    "key_arrow_left",
+    "key_home",
+    "key_pageup",
+    "key_pagedown",
+    "key_delete",
+    "chord_ctrl_c",
+    "chord_ctrl_a",
+    "chord_ctrl_shift_t",
+    "chord_ctrl_shift_arrow",
+    "chord_shift_tab",
+    "chord_alt_f4",
+    "chord_super_d",
+    "key_f1",
+    "key_f9",
+    "key_f12",
+    "key_insert",
+    "key_space_chord",
+    "key_end",
+    "key_arrow_down",
+    "key_arrow_right",
+    "chord_ctrl_home",
+    "chord_shift_arrow_left",
+    "chord_ctrl_alt_shift_r",
+    "chord_alt_tab",
+    "key_kp_enter",
+    "key_kp_add",
+    "chord_shift_alone",
+    "chord_ctrl_alone",
+    "key_menu",
+    "scroll_down_1",
+    "scroll_down_3",
+    "scroll_down_10",
+    "scroll_up_3",
+    "scroll_ctrl_down_3",
+    "scroll_shift_down_3",
+    "scroll_at_offcenter_position",
+    "scroll_down_25",
+    "scroll_down_then_up_net_zero",
+    "no_action_control",
+    "click_two_positions_ordered",
+    "click_then_type",
+    "seq_type_chord_type",
+    "seq_drag_then_click",
+    "seq_long_mixed",
+    "caps_lock_roundtrip",
+    "type_plain",
+    "type_shell_hostile",
+    "type_symbols_shifted",
+    "type_unicode_bmp",
+    "type_multiline_tabs",
+    "type_long_200",
+    "type_emoji",
+    "type_rtl",
+    "type_combining",
+    "type_emoji_zwj",
+    "type_with_correction",
+    "type_single_char",
+    "type_spaces",
+    "type_repeated_chars",
+    "type_mixed_case",
+    "type_digits",
+    "type_long_500"
+  ],
+  "non_gating": {
+    "click_button_back": [
+      "action 0 (click): H-OSW: no click action for button 8; H-GA: no click action for button 8"
+    ],
+    "click_button_forward": [
+      "action 0 (click): H-OSW: no click action for button 9; H-GA: no click action for button 9"
+    ],
+    "drag_alt_held": [
+      "action 0 (drag): H-OSW: no documented modifier parameter for drags; H-GA: no documented modifier parameter for drags"
+    ],
+    "drag_ctrl_held": [
+      "action 0 (drag): H-OSW: no documented modifier parameter for drags; H-GA: no documented modifier parameter for drags"
+    ],
+    "drag_middle_button": [
+      "action 0 (drag): H-OSW: only left_click_drag exists; H-GA: only left_click_drag exists"
+    ],
+    "drag_multipoint_l_shape": [
+      "action 0 (drag): H-OSW: multi-point drag; H-GA: multi-point drag"
+    ],
+    "drag_right_button": [
+      "action 0 (drag): H-OSW: only left_click_drag exists; H-GA: only left_click_drag exists"
+    ],
+    "drag_shift_held": [
+      "action 0 (drag): H-OSW: no documented modifier parameter for drags; H-GA: no documented modifier parameter for drags"
+    ],
+    "mixed_gesture_state": [
+      "action 0 (key_down): H-OSW: no action holds a key across actions; H-GA: no action holds a key across actions",
+      "action 3 (key_up): H-OSW: no action holds a key across actions; H-GA: no action holds a key across actions"
+    ],
+    "press_hold_release_left": [
+      "action 0 (button_down): H-OSW: no action holds or releases a mouse button; H-GA: no action holds or releases a mouse button",
+      "action 2 (button_up): H-OSW: no action holds or releases a mouse button; H-GA: no action holds or releases a mouse button"
+    ],
+    "press_hold_release_right": [
+      "action 0 (button_down): H-OSW: no action holds or releases a mouse button; H-GA: no action holds or releases a mouse button",
+      "action 2 (button_up): H-OSW: no action holds or releases a mouse button; H-GA: no action holds or releases a mouse button"
+    ],
+    "scroll_diagonal": [
+      "action 0 (scroll): H-OSW: prompt maps hscroll to vertical scroll; H-GA: no horizontal scroll action"
+    ],
+    "scroll_left_3": [
+      "action 0 (scroll): H-OSW: prompt maps hscroll to vertical scroll; H-GA: no horizontal scroll action"
+    ],
+    "scroll_right_3": [
+      "action 0 (scroll): H-OSW: prompt maps hscroll to vertical scroll; H-GA: no horizontal scroll action"
+    ]
+  }
+}

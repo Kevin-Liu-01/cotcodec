@@ -245,3 +245,139 @@ rating whose agent read or ran anything outside its directory. The
 equivalence operator `pptx.eq.zorder_nonoverlap` is restricted so it cannot
 change rendered order. If kappa still falls below 0.6 with the stronger rater,
 the design goes back to review rather than having its rule changed.
+
+**D28. Q1 pilot exposure and D14's precondition.** (Numbered D26 on branch `stage0/q1-gates`; Q1 code comments and the branch's fix-pass evidence still say D26.) The Q1 Stage 0 pilot pass
+(jobs 474, 518 and 548, branch `stage0/q1-gates`) scored, with the full gate
+and audit stack at replicate 42, five evaluation substrates (S1 L1/3, L2/3 and
+L2/74, the Liger cross-entropy and the Triton tutorial matmul) and part of a
+sixth (FlagGems cumsum), eight mutants of evaluation parents (three in the
+test split) and ten controls, before the preregistration and audit v1 were
+frozen. D14's "fixed before any mutant is scored" can no longer be met as
+written. Decided: (i) the exposed kernels are listed and hash-bound
+(`harness/q1/data/pilot_exposed.json`); (ii) exposed mutants never enter a
+sampling frame; (iii) exposed units stay in the primary analysis, because the
+outcome-blind pilot rule `q1-pilot/1` chose them and Stage 0 rescores them with
+the frozen code, and every primary quantity is also reported without them as a
+pre-specified sensitivity analysis; (iv) an audit change motivated by a pilot
+verdict (the TF32 `tl.dot` threshold, A5's refusal handling, a cap on the
+TF32 convolution tolerance) is labelled data-motivated, is designed and
+validated only on S1-cal and other non-evaluation kernels, and removes from
+the primary analysis of criteria 2 and 3 and of the mutant metrics every unit
+whose correctness it would change (the tutorial matmul family for the TF32
+threshold). D14's TF32 policy itself stands; changing it is Kevin's call.
+Reversal: Kevin prefers to exclude the exposed units from the primary
+analysis outright (criterion 3 then cannot reach 72 units within 8 GPU-h).
+
+**D29. Upstream benchmark test code on GPUs.** (Numbered D27 on branch `stage0/q1-gates`; Q1 code comments and the branch's fix-pass evidence still say D27.) D3 and D7 did not name two
+kinds of code that ran with GPU access in Q1 pilot job 518: KernelBench's three
+adversarial test kernels (`load_inline` CUDA, upstream commit 29c73cc of
+2025-12-27, vendored verbatim and reviewed here) and the unmodified upstream
+fidelity code (KernelBench at both pinned revisions, KernelGYM@3a84417f and
+kernel_bench_verified@3fdf6fec, unpacked read-only from hash-checked trees).
+Both are admitted as trusted inputs under D7: neither is code under study
+produced during an experiment, each is pinned by hash, small, and run only as
+a control or to check the gates against upstream. They are not part of D3's
+validation corpus, which stays TorchInductor output and human-written kernels
+from before 2025. Reversal: Kevin rules that post-2025 upstream code waits
+for the R580 driver; the three controls and the fidelity runs then move after
+the upgrade.
+
+**D30. Action-path A4: observation-service restarts are bounded separately.**
+In development the upstream OSWorld guest server crashed once in 8,114
+accessibility calls, and its systemd unit then stopped the processes it had
+launched. A4 certifies the action path; a guest-server fault belongs to the
+upstream observation service, which Stage 1 will run unchanged. Patching the
+server would make the runtime differ from the one the leaderboard uses.
+Decided before freezing: A4's zero-failure count excludes guest-server
+restarts, which are reported; the observation service gets its own registered
+bound (at most 5 x 10^-4 restarts per accessibility call, upper 95% bound from
+a dedicated campaign); the probe and tap are started in their own systemd
+scope so a restart costs at most the entry it hits; and Stage 1 counts
+restarts per episode as infrastructure failures. The single-event uncertainty
+is reported with A4.
+
+**D31. Q1 Stage 0 budget: engineering first, then re-pilot.** The trimmed
+Stage 0 (rule trim/2) fits 8 GPU-h only at the central estimate. As with D20,
+the design is not cut: an engineering-only pass computes references once per
+problem and draw, then a re-pilot of at most 0.5 GPU-h on S1-cal and other
+non-evaluation kernels only (no further exposure of evaluation units) sets the
+projection. Stage 0 is admitted only if the high estimate is within 8 GPU-h;
+otherwise it waits on the gauntlet (D24). D14's audit policy stays as
+registered: the TF32 convolution tolerance above 1 on two pilot problems is
+reported as a limitation, and any audit change follows D28's data-motivated
+rule.
+
+**D32. Q3 dense pre-check design decisions: accepted, four amended.** The
+second fresh pre-freeze audit of `q3-dense-headroom-precheck-v1`
+(`program/evidence/2026-10-07/q3-dense-headroom-precheck/prefreeze-audit-2.json`)
+found one blocker (the status line would have been frozen as a draft) and
+recommended four amendments. Decisions 2-9, 11, 14 and 15 are accepted as
+drafted, including decision 5's explicit H2 relaxation: H2 gates a lane only
+on FAIL, and any K1 v3 re-tests H2 under K1's bounds whenever the chosen
+base's H2 is not PASS. Amended: 1, both lanes run unless the 0.6B smoke
+reproduction fails, and the 4B lane never depends on the 0.6B headroom; 10,
+the floor's condition (c) passes only on a V1-adequate sigma whose seed-mean
+English ML loss is at least 2.5 points, the same reach rule as decision 8;
+12, every job, the first included, takes an exclusive filler claim, each
+filled manifest is submitted once, the summariser voids a lane with an
+unclaimed or over-claim job, the effective window is the limit minus the
+3-minute USR1 lead, and the smallest grant leaves 2 useful minutes; 13, only
+Triton's cache moves to the run directory. The status line is rewritten
+before the freeze.
+
+**D33. Action-path restarts: D30's exclusion extends to A1-A3 and the ladder.**
+A1-A3 and the ladder certify the action path, as A4 does. A guest-server
+restart during an observation call is an observation-service fault, and A7
+now bounds it on its own. Under the strict rule, one such restart (about 87%
+likely across A1-A3 and the ladder at the development rate) would fail the
+suite for a construct those criteria do not measure. So the narrow
+restart-only rule of D30 applies to them too: a trial whose only failures
+are a guest-server restart during an observation call and the accessibility
+tree that restart left undelivered is excused and reported; any other failure
+in that trial counts. A restart during an action (`/execute`) or a guard
+still counts, because the same server delivers actions. An A1-A3 entry is
+judged on its counted repetitions and needs all but at most one of its
+repetitions counted: a second excused trial in one entry counts as a failure.
+A ladder rung's "every gating trial passes" reads over its counted gating
+trials, and a rung with more than two excused trials does not qualify.
+Excused trials' steps stay in the step p95. Also decided before the freeze,
+from the review of `13c6790`: A7 sums restarts over every attempt but takes
+its call count from the counting attempt only, capped at the plan's 39,036
+calls, so cancelling and rerunning cannot raise its pass chance; A7 runs
+under attempt 1 at that attempt's N* and is not re-judged when a later
+attempt changes N*; a restart during the reset observation is excused the
+same way; and the remaining exposure (restarts outside an observation call,
+or slower than DesktopEnv's retry window of about 10 s, still count, and a
+post-guard restart can cost two entries) is stated with A4 and accepted.
+
+**D34. Checker-mutation audit: D27's consequence fired; one rater retry,
+then an honest exit.** With the upgraded open-weight rater (Qwen3.6-35B-A3B,
+thinking off, job 702) and the isolated Claude rater (133 items, no voids),
+development kappa is 0.27 against the registered 0.6, and the fourth review
+(score 57) projects P(kappa >= 0.6) near 0 at confirm scale. The open-weight
+rater accepts 19 of 26 violation mutants, often answering one word. As D27
+requires, the design went back to review; the kappa rule and its consequence
+stay as registered. Decided: (i) the open-weight rater runs once more, with
+thinking on (max_tokens at least 4,096), one configuration only; the
+development audit is rebuilt and rerated by both raters under the isolated
+protocol, within D27's 0.5 GPU-h. If development kappa is still below 0.6, no
+other rater is tried: the predictions that need audited labels (P2-P5) leave
+the confirmatory headline before the confirm campaign runs, and the campaign
+reports P1 and the checker false-negative candidates descriptively. (ii) Gold
+defects: every task with an audited K3 item gets a gold sham; when a task's
+gold sham is decided reject, its equivalence items leave the equivalence K3
+group and are reported as gold defects; labels stay relative to the gold.
+(iii) Violation misses: concordant answers that contradict a K3 label join
+the blind adjudication pool, mixed with the splits and disclosed; new-file
+end states get a text-level difference in the packet; and
+`pptx.viol.delete_bound_shape` skips shapes whose frame lies mostly off the
+slide. (iv) Audit integrity: the registered transcript audit ties each
+transcript to its item (the prompt names it, the answer's item id matches,
+the packet was read) and the final-text fallback needs an exact answer
+token; opaque ids use a secret per-audit salt, committed as a hash and
+revealed after ingest; the rater prompt template is committed and
+registered; and the context the agent harness injects is disclosed in
+section 9. (v) The rater GPU cap is re-measured with thinking on and
+registered so the 807-item maximum fits; the experiment's total stays under
+8 GPU-h, or it goes to the gauntlet (D24). Adjudication of the pool stays
+Kevin's.

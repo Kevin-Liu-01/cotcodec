@@ -1,0 +1,158 @@
+{
+  "case_status": {
+    "codecs": "PASS",
+    "derive": "PASS",
+    "end_to_end": "PASS",
+    "features": "PASS",
+    "multiple_choice": "PASS",
+    "selectors": "PASS",
+    "statistics": "PASS"
+  },
+  "cases": {
+    "codecs": {
+      "byte_level_codec": "checked",
+      "failures": [],
+      "status": "PASS"
+    },
+    "derive": {
+      "failures": [],
+      "refused_context_partition": "DenseDataError",
+      "refused_prompt_cluster": "IndexerContractError",
+      "refused_query_link": "DenseDataError",
+      "status": "PASS",
+      "tiny-attention": {
+        "anchored_questions": 1,
+        "context_length": {
+          "max": 128,
+          "min": 63
+        },
+        "questions": 6,
+        "sha256": "184fab69cff019a628c6bde5907a279bbb7ca6509a83ee126d07042ba12e9a96",
+        "units": 348
+      },
+      "tiny-hybrid": {
+        "anchored_questions": 1,
+        "context_length": {
+          "max": 87,
+          "min": 42
+        },
+        "questions": 6,
+        "sha256": "bfc6bb8a613e778c7216b0ee2f36d76bee3dfd20769ca85d220fac797d7f8367",
+        "units": 348
+      }
+    },
+    "end_to_end": {
+      "failures": [],
+      "status": "PASS",
+      "tiny-attention": {
+        "decisions": {
+          "anchor_confound": "NOT_EVALUABLE",
+          "entity_control": "NOT_EVALUABLE",
+          "fertility_association": "WEAK",
+          "floor_candidate": "NOT_VIABLE",
+          "h1_cx_lower": -1.0568701154589655,
+          "h1_cx_points": -0.6333800823915573,
+          "h1_cx_target": "mp",
+          "h2_status": "FAIL",
+          "lane_class": "NOT_VIABLE",
+          "literal_xi_rel_all": [
+            null,
+            null
+          ],
+          "literal_xi_rel_controlled": [
+            null,
+            null
+          ],
+          "null_calibration": {
+            "hs": "NOT_EVALUABLE",
+            "mp": "NOT_EVALUABLE"
+          }
+        },
+        "dev_artifact_sha256": "184fab69cff019a628c6bde5907a279bbb7ca6509a83ee126d07042ba12e9a96",
+        "seconds": 15.9,
+        "units": 348
+      },
+      "tiny-hybrid": {
+        "decisions": {
+          "anchor_confound": "NOT_EVALUABLE",
+          "entity_control": "NOT_EVALUABLE",
+          "fertility_association": "WEAK",
+          "floor_candidate": "NOT_VIABLE",
+          "h1_cx_lower": 0.018063938764943964,
+          "h1_cx_points": 0.15665282947676523,
+          "h1_cx_target": "mp",
+          "h2_status": "FAIL",
+          "lane_class": "NOT_VIABLE",
+          "literal_xi_rel_all": [
+            null,
+            null
+          ],
+          "literal_xi_rel_controlled": [
+            null,
+            null
+          ],
+          "null_calibration": {
+            "hs": "NOT_EVALUABLE",
+            "mp": "NOT_EVALUABLE"
+          }
+        },
+        "dev_artifact_sha256": "bfc6bb8a613e778c7216b0ee2f36d76bee3dfd20769ca85d220fac797d7f8367",
+        "seconds": 22.9,
+        "units": 348
+      }
+    },
+    "features": {
+      "failures": [],
+      "status": "PASS"
+    },
+    "multiple_choice": {
+      "failures": [],
+      "max_abs_gap": {
+        "attention": 1.430511474609375e-06,
+        "hybrid": 4.76837158203125e-07
+      },
+      "status": "PASS"
+    },
+    "selectors": {
+      "failures": [],
+      "status": "PASS"
+    },
+    "statistics": {
+      "failures": [],
+      "reads": {
+        "flat": {
+          "anchor_confound": "ABSENT",
+          "floor": "NOT_VIABLE",
+          "h1": 3.164313941321783,
+          "lane_class": "NOT_VIABLE"
+        },
+        "narrow": {
+          "anchor_confound": "ABSENT",
+          "floor": "VIABLE",
+          "h1": 15.164313941321783,
+          "lane_class": "GO_ONLY_CAPABLE"
+        },
+        "wide": {
+          "anchor_confound": "PRESENT",
+          "floor": "NOT_VIABLE",
+          "h1": 28.16431394132178,
+          "lane_class": "NEGATIVE_CAPABLE"
+        }
+      },
+      "status": "PASS"
+    }
+  },
+  "code_sha256": {
+    "harness/dense_headroom_data.py": "614f4b4cbfcce88f1b29513987ce3526a5a452f80048723210b8c1558d745ae8",
+    "harness/dense_headroom_stats.py": "5b036b99c1edde01fb4bf0826e3656c1071887a34b20bcc80fc410fcfff1cf8d",
+    "harness/dense_headroom_torch.py": "6dd8ff1f9cbcbd7d3faaecd1c94ab7908c12e2aea16b480bc56735e4b27547be",
+    "scripts/run_dense_headroom_precheck.py": "cb1eb03eeae6b86a4e4ae16abe570285ce4ca6b1f887a56108a4e958c026317a",
+    "scripts/run_dense_headroom_precheck_doctor.py": "57096736b09c36306f032317d46fb44f48a16d741ce674dc340cefcafd1eee30"
+  },
+  "doctor": "q3-dense-headroom-precheck-cpu-doctor",
+  "evidence_grade": "EXECUTABILITY_AND_GATE_SEMANTICS_ONLY: tiny randomly initialised Qwen3 and Qwen3.5-style models, stand-in byte and pair tokenizers and a synthetic K1 bundle built by the real K1 builder. Nothing here touches Qwen3-0.6B-Base, Qwen3.5-4B-Base, Belebele or FineWeb.",
+  "experiment_id": "q3-dense-headroom-precheck-v1",
+  "numbers_are_synthetic": true,
+  "seconds": 92.4,
+  "status": "DENSE_DOCTOR_PASS"
+}
