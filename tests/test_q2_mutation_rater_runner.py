@@ -14,6 +14,7 @@ import pytest
 from harness.q2_mutation import audit, rater_runner, raters
 
 ROOT = Path(__file__).resolve().parents[1]
+SALT = "c3" * 32
 
 
 def _packet(item_id: str, pages: int = 1) -> dict[str, Any]:
@@ -51,13 +52,21 @@ def test_both_raters_see_the_same_parts_in_the_same_order() -> None:
     oai_text = [b["text"] for b in oai["messages"][1]["content"] if b["type"] == "text"]
     assert anth_text == oai_text
     assert anth["system"] == raters.RATER_PROMPT_V1 == oai["messages"][0]["content"]
-    # Registered parameters: no sampling parameter for the Anthropic model,
-    # greedy decoding without thinking for the open-weight model.
+    # Registered parameters: no sampling parameter for the Anthropic model; for
+    # the open-weight model thinking on with the model card's sampling for
+    # thinking on general tasks, seeded, one configuration (decision D34).
     assert not {"temperature", "top_p", "top_k", "thinking"} & set(anth)
     assert anth["max_tokens"] == 16000 and anth["output_config"] == {"effort": "high"}
     assert anth["model"] == raters.RATERS[0]["registry_id"]
-    assert (oai["temperature"], oai["top_p"], oai["seed"], oai["max_tokens"]) == (0.0, 1.0, 42, 256)
-    assert oai["chat_template_kwargs"] == {"enable_thinking": False}
+    assert {k: oai[k] for k in ("temperature", "top_p", "top_k", "min_p")} == {
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "top_k": 20,
+        "min_p": 0.0,
+    }
+    assert (oai["presence_penalty"], oai["repetition_penalty"]) == (1.5, 1.0)
+    assert (oai["seed"], oai["max_tokens"]) == (42, 8192)
+    assert oai["chat_template_kwargs"] == {"enable_thinking": True}
     # The body is a pure function of the packet: its digest is reproducible.
     again = rater_runner.canonical_bytes(rater_runner.request_body("model-rater-anthropic", packet))
     assert again == rater_runner.canonical_bytes(anth)
@@ -127,14 +136,29 @@ def test_replies_map_to_answers() -> None:
     assert raters.answer_for(refusal.outcome, refusal.text) == ("unsure", "refusal")
     rejected = rater_runner.openai_reply(rater_runner.Attempt(status=400, response_bytes=b"{}"))
     assert raters.answer_for(rejected.outcome, rejected.text) == ("unsure", "request_rejected")
-    body = {
-        "model": "q2m-rater",
-        "choices": [{"message": {"content": ""}, "finish_reason": "stop"}],
-    }
-    empty = rater_runner.openai_reply(
-        rater_runner.Attempt(status=200, response_bytes=json.dumps(body).encode())
-    )
+    def reply(content: str | None, finish: str = "stop") -> rater_runner.Reply:
+        body = {
+            "model": "q2m-rater",
+            "choices": [{"message": {"content": content}, "finish_reason": finish}],
+        }
+        return rater_runner.openai_reply(
+            rater_runner.Attempt(status=200, response_bytes=json.dumps(body).encode())
+        )
+
+    # Thinking on (decision D34): the answer is the first word after the last
+    # </think>; a reply cut inside its thinking holds no answer.
+    thought = reply("The title on slide 3 is gone.\n</think>\n\nReject. Slide 3 lost its title.")
+    assert raters.answer_for(thought.outcome, thought.text) == ("reject", "ok")
+    assert thought.extra["thinking_finished"] is True
+    cut = reply("I should look at slide 3 and then", finish="length")
+    assert raters.answer_for(cut.outcome, cut.text) == ("unsure", "thinking_unfinished")
+    assert cut.stop_reason == "length" and cut.extra["thinking_finished"] is False
+    assert raters.answer_for(reply("").outcome, None) == ("unsure", "thinking_unfinished")
+    empty = reply("done</think>\n\n")
     assert raters.answer_for(empty.outcome, empty.text) == ("unsure", "empty")
+    # Only the text after the thinking is read: an answer word inside it is not.
+    inner = reply("accept? No.</think>\nMaybe it is fine.")
+    assert raters.answer_for(inner.outcome, inner.text) == ("unsure", "unparseable")
 
 
 def test_runner_calls_each_item_once_and_resumes(tmp_path: Path) -> None:
@@ -143,7 +167,7 @@ def test_runner_calls_each_item_once_and_resumes(tmp_path: Path) -> None:
 
     def send(item_id: str, payload: bytes) -> rater_runner.Attempt:
         sent.append(item_id)
-        reply = "accept" if item_id != "i3" else "maybe"
+        reply = "ok</think>\n\n" + ("accept" if item_id != "i3" else "maybe")
         body = {"model": "q2m-rater", "choices": [{"message": {"content": reply}}]}
         return rater_runner.Attempt(
             status=200, request_bytes=payload, response_bytes=json.dumps(body).encode()
@@ -257,6 +281,7 @@ def test_audit_sample_items_and_text_packets(tmp_path: Path) -> None:
         saved,
         targets,
         initial_of=lambda task: {vm: str(start)},
+        salt=SALT,
         path_map=[("/ro/build/", str(tmp_path) + "/")],
     )
     strata = sorted(r["stratum"] for r in built["sample"])
@@ -364,6 +389,7 @@ def test_packet_difference_is_against_the_saved_starting_file(
         saved_jobs,
         targets,
         initial_of=lambda task: {vm: str(w["start"])},
+        salt=SALT,
         build_root=str(w["build"]) + "/",
     )
     (job,) = built["baseline_jobs"]
@@ -469,6 +495,7 @@ def test_p1_flips_and_do_nothing_shams_use_the_control_saved_start(tmp_path: Pat
         saved,
         targets,
         initial_of=lambda task: {vm: str(raw)},
+        salt=SALT,
         controls_tasks=tasks,
         controls_saved=controls_saved,
     )
@@ -498,8 +525,11 @@ def test_fit_packet_shortens_starting_listings_first_and_records_cuts() -> None:
     assert packet["initial_files"][0]["structure"][-1].endswith(audit.FIT_NOTE)
     # The end-state difference is the last thing cut and stayed whole here.
     assert len(packet["candidate"]["files"][0]["diff_vs_initial"]) == 300
-    # The registered budget leaves the answer and prompt allowance in the window.
-    assert audit.PACKET_TOKEN_BUDGET == 131_072 - 256 - 2_048
+    # The registered budget leaves the reply (thinking and answer) and the prompt
+    # allowance in the window, and the window is the engine's (decision D34).
+    assert audit.PACKET_TOKEN_BUDGET == 139_264 - 8_192 - 2_048 == 129_024
+    assert dict(rater_runner.ENGINE_FLAGS)["max_model_len"] == audit.CONTEXT_TOKENS
+    assert rater_runner.OPEN_WEIGHT["max_tokens"] == audit.ANSWER_TOKENS
     small = _packet("i1")
     assert audit.fit_packet(small)["cuts"] == [] and small["fit"]["fits"]
     tiny = _packet("i2", pages=3)
@@ -1078,6 +1108,17 @@ def test_isolated_export_holds_one_item_per_directory(tmp_path: Path) -> None:
         rater_runner.export_isolated(items, root)
 
 
+def _prompt_entry(text: str) -> dict:
+    return {"type": "user", "message": {"role": "user", "content": text}}
+
+
+def _wrapped(text: str) -> str:
+    """The task text as the workflow harness hands it to the agent."""
+    return rater_runner.WORKFLOW_PREAMBLE + "\n".join(
+        rater_runner.WORKFLOW_INDENT + line for line in text.split("\n")
+    )
+
+
 def test_transcript_audit_voids_shell_outside_paths_and_other_tools(tmp_path: Path) -> None:
     folder = tmp_path / "iso" / "i0"
     (folder / "pages").mkdir(parents=True)
@@ -1100,15 +1141,15 @@ def test_transcript_audit_voids_shell_outside_paths_and_other_tools(tmp_path: Pa
     clean = audit(_use("Read", file_path=inside), _use("Read", file_path=page))
     assert clean["void_reasons"] == [] and clean["models"] == {"claude-opus-5-5": 2}
     assert clean["tool_calls"] == {"Read": 2, "StructuredOutput": 1}
-    assert audit(_use("Glob", path=str(folder), pattern="pages/*.png"))["void_reasons"] == []
+    assert clean["packet_read"] is True
     for blocks, reason in (
         ((_use("Bash", command="ls"),), "shell call"),
         ((_use("Read", file_path=str(tmp_path / "iso" / "i1" / "packet.txt")),), "not inside"),
         ((_use("Read", file_path=str(folder / ".." / "i1" / "packet.txt")),), "not inside"),
         ((_use("Read", file_path="packet.txt"),), "not inside"),  # relative: cwd unknown
-        ((_use("Glob", pattern="*.txt"),), "not inside"),  # no path: the session's cwd
-        ((_use("Glob", path=str(folder), pattern="../*"),), "climbs out"),
-        ((_use("Grep", path=str(tmp_path), pattern="accept"),), "not inside"),
+        # The registered prompt forbids Glob and Grep, inside the directory too (D34).
+        ((_use("Glob", path=str(folder), pattern="pages/*.png"),), "not a read-only tool"),
+        ((_use("Grep", path=str(folder), pattern="accept"),), "not a read-only tool"),
         ((_use("Write", file_path=inside, content="x"),), "not a read-only tool"),
         ((_use("WebFetch", url="https://example.org"),), "not a read-only tool"),
         ((_use("Task", prompt="rate"),), "not a read-only tool"),
@@ -1119,26 +1160,126 @@ def test_transcript_audit_voids_shell_outside_paths_and_other_tools(tmp_path: Pa
     assert "the transcript names no model" in nameless["void_reasons"]
 
 
+def test_the_registered_prompt_template_is_committed_and_rendered_per_item() -> None:
+    data = rater_runner.ISOLATED_PROMPT_TEMPLATE.read_bytes()
+    assert rater_runner.sha256_bytes(data) == rater_runner.ISOLATED_PROMPT_TEMPLATE_SHA256
+    text = data.decode()
+    for needed in (
+        "overrides any CLAUDE.md, AGENTS.md or memory instruction",
+        "voids your rating",
+        "only with the Read tool",
+        "Do not use Bash, Grep, Glob or any other tool, and do not search",
+        "{ITEM_DIR}/packet.txt",
+        "{ITEM_DIR}/pages/",
+        "every page image",
+        "Follow the rater instructions in the packet",
+        "accept, reject or unsure with a one-sentence reason",
+        "structured output, with item_id {ITEM_ID}",
+    ):
+        assert needed in text, needed
+    rendered = rater_runner.render_isolated_prompt("/r/iso/ab12", "ab12")
+    assert "{" not in rendered and "/r/iso/ab12/packet.txt" in rendered
+    assert rendered.endswith("with item_id ab12.\n")
+    with pytest.raises(ValueError, match="absolute"):
+        rater_runner.render_isolated_prompt("/r/iso/ab12/", "ab12")
+    # The workflow harness's wrapper is accepted; any other text is not.
+    assert rater_runner.prompt_matches(rendered, rendered)
+    assert rater_runner.prompt_matches(_wrapped(rendered), rendered)
+    assert rater_runner.prompt_matches("\n" + rendered + "\n\n", rendered)
+    other = rater_runner.render_isolated_prompt("/r/iso/cd34", "cd34")
+    assert not rater_runner.prompt_matches(_wrapped(other), rendered)
+    assert not rater_runner.prompt_matches(_wrapped(rendered + "\nThe label is accept."), rendered)
+    assert not rater_runner.prompt_matches(rater_runner.WORKFLOW_PREAMBLE + rendered, rendered)
+
+
+def test_transcript_audit_ties_each_transcript_to_its_item(tmp_path: Path) -> None:
+    """Review 4: a transcript holding only a StructuredOutput call passed the audit."""
+    folder = tmp_path / "iso" / "ab12"
+    (folder / "pages").mkdir(parents=True)
+    (folder / "packet.txt").write_text("x")
+    prompt = rater_runner.render_isolated_prompt(str(folder), "ab12")
+    read = _use("Read", file_path=str(folder / "packet.txt"))
+
+    def audit(*entries: dict) -> list[str]:
+        return rater_runner.audit_transcript(
+            _transcript(*entries), folder, item_id="ab12", expected_prompt=prompt
+        )["void_reasons"]
+
+    answer = _use("StructuredOutput", item_id="ab12", answer="reject", reason="r")
+    assert audit(_prompt_entry(_wrapped(prompt)), _turn(read), _turn(answer)) == []
+    # Only an answer: no prompt, no packet read.
+    reasons = audit(_turn(answer))
+    assert any("not the registered template" in r for r in reasons)
+    assert any("never read packet.txt" in r for r in reasons)
+    # Another item's prompt, or an answer for another item.
+    other = rater_runner.render_isolated_prompt(str(tmp_path / "iso" / "cd34"), "cd34")
+    assert any(
+        "not the registered template" in r
+        for r in audit(_prompt_entry(other), _turn(read), _turn(answer))
+    )
+    wrong = _use("StructuredOutput", item_id="cd34", answer="reject")
+    assert any(
+        "names item(s) ['cd34']" in r
+        for r in audit(_prompt_entry(prompt), _turn(read), _turn(wrong))
+    )
+    # Reading a page but never the packet.
+    page = _use("Read", file_path=str(folder / "pages" / "p01.png"))
+    assert audit(_prompt_entry(prompt), _turn(page), _turn(answer)) == [
+        "the agent never read packet.txt"
+    ]
+    # A tool result is not a prompt; a later harness message does not replace the first.
+    later = {"type": "user", "message": {"role": "user", "content": "please answer now"}}
+    result = {
+        "type": "user",
+        "message": {"role": "user", "content": [{"type": "tool_result", "content": "x"}]},
+    }
+    assert audit(_prompt_entry(prompt), _turn(read), result, later, _turn(answer)) == []
+
+
+@pytest.mark.parametrize(
+    ("final_text", "record", "source"),
+    [
+        ("reject", "reject", "final_text"),
+        ("Answer: Reject. The title is gone.", "reject", "final_text"),
+        ("I cannot accept this; reject.", "accept", "not_found"),
+        ("I cannot accept this; reject.", "reject", "not_found"),
+        ("unacceptable result", "accept", "not_found"),
+        ("accepted", "accept", "not_found"),
+        ("unsure", "unsure", "final_text"),
+        ("", "accept", "not_found"),
+    ],
+)
+def test_final_text_fallback_needs_one_exact_answer_word(
+    final_text: str, record: str, source: str
+) -> None:
+    audit_result = {"structured_answers": [], "final_text": final_text}
+    assert rater_runner._answer_source(record, audit_result) == source
+
+
 def test_isolated_ingest_takes_the_model_from_the_transcript_and_voids_breaches(
     tmp_path: Path,
 ) -> None:
     items = [_packet(f"i{n}") for n in range(5)]
     root = tmp_path / "iso"
     manifest = rater_runner.export_isolated(items, root)
+    assert manifest["prompt_template_sha256"] == rater_runner.ISOLATED_PROMPT_TEMPLATE_SHA256
     transcripts = tmp_path / "transcripts"
     transcripts.mkdir()
 
-    def write(item: str, *blocks: dict, model: str = "claude-opus-5-5") -> None:
+    def write(item: str, *blocks: dict, model: str = "claude-opus-5-5", prompt: str = "") -> None:
+        text = prompt or rater_runner.render_isolated_prompt(str(root / item), item)
         read = _use("Read", file_path=str(root / item / "packet.txt"))
-        (transcripts / f"{item}.jsonl").write_bytes(_transcript(_turn(read, *blocks, model=model)))
+        (transcripts / f"{item}.jsonl").write_bytes(
+            _transcript(_prompt_entry(_wrapped(text)), _turn(read, *blocks, model=model))
+        )
 
-    write("i0", _use("StructuredOutput", answer="accept", reason="fine"))
+    write("i0", _use("StructuredOutput", item_id="i0", answer="accept", reason="fine"))
     write(
         "i1",
         _use("Bash", command="cat ../i0/packet.txt"),
-        _use("StructuredOutput", answer="reject"),
+        _use("StructuredOutput", item_id="i1", answer="reject"),
     )
-    write("i2", _use("StructuredOutput", answer="reject"))  # the record says accept
+    write("i2", _use("StructuredOutput", item_id="i2", answer="reject"))  # the record says accept
     # i3 answers without a transcript; i4 is not answered at all.
     answers = tmp_path / "answers"
     answers.mkdir()
@@ -1173,6 +1314,9 @@ def test_isolated_ingest_takes_the_model_from_the_transcript_and_voids_breaches(
         transcripts / "i0.jsonl"
     )
     assert calls["i0"]["extra"]["answer_source"] == "structured_output"
+    assert calls["i0"]["extra"]["prompt_matches_template"] is True
+    assert calls["i0"]["extra"]["packet_read"] is True
+    assert calls["i0"]["extra"]["prompt_sha256"] == manifest["items"]["i0"]["prompt_sha256"]
     for item in ("i1", "i2", "i3"):
         assert (calls[item]["answer"], calls[item]["status"]) == ("unsure", "isolation_void")
     assert "shell call Bash" in calls["i1"]["extra"]["void_reasons"]
@@ -1184,20 +1328,32 @@ def test_isolated_ingest_takes_the_model_from_the_transcript_and_voids_breaches(
     receipt = json.loads((out / "receipt.json").read_text())
     assert receipt["result"]["unrated"] == ["i4"] and receipt["result"]["void"] == 3
     assert set(receipt["answers_files_sha256"]) == {"i0.json", "i1.json", "i2.json", "i3.json"}
+    assert receipt["isolation"]["prompt_template_sha256"] == (
+        rater_runner.ISOLATED_PROMPT_TEMPLATE_SHA256
+    )
     assert "r" not in {c["extra"].get("reason") for c in calls.values()}
     summary = rater_runner.merged_answers([out / "calls.jsonl"], [f"i{n}" for n in range(5)])
     assert summary["i1"] == ("unsure", "isolation_void") and summary["i4"] == ("unsure", "unrated")
 
     # Another model in a transcript refuses the whole ingest; so does a second answer.
-    write("i0", _use("StructuredOutput", answer="accept"), model="claude-sonnet-5")
     records = [{"item_id": "i0", "answer": "accept"}]
+    write("i0", _use("StructuredOutput", item_id="i0", answer="accept"), model="claude-sonnet-5")
     with pytest.raises(SystemExit, match="names model"):
         rater_runner.ingest_isolated(items, manifest, root, records, transcripts, tmp_path / "x")
-    write("i0", _use("StructuredOutput", answer="accept"))
+    write("i0", _use("StructuredOutput", item_id="i0", answer="accept"))
     with pytest.raises(SystemExit, match="second answer"):
         rater_runner.ingest_isolated(
             items, manifest, root, records * 2, transcripts, tmp_path / "y"
         )
+    # The transcript of another item's agent, filed under i0, is void.
+    other = rater_runner.render_isolated_prompt(str(root / "i1"), "i1")
+    write("i0", _use("StructuredOutput", item_id="i0", answer="accept"), prompt=other)
+    result = rater_runner.ingest_isolated(
+        items, manifest, root, records, transcripts, tmp_path / "w"
+    )
+    row = rater_runner.read_calls(tmp_path / "w" / "calls.jsonl")["i0"]
+    assert result["void"] == 1 and row["extra"]["prompt_matches_template"] is False
+    write("i0", _use("StructuredOutput", item_id="i0", answer="accept"))
     # A changed item directory voids that item.
     (root / "i0").chmod(0o755)
     (root / "i0" / "note.txt").write_text("label: should_pass_equiv")
@@ -1222,7 +1378,7 @@ def test_a_stop_signal_ends_the_run_inside_its_grace(tmp_path: Path) -> None:
             runner.signal_stop()  # the lane's USR1 arrives during the first call
             release.wait(5)  # the engine stops: the request in flight fails
             return rater_runner.Attempt(transport_error="ConnectError", request_bytes=payload)
-        body = {"choices": [{"message": {"content": "accept"}}]}
+        body = {"choices": [{"message": {"content": "x</think>\naccept"}}]}
         return rater_runner.Attempt(
             status=200, request_bytes=payload, response_bytes=json.dumps(body).encode()
         )

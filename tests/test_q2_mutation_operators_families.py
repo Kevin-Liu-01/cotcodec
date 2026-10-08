@@ -355,6 +355,36 @@ def test_delete_bound_shape_skips_shapes_hidden_under_later_ones(tmp_path: Path)
     assert not any(u.startswith("slides/0/shapes/") for u in hidden)
 
 
+def test_delete_bound_shape_skips_shapes_mostly_off_the_slide(tmp_path: Path) -> None:
+    """Decision D34 (review 4, 4ed5abd0 afb440d9): a rotated shape about 78% off its slide."""
+    from harness.q2_mutation.operators.pptx import OFFSLIDE_SHARE, offslide_share
+
+    size = ["18288000", "10287000"]
+    # A 6 x 1.2 million EMU frame turned by 60 degrees near the right edge: the
+    # bounding box of its rotation is mostly beyond x = 18,288,000.
+    rotated = _sh(16_420_000, 4_000_000, 6_000_000, 1_200_000, rot=str(60 * 60_000))
+    share = offslide_share(rotated, size)
+    assert 0.75 < share < 0.85 and share >= OFFSLIDE_SHARE
+    assert offslide_share(_sh(0, 0, 1_000_000, 1_000_000), size) == 0.0
+    half = _sh(-500_000, 0, 1_000_000, 1_000_000)  # exactly half off the left edge
+    assert offslide_share(half, size) == pytest.approx(0.5)
+    assert offslide_share(_sh(-400_000, 0, 1_000_000, 1_000_000), size) == pytest.approx(0.4)
+    assert offslide_share(rotated, None) == 0.0  # unknown slide size: no skip
+    assert offslide_share({"kind": "sp", "name": "ph"}, size) == 0.0  # no frame
+
+    ctx = _ctx(tmp_path, "pptx")
+    planned, _ = plan_operator(registry()["pptx.viol.delete_bound_shape"](), ctx)
+    before = {p.record["recipe"]["params"]["site"]["unit"] for p in planned}
+    assert "slides/0/shapes/0" in before
+    title = ctx.base["slides"][0]["shapes"][0]
+    width = int(ctx.base["slide_size"][0])
+    # Move the bound title so that 60% of its frame lies right of the slide.
+    title["off"] = [width - int(0.4 * title["ext"][0]), title["off"][1]]
+    planned, _ = plan_operator(registry()["pptx.viol.delete_bound_shape"](), ctx)
+    after = {p.record["recipe"]["params"]["site"]["unit"] for p in planned}
+    assert "slides/0/shapes/0" not in after and after == before - {"slides/0/shapes/0"}
+
+
 # --------------------------------------------------------------------------- text and config
 
 

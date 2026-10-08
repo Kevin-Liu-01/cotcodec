@@ -1,3 +1,4 @@
+import hashlib
 import io
 import json
 import tarfile
@@ -440,23 +441,26 @@ def test_violation_census_weights_every_violation_once() -> None:
     assert not any(s.mutant_id.startswith("v") and s.stratum != "violation" for s in sample)
 
 
+SALT = "5a" * 32
+
+
 def test_packets_are_blind() -> None:
     item = raters.Sampled("m1", TASK, "agreement", 0.5)
     packet = raters.make_packet(
         item,
+        item_id=raters.opaque_item_id("m1", SALT),
         instruction="Do X",
         initial_files=[{"path_in_vm": "/a", "sha256": "0"}],
         candidate_artifacts={"render_png": "r.png"},
-        seed=42,
     )
     assert "m1" not in str(packet)
     with pytest.raises(ValueError, match="leaks"):
         raters.make_packet(
             item,
+            item_id=raters.opaque_item_id("m1", SALT),
             instruction="Do X",
             initial_files=[],
             candidate_artifacts={"verdict": "pass"},
-            seed=42,
         )
     assert sorted(raters.rater_order(["a", "b", "c"], "r1")) == ["a", "b", "c"]
     assert raters.RATERS[0]["provider"] != raters.RATERS[1]["provider"]
@@ -552,6 +556,139 @@ def test_kappa_below_threshold_fires_both_groups() -> None:
     assert summary.kappa_fires and all(summary.k3_fires.values())
 
 
+def test_every_task_with_a_k3_item_gets_a_gold_sham() -> None:
+    """Decision D34: the quota's shams, then a gold sham for each K3 task without one."""
+    cands = [raters.Candidate(f"e{i}", f"t{i:02d}", "should_pass_equiv", "pass") for i in range(12)]
+    cands += [raters.Candidate("v0", "t20", "should_fail_violation", "fail")]
+    cands += [raters.Candidate("a0", "t30", "should_pass_alt_solution", "pass")]
+    cands += [raters.Candidate("x0", "t31", "should_fail_extra_change", "fail")]
+    sample = raters.draw_audit_sample(cands, seed=42)
+    shams = [s for s in sample if s.stratum == "sham"]
+    # 15 real items: the quota is 2 shams (gold and do-nothing of t00).
+    assert [(s.task_id, s.sham) for s in shams[:2]] == [("t00", "gold"), ("t00", "do_nothing")]
+    gold = {s.task_id for s in shams if s.sham == "gold"}
+    assert gold == {f"t{i:02d}" for i in range(12)} | {"t20"}
+    # Alternative-solution and extra-change tasks are not K3 tasks.
+    assert "t30" not in gold and "t31" not in gold
+    assert len(shams) == 14 and raters.draw_audit_sample(cands, seed=42) == sample
+
+
+def test_item_ids_need_the_audit_salt() -> None:
+    """Decision D34: ids are not a function of public ids and the seed."""
+    first = raters.opaque_item_id("t1__sham_gold", "0f" * 32)
+    second = raters.opaque_item_id("t1__sham_gold", "f0" * 32)
+    assert first != second and len(first) == 16
+    assert first != hashlib.sha256(b"q2-audit:42:t1__sham_gold").hexdigest()[:16]
+    assert raters.salt_sha256("0f" * 32) == hashlib.sha256(("0f" * 32).encode()).hexdigest()
+    for bad in ("42", "0F" * 32, "0f" * 31, "zz" * 32):
+        with pytest.raises(ValueError, match="64 lowercase hex"):
+            raters.opaque_item_id("m1", bad)
+
+
+def _pool_case() -> tuple[list, dict, dict]:
+    sample, labels, ratings = [], {}, {}
+    for task in range(10):
+        for n in range(4):
+            key = f"e{task}_{n}"
+            sample.append(raters.Sampled(key, f"t{task}", "agreement", 1.0))
+            labels[key], ratings[key] = "should_pass_equiv", ("accept", "accept")
+        key = f"v{task}"
+        sample.append(raters.Sampled(key, f"t{task}", "violation", 1.0))
+        labels[key], ratings[key] = "should_fail_violation", ("reject", "reject")
+        sample.append(raters.Sampled(f"t{task}__sham_gold", f"t{task}", "sham", 1.0, sham="gold"))
+        ratings[f"t{task}__sham_gold"] = ("accept", "accept")
+    return sample, labels, ratings
+
+
+def test_adjudication_pool_mixes_splits_concordant_contradictions_and_gold_shams() -> None:
+    sample, labels, ratings = _pool_case()
+    ratings["e0_0"] = ("accept", "reject")  # split
+    ratings["v1"] = ("accept", "accept")  # both accept a violation: contradicts the label
+    ratings["e2_0"] = ("reject", "reject")  # both reject an equivalence mutant
+    ratings["t3__sham_gold"] = ("reject", "accept")  # split gold sham
+    ratings["v4"] = ("reject", "reject")  # concordant with the label: not in the pool
+    pool = raters.adjudication_pool(sample, labels, ratings)
+    assert dict(pool) == {
+        "e0_0": "split",
+        "v1": "concordant_contradicts_label",
+        "e2_0": "concordant_contradicts_label",
+        "t3__sham_gold": "gold_sham_split",
+    }
+    assert pool == raters.adjudication_pool(sample, labels, ratings)
+    summary = raters.summarize(sample, labels, ratings, n_boot=200)
+    assert summary.adjudication["pool"] == 4 and summary.adjudication["pending"] == 4
+    assert summary.adjudication["pool_by_reason"] == {
+        "split": 1,
+        "concordant_contradicts_label": 2,
+        "gold_sham_split": 1,
+    }
+    # Unadjudicated, a concordant contradiction is a label error (the consensus).
+    assert summary.decisions["v1"] == "accept" and summary.decisions["e2_0"] == "reject"
+    # Kevin's answer decides every pool item, concordant ones included.
+    done = raters.summarize(
+        sample, labels, ratings, adjudicated={"v1": "reject", "e2_0": "accept"}, n_boot=200
+    )
+    assert done.decisions["v1"] == "reject" and done.decisions["e2_0"] == "accept"
+    assert done.adjudication["adjudicated_by_reason"] == {"concordant_contradicts_label": 2}
+    group = "should_fail_violation"
+    assert done.label_error[group].estimate == 0.0 < summary.label_error[group].estimate
+    # Kappa does not move with adjudication.
+    assert done.kappa == summary.kappa
+    with pytest.raises(ValueError, match="outside Kevin's pool"):
+        raters.summarize(sample, labels, ratings, adjudicated={"v4": "accept"}, n_boot=200)
+
+
+def test_a_rejected_gold_takes_its_equivalence_items_out_of_k3() -> None:
+    """Decision D34: gold defects leave the equivalence K3 group; labels stay."""
+    sample, labels, ratings = _pool_case()
+    for n in range(4):
+        ratings[f"e5_{n}"] = ("reject", "reject")  # judged against a flawed gold
+    ratings["t5__sham_gold"] = ("reject", "reject")
+    ratings["t6__sham_gold"] = ("reject", "accept")  # split: not decided yet
+    summary = raters.summarize(sample, labels, ratings, n_boot=200)
+    defects = summary.gold_defects
+    assert defects["tasks"] == ["t5"] and defects["equivalence_items"] == 4
+    assert defects["equivalence_decisions"] == {"reject": 4}
+    assert summary.label_error["should_pass_equiv"].estimate == 0.0
+    assert summary.k3["should_pass_equiv"].n_items == 36
+    # The violation item of the defect task stays in its group; S6 and the
+    # decisions keep every item; kappa is computed on every real item.
+    assert summary.k3["should_fail_violation"].n_items == 10
+    assert summary.by_label_class["should_pass_equiv"]["n"] == 40
+    assert summary.decisions["e5_0"] == "reject"
+    assert summary.sham_decisions["t5__sham_gold"] == "reject"
+    # Kevin rejecting the split gold sham makes t6 a gold defect as well.
+    both = raters.summarize(
+        sample, labels, ratings, adjudicated={"t6__sham_gold": "reject"}, n_boot=200
+    )
+    assert both.gold_defects["tasks"] == ["t5", "t6"]
+    assert both.k3["should_pass_equiv"].n_items == 32
+    # Without the gold-sham rejection the same answers are label errors.
+    ratings["t5__sham_gold"] = ("accept", "accept")
+    plain = raters.summarize(sample, labels, ratings, n_boot=200)
+    assert plain.gold_defects["tasks"] == []
+    assert plain.label_error["should_pass_equiv"].estimate == pytest.approx(0.1)
+
+
+@pytest.mark.parametrize(
+    ("content", "reasoning", "text", "finished"),
+    [
+        ("Let me look.\n</think>\n\nreject. Slide 3 lost its title.", None,
+         "\n\nreject. Slide 3 lost its title.", True),
+        ("a </think> b </think>\naccept", None, "\naccept", True),
+        ("Thinking that never ends", None, None, False),
+        (None, None, None, False),
+        ("accept. Fine.", "the separated thinking", "accept. Fine.", True),
+        (None, "cut in the thinking", None, False),
+    ],
+)
+def test_thinking_replies_answer_after_the_last_think_end(
+    content: str | None, reasoning: str | None, text: str | None, finished: bool
+) -> None:
+    assert raters.split_thinking(content, reasoning) == (text, finished)
+    assert raters.answer_for("thinking_unfinished", None) == ("unsure", "thinking_unfinished")
+
+
 @pytest.mark.parametrize(
     ("text", "answer", "status"),
     [
@@ -603,7 +740,12 @@ def test_audit_pool_and_sampler_add_p1_flips() -> None:
     strata = {s.mutant_id: s.stratum for s in sample}
     assert strata["m1"] == "agreement" and strata["m4"] == "violation"
     assert strata["t9__p1_flip"] == "p1_flip"
-    assert sum(1 for s in sample if s.stratum == "sham") == 1
+    # The 10% quota gives t1 a gold sham; t2 has a K3 (violation) item and gets
+    # one too (decision D34).
+    assert sorted(s.mutant_id for s in sample if s.stratum == "sham") == [
+        "t1__sham_gold",
+        "t2__sham_gold",
+    ]
 
 
 def test_k3_bound_fires_without_observed_errors_when_the_sample_is_small() -> None:
@@ -947,6 +1089,69 @@ def test_packet_artifacts_for_text_and_binary(tmp_path: Path) -> None:
     assert "gold" not in json.dumps(out)
     cmds = packets.render_command("/w/x.docx", "/w/r", "/w/h")
     assert cmds[0][-1] == "/w/x.docx" and cmds[1][0] == "pdftoppm"
+
+
+def test_new_file_end_states_get_a_text_difference(tmp_path: Path) -> None:
+    """Decision D34 (review 4, bb83cab4): a script written from a deck shows its text changes."""
+    from harness.q2_mutation import packets
+    from harness.q2_mutation.operators import _synth as synth
+
+    deck = synth.build_pptx(tmp_path / "deck.pptx")
+    lines = packets.text_lines(deck)
+    assert lines[:2] == ["QUARTERLY RESULTS", "Revenue rose in the north region"]
+    assert "Backup material for questions" in lines
+    script = synth.build_docx(
+        tmp_path / "script.docx",
+        blocks=[
+            {"runs": [("Revenue rose in the north region", {})]},  # the title was dropped
+            {"runs": [("Outlook remans positive", {})]},  # a one-letter typo
+        ],
+    )
+    out = packets.artifacts(
+        {"/home/user/deck.pptx": str(deck)},
+        {"/home/user/deck.pptx": str(deck), "/home/user/script.docx": str(script)},
+    )
+    diff = out["/home/user/script.docx"]["diff_vs_initial"]
+    assert diff[0] == packets.NEW_FILE_HEAD
+    assert "-QUARTERLY RESULTS" in diff and "-Outlook remains positive" in diff
+    assert "+Outlook remans positive" in diff
+    assert " Revenue rose in the north region" in diff
+    assert out["/home/user/script.docx"]["baseline"] == "none"
+    # Text and workbook files are compared the same way; a binary stays "new file".
+    notes = tmp_path / "notes.txt"
+    notes.write_text("QUARTERLY RESULTS\nRegion North\n")
+    text_diff = packets.new_file_text_diff([deck], notes)
+    assert "+Region North" in text_diff and "-Outlook remains positive" in text_diff
+    book = synth.build_xlsx(tmp_path / "book.xlsx")
+    assert packets.text_lines(book) and all(" | " in x or x for x in packets.text_lines(book))
+    blob = tmp_path / "chart.png"
+    blob.write_bytes(b"\x89PNG")
+    assert packets.new_file_text_diff([deck], blob) == ["new file"]
+
+
+def test_save_drift_is_counted_not_listed(tmp_path: Path) -> None:
+    """Decision D34 (review 4, 4ed5abd0): 0.01 mm save rounding is one closing line."""
+    from harness.q2_mutation import packets
+    from harness.q2_mutation.operators import _synth as synth
+
+    def deck(path: Path, dx: tuple[int, int, int, int]) -> Path:
+        slides = [[dict(shape) for shape in slide] for slide in synth.DEFAULT_SLIDES]
+        for shape, delta in zip(slides[0], dx, strict=True):
+            shape["off"] = (shape["off"][0] + delta, shape["off"][1])
+        return synth.build_pptx(path, slides=slides)
+
+    start = deck(tmp_path / "a.pptx", (0, 0, 0, 0))
+    # Shapes 0 and 2 drift by one and two LibreOffice units; shape 3 really moves.
+    end = deck(tmp_path / "b.pptx", (360, 0, -720, 540_000))
+    lines = packets.office_diff_lines(start, end)
+    assert len(lines) == 2
+    assert lines[0].startswith("changed slides/0/shapes/3/off [layout]")
+    assert lines[-1] == packets.DRIFT_NOTE.format(n=2)
+    only_drift = packets.office_diff_lines(start, deck(tmp_path / "c.pptx", (360, 0, 0, 0)))
+    assert only_drift == [packets.DRIFT_NOTE.format(n=1)]
+    # One unit more than the rule is listed.
+    over = packets.office_diff_lines(start, deck(tmp_path / "d.pptx", (721, 0, 0, 0)))
+    assert len(over) == 1 and over[0].startswith("changed slides/0/shapes/0/off")
 
 
 def test_make_jobs_skips_gold_identical_to_initial(tmp_path: Path) -> None:

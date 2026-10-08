@@ -9,7 +9,9 @@
     flip (``raters.draw_audit_sample``), Kevin's spot-check list, and one item
     per sampled key with the files the packet shows. ``sample.jsonl`` carries
     the labels and verdicts and never reaches a rater; ``items.jsonl`` holds
-    only an opaque item id, the task and file paths.
+    only an opaque item id, the task and file paths. Item ids are salted with
+    the audit's secret salt (``--salt-file``, decision D34); the summary
+    records only the salt's SHA-256.
 ``reach.sh`` on ``baseline-jobs.jsonl`` (LO-VM image)
     The saved starting files: the GUI-faithful save stage on each mutation
     target's starting files, with the target's own starting file as the build
@@ -36,7 +38,9 @@
     ``raters.summarize`` with Kevin's blind adjudications: kappa, sham
     accuracy, S6 per label class, the K3/K4 groups, P1 flip decisions, and
     ``decisions.jsonl`` (the final decision per mutant, which the headline
-    analysis reads to gate P2 and P4).
+    analysis reads to gate P2 and P4), the gold defects (D34) and Kevin's
+    blind adjudication pool (``adjudication-pool.jsonl``: item ids only, in
+    the pool's seeded order; ``raters.adjudication_pool``).
 """
 
 from __future__ import annotations
@@ -76,13 +80,14 @@ RENDER_TIMEOUT_S = 180
 
 # Registered packet budget (preregistration section 9). Every packet must fit
 # the open-weight rater's context window (``rater_runner.ENGINE_FLAGS``
-# max_model_len 131,072) with its 256 answer tokens and a fixed allowance for
-# the system prompt, chat template and answer line. Prompt size is estimated
-# before any rater sees the packet: text at 0.55 tokens per UTF-8 byte (the dev
-# smoke measured at most 0.49 for these listings with Qwen3.5's tokenizer) and
-# each image at one token per 32 x 32 pixel cell plus two.
-CONTEXT_TOKENS = 131_072
-ANSWER_TOKENS = 256
+# max_model_len 139,264 since decision D34) with its reply (``max_tokens``
+# 8,192: thinking and answer) and a fixed allowance for the system prompt, chat
+# template and answer line. Prompt size is estimated before any rater sees the
+# packet: text at 0.55 tokens per UTF-8 byte (the dev smoke measured at most
+# 0.49 for these listings with Qwen3.5's tokenizer) and each image at one token
+# per 32 x 32 pixel cell plus two.
+CONTEXT_TOKENS = 139_264
+ANSWER_TOKENS = 8_192
 OVERHEAD_TOKENS = 2_048
 PACKET_TOKEN_BUDGET = CONTEXT_TOKENS - ANSWER_TOKENS - OVERHEAD_TOKENS
 TEXT_TOKENS_PER_BYTE = 0.55
@@ -156,9 +161,13 @@ def build_sample(
     path_map: Sequence[tuple[str, str]] = (),
     primary: str = "lock",
     seed: int = 42,
+    salt: str,
     build_root: str = "/ro/build/",
 ) -> dict[str, Any]:
     """Sample rows, item rows, saved-baseline jobs and the spot-check list of one audit.
+
+    ``salt`` is the audit's secret salt (``raters.opaque_item_id``): item ids
+    cannot be computed from public mutant or task ids without it.
 
     ``initial_of(task_id)`` returns the task's starting files (VM path -> local
     path). The P1 flips are the control run's flips under ``primary``
@@ -241,7 +250,7 @@ def build_sample(
     rows: list[dict[str, Any]] = []
     items: list[dict[str, Any]] = []
     for entry in sample:
-        item_id = raters.opaque_item_id(entry.mutant_id, seed)
+        item_id = raters.opaque_item_id(entry.mutant_id, salt)
         row: dict[str, Any] = {
             **dataclasses.asdict(entry),
             "item_id": item_id,
@@ -298,10 +307,12 @@ def build_sample(
         "sample": rows,
         "items": sorted(items, key=lambda r: r["item_id"]),
         "baseline_jobs": [baseline_jobs[k] for k in sorted(baseline_jobs)],
-        "spot_check": [raters.opaque_item_id(s.mutant_id, seed) for s in spot],
+        "spot_check": [raters.opaque_item_id(s.mutant_id, salt) for s in spot],
         "summary": {
             "primary": primary,
             "seed": seed,
+            "salt_sha256": raters.salt_sha256(salt),
+            "shams": dict(Counter(str(s.sham) for s in sample if s.sham is not None)),
             "pool": len(pool),
             "pool_by_label": dict(Counter(c.label for c in pool)),
             "strata": dict(Counter(s.stratum for s in sample)),
@@ -344,6 +355,7 @@ def cmd_sample(args: argparse.Namespace) -> int:
     controls_tasks, controls_saved = controls_inputs(args.controls)
     sanitized = Path(args.sanitized)
     cache = Path(args.file_cache)
+    salt = raters.check_salt(Path(args.salt_file).read_text(encoding="ascii").strip())
     built = build_sample(
         read_jsonl(run / "score" / "outcomes.jsonl"),
         read_jsonl(run / "score" / "jobs-saved.jsonl"),
@@ -354,6 +366,7 @@ def cmd_sample(args: argparse.Namespace) -> int:
         path_map=mapping,
         primary=args.primary,
         seed=args.seed,
+        salt=salt,
         build_root=args.build_root,
     )
     out = Path(args.out)
@@ -522,13 +535,11 @@ def build_packet(item: Mapping[str, Any], instruction: str, work: Path) -> dict[
         )
     packet = raters.make_packet(
         raters.Sampled(item["item_id"], item["task_id"], "packet", 1.0),
+        item_id=item["item_id"],
         instruction=instruction,
         initial_files=start_files,
         candidate_artifacts={"files": end_files},
-        seed=0,
     )
-    # The item id is already opaque; keep it rather than hashing it again.
-    packet["item_id"] = item["item_id"]
     packet["schema"] = PACKET_SCHEMA
     packet["baseline_status"] = item.get("baseline_status") or ("saved" if baseline else "none")
     fit_packet(packet)
@@ -830,6 +841,8 @@ def cmd_summarize(args: argparse.Namespace) -> int:
     )
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
+    pool = raters.adjudication_pool(sample, labels, ratings, seed=args.seed)
+    write_jsonl(out / "adjudication-pool.jsonl", [{"item_id": item_of[key]} for key, _ in pool])
     statuses = {
         rid: dict(Counter(status for _, status in calls.values()))
         for rid, calls in zip(raters.RATER_IDS, (first, second), strict=True)
@@ -849,7 +862,9 @@ def cmd_summarize(args: argparse.Namespace) -> int:
         out / "decisions.jsonl",
         [
             {"key": key, "decision": decision, "first": ratings[key][0], "second": ratings[key][1]}
-            for key, decision in sorted(summary.decisions.items())
+            for key, decision in sorted(
+                {**summary.decisions, **summary.sham_decisions}.items()
+            )
         ],
     )
     print(
@@ -880,6 +895,11 @@ def main(argv: list[str] | None = None) -> int:
     sample.add_argument("--path-map", action="append", default=[], help="OLD=NEW path prefix")
     sample.add_argument("--primary", default="lock")
     sample.add_argument("--seed", type=int, default=42)
+    sample.add_argument(
+        "--salt-file",
+        required=True,
+        help="the audit's secret salt (64 hex characters), kept outside the repository",
+    )
     sample.add_argument(
         "--build-root",
         default="/ro/build/",

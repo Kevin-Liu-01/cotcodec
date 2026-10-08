@@ -102,8 +102,8 @@ differ from the pins:
 {
  "q2m_pins": 1,
  "experiment_id": "q2-evaluator-mutation-v1",
- "code_tree_sha256": "37ae60f07e549da933c3eddb63cccf126d6950785fad7832dc5721017ab207ac",
- "operator_catalog_sha256": "07e50a6fa39656e456584e6b56ca8f3c020fb7987ff9522d6d5f996bd9ac2dac",
+ "code_tree_sha256": "528b79851daa719037e6cdc213aea1d068296179d5734b18db614d3ee6201bde",
+ "operator_catalog_sha256": "3a5ff94953f7b672059b0f6b063064b97a438de166fd664903e239a12f65b46f",
  "operator_catalog_version": "q2-mut-operators-v1",
  "operators": 64,
  "spec_set_sha256": "05d4fb2074a7fa53046dff9f5d075b2b45ac014889eaae23d625c1894056de62",
@@ -132,7 +132,10 @@ differ from the pins:
   "open_weight_revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
   "open_weight_receipt_sha256": "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9",
   "vllm_base_image_id": "sha256:423783aac4fefebfe6b67d6fc2810b88a1d4dc08ed8bba587c80b0d8973e0b8b",
-  "open_weight_gpu_hours_cap": 1.0
+  "open_weight_enable_thinking": true,
+  "open_weight_max_tokens": 8192,
+  "open_weight_gpu_hours_cap": 1.0,
+  "isolated_prompt_template_sha256": "0e9d4eb6597c347d40db7f8ae150e3345fc8a88820d6e8501d02543c9ccbed44"
  }
 }
 ```

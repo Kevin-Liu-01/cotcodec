@@ -216,6 +216,10 @@ CLEARANCE_EMU = 72_000
 # frames of the shapes stacked above it may be hidden, so deleting it may not
 # change the rendered slide (the 4ed5abd0 sparkle group under its own copies).
 COVERED_SHARE = 0.9
+# delete_bound_shape (decision D34): a shape whose frame lies at least this share
+# off the slide is mostly not shown, so deleting it may change little that a
+# viewer sees (the 4ed5abd0 rotated shape about 78% off its slide).
+OFFSLIDE_SHARE = 0.5
 
 
 def _box(shape: dict) -> Box | None:
@@ -290,6 +294,26 @@ def covered_share(shapes: list[dict], k: int) -> float:
             if any(r[0] <= x0 and x1 <= r[2] and r[1] <= y0 and y1 <= r[3] for r in above):
                 covered += (x1 - x0) * (y1 - y0)
     return covered / ((box[2] - box[0]) * (box[3] - box[1]))
+
+
+def offslide_share(shape: dict, slide_size: list | None) -> float:
+    """Share of the shape's frame (its rotation's bounding box) outside the slide.
+
+    0.0 when the slide size or the frame is unknown or the frame has no area.
+    """
+    box = _box(shape)
+    if box is None or not slide_size or len(slide_size) != 2:
+        return 0.0
+    try:
+        width, height = int(slide_size[0]), int(slide_size[1])
+    except (TypeError, ValueError):
+        return 0.0
+    area = (box[2] - box[0]) * (box[3] - box[1])
+    if area <= 0 or width <= 0 or height <= 0:
+        return 0.0
+    inside_w = max(0, min(box[2], width) - max(box[0], 0))
+    inside_h = max(0, min(box[3], height) - max(box[1], 0))
+    return 1.0 - (inside_w * inside_h) / area
 
 
 class ZOrderNonOverlap(Operator):
@@ -676,7 +700,7 @@ class DeleteBoundShape(Operator):
     check_kinds = ("slide_object", "text_run")
     description = (
         "Delete a bound shape whose frame is not at least 90% under the frames of the shapes "
-        "stacked above it."
+        "stacked above it and not at least 50% off the slide."
     )
 
     def sites(self, ctx, req, binding):
@@ -684,10 +708,16 @@ class DeleteBoundShape(Operator):
         for unit in bound_shapes(ctx, binding):
             address = shape_address(unit)
             shapes = ctx.base["slides"][address["slide"]]["shapes"]
-            # A shape hidden under the shapes above it may vanish without a visible
-            # change, so its deletion is not a clear violation.
-            if covered_share(shapes, address["shape"]) < COVERED_SHARE:
-                out.append(site(unit, req.req_id))
+            # A shape hidden under the shapes above it, or lying mostly off the
+            # slide, may vanish without a clear visible change, so its deletion is
+            # not a clear violation.
+            if covered_share(shapes, address["shape"]) >= COVERED_SHARE:
+                continue
+            if offslide_share(shapes[address["shape"]], ctx.base.get("slide_size")) >= (
+                OFFSLIDE_SHARE
+            ):
+                continue
+            out.append(site(unit, req.req_id))
         return out
 
     def build(self, ctx, where, rng):

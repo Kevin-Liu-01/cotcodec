@@ -26,7 +26,9 @@ This module fixes, before any rating exists:
   disagree, cap 200) and ``agreement`` (100 of the rest), each item carrying
   its inclusion probability; plus sham items (10 percent, half
   LibreOffice-saved gold, half do-nothing, at most two per task) whose answer
-  is known, and every P1 gold fixed-point flip (``p1_flip``);
+  is known, a gold sham for every task with a sampled item in a K3 group
+  (decision D34), and every P1 gold fixed-point flip (``p1_flip``);
+* opaque item ids under a secret per-audit salt (``opaque_item_id``, D34);
 * the answer rule (``parse_first_token``): the first word of the reply, and
   ``unsure`` for a refusal, an empty or unparseable reply, a timeout, a
   request the provider rejected or a response body that is not the
@@ -38,7 +40,14 @@ This module fixes, before any rating exists:
   Kevin's adjudication, else counted as a label error; Hajek weights; the K3
   bound is the larger of the task-cluster bootstrap limit and an exact bound
   at the Kish effective size, with a minimum audited size
-  (``stats.label_error_bound``).
+  (``stats.label_error_bound``);
+* Kevin's blind adjudication pool (``adjudication_pool``, D34): the real items
+  on which the raters split, the real K3 items on which both raters agree
+  against the label, and the gold shams on which the raters split, mixed in
+  one seeded order;
+* gold defects (D34): a task whose gold sham is decided reject has its
+  equivalence items taken out of the equivalence K3 group and reported as
+  gold defects; labels stay relative to the gold.
 
 K3 and K4 are computed on the two label classes that enter the primary metrics
 without an audit gate: ``should_pass_equiv`` (P2, P5) and
@@ -57,6 +66,7 @@ import hashlib
 import math
 import random
 import re
+from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
@@ -209,7 +219,14 @@ def draw_audit_sample(
     sham_tasks: Sequence[str] = (),
     p1_flip_tasks: Sequence[str] = (),
 ) -> list[Sampled]:
-    """Stratified sample with known inclusion probabilities, plus shams and P1 flips."""
+    """Stratified sample with known inclusion probabilities, plus shams and P1 flips.
+
+    Shams: the 10 percent quota (``SHAM_FRACTION`` of the real items, rounded
+    up), alternating gold and do-nothing over the sorted sham tasks, at most two
+    per task; then a gold sham for every task with a sampled item in a K3 group
+    (``K3_GROUPS``) that the quota gave none (decision D34), so the gold-defect
+    rule of ``summarize`` can be applied to every task whose items enter K3.
+    """
     by_stratum: dict[str, list[Candidate]] = {name: [] for name in STRATA}
     for candidate in sorted(candidates, key=lambda c: c.mutant_id):
         name = stratum_of(candidate)
@@ -217,41 +234,70 @@ def draw_audit_sample(
             by_stratum[name].append(candidate)
     rng = random.Random(seed)
     sample: list[Sampled] = []
+    k3_tasks: set[str] = set()
     for name in STRATA:
         pool = by_stratum[name]
         cap = caps[name]
         chosen = pool if len(pool) <= cap else rng.sample(pool, cap)
         probability = 1.0 if len(pool) <= cap else cap / len(pool)
-        sample += [
-            Sampled(c.mutant_id, c.task_id, name, probability)
-            for c in sorted(chosen, key=lambda c: c.mutant_id)
-        ]
+        for c in sorted(chosen, key=lambda c: c.mutant_id):
+            sample.append(Sampled(c.mutant_id, c.task_id, name, probability))
+            if c.label in K3_GROUPS:
+                k3_tasks.add(c.task_id)
     n_sham = math.ceil(SHAM_FRACTION * len(sample))
     tasks = sorted(set(sham_tasks) or {item.task_id for item in sample})
+    gold_tasks: set[str] = set()
     for index in range(min(n_sham, 2 * len(tasks))):
         task = tasks[(index // 2) % len(tasks)]
         kind = "gold" if index % 2 == 0 else "do_nothing"
         sample.append(Sampled(sham_id(task, kind), task, "sham", 1.0, sham=kind))
+        if kind == "gold":
+            gold_tasks.add(task)
+    for task in sorted(k3_tasks - gold_tasks):
+        sample.append(Sampled(sham_id(task, "gold"), task, "sham", 1.0, sham="gold"))
     for task in sorted(set(p1_flip_tasks)):
         sample.append(Sampled(p1_flip_id(task), task, "p1_flip", 1.0))
     return sample
 
 
-def opaque_item_id(mutant_id: str, seed: int) -> str:
-    return hashlib.sha256(f"q2-audit:{seed}:{mutant_id}".encode()).hexdigest()[:16]
+SALT_HEX_CHARS = 64
+
+
+def check_salt(salt: str) -> str:
+    """A per-audit salt: 64 lowercase hex characters (32 random bytes)."""
+    if len(salt) != SALT_HEX_CHARS or any(ch not in "0123456789abcdef" for ch in salt):
+        raise ValueError("the audit salt must be 64 lowercase hex characters (32 random bytes)")
+    return salt
+
+
+def salt_sha256(salt: str) -> str:
+    """The digest committed before the ingest; the salt itself is revealed after it."""
+    return hashlib.sha256(check_salt(salt).encode("ascii")).hexdigest()
+
+
+def opaque_item_id(mutant_id: str, salt: str) -> str:
+    """Item id under a secret per-audit salt (decision D34).
+
+    With the public seed as the salt (the earlier rule), a sham's or P1 flip's
+    id was a function of its public task id; the salt is generated on the host
+    for each audit, kept outside the repository (mode 600), committed only as
+    its SHA-256 and revealed after the isolated ingest.
+    """
+    return hashlib.sha256(f"q2-audit:{check_salt(salt)}:{mutant_id}".encode()).hexdigest()[:16]
 
 
 def make_packet(
     sampled: Sampled,
     *,
+    item_id: str,
     instruction: str,
     initial_files: Sequence[Mapping[str, Any]],
     candidate_artifacts: Mapping[str, Any],
-    seed: int,
 ) -> dict[str, Any]:
-    """The only content a rater sees for one item."""
+    """The only content a rater sees for one item (``item_id`` is already opaque)."""
+    del sampled  # the packet names the item by its opaque id only
     packet = {
-        "item_id": opaque_item_id(sampled.mutant_id, seed),
+        "item_id": item_id,
         "prompt_version": "RATER_PROMPT_V1",
         "instruction": instruction,
         "initial_files": [dict(item) for item in initial_files],
@@ -312,7 +358,29 @@ NON_ANSWER_OUTCOMES = (
     "unrated",
     # Isolated agent-harness rater (D27): the transcript audit voided the answer.
     "isolation_void",
+    # Open-weight rater with thinking on (D34): the reply never closed its
+    # thinking (cut at max_tokens), so it holds no answer.
+    "thinking_unfinished",
 )
+THINK_END = "</think>"
+
+
+def split_thinking(content: str | None, reasoning: str | None = None) -> tuple[str | None, bool]:
+    """(answer text, finished) of a reply generated with thinking on (decision D34).
+
+    Registered rule: the chat template opens the model's thinking in the prompt,
+    so the reply is the thinking, then ``</think>``, then the answer. The answer
+    text is everything after the last ``</think>`` (the chat template's own
+    split); a reply without ``</think>`` never finished its thinking (cut at
+    ``max_tokens``) and holds no answer. If the engine returned the thinking
+    separately (``reasoning``, a reasoning parser), the content is the answer
+    text as it is. The first-token rule then reads the answer text.
+    """
+    if content is not None and THINK_END in content:
+        return content.split(THINK_END)[-1], True
+    if reasoning is not None and reasoning.strip():
+        return content, content is not None and bool(content.strip())
+    return None, False
 
 
 def parse_first_token(text: str | None) -> tuple[str, str]:
@@ -366,14 +434,65 @@ def label_is_wrong(label: str, decision: str) -> bool | None:
     raise ValueError(f"label {label!r} is not auditable")
 
 
-def final_decision(ratings: tuple[str, str], adjudicated: str | None) -> str:
-    """Consensus, else Kevin's blind adjudication, else ``unresolved``."""
+def final_decision(
+    ratings: tuple[str, str], adjudicated: str | None, *, in_pool: bool = False
+) -> str:
+    """Consensus, else Kevin's blind adjudication, else ``unresolved``.
+
+    ``in_pool``: the item is in Kevin's adjudication pool although its raters
+    agree (decision D34: a real K3 item on which both raters contradict the
+    label); his answer then decides it, and until he gives one the consensus
+    stands (and counts as the label error it is).
+    """
     decision = consensus(*ratings)
-    if decision != "unresolved" or adjudicated is None:
+    if adjudicated is None or (decision != "unresolved" and not in_pool):
         return decision
     if adjudicated not in ("accept", "reject"):
         raise ValueError(f"adjudication {adjudicated!r} is not accept or reject")
     return adjudicated
+
+
+POOL_REASONS = ("split", "concordant_contradicts_label", "gold_sham_split")
+
+
+def adjudication_pool(
+    sample: Sequence[Sampled],
+    labels: Mapping[str, str],
+    ratings: Mapping[str, tuple[str, str]],
+    *,
+    seed: int = 42,
+) -> list[tuple[str, str]]:
+    """Kevin's blind adjudication pool (decision D34), as ``(key, reason)`` in its order.
+
+    Three kinds of item enter it, mixed in one seeded order (``seed``) so the
+    order does not tell them apart: every real item (mutant or P1 flip) on
+    which the raters do not both accept or both reject (``split``); every real
+    item of a K3 group on which both raters agree against its label
+    (``concordant_contradicts_label``: a violation both accept, an equivalence
+    mutant both reject), which a consensus alone would count as a label error;
+    and every gold sham on which the raters split (``gold_sham_split``), whose
+    decision can make its task a gold defect. Kevin sees each item's packet
+    only, blind to its label, verdict, operator, sham status, reason for being
+    in the pool and the raters' answers; the reasons are disclosed as counts.
+    """
+    pool: list[tuple[str, str]] = []
+    for source in sorted(sample, key=lambda s: s.mutant_id):
+        if source.mutant_id not in ratings:
+            continue
+        pair = ratings[source.mutant_id]
+        decision = consensus(*pair)
+        if source.sham is not None:
+            if source.sham == "gold" and decision == "unresolved":
+                pool.append((source.mutant_id, "gold_sham_split"))
+            continue
+        if decision == "unresolved":
+            pool.append((source.mutant_id, "split"))
+            continue
+        label = labels.get(source.mutant_id)
+        if label in K3_GROUPS and label_is_wrong(label, decision):
+            pool.append((source.mutant_id, "concordant_contradicts_label"))
+    random.Random(f"{seed}:adjudication").shuffle(pool)
+    return pool
 
 
 @dataclass(frozen=True)
@@ -383,13 +502,19 @@ class AuditSummary:
     Groups are the label classes in ``K3_GROUPS``. An item is resolved by rater
     consensus, else by Kevin's adjudication; an item still unresolved counts
     as a label error (the spec author and one rater share a provider, so
-    dropping the other rater's dissents would bias label error down).
+    dropping the other rater's dissents would bias label error down). Kevin's
+    pool (``adjudication_pool``) also holds the K3 items both raters decide
+    against the label; his answer decides those too. A task whose gold sham is
+    decided reject is a gold defect (decision D34): its equivalence items leave
+    the equivalence K3 group (``gold_defects``) and are reported on their own;
+    their labels, kappa, S6 and the metrics stay relative to the gold.
     ``label_error_resolved_only`` (unresolved items dropped) is a sensitivity
     estimate, ``per_rater`` shows each rater's disagreement with the labels on
     its own, and ``by_label_class`` is S6 for every label class, including the
     audit-gated alternative-solution and extra-change classes. ``decisions``
     holds the final decision of every real item (mutant id or P1 flip id);
     the analysis uses it to gate P2 (alternative solutions) and P4.
+    ``sham_decisions`` holds every sham's decision.
     """
 
     kappa: float | None
@@ -408,6 +533,9 @@ class AuditSummary:
     by_label_class: Mapping[str, Mapping[str, Any]]
     p1_flips: Mapping[str, str]
     decisions: Mapping[str, str]
+    adjudication: Mapping[str, Any]
+    gold_defects: Mapping[str, Any]
+    sham_decisions: Mapping[str, str]
 
 
 KAPPA_MIN = 0.6
@@ -427,10 +555,16 @@ def summarize(
     ``ratings`` maps an item (mutant id, sham id or P1 flip id) to the two
     raters' answers in ``RATERS`` order; an item a rater never answered is
     ``unsure`` for that rater (``answer_for('unrated', None)``) and must be
-    passed as such. ``adjudicated`` maps an item whose raters did not agree to
-    Kevin's answer (accept or reject).
+    passed as such. ``adjudicated`` maps an item of Kevin's pool
+    (``adjudication_pool``) to his answer (accept or reject); an answer for an
+    item outside the pool is refused.
     """
-    adjudicated = adjudicated or {}
+    adjudicated = dict(adjudicated or {})
+    pool = adjudication_pool(sample, labels, ratings, seed=seed)
+    pool_reason = dict(pool)
+    stray = sorted(set(adjudicated) - set(pool_reason))
+    if stray:
+        raise ValueError(f"adjudications for items outside Kevin's pool: {stray[:5]}")
     real = [s for s in sample if s.sham is None and s.mutant_id in ratings]
     shams = [s for s in sample if s.sham is not None and s.mutant_id in ratings]
     kappa = (
@@ -446,6 +580,17 @@ def summarize(
         if shams:
             hits = sum(ratings[s.mutant_id][index] == expected[str(s.sham)] for s in shams)
             sham_accuracy[rater["rater_id"]] = hits / len(shams)
+    sham_decisions = {
+        s.mutant_id: final_decision(
+            ratings[s.mutant_id],
+            adjudicated.get(s.mutant_id),
+            in_pool=s.mutant_id in pool_reason,
+        )
+        for s in shams
+    }
+    defect_tasks = sorted(
+        {s.task_id for s in shams if s.sham == "gold" and sham_decisions[s.mutant_id] == "reject"}
+    )
     primary: dict[str, list[AuditItem]] = {group: [] for group in K3_GROUPS}
     resolved_only: dict[str, list[AuditItem]] = {}
     pessimistic: dict[str, list[AuditItem]] = {}
@@ -454,8 +599,8 @@ def summarize(
     classes: dict[str, list[tuple[Sampled, str]]] = {name: [] for name in LABEL_CLASSES}
     decisions: dict[str, str] = {}
     p1_flips: dict[str, str] = {}
+    defect_items: dict[str, str] = {}
     unresolved = 0
-    n_adjudicated = 0
 
     def item(source: Sampled, wrong: bool) -> AuditItem:
         return AuditItem(
@@ -464,11 +609,11 @@ def summarize(
 
     for source in real:
         pair = ratings[source.mutant_id]
-        decision = final_decision(pair, adjudicated.get(source.mutant_id))
+        decision = final_decision(
+            pair, adjudicated.get(source.mutant_id), in_pool=source.mutant_id in pool_reason
+        )
         if consensus(*pair) == "unresolved":
             unresolved += 1
-            if decision != "unresolved":
-                n_adjudicated += 1
         decisions[source.mutant_id] = decision
         if source.stratum == "p1_flip":
             p1_flips[source.mutant_id] = decision
@@ -476,6 +621,10 @@ def summarize(
         label = labels[source.mutant_id]
         classes[label].append((source, decision))
         if label not in K3_GROUPS:
+            continue
+        if label == "should_pass_equiv" and source.task_id in defect_tasks:
+            # Gold defect (D34): judged against a gold its own sham failed.
+            defect_items[source.mutant_id] = decision
             continue
         consensus_wrong = label_is_wrong(label, consensus(*pair))
         pessimistic.setdefault(label, []).append(
@@ -513,12 +662,14 @@ def summarize(
     k4_fires = all(
         group in label_error and label_error[group].estimate > K3_THRESHOLD for group in K3_GROUPS
     )
+    reasons = Counter(pool_reason.values())
+    answered = {key: pool_reason[key] for key in adjudicated}
     return AuditSummary(
         kappa=kappa,
         kappa_fires=kappa_fires,
         n_items=len(real),
         n_unresolved=unresolved,
-        n_adjudicated=n_adjudicated,
+        n_adjudicated=len(adjudicated),
         sham_accuracy=sham_accuracy,
         label_error=label_error,
         k3=k3,
@@ -544,6 +695,25 @@ def summarize(
         by_label_class={name: _class_summary(name, rows) for name, rows in classes.items()},
         p1_flips=p1_flips,
         decisions=decisions,
+        adjudication={
+            "pool": len(pool),
+            "pool_by_reason": {reason: reasons.get(reason, 0) for reason in POOL_REASONS},
+            "adjudicated": len(adjudicated),
+            "adjudicated_by_reason": dict(Counter(answered.values())),
+            "pending": len(pool) - len(adjudicated),
+        },
+        gold_defects={
+            "rule": (
+                "a task whose gold sham is decided reject: its equivalence items leave the "
+                "equivalence K3 group (decision D34); labels stay relative to the gold"
+            ),
+            "tasks": defect_tasks,
+            "gold_shams": len([s for s in shams if s.sham == "gold"]),
+            "equivalence_items": len(defect_items),
+            "equivalence_decisions": dict(Counter(defect_items.values())),
+            "items": dict(sorted(defect_items.items())),
+        },
+        sham_decisions=sham_decisions,
     )
 
 

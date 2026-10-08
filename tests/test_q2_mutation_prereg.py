@@ -156,6 +156,16 @@ def test_prereg_rater_pins_match_the_runner() -> None:
     assert declared["open_weight_revision"] == rater_runner.OPEN_WEIGHT["revision"]
     assert declared["open_weight_receipt_sha256"] == open_weight["receipt_sha256"]
     assert declared["open_weight_receipt_sha256"] == rater_runner.OPEN_WEIGHT["receipt_sha256"]
+    # Decision D34: the open-weight rater thinks, within a registered reply budget,
+    # and the isolated Claude rater starts from the committed prompt template.
+    assert declared["open_weight_enable_thinking"] is rater_runner.OPEN_WEIGHT["enable_thinking"]
+    assert declared["open_weight_max_tokens"] == rater_runner.OPEN_WEIGHT["max_tokens"]
+    template = rater_runner.ISOLATED_PROMPT_TEMPLATE.read_bytes()
+    assert (
+        declared["isolated_prompt_template_sha256"]
+        == rater_runner.ISOLATED_PROMPT_TEMPLATE_SHA256
+        == rater_runner.sha256_bytes(template)
+    )
     sys.path.insert(0, str(ROOT / "infra" / "q2-mutation" / "run"))
     import render_rater_manifest
 
