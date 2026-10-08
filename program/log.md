@@ -962,3 +962,58 @@ Append-only. Newest entries at the bottom.
   GPU, nothing pushed or frozen.
 - Next: a fresh review of the seventh draft, Kevin's sign-offs (section 17),
   re-merge main, freeze.
+
+## 2026-10-08 — Q2 evaluator-mutation: sixth review answered (eighth draft; not frozen)
+
+- Basis: the sixth review of the seventh draft (80/100, not ready to freeze;
+  scores 55, 62, 56, 57, 64, 80, lowest 55), one blocking defect. The
+  transcript audit read user turns only from entries of type `user`. The
+  agent harness also writes attachment entries, and a message sent to a
+  running agent (a user prompt, another agent's message, a task
+  notification) arrives as a `queued_command` attachment. The review's probe
+  (template, Read of `packet.txt`, a queued prompt naming the item's label,
+  `StructuredOutput`) returned no void reason, nor did an `edited_text_file`
+  attachment or a `system` or `progress` entry carrying a user message.
+- Fix (`1242da7`): `rater_runner.audit_transcript` treats any entry whose
+  message has the role user as a user turn, whatever its entry type, and
+  registers the entry types user, assistant and attachment
+  (`TRANSCRIPT_ENTRY_TYPES`) and the fifteen attachment types of the 158
+  D34 development transcripts (`HARNESS_ATTACHMENT_TYPES`). Any other entry
+  or attachment type (`queued_command`, `edited_text_file`, `nested_memory`,
+  `file`, a `queue-operation` entry and so on), a line that is not an entry
+  object and a user entry without a message void the item, with a reason
+  naming the type. The audit returns the count of every attachment type;
+  `ingest-isolated` records it per transcript and for the run, and the
+  receipt lists the registered types. Tests cover the probe and the other
+  channels, plus an ingest in which a queued prompt voids the answering
+  transcript; a prereg test checks that section 9 names every type.
+- Rerun over copies of the 158 dev transcripts (scratch only, nothing
+  ingested): no void reason, 3,304 attachments, all of the fifteen types,
+  none outside the list, one relay digest (`8e7dbd00`) in 110. The
+  registered dev result (κ 0.066) stays as recorded.
+- Registration (eighth draft): status note (item 4 and a sixth-review
+  paragraph), section 9 (the rule, and the fifteen types beside the D34
+  injected-context disclosure: checked by type only, fail closed if a
+  harness version adds a type), section 17 (the review's minor items listed
+  as open, the sign-off, the review log). Code-tree pin `d50be4df`. Harness
+  README and SKILL, HANDOFF and state.json updated.
+- Not changed (the review's minor items, open for Kevin and a later pass):
+  the stratified fallback's budget is not maximal as coded; transcript
+  collection from the workflow directory is unregistered; relay identity is
+  not checked across several calls files at `audit summarize`, and the
+  relayed text is kept only as a hash; concordant contradictions reach the
+  pool only for the K3 candidate kinds; a second resume with another
+  request voids every relay-frame item; stale K2 wording in section 10.
+- Checks: ruff clean; local Q2 tests 351 passed, 17 skipped;
+  validate_architecture_experiments, validate_provider_models and
+  check-chain pass; host full suite at `1242da7` (fresh scratch copy,
+  `uv sync --locked --extra dev`): ruff clean, 2087 passed, 34 skipped;
+  freeze-lint into a scratch copy of the ledger (equal to main's, 7 rows):
+  freeze, verify and check-chain (8 rows) pass,
+  registration SHA-256
+  `b8011fc9af23fcf96f6afe1b857154b09a1dd166523b050326275756b3e7de1f`.
+  Records in `program/evidence/q2-mutation/integration/d35-protocol/`. No
+  GPU, nothing pushed or frozen. Main has moved to `5e9e1f7` (D36, the Q3
+  pre-check operated); its ledger still equals the branch's.
+- Next: a narrow re-check of the eighth draft, Kevin's sign-offs (section
+  17), re-merge main, freeze.
