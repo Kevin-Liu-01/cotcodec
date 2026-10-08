@@ -6,9 +6,9 @@ codegen refuses to run when a GPU is visible). Steps:
 
 1. **Problems.** The rule's candidates: S1 calibration-half problems with no S2
    substrate, admitted to the Stage 0 planning corpus's S1-cal set (``--counts``,
-   ``calibration_substrates``), below 0.6 GB of native inputs, in four size bins,
-   each in ``sha256("q1-repilot/1/" + id)`` order.
-2. **Substrates.** For each candidate in order, until two per bin build:
+   ``calibration_substrates``), below 0.6 GB of native inputs, in five strata by
+   level and size, each in ``sha256("q1-repilot/1/" + id)`` order.
+2. **Substrates.** For each candidate in order, until each stratum is filled:
    mock-H100 TorchInductor codegen (``q1_build_substrates.py s1-codegen``) and
    conversion (``inductor_convert``); a candidate that does not build is replaced
    by the next and listed.
@@ -83,7 +83,12 @@ def build_one(problem_id: str, work: Path, timeout: int) -> dict[str, Any]:
     run = subprocess.run(command, capture_output=True, text=True, timeout=timeout + 60)
     record_path = records / (problem_id.replace("/", "__") + ".json")
     if run.returncode != 0 or not record_path.exists():
-        return {"problem_id": problem_id, "built": False, "reason": "codegen", "log": run.stdout[-800:]}
+        return {
+            "problem_id": problem_id,
+            "built": False,
+            "reason": "codegen",
+            "log": run.stdout[-800:],
+        }
     try:
         converted = inductor_convert.convert_record(json.loads(record_path.read_text()))
     except Exception as exc:  # a conversion refusal is a recorded outcome
@@ -170,6 +175,7 @@ def main(argv: list[str] | None = None) -> int:
     record = {
         **selection,
         "candidates": ordered,
+        "strata_rule": [list(s) for s in repilot.STRATA],
         "builds": builds,
         "order": order,
         "mutants": mutants,

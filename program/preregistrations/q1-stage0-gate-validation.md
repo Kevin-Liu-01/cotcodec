@@ -92,7 +92,7 @@ Version card (`python scripts/q1_version_card.py --markdown`):
 | `shape_manifest_sha256` | `29e693ee4d77bc86e3ecfdb1000307b3878c023c6c6224f87c4fcfae74a220cb` |
 | `audit_code_sha256` | `71a30ddb3dbbbb96ccce92bb454995f5c02a6aed7a3f9f8e82fd57fb7c6b6a2b` |
 | `analysis_sha256` | `60d5371d199bb4ee288a9cb79fd4ef284539833214deb0d929106659460fca54` |
-| `driver_sha256` | `1ac30989cfe28907a3c09712aed1ff12440b08389cb29c28befcae5c6ceba63b` |
+| `driver_sha256` | `c0feaee0aa3e619699dc5e0e029f0bb6b43f05ad1b547b8abc6d40fa1dd5bafc` |
 | `trim_rule` | `q1-stage0-trim/2` |
 | `mutator_package_sha256` | `f4aa6e93214126b1fcc82964654833a2da419ff98e7d7b9d27fa24dc2f595296` |
 | `mutator_registry_fingerprint` | `43a1f0a234ad1c4a4421626d740989e01890b878c5ce7f2dec5739e3d43922a6` |
