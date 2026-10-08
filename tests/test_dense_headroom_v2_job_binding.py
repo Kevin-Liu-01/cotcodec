@@ -57,24 +57,7 @@ def test_the_batch_script_writes_job_env_before_the_container_and_passes_no_slur
 
 # The stub container: the entry point's receipt-writing code (v2's and v1's) in the
 # container's environment, rebuilt from the batch script's `docker create` call.
-WORKLOAD_PROGRAM = textwrap.dedent('''
-    import json, os, subprocess, sys
-    from pathlib import Path
-
-    state = Path(os.environ["FAKE_DOCKER_STATE"])
-    run_dir = Path(os.environ["FAKE_RUN_DIR"])
-    calls = [json.loads(line) for line in (state / "calls.jsonl").read_text().splitlines()]
-    (create,) = [c for c in calls if c and c[0] == "create"]
-    env = {}
-    for flag, value in zip(create, create[1:]):
-        if flag == "--env":
-            key, _, val = value.partition("=")
-            env[key] = val.replace("/outputs", str(run_dir))
-        if flag == "--volume" and value.endswith(":/outputs:rw"):
-            assert value == f"{run_dir}:/outputs:rw", value
-    env["PATH"] = os.environ["PATH"]
-    env["PYTHONPATH"] = os.environ["BINDING_PROJECT_ROOT"]
-    code = """
+RECEIPT_CODE = '''\
 import os, sys
 from pathlib import Path
 from harness import dense_headroom_v2 as dv2
@@ -102,9 +85,27 @@ old.lane = dhd.LANES["qwen3-0.6b-base"]
 old.hashes = dict(job.hashes, job={"kind": "fresh", "predecessor_job_id": None,
                                    "minutes": 30})
 old.receipt("receipt.json", {"status": "PRECHECK_COMPLETE"})
-"""
-    result = subprocess.run([sys.executable, "-c", code], env=env, capture_output=True,
-                            text=True)
+'''
+
+WORKLOAD_PROGRAM = textwrap.dedent('''\
+    import json, os, subprocess, sys
+    from pathlib import Path
+
+    state = Path(os.environ["FAKE_DOCKER_STATE"])
+    run_dir = Path(os.environ["FAKE_RUN_DIR"])
+    calls = [json.loads(line) for line in (state / "calls.jsonl").read_text().splitlines()]
+    (create,) = [c for c in calls if c and c[0] == "create"]
+    env = {}
+    for flag, value in zip(create, create[1:]):
+        if flag == "--env":
+            key, _, val = value.partition("=")
+            env[key] = val.replace("/outputs", str(run_dir))
+        if flag == "--volume" and value.endswith(":/outputs:rw"):
+            assert value == f"{run_dir}:/outputs:rw", value
+    env["PATH"] = os.environ["PATH"]
+    env["PYTHONPATH"] = os.environ["BINDING_PROJECT_ROOT"]
+    result = subprocess.run([sys.executable, os.environ["BINDING_RECEIPT_CODE"]], env=env,
+                            capture_output=True, text=True)
     sys.stderr.write(result.stderr)
     sys.exit(result.returncode)
 ''')
@@ -134,7 +135,10 @@ def lane_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
 def test_a_batch_receipt_is_bound_to_its_job_and_accepted(lane_root: Path) -> None:
     program = lane_root / "binding_program.py"
     program.write_text(WORKLOAD_PROGRAM, encoding="utf-8")
+    receipt_code = lane_root / "receipt_writer.py"
+    receipt_code.write_text(RECEIPT_CODE, encoding="utf-8")
     run = StubbedRun(lane_root, _deterministic_raw(), BINDING_PROGRAM=str(program),
+                     BINDING_RECEIPT_CODE=str(receipt_code),
                      BINDING_PYTHON=sys.executable,
                      BINDING_PROJECT_ROOT=str(PROJECT_ROOT))
     (lane_root / "workload.sh").write_text(WORKLOAD, encoding="utf-8")
