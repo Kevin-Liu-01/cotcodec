@@ -522,3 +522,29 @@ development host root. Development may characterise the mechanism, and
 whether L0-fixed is exposed under Stage-1 conditions, on seed 42 only; A1
 then tests L0-fixed on `chord_super_d` as registered. No other rule
 changes, and no v1 data enters a v2 verdict.
+
+**D41. Q1 Stage 0 withdrawn after its gauntlet exit; the audit metric is the
+blocking problem.** Gauntlet wave 1 on the Stage 0 design ended at an honest
+exit (score 45, the lower of 47 and 45; all three refuters refuted; the
+declared query budget spent). Both reviewers named the same fatal defect:
+under the TF32-admissible policy, the registered audit's A1-A3 metric cannot
+separate a correct TF32 matmul or convolution from a destroyed output on most
+measured L2 problems (on L2/46 a correct Inductor convolution scores 0.83 and
+an all-zeros output 0.999), so it cannot serve as ground truth for Stage 0's
+false-accept and false-reject rates, nor for Stage 1. The D37 validation job
+(752, 0.11 GPU-h) showed the memory-aware policy is safe (no resource
+failures, no retired slots) but that items cost about 2.4 times the model, so
+Stage 0 as drafted projects to 20-25 GPU-h at the high point. The refuters
+also found its measurement design largely occupied by "Measuring the
+Checker" (2609.22220); that matters less for an instrument check than for a
+claim, but it removes any case for spending above 8 GPU-h on it. Decided:
+(i) `q1-stage0-gate-validation` as drafted is withdrawn; any successor is a
+new id with a fresh gauntlet (D24 still applies); (ii) the audit metric is
+studied first, on CPU only, from the stored journals of S1-cal and other
+non-evaluation units (jobs 474, 518, 548, 713 and 752; D28: no evaluation
+unit), to characterise where tolerance-based audits are vacuous and to
+design a metric that separates correct reduced-precision outputs from
+destroyed ones, or else to restrict the audit to problems and draws where it
+can; (iii) the per-item process overhead that dominates cost is designed
+for, not yet built; (iv) Q1 Stage 1 still needs the R580 driver upgrade or
+written risk acceptance.
