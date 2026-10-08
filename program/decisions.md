@@ -599,3 +599,18 @@ change is developed on seed 42 (positive and negative cases, including a
 dropped modifier on grabbed and ungrabbed chords) and reviewed before v2's
 freeze. Whether a later registration should observe the shell's side of a
 grabbed chord directly stays with Kevin.
+
+**D44. Q3 dense pre-check v2: the 4B limit is the largest estimate, and v2's
+decisions are accepted.** The second timing job (Slurm 810, 0.045 GPU-h)
+timed the fixed 4B path: cold and warm units now take the same time (0.16 to
+0.43 s per unit by stage), the per-shape cost is gone, and v1's evaluation
+path is bit-equal to v2's on five units. Under D36's rule the 4B limit was
+set at 30 minutes from an estimator (stage means scaled by length) chosen
+after a first pass came out over the cap; the narrow re-check showed that a
+per-stage line fit gives 31 minutes and the larger of the two in every stage
+32. Decided: the 4B lane's limit is 32 minutes (cap 0.533 GPU-h), the largest
+of the estimates computed, so D36's "at least twice the measured time" holds
+under each of them; the registered caps total 0.933 GPU-h within D36's 1.5.
+Decisions 16-21 of `q3-dense-headroom-precheck-v2` are accepted as amended by
+D42 and this decision (D42 (iii)); its status line and decisions' lead-in
+name D42 and D44 when it is frozen.
