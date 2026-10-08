@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2608.14681",
+ "fetched_at": "2026-10-08T15:17:31Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41930,
+ "raw_sha256": "a3f872117ea74984f054e3d33b4685fae782abdff7c65cb183fd20aa78e16e1d",
+ "raw_stored": false,
+ "extract": {
+  "title": "Automatic or Controlled? Repetition Priming Reveals Divergent Processing in Base LLMs, Instruct LLMs, and Humans",
+  "authors": [
+   "Ren, Jinglei",
+   "Wang, Yuyue"
+  ],
+  "citation_date": "2026/08/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 5 Aug 2026 00:52:03 UTC"
+   }
+  ],
+  "abstract": "Words recur constantly in natural language use, yet it remains unclear whether language models reactivate prior representations or re-evaluate repeated words afresh, and whether post-training changes this default behavior. We apply repetition priming (Shiffrin and Schneider, 1977) to 15 models across five model families (1.5B-14B parameters) in two tasks, semantic categorization and cloze completion, with matched human experiments using identical stimuli. We find that base models exhibit automatic processing: they show immediate facilitation that remains stable across lags, partially survives context removal, and correlates with attention to prior occurrences. Instruct models exhibit controlled processing: their facilitation decays with lag, collapses without expected context, and reverses to interference at larger scales. Within the Qwen 2.5 family, this dissociation increases monotonically with model scale, suggesting that post-training progressively alters repetition processing. Humans show a hybrid profile, with lag-sensitive facilitation resembling instruct models but without interference, suggesting that neither model type fully captures human cognition. Our findings reveal a qualitative shift in how language models process repeated information after post-training and provide mechanistic evidence for the divergence between model behaviors.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

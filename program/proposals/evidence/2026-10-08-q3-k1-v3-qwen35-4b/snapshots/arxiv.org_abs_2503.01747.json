@@ -1,0 +1,34 @@
+{
+ "url": "https://arxiv.org/abs/2503.01747",
+ "fetched_at": "2026-10-08T15:17:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41778,
+ "raw_sha256": "8d27bdd2e2f22d8e6b575cbf5c18a6c402f09b9473edba20aa9958648f22cc06",
+ "raw_stored": false,
+ "extract": {
+  "title": "Position: Don't Use the CLT in LLM Evals With Fewer Than a Few Hundred Datapoints",
+  "authors": [
+   "Bowyer, Sam",
+   "Aitchison, Laurence",
+   "Ivanova, Desi R."
+  ],
+  "citation_date": "2025/03/03",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 3 Mar 2025 17:15:17 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 4 Mar 2025 11:30:30 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 28 May 2025 15:29:03 UTC"
+   }
+  ],
+  "abstract": "Rigorous statistical evaluations of large language models (LLMs), including valid error bars and significance testing, are essential for meaningful and reliable performance assessment. Currently, when such statistical measures are reported, they typically rely on the Central Limit Theorem (CLT). In this position paper, we argue that while CLT-based methods for uncertainty quantification are appropriate when benchmarks consist of thousands of examples, they fail to provide adequate uncertainty estimates for LLM evaluations that rely on smaller, highly specialized benchmarks. In these small-data settings, we demonstrate that CLT-based methods perform very poorly, usually dramatically underestimating uncertainty (i.e. producing error bars that are too small). We give recommendations for alternative frequentist and Bayesian methods that are both easy to implement and more appropriate in these increasingly common scenarios. We provide a simple Python library for these Bayesian methods at https://github.com/sambowyer/bayes_evals .",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

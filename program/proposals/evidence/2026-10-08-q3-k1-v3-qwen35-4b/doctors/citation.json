@@ -1,0 +1,9 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
+ "evidence": "Claim registry E1-E11 (repository receipts, read by synthesis) and C01-C41 with locator, date and status. 12 closest priors re-read in full text by synthesis with orx paper --full (digests in query-log.json): 2606.07703, 2606.22874, 2608.26175, 2601.18886, 2609.35378, 2610.04635, 2308.16884, 2502.05167, 2609.04434, 2610.09272, 2608.30320, 2610.09025. Dates checked against hashed abs-page snapshots (five registry dates corrected). Claims carried from cells without a synthesis re-read are marked CELL_READ or ABSTRACT_ONLY and none is the sole support of a decision rule. Four cell statements corrected (romanized questions, one-sided literal gate, proxy contexts, query-type counts).",
+ "remediation": "Independent line-by-line audit by a fresh reader; read the ABSTRACT_ONLY econometrics and psycholinguistics sources (C32, C37) in full."
+}

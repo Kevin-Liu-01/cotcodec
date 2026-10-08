@@ -1,0 +1,9 @@
+{
+ "doctor": "Design",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
+ "evidence": "The draft registration specifies intervention, controls, falsifier (NEGATIVE with non-literal floor, masked headroom, robustness vetoes), metrics, leakage checks and statistics, and traces all seven combined-read requirements and the three verifier caveats. Not met: (1) the registered pre-freeze simulation with v3 statistics code does not exist (power is justified by synthesis approximations only); (2) masked development headroom and the two-sided literal check are unmeasured; (3) H2b passes the gate with probability about 0.69 at the development point, so UNINTERPRETABLE remains a likely branch; (4) masking leaves literal competition for the budget (residual R1), bounded by the literal gate under a linear-mixture reading only.",
+ "remediation": "Build the bundle and record its stage-0 facts; run decision 62 simulations; Kevin rules on decision 64 (primary-partition H2 cells) before any freeze."
+}

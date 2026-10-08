@@ -1,0 +1,9 @@
+{
+ "doctor": "Compute",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-1 single synthesis owner (Claude agent); not an independent review",
+ "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
+ "evidence": "Seeds [42, 43, 44], Slurm lane, checkpoint and resume rules, cost plan and caps are specified, but no v3 code, image, probe, smoke, manifest or dry-run exists (compute/v3-attestations-not-run.md). Supplementary only: lane 862 of the dense pre-check v2 ran the 4B evaluation path in the digest-pinned image 127.0.0.1:5000/cotcodec-research@sha256:13a9de83... with provenance PASS, dry-run and test-only exit 0 and ORX_RESULT exit 0. Projected caps 7.21 to 9.79 GPU-h exceed 8 at the high end (D24 admission). The 4B training path has never run. Doctor quirks recorded in the proposal (image_id manifest schema, harness/runner.py stub check, integer-only budget parser).",
+ "remediation": "Write the v3 code and tests; run the 4B throughput probe under its own id; Kevin rules on admission (D24); then freeze, build image B3, run doctors, fill manifests, dry-run and run the gate jobs."
+}

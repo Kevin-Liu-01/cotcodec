@@ -1,0 +1,37 @@
+{
+ "url": "https://arxiv.org/abs/2308.16884",
+ "fetched_at": "2026-10-08T15:17:15Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 45562,
+ "raw_sha256": "e0c4b5efe9650f88d6de6852080d2e08b15905cab5f5ae17840cc605770535fb",
+ "raw_stored": false,
+ "extract": {
+  "title": "The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants",
+  "authors": [
+   "Bandarkar, Lucas",
+   "Liang, Davis",
+   "Muller, Benjamin",
+   "Artetxe, Mikel",
+   "Shukla, Satya Narayan",
+   "Husa, Donald",
+   "Goyal, Naman",
+   "Krishnan, Abhinandan",
+   "Zettlemoyer, Luke",
+   "Khabsa, Madian"
+  ],
+  "citation_date": "2023/08/31",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 31 Aug 2023 17:43:08 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 25 Jul 2024 04:30:15 UTC"
+   }
+  ],
+  "abstract": "We present Belebele, a multiple-choice machine reading comprehension (MRC) dataset spanning 122 language variants. Significantly expanding the language coverage of natural language understanding (NLU) benchmarks, this dataset enables the evaluation of text models in high-, medium-, and low-resource languages. Each question is based on a short passage from the Flores-200 dataset and has four multiple-choice answers. The questions were carefully curated to discriminate between models with different levels of general language comprehension. The English dataset on its own proves difficult enough to challenge state-of-the-art language models. Being fully parallel, this dataset enables direct comparison of model performance across all languages. We use this dataset to evaluate the capabilities of multilingual masked language models (MLMs) and large language models (LLMs). We present extensive results and find that despite significant cross-lingual transfer in English-centric LLMs, much smaller MLMs pretrained on balanced multilingual data still understand far more languages. We also observe that larger vocabulary size and conscious vocabulary construction correlate with better performance on low-resource languages. Overall, Belebele opens up new avenues for evaluating and analyzing the multilingual capabilities of NLP systems.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

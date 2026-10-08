@@ -1,0 +1,41 @@
+{
+ "url": "https://arxiv.org/abs/2010.04814",
+ "fetched_at": "2026-10-08T15:17:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40429,
+ "raw_sha256": "9f9612f6d3a022fcd11761684d1282b958f9ba010dbf6e121b49c30c014e8a1d",
+ "raw_stored": false,
+ "extract": {
+  "title": "When Is Parallel Trends Sensitive to Functional Form?",
+  "authors": [
+   "Roth, Jonathan",
+   "Sant'Anna, Pedro H. C."
+  ],
+  "citation_date": "2020/10/09",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 9 Oct 2020 21:25:43 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 19 Nov 2020 23:16:31 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Thu, 28 Jan 2021 23:38:15 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Tue, 11 Jan 2022 20:17:23 UTC"
+   },
+   {
+    "version": "v5",
+    "date": "Mon, 19 Sep 2022 20:12:18 UTC"
+   }
+  ],
+  "abstract": "This paper assesses when the validity of difference-in-differences depends on functional form. We provide a novel characterization: the parallel trends assumption holds under all strictly monotonic transformations of the outcome if and only if a stronger ``parallel trends''-type condition holds for the cumulative distribution function of untreated potential outcomes. This condition for parallel trends to be insensitive to functional form is satisfied if and essentially only if the population can be partitioned into a subgroup for which treatment is effectively randomly assigned and a remaining subgroup for which the distribution of untreated potential outcomes is stable over time. These conditions have testable implications, and we introduce falsification tests for the null that parallel trends is insensitive to functional form.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

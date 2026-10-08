@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2610.09272",
+ "fetched_at": "2026-10-08T15:17:41Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41732,
+ "raw_sha256": "ee1483ac64e20cc0cf546996c8ef613e9b077ab6acd8d1a1e0a799ac96a3589b",
+ "raw_stored": false,
+ "extract": {
+  "title": "Evaluating Trajectory Features for Routing Final-Layer Attention",
+  "authors": [
+   "Yao, Yupeng"
+  ],
+  "citation_date": "2026/10/07",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 7 Oct 2026 01:12:37 UTC"
+   }
+  ],
+  "abstract": "Attention routing requires a signal that predicts the value of attention on the current prefix. We evaluate whether hidden-state extrapolation error, curvature and error change improve this prediction beyond uncertainty, one-step displacement, position and state projections. Paired executions of the final attention layer supply signed next-token loss differences in frozen SmolLM3-3B-Base and Qwen3.5-4B-Base checkpoints. Utility-supervised routers are tested on 100 held-out PG-19 books at an identical causal 20 percent invocation quota. None of six prespecified comparisons shows a positive gain after familywise correction. In Qwen3.5, a parameter-matched fixed-projection control lowers NLL by 0.00356 nats/token relative to the trajectory router (95 percent interval 0.00218 to 0.00487). Secondary results depend on the operation removed, feature location and scoring horizon; frozen thresholds also drift substantially at longer horizons. Actual selected-query execution yields small long-sequence latency reductions with increased NLL, while learned routers remain slower during cached continuation. The study identifies limits on the incremental value of these trajectory summaries and separates allocation quality from measured inference benefit.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/1208.2301",
+ "fetched_at": "2026-10-08T15:17:04Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43334,
+ "raw_sha256": "fda12b14309243b47acdbaec5c494006c7dc60fa666c286b229be54993809911",
+ "raw_stored": false,
+ "extract": {
+  "title": "Agnostic notes on regression adjustments to experimental data: Reexamining Freedman's critique",
+  "authors": [
+   "Lin, Winston"
+  ],
+  "citation_date": "2012/08/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 11 Aug 2012 01:27:34 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 19 Apr 2013 09:05:51 UTC"
+   }
+  ],
+  "abstract": "Freedman [Adv. in Appl. Math. 40 (2008) 180-193; Ann. Appl. Stat. 2 (2008) 176-196] critiqued ordinary least squares regression adjustment of estimated treatment effects in randomized experiments, using Neyman's model for randomization inference. Contrary to conventional wisdom, he argued that adjustment can lead to worsened asymptotic precision, invalid measures of precision, and small-sample bias. This paper shows that in sufficiently large samples, those problems are either minor or easily fixed. OLS adjustment cannot hurt asymptotic precision when a full set of treatment-covariate interactions is included. Asymptotically valid confidence intervals can be constructed with the Huber-White sandwich standard error estimator. Checks on the asymptotic approximations are illustrated with data from Angrist, Lang, and Oreopoulos's [Am. Econ. J.: Appl. Econ. 1:1 (2009) 136--163] evaluation of strategies to improve college students' achievement. The strongest reasons to support Freedman's preference for unadjusted estimates are transparency and the dangers of specification search.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
