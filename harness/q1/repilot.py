@@ -11,11 +11,16 @@ registered rule ``q1-repilot/1``, written before its job runs:
   with no S2 substrate (so no evaluation unit of any tier lives on them), not
   excluded, in the Stage 0 planning corpus's admitted S1-cal set, with native
   inputs below the trimming rule's small class (0.6 GB, where every in-scope
-  evaluation substrate lies: 0.008-0.537 GB). Four size bins, ``[0, 0.05)``,
-  ``[0.05, 0.2)``, ``[0.2, 0.4)`` and ``[0.4, 0.6)`` GB; in each, candidates are
-  ordered by ``sha256("q1-repilot/1/" + problem_id)`` and the first two that
-  build (mock-H100 codegen and conversion on the CPU) are taken. A candidate
-  that does not build is replaced by the next and listed.
+  evaluation substrate lies: 0.008-0.537 GB). Five strata follow the in-scope
+  evaluation set (45 level-2 and 24 level-1 substrates; the level-1 ones are
+  mostly matrix products): level 1 below 0.6 GB (2 problems), and level 2 in
+  ``[0, 0.05)`` (2), ``[0.05, 0.2)`` (1), ``[0.2, 0.4)`` (2) and ``[0.4, 0.6)``
+  GB (1). In each stratum candidates are ordered by
+  ``sha256("q1-repilot/1/" + problem_id)`` and the first that build (mock-H100
+  codegen and conversion on the CPU) are taken; a candidate that does not build
+  is replaced by the next and listed. (A CPU trial build of an earlier draft of
+  this rule, size bins without levels, picked eight level-2 problems; no GPU
+  item had run. The level strata were added before any GPU job.)
 - **Kernels.** Per problem: the S1-cal substrate, its reference-identity
   control and one mutant (the first of the parent's CPU-distinct pool by
   ``sha256("q1-repilot/1/mutant/" + mutant_id)``; no compile filter, since S1-cal
@@ -28,9 +33,9 @@ registered rule ``q1-repilot/1``, written before its job runs:
   so they run under the same contention; reference items go just before their
   group's first consumer. Execution is Stage 0's (``trim.TRIM_RULE``): 12 units
   per GPU, one unit per item below 0.6 GB, size-scaled watchdog limits.
-- **Order.** Problems by bin (smallest first), then by their order key; a time
-  box therefore cuts the largest problems first and every completed problem has
-  both arms.
+- **Order.** Problems by stratum (as listed), then by their order key; a time
+  box therefore cuts the largest level-2 problems first and every completed
+  problem has both arms.
 
 The paired per-gate ratio (store over inline) and the reference items' cost,
 both as functions of native input size, feed the Stage 0 projection
@@ -49,14 +54,14 @@ from typing import Any
 from harness.q1 import pilot, trim
 
 RULE = "q1-repilot/1"
-#: Native-input-size bins (bytes) and picks per bin.
-BINS: tuple[tuple[int, int], ...] = (
-    (0, 50_000_000),
-    (50_000_000, 200_000_000),
-    (200_000_000, 400_000_000),
-    (400_000_000, 600_000_000),
+#: Strata: (name, KernelBench level, native input bytes [low, high), problems).
+STRATA: tuple[tuple[str, int, int, int, int], ...] = (
+    ("L1-below-0.6GB", 1, 0, 600_000_000, 2),
+    ("L2-0-0.05GB", 2, 0, 50_000_000, 2),
+    ("L2-0.05-0.2GB", 2, 50_000_000, 200_000_000, 1),
+    ("L2-0.2-0.4GB", 2, 200_000_000, 400_000_000, 2),
+    ("L2-0.4-0.6GB", 2, 400_000_000, 600_000_000, 1),
 )
-PER_BIN = 2
 STORE_SUFFIX = ".store"
 REPLICATE = 42
 SCORING_GATES = trim.SCORING_GATES
@@ -78,32 +83,40 @@ def candidates(
     excluded: Iterable[str] = (),
     size_of: Any = pilot.native_input_bytes,
 ) -> dict[str, list[str]]:
-    """Per bin (``"lo-hi"`` in bytes), the eligible problems in rule order."""
-    s2 = set(s2_problems)
-    ok = set(eligible) - set(excluded) - s2
+    """Per stratum, the eligible problems in rule order."""
+    from harness.q1.schema import parse_problem_id
+
+    ok = set(eligible) - set(excluded) - set(s2_problems)
     out: dict[str, list[str]] = {}
-    for low, high in BINS:
-        members = [p for p in calibration_problems if p in ok and low <= (size_of(p) or 0) < high]
-        out[f"{low}-{high}"] = sorted(set(members), key=order_key)
+    for name, level, low, high, _count in STRATA:
+        members = {
+            p
+            for p in calibration_problems
+            if p in ok and parse_problem_id(p)[0] == level and low <= (size_of(p) or 0) < high
+        }
+        out[name] = sorted(members, key=order_key)
     return out
 
 
 def pick(
-    ordered: Mapping[str, Sequence[str]], builds: Any, per_bin: int = PER_BIN
+    ordered: Mapping[str, Sequence[str]],
+    builds: Any,
+    counts: Mapping[str, int] | None = None,
 ) -> dict[str, Any]:
-    """The first ``per_bin`` problems per bin for which ``builds(problem_id)`` is true;
-    the others tried are listed as replaced."""
+    """The first ``counts[stratum]`` problems per stratum (default: the rule's) for
+    which ``builds(problem_id)`` is true; the others tried are listed as replaced."""
+    wanted = dict(counts) if counts is not None else {s[0]: s[4] for s in STRATA}
     chosen: list[str] = []
     record = []
     for name, members in ordered.items():
         taken, replaced = [], []
         for problem_id in members:
-            if len(taken) == per_bin:
+            if len(taken) == wanted[name]:
                 break
             (taken if builds(problem_id) else replaced).append(problem_id)
         chosen += taken
-        record.append({"bin": name, "chosen": taken, "replaced_not_built": replaced})
-    return {"rule": RULE, "problems": chosen, "bins": record}
+        record.append({"stratum": name, "chosen": taken, "replaced_not_built": replaced})
+    return {"rule": RULE, "problems": chosen, "strata": record}
 
 
 def first_mutant(mutant_ids: Iterable[str]) -> str | None:
@@ -237,12 +250,11 @@ def _diff_paths(a: Any, b: Any, prefix: str = "") -> list[str]:
 
 
 __all__ = [
-    "BINS",
-    "PER_BIN",
     "REPLICATE",
     "RULE",
     "SCORING_GATES",
     "STORE_SUFFIX",
+    "STRATA",
     "arm_of",
     "candidates",
     "compare_twins",

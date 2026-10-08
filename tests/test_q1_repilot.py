@@ -22,27 +22,32 @@ SIZES = {
     "L2/9_I": 537_000_000,
     "L2/10_J": 700_000_000,
     "L1/11_K": 20_000_000,
+    "L1/12_L": 30_000_000,
 }
 
 
 def test_candidates_exclude_s2_problems_ineligible_and_large() -> None:
     ordered = repilot.candidates(
         list(SIZES),
-        s2_problems={"L1/11_K"},
+        s2_problems={"L1/12_L"},
         eligible=set(SIZES) - {"L2/3_C"},
         size_of=SIZES.get,
     )
     members = [p for group in ordered.values() for p in group]
-    assert "L1/11_K" not in members and "L2/3_C" not in members and "L2/10_J" not in members
-    assert ordered["0-50000000"] == sorted(["L2/1_A", "L2/2_B"], key=repilot.order_key)
-    assert set(ordered["400000000-600000000"]) == {"L2/8_H", "L2/9_I"}
+    assert "L1/12_L" not in members and "L2/3_C" not in members and "L2/10_J" not in members
+    assert ordered["L1-below-0.6GB"] == ["L1/11_K"]
+    assert ordered["L2-0-0.05GB"] == sorted(["L2/1_A", "L2/2_B"], key=repilot.order_key)
+    assert set(ordered["L2-0.4-0.6GB"]) == {"L2/8_H", "L2/9_I"}
+    assert sum(s[4] for s in repilot.STRATA) == 8
 
 
 def test_pick_replaces_what_does_not_build_and_lists_it() -> None:
-    ordered = {"bin": ["p1", "p2", "p3", "p4"]}
-    record = repilot.pick(ordered, lambda p: p != "p2", per_bin=2)
+    ordered = {"s": ["p1", "p2", "p3", "p4"]}
+    record = repilot.pick(ordered, lambda p: p != "p2", counts={"s": 2})
     assert record["problems"] == ["p1", "p3"]
-    assert record["bins"] == [{"bin": "bin", "chosen": ["p1", "p3"], "replaced_not_built": ["p2"]}]
+    assert record["strata"] == [
+        {"stratum": "s", "chosen": ["p1", "p3"], "replaced_not_built": ["p2"]}
+    ]
 
 
 def test_items_pair_twins_and_place_references_first() -> None:
