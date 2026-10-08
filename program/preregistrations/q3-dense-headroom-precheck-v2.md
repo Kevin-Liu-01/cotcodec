@@ -111,11 +111,13 @@ caps changed.
    lane has 74 chunks of at most 16 units (28, 18, 10 and 18 by stage).
 10. Files changed after the timing job (it ran the image built from `71dc954`):
     `scripts/run_dense_headroom_precheck_v2.py` (cuDNN's attention
-    off on the hybrid lane and the `attention_backend_check`; the timing job's
-    own profile is unchanged), `harness/dense_headroom_v2_lanes.py` and the 4B
-    template (the 4B limit and cap), `scripts/run_dense_headroom_precheck_v2_doctor.py`
-    (checks of the backend record), and this file. The timing job's code
-    digests are in its receipt.
+    off on the hybrid lane, the `attention_backend_check`, and the signal
+    block limited to runs of the file as the program, so that importing it in
+    tests does not block the signals of their child processes; the timing
+    job's own profile is unchanged), `harness/dense_headroom_v2_lanes.py` and
+    the 4B template (the 4B limit and cap),
+    `scripts/run_dense_headroom_precheck_v2_doctor.py` (checks of the backend
+    record), and this file. The timing job's code digests are in its receipt.
 
 ## Identity
 
