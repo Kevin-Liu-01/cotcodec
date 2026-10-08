@@ -1683,3 +1683,39 @@ Append-only. Newest entries at the bottom.
   control run, the overlay and the open-weight rater within the 3.0 GPU-h
   cap, the isolated Claude rating as one workflow session, collector,
   ingest, summary), then the registered analysis and Kevin's pool.
+
+## 2026-10-08 — Q2 evaluator-mutation: confirm campaign stage A2 (audit census, open-weight rater, isolated export)
+
+- Operator run of the frozen `q2-evaluator-mutation-v1` (ledger row 11,
+  `65bc2e2`), branch `ops/q2-mutation-confirm`, evidence
+  `program/evidence/2026-10-08/q2-mutation-confirm/audit/`. Every container
+  ran from the staged export or a clean clone of `65bc2e2`.
+- Salt (D34): 64 hex characters written on the host (mode 600 in a mode-700
+  directory, nothing else in it, never printed); SHA-256 `194ee66c...`
+  committed, the salt revealed after the isolated ingest.
+- Sample, baselines, packets (`submit_audit.sh` with `reserve-controls-v1`,
+  Slurm 815, CPU, 2 min 25 s): the census, 178 items (36 `fn_equiv`, 5
+  `fp_violation`, 93 `alt_gate`, all 4 P1 flips of both runs, 33 gold and 7
+  do-nothing shams), no fallback (capacity 1,139); 33 baseline saves, none
+  failed; two packet shards (133 and 45 items), 16 packets shortened, none
+  over budget. The sample summary is held (it names the P1 flip tasks); a
+  redacted copy is committed.
+- Overlay: capsule `a8559f89...` (3,744 files, clean); job 816 was refused by
+  the extractor in 1 s because the first receipt named the commit instead of
+  `HEAD`; the same archive with a `HEAD` receipt built as 817 (43 s, image
+  `7d4595f9...`, provenance PASS). CPU doctor 819: pass, 918 tokens per page.
+- Open-weight rater (Qwen3.6-35B-A3B, thinking on, registered sampling, 160
+  GiB, limits 22 and 13 minutes from the GPU ledger, 0.584 of 3.0 GPU-h
+  allocated): 823 rated 133/133 in 14 min 49 s, 824 rated 45/45 in 6 min
+  21 s; 172 `ok`, 6 `thinking_unfinished` (unsure), 0 unrated, no retry;
+  both ended on their own (`reason=completed`, exit 0), no container left.
+  Per-item calls held on the host; receipts and aggregates committed.
+- Isolated export (`rater_runner export-isolated` at `65bc2e2`): 178 item
+  directories under a fresh root in the session scratchpad, manifest
+  `f9c91d57...` outside it, template `0e9d4eb6...` as pinned; the exported,
+  sampled and rated id sets are equal.
+- GPU 0.365 GPU-h physical (rater 0.3528, overlay 0.0122); program total
+  4.2911. Nothing pushed or merged.
+- Next: the isolated Claude rating as one workflow session of rater agents
+  only, then `collect-transcripts`, `ingest-isolated`, `audit summarize`, the
+  registered analysis, Kevin's pool and spot check.
