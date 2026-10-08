@@ -483,3 +483,17 @@ relay frame, the items it voids are re-rated once in a fresh, unresumed run,
 answer-blind, and both results are reported. Kevin's own items stay his: the
 adjudication pool (about 16 items) and the human spot check (about 35 items,
 D9).
+
+**D39. Action-path freeze details: D33's limit is per entry, and C3
+equivalence fails closed.** D33's A1-A3 limit counts excused trials per
+entry, over both observation settings, every rerun and, in A1, both seeds'
+shuffles; D33's author confirms that reading here, as the registrations now
+state. The final pre-freeze verifier found that C3 could turn a surviving
+mutant into an equivalent one by cancelling and rerunning: equivalence was
+read from the counting attempt alone. Decided: a mutant is equivalent only if
+its counting attempt's stream signature equals the reference's and so does
+every earlier attempt's on each cell whose earlier trial had no
+infrastructure failure; kills stay read from the counting attempt. The three
+status lines are rewritten to the frozen wording before the freeze (as D32
+required for Q3), and the analysis treats an unparseable record file like a
+missing one, so a write cut short by a kill cannot block a verdict.
