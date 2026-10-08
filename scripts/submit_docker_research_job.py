@@ -647,6 +647,15 @@ def validate_manifest(
             raise ValueError("resume_subpath must be a safe relative artifact directory")
         normalized_subpath = resume_subpath
 
+    # A job that must not start before another (q2-stage1-rescoped-v1: a GPU job waits
+    # for its paired CPU-only VM job to start) names that job; sbatch then holds it with
+    # --dependency=after:<id>. The time it waits is not allocation time.
+    start_after = raw.get("start_after_job_id")
+    if start_after is not None:
+        start_after = str(start_after)
+        if not JOB_ID_RE.fullmatch(start_after):
+            raise ValueError("start_after_job_id must be a positive Slurm job id")
+
     command = _validate_command(raw.get("command"))
     # Memory workloads were archived on 2026-10-06; reject them before the
     # seed or bundle checks can produce a misleading error.
@@ -688,6 +697,8 @@ def validate_manifest(
     if normalized_job_id is not None:
         manifest["resume_from_job_id"] = normalized_job_id
         manifest["resume_subpath"] = normalized_subpath
+    if start_after is not None:
+        manifest["start_after_job_id"] = start_after
 
     memory_bundle = raw.get("memory_bundle")
     if memory_bundle is not None:
@@ -1065,6 +1076,8 @@ def sbatch_argv(manifest: dict[str, Any], test_only: bool) -> list[str]:
         f"--output={manifest['run_root']}/slurm-%j.out",
         f"--export={export_argument}",
     ]
+    if start_after := manifest.get("start_after_job_id"):
+        argv.append(f"--dependency=after:{start_after}")
     if test_only:
         argv.append("--test-only")
     argv.append(str(BATCH_SCRIPT))

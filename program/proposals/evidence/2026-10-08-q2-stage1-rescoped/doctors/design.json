@@ -2,8 +2,8 @@
  "doctor": "Design",
  "status": "PASS",
  "pass_condition": "Design fixed before data; randomization and blocking stated; seed count justified by power; decision rules fixed",
- "evidence": "Synthesis owner's self-check (not independent). Design panel judges scored the winning design 30 and 31 with no fatal flaw. Harness interleaved within session, sessions as a registered factor 12 h apart, seeded draws and orders, seeds [42, 43, 44] justified by simulation (analysis/sim_s1a.json, analysis/sim_signflip.json), estimator bias and test size checked under task x harness x session noise, DR0-DR5 and DR-A fixed before any confirm episode",
- "remediation": "Refute-first identification lens; check DR5's planning value M with a full-likelihood estimator",
+ "evidence": "Synthesis owner's self-check (not independent). Design panel judges scored the winning design 30 and 31 with no fatal flaw. Three adversarial pre-freeze reviews of the S1a draft (2026-10-08) found 21 blocking items (19 distinct), all fixed (preregistration section 22). Harness interleaved within session, sessions as a registered factor 12 h apart, sizes in a seeded order, seeded draws and orders written by a tested renderer, seeds [42, 43, 44] justified by simulation with the registered estimators (analysis/sim_s1a_v2.json): sign-flip tests hold their size under session excesses of 0-16 pp, DR5's M frozen on the estimator's scale; DR0-DR5 and DR-A coded in harness/q2_stage1/rules.py and tested before any confirm episode",
+ "remediation": "Refute-first identification lens in the gauntlet; a fresh pre-freeze audit of the revised draft",
  "evaluated_on": "2026-10-08",
  "evaluated_by": "wave-0 single synthesis owner (Claude agent); not an independent review"
 }

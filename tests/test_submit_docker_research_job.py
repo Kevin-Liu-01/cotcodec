@@ -968,3 +968,19 @@ def test_shared_gpu_opt_out_is_fail_closed(flag, reason, message: str) -> None:
         raw["shared_gpu_reason"] = reason
     with pytest.raises(ValueError, match=message):
         validate_manifest(raw)
+
+
+def test_start_after_job_id_holds_the_job_until_the_paired_job_starts() -> None:
+    raw = _manifest()
+    raw["start_after_job_id"] = 9123
+    manifest = validate_manifest(raw)
+    assert manifest["start_after_job_id"] == "9123"
+    argv = sbatch_argv(manifest, test_only=False)
+    assert "--dependency=after:9123" in argv
+    assert argv[-1] == str(BATCH_SCRIPT)
+    plain = sbatch_argv(validate_manifest(_manifest()), test_only=False)
+    assert not any(argument.startswith("--dependency") for argument in plain)
+    for bad in (0, "12; rm", "-1", "9" * 21):
+        raw["start_after_job_id"] = bad
+        with pytest.raises(ValueError, match="start_after_job_id"):
+            validate_manifest(raw)
