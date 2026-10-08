@@ -1913,7 +1913,9 @@ third defect; all are fixed before the freeze with no scored data (code in
    `c2_trial_pass`; C3 reads a mutant's kills and equivalence from the
    counting attempt and reports each earlier attempt (its failed cells and
    whether its streams matched the reference's), and a cell the reference
-   did not pass cleanly in any of its attempts cannot kill.
+   did not pass cleanly in any of its attempts cannot kill. (Decision D39
+   later made C3's equivalence fail closed over earlier attempts; section
+   23.)
 2. **A rung attempt without host snapshots** (section 9). `foreign_abort`
    returned "no host snapshots" for an attempt with none, and the rung rule
    read that as a foreign-load abort: the attempt's gating failures (since
