@@ -128,10 +128,43 @@ measured units all lie between 3,600 and 3,950 tokens, and C-literal's one
 7.4 s compile at 3,835 tokens set its slope (3.3 ms per token, intercept
 -12 s), which extrapolated 7.7 s per C-literal unit against 0.16 s measured;
 B-absent's slope came from one 7.6 s compile at 8,313 tokens. It was replaced
-by the estimator above, which leaves the compiles out of the per-unit means,
-adds them back as an allowance, and scales by length in proportion (which
-over-predicts the measured long units). The difference between the two is
-the treatment of the two compiles, nothing else.
+by the estimator above, which was written after the first pass came out over
+the cap. The two differ in two ways, not one: the registered estimator leaves
+the compiles out of the per-unit means and adds them back as an allowance,
+and it scales by length in proportion where the first pass scaled by the
+fitted line.
+
+The second difference crosses a minute boundary of D36's rule
+(`limit-recheck/estimator-sensitivity.py`, standard library only, from the
+receipt and `analysis.json`; output `estimator-sensitivity.txt` and `.json`;
+it reproduces both committed analyses, 30 and 73 minutes):
+
+| Estimator | A-main | B-absent | C-literal | D-nohaystack | Stages | Evaluation and statistics | (2 x that + 78.7 s) / 60 | Minutes |
+|---|---|---|---|---|---|---|---|---|
+| registered: compiles as an allowance, proportional scaling | 0.771 | 0.657 | 0.249 | 0.339 | 658.1 s | 769.2 s | 26.95 | **30** |
+| first pass's line fit, compiles treated as registered | 0.896 | 0.539 | 0.239 | 0.339 | 678.0 s | 789.2 s | 27.62 | **31** |
+| the larger of those two in every stage (a bound, not a proposed estimator) | 0.896 | 0.657 | 0.249 | 0.339 | 712.8 s | 823.9 s | 28.78 | 32 |
+| first pass as run (compiles in the fits and means, no allowance) | 0.896 | 1.160 | 7.674 | 0.339 | 2,041.8 s | 2,046.8 s | 69.54 | 73 |
+
+(seconds per unit entering the rule.) The increase from the first row to the
+second is all A-main's, which has no compile: +54.8 s for the stage, while
+the line gives B-absent 33.2 s and C-literal 1.5 s less than proportional
+scaling. A-main's 47 measured units span only 211 tokens (3,614 to 3,825),
+over which the line's slope is 0.160 ms per token, 3.3 times B-absent's
+0.048 ms per token over 3,551 to 8,313 tokens; at the lane's mean of 6,607
+tokens the line gives 0.896 s per unit against proportional scaling's
+0.771 s. Proportional scaling was kept because B-absent is the only stage
+with measured units at the lane's long contexts, and there it over-predicts:
+0.78 s against 0.60 s measured for the seven units at 8,304-8,313 tokens (all
+in the cProfile chunk, which only slows them). Against B-absent's 40 units
+near 3,730 tokens, those seven had prefill 0.247 s against 0.116 s and option
+forwards 0.347 s against 0.261 s, the whole unit 0.60 s against 0.38 s, for
+2.2 times the tokens. At the first three rows' estimates the lane's first
+job, run at that speed, ends 14.1, 14.5 or 15.0 minutes after Slurm's start
+(start-up included), of its 27 useful minutes; the minute boundaries lie
+inside D36's doubled margin. The registration's Compute section and decision
+20 disclose this (Limit re-check, below); the 4B limit stays 30 minutes, the
+registered estimator's.
 
 ## Registration and code after the job
 

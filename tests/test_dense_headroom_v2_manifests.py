@@ -7,6 +7,7 @@ import copy
 import hashlib
 import json
 import re
+import statistics
 from pathlib import Path
 
 import pytest
@@ -197,6 +198,52 @@ def test_the_4b_measurement_is_the_second_timing_jobs() -> None:
     assert receipt["hashes"]["code"]["scripts/run_dense_headroom_precheck_v2.py"] == (
         hashlib.sha256((PROJECT_ROOT / "scripts" / "run_dense_headroom_precheck_v2.py"
                         ).read_bytes()).hexdigest())
+
+
+def test_the_4b_limits_estimator_sensitivity_is_disclosed() -> None:
+    """The registered estimator (proportional scaling) gives 30 minutes; the first
+    analysis pass's line fit, with the compiles treated as registered, gives 31.
+    The registration says so, and says the passes differ in more than the compiles."""
+
+    analysis = json.loads((TIMING_2_EVIDENCE / "analysis.json").read_text(encoding="utf-8"))
+    timing = json.loads((TIMING_2_EVIDENCE / "dense-precheck_timing-receipt.json"
+                         ).read_text(encoding="utf-8"))["timing"]
+    check_unit = timing["attention_backend_check"]["unit"]
+    proportional = line_fit = 0.0
+    spans = {}
+    for stage in dhd.STAGES:
+        units = [u for u in timing["units"] if u["stage"] == stage and u["unit"] != check_unit]
+        median = statistics.median(u["seconds"] for u in units)
+        regular = [u for u in units if u["seconds"] <= 5 * median]
+        x = [float(u["context_tokens"]) for u in regular]
+        y = [float(u["seconds"]) for u in regular]
+        mx, my = sum(x) / len(x), sum(y) / len(y)
+        sxx = sum((v - mx) ** 2 for v in x)
+        slope = max(0.0, sum((a - mx) * (b - my) for a, b in zip(x, y, strict=True)) / sxx)
+        row = analysis["per_stage"][stage]
+        proportional += my * max(1.0, row["lane_tokens_mean"] / mx) * row["lane_units"]
+        line_fit += max(my, my + slope * (row["lane_tokens_mean"] - mx)) * row["lane_units"]
+        spans[stage] = (min(x), max(x), slope)
+    extra = analysis["compiles"]["allowance_s"] + 5.0
+    start_up = analysis["rule"]["start_up_s"]
+    assert proportional == pytest.approx(analysis["cross_checks"]["scaled_without_compiles_s"])
+    assert lanes.limit_minutes(proportional + extra, start_up) == lanes.LARGE_LANE_MINUTES == 30
+    assert lanes.limit_minutes(line_fit + extra, start_up) == 31
+    assert (spans["A-main"][0], spans["A-main"][1]) == (3614, 3825)
+    assert spans["A-main"][2] == pytest.approx(0.160e-3, abs=5e-7)
+    assert spans["B-absent"][2] == pytest.approx(0.048e-3, abs=5e-7)
+    text = (PROJECT_ROOT / "program" / "preregistrations" / f"{dv2.EXPERIMENT_ID}.md"
+            ).read_text(encoding="utf-8")
+    compute = " ".join(text[text.index("## Compute"):text.index("### The development timing jobs")
+                            ].split())
+    assert "differ only in how the two compiles are treated" not in compute
+    assert "differed from this one in two ways" in compute
+    assert f"gives {line_fit:.0f} s instead of {proportional:.0f} s" in compute
+    assert "so 31 minutes, not 30" in compute and "only 211 tokens (3,614 to 3,825)" in compute
+    assert "chosen after that pass came out over the cap" in compute
+    decision_20 = " ".join(text[text.index("\n20. Limits"):text.index("\n21. ")].split())
+    assert "is the conservative choice" not in decision_20
+    assert "gives 31 minutes" in decision_20 and "came out over D36's cap" in decision_20
 
 
 def _small_receipt() -> dict:
