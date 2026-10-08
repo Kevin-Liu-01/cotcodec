@@ -1,0 +1,3147 @@
+{
+ "generator_sha256": {
+  "harness/q1/data/shape_manifest.json": "29e693ee4d77bc86e3ecfdb1000307b3878c023c6c6224f87c4fcfae74a220cb",
+  "harness/q1/problems.py": "5c07653bab479d289d4ae0d42a1dabf88e2b8a9ab1652d1580eba0b477804b67",
+  "scripts/q1_memory_table.py": "11060ca03d9a2bfb779c486ea713552250bcec9b5b72849b94fe0943c1babf23"
+ },
+ "problems": {
+  "L1/100_HingeLoss": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 8590065664,
+    "max_activation_bytes": 4294967296,
+    "meta_forward_errors": 10,
+    "output_bytes": 4
+   },
+   "native": {
+    "input_bytes": 4295098368,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 4
+   },
+   "params_bytes": 0
+  },
+  "L1/10_3D_tensor_matrix_multiplication": {
+   "all_configs": {
+    "configs": 19,
+    "input_bytes": 152661320,
+    "max_activation_bytes": 146177220,
+    "meta_forward_errors": 0,
+    "output_bytes": 100663296
+   },
+   "native": {
+    "input_bytes": 140509184,
+    "max_activation_bytes": 134217728,
+    "meta_forward": "ok",
+    "output_bytes": 50331648
+   },
+   "params_bytes": 0
+  },
+  "L1/11_4D_tensor_matrix_multiplication": {
+   "all_configs": {
+    "configs": 20,
+    "input_bytes": 1208745984,
+    "max_activation_bytes": 6442450944,
+    "meta_forward_errors": 0,
+    "output_bytes": 6442450944
+   },
+   "native": {
+    "input_bytes": 1074528256,
+    "max_activation_bytes": 3221225472,
+    "meta_forward": "ok",
+    "output_bytes": 3221225472
+   },
+   "params_bytes": 0
+  },
+  "L1/12_Matmul_with_diagonal_matrices_": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 134234112,
+    "max_activation_bytes": 134217728,
+    "meta_forward_errors": 0,
+    "output_bytes": 134217728
+   },
+   "native": {
+    "input_bytes": 67125248,
+    "max_activation_bytes": 67108864,
+    "meta_forward": "ok",
+    "output_bytes": 67108864
+   },
+   "params_bytes": 0
+  },
+  "L1/13_Matmul_for_symmetric_matrices": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 268378112,
+    "max_activation_bytes": 134189056,
+    "meta_forward_errors": 0,
+    "output_bytes": 134189056
+   },
+   "native": {
+    "input_bytes": 134217728,
+    "max_activation_bytes": 67108864,
+    "meta_forward": "ok",
+    "output_bytes": 67108864
+   },
+   "params_bytes": 0
+  },
+  "L1/14_Matmul_for_upper_triangular_matrices": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 268378112,
+    "max_activation_bytes": 134189056,
+    "meta_forward_errors": 0,
+    "output_bytes": 134189056
+   },
+   "native": {
+    "input_bytes": 134217728,
+    "max_activation_bytes": 67108864,
+    "meta_forward": "ok",
+    "output_bytes": 67108864
+   },
+   "params_bytes": 0
+  },
+  "L1/15_Matmul_for_lower_triangular_matrices": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 268378112,
+    "max_activation_bytes": 134189056,
+    "meta_forward_errors": 0,
+    "output_bytes": 134189056
+   },
+   "native": {
+    "input_bytes": 134217728,
+    "max_activation_bytes": 67108864,
+    "meta_forward": "ok",
+    "output_bytes": 67108864
+   },
+   "params_bytes": 0
+  },
+  "L1/16_Matmul_with_transposed_A": {
+   "all_configs": {
+    "configs": 18,
+    "input_bytes": 335544320,
+    "max_activation_bytes": 67806340,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 201326592,
+    "max_activation_bytes": 67108864,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 0
+  },
+  "L1/17_Matmul_with_transposed_B": {
+   "all_configs": {
+    "configs": 18,
+    "input_bytes": 335544320,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 201326592,
+    "max_activation_bytes": 134217728,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 0
+  },
+  "L1/18_Matmul_with_transposed_both": {
+   "all_configs": {
+    "configs": 18,
+    "input_bytes": 335544320,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 201326592,
+    "max_activation_bytes": 134217728,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 0
+  },
+  "L1/19_ReLU": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/1_Square_matrix_multiplication_": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 268378112,
+    "max_activation_bytes": 134189056,
+    "meta_forward_errors": 0,
+    "output_bytes": 134189056
+   },
+   "native": {
+    "input_bytes": 134217728,
+    "max_activation_bytes": 67108864,
+    "meta_forward": "ok",
+    "output_bytes": 67108864
+   },
+   "params_bytes": 0
+  },
+  "L1/20_LeakyReLU": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/21_Sigmoid": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/22_Tanh": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/23_Softmax": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/24_LogSoftmax": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/25_Swish": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/26_GELU_": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/27_SELU_": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/28_HardSigmoid": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/29_Softplus": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/2_Standard_matrix_multiplication_": {
+   "all_configs": {
+    "configs": 18,
+    "input_bytes": 335544320,
+    "max_activation_bytes": 67108864,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 201326592,
+    "max_activation_bytes": 33554432,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 0
+  },
+  "L1/30_Softsign": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/31_ELU": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/32_HardTanh": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 12884901888,
+    "meta_forward_errors": 0,
+    "output_bytes": 12884901888
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 6442450944,
+    "meta_forward": "ok",
+    "output_bytes": 6442450944
+   },
+   "params_bytes": 0
+  },
+  "L1/33_BatchNorm": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 8589935104,
+    "meta_forward_errors": 0,
+    "output_bytes": 8589934592
+   },
+   "native": {
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4294967808,
+    "meta_forward": "ok",
+    "output_bytes": 4294967296
+   },
+   "params_bytes": 1032
+  },
+  "L1/34_InstanceNorm": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 15032385536,
+    "max_activation_bytes": 15032442880,
+    "meta_forward_errors": 0,
+    "output_bytes": 15032385536
+   },
+   "native": {
+    "input_bytes": 7516192768,
+    "max_activation_bytes": 7516250112,
+    "meta_forward": "ok",
+    "output_bytes": 7516192768
+   },
+   "params_bytes": 0
+  },
+  "L1/35_GroupNorm_": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 15032385536,
+    "max_activation_bytes": 15032392704,
+    "meta_forward_errors": 0,
+    "output_bytes": 15032385536
+   },
+   "native": {
+    "input_bytes": 7516192768,
+    "max_activation_bytes": 7516199936,
+    "meta_forward": "ok",
+    "output_bytes": 7516192768
+   },
+   "params_bytes": 512
+  },
+  "L1/36_RMSNorm_": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 15032385536,
+    "max_activation_bytes": 15032385536,
+    "meta_forward_errors": 0,
+    "output_bytes": 15032385536
+   },
+   "native": {
+    "input_bytes": 7516192768,
+    "max_activation_bytes": 7516192768,
+    "meta_forward": "ok",
+    "output_bytes": 7516192768
+   },
+   "params_bytes": 0
+  },
+  "L1/37_FrobeniusNorm_": {
+   "all_configs": {
+    "configs": 18,
+    "input_bytes": 15032385536,
+    "max_activation_bytes": 15032385536,
+    "meta_forward_errors": 0,
+    "output_bytes": 15032385536
+   },
+   "native": {
+    "input_bytes": 7516192768,
+    "max_activation_bytes": 7516192768,
+    "meta_forward": "ok",
+    "output_bytes": 7516192768
+   },
+   "params_bytes": 0
+  },
+  "L1/38_L1Norm_": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 17179607040,
+    "max_activation_bytes": 17179607040,
+    "meta_forward_errors": 0,
+    "output_bytes": 17179607040
+   },
+   "native": {
+    "input_bytes": 8589803520,
+    "max_activation_bytes": 8589803520,
+    "meta_forward": "ok",
+    "output_bytes": 8589803520
+   },
+   "params_bytes": 0
+  },
+  "L1/39_L2Norm_": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 17179607040,
+    "max_activation_bytes": 17179607040,
+    "meta_forward_errors": 0,
+    "output_bytes": 17179607040
+   },
+   "native": {
+    "input_bytes": 8589803520,
+    "max_activation_bytes": 8589803520,
+    "meta_forward": "ok",
+    "output_bytes": 8589803520
+   },
+   "params_bytes": 0
+  },
+  "L1/3_Batched_matrix_multiplication": {
+   "all_configs": {
+    "configs": 20,
+    "input_bytes": 2415919104,
+    "max_activation_bytes": 1073741824,
+    "meta_forward_errors": 0,
+    "output_bytes": 1073741824
+   },
+   "native": {
+    "input_bytes": 1342177280,
+    "max_activation_bytes": 536870912,
+    "meta_forward": "ok",
+    "output_bytes": 536870912
+   },
+   "params_bytes": 0
+  },
+  "L1/40_LayerNorm": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 536871168,
+    "meta_forward_errors": 0,
+    "output_bytes": 536870912
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 268435584,
+    "meta_forward": "ok",
+    "output_bytes": 268435456
+   },
+   "params_bytes": 33554432
+  },
+  "L1/41_Max_Pooling_1D": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 19325435904,
+    "meta_forward_errors": 0,
+    "output_bytes": 6441811968
+   },
+   "native": {
+    "input_bytes": 3221225472,
+    "max_activation_bytes": 9661759488,
+    "meta_forward": "ok",
+    "output_bytes": 3220586496
+   },
+   "params_bytes": 0
+  },
+  "L1/42_Max_Pooling_2D": {
+   "all_configs": {
+    "configs": 18,
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 12847177728,
+    "meta_forward_errors": 0,
+    "output_bytes": 4282392576
+   },
+   "native": {
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 6417309696,
+    "meta_forward": "ok",
+    "output_bytes": 2139103232
+   },
+   "params_bytes": 0
+  },
+  "L1/43_Max_Pooling_3D": {
+   "all_configs": {
+    "configs": 19,
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 2975809536,
+    "meta_forward_errors": 0,
+    "output_bytes": 991936512
+   },
+   "native": {
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 1464287232,
+    "meta_forward": "ok",
+    "output_bytes": 488095744
+   },
+   "params_bytes": 0
+  },
+  "L1/44_Average_Pooling_1D": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4295000064,
+    "meta_forward_errors": 0,
+    "output_bytes": 4295000064
+   },
+   "native": {
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 2147516416,
+    "meta_forward": "ok",
+    "output_bytes": 2147516416
+   },
+   "params_bytes": 0
+  },
+  "L1/45_Average_Pooling_2D": {
+   "all_configs": {
+    "configs": 17,
+    "input_bytes": 34359738368,
+    "max_activation_bytes": 283410432,
+    "meta_forward_errors": 0,
+    "output_bytes": 283410432
+   },
+   "native": {
+    "input_bytes": 17179869184,
+    "max_activation_bytes": 141705216,
+    "meta_forward": "ok",
+    "output_bytes": 141705216
+   },
+   "params_bytes": 0
+  },
+  "L1/46_Average_Pooling_3D": {
+   "all_configs": {
+    "configs": 19,
+    "input_bytes": 17179869184,
+    "max_activation_bytes": 2147483648,
+    "meta_forward_errors": 0,
+    "output_bytes": 2147483648
+   },
+   "native": {
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 1073741824,
+    "meta_forward": "ok",
+    "output_bytes": 1073741824
+   },
+   "params_bytes": 0
+  },
+  "L1/47_Sum_reduction_over_a_dimension": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 17175674880,
+    "max_activation_bytes": 4193280,
+    "meta_forward_errors": 0,
+    "output_bytes": 4193280
+   },
+   "native": {
+    "input_bytes": 8587837440,
+    "max_activation_bytes": 2096640,
+    "meta_forward": "ok",
+    "output_bytes": 2096640
+   },
+   "params_bytes": 0
+  },
+  "L1/48_Mean_reduction_over_a_dimension": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 17175674880,
+    "max_activation_bytes": 4193280,
+    "meta_forward_errors": 0,
+    "output_bytes": 4193280
+   },
+   "native": {
+    "input_bytes": 8587837440,
+    "max_activation_bytes": 2096640,
+    "meta_forward": "ok",
+    "output_bytes": 2096640
+   },
+   "params_bytes": 0
+  },
+  "L1/49_Max_reduction_over_a_dimension": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 17175674880,
+    "max_activation_bytes": 12579840,
+    "meta_forward_errors": 0,
+    "output_bytes": 4193280
+   },
+   "native": {
+    "input_bytes": 8587837440,
+    "max_activation_bytes": 6289920,
+    "meta_forward": "ok",
+    "output_bytes": 2096640
+   },
+   "params_bytes": 0
+  },
+  "L1/4_Matrix_vector_multiplication_": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 17188257792,
+    "max_activation_bytes": 8260,
+    "meta_forward_errors": 0,
+    "output_bytes": 8260
+   },
+   "native": {
+    "input_bytes": 8594128896,
+    "max_activation_bytes": 8192,
+    "meta_forward": "ok",
+    "output_bytes": 8192
+   },
+   "params_bytes": 0
+  },
+  "L1/50_conv_standard_2D__square_input__square_kernel": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 308281344,
+    "max_activation_bytes": 594739200,
+    "meta_forward_errors": 0,
+    "output_bytes": 594739200
+   },
+   "native": {
+    "input_bytes": 154140672,
+    "max_activation_bytes": 297369600,
+    "meta_forward": "ok",
+    "output_bytes": 297369600
+   },
+   "params_bytes": 139776
+  },
+  "L1/51_Argmax_over_a_dimension": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 17175674880,
+    "max_activation_bytes": 8386560,
+    "meta_forward_errors": 0,
+    "output_bytes": 8386560
+   },
+   "native": {
+    "input_bytes": 8587837440,
+    "max_activation_bytes": 4193280,
+    "meta_forward": "ok",
+    "output_bytes": 4193280
+   },
+   "params_bytes": 0
+  },
+  "L1/52_Argmin_over_a_dimension": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 17175674880,
+    "max_activation_bytes": 8386560,
+    "meta_forward_errors": 0,
+    "output_bytes": 8386560
+   },
+   "native": {
+    "input_bytes": 8587837440,
+    "max_activation_bytes": 4193280,
+    "meta_forward": "ok",
+    "output_bytes": 4193280
+   },
+   "params_bytes": 0
+  },
+  "L1/53_Min_reduction_over_a_dimension": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 17175674880,
+    "max_activation_bytes": 12579840,
+    "meta_forward_errors": 0,
+    "output_bytes": 4193280
+   },
+   "native": {
+    "input_bytes": 8587837440,
+    "max_activation_bytes": 6289920,
+    "meta_forward": "ok",
+    "output_bytes": 2096640
+   },
+   "params_bytes": 0
+  },
+  "L1/54_conv_standard_3D__square_input__square_kernel": {
+   "all_configs": {
+    "configs": 17,
+    "input_bytes": 100663296,
+    "max_activation_bytes": 1983873024,
+    "meta_forward_errors": 0,
+    "output_bytes": 1983873024
+   },
+   "native": {
+    "input_bytes": 50331648,
+    "max_activation_bytes": 976191488,
+    "meta_forward": "ok",
+    "output_bytes": 976191488
+   },
+   "params_bytes": 20736
+  },
+  "L1/55_conv_standard_2D__asymmetric_input__square_kernel": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 4274012160,
+    "meta_forward_errors": 0,
+    "output_bytes": 4274012160
+   },
+   "native": {
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2134917120,
+    "meta_forward": "ok",
+    "output_bytes": 2134917120
+   },
+   "params_bytes": 294912
+  },
+  "L1/56_conv_standard_2D__asymmetric_input__asymmetric_kernel": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1052868608,
+    "meta_forward_errors": 0,
+    "output_bytes": 1052868608
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 520192000,
+    "meta_forward": "ok",
+    "output_bytes": 520192000
+   },
+   "params_bytes": 1146880
+  },
+  "L1/57_conv_transposed_2D__square_input__square_kernel": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4307558400,
+    "meta_forward_errors": 0,
+    "output_bytes": 4307558400
+   },
+   "native": {
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 2155880448,
+    "meta_forward": "ok",
+    "output_bytes": 2155880448
+   },
+   "params_bytes": 147456
+  },
+  "L1/58_conv_transposed_3D__asymmetric_input__asymmetric_kernel": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 88915968,
+    "meta_forward_errors": 0,
+    "output_bytes": 88915968
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 46448640,
+    "meta_forward": "ok",
+    "output_bytes": 46448640
+   },
+   "params_bytes": 215040
+  },
+  "L1/59_conv_standard_3D__asymmetric_input__square_kernel": {
+   "all_configs": {
+    "configs": 17,
+    "input_bytes": 251658240,
+    "max_activation_bytes": 5285150720,
+    "meta_forward_errors": 0,
+    "output_bytes": 5285150720
+   },
+   "native": {
+    "input_bytes": 125829120,
+    "max_activation_bytes": 2642575360,
+    "meta_forward": "ok",
+    "output_bytes": 2642575360
+   },
+   "params_bytes": 6912
+  },
+  "L1/5_Matrix_scalar_multiplication": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 8589934592,
+    "meta_forward_errors": 0,
+    "output_bytes": 8589934592
+   },
+   "native": {
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 4294967296
+   },
+   "params_bytes": 0
+  },
+  "L1/60_conv_standard_3D__square_input__asymmetric_kernel": {
+   "all_configs": {
+    "configs": 17,
+    "input_bytes": 100663296,
+    "max_activation_bytes": 1858928640,
+    "meta_forward_errors": 0,
+    "output_bytes": 1858928640
+   },
+   "native": {
+    "input_bytes": 50331648,
+    "max_activation_bytes": 883752960,
+    "meta_forward": "ok",
+    "output_bytes": 883752960
+   },
+   "params_bytes": 80640
+  },
+  "L1/61_conv_transposed_3D__square_input__square_kernel": {
+   "all_configs": {
+    "configs": 17,
+    "input_bytes": 805306368,
+    "max_activation_bytes": 869806080,
+    "meta_forward_errors": 0,
+    "output_bytes": 869806080
+   },
+   "native": {
+    "input_bytes": 402653184,
+    "max_activation_bytes": 441593856,
+    "meta_forward": "ok",
+    "output_bytes": 441593856
+   },
+   "params_bytes": 248832
+  },
+  "L1/62_conv_standard_2D__square_input__asymmetric_kernel": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1057030144,
+    "meta_forward_errors": 0,
+    "output_bytes": 1057030144
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 524353536,
+    "meta_forward": "ok",
+    "output_bytes": 524353536
+   },
+   "params_bytes": 368640
+  },
+  "L1/63_conv_standard_2D__square_input__square_kernel": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 17129570304,
+    "meta_forward_errors": 0,
+    "output_bytes": 17129570304
+   },
+   "native": {
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 8556412928,
+    "meta_forward": "ok",
+    "output_bytes": 8556412928
+   },
+   "params_bytes": 73728
+  },
+  "L1/64_conv_transposed_1D": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4295032832,
+    "meta_forward_errors": 0,
+    "output_bytes": 4295032832
+   },
+   "native": {
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 2147549184,
+    "meta_forward": "ok",
+    "output_bytes": 2147549184
+   },
+   "params_bytes": 196608
+  },
+  "L1/65_conv_transposed_2D__square_input__asymmetric_kernel": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 1084252160,
+    "meta_forward_errors": 0,
+    "output_bytes": 1084252160
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 545284096,
+    "meta_forward": "ok",
+    "output_bytes": 545284096
+   },
+   "params_bytes": 344064
+  },
+  "L1/66_conv_standard_3D__asymmetric_input__asymmetric_kernel": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 50331648,
+    "max_activation_bytes": 888832000,
+    "meta_forward_errors": 0,
+    "output_bytes": 888832000
+   },
+   "native": {
+    "input_bytes": 25165824,
+    "max_activation_bytes": 433750016,
+    "meta_forward": "ok",
+    "output_bytes": 433750016
+   },
+   "params_bytes": 80640
+  },
+  "L1/67_conv_standard_1D": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 4294934528,
+    "meta_forward_errors": 0,
+    "output_bytes": 4294934528
+   },
+   "native": {
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2147450880,
+    "meta_forward": "ok",
+    "output_bytes": 2147450880
+   },
+   "params_bytes": 98304
+  },
+  "L1/68_conv_transposed_3D__square_input__asymmetric_kernel": {
+   "all_configs": {
+    "configs": 17,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2426535936,
+    "meta_forward_errors": 0,
+    "output_bytes": 2426535936
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1250033664,
+    "meta_forward": "ok",
+    "output_bytes": 1250033664
+   },
+   "params_bytes": 614400
+  },
+  "L1/69_conv_transposed_2D__asymmetric_input__asymmetric_kernel": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2198077440,
+    "meta_forward_errors": 0,
+    "output_bytes": 2198077440
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1107558400,
+    "meta_forward": "ok",
+    "output_bytes": 1107558400
+   },
+   "params_bytes": 491520
+  },
+  "L1/6_Matmul_with_large_K_dimension_": {
+   "all_configs": {
+    "configs": 18,
+    "input_bytes": 1610612736,
+    "max_activation_bytes": 524288,
+    "meta_forward_errors": 0,
+    "output_bytes": 524288
+   },
+   "native": {
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 262144,
+    "meta_forward": "ok",
+    "output_bytes": 262144
+   },
+   "params_bytes": 0
+  },
+  "L1/70_conv_transposed_3D__asymmetric_input__square_kernel": {
+   "all_configs": {
+    "configs": 17,
+    "input_bytes": 2717908992,
+    "max_activation_bytes": 1430919168,
+    "meta_forward_errors": 0,
+    "output_bytes": 1430919168
+   },
+   "native": {
+    "input_bytes": 1358954496,
+    "max_activation_bytes": 722835456,
+    "meta_forward": "ok",
+    "output_bytes": 722835456
+   },
+   "params_bytes": 124416
+  },
+  "L1/71_conv_transposed_2D__asymmetric_input__square_kernel": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 1078988800,
+    "meta_forward_errors": 0,
+    "output_bytes": 1078988800
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 540020736,
+    "meta_forward": "ok",
+    "output_bytes": 540020736
+   },
+   "params_bytes": 36864
+  },
+  "L1/72_conv_transposed_3D_asymmetric_input_asymmetric_kernel___strided_padded_grouped_": {
+   "all_configs": {
+    "configs": 17,
+    "input_bytes": 28311552,
+    "max_activation_bytes": 226492416,
+    "meta_forward_errors": 0,
+    "output_bytes": 226492416
+   },
+   "native": {
+    "input_bytes": 14155776,
+    "max_activation_bytes": 113246208,
+    "meta_forward": "ok",
+    "output_bytes": 113246208
+   },
+   "params_bytes": 107520
+  },
+  "L1/73_conv_transposed_3D_asymmetric_input_square_kernel__strided_padded__grouped": {
+   "all_configs": {
+    "configs": 17,
+    "input_bytes": 268435456,
+    "max_activation_bytes": 2093317632,
+    "meta_forward_errors": 0,
+    "output_bytes": 2093317632
+   },
+   "native": {
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1044610560,
+    "meta_forward": "ok",
+    "output_bytes": 1044610560
+   },
+   "params_bytes": 110592
+  },
+  "L1/74_conv_transposed_1D_dilated": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2147581952,
+    "meta_forward_errors": 0,
+    "output_bytes": 2147581952
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1073840128,
+    "meta_forward": "ok",
+    "output_bytes": 1073840128
+   },
+   "params_bytes": 40960
+  },
+  "L1/75_conv_transposed_2D_asymmetric_input_asymmetric_kernel_strided__grouped____padded____dilated__": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1614798848,
+    "meta_forward_errors": 0,
+    "output_bytes": 1614798848
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 806346752,
+    "meta_forward": "ok",
+    "output_bytes": 806346752
+   },
+   "params_bytes": 30720
+  },
+  "L1/76_conv_standard_1D_dilated_strided__": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 17179607040,
+    "max_activation_bytes": 11453005824,
+    "meta_forward_errors": 0,
+    "output_bytes": 11453005824
+   },
+   "native": {
+    "input_bytes": 8589803520,
+    "max_activation_bytes": 5726470144,
+    "meta_forward": "ok",
+    "output_bytes": 5726470144
+   },
+   "params_bytes": 98304
+  },
+  "L1/77_conv_transposed_3D_square_input_square_kernel___padded____dilated____strided__": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 1133383680,
+    "meta_forward_errors": 0,
+    "output_bytes": 1133383680
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 571084800,
+    "meta_forward": "ok",
+    "output_bytes": 571084800
+   },
+   "params_bytes": 221184
+  },
+  "L1/78_conv_transposed_2D_asymmetric_input_asymmetric_kernel___padded__": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 1073741824,
+    "meta_forward_errors": 0,
+    "output_bytes": 1073741824
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 536870912,
+    "meta_forward": "ok",
+    "output_bytes": 536870912
+   },
+   "params_bytes": 86016
+  },
+  "L1/79_conv_transposed_1D_asymmetric_input_square_kernel___padded____strided____dilated__": {
+   "all_configs": {
+    "configs": 13,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 2147487744,
+    "meta_forward_errors": 0,
+    "output_bytes": 2147487744
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 1073745920,
+    "meta_forward": "ok",
+    "output_bytes": 1073745920
+   },
+   "params_bytes": 24576
+  },
+  "L1/7_Matmul_with_small_K_dimension_": {
+   "all_configs": {
+    "configs": 18,
+    "input_bytes": 25165824,
+    "max_activation_bytes": 8589934592,
+    "meta_forward_errors": 0,
+    "output_bytes": 8589934592
+   },
+   "native": {
+    "input_bytes": 16777216,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 4294967296
+   },
+   "params_bytes": 0
+  },
+  "L1/80_conv_standard_2D_square_input_asymmetric_kernel___dilated____padded__": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1048707072,
+    "meta_forward_errors": 0,
+    "output_bytes": 1048707072
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 516030464,
+    "meta_forward": "ok",
+    "output_bytes": 516030464
+   },
+   "params_bytes": 368640
+  },
+  "L1/81_conv_transposed_2D_asymmetric_input_square_kernel___dilated____padded____strided__": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 33554432,
+    "max_activation_bytes": 1664630784,
+    "meta_forward_errors": 0,
+    "output_bytes": 1664630784
+   },
+   "native": {
+    "input_bytes": 16777216,
+    "max_activation_bytes": 831012864,
+    "meta_forward": "ok",
+    "output_bytes": 831012864
+   },
+   "params_bytes": 73728
+  },
+  "L1/82_conv_depthwise_2D_square_input_square_kernel": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 2134917120,
+    "meta_forward_errors": 0,
+    "output_bytes": 2134917120
+   },
+   "native": {
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 1065369600,
+    "meta_forward": "ok",
+    "output_bytes": 1065369600
+   },
+   "params_bytes": 2304
+  },
+  "L1/83_conv_depthwise_2D_square_input_asymmetric_kernel": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 1069547520,
+    "meta_forward_errors": 0,
+    "output_bytes": 1069547520
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 534773760,
+    "meta_forward": "ok",
+    "output_bytes": 534773760
+   },
+   "params_bytes": 96
+  },
+  "L1/84_conv_depthwise_2D_asymmetric_input_square_kernel": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 8506179584,
+    "meta_forward_errors": 0,
+    "output_bytes": 8506179584
+   },
+   "native": {
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4244766720,
+    "meta_forward": "ok",
+    "output_bytes": 4244766720
+   },
+   "params_bytes": 4608
+  },
+  "L1/85_conv_depthwise_2D_asymmetric_input_asymmetric_kernel": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 1044578304,
+    "meta_forward_errors": 0,
+    "output_bytes": 1044578304
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 516096000,
+    "meta_forward": "ok",
+    "output_bytes": 516096000
+   },
+   "params_bytes": 10752
+  },
+  "L1/86_conv_depthwise_separable_2D": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 4294967296,
+    "meta_forward_errors": 0,
+    "output_bytes": 4294967296
+   },
+   "native": {
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2147483648,
+    "meta_forward": "ok",
+    "output_bytes": 2147483648
+   },
+   "params_bytes": 35072
+  },
+  "L1/87_conv_pointwise_2D": {
+   "all_configs": {
+    "configs": 15,
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 17179869184,
+    "meta_forward_errors": 0,
+    "output_bytes": 17179869184
+   },
+   "native": {
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 8589934592,
+    "meta_forward": "ok",
+    "output_bytes": 8589934592
+   },
+   "params_bytes": 32768
+  },
+  "L1/88_MinGPTNewGelu": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 536870912,
+    "meta_forward_errors": 0,
+    "output_bytes": 536870912
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 268435456
+   },
+   "params_bytes": 0
+  },
+  "L1/89_cumsum": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 8589934592,
+    "meta_forward_errors": 0,
+    "output_bytes": 8589934592
+   },
+   "native": {
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 4294967296
+   },
+   "params_bytes": 0
+  },
+  "L1/8_Matmul_with_irregular_shapes_": {
+   "all_configs": {
+    "configs": 18,
+    "input_bytes": 236474412,
+    "max_activation_bytes": 388654440,
+    "meta_forward_errors": 0,
+    "output_bytes": 388654440
+   },
+   "native": {
+    "input_bytes": 166630296,
+    "max_activation_bytes": 194327220,
+    "meta_forward": "ok",
+    "output_bytes": 194327220
+   },
+   "params_bytes": 0
+  },
+  "L1/90_cumprod": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 8589934592,
+    "meta_forward_errors": 0,
+    "output_bytes": 8589934592
+   },
+   "native": {
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 4294967296
+   },
+   "params_bytes": 0
+  },
+  "L1/91_cumsum_reverse": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 8589934592,
+    "meta_forward_errors": 0,
+    "output_bytes": 8589934592
+   },
+   "native": {
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 4294967296
+   },
+   "params_bytes": 0
+  },
+  "L1/92_cumsum_exclusive": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 8589934592,
+    "meta_forward_errors": 0,
+    "output_bytes": 8589934592
+   },
+   "native": {
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 4294967296
+   },
+   "params_bytes": 0
+  },
+  "L1/93_masked_cumsum": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 10737418240,
+    "max_activation_bytes": 8589934592,
+    "meta_forward_errors": 0,
+    "output_bytes": 8589934592
+   },
+   "native": {
+    "input_bytes": 5368709120,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 4294967296
+   },
+   "params_bytes": 0
+  },
+  "L1/94_MSELoss": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 17179869184,
+    "max_activation_bytes": 8589934592,
+    "meta_forward_errors": 0,
+    "output_bytes": 4
+   },
+   "native": {
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 4
+   },
+   "params_bytes": 0
+  },
+  "L1/95_CrossEntropyLoss": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 1074003968,
+    "max_activation_bytes": 1073741824,
+    "meta_forward_errors": 0,
+    "output_bytes": 4
+   },
+   "native": {
+    "input_bytes": 537133056,
+    "max_activation_bytes": 536870912,
+    "meta_forward": "ok",
+    "output_bytes": 4
+   },
+   "params_bytes": 0
+  },
+  "L1/96_HuberLoss": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 17179869184,
+    "max_activation_bytes": 4,
+    "meta_forward_errors": 0,
+    "output_bytes": 4
+   },
+   "native": {
+    "input_bytes": 8589934592,
+    "max_activation_bytes": 4,
+    "meta_forward": "ok",
+    "output_bytes": 4
+   },
+   "params_bytes": 0
+  },
+  "L1/97_ScaledDotProductAttention": {
+   "all_configs": {
+    "configs": 18,
+    "input_bytes": 12884901888,
+    "max_activation_bytes": 4294967296,
+    "meta_forward_errors": 0,
+    "output_bytes": 4294967296
+   },
+   "native": {
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 2147483648,
+    "meta_forward": "ok",
+    "output_bytes": 2147483648
+   },
+   "params_bytes": 0
+  },
+  "L1/98_KLDivLoss": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 2147483648,
+    "meta_forward_errors": 0,
+    "output_bytes": 4
+   },
+   "native": {
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 1073741824,
+    "meta_forward": "ok",
+    "output_bytes": 4
+   },
+   "params_bytes": 0
+  },
+  "L1/99_TripletMarginLoss": {
+   "all_configs": {
+    "configs": 14,
+    "input_bytes": 6442450944,
+    "max_activation_bytes": 2147483648,
+    "meta_forward_errors": 0,
+    "output_bytes": 4
+   },
+   "native": {
+    "input_bytes": 3221225472,
+    "max_activation_bytes": 1073741824,
+    "meta_forward": "ok",
+    "output_bytes": 4
+   },
+   "params_bytes": 0
+  },
+  "L1/9_Tall_skinny_matrix_multiplication_": {
+   "all_configs": {
+    "configs": 16,
+    "input_bytes": 16777216,
+    "max_activation_bytes": 4299424900,
+    "meta_forward_errors": 0,
+    "output_bytes": 4299424900
+   },
+   "native": {
+    "input_bytes": 8388608,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 4294967296
+   },
+   "params_bytes": 0
+  },
+  "L2/100_ConvTranspose3d_Clamp_Min_Divide": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 452984832,
+    "max_activation_bytes": 6949683200,
+    "meta_forward_errors": 0,
+    "output_bytes": 6949683200
+   },
+   "native": {
+    "input_bytes": 226492416,
+    "max_activation_bytes": 3474841600,
+    "meta_forward": "ok",
+    "output_bytes": 3474841600
+   },
+   "params_bytes": 885248
+  },
+  "L2/10_ConvTranspose2d_MaxPool_Hardtanh_Mean_Tanh": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4294967296,
+    "meta_forward_errors": 0,
+    "output_bytes": 65536
+   },
+   "native": {
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 2147483648,
+    "meta_forward": "ok",
+    "output_bytes": 32768
+   },
+   "params_bytes": 147712
+  },
+  "L2/11_ConvTranspose2d_BatchNorm_Tanh_MaxPool_GroupNorm": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 268435456,
+    "max_activation_bytes": 606077952,
+    "meta_forward_errors": 0,
+    "output_bytes": 151519232
+   },
+   "native": {
+    "input_bytes": 134217728,
+    "max_activation_bytes": 303039488,
+    "meta_forward": "ok",
+    "output_bytes": 75759616
+   },
+   "params_bytes": 822792
+  },
+  "L2/12_Gemm_Multiply_LeakyReLU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268468224
+  },
+  "L2/13_ConvTranspose3d_Mean_Add_Softmax_Tanh_Scaling": {
+   "all_configs": {
+    "configs": 13,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 4294967296,
+    "meta_forward_errors": 0,
+    "output_bytes": 71303168
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 2147483648,
+    "meta_forward": "ok",
+    "output_bytes": 67108864
+   },
+   "params_bytes": 111104
+  },
+  "L2/14_Gemm_Divide_Sum_Scaling": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 8192
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 4096
+   },
+   "params_bytes": 268435456
+  },
+  "L2/15_ConvTranspose3d_BatchNorm_Subtract": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 33554432,
+    "max_activation_bytes": 503968000,
+    "meta_forward_errors": 0,
+    "output_bytes": 503967744
+   },
+   "native": {
+    "input_bytes": 16777216,
+    "max_activation_bytes": 251984128,
+    "meta_forward": "ok",
+    "output_bytes": 251983872
+   },
+   "params_bytes": 55944
+  },
+  "L2/16_ConvTranspose2d_Mish_Add_Hardtanh_Scaling": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 4294967296,
+    "meta_forward_errors": 0,
+    "output_bytes": 4294967296
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 2147483648,
+    "meta_forward": "ok",
+    "output_bytes": 2147483648
+   },
+   "params_bytes": 147712
+  },
+  "L2/17_Conv2d_InstanceNorm_Divide": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2081161216,
+    "meta_forward_errors": 0,
+    "output_bytes": 2080899072
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1040580608,
+    "meta_forward": "ok",
+    "output_bytes": 1040449536
+   },
+   "params_bytes": 295424
+  },
+  "L2/18_Matmul_Sum_Max_AvgPool_LogSumExp_LogSumExp": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 8192
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 4096
+   },
+   "params_bytes": 268468224
+  },
+  "L2/19_ConvTranspose2d_GELU_GroupNorm": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 4294967296,
+    "max_activation_bytes": 4362354688,
+    "meta_forward_errors": 0,
+    "output_bytes": 4362338304
+   },
+   "native": {
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 2181177344,
+    "meta_forward": "ok",
+    "output_bytes": 2181169152
+   },
+   "params_bytes": 148224
+  },
+  "L2/1_Conv2D_ReLU_BiasAdd": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2080899072,
+    "meta_forward_errors": 0,
+    "output_bytes": 2080899072
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1040449536,
+    "meta_forward": "ok",
+    "output_bytes": 1040449536
+   },
+   "params_bytes": 295936
+  },
+  "L2/20_ConvTranspose3d_Sum_ResidualAdd_Multiply_ResidualAdd": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 1073741824,
+    "meta_forward_errors": 0,
+    "output_bytes": 1073741824
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 536870912,
+    "meta_forward": "ok",
+    "output_bytes": 536870912
+   },
+   "params_bytes": 221696
+  },
+  "L2/21_Conv2d_Add_Scale_Sigmoid_GroupNorm": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 2114076672,
+    "meta_forward_errors": 0,
+    "output_bytes": 2114060288
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 1057038336,
+    "meta_forward": "ok",
+    "output_bytes": 1057030144
+   },
+   "params_bytes": 9856
+  },
+  "L2/22_Matmul_Scale_ResidualAdd_Clamp_LogSumExp_Mish": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 8192
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 4096
+   },
+   "params_bytes": 268468224
+  },
+  "L2/24_Conv3d_Min_Softmax": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 75497472,
+    "max_activation_bytes": 486604800,
+    "meta_forward_errors": 0,
+    "output_bytes": 22118400
+   },
+   "native": {
+    "input_bytes": 37748736,
+    "max_activation_bytes": 243302400,
+    "meta_forward": "ok",
+    "output_bytes": 11059200
+   },
+   "params_bytes": 7872
+  },
+  "L2/25_Conv2d_Min_Tanh_Tanh": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 4228120576,
+    "meta_forward_errors": 0,
+    "output_bytes": 66064384
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 2114060288,
+    "meta_forward": "ok",
+    "output_bytes": 33032192
+   },
+   "params_bytes": 37120
+  },
+  "L2/26_ConvTranspose3d_Add_HardSwish": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 2281701376,
+    "max_activation_bytes": 2147483648,
+    "meta_forward_errors": 0,
+    "output_bytes": 2147483648
+   },
+   "native": {
+    "input_bytes": 1140850688,
+    "max_activation_bytes": 1073741824,
+    "meta_forward": "ok",
+    "output_bytes": 1073741824
+   },
+   "params_bytes": 221696
+  },
+  "L2/27_Conv3d_HardSwish_GroupNorm_Mean": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 402653184,
+    "max_activation_bytes": 1433075712,
+    "meta_forward_errors": 0,
+    "output_bytes": 131072
+   },
+   "native": {
+    "input_bytes": 201326592,
+    "max_activation_bytes": 716537856,
+    "meta_forward": "ok",
+    "output_bytes": 65536
+   },
+   "params_bytes": 12480
+  },
+  "L2/28_BMM_InstanceNorm_Sum_ResidualAdd_Multiply": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268468224
+  },
+  "L2/29_Matmul_Mish_Mish": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268468224
+  },
+  "L2/2_ConvTranspose2d_BiasAdd_Clamp_Scaling_Clamp_Divide": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 4294967296,
+    "meta_forward_errors": 0,
+    "output_bytes": 4294967296
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 2147483648,
+    "meta_forward": "ok",
+    "output_bytes": 2147483648
+   },
+   "params_bytes": 147968
+  },
+  "L2/30_Gemm_GroupNorm_Hardtanh": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268533760
+  },
+  "L2/31_Conv2d_Min_Add_Multiply": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2080899072,
+    "meta_forward_errors": 0,
+    "output_bytes": 2080899072
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1040449536,
+    "meta_forward": "ok",
+    "output_bytes": 1040449536
+   },
+   "params_bytes": 295936
+  },
+  "L2/32_Conv2d_Scaling_Min": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 4228120576,
+    "meta_forward_errors": 0,
+    "output_bytes": 33032192
+   },
+   "native": {
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2114060288,
+    "meta_forward": "ok",
+    "output_bytes": 16516096
+   },
+   "params_bytes": 295424
+  },
+  "L2/33_Gemm_Scale_BatchNorm": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 1,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268632072
+  },
+  "L2/34_ConvTranspose3d_LayerNorm_GELU_Scaling": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 2214592512,
+    "meta_forward_errors": 0,
+    "output_bytes": 2147483648
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 1107296256,
+    "meta_forward": "ok",
+    "output_bytes": 1073741824
+   },
+   "params_bytes": 525056
+  },
+  "L2/35_Conv2d_Subtract_HardSwish_MaxPool_Mish": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2080899072,
+    "meta_forward_errors": 0,
+    "output_bytes": 520224768
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1040449536,
+    "meta_forward": "ok",
+    "output_bytes": 260112384
+   },
+   "params_bytes": 295424
+  },
+  "L2/36_ConvTranspose2d_Min_Sum_GELU_Add": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1073741824,
+    "meta_forward_errors": 0,
+    "output_bytes": 32768
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 536870912,
+    "meta_forward": "ok",
+    "output_bytes": 16384
+   },
+   "params_bytes": 295428
+  },
+  "L2/37_Matmul_Swish_Sum_GroupNorm": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 268435456,
+    "max_activation_bytes": 1107296256,
+    "meta_forward_errors": 0,
+    "output_bytes": 1073741824
+   },
+   "native": {
+    "input_bytes": 134217728,
+    "max_activation_bytes": 553648128,
+    "meta_forward": "ok",
+    "output_bytes": 536870912
+   },
+   "params_bytes": 16842752
+  },
+  "L2/38_ConvTranspose3d_AvgPool_Clamp_Softmax_Multiply": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2147483648,
+    "meta_forward_errors": 0,
+    "output_bytes": 2147483648
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1073741824,
+    "meta_forward": "ok",
+    "output_bytes": 1073741824
+   },
+   "params_bytes": 221696
+  },
+  "L2/39_Gemm_Scale_BatchNorm": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 536903680,
+    "meta_forward_errors": 1,
+    "output_bytes": 536870912
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 268468224,
+    "meta_forward": "ok",
+    "output_bytes": 268435456
+   },
+   "params_bytes": 67207176
+  },
+  "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 2214592512,
+    "meta_forward_errors": 0,
+    "output_bytes": 268435456
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 1107296256,
+    "meta_forward": "ok",
+    "output_bytes": 134217728
+   },
+   "params_bytes": 221956
+  },
+  "L2/40_Matmul_Scaling_ResidualAdd": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 536870912,
+    "meta_forward_errors": 0,
+    "output_bytes": 536870912
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 268435456
+   },
+   "params_bytes": 67125248
+  },
+  "L2/41_Gemm_BatchNorm_GELU_ReLU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 536903680,
+    "meta_forward_errors": 1,
+    "output_bytes": 536870912
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 268468224,
+    "meta_forward": "ok",
+    "output_bytes": 268435456
+   },
+   "params_bytes": 67190792
+  },
+  "L2/42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 4328587264,
+    "meta_forward_errors": 0,
+    "output_bytes": 128
+   },
+   "native": {
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2164293632,
+    "meta_forward": "ok",
+    "output_bytes": 64
+   },
+   "params_bytes": 295936
+  },
+  "L2/43_Conv3d_Max_LogSumExp_ReLU": {
+   "all_configs": {
+    "configs": 7,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1073741824,
+    "meta_forward_errors": 0,
+    "output_bytes": 2097152
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 536870912,
+    "meta_forward": "ok",
+    "output_bytes": 1048576
+   },
+   "params_bytes": 221440
+  },
+  "L2/44_ConvTranspose2d_Multiply_GlobalAvgPool_GlobalAvgPool_Mean": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1073741824,
+    "meta_forward_errors": 0,
+    "output_bytes": 16384
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 536870912,
+    "meta_forward": "ok",
+    "output_bytes": 8192
+   },
+   "params_bytes": 295424
+  },
+  "L2/45_Gemm_Sigmoid_LogSumExp": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 268435456,
+    "max_activation_bytes": 536870912,
+    "meta_forward_errors": 0,
+    "output_bytes": 131072
+   },
+   "native": {
+    "input_bytes": 134217728,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 65536
+   },
+   "params_bytes": 50352128
+  },
+  "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2080899072,
+    "meta_forward_errors": 0,
+    "output_bytes": 520224768
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1040449536,
+    "meta_forward": "ok",
+    "output_bytes": 260112384
+   },
+   "params_bytes": 295424
+  },
+  "L2/47_Conv3d_Mish_Tanh": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 944701440,
+    "meta_forward_errors": 0,
+    "output_bytes": 944701440
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 472350720,
+    "meta_forward": "ok",
+    "output_bytes": 472350720
+   },
+   "params_bytes": 221440
+  },
+  "L2/48_Conv3d_Scaling_Tanh_Multiply_Sigmoid": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 201326592,
+    "max_activation_bytes": 881721344,
+    "meta_forward_errors": 0,
+    "output_bytes": 881721344
+   },
+   "native": {
+    "input_bytes": 100663296,
+    "max_activation_bytes": 440860672,
+    "meta_forward": "ok",
+    "output_bytes": 440860672
+   },
+   "params_bytes": 5376
+  },
+  "L2/49_ConvTranspose3d_Softmax_Sigmoid": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 1073741824,
+    "meta_forward_errors": 0,
+    "output_bytes": 1073741824
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 536870912,
+    "meta_forward": "ok",
+    "output_bytes": 536870912
+   },
+   "params_bytes": 221440
+  },
+  "L2/4_Conv2d_Mish_Mish": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 4228120576,
+    "meta_forward_errors": 0,
+    "output_bytes": 4228120576
+   },
+   "native": {
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 2114060288,
+    "meta_forward": "ok",
+    "output_bytes": 2114060288
+   },
+   "params_bytes": 295424
+  },
+  "L2/50_ConvTranspose3d_Scaling_AvgPool_BiasAdd_Scaling": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 50331648,
+    "max_activation_bytes": 2015870976,
+    "meta_forward_errors": 0,
+    "output_bytes": 236175360
+   },
+   "native": {
+    "input_bytes": 25165824,
+    "max_activation_bytes": 1007935488,
+    "meta_forward": "ok",
+    "output_bytes": 118087680
+   },
+   "params_bytes": 5320
+  },
+  "L2/51_Gemm_Subtract_GlobalAvgPool_LogSumExp_GELU_ResidualAdd": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 134217728
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 67108864
+   },
+   "params_bytes": 268500992
+  },
+  "L2/52_Conv2d_Activation_BatchNorm": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1040450560,
+    "meta_forward_errors": 0,
+    "output_bytes": 1040449536
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 520225792,
+    "meta_forward": "ok",
+    "output_bytes": 520224768
+   },
+   "params_bytes": 297480
+  },
+  "L2/53_Gemm_Scaling_Hardtanh_GELU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 134217728
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 67108864
+   },
+   "params_bytes": 268468224
+  },
+  "L2/54_Conv2d_Multiply_LeakyReLU_GELU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 2147483648,
+    "max_activation_bytes": 2114060288,
+    "meta_forward_errors": 0,
+    "output_bytes": 2114060288
+   },
+   "native": {
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 1057030144,
+    "meta_forward": "ok",
+    "output_bytes": 1057030144
+   },
+   "params_bytes": 147968
+  },
+  "L2/55_Matmul_MaxPool_Sum_Scale": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 33554432,
+    "max_activation_bytes": 4294967296,
+    "meta_forward_errors": 0,
+    "output_bytes": 1024
+   },
+   "native": {
+    "input_bytes": 16777216,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 512
+   },
+   "params_bytes": 4295098368
+  },
+  "L2/56_Matmul_Sigmoid_Sum": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 33554432,
+    "max_activation_bytes": 4294967296,
+    "meta_forward_errors": 0,
+    "output_bytes": 1024
+   },
+   "native": {
+    "input_bytes": 16777216,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 512
+   },
+   "params_bytes": 4295098368
+  },
+  "L2/57_Conv2d_ReLU_HardSwish": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1040449536,
+    "meta_forward_errors": 0,
+    "output_bytes": 1040449536
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 520224768,
+    "meta_forward": "ok",
+    "output_bytes": 520224768
+   },
+   "params_bytes": 18688
+  },
+  "L2/58_ConvTranspose3d_LogSumExp_HardSwish_Subtract_Clamp": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 50331648,
+    "max_activation_bytes": 2015870976,
+    "meta_forward_errors": 0,
+    "output_bytes": 125991936
+   },
+   "native": {
+    "input_bytes": 25165824,
+    "max_activation_bytes": 1007935488,
+    "meta_forward": "ok",
+    "output_bytes": 62995968
+   },
+   "params_bytes": 5252
+  },
+  "L2/59_Matmul_Swish_Scaling": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 33554432,
+    "max_activation_bytes": 4294967296,
+    "meta_forward_errors": 0,
+    "output_bytes": 33554432
+   },
+   "native": {
+    "input_bytes": 16777216,
+    "max_activation_bytes": 4294967296,
+    "meta_forward": "ok",
+    "output_bytes": 16777216
+   },
+   "params_bytes": 4295098368
+  },
+  "L2/5_ConvTranspose2d_Subtract_Tanh": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 1073741824,
+    "max_activation_bytes": 4311760896,
+    "meta_forward_errors": 0,
+    "output_bytes": 4311760896
+   },
+   "native": {
+    "input_bytes": 536870912,
+    "max_activation_bytes": 2155880448,
+    "meta_forward": "ok",
+    "output_bytes": 2155880448
+   },
+   "params_bytes": 262656
+  },
+  "L2/60_ConvTranspose3d_Swish_GroupNorm_HardSwish": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 50331648,
+    "max_activation_bytes": 2015879168,
+    "meta_forward_errors": 0,
+    "output_bytes": 2015870976
+   },
+   "native": {
+    "input_bytes": 25165824,
+    "max_activation_bytes": 1007939584,
+    "meta_forward": "ok",
+    "output_bytes": 1007935488
+   },
+   "params_bytes": 5376
+  },
+  "L2/61_ConvTranspose3d_ReLU_GroupNorm": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 268435456,
+    "max_activation_bytes": 643958784,
+    "meta_forward_errors": 0,
+    "output_bytes": 643956736
+   },
+   "native": {
+    "input_bytes": 134217728,
+    "max_activation_bytes": 321979392,
+    "meta_forward": "ok",
+    "output_bytes": 321978368
+   },
+   "params_bytes": 885760
+  },
+  "L2/62_Matmul_GroupNorm_LeakyReLU_Sum": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268533760
+  },
+  "L2/63_Gemm_ReLU_Divide": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268468224
+  },
+  "L2/64_Gemm_LogSumExp_LeakyReLU_LeakyReLU_GELU_GELU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 8192
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 4096
+   },
+   "params_bytes": 268468224
+  },
+  "L2/65_Conv2d_AvgPool_Sigmoid_Sum": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 1207959552,
+    "max_activation_bytes": 9563275264,
+    "meta_forward_errors": 0,
+    "output_bytes": 1024
+   },
+   "native": {
+    "input_bytes": 603979776,
+    "max_activation_bytes": 4781637632,
+    "meta_forward": "ok",
+    "output_bytes": 512
+   },
+   "params_bytes": 18688
+  },
+  "L2/67_Conv2d_GELU_GlobalAvgPool": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 4228120576,
+    "meta_forward_errors": 0,
+    "output_bytes": 65536
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 2114060288,
+    "meta_forward": "ok",
+    "output_bytes": 32768
+   },
+   "params_bytes": 18688
+  },
+  "L2/68_Matmul_Min_Subtract": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 16777216,
+    "max_activation_bytes": 1073741824,
+    "meta_forward_errors": 0,
+    "output_bytes": 16777216
+   },
+   "native": {
+    "input_bytes": 8388608,
+    "max_activation_bytes": 1073741824,
+    "meta_forward": "ok",
+    "output_bytes": 8388608
+   },
+   "params_bytes": 1073807364
+  },
+  "L2/69_Conv2d_HardSwish_ReLU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1040449536,
+    "meta_forward_errors": 0,
+    "output_bytes": 1040449536
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 520224768,
+    "meta_forward": "ok",
+    "output_bytes": 520224768
+   },
+   "params_bytes": 18688
+  },
+  "L2/6_Conv3d_Softmax_MaxPool_MaxPool": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 50331648,
+    "max_activation_bytes": 206438400,
+    "meta_forward_errors": 0,
+    "output_bytes": 2408448
+   },
+   "native": {
+    "input_bytes": 25165824,
+    "max_activation_bytes": 103219200,
+    "meta_forward": "ok",
+    "output_bytes": 1204224
+   },
+   "params_bytes": 5248
+  },
+  "L2/70_Gemm_Sigmoid_Scaling_ResidualAdd": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268468224
+  },
+  "L2/71_Conv2d_Divide_LeakyReLU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1040449536,
+    "meta_forward_errors": 0,
+    "output_bytes": 1040449536
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 520224768,
+    "meta_forward": "ok",
+    "output_bytes": 520224768
+   },
+   "params_bytes": 18688
+  },
+  "L2/72_ConvTranspose3d_BatchNorm_AvgPool_AvgPool": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 50331648,
+    "max_activation_bytes": 2048385152,
+    "meta_forward_errors": 0,
+    "output_bytes": 27648000
+   },
+   "native": {
+    "input_bytes": 25165824,
+    "max_activation_bytes": 1024192640,
+    "meta_forward": "ok",
+    "output_bytes": 13824000
+   },
+   "params_bytes": 5512
+  },
+  "L2/73_Conv2d_BatchNorm_Scaling": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1040450048,
+    "meta_forward_errors": 0,
+    "output_bytes": 1040449536
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 520225280,
+    "meta_forward": "ok",
+    "output_bytes": 520224768
+   },
+   "params_bytes": 19720
+  },
+  "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 33554432,
+    "max_activation_bytes": 536870912,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 16777216,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 55552
+  },
+  "L2/75_Gemm_GroupNorm_Min_BiasAdd": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268566528
+  },
+  "L2/76_Gemm_Add_ReLU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268468224
+  },
+  "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 424674304,
+    "meta_forward_errors": 0,
+    "output_bytes": 16384
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 212337664,
+    "meta_forward": "ok",
+    "output_bytes": 8192
+   },
+   "params_bytes": 4098568
+  },
+  "L2/78_ConvTranspose3d_Max_Max_Sum": {
+   "all_configs": {
+    "configs": 9,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 2048385024,
+    "meta_forward_errors": 0,
+    "output_bytes": 128000
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 1024192512,
+    "meta_forward": "ok",
+    "output_bytes": 64000
+   },
+   "params_bytes": 1024256
+  },
+  "L2/79_Conv3d_Multiply_InstanceNorm_Clamp_Multiply_Max": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 50331648,
+    "max_activation_bytes": 206471168,
+    "meta_forward_errors": 0,
+    "output_bytes": 12902400
+   },
+   "native": {
+    "input_bytes": 25165824,
+    "max_activation_bytes": 103235584,
+    "meta_forward": "ok",
+    "output_bytes": 6451200
+   },
+   "params_bytes": 5312
+  },
+  "L2/7_Conv3d_ReLU_LeakyReLU_GELU_Sigmoid_BiasAdd": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 1889402880,
+    "meta_forward_errors": 0,
+    "output_bytes": 1889402880
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 944701440,
+    "meta_forward": "ok",
+    "output_bytes": 944701440
+   },
+   "params_bytes": 27904
+  },
+  "L2/81_Gemm_Swish_Divide_Clamp_Tanh_Clamp": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268468224
+  },
+  "L2/82_Conv2d_Tanh_Scaling_BiasAdd_Max": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 4228120576,
+    "meta_forward_errors": 0,
+    "output_bytes": 260112384
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 2114060288,
+    "meta_forward": "ok",
+    "output_bytes": 130056192
+   },
+   "params_bytes": 18944
+  },
+  "L2/84_Gemm_BatchNorm_Scaling_Softmax": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 1,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268599308
+  },
+  "L2/85_Conv2d_GroupNorm_Scale_MaxPool_Clamp": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1040482304,
+    "meta_forward_errors": 0,
+    "output_bytes": 62980096
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 520241152,
+    "meta_forward": "ok",
+    "output_bytes": 31490048
+   },
+   "params_bytes": 19456
+  },
+  "L2/86_Matmul_Divide_GELU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268468224
+  },
+  "L2/87_Conv2d_Subtract_Subtract_Mish": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 4228120576,
+    "meta_forward_errors": 0,
+    "output_bytes": 4228120576
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 2114060288,
+    "meta_forward": "ok",
+    "output_bytes": 2114060288
+   },
+   "params_bytes": 18688
+  },
+  "L2/88_Gemm_GroupNorm_Swish_Multiply_Swish": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268566528
+  },
+  "L2/89_ConvTranspose3d_MaxPool_Softmax_Subtract_Swish_Max": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 50331648,
+    "max_activation_bytes": 2147483648,
+    "meta_forward_errors": 0,
+    "output_bytes": 16777216
+   },
+   "native": {
+    "input_bytes": 25165824,
+    "max_activation_bytes": 1073741824,
+    "meta_forward": "ok",
+    "output_bytes": 8388608
+   },
+   "params_bytes": 5312
+  },
+  "L2/8_Conv3d_Divide_Max_GlobalAvgPool_BiasAdd_Sum": {
+   "all_configs": {
+    "configs": 13,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 944701440,
+    "meta_forward_errors": 1,
+    "output_bytes": 580
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 440860672,
+    "meta_forward": "ok",
+    "output_bytes": 512
+   },
+   "params_bytes": 13952
+  },
+  "L2/90_Conv3d_LeakyReLU_Sum_Clamp_GELU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 536870912,
+    "max_activation_bytes": 3526885376,
+    "meta_forward_errors": 0,
+    "output_bytes": 3526885376
+   },
+   "native": {
+    "input_bytes": 268435456,
+    "max_activation_bytes": 1763442688,
+    "meta_forward": "ok",
+    "output_bytes": 1763442688
+   },
+   "params_bytes": 55808
+  },
+  "L2/91_ConvTranspose2d_Softmax_BiasAdd_Scaling_Sigmoid": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 268435456,
+    "max_activation_bytes": 2181169152,
+    "meta_forward_errors": 0,
+    "output_bytes": 2181169152
+   },
+   "native": {
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1090584576,
+    "meta_forward": "ok",
+    "output_bytes": 1090584576
+   },
+   "params_bytes": 525312
+  },
+  "L2/92_Conv2d_GroupNorm_Tanh_HardSwish_ResidualAdd_LogSumExp": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1040482304,
+    "meta_forward_errors": 0,
+    "output_bytes": 16257024
+   },
+   "native": {
+    "input_bytes": 67108864,
+    "max_activation_bytes": 520241152,
+    "meta_forward": "ok",
+    "output_bytes": 8128512
+   },
+   "params_bytes": 19200
+  },
+  "L2/93_ConvTranspose2d_Add_Min_GELU_Multiply": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 268435456,
+    "max_activation_bytes": 2215116800,
+    "meta_forward_errors": 0,
+    "output_bytes": 2215116800
+   },
+   "native": {
+    "input_bytes": 134217728,
+    "max_activation_bytes": 1107558400,
+    "meta_forward": "ok",
+    "output_bytes": 1107558400
+   },
+   "params_bytes": 524800
+  },
+  "L2/94_Gemm_BiasAdd_Hardtanh_Mish_GroupNorm": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268566528
+  },
+  "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268500992
+  },
+  "L2/96_ConvTranspose3d_Multiply_Max_GlobalAvgPool_Clamp": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 50331648,
+    "max_activation_bytes": 2015870976,
+    "meta_forward_errors": 0,
+    "output_bytes": 16384
+   },
+   "native": {
+    "input_bytes": 25165824,
+    "max_activation_bytes": 1007935488,
+    "meta_forward": "ok",
+    "output_bytes": 8192
+   },
+   "params_bytes": 5248
+  },
+  "L2/97_Matmul_BatchNorm_BiasAdd_Divide_Swish": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 1,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268599308
+  },
+  "L2/98_Matmul_AvgPool_GELU_Scale_Max": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 8192
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 4096
+   },
+   "params_bytes": 268468224
+  },
+  "L2/99_Matmul_GELU_Softmax": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268468224
+  },
+  "L2/9_Matmul_Subtract_Multiply_ReLU": {
+   "all_configs": {
+    "configs": 11,
+    "input_bytes": 67108864,
+    "max_activation_bytes": 268435456,
+    "meta_forward_errors": 0,
+    "output_bytes": 67108864
+   },
+   "native": {
+    "input_bytes": 33554432,
+    "max_activation_bytes": 268435456,
+    "meta_forward": "ok",
+    "output_bytes": 33554432
+   },
+   "params_bytes": 268468224
+  }
+ },
+ "schema": "q1-memory-table/1",
+ "torch": "2.11.0"
+}

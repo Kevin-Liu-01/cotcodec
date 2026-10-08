@@ -1,0 +1,729 @@
+{
+ "kernels": [
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "64a4711a8ea155416afe8a172c45cec48672bbf180622d23bcc0a0162eaaa6c3"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "4f56b57979c3d95b085dab2e35be3753c454e58875e5ddfbce856f811684e44c"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "efbde1651932b00b46c2651cdc48b726d0085fbea1332edb85387df417603e19"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "42010389f9ade005567e3737b0c9a68f6d08c671e06bac04af8361a04cb470b1"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "467350b54674d07c725121e1e5c02eea31cd486392f010a40272ca37926887da"
+    }
+   ],
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+   "kind": "substrate",
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "tree": "substrates"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "cffc70031fa630abf1e5ecd5f96541085eae5a389fa25c151cb43e120ff8cec6"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "0a7b38dfdbfe190b1bb385d2d608a12c18124b8bec97d58c7960fa9ee70f65d7"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "96cd7b8f3f88f58e6cd18a7a10ba82883128d302acb7918c71031104da61b5c0"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "1238715095d6ed751fc1db9dfa8f49d0c0a76135deca8383469ac19013564ef5"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "655667d01d8fa1e9fac0be28504b51ac2ba7a3fc45466174d47e3cf882485aff"
+    }
+   ],
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+   "kind": "substrate",
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "tree": "substrates"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "92463d11df7b1ccdf6af2f225a8157f62a896b38a9ddd81db749cdd85ba60f44"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "33d82d6a28eced27100479ae650e6d32a5b65f6f92e04d3cc0bf4347df55f186"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "8ef5e8547d270f62184da17cd169b16ef90521af5ac1ebb72ef737ad6fe5fd65"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "de46d2aae41584b6f8f3ab2ecd595756276cab2f7331ef282203a488943631c8"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "777735b1524a2123d44918da8ca7974b5095b7725dc37033d085e87a2fb85e64"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+   "kind": "substrate",
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "tree": "substrates"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "819a75bb6608b7954e7a3468b831cacf74d369ce79b2d1128bd57c73d9b15144"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "0bcbfd90a212f1da4e27ce120189273542be4e4ffa76a6bf9670230c2e6c22c6"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "13267005e44d8e2ba1015dec7c8e1bc55b6f8f3782af9de3959796b3f1127acf"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "1d3e0cacba10480f2d5d349c62712dad9e996064a9b2e328b7068e8c62047a1c"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "3cb6cc5ae5af120238e791938f709f33ed5590045f2c41544b94e79078bfada0"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "kind": "substrate",
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "tree": "substrates"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "b5e3f3cbdad90bedffad3875ee9e2527552a09ab1e7996620df3a600c993beea"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "a43c4c7bf9a809dd58528d855c569cebbd0ea112ff29c6e942eeb6467cc831aa"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "cd5d5d46f6ef58aca1c8773c26a6b61ad60e7e863db93395eacfed4335fef477"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "ee67c62996204b4bad41fb1f0de2884f8bfce9217df95c38c0a72484c632823a"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "dce4a1d91939223e390d33938c16fe37a5afc452a0026c33dfd68d9f55ffdee9"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+   "kind": "substrate",
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "tree": "substrates"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "6bb7b044b17841994f5b472ca15bef059c2b2b1a06026aebcfc024a9f50f4c3a"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "4ef9f363ebfb0247d43e53a6cc8b9e635eb583707d6cc193fa0d7f282befe3d8"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "b99620ad2537dbf583b3b2a220e118d6d0af43d16f73de538948fde4016afc86"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "9ae2430613ea03b2f2b5ae8e07f154c0301be4686fef9387d24824c35abd1a3a"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "0f0d07b6249505be8c428b0f020af342ec117b41c2c57cf78c160a4b4ebaf772"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "kind": "substrate",
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "tree": "substrates"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "e76df3c609ef1ec22a51480ec2d15d7e5ac6d308fca86899d40ddbb31ece1670"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "44e1fc42777b5a24a1cda9d739e3b3986b64a5d5b047dff32c445ad6cc11bda5"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "cc70c9e2170330687c49f404219748c288a1f23c35c0847ca4c54ed2dd7d7841"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "0805397a3593d82ed369163e52c0343637c8ffb3806fdd58ac6ea6aea9bf3838"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "963c94299c3050aae708795fa1df83a90944165f6c41a30f0c0d69a02d55d10f"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish",
+   "kind": "substrate",
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "tree": "substrates"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "a759442e4f7e8fcab38228ccbb220b38a3fe9cd507a1ab60540d62233f33e9cd"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "a718c59e89a493fae2609fa733b94160b95b432a5773eae7985eaa0993a2aeff"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "a6f100f1691c8cec058cddac1f8d2104510cdde73e3abd89f61ee68711826e3a"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "35cff0a205c03666023e9d397025205aaaa4f2792ccc4048b4cda4b52de52739"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "cfad5030e868a2b3b4385c5edc1bec19d6b031d915b7fe4b025a78788c6382d6"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "kind": "substrate",
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "tree": "substrates"
+  },
+  {
+   "files": [
+    {
+     "path": "control.json",
+     "sha256": "31f2474d618cabf1fcaef57498451bbad2c921ea87a5433abc998f7a26fbd7c9"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "5b44eb3d6b6295670cc4f52e63a0550086f73f3c056d73ad74c2bf0b421c3d05"
+    }
+   ],
+   "kernel_id": "ctl-identity-L1-10_3D_tensor_matrix_multiplication",
+   "kind": "control",
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "tree": "controls"
+  },
+  {
+   "files": [
+    {
+     "path": "control.json",
+     "sha256": "4dad6cb8168c7b59b2e39f3007c9a94d450e1543c5751ba25bb468ae8bf8327a"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "db98e1e9ef0eb5847eb47cc0511a559234f5bbfb150d218dbcc73860a7d1d8c6"
+    }
+   ],
+   "kernel_id": "ctl-identity-L1-18_Matmul_with_transposed_both",
+   "kind": "control",
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "tree": "controls"
+  },
+  {
+   "files": [
+    {
+     "path": "control.json",
+     "sha256": "c66403976f90b977a8e37080ee54017e8d25332918ee64871899e5044496cd22"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "06682320b58280ba2d1a3442885995fbd73a4032072e02e7bca9203f848a9762"
+    }
+   ],
+   "kernel_id": "ctl-identity-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+   "kind": "control",
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "tree": "controls"
+  },
+  {
+   "files": [
+    {
+     "path": "control.json",
+     "sha256": "5a942e1fba4eb22f6c7368ada22473eec5c880f63235187ed855a549ae004a81"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "e96f44e95f323f27d493c81d6aa3bb1ec6d468e8057af1e3c529812e03a9ed66"
+    }
+   ],
+   "kernel_id": "ctl-identity-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "kind": "control",
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "tree": "controls"
+  },
+  {
+   "files": [
+    {
+     "path": "control.json",
+     "sha256": "6d0dcb1a0aad445a001c91f0b19423b9445a34c6c6e2b6b2af71c6b0c6766f74"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "6b5706d8e68e8fbfe799f749a60f94b7ff746cb8af6d6eab67ba1929bc5f0ed0"
+    }
+   ],
+   "kernel_id": "ctl-identity-L2-59_Matmul_Swish_Scaling",
+   "kind": "control",
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "tree": "controls"
+  },
+  {
+   "files": [
+    {
+     "path": "control.json",
+     "sha256": "bed85ee97e402e8bec6f11cfb450a05ff5f39a8d8851a12868163651281ee0f2"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "4a8cd3a5b3f77ca92494a1415e2660f91e3d6c0fc229b4aeeac22b428447ad97"
+    }
+   ],
+   "kernel_id": "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "kind": "control",
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "tree": "controls"
+  },
+  {
+   "files": [
+    {
+     "path": "control.json",
+     "sha256": "bcd54e9a6c0b4ab5cf541220ae471f3b159ef208b1dbfd85eb8e0d6e7515699f"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "2b9f5deba4f0ed5d4f03f2ff9b4feb57938e6e8924b49d485eff8c8f0e022717"
+    }
+   ],
+   "kernel_id": "ctl-identity-L2-87_Conv2d_Subtract_Subtract_Mish",
+   "kind": "control",
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "tree": "controls"
+  },
+  {
+   "files": [
+    {
+     "path": "control.json",
+     "sha256": "19fffaf64ea0276ea9dd82b050db1a421ae1c23df884435ed32021749680c0e3"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "2fd9d045a3ce2b49da61a520b7ae738f23fffb857e79c696f28d19ae3c185a1e"
+    }
+   ],
+   "kernel_id": "ctl-identity-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "kind": "control",
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "tree": "controls"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "64a4711a8ea155416afe8a172c45cec48672bbf180622d23bcc0a0162eaaa6c3"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "4f56b57979c3d95b085dab2e35be3753c454e58875e5ddfbce856f811684e44c"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "3fdc743e873992f4bf0cfec7d2ed63d24f51af161471b1ceab1b192a77ae7732"
+    },
+    {
+     "path": "mutation.json",
+     "sha256": "9353578bef8a332f5b9b7722c70ad741d7934b3dc41ecc01a6a7613be5922047"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "42010389f9ade005567e3737b0c9a68f6d08c671e06bac04af8361a04cb470b1"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "467350b54674d07c725121e1e5c02eea31cd486392f010a40272ca37926887da"
+    }
+   ],
+   "kernel_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication.acc-minus.L114C8",
+   "kind": "mutant",
+   "mutation": {
+    "dedup_hash": "b99b24856c4af5a3483782a11134d17336aba14947a90ffdcdccd160daa73d34",
+    "description": "Accumulation becomes subtraction: acc += x -> acc -= x, and acc = tl.dot(a, b, acc) -> acc - tl.dot(a, b).",
+    "family": "semantic",
+    "kernelbench_m_rule": "acc-minus",
+    "mutant_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication.acc-minus.L114C8",
+    "operator": "acc-minus",
+    "parent_substrate_id": "s1-inductor-L1-10_3D_tensor_matrix_multiplication",
+    "rule_origin": "paper",
+    "schema_version": "q1-schema/1",
+    "seed": 42,
+    "site": "kernel.py:114:8",
+    "triton_disable_line_info": true
+   },
+   "problem_id": "L1/10_3D_tensor_matrix_multiplication",
+   "tree": "mutants"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "cffc70031fa630abf1e5ecd5f96541085eae5a389fa25c151cb43e120ff8cec6"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "0a7b38dfdbfe190b1bb385d2d608a12c18124b8bec97d58c7960fa9ee70f65d7"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "56ade71f43d7ff14337ce52f7e0239b2fb2940b6b9967a9eddb76575d5b470c0"
+    },
+    {
+     "path": "mutation.json",
+     "sha256": "54b25212441056d33664d2cb32a159eba9aeefd2785cd1a915562b8cbb7e97b3"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "1238715095d6ed751fc1db9dfa8f49d0c0a76135deca8383469ac19013564ef5"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "655667d01d8fa1e9fac0be28504b51ac2ba7a3fc45466174d47e3cf882485aff"
+    }
+   ],
+   "kernel_id": "s1-inductor-L1-18_Matmul_with_transposed_both.load-offset-off1.L109C20",
+   "kind": "mutant",
+   "mutation": {
+    "dedup_hash": "cec61107f161dabca9a6b3a139db9411577fd77d2762f8a9b8462e0ecc4b4822",
+    "description": "One tl.load reads one element past its intended address. The paper rule offsets a shared-memory partner index; Triton has no explicit shared memory, so the port offsets a global load pointer.",
+    "family": "indexing",
+    "kernelbench_m_rule": "smem-index-off1",
+    "mutant_id": "s1-inductor-L1-18_Matmul_with_transposed_both.load-offset-off1.L109C20",
+    "operator": "load-offset-off1",
+    "parent_substrate_id": "s1-inductor-L1-18_Matmul_with_transposed_both",
+    "rule_origin": "paper",
+    "schema_version": "q1-schema/1",
+    "seed": 42,
+    "site": "kernel.py:109:20",
+    "triton_disable_line_info": true
+   },
+   "problem_id": "L1/18_Matmul_with_transposed_both",
+   "tree": "mutants"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "92463d11df7b1ccdf6af2f225a8157f62a896b38a9ddd81db749cdd85ba60f44"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "33d82d6a28eced27100479ae650e6d32a5b65f6f92e04d3cc0bf4347df55f186"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "5360cb30566cc1c6276c29e779dc010cc8eb96e2dc29596466bb63380ac1d481"
+    },
+    {
+     "path": "mutation.json",
+     "sha256": "99455cec9779e49eba0be3119766dd4fd78785c65e3531520c9f51f07d0c777c"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "de46d2aae41584b6f8f3ab2ecd595756276cab2f7331ef282203a488943631c8"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "777735b1524a2123d44918da8ca7974b5095b7725dc37033d085e87a2fb85e64"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide.plus2minus.L67C13",
+   "kind": "mutant",
+   "mutation": {
+    "dedup_hash": "be6b663dad0b8c4c3e65e19928be4bc95e0a06be3de2bdd8e46368813f9ad066",
+    "description": "AOR: one binary + in device code becomes -.",
+    "family": "arithmetic",
+    "kernelbench_m_rule": "plus2minus",
+    "mutant_id": "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide.plus2minus.L67C13",
+    "operator": "plus2minus",
+    "parent_substrate_id": "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+    "rule_origin": "paper",
+    "schema_version": "q1-schema/1",
+    "seed": 42,
+    "site": "kernel.py:67:13",
+    "triton_disable_line_info": true
+   },
+   "problem_id": "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+   "tree": "mutants"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "819a75bb6608b7954e7a3468b831cacf74d369ce79b2d1128bd57c73d9b15144"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "0bcbfd90a212f1da4e27ce120189273542be4e4ffa76a6bf9670230c2e6c22c6"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "02374ba2565896ff88326ca90189fa8311f00dfe052270ff8d17ffe6ec571516"
+    },
+    {
+     "path": "mutation.json",
+     "sha256": "54408db5fb4f5f962619863ded2f43bfffd84a17363e09718bd2a121a745ebf4"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "1d3e0cacba10480f2d5d349c62712dad9e996064a9b2e328b7068e8c62047a1c"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "3cb6cc5ae5af120238e791938f709f33ed5590045f2c41544b94e79078bfada0"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool.lt2gt.L88C21",
+   "kind": "mutant",
+   "mutation": {
+    "dedup_hash": "f149115d13ce5dcd380b52ae34a61a564d3ad90fc713ec34f669a3cf47d28d2c",
+    "description": "ROR: one < becomes > (inverted guard).",
+    "family": "boundary",
+    "kernelbench_m_rule": "lt2gt",
+    "mutant_id": "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool.lt2gt.L88C21",
+    "operator": "lt2gt",
+    "parent_substrate_id": "s1-inductor-L2-46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+    "rule_origin": "paper",
+    "schema_version": "q1-schema/1",
+    "seed": 42,
+    "site": "kernel.py:88:21",
+    "triton_disable_line_info": true
+   },
+   "problem_id": "L2/46_Conv2d_Subtract_Tanh_Subtract_AvgPool",
+   "tree": "mutants"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "b5e3f3cbdad90bedffad3875ee9e2527552a09ab1e7996620df3a600c993beea"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "a43c4c7bf9a809dd58528d855c569cebbd0ea112ff29c6e942eeb6467cc831aa"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "0002ed844cd88387de8b2c4136c3657ed14a7f51f22cdc437be297f9da91cc25"
+    },
+    {
+     "path": "mutation.json",
+     "sha256": "b62fd07a3e0392dc9484f907bab60faa685280d32f0d417a2318fed35c976f5f"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "ee67c62996204b4bad41fb1f0de2884f8bfce9217df95c38c0a72484c632823a"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "dce4a1d91939223e390d33938c16fe37a5afc452a0026c33dfd68d9f55ffdee9"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+   "kind": "mutant",
+   "mutation": {
+    "dedup_hash": "2de861d2bdde58b829a7cedacb4f979bac8c5dadf34a89a05768457532b68e52",
+    "description": "In one x < bound comparison the bound becomes bound - 1: the last element of a masked range or reduction is dropped.",
+    "family": "boundary",
+    "kernelbench_m_rule": "elementwise-guard-minus1",
+    "mutant_id": "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "operator": "mask-bound-minus1",
+    "parent_substrate_id": "s1-inductor-L2-59_Matmul_Swish_Scaling",
+    "rule_origin": "paper",
+    "schema_version": "q1-schema/1",
+    "seed": 42,
+    "site": "kernel.py:123:20",
+    "triton_disable_line_info": true
+   },
+   "problem_id": "L2/59_Matmul_Swish_Scaling",
+   "tree": "mutants"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "6bb7b044b17841994f5b472ca15bef059c2b2b1a06026aebcfc024a9f50f4c3a"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "4ef9f363ebfb0247d43e53a6cc8b9e635eb583707d6cc193fa0d7f282befe3d8"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "472ee7c5b1b7ea39037613c19a15ab35b3db350728985b060d162e0452fbe121"
+    },
+    {
+     "path": "mutation.json",
+     "sha256": "aa5eaba4d6300c71d054e1a27f8a5354a1e037689ae03ede931c1cc758d3e50e"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "9ae2430613ea03b2f2b5ae8e07f154c0301be4686fef9387d24824c35abd1a3a"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "0f0d07b6249505be8c428b0f020af342ec117b41c2c57cf78c160a4b4ebaf772"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+   "kind": "mutant",
+   "mutation": {
+    "dedup_hash": "a48c34598419c5b58053f72f26d30f54aeaf941a3a765fe8491176def5415027",
+    "description": "An initialiser 0 becomes 1: x = 0.0, tl.zeros(...) and tl.full(..., 0, ...).",
+    "family": "semantic",
+    "kernelbench_m_rule": "const0to1",
+    "mutant_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "operator": "const0to1",
+    "parent_substrate_id": "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "rule_origin": "paper",
+    "schema_version": "q1-schema/1",
+    "seed": 42,
+    "site": "kernel.py:87:37",
+    "triton_disable_line_info": true
+   },
+   "problem_id": "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+   "tree": "mutants"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "e76df3c609ef1ec22a51480ec2d15d7e5ac6d308fca86899d40ddbb31ece1670"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "44e1fc42777b5a24a1cda9d739e3b3986b64a5d5b047dff32c445ad6cc11bda5"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "9deb09f7e223e4f178403570194763591c1cd005f90c0fc1af51f8c0ab1f31db"
+    },
+    {
+     "path": "mutation.json",
+     "sha256": "356dbbd945cdfadac8790edbbfaa81c6d21bd32d8c3781d1c4a66273b20b3075"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "0805397a3593d82ed369163e52c0343637c8ffb3806fdd58ac6ea6aea9bf3838"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "963c94299c3050aae708795fa1df83a90944165f6c41a30f0c0d69a02d55d10f"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+   "kind": "mutant",
+   "mutation": {
+    "dedup_hash": "716784d3498e7e29498d445de51fd8c90aa391fbf88f9f6acaf745dfb25ebe1d",
+    "description": "AOR: one binary * becomes +.",
+    "family": "arithmetic",
+    "kernelbench_m_rule": "mul2plus",
+    "mutant_id": "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+    "operator": "mul2plus",
+    "parent_substrate_id": "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish",
+    "rule_origin": "paper",
+    "schema_version": "q1-schema/1",
+    "seed": 42,
+    "site": "kernel.py:61:39",
+    "triton_disable_line_info": true
+   },
+   "problem_id": "L2/87_Conv2d_Subtract_Subtract_Mish",
+   "tree": "mutants"
+  },
+  {
+   "files": [
+    {
+     "path": "build.json",
+     "sha256": "a759442e4f7e8fcab38228ccbb220b38a3fe9cd507a1ab60540d62233f33e9cd"
+    },
+    {
+     "path": "inductor_output.py.txt",
+     "sha256": "a718c59e89a493fae2609fa733b94160b95b432a5773eae7985eaa0993a2aeff"
+    },
+    {
+     "path": "kernel.py",
+     "sha256": "7e5e6751dd343ccb5ef7523dddcedd04ab8b3387ba8de1b06fa3cb546eb12ac4"
+    },
+    {
+     "path": "mutation.json",
+     "sha256": "d2a133f41723c76f091a2ac5e422f508614ea25de86f151b3ac97b2f1599b69c"
+    },
+    {
+     "path": "normalization.diff",
+     "sha256": "35cff0a205c03666023e9d397025205aaaa4f2792ccc4048b4cda4b52de52739"
+    },
+    {
+     "path": "substrate.json",
+     "sha256": "cfad5030e868a2b3b4385c5edc1bec19d6b031d915b7fe4b025a78788c6382d6"
+    }
+   ],
+   "kernel_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+   "kind": "mutant",
+   "mutation": {
+    "dedup_hash": "7a352b2951b8927f43cf3600fa5ed2d2478a133b602b6a07986b5455b577120c",
+    "description": "AOR: one binary + in device code becomes -.",
+    "family": "arithmetic",
+    "kernelbench_m_rule": "plus2minus",
+    "mutant_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "operator": "plus2minus",
+    "parent_substrate_id": "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+    "rule_origin": "paper",
+    "schema_version": "q1-schema/1",
+    "seed": 42,
+    "site": "kernel.py:78:14",
+    "triton_disable_line_info": true
+   },
+   "problem_id": "L2/95_Matmul_Add_Swish_Tanh_GELU_Hardtanh",
+   "tree": "mutants"
+  }
+ ],
+ "pool_manifest_sha256": "1018b647fff5e6ab43b2be62732a6c79b8cd639f34f11d9ac2b87cb4050bbf6a",
+ "repo_revision": "8e9d2574a3332114109e6b21bd0d041a9868b471",
+ "rule": "q1-repilot/1",
+ "schema": "q1-repilot-corpus-recipe/1",
+ "selection_sha256": "60e9f833fe142ec432ed6fdb52ff90729fe5eef308e9d774b89d47eb8345490b"
+}

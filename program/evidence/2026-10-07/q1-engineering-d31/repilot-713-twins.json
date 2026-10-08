@@ -1,0 +1,2551 @@
+{
+ "a4_rejected_kernels": [
+  "s1-inductor-L1-18_Matmul_with_transposed_both.load-offset-off1.L109C20",
+  "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+  "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+  "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14"
+ ],
+ "differing": [
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "A1/native/seed-6042",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "A1/native/seed-6043",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "A1/native/seed-6044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "A1/native/seed-6045",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "A1/native/seed-6046",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/allneg/seed-4047",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/constrows/seed-4048",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/randn/seed-4042",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/samesign100/seed-4044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/spiky/seed-4045",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_device",
+    ".details.strict-fp32.T"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/ties/seed-4046",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/uniform8/seed-4043",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A3",
+    "A3/inner137/seed-5044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A3",
+    "A3/lead1/seed-5042",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A3",
+    "A3/lead5/seed-5043",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A3",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "ctl-identity-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A3",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "static-checker-set-order",
+   "fields": [
+    ".details.static_warnings"
+   ],
+   "key": [
+    "ctl-identity-L2-87_Conv2d_Subtract_Subtract_Mish",
+    "a_static",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.e",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L1-18_Matmul_with_transposed_both.load-offset-off1.L109C20",
+    "A3",
+    "A3/allprime/seed-5046",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.e",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L1-18_Matmul_with_transposed_both.load-offset-off1.L109C20",
+    "A3",
+    "A3/inner37/seed-5044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.checks",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L1-18_Matmul_with_transposed_both.load-offset-off1.L109C20",
+    "A5",
+    "aggregate",
+    "not-applicable",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "non-consumer-gate",
+   "fields": [
+    ".details.returncode",
+    ".details.stdout_tail",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+    "A4",
+    "compute-sanitizer",
+    "not-applicable",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "non-consumer-gate",
+   "fields": [
+    ".details.byte",
+    ".details.hashes",
+    ".details.reason",
+    ".details.stderr_tail",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+    "A4",
+    "poison-allocator",
+    "not-applicable",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "memory-contention",
+   "fields": [
+    ".details.checks",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide",
+    "A5",
+    "aggregate",
+    "not-applicable",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "non-consumer-gate",
+   "fields": [
+    ".details.stdout_tail"
+   ],
+   "key": [
+    "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide.plus2minus.L67C13",
+    "A4",
+    "compute-sanitizer",
+    "not-applicable",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "non-consumer-gate",
+   "fields": [
+    ".details.stderr_tail"
+   ],
+   "key": [
+    "s1-inductor-L2-100_ConvTranspose3d_Clamp_Min_Divide.plus2minus.L67C13",
+    "A4",
+    "poison-allocator",
+    "not-applicable",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "non-consumer-gate",
+   "fields": [
+    ".details.probe.config_id",
+    ".details.probe.refused_configs",
+    ".details.probe.sha256",
+    ".details.probe.shapes",
+    ".details.returncode",
+    ".details.stdout_tail",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling",
+    "A4",
+    "compute-sanitizer",
+    "not-applicable",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "non-consumer-gate",
+   "fields": [
+    ".details.byte",
+    ".details.hashes",
+    ".details.reason",
+    ".details.stderr_tail",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling",
+    "A4",
+    "poison-allocator",
+    "not-applicable",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "memory-contention",
+   "fields": [
+    ".attempt",
+    ".details.item_exclusive"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling",
+    "a_head_1e-2",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "memory-contention",
+   "fields": [
+    ".attempt",
+    ".details.item_exclusive"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling",
+    "a_static",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "a",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "a_1e-3",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "a_head_1e-2",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "a_head_1e-4",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "a_static",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c1",
+    "aggregate",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c1",
+    "c1/D2/seed-1043",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c1",
+    "c1/D3/seed-1044",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c1",
+    "c1/D4/seed-1045",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.nonfinite",
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c2",
+    "aggregate",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.nonfinite",
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c2",
+    "c2/S-double/D1/seed-2044",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c2",
+    "c2/S-double/D4/seed-2045",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c2",
+    "c2/S-half/D1/seed-2042",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c2",
+    "c2/S-half/D4/seed-2043",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c2",
+    "c2/S-small/D1/seed-2046",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c2",
+    "c2/S-small/D4/seed-2047",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c3",
+    "aggregate",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c3",
+    "c3/U1/batch_size/D1/seed-3042",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c3",
+    "c3/U1/batch_size/D4/seed-3043",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c3",
+    "c3/U2/batch_size/D1/seed-3044",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c3",
+    "c3/U2/batch_size/D4/seed-3045",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c3",
+    "c3/U3/D1/seed-3046",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c3",
+    "c3/U3/D4/seed-3047",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.nonfinite",
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c_1e-2",
+    "aggregate",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.nonfinite",
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-59_Matmul_Swish_Scaling.mask-bound-minus1.L123C20",
+    "c_kbv_raw",
+    "aggregate",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "A1/native/seed-6042",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "A1/native/seed-6043",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "A1/native/seed-6044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "A1/native/seed-6045",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "A1/native/seed-6046",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A1",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/allneg/seed-4047",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/constrows/seed-4048",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/randn/seed-4042",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/samesign100/seed-4044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/spiky/seed-4045",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_device",
+    ".details.strict-fp32.T"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/ties/seed-4046",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "A2/uniform8/seed-4043",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A2",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A3",
+    "A3/inner137/seed-5044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A3",
+    "A3/lead1/seed-5042",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A3",
+    "A3/lead5/seed-5043",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A3",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool",
+    "A3",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A1",
+    "A1/native/seed-6042",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A1",
+    "A1/native/seed-6043",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A1",
+    "A1/native/seed-6044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A1",
+    "A1/native/seed-6045",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A1",
+    "A1/native/seed-6046",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A1",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A1",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A2",
+    "A2/allneg/seed-4047",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A2",
+    "A2/constrows/seed-4048",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.strict-fp32.T"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A2",
+    "A2/randn/seed-4042",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A2",
+    "A2/samesign100/seed-4044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A2",
+    "A2/spiky/seed-4045",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A2",
+    "A2/uniform8/seed-4043",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A2",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A2",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A3",
+    "A3/inner137/seed-5044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A3",
+    "A3/lead1/seed-5042",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".details.e_r32_cpu",
+    ".details.e_r32_device",
+    ".details.e_r32_tf32",
+    ".details.strict-fp32.T",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.T",
+    ".details.tf32-admissible.e",
+    ".max_rel_err",
+    ".tolerance"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A3",
+    "A3/lead5/seed-5043",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A3",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "inline-reference-nondeterministic",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool.const0to1.L87C37",
+    "A3",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "non-consumer-gate",
+   "fields": [
+    ".details.hashes.0.sha256",
+    ".details.hashes.255.sha256"
+   ],
+   "key": [
+    "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+    "A4",
+    "poison-allocator",
+    "not-applicable",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err"
+   ],
+   "key": [
+    "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+    "a",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err"
+   ],
+   "key": [
+    "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+    "a_1e-3",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err"
+   ],
+   "key": [
+    "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+    "a_head_1e-2",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err"
+   ],
+   "key": [
+    "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+    "a_head_1e-4",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "static-checker-set-order",
+   "fields": [
+    ".details.static_warnings"
+   ],
+   "key": [
+    "s1-inductor-L2-87_Conv2d_Subtract_Subtract_Mish.mul2plus.L61C39",
+    "a_static",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.outcome",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.e",
+    ".details.tf32-admissible.passed",
+    ".details.tf32-admissible.passes_at_64T",
+    ".details.tf32-admissible.reason",
+    ".max_rel_err",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A1",
+    "A1/native/seed-6043",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.outcome",
+    ".details.strict-fp32.e",
+    ".details.strict-fp32.passes_at_64T",
+    ".details.tf32-admissible.e",
+    ".details.tf32-admissible.passed",
+    ".details.tf32-admissible.passes_at_64T",
+    ".details.tf32-admissible.reason",
+    ".max_rel_err",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A1",
+    "A1/native/seed-6044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.outcome",
+    ".details.strict-fp32.e",
+    ".details.strict-fp32.passes_at_64T",
+    ".details.tf32-admissible.e",
+    ".details.tf32-admissible.passed",
+    ".details.tf32-admissible.passes_at_64T",
+    ".details.tf32-admissible.reason",
+    ".max_rel_err",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A1",
+    "A1/native/seed-6045",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.outcome",
+    ".details.strict-fp32.e",
+    ".details.strict-fp32.passes_at_64T",
+    ".details.tf32-admissible.e",
+    ".details.tf32-admissible.passed",
+    ".details.tf32-admissible.passes_at_64T",
+    ".details.tf32-admissible.reason",
+    ".max_rel_err",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A1",
+    "A1/native/seed-6046",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A1",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.counts.pass",
+    ".details.counts.silent-wrong",
+    ".max_rel_err",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A1",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.outcome",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.e",
+    ".details.tf32-admissible.passed",
+    ".details.tf32-admissible.passes_at_64T",
+    ".details.tf32-admissible.reason",
+    ".max_rel_err",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A2",
+    "A2/allneg/seed-4047",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.outcome",
+    ".details.strict-fp32.e",
+    ".details.strict-fp32.passes_at_64T",
+    ".details.tf32-admissible.e",
+    ".details.tf32-admissible.passed",
+    ".details.tf32-admissible.passes_at_64T",
+    ".details.tf32-admissible.reason",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A2",
+    "A2/constrows/seed-4048",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.outcome",
+    ".details.strict-fp32.e",
+    ".details.strict-fp32.passes_at_64T",
+    ".details.tf32-admissible.e",
+    ".details.tf32-admissible.passed",
+    ".details.tf32-admissible.passes_at_64T",
+    ".details.tf32-admissible.reason",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A2",
+    "A2/samesign100/seed-4044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.outcome",
+    ".details.strict-fp32.e",
+    ".details.strict-fp32.passes_at_64T",
+    ".details.tf32-admissible.e",
+    ".details.tf32-admissible.passed",
+    ".details.tf32-admissible.passes_at_64T",
+    ".details.tf32-admissible.reason",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A2",
+    "A2/spiky/seed-4045",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.outcome",
+    ".details.strict-fp32.e",
+    ".details.strict-fp32.passes_at_64T",
+    ".details.tf32-admissible.e",
+    ".details.tf32-admissible.passed",
+    ".details.tf32-admissible.passes_at_64T",
+    ".details.tf32-admissible.reason",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A2",
+    "A2/ties/seed-4046",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.outcome",
+    ".details.strict-fp32.e",
+    ".details.strict-fp32.passes_at_64T",
+    ".details.tf32-admissible.e",
+    ".details.tf32-admissible.passed",
+    ".details.tf32-admissible.passes_at_64T",
+    ".details.tf32-admissible.reason",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A2",
+    "A2/uniform8/seed-4043",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A2",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.counts.pass",
+    ".details.counts.silent-wrong",
+    ".max_rel_err",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A2",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.outcome",
+    ".details.strict-fp32.e",
+    ".details.tf32-admissible.e",
+    ".details.tf32-admissible.passed",
+    ".details.tf32-admissible.passes_at_64T",
+    ".details.tf32-admissible.reason",
+    ".max_rel_err",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A3",
+    "A3/inner37/seed-5044",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A3",
+    "aggregate",
+    "strict-fp32",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.counts.pass",
+    ".details.counts.silent-wrong",
+    ".max_rel_err",
+    ".verdict"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A3",
+    "aggregate",
+    "tf32-admissible",
+    42
+   ],
+   "verdicts_equal": false
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.checks"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "A5",
+    "aggregate",
+    "not-applicable",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.correctness_trials",
+    ".details.failed_trials",
+    ".max_abs_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "a",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.correctness_trials",
+    ".details.failed_trials",
+    ".max_abs_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "a_1e-3",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.correctness_trials",
+    ".details.failed_trials",
+    ".max_abs_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "a_head_1e-2",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.correctness_trials",
+    ".details.failed_trials",
+    ".max_abs_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "a_head_1e-4",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.correctness_trials",
+    ".details.failed_trials",
+    ".details.static_warnings",
+    ".max_abs_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "a_static",
+    "native/trials-5/seed-42",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c1",
+    "aggregate",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c1",
+    "c1/D2/seed-1043",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c1",
+    "c1/D3/seed-1044",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c1",
+    "c1/D4/seed-1045",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.nonfinite",
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c2",
+    "aggregate",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.nonfinite",
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c2",
+    "c2/S-double/D1/seed-2044",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c2",
+    "c2/S-double/D4/seed-2045",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c2",
+    "c2/S-half/D1/seed-2042",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c2",
+    "c2/S-half/D4/seed-2043",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c3",
+    "aggregate",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c3",
+    "c3/U1/batch_size/D1/seed-3042",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c3",
+    "c3/U1/batch_size/D4/seed-3043",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c3",
+    "c3/U2/batch_size/D1/seed-3044",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c3",
+    "c3/U2/batch_size/D4/seed-3045",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.nonfinite",
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c_1e-2",
+    "aggregate",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  },
+  {
+   "class": "a4-rejected-kernel",
+   "fields": [
+    ".details.nonfinite",
+    ".max_abs_err",
+    ".max_rel_err"
+   ],
+   "key": [
+    "s1-inductor-L2-95_Matmul_Add_Swish_Tanh_GELU_Hardtanh.plus2minus.L78C14",
+    "c_kbv_raw",
+    "aggregate",
+    "torch-default",
+    42
+   ],
+   "verdicts_equal": true
+  }
+ ],
+ "differing_rows_by_class": {
+  "a4-rejected-kernel": 71,
+  "inline-reference-nondeterministic": 62,
+  "memory-contention": 3,
+  "non-consumer-gate": 7,
+  "static-checker-set-order": 2
+ },
+ "inline_nondeterministic_problems": [
+  "L2/77_ConvTranspose3d_Scale_BatchNorm_GlobalAvgPool"
+ ],
+ "rows_compared": 843,
+ "rows_identical": 698,
+ "rows_in_one_arm_only": 157,
+ "verdict_differences_by_class": {
+  "a4-rejected-kernel": 10,
+  "memory-contention": 1,
+  "non-consumer-gate": 4
+ },
+ "verdicts_identical": 828
+}

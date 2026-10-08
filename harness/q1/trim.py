@@ -31,9 +31,16 @@ each answering a finding of the second adversarial review:
 - **Seeds, frames and weights are explicit** (``seed_of``, ``mutant_frames``,
   ``ht_weights``), and the priority order is rank-major across families so a
   cut leaves every family a simple random sample.
-- **Execution classes and the stop.** Concurrency units by native input size,
-  size-scaled watchdog limits on every item, contention failures retried alone
+- **Execution classes and the stop.** Concurrency units per item from its
+  estimated (or measured) peak GPU memory under the execution policy
+  ``q1-stage0-exec/2`` (``harness.q1.memory``; the native-input rule of
+  ``q1-stage0-exec/1`` is its floor, and still orders the buckets), size-scaled
+  watchdog limits on every item, contention failures retried alone
   (``runner``), and a stop enforced by Slurm job caps (``budget_check``).
+
+The execution policy changes how many items share a GPU only: no sample, seed,
+frame, bucket or priority order depends on it (``plan`` orders items by the
+``q1-stage0-exec/1`` class, as before).
 """
 
 from __future__ import annotations
@@ -48,7 +55,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-from harness.q1 import pilot
+from harness.q1 import memory, pilot
 from harness.q1.schema import MUTATION_FAMILIES
 
 RULE_VERSION = "q1-stage0-trim/2"
@@ -79,11 +86,14 @@ TRIM_RULE: dict[str, Any] = {
     "timing_floor_job_gpus": 8,
     "timing_floor_timing_gpus": 2,
     # Execution (measured conditions of jobs 518 and 548): one GPU and 32 CPUs per
-    # scoring job, one Stage 0 job at a time, 12 capacity units per GPU.
+    # scoring job, one Stage 0 job at a time, 12 capacity units per GPU. Units per
+    # item follow ``execution_policy`` (``harness.q1.memory``); the three size keys
+    # below are its floor (``q1-stage0-exec/1``) and the bucket order's class.
     "gpus_per_job": 1,
     "cpus_per_job": 32,
     "concurrent_stage0_jobs": 1,
     "slot_capacity": 12,
+    "execution_policy": memory.POLICY_VERSION,
     "small_below_bytes": 600_000_000,
     "units_small": 1,
     "units_medium": 3,
@@ -144,11 +154,30 @@ def concurrency_class(problem_id: str, rule: Mapping[str, Any] = TRIM_RULE) -> s
 
 
 def concurrency_units(problem_id: str, rule: Mapping[str, Any] = TRIM_RULE) -> int:
-    """Capacity units an item holds on its GPU (``slot_capacity`` = alone)."""
+    """Capacity units under ``q1-stage0-exec/1`` (native input size only): the floor of
+    the memory-aware units and the class that orders each bucket."""
     klass = concurrency_class(problem_id, rule)
     if klass == "exclusive":
         return int(rule["slot_capacity"])
     return int(rule["units_small"] if klass == "small" else rule["units_medium"])
+
+
+def item_units(
+    problem_id: str,
+    gate: str,
+    rule: Mapping[str, Any] = TRIM_RULE,
+    measured: Mapping[str, float] | None = None,
+) -> tuple[int, int | None]:
+    """(capacity units, estimated peak bytes) of one item under the execution policy
+    (``harness.q1.memory``), never fewer units than :func:`concurrency_units`."""
+    native = pilot.native_input_bytes(problem_id)
+    units = max(
+        concurrency_units(problem_id, rule),
+        memory.units_for(problem_id, gate, native, measured=measured),
+    )
+    return min(int(rule["slot_capacity"]), units), memory.estimated_peak_bytes(
+        problem_id, gate, measured=measured
+    )
 
 
 # --- corpus records ----------------------------------------------------------------
@@ -417,6 +446,7 @@ class PlannedItem:
     seed: int
     units: int
     timeouts: dict[str, float]
+    memory_bytes: int | None = None
 
 
 def _items(
@@ -425,16 +455,27 @@ def _items(
     seeds: Sequence[int],
     gates: Sequence[str],
     rule: Mapping[str, Any],
+    measured: Mapping[str, float] | None = None,
 ) -> list[PlannedItem]:
-    units = concurrency_units(record.problem_id, rule)
     limits = pilot.watchdog_limits(record.problem_id)
-    return [
-        PlannedItem(
-            bucket, record.kernel_id, record.kernel_path, record.problem_id, g, s, units, limits
-        )
-        for s in seeds
-        for g in gates
-    ]
+    out = []
+    for s in seeds:
+        for g in gates:
+            units, peak = item_units(record.problem_id, g, rule, measured)
+            out.append(
+                PlannedItem(
+                    bucket,
+                    record.kernel_id,
+                    record.kernel_path,
+                    record.problem_id,
+                    g,
+                    s,
+                    units,
+                    limits,
+                    peak,
+                )
+            )
+    return out
 
 
 def plan(
@@ -443,9 +484,12 @@ def plan(
     rule: Mapping[str, Any] = TRIM_RULE,
     exposed: Mapping[str, Any] | None = None,
     gates: Sequence[str] = SCORING_GATES,
+    measured: Mapping[str, float] | None = None,
 ) -> dict[str, Any]:
     """Apply the rule to the corpus records: the FRR set, the mutant frames and
-    samples, the control schedule and every planned item in bucket order."""
+    samples, the control schedule and every planned item in bucket order, each with
+    its capacity units and estimated peak memory under the execution policy
+    (``measured``: a measured-peak table, ``memory.load_measured``)."""
     by_id = {r.kernel_id: r for r in records}
     evaluation = [r for r in records if r.kind == "substrate" and r.half == "evaluation"]
     frr = frr_set(evaluation, rule)
@@ -470,7 +514,7 @@ def plan(
             ),
         )
         for kernel_id in small_first:
-            items.extend(_items(bucket, by_id[kernel_id], seeds, gates, rule))
+            items.extend(_items(bucket, by_id[kernel_id], seeds, gates, rule, measured))
 
     hack_ids = [
         k for kind in sorted(controls["hack_sample"]) for k in controls["hack_sample"][kind]
@@ -516,6 +560,11 @@ def plan(
         if exposed is None
         else hashlib.sha256(json.dumps(exposed, sort_keys=True).encode()).hexdigest(),
         "bucket_counts": {b: counts[b] for b in BUCKETS if b in counts},
+        "execution_policy": dict(memory.POLICY),
+        "memory_table_sha256": hashlib.sha256(memory.TABLE_PATH.read_bytes()).hexdigest(),
+        "measured_memory_sha256": None
+        if measured is None
+        else hashlib.sha256(json.dumps(measured, sort_keys=True).encode()).hexdigest(),
         "items": [asdict(i) for i in items],
     }
     record["plan_sha256"] = plan_digest(record)
@@ -593,6 +642,23 @@ def scheduled_controls(record: Mapping[str, Any]) -> dict[int, set[str]]:
 
 # --- budget ------------------------------------------------------------------------------
 
+#: Ledger experiments that are Stage 0 GPU work (``program/state.json``, ``gpu_hours_ledger``).
+STAGE0_LEDGER_PREFIX = "q1-stage0"
+
+
+def stage0_spent_gpu_hours(ledger: Iterable[Mapping[str, Any]]) -> float:
+    """Stage 0 GPU-hours recorded in the program's GPU ledger (every entry whose
+    experiment starts with ``q1-stage0``: the pilot pass and the D31 re-pilot so far).
+    A scoring job's ``--stage0-spent-gpu-hours`` may never be below it."""
+    return round(
+        sum(
+            float(entry.get("gpu_hours") or 0.0)
+            for entry in ledger
+            if str(entry.get("experiment", "")).startswith(STAGE0_LEDGER_PREFIX)
+        ),
+        4,
+    )
+
 
 def budget_check(
     *,
@@ -634,6 +700,7 @@ __all__ = [
     "family_order",
     "frr_set",
     "ht_weights",
+    "item_units",
     "load_exposed",
     "mutant_frames",
     "mutant_sample",
@@ -646,4 +713,5 @@ __all__ = [
     "scored_kernel_replicates",
     "seed_of",
     "seeded_order",
+    "stage0_spent_gpu_hours",
 ]
