@@ -476,7 +476,7 @@ def test_trim_plan_driver_and_report_on_the_cpu_journal(run: dict, tmp_path: Pat
         "--expected-plan-sha256",
         driver_plan["plan_sha256"],
         "--stage0-spent-gpu-hours",
-        "1.229",
+        "1.3381",
         "--job-cap-gpu-hours",
         "7.0",
         "--reserve-gpu-hours",

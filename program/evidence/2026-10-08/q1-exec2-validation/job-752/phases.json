@@ -1,0 +1,40 @@
+{
+ "phases": [
+  {
+   "name": "prepare",
+   "seconds": 0.078
+  },
+  {
+   "name": "validation",
+   "seconds": 390.375,
+   "runs": [
+    {
+     "run": 122,
+     "skipped": 0,
+     "timeouts": 0,
+     "crashes": 1,
+     "retired_slots": [],
+     "retired_devices": {},
+     "health_events": [],
+     "memory_guard_waits": 0,
+     "memory_guard_unreadable": 0,
+     "run_id": "30071b7ce003",
+     "left_in_queue": 303,
+     "deferred_by_deadline": 0,
+     "time_boxed": true,
+     "interrupted": false,
+     "expired_at_hard_deadline": true,
+     "rule": "q1-exec2-validation/1",
+     "items": 433,
+     "items_sha256": "633b2753a88df8d08eaac75023228f45d1f338b29456ce07b5a7a16216b51d08",
+     "reference_entries_deleted_after_last_consumer": 5,
+     "reference_bytes_freed_after_last_consumer": 3193722462,
+     "reference_tensors_deleted": 163,
+     "soft_deadline_seconds": 330.0,
+     "hard_deadline_seconds": 390.0,
+     "driver_seconds": 391.309
+    }
+   ]
+  }
+ ]
+}

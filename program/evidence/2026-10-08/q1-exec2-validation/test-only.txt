@@ -1,0 +1,2 @@
+test-only (sbatch --test-only through the submitter): exit=0
+0 sbatch: Job 751 to start at 2026-10-08T06:45:39 using 32 processors on nodes fal-h100-01 in partition research

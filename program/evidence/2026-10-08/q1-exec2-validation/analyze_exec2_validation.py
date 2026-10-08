@@ -501,16 +501,23 @@ def adversarial(run: Path, store: Path) -> dict[str, Any]:
         for r in read_jsonl(run / "validation" / "journal.jsonl")
         if r["kernel_id"].startswith("ctl-kernelbench-")
     ]
+
+    # Group by the item's gate (the item key), not the row's: gate (c) items write
+    # rows c1, c2, c3, c_1e-2 and c_kbv_raw (corrected after the job; the first run of
+    # this script grouped by row gate and found no gate (c) rows).
+    def item_gate(r: Mapping[str, Any]) -> str:
+        return r["details"]["item_key"].split("|")[1]
+
     finals: dict[tuple[str, str, str], list[dict]] = defaultdict(list)
     last_attempt: dict[tuple[str, str], int] = {}
     for r in rows:
-        key = (r["kernel_id"], r["gate"])
+        key = (r["kernel_id"], item_gate(r))
         last_attempt[key] = max(last_attempt.get(key, 0), int(r.get("attempt") or 1))
     for r in rows:
-        if int(r.get("attempt") or 1) != last_attempt[(r["kernel_id"], r["gate"])]:
+        if int(r.get("attempt") or 1) != last_attempt[(r["kernel_id"], item_gate(r))]:
             continue
         base, arm = rule.arm_of(r["kernel_id"])
-        finals[(base, r["gate"], arm)].append(r)
+        finals[(base, item_gate(r), arm)].append(r)
     uses = {}
     if (store / "uses").exists():
         for path in (store / "uses").glob("*.json"):
@@ -528,12 +535,26 @@ def adversarial(run: Path, store: Path) -> dict[str, Any]:
                 "gate": gate,
                 "store_verdicts": dict(Counter(r["verdict"] for r in store_rows)),
                 "inline_verdicts": dict(Counter(r["verdict"] for r in inline_rows)),
-                "store_aggregate": next(
-                    (r["verdict"] for r in store_rows if r["config_id"] == "aggregate"), None
+                "store_aggregate": sorted(
+                    f"{r['gate']}:{r['verdict']}"
+                    for r in store_rows
+                    if r["config_id"] == "aggregate"
                 ),
-                "inline_aggregate": next(
-                    (r["verdict"] for r in inline_rows if r["config_id"] == "aggregate"), None
+                "inline_aggregate": sorted(
+                    f"{r['gate']}:{r['verdict']}"
+                    for r in inline_rows
+                    if r["config_id"] == "aggregate"
                 ),
+                "a5_checks": {
+                    arm: [
+                        (c.get("check"), c.get("status"), (c.get("failures") or [""])[0][:80])
+                        for r in side
+                        for c in (r["details"].get("checks") or [])
+                    ]
+                    for arm, side in (("store", store_rows), ("inline", inline_rows))
+                }
+                if gate == "A5"
+                else None,
                 "store_lookups": uses.get(f"{kernel}|{gate}|seed-42"),
             }
             if store_rows and inline_rows:
