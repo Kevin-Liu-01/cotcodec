@@ -1,0 +1,15 @@
+{
+  "job_id": "819",
+  "mode": "run",
+  "image_id": "sha256:7d4595f98601d50f7393c447a1d0618d55cda1b7cf60e2d016ab5c6f47cc872e",
+  "argv_json_hex_sha256": "4c0daa4fc4617d2ebfecc1bb1ebf6e660b2df48bac06c92702a61c66f4b877e9",
+  "argv_json_hex": "5b227368222c20222d63222c20226364202f776f726b73706163652f636f74636f64656320262620484f4d453d2f746d702f686f6d652048465f4855425f4f46464c494e453d31205452414e53464f524d4552535f4f46464c494e453d3120707974686f6e202d6d206861726e6573732e71325f6d75746174696f6e2e72617465725f72756e6e657220617267732d646f63746f72202d2d6f7574202f6f75742f617267732d646f63746f722e6a736f6e202d2d6d6f64656c2d646972202f726f2f6d657461225d",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/src/65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1:/src:ro /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/args-doctor-65bc2e2:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/qwen36-meta:/ro/meta:ro",
+  "network": "none",
+  "gpus_requested": 0,
+  "container_dev_nvidia": [],
+  "batch_sha256": "f97d3af96418fb4fa806f39456e4117f306cbf04b14e08533d77a95349b37443",
+  "exit_status": 0,
+  "started_at": "2026-10-08T10:45:19Z",
+  "finished_at": "2026-10-08T10:45:43Z"
+}
