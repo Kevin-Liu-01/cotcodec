@@ -197,8 +197,9 @@ def test_every_scored_mutant_can_be_killed_by_an_in_spec_cell():
     assert "R03" not in killable["H-GA"] and "R03" not in killable["H-OSW-fixed"]
 
 
-def test_l0_raw_prediction_names_catalog_entries():
-    prediction = yaml.safe_load((HERE / "l0_raw_prediction.yaml").read_text(encoding="utf-8"))
+@pytest.mark.parametrize("name", ["l0_raw_prediction.yaml", "l0_raw_prediction_v2.yaml"])
+def test_l0_raw_prediction_names_catalog_entries(name):
+    prediction = yaml.safe_load((HERE / name).read_text(encoding="utf-8"))
     fail = set(prediction["predicted_fail"])
     unsupported = set(prediction["predicted_unsupported"])
     assert fail | unsupported <= set(cat.PUBLIC_IDS)

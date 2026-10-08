@@ -539,7 +539,10 @@ def session_plan(manifest: dict[str, Any], cells: dict[str, Any]) -> list[dict[s
         raise DriverError("suite-acceptance plans come from acceptance_plan")
     seed = manifest["randomness"]["seeds"][0]
     if kind == "suite-development":
-        layer_cells = [c["id"] for c in cells["layers"][workload["layer"]]]
+        # L0-raw runs the L0-fixed cells, as in acceptance_plan and the runner (its development
+        # runs characterise C2's mechanism at seed 42, decision D40).
+        layer = workload["layer"]
+        layer_cells = [c["id"] for c in cells["layers"]["L0-fixed" if layer == "L0-raw" else layer]]
         wanted = layer_cells if workload["cells"] == "all" else workload["cells"]
         unknown = sorted(set(wanted) - set(layer_cells))
         if unknown:
@@ -588,7 +591,7 @@ def acceptance_plan(
     else:
         plan = run_order.plan(
             ids, seed, workload["reps"], workload["settings"], workload["session_trials"],
-            acceptance=seed in run_order.ACCEPTANCE_SEEDS,
+            acceptance=seed in run_order.ACCEPTANCE_SEEDS, criterion=criterion,
         )  # fmt: skip
     span = workload.get("session_range")
     if span is not None:

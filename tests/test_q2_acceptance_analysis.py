@@ -136,18 +136,34 @@ def test_c1_needs_five_failures_of_five_on_each_known_defect():
     assert not acc.c1(partial)["pass"]
 
 
+def _c2_plan():
+    """v2's C2 order: the 100 entries in the seed-45 shuffle (decision D40)."""
+    return order.plan(ids("L0-fixed"), acc.C2_SEED, 5, ["screenshot"], criterion="C2")
+
+
 def test_c2_requires_the_exact_predicted_failing_set():
     import yaml
 
-    predicted = frozenset(
-        yaml.safe_load((ROOT / "harness/q2/action_path/l0_raw_prediction.yaml").read_text())[
-            "predicted_fail"
-        ]
-    )
-    plan = order.plan(ids("L0-fixed"), 42, 5, ["screenshot"])
+    predicted = frozenset(yaml.safe_load(acc.PREDICTION.read_text())["predicted_fail"])
+    assert "chord_super_d" in predicted  # v2's prediction (decision D40)
+    plan = _c2_plan()
     assert acc.c2([campaign(plan, fail=predicted)])["pass"]
     assert not acc.c2([campaign(plan, fail=predicted | {"key_enter"})])["pass"]
     assert not acc.c2([campaign(plan, fail=predicted - {"type_emoji"})])["pass"]
+    # chord_super_d passing, as v1 predicted, fails v2's C2.
+    assert not acc.c2([campaign(plan, fail=predicted - {"chord_super_d"})])["pass"]
+
+
+def test_c2_runs_v2s_own_order_seed():
+    """Decision D40: a C2 campaign that ran v1's seed-42 order is not v2's C2."""
+    import yaml
+
+    assert acc.C2_SEED == 45
+    predicted = frozenset(yaml.safe_load(acc.PREDICTION.read_text())["predicted_fail"])
+    v1_order = order.plan(ids("L0-fixed"), 42, 5, ["screenshot"])
+    result = acc.c2([campaign(v1_order, fail=predicted)])
+    assert not result["pass"]
+    assert any("C2" in problem for problem in result["problems"]), result["problems"]
 
 
 def test_c3_kills_equivalence_and_survivors():
@@ -577,11 +593,7 @@ def _c2_campaign(plan, mutate):
     """A C2 campaign failing exactly the predicted set, then ``mutate(trial)`` on every trial."""
     import yaml
 
-    predicted = frozenset(
-        yaml.safe_load((ROOT / "harness/q2/action_path/l0_raw_prediction.yaml").read_text())[
-            "predicted_fail"
-        ]
-    )
+    predicted = frozenset(yaml.safe_load(acc.PREDICTION.read_text())["predicted_fail"])
     run = campaign(plan, fail=predicted)
     for session in run["sessions"]:
         for trial in session["trials"]:
@@ -592,7 +604,7 @@ def _c2_campaign(plan, mutate):
 
 def test_c2_judges_l0_raw_on_the_event_and_text_channels_only():
     """Design decision 34: marker and release-state timing never decide C2."""
-    plan = order.plan(ids("L0-fixed"), 42, 5, ["screenshot"])
+    plan = _c2_plan()
     l0 = {c["id"]: c for c in CELLS["layers"]["L0-fixed"]}
     assert acc.c2([_c2_campaign(plan, lambda t: None)])["pass"]
 
@@ -1385,7 +1397,7 @@ def test_c2_reads_an_earlier_attempt_as_it_reads_the_counting_one():
     """An earlier failure counts against C2 only on a cell outside the predicted set,
     under C2's own reading of the trial (decision 34); the predicted cells fail by
     design."""
-    plan = order.plan(ids("L0-fixed"), 42, 5, ["screenshot"])
+    plan = _c2_plan()
     good = _c2_campaign(plan, lambda t: None)
     first = _uncounted(good, "79")
     first["receipt"]["summary"]["infra_gates_pass"] = False
