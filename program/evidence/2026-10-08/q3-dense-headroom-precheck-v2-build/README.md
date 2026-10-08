@@ -13,10 +13,10 @@ physical). Every other host job was CPU only.
 |---|---|---|
 | (i) receipts bound to their Slurm job | `harness/dense_headroom_v2.py::batch_job_id` reads `job_id` from the run directory's `job.env`, which `docker-research.sbatch` writes before `docker create` (the batch script is unchanged, digest `2a10c9c7...`); under the batch path the entry point exits 2 without it or when `SLURM_JOB_ID` disagrees; the receipt records `slurm_job_id` and `slurm_job_id_source: job.env`, and v2's summariser requires both | `tests/test_dense_headroom_v2_job_binding.py` (stub-sbatch end to end: the real batch script, v2's and v1's receipt writers, v1's `check_job`), doctor `job_binding`/`end_to_end`, live: `timing-766/dense-precheck_timing-receipt.json` (`slurm_job_id: "766"`, source `job.env`) |
 | (ii) SIGUSR1 honoured on the 4B path | cause below; SIGUSR1/SIGTERM blocked from process start in every thread, consumed at chunk boundaries by `SignalGuard`, which also records and repairs a replaced OS handler | `diagnosis/probe/sigprobe-cpu.log`, doctor `usr1_displaced` (images 763, 770, 776), `tests/pid1-image-770/`, `tests/pid1-image-776/` (entry point as the container's PID 1 with a real Triton compile; v2 exit 75 with marker, v1 exit 0 without), live: `timing-766/termination.env.txt` (`signal_USR1_checkpoint_confirmed`, exit 75) |
-| (iii) CPU bottleneck removed without changing results | cause and fix below | `timing-766/`, `diagnosis/prof-out/`, doctor `equivalence`/`end_to_end`/`timing_profile` |
+| (iii) CPU bottleneck removed without changing any computed quantity | cause and fix below; every change is bit-equal except the 4B lane's cuDNN switch, which changes computed quantities and so departs from (iii) (registration decision 18; the owner's decision must amend (iii) for that lane, "Review fixes" below) | `timing-766/`, `diagnosis/prof-out/`, doctor `equivalence`/`end_to_end`/`timing_profile` |
 | validity gate | the v2 0.6B lane must reproduce job 727's receipt to 1e-6 (every numeric leaf of `report`, `decisions`, `coverage`, `artifact_counts`, `selectors`, `attention_layers`; `hashes.dev_artifact_sha256` exact) and smoke 452 within 0.5 points, else INVALID and the 4B lane does not run | `harness/dense_headroom_v2.py::v1_reproduction`, filler `check_small_lane_receipt`, summariser, doctor `v1_gate` |
-| timing job (at most 0.1 GPU-h) | Slurm 766, 6-minute limit, registered subset; 205 s | `timing-766/` |
-| limits and caps | 0.6B 12 min (0.20 GPU-h) from job 727's 278 s; 4B 45 min (0.75 GPU-h); timing 6 min (0.10); total 1.05 of 1.5 | `harness/dense_headroom_v2_lanes.py`, registration Compute |
+| timing job (at most 0.1 GPU-h) on the fixed 4B path | Slurm 766, 6-minute limit, registered subset; 205 s; it ran the path before the fix (cuDNN's attention on), so the fixed path was not timed and has not run on a GPU | `timing-766/` |
+| limits and caps | 0.6B 12 min (0.20 GPU-h) from job 727's measured 278 s; 4B 45 min (0.75 GPU-h), projected, not measured (a departure from D36's timing rule, for the owner's decision); timing 6 min (0.10); total 1.05 of 1.5 | `harness/dense_headroom_v2_lanes.py`, registration Compute |
 
 ## SIGUSR1 (job 730's defect)
 
@@ -157,9 +157,55 @@ frozen commit (freeze procedure), not these.
 
 `freeze-simulation/`: on a scratch clone, never the real ledger.
 
+## Review fixes (after `fd8e906`; code at `b8977d9`)
+
+A review of the draft found six blocking issues. All are real; none needed a
+GPU job, and the limits, caps and every computed quantity are unchanged. Two
+of them can only be closed by the program owner, and the registration now
+says so instead of presenting them as settled.
+
+| Finding | Disposition |
+|---|---|
+| 1, 6: the 4B lane's cuDNN switch changes computed quantities, which D36 (iii) rules out, yet decision 18 was titled "Evaluation equal to v1's (D36 (iii))"; the carried "same code" wording implies the 0.6B gate covers the 4B backend | Real. No bit-equal alternative exists: any other attention backend changes the bf16 accumulation order, and keeping cuDNN keeps the per-shape graph build. Decision 18 is retitled as a departure from D36 (iii); the status paragraph, the design-decision lead-in, Changes item 4 and freeze step 1 say the owner's decision must amend D36 (iii) for the 4B lane or require another fix; decisions 18 and 19 say the job-727 gate and smoke 452 do not cover the backend and that `attention_backend_check`, descriptive, is the only check; decision 18 qualifies v1's carried wording (decision 11 and the INVALID rule stay verbatim, as the carried-text test requires). The amendment itself is not recorded here: it is the owner's decision. |
+| 2, 5: the registered 4B path (cuDNN off) has never run on a GPU, and its limit is a projection, not the measurement D36 asks for | Real. No GPU job was run. None of this round's fixes changes evaluated code (the entry point's change is a docstring and a comment), and what is left of the timing allowance cannot hold a job: 6 minutes less job 766's 5 charged minutes under the run-root rule (`ceil(205 s / 60) + 1`) leaves 1, against the 5 any job needs (0.043 GPU-h physical, also under 5 minutes). Compute, decisions 20 and 21, Changes item 6 and the status say the 4B limit is projected, not measured, that the fixed path has not run on a GPU, and that the lane completes only if that path averages at most about 2.1 s per unit (`large_lane_break_even_unit_s`). The owner's decision must amend D36's timing rule for the 4B lane, or authorise a second timing job (at most 0.1 GPU-h, 1.15 of 1.5; a fresh timing run root, because the filler refuses a second job in `timing-qwen3.5-4b-base`), whose measurement then replaces the projection before the freeze. |
+| 3: decisions 20 and 21 and the lanes docstring call the 4B limit measured and job 766's path the fixed one | Real. Decision 21: job 766 ran the 4B path before the fix (cuDNN's attention on). Decision 20: the 0.6B limit is measured; the 4B limit doubles a warm-shape projection, doubled again, and departs from D36's timing rule. `harness/dense_headroom_v2_lanes.py`: docstring corrected; `LARGE_LANE_MEASURED` renamed `LARGE_LANE_PROJECTED` (`measured: False`, `evaluation_entering_rule_s`); the 4B template's comment likewise. Code table re-rendered. |
+| 4: freeze step 1 rewrote only the status paragraph, so the frozen file would keep "wait for the program owner's acceptance" in the design-decision lead-in | Real. Step 1 now rewrites the lead-in as well. In frozen mode `test_status_and_decisions` refuses any draft wording ("DRAFT", "wait for the program owner") and requires the status paragraph and the lead-in to name a decision after D36 in `program/decisions.md` that names this experiment and amends D36 (iii). |
+
+Checks at `b8977d9` (all CPU; the real ledger untouched, nothing pushed):
+
+- Locally (macOS): the v2, v1 dense and preregister tests 109 passed, 9
+  skipped; `ruff check .` clean.
+- Host suite (fresh `~/cotcodec-scratch/` clone of a bundle, `uv sync
+  --locked --extra dev`, Slurm CPU step 802): 2,213 passed, 40 skipped, 0
+  failed (`review-fixes/tests/host-suite-b8977d9/`).
+- Image `sha256:5281ac01...` built by Slurm 801 (CPU-only build path, fresh
+  clone of `b8977d9`, source tar `4e040f36...`; `review-fixes/images/`). v2
+  CPU doctor in it (Slurm 803, network none): DENSE_V2_DOCTOR_PASS, 12/12
+  (`review-fixes/doctor/`). The torch-dependent dense tests inside it
+  (Slurm 804; the earlier list plus the v2 prereg and manifest tests): 52
+  passed (`review-fixes/tests/torch-in-image-801/`). The PID-1 SIGUSR1 test
+  against it (Slurm 805): passed (`review-fixes/tests/pid1-image-801/`).
+- Freeze simulated on three fresh local scratch clones of `b8977d9`, each
+  chained onto the branch's ledger head (11 rows, `dc39bfa2...`;
+  `review-fixes/freeze-simulation/`, `simulate.sh` and `rewrite.py`). A
+  stand-in decision "D42 FREEZE SIMULATION ONLY" was added to the clone's
+  `program/decisions.md` only. `full` (step 1 as now registered: status and
+  lead-in rewritten, naming the stand-in): freeze, verify and check-chain
+  (12 rows PASS) exit 0; no draft wording left; frozen-mode tests (v2 and v1
+  prereg, v2 manifests, preregister) 26 passed; the entry point's code table
+  matches the clone; the 0.6B fill with a stand-in image receipt exit 0 and
+  differs from the template only in the FILL values; the 4B fill without the
+  small-lane receipt exit 2; submitter dry run exit 0 (0.2 GPU-h).
+  `status-only` (the old step 1): the frozen file keeps "wait for the program
+  owner", and `test_status_and_decisions` fails. `wrong-dec` (both rewritten
+  but naming D41): `test_status_and_decisions` fails, "names no decision that
+  accepts v2 and amends D36 (iii)".
+
 ## Files
 
 - `diagnosis/`: probes (CPU) and their logs; CPU profiles.
 - `timing-766/`: the timing job's run-directory files, receipt, progress,
   observation and collection scripts, filler and submitter records.
 - `images/`, `doctor/`, `tests/`, `freeze-simulation/`; `operator-log.txt`.
+- `review-fixes/`: the review round's freeze simulations, image 801, doctor
+  and test runs.

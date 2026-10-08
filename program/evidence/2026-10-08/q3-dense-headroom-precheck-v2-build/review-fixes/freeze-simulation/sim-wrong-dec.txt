@@ -1,0 +1,23 @@
+clone of b8977d9d188cb7aa8c72414fe8ddd566627c614f mode=wrong-dec
+ledger rows before:       11
+wrong-dec rewritten
+{
+  "experiment_id": "q3-dense-headroom-precheck-v2",
+  "frozen_at": "2026-10-08T09:29:27.968499+00:00",
+  "git_head_at_freeze": "c7cdb9511bfdf4e3600918bd9031264941bb88dc",
+  "hash": "532d43240080556e0a8397ad173b4d01bd0ac9b3bf6acb97bc83e55d49d0ea26",
+  "path": "program/preregistrations/q3-dense-headroom-precheck-v2.md",
+  "previous_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439",
+  "sha256": "045051ebc9c4ea19c4352446f961c275136525537569ca3b3f7c20ce79465e87"
+}
+freeze exit=0
+verify exit=0
+{"rows": 12, "status": "PASS"}
+check-chain exit=0
+simulated freeze commit 4c70a11d81883245f8a129fae1c9b4a35314c613
+frozen file contains 'DRAFT': False
+frozen file contains 'wait for the program owner': False
+E           AssertionError: the frozen status names no decision that accepts v2 and amends D36 (iii)
+FAILED tests/test_dense_headroom_v2_prereg.py::test_status_and_decisions - As...
+1 failed, 25 passed in 31.41s
+pytest exit=1
