@@ -862,6 +862,34 @@ Append-only. Newest entries at the bottom.
   `program/evidence/q2-mutation/integration/rater-isolated-dev-v4/` and
   `dev-mutants-v9/`. No GPU used. Not frozen.
 
+## 2026-10-07 — Q1 Stage 0 engineering pass and re-pilot (D31)
+
+- Branch `stage0/q1-engineering-d31` (not merged, not pushed). Reference store
+  (`harness/q1/refstore.py`, `refschedule.py`): reference items compute the
+  fp32 device, TF32, CPU fp32 and fp64 references, gate (c)'s validity gate and
+  A5's reference calls once per problem, replicate and channel; consumers read
+  the entry or compute inline. No registered quantity changed (plan hash
+  untouched). The runner gained item requirements and per-item journals.
+- Equivalence: identical rows on the doctor's synthetic corpus (except a kernel
+  that reads unwritten memory, whose rows main does not reproduce either) and
+  on the committed integration fixtures; a differential against main@47f5fbc
+  agrees.
+- Re-pilot `q1-repilot/1` (Slurm 713, image `:8e9d2574` from CPU-only build
+  710; 0.330 GPU-h of the 0.5 cap): 8 S1-cal problems without evaluation
+  units, 24 kernels, inline and store twins of every scoring item. 843 twin
+  rows compared, 828 same verdict; every difference explained (inline cuDNN
+  nondeterminism on L2/77, mutants A4 finds faulty, A4 probes, memory
+  contention), none by the store.
+- Cost: the store saves on gate c (42%), A1 (25%), A2 (17%), A3, A5; reference
+  items cost about as much at in-scope sizes (store arm plus references 1.19x
+  inline at three kernels per problem). Trim/2 high through P3: 8.81-9.85 with
+  the store, 9.03 without, 8.56 at the bound of any store design. Stage 0 is
+  not admitted under D31; it waits on the gauntlet (D24) or Kevin.
+- Finding: at 12 units per GPU, 97 items on 3 of 8 problems (parameters and
+  activations, not inputs) ran out of GPU memory in both arms, and failed
+  health checks under contention retired 5 of 12 slots. The projections are
+  lower bounds for such problems; a memory-aware unit rule is needed first.
+
 ## 2026-10-07 — Q3 dense headroom pre-check: D32 applied, design accepted with four amendments (branch `stage0/q3-dense-d32`, not frozen)
 
 - Basis: the second fresh pre-freeze audit
@@ -1017,3 +1045,97 @@ Append-only. Newest entries at the bottom.
   pre-check operated); its ledger still equals the branch's.
 - Next: a narrow re-check of the eighth draft, Kevin's sign-offs (section
   17), re-merge main, freeze.
+
+## 2026-10-08 — Q3 dense headroom pre-check operated (freeze steps 3-5, branch `ops/q3-dense`): INCOMPLETE, no combined read
+
+- Registration `q3-dense-headroom-precheck-v1` (ledger row `94520a99`,
+  freeze commit `a369e6d`). Evidence:
+  `program/evidence/2026-10-08/q3-dense-headroom-precheck/` (README, operator
+  log, receipts, claims, orx logs, Slurm records, summariser output).
+- Step 3: a fresh clone of main at `a369e6d` on the host passed
+  `preregister.py verify` and `check-chain`, and all 17 tabled digests. Image
+  build Slurm 723 (CPU only): `sha256:60e8d442...`, source tar `fc386fae...`.
+  CPU doctor Slurm 724 in that image (`--network none`, no GPU, the image's
+  baked source): DENSE_DOCTOR_PASS, 7/7, code digests equal the table.
+- Step 4, Qwen3-0.6B-Base: filled on the host (slot-0 claim), dry-run and
+  test-only passed, submitted once by orx node `7c344837` (commit `38cf069`,
+  ssh backend) as Slurm 727: COMPLETED 0:0 in 278 s, provenance PASS,
+  ORX_RESULT exit 0. Receipt `PRECHECK_COMPLETE`; K1 smoke 452 REPRODUCED
+  (gaps below 1e-6 points). Lane NOT_VIABLE: H1_CX 12.25 (99% lower bound
+  8.98), H2a 31.43, H2b -3.93 (`h2_status` FAIL); lexical confound, entity
+  control and null calibration NOT_EVALUABLE; floor NOT_VIABLE; fertility
+  STRONG.
+- Step 4, Qwen3.5-4B-Base: filled with `--small-lane-receipt` (slot-0
+  claim), dry-run and test-only passed, submitted once by orx node
+  `51d32d53` (commit `c84c9aa`) as Slurm 730: FAILED 137:0 at its 21-minute
+  limit. It evaluated 18 of 74 chunks at about 61 s each (GPU idle when
+  sampled, one CPU core busy), did not act on SIGUSR1 (two chunks saved after
+  it, no marker) and was killed by the hard stop
+  (`signal_USR1_checkpoint_timeout`). The filler refused a re-run (-1 of 21
+  minutes left; the job is charged 22) and a continuation (no confirmed
+  checkpoint). The lane is void and INCOMPLETE.
+- Step 5: the registered summariser exited 2 on the 0.6B receipt ("the
+  receipt's Slurm job is not its job directory"): the entry point records
+  `SLURM_JOB_ID` from inside the container, the batch script never passes it,
+  and the summariser requires the field. Not a registered void rule; no code
+  was edited. Under the registration's rule the combined read is INCOMPLETE
+  (the 4B lane has no receipt); it was not written, and no base, K1 v3 design
+  or stop is read.
+- GPU time: 0.4189 GPU-h used (727 0.0772, 730 0.3417), 0.4667 charged under
+  the registration's rule; ledger rows use the physical figures, as earlier rows do, with the charged figures noted. Jobs 723 and
+  724 CPU only.
+- Decision for Kevin (pending in `program/state.json`): whether and how a
+  successor id runs. It would need the receipt's Slurm job id bound, the 4B
+  lane sized from the measured rate, and SIGUSR1 handled on the 4B path.
+
+## 2026-10-07 — Q1 D31 review fix pass: memory-aware execution, contention-safe health check, store narrowed (branch `stage0/q1-engineering-d31`, not merged, not frozen)
+
+- Main (D32-D35, the Q3 dense pre-check freeze) merged into the branch; the GPU
+  total equals the ledger sum (2.7668 GPU-h). No GPU was used in this pass.
+- Review of `@f7373aa` (not ready to freeze; D31 verdict computed as
+  registered). Every finding was checked against job 713's journals, reference
+  journal and the store's use records, and reproduced: 97 shared out-of-memory
+  items, 93 never final, 5 slots retired; A5's `na` path dropped the
+  reference's out-of-memory text; 10 of 13 failed reference items left
+  permanent unusable entries (37 of 189 lookups fell back inline); the pilot
+  size model under-predicts the re-pilot's own inline items x1.72 (x0.95
+  without L2/59, L2/87, L2/100); 124.6 GB written to the store; the
+  references-free bound used the post hoc ratio (9.08 with the pre-specified
+  one). One correction to the record: L2/46 was cut after 21 items (10 twin
+  pairs), not left unstarted.
+- Execution policy `q1-stage0-exec/2` (`harness/q1/memory.py`, meta-device
+  `memory_table.json`): units per item from estimated (or measured) peak GPU
+  memory with gate profiles, never below the old native-input rule; a
+  free-memory guard before an item starts; the runner records each worker's
+  peak memory. Health check: a failed check drains the GPU and repeats alone;
+  only a failure alone stops the GPU (`gpu-health-fault`, `gpu-memory-held`).
+  One resource-failure list (`faults.py`, cuBLAS/cuDNN allocation included).
+- Store: gate (a) is no longer a consumer (gate_a.py back to pre-D31); a raised
+  reference makes the entry unusable; a resource failure writes no entry and
+  is retried alone while consumers wait; input fingerprints per draw (A5 per
+  reference call); gate (c) replays skipped reference forwards on a mid-item
+  fallback; no tensors for unusable entries; entry cap 50 GB, live cap 400 GB,
+  tensors deleted after the last consumer. The documented residual difference:
+  a candidate that changes process-global state at import is judged against a
+  clean reference by c and A1-A5.
+- Projection through P3 (`fixpass/projection-fixpass.json`): the registered
+  table reproduces; store without gate (a) 9.15 high (pre-specified), 8.76
+  (post hoc); under `q1-stage0-exec/2` (model-based) 10.46 central and 12.31
+  high without the store, 11.10 high at the references-free bound. The exec/2
+  model predicts the re-pilot's items at x0.81 of measured cost. **D31 verdict
+  unchanged: not admitted**; Q1 waits on the gauntlet (D24) or Kevin.
+- Exposure ledger entry for job 713 (`repilot-713-exposure.json`): 24 S1-cal
+  kernels, no evaluation unit. Registration sections 2.1 (version card), 10,
+  18.7 items 6-7, 18.8 and new 18.9 updated.
+- Checks: host (rsync of the worktree into a fresh scratch dir, `uv sync
+  --locked --extra dev`): full suite 1834 passed, 37 skipped; `ruff check .`
+  passes. Every `tests/test_q1_*.py` in a CPU-only, network-less container of
+  image `cotcodec-q1-gates:8e9d2574` (CPU-only Slurm steps, no GPU requested;
+  KernelGYM and KBV clones mounted read-only): 402 passed. A first container
+  run found two test faults, both fixed: the integration test still passed
+  0.899 spent hours (now refused by the ledger guard), and the equivalence
+  comparison was sensitive to the static checker's set order (a hash-seed
+  effect, not the store's). The new tests fail without the fixes (checked by
+  disabling the gate (c) replay and A5's per-call check).
+- Waiting on Kevin: sign-off of `q1-stage0-exec/2` and the store policy, the
+  budget path, D14 findings 18.3 items 6-8, D28/D29.

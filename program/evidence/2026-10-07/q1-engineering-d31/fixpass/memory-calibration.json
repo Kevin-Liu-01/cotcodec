@@ -1,0 +1,8 @@
+{
+ "attempts": 699,
+ "largest_estimate_sum_gb_without_a_resource_failure": 404.4,
+ "median_estimate_sum_gb_with_a_resource_failure": 330.5,
+ "seconds_over_12_units_without_a_resource_failure": 299.7,
+ "smallest_estimate_sum_gb_with_a_resource_failure": 123.1,
+ "smallest_units_sum_with_a_resource_failure": 24
+}
