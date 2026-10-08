@@ -80,7 +80,7 @@ nothing.
    directory's name, and the doctor never passes an entry-point receipt to the
    summariser, so neither caught it.
 2. **The 4B lane needs several times its registered minutes.** Stage A chunks
-   (16 units) took about 61 s each after a 2-minute start-up: 18 of 73 chunks
+   (16 units) took about 61 s each after a 2-minute start-up: 18 of 74 chunks
    in 20 minutes, against an estimate of 11 minutes for the whole lane. During
    sampling the GPU was idle (0 percent in 10 samples) and the job's python
    process held one CPU core at 94-98 percent
