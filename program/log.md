@@ -2472,3 +2472,67 @@ they say so.)
 - Next: this run's blind critic (fresh packets including Lost in
   Compression), refute-first triad and two reviewers, then the recorder.
   Admission stays Kevin's under D24.
+
+## 2026-10-08 — K1 v3 gauntlet wave 2 (fresh run under D48): score 55, honest exit (branch `gauntlet/k1-v3`, not merged)
+
+- Fresh run (workflow `wf_2605eba0-3f4`; budgets queries 60, wall_minutes
+  600, tokens 8,000,000, dollars 150, waves 1, gpu_hours 0.3) on the repaired
+  proposal (`4def0af9...`, commit `fcb303d`) and DRAFT registration
+  (`08fa52ca...`, not frozen, not admitted). Audit row 2 appended to
+  `program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl` (wave 2 of the
+  gauntlet, wave 1 of this run), row hash
+  `c56037c94502fbc4e664185124b7befc4c9ec17859fdfd4b01fe1de03c30ee8f`.
+- Reviews: 55 (claude-opus-5-5) and 70 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1002). Both totals equal their dimension sums and sit below every cap (74,
+  79, 89). Score 55, best 55. Trajectory: 45 (K1 v2), 51 (K1 v3 wave 1), 55.
+  Neither review is signed (D24).
+- Refute-first triad: 3 of 3 refuted again. Novelty: trivial recombination
+  only (about 0.6), adding that ledger row 3 compresses XProvence's
+  (2601.18886) seen/unseen-training-language split. Identification and
+  feasibility: GO is not identified (below). The already-published prong
+  fails: no direct prior found through 2026-10-08 under this run's 34 counted
+  queries plus wave 1's coverage.
+- Blind discrimination: void this run. The critic judged the proposal
+  stronger, but its B packet (Oracle-Guided 2606.07703) carried an appended
+  note naming that paper and the Lost in Compression packet, and the critic
+  used the label against B. The cause was the repair's closest-prior field
+  passed verbatim by the workflow script. Only that one comparison ran; the
+  Lost in Compression and SpotAttention packets were not judged. Wave 1's
+  blind test (passed) remains the only valid one. Cap 74 already applies for
+  incomplete coverage, so the score is unchanged.
+- Largest defect: GO is not identified as drafted; the NEGATIVE that D48
+  targeted is materially repaired. GO's guard against long-range spill is
+  PRE, which the registration drops below 40 percent family coverage; two
+  independent model-free checks on the development text put coverage at
+  0.19-0.22 (only a 400-id stop list clears 40 percent; the registered stop
+  lists are not built). Without PRE, the repair's own S2 gives
+  P(GO | no excess, spill +10) 0.225, wave 1's figure. GO also lacks a
+  direction or floor condition, and a multiplicative query-by-passage loss
+  reads as "mismatch" (10.9 points at r 0.2, H 40; P(GO) 0.44 in the
+  identification refuter's re-run). S2 assumes 89 passage clusters; the
+  development text gives 66, where P(NEGATIVE | no excess) is 0.75 at seed SD
+  1 and 0.38 at seed SD 2. All of it is checkable in the DRAFT without GPU.
+- Honest exit: wave cap (1 of 1) and token budget overrun. The token counter
+  (row-1 convention) reads 8.62M against 8M; the repair owner alone used
+  5.71M. Only a reading that also excludes this recorder is under (7.93M).
+  Queries 34 of 60, $114.62 of $150 list-price equivalent, 176 of 600
+  minutes. The doctor re-run is byte-identical to the bundle copy (FAIL as
+  expected). Run against this file, its audit check would also flag the
+  run boundary (row 1's hash and counters against the fresh budgets, two rows
+  against waves=1); recorded in the row, nothing edited.
+- GPU: reviewer 2 job 1002 used 0.0564 GPU-h (scontrol RunTime 00:03:23 on 1
+  H100, COMPLETED 0:0, no leftover container), added to the ledger as "K1 v3
+  gauntlet wave 2 (fresh run under D48) open-weight review (D24)". Program
+  total 4.738. No screen GPU work ran.
+- Waiting on Kevin: whether K1 continues at all (three consecutive K1 waves
+  stopped 3 of 3 at the triad, each on one decisive verdict's identification
+  and on decisiveness), or closes as Q3's attachment screen with the dense
+  pre-check and these records as its outcome. If it continues: the stage-0
+  facts with the registered stop lists first, a PRE redesign or dense-only
+  spill bound, GO direction, floor and log-scale conditions, S2 with
+  non-additive generators and 66 clusters, a measured kappa, and a properly
+  blinded critic per prior packet. Also pending: the lane-862 CPU reads,
+  decision 64, the five-seed option, D24 admission (high cap 9.46 GPU-h), and
+  this run's token overrun. The Q3 pending-decision line in
+  `program/state.json` was left unchanged to avoid merge conflicts; update it
+  at merge.
