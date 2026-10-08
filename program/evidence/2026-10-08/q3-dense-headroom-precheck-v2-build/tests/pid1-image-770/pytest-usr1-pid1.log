@@ -1,0 +1,6 @@
+.                                                                        [100%]
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_dense_headroom_v2_usr1_pid1.py::test_usr1_reaches_pid1_after_triton_replaced_the_handler
+1 passed in 46.21s
+exit=0

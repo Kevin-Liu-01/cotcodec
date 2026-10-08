@@ -1,0 +1,81 @@
+         7732 function calls (6964 primitive calls) in 0.177 seconds
+
+   Ordered by: internal time
+   List reduced from 253 to 25 due to restriction <25>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       20    0.065    0.003    0.065    0.003 {built-in method torch._C._nn.scaled_dot_product_attention}
+       12    0.017    0.001    0.049    0.004 /work/harness/sparse_indexer_bank.py:540(select_blocks)
+       20    0.013    0.001    0.013    0.001 {built-in method torch.topk}
+        1    0.012    0.012    0.082    0.082 /work/harness/dense_headroom_torch.py:121(select_unit)
+      231    0.007    0.000    0.007    0.000 {method 'to' of 'torch._C.TensorBase' objects}
+       44    0.007    0.000    0.007    0.000 {built-in method torch.where}
+      145    0.007    0.000    0.007    0.000 {built-in method torch._C._nn.linear}
+       16    0.005    0.000    0.016    0.001 /work/harness/sparse_indexer_bank.py:509(_ordered_int)
+       24    0.004    0.000    0.004    0.000 {built-in method torch.isfinite}
+       98    0.003    0.000    0.003    0.000 {built-in method torch.cat}
+       96    0.003    0.000    0.003    0.000 {method 'sum' of 'torch._C.TensorBase' objects}
+       24    0.003    0.000    0.003    0.000 {method 'masked_fill' of 'torch._C.TensorBase' objects}
+       85    0.002    0.000    0.007    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:59(forward)
+       20    0.002    0.000    0.004    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:147(apply_rotary_pos_emb)
+      111    0.002    0.000    0.002    0.000 {method 'mean' of 'torch._C.TensorBase' objects}
+       74    0.001    0.000    0.001    0.000 {method 'reshape' of 'torch._C.TensorBase' objects}
+       12    0.001    0.000    0.001    0.000 {built-in method torch.randn}
+        4    0.001    0.000    0.006    0.002 /work/harness/sparse_indexer_bank.py:580(union_hits)
+       85    0.001    0.000    0.001    0.000 {method 'pow' of 'torch._C.TensorBase' objects}
+        4    0.001    0.000    0.002    0.001 /work/harness/dense_headroom_torch.py:87(expected_topk_hits)
+       62    0.001    0.000    0.001    0.000 {built-in method torch.arange}
+       40    0.001    0.000    0.002    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:140(rotate_half)
+       17    0.001    0.000    0.001    0.000 {built-in method torch.stack}
+    330/5    0.001    0.000    0.094    0.019 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1783(_call_impl)
+        8    0.001    0.000    0.001    0.000 {method 'all' of 'torch._C.TensorBase' objects}
+
+
+         7732 function calls (6964 primitive calls) in 0.177 seconds
+
+   Ordered by: cumulative time
+   List reduced from 253 to 40 due to restriction <40>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.177    0.177 /work/harness/dense_headroom_torch.py:213(evaluate_unit)
+    330/5    0.000    0.000    0.094    0.019 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1775(_wrapped_call_impl)
+    330/5    0.001    0.000    0.094    0.019 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1783(_call_impl)
+        5    0.000    0.000    0.094    0.019 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/utils/generic.py:933(wrapper)
+        5    0.000    0.000    0.094    0.019 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:446(forward)
+        5    0.000    0.000    0.093    0.019 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/utils/generic.py:1006(wrapper)
+        5    0.000    0.000    0.093    0.019 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/utils/output_capturing.py:231(wrapper)
+        5    0.000    0.000    0.093    0.019 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:364(forward)
+       20    0.000    0.000    0.089    0.004 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/modeling_layers.py:79(__call__)
+       20    0.001    0.000    0.089    0.004 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:294(forward)
+        1    0.012    0.012    0.082    0.082 /work/harness/dense_headroom_torch.py:121(select_unit)
+       20    0.000    0.000    0.080    0.004 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py:1795(inner)
+       20    0.001    0.000    0.080    0.004 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:241(forward)
+       20    0.000    0.000    0.067    0.003 /work/harness/sparse_indexer_torch.py:105(_capture_attention)
+       20    0.000    0.000    0.066    0.003 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/integrations/sdpa_attention.py:79(sdpa_attention_forward)
+       20    0.065    0.003    0.065    0.003 {built-in method torch._C._nn.scaled_dot_product_attention}
+       12    0.017    0.001    0.049    0.004 /work/harness/sparse_indexer_bank.py:540(select_blocks)
+        1    0.000    0.000    0.019    0.019 /work/harness/dense_headroom_torch.py:191(option_scores)
+        1    0.000    0.000    0.019    0.019 /work/harness/sparse_indexer_k1_runtime.py:803(_option_scores)
+       16    0.005    0.000    0.016    0.001 /work/harness/sparse_indexer_bank.py:509(_ordered_int)
+       20    0.013    0.001    0.013    0.001 {built-in method torch.topk}
+      231    0.007    0.000    0.007    0.000 {method 'to' of 'torch._C.TensorBase' objects}
+       44    0.007    0.000    0.007    0.000 {built-in method torch.where}
+      145    0.000    0.000    0.007    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/nn/modules/linear.py:130(forward)
+      145    0.007    0.000    0.007    0.000 {built-in method torch._C._nn.linear}
+       85    0.002    0.000    0.007    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:59(forward)
+        4    0.001    0.000    0.006    0.002 /work/harness/sparse_indexer_bank.py:580(union_hits)
+       20    0.000    0.000    0.004    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:81(forward)
+       24    0.004    0.000    0.004    0.000 {built-in method torch.isfinite}
+       20    0.002    0.000    0.004    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:147(apply_rotary_pos_emb)
+        4    0.000    0.000    0.003    0.001 /work/harness/sparse_indexer_torch.py:317(block_targets)
+       98    0.003    0.000    0.003    0.000 {built-in method torch.cat}
+       96    0.003    0.000    0.003    0.000 {method 'sum' of 'torch._C.TensorBase' objects}
+       24    0.003    0.000    0.003    0.000 {method 'masked_fill' of 'torch._C.TensorBase' objects}
+        4    0.001    0.000    0.002    0.001 /work/harness/dense_headroom_torch.py:87(expected_topk_hits)
+       20    0.000    0.000    0.002    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/cache_utils.py:1349(update)
+       20    0.000    0.000    0.002    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/cache_utils.py:127(update)
+       40    0.001    0.000    0.002    0.000 /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py:140(rotate_half)
+      111    0.002    0.000    0.002    0.000 {method 'mean' of 'torch._C.TensorBase' objects}
+        4    0.000    0.000    0.002    0.000 /work/harness/sparse_indexer_bank.py:212(causal_probs)
+
+
