@@ -1,0 +1,653 @@
+{
+ "python": "3.12.13 (main, Jul 18 2026, 17:02:19) [Clang 22.1.3 ]",
+ "implementation": "CPython",
+ "n_distributions": 129,
+ "fingerprint_sha256": "e591c8875c353ecbf6ec38b6c9c467e01b4164cc129744bd51e27c993310417a",
+ "distributions": [
+  {
+   "name": "audioread",
+   "version": "3.1.0",
+   "record_sha256": "428a76bab1ef230dd97d88e7214f179a230b05491d68f191bd61d216f31a8fe2"
+  },
+  {
+   "name": "beautifulsoup4",
+   "version": "4.15.0",
+   "record_sha256": "d66734c0b7a8e4d1077ad38ba04541c15514f2a3ac92e39b3907483ced024c6f"
+  },
+  {
+   "name": "borb",
+   "version": "2.1.25",
+   "record_sha256": "97312324966056e4fe6d0d595a84ac161051df67192103abd93c4e1de990bba2"
+  },
+  {
+   "name": "certifi",
+   "version": "2026.7.22",
+   "record_sha256": "cff9d243744c96445494c29abee3d592d0a6955d5504f4fbe034dce7aaf38490"
+  },
+  {
+   "name": "cffi",
+   "version": "2.1.1",
+   "record_sha256": "cfebdfdd082aef13b7ad2d48243dc5273e9f17ee6531ce1afed7b476a215074c"
+  },
+  {
+   "name": "chardet",
+   "version": "7.6.0",
+   "record_sha256": "c3559e0a24dae3558463b2325eb020e91b3382b1fdf8d7878dff36a45b9fbcbf"
+  },
+  {
+   "name": "charset-normalizer",
+   "version": "3.5.2",
+   "record_sha256": "9f12b090f6ab2ba4967675e512abb88aa68d9de8ffa58fee5bb6b020dd2b12ff"
+  },
+  {
+   "name": "cli_exit_tools",
+   "version": "1.2.7",
+   "record_sha256": "a2f8a5be230dd6b667c744e4848304984ad5d976534ba43ee5435fd20af17820"
+  },
+  {
+   "name": "click",
+   "version": "8.5.0",
+   "record_sha256": "924078ec3a47b97192425dbc0c3693085af7a7b863afcf6b4e110cf0bd97dea4"
+  },
+  {
+   "name": "cloudpickle",
+   "version": "3.1.2",
+   "record_sha256": "a24820e3d3ea3f0fb210f58b84abb5450a94cc649e573a9a0a69354afc6fa1de"
+  },
+  {
+   "name": "cryptography",
+   "version": "50.0.2",
+   "record_sha256": "61fa4cc2e3dfd89909ef58ce6e58bee07059008ec542e091750c6b51bf138edf"
+  },
+  {
+   "name": "cssselect",
+   "version": "1.5.0",
+   "record_sha256": "3e56eed77132213ae2812a49d6abdb28b3d293055e04b21e82185bb8a1f75f33"
+  },
+  {
+   "name": "decorator",
+   "version": "5.3.1",
+   "record_sha256": "7c490ad9278bafef19a0455a7ec324a1c1bf31c3c6eb946afc0d6f30423502db"
+  },
+  {
+   "name": "defusedxml",
+   "version": "0.7.1",
+   "record_sha256": "8d83b6f0c94380f24506bd6d01e9a3a8858aac7a9118bc9e7dee21e6b566d13c"
+  },
+  {
+   "name": "dill",
+   "version": "0.4.1",
+   "record_sha256": "52eb0f57c0eef069aa67203ce075535afa012ddd5e1958bb406f465719f4c4f5"
+  },
+  {
+   "name": "dotenv",
+   "version": "0.9.9",
+   "record_sha256": "eb79d5c8dcc7eae2d4568e7d4027af00e9c561b692fa2916ab03f6277dbb97f5"
+  },
+  {
+   "name": "easyocr",
+   "version": "1.7.2",
+   "record_sha256": "3b12009d252a5640cf632b5a85b0ae0187cec9994eb4007fc64f71cd6b1bfe4d"
+  },
+  {
+   "name": "et_xmlfile",
+   "version": "2.0.0",
+   "record_sha256": "0f0861905c07d20c301567320c32950ef93b01084295cc11d54ba9705eb269bb"
+  },
+  {
+   "name": "Farama-Notifications",
+   "version": "0.0.6",
+   "record_sha256": "1f263ba114522a87305f3c3036e1ee1e3df172d72fc05a08850464f5bfb4a9f3"
+  },
+  {
+   "name": "fastdtw",
+   "version": "0.3.4",
+   "record_sha256": "5c88e4be5d578e72be8a36f9d9c9297f2cf0d3ba976ef9ffda024b3389d3ea98"
+  },
+  {
+   "name": "filelock",
+   "version": "3.32.3",
+   "record_sha256": "977b6b42d26c24d999d1babdcd700a9cb146c085a61de15f7b252e2e441aee04"
+  },
+  {
+   "name": "fonttools",
+   "version": "4.66.1",
+   "record_sha256": "1e17e134ca7af9fe8c1b20cc2af87bd59fe17bf1f6c88023805f20a9e858fa48"
+  },
+  {
+   "name": "formulas",
+   "version": "1.3.3",
+   "record_sha256": "cfc0e67e8e36c87a92214a114471d3e772f3667f165c398cdae7265992164136"
+  },
+  {
+   "name": "fsspec",
+   "version": "2026.7.0",
+   "record_sha256": "bf8970ef32f4fa1da4c23e55e648fbcd3980d3d67f14268a514a5973514fd2a0"
+  },
+  {
+   "name": "func_timeout",
+   "version": "4.3.5",
+   "record_sha256": "1e18cfee1b91f0aa52421709516ffb47eb99713b595e8a055fd5d7bf85392683"
+  },
+  {
+   "name": "google-api-core",
+   "version": "2.41.0",
+   "record_sha256": "688700d174693bbf1082d82cf707e5fe671949352bc4f2e905123fc78d1096cc"
+  },
+  {
+   "name": "google-api-python-client",
+   "version": "2.201.0",
+   "record_sha256": "7880216cf73906e4fd14e27f77f3afa298a58cca1598f47311b94c2cb815e4ac"
+  },
+  {
+   "name": "google-auth",
+   "version": "2.60.0",
+   "record_sha256": "8ab50b1a20cf22b1e835c4788a725fa19d423551a22d4ccf48bfbf8ca888c33b"
+  },
+  {
+   "name": "google-auth-httplib2",
+   "version": "0.4.4",
+   "record_sha256": "3569dabd100dcaa3ef7b8a200e3d64a35941f9d003d317d338b6db1e4cc84578"
+  },
+  {
+   "name": "googleapis-common-protos",
+   "version": "1.75.5",
+   "record_sha256": "aae271525ae9a6bfe5e6397e93502e99ff9e900f5e3449006aa70fbde9e95f43"
+  },
+  {
+   "name": "greenlet",
+   "version": "3.5.6",
+   "record_sha256": "8ce9b5af8fb2057ace3f49a400e166e0cc2166a9a176e71d8cacd76e1f061a2b"
+  },
+  {
+   "name": "gymnasium",
+   "version": "0.28.1",
+   "record_sha256": "d3f579ce84b762bbff1415f39bd1924c50ca321d1a32553ac9861ee75b698ab1"
+  },
+  {
+   "name": "httplib2",
+   "version": "0.32.0",
+   "record_sha256": "be757c2bd47874ff9d11a263c1fc32cd9a7cb73a249a5bd70436dc25c3189ba6"
+  },
+  {
+   "name": "idna",
+   "version": "3.20",
+   "record_sha256": "0b38b7a6e883b822ba0879fe147ffcae9ab1b12eed77912054bc8e5c1bd133af"
+  },
+  {
+   "name": "ImageHash",
+   "version": "4.3.2",
+   "record_sha256": "535f6d2a00dddee4889eadc1c8ad5fd509eec6a3b363963fa2852c0fc7000d3b"
+  },
+  {
+   "name": "ImageIO",
+   "version": "2.38.0",
+   "record_sha256": "65f0e5a150ac84064765919ad71c0bfbfaf2e29679766e42f3ef388357e668b1"
+  },
+  {
+   "name": "jax-jumpy",
+   "version": "1.0.0",
+   "record_sha256": "7353e47b8d05088e215f402bdf05c444cb3166576568eef016515a572e242524"
+  },
+  {
+   "name": "Jinja2",
+   "version": "3.1.6",
+   "record_sha256": "4551b3fb657b85a9f01e961c0f8a235da65d758149b619400211964b3ac02bdc"
+  },
+  {
+   "name": "joblib",
+   "version": "1.6.0",
+   "record_sha256": "c1088eee5a30f2c8e5b1611ee43a7ccd8e8a9fcc53ebba0606692431d896a873"
+  },
+  {
+   "name": "lazy-loader",
+   "version": "0.6",
+   "record_sha256": "fe635a4b213c271fc498fecab243e34fc7f0a0c73326ff5a3accef2cf710aaf1"
+  },
+  {
+   "name": "lib_detect_testenv",
+   "version": "3.0.4",
+   "record_sha256": "f26c194c4b722afbf0142ab7ba8bc2fb40494f828654a2a4faff28beb17e7fef"
+  },
+  {
+   "name": "librosa",
+   "version": "0.11.0",
+   "record_sha256": "1b58c615f4d2a251273113053e7a7d612dda68601f55d4ba8fe18d53e886ecab"
+  },
+  {
+   "name": "llvmlite",
+   "version": "0.50.0",
+   "record_sha256": "5cb616a56c067d3c221452ffd394beea592e77aff735f161b3ee4e979ebbca43"
+  },
+  {
+   "name": "lxml",
+   "version": "6.0.2",
+   "record_sha256": "c8822d24eb1462e786af5bd873c1aba0329fbc6f7edab41a5cebf3f75901cb62"
+  },
+  {
+   "name": "markdown-it-py",
+   "version": "4.2.0",
+   "record_sha256": "0879733209e5a9d5e76f52aaf9d7dfc3745de6929fe00c53f44404e9f6bcc19e"
+  },
+  {
+   "name": "MarkupSafe",
+   "version": "3.0.3",
+   "record_sha256": "3e96bcf1c73245c4ff9be34b7df22f705b615b7980b7b984fd2feba5032127b6"
+  },
+  {
+   "name": "mdurl",
+   "version": "0.1.2",
+   "record_sha256": "9a1b05128e711beabd7684e116fcf408ce8cff7ef10e7e8b359b248924fe529c"
+  },
+  {
+   "name": "mpmath",
+   "version": "1.3.0",
+   "record_sha256": "09cbd04e87d0c5ab64aab08291b31883e4ea27e8d2c640710e0beb1995e86b9b"
+  },
+  {
+   "name": "msgpack",
+   "version": "1.2.3",
+   "record_sha256": "ff9868515179046ef892f3b571eda82dab9dc112697ad5ebae045fc9867698ad"
+  },
+  {
+   "name": "multiprocess",
+   "version": "0.70.19",
+   "record_sha256": "cf32ca70b937ec97c365006cb6e3559faa1bdec4acbc2cdd81fe3f762325c2d2"
+  },
+  {
+   "name": "mutagen",
+   "version": "1.47.0",
+   "record_sha256": "585eb20669dfcb2aaf0183abd3fd55478111e833a4fde0b69794a093d54db519"
+  },
+  {
+   "name": "narwhals",
+   "version": "2.26.0",
+   "record_sha256": "c99a978c7880d8cddcde26a5ec1164ef78b491b8cb8c8e4a73f6e38bff3617b1"
+  },
+  {
+   "name": "networkx",
+   "version": "3.6.1",
+   "record_sha256": "f6833bb525b720a7809dd6280817601af3dbd78efef02d9e55d4b887ec1f52da"
+  },
+  {
+   "name": "ninja",
+   "version": "1.13.2",
+   "record_sha256": "ef04a430763122dafbb01479a572962b1bf7f57e03b38eb90c494ed04a3cafea"
+  },
+  {
+   "name": "numba",
+   "version": "0.68.0",
+   "record_sha256": "ee0dd58e1058327371e7fdda6cfdd3edd161a7e2af76482a2bee6c03ee633fab"
+  },
+  {
+   "name": "numpy",
+   "version": "1.26.4",
+   "record_sha256": "b64cf36c00ed65fb8f87758f1ecdb2f310e7dccbc9ec549115694a1b320e86da"
+  },
+  {
+   "name": "numpy-financial",
+   "version": "1.0.0",
+   "record_sha256": "24fe31890cee1ace7adc60aaf003f9b82171bba69b8727dbd99b807d1e8d3809"
+  },
+  {
+   "name": "oauth2client",
+   "version": "4.1.3",
+   "record_sha256": "f2ea6dd7618da6808b84ba06455047b277d24019e2c40f50a4429a44ef3dfead"
+  },
+  {
+   "name": "odfpy",
+   "version": "1.4.1",
+   "record_sha256": "351216a76861ef7d8c4a44a65df0b525d7000393895f185b307bb0f69915afac"
+  },
+  {
+   "name": "opencv-python-headless",
+   "version": "4.8.1.78",
+   "record_sha256": "6c67f2ce7862ab12c62b33124ed1b741163edb0a49ab31220ef2bd66b9880380"
+  },
+  {
+   "name": "openpyxl",
+   "version": "3.1.5",
+   "record_sha256": "89fb27b7b9ef96f6871e5f400b8aedf1f569856ac2594f0cf48ff0fbcd04ece0"
+  },
+  {
+   "name": "opentelemetry-api",
+   "version": "1.45.1",
+   "record_sha256": "d520e7cb82b3b9a151e8957337f167ea73f139a710b9d681bd1e1a7189049cdd"
+  },
+  {
+   "name": "packaging",
+   "version": "26.3",
+   "record_sha256": "1b8655965b0d83e9a067fd7f84b977bd1e117e0fb9f2874b2572781bdc9e2147"
+  },
+  {
+   "name": "pandas",
+   "version": "2.3.3",
+   "record_sha256": "463fbfdd9c961005ef1f069c04a006858f829a981edfad1313b886e418a7e887"
+  },
+  {
+   "name": "pdfminer.six",
+   "version": "20251230",
+   "record_sha256": "698c18e7b60f917b26061eb377b77b36096779ce6548e011cc80bbe21a3ae10b"
+  },
+  {
+   "name": "pdfplumber",
+   "version": "0.11.9",
+   "record_sha256": "3367d462e5a24166e20fb9e27e68823e63520cac7415feb1c69689a2042b246a"
+  },
+  {
+   "name": "pillow",
+   "version": "11.0.0",
+   "record_sha256": "01edbc9a54731d7f3ea537f19eea385c55e5540f2538666881ec303791d1f573"
+  },
+  {
+   "name": "platformdirs",
+   "version": "4.12.3",
+   "record_sha256": "961c2d8e786424eee517560864471fe61f63a9b380a3d859f6bcdab8fc9b6abf"
+  },
+  {
+   "name": "playwright",
+   "version": "1.63.0",
+   "record_sha256": "5d0cfe95c240501e47d4dc72eb186c8b207ae3925074c99bfdd68c4580dad1d2"
+  },
+  {
+   "name": "pooch",
+   "version": "1.9.0",
+   "record_sha256": "7baabed9c89c1bebdd4a629b1784759faa0937e96930cb8f4dcec2b5271a2f4d"
+  },
+  {
+   "name": "proto-plus",
+   "version": "1.29.0",
+   "record_sha256": "7d0d00f360f982d4cca136bc54c33dea0165baae581897232095265b52dbd2e5"
+  },
+  {
+   "name": "protobuf",
+   "version": "7.36.2",
+   "record_sha256": "5f397a477684d759fa9c82115c2b1a0e10d74e1b8a746e7270c2c6a4d9a32032"
+  },
+  {
+   "name": "psutil",
+   "version": "7.2.2",
+   "record_sha256": "2af7e87b12ad6542c1eaaf20a299c109fa09b9dc5d69faf745219bd61e8cfca6"
+  },
+  {
+   "name": "pyacoustid",
+   "version": "1.3.0",
+   "record_sha256": "1be7e53473c396bf4ba9cf2cf9d7895a402bca7dc2c2f90fa47de18d8fdd8be3"
+  },
+  {
+   "name": "pyasn1",
+   "version": "0.6.4",
+   "record_sha256": "a090dfffb5eba2e22eaf9fa9368748a431669c88ae5eb8043afd5fb16b398fa3"
+  },
+  {
+   "name": "pyasn1_modules",
+   "version": "0.4.2",
+   "record_sha256": "6645737688eada1bc4448276028ef35d5a1132cf61f292667af044f0d8703b24"
+  },
+  {
+   "name": "pyclipper",
+   "version": "1.4.0",
+   "record_sha256": "c9acc4e5454de8d4b61a96b291993e11e64367ba4951d9c2b8b46dc272545b8b"
+  },
+  {
+   "name": "pycparser",
+   "version": "3.0",
+   "record_sha256": "e752c5c64ce06f508a80e0edeef0c165df849587b829cb9a7b7bb22ac43b0c7e"
+  },
+  {
+   "name": "PyDrive",
+   "version": "1.3.1",
+   "record_sha256": "099c759a5e422429363bbcfbb150e97502b8ae99d0b42280e947b5a50e58da16"
+  },
+  {
+   "name": "pyee",
+   "version": "13.0.1",
+   "record_sha256": "e546602c3140b5410279c7ba1ede8f74ec6cdd873e68435b12b099fe1067e169"
+  },
+  {
+   "name": "Pygments",
+   "version": "2.21.0",
+   "record_sha256": "19371c41e20de68f9c2988654a8c1e6616cc4ec5f9b66c9af1363d30dcd35feb"
+  },
+  {
+   "name": "PyMuPDF",
+   "version": "1.27.1",
+   "record_sha256": "2dedb0253b166bda6aa400de4c0a221f3388dde3a2fd3a394f3dc79fefa16939"
+  },
+  {
+   "name": "pyparsing",
+   "version": "3.3.3",
+   "record_sha256": "dbc82867d6a4a3b935f9a9f3f2c876e3056dfffb104e1c8b3a3117d90aa21ad3"
+  },
+  {
+   "name": "pypdf",
+   "version": "6.7.5",
+   "record_sha256": "c7b27aeb537d53c13cc8396cbff1734476776e7d900047bd19c1198e0b1bc322"
+  },
+  {
+   "name": "PyPDF2",
+   "version": "3.0.1",
+   "record_sha256": "e50d9bb8a8d439599023e3c67dfffab884cfd61752ffb02de1bfe759928faf37"
+  },
+  {
+   "name": "pypdfium2",
+   "version": "5.14.0",
+   "record_sha256": "e3d18c804ed78c4578961b6b97181db16451297ec1e81e63e359ed36bd759671"
+  },
+  {
+   "name": "python-barcode",
+   "version": "0.16.1",
+   "record_sha256": "eea749b3409dacfe1190bda252b0c4a4dfc21b10c37ead60c3d04df4f8c190f9"
+  },
+  {
+   "name": "python-bidi",
+   "version": "0.6.11",
+   "record_sha256": "8b7150efbe30ab81014e2cfb871c982f36980847fd7c1b919479703d76862bd6"
+  },
+  {
+   "name": "python-dateutil",
+   "version": "2.9.0.post0",
+   "record_sha256": "e15e868a50b9c4e71df17b31369843617780146ac5adb1bbfdcced0ebe501824"
+  },
+  {
+   "name": "python-docx",
+   "version": "1.2.0",
+   "record_sha256": "12c3f5a29037038240513972e67e26bd2ffbbdd56e23dd93a05b6e49423f5cbc"
+  },
+  {
+   "name": "python-dotenv",
+   "version": "1.2.4",
+   "record_sha256": "6ffac4fa48f7da4e8214f17cb8b0d13627e8b8f21a9b2280aa26dbad9679e53c"
+  },
+  {
+   "name": "python-pptx",
+   "version": "1.0.2",
+   "record_sha256": "5f7550480311ffb76c562537ad58ed9262ad4019d36c1eb3fbd06373f6f42c17"
+  },
+  {
+   "name": "pytz",
+   "version": "2026.5",
+   "record_sha256": "20599acd6dfd38a2bdb94c261f7388340c37fda705dc9917e0a4bf8ac6e3c156"
+  },
+  {
+   "name": "PyWavelets",
+   "version": "1.10.0",
+   "record_sha256": "c14f2946027802a2ec7fb5bba3436807861aff07e6366014584124c04c79ed92"
+  },
+  {
+   "name": "PyYAML",
+   "version": "6.0.3",
+   "record_sha256": "7d0856221a182f5b25fde9bb976af79b4883090f54680d86a42b35fc8d6735a2"
+  },
+  {
+   "name": "qrcode",
+   "version": "8.2",
+   "record_sha256": "94596885f02c966f08fab92c43150a724a745d8387c27b708b0ac68194bea87d"
+  },
+  {
+   "name": "RapidFuzz",
+   "version": "3.14.3",
+   "record_sha256": "9d12a572c829de3756b8efd1a4122f9100bd811a369a828dde2ae72d9c1204a3"
+  },
+  {
+   "name": "regex",
+   "version": "2026.9.29",
+   "record_sha256": "173d8be353c7cab0e4ea8fdb01bc695b045c3cfe9912f0607eec0898198a7d96"
+  },
+  {
+   "name": "requests",
+   "version": "2.34.2",
+   "record_sha256": "fc8c5216d0e865d815bd04cc240b5adc5d56f6c3dbe9aef3b4ea3b83d735bdfe"
+  },
+  {
+   "name": "requests-file",
+   "version": "3.0.1",
+   "record_sha256": "008e8508b53ebe0b9c589190c46c20a8086e101b133956327dcc3473e67d4239"
+  },
+  {
+   "name": "requests-toolbelt",
+   "version": "1.0.0",
+   "record_sha256": "fed817b8bd98101990c9bf46cb01dc5ab2771dc039d5581f510fc8aacf415c21"
+  },
+  {
+   "name": "rich",
+   "version": "15.0.0",
+   "record_sha256": "1b725253b1bd316b53169a3a0b35d03d6c81bad9009ddae73d8645fb3cd3f292"
+  },
+  {
+   "name": "rich-click",
+   "version": "1.9.9",
+   "record_sha256": "6175502dcc79270fb0660b1a9e7b1d59f8c4f4a6be2bb84154cd3785265f273d"
+  },
+  {
+   "name": "rsa",
+   "version": "4.9.1",
+   "record_sha256": "cb91bf1251f0b561d20b61922299eec33bafaaa71aaef5ab802a81b13f15a584"
+  },
+  {
+   "name": "schedula",
+   "version": "1.6.15",
+   "record_sha256": "677fb064627f3e9309c30767c9e6665943ed682a0d1421b9786c9ca319550228"
+  },
+  {
+   "name": "scikit-image",
+   "version": "0.26.0",
+   "record_sha256": "8dd0d6c9fa72c6d2b4e4b2579bf9215960d3ffd51a87541874f34aa5adb8ba83"
+  },
+  {
+   "name": "scikit-learn",
+   "version": "1.9.1",
+   "record_sha256": "c02d3c24fc123209db65a16586dba4f7f91f07c5cbe59dcc7562e827455c5637"
+  },
+  {
+   "name": "scipy",
+   "version": "1.17.1",
+   "record_sha256": "bebd5a00dcf3d8fd96b1f5d18d985564b891d893de7584d65ccea6902888a7a8"
+  },
+  {
+   "name": "setuptools",
+   "version": "78.1.0",
+   "record_sha256": "a20628e88a72670896096c609d1c57e72bdc12276636a882e2dd78ce854fb9c0"
+  },
+  {
+   "name": "shapely",
+   "version": "2.1.2",
+   "record_sha256": "94b33e64450bbc4764586891a30d1364994a06a518a79ebf99fd12c0cd109a3c"
+  },
+  {
+   "name": "six",
+   "version": "1.17.0",
+   "record_sha256": "d16e50f347969b1e1919fb0c88bac4b9c644f5305bcfcfb00f72b646dbd4065d"
+  },
+  {
+   "name": "soundfile",
+   "version": "0.14.0",
+   "record_sha256": "88df91b7c81c51587afeab1a65ed44db69b1842a2f3d55f29c67025fe0445faa"
+  },
+  {
+   "name": "soupsieve",
+   "version": "2.10",
+   "record_sha256": "82e0e3eeb5375a499a78292bb91c1c3f4381d6fb94fe59d4999f4c15e64ab8d1"
+  },
+  {
+   "name": "soxr",
+   "version": "1.1.0",
+   "record_sha256": "f81ca98e0693ffd2549268fceae106ac67d25ce1c2077cbb3e507135864e3451"
+  },
+  {
+   "name": "sympy",
+   "version": "1.13.1",
+   "record_sha256": "41f542242b81a44bf9c7c72b35a255856f39fa4835ba19f218d36c654d0fa9c0"
+  },
+  {
+   "name": "threadpoolctl",
+   "version": "3.7.0",
+   "record_sha256": "271378a6666651adc5c620731081b466a07024b75d7728b9d61b8335b45d7225"
+  },
+  {
+   "name": "tifffile",
+   "version": "2026.3.3",
+   "record_sha256": "64fae0f599aee3a2285b438b07e90177b88333346b6a708e847359f9fdb72fca"
+  },
+  {
+   "name": "tldextract",
+   "version": "5.3.1",
+   "record_sha256": "c1d1c9d55fdb0534027fb4080c46139b7a8e76dd9ad15aa8cc48a307ff7482e5"
+  },
+  {
+   "name": "torch",
+   "version": "2.5.1+cpu",
+   "record_sha256": "6e060d28c803a31e7ad604daa599e53daefe51e13d4691721d3f0ccd574728e6"
+  },
+  {
+   "name": "torchvision",
+   "version": "0.20.1+cpu",
+   "record_sha256": "874a13d9586ccd58fa38b29b3030c9c2e7bc1d29cb845e29bbc63969db9de867"
+  },
+  {
+   "name": "tqdm",
+   "version": "4.70.1",
+   "record_sha256": "ab4c43b9794a029b3f8d506bdac542a058be44462544495a533cf4446b76fa34"
+  },
+  {
+   "name": "typing_extensions",
+   "version": "4.16.0",
+   "record_sha256": "9e07fea845cac76293d927afa7157a14ecba39b318bc8af236b8de530b7656c1"
+  },
+  {
+   "name": "tzdata",
+   "version": "2026.5",
+   "record_sha256": "bc03ea1afd3394eb010013e6112f91d884785445c8453b7d56ddb7ba0cc4939d"
+  },
+  {
+   "name": "uritemplate",
+   "version": "4.2.0",
+   "record_sha256": "b06d84680bc9ed70b2a79703745de7129784a2309ab11c4e588da9452d635b63"
+  },
+  {
+   "name": "urllib3",
+   "version": "2.8.0",
+   "record_sha256": "1753d325c8936a612ecdc947e686ade56b21f591fbb7518330cb0f2f7619c330"
+  },
+  {
+   "name": "wrapt",
+   "version": "2.5.0",
+   "record_sha256": "c8e4382b4922ef3cf3900777383f1e2b3aa7219c573baf6519e644469940ded0"
+  },
+  {
+   "name": "wrapt_timeout_decorator",
+   "version": "1.5.1",
+   "record_sha256": "0eed7e9941d7d721937e4e11c14994b1ecbcbe3d0d939b7b76ae315816901501"
+  },
+  {
+   "name": "xlsxwriter",
+   "version": "3.2.9",
+   "record_sha256": "4493bb7454256a99d5afba1b2d42dbee2fa9a0d3cdaf51fb15476618f4d46139"
+  },
+  {
+   "name": "xmltodict",
+   "version": "1.0.4",
+   "record_sha256": "cf23ebb8929177cfee9590525749dfe77d19e7418e4e2cd99e28a4dc0be56bd5"
+  }
+ ]
+}

@@ -1731,6 +1731,49 @@ Append-only. Newest entries at the bottom.
   timing job of the fixed path (at most 0.1 GPU-h, a fresh timing run root);
   then freeze with that decision named in the status and the lead-in.
 
+## 2026-10-08 — Q2 evaluator-mutation: confirm campaign stage A1 (K1, P1, confirm mutants; CPU only)
+
+- Operator run of the frozen `q2-evaluator-mutation-v1` (ledger row 11,
+  frozen on main at `65bc2e2`), branch `ops/q2-mutation-confirm`, evidence
+  `program/evidence/2026-10-08/q2-mutation-confirm/`. Source: a `git archive`
+  of `65bc2e2` staged under the Q2 run root; every pin of the frozen block
+  matches it locally and on the host (code tree `58bee019`, catalog
+  `3a5ff949`, the mounted OSWorld tree and VM baseline), and
+  `check_frozen.py` and `campaign guard` passed in every run.
+- K1 (first step after the freeze; `confirm-controls-v1`, Slurm 781-783):
+  70/74 under the lock-exact venv (94.6%, 90% required): PASS. The four
+  misses are raw-gold failures (three `compare_pptx_files`, one
+  `check_tabstops`). Unemulated tasks with a gold: 2a729ded and e8172110 as
+  registered, plus 5df7b33a (a postconfig shell `zip` writes the checked
+  archive), which the registered rule excludes but the pre-freeze count did
+  not name; its gold is a zip, so only K1's denominator moves (75 to 74).
+- P1 (`reserve-controls-v1`, Slurm 791-793, with the confirm run): raw flips
+  3/67 confirm and 1/25 reserve, 4/92 together (4.35%, Clopper-Pearson
+  1.2-10.8%), on the registered 92 golds; replication only, audit-confirmed
+  share pending. The headless scoping round trip had flipped 7/63 and 1/26.
+- Confirm mutants (`confirm-mutants-v1`, Slurm 794-796, 16 workers, apply
+  to gold): 68 targets on 67 tasks as counted before the freeze; 1,289
+  planned, 1,232 admitted (495 equivalence, 93 alternative, 290 violation,
+  138 extra change, 216 ambiguous), 1,300 saves all written (96 slower than
+  0.5 s, slowest 1.20 s), no save, scoring or infrastructure failure, no
+  nondeterministic scoring, no venv disagreement (S1 empty), 23 normalized
+  (S3; no K5 finding), 7 of 68 null mutants not passing (S7; K9 not fired).
+  Evaluable 888 (444 outside probe-touched cells, 60 tasks). The census
+  preview holds 134 real items on 33 tasks (36 equivalence mutants the
+  checker fails, 5 violations it passes, 93 alternative solutions it passes)
+  plus shams and the 4 P1 flips, far under the 1,139-item capacity. K2
+  sample drawn (80 jobs, 4 domains, 41 tasks); no K2 executor yet.
+- Held on the host until the isolated ingest (digests committed): the run's
+  `campaign export` (labels, outcomes, verdicts), the per-task control
+  summaries, the P1 flip list and the K2 sample. Committed: receipts,
+  scontrol records, submissions and aggregates only.
+- GPU: none (0.0 GPU-h row added to the ledger; total unchanged at 3.9261).
+  Nothing pushed or merged.
+- Next: stage A2, the audit (fresh salt, `submit_audit.sh` with the reserve
+  control run, the overlay and the open-weight rater within the 3.0 GPU-h
+  cap, the isolated Claude rating as one workflow session, collector,
+  ingest, summary), then the registered analysis and Kevin's pool.
+
 ## 2026-10-08 — Q3 dense pre-check v2: second timing job of the fixed 4B path (D42; branch `stage0/q3-dense-v2`, draft, not frozen)
 
 - Main (`18fe252`, D42) merged in (`175d35e`); only `program/decisions.md`
