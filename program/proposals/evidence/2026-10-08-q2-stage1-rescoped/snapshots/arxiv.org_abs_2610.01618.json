@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2610.01618",
+ "fetched_at": "2026-10-08T14:39:51Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42553,
+ "raw_sha256": "2b145f7cd1ba05c42e06af17b2ba87da3ec89744bfd20e9d5726f94571f332e5",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "[2610.01618] Agents Are Systems, Not Models: Rethinking Agentic Evaluation",
+  "title": "Agents Are Systems, Not Models: Rethinking Agentic Evaluation",
+  "authors": [
+   "Wiedmann, Luis",
+   "Girrbach, Leander",
+   "Schmid, Cordelia",
+   "Akata, Zeynep"
+  ],
+  "citation_date": "2026/10/01",
+  "submission_history": [
+   [
+    "v1",
+    "Thu, 1 Oct 2026 12:55:07 UTC "
+   ]
+  ],
+  "abstract": "Agent evaluations increasingly go beyond a single success rate, reporting metrics such as cost, consistency, and robustness. Yet they typically treat the agent itself as fixed. In practice, an agent is a configurable system: users decide what to tell it, how long to let it run, and which model to use, and each of these choices can change how well and how consistently it performs. We study these choices on a new benchmark of four scientific tasks, where a coding agent must find and correctly operate a published specialist model. We investigate five parts of the agent's configuration: task information, reasoning, self-verification, time budget, and backbone model. We find substantial run-to-run variability, with approximately 54% of the outcome variance coming from repeating the same configuration rather than changing it. Across configurations, the information provided to the agent has the largest effect, exceeding both time budget and model size, while also reducing cost and improving calibration. Configuration choices also interact: additional time helps only when the agent has sufficient information or a capable enough model to use it. Finally, a trajectory-based taxonomy of agent behavior reveals that prompting an agent to verify its answer has little effect on its verification behavior, whereas providing a dedicated verification tool changes that behavior substantially. These results suggest that agents should be evaluated as configurable systems themselves, and that some desired behaviors are more effectively implemented in the system than requested through prompting. We release the benchmark and more than 18,000 agent trajectories.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

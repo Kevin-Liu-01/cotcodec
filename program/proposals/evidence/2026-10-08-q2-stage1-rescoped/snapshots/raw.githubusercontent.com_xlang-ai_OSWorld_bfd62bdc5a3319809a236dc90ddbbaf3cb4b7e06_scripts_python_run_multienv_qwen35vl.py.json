@@ -1,0 +1,12 @@
+{
+ "url": "https://raw.githubusercontent.com/xlang-ai/OSWorld/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/scripts/python/run_multienv_qwen35vl.py",
+ "fetched_at": "2026-10-08T14:40:09Z",
+ "http_status": 200,
+ "content_type": "text/plain; charset=utf-8",
+ "raw_bytes": 15974,
+ "raw_sha256": "a3bf2a6343f470d1c0b55b136ddea58b0d3bfe5970760025add39e8275ba6bb1",
+ "raw_stored": false,
+ "extract": {
+  "html_title": null
+ }
+}

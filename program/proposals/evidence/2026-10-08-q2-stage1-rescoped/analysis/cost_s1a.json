@@ -1,0 +1,252 @@
+{
+ "budget_py_sha256": "cdb75646eafe47148a2b52148e24493bdd07f1c1c05dcec8211c55d9ea75ceb1",
+ "inputs": {
+  "open_loop_reference": {
+   "flags": [],
+   "measured_rate": 3.15349388398179,
+   "output_tokens": 300.0,
+   "point": "a2",
+   "prompt_tokens": 8205.46875,
+   "rate": 3.15349388398179
+  },
+  "a1_min_rate": 2.5230140669667356
+ },
+ "card_cells_9b_per_360": {
+  "h1-screenshot": {
+   "T": 15,
+   "V": 40,
+   "closed": 0.7522,
+   "open": 0.6671,
+   "per_episode": 0.002089
+  },
+  "h1-a11y": {
+   "T": 15,
+   "V": 40,
+   "closed": 1.1289,
+   "open": 1.0232,
+   "per_episode": 0.003136
+  },
+  "h2-thinking-screenshot": {
+   "T": 100,
+   "V": 20,
+   "closed": 24.1054,
+   "open": 21.6479,
+   "per_episode": 0.06696
+  },
+  "h2-thinking-a11y": {
+   "T": 100,
+   "V": 20,
+   "closed": 29.2954,
+   "open": 21.6479,
+   "per_episode": 0.081376
+  }
+ },
+ "h2_thinking_T15": {
+  "sum_t_env_plus_L_s": 460.62,
+  "sum_L_r3_steps_1_15_s": 170.95,
+  "thinking_penalty_s": 16.8116,
+  "mean_modelled_prompt_tokens": 20036.0,
+  "open_loop_ratio": 6.8267,
+  "r_cell_req_s": 0.4619,
+  "per_episode": {
+   "8": {
+    "V": 8,
+    "closed": 0.015994,
+    "open": 0.00902,
+    "central": 0.015994,
+    "closed_high": 0.023025,
+    "open_high": 0.011274,
+    "high": 0.023025
+   },
+   "16": {
+    "V": 16,
+    "closed": 0.007997,
+    "open": 0.00902,
+    "central": 0.00902,
+    "closed_high": 0.011512,
+    "open_high": 0.011274,
+    "high": 0.011512
+   },
+   "20": {
+    "V": 20,
+    "closed": 0.006397,
+    "open": 0.00902,
+    "central": 0.00902,
+    "closed_high": 0.00921,
+    "open_high": 0.011274,
+    "high": 0.011274
+   }
+  },
+  "t100_per_episode_card": 0.06696
+ },
+ "thinking_passback_bound": {
+  "mean_modelled_prompt_tokens": 32272.0,
+  "max_prompt_step15": 60902,
+  "max_context_with_output": 62950,
+  "open_loop_ratio": 6.8267,
+  "open_binds_unchanged": true,
+  "closed_wave_s_latency_scaled_by_prompt_ratio": 564.2,
+  "per_episode": {
+   "16": {
+    "V": 16,
+    "closed": 0.009794,
+    "open": 0.00902,
+    "central": 0.009794,
+    "closed_high": 0.01331,
+    "open_high": 0.011274,
+    "high": 0.01331
+   },
+   "20": {
+    "V": 20,
+    "closed": 0.007835,
+    "open": 0.00902,
+    "central": 0.00902,
+    "closed_high": 0.010648,
+    "open_high": 0.011274,
+    "high": 0.011274
+   }
+  },
+  "note": "upper bound: scales the whole step latency (decode included) by the prompt ratio"
+ },
+ "s1a": {
+  "a1_plans": {
+   "K32_V16": {
+    "K_base": 32,
+    "V": 16,
+    "episodes": 512,
+    "central": 5.018,
+    "high": 6.561,
+    "per_job_high_min": 98.4
+   },
+   "K32_V20": {
+    "K_base": 32,
+    "V": 20,
+    "episodes": 512,
+    "central": 5.018,
+    "high": 6.439,
+    "per_job_high_min": 96.6
+   },
+   "K36_V16": {
+    "K_base": 36,
+    "V": 16,
+    "episodes": 576,
+    "central": 5.596,
+    "high": 7.298,
+    "per_job_high_min": 109.5
+   },
+   "K16_V8": {
+    "K_base": 16,
+    "V": 8,
+    "episodes": 256,
+    "central": 4.494,
+    "high": 6.561,
+    "per_job_high_min": 98.4
+   }
+  },
+  "caps_gpu_h": {
+   "O1_overlay": 0.05,
+   "A0a_9b_pilot": 0.3667,
+   "A0b_anchor_smoke": 0.3,
+   "O2_overlay": 0.05,
+   "ANC_anchor": 0.5333,
+   "A1_4_jobs": 6.6667,
+   "total": 7.9667
+  },
+  "K_rule": "K_base <= 0.375 / c_proj (90 usable minutes per 100-minute job, 4K episodes/job)",
+  "K_rule_at_card_high": 32.57,
+  "A0a": {
+   "episodes": 16,
+   "central": 0.244,
+   "high": 0.351
+  },
+  "jobs_central_high": {
+   "O1": [
+    0.012,
+    0.05
+   ],
+   "A0a": [
+    0.244,
+    0.351
+   ],
+   "A0b": [
+    0.22,
+    0.287
+   ],
+   "O2": [
+    0.012,
+    0.05
+   ],
+   "ANC": [
+    0.449,
+    0.533
+   ],
+   "A1_K32_V16": [
+    5.018,
+    6.561
+   ]
+  },
+  "total_central_high": [
+   5.955,
+   7.832
+  ]
+ },
+ "anchor": {
+  "wave_s": 432.6,
+  "open_per_episode": 0.002779,
+  "V20": {
+   "card_closed_116": 0.7209,
+   "continuous_116": 0.6969,
+   "episodes_in_29_min_continuous": 80
+  },
+  "V32": {
+   "card_closed_116": 0.4806,
+   "continuous_116": 0.4356,
+   "episodes_in_29_min_continuous": 128
+  },
+  "V40": {
+   "card_closed_116": 0.3605,
+   "continuous_116": 0.3485,
+   "episodes_in_29_min_continuous": 160
+  },
+  "smoke_4_eps_central": 0.22
+ },
+ "vm_hours": {
+  "A1_K32_central": 105.2,
+  "A1_K32_high": 119.9,
+  "A1_reservation_bound_V20": 133.3,
+  "A0a": 3.7,
+  "anchor_reservation_bound_V40": 26.0
+ },
+ "s1b": {
+  "ladder": {
+   "9b_extra_2_sessions_60_tasks": [
+    2.16,
+    2.76
+   ],
+   "4b_extra_2_sessions_60_tasks": [
+    2.16,
+    2.76
+   ],
+   "35b_a3b_4_sessions_60_tasks": [
+    6.49,
+    8.29
+   ],
+   "27b_4_sessions_60_tasks": [
+    19.48,
+    24.87
+   ]
+  },
+  "ladder_total_central_high": [
+   31.9,
+   41.3
+  ],
+  "a11y_cell_per_episode_central_high": [
+   0.00902,
+   0.014216
+  ],
+  "observation_branch_one_rung_960_eps_central_high": [
+   9.1,
+   13.0
+  ]
+ }
+}

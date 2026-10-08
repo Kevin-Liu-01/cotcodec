@@ -1,0 +1,9 @@
+{
+ "doctor": "Source",
+ "status": "PASS",
+ "pass_condition": "Required retrieval backends reachable; cutoff and degraded coverage recorded",
+ "evidence": "orx 0.2.2 reachable (alphaXiv keyword and embedding, OpenAlex): 10 discover queries and 3 full-text reads this wave (query-log.json); 26 cited pages fetched on 2026-10-08 with HTTP 200, raw-body SHA-256 recorded and metadata extracts hashed (snapshots/, analysis/snapshot-index.json); raw upstream harness files at bfd62bdc and aae6f7607 hash-equal to harness/q2/action_path/upstream/PROVENANCE.json; coverage limits in the proposal header",
+ "remediation": "Use the host relay for Semantic Scholar and arXiv-API citation expansion of 2610.01618, 2610.00917 and 2609.32459; record OpenReview access",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-0 single synthesis owner (Claude agent); not an independent review"
+}
