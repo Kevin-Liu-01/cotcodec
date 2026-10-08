@@ -1139,3 +1139,54 @@ Append-only. Newest entries at the bottom.
   disabling the gate (c) replay and A5's per-call check).
 - Waiting on Kevin: sign-off of `q1-stage0-exec/2` and the store policy, the
   budget path, D14 findings 18.3 items 6-8, D28/D29.
+
+## 2026-10-08 — Q2 evaluator-mutation: D38 applied (ninth draft; the sixth review's minor items fixed; not frozen)
+
+- Basis: decision D38 on main (`5231846`): the eighth draft's choices
+  accepted as implemented, the sixth review's minor items fixed before the
+  freeze. Main merged first (`f0e6d35`): `log.md` kept both sides,
+  `state.json` keeps main's entries for the other questions (the resolved A4
+  pending decision stays removed) and the branch's Q2 entries, and the GPU
+  total is recomputed from the 16 ledger rows (3.7597 = main's 3.1857 plus
+  the branch's four checker-mutation dev rows, 0.5740); HANDOFF takes main's
+  version with the checker-mutation bullet updated; the branch's
+  `ledger.jsonl` equals main's byte for byte (7 rows).
+- Code (`58435c3`): the stratified fallback searches for the largest mutant
+  budget that fits (`raters.stratified_sample`; the review's synthetic pool
+  fills 300, 500 and 700 exactly, budgets 227, 417 and 608, where one
+  subtraction stopped at 251, 462 and 672); concordant contradictions of
+  every stratum join Kevin's pool (the dev census pool stays 4 of 50, the
+  D34 audit's pools stay 24 and 113); `rater_runner collect-transcripts`
+  maps every `agent-*.jsonl` of the rating run to its item by its rendered
+  task turn, refuses one it cannot map, an unstarted agent and a started
+  agent without a transcript, copies byte-exact and writes a collection
+  manifest that `ingest-isolated --collection` checks (missing, changed or
+  unlisted transcripts refused); an attempt without a journal result answers
+  only through StructuredOutput; the receipt records each relay frame
+  verbatim (digest only if it names an item); `rerate.json` lists items voided
+  only for differing frames, `export-isolated --rerate-list` exports them
+  for one fresh, unresumed re-rate, and `audit summarize --rerate-list
+  --rerate-calls` writes the re-rated summary beside the registered one;
+  `audit summarize` refuses calls files with different relay frames. Tests
+  for each.
+- Registration (`e6cdbd7`, ninth draft): status note items 6-12, sections 4,
+  9, 10 (K2 no longer has K6 reading P5), 14, 16 and 17 (D38 checklist item;
+  Kevin's remaining items: the pool, the spot check, outward actions and the
+  carried-over sign-offs). Code-tree pin `50edcc45`; catalog unchanged.
+  `rater-isolated-dev-v4/README.md` no longer calls the relay question open
+  (its SHA256SUMS refreshed).
+- Checks: locally ruff clean and the Q2 tests 356 passed, 20 skipped
+  (module-level torch skips); on the host (fresh
+  `~/cotcodec-scratch/q2m-d38-e6cdbd7-20261008065436`, `uv sync --locked
+  --extra dev`) ruff clean and the full suite 2124 passed, 37 skipped. The
+  collector and audit over copies of the 158 dev transcripts (scratch only):
+  all 158 mapped, layout equal to the hand copies file for file, no void, 142
+  answering, one relay digest in 110; the whole run (with its non-rater
+  agents) is refused. Freeze-lint on a scratch ledger copy: freeze, verify,
+  check-chain PASS (8 rows); registration SHA-256
+  `0a01f424e9a83357b107c948e915c7b6448848cc9ea55175e1d52f24b34fd27c`.
+  Records in `program/evidence/q2-mutation/integration/d38-fixes/`. The older
+  host scratch directories `q2m-d35-*` are removed. No GPU, nothing pushed or
+  frozen.
+- Next: a narrow re-check of the ninth draft, Kevin's remaining items
+  (section 17), re-merge main, freeze.

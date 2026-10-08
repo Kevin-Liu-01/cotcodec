@@ -1,0 +1,32 @@
+{
+ "answered_in_journal": 142,
+ "answering_by_journal_result": {
+  "journal_result=False, answers=False": 16,
+  "journal_result=True, answers=True": 142
+ },
+ "collected": 158,
+ "commit": "58435c333c59469fe24d4001739adb2f63b72e06",
+ "exported_items_without_transcript": [],
+ "files": {
+  "item": 142,
+  "item.agent": 16
+ },
+ "hand_copied_comparison": {
+  "hand_copied": 158,
+  "only_collected": [],
+  "only_hand_copied": [],
+  "same_name_and_sha256": 158
+ },
+ "items": 142,
+ "items_by_answering_transcripts": {
+  "1": 142
+ },
+ "kind": "scratch-only rerun of the D38 collector (rater_runner.collect_transcripts) and the registered transcript audit over copies of the 158 D34 development rater transcripts; counts only, nothing ingested, the registered dev result stays",
+ "rater_agents": 158,
+ "relay_frames": {
+  "8e7dbd00": 110
+ },
+ "transcripts_answering": 142,
+ "void_reasons": {},
+ "whole_run_with_non_rater_agents": "refused: agent a1d37e23fa1e5618d (agent-a1d37e23fa1e5618d.jsonl): its user turns are the rendered prompt of no exported item; every transcript of the run must map to one item"
+}
