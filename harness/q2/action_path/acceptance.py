@@ -35,11 +35,16 @@ Rules that apply to every criterion:
   at the plan's 39,036 calls (decision D33);
 * reruns (section 6.1): a campaign may be rerun once, as a new attempt with a new
   output path, and only when the earlier attempt did not count (a ladder rung also when
-  it aborted on foreign load); every trial of every attempt is reported, and a failed
-  trial in an earlier attempt counts against the criterion exactly as if that attempt
-  had counted: on the cells the criterion judges, less the trials it excuses (an aborted
-  rung's do not count at all); excused trials count toward A1-A3's and the ladder's
-  limits over every attempt, so a rerun never resets them;
+  it aborted on foreign load or lacks host snapshots); every trial of every attempt is
+  reported, and a failed trial in an earlier attempt counts against the criterion
+  exactly as if that attempt had counted: on the cells the criterion judges, less the
+  trials it excuses (only a rung aborted on foreign load has none that count; a rung
+  attempt without host snapshots is not an abort); excused trials count toward A1-A3's
+  and the ladder's limits over every attempt, so a rerun never resets them; C1-C3 judge
+  an earlier attempt's trials by their own rules (C1: a known-defect cell must fail in
+  every attempt; C2: an earlier failure counts outside the predicted set only; C3: kills
+  and equivalence from the counting attempt, while a cell the reference did not pass
+  cleanly in any attempt cannot kill);
 * the trials a criterion runs must be exactly the realized order its manifest
   declares (``order.plan`` or ``volume.sessions``), so a campaign cut short cannot pass,
   and every campaign of a criterion runs one source tree (git SHA, tree digest and
@@ -391,10 +396,12 @@ def campaign_problems(
     when it did not count (``rerun_allowed``; the ladder also admits a foreign-load
     abort), and its failed trials count against the criterion exactly as if it had
     counted: unless ``earlier_failures_count`` says otherwise (an aborted rung's do not),
-    the criterion ``excused`` them (restart-only trials in A1-A4 and the ladder) or they
-    are on cells the criterion does not judge (``judged``: G for A1 and the ladder, the
-    in-spec cells for A2; every cell when None). Excused trials of every attempt count
-    toward A1-A3's and the ladder's limits; those are checked by the criterion.
+    the criterion ``excused`` them (restart-only trials in A1-A4 and the ladder, C2's
+    reading of an L0-raw trial) or they are on cells the criterion does not judge
+    (``judged``: G for A1 and the ladder, the in-spec cells for A2, the cells outside the
+    predicted set for C2; every cell when None). Excused trials of every attempt count
+    toward A1-A3's and the ladder's limits; those are checked by the criterion. C1 and C3
+    read an earlier attempt's trials by their own rules (their cells fail by design).
     """
     rerun_allowed = rerun_allowed or (lambda prev: bool(counting_problems(prev)))
     earlier_failures_count = earlier_failures_count or (lambda prev: True)
@@ -982,7 +989,13 @@ def a6(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def c1(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
-    """The detection controls fail their known-defect cells in 5 of 5 repetitions."""
+    """The detection controls fail their known-defect cells in 5 of 5 repetitions.
+
+    An earlier attempt (section 6.1) is judged by C1's own rule: its failures are what C1
+    requires (a known-defect cell fails by design, and C1 judges no other cell), so they
+    never count against it, while a known-defect cell that passed in any trial of any
+    attempt does.
+    """
     problems: list[str] = []
     table = {}
     for layer, must_fail in C1_MUST_FAIL.items():
@@ -991,7 +1004,21 @@ def c1(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
             problems.append(f"no {layer} campaign")
             continue
         for c in campaigns:
-            problems += campaign_problems(c)
+            problems += campaign_problems(c, earlier_failures_count=lambda prev: False)
+            for previous in c.get("earlier") or []:
+                passed = sorted(
+                    {
+                        t["cell"]
+                        for s in previous["sessions"]
+                        for t in s["trials"]
+                        if t["pass"] and t["cell"] in must_fail
+                    }
+                )
+                if passed:
+                    problems.append(
+                        f"job {c['job']}: earlier attempt {previous['job']} passed "
+                        f"known-defect cells {passed}"
+                    )
         plan = order.plan(_layer_ids(layer), 42, 5, ["screenshot"])
         problems += _check_plan(campaigns, expected(plan), f"C1 {layer}")
         found = outcomes(campaigns)
@@ -1069,15 +1096,22 @@ def c2(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
     """L0-raw fails exactly the predicted set (an entry fails unless PASS 5 of 5).
 
     Each trial is read by ``c2_trial_pass``; the section-5 verdicts (marker included) are
-    reported next to it as ``strict_entries``.
+    reported next to it as ``strict_entries``. An earlier attempt's trials are read the
+    same way (section 6.1): a failure counts against C2 only on a cell outside the
+    predicted set, where every repetition must pass; the predicted cells are judged on
+    the counting attempt.
     """
     import yaml
 
     problems: list[str] = []
     predicted = set(yaml.safe_load(PREDICTION.read_text(encoding="utf-8"))["predicted_fail"])
     cells = {c["id"]: c for c in _cells()["layers"]["L0-fixed"]}
+
+    def read_as_pass(trial: dict[str, Any]) -> bool:
+        return c2_trial_pass(trial, cells.get(trial["cell"]) or {})
+
     for c in campaigns:
-        problems += campaign_problems(c)
+        problems += campaign_problems(c, excused=read_as_pass, judged=set(cells) - predicted)
     plan = order.plan(_layer_ids("L0-raw"), 42, 5, ["screenshot"])
     problems += _check_plan(campaigns, expected(plan), "C2")
     flags: dict[str, dict[str, list[bool]]] = {}
@@ -1137,6 +1171,13 @@ def c3(
     with an infrastructure failure never kills; it is reported under ``infra_cells``, and a
     mutant with no clean kill is equivalent (byte-identical signature on every cell) or
     survives.
+
+    Earlier attempts (section 6.1) are read by C3's own rule. A mutant's failures are its
+    kills, never failures against C3: its kills and its equivalence are read from the
+    counting attempt, and each earlier attempt is reported with its failed cells and
+    whether its signature matched the reference's on the cells it ran. The reference's
+    failures are what keep a cell from killing: a cell the reference failed, or failed
+    with an infrastructure failure, in any of its attempts cannot kill.
     """
     import yaml
 
@@ -1155,11 +1196,14 @@ def c3(
             problems.append(f"no unmutated reference run on {layer}")
     for campaigns in references.values():
         for c in campaigns:
-            problems += campaign_problems(c)
+            # An earlier reference attempt's failures act through reference_results.
+            problems += campaign_problems(c, earlier_failures_count=lambda prev: False)
     for layer, campaigns in references.items():
         plan = order.plan(_layer_ids(layer), 42, 1, ["screenshot"])
         problems += _check_plan(campaigns, expected(plan), f"C3 reference {layer}")
-    reference_results = {layer: _cell_results(c) for layer, c in references.items()}
+    # Over every attempt: a cell the reference did not pass cleanly in one cannot kill.
+    reference_results = {layer: _cell_results(every_attempt(c)) for layer, c in references.items()}
+    reference_signatures = {layer: _signature(c) for layer, c in references.items()}
     table = {}
     for operator, layer in kit.scored_pairs(operators):
         key = f"{operator} {layer}"
@@ -1168,7 +1212,8 @@ def c3(
             problems.append(f"{operator} on {layer}: no run")
             continue
         for c in campaigns:
-            problems += campaign_problems(c)
+            # A mutant's failures are kills: an earlier attempt's are reported below.
+            problems += campaign_problems(c, earlier_failures_count=lambda prev: False)
         plan = order.plan(_layer_ids(layer), 42, 1, ["screenshot"])
         problems += _check_plan(campaigns, expected(plan), f"C3 {operator} {layer}")
         problems += version_problems(
@@ -1192,15 +1237,29 @@ def c3(
                 reference_not_clean.append(cell)
                 continue
             killers.append(cell)
+        signature = reference_signatures.get(layer) or {}
         entry = {
             "killers": killers,
             "predicted_killers": predicted_cells.get((operator, layer), []),
             "infra_cells": infra_cells,
             "reference_not_clean": reference_not_clean,
+            # Reported, not judged (section 6.1).
+            "earlier_attempts": [
+                {
+                    "job": previous["job"],
+                    "failed_cells": sorted({cell for _, _, cell in failed_trials(previous)}),
+                    "signature_matches_reference": all(
+                        signature.get(cell) == values
+                        for cell, values in _signature([previous]).items()
+                    ),
+                }
+                for c in campaigns
+                for previous in c.get("earlier") or []
+            ],
         }
         if killers:
             entry["outcome"] = "killed"
-        elif references.get(layer) and _signature(campaigns) == _signature(references[layer]):
+        elif references.get(layer) and _signature(campaigns) == signature:
             entry["outcome"] = "equivalent"
         else:
             entry["outcome"] = "survived"
@@ -1235,7 +1294,11 @@ def quantile(values: list[float], q: float) -> float | None:
 
 
 def foreign_abort(campaign: dict[str, Any]) -> list[str]:
-    """Section 9: a foreign Slurm job started, or foreign jobs held more than 8 CPUs."""
+    """Section 9: a foreign Slurm job started, or foreign jobs held more than 8 CPUs.
+
+    These are the only two reasons that abort a rung. With no host snapshot there is no
+    abort to read (empty); ``snapshot_problems`` reports the missing snapshots instead.
+    """
     own = campaign["job"]
     snapshots = [s for session in campaign["sessions"] for s in session["snapshots"] if s]
     snapshots.sort(key=lambda s: s.get("t") or 0)
@@ -1249,7 +1312,7 @@ def foreign_abort(campaign: dict[str, Any]) -> list[str]:
         return out
 
     if not snapshots:
-        return ["no host snapshots"]
+        return []
     first = set(running(snapshots[0]))
     reasons = []
     for snapshot in snapshots:
@@ -1262,6 +1325,27 @@ def foreign_abort(campaign: dict[str, Any]) -> list[str]:
     return sorted(set(reasons))
 
 
+def snapshot_problems(campaign: dict[str, Any]) -> list[str]:
+    """The sessions whose host snapshots (before and after) are missing (section 9).
+
+    The driver writes them into each session's record file after the VM's teardown, so a
+    job killed while its first sessions ran, or a run directory copied without its record
+    files, has none for those sessions. Such a rung attempt cannot show that no abort
+    occurred: it does not qualify and may be rerun once, like a campaign that did not
+    count. It is not an abort: its failed and excused trials count (section 6.1).
+    """
+    sessions = campaign["sessions"]
+    missing = [s.get("cycle") for s in sessions if not all(s.get("snapshots") or [None])]
+    if not sessions:
+        return [f"job {campaign['job']}: no session, so no host snapshots"]
+    if missing:
+        return [
+            f"job {campaign['job']}: host snapshots missing for {len(missing)} of "
+            f"{len(sessions)} sessions, first {missing[:5]}"
+        ]
+    return []
+
+
 def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
     """Whether one ladder rung qualifies (section 9), with its measurements.
 
@@ -1269,7 +1353,9 @@ def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
     (a restart-only trial is excused and listed in the restart report), and a rung with
     more than ``MAX_EXCUSED_PER_RUNG`` excused trials, gating or not, over its attempts
     (an aborted attempt aside, section 9) does not qualify. Excused trials' steps stay in
-    the step p95, and the foreign-load abort is unchanged.
+    the step p95, and the foreign-load abort is unchanged. Only ``foreign_abort``'s two
+    reasons abort a rung: an attempt missing host snapshots (``snapshot_problems``) does
+    not qualify and may be rerun, but its failed and excused trials count.
     """
     from harness.q2.vm.manifest import ladder_reps
 
@@ -1278,11 +1364,15 @@ def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
     gating = _gating()
 
     def rerun_allowed(previous: dict[str, Any]) -> bool:
-        # Section 9: an aborted rung (or one that did not count) is rerun once.
-        return bool(counting_problems(previous)) or bool(foreign_abort(previous))
+        # Section 9: an aborted rung, one without its host snapshots, or one that did not
+        # count is rerun once.
+        return bool(
+            counting_problems(previous) or foreign_abort(previous) or snapshot_problems(previous)
+        )
 
     def not_aborted(previous: dict[str, Any]) -> bool:
-        # Section 9: an aborted attempt's trials are reported and never counted.
+        # Section 9: an aborted attempt's trials are reported and never counted; missing
+        # snapshots are not an abort.
         return not foreign_abort(previous)
 
     earlier = []
@@ -1290,6 +1380,7 @@ def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
         problems += campaign_problems(
             c, rerun_allowed, not_aborted, excused=restart_only, judged=gating
         )
+        problems += snapshot_problems(c)
         if c["manifest"]["vm"]["concurrency"] != n:
             problems.append("a rung's campaigns run at one concurrency")
         for previous in c.get("earlier") or []:
@@ -1297,6 +1388,7 @@ def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
                 {
                     "job": previous["job"],
                     "abort_reasons": foreign_abort(previous),
+                    "snapshot_problems": snapshot_problems(previous),
                     "failed_trials": len(failed_trials(previous)),
                     "excused_trials": _excused_total([previous]),
                 }

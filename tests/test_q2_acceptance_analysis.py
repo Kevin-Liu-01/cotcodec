@@ -1274,3 +1274,179 @@ def test_a_rung_counts_excused_trials_over_its_attempts_but_not_an_aborted_one()
     _hit(_nth(again, SHOT, "type_plain", 0), *RESTART_ONLY)
     result = acc.n_star(a1, {8: [again]})
     assert result["n_star"] == 1 and "3 excused trials" in result["rungs"][8]["problems"][-1]
+
+
+# --- review of the D33 pass: reruns of the controls and rungs without host snapshots ------------
+
+
+def _uncounted(run: dict, job: str) -> dict:
+    """``run`` as an earlier attempt that did not count (the job never recorded its end)."""
+    earlier = copy.deepcopy(run)
+    earlier["job"], earlier["batch"], earlier["slurm"] = job, None, None
+    return earlier
+
+
+def _without_snapshots(run: dict, sessions: slice = slice(None)) -> dict:
+    """``run`` with the host snapshots of ``sessions`` missing (their record files)."""
+    out = copy.deepcopy(run)
+    for session in out["sessions"][sessions]:
+        session["snapshots"] = [None, None]
+    return out
+
+
+def test_a_rung_attempt_without_host_snapshots_is_not_an_abort():
+    """Section 9: only a foreign job starting, or foreign jobs holding more than 8 CPUs,
+    abort a rung. An attempt missing its host snapshots cannot show that no abort
+    occurred, so it does not qualify and may be rerun, but its failed and excused trials
+    count (section 6.1). Before, "no host snapshots" was read as an abort and dropped
+    them, so a rerun of an attempt that had counted qualified."""
+    a1 = [campaign(a1_plan(43)), campaign(a1_plan(44))]
+    gating = set(
+        json.loads((ROOT / "harness/q2/action_path/gating_set.json").read_text())["gating"]
+    )
+    blind = _without_snapshots(_rung(8))
+    blind["job"] = "81"
+    assert acc.counting_problems(blind) == [] and acc.foreign_abort(blind) == []
+    assert "missing for 20 of 20 sessions" in acc.snapshot_problems(blind)[0]
+    # Alone it does not qualify, and it is not reported as aborted.
+    result = acc.n_star(a1, {8: [blind]})["rungs"][8]
+    assert not result["qualifies"] and not result["aborted"] and result["abort_reasons"] == []
+    assert any("host snapshots missing" in p for p in result["problems"])
+    # It may be rerun, and a clean one leaves the rerun free to qualify.
+    rerun = dict(_rung(8), earlier=[blind])
+    result = acc.n_star(a1, {8: [rerun]})
+    assert result["n_star"] == 8, result["rungs"][8]["problems"]
+    report = result["rungs"][8]["earlier_attempts"][0]
+    assert report["abort_reasons"] == [] and report["snapshot_problems"]
+    # Its gating failure counts against the rerun.
+    gating_trial = next(t for s in blind["sessions"] for t in s["trials"] if t["cell"] in gating)
+    _hit(gating_trial, "events differ: expected [...], observed []")
+    result = acc.n_star(a1, {8: [rerun]})
+    problems = result["rungs"][8]["problems"]
+    assert result["n_star"] == 1 and any("earlier attempt 81 has 1 failed" in p for p in problems)
+    assert not any("counted and was rerun" in p for p in problems)
+    # So do its excused trials, toward the rung's limit of two.
+    gating_trial["pass"], gating_trial["infra"], gating_trial["reasons"] = True, [], []
+    for nth in range(3):
+        _hit(_nth(blind, A11Y, "type_plain", nth), *RESTART_ONLY)
+    result = acc.n_star(a1, {8: [rerun]})
+    assert result["n_star"] == 1
+    assert "3 excused trials" in result["rungs"][8]["problems"][-1]
+    # A counting attempt missing one session's snapshots does not qualify either.
+    partial = _without_snapshots(_rung(8), slice(3, 4))
+    assert acc.foreign_abort(partial) == []
+    assert "missing for 1 of 20 sessions, first [3]" in acc.snapshot_problems(partial)[0]
+    assert acc.n_star(a1, {8: [partial]})["n_star"] == 1
+    # A foreign-load abort still drops the aborted attempt's trials (section 9).
+    aborted = copy.deepcopy(blind)
+    aborted["sessions"][0]["snapshots"] = [
+        {"t": 0.0, "squeue_foreign": []},
+        {"t": 1.0, "squeue_foreign": [["91", "u", "RUNNING", "2"]]},
+    ]
+    assert acc.foreign_abort(aborted) == ["foreign job started: ['91']"]
+    assert acc.n_star(a1, {8: [dict(_rung(8), earlier=[aborted])]})["n_star"] == 8
+
+
+def test_c1_reads_an_earlier_attempt_by_its_own_rule():
+    """C1's known-defect cells fail by design: an earlier attempt's failures there are
+    what C1 requires and never count against it, and C1 judges no other cell; a
+    known-defect cell that passed in an earlier attempt does count."""
+
+    def plan(layer):
+        return order.plan(ids(layer), 42, 5, ["screenshot"])
+
+    defects = {layer: frozenset(cells) for layer, cells in acc.C1_MUST_FAIL.items()}
+    good = {layer: [campaign(plan(layer), fail=defects[layer])] for layer in acc.C1_MUST_FAIL}
+    first = _uncounted(good["H-OSW-up"][0], "70")
+    first["slurm"] = {"state": "TIMEOUT", "exit_code": "0:15"}
+    first["sessions"] = first["sessions"][:1]
+    _nth(first, SHOT, "R13", 0)["pass"] = False  # not a cell C1 judges
+    rerun = dict(good, **{"H-OSW-up": [dict(copy.deepcopy(good["H-OSW-up"][0]), earlier=[first])]})
+    assert acc.c1(rerun)["pass"], acc.c1(rerun)["problems"]
+    _nth(first, SHOT, "R09", 0)["pass"] = True  # the defect did not show in that trial
+    result = acc.c1(rerun)
+    assert not result["pass"]
+    assert any(
+        "earlier attempt 70 passed known-defect cells ['R09']" in p for p in result["problems"]
+    )
+    # The rerun rules still hold: a campaign that counted is not rerun.
+    counted = dict(good, **{"H-GA-buggy": [dict(good["H-GA-buggy"][0], earlier=[
+        copy.deepcopy(good["H-GA-buggy"][0])
+    ])]})  # fmt: skip
+    assert not acc.c1(counted)["pass"]
+
+
+def test_c2_reads_an_earlier_attempt_as_it_reads_the_counting_one():
+    """An earlier failure counts against C2 only on a cell outside the predicted set,
+    under C2's own reading of the trial (decision 34); the predicted cells fail by
+    design."""
+    plan = order.plan(ids("L0-fixed"), 42, 5, ["screenshot"])
+    good = _c2_campaign(plan, lambda t: None)
+    first = _uncounted(good, "79")
+    first["receipt"]["summary"]["infra_gates_pass"] = False
+    rerun = dict(copy.deepcopy(good), earlier=[first])
+    assert acc.c2([rerun])["pass"], acc.c2([rerun])["problems"]
+    # A marker-only failure outside the predicted set is not a failure under C2's reading.
+    stale = _nth(first, SHOT, "type_plain", 0)
+    stale["pass"], stale["reasons"] = False, ["marker [3, 1] != probe final [3, 2]"]
+    assert acc.c2([rerun])["pass"]
+    # A text difference there is, and so is an infrastructure failure.
+    stale["reasons"] = ["text 'a' != 'b'"]
+    result = acc.c2([rerun])
+    assert not result["pass"] and "earlier attempt 79 has 1 failed" in result["problems"][0]
+    stale["reasons"], stale["infra"] = ["infra: execute"], ["execute"]
+    assert not acc.c2([rerun])["pass"]
+
+
+def test_c3_reads_kills_from_the_counting_attempt_and_the_reference_over_every_attempt():
+    """A mutant's failures are its kills, so an earlier attempt's never count against C3;
+    its kills and equivalence come from the counting attempt and the earlier attempt is
+    reported. A cell the reference failed in any attempt cannot kill, while a by-design
+    outside-spec failure in an earlier reference attempt costs nothing."""
+    import yaml
+
+    from harness.q2.action_path import mutants as kit
+
+    operators = yaml.safe_load(
+        (ROOT / "harness/q2/action_path/mutation_operators.yaml").read_text()
+    )
+    pairs = kit.scored_pairs(operators)
+    plans = {layer: order.plan(ids(layer), 42, 1, ["screenshot"]) for layer in acc.C3_LAYERS}
+    references = {layer: [campaign(plans[layer])] for layer in acc.C3_LAYERS}
+    runs = {(op, layer): [campaign(plans[layer], fail={"R14", "key_enter"})] for op, layer in pairs}
+    op = next(p for p in pairs if p[1] == "H-GA")
+    key = f"{op[0]} H-GA"
+    one = runs[op][0]
+    rerun = {**runs, op: [dict(copy.deepcopy(one), earlier=[_uncounted(one, "e3")])]}
+    result = acc.c3(rerun, references)
+    assert result["pass"], result["problems"]
+    entry = result["mutants"][key]
+    assert entry["outcome"] == "killed" and entry["killers"] == ["R14", "key_enter"]
+    assert entry["earlier_attempts"] == [
+        {"job": "e3", "failed_cells": ["R14", "key_enter"], "signature_matches_reference": True}
+    ]  # the synthetic failures keep the reference's events and text
+    # An earlier attempt's kills do not count: a counting attempt that kills nothing and
+    # differs from the reference survives.
+    differs = campaign(plans["H-GA"])
+    _nth(differs, SHOT, "type_plain", 0)["text"] = "b"
+    survivor = {**runs, op: [dict(differs, earlier=[_uncounted(one, "e4")])]}
+    result = acc.c3(survivor, references)
+    assert not result["pass"] and result["mutants"][key]["outcome"] == "survived"
+    # The reference: an outside-spec failure in an earlier attempt (R03, by design on
+    # H-GA) costs nothing; a failure of a cell that can kill keeps it from killing.
+    reference = references["H-GA"][0]
+    earlier_reference = _uncounted(reference, "r1")
+    _nth(earlier_reference, SHOT, "R03", 0)["pass"] = False
+    rerun_reference = dict(references, **{"H-GA": [dict(reference, earlier=[earlier_reference])]})
+    assert acc.c3(runs, rerun_reference)["pass"]
+    _nth(earlier_reference, SHOT, "key_enter", 0)["pass"] = False
+    result = acc.c3(runs, rerun_reference)
+    entry = result["mutants"][key]
+    assert entry["killers"] == ["R14"] and entry["reference_not_clean"] == ["key_enter"]
+    alone = campaign(plans["H-GA"], fail={"key_enter"})
+    _nth(alone, SHOT, "key_enter", 0)["text"] = "b"  # the mutant's own effect
+    lone = {**runs, op: [alone]}
+    assert acc.c3(lone, references)["mutants"][key]["outcome"] == "killed"
+    result = acc.c3(lone, rerun_reference)
+    assert not result["pass"] and result["mutants"][key]["outcome"] == "survived"
+    assert result["mutants"][key]["reference_not_clean"] == ["key_enter"]
