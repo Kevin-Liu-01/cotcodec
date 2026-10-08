@@ -317,3 +317,99 @@ def test_d34_rerate_evidence_is_intact_and_holds_no_item_label_or_answer() -> No
     held = (RERATE_V4 / "held" / "SHA256SUMS").read_text(encoding="utf-8")
     for name in ("dev-audit-v4/sample.jsonl", "open-weight/calls.jsonl"):
         assert name in held
+
+
+ISOLATED_V4 = INTEGRATION / "rater-isolated-dev-v4"
+
+
+def test_d34_isolated_ingest_evidence_is_intact_salted_and_carries_no_document_text() -> None:
+    """Held files match their pre-ingest digests, the salt matches its committed hash, and
+    the registered and relay-excepted ingests agree with the strict transcript audit."""
+    from harness.q2_mutation import rater_runner, raters
+
+    sums = {}
+    for line in (ISOLATED_V4 / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        sums[name.removeprefix("./")] = digest
+    files = {
+        str(p.relative_to(ISOLATED_V4))
+        for p in ISOLATED_V4.rglob("*")
+        if p.is_file() and p.name != "SHA256SUMS"
+    }
+    assert set(sums) == files
+    for name, digest in sums.items():
+        assert hashlib.sha256((ISOLATED_V4 / name).read_bytes()).hexdigest() == digest, name
+    # The released files are exactly the ones whose digests were committed before the ingest.
+    held = {}
+    for line in (RERATE_V4 / "held" / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        held[name.removeprefix("./")] = digest
+    released = {
+        f"dev-audit-v4/{name}": ISOLATED_V4 / "audit" / name
+        for name in ("sample.jsonl", "spot-check.jsonl", "items.jsonl", "baseline-jobs.jsonl")
+    }
+    released["open-weight/calls.jsonl"] = ISOLATED_V4 / "open-weight" / "calls.jsonl"
+    for name in held:
+        if name.startswith("dev-mutants-v9/"):
+            released[name] = INTEGRATION / name
+    assert set(released) == set(held)
+    for name, path in released.items():
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == held[name], name
+
+    # The revealed salt is the one committed as a hash, and it makes every item id.
+    salt = (ISOLATED_V4 / "audit" / "salt.hex").read_text(encoding="ascii").strip()
+    sample_summary = json.loads((RERATE_V4 / "audit" / "sample-summary.json").read_text())
+    assert raters.salt_sha256(salt) == sample_summary["salt_sha256"]
+    sample = _jsonl(ISOLATED_V4 / "audit" / "sample.jsonl")
+    assert {row["task_id"] for row in sample} <= DEV
+    assert all(raters.opaque_item_id(r["mutant_id"], salt) == r["item_id"] for r in sample)
+    manifest_bytes = (RERATE_V4 / "isolated-export" / "iso-manifest.json").read_bytes()
+    manifest = json.loads(manifest_bytes)
+    assert {row["item_id"] for row in sample} == set(manifest["items"])
+
+    audit = json.loads((ISOLATED_V4 / "claude-isolated" / "transcript-audit.json").read_text())
+    assert audit["prompt_template_sha256"] == rater_runner.ISOLATED_PROMPT_TEMPLATE_SHA256
+    assert audit["manifest_sha256"] == hashlib.sha256(manifest_bytes).hexdigest()
+    done = {a["item_id"]: a for a in audit["agents"] if a["completed"]}
+    assert set(done) == set(manifest["items"]) and len(done) == 142
+    for agent in audit["agents"]:
+        assert set(agent["tool_counts"]) <= {"Read", "StructuredOutput"}
+        assert agent["reads_outside_item_dir"] == 0 and not agent["problems"]
+        assert agent["task_turn_exact"] and set(agent["models"]) == {"claude-opus-5-5"}
+        assert agent["completed"] or "StructuredOutput" not in agent["tool_counts"]
+    assert not any(item["strict_void"] for item in audit["items"])
+
+    receipt = json.loads((ISOLATED_V4 / "claude-isolated" / "receipt.json").read_text())
+    assert receipt["manifest_sha256"] == hashlib.sha256(manifest_bytes).hexdigest()
+    assert receipt["calls_sha256"] == sums["claude-isolated/calls.jsonl"]
+    registered = _jsonl(ISOLATED_V4 / "claude-isolated" / "calls.jsonl")
+    excepted = {
+        c["item_id"]: c
+        for c in _jsonl(ISOLATED_V4 / "claude-isolated-relay-excepted" / "calls.jsonl")
+    }
+    assert {c["item_id"] for c in registered} == set(excepted) == set(manifest["items"])
+    for call in registered:
+        extra = call["extra"]
+        agent = done[call["item_id"]]
+        assert extra["transcript_sha256"] == agent["transcript_sha256"]
+        assert extra["tree_sha256"] == extra["tree_rehashed_sha256"]
+        assert excepted[call["item_id"]]["outcome"] == "ok"
+        assert excepted[call["item_id"]]["answer"] == agent["answer"]
+        if agent["first_turn_is_task"]:
+            assert call["outcome"] == "ok" and call["answer"] == agent["answer"]
+        else:
+            # The resumed harness's relay turn came first: void under the registered rule.
+            assert call["outcome"] == "isolation_void" and call["answer"] == "unsure"
+    assert Counter(c["outcome"] for c in registered) == {"ok": 32, "isolation_void": 110}
+    for path in ISOLATED_V4.rglob("*"):
+        if path.is_file() and path.suffix in {".json", ".jsonl", ".txt", ".md"}:
+            text = path.read_text(encoding="utf-8")
+            assert "data_b64" not in text and '"reason":' not in text, path
+    summary = json.loads((ISOLATED_V4 / "summary.json").read_text())
+    for name, folder in (
+        ("registered", "audit-summary"),
+        ("relay_excepted", "audit-summary-relay-excepted"),
+    ):
+        result = json.loads((ISOLATED_V4 / folder / "audit-summary.json").read_text())
+        assert summary[f"summary_{name}"]["kappa"] == result["kappa"]
+        assert summary["d34_i"][f"fires_{name}"] == (result["kappa"] < 0.6)
