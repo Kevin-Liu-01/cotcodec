@@ -1,0 +1,28 @@
+{
+ "agent_turn_models": {
+  "claude-opus-5-5": 3192
+ },
+ "items": 178,
+ "items_reading_every_page_image": 176,
+ "items_with_read_truncation_notice": 153,
+ "outcomes": {
+  "isolation_void": 1,
+  "ok": 177
+ },
+ "page_images_exported": 1457,
+ "page_images_read": 1453,
+ "read_truncation_notices": 153,
+ "reads_outside_item_directory": [
+  {
+   "exists": false,
+   "item_id": "fd455942d783ba01",
+   "path_relative_to_session_root": "pages/p01.png"
+  }
+ ],
+ "role": "diligence aggregates; the registered transcript audit is rater_runner.audit_transcript",
+ "schema": "q2m-confirm-transcript-stats-v1",
+ "tool_calls": {
+  "Read": 2141,
+  "StructuredOutput": 178
+ }
+}

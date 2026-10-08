@@ -1859,6 +1859,40 @@ Append-only. Newest entries at the bottom.
 - Next: the narrow re-check of the measured limits (D42 (iii)), then merge
   and freeze naming D42.
 
+## 2026-10-08 — Q2 evaluator-mutation: confirm stage B (isolated Claude rating ingest, audit summary, registered analysis)
+
+- Operator run of the frozen `q2-evaluator-mutation-v1` (ledger row 11,
+  `65bc2e2`), branch `ops/q2-mutation-confirm`, evidence
+  `program/evidence/2026-10-08/q2-mutation-confirm/audit/` (section Stage B)
+  and `.../results/`. Every command ran locally from a fresh `git archive` of
+  `65bc2e2` (pins equal the frozen block). No GPU; the host was only read.
+- Isolated Claude rating: workflow run `wf_138e30b5-c1a`, one unresumed
+  session of 178 rater agents (`rate:0`-`177`), every one answered.
+  `collect-transcripts`: 178 transcripts mapped to 178 items, none
+  unmappable. `ingest-isolated` (both packet copies, manifest `f9c91d57...`,
+  root re-hashed, collection `3a48f6f0...`): 177 `ok`, 1 `isolation_void`
+  (`fd455942d783ba01`: one Read of a mistyped, non-existent path outside the
+  item directory; the registered rule voids it, and it is in the pool as a
+  split); no relay frame, nothing to re-rate; model `claude-opus-5-5` only;
+  only the 15 registered attachment types.
+- Salt revealed: SHA-256 `194ee66c...` matches, 178/178 item ids recompute.
+  Held files released after their digests checked (A1 18/18, A2 7/7).
+- `audit summarize`: κ 0.343 on 138 real items (raw agreement 82.6%); sham
+  accuracy Claude 0.90, Qwen 0.975; 24 real items unresolved; K3 fires for
+  both groups and κ, K4 fires (reported only, D35); no gold defect decided.
+- Registered analysis (`--controls-summary`, `--reserve-controls-summary`):
+  P1 raw 4/92 (4.35%), audit-confirmed 3/92 (3.26%, 0.68-9.23%). Checker
+  false-negative candidates 36, all `pptx.eq.zorder_nonoverlap` on
+  `compare_pptx_files`(`_tolerant`): 30 confirmed, 6 unresolved; candidate
+  share 12.4% (7.2-18.3%), `compare_pptx_files` 40.2%. False-positive
+  candidates 5 violations: 2 confirmed, 3 label-contradicted by both raters
+  (pending Kevin); 5.9% (0.8-12.3%). Exploratory (D34 (i)): P2 12.4%, P3
+  6.1%, P4 0/5, P5 17/60. K2 "offline harness, VM fidelity unverified".
+- Pending for Kevin: the 34-item adjudication pool (24 splits, 6 concordant
+  contradictions, 4 split gold shams) and the 25-item human spot check (7
+  overlap); then `audit summarize --adjudications` and the analysis rerun.
+  Nothing pushed or merged.
+
 ## 2026-10-08 — Q3 dense pre-check v2: the 4B limit's estimator sensitivity disclosed (branch `stage0/q3-dense-v2`, draft, not frozen)
 
 - The narrow re-check of the measured limits found that Compute said the
