@@ -1,0 +1,1024 @@
+{
+ "a4_probes": {
+  "counts": {
+   "aggregate|tutorial": {
+    "reject:candidate-raised": 1
+   },
+   "compute-sanitizer|control": {
+    "accept:": 4
+   },
+   "compute-sanitizer|inductor": {
+    "accept:": 6
+   },
+   "compute-sanitizer|liger": {
+    "accept:": 3
+   },
+   "compute-sanitizer|tutorial": {
+    "accept:": 2,
+    "reject:": 1
+   },
+   "in-process|control": {
+    "accept:": 4
+   },
+   "in-process|inductor": {
+    "accept:": 6
+   },
+   "in-process|liger": {
+    "accept:": 2,
+    "reject:": 1
+   },
+   "in-process|tutorial": {
+    "accept:": 2
+   },
+   "poison-allocator|control": {
+    "accept:": 4
+   },
+   "poison-allocator|inductor": {
+    "accept:": 6
+   },
+   "poison-allocator|liger": {
+    "accept:": 3
+   },
+   "poison-allocator|tutorial": {
+    "accept:": 3
+   }
+  },
+  "rows": [
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead5",
+    "reason": "",
+    "refused_configs": [
+     {
+      "config_id": "A3/lead1",
+      "exception": "SubstrateRefusal"
+     }
+    ],
+    "returncode": 0,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead5",
+    "reason": "",
+    "refused_configs": [
+     {
+      "config_id": "A3/lead1",
+      "exception": "SubstrateRefusal"
+     }
+    ],
+    "returncode": 0,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": [],
+    "returncode": 0,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": "A3/allprime",
+    "reason": "",
+    "refused_configs": [],
+    "returncode": 0,
+    "role": "substrate",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "ctl-identity-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "ctl-identity-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "ctl-identity-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": [],
+    "returncode": 0,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "ctl-identity-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "ctl-identity-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "ctl-identity-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": [],
+    "returncode": 0,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "ctl-identity-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "ctl-identity-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "ctl-identity-L1-95_CrossEntropyLoss",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": [],
+    "returncode": 0,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "ctl-identity-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "ctl-identity-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "ctl-identity-L1-2_Standard_matrix_multiplication_",
+    "phase": "scoring",
+    "probe_config_id": "A3/allprime",
+    "reason": "",
+    "refused_configs": [],
+    "returncode": 0,
+    "role": "identity-control",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead5",
+    "reason": "",
+    "refused_configs": [
+     {
+      "config_id": "A3/lead1",
+      "exception": "SubstrateRefusal"
+     }
+    ],
+    "returncode": 0,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead5",
+    "reason": "",
+    "refused_configs": [
+     {
+      "config_id": "A3/lead1",
+      "exception": "SubstrateRefusal"
+     }
+    ],
+    "returncode": 0,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.minus2plus.L140C13",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.minus2plus.L140C13",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.minus2plus.L140C13",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": [],
+    "returncode": 0,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.mul2plus.L123C18",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.mul2plus.L123C18",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.mul2plus.L123C18",
+    "phase": "scoring",
+    "probe_config_id": "A3/allprime",
+    "reason": "",
+    "refused_configs": [],
+    "returncode": 0,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.dim-param-swap-decode.L92C19",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.dim-param-swap-decode.L92C19",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead5",
+    "reason": "",
+    "refused_configs": [
+     {
+      "config_id": "A3/lead1",
+      "exception": "SubstrateRefusal"
+     }
+    ],
+    "returncode": 0,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.dim-param-swap-decode.L92C19",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.dim-param-swap-decode.L76C21",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.dim-param-swap-decode.L76C21",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead5",
+    "reason": "",
+    "refused_configs": [
+     {
+      "config_id": "A3/lead1",
+      "exception": "SubstrateRefusal"
+     }
+    ],
+    "returncode": 0,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "in-process",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.program-id-axis-swap.L55C17",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "reject"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.dim-param-swap-decode.L76C21",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.program-id-axis-swap.L55C17",
+    "phase": "scoring",
+    "probe_config_id": "A3/lead1",
+    "reason": "",
+    "refused_configs": [],
+    "returncode": 0,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.program-id-axis-swap.L55C17",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "aggregate",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.launch-stride-swap.L158C21",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "candidate-raised",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "reject"
+   },
+   {
+    "config_id": "poison-allocator",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.launch-stride-swap.L158C21",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": null,
+    "role": "mutant",
+    "verdict": "accept"
+   },
+   {
+    "config_id": "compute-sanitizer",
+    "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.launch-stride-swap.L158C21",
+    "phase": "scoring",
+    "probe_config_id": null,
+    "reason": "",
+    "refused_configs": null,
+    "returncode": 86,
+    "role": "mutant",
+    "verdict": "reject"
+   }
+  ]
+ },
+ "b2_rows": [
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 18,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 18,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 22,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 22,
+    "reason": null
+   },
+   "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 9,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 9,
+    "reason": null
+   },
+   "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 27,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 27,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-identity-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 27,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 27,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-identity-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 18,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 18,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-identity-L1-95_CrossEntropyLoss",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 11,
+    "num_custom_kernels": 0,
+    "num_total_kernels": 11,
+    "reason": "profiler-shows-no-captured-kernel"
+   },
+   "kernel": "ctl-identity-L1-2_Standard_matrix_multiplication_",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "reject"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 18,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 18,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 22,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 22,
+    "reason": null
+   },
+   "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.minus2plus.L140C13",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 9,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 9,
+    "reason": null
+   },
+   "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.mul2plus.L123C18",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 18,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.dim-param-swap-decode.L92C19",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 18,
+    "num_custom_kernels": 3,
+    "num_total_kernels": 18,
+    "reason": null
+   },
+   "kernel": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.dim-param-swap-decode.L76C21",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": 5,
+    "event_rows": 22,
+    "num_custom_kernels": 2,
+    "num_total_kernels": 22,
+    "reason": null
+   },
+   "kernel": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.program-id-axis-swap.L55C17",
+   "phase": "scoring",
+   "profile_attempts": 1,
+   "verdict": "accept"
+  },
+  {
+   "details": {
+    "b0_calls_replayed": null,
+    "event_rows": null,
+    "num_custom_kernels": null,
+    "num_total_kernels": null,
+    "reason": "profiling-raised"
+   },
+   "kernel": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.launch-stride-swap.L158C21",
+   "phase": "scoring",
+   "profile_attempts": null,
+   "verdict": "error"
+  }
+ ],
+ "calibration": null,
+ "fidelity": [],
+ "fidelity_agreement_counts": {},
+ "job": "runs/548",
+ "phases": {
+  "elapsed_seconds": 264.647,
+  "job": "pilot",
+  "phases": [
+   {
+    "manifest_sha256": "260038b32e3f6778187c49a2610a5ecc81a34032214d93c353f0e7b6dd18279d",
+    "phase": "unpack",
+    "seconds": 0.32,
+    "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+    "start_offset_seconds": 0.019,
+    "status": "ok",
+    "trees": {
+     "corpus": {
+      "added": [],
+      "files": 1905,
+      "licence": "mixed",
+      "path": "/outputs/q1/inputs/corpus",
+      "revision": null,
+      "source": "q1-pilot-corpus",
+      "tree_sha256": "62700d5ac1469e362352caf779946d2d758cc758266ca6b4325fd005cc45304b"
+     },
+     "kbv": {
+      "added": [
+       "REVISION"
+      ],
+      "files": 604,
+      "licence": "MIT",
+      "path": "/outputs/q1/inputs/kbv",
+      "revision": "3fdf6fec7372a4d0cb682635f00e7bdcbc55d50e",
+      "source": "facebookresearch/kernel_bench_verified",
+      "tree_sha256": "02aac1269d88844ee6bbe3049fb31528169fa64435b2ce6e37694276f3b3244d"
+     },
+     "kernelgym": {
+      "added": [
+       "REVISION"
+      ],
+      "files": 291,
+      "licence": "none",
+      "path": "/outputs/q1/inputs/kernelgym",
+      "revision": "3a84417f8c0efaadb215ef638b37d12e71ed20f3",
+      "source": "hkust-nlp/KernelGYM",
+      "tree_sha256": "162a31a621fa7e3a43e0537a30e6dba934aa4ddb7d73ca90df2b284a3e39a83e"
+     }
+    }
+   },
+   {
+    "phase": "timing",
+    "runs": [
+     {
+      "budget_seconds": 90.0,
+      "crashes": 0,
+      "left_in_queue": 0,
+      "name": "timing",
+      "planned": 2,
+      "retired_slots": [],
+      "run": 2,
+      "run_id": "84c166e3a2bb",
+      "skipped": 0,
+      "time_boxed": false,
+      "timeouts": 0
+     }
+    ],
+    "seconds": 22.508,
+    "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+    "start_offset_seconds": 0.393,
+    "status": "ok"
+   },
+   {
+    "phase": "scoring",
+    "runs": [
+     {
+      "budget_seconds": 319.1,
+      "crashes": 2,
+      "left_in_queue": 0,
+      "name": "scoring",
+      "planned": 240,
+      "retired_slots": [],
+      "run": 240,
+      "run_id": "6f3e65c857e1",
+      "skipped": 0,
+      "time_boxed": false,
+      "timeouts": 0
+     }
+    ],
+    "scoring_selection": {
+     "items": 240,
+     "prefix": 240,
+     "shared_only": true
+    },
+    "seconds": 241.74,
+    "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+    "start_offset_seconds": 22.901,
+    "status": "ok"
+   }
+  ],
+  "slots": [
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0",
+   "cuda:0"
+  ],
+  "slots_per_gpu": 12
+ },
+ "schema": "q1-pilot-evidence/1",
+ "smoke_checks": [],
+ "smoke_checks_failed": [],
+ "verdict_counts": {
+  "calibration": {},
+  "fidelity": {},
+  "scoring": {
+   "A1": {
+    "accept": 3,
+    "reject": 13
+   },
+   "A2": {
+    "accept": 3,
+    "reject": 13
+   },
+   "A3": {
+    "accept": 3,
+    "refuse": 3,
+    "reject": 10
+   },
+   "A4": {
+    "reject": 1
+   },
+   "A5": {
+    "accept": 5,
+    "error": 1,
+    "reject": 10
+   },
+   "a": {
+    "accept": 10,
+    "reject": 6
+   },
+   "a_1e-3": {
+    "accept": 10,
+    "reject": 6
+   },
+   "a_head_1e-2": {
+    "accept": 8,
+    "error": 4,
+    "reject": 4
+   },
+   "a_head_1e-4": {
+    "accept": 7,
+    "error": 4,
+    "reject": 5
+   },
+   "a_static": {
+    "accept": 5,
+    "reject": 11
+   },
+   "b1": {
+    "accept": 11,
+    "error": 1,
+    "reject": 4
+   },
+   "b2": {
+    "accept": 11,
+    "error": 1,
+    "reject": 4
+   },
+   "c": {
+    "reject": 1
+   },
+   "c1": {
+    "accept": 10,
+    "reject": 5
+   },
+   "c2": {
+    "accept": 10,
+    "reject": 5
+   },
+   "c3": {
+    "accept": 10,
+    "reject": 5
+   },
+   "c_1e-2": {
+    "accept": 10,
+    "reject": 5
+   },
+   "c_kbv_raw": {
+    "accept": 10,
+    "reject": 5
+   }
+  },
+  "smoke": {},
+  "smoke-timing": {},
+  "timing": {
+   "timing": {
+    "accept": 2
+   }
+  }
+ }
+}

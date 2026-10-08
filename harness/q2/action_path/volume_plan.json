@@ -1,0 +1,759 @@
+{
+  "boot_upper_bound_family_95": 0.004741,
+  "class_actions": {
+    "click_left": 10170,
+    "click_other": 10150,
+    "drag": 10150,
+    "key": 10216,
+    "move": 10148,
+    "scroll": 10150,
+    "type": 10148
+  },
+  "class_upper_bound_family_95": {
+    "click_left": 0.0004989,
+    "click_other": 0.0004999,
+    "drag": 0.0004999,
+    "key": 0.0004967,
+    "move": 0.0005,
+    "scroll": 0.0004999,
+    "type": 0.0005
+  },
+  "entries": {
+    "caps_lock_roundtrip": {
+      "classes": {
+        "key": 2
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_alt_f4": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_alt_tab": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_ctrl_a": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_ctrl_alone": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_ctrl_alt_shift_r": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_ctrl_c": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_ctrl_home": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_ctrl_shift_arrow": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_ctrl_shift_t": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_shift_alone": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_shift_arrow_left": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_shift_tab": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "chord_super_d": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "click_alt_left": {
+      "classes": {
+        "click_other": 1
+      },
+      "entry_upper_bound_95": 0.002375,
+      "pure_class": "click_other",
+      "reps": 1260
+    },
+    "click_burst_5": {
+      "classes": {
+        "click_left": 5
+      },
+      "entry_upper_bound_95": 0.003603,
+      "pure_class": "click_left",
+      "reps": 830
+    },
+    "click_corner_bottomright": {
+      "classes": {
+        "click_left": 1
+      },
+      "entry_upper_bound_95": 0.003603,
+      "pure_class": "click_left",
+      "reps": 830
+    },
+    "click_corner_topleft": {
+      "classes": {
+        "click_left": 1
+      },
+      "entry_upper_bound_95": 0.003603,
+      "pure_class": "click_left",
+      "reps": 830
+    },
+    "click_ctrl_left": {
+      "classes": {
+        "click_other": 1
+      },
+      "entry_upper_bound_95": 0.002375,
+      "pure_class": "click_other",
+      "reps": 1260
+    },
+    "click_ctrl_shift_right": {
+      "classes": {
+        "click_other": 1
+      },
+      "entry_upper_bound_95": 0.002375,
+      "pure_class": "click_other",
+      "reps": 1260
+    },
+    "click_double_left": {
+      "classes": {
+        "click_other": 1
+      },
+      "entry_upper_bound_95": 0.002375,
+      "pure_class": "click_other",
+      "reps": 1260
+    },
+    "click_double_slow": {
+      "classes": {
+        "click_left": 2
+      },
+      "entry_upper_bound_95": 0.003603,
+      "pure_class": "click_left",
+      "reps": 830
+    },
+    "click_left_center": {
+      "classes": {
+        "click_left": 1
+      },
+      "entry_upper_bound_95": 0.003603,
+      "pure_class": "click_left",
+      "reps": 830
+    },
+    "click_middle": {
+      "classes": {
+        "click_other": 1
+      },
+      "entry_upper_bound_95": 0.002375,
+      "pure_class": "click_other",
+      "reps": 1260
+    },
+    "click_right": {
+      "classes": {
+        "click_other": 1
+      },
+      "entry_upper_bound_95": 0.002375,
+      "pure_class": "click_other",
+      "reps": 1260
+    },
+    "click_shift_left": {
+      "classes": {
+        "click_other": 1
+      },
+      "entry_upper_bound_95": 0.002375,
+      "pure_class": "click_other",
+      "reps": 1260
+    },
+    "click_then_type": {
+      "classes": {
+        "click_left": 1,
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.041893,
+      "pure_class": null,
+      "reps": 70
+    },
+    "click_triple_left": {
+      "classes": {
+        "click_other": 1
+      },
+      "entry_upper_bound_95": 0.002375,
+      "pure_class": "click_other",
+      "reps": 1260
+    },
+    "click_two_positions_ordered": {
+      "classes": {
+        "click_left": 2
+      },
+      "entry_upper_bound_95": 0.003603,
+      "pure_class": "click_left",
+      "reps": 830
+    },
+    "drag_long_diagonal": {
+      "classes": {
+        "drag": 1
+      },
+      "entry_upper_bound_95": 0.001495,
+      "pure_class": "drag",
+      "reps": 2002
+    },
+    "drag_short": {
+      "classes": {
+        "drag": 1
+      },
+      "entry_upper_bound_95": 0.001495,
+      "pure_class": "drag",
+      "reps": 2002
+    },
+    "drag_slow_small": {
+      "classes": {
+        "drag": 1
+      },
+      "entry_upper_bound_95": 0.001495,
+      "pure_class": "drag",
+      "reps": 2002
+    },
+    "drag_to_corner": {
+      "classes": {
+        "drag": 1
+      },
+      "entry_upper_bound_95": 0.001495,
+      "pure_class": "drag",
+      "reps": 2002
+    },
+    "drag_vertical": {
+      "classes": {
+        "drag": 1
+      },
+      "entry_upper_bound_95": 0.001495,
+      "pure_class": "drag",
+      "reps": 2002
+    },
+    "key_arrow_down": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_arrow_left": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_arrow_right": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_arrow_up": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_delete": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_end": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_enter": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_esc": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_f1": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_f12": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_f5": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_f9": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_home": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_insert": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_kp_add": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_kp_enter": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_menu": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_pagedown": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_pageup": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_space_chord": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "key_tab": {
+      "classes": {
+        "key": 1
+      },
+      "entry_upper_bound_95": 0.010795,
+      "pure_class": "key",
+      "reps": 276
+    },
+    "move_only": {
+      "classes": {
+        "move": 1
+      },
+      "entry_upper_bound_95": 0.000297,
+      "pure_class": "move",
+      "reps": 10078
+    },
+    "no_action_control": {
+      "classes": {},
+      "entry_upper_bound_95": 0.041893,
+      "pure_class": null,
+      "reps": 70
+    },
+    "scroll_at_offcenter_position": {
+      "classes": {
+        "scroll": 1
+      },
+      "entry_upper_bound_95": 0.002968,
+      "pure_class": "scroll",
+      "reps": 1008
+    },
+    "scroll_ctrl_down_3": {
+      "classes": {
+        "scroll": 1
+      },
+      "entry_upper_bound_95": 0.002968,
+      "pure_class": "scroll",
+      "reps": 1008
+    },
+    "scroll_down_1": {
+      "classes": {
+        "scroll": 1
+      },
+      "entry_upper_bound_95": 0.002968,
+      "pure_class": "scroll",
+      "reps": 1008
+    },
+    "scroll_down_10": {
+      "classes": {
+        "scroll": 1
+      },
+      "entry_upper_bound_95": 0.002968,
+      "pure_class": "scroll",
+      "reps": 1008
+    },
+    "scroll_down_25": {
+      "classes": {
+        "scroll": 1
+      },
+      "entry_upper_bound_95": 0.002968,
+      "pure_class": "scroll",
+      "reps": 1008
+    },
+    "scroll_down_3": {
+      "classes": {
+        "scroll": 1
+      },
+      "entry_upper_bound_95": 0.002968,
+      "pure_class": "scroll",
+      "reps": 1008
+    },
+    "scroll_down_then_up_net_zero": {
+      "classes": {
+        "scroll": 2
+      },
+      "entry_upper_bound_95": 0.002968,
+      "pure_class": "scroll",
+      "reps": 1008
+    },
+    "scroll_shift_down_3": {
+      "classes": {
+        "scroll": 1
+      },
+      "entry_upper_bound_95": 0.002968,
+      "pure_class": "scroll",
+      "reps": 1008
+    },
+    "scroll_up_3": {
+      "classes": {
+        "scroll": 1
+      },
+      "entry_upper_bound_95": 0.002968,
+      "pure_class": "scroll",
+      "reps": 1008
+    },
+    "seq_drag_then_click": {
+      "classes": {
+        "click_left": 1,
+        "drag": 1
+      },
+      "entry_upper_bound_95": 0.041893,
+      "pure_class": null,
+      "reps": 70
+    },
+    "seq_long_mixed": {
+      "classes": {
+        "click_left": 1,
+        "click_other": 1,
+        "drag": 1,
+        "key": 2,
+        "move": 1,
+        "scroll": 1,
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.041893,
+      "pure_class": null,
+      "reps": 70
+    },
+    "seq_type_chord_type": {
+      "classes": {
+        "key": 1,
+        "type": 2
+      },
+      "entry_upper_bound_95": 0.041893,
+      "pure_class": null,
+      "reps": 70
+    },
+    "type_combining": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_digits": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_emoji": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_emoji_zwj": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_long_200": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_long_500": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_mixed_case": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_multiline_tabs": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_plain": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_repeated_chars": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_rtl": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_shell_hostile": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_single_char": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_spaces": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_symbols_shifted": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_unicode_bmp": {
+      "classes": {
+        "type": 1
+      },
+      "entry_upper_bound_95": 0.004915,
+      "pure_class": "type",
+      "reps": 608
+    },
+    "type_with_correction": {
+      "classes": {
+        "key": 1,
+        "type": 2
+      },
+      "entry_upper_bound_95": 0.041893,
+      "pure_class": null,
+      "reps": 70
+    }
+  },
+  "layer": "L0-fixed",
+  "order_sha256": "87a70e10bb18d8d81bde77b1c9ce89cc5c8cb212dc6d22f3b36c30964d2e82dd",
+  "rule": {
+    "actions_per_class_min": 10148,
+    "alpha_each": 0.00625,
+    "classes": [
+      "click_left",
+      "click_other",
+      "move",
+      "drag",
+      "scroll",
+      "type",
+      "key"
+    ],
+    "episode_actions": 20,
+    "episode_loss_bound_pp": 1.5,
+    "family_alpha": 0.05,
+    "min_reps_per_entry": 70,
+    "order_seed": 43,
+    "p_action": 0.0005,
+    "p_boot": 0.005,
+    "session_trials_max": 60,
+    "sessions_min": 1013,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "statements": 8
+  },
+  "schema": "cotcodec-q2-volume-plan-v1",
+  "sessions": 1068,
+  "sessions_per_setting": {
+    "screenshot": 534,
+    "screenshot+a11y": 534
+  },
+  "trials": 64028,
+  "trials_per_setting": {
+    "screenshot": 32014,
+    "screenshot+a11y": 32014
+  }
+}

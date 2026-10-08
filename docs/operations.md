@@ -135,7 +135,7 @@ the result. This is a check at one moment, not isolation.
 
 Slurm sends SIGUSR1 to the batch script 180 s before the time limit. The
 script forwards it to the running container at once (and forwards SIGTERM the
-same way). The workload must:
+same way, with a shorter wait; see below). The workload must:
 
 1. On SIGUSR1, finish a complete checkpoint save to `/outputs`.
 2. Only after that save is complete, write `/outputs/checkpoint.ready`
@@ -153,14 +153,80 @@ inode, size and nanosecond mtime, and the time. It confirms only a marker that
 differs from that record, has an mtime no earlier than that time, and contains
 the `trigger=` line for the signal it sent. A stale marker, a periodic save that
 lands in the same window, or a marker without the trigger line never confirms.
+SIGTERM is different: Slurm sends it to every process of the job, and the
+attached `docker start` client passes it to the container before the script's
+trap can run. For TERM the record is therefore taken just before the container
+starts and again before each TERM the script sends itself (after a USR1), and a
+`trigger=SIGTERM` marker written since then confirms, even when the container
+has already exited by the time the trap runs.
 It waits up to 120 s or until the container exits, then sends SIGTERM if the
 container is still running. `termination.env` records the outcome as
 `reason=signal_USR1_checkpoint_confirmed`, `_missing` (container exited
 without a confirming marker), `_timeout` or `_not_forwarded` (container not
-running). Other reasons are `completed`, `workload_failed`,
-`foreign_gpu_process` and `gpu_prolog_unavailable`. `checkpoint_ready=true`
-means a signal-triggered checkpoint was confirmed in this job;
-`checkpoint_marker_present` only says whether the file exists at the end.
+running). Other reasons are `completed`, `workload_failed`, `hard_stop`,
+`hard_stop_before_start`, `foreign_gpu_process` and `gpu_prolog_unavailable`.
+`checkpoint_ready=true` means a signal-triggered checkpoint was confirmed in
+this job; `checkpoint_marker_present` only says whether the file exists at the
+end.
+
+### Container lifetime
+
+The container is a child of the Docker daemon, not of the job, so Slurm cannot
+end it. When Slurm ends a job (time limit, `scancel`, preemption) it sends
+SIGTERM and, `KillWait` (30 s on this host) later, SIGKILL, which no trap
+survives. Before this guarantee, the container was removed only by the exit
+trap: in Slurm 617 a workload that ignored TERM outlived its timed-out job by
+88 s, holding 74 GB of GPU 0. The batch script now bounds the container's life:
+
+- **Time limit.** At start it reads the time left (`squeue -o %L`) and refuses
+  with exit 2 when Slurm reports no finite limit, more time than the manifest's
+  minutes, or no more than the 30 s hard-stop margin. `job.env` records
+  `slurm_time_left_seconds` and `hard_stop_at`.
+- **Hard stop.** A background timer SIGKILLs the container (`docker kill`) 30 s
+  before the time limit. USR1 comes 180 s before the limit, its checkpoint wait
+  is at most 120 s, and the script then sends TERM, so **a workload must exit
+  within 150 s of USR1**, however well it follows the protocol. One that needs
+  longer (draining in-flight requests, a slow engine shutdown after its
+  checkpoint) is SIGKILLed; before this guarantee it could run on until
+  Slurm's TERM at the limit and `KillWait` after it. The hard-stop time is
+  fixed when the job starts: raising `TimeLimit` with `scontrol update`, or
+  suspending the job, does not move it. No container is created after the hard
+  stop has passed (`hard_stop_before_start`, exit 2).
+- **Batch script killed alone.** If only the batch shell gets SIGKILL (the OOM
+  killer, `scancel --batch --signal=KILL`), no trap runs and Slurm treats the
+  job and its GPUs as free. The timer notices within about 5 s, SIGKILLs the
+  container, writes `hard-stop.env` with `cause=batch_script_gone` and exits.
+  The stopped container is left for inspection; remove it with
+  `docker rm cotcodec-<job-id>`.
+- **SIGTERM.** The script forwards TERM and gives the container at most
+  `term_grace_seconds` (Slurm's `KillWait` minus 20 s, at most 120 s, and 0 if
+  `KillWait` cannot be read; 10 s here) to write a `trigger=SIGTERM` marker
+  and exit. A container that confirmed its checkpoint may keep running until
+  the grace ends, for a receipt or log flushes. The script then SIGKILLs the
+  container, never `docker stop`, and exits so the exit trap removes it before
+  Slurm's SIGKILL. A TERM that arrives before the container is started means
+  no container is started. If the TERM kills the `docker create` client before
+  it prints the container ID, the exit trap watches for 5 s for the container
+  dockerd may still create, and removes it.
+- `docker create` gets `--stop-timeout <term_grace_seconds>`, so an operator's
+  `docker stop` (or dockerd shutting down) has the same TERM-then-KILL bound.
+- **One attempt per run directory.** Jobs are submitted with `--no-requeue`, and
+  the batch script exits 2 if `<run_root>/<job-id>` already exists (a requeue
+  despite the flag, or a job id reused after a Slurm state reset), so an
+  earlier attempt's records are never overwritten or read as this attempt's.
+
+`termination.env` adds `hard_stop_at`, `container_killed_by` (`none`,
+`hard_stop`, `signal_TERM`, or `exit` when the exit trap found it still
+running) and `container_killed_at`; `container_killed_by` names the first
+party that found the container running and sent it SIGKILL. A hard stop also
+leaves `hard-stop.env` (`cause=time_limit`), written just before its kill on a
+best-effort basis: if the run directory cannot be written, the kill still
+happens but the job ends as `workload_failed`. `reason=hard_stop` requires the
+SIGKILL exit status 137 (`JobState=FAILED`); a container that exited by itself
+just as the timer fired keeps its own outcome. A container can still outlive
+its job if every process of the job gets SIGKILL without a preceding SIGTERM (a
+node or `slurmd` failure, `scancel --signal=KILL`); after any such event check
+`docker ps -a --filter name=cotcodec-<job-id>`.
 
 ### Open-weight reviewer jobs
 

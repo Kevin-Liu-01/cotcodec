@@ -1,0 +1,5 @@
+{
+  "falsifiability_score": 0,
+  "has_falsifier": false,
+  "largest_defect": "no proposal was given"
+}

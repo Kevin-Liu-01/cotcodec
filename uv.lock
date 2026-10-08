@@ -462,6 +462,7 @@ architecture = [
     { name = "transformers" },
 ]
 dev = [
+    { name = "jinja2" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "ruff" },
@@ -505,6 +506,7 @@ requires-dist = [
     { name = "graphiti-core", extras = ["falkordblite"], marker = "extra == 'memory-graphiti'", specifier = "==0.29.3" },
     { name = "httpx" },
     { name = "huggingface-hub" },
+    { name = "jinja2", marker = "extra == 'dev'" },
     { name = "langgraph-checkpoint-postgres", marker = "extra == 'memory-langmem'", specifier = "==3.1.0" },
     { name = "langmem", marker = "extra == 'memory-langmem'", specifier = "==0.0.30" },
     { name = "matplotlib" },

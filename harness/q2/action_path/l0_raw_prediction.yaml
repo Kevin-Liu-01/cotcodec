@@ -1,0 +1,130 @@
+# Predicted outcome of the L0-raw control (validity control C2), written from
+# code reading before any L0-raw trial exists. C2 passes only if the observed
+# failing set equals predicted_fail exactly; a deviation in either direction
+# invalidates the suite for q2-action-path-v1 (preregistration section 8). The
+# file and the translator `harness/q2/action_path/l0_raw.py` are frozen by their
+# SHA-256 in the main preregistration, so neither can change after C2 is seen.
+#
+# L0-raw: each IR action becomes the natural PyAutoGUI 0.9.54 call (one
+# DesktopEnv.step per IR action, built by l0_raw.py) and is sent unchanged
+# through OSWorld b138d348's DesktopEnv.step -> PythonController.execute_python_command,
+# i.e. `python -c <PYAUTOGUI_PKGS_PREFIX + command>` posted to the guest's
+# /execute with shell=False. Strings are embedded with json.dumps(ensure_ascii=False),
+# the convention of OSWorld's bfd62bdc Qwen3.5 agent.
+#
+# Corrected before the freeze (review of 2026-10-07): the draft passed the IR's
+# integer button to PyAutoGUI. PyAutoGUI 0.9.54 _normalizeButton runs
+# `button = button.lower()` before any range check, so every integer button
+# raises AttributeError; buttons 1-3 now use PyAutoGUI's own names.
+schema: cotcodec-q2-l0-raw-prediction-v1
+status: draft
+basis:
+  osworld: >-
+    b138d348256078fa634fc3b73567a7337c793e6b desktop_env/controllers/python.py:
+    PYAUTOGUI_PKGS_PREFIX sets FAILSAFE=False and patches isShiftCharacter with a
+    Linux shift set that excludes '<'; execute_python_command posts
+    ["python", "-c", ...] with "shell": false.
+  pyautogui: >-
+    PyAutoGUI 0.9.54 sdist (sha256 dd1d29e8fd118941cb193f74df57e5c6ff8e9253b99c7b04f39cfc69f3ae04b2),
+    pyautogui/_pyautogui_x11.py: keyboardMapping has no entry for non-ASCII characters or
+    for 'kp_enter'; _keyDown returns silently for unmapped keys; BUTTON_NAME_MAPPING
+    covers buttons 1-7 only; _vscroll uses 4 (up) / 5 (down) and _hscroll 6 (left) / 7 (right).
+    pyautogui/__init__.py: click, mouseDown, mouseUp, doubleClick and tripleClick call
+    _normalizeButton, whose first statement is `button = button.lower()`, so an int button
+    raises AttributeError before any event is sent; 'left', 'middle', 'right' pass.
+  buttons: >-
+    'left', 'middle' and 'right' pass _normalizeButton and map to X buttons 1, 2 and 3
+    through BUTTON_NAME_MAPPING, so every click, drag and hold on buttons 1-3 is predicted
+    to pass; only the two entries on buttons 8 and 9 are predicted to fail.
+  python_xlib: >-
+    0.33 in the guest; Display.keysym_to_keycode returns the keycode with the lowest
+    (index, keycode) pair.
+  guest_facts: >-
+    Boot report (VM campaign job 374, cycle 0): Ubuntu 22.04.3, Xorg, GNOME Shell 42.9,
+    xkb rules evdev, model pc105, layout us,us; xmodmap keycode 94 = less greater, keycode
+    59 = comma less, keycode 60 = period greater; pyautogui 0.9.54; /usr/bin/python serves
+    /execute.
+translation:
+  module: harness/q2/action_path/l0_raw.py
+  move: pyautogui.moveTo(x, y)
+  click: optional keyDown(mod) for each modifier; pyautogui.click(x, y, clicks=n, button=NAME) (tripleClick(x, y, button=NAME) for n=3); keyUp in reverse; one step
+  button_down: pyautogui.mouseDown(x, y, button=NAME)
+  button_up: pyautogui.mouseUp(x, y, button=NAME)
+  drag: keyDown(mods); moveTo(p0) unless from_current; mouseDown(button=NAME); moveTo(p_i, duration=d/(k-1)) for each later point; mouseUp(button=NAME); keyUp(mods); one step
+  scroll: keyDown(mods); pyautogui.scroll(-wheel_y, x, y) and/or pyautogui.hscroll(wheel_x, x, y); keyUp(mods); one step
+  key: pyautogui.press(name) for one key, pyautogui.hotkey(*names) for a chord
+  key_down: pyautogui.keyDown(name) per key
+  key_up: pyautogui.keyUp(name) per key, in the listed order
+  type: pyautogui.typewrite(text)
+  wait: time.sleep(ms / 1000)
+button_names:
+  # IR button -> the PyAutoGUI button argument (NAME above). PyAutoGUI names
+  # buttons 1-3 only; 8 and 9 have no name and are passed as the integer.
+  1: left
+  2: middle
+  3: right
+  8: 8
+  9: 9
+key_names:
+  # IR keysym -> the PyAutoGUI name sent. Where PyAutoGUI has no name, the
+  # lowercase keysym name is sent unchanged, as an upstream harness would.
+  Return: enter
+  Escape: esc
+  Tab: tab
+  BackSpace: backspace
+  Delete: delete
+  Insert: insert
+  Home: home
+  End: end
+  Prior: pageup
+  Next: pagedown
+  Up: up
+  Down: down
+  Left: left
+  Right: right
+  space: space
+  Control_L: ctrl
+  Shift_L: shift
+  Alt_L: alt
+  Super_L: winleft
+  Menu: apps
+  KP_Add: add
+  KP_Enter: kp_enter
+  Caps_Lock: capslock
+  F1: f1
+  F4: f4
+  F5: f5
+  F9: f9
+  F12: f12
+predicted_fail:
+  - type_unicode_bmp
+  - type_emoji
+  - type_rtl
+  - type_combining
+  - type_emoji_zwj
+  - key_kp_enter
+  - click_button_back
+  - click_button_forward
+predicted_unsupported: []
+predicted_pass_notable:
+  - type_shell_hostile
+  - type_symbols_shifted
+  - key_menu
+  - key_kp_add
+  - caps_lock_roundtrip
+  - chord_super_d
+reasons:
+  type_unicode_bmp: every non-ASCII code point is absent from keyboardMapping and is skipped silently
+  type_emoji: astral code points are absent from keyboardMapping and are skipped silently
+  type_rtl: Hebrew and Arabic code points are skipped; only the spaces are typed
+  type_combining: the combining marks U+0301, U+0308 and U+0303 are skipped
+  type_emoji_zwj: emoji and U+200D are skipped
+  key_kp_enter: "PyAutoGUI has no KP_Enter name; 'kp_enter' is unmapped and dropped without an event"
+  click_button_back: "PyAutoGUI has no name for button 8, so the int is passed; _normalizeButton calls 8.lower(), raises AttributeError and nothing is sent"
+  click_button_forward: "PyAutoGUI has no name for button 9, so the int is passed; _normalizeButton calls 9.lower(), raises AttributeError and nothing is sent"
+  type_shell_hostile: /execute runs an argv with shell=False, so no shell expansion can occur
+  type_symbols_shifted: "with the b138d348 Linux shift set, '<' is typed unshifted on keycode 94 (less), '>' shifted on keycode 60"
+  key_menu: "'apps' maps to the Menu keysym (keycode 135)"
+  key_kp_add: "'add' maps to KP_Add (keycode 86)"
+  caps_lock_roundtrip: "'capslock' maps to Caps_Lock (keycode 66); two presses toggle the lock on and off"
+  chord_super_d: "'winleft' maps to Super_L (keycode 133)"

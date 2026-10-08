@@ -1,0 +1,1385 @@
+{
+  "jobs": {
+    "369": {
+      "campaign_id": "q2ap-boot-reset-smoke-v1",
+      "cpusets": {
+        "allocated": "0-7",
+        "runner": "4",
+        "vm": "0-3",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      "docker": {
+        "cgroup_version": "2",
+        "default_runtime": "runc",
+        "runtimes": [
+          "io.containerd.runc.v2",
+          "runc"
+        ],
+        "server_version": "28.3.1"
+      },
+      "foreign_slurm_jobs_seen": [],
+      "git_sha": "f755a09e72e464057423eaa89cdcb9af68814e85",
+      "hmp_info": {
+        "banner": "QEMU 9.1.0 monitor - type 'help' for more information",
+        "kvm": "",
+        "status": "iininfinfoinfo info kinfo kvinfo kvm\nkvm support: enabled\n(qemu)\n(qemu) iininfinfoinfo info sinfo stinfo stainfo statinfo statuinfo status\nVM status: running\n(qemu)",
+        "version": "iininfinfoinfo info vinfo veinfo verinfo versinfo versiinfo versioinfo version\n9.1.0Debian 1:9.1.0+ds-8"
+      },
+      "label": "smoke, none-netns, 2 cycles",
+      "labelled_containers_left": [],
+      "network": "none-netns",
+      "preflight": {
+        "batch_sha256": "3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a",
+        "docker_default_runtime": "runc",
+        "exit": "driver_exit=0 labelled_containers_left=0",
+        "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+        "manifest_sha256": "05995170460c368a3200ebd9356eed398404565581475245729ab980f877a4d0",
+        "source_tree_sha256": "166f88fae804559404e56088b59e2fe18f605a78ce9b4f51ed4e43fe4e4a1e03"
+      },
+      "qcow2_info": {
+        "actual-size": 24460201984,
+        "format": "qcow2",
+        "virtual-size": 53687091200
+      },
+      "qcow2_sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+      "qcow2_unchanged": true,
+      "receipt_sha256": "8c3a6b86ed2d04618beaaa17d369a9cfc2f547aabdc186423b0d7d65a63dba7c",
+      "runner_isolation": {
+        "cuda_visible_devices": "",
+        "net_interfaces": [
+          "dockerbridge",
+          "lo",
+          "qemu"
+        ],
+        "nvidia_devices": [],
+        "proc_status": {
+          "CapBnd": "0000000000000000",
+          "CapEff": "0000000000000000",
+          "NoNewPrivs": "1",
+          "Seccomp": "2",
+          "Seccomp_filters": "1"
+        }
+      },
+      "slurm": "purged from scontrol before it was read; driver exit recorded in preflight",
+      "summary": {
+        "boot_s": {
+          "max": 17.898,
+          "n": 2,
+          "p50": 17.18,
+          "p95": 17.898
+        },
+        "boots_ok": 2,
+        "containers_removed_all": true,
+        "cycles": 2,
+        "distinct_boot_ids": 2,
+        "errors": [],
+        "hmp_cycles_all_ok": 0,
+        "hmp_step_pass_counts": {
+          "button_left": "0/2",
+          "button_middle": "0/2",
+          "button_right": "2/2",
+          "caps_lock_off": "2/2",
+          "caps_lock_on": "2/2",
+          "chord_shift_comma": "0/2",
+          "key_a": "0/2",
+          "key_esc_after_menu": "0/2",
+          "key_esc_after_right": "2/2",
+          "key_kp_add": "2/2",
+          "key_kp_enter": "0/2",
+          "key_menu": "0/2",
+          "rel_motion": "2/2",
+          "wheel_dz_neg": "0/2",
+          "wheel_dz_pos": "2/2"
+        },
+        "infra_gates_pass": true,
+        "latency_s": {
+          "accessibility_s": {
+            "n": 6,
+            "p50": 1.3051,
+            "p95": 1.6627
+          },
+          "execute_noop_s": {
+            "n": 6,
+            "p50": 0.0147,
+            "p95": 0.0151
+          },
+          "screenshot_s": {
+            "n": 6,
+            "p50": 0.5588,
+            "p95": 0.5839
+          }
+        },
+        "leaked_volumes": [],
+        "nat_modes": [
+          "nat"
+        ],
+        "no_gpu_all": true,
+        "no_published_ports_all": true,
+        "sentinel_pristine": 1,
+        "sentinel_readback_dconf": 2,
+        "sentinel_readback_file": 2,
+        "sentinel_readback_gsettings": 2,
+        "sentinel_reset_checks": 1,
+        "settled_s": {
+          "n": 2,
+          "p50": 20.322,
+          "p95": 21.017
+        }
+      },
+      "verdicts": [
+        {
+          "boot_id": "420e060e-2d5a-4068-ad50-d183d59e1a94",
+          "boot_s": 17.898,
+          "container_removed": true,
+          "cycle": 0,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 21.017
+        },
+        {
+          "boot_id": "1484d220-789d-4af4-954e-d5e25b802047",
+          "boot_s": 17.18,
+          "container_removed": true,
+          "cycle": 1,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 20.322
+        }
+      ],
+      "vm_container": {
+        "cap_add": [
+          "CAP_NET_ADMIN"
+        ],
+        "device_requests": null,
+        "devices": [
+          "/dev/kvm"
+        ],
+        "has_bridge_address": false,
+        "memory": 6442450944,
+        "network_mode": "none",
+        "networks": [
+          "none"
+        ],
+        "port_bindings": {},
+        "privileged": false,
+        "publish_all_ports": false,
+        "runtime": "runc"
+      },
+      "vm_measurements_cycle0": {
+        "nat_rules": 2,
+        "nvidia": 0,
+        "overlay_alloc": 65933312,
+        "overlay_bytes": 65994752,
+        "rc": 0,
+        "storage_alloc": 7315456
+      }
+    },
+    "372": {
+      "campaign_id": "q2ap-bridge-exposure-v1",
+      "cpusets": {
+        "allocated": "0-7",
+        "runner": "4",
+        "vm": "0-3",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      "docker": {
+        "cgroup_version": "2",
+        "default_runtime": "runc",
+        "runtimes": [
+          "io.containerd.runc.v2",
+          "runc"
+        ],
+        "server_version": "28.3.1"
+      },
+      "exposure_probe_cycle0": {
+        "bytes": 5,
+        "http_status": 200,
+        "tcp_open": true
+      },
+      "foreign_slurm_jobs_seen": [],
+      "git_sha": "d2d63b920da92453dc0907c88f0da92a8adc0a2e",
+      "hmp_info": {
+        "banner": "QEMU 9.1.0 monitor - type 'help' for more information",
+        "kvm": "kvm support: enabled",
+        "status": "VM status: running",
+        "version": "9.1.0Debian 1:9.1.0+ds-8"
+      },
+      "label": "bridge-unpublished exposure, 2 cycles",
+      "labelled_containers_left": [],
+      "network": "bridge-unpublished",
+      "preflight": {
+        "batch_sha256": "3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a",
+        "docker_default_runtime": "runc",
+        "exit": "driver_exit=0 labelled_containers_left=0",
+        "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+        "manifest_sha256": "bebba8ec71640fd32f9ef6abd491006012d0bbcf89ddde962ea7bbafa990d9d5",
+        "source_tree_sha256": "321965b5f2fdf6a6993fc8b59edef650b876ca5d0eb1f11144929cb32af17776"
+      },
+      "qcow2_info": {
+        "actual-size": 24460201984,
+        "format": "qcow2",
+        "virtual-size": 53687091200
+      },
+      "qcow2_sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+      "qcow2_unchanged": true,
+      "receipt_sha256": "4b1270565a4efd2092145a64899856edfdea6e0bc5cfcaef7908cc600a3895a1",
+      "runner_isolation": {
+        "cuda_visible_devices": "",
+        "net_interfaces": [
+          "dockerbridge",
+          "eth0",
+          "lo",
+          "qemu"
+        ],
+        "nvidia_devices": [],
+        "proc_status": {
+          "CapBnd": "0000000000000000",
+          "CapEff": "0000000000000000",
+          "NoNewPrivs": "1",
+          "Seccomp": "2",
+          "Seccomp_filters": "1"
+        }
+      },
+      "slurm": "purged from scontrol before it was read; driver exit recorded in preflight",
+      "summary": {
+        "boot_s": {
+          "max": 18.404,
+          "n": 2,
+          "p50": 17.975,
+          "p95": 18.404
+        },
+        "boots_ok": 2,
+        "containers_removed_all": true,
+        "cycles": 2,
+        "distinct_boot_ids": 2,
+        "errors": [],
+        "hmp_cycles_all_ok": 0,
+        "hmp_step_pass_counts": {},
+        "infra_gates_pass": true,
+        "latency_s": {
+          "accessibility_s": {
+            "n": 6,
+            "p50": 1.2647,
+            "p95": 1.4747
+          },
+          "execute_noop_s": {
+            "n": 6,
+            "p50": 0.0145,
+            "p95": 0.016
+          },
+          "screenshot_s": {
+            "n": 6,
+            "p50": 0.5605,
+            "p95": 0.5989
+          }
+        },
+        "leaked_volumes": [],
+        "nat_modes": [
+          "nat"
+        ],
+        "no_gpu_all": true,
+        "no_published_ports_all": true,
+        "sentinel_pristine": 1,
+        "sentinel_readback_dconf": 2,
+        "sentinel_readback_file": 2,
+        "sentinel_readback_gsettings": 2,
+        "sentinel_reset_checks": 1,
+        "settled_s": {
+          "n": 2,
+          "p50": 21.102,
+          "p95": 21.568
+        }
+      },
+      "verdicts": [
+        {
+          "boot_id": "f6e410be-bafa-43e8-a71a-b156b85e324a",
+          "boot_s": 17.975,
+          "container_removed": true,
+          "cycle": 0,
+          "error": null,
+          "hmp_ok": null,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 21.102
+        },
+        {
+          "boot_id": "a24ebee2-2314-4a75-8c28-231483529763",
+          "boot_s": 18.404,
+          "container_removed": true,
+          "cycle": 1,
+          "error": null,
+          "hmp_ok": null,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 21.568
+        }
+      ],
+      "vm_container": {
+        "cap_add": [
+          "CAP_NET_ADMIN"
+        ],
+        "device_requests": null,
+        "devices": [
+          "/dev/kvm"
+        ],
+        "has_bridge_address": true,
+        "memory": 6442450944,
+        "network_mode": "bridge",
+        "networks": [
+          "bridge"
+        ],
+        "port_bindings": {},
+        "privileged": false,
+        "publish_all_ports": false,
+        "runtime": "runc"
+      },
+      "vm_measurements_cycle0": {
+        "nat_rules": 2,
+        "nvidia": 0,
+        "overlay_alloc": 68362240,
+        "overlay_bytes": 68419584,
+        "rc": 0,
+        "storage_alloc": 7315456
+      }
+    },
+    "374": {
+      "campaign_id": "q2ap-boot-reset-v1",
+      "cpusets": {
+        "allocated": "0-7",
+        "runner": "4",
+        "vm": "0-3",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      "docker": {
+        "cgroup_version": "2",
+        "default_runtime": "runc",
+        "runtimes": [
+          "io.containerd.runc.v2",
+          "runc"
+        ],
+        "server_version": "28.3.1"
+      },
+      "foreign_slurm_jobs_seen": [
+        "386"
+      ],
+      "git_sha": "d2d63b920da92453dc0907c88f0da92a8adc0a2e",
+      "guest_facts": {
+        "apps": {
+          "chromium": null,
+          "chromium-browser": null,
+          "code": "/usr/bin/code",
+          "dconf": "/usr/bin/dconf",
+          "gedit": "/usr/bin/gedit",
+          "gimp": "/usr/bin/gimp",
+          "gnome-terminal": "/usr/bin/gnome-terminal",
+          "google-chrome": "/usr/bin/google-chrome",
+          "gsettings": "/usr/bin/gsettings",
+          "libreoffice": "/usr/bin/libreoffice",
+          "nautilus": "/usr/bin/nautilus",
+          "soffice": "/usr/bin/soffice",
+          "thunderbird": "/usr/bin/thunderbird",
+          "vlc": "/usr/bin/vlc",
+          "wmctrl": "/usr/bin/wmctrl",
+          "xclip": null,
+          "xdotool": null,
+          "xev": "/usr/bin/xev",
+          "xinput": "/usr/bin/xinput"
+        },
+        "dbus_session_present": true,
+        "display_processes": [
+          "Xorg",
+          "gnome-shell",
+          "ibus-daemon"
+        ],
+        "gnome_shell": "GNOME Shell 42.9",
+        "locale_lang": "en_HK.UTF-8",
+        "os_release": "PRETTY_NAME=\"Ubuntu 22.04.3 LTS\"",
+        "python": "3.10.12",
+        "python_modules": {
+          "PIL": "10.1.0",
+          "Xlib": "(0, 33)",
+          "flask": "3.0.0",
+          "pyatspi": "(1, 9, 0)",
+          "pyautogui": "0.9.54",
+          "pynput": "present",
+          "requests": "2.25.1",
+          "tkinter": "present"
+        },
+        "server": {
+          "cmdline": "/usr/bin/python /home/user/server/main.py",
+          "main_py": "/home/user/server/main.py",
+          "main_py_sha256": "41376a5c4f0b68ed7bbbbcc73ece60427f4a58dd8bd4710176f9911de726339e"
+        },
+        "setxkbmap": "rules:      evdev\nmodel:      pc105\nlayout:     us,us\nvariant:    ,\n",
+        "uname_release": "6.5.0-15-generic",
+        "x11": {
+          "extensions": [
+            "BIG-REQUESTS",
+            "Composite",
+            "DAMAGE",
+            "DOUBLE-BUFFER",
+            "DPMS",
+            "DRI2",
+            "GLX",
+            "Generic Event Extension",
+            "MIT-SCREEN-SAVER",
+            "MIT-SHM",
+            "Present",
+            "RANDR",
+            "RECORD",
+            "RENDER",
+            "SECURITY",
+            "SHAPE",
+            "SYNC",
+            "X-Resource",
+            "XC-MISC",
+            "XFIXES",
+            "XFree86-DGA",
+            "XFree86-VidModeExtension",
+            "XINERAMA",
+            "XInputExtension",
+            "XKEYBOARD",
+            "XTEST",
+            "XVideo"
+          ],
+          "keycode_range": [
+            8,
+            255
+          ],
+          "led_mask": 2,
+          "record": true,
+          "screen": [
+            1920,
+            1080
+          ],
+          "spare_keycodes": 19,
+          "xtest": true
+        },
+        "xmodmap": {
+          "lines": [
+            "keycode  59 = comma less comma less",
+            "keycode  60 = period greater period greater",
+            "keycode  66 = Caps_Lock NoSymbol Caps_Lock",
+            "keycode  86 = KP_Add KP_Add KP_Add KP_Add KP_Add KP_Add XF86Next_VMode",
+            "keycode  94 = less greater less greater bar brokenbar bar",
+            "keycode 104 = KP_Enter NoSymbol KP_Enter",
+            "keycode 133 = Super_L NoSymbol Super_L",
+            "keycode 135 = Menu NoSymbol Menu",
+            "keycode 147 = XF86MenuKB NoSymbol XF86MenuKB"
+          ],
+          "lines_total": 248,
+          "sha256": "4c3f5f1927ba7c49260cca9d707fb086fd7614baf898fa1cba34fda782c5ad36"
+        }
+      },
+      "hmp_info": {
+        "banner": "QEMU 9.1.0 monitor - type 'help' for more information",
+        "kvm": "kvm support: enabled",
+        "status": "VM status: running",
+        "version": "9.1.0Debian 1:9.1.0+ds-8"
+      },
+      "hmp_steps_distinct_outcomes": {
+        "button_left": [
+          {
+            "buttons": [
+              [
+                "ButtonPress",
+                1
+              ],
+              [
+                "ButtonRelease",
+                1
+              ]
+            ],
+            "keycodes": [],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": []
+          }
+        ],
+        "button_middle": [
+          {
+            "buttons": [
+              [
+                "ButtonPress",
+                2
+              ],
+              [
+                "ButtonRelease",
+                2
+              ]
+            ],
+            "keycodes": [],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": []
+          }
+        ],
+        "button_right": [
+          {
+            "buttons": [
+              [
+                "ButtonPress",
+                3
+              ],
+              [
+                "ButtonRelease",
+                3
+              ]
+            ],
+            "keycodes": [],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": []
+          }
+        ],
+        "caps_lock_off": [
+          {
+            "buttons": [],
+            "keycodes": [
+              [
+                "KeyPress",
+                66
+              ],
+              [
+                "KeyRelease",
+                66
+              ]
+            ],
+            "led": 2,
+            "motion": false,
+            "ok": true,
+            "presses": [
+              65509
+            ]
+          }
+        ],
+        "caps_lock_on": [
+          {
+            "buttons": [],
+            "keycodes": [
+              [
+                "KeyPress",
+                66
+              ],
+              [
+                "KeyRelease",
+                66
+              ]
+            ],
+            "led": 3,
+            "motion": false,
+            "ok": true,
+            "presses": [
+              65509
+            ]
+          }
+        ],
+        "chord_shift_comma": [
+          {
+            "buttons": [],
+            "keycodes": [
+              [
+                "KeyPress",
+                50
+              ],
+              [
+                "KeyPress",
+                59
+              ],
+              [
+                "KeyRelease",
+                59
+              ],
+              [
+                "KeyRelease",
+                50
+              ]
+            ],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": [
+              65505,
+              44
+            ]
+          }
+        ],
+        "key_a": [
+          {
+            "buttons": [],
+            "keycodes": [
+              [
+                "KeyPress",
+                38
+              ],
+              [
+                "KeyRelease",
+                38
+              ]
+            ],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": [
+              97
+            ]
+          }
+        ],
+        "key_compose": [
+          {
+            "buttons": [],
+            "keycodes": [
+              [
+                "KeyPress",
+                135
+              ],
+              [
+                "KeyRelease",
+                135
+              ]
+            ],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": [
+              65383
+            ]
+          }
+        ],
+        "key_esc_after_compose": [
+          {
+            "buttons": [],
+            "keycodes": [
+              [
+                "KeyPress",
+                9
+              ],
+              [
+                "KeyRelease",
+                9
+              ]
+            ],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": [
+              65307
+            ]
+          }
+        ],
+        "key_esc_after_menu": [
+          {
+            "buttons": [],
+            "keycodes": [
+              [
+                "KeyPress",
+                9
+              ],
+              [
+                "KeyRelease",
+                9
+              ]
+            ],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": [
+              65307
+            ]
+          }
+        ],
+        "key_esc_after_right": [
+          {
+            "buttons": [],
+            "keycodes": [
+              [
+                "KeyPress",
+                9
+              ],
+              [
+                "KeyRelease",
+                9
+              ]
+            ],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": [
+              65307
+            ]
+          }
+        ],
+        "key_kp_add": [
+          {
+            "buttons": [],
+            "keycodes": [
+              [
+                "KeyPress",
+                86
+              ],
+              [
+                "KeyRelease",
+                86
+              ]
+            ],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": [
+              65451
+            ]
+          }
+        ],
+        "key_kp_enter": [
+          {
+            "buttons": [],
+            "keycodes": [
+              [
+                "KeyPress",
+                104
+              ],
+              [
+                "KeyRelease",
+                104
+              ]
+            ],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": [
+              65421
+            ]
+          }
+        ],
+        "key_less_102nd": [
+          {
+            "buttons": [],
+            "keycodes": [
+              [
+                "KeyPress",
+                94
+              ],
+              [
+                "KeyRelease",
+                94
+              ]
+            ],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": [
+              60
+            ]
+          }
+        ],
+        "key_menu": [
+          {
+            "buttons": [],
+            "keycodes": [],
+            "led": null,
+            "motion": false,
+            "ok": false,
+            "presses": []
+          }
+        ],
+        "rel_motion": [
+          {
+            "buttons": [],
+            "keycodes": [],
+            "led": null,
+            "motion": true,
+            "ok": true,
+            "presses": []
+          }
+        ],
+        "wheel_dz_neg": [
+          {
+            "buttons": [
+              [
+                "ButtonPress",
+                5
+              ],
+              [
+                "ButtonRelease",
+                5
+              ]
+            ],
+            "keycodes": [],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": []
+          }
+        ],
+        "wheel_dz_pos": [
+          {
+            "buttons": [
+              [
+                "ButtonPress",
+                4
+              ],
+              [
+                "ButtonRelease",
+                4
+              ]
+            ],
+            "keycodes": [],
+            "led": null,
+            "motion": false,
+            "ok": true,
+            "presses": []
+          }
+        ]
+      },
+      "label": "boot-reset validation, none-netns, 22 cycles",
+      "labelled_containers_left": [],
+      "network": "none-netns",
+      "preflight": {
+        "batch_sha256": "3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a",
+        "docker_default_runtime": "runc",
+        "exit": "driver_exit=0 labelled_containers_left=0",
+        "job_tres": "TRES=cpu=8,mem=12G,node=1,billing=8",
+        "manifest_sha256": "4d354bdb74f5fc927f0bf9f783e6d98020e87a82777f6886b94a3097e6209cb4",
+        "source_tree_sha256": "321965b5f2fdf6a6993fc8b59edef650b876ca5d0eb1f11144929cb32af17776"
+      },
+      "qcow2_info": {
+        "actual-size": 24460201984,
+        "format": "qcow2",
+        "virtual-size": 53687091200
+      },
+      "qcow2_sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+      "qcow2_unchanged": true,
+      "receipt_sha256": "4dd215f83878c17216a05dbc3ea0eecfe5d069a9e696ee1033bd61f23e4cf849",
+      "runner_isolation": {
+        "cuda_visible_devices": "",
+        "net_interfaces": [
+          "dockerbridge",
+          "lo",
+          "qemu"
+        ],
+        "nvidia_devices": [],
+        "proc_status": {
+          "CapBnd": "0000000000000000",
+          "CapEff": "0000000000000000",
+          "NoNewPrivs": "1",
+          "Seccomp": "2",
+          "Seccomp_filters": "1"
+        }
+      },
+      "slurm": "COMPLETED ExitCode=0:0 (scontrol)",
+      "summary": {
+        "boot_s": {
+          "max": 22.431,
+          "n": 22,
+          "p50": 18.28,
+          "p95": 20.846
+        },
+        "boots_ok": 22,
+        "containers_removed_all": true,
+        "cycles": 22,
+        "distinct_boot_ids": 22,
+        "errors": [],
+        "hmp_cycles_all_ok": 0,
+        "hmp_step_pass_counts": {
+          "button_left": "22/22",
+          "button_middle": "22/22",
+          "button_right": "22/22",
+          "caps_lock_off": "22/22",
+          "caps_lock_on": "22/22",
+          "chord_shift_comma": "22/22",
+          "key_a": "22/22",
+          "key_compose": "22/22",
+          "key_esc_after_compose": "22/22",
+          "key_esc_after_menu": "22/22",
+          "key_esc_after_right": "22/22",
+          "key_kp_add": "22/22",
+          "key_kp_enter": "22/22",
+          "key_less_102nd": "22/22",
+          "key_menu": "0/22",
+          "rel_motion": "22/22",
+          "wheel_dz_neg": "22/22",
+          "wheel_dz_pos": "22/22"
+        },
+        "infra_gates_pass": true,
+        "latency_s": {
+          "accessibility_s": {
+            "n": 66,
+            "p50": 1.4524,
+            "p95": 1.8641
+          },
+          "execute_noop_s": {
+            "n": 66,
+            "p50": 0.0157,
+            "p95": 0.0205
+          },
+          "screenshot_s": {
+            "n": 66,
+            "p50": 0.6032,
+            "p95": 0.7425
+          }
+        },
+        "leaked_volumes": [],
+        "nat_modes": [
+          "nat"
+        ],
+        "no_gpu_all": true,
+        "no_published_ports_all": true,
+        "sentinel_pristine": 21,
+        "sentinel_readback_dconf": 22,
+        "sentinel_readback_file": 22,
+        "sentinel_readback_gsettings": 22,
+        "sentinel_reset_checks": 21,
+        "settled_s": {
+          "n": 22,
+          "p50": 21.601,
+          "p95": 25.323
+        }
+      },
+      "verdicts": [
+        {
+          "boot_id": "1e3c8b20-f190-4ced-baa6-6fb273dc1a2d",
+          "boot_s": 17.164,
+          "container_removed": true,
+          "cycle": 0,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 20.318
+        },
+        {
+          "boot_id": "c35ce529-826e-4dc5-a093-55fda9f2ed67",
+          "boot_s": 19.691,
+          "container_removed": true,
+          "cycle": 1,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 25.323
+        },
+        {
+          "boot_id": "31cee577-bc5c-4a25-8fc5-6d125958933c",
+          "boot_s": 17.899,
+          "container_removed": true,
+          "cycle": 2,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 21.029
+        },
+        {
+          "boot_id": "ec07cf4b-f8ff-4183-a283-0116e7d2b2cb",
+          "boot_s": 17.152,
+          "container_removed": true,
+          "cycle": 3,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 20.314
+        },
+        {
+          "boot_id": "d65132e3-0115-43a5-afe3-03719c175a4b",
+          "boot_s": 18.396,
+          "container_removed": true,
+          "cycle": 4,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 21.601
+        },
+        {
+          "boot_id": "2a35ab0a-fcd5-4be4-a34d-b7d4c6ea3fae",
+          "boot_s": 18.965,
+          "container_removed": true,
+          "cycle": 5,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 22.112
+        },
+        {
+          "boot_id": "6b1bbaa7-2f12-437b-a53c-56728d34364a",
+          "boot_s": 20.846,
+          "container_removed": true,
+          "cycle": 6,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 24.426
+        },
+        {
+          "boot_id": "11e2b1f0-d8b3-42f2-a0c0-1f402115e68e",
+          "boot_s": 22.431,
+          "container_removed": true,
+          "cycle": 7,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 27.824
+        },
+        {
+          "boot_id": "234511ff-211e-4b48-b14d-224665de0464",
+          "boot_s": 17.307,
+          "container_removed": true,
+          "cycle": 8,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 20.443
+        },
+        {
+          "boot_id": "f145c6e7-5d6b-423b-9b32-8997ba598e10",
+          "boot_s": 17.219,
+          "container_removed": true,
+          "cycle": 9,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 20.355
+        },
+        {
+          "boot_id": "385009a9-7e0d-4e30-805e-a01bc36c9b6f",
+          "boot_s": 16.891,
+          "container_removed": true,
+          "cycle": 10,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 20.019
+        },
+        {
+          "boot_id": "afa8e811-cb04-4350-b240-b5d1f6527c96",
+          "boot_s": 18.28,
+          "container_removed": true,
+          "cycle": 11,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 21.62
+        },
+        {
+          "boot_id": "19565977-ef65-4e3d-989a-9d6ed3aa302c",
+          "boot_s": 19.369,
+          "container_removed": true,
+          "cycle": 12,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 22.567
+        },
+        {
+          "boot_id": "70ad4beb-bd9e-48db-8a8d-cb198dae7d9d",
+          "boot_s": 17.906,
+          "container_removed": true,
+          "cycle": 13,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 21.037
+        },
+        {
+          "boot_id": "d598b464-656f-4331-8c3c-09d478d1c812",
+          "boot_s": 17.908,
+          "container_removed": true,
+          "cycle": 14,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 21.109
+        },
+        {
+          "boot_id": "1cb55082-57d3-4e55-b7cb-217e1fdef264",
+          "boot_s": 19.423,
+          "container_removed": true,
+          "cycle": 15,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 22.72
+        },
+        {
+          "boot_id": "523b0711-f06f-4845-9f2a-4e9b17780d70",
+          "boot_s": 19.591,
+          "container_removed": true,
+          "cycle": 16,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 22.791
+        },
+        {
+          "boot_id": "5a4b60f6-5292-4458-92b6-1d9c43b36ea2",
+          "boot_s": 18.075,
+          "container_removed": true,
+          "cycle": 17,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 21.355
+        },
+        {
+          "boot_id": "a43a2b5c-08d6-498a-b688-78ce7b37dca7",
+          "boot_s": 19.043,
+          "container_removed": true,
+          "cycle": 18,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 22.369
+        },
+        {
+          "boot_id": "7218948a-9273-403b-92d7-47bbd2c1593c",
+          "boot_s": 18.726,
+          "container_removed": true,
+          "cycle": 19,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 22.11
+        },
+        {
+          "boot_id": "503ddc04-58ea-43e8-8ec2-9481c89e90f0",
+          "boot_s": 18.221,
+          "container_removed": true,
+          "cycle": 20,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 21.481
+        },
+        {
+          "boot_id": "04e20e26-7971-4421-a9ea-d04dfe3da750",
+          "boot_s": 18.932,
+          "container_removed": true,
+          "cycle": 21,
+          "error": null,
+          "hmp_ok": false,
+          "leaked_volumes": [],
+          "nat_mode": "nat",
+          "no_gpu": true,
+          "no_published_ports": true,
+          "sentinel_pristine": true,
+          "sentinel_readback_dconf": true,
+          "sentinel_readback_file": true,
+          "sentinel_readback_gsettings": true,
+          "settled_s": 22.12
+        }
+      ],
+      "vm_container": {
+        "cap_add": [
+          "CAP_NET_ADMIN"
+        ],
+        "device_requests": null,
+        "devices": [
+          "/dev/kvm"
+        ],
+        "has_bridge_address": false,
+        "memory": 6442450944,
+        "network_mode": "none",
+        "networks": [
+          "none"
+        ],
+        "port_bindings": {},
+        "privileged": false,
+        "publish_all_ports": false,
+        "runtime": "runc"
+      },
+      "vm_measurements_cycle0": {
+        "nat_rules": 2,
+        "nvidia": 0,
+        "overlay_alloc": 67772416,
+        "overlay_bytes": 67829760,
+        "rc": 0,
+        "storage_alloc": 7315456
+      }
+    }
+  },
+  "note": "Infrastructure validation before the freeze; not evidence for acceptance criteria A1-A6.",
+  "schema": "cotcodec-q2-boot-report-v1"
+}

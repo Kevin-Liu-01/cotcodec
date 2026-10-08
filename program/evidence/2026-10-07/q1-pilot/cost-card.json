@@ -1,0 +1,4317 @@
+{
+ "c_over_b": {
+  "c_lite_trigger_2x": false,
+  "median_c_cumulative_over_b_cumulative": 1.642,
+  "median_c_marginal_over_b_marginal": 1.353,
+  "pinned_statistic": {
+   "c_lite_triggered": false,
+   "clusters": 9,
+   "interval_95": [
+    1.5214926846292205,
+    2.3215300264825918
+   ],
+   "kernels": 17,
+   "other_readings_reported_only": {
+    "marginal_ratio_of_medians": {
+     "interval_95": [
+      0.7817865609294485,
+      1.8042652014780143
+     ],
+     "value": 1.352866170440862
+    },
+    "median_of_ratios": {
+     "interval_95": [
+      1.5163475703157407,
+      2.1955104143963586
+     ],
+     "value": 2.1115895488872596
+    },
+    "ratio_of_means": {
+     "interval_95": [
+      1.7944770815001623,
+      2.8293620044068635
+     ],
+     "value": 2.38083977379132
+    }
+   },
+   "share_of_resamples_above_2": 0.396,
+   "statistic": "ratio of medians of per-kernel cumulative GPU-seconds, c over b",
+   "value": 1.6424301507136103
+  }
+ },
+ "censored_items": [
+  {
+   "bound_from": "file-mtimes",
+   "exclusive": true,
+   "gate": "c",
+   "gpu_seconds_lower_bound": 676.8,
+   "item_key": "s2-flaggems-cumsum-L1-89_cumsum|c|seed-42",
+   "phase": "scoring",
+   "problem_id": "L1/89_cumsum",
+   "wall_seconds_lower_bound": 676.8
+  },
+  {
+   "bound_from": "file-mtimes",
+   "exclusive": true,
+   "gate": "a_head_1e-4",
+   "gpu_seconds_lower_bound": 109.0,
+   "item_key": "ctl-identity-L1-19_ReLU|a_head_1e-4|seed-42",
+   "phase": "smoke",
+   "problem_id": "L1/19_ReLU",
+   "wall_seconds_lower_bound": 109.0
+  }
+ ],
+ "class_means_cross_check": {
+  "L1-exclusive": 297.64,
+  "L1-shared": 26.14,
+  "L2-shared": 35.06
+ },
+ "compile_filter": {
+  "compile_checked": true,
+  "compile_distinct": 703,
+  "cpu_distinct": 936,
+  "selected": 260,
+  "survival": 0.7510683760683761
+ },
+ "exposed_sha256": "cb4a0c369d5ae5f3bc5e0c9e52d4ba2ab3f4d27905df4ce86bc3c70489875646",
+ "fixed_gpu_hours": {
+  "admission_full": 0.5498055555555555,
+  "already_spent_this_pass": 0.899,
+  "audit_hole_replay_cap": 0.5,
+  "calibration_full": 0.4879709368041978,
+  "fidelity_full": 10.758678863041991,
+  "specializations_full": 0.2725,
+  "timing_noise_floor_estimate": 0.5
+ },
+ "fixed_phases": {
+  "admission": {
+   "codegen_and_build_seconds_per_problem": 6.09,
+   "codegen_problems": 24,
+   "gpu_admission_seconds_per_substrate": 4.34,
+   "gpu_admitted_substrates": 13,
+   "measured_seconds": 202.621,
+   "projected_seconds": 1979.3
+  },
+  "calibration": {
+   "a1_gpu_seconds": {
+    "max": 76.608,
+    "mean": 24.248,
+    "median": 8.497,
+    "n": 4,
+    "p95": 66.561,
+    "sum": 96.994
+   },
+   "measured_items": 4,
+   "projected_seconds": 1818.6
+  },
+  "fidelity": {
+   "allocation_seconds_per_kernel": 27.83,
+   "kernels": 11,
+   "per_gate": {
+    "a": {
+     "crash_rows": 0,
+     "gpu_seconds": {
+      "max": 8.873,
+      "mean": 4.658,
+      "median": 1.974,
+      "n": 7,
+      "p95": 8.844,
+      "sum": 32.607
+     },
+     "item_wall_seconds": {
+      "max": 35.479,
+      "mean": 18.621,
+      "median": 7.885,
+      "n": 7,
+      "p95": 35.364,
+      "sum": 130.348
+     },
+     "timeouts": 0,
+     "verdicts": {
+      "accept": 1,
+      "reject": 6
+     }
+    },
+    "a_head_1e-4": {
+     "crash_rows": 0,
+     "gpu_seconds": {
+      "max": 8.899,
+      "mean": 4.559,
+      "median": 2.041,
+      "n": 7,
+      "p95": 8.849,
+      "sum": 31.91
+     },
+     "item_wall_seconds": {
+      "max": 35.579,
+      "mean": 18.222,
+      "median": 8.147,
+      "n": 7,
+      "p95": 35.382,
+      "sum": 127.557
+     },
+     "timeouts": 0,
+     "verdicts": {
+      "accept": 1,
+      "error": 1,
+      "reject": 5
+     }
+    },
+    "a_upstream_423217d9": {
+     "crash_rows": 0,
+     "gpu_seconds": {
+      "max": 9.001,
+      "mean": 3.491,
+      "median": 2.079,
+      "n": 11,
+      "p95": 8.883,
+      "sum": 38.406
+     },
+     "item_wall_seconds": {
+      "max": 35.993,
+      "mean": 13.96,
+      "median": 8.309,
+      "n": 11,
+      "p95": 35.523,
+      "sum": 153.559
+     },
+     "timeouts": 0,
+     "verdicts": {
+      "accept": 3,
+      "reject": 8
+     }
+    },
+    "a_upstream_44130946": {
+     "crash_rows": 0,
+     "gpu_seconds": {
+      "max": 8.969,
+      "mean": 3.678,
+      "median": 2.065,
+      "n": 11,
+      "p95": 8.956,
+      "sum": 40.461
+     },
+     "item_wall_seconds": {
+      "max": 35.87,
+      "mean": 14.704,
+      "median": 8.227,
+      "n": 11,
+      "p95": 35.817,
+      "sum": 161.739
+     },
+     "timeouts": 0,
+     "verdicts": {
+      "accept": 5,
+      "reject": 6
+     }
+    },
+    "b1": {
+     "crash_rows": 0,
+     "gpu_seconds": {
+      "max": 8.856,
+      "mean": 4.636,
+      "median": 1.943,
+      "n": 7,
+      "p95": 8.804,
+      "sum": 32.455
+     },
+     "item_wall_seconds": {
+      "max": 35.416,
+      "mean": 18.498,
+      "median": 7.764,
+      "n": 7,
+      "p95": 35.21,
+      "sum": 129.488
+     },
+     "timeouts": 0,
+     "verdicts": {
+      "accept": 4,
+      "reject": 3
+     }
+    },
+    "b2": {
+     "crash_rows": 0,
+     "gpu_seconds": {
+      "max": 9.284,
+      "mean": 5.321,
+      "median": 3.754,
+      "n": 7,
+      "p95": 9.148,
+      "sum": 37.249
+     },
+     "item_wall_seconds": {
+      "max": 37.125,
+      "mean": 19.825,
+      "median": 9.081,
+      "n": 7,
+      "p95": 36.58,
+      "sum": 138.772
+     },
+     "timeouts": 0,
+     "verdicts": {
+      "accept": 4,
+      "reject": 3
+     }
+    },
+    "b_native": {
+     "crash_rows": 0,
+     "gpu_seconds": {
+      "max": 8.924,
+      "mean": 3.771,
+      "median": 2.087,
+      "n": 11,
+      "p95": 8.846,
+      "sum": 41.479
+     },
+     "item_wall_seconds": {
+      "max": 35.691,
+      "mean": 15.076,
+      "median": 8.341,
+      "n": 11,
+      "p95": 35.378,
+      "sum": 165.833
+     },
+     "timeouts": 0,
+     "verdicts": {
+      "accept": 4,
+      "reject": 7
+     }
+    },
+    "c1_kbv_compat": {
+     "crash_rows": 0,
+     "gpu_seconds": {
+      "max": 8.271,
+      "mean": 3.324,
+      "median": 1.982,
+      "n": 11,
+      "p95": 8.179,
+      "sum": 36.564
+     },
+     "item_wall_seconds": {
+      "max": 33.077,
+      "mean": 13.289,
+      "median": 7.92,
+      "n": 11,
+      "p95": 32.709,
+      "sum": 146.175
+     },
+     "timeouts": 0,
+     "verdicts": {
+      "accept": 26,
+      "error": 10,
+      "reject": 30
+     }
+    },
+    "c1_kbv_native": {
+     "crash_rows": 0,
+     "gpu_seconds": {
+      "max": 1.991,
+      "mean": 1.321,
+      "median": 1.212,
+      "n": 11,
+      "p95": 1.984,
+      "sum": 14.527
+     },
+     "item_wall_seconds": {
+      "max": 7.951,
+      "mean": 5.275,
+      "median": 4.844,
+      "n": 11,
+      "p95": 7.923,
+      "sum": 58.03
+     },
+     "timeouts": 0,
+     "verdicts": {
+      "accept": 30,
+      "reject": 25
+     }
+    }
+   },
+   "per_kernel_gpu_seconds": {
+    "max": 35.944,
+    "mean": 15.585,
+    "median": 10.22,
+    "n": 11,
+    "p95": 35.585,
+    "sum": 171.438
+   },
+   "phase_seconds": 306.143
+  },
+  "smoke_job_driver_seconds": 753.0,
+  "specializations": {
+   "measured_seconds": 74.039,
+   "projected_seconds": 981.0,
+   "substrates": 8
+  }
+ },
+ "kernel_replicate_cost_by_class": {
+  "L1-exclusive": {
+   "max": 297.642,
+   "mean": 297.642,
+   "median": 297.642,
+   "n": 1,
+   "p95": 297.642,
+   "sum": 297.642
+  },
+  "L1-shared": {
+   "max": 28.625,
+   "mean": 26.135,
+   "median": 26.274,
+   "n": 8,
+   "p95": 28.572,
+   "sum": 209.081
+  },
+  "L2-shared": {
+   "max": 45.182,
+   "mean": 35.062,
+   "median": 34.093,
+   "n": 8,
+   "p95": 45.117,
+   "sum": 280.495
+  }
+ },
+ "kernel_replicate_cost_by_role": {
+  "identity-control": {
+   "max": 27.883,
+   "mean": 23.312,
+   "median": 24.461,
+   "n": 4,
+   "p95": 27.709,
+   "sum": 93.249
+  },
+  "mutant": {
+   "max": 45.182,
+   "mean": 33.215,
+   "median": 31.252,
+   "n": 8,
+   "p95": 45.117,
+   "sum": 265.722
+  },
+  "substrate": {
+   "max": 297.642,
+   "mean": 85.649,
+   "median": 34.103,
+   "n": 5,
+   "p95": 246.898,
+   "sum": 428.247
+  }
+ },
+ "kernel_replicates_complete": 17,
+ "kernel_rows": [
+  {
+   "a": 0.9231666922569275,
+   "a_secondaries": 3.130249996980031,
+   "audit": 11.381583273410797,
+   "b_marginal": 2.7151666680971784,
+   "c_marginal": 4.044333338737488,
+   "cost_class": "L1-shared",
+   "kernel_id": "ctl-identity-L1-2_Standard_matrix_multiplication_",
+   "parent": "ctl-identity-L1-2_Standard_matrix_multiplication_",
+   "problem_id": "L1/2_Standard_matrix_multiplication_",
+   "role": "identity-control",
+   "seed": 42,
+   "total": 22.194499969482422,
+   "wall_total": 88.307
+  },
+  {
+   "a": 1.3857499559720359,
+   "a_secondaries": 3.011750022570292,
+   "audit": 13.674416641394297,
+   "b_marginal": 3.6177499691645307,
+   "c_marginal": 5.038750052452088,
+   "cost_class": "L1-shared",
+   "kernel_id": "ctl-identity-L1-95_CrossEntropyLoss",
+   "parent": "ctl-identity-L1-95_CrossEntropyLoss",
+   "problem_id": "L1/95_CrossEntropyLoss",
+   "role": "identity-control",
+   "seed": 42,
+   "total": 26.728416641553245,
+   "wall_total": 106.462
+  },
+  {
+   "a": 0.702750027179718,
+   "a_secondaries": 2.4900833765665693,
+   "audit": 16.714500109354656,
+   "b_marginal": 2.5784166256586714,
+   "c_marginal": 5.39674993356069,
+   "cost_class": "L2-shared",
+   "kernel_id": "ctl-identity-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "parent": "ctl-identity-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "problem_id": "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "role": "identity-control",
+   "seed": 42,
+   "total": 27.882500072320305,
+   "wall_total": 110.979
+  },
+  {
+   "a": 0.5975000063578289,
+   "a_secondaries": 2.1897499163945517,
+   "audit": 9.863750000794727,
+   "b_marginal": 2.0803333520889282,
+   "c_marginal": 1.71274995803833,
+   "cost_class": "L2-shared",
+   "kernel_id": "ctl-identity-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "parent": "ctl-identity-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "problem_id": "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "role": "identity-control",
+   "seed": 42,
+   "total": 16.444083233674366,
+   "wall_total": 65.344
+  },
+  {
+   "a": 13.146999835968018,
+   "a_secondaries": 52.513999938964844,
+   "audit": 116.47300004959106,
+   "b_marginal": 28.28500008583069,
+   "c_marginal": 87.22300004959106,
+   "cost_class": "L1-exclusive",
+   "kernel_id": "s1-inductor-L1-3_Batched_matrix_multiplication",
+   "parent": "s1-inductor-L1-3_Batched_matrix_multiplication",
+   "problem_id": "L1/3_Batched_matrix_multiplication",
+   "role": "substrate",
+   "seed": 42,
+   "total": 297.6419999599457,
+   "wall_total": 297.639
+  },
+  {
+   "a": 1.9523332913716633,
+   "a_secondaries": 7.599083383878073,
+   "audit": 24.259916524092358,
+   "b_marginal": 3.7245000004768376,
+   "c_marginal": 6.38825003306071,
+   "cost_class": "L2-shared",
+   "kernel_id": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "parent": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "problem_id": "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "role": "substrate",
+   "seed": 42,
+   "total": 43.92408323287964,
+   "wall_total": 175.548
+  },
+  {
+   "a": 1.9787500103314717,
+   "a_secondaries": 7.7690833409627285,
+   "audit": 24.789750039577484,
+   "b_marginal": 3.829250017801921,
+   "c_marginal": 6.629583299160004,
+   "cost_class": "L2-shared",
+   "kernel_id": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.dim-param-swap-decode.L76C21",
+   "parent": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "problem_id": "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "role": "mutant",
+   "seed": 42,
+   "total": 44.99641670783361,
+   "wall_total": 178.858
+  },
+  {
+   "a": 1.9797500173250835,
+   "a_secondaries": 7.880666613578796,
+   "audit": 24.743166645367943,
+   "b_marginal": 3.9156667192776995,
+   "c_marginal": 6.663166681925456,
+   "cost_class": "L2-shared",
+   "kernel_id": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31",
+   "parent": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "problem_id": "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+   "role": "mutant",
+   "seed": 42,
+   "total": 45.182416677474976,
+   "wall_total": 179.982
+  },
+  {
+   "a": 1.952999989191691,
+   "a_secondaries": 7.583999991416931,
+   "audit": 17.874583323796593,
+   "b_marginal": 3.7817500233650208,
+   "c_marginal": 2.909499963124593,
+   "cost_class": "L2-shared",
+   "kernel_id": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "parent": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "problem_id": "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "role": "substrate",
+   "seed": 42,
+   "total": 34.10283329089483,
+   "wall_total": 136.27
+  },
+  {
+   "a": 1.9211666584014893,
+   "a_secondaries": 7.553749998410543,
+   "audit": 17.949750045935314,
+   "b_marginal": 3.737166623274485,
+   "c_marginal": 2.92166664203008,
+   "cost_class": "L2-shared",
+   "kernel_id": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.dim-param-swap-decode.L92C19",
+   "parent": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "problem_id": "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "role": "mutant",
+   "seed": 42,
+   "total": 34.08349996805191,
+   "wall_total": 135.528
+  },
+  {
+   "a": 1.8985000252723694,
+   "a_secondaries": 7.4837499260902405,
+   "audit": 17.948916594187416,
+   "b_marginal": 3.6886667211850486,
+   "c_marginal": 2.8593333959579468,
+   "cost_class": "L2-shared",
+   "kernel_id": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12",
+   "parent": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "problem_id": "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+   "role": "mutant",
+   "seed": 42,
+   "total": 33.879166662693024,
+   "wall_total": 134.949
+  },
+  {
+   "a": 1.418083369731903,
+   "a_secondaries": 3.050666670004527,
+   "audit": 14.436833302179972,
+   "b_marginal": 3.82016670703888,
+   "c_marginal": 5.259583373864492,
+   "cost_class": "L1-shared",
+   "kernel_id": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+   "parent": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+   "problem_id": "L1/95_CrossEntropyLoss",
+   "role": "substrate",
+   "seed": 42,
+   "total": 27.985333422819775,
+   "wall_total": 111.801
+  },
+  {
+   "a": 1.3995000123977661,
+   "a_secondaries": 3.1615000565846763,
+   "audit": 14.753583292166391,
+   "b_marginal": 3.8840833306312557,
+   "c_marginal": 5.2752499381701154,
+   "cost_class": "L1-shared",
+   "kernel_id": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.minus2plus.L140C13",
+   "parent": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+   "problem_id": "L1/95_CrossEntropyLoss",
+   "role": "mutant",
+   "seed": 42,
+   "total": 28.473916629950207,
+   "wall_total": 113.353
+  },
+  {
+   "a": 1.4805833498636882,
+   "a_secondaries": 3.1860833168029785,
+   "audit": 14.81716670592626,
+   "b_marginal": 3.8443333109219875,
+   "c_marginal": 5.296416620413462,
+   "cost_class": "L1-shared",
+   "kernel_id": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.program-id-axis-swap.L55C17",
+   "parent": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+   "problem_id": "L1/95_CrossEntropyLoss",
+   "role": "mutant",
+   "seed": 42,
+   "total": 28.624583303928375,
+   "wall_total": 113.697
+  },
+  {
+   "a": 0.9802500009536743,
+   "a_secondaries": 3.9372499982515974,
+   "audit": 12.339916785558065,
+   "b_marginal": 2.7744999726613364,
+   "c_marginal": 4.560499986012776,
+   "cost_class": "L1-shared",
+   "kernel_id": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+   "parent": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+   "problem_id": "L1/2_Standard_matrix_multiplication_",
+   "role": "substrate",
+   "seed": 42,
+   "total": 24.59241674343745,
+   "wall_total": 98.095
+  },
+  {
+   "a": 1.0927500128746033,
+   "a_secondaries": 3.7797499895095825,
+   "audit": 14.663500050703686,
+   "b_marginal": 1.8275833924611409,
+   "c_marginal": 4.4564999143282575,
+   "cost_class": "L1-shared",
+   "kernel_id": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.launch-stride-swap.L158C21",
+   "parent": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+   "problem_id": "L1/2_Standard_matrix_multiplication_",
+   "role": "mutant",
+   "seed": 42,
+   "total": 25.82008335987727,
+   "wall_total": 94.429
+  },
+  {
+   "a": 0.9568333427111307,
+   "a_secondaries": 3.908583362897237,
+   "audit": 12.252333362897236,
+   "b_marginal": 2.915083309014638,
+   "c_marginal": 4.628916680812836,
+   "cost_class": "L1-shared",
+   "kernel_id": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_.mul2plus.L123C18",
+   "parent": "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+   "problem_id": "L1/2_Standard_matrix_multiplication_",
+   "role": "mutant",
+   "seed": 42,
+   "total": 24.661750058333077,
+   "wall_total": 98.007
+  }
+ ],
+ "large_problem_anchors": {
+  "c_points": [
+   {
+    "gb": 1.342,
+    "gpu_seconds_per_gb": 64.986,
+    "kind": "measured"
+   },
+   {
+    "gb": 4.295,
+    "gpu_seconds_per_gb": 157.58,
+    "kind": "censored lower bound"
+   }
+  ],
+  "kernels": [
+   "s1-inductor-L1-3_Batched_matrix_multiplication"
+  ],
+  "non_c_gpu_seconds_per_gb": 156.774
+ },
+ "paired_concurrency": {
+  "factors": {
+   "A1": 0.455,
+   "A2": 0.448,
+   "A3": 0.454,
+   "A4": 0.434,
+   "A4_poison": 0.515,
+   "A4_sanitizer": 0.849,
+   "A5": 0.502,
+   "a": 0.519,
+   "a_1e-3": 0.489,
+   "a_head_1e-2": 0.486,
+   "a_head_1e-4": 0.506,
+   "a_static": 0.461,
+   "b1": 0.458,
+   "b2": 0.445,
+   "c": 0.458
+  },
+  "gpu_seconds_base": 489.6,
+  "gpu_seconds_other": 241.6,
+  "gpu_seconds_ratio_total": 0.493,
+  "items_in_both": 240,
+  "only_base": 20,
+  "only_other": 0,
+  "per_gate": {
+   "A1": {
+    "base_gpu_seconds_sum": 46.22,
+    "gpu_seconds_ratio_median": 0.455,
+    "n": 16,
+    "other_gpu_seconds_sum": 20.96,
+    "wall_ratio_median": 1.349
+   },
+   "A2": {
+    "base_gpu_seconds_sum": 65.69,
+    "gpu_seconds_ratio_median": 0.448,
+    "n": 16,
+    "other_gpu_seconds_sum": 31.66,
+    "wall_ratio_median": 1.328
+   },
+   "A3": {
+    "base_gpu_seconds_sum": 39.07,
+    "gpu_seconds_ratio_median": 0.454,
+    "n": 16,
+    "other_gpu_seconds_sum": 18.09,
+    "wall_ratio_median": 1.358
+   },
+   "A4": {
+    "base_gpu_seconds_sum": 22.77,
+    "gpu_seconds_ratio_median": 0.434,
+    "n": 16,
+    "other_gpu_seconds_sum": 10.35,
+    "wall_ratio_median": 1.306
+   },
+   "A4_poison": {
+    "base_gpu_seconds_sum": 43.76,
+    "gpu_seconds_ratio_median": 0.515,
+    "n": 16,
+    "other_gpu_seconds_sum": 21.59,
+    "wall_ratio_median": 1.55
+   },
+   "A4_sanitizer": {
+    "base_gpu_seconds_sum": 23.96,
+    "gpu_seconds_ratio_median": 0.849,
+    "n": 16,
+    "other_gpu_seconds_sum": 17.86,
+    "wall_ratio_median": 2.388
+   },
+   "A5": {
+    "base_gpu_seconds_sum": 20.99,
+    "gpu_seconds_ratio_median": 0.502,
+    "n": 16,
+    "other_gpu_seconds_sum": 11.11,
+    "wall_ratio_median": 1.503
+   },
+   "a": {
+    "base_gpu_seconds_sum": 22.62,
+    "gpu_seconds_ratio_median": 0.519,
+    "n": 16,
+    "other_gpu_seconds_sum": 11.95,
+    "wall_ratio_median": 1.559
+   },
+   "a_1e-3": {
+    "base_gpu_seconds_sum": 22.4,
+    "gpu_seconds_ratio_median": 0.489,
+    "n": 16,
+    "other_gpu_seconds_sum": 11.34,
+    "wall_ratio_median": 1.471
+   },
+   "a_head_1e-2": {
+    "base_gpu_seconds_sum": 19.2,
+    "gpu_seconds_ratio_median": 0.486,
+    "n": 16,
+    "other_gpu_seconds_sum": 9.4,
+    "wall_ratio_median": 1.469
+   },
+   "a_head_1e-4": {
+    "base_gpu_seconds_sum": 19.09,
+    "gpu_seconds_ratio_median": 0.506,
+    "n": 16,
+    "other_gpu_seconds_sum": 9.61,
+    "wall_ratio_median": 1.518
+   },
+   "a_static": {
+    "base_gpu_seconds_sum": 17.03,
+    "gpu_seconds_ratio_median": 0.461,
+    "n": 16,
+    "other_gpu_seconds_sum": 7.87,
+    "wall_ratio_median": 1.383
+   },
+   "b1": {
+    "base_gpu_seconds_sum": 22.47,
+    "gpu_seconds_ratio_median": 0.458,
+    "n": 16,
+    "other_gpu_seconds_sum": 11.25,
+    "wall_ratio_median": 1.376
+   },
+   "b2": {
+    "base_gpu_seconds_sum": 30.26,
+    "gpu_seconds_ratio_median": 0.445,
+    "n": 16,
+    "other_gpu_seconds_sum": 14.91,
+    "wall_ratio_median": 1.335
+   },
+   "c": {
+    "base_gpu_seconds_sum": 74.04,
+    "gpu_seconds_ratio_median": 0.458,
+    "n": 16,
+    "other_gpu_seconds_sum": 33.63,
+    "wall_ratio_median": 1.371
+   }
+  },
+  "phases": {
+   "elapsed_seconds": 264.647,
+   "job": "pilot",
+   "phases": [
+    {
+     "manifest_sha256": "260038b32e3f6778187c49a2610a5ecc81a34032214d93c353f0e7b6dd18279d",
+     "phase": "unpack",
+     "seconds": 0.32,
+     "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+     "start_offset_seconds": 0.019,
+     "status": "ok",
+     "trees": {
+      "corpus": {
+       "added": [],
+       "files": 1905,
+       "licence": "mixed",
+       "path": "/outputs/q1/inputs/corpus",
+       "revision": null,
+       "source": "q1-pilot-corpus",
+       "tree_sha256": "62700d5ac1469e362352caf779946d2d758cc758266ca6b4325fd005cc45304b"
+      },
+      "kbv": {
+       "added": [
+        "REVISION"
+       ],
+       "files": 604,
+       "licence": "MIT",
+       "path": "/outputs/q1/inputs/kbv",
+       "revision": "3fdf6fec7372a4d0cb682635f00e7bdcbc55d50e",
+       "source": "facebookresearch/kernel_bench_verified",
+       "tree_sha256": "02aac1269d88844ee6bbe3049fb31528169fa64435b2ce6e37694276f3b3244d"
+      },
+      "kernelgym": {
+       "added": [
+        "REVISION"
+       ],
+       "files": 291,
+       "licence": "none",
+       "path": "/outputs/q1/inputs/kernelgym",
+       "revision": "3a84417f8c0efaadb215ef638b37d12e71ed20f3",
+       "source": "hkust-nlp/KernelGYM",
+       "tree_sha256": "162a31a621fa7e3a43e0537a30e6dba934aa4ddb7d73ca90df2b284a3e39a83e"
+      }
+     }
+    },
+    {
+     "phase": "timing",
+     "runs": [
+      {
+       "budget_seconds": 90.0,
+       "crashes": 0,
+       "left_in_queue": 0,
+       "name": "timing",
+       "planned": 2,
+       "retired_slots": [],
+       "run": 2,
+       "run_id": "84c166e3a2bb",
+       "skipped": 0,
+       "time_boxed": false,
+       "timeouts": 0
+      }
+     ],
+     "seconds": 22.508,
+     "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+     "start_offset_seconds": 0.393,
+     "status": "ok"
+    },
+    {
+     "phase": "scoring",
+     "runs": [
+      {
+       "budget_seconds": 319.1,
+       "crashes": 2,
+       "left_in_queue": 0,
+       "name": "scoring",
+       "planned": 240,
+       "retired_slots": [],
+       "run": 240,
+       "run_id": "6f3e65c857e1",
+       "skipped": 0,
+       "time_boxed": false,
+       "timeouts": 0
+      }
+     ],
+     "scoring_selection": {
+      "items": 240,
+      "prefix": 240,
+      "shared_only": true
+     },
+     "seconds": 241.74,
+     "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+     "start_offset_seconds": 22.901,
+     "status": "ok"
+    }
+   ],
+   "slots": [
+    "cuda:0",
+    "cuda:0",
+    "cuda:0",
+    "cuda:0",
+    "cuda:0",
+    "cuda:0",
+    "cuda:0",
+    "cuda:0",
+    "cuda:0",
+    "cuda:0",
+    "cuda:0",
+    "cuda:0"
+   ],
+   "slots_per_gpu": 12
+  },
+  "timing_items": {
+   "timing": {
+    "crash_rows": 0,
+    "gpu_seconds": {
+     "max": 11.724,
+     "mean": 11.116,
+     "median": 11.116,
+     "n": 2,
+     "p95": 11.663,
+     "sum": 22.233
+    },
+    "item_wall_seconds": {
+     "max": 11.723,
+     "mean": 11.116,
+     "median": 11.116,
+     "n": 2,
+     "p95": 11.662,
+     "sum": 22.232
+    },
+    "timeouts": 0,
+    "verdicts": {
+     "accept": 2
+    }
+   }
+  },
+  "verdict_differences": [
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.dim-param-swap-decode.L76C21|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU.plus2minus.L132C31|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.dim-param-swap-decode.L92C19|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max.mul2div.L75C12|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "error": 1
+    },
+    "item_key": "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max|A4_sanitizer|seed-42",
+    "other": {
+     "accept": 1
+    }
+   },
+   {
+    "base": {
+     "reject": 1
+    },
+    "item_key": "s2-liger-cross-entropy-L1-95_CrossEntropyLoss.program-id-axis-swap.L55C17|A4_poison|seed-42",
+    "other": {
+     "accept": 1
+    }
+   }
+  ]
+ },
+ "per_gate_job1_smoke_prefix": {
+  "a": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 181.563,
+    "mean": 181.563,
+    "median": 181.563,
+    "n": 1,
+    "p95": 181.563,
+    "sum": 181.563
+   },
+   "item_wall_seconds": {
+    "max": 181.563,
+    "mean": 181.563,
+    "median": 181.563,
+    "n": 1,
+    "p95": 181.563,
+    "sum": 181.563
+   },
+   "timeouts": 1,
+   "verdicts": {
+    "timeout": 1
+   }
+  },
+  "a_head_1e-2": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 181.559,
+    "mean": 181.559,
+    "median": 181.559,
+    "n": 1,
+    "p95": 181.559,
+    "sum": 181.559
+   },
+   "item_wall_seconds": {
+    "max": 181.559,
+    "mean": 181.559,
+    "median": 181.559,
+    "n": 1,
+    "p95": 181.559,
+    "sum": 181.559
+   },
+   "timeouts": 1,
+   "verdicts": {
+    "timeout": 1
+   }
+  }
+ },
+ "per_gate_scoring": {
+  "A1": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 19.481,
+    "mean": 3.865,
+    "median": 2.589,
+    "n": 17,
+    "p95": 7.635,
+    "sum": 65.705
+   },
+   "item_wall_seconds": {
+    "max": 19.481,
+    "mean": 11.993,
+    "median": 10.349,
+    "n": 17,
+    "p95": 18.839,
+    "sum": 203.889
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 70,
+    "reject": 49
+   }
+  },
+  "A2": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 45.758,
+    "mean": 6.556,
+    "median": 4.983,
+    "n": 17,
+    "p95": 13.613,
+    "sum": 111.446
+   },
+   "item_wall_seconds": {
+    "max": 45.758,
+    "mean": 18.048,
+    "median": 19.848,
+    "n": 17,
+    "p95": 26.95,
+    "sum": 306.81
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 85,
+    "error": 12,
+    "reject": 56
+   }
+  },
+  "A3": {
+   "crash_rows": 1,
+   "gpu_seconds": {
+    "max": 11.081,
+    "mean": 2.95,
+    "median": 2.331,
+    "n": 17,
+    "p95": 5.105,
+    "sum": 50.15
+   },
+   "item_wall_seconds": {
+    "max": 14.442,
+    "mean": 9.825,
+    "median": 9.298,
+    "n": 17,
+    "p95": 14.44,
+    "sum": 167.026
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 36,
+    "error": 12,
+    "refuse": 17,
+    "reject": 36
+   }
+  },
+  "A4": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 9.591,
+    "mean": 1.904,
+    "median": 1.102,
+    "n": 17,
+    "p95": 3.865,
+    "sum": 32.365
+   },
+   "item_wall_seconds": {
+    "max": 9.635,
+    "mean": 5.864,
+    "median": 4.263,
+    "n": 17,
+    "p95": 9.6,
+    "sum": 99.688
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 15,
+    "reject": 2
+   }
+  },
+  "A4_poison": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 15.291,
+    "mean": 3.474,
+    "median": 1.988,
+    "n": 17,
+    "p95": 6.695,
+    "sum": 59.053
+   },
+   "item_wall_seconds": {
+    "max": 18.032,
+    "mean": 10.934,
+    "median": 7.624,
+    "n": 17,
+    "p95": 17.402,
+    "sum": 185.87
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 16,
+    "reject": 1
+   }
+  },
+  "A4_sanitizer": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 6.029,
+    "mean": 1.764,
+    "median": 1.194,
+    "n": 17,
+    "p95": 2.906,
+    "sum": 29.988
+   },
+   "item_wall_seconds": {
+    "max": 8.484,
+    "mean": 5.875,
+    "median": 4.749,
+    "n": 17,
+    "p95": 8.457,
+    "sum": 99.873
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 9,
+    "error": 7,
+    "reject": 1
+   }
+  },
+  "A5": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 9.242,
+    "mean": 1.778,
+    "median": 1.034,
+    "n": 17,
+    "p95": 3.534,
+    "sum": 30.229
+   },
+   "item_wall_seconds": {
+    "max": 9.241,
+    "mean": 5.417,
+    "median": 4.091,
+    "n": 17,
+    "p95": 8.526,
+    "sum": 92.087
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 5,
+    "error": 1,
+    "reject": 11
+   }
+  },
+  "a": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 28.012,
+    "mean": 3.543,
+    "median": 1.449,
+    "n": 18,
+    "p95": 15.377,
+    "sum": 63.78
+   },
+   "item_wall_seconds": {
+    "max": 28.012,
+    "mean": 7.289,
+    "median": 5.787,
+    "n": 18,
+    "p95": 15.377,
+    "sum": 131.204
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 12,
+    "reject": 6
+   }
+  },
+  "a_1e-3": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 13.471,
+    "mean": 2.11,
+    "median": 1.444,
+    "n": 17,
+    "p95": 4.279,
+    "sum": 35.872
+   },
+   "item_wall_seconds": {
+    "max": 13.47,
+    "mean": 6.015,
+    "median": 5.663,
+    "n": 17,
+    "p95": 8.992,
+    "sum": 102.262
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 11,
+    "reject": 6
+   }
+  },
+  "a_head_1e-2": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 27.859,
+    "mean": 3.343,
+    "median": 0.985,
+    "n": 18,
+    "p95": 15.335,
+    "sum": 60.183
+   },
+   "item_wall_seconds": {
+    "max": 27.859,
+    "mean": 6.517,
+    "median": 3.917,
+    "n": 18,
+    "p95": 15.335,
+    "sum": 117.312
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 10,
+    "error": 4,
+    "reject": 4
+   }
+  },
+  "a_head_1e-4": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 94.397,
+    "mean": 7.037,
+    "median": 0.973,
+    "n": 18,
+    "p95": 25.368,
+    "sum": 126.671
+   },
+   "item_wall_seconds": {
+    "max": 94.397,
+    "mean": 10.192,
+    "median": 3.862,
+    "n": 18,
+    "p95": 25.368,
+    "sum": 183.456
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 9,
+    "error": 4,
+    "reject": 5
+   }
+  },
+  "a_static": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 27.873,
+    "mean": 3.202,
+    "median": 0.986,
+    "n": 18,
+    "p95": 15.003,
+    "sum": 57.633
+   },
+   "item_wall_seconds": {
+    "max": 27.873,
+    "mean": 6.013,
+    "median": 3.917,
+    "n": 18,
+    "p95": 15.002,
+    "sum": 108.238
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 7,
+    "reject": 11
+   }
+  },
+  "b1": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 34.095,
+    "mean": 3.918,
+    "median": 1.557,
+    "n": 18,
+    "p95": 16.983,
+    "sum": 70.529
+   },
+   "item_wall_seconds": {
+    "max": 34.095,
+    "mean": 7.633,
+    "median": 6.185,
+    "n": 18,
+    "p95": 16.983,
+    "sum": 137.387
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 13,
+    "error": 1,
+    "reject": 4
+   }
+  },
+  "b2": {
+   "crash_rows": 0,
+   "gpu_seconds": {
+    "max": 14.322,
+    "mean": 2.623,
+    "median": 1.906,
+    "n": 17,
+    "p95": 4.729,
+    "sum": 44.585
+   },
+   "item_wall_seconds": {
+    "max": 14.322,
+    "mean": 7.93,
+    "median": 7.577,
+    "n": 17,
+    "p95": 10.296,
+    "sum": 134.805
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 12,
+    "error": 1,
+    "reject": 4
+   }
+  },
+  "c": {
+   "crash_rows": 1,
+   "gpu_seconds": {
+    "max": 87.223,
+    "mean": 9.486,
+    "median": 5.039,
+    "n": 17,
+    "p95": 22.775,
+    "sum": 161.264
+   },
+   "item_wall_seconds": {
+    "max": 87.223,
+    "mean": 22.446,
+    "median": 20.084,
+    "n": 17,
+    "p95": 38.713,
+    "sum": 381.577
+   },
+   "timeouts": 0,
+   "verdicts": {
+    "accept": 282,
+    "reject": 115
+   }
+  }
+ },
+ "per_kernel_rung": {
+  "a": {
+   "max": 13.147,
+   "mean": 2.104,
+   "median": 1.418,
+   "n": 17,
+   "p95": 4.213,
+   "sum": 35.768
+  },
+  "a_secondaries": {
+   "max": 52.514,
+   "mean": 7.661,
+   "median": 3.909,
+   "n": 17,
+   "p95": 16.807,
+   "sum": 130.23
+  },
+  "audit": {
+   "max": 116.473,
+   "mean": 22.29,
+   "median": 14.817,
+   "n": 17,
+   "p95": 43.126,
+   "sum": 378.937
+  },
+  "b_marginal": {
+   "max": 28.285,
+   "mean": 4.766,
+   "median": 3.725,
+   "n": 17,
+   "p95": 8.79,
+   "sum": 81.019
+  },
+  "c_marginal": {
+   "max": 87.223,
+   "mean": 9.486,
+   "median": 5.039,
+   "n": 17,
+   "p95": 22.775,
+   "sum": 161.264
+  }
+ },
+ "phases": {
+  "pilot": {
+   "elapsed_seconds": 2207.353,
+   "job": "pilot",
+   "phases": [
+    {
+     "manifest_sha256": "260038b32e3f6778187c49a2610a5ecc81a34032214d93c353f0e7b6dd18279d",
+     "phase": "unpack",
+     "seconds": 0.32,
+     "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+     "start_offset_seconds": 0.02,
+     "status": "ok",
+     "trees": {
+      "corpus": {
+       "added": [],
+       "files": 1905,
+       "licence": "mixed",
+       "path": "/outputs/q1/inputs/corpus",
+       "revision": null,
+       "source": "q1-pilot-corpus",
+       "tree_sha256": "62700d5ac1469e362352caf779946d2d758cc758266ca6b4325fd005cc45304b"
+      },
+      "kbv": {
+       "added": [
+        "REVISION"
+       ],
+       "files": 604,
+       "licence": "MIT",
+       "path": "/outputs/q1/inputs/kbv",
+       "revision": "3fdf6fec7372a4d0cb682635f00e7bdcbc55d50e",
+       "source": "facebookresearch/kernel_bench_verified",
+       "tree_sha256": "02aac1269d88844ee6bbe3049fb31528169fa64435b2ce6e37694276f3b3244d"
+      },
+      "kernelgym": {
+       "added": [
+        "REVISION"
+       ],
+       "files": 291,
+       "licence": "none",
+       "path": "/outputs/q1/inputs/kernelgym",
+       "revision": "3a84417f8c0efaadb215ef638b37d12e71ed20f3",
+       "source": "hkust-nlp/KernelGYM",
+       "tree_sha256": "162a31a621fa7e3a43e0537a30e6dba934aa4ddb7d73ca90df2b284a3e39a83e"
+      }
+     }
+    },
+    {
+     "phase": "smoke",
+     "runs": [
+      {
+       "budget_seconds": 360.0,
+       "crashes": 0,
+       "left_in_queue": 0,
+       "name": "smoke",
+       "planned": 19,
+       "retired_slots": [],
+       "run": 19,
+       "run_id": "ba00cccd92f9",
+       "skipped": 0,
+       "time_boxed": false,
+       "timeouts": 0
+      },
+      {
+       "budget_seconds": 120,
+       "crashes": 0,
+       "left_in_queue": 0,
+       "name": "smoke-timing",
+       "planned": 1,
+       "retired_slots": [],
+       "run": 1,
+       "run_id": "23f106c0d65b",
+       "skipped": 0,
+       "time_boxed": false,
+       "timeouts": 0
+      }
+     ],
+     "seconds": 127.076,
+     "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+     "start_offset_seconds": 0.391,
+     "status": "ok"
+    },
+    {
+     "phase": "fidelity",
+     "runs": [
+      {
+       "budget_seconds": 420.0,
+       "crashes": 0,
+       "left_in_queue": 0,
+       "name": "fidelity",
+       "planned": 83,
+       "retired_slots": [],
+       "run": 83,
+       "run_id": "01dab0e00629",
+       "skipped": 0,
+       "time_boxed": false,
+       "timeouts": 0
+      }
+     ],
+     "seconds": 306.143,
+     "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+     "start_offset_seconds": 127.468,
+     "status": "ok"
+    },
+    {
+     "calibrate_exit": 0,
+     "phase": "calibration",
+     "runs": [
+      {
+       "budget_seconds": 240.0,
+       "crashes": 0,
+       "left_in_queue": 0,
+       "name": "calibration",
+       "planned": 4,
+       "retired_slots": [],
+       "run": 4,
+       "run_id": "e4fc6ad8758e",
+       "skipped": 0,
+       "time_boxed": false,
+       "timeouts": 0
+      }
+     ],
+     "seconds": 97.434,
+     "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+     "start_offset_seconds": 433.611,
+     "status": "ok"
+    },
+    {
+     "phase": "scoring",
+     "runs": [
+      {
+       "budget_seconds": 1538.9,
+       "crashes": 3,
+       "left_in_queue": 4551,
+       "name": "scoring",
+       "planned": 4815,
+       "retired_slots": [],
+       "run": 260,
+       "run_id": "ae738cb1f7f3",
+       "skipped": 0,
+       "time_boxed": true,
+       "timeouts": 0
+      }
+     ],
+     "seconds": 1676.298,
+     "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+     "start_offset_seconds": 531.045,
+     "status": "ok"
+    },
+    {
+     "phase": "timing",
+     "runs": [
+      {
+       "budget_seconds": 0.0,
+       "crashes": 0,
+       "left_in_queue": 2,
+       "name": "timing",
+       "planned": 2,
+       "retired_slots": [],
+       "run": 0,
+       "run_id": "1c5e5e5ae11c",
+       "skipped": 0,
+       "time_boxed": true,
+       "timeouts": 0
+      }
+     ],
+     "seconds": 0.001,
+     "sigusr1_handler_before": "install_signal_handlers.<locals>.<lambda>",
+     "start_offset_seconds": 2207.344,
+     "status": "ok"
+    }
+   ],
+   "slots": [
+    "cuda:0",
+    "cuda:0",
+    "cuda:0",
+    "cuda:0"
+   ],
+   "slots_per_gpu": 4
+  },
+  "smoke": {
+   "elapsed_seconds": 752.991,
+   "job": "smoke",
+   "phases": [
+    {
+     "codegen_problems": [
+      "L1/25_Swish",
+      "L1/22_Tanh",
+      "L1/30_Softsign",
+      "L1/72_conv_transposed_3D_asymmetric_input_asymmetric_kernel___strided_padded_grouped_",
+      "L1/3_Batched_matrix_multiplication",
+      "L1/90_cumprod",
+      "L2/74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+      "L2/3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+      "L2/9_Matmul_Subtract_Multiply_ReLU",
+      "L2/62_Matmul_GroupNorm_LeakyReLU_Sum",
+      "L2/90_Conv3d_LeakyReLU_Sum_Clamp_GELU",
+      "L2/69_Conv2d_HardSwish_ReLU",
+      "L1/15_Matmul_for_lower_triangular_matrices",
+      "L1/46_Average_Pooling_3D",
+      "L1/47_Sum_reduction_over_a_dimension",
+      "L1/74_conv_transposed_1D_dilated",
+      "L1/95_CrossEntropyLoss",
+      "L1/8_Matmul_with_irregular_shapes_",
+      "L2/52_Conv2d_Activation_BatchNorm",
+      "L2/60_ConvTranspose3d_Swish_GroupNorm_HardSwish",
+      "L2/88_Gemm_GroupNorm_Swish_Multiply_Swish",
+      "L2/61_ConvTranspose3d_ReLU_GroupNorm",
+      "L2/100_ConvTranspose3d_Clamp_Min_Divide",
+      "L2/59_Matmul_Swish_Scaling"
+     ],
+     "phase": "admission",
+     "seconds": 202.621,
+     "selection": {
+      "calibration": [
+       "s1-inductor-L1-15_Matmul_for_lower_triangular_matrices",
+       "s1-inductor-L1-47_Sum_reduction_over_a_dimension",
+       "s1-inductor-L2-52_Conv2d_Activation_BatchNorm",
+       "s1-inductor-L2-60_ConvTranspose3d_Swish_GroupNorm_HardSwish"
+      ],
+      "evaluation": [
+       "s1-inductor-L1-25_Swish",
+       "s1-inductor-L1-3_Batched_matrix_multiplication",
+       "s1-inductor-L2-74_ConvTranspose3d_LeakyReLU_Multiply_LeakyReLU_Max",
+       "s1-inductor-L2-3_ConvTranspose3d_Sum_LayerNorm_AvgPool_GELU",
+       "s2-flaggems-cumsum-L1-89_cumsum",
+       "s2-liger-cross-entropy-L1-95_CrossEntropyLoss",
+       "s2-tutorial-matmul-L1-2_Standard_matrix_multiplication_",
+       "s2-flaggems-mul-scalar-L1-5_Matrix_scalar_multiplication"
+      ]
+     },
+     "start_offset_seconds": 0.035,
+     "status": "ok",
+     "steps": [
+      {
+       "exit": 0,
+       "step": "s1-codegen"
+      },
+      {
+       "exit": 0,
+       "step": "s1-convert"
+      },
+      {
+       "exit": 0,
+       "step": "s2-build"
+      },
+      {
+       "exit": 0,
+       "step": "check-static"
+      },
+      {
+       "exit": 0,
+       "step": "split"
+      }
+     ]
+    },
+    {
+     "exit": 0,
+     "phase": "specializations",
+     "seconds": 74.039,
+     "start_offset_seconds": 202.656,
+     "status": "ok"
+    },
+    {
+     "core_controls": 13,
+     "hack_controls": 37,
+     "phase": "controls",
+     "seconds": 0.387,
+     "start_offset_seconds": 276.696,
+     "status": "ok"
+    },
+    {
+     "phase": "smoke",
+     "runs": [
+      {
+       "budget_seconds": 142.9,
+       "crashes": 1,
+       "left_in_queue": 71,
+       "name": "smoke",
+       "planned": 75,
+       "retired_slots": [],
+       "run": 2,
+       "run_id": "0c44c0872796",
+       "skipped": 0,
+       "time_boxed": true,
+       "timeouts": 2
+      }
+     ],
+     "seconds": 475.903,
+     "start_offset_seconds": 277.083,
+     "status": "ok"
+    },
+    {
+     "phase": "timing",
+     "runs": [
+      {
+       "budget_seconds": 0.0,
+       "crashes": 0,
+       "left_in_queue": 3,
+       "name": "timing",
+       "planned": 3,
+       "retired_slots": [],
+       "run": 0,
+       "run_id": "a493b0cc1810",
+       "skipped": 0,
+       "time_boxed": true,
+       "timeouts": 0
+      }
+     ],
+     "seconds": 0.003,
+     "start_offset_seconds": 752.987,
+     "status": "ok"
+    }
+   ],
+   "slots": [
+    "cuda:0",
+    "cuda:0",
+    "cuda:0",
+    "cuda:0"
+   ],
+   "slots_per_gpu": 4
+  }
+ },
+ "pilot_job": "/runs/518",
+ "run_records_sha256": "2b4c20c10a9b3329620644b6d1fc58982ea8340fa9238db33c5c4e1c2e020f63",
+ "scenarios": [
+  {
+   "cap": 40,
+   "detectable_difference_pp": 1.6,
+   "families_with_30_witnessed_test": 5,
+   "fits_8_gpu_h": false,
+   "fixed_gpu_hours": 13.968,
+   "frr_upper_bound_at_zero_rejections": 0.0366,
+   "gpu_hours": 1041.59,
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.078,
+    "hack-control": 152.583,
+    "identity-control": 25.418,
+    "mutant": 832.276,
+    "mutant-control": 4.423,
+    "substrate": 26.812
+   },
+   "kernels": {
+    "adversarial-control": 3,
+    "hack-control": 480.0,
+    "identity-control": 106,
+    "mutant": 3908,
+    "mutant-control": 5,
+    "substrate": 106
+   },
+   "missing_gates": [],
+   "mutant_seeds": 3,
+   "mutants_per_family": {
+    "arithmetic": 1216,
+    "boundary": 1129,
+    "indexing": 699,
+    "precision": 444,
+    "semantic": 396,
+    "synchronization": 24
+   },
+   "n_eval_independent": 99,
+   "name": "as-drafted",
+   "pooled_half_width_pp": 3.3,
+   "pooled_witnessed_test": 977,
+   "precision": {
+    "arithmetic": {
+     "half_width_pp": 6.4,
+     "n": 304
+    },
+    "boundary": {
+     "half_width_pp": 6.6,
+     "n": 282
+    },
+    "indexing": {
+     "half_width_pp": 8.4,
+     "n": 175
+    },
+    "precision": {
+     "half_width_pp": 10.5,
+     "n": 111
+    },
+    "semantic": {
+     "half_width_pp": 11.1,
+     "n": 99
+    },
+    "synchronization": {
+     "half_width_pp": 45.3,
+     "n": 6
+    }
+   },
+   "rule": {
+    "cap": 40,
+    "control_seeds": 3,
+    "hack_fraction": 1.0,
+    "mutant_seeds": 3,
+    "scope": "all",
+    "substrate_seeds": 3
+   },
+   "scoring_gpu_hours_95": {
+    "high": 1359.085625,
+    "low": 670.6633999999999
+   },
+   "seeds": 3,
+   "total_gpu_hours": 1055.558,
+   "total_gpu_hours_high": 1373.054,
+   "witnessed_test_mutants": {
+    "arithmetic": 304,
+    "boundary": 282,
+    "indexing": 175,
+    "precision": 111,
+    "semantic": 99,
+    "synchronization": 6
+   }
+  },
+  {
+   "cap": 40,
+   "detectable_difference_pp": 1.6,
+   "families_with_30_witnessed_test": 5,
+   "fits_8_gpu_h": false,
+   "fixed_gpu_hours": 13.968,
+   "frr_upper_bound_at_zero_rejections": 0.0366,
+   "gpu_hours": 486.739,
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.078,
+    "hack-control": 152.583,
+    "identity-control": 25.418,
+    "mutant": 277.425,
+    "mutant-control": 4.423,
+    "substrate": 26.812
+   },
+   "kernels": {
+    "adversarial-control": 3,
+    "hack-control": 480.0,
+    "identity-control": 106,
+    "mutant": 3908,
+    "mutant-control": 5,
+    "substrate": 106
+   },
+   "missing_gates": [],
+   "mutant_seeds": 1,
+   "mutants_per_family": {
+    "arithmetic": 1216,
+    "boundary": 1129,
+    "indexing": 699,
+    "precision": 444,
+    "semantic": 396,
+    "synchronization": 24
+   },
+   "n_eval_independent": 99,
+   "name": "all-cap40-m1",
+   "pooled_half_width_pp": 3.3,
+   "pooled_witnessed_test": 977,
+   "precision": {
+    "arithmetic": {
+     "half_width_pp": 6.4,
+     "n": 304
+    },
+    "boundary": {
+     "half_width_pp": 6.6,
+     "n": 282
+    },
+    "indexing": {
+     "half_width_pp": 8.4,
+     "n": 175
+    },
+    "precision": {
+     "half_width_pp": 10.5,
+     "n": 111
+    },
+    "semantic": {
+     "half_width_pp": 11.1,
+     "n": 99
+    },
+    "synchronization": {
+     "half_width_pp": 45.3,
+     "n": 6
+    }
+   },
+   "rule": {
+    "cap": 40,
+    "control_seeds": 3,
+    "hack_fraction": 1.0,
+    "mutant_seeds": 1,
+    "scope": "all",
+    "substrate_seeds": 3
+   },
+   "scoring_gpu_hours_95": {
+    "high": 635.3492,
+    "low": 313.5341
+   },
+   "seeds": 3,
+   "total_gpu_hours": 500.707,
+   "total_gpu_hours_high": 649.317,
+   "witnessed_test_mutants": {
+    "arithmetic": 304,
+    "boundary": 282,
+    "indexing": 175,
+    "precision": 111,
+    "semantic": 99,
+    "synchronization": 6
+   }
+  },
+  {
+   "cap": 8,
+   "detectable_difference_pp": 7.4,
+   "families_with_30_witnessed_test": 4,
+   "fits_8_gpu_h": false,
+   "fixed_gpu_hours": 13.968,
+   "frr_upper_bound_at_zero_rejections": 0.0366,
+   "gpu_hours": 159.144,
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.026,
+    "hack-control": 50.861,
+    "identity-control": 8.473,
+    "mutant": 71.498,
+    "mutant-control": 1.474,
+    "substrate": 26.812
+   },
+   "kernels": {
+    "adversarial-control": 3,
+    "hack-control": 480.0,
+    "identity-control": 106,
+    "mutant": 848,
+    "mutant-control": 5,
+    "substrate": 106
+   },
+   "missing_gates": [],
+   "mutant_seeds": 1,
+   "mutants_per_family": {
+    "arithmetic": 212,
+    "boundary": 210,
+    "indexing": 180,
+    "precision": 129,
+    "semantic": 99,
+    "synchronization": 18
+   },
+   "n_eval_independent": 99,
+   "name": "all-cap8-m1-c1",
+   "pooled_half_width_pp": 7.2,
+   "pooled_witnessed_test": 211,
+   "precision": {
+    "arithmetic": {
+     "half_width_pp": 15.2,
+     "n": 53
+    },
+    "boundary": {
+     "half_width_pp": 15.4,
+     "n": 52
+    },
+    "indexing": {
+     "half_width_pp": 16.5,
+     "n": 45
+    },
+    "precision": {
+     "half_width_pp": 19.6,
+     "n": 32
+    },
+    "semantic": {
+     "half_width_pp": 22.2,
+     "n": 25
+    },
+    "synchronization": {
+     "half_width_pp": 55.4,
+     "n": 4
+    }
+   },
+   "rule": {
+    "cap": 8,
+    "control_seeds": 1,
+    "hack_fraction": 1.0,
+    "mutant_seeds": 1,
+    "scope": "all",
+    "substrate_seeds": 3
+   },
+   "scoring_gpu_hours_95": {
+    "high": 207.99905,
+    "low": 102.55055
+   },
+   "seeds": 3,
+   "total_gpu_hours": 173.112,
+   "total_gpu_hours_high": 221.967,
+   "witnessed_test_mutants": {
+    "arithmetic": 53,
+    "boundary": 52,
+    "indexing": 45,
+    "precision": 32,
+    "semantic": 25,
+    "synchronization": 4
+   }
+  },
+  {
+   "cap": 40,
+   "detectable_difference_pp": 2.3,
+   "families_with_30_witnessed_test": 5,
+   "fits_8_gpu_h": false,
+   "fixed_gpu_hours": 13.968,
+   "frr_upper_bound_at_zero_rejections": 0.0569,
+   "gpu_hours": 92.664,
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.078,
+    "hack-control": 8.367,
+    "identity-control": 2.14,
+    "mutant": 80.043,
+    "substrate": 2.036
+   },
+   "kernels": {
+    "adversarial-control": 3,
+    "hack-control": 281.0,
+    "identity-control": 69,
+    "mutant": 2723,
+    "substrate": 69
+   },
+   "missing_gates": [],
+   "mutant_seeds": 3,
+   "mutants_per_family": {
+    "arithmetic": 789,
+    "boundary": 753,
+    "indexing": 514,
+    "precision": 334,
+    "semantic": 313,
+    "synchronization": 20
+   },
+   "n_eval_independent": 63,
+   "name": "shared-cap40",
+   "pooled_half_width_pp": 4.0,
+   "pooled_witnessed_test": 680,
+   "precision": {
+    "arithmetic": {
+     "half_width_pp": 7.9,
+     "n": 197
+    },
+    "boundary": {
+     "half_width_pp": 8.1,
+     "n": 188
+    },
+    "indexing": {
+     "half_width_pp": 9.8,
+     "n": 128
+    },
+    "precision": {
+     "half_width_pp": 12.1,
+     "n": 84
+    },
+    "semantic": {
+     "half_width_pp": 12.6,
+     "n": 78
+    },
+    "synchronization": {
+     "half_width_pp": 49.6,
+     "n": 5
+    }
+   },
+   "rule": {
+    "cap": 40,
+    "control_seeds": 3,
+    "hack_fraction": 1.0,
+    "mutant_seeds": 3,
+    "scope": "shared",
+    "substrate_seeds": 3
+   },
+   "scoring_gpu_hours_95": {
+    "high": 134.1622,
+    "low": 60.85185
+   },
+   "seeds": 3,
+   "total_gpu_hours": 106.632,
+   "total_gpu_hours_high": 148.13,
+   "witnessed_test_mutants": {
+    "arithmetic": 197,
+    "boundary": 188,
+    "indexing": 128,
+    "precision": 84,
+    "semantic": 78,
+    "synchronization": 5
+   }
+  },
+  {
+   "cap": 40,
+   "detectable_difference_pp": 2.3,
+   "families_with_30_witnessed_test": 5,
+   "fits_8_gpu_h": false,
+   "fixed_gpu_hours": 13.968,
+   "frr_upper_bound_at_zero_rejections": 0.0569,
+   "gpu_hours": 39.302,
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.078,
+    "hack-control": 8.367,
+    "identity-control": 2.14,
+    "mutant": 26.681,
+    "substrate": 2.036
+   },
+   "kernels": {
+    "adversarial-control": 3,
+    "hack-control": 281.0,
+    "identity-control": 69,
+    "mutant": 2723,
+    "substrate": 69
+   },
+   "missing_gates": [],
+   "mutant_seeds": 1,
+   "mutants_per_family": {
+    "arithmetic": 789,
+    "boundary": 753,
+    "indexing": 514,
+    "precision": 334,
+    "semantic": 313,
+    "synchronization": 20
+   },
+   "n_eval_independent": 63,
+   "name": "shared-cap40-m1",
+   "pooled_half_width_pp": 4.0,
+   "pooled_witnessed_test": 680,
+   "precision": {
+    "arithmetic": {
+     "half_width_pp": 7.9,
+     "n": 197
+    },
+    "boundary": {
+     "half_width_pp": 8.1,
+     "n": 188
+    },
+    "indexing": {
+     "half_width_pp": 9.8,
+     "n": 128
+    },
+    "precision": {
+     "half_width_pp": 12.1,
+     "n": 84
+    },
+    "semantic": {
+     "half_width_pp": 12.6,
+     "n": 78
+    },
+    "synchronization": {
+     "half_width_pp": 49.6,
+     "n": 5
+    }
+   },
+   "rule": {
+    "cap": 40,
+    "control_seeds": 3,
+    "hack_fraction": 1.0,
+    "mutant_seeds": 1,
+    "scope": "shared",
+    "substrate_seeds": 3
+   },
+   "scoring_gpu_hours_95": {
+    "high": 56.877175,
+    "low": 25.826475000000002
+   },
+   "seeds": 3,
+   "total_gpu_hours": 53.27,
+   "total_gpu_hours_high": 70.845,
+   "witnessed_test_mutants": {
+    "arithmetic": 197,
+    "boundary": 188,
+    "indexing": 128,
+    "precision": 84,
+    "semantic": 78,
+    "synchronization": 5
+   }
+  },
+  {
+   "cap": 16,
+   "detectable_difference_pp": 5.7,
+   "families_with_30_witnessed_test": 5,
+   "fits_8_gpu_h": false,
+   "fixed_gpu_hours": 13.968,
+   "frr_upper_bound_at_zero_rejections": 0.0569,
+   "gpu_hours": 23.481,
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.078,
+    "hack-control": 8.367,
+    "identity-control": 2.14,
+    "mutant": 10.86,
+    "substrate": 2.036
+   },
+   "kernels": {
+    "adversarial-control": 3,
+    "hack-control": 281.0,
+    "identity-control": 69,
+    "mutant": 1104,
+    "substrate": 69
+   },
+   "missing_gates": [],
+   "mutant_seeds": 1,
+   "mutants_per_family": {
+    "arithmetic": 274,
+    "boundary": 247,
+    "indexing": 207,
+    "precision": 187,
+    "semantic": 169,
+    "synchronization": 20
+   },
+   "n_eval_independent": 63,
+   "name": "shared-cap16-m1",
+   "pooled_half_width_pp": 6.3,
+   "pooled_witnessed_test": 276,
+   "precision": {
+    "arithmetic": {
+     "half_width_pp": 13.4,
+     "n": 68
+    },
+    "boundary": {
+     "half_width_pp": 14.1,
+     "n": 62
+    },
+    "indexing": {
+     "half_width_pp": 15.4,
+     "n": 52
+    },
+    "precision": {
+     "half_width_pp": 16.2,
+     "n": 47
+    },
+    "semantic": {
+     "half_width_pp": 17.1,
+     "n": 42
+    },
+    "synchronization": {
+     "half_width_pp": 49.6,
+     "n": 5
+    }
+   },
+   "rule": {
+    "cap": 16,
+    "control_seeds": 3,
+    "hack_fraction": 1.0,
+    "mutant_seeds": 1,
+    "scope": "shared",
+    "substrate_seeds": 3
+   },
+   "scoring_gpu_hours_95": {
+    "high": 33.94525,
+    "low": 15.4482
+   },
+   "seeds": 3,
+   "total_gpu_hours": 37.449,
+   "total_gpu_hours_high": 47.913,
+   "witnessed_test_mutants": {
+    "arithmetic": 68,
+    "boundary": 62,
+    "indexing": 52,
+    "precision": 47,
+    "semantic": 42,
+    "synchronization": 5
+   }
+  },
+  {
+   "cap": 8,
+   "detectable_difference_pp": 11.4,
+   "families_with_30_witnessed_test": 2,
+   "fits_8_gpu_h": false,
+   "fixed_gpu_hours": 13.968,
+   "frr_upper_bound_at_zero_rejections": 0.0569,
+   "gpu_hours": 18.051,
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.078,
+    "hack-control": 8.367,
+    "identity-control": 2.14,
+    "mutant": 5.43,
+    "substrate": 2.036
+   },
+   "kernels": {
+    "adversarial-control": 3,
+    "hack-control": 281.0,
+    "identity-control": 69,
+    "mutant": 552,
+    "substrate": 69
+   },
+   "missing_gates": [],
+   "mutant_seeds": 1,
+   "mutants_per_family": {
+    "arithmetic": 138,
+    "boundary": 137,
+    "indexing": 111,
+    "precision": 80,
+    "semantic": 71,
+    "synchronization": 15
+   },
+   "n_eval_independent": 63,
+   "name": "shared-cap8-m1",
+   "pooled_half_width_pp": 8.9,
+   "pooled_witnessed_test": 138,
+   "precision": {
+    "arithmetic": {
+     "half_width_pp": 19.0,
+     "n": 34
+    },
+    "boundary": {
+     "half_width_pp": 19.0,
+     "n": 34
+    },
+    "indexing": {
+     "half_width_pp": 21.0,
+     "n": 28
+    },
+    "precision": {
+     "half_width_pp": 24.8,
+     "n": 20
+    },
+    "semantic": {
+     "half_width_pp": 26.1,
+     "n": 18
+    },
+    "synchronization": {
+     "half_width_pp": 55.4,
+     "n": 4
+    }
+   },
+   "rule": {
+    "cap": 8,
+    "control_seeds": 3,
+    "hack_fraction": 1.0,
+    "mutant_seeds": 1,
+    "scope": "shared",
+    "substrate_seeds": 3
+   },
+   "scoring_gpu_hours_95": {
+    "high": 26.084274999999998,
+    "low": 11.88125
+   },
+   "seeds": 3,
+   "total_gpu_hours": 32.019,
+   "total_gpu_hours_high": 40.052,
+   "witnessed_test_mutants": {
+    "arithmetic": 34,
+    "boundary": 34,
+    "indexing": 28,
+    "precision": 20,
+    "semantic": 18,
+    "synchronization": 4
+   }
+  },
+  {
+   "cap": 8,
+   "detectable_difference_pp": 11.4,
+   "families_with_30_witnessed_test": 2,
+   "fits_8_gpu_h": false,
+   "fixed_gpu_hours": 13.968,
+   "frr_upper_bound_at_zero_rejections": 0.0569,
+   "gpu_hours": 10.994,
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.026,
+    "hack-control": 2.789,
+    "identity-control": 0.713,
+    "mutant": 5.43,
+    "substrate": 2.036
+   },
+   "kernels": {
+    "adversarial-control": 3,
+    "hack-control": 281.0,
+    "identity-control": 69,
+    "mutant": 552,
+    "substrate": 69
+   },
+   "missing_gates": [],
+   "mutant_seeds": 1,
+   "mutants_per_family": {
+    "arithmetic": 138,
+    "boundary": 137,
+    "indexing": 111,
+    "precision": 80,
+    "semantic": 71,
+    "synchronization": 15
+   },
+   "n_eval_independent": 63,
+   "name": "shared-cap8-m1-c1",
+   "pooled_half_width_pp": 8.9,
+   "pooled_witnessed_test": 138,
+   "precision": {
+    "arithmetic": {
+     "half_width_pp": 19.0,
+     "n": 34
+    },
+    "boundary": {
+     "half_width_pp": 19.0,
+     "n": 34
+    },
+    "indexing": {
+     "half_width_pp": 21.0,
+     "n": 28
+    },
+    "precision": {
+     "half_width_pp": 24.8,
+     "n": 20
+    },
+    "semantic": {
+     "half_width_pp": 26.1,
+     "n": 18
+    },
+    "synchronization": {
+     "half_width_pp": 55.4,
+     "n": 4
+    }
+   },
+   "rule": {
+    "cap": 8,
+    "control_seeds": 1,
+    "hack_fraction": 1.0,
+    "mutant_seeds": 1,
+    "scope": "shared",
+    "substrate_seeds": 3
+   },
+   "scoring_gpu_hours_95": {
+    "high": 15.90105,
+    "low": 7.229725
+   },
+   "seeds": 3,
+   "total_gpu_hours": 24.962,
+   "total_gpu_hours_high": 29.869,
+   "witnessed_test_mutants": {
+    "arithmetic": 34,
+    "boundary": 34,
+    "indexing": 28,
+    "precision": 20,
+    "semantic": 18,
+    "synchronization": 4
+   }
+  },
+  {
+   "cap": 8,
+   "detectable_difference_pp": 11.4,
+   "families_with_30_witnessed_test": 2,
+   "fits_8_gpu_h": false,
+   "fixed_gpu_hours": 13.968,
+   "frr_upper_bound_at_zero_rejections": 0.0569,
+   "gpu_hours": 8.903,
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.026,
+    "hack-control": 0.697,
+    "identity-control": 0.713,
+    "mutant": 5.43,
+    "substrate": 2.036
+   },
+   "kernels": {
+    "adversarial-control": 3,
+    "hack-control": 70.2,
+    "identity-control": 69,
+    "mutant": 552,
+    "substrate": 69
+   },
+   "missing_gates": [],
+   "mutant_seeds": 1,
+   "mutants_per_family": {
+    "arithmetic": 138,
+    "boundary": 137,
+    "indexing": 111,
+    "precision": 80,
+    "semantic": 71,
+    "synchronization": 15
+   },
+   "n_eval_independent": 63,
+   "name": "shared-cap8-m1-c1-h25",
+   "pooled_half_width_pp": 8.9,
+   "pooled_witnessed_test": 138,
+   "precision": {
+    "arithmetic": {
+     "half_width_pp": 19.0,
+     "n": 34
+    },
+    "boundary": {
+     "half_width_pp": 19.0,
+     "n": 34
+    },
+    "indexing": {
+     "half_width_pp": 21.0,
+     "n": 28
+    },
+    "precision": {
+     "half_width_pp": 24.8,
+     "n": 20
+    },
+    "semantic": {
+     "half_width_pp": 26.1,
+     "n": 18
+    },
+    "synchronization": {
+     "half_width_pp": 55.4,
+     "n": 4
+    }
+   },
+   "rule": {
+    "cap": 8,
+    "control_seeds": 1,
+    "hack_fraction": 0.25,
+    "mutant_seeds": 1,
+    "scope": "shared",
+    "substrate_seeds": 3
+   },
+   "scoring_gpu_hours_95": {
+    "high": 12.878025000000001,
+    "low": 5.853775
+   },
+   "seeds": 3,
+   "total_gpu_hours": 22.871,
+   "total_gpu_hours_high": 26.846,
+   "witnessed_test_mutants": {
+    "arithmetic": 34,
+    "boundary": 34,
+    "indexing": 28,
+    "precision": 20,
+    "semantic": 18,
+    "synchronization": 4
+   }
+  },
+  {
+   "cap": 4,
+   "detectable_difference_pp": 22.7,
+   "families_with_30_witnessed_test": 0,
+   "fits_8_gpu_h": false,
+   "fixed_gpu_hours": 13.968,
+   "frr_upper_bound_at_zero_rejections": 0.0569,
+   "gpu_hours": 6.188,
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.026,
+    "hack-control": 0.697,
+    "identity-control": 0.713,
+    "mutant": 2.715,
+    "substrate": 2.036
+   },
+   "kernels": {
+    "adversarial-control": 3,
+    "hack-control": 70.2,
+    "identity-control": 69,
+    "mutant": 276,
+    "substrate": 69
+   },
+   "missing_gates": [],
+   "mutant_seeds": 1,
+   "mutants_per_family": {
+    "arithmetic": 69,
+    "boundary": 69,
+    "indexing": 68,
+    "precision": 32,
+    "semantic": 38,
+    "synchronization": 0
+   },
+   "n_eval_independent": 63,
+   "name": "shared-cap4-m1-c1-h25",
+   "pooled_half_width_pp": 12.5,
+   "pooled_witnessed_test": 69,
+   "precision": {
+    "arithmetic": {
+     "half_width_pp": 26.9,
+     "n": 17
+    },
+    "boundary": {
+     "half_width_pp": 26.9,
+     "n": 17
+    },
+    "indexing": {
+     "half_width_pp": 26.9,
+     "n": 17
+    },
+    "precision": {
+     "half_width_pp": 39.2,
+     "n": 8
+    },
+    "semantic": {
+     "half_width_pp": 35.1,
+     "n": 10
+    },
+    "synchronization": {
+     "half_width_pp": null,
+     "n": 0
+    }
+   },
+   "rule": {
+    "cap": 4,
+    "control_seeds": 1,
+    "hack_fraction": 0.25,
+    "mutant_seeds": 1,
+    "scope": "shared",
+    "substrate_seeds": 3
+   },
+   "scoring_gpu_hours_95": {
+    "high": 8.948025000000001,
+    "low": 4.069825000000001
+   },
+   "seeds": 3,
+   "total_gpu_hours": 20.156,
+   "total_gpu_hours_high": 22.916,
+   "witnessed_test_mutants": {
+    "arithmetic": 17,
+    "boundary": 17,
+    "indexing": 17,
+    "precision": 8,
+    "semantic": 10,
+    "synchronization": 0
+   }
+  },
+  {
+   "cap": 2,
+   "detectable_difference_pp": 46.1,
+   "families_with_30_witnessed_test": 0,
+   "fits_8_gpu_h": false,
+   "fixed_gpu_hours": 13.968,
+   "frr_upper_bound_at_zero_rejections": 0.0569,
+   "gpu_hours": 4.83,
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.026,
+    "hack-control": 0.697,
+    "identity-control": 0.713,
+    "mutant": 1.357,
+    "substrate": 2.036
+   },
+   "kernels": {
+    "adversarial-control": 3,
+    "hack-control": 70.2,
+    "identity-control": 69,
+    "mutant": 138,
+    "substrate": 69
+   },
+   "missing_gates": [],
+   "mutant_seeds": 1,
+   "mutants_per_family": {
+    "arithmetic": 69,
+    "boundary": 59,
+    "indexing": 9,
+    "precision": 1,
+    "semantic": 0,
+    "synchronization": 0
+   },
+   "n_eval_independent": 63,
+   "name": "shared-cap2-m1-c1-h25",
+   "pooled_half_width_pp": 17.9,
+   "pooled_witnessed_test": 34,
+   "precision": {
+    "arithmetic": {
+     "half_width_pp": 26.9,
+     "n": 17
+    },
+    "boundary": {
+     "half_width_pp": 28.6,
+     "n": 15
+    },
+    "indexing": {
+     "half_width_pp": 78.4,
+     "n": 2
+    },
+    "precision": {
+     "half_width_pp": null,
+     "n": 0
+    },
+    "semantic": {
+     "half_width_pp": null,
+     "n": 0
+    },
+    "synchronization": {
+     "half_width_pp": null,
+     "n": 0
+    }
+   },
+   "rule": {
+    "cap": 2,
+    "control_seeds": 1,
+    "hack_fraction": 0.25,
+    "mutant_seeds": 1,
+    "scope": "shared",
+    "substrate_seeds": 3
+   },
+   "scoring_gpu_hours_95": {
+    "high": 6.98205,
+    "low": 3.177825
+   },
+   "seeds": 3,
+   "total_gpu_hours": 18.798,
+   "total_gpu_hours_high": 20.95,
+   "witnessed_test_mutants": {
+    "arithmetic": 17,
+    "boundary": 15,
+    "indexing": 2,
+    "precision": 0,
+    "semantic": 0,
+    "synchronization": 0
+   }
+  }
+ ],
+ "schema": "q1-pilot-cost-card/2",
+ "size_model": {
+  "A1": {
+   "alpha": 1.461,
+   "beta": 8.923,
+   "method": "fit",
+   "n": 18
+  },
+  "A2": {
+   "alpha": 0.005,
+   "beta": 24.436,
+   "method": "fit",
+   "n": 18
+  },
+  "A3": {
+   "alpha": 1.762,
+   "beta": 4.373,
+   "method": "fit",
+   "n": 18
+  },
+  "A4": {
+   "alpha": 0.778,
+   "beta": 4.117,
+   "method": "fit",
+   "n": 18
+  },
+  "A4_poison": {
+   "alpha": 1.822,
+   "beta": 6.039,
+   "method": "fit",
+   "n": 18
+  },
+  "A4_sanitizer": {
+   "alpha": 1.206,
+   "beta": 2.024,
+   "method": "fit",
+   "n": 18
+  },
+  "A5": {
+   "alpha": 0.722,
+   "beta": 3.9,
+   "method": "fit",
+   "n": 18
+  },
+  "a": {
+   "alpha": 0.364,
+   "beta": 6.445,
+   "method": "fit",
+   "n": 19
+  },
+  "a_1e-3": {
+   "alpha": 0.295,
+   "beta": 6.735,
+   "method": "fit",
+   "n": 18
+  },
+  "a_head_1e-2": {
+   "alpha": 0.193,
+   "beta": 6.406,
+   "method": "fit",
+   "n": 19
+  },
+  "a_head_1e-4": {
+   "alpha": 0.0,
+   "beta": 21.068,
+   "method": "fit",
+   "n": 19
+  },
+  "a_static": {
+   "alpha": 0.025,
+   "beta": 6.42,
+   "method": "fit",
+   "n": 19
+  },
+  "b1": {
+   "alpha": 0.098,
+   "beta": 7.703,
+   "method": "fit",
+   "n": 20
+  },
+  "b2": {
+   "alpha": 0.669,
+   "beta": 7.343,
+   "method": "fit",
+   "n": 19
+  },
+  "c": {
+   "alpha": 0.0,
+   "beta": 47.379,
+   "method": "fit",
+   "n": 18
+  }
+ },
+ "smoke_job": "/runs/474",
+ "spent_gpu_hours": 0.899,
+ "timing_bias_identity_controls": [
+  {
+   "job": "518",
+   "kernel_id": "ctl-identity-L2-12_Gemm_Multiply_LeakyReLU",
+   "strict_fp32": {
+    "ci95": [
+     0.9657,
+     0.9826
+    ],
+    "median_speedup": 0.974,
+    "rounds_kept": 30
+   },
+   "tf32": {
+    "ci95": [
+     0.8861,
+     1.0437
+    ],
+    "median_speedup": 0.9072,
+    "rounds_kept": 30
+   }
+  }
+ ],
+ "timing_phase_seconds_per_item": 11.254,
+ "trimmed": [
+  {
+   "anchors": null,
+   "budget_stop": {
+    "central": {
+     "completed": [
+      "P1",
+      "P2",
+      "P3",
+      "P5",
+      "P6",
+      "P7"
+     ],
+     "partial": {
+      "bucket": "P8",
+      "share": 0.381
+     },
+     "test_mutants_scored": 424
+    },
+    "high": {
+     "completed": [
+      "P1",
+      "P2",
+      "P3"
+     ],
+     "partial": {
+      "bucket": "P5",
+      "share": 0.464
+     },
+     "test_mutants_scored": 310
+    }
+   },
+   "corrected_for_second_review": false,
+   "detectable_difference_pp": 10.1,
+   "factors": {
+    "A1": 0.455,
+    "A2": 0.448,
+    "A3": 0.454,
+    "A4": 0.434,
+    "A4_poison": 0.515,
+    "A4_sanitizer": 0.849,
+    "A5": 0.502,
+    "a": 0.519,
+    "a_1e-3": 0.489,
+    "a_head_1e-2": 0.486,
+    "a_head_1e-4": 0.506,
+    "a_static": 0.461,
+    "b1": 0.458,
+    "b2": 0.445,
+    "c": 0.458
+   },
+   "families_with_30_witnessed_test": 5,
+   "fits_8_gpu_h": true,
+   "fits_8_gpu_h_at_high": false,
+   "fixed_gpu_hours": {
+    "admission_full": 0.55,
+    "already_spent_this_pass": 0.899,
+    "audit_hole_replay_cap": 0.5,
+    "calibration_within_frr_bound": 0.041,
+    "fidelity_sample": 0.139,
+    "specializations_in_scope": 0.177,
+    "timing_noise_floor": 0.234
+   },
+   "frr_core_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D"
+   ],
+   "frr_extra_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D"
+   ],
+   "frr_margin_substrates": [],
+   "frr_skipped_no_new_unit": [
+    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_"
+   ],
+   "frr_upper_bound_at_zero_rejections": 0.0499,
+   "gpu_hours": 6.362,
+   "gpu_hours_by_priority": {
+    "P1": 1.523,
+    "P2": 1.498,
+    "P3": 0.518,
+    "P5": 0.661,
+    "P6": 0.3,
+    "P7": 0.405,
+    "P8": 1.457
+   },
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.038,
+    "frr-core-replicate-42": 0.587,
+    "hack-control": 0.739,
+    "identity-control": 0.347,
+    "mutant": 1.903,
+    "mutant-extension": 1.457,
+    "mutant-robustness": 0.3,
+    "substrate": 0.992
+   },
+   "in_scope_substrates": 69,
+   "kernels": {
+    "adversarial-control": 3,
+    "frr-core-replicate-42": 9,
+    "hack-control": 49.0,
+    "identity-control": 69,
+    "mutant": 395.0,
+    "mutant-extension": 300.0,
+    "substrate": 69
+   },
+   "mutants_exposed_removed": {},
+   "mutants_per_family": {
+    "arithmetic": {
+     "capped_frame": 789,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 394,
+     "witnessed_test_planning": 30
+    },
+    "boundary": {
+     "capped_frame": 753,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 376,
+     "witnessed_test_planning": 30
+    },
+    "indexing": {
+     "capped_frame": 514,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 257,
+     "witnessed_test_planning": 30
+    },
+    "precision": {
+     "capped_frame": 334,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 167,
+     "witnessed_test_planning": 30
+    },
+    "semantic": {
+     "capped_frame": 313,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 156,
+     "witnessed_test_planning": 30
+    },
+    "synchronization": {
+     "capped_frame": 20,
+     "dev": 10,
+     "half_width_pp": 49.6,
+     "robustness": 1,
+     "test": 10,
+     "test_extension_max": 0,
+     "test_frame": 10,
+     "witnessed_test_planning": 5
+    }
+   },
+   "n_eval_independent": 72,
+   "n_eval_independent_core": 72,
+   "name": "trim1-recomputed-paired-concurrency",
+   "pooled_half_width_pp": 8.4,
+   "pooled_witnessed_test_planning": 155,
+   "priority_cumulative_with_reserve": [
+    {
+     "through": "P1",
+     "total_central": 4.063,
+     "total_high": 4.702
+    },
+    {
+     "through": "P2",
+     "total_central": 5.561,
+     "total_high": 6.829
+    },
+    {
+     "through": "P3",
+     "total_central": 6.079,
+     "total_high": 7.565
+    },
+    {
+     "through": "P5",
+     "total_central": 6.74,
+     "total_high": 8.503
+    },
+    {
+     "through": "P6",
+     "total_central": 7.04,
+     "total_high": 8.929
+    },
+    {
+     "through": "P7",
+     "total_central": 7.445,
+     "total_high": 9.504
+    },
+    {
+     "through": "P8",
+     "total_central": 8.902,
+     "total_high": 11.573
+    }
+   ],
+   "rule": {
+    "adversarial_seeds": 3,
+    "cap": 40,
+    "concurrent_stage0_jobs": 1,
+    "cpus_per_job": 32,
+    "family_quota_dev": 15,
+    "family_quota_test": 60,
+    "family_quota_test_max": 120,
+    "fidelity_mutants_per_family_tier": 1,
+    "frr_margin_units": 0,
+    "frr_min_units": 72,
+    "gpu_hour_cap_total": 8.0,
+    "gpus_per_job": 1,
+    "hack_fraction": 0.15,
+    "hack_seeds": 3,
+    "identity_seeds": 1,
+    "mutant_robustness_fraction": 0.1,
+    "name": "q1-stage0-trim/1",
+    "scope_bytes": 1000000000,
+    "slot_capacity": 12,
+    "small_below_bytes": 600000000,
+    "substrate_seeds": 3,
+    "timing_floor_items": 80,
+    "timing_floor_job_gpus": 8,
+    "timing_floor_timing_gpus": 2,
+    "units_medium": 3,
+    "units_small": 1
+   },
+   "scoring_gpu_hours_95": {
+    "high": 9.033,
+    "low": 4.234
+   },
+   "total_gpu_hours": 7.445,
+   "total_gpu_hours_high": 9.504,
+   "unscheduled_controls_gpu_hours_at_replicate_42": {
+    "hack-emulating-mutant-controls": 1.474,
+    "kbv-h1-controls": 1.769
+   },
+   "unscheduled_controls_kernels": {
+    "hack-emulating-mutant-controls": 5,
+    "kbv-h1-controls": 6
+   }
+  },
+  {
+   "anchors": {
+    "c_points": [
+     {
+      "gb": 1.342,
+      "gpu_seconds_per_gb": 64.986,
+      "kind": "measured"
+     },
+     {
+      "gb": 4.295,
+      "gpu_seconds_per_gb": 157.58,
+      "kind": "censored lower bound"
+     }
+    ],
+    "kernels": [
+     "s1-inductor-L1-3_Batched_matrix_multiplication"
+    ],
+    "non_c_gpu_seconds_per_gb": 156.774
+   },
+   "budget_stop": {
+    "central": {
+     "completed": [
+      "P1",
+      "P2",
+      "P3"
+     ],
+     "partial": {
+      "bucket": "P4",
+      "share": 0.196
+     },
+     "test_mutants_scored": 310
+    },
+    "high": {
+     "completed": [
+      "P1"
+     ],
+     "partial": {
+      "bucket": "P2",
+      "share": 0.982
+     },
+     "test_mutants_scored": 304
+    }
+   },
+   "corrected_for_second_review": true,
+   "detectable_difference_pp": 10.1,
+   "factors": {
+    "A1": 0.455,
+    "A2": 0.448,
+    "A3": 0.454,
+    "A4": 0.434,
+    "A4_poison": 0.515,
+    "A4_sanitizer": 0.849,
+    "A5": 0.502,
+    "a": 0.519,
+    "a_1e-3": 0.489,
+    "a_head_1e-2": 0.486,
+    "a_head_1e-4": 0.506,
+    "a_static": 0.461,
+    "b1": 0.458,
+    "b2": 0.445,
+    "c": 0.458
+   },
+   "families_with_30_witnessed_test": 5,
+   "fits_8_gpu_h": false,
+   "fits_8_gpu_h_at_high": false,
+   "fixed_gpu_hours": {
+    "admission_full": 0.55,
+    "already_spent_this_pass": 0.899,
+    "audit_hole_replay_cap": 0.5,
+    "calibration_within_frr_bound": 0.08,
+    "fidelity_sample": 0.649,
+    "specializations_in_scope": 0.177,
+    "timing_noise_floor": 1.0
+   },
+   "frr_core_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D"
+   ],
+   "frr_extra_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D",
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_margin_substrates": [
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_skipped_no_new_unit": [
+    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_"
+   ],
+   "frr_upper_bound_at_zero_rejections": 0.0462,
+   "gpu_hours": 8.593,
+   "gpu_hours_by_priority": {
+    "P1": 1.732,
+    "P2": 1.498,
+    "P3": 0.518,
+    "P4": 2.023,
+    "P5": 0.661,
+    "P6": 0.3,
+    "P7": 0.405,
+    "P8": 1.457
+   },
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.038,
+    "frr-core-replicate-42": 0.795,
+    "frr-margin-replicate-42": 2.023,
+    "hack-control": 0.739,
+    "identity-control": 0.347,
+    "mutant": 1.903,
+    "mutant-extension": 1.457,
+    "mutant-robustness": 0.3,
+    "substrate": 0.992
+   },
+   "in_scope_substrates": 69,
+   "kernels": {
+    "adversarial-control": 3,
+    "frr-core-replicate-42": 9,
+    "frr-margin-replicate-42": 6,
+    "hack-control": 49.0,
+    "identity-control": 69,
+    "mutant": 395.0,
+    "mutant-extension": 300.0,
+    "substrate": 69
+   },
+   "mutants_exposed_removed": {
+    "arithmetic/dev": 3,
+    "arithmetic/test": 1,
+    "indexing/dev": 2,
+    "indexing/test": 2
+   },
+   "mutants_per_family": {
+    "arithmetic": {
+     "capped_frame": 789,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 394,
+     "witnessed_test_planning": 30
+    },
+    "boundary": {
+     "capped_frame": 753,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 376,
+     "witnessed_test_planning": 30
+    },
+    "indexing": {
+     "capped_frame": 514,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 255,
+     "witnessed_test_planning": 30
+    },
+    "precision": {
+     "capped_frame": 334,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 167,
+     "witnessed_test_planning": 30
+    },
+    "semantic": {
+     "capped_frame": 313,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 156,
+     "witnessed_test_planning": 30
+    },
+    "synchronization": {
+     "capped_frame": 20,
+     "dev": 10,
+     "half_width_pp": 49.6,
+     "robustness": 1,
+     "test": 10,
+     "test_extension_max": 0,
+     "test_frame": 10,
+     "witnessed_test_planning": 5
+    }
+   },
+   "n_eval_independent": 78,
+   "n_eval_independent_core": 72,
+   "name": "trim2-paired-concurrency",
+   "pooled_half_width_pp": 8.4,
+   "pooled_witnessed_test_planning": 155,
+   "priority_cumulative_with_reserve": [
+    {
+     "through": "P1",
+     "total_central": 5.588,
+     "total_high": 6.096
+    },
+    {
+     "through": "P2",
+     "total_central": 7.086,
+     "total_high": 8.034
+    },
+    {
+     "through": "P3",
+     "total_central": 7.604,
+     "total_high": 8.704
+    },
+    {
+     "through": "P4",
+     "total_central": 9.627,
+     "total_high": 11.321
+    },
+    {
+     "through": "P5",
+     "total_central": 10.288,
+     "total_high": 12.176
+    },
+    {
+     "through": "P6",
+     "total_central": 10.588,
+     "total_high": 12.564
+    },
+    {
+     "through": "P7",
+     "total_central": 10.993,
+     "total_high": 13.088
+    },
+    {
+     "through": "P8",
+     "total_central": 12.45,
+     "total_high": 14.972
+    }
+   ],
+   "rule": {
+    "adversarial_seeds": 3,
+    "cap": 40,
+    "concurrent_stage0_jobs": 1,
+    "cpus_per_job": 32,
+    "family_quota_dev": 15,
+    "family_quota_test": 60,
+    "family_quota_test_max": 120,
+    "fidelity_mutants_per_family_tier": 1,
+    "frr_margin_units": 6,
+    "frr_min_units": 72,
+    "gpu_hour_cap_total": 8.0,
+    "gpus_per_job": 1,
+    "hack_fraction": 0.15,
+    "hack_seeds": 3,
+    "identity_seeds": 1,
+    "mutant_robustness_fraction": 0.1,
+    "name": "q1-stage0-trim/2",
+    "scope_bytes": 1000000000,
+    "slot_capacity": 12,
+    "small_below_bytes": 600000000,
+    "substrate_seeds": 3,
+    "timing_floor_items": 80,
+    "timing_floor_job_gpus": 8,
+    "timing_floor_timing_gpus": 2,
+    "units_medium": 3,
+    "units_small": 1
+   },
+   "scoring_gpu_hours_95": {
+    "high": 11.115,
+    "low": 6.617
+   },
+   "total_gpu_hours": 10.992,
+   "total_gpu_hours_high": 13.086,
+   "unscheduled_controls_gpu_hours_at_replicate_42": {
+    "hack-emulating-mutant-controls": 2.813,
+    "kbv-h1-controls": 3.375
+   },
+   "unscheduled_controls_kernels": {
+    "hack-emulating-mutant-controls": 5,
+    "kbv-h1-controls": 6
+   }
+  },
+  {
+   "anchors": {
+    "c_points": [
+     {
+      "gb": 1.342,
+      "gpu_seconds_per_gb": 64.986,
+      "kind": "measured"
+     },
+     {
+      "gb": 4.295,
+      "gpu_seconds_per_gb": 157.58,
+      "kind": "censored lower bound"
+     }
+    ],
+    "kernels": [
+     "s1-inductor-L1-3_Batched_matrix_multiplication"
+    ],
+    "non_c_gpu_seconds_per_gb": 156.774
+   },
+   "budget_stop": {
+    "central": {
+     "completed": [
+      "P1"
+     ],
+     "partial": {
+      "bucket": "P2",
+      "share": 0.457
+     },
+     "test_mutants_scored": 142
+    },
+    "high": {
+     "completed": [
+      "P1"
+     ],
+     "partial": {
+      "bucket": "P2",
+      "share": 0.103
+     },
+     "test_mutants_scored": 32
+    }
+   },
+   "corrected_for_second_review": true,
+   "detectable_difference_pp": 10.1,
+   "factors": null,
+   "families_with_30_witnessed_test": 5,
+   "fits_8_gpu_h": false,
+   "fits_8_gpu_h_at_high": false,
+   "fixed_gpu_hours": {
+    "admission_full": 0.55,
+    "already_spent_this_pass": 0.899,
+    "audit_hole_replay_cap": 0.5,
+    "calibration_within_frr_bound": 0.099,
+    "fidelity_sample": 0.649,
+    "specializations_in_scope": 0.177,
+    "timing_noise_floor": 1.0
+   },
+   "frr_core_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D"
+   ],
+   "frr_extra_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D",
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_margin_substrates": [
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_skipped_no_new_unit": [
+    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_"
+   ],
+   "frr_upper_bound_at_zero_rejections": 0.0462,
+   "gpu_hours": 14.682,
+   "gpu_hours_by_priority": {
+    "P1": 2.72,
+    "P2": 3.077,
+    "P3": 1.066,
+    "P4": 2.023,
+    "P5": 1.357,
+    "P6": 0.615,
+    "P7": 0.832,
+    "P8": 2.992
+   },
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.078,
+    "frr-core-replicate-42": 0.795,
+    "frr-margin-replicate-42": 2.023,
+    "hack-control": 1.52,
+    "identity-control": 0.713,
+    "mutant": 3.909,
+    "mutant-extension": 2.992,
+    "mutant-robustness": 0.615,
+    "substrate": 2.036
+   },
+   "in_scope_substrates": 69,
+   "kernels": {
+    "adversarial-control": 3,
+    "frr-core-replicate-42": 9,
+    "frr-margin-replicate-42": 6,
+    "hack-control": 49.0,
+    "identity-control": 69,
+    "mutant": 395.0,
+    "mutant-extension": 300.0,
+    "substrate": 69
+   },
+   "mutants_exposed_removed": {
+    "arithmetic/dev": 3,
+    "arithmetic/test": 1,
+    "indexing/dev": 2,
+    "indexing/test": 2
+   },
+   "mutants_per_family": {
+    "arithmetic": {
+     "capped_frame": 789,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 394,
+     "witnessed_test_planning": 30
+    },
+    "boundary": {
+     "capped_frame": 753,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 376,
+     "witnessed_test_planning": 30
+    },
+    "indexing": {
+     "capped_frame": 514,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 255,
+     "witnessed_test_planning": 30
+    },
+    "precision": {
+     "capped_frame": 334,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 167,
+     "witnessed_test_planning": 30
+    },
+    "semantic": {
+     "capped_frame": 313,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 156,
+     "witnessed_test_planning": 30
+    },
+    "synchronization": {
+     "capped_frame": 20,
+     "dev": 10,
+     "half_width_pp": 49.6,
+     "robustness": 1,
+     "test": 10,
+     "test_extension_max": 0,
+     "test_frame": 10,
+     "witnessed_test_planning": 5
+    }
+   },
+   "n_eval_independent": 78,
+   "n_eval_independent_core": 72,
+   "name": "trim2-measured-4-per-gpu",
+   "pooled_half_width_pp": 8.4,
+   "pooled_witnessed_test_planning": 155,
+   "priority_cumulative_with_reserve": [
+    {
+     "through": "P1",
+     "total_central": 6.595,
+     "total_high": 7.57
+    },
+    {
+     "through": "P2",
+     "total_central": 9.672,
+     "total_high": 11.75
+    },
+    {
+     "through": "P3",
+     "total_central": 10.738,
+     "total_high": 13.198
+    },
+    {
+     "through": "P4",
+     "total_central": 12.761,
+     "total_high": 15.946
+    },
+    {
+     "through": "P5",
+     "total_central": 14.118,
+     "total_high": 17.789
+    },
+    {
+     "through": "P6",
+     "total_central": 14.733,
+     "total_high": 18.625
+    },
+    {
+     "through": "P7",
+     "total_central": 15.565,
+     "total_high": 19.755
+    },
+    {
+     "through": "P8",
+     "total_central": 18.557,
+     "total_high": 23.819
+    }
+   ],
+   "rule": {
+    "adversarial_seeds": 3,
+    "cap": 40,
+    "concurrent_stage0_jobs": 1,
+    "cpus_per_job": 32,
+    "family_quota_dev": 15,
+    "family_quota_test": 60,
+    "family_quota_test_max": 120,
+    "fidelity_mutants_per_family_tier": 1,
+    "frr_margin_units": 6,
+    "frr_min_units": 72,
+    "gpu_hour_cap_total": 8.0,
+    "gpus_per_job": 1,
+    "hack_fraction": 0.15,
+    "hack_seeds": 3,
+    "identity_seeds": 1,
+    "mutant_robustness_fraction": 0.1,
+    "name": "q1-stage0-trim/2",
+    "scope_bytes": 1000000000,
+    "slot_capacity": 12,
+    "small_below_bytes": 600000000,
+    "substrate_seeds": 3,
+    "timing_floor_items": 80,
+    "timing_floor_job_gpus": 8,
+    "timing_floor_timing_gpus": 2,
+    "units_medium": 3,
+    "units_small": 1
+   },
+   "scoring_gpu_hours_95": {
+    "high": 19.944,
+    "low": 10.614
+   },
+   "total_gpu_hours": 15.565,
+   "total_gpu_hours_high": 19.755,
+   "unscheduled_controls_gpu_hours_at_replicate_42": {
+    "hack-emulating-mutant-controls": 2.813,
+    "kbv-h1-controls": 3.375
+   },
+   "unscheduled_controls_kernels": {
+    "hack-emulating-mutant-controls": 5,
+    "kbv-h1-controls": 6
+   }
+  },
+  {
+   "anchors": {
+    "c_points": [
+     {
+      "gb": 1.342,
+      "gpu_seconds_per_gb": 64.986,
+      "kind": "measured"
+     },
+     {
+      "gb": 4.295,
+      "gpu_seconds_per_gb": 157.58,
+      "kind": "censored lower bound"
+     }
+    ],
+    "kernels": [
+     "s1-inductor-L1-3_Batched_matrix_multiplication"
+    ],
+    "non_c_gpu_seconds_per_gb": 156.774
+   },
+   "budget_stop": {
+    "central": {
+     "completed": [
+      "P1",
+      "P2",
+      "P3"
+     ],
+     "partial": {
+      "bucket": "P4",
+      "share": 0.556
+     },
+     "test_mutants_scored": 160
+    },
+    "high": {
+     "completed": [
+      "P1",
+      "P2",
+      "P3"
+     ],
+     "partial": {
+      "bucket": "P4",
+      "share": 0.098
+     },
+     "test_mutants_scored": 160
+    }
+   },
+   "corrected_for_second_review": true,
+   "detectable_difference_pp": 19.6,
+   "factors": {
+    "A1": 0.455,
+    "A2": 0.448,
+    "A3": 0.454,
+    "A4": 0.434,
+    "A4_poison": 0.515,
+    "A4_sanitizer": 0.849,
+    "A5": 0.502,
+    "a": 0.519,
+    "a_1e-3": 0.489,
+    "a_head_1e-2": 0.486,
+    "a_head_1e-4": 0.506,
+    "a_static": 0.461,
+    "b1": 0.458,
+    "b2": 0.445,
+    "c": 0.458
+   },
+   "families_with_30_witnessed_test": 0,
+   "fits_8_gpu_h": false,
+   "fits_8_gpu_h_at_high": false,
+   "fixed_gpu_hours": {
+    "admission_full": 0.55,
+    "already_spent_this_pass": 0.899,
+    "audit_hole_replay_cap": 0.5,
+    "calibration_within_frr_bound": 0.08,
+    "fidelity_sample": 0.649,
+    "specializations_in_scope": 0.177,
+    "timing_noise_floor": 1.0
+   },
+   "frr_core_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D"
+   ],
+   "frr_extra_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D",
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_margin_substrates": [
+    "s2-liger-kl-div-L1-98_KLDivLoss",
+    "s1-inductor-L1-43_Max_Pooling_3D",
+    "s1-inductor-L1-5_Matrix_scalar_multiplication",
+    "s1-inductor-L1-89_cumsum",
+    "s1-inductor-L1-90_cumprod",
+    "s1-inductor-L1-92_cumsum_exclusive"
+   ],
+   "frr_skipped_no_new_unit": [
+    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_"
+   ],
+   "frr_upper_bound_at_zero_rejections": 0.0462,
+   "gpu_hours": 8.269,
+   "gpu_hours_by_priority": {
+    "P1": 1.732,
+    "P2": 0.77,
+    "P3": 0.518,
+    "P4": 2.023,
+    "P5": 0.661,
+    "P6": 0.154,
+    "P7": 0.227,
+    "P8": 2.185
+   },
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.038,
+    "frr-core-replicate-42": 0.795,
+    "frr-margin-replicate-42": 2.023,
+    "hack-control": 0.739,
+    "identity-control": 0.347,
+    "mutant": 0.997,
+    "mutant-extension": 2.185,
+    "mutant-robustness": 0.154,
+    "substrate": 0.992
+   },
+   "in_scope_substrates": 69,
+   "kernels": {
+    "adversarial-control": 3,
+    "frr-core-replicate-42": 9,
+    "frr-margin-replicate-42": 6,
+    "hack-control": 49.0,
+    "identity-control": 69,
+    "mutant": 208.0,
+    "mutant-extension": 450.0,
+    "substrate": 69
+   },
+   "mutants_exposed_removed": {
+    "arithmetic/dev": 3,
+    "arithmetic/test": 1,
+    "indexing/dev": 2,
+    "indexing/test": 2
+   },
+   "mutants_per_family": {
+    "arithmetic": {
+     "capped_frame": 789,
+     "dev": 8,
+     "half_width_pp": 28.6,
+     "robustness": 3,
+     "test": 30,
+     "test_extension_max": 90,
+     "test_frame": 394,
+     "witnessed_test_planning": 15
+    },
+    "boundary": {
+     "capped_frame": 753,
+     "dev": 8,
+     "half_width_pp": 28.6,
+     "robustness": 3,
+     "test": 30,
+     "test_extension_max": 90,
+     "test_frame": 376,
+     "witnessed_test_planning": 15
+    },
+    "indexing": {
+     "capped_frame": 514,
+     "dev": 8,
+     "half_width_pp": 28.6,
+     "robustness": 3,
+     "test": 30,
+     "test_extension_max": 90,
+     "test_frame": 255,
+     "witnessed_test_planning": 15
+    },
+    "precision": {
+     "capped_frame": 334,
+     "dev": 8,
+     "half_width_pp": 28.6,
+     "robustness": 3,
+     "test": 30,
+     "test_extension_max": 90,
+     "test_frame": 167,
+     "witnessed_test_planning": 15
+    },
+    "semantic": {
+     "capped_frame": 313,
+     "dev": 8,
+     "half_width_pp": 28.6,
+     "robustness": 3,
+     "test": 30,
+     "test_extension_max": 90,
+     "test_frame": 156,
+     "witnessed_test_planning": 15
+    },
+    "synchronization": {
+     "capped_frame": 20,
+     "dev": 8,
+     "half_width_pp": 49.6,
+     "robustness": 1,
+     "test": 10,
+     "test_extension_max": 0,
+     "test_frame": 10,
+     "witnessed_test_planning": 5
+    }
+   },
+   "n_eval_independent": 78,
+   "n_eval_independent_core": 72,
+   "name": "trim2-q30-paired-concurrency",
+   "pooled_half_width_pp": 11.6,
+   "pooled_witnessed_test_planning": 80,
+   "priority_cumulative_with_reserve": [
+    {
+     "through": "P1",
+     "total_central": 5.588,
+     "total_high": 6.087
+    },
+    {
+     "through": "P2",
+     "total_central": 6.358,
+     "total_high": 7.078
+    },
+    {
+     "through": "P3",
+     "total_central": 6.876,
+     "total_high": 7.745
+    },
+    {
+     "through": "P4",
+     "total_central": 8.899,
+     "total_high": 10.351
+    },
+    {
+     "through": "P5",
+     "total_central": 9.56,
+     "total_high": 11.202
+    },
+    {
+     "through": "P6",
+     "total_central": 9.714,
+     "total_high": 11.4
+    },
+    {
+     "through": "P7",
+     "total_central": 9.941,
+     "total_high": 11.692
+    },
+    {
+     "through": "P8",
+     "total_central": 12.126,
+     "total_high": 14.506
+    }
+   ],
+   "rule": {
+    "adversarial_seeds": 3,
+    "cap": 40,
+    "concurrent_stage0_jobs": 1,
+    "cpus_per_job": 32,
+    "family_quota_dev": 8,
+    "family_quota_test": 30,
+    "family_quota_test_max": 120,
+    "fidelity_mutants_per_family_tier": 1,
+    "frr_margin_units": 6,
+    "frr_min_units": 72,
+    "gpu_hour_cap_total": 8.0,
+    "gpus_per_job": 1,
+    "hack_fraction": 0.15,
+    "hack_seeds": 3,
+    "identity_seeds": 1,
+    "mutant_robustness_fraction": 0.1,
+    "name": "q1-stage0-trim/2",
+    "scope_bytes": 1000000000,
+    "slot_capacity": 12,
+    "small_below_bytes": 600000000,
+    "substrate_seeds": 3,
+    "timing_floor_items": 80,
+    "timing_floor_job_gpus": 8,
+    "timing_floor_timing_gpus": 2,
+    "units_medium": 3,
+    "units_small": 1
+   },
+   "scoring_gpu_hours_95": {
+    "high": 10.649,
+    "low": 6.404
+   },
+   "total_gpu_hours": 9.94,
+   "total_gpu_hours_high": 11.691,
+   "unscheduled_controls_gpu_hours_at_replicate_42": {
+    "hack-emulating-mutant-controls": 2.813,
+    "kbv-h1-controls": 3.375
+   },
+   "unscheduled_controls_kernels": {
+    "hack-emulating-mutant-controls": 5,
+    "kbv-h1-controls": 6
+   }
+  },
+  {
+   "anchors": {
+    "c_points": [
+     {
+      "gb": 1.342,
+      "gpu_seconds_per_gb": 64.986,
+      "kind": "measured"
+     },
+     {
+      "gb": 4.295,
+      "gpu_seconds_per_gb": 157.58,
+      "kind": "censored lower bound"
+     }
+    ],
+    "kernels": [
+     "s1-inductor-L1-3_Batched_matrix_multiplication"
+    ],
+    "non_c_gpu_seconds_per_gb": 156.774
+   },
+   "budget_stop": {
+    "central": {
+     "completed": [
+      "P1",
+      "P2",
+      "P3"
+     ],
+     "partial": {
+      "bucket": "P5",
+      "share": 0.658
+     },
+     "test_mutants_scored": 310
+    },
+    "high": {
+     "completed": [
+      "P1"
+     ],
+     "partial": {
+      "bucket": "P2",
+      "share": 0.862
+     },
+     "test_mutants_scored": 267
+    }
+   },
+   "corrected_for_second_review": true,
+   "detectable_difference_pp": 10.1,
+   "factors": {
+    "A1": 0.455,
+    "A2": 0.448,
+    "A3": 0.454,
+    "A4": 0.434,
+    "A4_poison": 0.515,
+    "A4_sanitizer": 0.849,
+    "A5": 0.502,
+    "a": 0.519,
+    "a_1e-3": 0.489,
+    "a_head_1e-2": 0.486,
+    "a_head_1e-4": 0.506,
+    "a_static": 0.461,
+    "b1": 0.458,
+    "b2": 0.445,
+    "c": 0.458
+   },
+   "families_with_30_witnessed_test": 5,
+   "fits_8_gpu_h": false,
+   "fits_8_gpu_h_at_high": false,
+   "fixed_gpu_hours": {
+    "admission_full": 0.55,
+    "already_spent_this_pass": 0.899,
+    "audit_hole_replay_cap": 0.5,
+    "calibration_within_frr_bound": 0.041,
+    "fidelity_sample": 0.649,
+    "specializations_in_scope": 0.177,
+    "timing_noise_floor": 1.0
+   },
+   "frr_core_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D"
+   ],
+   "frr_extra_substrates": [
+    "s1-inductor-L1-6_Matmul_with_large_K_dimension_",
+    "s1-inductor-L2-32_Conv2d_Scaling_Min",
+    "s1-inductor-L2-42_ConvTranspose2d_GlobalAvgPool_BiasAdd_LogSumExp_Sum_Multiply",
+    "s1-inductor-L1-11_4D_tensor_matrix_multiplication",
+    "s1-inductor-L2-26_ConvTranspose3d_Add_HardSwish",
+    "s1-inductor-L1-3_Batched_matrix_multiplication",
+    "s2-flaggems-bmm-L1-3_Batched_matrix_multiplication",
+    "s1-inductor-L1-42_Max_Pooling_2D",
+    "s1-inductor-L1-44_Average_Pooling_1D"
+   ],
+   "frr_margin_substrates": [],
+   "frr_skipped_no_new_unit": [
+    "s2-flaggems-mm-L1-6_Matmul_with_large_K_dimension_"
+   ],
+   "frr_upper_bound_at_zero_rejections": 0.0499,
+   "gpu_hours": 6.57,
+   "gpu_hours_by_priority": {
+    "P1": 1.732,
+    "P2": 1.498,
+    "P3": 0.518,
+    "P5": 0.661,
+    "P6": 0.3,
+    "P7": 0.405,
+    "P8": 1.457
+   },
+   "gpu_hours_by_role": {
+    "adversarial-control": 0.038,
+    "frr-core-replicate-42": 0.795,
+    "hack-control": 0.739,
+    "identity-control": 0.347,
+    "mutant": 1.903,
+    "mutant-extension": 1.457,
+    "mutant-robustness": 0.3,
+    "substrate": 0.992
+   },
+   "in_scope_substrates": 69,
+   "kernels": {
+    "adversarial-control": 3,
+    "frr-core-replicate-42": 9,
+    "hack-control": 49.0,
+    "identity-control": 69,
+    "mutant": 395.0,
+    "mutant-extension": 300.0,
+    "substrate": 69
+   },
+   "mutants_exposed_removed": {
+    "arithmetic/dev": 3,
+    "arithmetic/test": 1,
+    "indexing/dev": 2,
+    "indexing/test": 2
+   },
+   "mutants_per_family": {
+    "arithmetic": {
+     "capped_frame": 789,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 394,
+     "witnessed_test_planning": 30
+    },
+    "boundary": {
+     "capped_frame": 753,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 376,
+     "witnessed_test_planning": 30
+    },
+    "indexing": {
+     "capped_frame": 514,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 255,
+     "witnessed_test_planning": 30
+    },
+    "precision": {
+     "capped_frame": 334,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 167,
+     "witnessed_test_planning": 30
+    },
+    "semantic": {
+     "capped_frame": 313,
+     "dev": 15,
+     "half_width_pp": 20.2,
+     "robustness": 6,
+     "test": 60,
+     "test_extension_max": 60,
+     "test_frame": 156,
+     "witnessed_test_planning": 30
+    },
+    "synchronization": {
+     "capped_frame": 20,
+     "dev": 10,
+     "half_width_pp": 49.6,
+     "robustness": 1,
+     "test": 10,
+     "test_extension_max": 0,
+     "test_frame": 10,
+     "witnessed_test_planning": 5
+    }
+   },
+   "n_eval_independent": 72,
+   "n_eval_independent_core": 72,
+   "name": "trim2-no-margin-paired-concurrency",
+   "pooled_half_width_pp": 8.4,
+   "pooled_witnessed_test_planning": 155,
+   "priority_cumulative_with_reserve": [
+    {
+     "through": "P1",
+     "total_central": 5.549,
+     "total_high": 6.214
+    },
+    {
+     "through": "P2",
+     "total_central": 7.047,
+     "total_high": 8.287
+    },
+    {
+     "through": "P3",
+     "total_central": 7.565,
+     "total_high": 9.004
+    },
+    {
+     "through": "P5",
+     "total_central": 8.226,
+     "total_high": 9.919
+    },
+    {
+     "through": "P6",
+     "total_central": 8.526,
+     "total_high": 10.334
+    },
+    {
+     "through": "P7",
+     "total_central": 8.931,
+     "total_high": 10.894
+    },
+    {
+     "through": "P8",
+     "total_central": 10.388,
+     "total_high": 12.911
+    }
+   ],
+   "rule": {
+    "adversarial_seeds": 3,
+    "cap": 40,
+    "concurrent_stage0_jobs": 1,
+    "cpus_per_job": 32,
+    "family_quota_dev": 15,
+    "family_quota_test": 60,
+    "family_quota_test_max": 120,
+    "fidelity_mutants_per_family_tier": 1,
+    "frr_margin_units": 0,
+    "frr_min_units": 72,
+    "gpu_hour_cap_total": 8.0,
+    "gpus_per_job": 1,
+    "hack_fraction": 0.15,
+    "hack_seeds": 3,
+    "identity_seeds": 1,
+    "mutant_robustness_fraction": 0.1,
+    "name": "q1-stage0-trim/2",
+    "scope_bytes": 1000000000,
+    "slot_capacity": 12,
+    "small_below_bytes": 600000000,
+    "substrate_seeds": 3,
+    "timing_floor_items": 80,
+    "timing_floor_job_gpus": 8,
+    "timing_floor_timing_gpus": 2,
+    "units_medium": 3,
+    "units_small": 1
+   },
+   "scoring_gpu_hours_95": {
+    "high": 9.092,
+    "low": 4.595
+   },
+   "total_gpu_hours": 8.93,
+   "total_gpu_hours_high": 10.893,
+   "unscheduled_controls_gpu_hours_at_replicate_42": {
+    "hack-emulating-mutant-controls": 2.813,
+    "kbv-h1-controls": 3.375
+   },
+   "unscheduled_controls_kernels": {
+    "hack-emulating-mutant-controls": 5,
+    "kbv-h1-controls": 6
+   }
+  }
+ ]
+}
