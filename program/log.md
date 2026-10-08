@@ -1822,3 +1822,38 @@ Append-only. Newest entries at the bottom.
   Evidence `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2-build/timing-2/README.md`.
 - Next: the narrow re-check of the measured limits (D42 (iii)), then merge
   and freeze naming D42.
+
+## 2026-10-08 — Q3 dense pre-check v2: the 4B limit's estimator sensitivity disclosed (branch `stage0/q3-dense-v2`, draft, not frozen)
+
+- The narrow re-check of the measured limits found that Compute said the
+  discarded first analysis pass and the registered one "differ only in how
+  the two compiles are treated" (the timing-2 README too). They also scale
+  differently: the first pass took the larger of a per-stage least-squares
+  line in tokens (at the lane's mean) and the stage mean; the registered
+  estimator scales the stage mean in proportion to length, and was chosen
+  after the first pass came out over D36's cap (73 minutes).
+- Recomputed from Slurm 810's receipt and `analysis.json`
+  (`timing-2/limit-recheck/estimator-sensitivity.py`, standard library; it
+  reproduces both committed analyses): with the compiles treated as
+  registered, the line fit gives 678 s against 658 s for the stages, 27.62
+  against 26.95 minutes before rounding, so 31 minutes against 30. The
+  increase is all A-main's (+55 s; it has no compile): its measured units
+  span only 211 tokens (3,614-3,825), slope 0.16 ms per token, 3.3 times
+  B-absent's 0.048 over 3,551-8,313 tokens. The larger of the two in every
+  stage gives 32. Proportional scaling over-predicts B-absent's measured
+  8,310-token units (0.78 s against 0.60 s). At any of these estimates the
+  lane's first job ends in about 14-15 of its 27 useful minutes.
+- Fixed in text only (`ddb3d02`; no GPU job, no tabled file changed):
+  Compute's parenthetical and decision 20 disclose both differences, the 31
+  minutes, the 32-minute bound and why proportional scaling is registered;
+  the 4B limit stays 30 minutes (0.50 GPU-h; caps 0.90 of 1.5). A new
+  manifests test recomputes both estimators from the receipt and binds the
+  disclosure.
+- Checks at `ddb3d02`: local dense, preregister and v2 tests 185 passed, 15
+  skipped; ruff clean. Freeze simulated on scratch clones naming D42:
+  check-chain 12 rows PASS, frozen-mode tests 30 passed, code table matches,
+  fills and dry runs (0.2 and 0.5 GPU-h) as before; status-only and a wrong
+  decision fail the test; full suite in the frozen clone 2,170 passed, 87
+  skipped. Real ledger unchanged.
+- Next: close the narrow re-check (D42 (iii)); then merge and freeze naming
+  D42.
