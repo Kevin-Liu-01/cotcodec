@@ -1822,3 +1822,46 @@ they say so.)
 - Next: review of D43's implementation, then freeze v2, `-inputs`,
   `-executor`, and run C2 (seed 45), C1, C3, A1-A6, the ladder on a quiet
   host, A4 and A7.
+
+## 2026-10-08 — Q2 action path v2: review of D43's implementation (branch `stage0/q2-action-path-v2`)
+
+- Reviewers' blocking findings on `65267b7`, fixed at `932c8cb` in the
+  registration text before any freeze; no file a campaign executes changed
+  (`git diff --stat 126ff8b` over the lane still lists only
+  `l0_raw_prediction_v2.yaml`), so the development at `126ff8b` stands.
+- Section 26's garbled duplicate sentence (left by `31942e8`) is removed; a
+  new test fails any prose paragraph of the three registrations that
+  repeats a run of eight words, and catches the old text. Section 15 and the
+  header both name sections 24-27; section 24's items 6 and 8 name D43's
+  reading of the tap as the exception to "unchanged".
+- D43's precondition is stated as observed, not checked (sections 4.4 and
+  27, design decision 47, the inputs addendum, the prediction file's
+  `d43_judge` note): all 280 development key events without Mod2 (172 in
+  the scan, 108 in job 830) have state 0 and follow their grab key's
+  processed press, but any client's synchronous grab freezes the keyboard
+  and an active grab needs no key press. Section 27's new case 6: a
+  synchronous grab already active before an entry would have every event
+  read without its state and pass a raw-only shell chord, and the guard
+  cannot see a grab (job 833 shows it blind to the overview a lone Super_L
+  opened: no key reached the probe in seq 3-21 and 28-34 of both sessions,
+  every pre check clean). Section 12 now reports any event read without its
+  state that no key press with Mod2 preceded. The narrower rule (read
+  without state only after such a press) is not D43's wording and would
+  change `verdict.py` and `acceptance.py` and so the final development runs;
+  left to Kevin.
+- C3's equivalence test still compares the recorded state byte for byte
+  (D43 names the judge); disclosed in sections 8, 26 and 27 and design
+  decision 47 with its bound (up to 6.7% over the three `chord_super_d`
+  trials of C3's H-OSW-fixed reference, M12 and M13 runs at the 2.3% bound;
+  it can only fail C3, never pass a criterion; none observed). Whether D43
+  covers it is left to Kevin (an `acceptance.py`-only change, no rerun).
+- Tests pin each disclosed limit on real records (`tests/test_q2_d43_judge.py`)
+  and the text (`tests/test_q2_prereg_inputs.py`). Checks at `932c8cb`
+  (`program/evidence/2026-10-08/q2-action-path-v2-d43/checks/checks-932c8cb.json`):
+  ruff clean; Q2 tests 635 passed, 1 skipped; full suite on the host from a
+  fresh `~/cotcodec-scratch/` export 2242 passed, 38 skipped; validators
+  PASS; freeze lint
+  of v2, `-inputs`, `-executor` in order on a scratch copy of the ledger:
+  14 rows, chain PASS, v1's, the checker-mutation and v2's rows verify; the
+  repository ledger is unchanged (11 rows). Nothing frozen, pushed or
+  merged. No GPU, no VM job.
