@@ -190,9 +190,10 @@ file equals it), so freezing the catalog fixes them.
   than two; A7, the restarts per accessibility call on the exact one-sided
   95% Poisson bound, its calls capped at the plan's 39,036; C1; C2's
   reading of L0-raw trials (main section 8, decision 34); C3's clean kills
-  (decision 36) and its equivalence, which needs every attempt's streams
-  to match the reference's on the cells each ran without an infrastructure
-  failure (decision D39); C4; each control reading an earlier attempt by
+  (decision 36) and its equivalence, which needs the counting attempt's
+  streams to match the reference's on every cell and each earlier
+  attempt's on the cells it ran without an infrastructure failure
+  (decision D39); C4; each control reading an earlier attempt by
   its own rule (main design decision 45); and the ladder's N* with the
   foreign-load abort and its rerun cap, a rung attempt without host
   snapshots not qualifying but counting its trials. An attempt killed
