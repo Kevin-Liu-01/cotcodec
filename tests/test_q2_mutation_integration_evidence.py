@@ -191,3 +191,71 @@ def test_d27_rerate_evidence_is_intact_and_holds_no_item_label_or_answer() -> No
         for line in (RERATE / "manifests" / "gpu-ledger.jsonl").read_text().splitlines()
     ]
     assert sum(row["max_gpu_hours"] for row in ledger if row["audit_id"] == "dev-rerate-v3") <= 0.5
+
+
+ISOLATED = INTEGRATION / "rater-isolated-dev-v3"
+
+
+def test_isolated_claude_ingest_evidence_is_intact_and_carries_no_document_text() -> None:
+    """Released held files match their committed digests; answers carry digests, not text."""
+    sums = {}
+    for line in (ISOLATED / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        sums[name.removeprefix("./")] = digest
+    files = {
+        str(p.relative_to(ISOLATED))
+        for p in ISOLATED.rglob("*")
+        if p.is_file() and p.name != "SHA256SUMS"
+    }
+    assert set(sums) == files
+    for name, digest in sums.items():
+        assert hashlib.sha256((ISOLATED / name).read_bytes()).hexdigest() == digest, name
+    # The held files are exactly the ones whose digests were committed before the ingest.
+    held = {}
+    for line in (RERATE / "held" / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split(maxsplit=1)
+        held[name.removeprefix("./")] = digest
+    released = {
+        "dev-audit-smoke-v3/sample.jsonl": ISOLATED / "audit" / "sample.jsonl",
+        "dev-audit-smoke-v3/spot-check.jsonl": ISOLATED / "audit" / "spot-check.jsonl",
+        "dev-audit-smoke-v3/items.jsonl": ISOLATED / "audit" / "items.jsonl",
+        "dev-audit-smoke-v3/baseline-jobs.jsonl": ISOLATED / "audit" / "baseline-jobs.jsonl",
+        "open-weight/calls.jsonl": ISOLATED / "open-weight" / "calls.jsonl",
+    }
+    for name in held:
+        if name.startswith("dev-mutants-v8/"):
+            released[name] = INTEGRATION / name
+    assert set(released) == set(held)
+    for name, path in released.items():
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == held[name], name
+
+    manifest = json.loads((RERATE / "isolated-export" / "iso-manifest.json").read_text())
+    sample = _jsonl(ISOLATED / "audit" / "sample.jsonl")
+    assert {row["task_id"] for row in sample} <= DEV
+    assert {row["item_id"] for row in sample} == set(manifest["items"])
+    claude = _jsonl(ISOLATED / "claude-isolated" / "calls.jsonl")
+    audit = json.loads((ISOLATED / "claude-isolated" / "transcript-audit.json").read_text())
+    receipt = json.loads((ISOLATED / "claude-isolated" / "receipt.json").read_text())
+    manifest_bytes = (RERATE / "isolated-export" / "iso-manifest.json").read_bytes()
+    assert receipt["manifest_sha256"] == hashlib.sha256(manifest_bytes).hexdigest()
+    assert receipt["calls_sha256"] == sums["claude-isolated/calls.jsonl"]
+    assert {c["item_id"] for c in claude} == set(manifest["items"])
+    by_item = {r["item_id"]: r for r in audit["raters"]}
+    assert len(by_item) == len(audit["raters"]) == 133
+    for call in claude:
+        extra = call["extra"]
+        assert "reason" not in call and "text" not in call
+        assert extra["transcript_sha256"] == by_item[call["item_id"]]["transcript_sha256"]
+        assert extra["tree_sha256"] == extra["tree_rehashed_sha256"]
+        assert call["answer"] == by_item[call["item_id"]]["answer"] or call["outcome"] != "ok"
+    for row in audit["raters"]:
+        assert set(row["tool_counts"]) <= {"Read", "StructuredOutput"} or row["strict_void"]
+        assert row["reads_outside_item_dir"] == 0 or row["strict_void"]
+    for path in ISOLATED.rglob("*"):
+        if path.is_file() and path.suffix in {".json", ".jsonl", ".txt", ".md"}:
+            text = path.read_text(encoding="utf-8")
+            assert "data_b64" not in text and '"reason":' not in text, path
+    summary = json.loads((ISOLATED / "summary.json").read_text())
+    registered = json.loads((ISOLATED / "audit-summary" / "audit-summary.json").read_text())
+    assert summary["registered"]["kappa"] == registered["kappa"]
+    assert summary["registered"]["kappa_fires"] == (registered["kappa"] < 0.6)
