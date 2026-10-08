@@ -6,8 +6,9 @@
 # seed 42, 2026-10-08): the XRecord tap records the d press, queued under GNOME Shell's
 # synchronous grab, with core state 0 (q2-action-path-v2, section 26). Decision D43, taken
 # after that run, has v2's judge read a key event the tap records without the guard's lock
-# bit (Mod2) on its kind, keycode, keysym and order only, and under that rule the same
-# records pass (section 27). The entry's prediction is therefore informed by v1's C2 and by
+# bit (Mod2) on its kind, keycode, keysym and order only (decision D45: only when a key press
+# recorded with Mod2 comes before it in its window), and under that rule the same records
+# pass (section 27). The entry's prediction is therefore informed by v1's C2 and by
 # seed-42 development, and v2's C2 is a reproduction test of the L0-raw failing set on a new
 # order seed (45), not an a-priori prediction test; v1's C2 is the a-priori result (one
 # unpredicted failure, chord_super_d). C2 passes only if the observed failing set equals
@@ -15,7 +16,8 @@
 # q2-action-path-v2 (preregistration section 8). This file and the translator
 # `harness/q2/action_path/l0_raw.py` (unchanged from v1) are frozen by their SHA-256 in the
 # v2 main preregistration. Everything below is v1's text except the status line, the three
-# basis notes v1_c2, shell_grab and d43_judge, and chord_super_d's reason.
+# basis notes v1_c2, shell_grab and d43_judge (which also states decision D45), and
+# chord_super_d's reason.
 #
 # v1's header follows.
 #
@@ -80,15 +82,18 @@ basis:
     before its state is computed (Xi/exevents.c ProcessDeviceEvent), and not again when the
     queue is replayed, so the tap records it with core state 0.
   d43_judge: >-
-    Decision D43 (after v1's C2): the entry guard guarantees Num Lock locked, Mod2 in every
-    processed key event (conditions b and f), so a key event the tap records without Mod2 is
-    read as recorded while queued under a synchronous grab (in development, always a shell
-    grab its entry's own press of the grab key activated; what neither the judge nor the
-    guard checks is in q2-action-path-v2, section 27, case 6); v2's judge
-    (harness/q2/action_path/verdict.py, modifier_state_observable) reads such an event on its
-    kind, keycode, keysym and order only, and C2's reading of the tap window leaves its state
-    out too (acceptance.py, c2_projection). Every other event, and every event on the probe's
-    channel, is judged as in v1.
+    Decisions D43 and D45 (after v1's C2): the entry guard guarantees Num Lock locked, Mod2
+    in every processed key event (conditions b and f), so a key event the tap records
+    without Mod2 after a key press it records with Mod2 in the same window (decision D45's
+    narrowing) is read as recorded while queued under a synchronous grab that activated after
+    that processed press (in development, always a shell grab its entry's own press of the
+    grab key activated; what the judge still does not check is in q2-action-path-v2, section
+    27, case 6); v2's judge (harness/q2/action_path/verdict.py, modifier_state_observable)
+    reads such an event on its kind, keycode, keysym and order only, and C2's reading of the
+    tap window leaves its state out too (acceptance.py, c2_projection). A key event without
+    Mod2 that no such press precedes, as under a synchronous grab already active before the
+    entry's first key, is judged on its state as recorded. Every other event, and every event
+    on the probe's channel, is judged as in v1.
 translation:
   module: harness/q2/action_path/l0_raw.py
   move: pyautogui.moveTo(x, y)
@@ -178,7 +183,8 @@ reasons:
     with no interval and no hold, so the d press reaches X within about 2 ms of the Super_L
     press. The shell's synchronous grab on Super_L (its overlay key) has frozen the keyboard
     by then, so the d press, the d release and the Super_L release are queued, and the XRecord
-    tap records each with core state 0, without Mod2 (and so without Mod4). The shell itself
+    tap records each with core state 0, without Mod2 (and so without Mod4), after the Super_L
+    press, which it records with Mod2 (processed; decision D45). The shell itself
     received Super+d: it showed the desktop and no key reached the probe, as under L0-fixed.
     Under D43 the judge reads those three events on kind, keycode, keysym and order, which
     the tap records correctly (Super_L press, d press, d release, Super_L release), so the

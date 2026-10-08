@@ -486,7 +486,15 @@ def test_c4_counts_only_entries_with_a_reference():
     a1 = [campaign(a1_plan(43))]
     trials = [t for s in a1[0]["sessions"] for t in s["trials"]]
     trials[0]["c4"], trials[1]["c4"] = True, True
-    assert acc.c4(a1) == {"pass": True, "problems": [], "trials_checked": 2}
+    result = acc.c4(a1)
+    assert {k: result[k] for k in ("pass", "problems", "trials_checked")} == {
+        "pass": True, "problems": [], "trials_checked": 2,
+    }  # fmt: skip
+    # Section 12 (decisions D43 and D45): every key event here carries Mod2, so none is read
+    # without its state and none lacks the bit.
+    assert result["state_not_observed"] == {
+        "trials": 1000, "read_without_state": [], "no_processed_press_before": [], "by_entry": {},
+    }  # fmt: skip
     trials[1]["c4"] = False
     assert not acc.c4(a1)["pass"]
 

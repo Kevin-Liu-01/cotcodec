@@ -2,9 +2,9 @@
 
 This module restates the preregistration's decision rules (sections 5-9 of
 ``program/preregistrations/q2-action-path-v2.md``, which keeps v1's rules; decision D40
-changes only C2's prediction file and order seed, and decision D43 how the judge, and so
-C2's and C4's readings, treat a key event the tap recorded without the guard's lock bit)
-as code, frozen with the inputs
+changes only C2's prediction file and order seed, and decisions D43 and D45 how the judge,
+and so C2's, C3's and C4's readings, treat a key event the tap recorded without the guard's
+lock bit) as code, frozen with the inputs
 addendum (and pinned again by the executor addendum) before any scored campaign runs,
 C2 included, so the verdicts are computed the way the text says and nothing is chosen
 after the data. It reads campaign run directories as the VM lane writes them
@@ -20,18 +20,22 @@ Rules that apply to every criterion:
   ``preflight.txt``, written just before it exits 0; a job killed by a signal, a time
   limit or a node failure never writes it), and from Slurm when the operator read it in
   time, in which case both must agree;
-* a trial is PASS only as ``verdict.judge`` judged it, infrastructure failures
-  included (section 6.1); a session whose ``DesktopEnv.reset`` observation was not
-  delivered charges its first trial (``reset_observation``, an infrastructure type and a
-  reason of that trial); an entry is PASS only at k of k repetitions, and an entry that
-  is PASS in one observation setting and not the other fails (section 5). One exception
-  (decisions D30 and D33): in A1-A4 and the concurrency ladder a trial whose only
-  failure is a guest-server restart during an observation call, with the tree it left
-  undelivered, is excused: reported and not counted (``restart_only``). A1-A3 judge an
-  entry on its counted repetitions and fail it on a second excused trial in that entry,
-  over both observation settings and every attempt (A1: both seeds; ``RESTART_LIMIT``);
-  a ladder rung with more than two excused trials does not qualify; A4 has no such
-  limit;
+* a trial is PASS only as ``verdict.judge`` judged it, infrastructure failures included
+  (section 6.1); every reading of the XRecord tap here (C2's reading of an L0-raw window,
+  C3's stream comparison) reads a key event's modifier state as the judge does (decisions
+  D43 and D45: not for an event recorded without the guard's lock bit after a key press
+  recorded with it in the same window), and every criterion reports the events read that way
+  and the events without the bit that no such press preceded (``state_not_observed_report``,
+  section 12; reported, never judged); a session whose ``DesktopEnv.reset`` observation was
+  not delivered charges its first trial (``reset_observation``, an infrastructure type and a
+  reason of that trial); an entry is PASS only at k of k repetitions, and an entry that is
+  PASS in one observation setting and not the other fails (section 5). One exception
+  (decisions D30 and D33): in A1-A4 and the concurrency ladder a trial whose only failure is
+  a guest-server restart during an observation call, with the tree it left undelivered, is
+  excused: reported and not counted (``restart_only``). A1-A3 judge an entry on its counted
+  repetitions and fail it on a second excused trial in that entry, over both observation
+  settings and every attempt (A1: both seeds; ``RESTART_LIMIT``); a ladder rung with more
+  than two excused trials does not qualify; A4 has no such limit;
 * the observation service has its own bound (A7, decision D30): guest-server restarts
   per ``/accessibility`` call, judged on the exact one-sided 95% Poisson upper bound,
   with the restarts of every attempt and the calls of the counting attempts only, capped
@@ -75,7 +79,11 @@ from pathlib import Path
 from typing import Any
 
 from harness.q2.action_path import order
-from harness.q2.action_path.verdict import GUARD_LOCKED_MODS
+from harness.q2.action_path.verdict import (
+    KEY_KINDS,
+    carries_guard_lock_bit,
+    state_not_observed,
+)
 from harness.q2.vm import suite
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -348,7 +356,11 @@ def _trial(raw: dict[str, Any], setting: str | None) -> dict[str, Any]:
         "retried": list(verdict.get("retried") or []),
         "reasons": verdict.get("reasons"),
         "c4": raw.get("c4"),
+        # The judged channel's key events read without their state (decisions D43, D45).
+        "state_not_observed": list(verdict.get("state_not_observed") or []),
         "events": [r[:-1] for r in raw.get("tap_window") or [] if _device(r)],
+        # Server ms of each of ``events`` (the timestamp ``events`` leaves out; section 12).
+        "event_times": [r[-1] for r in raw.get("tap_window") or [] if _device(r)],
         "probe_events": end.get("events") if end.get("ok") else None,
         "text": end.get("text"),
         "terminal": raw.get("terminal"),
@@ -719,7 +731,16 @@ def a1(by_seed: dict[int, list[dict[str, Any]]]) -> dict[str, Any]:
         table[seed], reports[seed] = _judge_entries(
             campaigns, gating, f"seed {seed}: gating entries", problems, pooled
         )
-    return _verdict(problems, {"entries": table, "guest_server": reports})
+    return _verdict(
+        problems,
+        {
+            "entries": table,
+            "guest_server": reports,
+            "state_not_observed": state_not_observed_report(
+                c for seed in (43, 44) for c in by_seed.get(seed) or []
+            ),
+        },
+    )
 
 
 def a2(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
@@ -741,7 +762,16 @@ def a2(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
         table[layer], reports[layer] = _judge_entries(
             campaigns, scored, f"{layer}: in-spec cells", problems
         )
-    return _verdict(problems, {"cells": table, "guest_server": reports})
+    return _verdict(
+        problems,
+        {
+            "cells": table,
+            "guest_server": reports,
+            "state_not_observed": state_not_observed_report(
+                c for layer in ("H-OSW-fixed", "H-GA") for c in by_layer.get(layer) or []
+            ),
+        },
+    )
 
 
 def a3(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
@@ -763,7 +793,18 @@ def a3(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
         table[layer], reports[layer] = _judge_entries(
             campaigns, set(ids), f"{layer}: stress entries", problems
         )
-    return _verdict(problems, {"entries": table, "guest_server": reports})
+    return _verdict(
+        problems,
+        {
+            "entries": table,
+            "guest_server": reports,
+            "state_not_observed": state_not_observed_report(
+                c
+                for layer in ("L0-fixed", "H-OSW-fixed", "H-GA")
+                for c in by_layer.get(layer) or []
+            ),
+        },
+    )
 
 
 def _restart_report(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
@@ -892,6 +933,7 @@ def a4(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
             "class_actions": plan_data["class_actions"],
             "class_upper_bound_family_95": plan_data["class_upper_bound_family_95"],
             "boot_upper_bound_family_95": plan_data["boot_upper_bound_family_95"],
+            "state_not_observed": state_not_observed_report(campaigns),
         },
     )
 
@@ -1089,6 +1131,7 @@ def a7(campaigns: list[dict[str, Any]], n_star: int) -> dict[str, Any]:
             "per_session": per_session,
             "failed_trials": sum(len(failed_trials(c)) for c in campaigns),
             "guest_server": report,
+            "state_not_observed": state_not_observed_report(campaigns),
         },
     )
 
@@ -1159,7 +1202,9 @@ def a6(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
     failing = sorted(cell for cell, s in status.items() if s != "PASS")
     if failing:
         problems.append(f"canary entries not PASS: {failing}")
-    return _verdict(problems, {"entries": status})
+    return _verdict(
+        problems, {"entries": status, "state_not_observed": state_not_observed_report(campaigns)}
+    )
 
 
 # --- C1-C4 ------------------------------------------------------------------------------------
@@ -1204,7 +1249,15 @@ def c1(by_layer: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
             flags = (found.get(cell) or {}).get("screenshot") or []
             if len(flags) != 5 or any(flags):
                 problems.append(f"{layer} {cell}: {sum(flags)} of {len(flags)} passed (0 of 5)")
-    return _verdict(problems, {"cells": table})
+    return _verdict(
+        problems,
+        {
+            "cells": table,
+            "state_not_observed": state_not_observed_report(
+                c for layer in C1_MUST_FAIL for c in by_layer.get(layer) or []
+            ),
+        },
+    )
 
 
 def _keysym_name(value: Any) -> str:
@@ -1217,16 +1270,36 @@ def _states(state: Any) -> list[str]:
     return [name for name, bit in STATE_BITS if int(state or 0) & bit]
 
 
+def _tap_dicts(records: list[list[Any]]) -> list[dict[str, Any]]:
+    """Compact tap records (``[kind, keycode, state, ...]``) as the dicts the judge's rule reads."""
+    return [{"kind": r[0], "state": r[2] if len(r) > 2 else 0} for r in records]
+
+
+def tap_state_unread(records: list[list[Any]]) -> list[bool]:
+    """Per compact record of one tap window: whether the judge reads it without its state.
+
+    The rule is ``verdict.modifier_state_observable`` (decisions D43 and D45): a key event
+    recorded without the guard's lock bit (Mod2) after a key press recorded with it in the
+    same window. ``records`` is one trial's window in recorded order (``_trial``'s
+    ``events``: the device events, timestamps dropped).
+    """
+    dicts = _tap_dicts(records)
+    keys = [i for i, d in enumerate(dicts) if d["kind"] in KEY_KINDS]
+    unread = {keys[k] for k in state_not_observed(dicts, recorded_by_tap=True)}
+    return [i in unread for i in range(len(records))]
+
+
 def c2_projection(trial: dict[str, Any], cell: dict[str, Any]) -> list[list[Any]] | None:
     """The trial's R-dev projection with the modifier state of key releases left out.
 
     The channel is the one ``verdict.judge`` reads: the probe's event log for ``observable:
     app`` cells (``[kind, keycode, state, x, y, time, keysym0, ...]``), the XRecord window for
     ``raw-only`` cells (``[kind, keycode, state, keysym0]`` once the timestamp is dropped).
-    On the XRecord window a key press recorded without the guard's lock bit also leaves its
-    state out, as ``verdict.judge`` reads it (decision D43,
-    ``verdict.modifier_state_observable``). An element without a state matches a reference
-    element on its kind and keysym (``c2_matches``).
+    On the XRecord window a key press the judge reads without its state also leaves its
+    state out (decisions D43 and D45, ``tap_state_unread``: recorded without the guard's
+    lock bit after a key press recorded with it in the same window); a press without the
+    bit that no such press precedes keeps its recorded state. An element without a state
+    matches a reference element on its kind and keysym (``c2_matches``).
     """
     tap = cell.get("observable", "app") != "app"
     if not tap:
@@ -1237,14 +1310,14 @@ def c2_projection(trial: dict[str, Any], cell: dict[str, Any]) -> list[list[Any]
         keysym_at = 3
     if records is None:
         return None
+    unread = tap_state_unread(records) if tap else [False] * len(records)
     out: list[list[Any]] = []
-    for record in records:
+    for record, state_unread in zip(records, unread, strict=True):
         kind = record[0]
         if kind not in ("KeyPress", "KeyRelease"):
             continue
         keysym = _keysym_name(record[keysym_at] if len(record) > keysym_at else 0)
-        observed = not tap or int(record[2] or 0) & GUARD_LOCKED_MODS == GUARD_LOCKED_MODS
-        if kind == "KeyRelease" or not observed:
+        if kind == "KeyRelease" or state_unread:
             out.append([kind, keysym])
         else:
             out.append([kind, keysym, _states(record[2])])
@@ -1252,7 +1325,12 @@ def c2_projection(trial: dict[str, Any], cell: dict[str, Any]) -> list[list[Any]
 
 
 def c2_matches(projection: list[list[Any]] | None, reference: list[list[Any]] | None) -> bool:
-    """Element by element: equal, or, for an element without a state, equal kind and keysym."""
+    """Element by element: equal, or, for an element without a state, equal kind and keysym.
+
+    ``c2_projection`` decides which elements have no state: every key release (design
+    decision 34) and, on the XRecord window, a key press the judge reads without its state
+    (decisions D43 and D45); every other element is compared with its state.
+    """
     if projection is None or reference is None or len(projection) != len(reference):
         return False
     return all(got == want[: len(got)] for got, want in zip(projection, reference, strict=True))
@@ -1265,6 +1343,100 @@ def c2_reference(cell: dict[str, Any]) -> list[list[Any]] | None:
     return [[e[0], e[1]] if e[0] == "KeyRelease" else [e[0], e[1], list(e[2])] for e in events]
 
 
+def state_not_observed_report(campaigns: Iterable[dict[str, Any]]) -> dict[str, Any]:
+    """Section 12 (decisions D43 and D45): the tap's key events read without their state.
+
+    Over every trial of every attempt of ``campaigns``; reported, never judged.
+
+    * ``read_without_state``: each trial whose XRecord window holds a key event the rule
+      reads without its modifier state (``tap_state_unread``: recorded without the guard's
+      lock bit, Mod2, after a key press recorded with it in the same window), with each
+      such event's offset (server ms) from the preceding processed press (the latest key
+      press recorded with Mod2 before it), that press's keysym, and whether the trial's
+      verdict read the event so (``in_verdict``: the judge reads the tap's channel for
+      ``raw-only`` entries; C2's reading of an L0-raw window, C3's stream comparison and
+      C4 read every window by the same rule).
+    * ``no_processed_press_before``: each trial whose window holds a key event recorded
+      without Mod2 that no key press recorded with Mod2 preceded. Decision D45 judges that
+      event's state as recorded (a synchronous grab already active before the entry's first
+      key would queue every key event so, each with state 0), with the trial's verdict.
+    * ``by_entry``: per entry, the trials and events of both lists.
+    """
+    read: list[dict[str, Any]] = []
+    unpreceded: list[dict[str, Any]] = []
+    by_entry: dict[str, dict[str, int]] = {}
+    examined = 0
+    for c in every_attempt(campaigns):
+        for session in c["sessions"]:
+            for trial in session["trials"]:
+                examined += 1
+                events = trial.get("events") or []
+                times = trial.get("event_times") or []
+                if len(times) != len(events):
+                    times = [None] * len(events)
+                in_verdict = set(trial.get("state_not_observed") or [])
+                key_index = -1
+                press: tuple[Any, Any] | None = None
+                found: list[dict[str, Any]] = []
+                missing: list[dict[str, Any]] = []
+                for record, time, state_unread in zip(
+                    events, times, tap_state_unread(events), strict=True
+                ):
+                    if record[0] not in KEY_KINDS:
+                        continue
+                    key_index += 1
+                    event = {
+                        "key_index": key_index,
+                        "kind": record[0],
+                        "keysym": _keysym_name(record[3] if len(record) > 3 else 0),
+                        "state": record[2],
+                    }
+                    with_bit = carries_guard_lock_bit({"state": record[2]})
+                    if state_unread and press is not None:
+                        offset = None if time is None or press[1] is None else time - press[1]
+                        event.update(
+                            after_press_ms=offset,
+                            press_keysym=_keysym_name(press[0]),
+                            in_verdict=key_index in in_verdict,
+                        )
+                        found.append(event)
+                    elif not with_bit:
+                        missing.append(event)
+                    if record[0] == "KeyPress" and with_bit:
+                        press = (record[3] if len(record) > 3 else 0, time)
+                row = {
+                    "job": c["job"],
+                    "setting": session["setting"],
+                    "cycle": session.get("cycle"),
+                    "seq": trial["seq"],
+                    "cell": trial["cell"],
+                    "pass": trial["pass"],
+                }
+                counts = by_entry.setdefault(
+                    trial["cell"],
+                    {
+                        "trials_read_without_state": 0,
+                        "events_read_without_state": 0,
+                        "trials_no_processed_press_before": 0,
+                        "events_no_processed_press_before": 0,
+                    },
+                )
+                if found:
+                    read.append({**row, "events": found})
+                    counts["trials_read_without_state"] += 1
+                    counts["events_read_without_state"] += len(found)
+                if missing:
+                    unpreceded.append({**row, "events": missing})
+                    counts["trials_no_processed_press_before"] += 1
+                    counts["events_no_processed_press_before"] += len(missing)
+    return {
+        "trials": examined,
+        "read_without_state": read,
+        "no_processed_press_before": unpreceded,
+        "by_entry": {cell: n for cell, n in sorted(by_entry.items()) if any(n.values())},
+    }
+
+
 def c2_trial_pass(trial: dict[str, Any], cell: dict[str, Any]) -> bool:
     """C2's reading of one L0-raw trial (section 8, design decision 34).
 
@@ -1272,8 +1444,9 @@ def c2_trial_pass(trial: dict[str, Any], cell: dict[str, Any]) -> bool:
     infrastructure failure and every reason it failed is excused: a marker reason
     (condition 3 is reported, not judged, for L0-raw), or an R-dev projection difference
     that disappears when key releases are compared without their modifier state (and, on the
-    XRecord window, key presses recorded without the guard's lock bit, which the judge
-    already reads without theirs; decision D43).
+    XRecord window, key presses the judge already reads without theirs: recorded without
+    the guard's lock bit after a key press recorded with it in the same window; decisions
+    D43 and D45).
     """
     if trial["pass"]:
         return True
@@ -1325,19 +1498,78 @@ def c2(campaigns: list[dict[str, Any]]) -> dict[str, Any]:
         )
     return _verdict(
         problems,
-        {"entries": status, "strict_entries": strict, "predicted_fail": sorted(predicted)},
+        {
+            "entries": status,
+            "strict_entries": strict,
+            "predicted_fail": sorted(predicted),
+            "state_not_observed": state_not_observed_report(campaigns),
+        },
     )
 
 
+# Decisions D43 and D45: in C3's stream, the state of a key event the judge reads without it.
+STATE_NOT_OBSERVED = "state not observed"
+
+
+def _stream(trial: dict[str, Any]) -> list[Any]:
+    """A trial's stream as C3 compares it: device events, text buffer, terminal action.
+
+    The device events are the XRecord window without timestamps, each as recorded, except
+    that a key event the judge reads without its modifier state (decisions D43 and D45,
+    ``tap_state_unread``: recorded without the guard's lock bit after a key press recorded
+    with it in the same window) has its state replaced by ``STATE_NOT_OBSERVED``.
+    """
+    events = trial["events"]
+    marked = [
+        [*record[:2], STATE_NOT_OBSERVED, *record[3:]] if state_unread else record
+        for record, state_unread in zip(events, tap_state_unread(events), strict=True)
+    ]
+    return [marked, trial["text"], trial["terminal"]]
+
+
+def _events_equal(a: list[Any], b: list[Any]) -> bool:
+    """Two recorded device events are equal, a state the judge does not read aside.
+
+    A key event whose state is ``STATE_NOT_OBSERVED`` on either side equals the other's on
+    kind, keycode and keysym (decisions D43 and D45); every other event byte for byte.
+    """
+    if a == b:
+        return True
+    if len(a) != 4 or len(b) != 4 or a[0] not in KEY_KINDS:
+        return False
+    if STATE_NOT_OBSERVED not in (a[2], b[2]):
+        return False
+    return a[0] == b[0] and a[1] == b[1] and a[3] == b[3]
+
+
+def _streams_equal(a: list[Any] | None, b: list[Any] | None) -> bool:
+    """Two trials' streams (``_stream``) are equal, as ``_events_equal`` reads events."""
+    if a is None or b is None or len(a[0]) != len(b[0]) or a[1:] != b[1:]:
+        return False
+    return all(_events_equal(x, y) for x, y in zip(a[0], b[0], strict=True))
+
+
+def _cell_streams_equal(a: list[Any] | None, b: list[Any] | None) -> bool:
+    """One cell's streams, repetition by repetition (``_streams_equal``)."""
+    if a is None or b is None or len(a) != len(b):
+        return False
+    return all(_streams_equal(x, y) for x, y in zip(a, b, strict=True))
+
+
+def _signatures_equal(a: dict[str, list[Any]], b: dict[str, list[Any]]) -> bool:
+    """Two signatures (``_signature``) are equal on every cell (``_cell_streams_equal``)."""
+    return set(a) == set(b) and all(_cell_streams_equal(a[cell], b[cell]) for cell in a)
+
+
 def _signature(campaigns: list[dict[str, Any]]) -> dict[str, list[Any]]:
-    """Per cell: the device events without timestamps, the text buffer and the terminal."""
+    """Per cell: each trial's stream (``_stream``: the device events without timestamps, the
+    state of an event the judge reads without it marked, the text buffer and the terminal
+    action)."""
     out: dict[str, list[Any]] = {}
     for c in campaigns:
         for session in c["sessions"]:
             for trial in session["trials"]:
-                out.setdefault(trial["cell"], []).append(
-                    [trial["events"], trial["text"], trial["terminal"]]
-                )
+                out.setdefault(trial["cell"], []).append(_stream(trial))
     return out
 
 
@@ -1348,11 +1580,13 @@ def _stream_differences(
 
     Decision D39, for an earlier attempt of a C3 mutant: each trial the attempt ran
     without an infrastructure failure is compared with the reference's trial of the
-    same cell and repetition (the device events without timestamps, the text buffer
-    and the terminal action, as ``_signature``); a trial with an infrastructure failure
-    is not compared (its stream may differ for reasons that say nothing about the
-    mutant), and a cell the attempt did not reach is not compared either. Returns the
-    differing cells and the cells left out for an infrastructure failure.
+    same cell and repetition (``_streams_equal``: the device events without timestamps,
+    the text buffer and the terminal action, as ``_signature``, a key event's state not
+    compared where the judge does not read it, decisions D43 and D45); a trial with an
+    infrastructure failure is not compared (its stream may differ for reasons that say
+    nothing about the mutant), and a cell the attempt did not reach is not compared
+    either. Returns the differing cells and the cells left out for an infrastructure
+    failure.
     """
     differing: set[str] = set()
     infra: set[str] = set()
@@ -1366,8 +1600,9 @@ def _stream_differences(
                 infra.add(cell)
                 continue
             expected_streams = reference.get(cell) or []
-            stream = [trial["events"], trial["text"], trial["terminal"]]
-            if index >= len(expected_streams) or expected_streams[index] != stream:
+            if index >= len(expected_streams) or not _streams_equal(
+                expected_streams[index], _stream(trial)
+            ):
                 differing.add(cell)
     return sorted(differing), sorted(infra)
 
@@ -1394,8 +1629,9 @@ def c3(
     A cell kills a mutant only when the mutant's run fails it without an infrastructure
     failure and the unmutated reference run passed it cleanly (section 8). A failing cell
     with an infrastructure failure never kills; it is reported under ``infra_cells``, and a
-    mutant with no clean kill is equivalent (byte-identical signature on every cell) or
-    survives.
+    mutant with no clean kill is equivalent (its signature equal to the reference's on
+    every cell, byte for byte except the state of a key event the judge reads without it,
+    decisions D43 and D45: ``_signatures_equal``) or survives.
 
     Earlier attempts (section 6.1) are read by C3's own rule. A mutant's failures are its
     kills, never failures against C3: its kills are read from the counting attempt only.
@@ -1478,7 +1714,7 @@ def c3(
                         "job": previous["job"],
                         "failed_cells": sorted({cell for _, _, cell in failed_trials(previous)}),
                         "signature_matches_reference": all(
-                            signature.get(cell) == values
+                            _cell_streams_equal(signature.get(cell), values)
                             for cell, values in _signature([previous]).items()
                         ),
                         # Decision D39: any of these keeps the mutant from being equivalent.
@@ -1498,7 +1734,7 @@ def c3(
             entry["outcome"] = "killed"
         elif (
             references.get(layer)
-            and _signature(campaigns) == signature
+            and _signatures_equal(_signature(campaigns), signature)
             and not any(row["differing_cells"] for row in earlier)
         ):
             entry["outcome"] = "equivalent"
@@ -1506,7 +1742,11 @@ def c3(
             entry["outcome"] = "survived"
             problems.append(f"{operator} on {layer} survived and is not equivalent")
         table[key] = entry
-    return _verdict(problems, {"mutants": table})
+    every_run = [c for runs in (*mutants.values(), *references.values()) for c in runs]
+    return _verdict(
+        problems,
+        {"mutants": table, "state_not_observed": state_not_observed_report(every_run)},
+    )
 
 
 def c4(a1_campaigns: Iterable[dict[str, Any]]) -> dict[str, Any]:
@@ -1517,6 +1757,7 @@ def c4(a1_campaigns: Iterable[dict[str, Any]]) -> dict[str, Any]:
     would otherwise disappear with a rerun.
     """
     problems: list[str] = []
+    a1_campaigns = list(a1_campaigns)
     checked = 0
     for c in every_attempt(a1_campaigns):
         for session in c["sessions"]:
@@ -1526,7 +1767,13 @@ def c4(a1_campaigns: Iterable[dict[str, Any]]) -> dict[str, Any]:
                 checked += 1
                 if trial["c4"] is not True:
                     problems.append(f"job {c['job']} {session['setting']} {trial['cell']}")
-    return _verdict(problems, {"trials_checked": checked})
+    return _verdict(
+        problems,
+        {
+            "trials_checked": checked,
+            "state_not_observed": state_not_observed_report(a1_campaigns),
+        },
+    )
 
 
 # --- concurrency ------------------------------------------------------------------------------
@@ -1681,6 +1928,7 @@ def rung(campaigns: list[dict[str, Any]], step_p95_n1: float) -> dict[str, Any]:
         "excused_trials": excused,
         "guest_server": _restart_report(campaigns),
         "earlier_attempts": earlier,
+        "state_not_observed": state_not_observed_report(campaigns),
     }
 
 

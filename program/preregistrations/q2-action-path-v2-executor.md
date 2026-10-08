@@ -42,7 +42,7 @@ Frozen with this file (SHA-256 of the committed bytes):
 | `harness/q2/action_path/vm_hours.py` | `58b7379377ae87a72c85076ee87441fbb2da12042a15e9ae4aa62f67365074b1` |
 | `harness/q2/action_path/trial_times.json` | `a33ca2e024d6f24a31a60ff62053be1fb197af48c996ae99fb75aff4d20217e5` |
 | `harness/q2/action_path/vm_hours.json` | `5fc0617303a2782c02e67888be4584261239e5f90268e4e39d7524aff625636e` |
-| `harness/q2/action_path/acceptance.py` | `06bc089e9e96e1dbbeebcfd465b0e8e16300610bc72f9c3dea9f59f81b775715` |
+| `harness/q2/action_path/acceptance.py` | `ae5470e56e00a4a4a31fb591d41654efe29f7f0a4f45203c9cb03419ec55c573` |
 | `scripts/render_q2_action_path_manifest.py` | `0d547c7af6c440f108526a4306870091da09e7b99419334d76a4bdd116b90845` |
 | `experiments/manifests/q2-action-path/dev-l0-fixed-v10.yaml` | `0a4f908e67631483687740cfba3266b829f3c5d2577b08b676a5fa022186ad92` |
 | `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
