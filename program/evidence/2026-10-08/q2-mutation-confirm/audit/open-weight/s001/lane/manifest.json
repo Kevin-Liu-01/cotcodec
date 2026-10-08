@@ -1,0 +1,47 @@
+{
+  "batch_script_sha256": "2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec",
+  "command": [
+    "python",
+    "-m",
+    "harness.q2_mutation.rater_runner",
+    "open",
+    "--evidence",
+    "/inputs/study-artifact.json",
+    "--expected-evidence-sha256",
+    "f91104b4257ee2087c75494a12d9ba7415a48a2370fcbffbd247c4931de07585",
+    "--output-dir",
+    "/outputs/rater"
+  ],
+  "container_profile": "vllm",
+  "cpus": 16,
+  "git_sha": "65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1",
+  "gpu_type": "h100",
+  "gpus": 1,
+  "image_id": "sha256:7d4595f98601d50f7393c447a1d0618d55cda1b7cf60e2d016ab5c6f47cc872e",
+  "max_gpu_hours": 0.217,
+  "memory_gb": 160,
+  "minutes": 13,
+  "model": {
+    "artifact_root_sha256": "8ac6d764b84034f4ed0df3f2388c9180afceab806f7e75f5d1e43a73bdd2736b",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3.6-35b-a3b",
+    "receipt_sha256": "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9",
+    "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0"
+  },
+  "name": "q2m-rater-confirm-audit-v1-s001",
+  "randomness_contract": "deterministic",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/raters/confirm-audit-v1-s001",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seeds": [],
+  "source_sha256": "a8559f89ea0333cfd2b6bab73c70c45e8a01340f7b098d906968fa5478592e04",
+  "study_artifact": {
+    "container_path": "/inputs/study-artifact.json",
+    "host_path": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/audits/confirm-audit-v1/packets/packets-001.jsonl",
+    "license": "Apache-2.0",
+    "revision": "65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1",
+    "sha256": "f91104b4257ee2087c75494a12d9ba7415a48a2370fcbffbd247c4931de07585",
+    "size_bytes": 111140718,
+    "source_id": "q2m-audit-packets-confirm-audit-v1-s001"
+  }
+}

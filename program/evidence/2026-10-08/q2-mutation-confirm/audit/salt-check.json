@@ -1,0 +1,11 @@
+{
+ "committed_salt_sha256": "194ee66ccc11f93c16bffdc7cf54d0b0f5398f35cbdb3541bb9d9d511c40451e",
+ "digest_matches": true,
+ "item_ids_recomputed": 178,
+ "redacted_summary_salt_sha256": "194ee66ccc11f93c16bffdc7cf54d0b0f5398f35cbdb3541bb9d9d511c40451e",
+ "rule": "raters.opaque_item_id: first 16 hex of SHA-256('q2-audit:{salt}:{key}') (D34)",
+ "salt_sha256": "194ee66ccc11f93c16bffdc7cf54d0b0f5398f35cbdb3541bb9d9d511c40451e",
+ "sample_ids_equal_export_ids": true,
+ "sample_items": 178,
+ "schema": "q2m-confirm-salt-check-v1"
+}

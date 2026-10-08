@@ -145,11 +145,37 @@ sample, label or rater output on the rating side before the ingest. The run
 directories (mutant files, recipes, saved files) stay on the host as
 registered (section 16).
 
+## Stage A2: the audit (`audit/`)
+
+`audit/README.md`: the salt (SHA-256 committed), the census sample of 178
+items with every P1 flip of both runs (Slurm 815, CPU), the packets (two
+shards), the cu129 overlay of `65bc2e2` (Slurm 817; 816 refused before any
+build), the CPU args and image-input doctor (819), the open-weight rater
+(Slurm 823 and 824: 178 of 178 items rated, 172 `ok` and 6
+`thinking_unfinished`, clean exits; 0.365 GPU-h physical in all) and the
+isolated export for the Claude rater.
+
+## Stage B: ingest, summary, analysis (`audit/`, `results/`)
+
+`audit/README.md` (section "Stage B") and `results/README.md`: the isolated
+Claude rating ran as one unresumed workflow session of 178 rater agents
+(`wf_138e30b5-c1a`); the registered collector mapped all 178 transcripts;
+the ingest gave 177 `ok` and 1 `isolation_void` (a Read of a mistyped,
+non-existent path outside the item directory), no relay frame, nothing to
+re-rate; the salt was revealed and all 178 ids recompute; both held sets
+were released after their digests checked; `audit summarize` gave κ 0.343
+(138 real items) and a 34-item adjudication pool; the registered analysis
+ran on the released outcomes and both control summaries. Descriptive
+outputs: P1 raw 4/92 (4.35%, 1.20-10.76%), audit-confirmed 3/92 (3.26%,
+0.68-9.23%); 36 false-negative candidates (all `pptx.eq.zorder_nonoverlap`
+on `compare_pptx_files`(`_tolerant`): 30 confirmed, 6 unresolved; candidate
+share 12.4%, 7.2-18.3%) and 5 false-positive candidates (2 confirmed, 3
+label-contradicted by both raters, pending Kevin; 5.9%, 0.8-12.3%).
+
 ## Not done here
 
-The audit (sample, saved baselines, packets, the open-weight rater within
-the 3.0 GPU-h cap, the isolated Claude rating as one workflow session, the
-collector, the ingest, the summary), the registered analysis, Kevin's
-adjudication pool and spot check, and K2.
+Kevin's adjudication of the 34-item pool and the 25-item human spot check
+(D9), after which `audit summarize --adjudications` and the analysis are
+rerun; K2 (no executor).
 
 `SHA256SUMS` covers every file here.
