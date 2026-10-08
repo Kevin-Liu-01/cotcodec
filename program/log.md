@@ -1681,3 +1681,36 @@ Append-only. Newest entries at the bottom.
   GPU pilot of the rule (0.28 GPU-h, 0.20 for the 8 re-pilot problems, 0.57 with a
   2x margin; pass rule in README section 5); then a new Stage 0 id and gauntlet.
   F2 (cost) is unchanged. No GPU used; nothing pushed or merged.
+
+## 2026-10-08 — Q1 audit-metric study, revision 2: reconciled with a replication and a critique; rule /1 withdrawn, rule /2 three-valued; recommendation not to fund a successor Stage 0 now (branch `stage0/q1-audit-metric`, CPU only, not merged)
+
+- Scope: D41 (ii), D28, CPU only. An independent replication and an adversarial critique
+  (both S1-cal only, no D28 violation found) were reconciled in
+  `program/evidence/2026-10-08/q1-audit-metric-study/` (README sections 0 and 8 list each
+  item and its answer). Every script was re-run.
+- Fixed: the D28 filter now drops 752's L1/1 rows too (L1/1 hosts the FlagGems mm
+  evaluation unit; 2,306 kept, 2,172 dropped); determinacy is reported per stored
+  reference realization over both arms and all jobs (L2/59 A3/lead1 rejects zeros; L2/100
+  has no draw that does in every realization); strict false rejects are 55 kernel-draws,
+  not 95 rows; the L2/95 `plus2minus` account covers both arms; L2/59 `mask-bound-minus1`
+  added (a zeros-like pass); the emulation check compares TF32 realizations only
+  (batch-sliced 0.78-1.09); 12/276, not 13/286; 17 vs 27 conjunction escapes separated;
+  the pilot re-priced with `cost_card.charge` (first-pass plan 0.50 GPU-h, not 0.28).
+- New: `alt_algorithms.py` (83 registered draws of correct algorithms that are not
+  yardstick members) and `scalar_check.py`. Rule /1 (reject above 4x/8x) falsely rejects
+  the L1/47 sequential sum (13.7-15.2x), Winograd F(4x4,3x3) (fp32 under strict, TF32 up
+  to 50x), truncating TF32 under an RNE-only yardstick, and, in stored GPU rows, fp32
+  Inductor substrates at 5.4-7.5x the deployment strict yardstick. Withdrawn.
+- Rule /2: noise-relative max-abs and blockwise ratios against a policy-chosen yardstick
+  with a 2^-24 floor; accept within 4x/8x (strict 4x/16x), reject above 64x/128x (strict
+  256x), otherwise precision-ambiguous; decoy-battery determinacy gate. On 139 CPU and 83
+  alternative draws: every gross decoy rejected, no correct algorithm rejected (with RZ
+  in the TF32 yardstick); 1% faults decided under strict (276/278) but ambiguous under
+  TF32 (239/272). In-sample thresholds, thin margins (1.43x TF32).
+- Pilot (if ever run): 13 S1-cal problems, compiler and cuDNN variants as correct
+  controls, 0.57 GPU-h measured-cost estimate, 1.14 with a 2x margin, time box 1.2 GPU-h.
+- Recommendation for Kevin: do not fund a successor Q1 Stage 0 now (TF32 ground truth
+  covers gross faults only; MtC owns the mutant arm; Stage 1 blocked by R580 and D5);
+  record this study as Stage 0's outcome; if Q1 is revived, D14 truncation ruling, then
+  the pilot, then a reduced Stage 0 with a fresh gauntlet. No GPU used; nothing pushed or
+  merged.

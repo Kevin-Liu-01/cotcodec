@@ -1,0 +1,18 @@
+run L2/60 A1/native/seed-6042
+done L2/60 A1/native/seed-6042 33.0s
+run L2/60 A1/native/seed-6043
+done L2/60 A1/native/seed-6043 30.6s
+run L2/60 A2/randn/seed-4042
+done L2/60 A2/randn/seed-4042 26.7s
+run L2/60 A2/uniform8/seed-4043
+done L2/60 A2/uniform8/seed-4043 28.2s
+run L2/60 A2/spiky/seed-4045
+done L2/60 A2/spiky/seed-4045 38.2s
+run L2/60 A2/ties/seed-4046
+done L2/60 A2/ties/seed-4046 49.6s
+run L2/60 A2/constrows/seed-4048
+done L2/60 A2/constrows/seed-4048 37.3s
+run L2/60 A3/lead5/seed-5043
+done L2/60 A3/lead5/seed-5043 5.9s
+run L2/60 A3/inner37/seed-5044
+done L2/60 A3/inner37/seed-5044 47.7s

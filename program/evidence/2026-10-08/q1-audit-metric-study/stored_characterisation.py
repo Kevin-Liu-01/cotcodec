@@ -18,11 +18,19 @@ and verdicts under both TF32 policies:
   G conjoin them) can reject an all-zeros or a negated output at all.
 
 D28 filter (hard rule). A row is kept only if its problem is in the S1 calibration
-half and its kernel is not an evaluation unit. Tier 1 (primary) keeps problems
-that host no S2 substrate, so no evaluation unit of any tier lives on them. Tier 2
-(stored rows only, never recomputed) keeps controls on S1-cal problems that host
-an S2 evaluation substrate (job 752's KernelBench adversarial controls on L1/1);
-it is reported apart. Every other row is dropped and counted.
+half, its kernel is not an evaluation unit, and its problem hosts no S2 substrate,
+so no evaluation unit of any tier lives on it ("tier 1"). Revision 2 drops the
+first pass's tier 2 (job 752's KernelBench adversarial controls on L1/1): L1/1
+hosts the FlagGems mm evaluation substrate, its stored draw thresholds are the ones
+that would judge that unit, and the first pass already dropped L1/95's identity
+control on the same ground. Every dropped row is counted with its reason.
+
+Revision 2 also reports (both reviews of the first pass): determinacy per stored
+reference realization across both arms and every job, not per draw from the inline
+arm alone; strict-fp32 false rejects as distinct kernel-draws; every arm's mutant
+rows; the correct-versus-zeros separation over all correct kernels and arms; which
+correct-kernel rows equal a yardstick member bitwise; and the fp32 correct kernels'
+error over the deployment strict yardstick (device fp32, x86 CPU fp32).
 
 Usage: python stored_characterisation.py --journals <dir with j474/ j518/ j548/ j713/ j752/>
 """
@@ -137,9 +145,7 @@ def classify(row: dict[str, Any], job: str, fr: dict[str, Any]) -> tuple[str, st
     if base in fr["eval_kernels"] or kind == "s2-substrate":
         return "drop", "evaluation unit (pilot_exposed evaluation substrate or its mutant, or an S2 substrate)"
     if p in fr["s2"]:
-        if kind == "adversarial-control":
-            return "tier2", f"control on S1-cal problem {p} that hosts an S2 evaluation substrate (stored rows only)"
-        return "drop", f"S1-cal problem {p} hosts an S2 evaluation substrate; non-adversarial rows dropped"
+        return "drop", f"S1-cal problem {p} hosts an S2 evaluation substrate; all rows dropped"
     return "tier1", "S1-cal problem without an S2 substrate"
 
 
@@ -192,6 +198,8 @@ def main() -> None:
                 "problem": p, "op_class": OP_CLASS.get(p), "channel": gate, "config": cfg.split("/seed")[0],
                 "seed": d.get("seed"), "tier": tier, "job": job, "kernel_id": row["kernel_id"],
                 "kind": kind_of(row["kernel_id"]), "arm": arm_of(row["kernel_id"], job), "attempt": row.get("attempt"),
+                "base_kernel": row["kernel_id"].removesuffix(".store").removesuffix(".inline"),
+                "item_final": d.get("item_final") is not False, "infra_failure_kind": d.get("infra_failure_kind"),
                 "admissible": d.get("admissible"), "validity_reasons": d.get("validity_reasons") or [],
                 "matmul_or_conv": d.get("matmul_or_conv"), "outcome": d.get("outcome"), "verdict_primary": row["verdict"],
                 **threshold_parts(d),
@@ -203,14 +211,27 @@ def main() -> None:
     for r in rows:
         r["admits_zeros"] = {pol: (t is not None and t >= E_ZEROS) for pol, t in r["T"].items()}
         r["admits_negation"] = {pol: (t is not None and t >= E_NEG) for pol, t in r["T"].items()}
-        r["device_used_tf32"] = r["e_tf32"] is not None and r["e_tf32"] != r["e_dev"]
-    # per draw: the reference realizations seen across items (nondeterministic references)
+        # the device used TF32 in this realization if its TF32-policy reference is at least
+        # twice as far from the oracle as both fp32 references (TF32 error is ~2^13 times fp32's;
+        # a non-TF32 cuDNN algorithm can differ from the fp32 run in the last bits only)
+        r["device_used_tf32"] = r["e_tf32"] is not None and r["e_tf32"] >= 2 * max(x for x in (r["e_dev"], r["e_cpu"]) if x is not None)
+    # per draw: every stored reference realization (each row carries its own reference
+    # errors and T; cuDNN's algorithm and TF32 use are chosen per process, so one draw can
+    # be determinate in one realization and vacuous in another)
     draws: dict[tuple, dict[str, Any]] = {}
     for r in rows:
         key = (r["problem"], r["channel"], r["config"], r["seed"])
-        dr = draws.setdefault(key, {"problem": r["problem"], "op_class": r["op_class"], "channel": r["channel"], "config": r["config"], "seed": r["seed"], "tier": r["tier"], "rows": 0, "admissible_rows": 0, "realizations": set(), "T": {pol: [] for pol in POLICIES}, "T_inline": {pol: [] for pol in POLICIES}})
+        dr = draws.setdefault(key, {"problem": r["problem"], "op_class": r["op_class"], "channel": r["channel"], "config": r["config"], "seed": r["seed"], "tier": r["tier"], "rows": 0, "admissible_rows": 0, "realizations": {}, "T": {pol: [] for pol in POLICIES}, "T_inline": {pol: [] for pol in POLICIES}, "admissible_votes": []})
         dr["rows"] += 1
-        dr["realizations"].add((r["e_dev"], r["e_cpu"], r["e_tf32"]))
+        if r["admissible"] is not None:
+            dr["admissible_votes"].append(bool(r["admissible"]))
+        real = dr["realizations"].setdefault((r["e_dev"], r["e_cpu"], r["e_tf32"]), {
+            "e_dev": r["e_dev"], "e_cpu": r["e_cpu"], "e_tf32": r["e_tf32"], "device_used_tf32": r["device_used_tf32"],
+            "T": {pol: r["T"][pol] for pol in POLICIES}, "rows": []})
+        real["rows"].append(f"{r['job']} {r['arm']} {r['kind']}{'' if r['item_final'] else ' non-final'}")
+        for pol in POLICIES:
+            if real["T"][pol] is None and r["T"][pol] is not None:
+                real["T"][pol] = r["T"][pol]
         if r["admissible"]:
             dr["admissible_rows"] += 1
             for pol in POLICIES:
@@ -220,13 +241,36 @@ def main() -> None:
                     if r["arm"] == "inline":
                         dr["T_inline"][pol].append(t)
     for dr in draws.values():
-        dr["reference_realizations"] = len(dr.pop("realizations"))
+        reals = list(dr.pop("realizations").values())
+        dr["reference_realizations"] = len(reals)
+        dr["realizations"] = reals
+        votes = dr.pop("admissible_votes")
+        dr["admissible"] = (sum(votes) * 2 >= len(votes)) if votes else None
         for which in ("T", "T_inline"):
             dr[which] = {pol: ([min(v), max(v)] if v else None) for pol, v in dr[which].items()}
         dr["nondeterministic_T"] = {pol: bool(v and v[1] > 1.5 * v[0]) for pol, v in dr["T"].items()}
         dr["inline_admits_zeros_every_row"] = {pol: (v is not None and v[0] >= E_ZEROS) for pol, v in dr["T_inline"].items()}
         dr["inline_admits_negation_every_row"] = {pol: (v is not None and v[0] >= E_NEG) for pol, v in dr["T_inline"].items()}
-    # per problem and policy, inline arm (primary) and every arm
+        ts = {pol: [x["T"][pol] for x in reals if x["T"][pol] is not None] for pol in POLICIES}
+        dr["zeros_rejectable"] = {
+            pol: ("no T" if not v else "every realization" if max(v) < E_ZEROS else "some realizations" if min(v) < E_ZEROS else "none")
+            for pol, v in ts.items()
+        }
+        dr["device_used_tf32_realizations"] = [x["device_used_tf32"] for x in reals]
+    # per problem and policy: admissible draws by whether some or every stored realization
+    # can reject zeros (all arms and jobs; the first pass read the inline arm only)
+    determinacy: dict[str, Any] = {}
+    for dr in draws.values():
+        if not dr["admissible"]:
+            continue
+        for pol in POLICIES:
+            c = determinacy.setdefault(dr["problem"], {}).setdefault(pol, {"draws": 0, "every_realization": [], "some_realizations": [], "none": []})
+            z = dr["zeros_rejectable"][pol]
+            if z == "no T":
+                continue
+            c["draws"] += 1
+            c[z.replace(" ", "_")].append(f"{dr['config']} T={','.join('%.3g' % x['T'][pol] for x in dr['realizations'] if x['T'][pol] is not None)}")
+    # per problem and policy, inline arm and every arm (rows)
     problems: dict[str, Any] = {}
     for arm_sel in ("inline", "all"):
         for pol in POLICIES:
@@ -246,7 +290,7 @@ def main() -> None:
                 ch["admit_negation"] += t >= E_NEG
                 ch["T"].append(t)
                 if t < E_ZEROS:
-                    ch["rejecting_rows"].append(f"{r['config']} {r['kind']} {r['job']} T={t:.3g}")
+                    ch["rejecting_rows"].append(f"{r['config']} {r['kind']} {r['job']} {r['arm']}{'' if r['item_final'] else ' non-final'} T={t:.3g}")
             for p, pp in per.items():
                 chans = {}
                 for c, ch in pp["channels"].items():
@@ -263,50 +307,109 @@ def main() -> None:
     for r in rows:
         if r["problem"] in problems:
             problems[r["problem"]]["tier"] = r["tier"]
-    # stored mutant and adversarial-control rows
+            problems[r["problem"]]["determinacy_by_realization"] = determinacy.get(r["problem"])
+    # stored mutant rows, every arm
     witnesses = [
-        {k: r[k] for k in ("problem", "channel", "config", "admissible", "kernel_id", "kind", "arm", "job", "outcome", "e", "T", "passed")}
+        {k: r[k] for k in ("problem", "channel", "config", "seed", "admissible", "kernel_id", "base_kernel", "kind", "arm", "job", "item_final", "outcome", "e", "T", "passed")}
         | {"e_is_zeros_like": r["e"]["tf32-admissible"] is not None and abs(r["e"]["tf32-admissible"] - E_ZEROS) < 2e-3}
         for r in sorted(rows, key=lambda x: (x["problem"], x["channel"], x["config"], x["kernel_id"]))
         if r["kind"] in ("mutant", "adversarial-control")
     ]
-    # correct kernels (S1 substrates, identity controls): e / T and whether they use the TF32 library path
+    mutants: dict[str, Any] = {}
+    for w in witnesses:
+        m = mutants.setdefault(w["base_kernel"], {"problem": w["problem"], "admissible_numeric_rows": 0, "by_arm": {}, "zeros_like_passes": [], "passes_with_e_ge_0.5": []})
+        t, e = w["T"]["tf32-admissible"], w["e"]["tf32-admissible"]
+        if w["admissible"] and t is not None:
+            m["admissible_numeric_rows"] += 1
+        arm_counts = m["by_arm"].setdefault(w["arm"], collections.Counter())
+        arm_counts[f"{w['outcome']}{'' if w['admissible'] else ' (inadmissible)'}"] += 1
+        tag = f"{w['config']} seed {w['seed']} {w['arm']} {w['job']}: e={e if e is None else '%.4g' % e} T={t if t is None else '%.3g' % t}"
+        if w["admissible"] and w["passed"]["tf32-admissible"] and w["e_is_zeros_like"]:
+            m["zeros_like_passes"].append(tag)
+        if w["admissible"] and w["passed"]["tf32-admissible"] and e is not None and e >= 0.5:
+            m["passes_with_e_ge_0.5"].append(tag)
+    for m in mutants.values():
+        m["by_arm"] = {k: dict(v) for k, v in m["by_arm"].items()}
+    # correct kernels (S1 substrates, identity controls)
+    def member_match(r: dict[str, Any]) -> str:
+        e = r["e"]["strict-fp32"] if r["e"]["strict-fp32"] is not None else r["e"]["tf32-admissible"]
+        mem = [x for x in (r["e_dev"], r["e_cpu"], r["e_tf32"]) if x is not None]
+        if e is None or not mem:
+            return "no e"
+        if e in mem:
+            return "bitwise equal to a yardstick member"
+        if any(abs(e - m_) <= 1e-3 * m_ for m_ in mem):
+            return "within 0.1% of a yardstick member"
+        return "differs"
     correct = [
-        {k: r[k] for k in ("problem", "channel", "config", "admissible", "kernel_id", "kind", "arm", "job", "outcome")}
+        {k: r[k] for k in ("problem", "channel", "config", "seed", "admissible", "kernel_id", "base_kernel", "kind", "arm", "job", "item_final", "outcome", "e_dev", "e_cpu", "e_tf32", "device_used_tf32")}
         | {"e_over_T": {pol: (r["e"][pol] / r["T"][pol]) if r["e"][pol] is not None and r["T"][pol] else None for pol in POLICIES},
            "e_equals_e_tf32": r["e"]["tf32-admissible"] is not None and r["e_tf32"] is not None and r["e"]["tf32-admissible"] == r["e_tf32"],
-           "e_tf32_policy": r["e"]["tf32-admissible"]}
+           "e_tf32_policy": r["e"]["tf32-admissible"],
+           "yardstick_match": member_match(r)}
         for r in rows if r["kind"] in ("substrate", "identity")
     ]
+    match_counts = collections.Counter((c["kind"], c["yardstick_match"]) for c in correct if c["e_tf32_policy"] is not None)
     strict_false_rejects = [c for c in correct if c["admissible"] and c["e_over_T"]["strict-fp32"] is not None and c["e_over_T"]["strict-fp32"] > 1]
-    # separation of correct substrates from zeros under the registered metric (same draw)
-    sep = []
+    def kd(c: dict[str, Any]) -> tuple:
+        return (c["base_kernel"], c["problem"], c["config"], c["seed"])
+    strict_fr_summary = {
+        "rows": len(strict_false_rejects),
+        "distinct_kernel_draws": len({kd(c) for c in strict_false_rejects}),
+        "distinct_kernel_draws_inline_arm": len({kd(c) for c in strict_false_rejects if c["arm"] == "inline"}),
+        "by_problem_distinct": dict(collections.Counter(p for p, *_ in {(c["problem"], *kd(c)) for c in strict_false_rejects})),
+        "note": "a kernel-draw scored by both arms, or by jobs 713 and 752, is one kernel-draw",
+    }
+    # fp32 correct kernels against the deployment strict yardstick (device fp32, x86 CPU fp32):
+    # rows whose error is not TF32-sized and not a yardstick member
+    deploy = []
     for c in correct:
         e = c["e_tf32_policy"]
-        if c["admissible"] and e and c["arm"] == "inline" and c["kind"] == "substrate":
-            sep.append({"problem": c["problem"], "config": c["config"], "e_correct": e, "e_zeros_over_e_correct": E_ZEROS / e})
-    sep.sort(key=lambda x: x["e_zeros_over_e_correct"])
-    # registered calibration rule on the stored S1-cal substrates (A1, primary policy, inline)
+        if e is None or not c["admissible"] or c["yardstick_match"] != "differs":
+            continue
+        strict_e = max(x for x in (c["e_dev"], c["e_cpu"]) if x is not None)
+        if c["device_used_tf32"] and e >= 0.25 * c["e_tf32"]:
+            continue  # the kernel itself ran in TF32 (cuDNN default): a strict-fp32 false reject, counted above
+        if strict_e <= 0:
+            continue
+        deploy.append({"problem": c["problem"], "config": c["config"], "seed": c["seed"], "kind": c["kind"], "arm": c["arm"], "job": c["job"],
+                       "e": e, "e_dev": c["e_dev"], "e_cpu_x86": c["e_cpu"], "e_over_strict_yardstick": e / strict_e,
+                       "e_over_T_strict": c["e_over_T"]["strict-fp32"]})
+    deploy.sort(key=lambda x: -x["e_over_strict_yardstick"])
+    # separation of correct kernels from zeros under the registered metric (same draw),
+    # all correct kernels and arms, one entry per kernel-draw
+    sep_all: dict[tuple, dict[str, Any]] = {}
+    for c in correct:
+        e = c["e_tf32_policy"]
+        if c["admissible"] and e:
+            k = (c["problem"], c["config"], c["seed"], c["kind"])
+            cur = sep_all.get(k)
+            if cur is None or e > cur["e_correct"]:
+                sep_all[k] = {"problem": c["problem"], "config": c["config"], "seed": c["seed"], "kind": c["kind"], "arm": c["arm"], "job": c["job"], "e_correct": e, "e_zeros_over_e_correct": E_ZEROS / e}
+    sep = sorted(sep_all.values(), key=lambda x: x["e_zeros_over_e_correct"])
+    # registered calibration rule on the stored S1-cal substrates (A1, primary policy), every arm
     calib = {}
     for r in rows:
-        if r["channel"] != "A1" or r["kind"] != "substrate" or r["arm"] != "inline":
+        if r["channel"] != "A1" or r["kind"] != "substrate":
             continue
         e, t = r["e"]["tf32-admissible"], r["T"]["tf32-admissible"]
         if e is None or t is None:
             continue
         E = t / MULTIPLIER
         req = 0.0 if e <= 2**-20 else (e / E if E > 0 else math.inf)
-        c = calib.setdefault(r["problem"], {"required_multiplier": 0.0, "draws": 0})
+        c = calib.setdefault(r["problem"], {"required_multiplier": 0.0, "rows": 0})
         c["required_multiplier"] = max(c["required_multiplier"], req)
-        c["draws"] += 1
+        c["rows"] += 1
     result = {
-        "schema": "q1-audit-metric-study/stored/1",
+        "schema": "q1-audit-metric-study/stored/2",
         "inputs": inputs,
         "d28_filter": {
-            "rule": "keep a row only if its problem is S1-cal and its kernel is not an evaluation unit; tier1 = problems hosting no S2 substrate; tier2 = adversarial controls on S1-cal problems that host an S2 substrate (stored rows only)",
+            "rule": "keep a row only if its problem is S1-cal, hosts no S2 substrate, and its kernel is not an evaluation unit (tier1); every other row is dropped, including job 752's adversarial controls on L1/1 (L1/1 hosts the FlagGems mm evaluation substrate)",
             "split_sha256": fr["split_sha256"],
             "kept_rows": {f"{j}/{t}": n for (j, t), n in sorted(kept.items())},
+            "kept_total": sum(kept.values()),
             "dropped_rows": dict(sorted(dropped.items())),
+            "dropped_total": sum(dropped.values()),
             "dropped_reasons": dict(sorted(drop_reasons.items())),
         },
         "constants": {"kappa": KAPPA, "e_zeros": E_ZEROS, "e_negation": E_NEG, "multiplier": MULTIPLIER},
@@ -314,22 +417,32 @@ def main() -> None:
         "draws": sorted(draws.values(), key=lambda r: (r["tier"], r["problem"], r["channel"], r["config"])),
         "rows": rows,
         "mutant_and_control_rows": witnesses,
+        "mutants": mutants,
         "correct_kernel_rows": correct,
+        "correct_kernel_yardstick_match": {f"{k} / {m}": n for (k, m), n in sorted(match_counts.items())},
         "strict_policy_false_rejects_of_correct_kernels": strict_false_rejects,
+        "strict_policy_false_rejects_summary": strict_fr_summary,
+        "fp32_correct_kernels_over_deployment_strict_yardstick": deploy,
         "registered_metric_separation_correct_vs_zeros": sep[:15],
-        "calibration_required_multiplier_A1_inline": calib,
+        "calibration_required_multiplier_A1": calib,
         "non_numeric_rows": other_rows,
     }
     Path(a.out).write_text(json.dumps(result, indent=1, sort_keys=True, default=lambda o: None if (isinstance(o, float) and not math.isfinite(o)) else o))
-    print(json.dumps(result["d28_filter"], indent=1))
+    print(json.dumps({k: v for k, v in result["d28_filter"].items() if k != "dropped_reasons"}, indent=1))
     for p in sorted(problems):
         for pol in POLICIES:
-            pp = problems[p]["by_arm"].get("inline", {}).get(pol)
-            if pp:
-                rej = {c: sorted({x.split()[0] for x in v["zeros_rejected_on"]}) for c, v in pp["channels"].items() if v["zeros_rejected_on"]}
-                print(p, pol[:6], "inline adm rows", pp["admissible_rows"], "admit zeros", pp["rows_admitting_zeros"], "negation", pp["rows_admitting_negation"], "T %.3g-%.3g" % tuple(pp["T_range"]), "zeros rejected on", rej)
-    print("closest correct-vs-zeros separations:", [(x["problem"], x["config"], round(x["e_zeros_over_e_correct"], 2)) for x in sep[:6]])
-    print("strict false rejects of correct kernels:", len(strict_false_rejects))
+            dd = (problems[p].get("determinacy_by_realization") or {}).get(pol)
+            pp = problems[p]["by_arm"].get("all", {}).get(pol)
+            if pp and dd:
+                print(p, pol[:6], "adm rows (all arms)", pp["admissible_rows"], "admit zeros", pp["rows_admitting_zeros"], "negation", pp["rows_admitting_negation"],
+                      "T %.3g-%.3g" % tuple(pp["T_range"]), "| adm draws", dd["draws"], "zeros rejectable: every realization", [x.split()[0] for x in dd["every_realization"]],
+                      "some", [x.split()[0] for x in dd["some_realizations"]])
+    print("closest correct-vs-zeros separations:", [(x["problem"], x["config"], x["kind"], round(x["e_zeros_over_e_correct"], 2)) for x in sep[:6]])
+    print("strict false rejects of correct kernels:", strict_fr_summary)
+    print("correct-kernel rows vs yardstick members:", dict(match_counts))
+    print("fp32 correct kernels over the deployment strict yardstick (max 6):", [(x["problem"], x["config"], x["arm"], round(x["e_over_strict_yardstick"], 2)) for x in deploy[:6]])
+    for k, m in mutants.items():
+        print("mutant", k.split(".", 1)[1] if "." in k else k, m["problem"], "admissible numeric rows", m["admissible_numeric_rows"], m["by_arm"], "zeros-like passes", m["zeros_like_passes"])
 
 
 if __name__ == "__main__":
