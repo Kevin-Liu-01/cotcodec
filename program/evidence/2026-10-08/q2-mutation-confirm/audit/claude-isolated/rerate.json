@@ -1,0 +1,7 @@
+{
+ "calls_sha256": "2120e6ce0e93b003135e555f73d2d9159355a4aeed31f83b41f7ed322eda0c04",
+ "items": [],
+ "relay_frames_sha256": {},
+ "rule": "decision D38: the items whose only void reason is that the run's relay frames differ are re-rated once in a fresh, unresumed workflow run, chosen by that reason alone (answer-blind); the registered result and the re-rated one are both reported",
+ "schema": "q2m-relay-rerate-v1"
+}
