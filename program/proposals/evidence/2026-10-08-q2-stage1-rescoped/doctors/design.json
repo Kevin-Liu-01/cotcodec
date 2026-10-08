@@ -1,0 +1,9 @@
+{
+ "doctor": "Design",
+ "status": "PASS",
+ "pass_condition": "Design fixed before data; randomization and blocking stated; seed count justified by power; decision rules fixed",
+ "evidence": "Synthesis owner's self-check (not independent). Design panel judges scored the winning design 30 and 31 with no fatal flaw. Harness interleaved within session, sessions as a registered factor 12 h apart, seeded draws and orders, seeds [42, 43, 44] justified by simulation (analysis/sim_s1a.json, analysis/sim_signflip.json), estimator bias and test size checked under task x harness x session noise, DR0-DR5 and DR-A fixed before any confirm episode",
+ "remediation": "Refute-first identification lens; check DR5's planning value M with a full-likelihood estimator",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-0 single synthesis owner (Claude agent); not an independent review"
+}

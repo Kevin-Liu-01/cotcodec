@@ -1,0 +1,9 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "pass_condition": "Every quantitative or causal claim has a claim id, a locator and a verification status",
+ "evidence": "Claim registry C01-C16 in the proposal: 4 recomputed from committed inputs (cost card, prices, thinking bound, power), 1 hash-verified against source, 3 verified in full text this wave (2610.01618 section 4.2, 2609.32459 sections 1 and 5, 2610.00917 section 7), in-repo records labelled by their registration status, first-party model-card numbers labelled FIRST-PARTY, dossier-verified numbers labelled as such",
+ "remediation": "Independent line-by-line audit; full-text re-read of 2609.40284 and 2608.06171 for the delta rows",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-0 single synthesis owner (Claude agent); not an independent review"
+}

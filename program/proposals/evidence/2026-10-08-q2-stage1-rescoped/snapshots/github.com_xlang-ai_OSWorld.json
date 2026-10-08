@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/xlang-ai/OSWorld",
+ "fetched_at": "2026-10-08T14:39:53Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 416933,
+ "raw_sha256": "ba2acb3ce859340470437078d4bc9811b753207503be122ad597cfe6c48fbfaf",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - xlang-ai/OSWorld: [NeurIPS 2024] OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments · GitHub"
+ }
+}

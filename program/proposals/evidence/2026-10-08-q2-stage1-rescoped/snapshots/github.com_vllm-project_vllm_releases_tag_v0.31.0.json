@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/vllm-project/vllm/releases/tag/v0.31.0",
+ "fetched_at": "2026-10-08T14:39:55Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 595920,
+ "raw_sha256": "7fe1b7dac83fadf547857158a4010702faca386b9c8d9ac9c1f48960f72d3f5d",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "Release v0.31.0 · vllm-project/vllm · GitHub"
+ }
+}

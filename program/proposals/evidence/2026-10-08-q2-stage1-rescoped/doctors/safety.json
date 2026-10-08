@@ -1,0 +1,9 @@
+{
+ "doctor": "Safety",
+ "status": "PASS",
+ "pass_condition": "No red line; untrusted-code, isolation, licence and public-repository rules respected",
+ "evidence": "Model weights only on GPUs; model-chosen actions run in GPU-less VMs and runners (D7, D12); no new Docker network (D13); OpenCUA-7B remote code gated on a D29-style decision; licences: OSWorld Apache-2.0, Qwen3.5 Apache-2.0, OpenCUA-7B MIT, gym-anything MIT, public trajectories MIT; snapshots store metadata and hashes only; no host address or private data",
+ "remediation": "Decision on the OpenCUA remote-code admission before A0b",
+ "evaluated_on": "2026-10-08",
+ "evaluated_by": "wave-0 single synthesis owner (Claude agent); not an independent review"
+}

@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2609.32459",
+ "fetched_at": "2026-10-08T14:39:51Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43925,
+ "raw_sha256": "328efb66197f797eb25dba2ba1b9fdc2f618b1c5c6a957e4c74a61a030044d84",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "[2609.32459] Beyond the Model: Demystifying Harness Effects in Software Engineering Agents",
+  "title": "Beyond the Model: Demystifying Harness Effects in Software Engineering Agents",
+  "authors": [
+   "Hu, Haichuan",
+   "Zhang, Quanjun",
+   "Yu, Shengcheng",
+   "Chen, Zhifei",
+   "Luo, Tianyu",
+   "Fang, Chunrong",
+   "Chen, Zhenyu",
+   "Xiao, Liang"
+  ],
+  "citation_date": "2026/09/26",
+  "submission_history": [
+   [
+    "v1",
+    "Sat, 26 Sep 2026 10:49:28 UTC "
+   ]
+  ],
+  "abstract": "Large Language Model (LLM)-based agents are increasingly used for software engineering tasks, yet their performance is not determined by the base model alone. The agent harness substantially shapes how SE agents interact with repositories, execute actions, and validate solutions. However, the role of harness design remains insufficiently understood, especially across different models, tasks, and harness components. In this paper, we present a systematic empirical study of harness effects in SE agents. We first evaluate two representative harnesses, mini-SWE-agent and OpenCode, with ten models from two prominent open-weight model families, Qwen and DeepSeek, on three benchmarks: SWE-bench Pro, ProgramBench, and GitTaskBench. We then construct NanoHarness, a lightweight modular harness built on top of mini-SWE-agent, and use it to analyze five representative harness components: tool registry, context compression, explicit planning, subagents, and lazy skills. Experimental results show that harness effectiveness depends jointly on model capability and task type. Complex harnesses provide diminishing marginal gains on SWE-style issue repair as model capability improves, but can benefit stronger models on more complex and open-ended repository-level tasks. Component-level analysis on ProgramBench further shows that structured tool use and task-specific subagents provide the most stable improvements, while context compression and general subagents can hurt repository-generation performance. When combined, NanoHarness improves over mini-SWE-agent by 7.37 and 6.21 percentage points on Qwen3.7-Max and DeepSeek-V4-Pro, respectively, recovering most of the gains of product-level harnesses. These findings highlight harness design as a first-class factor in SE-agent performance and provide insights for building more effective and efficient coding agents.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
