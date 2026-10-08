@@ -214,7 +214,7 @@ def test_prereg_states_the_d35_protocol_its_relay_frame_and_its_review_log() -> 
     assert "8e7dbd00c14db448bb1272f7bbf2c908dbd8b4a39d83445792b7d5f8cb6fe5fa" in text
     # The census capacity and the scores of every review so far.
     assert f"{raters.audit_capacity():,} items" in flat
-    assert "Scores so far: 55, 62, 56, 57, 64, 80; the lowest is 55." in text
+    assert "Scores so far: 55, 62, 56, 57, 64, 80, 90; the lowest is 55." in text
 
 
 def test_prereg_lists_the_registered_transcript_entry_and_attachment_types() -> None:
@@ -264,3 +264,11 @@ def test_prereg_records_d38_and_its_fixes() -> None:
     assert "minor items stay open" not in flat and "are not changed in this draft" not in flat
     section17 = flat.split("## 17. Freeze checklist")[1]
     assert "[x] Decision D38" in section17 and "Kevin's remaining items (D38)" in section17
+    # The narrow re-check's minor items: the re-rate list is recomputed where it is
+    # read, and a different relay frame on a resume enlarges Kevin's pool.
+    assert "`rater_runner.check_rerate_list`" in flat
+    section9 = flat.split("## 9. Audit")[1].split("## 10.")[0]
+    for part in (section9, section17):
+        assert "every relay-voided item" in part and "on top of the normal pool" in part
+        assert "113 items against 24" in part
+    assert "[x] A narrow re-check of this ninth draft" in section17

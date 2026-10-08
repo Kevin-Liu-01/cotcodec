@@ -1,10 +1,12 @@
 # q2-evaluator-mutation-v1: OSWorld-Verified checker mutation audit
 
-**Status: DRAFT (ninth draft), not frozen: a pre-specified descriptive
+**Status: DRAFT (ninth draft, with its narrow re-check's minor items
+fixed), not frozen: a pre-specified descriptive
 protocol under decisions D35 and D38.** Every pin below is filled from the integration
 branch `stage0/q2-evaluator-mutation`, and no value is left open. Six
 adversarial reviews have read the earlier drafts (scores 55, 62, 56, 57, 64 and
-80; the review log is at the end of section 17). The fourth review found that D27's
+80), and a narrow re-check read this one (90, no blocking defect; the review
+log is at the end of section 17). The fourth review found that D27's
 consequence had fired (development κ 0.270 against the registered 0.6), and
 decision D34 allowed one rater retry, then an honest exit: the open-weight
 rater thinks before it answers, and the development audit was rebuilt
@@ -115,19 +117,31 @@ items fixed before the freeze. This ninth draft fixes them:
    different relay frame, the items it voids are re-rated once in a fresh,
    unresumed run, chosen by that void reason alone (answer-blind), and both
    results are reported (section 9: `rerate.json`, `export-isolated
-   --rerate-list`, `audit summarize --rerate-list --rerate-calls`).
+   --rerate-list`, `audit summarize --rerate-list --rerate-calls`; both
+   commands recompute the list from the ingest's calls file and refuse one
+   that differs).
 12. Stale text: section 10's K2 consequence (K6 no longer reads P5) and the
    development evidence README's open relay decision (D35 and D38 decided
    it).
+
+The narrow re-check of this draft (90/100, ready to freeze, no blocking
+defect) left minor items, fixed here without changing a registered choice:
+the re-rate list is recomputed from its calls file wherever it is read
+(item 11); tests now pin the "only void reason" rule of that list and the
+collector's refusal of a journal that starts an agent twice; the collector
+copies into a staging directory and renames it into place only when every
+copy checks, so a refusal leaves nothing behind (section 9); and section 9's
+workload estimate and Kevin's item in section 17 now say that a resume with
+a different relay frame puts every relay-voided item in his pool.
 
 Kevin's remaining items are listed in section 17: adjudicating the pool,
 the human spot check, the outward actions and the sign-offs carried over
 from earlier drafts.
 
 The registered analysis is code (`harness/q2_mutation/analysis.py`), so no
-choice is left to make after a result is read. After a narrow re-check of
-this draft that finds no blocking defect and Kevin's sign-offs (section 17),
-merge main once more (so the ledger does not fork) and freeze with
+choice is left to make after a result is read. The narrow re-check of this
+draft found no blocking defect; after Kevin's sign-offs (section 17), merge
+main once more (so the ledger does not fork) and freeze with
 
 ```bash
 uv run python scripts/preregister.py freeze q2-evaluator-mutation-v1 \
@@ -193,7 +207,7 @@ differ from the pins:
 {
  "q2m_pins": 1,
  "experiment_id": "q2-evaluator-mutation-v1",
- "code_tree_sha256": "50edcc45eafa8f5921d2fa59384dbe617eaaf64653ab84b130f50f7445a4c3cc",
+ "code_tree_sha256": "58bee0190c0c7eb5d44f36e27c0f1e0daab82c1c48716009a9066777c69a0721",
  "operator_catalog_sha256": "3a5ff94953f7b672059b0f6b063064b97a438de166fd664903e239a12f65b46f",
  "operator_catalog_version": "q2-mut-operators-v1",
  "operators": 64,
@@ -866,7 +880,12 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
         --rerate-list rerate.json --rerate-calls {calls}`'s second summary
         (`rerate/`), in which the fresh answers replace them; the analysis
         is run on each. The re-rate list must belong to one of the
-        summary's Anthropic calls files (its `calls_sha256`), a re-rate
+        summary's Anthropic calls files (its `calls_sha256`); `audit
+        summarize` and `export-isolated` (which reads the `calls.jsonl`
+        beside the list, where the ingest writes both) recompute its items
+        from that calls file, as the records whose only void reason is the
+        relay mismatch (`rater_runner.check_rerate_list`), and refuse a list
+        that differs, so an edited list cannot choose items. A re-rate
         record for an item not on the list is refused, and so is a re-rate
         record that carries a relay frame (the re-rate run is never
         resumed). Kevin adjudicates the union of both pools, and each
@@ -1256,7 +1275,13 @@ A checker exception is not an infrastructure failure; it is verdict `error`.
   hours at an assumed 3 to 5 minutes per item; the fifth draft's sampler
   projected 43 to 134 items. Under the registered dev ingest, where the relay turn voided 110
   Claude answers, the same items would have split far more often; that
-  failure mode is the one D35's relay rule removes. Unadjudicated pool items
+  failure mode is the one D35's relay rule removes. If a resume of the
+  confirm rating does bring a different relay frame (D38), every
+  relay-voided item is `unsure` in the registered summary and so enters the
+  registered pool (a do-nothing sham excepted, which never enters it), which
+  then holds the re-rate's pool too, so Kevin adjudicates those items on top
+  of the normal pool (the development analogue: 113 items against 24).
+  Unadjudicated pool items
   count as label errors in the reported K3 statistics, which no longer
   decide anything (section 10).
 - Human spot check: a stratified sample (max(5, 10%) per D35 stratum plus 5
@@ -2162,14 +2187,22 @@ exported harness files and renders, and raw rater responses and reasons
       collector maps all 158 to their items, its layout equals the
       hand-copied one file for file, and the audit finds no void and 142
       answering transcripts (`integration/d38-fixes/`).
-- [ ] A narrow re-check of this ninth draft (D38's fixes and their tests,
+- [x] A narrow re-check of this ninth draft (D38's fixes and their tests,
       the collector rerun over the 158 development transcripts, the pin
-      refresh and the freeze lint); record any new score in the review log
-      below and use the lowest.
+      refresh and the freeze lint): 90/100, ready to freeze, no blocking
+      defect (review log below). Its minor items are fixed in this draft
+      (status note): the re-rate list recomputed from its calls file, tests
+      for the list's "only void reason" rule and the journal's started-twice
+      refusal, the collector's staging directory, the workload sentence
+      below and in section 9, and the harness README's pool row.
 - [ ] Kevin's remaining items (D38). His own work: adjudicating the whole
       pool (about 16 items, 10 to 40, roughly 0.5 to 3.5 hours at 3 to 5
       minutes per item; with D38 it also holds every candidate kind's
-      concordant contradictions) and the human spot check of D9 (about 35
+      concordant contradictions; if a resume brings a different relay
+      frame, every relay-voided item enters the registered pool, since it
+      is `unsure` there, so he adjudicates those on top of the normal pool,
+      113 items against 24 in the development analogue) and the human spot
+      check of D9 (about 35
       items at the expected census, whose result stays pending until done;
       recommendation: the registered stratified sample, max(5, 10%) per D35
       stratum plus 5 shams, with every item on which the raters split or a
@@ -2209,8 +2242,9 @@ score is the one recorded):
 | Fourth adversarial review (2026-10-07) | fifth | 57 | no | sixth draft (D34) |
 | Fifth adversarial review (2026-10-08) | sixth | 64 | no | seventh draft (D35) |
 | Sixth adversarial review (2026-10-08) | seventh | 80 | no | eighth draft (blocker); ninth draft (minor items, D38) |
+| Narrow re-check of the ninth draft (2026-10-08) | ninth | 90 | yes | ninth draft (minor items fixed) |
 
-Scores so far: 55, 62, 56, 57, 64, 80; the lowest is 55.
+Scores so far: 55, 62, 56, 57, 64, 80, 90; the lowest is 55.
 
 ## Appendix A. Operator catalog `q2-mut-operators-v1` (64 operators)
 
