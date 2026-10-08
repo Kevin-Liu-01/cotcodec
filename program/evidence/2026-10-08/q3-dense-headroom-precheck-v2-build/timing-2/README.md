@@ -240,3 +240,54 @@ receipt.
   (kept with those suffixes), and the `full` run again at `436f038` after
   the second merge of main (`sim-full-436f038.txt`: check-chain 12 rows
   PASS, frozen-mode tests 29 passed).
+
+## Limit re-check: the 4B estimator's sensitivity (`ddb3d02`)
+
+The narrow re-check of the measured limits (D42 (iii)) found that the
+registration's Compute section said the discarded first analysis pass and the
+registered one "differ only in how the two compiles are treated", and that
+this README said the same. They also differ in how they scale to the lane's
+lengths (a fitted line against proportional scaling), the registered scaling
+was chosen after the first pass came out over the cap, and that choice
+crosses a minute boundary of D36's rule: 31 minutes under the first pass's
+line fit with the compiles treated as registered, 30 under the registered
+estimator (the table above; `limit-recheck/`). The text could not have been
+corrected after the freeze.
+
+Fixed in text only, with no GPU job and no tabled file changed (the
+entry point's code table still matches): Compute's parenthetical and
+decision 20 now state both differences, the 31 minutes and where they come
+from (A-main's 211-token span), the per-stage larger-of-two bound (32), why
+proportional scaling is registered (it over-predicts B-absent's measured
+8,310-token units) and that the lane's first job ends in about 14 to 15 of
+its 27 useful minutes at any of these estimates; decision 20 no longer calls
+the scaling "the conservative choice" without qualification. The 4B limit
+stays 30 minutes (0.50 GPU-h; caps 0.90 of 1.5). The paragraph on
+`analysis-first-pass.txt` above is corrected likewise.
+`tests/test_dense_headroom_v2_manifests.py::test_the_4b_limits_estimator_sensitivity_is_disclosed`
+recomputes both estimators from the receipt and `analysis.json` (30 and 31
+minutes, A-main's span and both slopes) and requires the registration's
+Compute section and decision 20 to say so.
+
+Checks at `ddb3d02`:
+
+- Local (macOS `.venv`): ruff clean; the dense, preregister and v2 tests
+  (`tests/test_dense_headroom_*.py`, `test_run_dense_headroom_precheck.py`,
+  `test_summarise_dense_headroom_precheck.py`, `test_preregister.py`,
+  `test_*prereg*.py`) 185 passed, 15 skipped.
+- Freeze simulation (`freeze-simulation/*-ddb3d02.*`; local scratch clones of
+  `ddb3d02` chaining onto the branch's 11-row ledger ending at
+  `q2-evaluator-mutation-v1`, `dc39bfa2...`; the real ledger `1052d58b...`
+  before and after every run):
+  - `full`: freeze, verify and check-chain exit 0 (12 rows PASS); no
+    "DRAFT", "wait for the program owner" or "still to be done" left;
+    frozen-mode tests (v2 and v1 prereg, v2 manifests with the new test,
+    preregister) 30 passed; the frozen-wording diff equals the earlier runs'
+    but for line offsets; the entry point's code table matches (no differing
+    file); 0.6B fill exit 0, 4B fill exit 2 without the 0.6B receipt and 0
+    with a stand-in one; dry runs 0.2 GPU-h (`--time=00:12:00`) and 0.5 GPU-h
+    (`--time=00:30:00`). The full suite in the frozen clone (macOS): 2,170
+    passed, 87 skipped, 0 failed (`pytest-frozen-clone-full-ddb3d02.txt`).
+  - `status-only`: the frozen-mode test fails ("the frozen file still says
+    'still to be done'"); `wrong-dec`: it fails ("the status does not name
+    D42").

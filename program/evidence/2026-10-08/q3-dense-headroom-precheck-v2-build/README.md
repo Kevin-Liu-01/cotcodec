@@ -216,7 +216,12 @@ D36's rule the 4B lane is now 30 minutes (0.50 GPU-h; 769 s of evaluation
 and statistics with length scaling and a compile allowance, 79 s of
 start-up); the 0.6B lane stays 12; caps with both timing jobs 0.90 of 1.5
 GPU-h. The earlier sections' 45-minute projection and "untimed fixed path"
-are superseded. Everything is in `timing-2/README.md`.
+are superseded. Everything is in `timing-2/README.md`. The narrow re-check
+then found that the registered estimator's proportional scaling, chosen after
+a first analysis pass came out over the cap, crosses a minute boundary: the
+first pass's line fit with the compiles treated as registered gives 31
+minutes. The registration now discloses it (`ddb3d02`, text only; the limit
+stays 30 minutes; `timing-2/README.md`, "Limit re-check").
 
 ## Files
 
