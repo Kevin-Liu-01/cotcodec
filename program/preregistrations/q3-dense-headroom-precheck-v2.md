@@ -3,12 +3,18 @@
 Status: DRAFT, not frozen. The design is v1's (`q3-dense-headroom-precheck-v1`,
 frozen 2026-10-08 after D32), kept unchanged by program decision D36
 (`program/decisions.md`); the repairs and limits listed under "Changes from
-v1 (D36)" and design decisions 16-21 wait for the program owner's acceptance
-in `program/decisions.md` before the freeze. No lane job of this experiment
-runs before the freeze; every lane job verifies this file's digest against
-its ledger row at start-up and refuses code whose SHA-256 differs from the
-table below. The one development timing job of D36 ran before the freeze
-(Compute).
+v1 (D36)" and design decisions 16-21 wait for the program owner's decision
+in `program/decisions.md` before the freeze. Two of them depart from D36 on
+the Qwen3.5-4B-Base lane, so that decision has to amend D36 there or require
+another fix: decision 18 turns cuDNN's attention off, which changes computed
+quantities where D36 (iii) allows none, and decision 20's 4B limit doubles a
+projection, because the fixed 4B path was neither timed nor run on a GPU
+where D36's timing rule asks for a measurement of it (Freeze procedure, step
+1). No lane job of this experiment runs before the freeze; every lane job
+verifies this file's digest against its ledger row at start-up and refuses
+code whose SHA-256 differs from the table below. The one development timing
+job of D36 ran before the freeze, on the 4B path as it was before the fix
+(cuDNN's attention on; Compute).
 
 ## Purpose and claim level
 
@@ -82,9 +88,11 @@ caps changed.
    cloned instead of deep-copied, the first option token from the host array;
    all bit-equal to v1, tested) and, on the hybrid lane only, torch's cuDNN
    attention turned off, which removes the CPU bottleneck (a cuDNN graph built
-   for every new sequence length) and is not bit-equal to cuDNN (decision 18
-   says why and what is reported). Why: job 730 ran CPU-bound at about 3.8 s
-   per unit; the timing job located the cost. The carried
+   for every new sequence length). That switch is not bit-equal to cuDNN, so
+   on the 4B lane it departs from D36 (iii), which allows no change to a
+   computed quantity; the decision that accepts it must amend D36 (iii) for
+   that lane (decision 18 says why and what is reported). Why: job 730 ran
+   CPU-bound at about 3.8 s per unit; the timing job located the cost. The carried
    Selectors text says "copied per option for Qwen3.5 (v2's `clone_cache`, the
    values v1's deep copy held)" where v1's said "deep-copied per option", and
    the Decision rules text names `scripts/summarise_dense_headroom_precheck_v2.py`
@@ -94,12 +102,15 @@ caps changed.
    the read is INVALID and the 4B lane does not run (filler and summariser).
    Why: D36 ties the repaired code path to the one valid v1 measurement.
 6. Limits and caps (D36, decision 20). 0.6B lane 12 minutes (0.20 GPU-h, from
-   job 727's 278 s); 4B lane 45 minutes (0.75 GPU-h, from the timing job);
-   timing job 6 minutes (0.1 GPU-h); total 1.05 GPU-h within D36's 1.5. v1 had
+   job 727's measured 278 s); 4B lane 45 minutes (0.75 GPU-h, projected, not
+   measured: a projection from the timing job's warm-shape units, doubled
+   again because the fixed path was not timed, a departure from D36's timing
+   rule); timing job 6 minutes (0.1 GPU-h); total 1.05 GPU-h within D36's 1.5. v1 had
    9 and 21 minutes (0.15 and 0.35 GPU-h, D26's 0.5) from estimates; the 4B
    lane needed several times its 21 minutes.
 7. The development timing job (D36, decision 21; Compute). New in v2; it ran
-   before the freeze.
+   before the freeze, on the 4B path as it was before the fix (cuDNN's
+   attention on).
 8. Reporting. Receipts add per-chunk times, the signal guard's record and the
    job binding; the summariser reports the job-727 reproduction and v1's
    0.6B receipt beside v2's.
@@ -142,9 +153,9 @@ v2's), doctor, filler and summariser by `q3-dense-headroom-precheck-v1`,
 
 | File | SHA-256 |
 |---|---|
-| scripts/run_dense_headroom_precheck_v2.py | dadab67fa371835d80c7291dded84519371f2a6b889840b0ca4c24ae2ad27e31 |
+| scripts/run_dense_headroom_precheck_v2.py | 058caf287ea8012504a63f95a963ba136810e693d7acda80cb2ae592175e7a37 |
 | harness/dense_headroom_v2.py | 49f340ac46c80fa312d10e29bb3eaa45d95e574b9a598f47379b0e1effa5b5e1 |
-| harness/dense_headroom_v2_lanes.py | 375b8f426c1f42dc14cbd16fc1bec91a772860a8286a58f109de01ae1caca7e8 |
+| harness/dense_headroom_v2_lanes.py | 0bc91f380eee9aa191a7f9c6c74d9f19d596fc8fad3c8fb9c013a55f8c5d0f7f |
 | harness/dense_headroom_torch_v2.py | 34963c32746c9d6b4384cb32b9ab37b1a4966b4586923ba43da036bdc6da0cbe |
 | scripts/run_dense_headroom_precheck_v2_doctor.py | 58b336c798cf2d640cdf27b456336d08b01fcca23af4f715e792788fb8f4e727 |
 | scripts/dense_headroom_v2_signal_shim.py | 40be0760437253ca7290b358245d8ce61ff5c9886e930a833a3768765c620fa1 |
@@ -152,7 +163,7 @@ v2's), doctor, filler and summariser by `q3-dense-headroom-precheck-v1`,
 | scripts/summarise_dense_headroom_precheck_v2.py | cd5b6af45a93cf1b04faaffe1dfd72b82d9a7cb3ffcfed2e512de04a8ce2deae |
 | scripts/preregister.py | 21fc3ef0ed0958b1600ce742c3b4f8d557d0a298635acb20342710eb814b2c0d |
 | experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-0p6b.yaml | bf28d0b75d13d4b0ea825b481f3c9f8d17026dae8ce0d24b910c4d7f178c4cc1 |
-| experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-4b.yaml | 35fa4516a6b1637a90fb8a9e54740f02dd442d0bdace97170e893c6e1eaa5277 |
+| experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-4b.yaml | e92f76a16be411fb26750cb47a3131e493a549a7270631c9b95c7fe9fc1fc005 |
 | experiments/manifests/q3-dense-headroom-precheck-v2/q3-dense-headroom-v2-timing-4b.yaml | 007b64f91a53eefcbadeaf0971a46701769210d7d1b34383a7f78f70af353c6c |
 | harness/dense_headroom_data.py | ee78549e257631035aef0d52c5243f6bae969fd2c4f4a1e43bb8779bdf524003 |
 | harness/dense_headroom_stats.py | a94d1ceee80fe3e95f2f36af0cbda51644846594d5fc9ccf69fcb90c8215d195 |
@@ -496,7 +507,9 @@ v2, PyTorch's flash or memory-efficient attention in place of cuDNN's
 (decision 18), so its numbers are compared with nothing, as in v1; its
 receipt reports how far cuDNN's attention would move its first unit. The timing job compared v1's
 and v2's evaluation on real 4B units on the GPU (two units, both with cuDNN's attention: every field bit for bit
-equal).
+equal). Neither this gate nor the smoke reproduction covers the 4B lane's attention backend, which the
+0.6B lane never switches, and the fixed 4B path (cuDNN's attention off) has not run on a GPU before the
+freeze; `attention_backend_check` is the only check of the switch, and it is descriptive.
 
 ## Compute
 
@@ -509,10 +522,15 @@ equal).
 
 The total is the sum of the registered caps, D22's counting rule, within
 D36's v2 cap of 1.5 GPU-h (the timing job included); with v1's 0.4189 GPU-h
-the dense pre-check stays far below 8 GPU-h. The limits follow D36: a lane's
-minutes are at least twice its measured full-lane evaluation (evaluation and
-statistics), plus its measured start-up, plus the 3-minute SIGUSR1 lead,
-rounded up.
+the dense pre-check stays far below 8 GPU-h. The limits use D36's
+arithmetic: twice the full-lane evaluation (evaluation and statistics), plus
+start-up, plus the 3-minute SIGUSR1 lead, rounded up. For the 0.6B lane every
+input is measured. For the 4B lane the evaluation time is projected, not
+measured, and the start-up was measured on the path before the fix (below):
+that departs from D36's rule, which sets the 4B limit from a measurement of
+the fixed 4B path, and the decision that accepts this registration has to
+amend the rule for the 4B lane or authorise a timing job of the fixed path
+(decision 20).
 
 - Qwen3-0.6B-Base: job 727 used 278 s from `job.env` to `termination.env`,
   of which 262 s were evaluation and statistics (stage walls 132.5, 52.6,
@@ -520,23 +538,30 @@ rounded up.
   bundle read, derivation 1.9 s, model load 3.0 s). 2 x 262 + 16 s is 9 minutes
   rounded up; with the 3-minute lead, 12 minutes. v2 runs the same
   computation (the validity gate above).
-- Qwen3.5-4B-Base: from the timing job (below), whose subset ran the path as it then was (cuDNN's attention on): cold
+- Qwen3.5-4B-Base: projected, not measured, from the timing job (below),
+  whose subset ran the path before the fix (cuDNN's attention on): cold
   units took 3.6 to 4.1 s, the cost found (decision 18). The fixed path
   (cuDNN's attention off on this lane) was not timed: the timing job ran
-  before the cause was known, and D36 allows one timing job. Its per-unit
+  before the cause was known, and D36 allows one timing job (what is left
+  of its 6 minutes, 1 after job 766's 5 charged minutes under the run-root
+  rule below, is less than the 5 any job needs). Its per-unit
   time is taken from the units the timing job re-evaluated with every cuDNN
   graph cached, where the per-shape cost is absent (0.511 and 0.517 s for
   whole units through v1's path under cProfile; 0.42 s of CPU under
   torch.profiler): 0.52 s for each of the 1,160 units plus a 5 s statistics
   bound (job 727's took 1.2 s), 608 s projected. Because this projects the
-  fixed path rather than measuring it, the evaluation time entering D36's rule
-  is twice the projection, 1,216 s. Start-up was measured: 8 s before the
-  process, 19.4 s to the first unit (start-up checks, derivation, model load)
-  and 47.2 s of first-use compiles in the first unit, 75 s. 2 x 1,216 + 75 s is
-  42 minutes rounded up; with the 3-minute lead, 45 minutes, a useful window
-  about 4 times the projection. At the timed path's rate the lane would need
-  about 75 minutes and twice that cannot fit in D36's cap at any limit; a lane
-  that runs at that rate ends INCOMPLETE under the registered rules.
+  fixed path rather than measuring it, the evaluation time entering D36's
+  arithmetic is twice the projection, 1,216 s. Start-up was measured on the path before
+  the fix: 8 s before the process, 19.4 s to the first unit (start-up checks,
+  derivation, model load) and 47.2 s of first-use compiles in the first unit,
+  75 s. 2 x 1,216 + 75 s is 42 minutes rounded up; with the 3-minute lead, 45
+  minutes, a useful window about 4 times the projection. The lane's first job
+  finishes its 1,160 units inside its 42 useful minutes only if the fixed path
+  averages at most about 2.1 s per unit (after the 75 s start-up and the 5 s
+  statistics bound); the fixed path has not run on a GPU, so whether it does
+  is not known before the lane runs. At the timed path's rate the lane would
+  need about 75 minutes and twice that cannot fit in D36's cap at any limit; a
+  lane that runs at that rate ends INCOMPLETE under the registered rules.
 
 Slurm sends SIGUSR1 three minutes before a job's limit. In v2 the signal is
 honoured at the next chunk boundary whatever the libraries did to the
@@ -544,8 +569,8 @@ process's signal handlers (decision 17); the job then saves its completed
 chunks, writes `receipt-interrupted.json` and the marker, and exits 75. In the
 statistics phase it is not checked (as in v1). A job's useful time is its
 limit minus three minutes: 9 and 42 minutes for the two lanes' first
-jobs, each covering twice the evaluation time entering D36's rule plus
-start-up.
+jobs, each covering twice the evaluation time entering D36's arithmetic plus
+start-up (measured for the 0.6B lane, a doubled projection for the 4B lane).
 
 Every job of a lane counts against that lane's own minutes: its first job, a
 re-run of a void job and its one continuation. All of a lane's jobs run in the
@@ -688,12 +713,23 @@ INVALID.
 ## Freeze procedure
 
 1. The program owner accepts or amends design decisions 16-21 below and the
-   limits (a decision in `program/decisions.md`). Before step 2 the status
-   paragraph at the top of this file is rewritten to the frozen wording
-   (frozen in the ledger, decisions accepted in that decision), because a
-   frozen file cannot be edited. The code table above is recomputed from the
-   final code; `tests/test_dense_headroom_v2_prereg.py` binds it to the
-   working tree.
+   limits (a decision in `program/decisions.md`). That decision also rules on
+   the two departures from D36 on the 4B lane: it amends D36 (iii) for that
+   lane (decision 18: cuDNN's attention off, not bit-equal, checked only by
+   the descriptive `attention_backend_check`) and D36's timing rule (decisions
+   20 and 21: a projected limit for a path that has not run on a GPU), or it
+   requires another fix or authorises a timing job of the fixed path, after
+   which this file is revised and reviewed again before step 2. Before step 2
+   the status paragraph at the top of this file is rewritten to the frozen
+   wording (frozen in the ledger; decisions accepted in that decision, named,
+   with the amendments of D36 it makes), and so is the lead-in of the design
+   decisions (decisions 16-21 accepted in that decision), because a frozen
+   file cannot be edited. In frozen mode `tests/test_dense_headroom_v2_prereg.py`
+   refuses a file that still holds draft wording, or whose status paragraph
+   and lead-in do not name a decision in `program/decisions.md` that names
+   this experiment and amends D36 (iii). The code table above is recomputed
+   from the final code; `tests/test_dense_headroom_v2_prereg.py` binds it to
+   the working tree.
 2. This file is frozen with
    `uv run python scripts/preregister.py freeze q3-dense-headroom-precheck-v2 program/preregistrations/q3-dense-headroom-precheck-v2.md`
    and committed with its ledger row.
@@ -724,7 +760,9 @@ Each states the choice and why. Decisions 1-15 are v1's, accepted in D32
 (`program/decisions.md`; 1, 10, 12 and 13 were amended there and are
 stated as amended), carried unchanged except decision 12's caps (D36).
 Decisions 16-21 are v2's (D36) and wait for the program owner's
-acceptance before the freeze.
+acceptance before the freeze. Decisions 18 and 20 depart from D36 on the 4B
+lane (from D36 (iii) and from its timing rule), so the accepting decision
+must amend D36 there (Freeze procedure, step 1).
 
 1. Two lanes, both run unless the 0.6B smoke reproduction fails or the 0.6B
    lane ends without a receipt (amended in D32). The 4B lane is filled and
@@ -810,7 +848,8 @@ acceptance before the freeze.
     arrives three minutes before the limit and ends the job at the next chunk
     boundary, so the useful window is the limit minus three minutes: 9 and
     42 minutes, each covering twice the evaluation time entering D36's
-    rule plus start-up (decision 20). Every job of a lane
+    arithmetic plus start-up (for the 4B lane a doubled projection, not a
+    measurement; decision 20). Every job of a lane
     (re-runs and its one continuation included) is charged against the lane's
     own minutes from the run root's timestamps, gets at least 5 minutes (2
     useful after the signal's lead) or is refused, and no budget amendment is
@@ -883,7 +922,8 @@ acceptance before the freeze.
     script's exec chain with `docker kill --signal USR1`) under a shim that
     compiles a real Triton kernel inside the first forward; v2 answers, v1
     does not. The timing job tested the live path on the GPU (Compute).
-18. Evaluation equal to v1's (D36 (iii)). v2's `harness/dense_headroom_torch_v2.py` runs v1's
+18. Evaluation: v1's on every computed quantity except the 4B lane's attention
+    backend, a departure from D36 (iii). v2's `harness/dense_headroom_torch_v2.py` runs v1's
     selectors (`select_unit`, imported) and v1's multiple choice with three
     changes that leave every value as it was: the literal blocks are moved to
     the device before the layer loop, a hybrid prompt cache is cloned per
@@ -918,25 +958,59 @@ acceptance before the freeze.
     and multiple choice, the largest difference of every recall and option
     score between cuDNN's attention and the lane's (`attention_backend_check`,
     descriptive). The 0.6B lane is untouched, so the job-727 gate binds it
-    exactly; on CPU the equality holds bitwise (no cuDNN there).
+    exactly; on CPU the equality holds bitwise (no cuDNN there). D36 (iii)
+    asks that the bottleneck be removed without changing any computed
+    quantity, so on the 4B lane this switch departs from it, and the decision
+    that accepts this registration must amend D36 (iii) for that lane (Freeze
+    procedure, step 1). The job-727 gate (decision 19) and the smoke-452
+    reproduction do not cover the switch, because the 0.6B lane never makes
+    it. Where the carried text says that the 4B lane runs the same code or
+    path as the 0.6B lane (decision 11, and the INVALID rule under Decision
+    rules; v1's words, kept verbatim), that holds in v2 for everything except
+    this backend: a 0.6B failure still makes the combined read INVALID, but a
+    0.6B pass says nothing about the 4B lane's attention. `attention_backend_check`
+    is the only check of the switch, and it is descriptive; the fixed path
+    has not run on a GPU before the freeze (decision 20).
 19. The validity gate against job 727 (D36), with the fields and the 1e-6
     tolerance stated in its section. Exact equality is expected on the 0.6B
     lane (strict deterministic kernels, same hardware and libraries); the
     tolerance is D36's and is not widened. A failure means the shared code
     path no longer reproduces v1's measurement, so the combined read is
-    INVALID, as for a failed smoke reproduction (decision 11).
-20. Limits from measurements (D36). The 0.6B lane's minutes come from job
-    727's measured 278 s (262 s of evaluation and statistics, 16 s of
-    start-up), the 4B lane's from the timing job; each is at least twice the
-    measured full-lane evaluation plus start-up plus the 3-minute SIGUSR1
-    lead, so a lane that runs at its measured speed ends well inside its
-    useful window and the one continuation stays possible after an early
-    interruption. The caps sum with the timing job's to 1.05 GPU-h, within
-    D36's 1.5.
-21. One development timing job before the freeze (D36), on the fixed 4B path
-    and a registered subset, with component timings and profiles so that it
-    can show where the time goes, a bit-for-bit comparison of v1's and v2's
-    evaluation on real 4B units, and a live SIGUSR1 at its limit. Its numbers
-    set the 4B lane's limit and are not evidence of any statistic. It ran on
-    the image built from commit `71dc954` (the evaluation code tabled here; the
-    files changed afterwards are listed in "Changes from v1").
+    INVALID, as for a failed smoke reproduction (decision 11). The gate does
+    not cover the 4B lane's attention backend (decision 18): the 0.6B lane
+    never switches it, and there `attention_backend_check`, which is
+    descriptive, is the only check.
+20. Limits with D36's arithmetic: the 0.6B lane's measured, the 4B lane's
+    projected. The 0.6B lane's minutes come from job 727's measured 278 s
+    (262 s of evaluation and statistics, 16 s of start-up): twice the
+    measured evaluation plus start-up plus the 3-minute SIGUSR1 lead, so a
+    lane that runs at its measured speed ends well inside its useful window
+    and the one continuation stays possible after an early interruption. The
+    4B lane's minutes do not come from a measurement of its path. The timing
+    job ran the path before the fix (cuDNN's attention on; decision 21), at
+    3.6 to 4.1 s per cold unit, at which the lane would need about 75
+    minutes and end INCOMPLETE. The 45 minutes double a projection from the
+    timing job's warm-shape units (0.52 s per unit, 608 s for the lane),
+    doubled again because the fixed path is unmeasured (1,216 s), plus
+    start-up measured on the path before the fix (75 s) and the lead
+    (Compute). They suffice if the fixed path averages at most about 2.1 s
+    per unit; its own rate is unknown, since it has not run on a GPU. D36
+    sets the 4B limit from a measurement of the fixed path, so this departs
+    from D36's timing rule: the accepting decision must amend that rule for
+    the 4B lane, or authorise a timing job of the fixed path whose
+    measurement then replaces the projection here, in Compute and in
+    `harness/dense_headroom_v2_lanes.py`. The caps sum with the timing job's
+    to 1.05 GPU-h, within D36's 1.5.
+21. One development timing job before the freeze (D36), on the 4B path as it
+    was before the fix (cuDNN's attention on) and a registered subset, with
+    component timings and profiles so that it can show where the time goes,
+    a bit-for-bit comparison of v1's and v2's evaluation on real 4B units
+    (both with cuDNN's attention), and a live SIGUSR1 at its limit. It ran on
+    the image built from commit `71dc954`, whose evaluation module
+    (`harness/dense_headroom_torch_v2.py`) is the one tabled here; the files
+    changed afterwards, the cuDNN switch among them, are listed in "Changes
+    from v1" (item 10). It located the per-shape cost (decision 18) but did
+    not time the fixed path, which no job has run on a GPU, so the 4B lane's
+    limit rests on a projection (decision 20). Its numbers are not evidence
+    of any statistic. D36 allows one timing job; a second, on the fixed path,
+    needs the program owner's decision.

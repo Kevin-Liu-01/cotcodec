@@ -23,8 +23,11 @@ modules are imported byte for byte), and three repairs:
    query and key length, about 0.7 s of CPU per forward with the GPU idle,
    which is why v1's 4B job ran CPU-bound. PyTorch's flash and
    memory-efficient kernels compute the same attention without a per-shape
-   build; the receipt reports the largest difference on the lane's first unit
-   between them and cuDNN (``attention_backend_check``).
+   build, but not bit for bit: this is the one v2 change to a computed
+   quantity, on this lane only, and a departure from D36 (iii) (registration
+   decision 18). The receipt reports the largest difference on the lane's
+   first unit between them and cuDNN (``attention_backend_check``,
+   descriptive; nothing is gated on it).
 
 Profiles: ``registered`` (the lanes; the frozen preregistration and its code
 table are verified at start-up), ``tiny`` (the CPU doctor) and ``timing``
@@ -492,7 +495,8 @@ class Job:
             # key length: about 0.7 s of CPU per forward, with the GPU idle (the
             # timing job, Slurm 766; v1's job 730 ran at that rate). Every unit
             # has new lengths. PyTorch's flash and memory-efficient kernels have
-            # no per-shape build (decision 18). The 0.6B lane is not touched.
+            # no per-shape build. Not bit-equal to cuDNN's attention: decision 18,
+            # a departure from D36 (iii). The 0.6B lane is not touched.
             torch.backends.cuda.enable_cudnn_sdp(False)
         self.attention_backends = attention_backends()
         self.timings["model_load"] = time.perf_counter() - started
