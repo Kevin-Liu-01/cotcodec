@@ -1,0 +1,13 @@
+start=2026-10-07T23:47:48Z image=sha256:e59d9cc18c0db05fa0ae20a0f65492268112d07fef20f00af799323ae02ce6d3
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 582.79it/s]
+Loading weights:   0%|          | 0/46 [00:00<?, ?it/s]Loading weights: 100%|██████████| 46/46 [00:00<00:00, 8294.48it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 695.34it/s]
+Loading weights:   0%|          | 0/46 [00:00<?, ?it/s]Loading weights: 100%|██████████| 46/46 [00:00<00:00, 8331.02it/s]
+[transformers] Calling `crop` with a positive value is deprecated and will be removed in version 5.18. Please use a negative integer to remove that number of tokens from the cache instead.
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 443.56it/s]
+Loading weights:   0%|          | 0/52 [00:00<?, ?it/s]Loading weights: 100%|██████████| 52/52 [00:00<00:00, 7830.25it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 813.80it/s]
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 541.06it/s]
+{"status": "DENSE_DOCTOR_PASS", "case_status": {"codecs": "PASS", "features": "PASS", "derive": "PASS", "statistics": "PASS", "selectors": "PASS", "multiple_choice": "PASS", "end_to_end": "PASS"}}
+exit=0
+end=2026-10-07T23:49:32Z
