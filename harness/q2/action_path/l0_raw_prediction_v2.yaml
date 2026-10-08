@@ -166,5 +166,8 @@ reasons:
     The shell's synchronous grab on Super_L (its overlay key) has frozen the keyboard by then,
     so the d press, the d release and the Super_L release are queued, and the XRecord tap
     records each with core state 0, without Mod4. C2 compares key presses with their state,
-    so the d press fails the R-dev projection in every repetition. L0-fixed waits 10 ms
-    between the presses and holds the chord 0.1 s, and records the d press with Mod4.
+    so the d press fails the R-dev projection in every repetition. The shell itself received
+    Super+d (it showed the desktop and no key reached the probe, as under L0-fixed), so what
+    fails is the tap's record of an event queued during the grab, not the chord's delivery.
+    L0-fixed waits 10 ms between the presses and holds the chord 0.1 s, and its d press is
+    recorded with Mod4. Seed-42 development reproduced this 10 of 10 (job 784).

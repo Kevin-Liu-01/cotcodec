@@ -116,8 +116,9 @@ def test_v2_names_its_changes_from_v1_and_v1s_outcome():
     for doc in DOCS:
         text = doc.read_text(encoding="utf-8")
         assert "Changes from v1 (D40)" in text, doc.name
+        changes = " ".join(text.split("Changes from v1 (D40)", 1)[1].split())
         for path in D40_ROWS[doc]:
-            assert path.split("/")[-1] in " ".join(text.split("Changes from v1 (D40)", 1)[1].split())
+            assert path.split("/")[-1] in changes, (doc.name, path)
     main = " ".join(PREREG.read_text(encoding="utf-8").split())
     assert "program/evidence/2026-10-08/q2-action-path-acceptance/" in main
     assert "not an a-priori prediction test" in main

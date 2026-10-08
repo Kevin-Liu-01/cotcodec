@@ -1,0 +1,569 @@
+{
+  "campaign_id": "q2ap-v2-dev-l0fixed-superd-n8-v1",
+  "cpusets": [
+    {
+      "allocated": "22-57",
+      "runner": "54-57",
+      "vm": "22-25",
+      "vm_mems": "0",
+      "vm_numa_nodes": [
+        0
+      ]
+    },
+    {
+      "allocated": "22-57",
+      "runner": "54-57",
+      "vm": "26-29",
+      "vm_mems": "0",
+      "vm_numa_nodes": [
+        0
+      ]
+    },
+    {
+      "allocated": "22-57",
+      "runner": "54-57",
+      "vm": "30-33",
+      "vm_mems": "0",
+      "vm_numa_nodes": [
+        0
+      ]
+    },
+    {
+      "allocated": "22-57",
+      "runner": "54-57",
+      "vm": "34-37",
+      "vm_mems": "0",
+      "vm_numa_nodes": [
+        0
+      ]
+    },
+    {
+      "allocated": "22-57",
+      "runner": "54-57",
+      "vm": "38-41",
+      "vm_mems": "0",
+      "vm_numa_nodes": [
+        0
+      ]
+    },
+    {
+      "allocated": "22-57",
+      "runner": "54-57",
+      "vm": "42-45",
+      "vm_mems": "0",
+      "vm_numa_nodes": [
+        0
+      ]
+    },
+    {
+      "allocated": "22-57",
+      "runner": "54-57",
+      "vm": "46-49",
+      "vm_mems": "0",
+      "vm_numa_nodes": [
+        0
+      ]
+    },
+    {
+      "allocated": "22-57",
+      "runner": "54-57",
+      "vm": "50-53",
+      "vm_mems": "0",
+      "vm_numa_nodes": [
+        0
+      ]
+    }
+  ],
+  "dangling_volumes_after": 0,
+  "dangling_volumes_before": 0,
+  "docker": {
+    "cgroup_version": "2",
+    "default_runtime": "runc",
+    "runtimes": [
+      "io.containerd.runc.v2",
+      "runc"
+    ],
+    "server_version": "28.3.1"
+  },
+  "driver_python": "3.10.12",
+  "finished_at": 1791448575.9899783,
+  "git_sha": "e66bf1665ee9484e9c95bc6f4509780311234da4",
+  "host_end": {
+    "containers_ours": 0,
+    "containers_running_total": 8,
+    "loadavg": [
+      "35.22",
+      "19.87",
+      "9.11"
+    ],
+    "squeue_foreign": [
+      [
+        "782",
+        "kevin",
+        "PENDING",
+        "16",
+        "N/A",
+        "cotcodec-q2-mutation-cpu"
+      ],
+      [
+        "783",
+        "kevin",
+        "PENDING",
+        "16",
+        "N/A",
+        "cotcodec-q2-mutation-cpu"
+      ],
+      [
+        "781",
+        "kevin",
+        "RUNNING",
+        "16",
+        "N/A",
+        "cotcodec-q2-mutation-cpu"
+      ],
+      [
+        "784",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-dev-raw"
+      ],
+      [
+        "787",
+        "kevin",
+        "RUNNING",
+        "36",
+        "N/A",
+        "q2ap-v2-dev-superd"
+      ]
+    ],
+    "t": 1791448575.960285
+  },
+  "host_start": {
+    "containers_ours": 0,
+    "containers_running_total": 2,
+    "loadavg": [
+      "13.34",
+      "9.89",
+      "5.03"
+    ],
+    "squeue_foreign": [
+      [
+        "782",
+        "kevin",
+        "PENDING",
+        "16",
+        "N/A",
+        "cotcodec-q2-mutation-cpu"
+      ],
+      [
+        "783",
+        "kevin",
+        "PENDING",
+        "16",
+        "N/A",
+        "cotcodec-q2-mutation-cpu"
+      ],
+      [
+        "781",
+        "kevin",
+        "RUNNING",
+        "16",
+        "N/A",
+        "cotcodec-q2-mutation-cpu"
+      ],
+      [
+        "784",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-dev-raw"
+      ],
+      [
+        "786",
+        "kevin",
+        "RUNNING",
+        "72",
+        "N/A",
+        "q2ap-v2-dev-superd"
+      ],
+      [
+        "787",
+        "kevin",
+        "RUNNING",
+        "36",
+        "N/A",
+        "q2ap-v2-dev-superd"
+      ]
+    ],
+    "t": 1791448493.5093431
+  },
+  "job_id": "785",
+  "labelled_containers_left": [],
+  "manifest_sha256": "95b8045144bdc3b475f68a92c94a3fecc153e86db9fb349101cbd53f470e02a8",
+  "qcow2_info": {
+    "actual-size": 24460201984,
+    "format": "qcow2",
+    "virtual-size": 53687091200
+  },
+  "qcow2_sha256_after": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+  "qcow2_sha256_before": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+  "qcow2_unchanged": true,
+  "schema": "cotcodec-vm-campaign-receipt-v1",
+  "session_plan_sha256": "70cebfa79dd4ae9154a3a846d5b32b972602bab06f55b70e86b9bba59ad42fab",
+  "source_tree_sha256": "73e373a20c4a974e0ee81dce212360b3877df2abfa1c3b8cba8fbc50b0f0e4be",
+  "started_at": 1791448475.090565,
+  "summary": {
+    "boot_s": {
+      "max": 21.938,
+      "n": 8,
+      "p50": 20.917,
+      "p95": 21.938
+    },
+    "boots_ok": 8,
+    "containers_removed_all": true,
+    "cycles": 8,
+    "distinct_boot_ids": 8,
+    "errors": [],
+    "hmp_cycles_all_ok": 0,
+    "hmp_step_pass_counts": {},
+    "infra_gates_pass": true,
+    "latency_s": {
+      "accessibility_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "execute_noop_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "screenshot_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      }
+    },
+    "leaked_volumes": [],
+    "nat_modes": [
+      "nat"
+    ],
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "sentinel_pristine": 7,
+    "sentinel_readback_dconf": 0,
+    "sentinel_readback_file": 0,
+    "sentinel_readback_gsettings": 0,
+    "sentinel_reset_checks": 7,
+    "sessions": {
+      "accessibility_calls": 44,
+      "cell_counts": {
+        "FAIL": 0,
+        "FLAKY": 0,
+        "PASS": 16
+      },
+      "cells": {
+        "screenshot+a11y|chord_alt_f4": "PASS",
+        "screenshot+a11y|chord_alt_tab": "PASS",
+        "screenshot+a11y|chord_ctrl_alt_shift_r": "PASS",
+        "screenshot+a11y|chord_super_d": "PASS",
+        "screenshot+a11y|key_menu": "PASS",
+        "screenshot+a11y|type_emoji": "PASS",
+        "screenshot+a11y|type_plain": "PASS",
+        "screenshot+a11y|type_unicode_bmp": "PASS",
+        "screenshot|chord_alt_f4": "PASS",
+        "screenshot|chord_alt_tab": "PASS",
+        "screenshot|chord_ctrl_alt_shift_r": "PASS",
+        "screenshot|chord_super_d": "PASS",
+        "screenshot|key_menu": "PASS",
+        "screenshot|type_emoji": "PASS",
+        "screenshot|type_plain": "PASS",
+        "screenshot|type_unicode_bmp": "PASS"
+      },
+      "guest_server_restarts": 0,
+      "infra_failures": {},
+      "observation_retries": {},
+      "runner_errors": [],
+      "sessions": [
+        {
+          "accessibility_calls": 0,
+          "cycle": 0,
+          "guest_server_restarts": 0,
+          "passed": 10,
+          "probe_relaunches": 0,
+          "setting": "screenshot",
+          "tap_relaunches": 0,
+          "trials": 10,
+          "wall_s": 42.55
+        },
+        {
+          "accessibility_calls": 0,
+          "cycle": 1,
+          "guest_server_restarts": 0,
+          "passed": 10,
+          "probe_relaunches": 0,
+          "setting": "screenshot",
+          "tap_relaunches": 0,
+          "trials": 10,
+          "wall_s": 41.41
+        },
+        {
+          "accessibility_calls": 0,
+          "cycle": 2,
+          "guest_server_restarts": 0,
+          "passed": 10,
+          "probe_relaunches": 0,
+          "setting": "screenshot",
+          "tap_relaunches": 0,
+          "trials": 10,
+          "wall_s": 43.78
+        },
+        {
+          "accessibility_calls": 0,
+          "cycle": 3,
+          "guest_server_restarts": 0,
+          "passed": 10,
+          "probe_relaunches": 0,
+          "setting": "screenshot",
+          "tap_relaunches": 0,
+          "trials": 10,
+          "wall_s": 42.93
+        },
+        {
+          "accessibility_calls": 11,
+          "cycle": 4,
+          "guest_server_restarts": 0,
+          "passed": 10,
+          "probe_relaunches": 0,
+          "setting": "screenshot+a11y",
+          "tap_relaunches": 0,
+          "trials": 10,
+          "wall_s": 60.91
+        },
+        {
+          "accessibility_calls": 11,
+          "cycle": 5,
+          "guest_server_restarts": 0,
+          "passed": 10,
+          "probe_relaunches": 0,
+          "setting": "screenshot+a11y",
+          "tap_relaunches": 0,
+          "trials": 10,
+          "wall_s": 61.69
+        },
+        {
+          "accessibility_calls": 11,
+          "cycle": 6,
+          "guest_server_restarts": 0,
+          "passed": 10,
+          "probe_relaunches": 0,
+          "setting": "screenshot+a11y",
+          "tap_relaunches": 0,
+          "trials": 10,
+          "wall_s": 62.94
+        },
+        {
+          "accessibility_calls": 11,
+          "cycle": 7,
+          "guest_server_restarts": 0,
+          "passed": 10,
+          "probe_relaunches": 0,
+          "setting": "screenshot+a11y",
+          "tap_relaunches": 0,
+          "trials": 10,
+          "wall_s": 61.76
+        }
+      ],
+      "step_s": {
+        "n": 80,
+        "p50": 2.1536,
+        "p95": 3.2794
+      },
+      "trial_s": {
+        "n": 80,
+        "p50": 2.4656,
+        "p95": 3.9532,
+        "sum": 193.94
+      }
+    },
+    "settled_s": {
+      "n": 8,
+      "p50": 26.324,
+      "p95": 27.292
+    },
+    "tap_selftest_ok": 0
+  },
+  "verdicts": [
+    {
+      "boot_id": "8c80d772-93d7-4605-b866-611c2a042b02",
+      "boot_s": 20.917,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 0,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 26.324,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "0e8034b7-f919-4bd2-861b-471a9fa24c7d",
+      "boot_s": 21.938,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 1,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 25.316,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "1a1384c7-b935-4d83-97fb-081f607648e4",
+      "boot_s": 20.633,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 2,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 26.955,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "3a41eeaf-cb3c-4896-a6a1-24afd3e43d5e",
+      "boot_s": 21.111,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 3,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 26.496,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "4b22192f-d434-4bf2-ad96-dacdab9c16c3",
+      "boot_s": 20.579,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 4,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 26.163,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "c6bb0dd3-0154-4e69-ac54-565f7230cc54",
+      "boot_s": 21.014,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 5,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 27.292,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "9f891a9e-1699-457c-a0d9-6d07219b6315",
+      "boot_s": 20.989,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 6,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 27.215,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "f2804120-b7d4-44e3-bdc4-1cf12a90d650",
+      "boot_s": 20.793,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 7,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 26.183,
+      "tap_selftest_ok": null
+    }
+  ]
+}
