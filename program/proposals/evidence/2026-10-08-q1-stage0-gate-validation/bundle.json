@@ -1,0 +1,674 @@
+{
+ "schema_version": 1,
+ "proposal": "program/proposals/2026-10-08-q1-stage0-gate-validation.md",
+ "proposal_sha256": "7f4d080b54e0830382dd57eafe0677cd6ee53292c04fdbbfda7fa510452a8a9f",
+ "source_snapshots": [
+  {
+   "url": "https://arxiv.org/abs/2507.05687",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:19Z",
+   "raw_sha256": "231a88c00772cab1368bf580fbb121c0e3358b0c478e4f11b44d9de37f198f2e",
+   "raw_bytes": 44770,
+   "artifact": "snapshots/arxiv.org_abs_2507.05687.json",
+   "sha256": "24b7cd136c1397df48d4ad60315ad8d7afbafca7b2670f2df041718378eca717"
+  },
+  {
+   "url": "https://arxiv.org/abs/2509.14279",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:23Z",
+   "raw_sha256": "c97c16ca92229a15ff575526689cd8f535ba64e8a5d9b0d676ad0cda30b79df5",
+   "raw_bytes": 43036,
+   "artifact": "snapshots/arxiv.org_abs_2509.14279.json",
+   "sha256": "4ee87f2026f98d5e1bfc9c95f5ca743b47fb6d504388122a320111a1607f924c"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.17891",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:26Z",
+   "raw_sha256": "33dbb9514b5378398acb7bb9e46d55689c6ae267984f12b6364cf16745215911",
+   "raw_bytes": 41799,
+   "artifact": "snapshots/arxiv.org_abs_2510.17891.json",
+   "sha256": "c8fd72b8bb329fb8a698f9f6458a75328117a1051716de23f59910ef49916b56"
+  },
+  {
+   "url": "https://arxiv.org/abs/2601.04411",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:29Z",
+   "raw_sha256": "cee5b0dd0d016fa2da0b17157ada6f478cf895e2233315cb557cb9d3aa495c3f",
+   "raw_bytes": 44127,
+   "artifact": "snapshots/arxiv.org_abs_2601.04411.json",
+   "sha256": "645639fdff356f84ac41c3dd1055625f71c0868908c38da72453d4faa32308f9"
+  },
+  {
+   "url": "https://arxiv.org/abs/2602.05885",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:33Z",
+   "raw_sha256": "2a9679e8581daafacdf40cb1fabd9fc744861b592cab1e865975c162d9d2eb16",
+   "raw_bytes": 44497,
+   "artifact": "snapshots/arxiv.org_abs_2602.05885.json",
+   "sha256": "3d90afb7d752cd90213e2d6f36c781f3dd97fb07e6148ff480546b5dedd962f1"
+  },
+  {
+   "url": "https://arxiv.org/abs/2602.08043",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:36Z",
+   "raw_sha256": "aaf17d78ddd1cf9d4dfb6b2b33a55aaa75a61f1890d5f53a4c591cdf283c31b8",
+   "raw_bytes": 44264,
+   "artifact": "snapshots/arxiv.org_abs_2602.08043.json",
+   "sha256": "ee0a0086470ab38db34de44cc48c018efe086ef3aaa1e690d980515b62bd952d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2602.24286",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:40Z",
+   "raw_sha256": "7fe88923f902d43e4546eff9aba52c562a1e609e2d75996c31f8a19d39284672",
+   "raw_bytes": 44164,
+   "artifact": "snapshots/arxiv.org_abs_2602.24286.json",
+   "sha256": "1df954dc0aec12036b4725ec7aabc976f774aadc3d81ef24c397319b137e9a27"
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.07666",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:43Z",
+   "raw_sha256": "71afaacfd7cec7801c9fd535d80687c1343295b0b8fc2f7c37ce799508086893",
+   "raw_bytes": 42779,
+   "artifact": "snapshots/arxiv.org_abs_2604.07666.json",
+   "sha256": "378d6dbbdcf496bf968c9fe15d7f0aca320abd8434a54fbd78ff312eda269ce6"
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.22032",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:47Z",
+   "raw_sha256": "6f26eea852317e75d00ed61e09800eacf1898c409715dfd94836aecd9c0fae8b",
+   "raw_bytes": 43138,
+   "artifact": "snapshots/arxiv.org_abs_2604.22032.json",
+   "sha256": "adcaa7474c8972ea74860fd4935959610c7837e7c89f9c29d6cf02ddeb3708f8"
+  },
+  {
+   "url": "https://arxiv.org/abs/2605.02909",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:50Z",
+   "raw_sha256": "5027c9d1f5a80ff544c9db494a39c65d5d819a069ac956e61af0c71e10fe03e5",
+   "raw_bytes": 43788,
+   "artifact": "snapshots/arxiv.org_abs_2605.02909.json",
+   "sha256": "ad0c16f9d9e8bfc4da0825b874ba8651e685487f52ce1a58297587cf49681af9"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.20128",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:53Z",
+   "raw_sha256": "58ebf3a0ae2b952963ff4c35d8bb92f147b2f3bdd6cfd18f818af7022d160415",
+   "raw_bytes": 41535,
+   "artifact": "snapshots/arxiv.org_abs_2606.20128.json",
+   "sha256": "073148593494092183db91b5dbd8fcb68e3e8bdc4a099678b34fdd2128c988c2"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.26453",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:30:56Z",
+   "raw_sha256": "8c868a97b208ae79e4795f333f1b9fd347b2d1096558c4bd73610056efd767b3",
+   "raw_bytes": 45276,
+   "artifact": "snapshots/arxiv.org_abs_2606.26453.json",
+   "sha256": "1ef49c7aef9da54af5a0abf1b79fb20d7bb4b3226cfe26d1deea200ae67c2824"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.27396",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:00Z",
+   "raw_sha256": "50330f289181a746b25ca71e946961ab7b0fa0f79e8f38a981b39c19b123da08",
+   "raw_bytes": 42153,
+   "artifact": "snapshots/arxiv.org_abs_2606.27396.json",
+   "sha256": "236058036fd188d7c57c99c06c3203f5d675e13243582d8c36ec4c638e406174"
+  },
+  {
+   "url": "https://arxiv.org/abs/2607.11022",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:03Z",
+   "raw_sha256": "95e7b8a097689700a328f318637ba47df925418723aadf11b514f0e4e94d3bde",
+   "raw_bytes": 44467,
+   "artifact": "snapshots/arxiv.org_abs_2607.11022.json",
+   "sha256": "2c24cd8672189dee38a2ee015b169e0f884b883be1c40dca2af4539c26402040"
+  },
+  {
+   "url": "https://arxiv.org/abs/2607.16228",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:06Z",
+   "raw_sha256": "a097f5e3acda3540a79108f8677998524e80941335a9c599dbbe29e6b4dda418",
+   "raw_bytes": 41862,
+   "artifact": "snapshots/arxiv.org_abs_2607.16228.json",
+   "sha256": "3573fc6dfbaab9687db8c8e68d8ab974e211a2f7a1732e17c91b3c2b09ea1f46"
+  },
+  {
+   "url": "https://arxiv.org/abs/2607.16241",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:09Z",
+   "raw_sha256": "bdf61e520d2837229d2a103ec4625b4980a7de6bf81d72a55ce3e6c67ae63743",
+   "raw_bytes": 44145,
+   "artifact": "snapshots/arxiv.org_abs_2607.16241.json",
+   "sha256": "e36983e1535a316d0261bc510ad951f83889440ca27fe1e4994a2420c2de56c3"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.12629",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:12Z",
+   "raw_sha256": "9dadd6f0dbc66dc3dd676c77e576070b0728f7398137ce049b51de5a6d907e5c",
+   "raw_bytes": 43947,
+   "artifact": "snapshots/arxiv.org_abs_2608.12629.json",
+   "sha256": "1849b0ed7e8910d1c65f09bb8779765af7ccce9a474e23df2735364233d47d01"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.12635",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:15Z",
+   "raw_sha256": "7eefa4baa643b3e3be226c33847fa3dbbee0e57ae41b195203539c982a6ba7a7",
+   "raw_bytes": 42851,
+   "artifact": "snapshots/arxiv.org_abs_2608.12635.json",
+   "sha256": "0563c9af7dcf9f1a127dd47af202de2b0bda1e9cad33e81b90ed0086fbf1ecad"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.12700",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:19Z",
+   "raw_sha256": "3659367be2da31c3140cdeae04af1e7799b25f98745a11df82c4143a8e1c2ff2",
+   "raw_bytes": 44930,
+   "artifact": "snapshots/arxiv.org_abs_2608.12700.json",
+   "sha256": "1f462dc228feebf20a0cbc0d27da23def45a158bc799030fdbc5f6d4e406f3e3"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.17214",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:22Z",
+   "raw_sha256": "528e976aa45feff9c0baf2d218190826558e5c5005e349f0e9f5610e9644c882",
+   "raw_bytes": 42002,
+   "artifact": "snapshots/arxiv.org_abs_2608.17214.json",
+   "sha256": "178c060342b08fcda21683249783b56a6dde5f560aea8c476fbd1b640f12fd9c"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.00058",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:25Z",
+   "raw_sha256": "bc14b3fd67e7da784adae77dec4db7d39a20065122f74e17208b222c304765e9",
+   "raw_bytes": 42942,
+   "artifact": "snapshots/arxiv.org_abs_2609.00058.json",
+   "sha256": "7bd28a3718ad044a64c9808b66459b995d65ed63b0984ec7569c2ef859f9f801"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.09315",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:29Z",
+   "raw_sha256": "1690c48d749e58b14c38b23b7f2818b8d937b98d0f1fe795b54bca10e27efe45",
+   "raw_bytes": 42629,
+   "artifact": "snapshots/arxiv.org_abs_2609.09315.json",
+   "sha256": "77653db7c79ec0c7ffb28878b079f44bf7d8c95e559c545671878d4672ab520f"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.11356",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:32Z",
+   "raw_sha256": "b25aa653f21c8d7616b10cba0fe2dc0d2d88782c05101dc0e2eecfce441b42f2",
+   "raw_bytes": 43719,
+   "artifact": "snapshots/arxiv.org_abs_2609.11356.json",
+   "sha256": "3530e7f7019ff8cd2f362879b1226e6de113d00ad8469442f88e2332fc690d42"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.19611",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:35Z",
+   "raw_sha256": "662209e58e9b492a000b694b0c289c27b512c43451f5f86e12ef2ce2881b88dd",
+   "raw_bytes": 41460,
+   "artifact": "snapshots/arxiv.org_abs_2609.19611.json",
+   "sha256": "e137ac038598c1f7bc2e81169b858713220d25678f5ace392a6a7d971f58ee00"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.21058",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:38Z",
+   "raw_sha256": "eed9f1bdec6a53e36850fe800d67deebeeb3beea5f7f3f4bb96dfeb821d405d9",
+   "raw_bytes": 42493,
+   "artifact": "snapshots/arxiv.org_abs_2609.21058.json",
+   "sha256": "a8225ac69c5a708016d97cb590490ecc8e553f248e82d3ba91d3002484d70628"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.22220",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:41Z",
+   "raw_sha256": "5987affd4404a020529b58c562e56da3fc4b18803d58402f38e5adc86f465f1e",
+   "raw_bytes": 44267,
+   "artifact": "snapshots/arxiv.org_abs_2609.22220.json",
+   "sha256": "0d8122cbeadd3340fe443ef42731e9e46534d243e927070b6a7d8a7f46d543ff"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.33074",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:44Z",
+   "raw_sha256": "eb350e64381625d234f29f15369a305e0267c891417936656cc8fc410111f1d0",
+   "raw_bytes": 44363,
+   "artifact": "snapshots/arxiv.org_abs_2609.33074.json",
+   "sha256": "d2a07bda7c112f21e18a5d289c303c054147e1105003e8034cc770007f12d2bb"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.36800",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:47Z",
+   "raw_sha256": "42550595b2cee2c7539042a64fdec297494fe7b48f781ff7c5df825c83ea722a",
+   "raw_bytes": 43122,
+   "artifact": "snapshots/arxiv.org_abs_2609.36800.json",
+   "sha256": "273ab7717681ff8645d19f8253a8cae5155eae6e4f8efee3dda599fda8f7733e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.39533",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:51Z",
+   "raw_sha256": "90b904b8824ebb435e2af6009f8c340b78f80f603e36320656c242347951d31a",
+   "raw_bytes": 43846,
+   "artifact": "snapshots/arxiv.org_abs_2609.39533.json",
+   "sha256": "8896f1d58930bd02f5c369229d5a14297843ff9c0b481ec49421c6a9b55c4883"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.02240",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:54Z",
+   "raw_sha256": "ee4d7162e8338de581116742a92fe12c30bc2211ab9e57ab4709e7a0b38c5dd7",
+   "raw_bytes": 44050,
+   "artifact": "snapshots/arxiv.org_abs_2610.02240.json",
+   "sha256": "4a7f9e67d738130e978c430ac2bcff193a052313a1f6e230c960473eff4362f6"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.05683",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:31:57Z",
+   "raw_sha256": "db702e1bbad3b95253f7a5f4c295bb2a0c1a31c72c46570840bf3dc4b36b4210",
+   "raw_bytes": 44046,
+   "artifact": "snapshots/arxiv.org_abs_2610.05683.json",
+   "sha256": "da211ae415b13d689d583e85d6e564ca5cda8c48b92da9155f92a542be3b5033"
+  },
+  {
+   "url": "https://github.com/RishiShah99/lethe",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:32:02Z",
+   "raw_sha256": "7d6ad3de8716b35a184c18131254e42f8c3b322940b9978c396d170e0c14afbb",
+   "raw_bytes": 310698,
+   "artifact": "snapshots/github.com_RishiShah99_lethe.json",
+   "sha256": "bb3f9b233fa9adf2da6010c2496a232502dc2ea18a83c737511238eb163e53c7"
+  },
+  {
+   "url": "https://github.com/facebookresearch/kernel_bench_verified",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:32:06Z",
+   "raw_sha256": "e45bf432a2a690a05220760ac6f87a834bc66f971dd3961ced62af009cae0f8a",
+   "raw_bytes": 349143,
+   "artifact": "snapshots/github.com_facebookresearch_kernel_bench_verified.json",
+   "sha256": "5e46fb4681b7ea5f59cdb1c2847c92541813a13d7c39f460b282ffdaf5af35e0"
+  },
+  {
+   "url": "https://github.com/hkust-nlp/KernelGYM",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:32:10Z",
+   "raw_sha256": "d613f62495678237bda8b9946b722d3b199bd898b5258fcfb96ad3286aec1b48",
+   "raw_bytes": 493664,
+   "artifact": "snapshots/github.com_hkust-nlp_KernelGYM.json",
+   "sha256": "a12a302fc897715d5df985f966c29f27981a7ac1f7484b4efe076597ff9a6b26"
+  },
+  {
+   "url": "https://github.com/toffee-desuwa/rlvr-leaky-suite",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:32:15Z",
+   "raw_sha256": "f94e7db3359819566d15a02e96203360ed2bc39cb44a3d36305508923efd9bcf",
+   "raw_bytes": 301779,
+   "artifact": "snapshots/github.com_toffee-desuwa_rlvr-leaky-suite.json",
+   "sha256": "a5eba79b4d57b5b4a575a7a570c3f933422608b39fd15a021da9eeab3f9f35ce"
+  },
+  {
+   "url": "https://huggingface.co/datasets/Elfsong/KernelBench-M",
+   "http_status": 200,
+   "fetched_at": "2026-10-08T07:32:18Z",
+   "raw_sha256": "39620dc1f18e4ad01c307ec9d298644d9b1a283601171ab2ba6ab86d207e4a75",
+   "raw_bytes": 107235,
+   "artifact": "snapshots/huggingface.co_datasets_Elfsong_KernelBench-M.json",
+   "sha256": "ce72b5fe71225648e3cf90b72f80daef88a3dd2f25e6e5b7dc258e663ba41d99"
+  }
+ ],
+ "query_log": {
+  "artifact": "query-log.json",
+  "sha256": "b1ba14587c84c4552aa260cdada920d61c17030e3dbddaf2cd1dcb986a1dac99",
+  "queries_against_budget": 136,
+  "discover_counts": {
+   "frontier": 55,
+   "kill-shot": 27,
+   "cross-domain": 47,
+   "synthesis": 7
+  }
+ },
+ "reviews": [],
+ "reviews_status": "NOT_RUN in wave 1: blind discrimination, refute-first triad and two provider-distinct reviews come after synthesis. No Ed25519 trust store exists (D24), so no review can be signed by a trusted attestor; the signed-review requirement fails.",
+ "compute": {
+  "scope": "The registered Stage 0 run has no compute attestation of its own (compute/stage0-attestations-not-run.md). The image, manifest and supplementary attestations below are those of the D37 validation job (Slurm 752, branch stage0/q1-exec2-validation at 13f3180), which ran the registered gate, audit and driver code (version-card hashes equal to registration section 2.1) under q1-stage0-exec/2.",
+  "image_digest": "127.0.0.1:5000/cotcodec-q1-gates@sha256:888dbf98cab2ebec4f8f2234727c84f2accb8bb042ec09ead944245be8b7c452",
+  "image_scope": "validation image cotcodec-q1-gates:23a87683, CPU-only build 746 from a fresh clean clone of 23a876838487206a4b9de35318656eec2a4030c5 (source tar 8d35417c...), image id sha256:28853b9a12fe6bed275155874e4af5e01cffb34ad89f95b8fefd49a4f31f39ff, private local registry only; a Stage 0 image is built only from the frozen revision and does not exist",
+  "real_model_loop": false,
+  "real_model_loop_scope": "Stage 0 trains and samples no model (model kind none). Its executable loop is the gate and audit runner (harness/q1/runner.py, harness/q1/worker.py), which ran on an H100 in jobs 518, 548, 713 and 752. The field is set false because no model loop exists, not because the harness is a stub.",
+  "executable_harness_loop": true,
+  "benchmark_adapter": "harness/q1/worker.py",
+  "manifest": {
+   "artifact": "compute/validation-752-manifest.yaml",
+   "sha256": "7b0a9a0bf91a7741c205e8a48d55533e316c217156f637afdddd64c54a3109e6",
+   "note": "Executed Docker-lane manifest of the validation job (runtime docker-single-node-discovery-v1, image_id field)."
+  },
+  "container_smoke": {
+   "label": "container_smoke",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/stage0-attestations-not-run.md",
+   "sha256": "0dbdf95ce4ba795de0e73f0194afdd283fad01f3e44ca593b86bc2a0b41cadbe",
+   "note": "No Stage 0 smoke job exists; it needs a frozen image."
+  },
+  "slurm_test": {
+   "label": "slurm_test",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/stage0-attestations-not-run.md",
+   "sha256": "0dbdf95ce4ba795de0e73f0194afdd283fad01f3e44ca593b86bc2a0b41cadbe",
+   "note": "No Stage 0 scoring manifest exists to dry-run."
+  },
+  "provenance_verification": {
+   "label": "provenance_verification",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/stage0-attestations-not-run.md",
+   "sha256": "0dbdf95ce4ba795de0e73f0194afdd283fad01f3e44ca593b86bc2a0b41cadbe",
+   "note": "The Stage 0 image does not exist."
+  },
+  "supplementary_attestations": [
+   {
+    "label": "validation job submitter dry-run (sbatch argv)",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/validation-752-dry-run.json",
+    "sha256": "3e42329b5073920374665099b273d15e143e5d991887730814bafd5404018241",
+    "note": "0.1667 GPU-h requested"
+   },
+   {
+    "label": "validation job sbatch --test-only through the submitter",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/validation-752-test-only.txt",
+    "sha256": "93ba01cb4f6e1e9dc7140f33d1aa39ce548b4d8aa655f27dec37e05487aa8578",
+    "note": "exit 0"
+   },
+   {
+    "label": "validation job provenance verification",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/validation-752-provenance-verification.txt",
+    "sha256": "aca47ce852a92553f1e3ad7618b5b9c9f740d94cf4b7b1054629dd7bf376cf56",
+    "note": "git 23a87683, source 8d35417c"
+   },
+   {
+    "label": "validation job Slurm record",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/validation-752-slurm-record.txt",
+    "sha256": "9b7f702b05ea3c928bb9136cc4e3c95f47bdcfdc42eca32df3245caba20c7797",
+    "note": "COMPLETED 0:0, 6 min 33 s, 1 H100"
+   },
+   {
+    "label": "validation job lane termination",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/validation-752-termination.env",
+    "sha256": "5d05ffbc4fffb78ff2e9f5a1a19c2c694762b48f7e1e9ce5b6defad508235d83",
+    "note": "reason completed, no hard stop"
+   },
+   {
+    "label": "validation job GPU prolog",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/validation-752-gpu-prolog.env",
+    "sha256": "7e46b25b3d23014591cb11ff354a31780bf9ac977af7abb476f26556683cdcb6",
+    "note": "exclusive, 0 foreign compute processes"
+   },
+   {
+    "label": "validation job lane environment",
+    "status": "INFO",
+    "return_code": 0,
+    "artifact": "compute/validation-752-job.env",
+    "sha256": "7117c1d08eee05a76974c39f70cdc9e59971e40bab7dd9bf43582732361f06b4",
+    "note": "seeds 42:43:44, model kind none"
+   },
+   {
+    "label": "pre-submit queue and GPU state",
+    "status": "INFO",
+    "return_code": 0,
+    "artifact": "compute/validation-752-pre-submit-state.txt",
+    "sha256": "7a59c783ace0e20b6abc09d25db13520c236601301e19c45a28c35cec4dbd7e7",
+    "note": "empty queue, 8 GPUs at 0 MiB"
+   },
+   {
+    "label": "image build receipt (CPU-only Slurm 746)",
+    "status": "PASS",
+    "return_code": 0,
+    "artifact": "compute/image-build-receipt-746.json",
+    "sha256": "9a4ab487103d9b09013689b519ad5a322eb3d837c48c228506728952e03154a5",
+    "note": "fresh clean clone, lane_ready"
+   },
+   {
+    "label": "validation job driver summary",
+    "status": "INFO",
+    "return_code": 0,
+    "artifact": "compute/validation-752-driver-summary.json",
+    "sha256": "42fcb49b1b0e2a7b11ee7a3a7b9f5d44ac77d29c56708049ca5b9f4b0630fffb",
+    "note": "122 of 433 items run, 0 retired slots, 0 guard waits"
+   },
+   {
+    "label": "validation job plan",
+    "status": "INFO",
+    "return_code": 0,
+    "artifact": "compute/validation-752-plan.json",
+    "sha256": "9be958c9ef4ebf01ce3b62e818e01ba2b978b159ea802d4bd0791896362ca90e",
+    "note": "items_sha256 633b2753..."
+   },
+   {
+    "label": "validation job phases",
+    "status": "INFO",
+    "return_code": 0,
+    "artifact": "compute/validation-752-phases.json",
+    "sha256": "0ac5ec27c44e28bc997e4cf24e137cc3e20eedbbb10d3c0b9e35376655293ce2",
+    "note": ""
+   },
+   {
+    "label": "adversarial controls under the store",
+    "status": "INFO",
+    "return_code": 0,
+    "artifact": "compute/validation-752-adversarial-controls.json",
+    "sha256": "e5627689f3f5d9c7a8e2c870bfb0fb15d6a18521a243325c5ce8416982c9d154",
+    "note": "15 of 15 aggregates equal to inline"
+   },
+   {
+    "label": "pre-specified analysis output",
+    "status": "INFO",
+    "return_code": 0,
+    "artifact": "compute/validation-752-analysis.json",
+    "sha256": "bc8b54feb769a795c194a3602f18bb0f35821d417ee3ad5fbfdb7177ce2d396f",
+    "note": "R = 2.425; projection rows A-E"
+   },
+   {
+    "label": "post hoc regime split",
+    "status": "INFO",
+    "return_code": 0,
+    "artifact": "compute/validation-752-posthoc-regime-split.json",
+    "sha256": "717b3877b0a4a7ae8124a9ef53ea7f553f004b8d78365eef8b23ed31caba6f30",
+    "note": "post hoc; rows F and G"
+   },
+   {
+    "label": "validation evidence README",
+    "status": "INFO",
+    "return_code": 0,
+    "artifact": "compute/validation-752-README.md",
+    "sha256": "5bc9fb476568ef407ae2af99569edf320576c6e1d36562a75fa575c3c6a3f83b",
+    "note": "copied from the branch"
+   }
+  ],
+  "stage0_gpu_hours_spent": 1.338,
+  "stage0_cap_registered_gpu_hours": 8.0,
+  "stage0_projection_gpu_hours": {
+   "A: exec/2 without the store (fix pass model)": {
+    "P3_central": 10.57,
+    "P3_high": 12.41,
+    "P7_central": 15.16,
+    "P7_high": 18.35
+   },
+   "B: exec/2, store without gate (a), linear ratio (pre-specified), per job (model)": {
+    "P3_central": 10.77,
+    "P3_high": 12.69,
+    "P7_central": 15.67,
+    "P7_high": 19.06
+   },
+   "C: B scaled by this job's measured/model R = 2.425 (primary)": {
+    "P3_central": 19.99,
+    "P3_high": 24.66,
+    "P7_central": 31.89,
+    "P7_high": 40.1
+   },
+   "C2.5%: B scaled by the bootstrap 2.5% point of R (1.140)": {
+    "P3_central": 11.68,
+    "P3_high": 13.87,
+    "P7_central": 17.27,
+    "P7_high": 21.13
+   },
+   "C97.5%: B scaled by the bootstrap 97.5% point of R (4.837)": {
+    "P3_central": 35.6,
+    "P3_high": 44.92,
+    "P7_central": 59.33,
+    "P7_high": 75.71
+   },
+   "D: B with per-gate scales (references by theirs)": {
+    "P3_central": 18.14,
+    "P3_high": 22.26,
+    "P7_central": 27.04,
+    "P7_high": 33.81
+   },
+   "E: A scaled by the store-independent gates' R = 3.475": {
+    "P3_central": 26.11,
+    "P3_high": 32.51,
+    "P7_central": 42.05,
+    "P7_high": 53.13
+   }
+  },
+  "R_measured_over_model": 2.425,
+  "R_bootstrap_problems": {
+   "2.5%": 1.14,
+   "97.5%": 4.837
+  },
+  "seeds": [
+   42,
+   43,
+   44
+  ],
+  "known_doctor_mismatch": "scripts/research_direction_doctor.py validates the manifest with scripts/submit_research_job.validate_manifest, which requires an OCI digest in an 'image' field; the Docker discovery lane declares 'image_id'. The doctor's real-model-loop check reads harness/runner.py, which does not exist. The doctor parses the header's gpu_hours=0.5 as 0. None is repaired (rule 3)."
+ },
+ "doctors": [
+  {
+   "name": "Source",
+   "status": "PASS",
+   "artifact": "doctors/source.json",
+   "sha256": "7636da88cf86d341450e314b20a3202c0298d0b4cb7d37336997686835f3bde4"
+  },
+  {
+   "name": "Citation",
+   "status": "PASS",
+   "artifact": "doctors/citation.json",
+   "sha256": "9515c730a042624384cc33cb9e25f6eabfe70c451c3f199e10bd4be4dc82a066"
+  },
+  {
+   "name": "Novelty",
+   "status": "FAIL",
+   "artifact": "doctors/novelty.json",
+   "sha256": "af4c7e9b7ccd0333bcce85bb5b1924074aa589144ff55208fc873239ff6aec90"
+  },
+  {
+   "name": "Design",
+   "status": "FAIL",
+   "artifact": "doctors/design.json",
+   "sha256": "8c140bbe59c3db76bb4fe3656d24368940339f97c3ac55993d37092976bfddfe"
+  },
+  {
+   "name": "Compute",
+   "status": "FAIL",
+   "artifact": "doctors/compute.json",
+   "sha256": "b68f3ecf392fd3a5e4396ec330c045b1e8609bcb45841424fb80044a7fecc32f"
+  },
+  {
+   "name": "Safety",
+   "status": "PASS",
+   "artifact": "doctors/safety.json",
+   "sha256": "c3ad9c1e8a40aeace76683b86e86aecf52d0d2149521a4df25bf0913cfbaf799"
+  }
+ ],
+ "audit_log": null,
+ "audit_log_status": "Not written in synthesis. The wave-1 row is appended to program/gauntlet/ with scripts/research_gauntlet_record.py after the reviewers score, so the hash-chained score is a reviewer score.",
+ "synthesis_analyses": [
+  {
+   "artifact": "analysis/tf32_threshold_check.py",
+   "sha256": "486f409cd8f5f6336ddc5ca01919d09df8db4ac875c49fae1dbd60fec6369ce2"
+  },
+  {
+   "artifact": "analysis/tf32-threshold-check.json",
+   "sha256": "5f727584932b303a0f4d3b08629b0b045cd8eca41653bbbe8e0d5d34393d83a9"
+  },
+  {
+   "artifact": "analysis/stop_point_estimate.py",
+   "sha256": "46f7d5fa55e03e00cacaa1057a973a66e5b0e3537525231d6f260ae3142ab165"
+  },
+  {
+   "artifact": "analysis/stop-point-estimate.json",
+   "sha256": "b3b73ba7fad34de964999ffcd515801c8d8bfd07c52097c591d2338c2d307d3f"
+  }
+ ],
+ "findings": {
+  "F1_fatal_confound": "TF32-admissible audit threshold T >= 1 on admissible A1-A3 draws of L2/46, L2/59, L2/77, L2/95 and L2/100 (job 713, journal SHA-256 ddbfbbf6...); e(zeros) < 1, so an all-zeros output passes the audit's numerical channels there; found by the kill-shot cell, verified by synthesis.",
+  "F2_feasibility": "registered 8 GPU-h stop ends inside P1 under rows C, D and E (estimate); primary P3 projection 19.99 / 24.66 GPU-h",
+  "F3_novelty": "mutant arm OCCUPIED by 2609.22220; combination NARROWED, no direct prior found",
+  "direct_prior_match": false
+ },
+ "budget_ledger": {
+  "declared": {
+   "queries": 150,
+   "wall_minutes": 600,
+   "tokens": 8000000,
+   "dollars": 150,
+   "waves": 3,
+   "gpu_hours": 0.5
+  },
+  "used_through_synthesis": {
+   "queries": 136,
+   "queries_note": "orx discover only: frontier 55, kill-shot 27, cross-domain 47, synthesis 7 (3 failed); paper reads, metadata reads, version and API checks listed in the query log but not counted",
+   "wall_minutes_estimate": "frontier about 50 and cross-domain about 40 (self-reported), kill-shot not reported, run in parallel; synthesis about 110; not metered",
+   "tokens_estimate": "cross-domain about 0.35M (self-reported); frontier and kill-shot not reported; synthesis about 0.7M at the time of writing; not metered",
+   "dollars": "not metered; cells report 0 external API spend; model inference cost not attributed",
+   "gpu_hours": 0.0,
+   "gpu_hours_note": "No GPU used by the gauntlet. The D37 validation job (0.1092 GPU-h) is accounted under D31's re-pilot allowance, not this budget.",
+   "waves": "1 (in progress)"
+  }
+ },
+ "blind_discrimination_packet": {
+  "proposal": {
+   "artifact": "blind/paragraph-f1b804ce.txt",
+   "sha256": "9a0bea8cd5b0d2ff1ba0f1f641aad1a45a58d586988b3db1776c703841c0e0e5",
+   "text_sha256": "f1b804ce80daa6a0a51adbaf2bb2f3fa0f9e0b5691a141ce8df5c1ff931e7c6c"
+  },
+  "closest_prior": {
+   "artifact": "blind/paragraph-06b60264.txt",
+   "sha256": "06f687e8099efd3dcab69a3f031836d96fe236dc460fd6365d2c8e6aa31f99bd",
+   "text_sha256": "06b6026415735a393d97c8b04da030a0104b76240b40483038df5cac2763fe71"
+  },
+  "closest_prior_id": "arXiv:2609.22220 (Measuring the Checker: Mutation Analysis for GPU-Kernel Benchmark Oracles, v1 2026-09-02)",
+  "note": "File names carry no role. The critic receives the two texts in randomized order without this mapping; the mapping here is for the record."
+ },
+ "evidence_root_sha256": "5943a63dbcd8f30f7837474abe2a048af458de56c6f200972f6ef5b405514c88",
+ "direction_doctor_run": {
+  "artifact": "doctors/research-direction-doctor-output.json",
+  "sha256": "b155cdec21c9e8aab6c16169f307bfc1e1777f0890d655446853649bdc51727b",
+  "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-08-q1-stage0-gate-validation.md",
+  "note": "Outside evidence_root by design: the doctor's output depends on this bundle."
+ }
+}

@@ -1136,3 +1136,44 @@ Append-only. Newest entries at the bottom.
   grouped by row gate and missed gate c's `c1`-`c3` rows); post hoc regime split and
   exposure entry written after the data. Evidence:
   `program/evidence/2026-10-08/q1-exec2-validation/`.
+
+## 2026-10-08 — Q1 Stage 0 gauntlet wave 1: score 45, honest exit (branch `gauntlet/q1-stage0`, not merged)
+
+- Wave 1 under D37 (workflow `wf_fcfd5ed9-8a8`) on proposal
+  `program/proposals/2026-10-08-q1-stage0-gate-validation.md` (`7f4d080b...`,
+  commit `7af2f57`). Audit row 1 appended to
+  `program/gauntlet/2026-10-08-q1-stage0-gate-validation.jsonl`, row hash
+  `836c7e7d3820736d0d24a48f56271adbced541e4a34757d208cfceef8eaf4d42`.
+- Reviews: 47 (claude-opus-5-5) and 45 (qwen3.6-35b-a3b, self-hosted, Slurm
+  775). Both totals equal their dimension sums and sit below every cap (74,
+  79, 89). Score 45, best 45. Neither review is signed (D24).
+- Blind discrimination passed under the rule: same mechanism, proposal judged
+  stronger. The pass is weak, because the proposal's paragraph omits the
+  registered TF32-admissible policy. Refute-first triad: 3 of 3 refuted
+  (novelty: trivial recombination of MtC, CGV and Correctness Illusion;
+  identification: execution-arm confound; feasibility: the 8 GPU-h stop falls
+  inside P1). The doctor gives FAIL as expected (Novelty, Design and Compute
+  FAIL; trust store; known parser quirks, including `gpu_hours=0.5` read as 0).
+- Largest defect (F1): the audit metric cannot separate a correct TF32 matmul
+  or convolution from a destroyed output. In job 713 the correct L2/46
+  Inductor conv substrate scores e = 0.8275 on admissible draw A2/uniform8,
+  equal to the reference's own TF32 error, against e = 0.999 for all zeros.
+  The recorder checked this against the journal. A threshold-only D14 fix is
+  therefore excluded on stored data.
+- Honest exit. The query budget is used: 149 of 150 discover calls (the
+  recorder recounted from transcripts; the feasibility refuter ran one
+  unrecorded duplicate). A compliant wave 2 needs at least 18 more. The triad
+  also stopped the candidate. Tokens 5.95M of 8M (conservative counter),
+  $87.16 of $150 list-price equivalent, 123 of 600 minutes.
+- GPU: reviewer 2 job 775 used 0.0572 GPU-h, added to the ledger as
+  "Q1 Stage 0 gauntlet wave 1 open-weight review". The name does not start
+  with `q1-stage0`, so the Stage 0 spend in `trim.stage0_spent_gpu_hours`
+  stays 1.2289 (ledger test passes). The validation job 752 (0.1092 GPU-h) is
+  on `stage0/q1-exec2-validation`. Merging both branches conflicts trivially
+  at the ledger end and the total; the resolved total is 3.3521 GPU-h.
+- Waiting on Kevin: D14 and the audit metric (normaliser); a GPU allowance for
+  an S1-cal repair pilot (at most 0.1 GPU-h, pass rule written first); a
+  successor gauntlet with fresh budgets (six queries per refuter and
+  reviewer); the Stage 0 cap or a re-scope with the FRR core first. The Q1
+  status line in `program/state.json` was left unchanged to avoid a merge
+  conflict with the validation branch; update it at merge.

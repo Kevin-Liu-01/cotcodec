@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2608.12635",
+ "fetched_at": "2026-10-08T07:31:15Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42851,
+ "raw_sha256": "7eefa4baa643b3e3be226c33847fa3dbbee0e57ae41b195203539c982a6ba7a7",
+ "raw_stored": false,
+ "extract": {
+  "title": "GateTruth: Auditing the Rigor of RTL Design Benchmarks via Mutation Testing",
+  "authors": [
+   "Bhadra, Meet"
+  ],
+  "citation_date": "2026/08/12",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 12 Aug 2026 22:50:11 UTC"
+   }
+  ],
+  "abstract": "Benchmarks for evaluating large language models on register-transfer-level (RTL) hardware design have proliferated rapidly, yet none reports having applied mutation testing, an established hardware-verification technique for quantifying testbench quality, to ask whether its own testbenches are trustworthy. A testbench that never fails is not evidence of a correct design; it may simply never stimulate the logic that is actually broken. We introduce GateTruth, a mutation-testing engine and methodology for auditing RTL benchmark testbench rigor: inject a deterministic, seeded set of semantic mutants into a reference design and measure what fraction the testbench catches. We validate the methodology against our own 68-task, dual-track reference suite -- 60 specification-to-RTL generation tasks and 8 agentic-repair tasks, scored through a pinned, deterministic synthesis-to-timing flow with correctness enforced as a strict gate -- certifying that 46 of 60 Track A testbenches kill at least 95% of injected mutants under sequential, reproducible execution; we disclose why the other 14 do not, including a Goodhart effect on testbenches revised to pass this gate. We then point the same engine, unmodified, at RTLLM v2.0, a widely adopted external benchmark: of 46 auditable designs, 72% fall below the 95% floor our own suite is held to, and three score 0% outright. A comparable audit of NVIDIA's CVDP benchmark is structurally impossible: its public release withholds reference solutions, removing the golden RTL mutation testing requires. Auditing our own instrument also surfaced a second finding: an initially uniform 4096-token output cap silently truncated three of seven evaluated models, and re-running at 16,384 tokens moved one model from fifth place to first. We argue mutation-kill certification should become a standard reporting requirement for RTL-generation benchmarks generally.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

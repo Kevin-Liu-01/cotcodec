@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/RishiShah99/lethe",
+ "fetched_at": "2026-10-08T07:32:02Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 310698,
+ "raw_sha256": "7d6ad3de8716b35a184c18131254e42f8c3b322940b9978c396d170e0c14afbb",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - RishiShah99/lethe: Native Blackwell (sm_100) tcgen05 training backward for the gated-linear-recurrence family (GDN-2/GLA/KDA/SSD), plus a contract-grade verifier that falsifies published GPU kernels. Six open Mamba-3 Triton kernels including the first open MIMO backward; GRPO trainer graded on contract correctness. state-spaces/mamba#904 · GitHub"
+ }
+}
