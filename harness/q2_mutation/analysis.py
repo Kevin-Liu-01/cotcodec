@@ -31,6 +31,11 @@ freeze so no analysis choice is made after a confirmatory verdict is read:
   the headline and are reported as exploratory; for
   ``should_fail_violation``, P3 and P5; when kappa is below 0.6, P2-P5. K4
   stops the experiment;
+* gold defects (decision D34): the tasks whose gold sham the audit decided
+  reject (``raters.summarize``: their equivalence items left the equivalence
+  K3 group) are reported with P2 recomputed without those tasks' equivalence
+  mutants, a sensitivity estimate; P2 itself stays defined relative to the
+  gold;
 * K5, K6, K6b, K7 (family floor decides whether K7 applies) and K9.
 
 Every population is the one ``campaign.build_report`` marks: evaluable under
@@ -364,6 +369,25 @@ def headline(
                 seed,
             ),
         }
+    gold_defects = (audit or {}).get("gold_defects") or {}
+    defect_tasks = sorted(str(t) for t in gold_defects.get("tasks", []))
+    without = [
+        r
+        for r in kept
+        if not (r.get("label") == "should_pass_equiv" and str(r["task_id"]) in set(defect_tasks))
+    ]
+    out["gold_defects"] = {
+        "rule": (
+            "tasks whose gold sham the audit decided reject; their equivalence items left the "
+            "equivalence K3 group (decision D34); P2 stays defined relative to the gold"
+        ),
+        "tasks": defect_tasks,
+        "P2_without_their_equivalence_mutants": (
+            rate_table(metric_units(without, decisions, primary)[0]["P2"], n_boot, seed)
+            if defect_tasks
+            else None
+        ),
+    }
     p1 = None
     if controls is not None:
         runs = [("confirm", controls)]

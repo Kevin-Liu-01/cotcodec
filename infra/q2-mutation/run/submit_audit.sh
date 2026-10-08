@@ -14,6 +14,12 @@
 # sample.jsonl (labels, verdicts) stays on the host next to the packets and is
 # never mounted into a rater job. GPU-less, network-less (q2-mutation-cpu.sbatch).
 #
+# Item ids are salted with the audit's secret salt (decision D34): 32 random
+# bytes as 64 hex characters in ${root}/scratch/audit-salts/<audit-name>/salt.hex
+# (file mode 600, directory 700, outside every repository), written before this
+# script runs; only that directory is mounted (read-only), and the sample summary
+# records the salt's SHA-256 only. The salt is revealed after the isolated ingest.
+#
 # Usage (on the host): submit_audit.sh <git-sha> <mutation-run> <controls-run> \
 #          <audit-name> <metric-image-id> <lo-image-id> [workers] [reserve-controls-run]
 # The split is the one the mutation run recorded; any split but dev needs the
@@ -32,12 +38,17 @@ batch="${src}/infra/slurm/host-single-node/q2-mutation-cpu.sbatch"
 [[ -f "${mut}/score/outcomes.jsonl" ]] || { echo "${mut} has no scored outcomes" >&2; exit 2; }
 [[ -f "${ctl}/summary.json" ]] || { echo "${ctl} has no control summary" >&2; exit 2; }
 [[ ! -e "${out}" ]] || { echo "${out} exists; version the audit name" >&2; exit 2; }
+saltdir="${root}/scratch/audit-salts/${name}"
+[[ -f "${saltdir}/salt.hex" ]] || { echo "write the audit salt ${saltdir}/salt.hex first" >&2; exit 2; }
+[[ "$(stat -c %a "${saltdir}/salt.hex")" == "600" && "$(stat -c %a "${saltdir}")" == "700" ]] \
+  || { echo "the salt file must be mode 600 in a mode 700 directory" >&2; exit 2; }
+[[ "$(ls -A "${saltdir}")" == "salt.hex" ]] || { echo "${saltdir} must hold the salt only" >&2; exit 2; }
 split="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["split"])' "${mut}/submitted.json")"
 csplit="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["split"])' "${ctl}/submitted.json")"
 [[ "${split}" == "${csplit}" ]] || { echo "mutation run is ${split}, control run is ${csplit}" >&2; exit 2; }
 python3 "${src}/infra/q2-mutation/run/check_frozen.py" --src "${src}" --sha "${sha}" \
   --split "${split}" --metric "${metric}" --lo "${lo}"
-extra_ro="${mut}:/ro/mut+${ctl}:/ro/controls"
+extra_ro="${mut}:/ro/mut+${ctl}:/ro/controls+${saltdir}:/ro/salt"
 reserve_arg=""
 if [[ -n "${rrun}" ]]; then
   res="${root}/runs/${rrun}"
@@ -54,6 +65,7 @@ argv=$(hex sh -c "cd /src && python3 -m harness.q2_mutation.audit sample --run /
      --controls /ro/controls ${reserve_arg} \
      --sanitized /src/program/evidence/q2-mutation/sanitized-tasks \
      --file-cache /inputs/file_cache_1e112283/files --out /out \
+     --salt-file /ro/salt/salt.hex \
      --path-map /ro/build/=/ro/mut/build/ \
   && mkdir -p /out/baseline \
   && /src/infra/q2-mutation/run/reach.sh /out/baseline-jobs.jsonl /out/baseline ${workers} \

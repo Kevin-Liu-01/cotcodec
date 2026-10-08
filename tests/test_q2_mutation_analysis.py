@@ -107,6 +107,24 @@ def test_k3_single_rule_and_k2_label() -> None:
     assert set(kappa["metrics_leaving_headline"]) == {"P2", "P3", "P4", "P5"}
 
 
+def test_gold_defects_are_reported_with_a_p2_sensitivity() -> None:
+    """Decision D34: P2 stays relative to the gold; its gold-defect-free value is reported."""
+    rows = [_row(n, "t1", "should_pass_equiv", "fail") for n in range(3)]
+    rows += [_row(n, "t2", "should_pass_equiv", "pass") for n in range(3, 6)]
+    rows += [_row(6, "t1", "should_fail_violation", "fail")]
+    audit = {"kappa_fires": False, "k3_fires": {}, "gold_defects": {"tasks": ["t1"]}}
+    out = analysis.headline(rows, audit=audit, n_boot=200)
+    # P2 keeps the defect task's mutants (labels stay relative to the gold).
+    assert out["P2"]["pooled"]["rate"] == pytest.approx(0.5)
+    defects = out["gold_defects"]
+    assert defects["tasks"] == ["t1"]
+    assert defects["P2_without_their_equivalence_mutants"]["pooled"]["rate"] == 0.0
+    assert defects["P2_without_their_equivalence_mutants"]["pooled"]["tasks"] == 1
+    none = analysis.headline(rows, audit={"kappa_fires": False, "k3_fires": {}}, n_boot=200)
+    assert none["gold_defects"]["tasks"] == []
+    assert none["gold_defects"]["P2_without_their_equivalence_mutants"] is None
+
+
 def test_p1_and_k6_from_the_controls() -> None:
     def v(verdict: str) -> dict:
         return {"verdict": verdict, "score": None, "error": None}
