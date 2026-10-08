@@ -184,3 +184,19 @@ def test_draft_plan_digest_is_the_renderers(tmp_path):
     )
     assert run.returncode == 0, run.stderr
     assert f"`{run.stdout.strip()}`" in _text()
+
+
+def test_registered_base_is_the_draw_on_the_eligible_pool():
+    """Section 5.4 states the K = 32 base and the eligible pool the plan draws it from."""
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import render_q2_stage1_plan as renderer
+
+    inputs = renderer.load_inputs(ROOT)
+    pool = P.eligible_pool(inputs["confirm_ids"], P.OFFLINE_EXCLUDED)
+    base = P.draw_tasks(pool, inputs["domain"], 32)["base"]
+    text = " ".join(_text().split())
+    assert "K = 32 base: `" + " ".join(t[:8] for t in base) + "`" in text
+    assert f"**Eligible pool ({len(pool)} tasks):**" in text
+    for task in P.OFFLINE_EXCLUDED:
+        assert f"`{task[:8]}`" in text
+    assert f"`{P.SETUP_CHECK_SHA256}`" in text

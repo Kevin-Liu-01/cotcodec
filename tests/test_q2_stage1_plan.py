@@ -473,3 +473,19 @@ def test_offline_exclusion_rules():
     assert out["absent"] == ["(b) no setup-check-v2 record"]
     pool = P.eligible_pool(["0a0faba3-x", "b", "c"], {"c": ["(a)"]})
     assert pool == ["b"]
+
+
+def test_offline_excluded_is_the_registered_rule_on_the_committed_records(inputs):
+    """``plan.OFFLINE_EXCLUDED`` is section 5.4's rule applied to G0 item 5's second-pass
+    records (by their registered SHA-256), over every pool and dev task; the draw runs on
+    the eligible pool and keeps the 32-task floor."""
+    rows = P.load_setup_check(ROOT)
+    tasks = P.task_pool(inputs["confirm_ids"]) + sorted(inputs["dev_ids"])
+    computed = P.offline_exclusions(rows, tasks)
+    assert {t: tuple(r) for t, r in computed.items()} == P.OFFLINE_EXCLUDED
+    assert {r["task_id"] for r in rows} == set(tasks)  # every pool and dev task was checked
+    pool = P.eligible_pool(inputs["confirm_ids"], P.OFFLINE_EXCLUDED)
+    draw = P.draw_tasks(pool, inputs["domain"], 32)
+    assert len(draw["base"]) == 32 and not set(draw["base"]) & set(P.OFFLINE_EXCLUDED)
+    dev = P.dev_tasks(inputs["dev_ids"], P.dev_setup_ok(rows), 5)
+    assert not set(dev) & set(P.OFFLINE_EXCLUDED)

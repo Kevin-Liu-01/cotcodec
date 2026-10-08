@@ -192,7 +192,8 @@ def test_a1_session_one_manifest_is_the_plans(frozen_tree):
         rerun = int(sub["label"][-1])
         assert {(s["rerun"], s["extension_block"]) for s in sub["slots"]} == {(rerun, 1)}
         assert sorted({s["task_id"] for s in sub["slots"]}) == sorted(plan["extension_blocks"]["1"])
-    assert len(fill["blocks"][-1]["sub_blocks"][0]["slots"]) == 8  # the last block has 4 tasks
+    last = plan["extension_blocks"][str(len(fill["blocks"]))]
+    assert len(fill["blocks"][-1]["sub_blocks"][0]["slots"]) == 2 * len(last) < 16  # short last
     for slot in m["slots"]:
         validate(
             {**slot, "schema": "q2-stage1a-episode-v1", "attempt": 1, "status": "cap_truncated"}

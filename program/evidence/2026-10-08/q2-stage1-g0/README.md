@@ -10,7 +10,8 @@ draft is not frozen and has had no fresh audit yet.
 |---|---|---|
 | `opencua-remote-code/` | OpenCUA-7B's four remote-code files read and hashed (G0 items 2, 9.2; D49 iii) | fetch job 971 |
 | `dev-smoke/` | The episode lane end to end with the scripted fake engine on two dev tasks under both harnesses: 3 of 3 scored; offline rescoring matched live on 3 of 3 | 978, 983 |
-| `setup-check/` | G0 item 5: every pool (116) and dev (32) task's setup run once offline: 148 of 148 completed | 982 |
+| `setup-check/` | G0 item 5, first pass: every pool (116) and dev (32) task's setup run once offline: 148 of 148 raised no error (a step that fails inside the guest was not visible) | 982 |
+| `setup-check-v2/` | G0 item 5, second pass after the pre-freeze audit: every guest setup reply recorded per step, diagnostics, postconfig on the initial state; 145 of 148 clean; the offline-setup exclusion removes `26150609`, `982d12a5` and `e2b5e914` | 1011 |
 | `zinv/` | G0 item 8: the corrected comparator on the stored checker-mutation confirm campaign; gate passed in the third run (v1 0/29 and v2 26/29 kept) | 980, 995, 1000 |
 | `anchor/` | G0 item 9: the public runs' settings (9.5), the prompt check, the evaluator diff (9.6: 110 of 116 tasks excluded, so the anchor is UNAVAILABLE), and the development dry run of the vLLM check (9.3) | git reads on the host (997 and others), 998 |
 | `glmm/` | G0 item 12: the container build receipt, its package lock, and the acceptance fit on synthetic data | 972, 984 |
@@ -23,4 +24,5 @@ documents, and model replies) stay on the host under
 Source revisions: `9d4205a` (fetch lane, GLMM image), `dcd3d4a` (dev smoke), `ac6c7cd`
 (setup check, GLMM acceptance, rescoring of the smoke), `c3f2f9d` (zinv v1), `6c5948e`
 (zinv v2, anchor evidence), `1b18ba3` (zinv v3, the validated comparator), `e43549d`
-(transport check after the correctness and readiness review's fixes).
+(transport check after the correctness and readiness review's fixes), `8b4a874` (the second
+setup pass, with the offline-setup exclusion registered).
