@@ -462,3 +462,24 @@ the policy's safety and cost; (iv) D31 stands: Stage 0 waits on the gauntlet
 under D24, and a gauntlet wave on the Stage 0 design runs now, so the
 admission ruling (Kevin's) has a scored, reviewed package. D14's audit policy
 stays as registered (D31).
+
+**D38. Checker-mutation protocol: the eighth draft's choices, and the minor
+items fixed before the freeze.** The sixth review scored the D35 protocol 80
+(scores 55, 62, 56, 57, 64, 80) and its one blocker, user messages delivered
+as harness attachments, is fixed by a registered allow-list of entry and
+attachment types that fails closed. Accepted as implemented: the census audit
+with its seeded stratified fallback; gold shams for every audited task (wider
+than D34's K3 tasks); the relay frame registered under D35's constraints; and
+the difference-first packet order. Because a freeze pins this code, the
+review's minor items are fixed rather than recorded: the fallback takes the
+largest budget that fits; a registered collector maps every transcript of the
+rating run to its item and refuses any it cannot map; audit summarize refuses
+calls files whose relay frames differ, and the receipt records the relayed
+text verbatim; concordant contradictions join the adjudication pool for every
+candidate kind, not only the K3 groups; an interrupted attempt counts as
+answering only through a structured answer; and stale text is corrected. The
+confirm rating runs as one workflow session; if a resume brings a different
+relay frame, the items it voids are re-rated once in a fresh, unresumed run,
+answer-blind, and both results are reported. Kevin's own items stay his: the
+adjudication pool (about 16 items) and the human spot check (about 35 items,
+D9).
