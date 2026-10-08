@@ -1,0 +1,20 @@
+This is a load check of the reviewer lane, not a review: there is no proposal to assess.
+Answer with falsifiability_score 0, has_falsifier false and largest_defect "no proposal was given".
+
+
+---
+Answer with exactly one JSON object and nothing else. It must validate against this JSON Schema:
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Open-weight reviewer smoke answer",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["falsifiability_score", "has_falsifier", "largest_defect"],
+  "properties": {
+    "falsifiability_score": {"type": "integer", "minimum": 0, "maximum": 10},
+    "has_falsifier": {"type": "boolean"},
+    "largest_defect": {"type": "string", "minLength": 1, "maxLength": 400}
+  }
+}
+```
