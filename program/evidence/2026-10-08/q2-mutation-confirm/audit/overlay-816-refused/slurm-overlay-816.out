@@ -1,0 +1,6 @@
+usage: source-extractor.py [-h] --archive ARCHIVE --receipt RECEIPT
+                           --output-dir OUTPUT_DIR --expected-archive-sha256
+                           EXPECTED_ARCHIVE_SHA256 --expected-git-sha
+                           EXPECTED_GIT_SHA --expected-git-tree
+                           EXPECTED_GIT_TREE
+source-extractor.py: error: source receipt differs from the registered discovery archive

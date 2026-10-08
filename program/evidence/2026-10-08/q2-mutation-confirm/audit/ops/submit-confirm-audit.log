@@ -1,0 +1,19 @@
+== confirm audit preflight 2026-10-08T10:41:51Z
+ 10:41:51 up 68 days, 11:27, 61 users,  load average: 0.28, 0.69, 3.13
+ JOBID                           NAME ST       TIME TIME_LIMIT TRES_PER_NODE
+   814                q3v2-host-suite  R      12:42      30:00 N/A
+index, utilization.gpu [%], memory.used [MiB]
+0, 0 %, 0 MiB
+1, 0 %, 0 MiB
+2, 0 %, 0 MiB
+3, 0 %, 0 MiB
+4, 0 %, 0 MiB
+5, 0 %, 0 MiB
+6, 0 %, 0 MiB
+7, 0 %, 0 MiB
+{"frozen": true, "ledger_hash": "dc39bfa2f68e0fd57a213e0972266a4db60428e00d6c4e6bca8e576f35ec6439", "split": "confirm"}
+{"audit": "confirm-audit-v1", "split": "confirm", "mutation_run": "confirm-mutants-v1", "controls_run": "confirm-controls-v1", "git_sha": "65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1", "job": 815}
+submitted 2026-10-08T10:41:52Z
+ JOBID                           NAME ST       TIME TIME_LIMIT TRES_PER_NODE
+   815       cotcodec-q2-mutation-cpu PD       0:00    3:00:00 N/A
+   814                q3v2-host-suite  R      12:43      30:00 N/A
