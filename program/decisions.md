@@ -749,3 +749,15 @@ section 11 does not provide for. Section 9's program kill criterion applies
 (cut the Stage-1 task count before adding GPUs; S1a already uses at most 20
 VMs). If the host administrator raises the limit, a repair attempt's ladder
 gives its own N*, reported beside A7's.
+
+**D52. Q3 K1 v3 continues: a third repair and gauntlet wave.** On
+2026-10-09 the program owner asked to keep going on every line of work, which
+answers D50's open question in favour of continuing K1. Decided: one more
+CPU-only repair of the K1 v3 draft aimed at the defects wave 2 named (GO's
+identification: its guard against long-range literal spill must hold for the
+families it reads, or GO must be gated on a measured spill; GO's agreement
+across directions and its floor; the additivity the decision simulation
+assumes; and the screen's low chance of reaching any verdict), using only
+development-partition text and the existing receipts, then a fresh gauntlet
+run with newly declared budgets. Admission still needs D24's trust store or
+Kevin's ruling, whatever the score.
