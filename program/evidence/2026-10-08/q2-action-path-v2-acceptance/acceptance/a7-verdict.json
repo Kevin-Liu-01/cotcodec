@@ -1,0 +1,41 @@
+{
+  "accessibility_calls": 39036,
+  "accessibility_calls_counting": 39036,
+  "accessibility_calls_every_attempt": 39036,
+  "bound": 0.0005,
+  "failed_trials": 59,
+  "guest_server": {
+    "accessibility_calls": 39036,
+    "accessibility_calls_counting": 39036,
+    "development_rate": {
+      "accessibility_calls": 8114,
+      "interval_95": [
+        3.1202622608195517e-06,
+        0.0006866703710794798
+      ],
+      "rate": 0.00012324377618930243,
+      "restarts": 1
+    },
+    "restarts": 0,
+    "sessions_with_unattributed_restarts": [],
+    "trials_hit": []
+  },
+  "pass": true,
+  "per_session": {
+    "rate": 0.0,
+    "sessions": 516,
+    "sessions_with_restart": 0,
+    "upper_95": 0.0058056827006860295
+  },
+  "plan_calls": 39036,
+  "problems": [],
+  "rate": 0.0,
+  "restarts": 0,
+  "state_not_observed": {
+    "by_entry": {},
+    "no_processed_press_before": [],
+    "read_without_state": [],
+    "trials": 30960
+  },
+  "upper_95": 7.674280852428506e-05
+}

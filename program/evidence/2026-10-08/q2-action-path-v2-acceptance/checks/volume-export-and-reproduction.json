@@ -1,0 +1,70 @@
+{
+  "stage": "the volume campaigns A4 (job 1027) and A7 (job 1029) at attempt 1's N* = 32, attempt 1, and A5's final judgement",
+  "export_commit": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+  "why_this_commit": "the export the validity controls, the N = 1 acceptance stage and the ladder ran from (the commit that records ledger row 15)",
+  "local_export": {
+    "how": "git archive bf99a64 | tar -x into the session scratch directory, again for this stage (2026-10-09)",
+    "preregister_check_chain": {
+      "rows": 15,
+      "status": "PASS"
+    },
+    "preregister_verify": [
+      "q2-action-path-v2",
+      "q2-action-path-v2-inputs",
+      "q2-action-path-v2-executor"
+    ],
+    "pins_and_admission_tests": "uv run --locked --extra dev pytest -q -p no:cacheprovider tests/test_q2_prereg_inputs.py tests/test_q2_acceptance_admission.py in the export: 51 passed",
+    "source_tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "python": "3.13.14"
+  },
+  "host_export": {
+    "path": "~/cotcodec-runs/q2-action-path-v2/src/bf99a645c3782b2c59a75b6f463461b2515d0d97 (the earlier stages' export, unchanged; never ~/cotcodec)",
+    "checked_again_for_the_analysis": {
+      "source_tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+      "mode": "dr-xr-xr-x",
+      "pycache_dirs": 0,
+      "writable_entries_other_than_symlinks": 0,
+      "symlinks": 27,
+      "file_sha256": {
+        "infra/slurm/host-single-node/vm-campaign.sbatch": "3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a",
+        "harness/q2/action_path/acceptance.py": "ae5470e56e00a4a4a31fb591d41654efe29f7f0a4f45203c9cb03419ec55c573",
+        "harness/q2/action_path/volume_plan.json": "9567d257b769273788153c4193981f1c7eb1e8664b4d1ef36389b4fbd211802a",
+        "harness/q2/vm/manifest.py": "f238f12bdb8470919c8892eff46fe8b721e1e0c83ad08a60c0293ed8da3b9e2e",
+        "harness/q2/vm/driver.py": "06f3a29f39ad3a5de55efafd23fdfdfe121914f0f7f5dba281f4aabb68f74f7c",
+        "scripts/render_q2_action_path_manifest.py": "0d547c7af6c440f108526a4306870091da09e7b99419334d76a4bdd116b90845",
+        "scripts/submit_vm_campaign.py": "f08aafc8bc693cd6eb6850ff972a3401f3bddc99f3c14e03187b4d313fcc5917",
+        "scripts/record_slurm_end_states.sh": "33532668a2b41c068f76c4c65b1d60994fcd1746441bc405f6a438b9ccf2813f"
+      },
+      "same_digests_in_the_local_export": true
+    },
+    "pycache_dirs_after_all_analyses": 0,
+    "python": "3.10.12",
+    "note": "the batch record of each job (runs/<job>/preflight.txt) names the same batch script and tree digest, and the Slurm record runs the export's batch script (checks/run-checks-volume.json)"
+  },
+  "manifests": {
+    "rendered_on_host": 2,
+    "rendered_at": "2026-10-09 03:21 UTC, both before A4 was submitted",
+    "how": "ops/render_volume.sh 32 A4 and 32 A7 (the frozen renderer, --seed 43 --layer L0-fixed --concurrency 32, run from the host export with --host-root ~/cotcodec-runs/q2-action-path-v2; the renderer's default runner CPUs manifest.runner_cpus(32) = 16); each validated with the ledger by the renderer",
+    "rendered_again_locally_from_the_local_export_with_the_same_arguments": 2,
+    "byte_identical": true,
+    "list": "checks/local-render-sha256sums-volume.txt against manifests/rendered-sha256sums-volume.txt",
+    "edited_after_rendering": false,
+    "worst_case_budget_minutes": {
+      "A4": 1350,
+      "A7": 660,
+      "lane_limit": 1440
+    },
+    "session_ranges": "none: each campaign's worst-case budget fits the lane's 24 h, so each ran as one job (section 9 splits a campaign only when one job would exceed it)",
+    "registered_shape": "A4: L0-fixed, volume_plan.json's 64,028 trials over the 86 G entries in 1,068 sessions (534 per setting), seed-43 order; A7: L0-fixed, G in the screenshot-plus-accessibility setting only, 360 repetitions, 30,960 trials in 516 sessions; both N = 32 VMs, 128 vCPUs, 16 runner CPUs, Slurm CPUs 144, attempt 1"
+  },
+  "verdicts_reproduced": {
+    "raw_records": "run directories 1027 (5,344 files, 2.3 GB) and 1029 (2,584 files, 1.2 GB) copied to the session scratch directory; every file's SHA-256 equal to its runs/<job>/raw-sha256sums.txt entry, and each list covers exactly the files on disk; the 14 other acceptance run directories A5 reads (964-1025) checked the same way against their committed lists; the watcher records and slurm-<job>.out equal the bundle's copies",
+    "host_a4_twice": "ops/analyze_volume.py A4 ran on the host at 05:01 UTC (right after job 1027) and again at 16:46 UTC; all five output files byte-identical",
+    "local": "ops/analyze_volume.py (A4 and A7) and ops/analyze_acceptance.py (A5 over the boot-reset campaign and all 15 acceptance campaigns) run with the local export under Python 3.13.14 over the same attempt maps: all 8 A4/A7 JSON files, both A5 files and the three stdout lines byte-identical to the host's (Python 3.10.12)",
+    "n_star_recomputed": "analyze_volume.py recomputes N* with acceptance.n_star over attempt 1's A1 campaigns and attempt 1's ladder before judging A4 and A7: 32 on the host and locally",
+    "attempt_maps": "ops/attempts-a4.json and ops/attempts-a7.json, written on the host by ops/make_attempts.py from ops/submissions.log, regenerated locally byte-identical",
+    "analysis_scripts": "ops/render_volume.sh, ops/submit_volume.sh, ops/analyze_volume.py and ops/check_runs_volume.py as committed are byte-identical to the copies that ran on the host (sha256 f419522e..., 6120d60c..., 65e25365..., bcd7175c...); make_attempts.py, analyze_acceptance.py and collect_evidence.sh are the earlier stages' scripts, unchanged"
+  },
+  "run_checks": "checks/run-checks-volume.json (ops/check_runs_volume.py): every check passes for jobs 1027 and 1029; the only IPv4 address in the files read is the guest VM's internal NAT address in each manifest, as in the earlier stages",
+  "host_load": "checks/host-snapshots-volume.json (ops/host_snapshots.py): no foreign Slurm job in any of the 3,172 host snapshots (2,138 and 1,034); checks/procstat-summary-volume.json: host CPU busy and steal fractions from the operator's read-only /proc/stat samples (reported only; the A7 sampler stopped at 05:53:51 UTC, 53 of the job's 80 minutes, when the earlier operator session ended)"
+}
