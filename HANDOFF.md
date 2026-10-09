@@ -5,7 +5,7 @@
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 15 rows). Decisions taken
-on Kevin's behalf are D1-D46 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D50 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 4.62 in total.
 
 | Registration | Outcome | Evidence |
@@ -25,14 +25,20 @@ audit certifies "not grossly wrong", not 1% correctness
 
 ## In progress
 
-- **Q2 action path v2** (frozen, ledger rows 13-15): stage A campaigns (C2 on
-  seed 45, C1, C3, then A5, A1, A2, A3, A6 at N = 1; CPU only) on
-  `ops/q2-action-path-v2`. Then the ladder on a quiet host (no other Slurm job
-  may start during a rung), A4 and A7.
-- **Q3 K1 v3**: gauntlet wave 1 on a K1 v3 for Qwen3.5-4B-Base
-  (`gauntlet/k1-v3`), carrying the seven requirements of the v2 read.
-- **Q2 Stage 1**: a design panel is rescoping it from the cost card
-  (`stage0/q2-stage1-rescope`); it then goes through the gauntlet.
+- **Q2 action path v2** (frozen, ledger rows 13-15): stage A passed and was
+  independently verified (C1-C4; A1 at N = 1, 2,000 of 2,000; A2; A3; A6; A5
+  so far; `program/evidence/2026-10-08/q2-action-path-v2-acceptance/`). Stage
+  B is running: the concurrency ladder (no other Slurm job may start during a
+  rung, so nothing else is submitted meanwhile), then A4 and A7 at N*, then
+  A5 over every receipt and the suite's overall verdict.
+- **Q2 S1a** (`q2-stage1-rescoped-v1`, D47, D49): G0 built, audited and
+  re-checked (ready once the action-path suite passes). Its last TBDs (N*,
+  the accepted executor, the A1 step p95 reference, A0a's GPU timing) and
+  three sign-off slots wait on the suite verdict and on A0a; the OpenCUA
+  anchor is unavailable, so S1a runs unanchored with 32 base tasks.
+- **Q3**: K1 v3 paused after its gauntlet's second wave (D50, score 55);
+  the dense pre-check v2 result is Q3's Stage 0 outcome.
+- **Q1**: Stage 0 closed on the audit-metric study (D46).
 
 ## Waiting on Kevin
 
