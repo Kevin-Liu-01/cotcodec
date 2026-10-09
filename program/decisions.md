@@ -835,3 +835,34 @@ option (b)), `982d12a5` and `e2b5e914` leave the pool; `53ad5833` and
 `d38192b0` stay; the base is re-drawn on the 113 remaining tasks. The draft's
 two Kevin slots cite this entry. The remaining program sign-off (items 1-16
 and 19-27) is recorded after the pre-freeze audit.
+
+**D56. Q2 S1a (`q2-stage1-rescoped-v1`): the program's sign-off of items
+1-16 and 19-27, and S1a's reading of D53 (iii).** Two fresh pre-freeze
+auditors (after O1 and A0a) and two freeze rehearsals on scratch copies of the
+tree and the ledger read the draft. Every blocking item they raised is fixed,
+and Kevin ruled on item 17 and on G0 item 5 (D55). Decided, on Kevin's behalf:
+items 1-16 and 19-27 of the draft's section 18 are signed as written. Items 20
+and 22 (the OpenCUA-7B anchor and its `--trust-remote-code`, admissible under
+D49 (iii)) are moot: the anchor is UNAVAILABLE (G0 item 9.6), so S1a runs in
+the "anchor unavailable before A0b" branch, and every output is labelled "not
+externally anchored". Item 18 stays unsigned and moot, since the floor is 32
+either way. Under item 13, S1a's reading of D53 (iii) (section 7.3) is
+accepted. An observation the guest server does not deliver is an
+infrastructure loss. Every attempt is bounded: a checker read without its own
+timeout gets 150 s, then a transport loss. An observation delivered slowly or
+on a retry is counted per episode as infrastructure and reported beside the
+losses, and its episode is scored. This is D53 (iii)'s "counts ... as
+infrastructure". A delivered observation carries the guest's true state, and
+dropping delivered episodes on a delay the agent can influence would add a
+selection. The postconfig carve-out of section 7.2 is accepted on two
+conditions, which the registration states before the freeze. First, the
+observation counts and the postconfig server errors are also reported per
+session, because the session excess (P1) is the estimand a guest server that
+degrades in one session would bias. Second, a postconfig server-error
+sensitivity recomputes the primary estimands with every episode treated as
+missing that has any postconfig reply at HTTP 500 or above, or with no HTTP
+reply. A non-zero `returncode` under HTTP 200 is the agent's state and does
+not count. This sensitivity changes no decision rule. After the freeze, no
+pre-freeze job purpose (A0a, A0b, O1) is submitted. The freeze writes the
+frozen plan's `plan_sha256` into G0 item 10. O2, A1 and every later export
+run from the commit that adds the ledger row.
