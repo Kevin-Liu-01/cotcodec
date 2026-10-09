@@ -734,3 +734,18 @@ proposal and gauntlet record as the package. The dense pre-check v2 result
 verifier's caveats) stands as Q3's Stage 0 outcome. Kevin decides whether K1
 continues (fix GO's identification and decisiveness in the draft, then a
 third wave) or Q3 stops at this pre-result.
+
+**D51. Action-path v2: A4 and A7 at N* = 32; rung 40 not rerun under
+attempt 1.** The ladder (jobs 1017-1025) gives N* = 32. Rung 40 did not count:
+10 of its 80 cold boots hit the host's `fs.inotify.max_user_instances` (128),
+so `dnsmasq` failed in those VM containers. Raising the limit needs root,
+which no operator here has, and section 2.1 pins no kernel parameter. Section
+11 runs A7 at attempt 1's N*, computed over attempt 1's ladder, which ran in
+full; a rung that did not count may be rerun once. Decided (by the volume
+stage's operator, confirmed here): A4 and A7 run at N* = 32 (they did, jobs
+1027 and 1029), and rung 40 is not rerun under attempt 1, because a
+qualifying rerun after A7 would change attempt 1's N* after A7, a case
+section 11 does not provide for. Section 9's program kill criterion applies
+(cut the Stage-1 task count before adding GPUs; S1a already uses at most 20
+VMs). If the host administrator raises the limit, a repair attempt's ladder
+gives its own N*, reported beside A7's.
