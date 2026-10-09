@@ -62,3 +62,5 @@
 2026-10-09T02:37:55Z ladder-attempt1 job=1021 manifest=ladder-n24-seed43-a1.yaml
 2026-10-09T02:45:27Z ladder-attempt1 job=1023 manifest=ladder-n32-seed43-a1.yaml
 2026-10-09T02:53:11Z ladder-attempt1 job=1025 manifest=ladder-n40-seed43-a1.yaml
+2026-10-09T03:21:55Z A4-attempt1 job=1027 manifest=a4-l0fixed-seed43-n32-a1.yaml
+2026-10-09T05:00:32Z A7-attempt1 job=1029 manifest=a7-l0fixed-seed43-n32-a1.yaml

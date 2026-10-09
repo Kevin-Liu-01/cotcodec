@@ -1,0 +1,20 @@
+{
+ "1027": {
+  "busy_cpu_equivalents": 46.8,
+  "busy_fraction": 0.2249,
+  "iowait_fraction": 0.000434,
+  "samples_running": 190,
+  "steal_cpu_equivalents": 0.02,
+  "steal_fraction": 9.5e-05,
+  "window_s": 5835
+ },
+ "1029": {
+  "busy_cpu_equivalents": 54.5,
+  "busy_fraction": 0.262,
+  "iowait_fraction": 0.000408,
+  "samples_running": 105,
+  "steal_cpu_equivalents": 0.022,
+  "steal_fraction": 0.000108,
+  "window_s": 3195
+ }
+}
