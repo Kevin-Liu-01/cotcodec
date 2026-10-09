@@ -761,3 +761,37 @@ assumes; and the screen's low chance of reaching any verdict), using only
 development-partition text and the existing receipts, then a fresh gauntlet
 run with newly declared budgets. Admission still needs D24's trust store or
 Kevin's ruling, whatever the score.
+
+**D53. Q2 action path v2 accepted on attempt 1; D51 corrected; S1a goes to its
+pre-freeze jobs.** The suite's registered verdict was reproduced by two fresh
+verifiers, each recomputing every verdict with the frozen code from SHA-256-checked
+raw records (`independent-verification-stage-a.json`, `-stage-b.json`):
+C1-C4, A1 at N = 1 and at N* = 32, and A2-A6 pass, so Stage 1 may start; A7 passes,
+so the screenshot-plus-accessibility setting may be used; N* = 32 < 40, so section
+9's program kill criterion applies (cut the Stage-1 task count before adding
+GPUs). The verdict covers the L0-fixed runtime and the two Stage-1 harness
+adapters on this host as configured, at no more than 32 concurrent VMs. It does
+not cover more VMs, another host, image or kernel setting, untested catalog
+instances, or the guest server under Stage-1 task applications. Three
+corrections. (i) A4 and A7 were rendered and submitted about six minutes after
+the ladder stage handed the rung-40 choice to the program owner, and D51 ratified
+it 13 hours later. No verdict changes: the rerun was optional, and with the host
+limit unchanged it would almost surely have failed the same way. This is
+disclosed as a governance deviation. From now on an operator stage that hands a
+choice to the owner stops until a decision is recorded, and workflow prompts say
+so. (ii) D51's last sentence is wrong. Section 11 repairs only a failed attempt,
+with a new executor SHA, so raising the host's inotify limit opens no repair
+attempt. Running above 32 VMs after a host change needs a registered deviation or
+a new registration with its own ladder. (iii) The observation service failed in
+ways no criterion bounds: a whole-boot `/accessibility` HTTP 500 without a
+restart (A7 session 193; 1 of 1,245 accessibility boots), first-call 500s and two
+hangs of about 125 s that were delivered on retry. Any Stage-1 registration
+counts undelivered, and very slow, observations per episode as infrastructure,
+not only restarts. S1a reads screenshots only (session 193 delivered every
+screenshot); before its freeze, S1a must classify persistent guest-server errors
+on any observation call as infrastructure losses. S1b, if it uses the
+accessibility setting, must bound these failures. S1a: G0 item 1 is filled from
+attempt 1 (N* = 32, so V = 20 with the sizes run in sequence). O1 and A0a run
+under D49 (ii), followed by a fresh pre-freeze audit. The freeze still waits on
+the sign-off slots of the draft's section 18, two of which are the program
+owner's own.
