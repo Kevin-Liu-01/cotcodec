@@ -1081,13 +1081,18 @@ Every quantity is task-weighted over the analysis set. The code is
    public runs differ by 7.5-9.7% on all 359 tasks: holo3-v2 receipt).
 10. **Cost card.** Realized GPU-h and VM-h per episode by size, harness and
     job (`analysis.realized_costs`; `python -m harness.q2_stage1.analysis costs`
-    builds `costs.json` from the lane records and `sacct`):
+    builds `costs.json` from the lane records):
     - an A1 job's **episodes** are its episode attempts that ran to an end,
       status `scored` or `infrastructure` (first attempts and re-queues, base and
       fill blocks); a `cap_truncated` attempt is not one;
     - **realized GPU-h per episode** is the GPU job's Slurm elapsed time
-      (`sacct` ElapsedRaw, engine start-up included) in hours over those
-      episodes. This is the input of DR4 and P5;
+      (EndTime minus StartTime, engine start-up included) in hours over those
+      episodes. This is the input of DR4 and P5. Slurm accounting is off on the
+      host and `scontrol` forgets a finished job within minutes, so the VM lane
+      records both: StartTime when the engine is ready, EndTime by polling for
+      the GPU job's final state after `vm.done`; if the lane could not see the
+      end, the bridge's `stopped.json` `t_end` (the workload's end, seconds
+      before the job's) stands in (`analysis.gpu_elapsed`);
     - **by harness**: both harnesses share one engine, so the job's GPU-h is
       split between them in proportion to their summed slot occupancy (dispatch
       to teardown) over those episodes, then divided by each harness's episodes;
@@ -1610,7 +1615,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/records.py` | `468bff7150d5d462376cbabf12af8f558b9326e8297f2ef52031cc10b28679e4` |
 | `harness/q2_stage1/rules.py` | `63ed09b0362595e85ac65c9bd29b090dc8b1a3a5e4ab3ace559243a82389d8b0` |
 | `harness/q2_stage1/plan.py` | `1f9c77f758ed590d99597488219cc49fae0e0f3c53567d628d14382346fc2187` |
-| `harness/q2_stage1/analysis.py` | `4a33aea8dbda09b759faa5f2745e32a60a06a0e75d9aceadc5f64c2380f5a7fb` |
+| `harness/q2_stage1/analysis.py` | `2cb9f2b942a783492a5d418230370cf461a33daf86be1530c479b58814e59bae` |
 | `scripts/render_q2_stage1_manifest.py` | `50344cba078d2d8129b26b43d313c0c29a2ebcb64bf0657faba9b6d63f6ee632` |
 | `scripts/render_q2_stage1_plan.py` | `44825c58dfed70f60f37d7afb55de5c59de486c4d000000f05c1261adf902341` |
 | `scripts/submit_docker_research_job.py` | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
@@ -1625,7 +1630,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/bridge.py` | `7083f728511477e8f32ed90a026290e6982ae04c9d5f8f61274112f5724d0550` |
 | `harness/q2_stage1/fake_engine.py` | `02e0b66e7b67b3647dc853c4069de21ce3e6234ed01ec4e3842afbd42cd89a00` |
 | `harness/q2_stage1/osworld_live.py` | `dacf6336a02c6a69a5f097be50385b7b31d389d5818abc8ecef4612e95153e12` |
-| `harness/q2_stage1/lane.py` | `336e86b2d3d8060ecfdd465742c6ebbfb0fbcc9155e8b668a76084ea510644d6` |
+| `harness/q2_stage1/lane.py` | `08847e43f2f2e81e0a77d6cfd3fe234aaefecf6fb67e8255de791529a8f5bf09` |
 | `harness/q2_stage1/rescore.py` | `d240db03e969c8aa5bb97403c5005cd4c9e96016599a78f70e97850415893737` |
 | `harness/q2_stage1/zinv.py` | `64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655` |
 | `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |
@@ -1838,7 +1843,7 @@ Everything is CPU-only; no GPU job and no GPU episode ran.
 | A-B5 | DR0's stop, the 9B-then-4B order and the 12-hour gap existed only as text | Fixed: `rules.job_dr0` and `python -m harness.q2_stage1.rules dr0` judge one A1 job from its lane records and receipt; each A1 manifest names every earlier A1 job's record file and receipt by SHA-256 in `plan.a1_job_order`, and the lane refuses a missing or changed file or a job that fired DR0; a session-2 VM job is submitted with `--begin` at the later session-1 end plus 12 hours and the lane refuses to start earlier | 5.5, 11; `rules.py`, `lane.py`, `plan.py`, `render_q2_stage1_manifest.py` |
 | A-B6 | The episode image, re-queue, episode timeout and the GPU half's cap and model were operator input | Fixed: A0a and A1 manifests must name the registered episode image and may not set re-queue, the episode timeout or the interpreter; the GPU half is rendered from the validated VM manifest (size and cap), with no free size or minutes; before dispatch the lane checks the GPU job's `ready.json` engine argv against `plan.engine_argv` for the job's size and its Slurm time limit against the cap, and counts USR1 from the Slurm start | 5.5, 5.6; `lane.py`, `render_q2_stage1_manifest.py` |
 | A-B7 | Kevin's sign-offs and the unanchored read were not slots, so the guard would have frozen the file without them | Fixed: three sign-off slots in section 18 (Kevin: item 17 and the read without the D11 check; Kevin: G0 item 5's decisions; the program: items 1-16 and 19-27); a test checks them | 18 |
-| A-B8 | "Realized GPU-h per episode" (DR4, P5) undefined and computed by nothing | Fixed: section 9 item 10 defines it (the GPU job's `sacct` elapsed hours over the job's episodes that ran to an end; per harness by slot-occupancy share); `analysis.realized_costs` and `python -m harness.q2_stage1.analysis costs` build `costs.json` from the lane records | 9, 11; `analysis.py` |
+| A-B8 | "Realized GPU-h per episode" (DR4, P5) undefined and computed by nothing | Fixed: section 9 item 10 defines it (the GPU job's Slurm elapsed hours, EndTime minus StartTime as the VM lane records them from `scontrol` because accounting is off on the host, with the bridge's stop time as the registered stand-in for a missed end, over the job's episodes that ran to an end; per harness by slot-occupancy share); `analysis.realized_costs` and `python -m harness.q2_stage1.analysis costs` build `costs.json` from the lane records, with no typed input | 9, 11; `analysis.py` |
 
 Non-blocking items:
 

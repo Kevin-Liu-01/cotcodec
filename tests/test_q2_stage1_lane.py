@@ -457,6 +457,11 @@ def test_parse_scontrol_reads_start_and_limit():
     info = lane.parse_scontrol(text)
     assert info["state"] == "RUNNING" and info["time_limit_min"] == 111
     assert info["start_time"] == "2026-10-08T21:30:00" and isinstance(info["start_epoch"], float)
+    done = lane.parse_scontrol(
+        "JobId=1 JobState=COMPLETED StartTime=2026-10-08T21:30:00 "
+        "EndTime=2026-10-08T23:21:00 TimeLimit=01:51:00"
+    )
+    assert done["end_epoch"] - done["start_epoch"] == 111 * 60
     for value, minutes in (("25", 25), ("00:25:00", 25), ("1-00:00:00", 1440), ("25:30", 26),
                            ("2-03", 51 * 60), ("UNLIMITED", None)):  # fmt: skip
         assert lane.parse_time_limit(value) == minutes, value
@@ -484,6 +489,9 @@ def registered_lane(tmp_path, *, argv_size="9B", limit=25, start=5000.0):
 
     def slurm(job_id):
         calls.append(job_id)
+        if (tmp_path / "gpu" / "77" / "bridge" / "vm.done").exists():  # the job has ended
+            return {"state": "COMPLETED", "time_limit_min": limit, "start_epoch": start,
+                    "end_epoch": start + 900}  # fmt: skip
         return {"state": "RUNNING", "time_limit_min": limit, "start_epoch": start}
 
     docker = FakeDocker({})
@@ -494,7 +502,12 @@ def registered_lane(tmp_path, *, argv_size="9B", limit=25, start=5000.0):
 def test_registered_job_dispatches_only_against_the_registered_engine(tmp_path):
     the_lane, docker, calls = registered_lane(tmp_path / "ok")
     receipt = the_lane.run()
-    assert "error" not in receipt and calls == ["77"] and docker.episodes
+    assert "error" not in receipt and calls == ["77", "77"] and docker.episodes
+    # After vm.done the lane records the GPU job's end (accounting is off on the host).
+    assert receipt["gpu_job_end"]["state"] == "COMPLETED"
+    assert receipt["gpu_job_end"]["end_epoch"] == 5900.0 and receipt["bridge_dir"].endswith(
+        "bridge"
+    )
     # USR1 comes 180 s before the GPU job's limit, counted from its Slurm start.
     assert receipt["usr1_epoch"] == 5000.0 + 25 * 60 - 180
     assert receipt["gpu_job"]["start_epoch"] == 5000.0 and receipt["first_dispatch"] == 5300.0
@@ -506,3 +519,13 @@ def test_registered_job_dispatches_only_against_the_registered_engine(tmp_path):
     assert "time limit is 30 minutes, not its cap of 25" in receipt["error"]
     assert not docker.episodes and receipt["statuses"] == {"cap_truncated": 1}
     assert (tmp_path / "cap" / "gpu" / "77" / "bridge" / "vm.done").exists()  # engine stopped
+
+
+def test_a_gpu_job_that_has_not_ended_leaves_no_end_time(tmp_path):
+    """A running job's scontrol EndTime is its projected limit; the lane does not record it
+    as an end (the bridge's stop time then stands in, section 9 item 10)."""
+    the_lane, _, _ = registered_lane(tmp_path)
+    the_lane.gpu_job_id = "77"
+    the_lane.slurm_job = lambda job: {"state": "RUNNING", "start_epoch": 1.0, "end_epoch": 9.0}
+    out = the_lane.wait_gpu_end(wait_s=0.0, poll_s=0.0)
+    assert out["error"] == "no final state" and "end_epoch" not in out

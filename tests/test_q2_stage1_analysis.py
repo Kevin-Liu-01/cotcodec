@@ -249,12 +249,26 @@ def test_realized_costs_follow_section_9_item_10(tmp_path):
                  infrastructure_type="transport" if r["status"] == "infrastructure" else None)
             for r in rows if r["job"] == "A1-9B-S1"]  # fmt: skip
     (run / "episodes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in recs))
-    (run / "lane-receipt.json").write_text(json.dumps({"gpu_job": {"job_id": "88"}}))
+    bridge = tmp_path / "bridge"
+    bridge.mkdir()
+    (bridge / "stopped.json").write_text(json.dumps({"t_end": 5000.0 + 3200}))
+    receipt = {"gpu_job": {"job_id": "88", "start_epoch": 5000.0},
+               "gpu_job_end": {"job_id": "88", "state": "COMPLETED", "end_epoch": 5000.0 + 3240},
+               "bridge_dir": str(bridge)}  # fmt: skip
+    (run / "lane-receipt.json").write_text(json.dumps(receipt))
     out = tmp_path / "costs.json"
-    assert A.main(["costs", "--run-dir", str(run), "--elapsed", "A1-9B-S1=3240",
-                   "--out", str(out)]) == 0  # fmt: skip
+    assert A.main(["costs", "--run-dir", str(run), "--out", str(out)]) == 0
     costs = json.loads(out.read_text())
     assert costs["A1-9B-S1"]["gpu_h_per_episode"] == pytest.approx(0.1)
+    assert costs["A1-9B-S1"]["gpu_elapsed_source"] == "scontrol EndTime"
+    # Slurm forgot the job before the lane saw its end: the bridge's stop stands in.
+    forgot = {**receipt, "gpu_job_end": {"job_id": "88", "error": "Invalid job id"}}
+    assert A.gpu_elapsed(forgot, {"t_end": 8200.0}) == {
+        "gpu_elapsed_s": 3200.0, "source": "bridge stopped.json"}  # fmt: skip
+    running = {**receipt, "gpu_job_end": {"state": "RUNNING", "end_epoch": 5000.0 + 6660}}
+    assert A.gpu_elapsed(running, {"t_end": 8200.0})["source"] == "bridge stopped.json"
+    with pytest.raises(ValueError, match="Slurm start"):
+        A.gpu_elapsed({}, {"t_end": 1.0})
     assert A.costs_by_size(costs)["9B"]["episodes"] == 9
     assert rules_dr4(costs) == ["A1-9B-S1"]  # above the V = 20 high price
 
