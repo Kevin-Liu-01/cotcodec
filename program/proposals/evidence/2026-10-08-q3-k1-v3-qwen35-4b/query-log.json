@@ -3820,5 +3820,108 @@
   },
   "queries_against_budget": 6,
   "note": "Wave 1 counted 171 queries against its own 150 (cells 146, synthesis 2, refuters 17, reviewer 6), recorded in program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl. This run's budget is fresh: 6 used by the repair, 54 left for the blind critic, the refuters (at least six each) and the reviewers."
- }
+ },
+ "repair3_run": {
+  "run": "fresh gauntlet run after D52 (single-owner repair of the K1 v3 draft, 2026-10-09)",
+  "declared_query_budget": 60,
+  "convention": "A counted query is one orx discover call that reached its backend. Paper reads, version checks, citation lookups and dataset-row reads are recorded and not counted (K1 v2 convention).",
+  "rows": [
+   {
+    "id": "RP3-Q1",
+    "timestamp": "2026-10-09T17:10:40Z",
+    "tool": "orx discover keyword --limit 15 --published-after 2026-10-07",
+    "query": "sparse attention indexer selector language",
+    "returned_ids": [
+     "2610.11134",
+     "2610.10871",
+     "2610.11201",
+     "2610.09496",
+     "2610.10274",
+     "2610.11430",
+     "2610.11302",
+     "2610.10893",
+     "2610.11262",
+     "2610.11579",
+     "2610.10135",
+     "2610.12300",
+     "2610.09600",
+     "2610.11063",
+     "2610.11251"
+    ],
+    "counted": true,
+    "raw_sha256": "712d285b874954ae99329f444a765d84bf264213125c04528c73ba9839387180"
+   },
+   {
+    "id": "RP3-Q2",
+    "timestamp": "2026-10-09T17:10:41Z",
+    "tool": "orx discover embedding --limit 15",
+    "query": "A learned token selector distilled from a frozen language model's own attention is audited against that attention's exact top-k selection when the question is in a different script from the evidence passage; the excess loss must appear in both translation directions, on evidence before the first literal match, and on both a linear and a logarithmic retention scale, so that independent question-side and passage-side deficits cannot produce it.",
+    "returned_ids": [
+     "2610.08159",
+     "2609.36138",
+     "2609.37700",
+     "2609.08574",
+     "2608.20768",
+     "2609.26823",
+     "2609.09902",
+     "2609.16501",
+     "2609.04582",
+     "2609.14861",
+     "2609.11365",
+     "2608.20290",
+     "2609.13725",
+     "2609.04579",
+     "2608.15022"
+    ],
+    "counted": true,
+    "raw_sha256": "2570b7057660a5b86211577d43c673da0c0a22c937232d9b03105231675360e9"
+   }
+  ],
+  "not_counted": [
+   {
+    "tool": "orx paper --full",
+    "query": "2601.18886",
+    "returned_ids": [
+     "2601.18886"
+    ],
+    "counted": false,
+    "raw_sha256": "4994c4bb15afad9d46093554e8fa48038b3d602527969e430e2612ed22540290",
+    "use": "sections 3 to 5, footnotes 4 and 5, Figure 2 caption, RQ4 (C07, closest prior 4, blind packet 9606bfd6)"
+   },
+   {
+    "tool": "orx paper --full",
+    "query": "1910.07475",
+    "returned_ids": [
+     "1910.07475"
+    ],
+    "counted": false,
+    "raw_sha256": "4393c3e025d0622c7e90d7224945982e5e1237a1bfc2df45442bf7b29da5e01c",
+    "use": "G-XLT definition, section 5.2 (C50)"
+   },
+   {
+    "tool": "orx paper --full",
+    "query": "2608.27309",
+    "returned_ids": [
+     "2608.27309"
+    ],
+    "counted": false,
+    "raw_sha256": "44c6cfc7940d0c331ea137c5aad57ef883cdcba408a65e95852a1d2d9f6e87bb",
+    "use": "abstract, section 1 (C51)"
+   },
+   {
+    "tool": "orx paper --full",
+    "query": "2609.15545",
+    "returned_ids": [
+     "2609.15545"
+    ],
+    "counted": false,
+    "raw_sha256": "9e1e9445a1c47c9fbebdb4258e8002b1f15e41572adcbbdd4bfb38e18d84ae32",
+    "use": "abstract (C52)"
+   }
+  ],
+  "screening": "RP3-Q1 is a recency check from 2026-10-07: no selector audit across languages (2610.10871 and 2610.11201 are sparse-attention method papers, read as titles and abstracts). RP3-Q2 returned nothing on topic. No direct prior.",
+  "queries_against_budget": 2,
+  "note": "Counted against this run's declared 60 (D52). Wave 2's 34 counted queries are recorded in the wave-2 gauntlet row."
+ },
+ "queries_against_budget_this_run": 2
 }

@@ -1,0 +1,36 @@
+{
+  "url": "https://arxiv.org/abs/2608.27309",
+  "fetched_at": "2026-10-09T17:22:26Z",
+  "http_status": 200,
+  "content_type": "text/html; charset=utf-8",
+  "raw_bytes": 42947,
+  "raw_sha256": "a2adda3b90e702db8ccb22ecce87ef1b5fc3278592d63c53e85e56b5ff42cf2a",
+  "raw_stored": false,
+  "extract": {
+    "title": "Difference-in-Differences on a Censored Rating Scale Can Manufacture an Effect: Evidence from a Pre-Registered LLM-Judge Audit",
+    "authors": [
+      "Fan, Shuyi",
+      "Deng, Boyuan",
+      "Xu, Mengyu",
+      "Xie, Xinhong",
+      "Li, Chenyang",
+      "Zhang, Hongyang"
+    ],
+    "citation_date": "2026/08/27",
+    "submission_history": [
+      {
+        "version": "v1",
+        "date": "Thu, 27 Aug 2026 16:10:16 UTC"
+      },
+      {
+        "version": "v2",
+        "date": "Wed, 2 Sep 2026 05:16:14 UTC"
+      },
+      {
+        "version": "v3",
+        "date": "Sun, 4 Oct 2026 11:30:23 UTC"
+      }
+    ],
+    "abstract": "LLM-judge audits assess bias by comparing ratings across matched conditions. Difference-in-differences designs compare two candidate responses within each item and then compare that contrast across a manipulated attribute. We show in closed form that this endpoint need not identify differential preference on the latent scale when ratings are bounded. A severity shift common to both responses produces an observed interaction whenever the scale bounds attenuate it unequally. We examine this problem in a pre-registered audit comprising 990 calls to a frozen pedagogy judge. The registered primary analysis did not detect an effect of the stated learner profile on scaffolding preference. The only nominally significant secondary interaction concerned productive struggle ($+0.378$ points; $p = 0.002$). A post-hoc construction with zero differential preference reproduced 79 to 85\\% of this interaction using the observed severity shift and the scale floor alone. The observed interaction therefore does not identify differential preference on the latent scale."
+  }
+}
