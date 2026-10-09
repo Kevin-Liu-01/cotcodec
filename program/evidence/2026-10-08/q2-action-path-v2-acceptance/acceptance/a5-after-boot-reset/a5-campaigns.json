@@ -1,0 +1,152 @@
+[
+  {
+    "accessibility_calls": 0,
+    "attempt": null,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.906,
+      "n": 21,
+      "p50": 17.129,
+      "p95": 17.88
+    },
+    "c4_flags": {},
+    "campaign_id": "q2ap-v2-a5-bootreset-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A5",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791474370.5842605,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "964",
+    "jobs": [
+      "964"
+    ],
+    "kind": "boot-reset-validation",
+    "labelled_containers_left": [],
+    "layer": null,
+    "leaked_volumes": [],
+    "manifest_json_sha256": "8e2d7615a833abfa9cc63d697f2667b15fb623a9db8b1823c1480963bd5d0843",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {},
+    "qcow2_unchanged": true,
+    "receipt_sha256": "066d19521ec94027466fb12c6537ab25396072481977416b9da753a45ea08abf",
+    "receipt_summary": {
+      "boot_s": {
+        "max": 17.906,
+        "n": 21,
+        "p50": 17.129,
+        "p95": 17.88
+      },
+      "boots_ok": 21,
+      "containers_removed_all": true,
+      "cycles": 21,
+      "distinct_boot_ids": 21,
+      "errors": [],
+      "hmp_cycles_all_ok": 0,
+      "hmp_step_pass_counts": {
+        "button_left": "21/21",
+        "button_middle": "21/21",
+        "button_right": "21/21",
+        "caps_lock_off": "21/21",
+        "caps_lock_on": "21/21",
+        "chord_shift_comma": "21/21",
+        "key_a": "21/21",
+        "key_compose": "21/21",
+        "key_esc_after_compose": "21/21",
+        "key_esc_after_menu": "21/21",
+        "key_esc_after_right": "21/21",
+        "key_kp_add": "21/21",
+        "key_kp_enter": "21/21",
+        "key_less_102nd": "21/21",
+        "key_menu": "0/21",
+        "rel_motion": "21/21",
+        "wheel_dz_neg": "21/21",
+        "wheel_dz_pos": "21/21"
+      },
+      "infra_gates_pass": true,
+      "latency_s": {
+        "accessibility_s": {
+          "n": 63,
+          "p50": 1.2858,
+          "p95": 1.542
+        },
+        "execute_noop_s": {
+          "n": 63,
+          "p50": 0.0145,
+          "p95": 0.0163
+        },
+        "screenshot_s": {
+          "n": 63,
+          "p50": 0.5537,
+          "p95": 0.5782
+        }
+      },
+      "leaked_volumes": [],
+      "nat_modes": [
+        "nat"
+      ],
+      "no_gpu_all": true,
+      "no_published_ports_all": true,
+      "sentinel_pristine": 20,
+      "sentinel_readback_dconf": 21,
+      "sentinel_readback_file": 21,
+      "sentinel_readback_gsettings": 21,
+      "sentinel_reset_checks": 20,
+      "settled_s": {
+        "n": 21,
+        "p50": 20.432,
+        "p95": 22.688
+      },
+      "tap_selftest_ok": 0
+    },
+    "reset_observations": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "restarts": 0,
+    "seed": [],
+    "session_errors": [],
+    "sessions": 21,
+    "settings": null,
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791473331.1917076,
+    "step_s": {
+      "n": 0,
+      "p50": null,
+      "p95": null
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 0,
+    "trials_pass": 0,
+    "unreadable": []
+  }
+]

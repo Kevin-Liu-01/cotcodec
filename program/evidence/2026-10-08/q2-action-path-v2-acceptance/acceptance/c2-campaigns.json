@@ -1,0 +1,582 @@
+[
+  {
+    "accessibility_calls": 0,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": [
+      17.214,
+      17.279,
+      16.899,
+      17.186,
+      17.212,
+      17.396,
+      17.395,
+      17.336,
+      17.229
+    ],
+    "campaign_id": "q2ap-v2-c2-l0raw-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "C2",
+    "earlier_attempts": [],
+    "failed_trials": [
+      {
+        "cell": "key_kp_enter",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [] != [['KeyPress', 'KP_Enter', []], ['KeyRelease', 'KP_Enter', []]]"
+        ],
+        "seq": 19,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji_zwj",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "text ' ' != '\ud83d\udc69\\u200d\ud83d\udcbb \ud83d\udc68\\u200d\ud83d\udc69\\u200d\ud83d\udc67'"
+        ],
+        "seq": 23,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "text '  ' != '\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627'",
+          "marker [35, 50578] != probe final [35, 16267]"
+        ],
+        "seq": 35,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_unicode_bmp",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'"
+        ],
+        "seq": 36,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_back",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 8, 960, 540], ['ButtonRelease', 8, 960, 540]], observed []"
+        ],
+        "seq": 46,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "text 'ok  done ' != 'ok \ud83d\ude80 done \ud83c\udf89'"
+        ],
+        "seq": 6,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_combining",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "text 'e a n' != 'e\u0301 a\u0308 n\u0303'"
+        ],
+        "seq": 19,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_forward",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 9, 960, 540], ['ButtonRelease', 9, 960, 540]], observed []"
+        ],
+        "seq": 24,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji_zwj",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "text ' ' != '\ud83d\udc69\\u200d\ud83d\udcbb \ud83d\udc68\\u200d\ud83d\udc69\\u200d\ud83d\udc67'"
+        ],
+        "seq": 50,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_forward",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 9, 960, 540], ['ButtonRelease', 9, 960, 540]], observed []"
+        ],
+        "seq": 0,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "seq_type_chord_type",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "marker [8, 62356] != probe final [8, 54837]"
+        ],
+        "seq": 8,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "text '  ' != '\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627'"
+        ],
+        "seq": 16,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_unicode_bmp",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'"
+        ],
+        "seq": 18,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_combining",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "text 'e a n' != 'e\u0301 a\u0308 n\u0303'"
+        ],
+        "seq": 23,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "text 'ok  done ' != 'ok \ud83d\ude80 done \ud83c\udf89'"
+        ],
+        "seq": 40,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_back",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 8, 960, 540], ['ButtonRelease', 8, 960, 540]], observed []"
+        ],
+        "seq": 6,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "key_kp_enter",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [] != [['KeyPress', 'KP_Enter', []], ['KeyRelease', 'KP_Enter', []]]"
+        ],
+        "seq": 31,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "text '  ' != '\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627'"
+        ],
+        "seq": 5,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji_zwj",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "text ' ' != '\ud83d\udc69\\u200d\ud83d\udcbb \ud83d\udc68\\u200d\ud83d\udc69\\u200d\ud83d\udc67'"
+        ],
+        "seq": 19,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_unicode_bmp",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'"
+        ],
+        "seq": 27,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "key_kp_enter",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [] != [['KeyPress', 'KP_Enter', []], ['KeyRelease', 'KP_Enter', []]]"
+        ],
+        "seq": 33,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "text 'ok  done ' != 'ok \ud83d\ude80 done \ud83c\udf89'"
+        ],
+        "seq": 35,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_combining",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "text 'e a n' != 'e\u0301 a\u0308 n\u0303'"
+        ],
+        "seq": 37,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_back",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 8, 960, 540], ['ButtonRelease', 8, 960, 540]], observed []"
+        ],
+        "seq": 55,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_shell_hostile",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "marker [6, 51830] != probe final [6, 14917]"
+        ],
+        "seq": 6,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_forward",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 9, 960, 540], ['ButtonRelease', 9, 960, 540]], observed []"
+        ],
+        "seq": 15,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_shell_hostile",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "marker [23, 51830] != probe final [23, 14917]"
+        ],
+        "seq": 23,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_symbols_shifted",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "marker [32, 57590] != probe final [32, 40487]"
+        ],
+        "seq": 32,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_combining",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "text 'e a n' != 'e\u0301 a\u0308 n\u0303'"
+        ],
+        "seq": 40,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_unicode_bmp",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'"
+        ],
+        "seq": 46,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_back",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 8, 960, 540], ['ButtonRelease', 8, 960, 540]], observed []"
+        ],
+        "seq": 48,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "key_kp_enter",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [] != [['KeyPress', 'KP_Enter', []], ['KeyRelease', 'KP_Enter', []]]"
+        ],
+        "seq": 1,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "text '  ' != '\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627'"
+        ],
+        "seq": 13,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_forward",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 9, 960, 540], ['ButtonRelease', 9, 960, 540]], observed []"
+        ],
+        "seq": 16,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "text 'ok  done ' != 'ok \ud83d\ude80 done \ud83c\udf89'"
+        ],
+        "seq": 44,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "seq_type_chord_type",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "marker [45, 62356] != probe final [45, 54837]"
+        ],
+        "seq": 45,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji_zwj",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "text ' ' != '\ud83d\udc69\\u200d\ud83d\udcbb \ud83d\udc68\\u200d\ud83d\udc69\\u200d\ud83d\udc67'"
+        ],
+        "seq": 7,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_combining",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "text 'e a n' != 'e\u0301 a\u0308 n\u0303'"
+        ],
+        "seq": 17,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "seq_type_chord_type",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "marker [0, 62356] != probe final [0, 54837]"
+        ],
+        "seq": 0,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "text 'ok  done ' != 'ok \ud83d\ude80 done \ud83c\udf89'"
+        ],
+        "seq": 3,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_emoji_zwj",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "text ' ' != '\ud83d\udc69\\u200d\ud83d\udcbb \ud83d\udc68\\u200d\ud83d\udc69\\u200d\ud83d\udc67'"
+        ],
+        "seq": 12,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "key_kp_enter",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "R-dev projection differs: [] != [['KeyPress', 'KP_Enter', []], ['KeyRelease', 'KP_Enter', []]]"
+        ],
+        "seq": 15,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "text '  ' != '\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627'"
+        ],
+        "seq": 30,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "type_unicode_bmp",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "text 'crme brle, r, , , ' != 'cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e'"
+        ],
+        "seq": 41,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_back",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 8, 960, 540], ['ButtonRelease', 8, 960, 540]], observed []"
+        ],
+        "seq": 48,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "click_button_forward",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "error: executor rc=1: ib/python3.10/site-packages/pyautogui/__init__.py\", line 984, in click\n    button = _normalizeButton(button)\n  File \"/home/user/.local/lib/python3.10/site-packages/pyautogui/__init__.py\", line 850, in _normalizeButton\n    button = button.lower()\nAttributeError: 'int' object has no attribute 'lower'\n",
+          "events differ: expected [['ButtonPress', 9, 960, 540], ['ButtonRelease', 9, 960, 540]], observed []"
+        ],
+        "seq": 50,
+        "setting": "screenshot"
+      }
+    ],
+    "finished_at": 1791470446.372139,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "864",
+    "jobs": [
+      "864"
+    ],
+    "labelled_containers_left": [],
+    "layer": "L0-raw",
+    "manifest_json_sha256": "4be45b449919f30452835fa67c7e6aadbff3b4388915c83c5ef2cb19c03441a4",
+    "mutant": null,
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "qcow2_unchanged": true,
+    "receipt_sha256": "8cde13be8df66152642b88a7196865fa2975eddef02afa4d2bee7aac34f821c5",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      45
+    ],
+    "session_errors": [],
+    "sessions": 9,
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791469834.940587,
+    "step_s": {
+      "n": 640,
+      "p50": 0.2243,
+      "p95": 1.1905
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 500,
+    "trials_pass": 454,
+    "unreadable": []
+  }
+]

@@ -1,0 +1,1 @@
+sbatch: Job 873 to start at 2026-10-08T14:45:06 using 6 processors on nodes fal-h100-01 in partition research

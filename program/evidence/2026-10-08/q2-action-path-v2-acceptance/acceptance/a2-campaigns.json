@@ -1,0 +1,1758 @@
+[
+  {
+    "accessibility_calls": 693,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 18.075,
+      "n": 16,
+      "p50": 17.938,
+      "p95": 18.075
+    },
+    "c4_flags": {
+      "True": 350
+    },
+    "campaign_id": "q2ap-v2-a2-hga-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A2",
+    "earlier_attempts": [],
+    "failed_trials": [
+      {
+        "cell": "R02",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 20,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 26,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 46,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 5,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 34,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 47,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 54,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 9,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 14,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 28,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 19,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 55,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 5,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 22,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 55,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 35,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 57,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 7,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 20,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R10",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 26,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R06",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 46,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R04",
+        "cycle": 9,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 5,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R02",
+        "cycle": 9,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 34,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R06",
+        "cycle": 9,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 47,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R04",
+        "cycle": 10,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 54,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R10",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 9,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R10",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 14,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R04",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 28,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R02",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R06",
+        "cycle": 12,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 19,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R06",
+        "cycle": 12,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 55,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R02",
+        "cycle": 13,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 5,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R04",
+        "cycle": 13,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 22,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R10",
+        "cycle": 13,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 55,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R10",
+        "cycle": 14,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 35,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R02",
+        "cycle": 14,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 57,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R04",
+        "cycle": 15,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 7,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R06",
+        "cycle": 15,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot+a11y"
+      }
+    ],
+    "finished_at": 1791485614.4236805,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "991",
+    "jobs": [
+      "991"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "H-GA",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "7ed96743830b98aea9e9e35cac99229915a0feb01f3ad45b593f13b75a3c1962",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "R01": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R02": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R03": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R04": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R05": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R06": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R07": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R08": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R09": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R10": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R11": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R13": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R14": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "caps_lock_roundtrip": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_f4": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_a": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alt_shift_r": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_super_d": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_burst_5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_bottomright": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_topleft": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_slow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_left_center": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_middle": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_then_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_triple_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_two_positions_ordered": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_short": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_slow_small": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_to_corner": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_vertical": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_down": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_up": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_delete": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_end": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_esc": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f9": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_insert": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_add": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_menu": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pagedown": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pageup": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_space_chord": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "move_only": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "no_action_control": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_at_offcenter_position": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_10": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_up_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_drag_then_click": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_long_mixed": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_type_chord_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_combining": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_digits": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_200": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_500": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_mixed_case": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_multiline_tabs": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_plain": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_repeated_chars": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_rtl": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_shell_hostile": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_single_char": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_spaces": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_with_correction": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "095f33816314305b720997ab950a321058d515de311bd475fe00fcbb8e062068",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 16,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791482904.7796798,
+    "step_s": {
+      "n": 1370,
+      "p50": 1.8028,
+      "p95": 2.6852
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 930,
+    "trials_pass": 890,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 759,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.94,
+      "n": 18,
+      "p50": 17.276,
+      "p95": 17.94
+    },
+    "c4_flags": {
+      "True": 350
+    },
+    "campaign_id": "q2ap-v2-a2-hoswfixed-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A2",
+    "earlier_attempts": [],
+    "failed_trials": [
+      {
+        "cell": "R03",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 12,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 26,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 45,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 53,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 18,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 46,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 0,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 19,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 43,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 10,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 12,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R09",
+        "cycle": 10,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 26,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R09",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 45,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R03",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 53,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R03",
+        "cycle": 13,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 18,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R09",
+        "cycle": 13,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 46,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R09",
+        "cycle": 15,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 0,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R03",
+        "cycle": 15,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R03",
+        "cycle": 16,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 19,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R09",
+        "cycle": 17,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 43,
+        "setting": "screenshot+a11y"
+      }
+    ],
+    "finished_at": 1791482824.0372086,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "974",
+    "jobs": [
+      "974"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "H-OSW-fixed",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "8423708f596ca10313d02619e00df62aac275e6d0070e534152361bed1ab6288",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "R01": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R02": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R03": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R04": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R05": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R06": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R07": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R08": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R09": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R10": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R11": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R13": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R14": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "caps_lock_roundtrip": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_f4": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_a": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alt_shift_r": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_super_d": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_alt_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_burst_5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_bottomright": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_topleft": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_shift_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_slow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_left_center": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_middle": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_shift_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_then_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_two_positions_ordered": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_short": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_slow_small": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_to_corner": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_vertical": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_down": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_up": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_delete": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_end": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_esc": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f9": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_insert": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_add": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_menu": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pagedown": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pageup": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_space_chord": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "move_only": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "no_action_control": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_at_offcenter_position": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_ctrl_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_10": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_25": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_shift_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_up_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_drag_then_click": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_long_mixed": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_type_chord_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_combining": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_digits": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_200": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_500": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_mixed_case": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_multiline_tabs": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_plain": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_repeated_chars": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_rtl": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_shell_hostile": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_single_char": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_spaces": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_with_correction": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "a4f8d0a9d3a8a6906e894c18a884463f8c4a248b12d6314addb78988da10faa9",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 18,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791479924.687692,
+    "step_s": {
+      "n": 1500,
+      "p50": 1.7908,
+      "p95": 2.6201
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 990,
+    "trials_pass": 970,
+    "unreadable": []
+  }
+]

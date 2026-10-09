@@ -1,0 +1,346 @@
+{
+  "campaign_id": "q2ap-v2-c3-m01-hoswfixed-a1",
+  "cpusets": {
+    "allocated": "24-29",
+    "runner": "28",
+    "vm": "24-27",
+    "vm_mems": "0",
+    "vm_numa_nodes": [
+      0
+    ]
+  },
+  "dangling_volumes_after": 0,
+  "dangling_volumes_before": 0,
+  "docker": {
+    "cgroup_version": "2",
+    "default_runtime": "runc",
+    "runtimes": [
+      "io.containerd.runc.v2",
+      "runc"
+    ],
+    "server_version": "28.3.1"
+  },
+  "driver_python": "3.10.12",
+  "finished_at": 1791470924.5294158,
+  "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+  "host_end": {
+    "containers_ours": 0,
+    "containers_running_total": 1,
+    "loadavg": [
+      "4.93",
+      "3.73",
+      "2.04"
+    ],
+    "squeue_foreign": [],
+    "t": 1791470924.5050294
+  },
+  "host_start": {
+    "containers_ours": 0,
+    "containers_running_total": 9,
+    "loadavg": [
+      "2.66",
+      "1.77",
+      "1.10"
+    ],
+    "squeue_foreign": [
+      [
+        "870",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-c3"
+      ],
+      [
+        "872",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-c3"
+      ],
+      [
+        "874",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-c3"
+      ],
+      [
+        "876",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-c3"
+      ],
+      [
+        "880",
+        "kevin",
+        "RUNNING",
+        "6",
+        "N/A",
+        "q2ap-v2-c3"
+      ]
+    ],
+    "t": 1791470727.8716538
+  },
+  "job_id": "878",
+  "labelled_containers_left": [],
+  "manifest_sha256": "ba47e444c0c06a8dfffbd8adc7619db0d764628b11c94c1f235df9aa8b92c370",
+  "qcow2_info": {
+    "actual-size": 24460201984,
+    "format": "qcow2",
+    "virtual-size": 53687091200
+  },
+  "qcow2_sha256_after": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+  "qcow2_sha256_before": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+  "qcow2_unchanged": true,
+  "schema": "cotcodec-vm-campaign-receipt-v1",
+  "session_plan_sha256": "9432f175faab9a8e600586a8dc78ab825d9b96ffe7c327b9d54688f2b2de326b",
+  "source_tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+  "started_at": 1791470709.885112,
+  "summary": {
+    "boot_s": {
+      "max": 17.951,
+      "n": 2,
+      "p50": 17.945,
+      "p95": 17.951
+    },
+    "boots_ok": 2,
+    "containers_removed_all": true,
+    "cycles": 2,
+    "distinct_boot_ids": 2,
+    "errors": [],
+    "hmp_cycles_all_ok": 0,
+    "hmp_step_pass_counts": {},
+    "infra_gates_pass": true,
+    "latency_s": {
+      "accessibility_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "execute_noop_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "screenshot_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      }
+    },
+    "leaked_volumes": [],
+    "nat_modes": [
+      "nat"
+    ],
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "sentinel_pristine": 1,
+    "sentinel_readback_dconf": 0,
+    "sentinel_readback_file": 0,
+    "sentinel_readback_gsettings": 0,
+    "sentinel_reset_checks": 1,
+    "sessions": {
+      "accessibility_calls": 0,
+      "cell_counts": {
+        "FAIL": 8,
+        "FLAKY": 0,
+        "PASS": 91
+      },
+      "cells": {
+        "screenshot|R01": "PASS",
+        "screenshot|R02": "FAIL",
+        "screenshot|R03": "FAIL",
+        "screenshot|R04": "FAIL",
+        "screenshot|R05": "PASS",
+        "screenshot|R06": "PASS",
+        "screenshot|R07": "PASS",
+        "screenshot|R08": "PASS",
+        "screenshot|R09": "FAIL",
+        "screenshot|R10": "PASS",
+        "screenshot|R11": "PASS",
+        "screenshot|R12": "PASS",
+        "screenshot|R13": "PASS",
+        "screenshot|R14": "PASS",
+        "screenshot|caps_lock_roundtrip": "PASS",
+        "screenshot|chord_alt_f4": "PASS",
+        "screenshot|chord_alt_tab": "PASS",
+        "screenshot|chord_ctrl_a": "PASS",
+        "screenshot|chord_ctrl_alone": "PASS",
+        "screenshot|chord_ctrl_alt_shift_r": "PASS",
+        "screenshot|chord_ctrl_c": "PASS",
+        "screenshot|chord_ctrl_home": "PASS",
+        "screenshot|chord_ctrl_shift_arrow": "PASS",
+        "screenshot|chord_ctrl_shift_t": "PASS",
+        "screenshot|chord_shift_alone": "PASS",
+        "screenshot|chord_shift_arrow_left": "PASS",
+        "screenshot|chord_shift_tab": "PASS",
+        "screenshot|chord_super_d": "PASS",
+        "screenshot|click_alt_left": "FAIL",
+        "screenshot|click_burst_5": "PASS",
+        "screenshot|click_corner_bottomright": "PASS",
+        "screenshot|click_corner_topleft": "PASS",
+        "screenshot|click_ctrl_left": "FAIL",
+        "screenshot|click_ctrl_shift_right": "FAIL",
+        "screenshot|click_double_left": "PASS",
+        "screenshot|click_double_slow": "PASS",
+        "screenshot|click_left_center": "PASS",
+        "screenshot|click_middle": "PASS",
+        "screenshot|click_right": "PASS",
+        "screenshot|click_shift_left": "FAIL",
+        "screenshot|click_then_type": "PASS",
+        "screenshot|click_two_positions_ordered": "PASS",
+        "screenshot|drag_long_diagonal": "PASS",
+        "screenshot|drag_short": "PASS",
+        "screenshot|drag_slow_small": "PASS",
+        "screenshot|drag_to_corner": "PASS",
+        "screenshot|drag_vertical": "PASS",
+        "screenshot|key_arrow_down": "PASS",
+        "screenshot|key_arrow_left": "PASS",
+        "screenshot|key_arrow_right": "PASS",
+        "screenshot|key_arrow_up": "PASS",
+        "screenshot|key_delete": "PASS",
+        "screenshot|key_end": "PASS",
+        "screenshot|key_enter": "PASS",
+        "screenshot|key_esc": "PASS",
+        "screenshot|key_f1": "PASS",
+        "screenshot|key_f12": "PASS",
+        "screenshot|key_f5": "PASS",
+        "screenshot|key_f9": "PASS",
+        "screenshot|key_home": "PASS",
+        "screenshot|key_insert": "PASS",
+        "screenshot|key_kp_add": "PASS",
+        "screenshot|key_kp_enter": "PASS",
+        "screenshot|key_menu": "PASS",
+        "screenshot|key_pagedown": "PASS",
+        "screenshot|key_pageup": "PASS",
+        "screenshot|key_space_chord": "PASS",
+        "screenshot|key_tab": "PASS",
+        "screenshot|move_only": "PASS",
+        "screenshot|no_action_control": "PASS",
+        "screenshot|scroll_at_offcenter_position": "PASS",
+        "screenshot|scroll_ctrl_down_3": "PASS",
+        "screenshot|scroll_down_1": "PASS",
+        "screenshot|scroll_down_10": "PASS",
+        "screenshot|scroll_down_25": "PASS",
+        "screenshot|scroll_down_3": "PASS",
+        "screenshot|scroll_down_then_up_net_zero": "PASS",
+        "screenshot|scroll_shift_down_3": "PASS",
+        "screenshot|scroll_up_3": "PASS",
+        "screenshot|seq_drag_then_click": "PASS",
+        "screenshot|seq_long_mixed": "PASS",
+        "screenshot|seq_type_chord_type": "PASS",
+        "screenshot|type_combining": "PASS",
+        "screenshot|type_digits": "PASS",
+        "screenshot|type_emoji": "PASS",
+        "screenshot|type_emoji_zwj": "PASS",
+        "screenshot|type_long_200": "PASS",
+        "screenshot|type_long_500": "PASS",
+        "screenshot|type_mixed_case": "PASS",
+        "screenshot|type_multiline_tabs": "PASS",
+        "screenshot|type_plain": "PASS",
+        "screenshot|type_repeated_chars": "PASS",
+        "screenshot|type_rtl": "PASS",
+        "screenshot|type_shell_hostile": "PASS",
+        "screenshot|type_single_char": "PASS",
+        "screenshot|type_spaces": "PASS",
+        "screenshot|type_symbols_shifted": "PASS",
+        "screenshot|type_unicode_bmp": "PASS",
+        "screenshot|type_with_correction": "PASS"
+      },
+      "guest_server_restarts": 0,
+      "infra_failures": {},
+      "observation_retries": {},
+      "runner_errors": [],
+      "sessions": [
+        {
+          "accessibility_calls": 0,
+          "cycle": 0,
+          "guest_server_restarts": 0,
+          "passed": 48,
+          "probe_relaunches": 0,
+          "setting": "screenshot",
+          "tap_relaunches": 0,
+          "trials": 50,
+          "wall_s": 91.68
+        },
+        {
+          "accessibility_calls": 0,
+          "cycle": 1,
+          "guest_server_restarts": 0,
+          "passed": 43,
+          "probe_relaunches": 0,
+          "setting": "screenshot",
+          "tap_relaunches": 0,
+          "trials": 49,
+          "wall_s": 86.73
+        }
+      ],
+      "step_s": {
+        "n": 158,
+        "p50": 0.5928,
+        "p95": 1.1691
+      },
+      "trial_s": {
+        "n": 99,
+        "p50": 0.9157,
+        "p95": 3.0099,
+        "sum": 133.71
+      }
+    },
+    "settled_s": {
+      "n": 2,
+      "p50": 21.071,
+      "p95": 21.08
+    },
+    "tap_selftest_ok": 0
+  },
+  "verdicts": [
+    {
+      "boot_id": "780a4ad9-64a9-44a9-a72f-34a15bda4692",
+      "boot_s": 17.951,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 0,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 21.08,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "aa00619d-22b9-450e-8256-7ed154caca96",
+      "boot_s": 17.945,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 1,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 21.071,
+      "tap_selftest_ok": null
+    }
+  ]
+}
