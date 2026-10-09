@@ -244,6 +244,72 @@ def test_jobs_are_sequential_and_paired(inputs):
     assert P.gpu_sbatch_time(91) == "01:31:00"
 
 
+def a0a_run(tmp: Path, *, seconds=640.0, start=10_000.0, first=10_300.0, statuses=None,
+            truncated_steps=0) -> tuple[Path, Path]:  # fmt: skip
+    """A finished A0a lane run directory and its GPU job's bridge directory: V = 20 slots
+    from ``plan.a0a_slots``, each scored after ``seconds`` of slot occupancy unless
+    ``statuses`` (slot index -> list of attempt statuses) says otherwise."""
+    inputs = renderer.load_inputs(ROOT)
+    slots = P.a0a_slots(inputs["dev_ids"], P.dev_setup_ok(P.load_setup_check(ROOT)), 20)
+    run = tmp / "run"
+    (run / "episodes").mkdir(parents=True)
+    (run / "manifest.json").write_text(json.dumps({"purpose": "a0a", "vm": {"concurrency": 20},
+                                                   "slots": slots}))  # fmt: skip
+    rows = []
+    for i, slot in enumerate(slots):
+        for attempt, status in enumerate((statuses or {}).get(i, ["scored"]), start=1):
+            rows.append({**slot, "attempt": attempt, "status": status,
+                         "host": {"slot_occupancy_s": seconds + i}})  # fmt: skip
+            out = run / "episodes" / f"{slot['slot'].replace(':', '_')}.a{attempt}"
+            out.mkdir()
+            steps = [turn(k < truncated_steps, k >= truncated_steps, 2.0) for k in range(5)]
+            (out / "steps.jsonl").write_text("".join(json.dumps(t) + "\n" for t in steps))
+    (run / "episodes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    (run / "lane-receipt.json").write_text(json.dumps(
+        {"gpu_job": {"job_id": "77", "start_epoch": start, "time_limit_min": 25},
+         "first_dispatch": first, "t_end": start + 1400}))  # fmt: skip
+    bridge = tmp / "bridge"
+    bridge.mkdir()
+    (bridge / "stopped.json").write_text(json.dumps({"t_first_request": first + 75}))
+    return run, bridge
+
+
+def test_a0a_measurements_come_from_the_records(tmp_path):
+    """Section 6.2: c_A0a's slots, L_A0a (Slurm start to the first dispatch) and both gates
+    over the same V episodes, all from A0a's records; nothing typed."""
+    run, bridge = a0a_run(tmp_path / "ok", statuses={3: ["infrastructure", "scored"]})
+    got = P.a0a_measurements(run, bridge, action_path_step_p95_s=2.71)
+    assert len(got["a0a_slot_seconds"]) == 20 and got["a0a_slot_seconds"][0] == 640.0
+    assert got["launch_a0a_min"] == 5.0  # (10,300 - 10,000) / 60
+    assert got["measured"]["launch_to_first_request_min"] == 6.25
+    assert got["a0a_gates"]["problems"] == [] and got["a0a_gates"]["turns"]["H-GA"] == 50
+    assert set(got["measured"]["files_sha256"]) == {
+        "manifest.json",
+        "episodes.jsonl",
+        "lane-receipt.json",
+        "bridge/stopped.json",
+    }
+    fc = P.freeze_constants(**P.freeze_inputs(got, n_star=40, prefreeze_jobs=["O1", "A0a"]))
+    assert fc.a1_cap_min == 111 and fc.k_base == 32 and fc.launch_a0a_min == 5.0
+    for name, kwargs, message in (
+        ("cut", {"statuses": {7: ["cap_truncated"]}}, "cut at the cap or never dispatched"),
+        ("lost", {"statuses": {7: ["infrastructure", "infrastructure"]}}, "completed 19 of V"),
+        ("long", {"seconds": 760.0}, None),
+    ):
+        run, bridge = a0a_run(tmp_path / name, **kwargs)
+        if message is None:  # the longest episodes count: a mean slot of 769.5 s gives 24
+            got = P.a0a_measurements(run, bridge, action_path_step_p95_s=2.71)
+            with pytest.raises(P.PlanError, match="K_base 24 is below the floor 32"):
+                P.freeze_constants(**P.freeze_inputs(got, n_star=40, prefreeze_jobs=["O1", "A0a"]))
+            continue
+        with pytest.raises(P.PlanError, match=message):
+            P.a0a_measurements(run, bridge, action_path_step_p95_s=2.71)
+    with pytest.raises(P.PlanError, match="not \\['O2'\\]"):
+        P.freeze_inputs(got, n_star=40, prefreeze_jobs=["O1", "A0a", "O2"])
+    assert P.freeze_inputs(got, n_star=40, prefreeze_jobs=["O1", "A0a", "A0a"])[
+        "prefreeze_caps"] == [3, 25, 25]  # fmt: skip
+
+
 def test_renderer_draft_and_freeze_modes(tmp_path):
     out = tmp_path / "plan.json"
     script = ROOT / "scripts/render_q2_stage1_plan.py"
@@ -254,33 +320,26 @@ def test_renderer_draft_and_freeze_modes(tmp_path):
     plan = json.loads(out.read_text())
     assert plan["status"] == "draft" and len(plan["base"]) == 32
     assert plan["plan_sha256"] == run.stdout.strip()
+    assert plan["dev_order"][:5] == P.dev_tasks(
+        renderer.load_inputs(ROOT)["dev_ids"], P.dev_setup_ok(P.load_setup_check(ROOT)), 5
+    )
     again = subprocess.run(
         [sys.executable, str(script), "--out", str(out)], capture_output=True, text=True
     )
     assert again.returncode != 0
-    constants = tmp_path / "c.json"
-    constants.write_text(
-        json.dumps(
-            {
-                "n_star": 40, "a0a_slot_seconds": [640.0] * 20, "launch_a0a_min": 4,
-                "prefreeze_caps": [3, 25, 26], "anchor_available": True,
-                "launch_a0b_min": 5, "longest_a0b_slot_min": 10.0, "k_floor": 24,
-                "a0a_gates": GATES,
-            }
-        )
-    )  # fmt: skip
-    dev = tmp_path / "dev.json"
-    dev.write_text(json.dumps(dict.fromkeys(renderer.load_inputs(ROOT)["dev_ids"], True)))
+    a0a, bridge = a0a_run(tmp_path / "a0a", first=10_240.0)
     frozen = tmp_path / "frozen.json"
     run = subprocess.run(
-        [sys.executable, str(script), "--constants", str(constants), "--dev-setup", str(dev),
-         "--out", str(frozen)], capture_output=True, text=True,
+        [sys.executable, str(script), "--a0a-run-dir", str(a0a), "--a0a-bridge-dir", str(bridge),
+         "--n-star", "40", "--action-path-step-p95", "2.71", "--out", str(frozen)],
+        capture_output=True, text=True,
     )  # fmt: skip
     assert run.returncode == 0, run.stderr
     plan = json.loads(frozen.read_text())
-    assert plan["constants"]["k_base"] == 24 and len(plan["base"]) == 24
-    assert len(plan["anchor_tasks"]) == 96 and len(plan["dev_tasks_a0a"]) == 5
-    assert set(plan["dev_tasks_a0b"]) <= set(plan["dev_tasks_a0a"])
+    assert plan["constants"]["k_base"] == 32 and len(plan["base"]) == 32
+    assert plan["constants"]["launch_a0a_min"] == 4.0 and plan["constants"]["a1_cap_min"] == 111
+    assert plan["a0a_measurements"]["measured"]["files_sha256"]["episodes.jsonl"]
+    assert plan["anchor_tasks"] == [] and [j["job"] for j in plan["jobs"]][1:] == P.a1_job_order()
     assert all(t in plan["anchor_order"] for t in plan["flagged_tasks"])
 
 
@@ -337,8 +396,96 @@ def test_a0a_gates_from_a_lane_run_directory(tmp_path):
             (out / "steps.jsonl").write_text(json.dumps(turn(False, True, 2.0)) + "\n")
     episodes = P.load_a0a_episodes(run)
     assert sorted(e["harness"] for e in episodes) == ["H-GA", "H-OSW-fixed"]  # scored only
-    script = [sys.executable, "-m", "harness.q2_stage1.plan", "a0a-gates", "--run-dir",
-              str(run), "--action-path-step-p95", "2.71"]  # fmt: skip
+    run, bridge = a0a_run(tmp_path / "cli")
+    script = [sys.executable, "-m", "harness.q2_stage1.plan", "a0a-measurements", "--run-dir",
+              str(run), "--bridge-dir", str(bridge), "--action-path-step-p95", "2.71"]  # fmt: skip
     done = subprocess.run(script, capture_output=True, text=True, cwd=ROOT)
     assert done.returncode == 0, done.stderr
-    assert json.loads(done.stdout)["steps_timed"] == 2
+    assert json.loads(done.stdout)["a0a_gates"]["steps_timed"] == 100
+
+
+# --------------------------------------------------------------------------- offline setup
+# Section 5.4's offline-setup exclusion, registered before G0 item 5's second pass ran.
+
+ARGV = {
+    "26150609": ["pip", "install", "pygame"],
+    "e2b5e914": ["code", "--install-extension", "ms-python.python"],
+    "53ad5833": ["/bin/bash", "-c", "cd /home/user/Downloads && unzip -q vscodeEvalExtension.zip "
+                 "&& code --install-extension vscodeEvalExtension/eval-0.0.1.vsix && rm -rf x"],
+    "d38192b0": ["pip", "install", "/home/user/cssselect-1.3.0-py3-none-any.whl"],
+}  # fmt: skip
+
+
+def test_install_targets_tell_network_installs_from_local_ones():
+    assert P.install_targets(ARGV["26150609"]) == [("pip", "pygame", True)]
+    assert P.install_targets(ARGV["e2b5e914"]) == [("code", "ms-python.python", True)]
+    assert P.install_targets(ARGV["53ad5833"]) == [
+        ("code", "vscodeEvalExtension/eval-0.0.1.vsix", False)]  # fmt: skip
+    assert P.install_targets(ARGV["d38192b0"]) == [
+        ("pip", "/home/user/cssselect-1.3.0-py3-none-any.whl", False)]  # fmt: skip
+    assert P.install_targets("sudo apt-get install -y curl") == [("apt-get", "curl", True)]
+    assert P.install_targets(["python3", "-m", "pip", "install", "x"]) == [("pip", "x", True)]
+    for argv in (["mkdir", "-p", "/x"], ["tar", "-xzv", "-f", "a.tar.gz"], "pkill vlc", None):
+        assert P.install_targets(argv) == []
+
+
+def setup_row(task: str, *, status="setup_ok", setup_steps=(), probe_steps=(), probe_replies=(),
+              failures=(), diagnostics=None, attempt=1, probe=True) -> dict:  # fmt: skip
+    row = {"task_id": task, "attempt": attempt, "status": status,
+           "setup": {"config_steps": list(setup_steps), "failures": list(failures)}}  # fmt: skip
+    if probe:
+        row["postconfig_probe"] = {"config_steps": list(probe_steps),
+                                   "replies": list(probe_replies)}  # fmt: skip
+    if diagnostics is not None:
+        row["diagnostics"] = diagnostics
+    return row
+
+
+def test_offline_exclusion_rules():
+    step = lambda i, argv: {"step": i, "type": "command", "argv": argv}  # noqa: E731
+    rows = [
+        setup_row("clean", setup_steps=[step(1, ["mkdir", "-p", "/x"])]),
+        setup_row("net", setup_steps=[step(2, ARGV["26150609"])]),
+        setup_row("market", setup_steps=[step(1, ARGV["e2b5e914"])],
+                  diagnostics=[{"argv": ["code"], "expect": "ms-python", "found": False}]),
+        setup_row("vsix", setup_steps=[step(2, ARGV["53ad5833"])],
+                  diagnostics=[{"argv": ["code"], "expect": "eval", "found": True}]),
+        setup_row("vsix-missing", setup_steps=[step(2, ARGV["53ad5833"])],
+                  diagnostics=[{"argv": ["code"], "expect": "eval", "found": False}]),
+        setup_row("wheel-ok", probe_steps=[step(2, ARGV["d38192b0"])],
+                  probe_replies=[{"step": 2, "status": 200, "returncode": 0}]),
+        setup_row("wheel-bad", probe_steps=[step(2, ARGV["d38192b0"])],
+                  probe_replies=[{"step": 2, "status": 200, "returncode": 1}]),
+        setup_row("agent-state", probe_steps=[step(1, ["ls", "-R", "/home/user/x"])],
+                  probe_replies=[{"step": 1, "status": 200, "returncode": 2}]),
+        setup_row("failed", status="setup_failed", failures=["setup step 1 (execute): rc=1"]),
+        setup_row("flaky", status="setup_failed"),
+        setup_row("flaky", attempt=2),
+        setup_row("unprobed", probe=False),
+    ]  # fmt: skip
+    tasks = sorted({r["task_id"] for r in rows} | {"absent"})
+    out = P.offline_exclusions(rows, tasks)
+    assert sorted(out) == ["absent", "failed", "market", "net", "unprobed", "vsix-missing",
+                           "wheel-bad"]  # fmt: skip
+    assert out["net"] == ["(a) setup step 2: pip install pygame"]
+    assert out["market"][0].startswith("(a)") and out["market"][1].startswith("(b) diagnostic")
+    assert out["wheel-bad"][0].startswith("(c) postconfig step 2 install failed")
+    assert out["absent"] == ["(b) no setup-check-v2 record"]
+    pool = P.eligible_pool(["0a0faba3-x", "b", "c"], {"c": ["(a)"]})
+    assert pool == ["b"]
+
+
+def test_offline_excluded_is_the_registered_rule_on_the_committed_records(inputs):
+    """``plan.OFFLINE_EXCLUDED`` is section 5.4's rule applied to G0 item 5's second-pass
+    records (by their registered SHA-256), over every pool and dev task; the draw runs on
+    the eligible pool and keeps the 32-task floor."""
+    rows = P.load_setup_check(ROOT)
+    tasks = P.task_pool(inputs["confirm_ids"]) + sorted(inputs["dev_ids"])
+    computed = P.offline_exclusions(rows, tasks)
+    assert {t: tuple(r) for t, r in computed.items()} == P.OFFLINE_EXCLUDED
+    assert {r["task_id"] for r in rows} == set(tasks)  # every pool and dev task was checked
+    pool = P.eligible_pool(inputs["confirm_ids"], P.OFFLINE_EXCLUDED)
+    draw = P.draw_tasks(pool, inputs["domain"], 32)
+    assert len(draw["base"]) == 32 and not set(draw["base"]) & set(P.OFFLINE_EXCLUDED)
+    dev = P.dev_tasks(inputs["dev_ids"], P.dev_setup_ok(rows), 5)
+    assert not set(dev) & set(P.OFFLINE_EXCLUDED)

@@ -28,6 +28,7 @@ import contextlib
 import hashlib
 import json
 import os
+import re
 import signal
 import socket
 import socketserver
@@ -43,6 +44,7 @@ from typing import Any
 
 SOCKET_NAME = "engine.sock"
 READY_NAME = "ready.json"
+FIRST_REQUEST_NAME = "first_request.json"
 USR1_NAME = "usr1.json"
 DONE_NAME = "vm.done"
 FAILED_NAME = "failed.json"
@@ -79,13 +81,24 @@ class _UnixServer(socketserver.ThreadingMixIn, socketserver.UnixStreamServer):
 class Forwarder:
     """Unix-domain socket -> TCP 127.0.0.1:``port``, one thread pair per connection."""
 
-    def __init__(self, socket_path: str, port: int = ENGINE_PORT, host: str = ENGINE_HOST):
+    def __init__(
+        self,
+        socket_path: str,
+        port: int = ENGINE_PORT,
+        host: str = ENGINE_HOST,
+        on_first: Any = None,
+    ):
         if host != ENGINE_HOST:
             raise ValueError("the bridge forwards to the loopback engine only (D13)")
         self.socket_path = socket_path
         self.port = port
         self.host = host
         self.connections = 0
+        # The first forwarded request's time (section 6.2 reports L to it beside L to the
+        # first dispatch); ``on_first(t)`` runs once, from the handler thread.
+        self.t_first_request: float | None = None
+        self.on_first = on_first
+        self._first_lock = threading.Lock()
         self._server: _UnixServer | None = None
         self._thread: threading.Thread | None = None
 
@@ -95,6 +108,7 @@ class Forwarder:
         class Handler(socketserver.BaseRequestHandler):
             def handle(self) -> None:
                 forwarder.connections += 1
+                forwarder.note_first()
                 try:
                     upstream = socket.create_connection((forwarder.host, forwarder.port), 10)
                 except OSError:
@@ -119,6 +133,15 @@ class Forwarder:
         self._thread.start()
         return self
 
+    def note_first(self) -> None:
+        with self._first_lock:
+            if self.t_first_request is not None:
+                return
+            self.t_first_request = time.time()
+        if self.on_first is not None:
+            with contextlib.suppress(Exception):
+                self.on_first(self.t_first_request)
+
     def stop(self) -> None:
         if self._server is not None:
             self._server.shutdown()
@@ -136,6 +159,53 @@ def engine_healthy(port: int = ENGINE_PORT, timeout: float = 5.0) -> bool:
             return response.status == 200
     except (urllib.error.URLError, OSError, TimeoutError):
         return False
+
+
+# The engine's counters sampled with the GPU (section 7.3): vLLM v0.31.0 reports no queue
+# wait or cached-token count per request without a flag change, so the queue-time histogram's
+# sum and count and the prefix-cache counters are read every sample; per block they are the
+# differences between the samples around the block's start and end (the lane's snapshots).
+ENGINE_METRICS = (
+    "vllm:prefix_cache_queries",
+    "vllm:prefix_cache_hits",
+    "vllm:gpu_prefix_cache_queries",
+    "vllm:gpu_prefix_cache_hits",
+    "vllm:request_queue_time_seconds_sum",
+    "vllm:request_queue_time_seconds_count",
+    "vllm:num_requests_waiting",
+    "vllm:num_requests_running",
+)
+
+
+_SAMPLE = re.compile(r"^([A-Za-z_:][A-Za-z0-9_:]*)(?:\{[^}]*\})?\s+(\S+)")
+
+
+def parse_metrics(text: str) -> dict[str, float]:
+    """The ``ENGINE_METRICS`` series of a Prometheus text page, summed over their labels
+    (a ``_total`` suffix dropped)."""
+    out: dict[str, float] = {}
+    for line in text.splitlines():
+        match = _SAMPLE.match(line)
+        if not match:
+            continue
+        key = match.group(1).removesuffix("_total")
+        if key not in ENGINE_METRICS:
+            continue
+        try:
+            out[key] = out.get(key, 0.0) + float(match.group(2))
+        except ValueError:
+            continue
+    return out
+
+
+def engine_metrics(port: int = ENGINE_PORT, timeout: float = 5.0) -> dict[str, float] | None:
+    try:
+        with urllib.request.urlopen(  # noqa: S310 - loopback engine only
+            f"http://{ENGINE_HOST}:{port}/metrics", timeout=timeout
+        ) as response:
+            return parse_metrics(response.read().decode("utf-8", errors="replace"))
+    except (urllib.error.URLError, OSError, TimeoutError, ValueError):
+        return None
 
 
 def gpu_sample() -> list[dict[str, Any]] | None:
@@ -219,7 +289,11 @@ def serve(
             log.close()
             return 3
         time.sleep(poll_s)
-    forwarder = Forwarder(str(bridge_dir / SOCKET_NAME), port).start()
+
+    def first(t: float) -> None:
+        atomic_write(bridge_dir / FIRST_REQUEST_NAME, json.dumps({"t_first_request": t}))
+
+    forwarder = Forwarder(str(bridge_dir / SOCKET_NAME), port, on_first=first).start()
     status["t_ready"] = time.time()
     atomic_write(bridge_dir / READY_NAME, json.dumps(status, indent=2, sort_keys=True))
     gpu_log = (bridge_dir / "gpu.jsonl").open("a", encoding="utf-8")
@@ -229,7 +303,8 @@ def serve(
         while True:
             now = time.time()
             if gpu_sample_s and now >= next_sample:
-                gpu_log.write(json.dumps({"t": now, "gpus": gpu_sample()}) + "\n")
+                sample = {"t": now, "gpus": gpu_sample(), "engine": engine_metrics(port)}
+                gpu_log.write(json.dumps(sample) + "\n")
                 gpu_log.flush()
                 next_sample = now + gpu_sample_s
             if (bridge_dir / DONE_NAME).exists():
@@ -266,6 +341,7 @@ def serve(
             stop_reason=reason,
             engine_returncode=returncode,
             connections=forwarder.connections,
+            t_first_request=forwarder.t_first_request,
         )
         atomic_write(bridge_dir / "stopped.json", json.dumps(status, indent=2, sort_keys=True))
     return 0 if reason in ("vm_done", "usr1") else 4

@@ -40,6 +40,7 @@ INFRASTRUCTURE_TYPES = (
     "executor_device",
     "transport",
     "runner_crash",
+    "offline_network",
 )
 REQUIRED = (
     "schema",
@@ -328,17 +329,31 @@ def anchor_first_attempt_losses(records: Iterable[Mapping[str, Any]]) -> tuple[i
 def first_divergence(
     steps_a: Sequence[Mapping[str, Any]], steps_b: Sequence[Mapping[str, Any]]
 ) -> dict[str, Any]:
-    """Where two reruns of one (size, task, harness) first part (section 14).
+    """Where two reruns of one (size, task, harness) first part (section 9 item 11).
 
-    Each step carries ``prompt_sha256`` (the prompt token ids' digest) and ``ir_sha256``
-    (the parsed IR's digest). The first step whose prompt digests differ marks an
-    environment divergence (the observation differed before any action did); a step with
-    equal prompt digests and different IR marks a serving divergence (batched-numerics or
-    engine-state difference on an identical prompt). Equal steps throughout with different
-    lengths is a length divergence.
+    Each step carries ``processed_sha256`` (the processed screenshot the model saw that
+    step), ``messages_sha256`` (the whole request, text and images) and ``ir_sha256`` (the
+    parsed IR). At the first step where the two runs differ:
+
+    * the observation differs: an **environment** divergence (the screen differed before any
+      action did). The guest's top-bar clock is on every screenshot, so nearly every pair
+      parts here at step 1 (disclosed);
+    * the observation is equal but the request differs (an earlier reply's text, thinking
+      included, differed while its IR was equal), or the request is equal and the IR differs:
+      a **serving** divergence (batched numerics or engine state on an identical screen).
+
+    Equal steps throughout with different lengths is a length divergence. A step without the
+    screenshot digest falls back to ``prompt_sha256``, the prompt token ids' digest, which
+    cannot see an image (its tokens are image placeholders).
     """
     for i, (a, b) in enumerate(zip(steps_a, steps_b, strict=False)):
-        if a["prompt_sha256"] != b["prompt_sha256"]:
+        obs_a, obs_b = a.get("processed_sha256"), b.get("processed_sha256")
+        if obs_a is not None and obs_b is not None:
+            if obs_a != obs_b:
+                return {"kind": "environment", "step": i + 1}
+            if a.get("messages_sha256") != b.get("messages_sha256"):
+                return {"kind": "serving", "step": i + 1}
+        elif a.get("prompt_sha256") != b.get("prompt_sha256"):
             return {"kind": "environment", "step": i + 1}
         if a["ir_sha256"] != b["ir_sha256"]:
             return {"kind": "serving", "step": i + 1}
