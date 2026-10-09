@@ -52,6 +52,25 @@ After evaluation a capture sweep calls every result getter once more, so the cap
 holds every file every metric reads even when ``and`` stopped early or the agent's ``FAIL``
 returned 0 before any getter ran; ``rescore.py`` scores it offline with the raw and the
 corrected checker.
+
+Guest-server errors on the checker's observations (D53 (iii); section 7.2). The pinned
+controller treats an HTTP 5xx reply like any other non-200 one: ``get_file``,
+``get_accessibility_tree``, ``get_terminal_output``, ``execute_python_command`` and the rest
+retry and then return ``None``, and the getters pass ``None`` to the metric, which scores 0.
+So a guest server that answers HTTP 500 to a read for a whole boot (as the action-path suite
+saw for ``/accessibility`` in A7 session 193, with no restart) would be scored as the agent's
+outcome. The shim therefore records every guest reply (method, path, HTTP status, time; never
+a body) with the phase and the controller call it belongs to (``LiveTask.guest_calls``). A
+checker *observation* is a guest read during ``evaluate()`` or the capture sweep that is not
+a postconfig action (no ``/setup/*`` path, not inside ``SetupController.setup``); one
+controller call with its retries is one observation. An observation is *undelivered* when no
+attempt got an HTTP status below 500 (a 404 for a file the agent never wrote is the agent's
+state and counts as delivered); an undelivered observation raises ``GuestObservationFailure``
+after the phase, an infrastructure loss (``guest_observation``), whatever the checker
+returned. A guest request the pinned code sends with no timeout gets ``GUEST_REQUEST_TIMEOUT_S``
+(above the guest server's own 120 s command limit), so a hung server ends in a transport loss
+instead of holding the slot until the lane's episode timeout. Every observation's attempts and
+time are counted (``observation_summary``: calls, retried, slow, undelivered), reported.
 """
 
 from __future__ import annotations
@@ -78,6 +97,12 @@ SETUP_PATH_PREFIX = "/setup/"
 REPLY_TAIL = 300
 # Setup step types whose argv the records keep (rule (a) of section 5.4 reads them).
 ARGV_STEP_TYPES = ("execute", "command", "launch", "execute_with_verification")
+# A guest request the pinned code sends without a timeout waits at most this long; the guest
+# server ends its own commands at 120 s (``/execute``), so only a hung server reaches it.
+GUEST_REQUEST_TIMEOUT_S = 150.0
+SERVER_ERROR = 500  # an HTTP status at or above it is the guest server's own failure
+SLOW_OBSERVATION_S = 30.0  # an observation that took longer is counted as slow (reported)
+OBSERVATION_PHASES = ("evaluate", "capture_sweep")
 
 
 class OfflineNetworkRefused(RuntimeError):
@@ -86,6 +111,11 @@ class OfflineNetworkRefused(RuntimeError):
 
 class TransportFailure(RuntimeError):
     """A checker getter could not retrieve a file because the transport failed."""
+
+
+class GuestObservationFailure(RuntimeError):
+    """The guest server answered a checker's read with HTTP 5xx on every attempt, so the
+    checker would have scored a server fault as the agent's state (D53 (iii))."""
 
 
 @dataclass
@@ -129,6 +159,13 @@ def setup_reply_summary(response: Any, streamed: bool = False) -> dict[str, Any]
     return out
 
 
+def answered(attempt: Mapping[str, Any]) -> bool:
+    """Whether one guest request got an answer that is not the server's own failure: an HTTP
+    status below 500 (a 404 for a file the agent never wrote is the agent's state)."""
+    status = attempt.get("status")
+    return isinstance(status, int) and not isinstance(status, bool) and status < SERVER_ERROR
+
+
 def setup_reply_failed(reply: Mapping[str, Any]) -> bool:
     """The registered reading of one ``/setup/*`` reply (section 7.2): the step failed in the
     guest when the reply is not HTTP 200 or carries a non-zero ``returncode``."""
@@ -151,6 +188,7 @@ def install_network_shim(
     guest_errors: list[dict[str, Any]] | None = None,
     guest_replies: list[dict[str, Any]] | None = None,
     context: Callable[[], dict[str, Any]] | None = None,
+    guest_calls: list[dict[str, Any]] | None = None,
 ) -> Callable[[], None]:
     """Route ``requests.get``/``post`` (guest passes, file cache served locally, rest refused).
 
@@ -158,7 +196,10 @@ def install_network_shim(
     timeout, a broken chunked body) is appended to ``guest_errors`` and re-raised, so a
     caller that swallows it (the pinned OSWorld code does, in many places) cannot hide it.
     Every guest ``/setup/*`` reply is appended to ``guest_replies`` (``setup_reply_summary``)
-    with ``context()``, the setup phase and step it answers.
+    with ``context()``, the setup phase and step it answers. Every guest request, answered or
+    not, is appended to ``guest_calls`` (method, path, HTTP status or error, seconds, and
+    ``context()``), never a body. A guest request sent without a timeout gets
+    ``GUEST_REQUEST_TIMEOUT_S``; an explicit one (``_open_setup``'s 1,810 s) is kept.
     """
     import requests
 
@@ -172,19 +213,28 @@ def install_network_shim(
 
     def guest_call(method: str, call: Callable[..., Any], url: str, *args: Any, **kwargs: Any):
         path = str(url)[len(guest_base) :]
+        if kwargs.get("timeout") is None:
+            kwargs["timeout"] = GUEST_REQUEST_TIMEOUT_S
+        started = time.monotonic()
         try:
             response = call(url, *args, **kwargs)
         except requests.exceptions.RequestException as exc:
+            error = f"{type(exc).__name__}: {str(exc)[:200]}"
             errors.append(
-                {
-                    "method": method,
-                    "path": path[:200],
-                    "error": f"{type(exc).__name__}: {str(exc)[:200]}",
-                    "t": time.time(),
-                    **where(),
-                }
+                {"method": method, "path": path[:200], "error": error, "t": time.time(), **where()}
             )
+            if guest_calls is not None:
+                guest_calls.append(
+                    {"method": method, "path": path.split("?")[0][:200], "error": error,
+                     "seconds": round(time.monotonic() - started, 3), **where()}
+                )  # fmt: skip
             raise
+        if guest_calls is not None:
+            guest_calls.append(
+                {"method": method, "path": path.split("?")[0][:200],
+                 "status": getattr(response, "status_code", None),
+                 "seconds": round(time.monotonic() - started, 3), **where()}
+            )  # fmt: skip
         if guest_replies is not None and path.startswith(SETUP_PATH_PREFIX):
             summary = setup_reply_summary(response, streamed=bool(kwargs.get("stream")))
             guest_replies.append(
@@ -278,12 +328,16 @@ class LiveTask:
         self.fetched: list[str] = []
         self.guest_errors: list[dict[str, Any]] = []
         self.setup_replies: list[dict[str, Any]] = []
+        self.guest_calls: list[dict[str, Any]] = []
+        self.call_seconds: dict[int, float] = {}
         self.transport: dict[str, list[str]] = {}
-        self.step_state: dict[str, Any] = {"phase": None, "step": 0, "type": None, "depth": 0}
+        self.undelivered: dict[str, list[str]] = {}
+        self.step_state: dict[str, Any] = {"phase": None, "step": 0, "type": None, "depth": 0,
+                                           "call": None, "calls": 0, "in_setup": 0}  # fmt: skip
         self.guest_base = f"http://{guest_ip}:{server_port}"
         self.restore = install_network_shim(
             self.guest_base, file_cache, self.fetched, self.guest_errors,
-            self.setup_replies, self.step_context,
+            self.setup_replies, self.step_context, self.guest_calls,
         )  # fmt: skip
         env = DesktopEnv.__new__(DesktopEnv)
         env.provider_name = "docker"
@@ -315,12 +369,57 @@ class LiveTask:
             screen_height=SCREEN[1],
         )
         self.track_steps(env.setup_controller)
+        self.track_setup(env.setup_controller)
+        self.track_calls(env.controller)
         self.env = env
 
     # ---------------------------------------------------------------- setup steps (7.2)
     def step_context(self) -> dict[str, Any]:
         state = self.step_state
-        return {"phase": state["phase"], "step": state["step"] or None, "type": state["type"]}
+        return {"phase": state["phase"], "step": state["step"] or None, "type": state["type"],
+                "call": state["call"], "in_setup": bool(state["in_setup"])}  # fmt: skip
+
+    def track_setup(self, controller: Any) -> None:
+        """Mark every request ``SetupController.setup`` sends (the postconfig's steps and its
+        ``/terminal`` connectivity probe) as a setup action, not a checker observation."""
+        state, setup = self.step_state, controller.setup
+
+        def wrapped(*args: Any, **kwargs: Any) -> Any:
+            state["in_setup"] += 1
+            try:
+                return setup(*args, **kwargs)
+            finally:
+                state["in_setup"] -= 1
+
+        controller.setup = wrapped
+
+    def track_calls(self, controller: Any) -> None:
+        """Number each call of the controller's public methods (``get_file``,
+        ``get_accessibility_tree``, ``execute_python_command``, ...), so the requests of one
+        call and its retries form one observation; the call's seconds are kept."""
+        state, seconds = self.step_state, self.call_seconds
+
+        def wrap(method: Callable[..., Any]) -> Callable[..., Any]:
+            def wrapped(*args: Any, **kwargs: Any) -> Any:
+                if state["call"] is not None:  # a nested call stays in the outer one
+                    return method(*args, **kwargs)
+                state["calls"] += 1
+                call, started = state["calls"], time.monotonic()
+                state["call"] = call
+                try:
+                    return method(*args, **kwargs)
+                finally:
+                    state["call"] = None
+                    seconds[call] = round(time.monotonic() - started, 3)
+
+            return wrapped
+
+        for name in dir(type(controller)):
+            if name.startswith("_"):
+                continue
+            method = getattr(controller, name)
+            if callable(method):
+                setattr(controller, name, wrap(method))
 
     def track_steps(self, controller: Any) -> None:
         """Wrap the controller's ``_<type>_setup`` methods (instance attributes, which the
@@ -357,13 +456,13 @@ class LiveTask:
         return [dict(r) for r in self.setup_replies[start:]]
 
     # ---------------------------------------------------------------- transport (7.2)
-    def mark(self) -> tuple[int, int]:
-        return len(self.guest_errors), len(self.env.controller.reads)
+    def mark(self) -> tuple[int, int, int]:
+        return len(self.guest_errors), len(self.env.controller.reads), len(self.guest_calls)
 
-    def transport_since(self, mark: tuple[int, int]) -> list[str]:
+    def transport_since(self, mark: tuple[int, int, int]) -> list[str]:
         """Transport failures since ``mark``: a guest request that raised, or a file read
         with no answer on any attempt (what the pinned code may have swallowed)."""
-        errors, reads = mark
+        errors, reads = mark[0], mark[1]
         out = [f"{e['method']} {e['path']}: {e['error']}" for e in self.guest_errors[errors:]]
         for read in self.env.controller.reads[reads:]:
             if read.attempts and all("error" in a for a in read.attempts):
@@ -371,7 +470,7 @@ class LiveTask:
         return out
 
     def check_transport(
-        self, phase: str, mark: tuple[int, int], cause: BaseException | None = None
+        self, phase: str, mark: tuple[int, int, int], cause: BaseException | None = None
     ) -> None:
         failures = self.transport_since(mark)
         if failures:
@@ -379,6 +478,76 @@ class LiveTask:
             raise TransportFailure(
                 f"{phase}: {len(failures)} guest transport failure(s), first {failures[0]}"
             ) from cause
+
+    # ---------------------------------------------------------------- observations (D53)
+    def observations_since(self, start: int = 0) -> list[dict[str, Any]]:
+        """The checker's observations among the guest requests from index ``start``: the
+        requests of ``evaluate()`` and the capture sweep that are not setup actions (no
+        ``/setup/*`` path, not inside ``SetupController.setup``), one per controller call with
+        its retries (a request outside any call is its own). An observation is delivered when
+        some attempt got an HTTP status below 500; ``retried`` when that took more than the
+        first attempt; ``seconds`` is the call's time, retry pauses included."""
+        groups: dict[tuple[str, int], list[dict[str, Any]]] = {}
+        for index, row in enumerate(self.guest_calls[start:], start=start):
+            if row.get("phase") not in OBSERVATION_PHASES or row.get("in_setup"):
+                continue
+            if str(row.get("path", "")).startswith(SETUP_PATH_PREFIX):
+                continue
+            call = row.get("call")
+            key = ("call", int(call)) if call is not None else ("request", index)
+            groups.setdefault(key, []).append(row)
+        out = []
+        for (kind, number), attempts in groups.items():
+            seconds = self.call_seconds.get(number) if kind == "call" else None
+            if seconds is None:
+                seconds = round(sum(float(a.get("seconds") or 0.0) for a in attempts), 3)
+            delivered = any(answered(a) for a in attempts)
+            out.append(
+                {
+                    "path": attempts[0].get("path"),
+                    "phase": attempts[0].get("phase"),
+                    "attempts": [a.get("status", "error") for a in attempts],
+                    "delivered": delivered,
+                    "retried": delivered and not answered(attempts[0]),
+                    "seconds": seconds,
+                }
+            )
+        return out
+
+    def check_observations(
+        self, phase: str, mark: tuple[int, int, int], cause: BaseException | None = None
+    ) -> None:
+        """Raise ``GuestObservationFailure`` when a checker observation of the phase got no
+        HTTP status below 500 on any attempt (section 7.2, D53 (iii))."""
+        failed = [
+            f"{o['path']} ({', '.join(str(a) for a in o['attempts'])})"
+            for o in self.observations_since(mark[2])
+            if not o["delivered"]
+        ]
+        if failed:
+            self.undelivered[phase] = failed
+            raise GuestObservationFailure(
+                f"{phase}: {len(failed)} checker observation(s) undelivered, first {failed[0]}"
+            ) from cause
+
+    def observation_summary(self) -> dict[str, Any]:
+        """Every checker observation of the episode, counted (reported, section 7.3): calls,
+        delivered on retry, slow (over ``SLOW_OBSERVATION_S``), undelivered, the longest; and
+        the observations that were not plain (retried, slow or undelivered), at most 20."""
+        observations = self.observations_since(0)
+        unusual = [
+            o
+            for o in observations
+            if o["retried"] or not o["delivered"] or o["seconds"] > SLOW_OBSERVATION_S
+        ]
+        return {
+            "calls": len(observations),
+            "retried": sum(1 for o in observations if o["retried"]),
+            "slow": sum(1 for o in observations if o["seconds"] > SLOW_OBSERVATION_S),
+            "undelivered": sum(1 for o in observations if not o["delivered"]),
+            "max_s": max((o["seconds"] for o in observations), default=None),
+            "unusual": unusual[:20],
+        }
 
     # ---------------------------------------------------------------- phases
     def setup(self) -> dict[str, Any]:
@@ -446,8 +615,9 @@ class LiveTask:
         """The pinned ``DesktopEnv.evaluate()`` with the episode's last action in history.
 
         Raises ``TransportFailure`` when any guest request of the evaluation (postconfig,
-        getters) failed in transport, whatever ``evaluate()`` returned or raised. The
-        postconfig's ``/setup/*`` replies are kept in ``evaluate_replies``.
+        getters) failed in transport, and then ``GuestObservationFailure`` when a checker
+        observation got HTTP 5xx on every attempt, whatever ``evaluate()`` returned or raised.
+        The postconfig's ``/setup/*`` replies are kept in ``evaluate_replies``.
         """
         self.env.action_history = [last_action] if last_action is not None else []
         mark = self.mark()
@@ -456,16 +626,19 @@ class LiveTask:
             score = self.env.evaluate()
         except Exception as exc:
             self.check_transport("evaluate", mark, exc)
+            self.check_observations("evaluate", mark, exc)
             raise
         finally:
             self.step_state["phase"] = None
             self.evaluate_replies = self.replies_since(first)
         self.check_transport("evaluate", mark)
+        self.check_observations("evaluate", mark)
         return score
 
     def capture_sweep(self) -> list[dict[str, Any]]:
         """Call every result getter once more (the captured state then holds every input);
-        a transport failure during the sweep raises ``TransportFailure``."""
+        a transport failure during the sweep raises ``TransportFailure``, an undelivered
+        observation ``GuestObservationFailure``."""
         env = self.env
         evaluator = env.evaluator
         results = evaluator.get("result")
@@ -474,23 +647,32 @@ class LiveTask:
         functions = getters if isinstance(getters, list) else [getters]
         out = []
         mark = self.mark()
-        for config, getter in zip(configs, functions, strict=False):
-            if getter is None or not config:
-                continue
-            try:
-                getter(env, config)
-                out.append({"type": config.get("type"), "ok": True})
-            except TransportFailure:
-                raise
-            except Exception as exc:  # noqa: BLE001 - a getter that fails on agent state
-                self.check_transport("capture_sweep", mark, exc)
-                out.append({"type": config.get("type"), "ok": False, "error": str(exc)[:200]})
+        self.begin_phase("capture_sweep")
+        try:
+            for config, getter in zip(configs, functions, strict=False):
+                if getter is None or not config:
+                    continue
+                try:
+                    getter(env, config)
+                    out.append({"type": config.get("type"), "ok": True})
+                except TransportFailure:
+                    raise
+                except Exception as exc:  # noqa: BLE001 - a getter that fails on agent state
+                    self.check_transport("capture_sweep", mark, exc)
+                    self.check_observations("capture_sweep", mark, exc)
+                    out.append({"type": config.get("type"), "ok": False, "error": str(exc)[:200]})
+        finally:
+            self.step_state["phase"] = None
         self.check_transport("capture_sweep", mark)
+        self.check_observations("capture_sweep", mark)
         return out
 
     def write_capture(self, capture_dir: Path) -> dict[str, Any]:
-        """Copy the files the checker read and the task cache off the VM; hash both."""
+        """Copy the files the checker read and the task cache off the VM; hash both. The
+        directory is made first: a checker that read no file (the agent never wrote it) and
+        an empty task cache still leave a manifest."""
         controller = self.env.controller
+        capture_dir.mkdir(parents=True, exist_ok=True)
         vm_root = capture_dir / "vm"
         files = {}
         for path, data in sorted(controller.blobs.items()):
@@ -518,6 +700,7 @@ class LiveTask:
             "action_history": list(self.env.action_history),
             "guest_request_errors": list(self.guest_errors),
             "setup_replies": list(self.setup_replies),
+            "guest_calls": list(self.guest_calls),
         }
         manifest["state_sha256"] = hashlib.sha256(
             json.dumps({"vm": files, "cache": cache}, sort_keys=True).encode()
@@ -577,6 +760,22 @@ def is_transport_error(exc: BaseException) -> bool:
             continue
         seen.add(id(current))
         if isinstance(current, transport):
+            return True
+        stack += [e for e in (current.__cause__, current.__context__) if e is not None]
+    return False
+
+
+def is_observation_failure(exc: BaseException) -> bool:
+    """Whether a checker observation went undelivered (``GuestObservationFailure`` anywhere in
+    the exception chain): a ``guest_observation`` loss (section 7.2, D53 (iii))."""
+    seen: set[int] = set()
+    stack: list[BaseException] = [exc]
+    while stack:
+        current = stack.pop()
+        if id(current) in seen:
+            continue
+        seen.add(id(current))
+        if isinstance(current, GuestObservationFailure):
             return True
         stack += [e for e in (current.__cause__, current.__context__) if e is not None]
     return False

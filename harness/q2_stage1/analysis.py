@@ -16,6 +16,16 @@ job's episodes that ran to an end; ``realized_costs``, ``gpu_elapsed``). The pri
 set is the base, fixed at the freeze; base plus the extension blocks completed in all four
 A1 jobs is the registered secondary (the fill rule's block count depends on episode
 lengths, so on outcomes).
+
+Section 15's counts (``infrastructure_counts``): losses by type, the agent's and the checker's
+observations (calls, delivered on retry, slower than 30 s, undelivered) and the postconfig
+replies, failures and server errors, per (size, harness), per (size, session) and per (size,
+harness, session) (D56: the session excess P1 is the estimand a guest server that degrades in
+one session would bias), over the final records and over every episode attempt (re-queued
+losses included). Beside the primary: the metric-exception-missing sensitivity and the
+postconfig server-error sensitivity (section 7.2; ``postconfig_missing``), which treats
+as missing every episode with a postconfig reply at HTTP 500 or above or with no HTTP reply.
+No sensitivity changes a decision rule: DR0-DR5 and P1-P5 read the primary.
 """
 
 from __future__ import annotations
@@ -40,6 +50,14 @@ N_RANDOMIZATION = 10_000
 SEED = 42
 NOT_ANCHORED = "not externally anchored"
 GPU_FINAL_STATES = ("COMPLETED", "FAILED", "CANCELLED", "TIMEOUT", "NODE_FAIL", "OUT_OF_MEMORY")
+# ``osworld_live.SERVER_ERROR``: an HTTP status at or above it is the guest server's own failure.
+SERVER_ERROR = 500
+# Section 15's count groupings (D56): per (size, harness), and per session within a size.
+GROUPINGS = {
+    "size_harness": ("size", "harness"),
+    "size_session": ("size", "session"),
+    "size_harness_session": ("size", "harness", "session"),
+}
 
 
 def _f(x: Any) -> Any:
@@ -172,10 +190,36 @@ def analyse_array(
 # --------------------------------------------------------------------------- records
 
 
-def _flags_counts(finals: Mapping[R.SlotKey, Mapping[str, Any]]) -> dict[str, Any]:
+def server_error(reply: Mapping[str, Any]) -> bool:
+    """A guest reply the server itself failed: an HTTP status of 500 or above, or no HTTP
+    status (no reply: transport). A failed step under HTTP 200 (a non-zero ``returncode``) is
+    the agent's state, and so is a 4xx (a window or file the agent's state lacks); D56."""
+    status = reply.get("status")
+    return not isinstance(status, int) or isinstance(status, bool) or status >= SERVER_ERROR
+
+
+def postconfig_server_errors(rec: Mapping[str, Any]) -> int:
+    """The episode's postconfig replies (``postconfig_replies``) the guest server failed."""
+    return sum(1 for reply in rec.get("postconfig_replies") or () if server_error(reply))
+
+
+def postconfig_missing(finals: Mapping[R.SlotKey, Mapping[str, Any]]) -> set[R.SlotKey]:
+    """The slots the postconfig server-error sensitivity treats as missing (section 7.2, D56):
+    a scored final record with any postconfig reply the guest server itself failed (HTTP 500
+    or above, or no HTTP reply). It changes no decision rule."""
+    return {
+        key for key, rec in finals.items()
+        if rec["status"] == "scored" and postconfig_server_errors(rec)
+    }  # fmt: skip
+
+
+def _counts(
+    records: Iterable[Mapping[str, Any]], by: Sequence[str] = GROUPINGS["size_harness"]
+) -> dict[str, Any]:
+    """Section 15's counts per cell, the cell named by the fields ``by`` joined by "/"."""
     per_cell: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
-    for (z, _s, _t, h, _r), rec in finals.items():
-        cell = per_cell[f"{z}/{h}"]
+    for rec in records:
+        cell = per_cell["/".join(str(rec[field]) for field in by)]
         cell["episodes"] += 1
         cell[f"status_{rec['status']}"] += 1
         if rec["status"] == "infrastructure":
@@ -183,8 +227,41 @@ def _flags_counts(finals: Mapping[R.SlotKey, Mapping[str, Any]]) -> dict[str, An
         for key in R.COUNTS:
             cell[key] += int(rec.get(key, 0))
         cell["metric_exceptions"] += int(bool(rec.get("metric_exception")))
+        observations = rec.get("observations") or {}
+        for side in ("agent", "checker"):
+            counts = observations.get(side) or {}
+            for key in R.OBSERVATION_COUNTS:
+                cell[f"observations_{side}_{key}"] += int(counts.get(key) or 0)
+        server_errors = postconfig_server_errors(rec)
+        cell["postconfig_replies"] += len(rec.get("postconfig_replies") or ())
+        cell["postconfig_failures"] += int(rec.get("postconfig_failures") or 0)
+        cell["postconfig_server_errors"] += server_errors
+        cell["episodes_with_postconfig_server_error"] += int(server_errors > 0)
+        for reply in rec.get("postconfig_replies") or ():
+            if server_error(reply):  # by step type: each calls its own handler (section 7.2)
+                cell[f"postconfig_server_errors_{reply.get('type') or 'unknown'}"] += 1
         cell["fractional_scores"] += int(rec["status"] == "scored" and 0 < float(rec["score"]) < 1)
     return {k: dict(v) for k, v in sorted(per_cell.items())}
+
+
+def _flags_counts(
+    finals: Mapping[R.SlotKey, Mapping[str, Any]], by: Sequence[str] = GROUPINGS["size_harness"]
+) -> dict[str, Any]:
+    """Section 15's counts over the final records (one per slot), per cell of ``by``."""
+    return _counts(finals.values(), by)
+
+
+def infrastructure_counts(
+    records: Sequence[Mapping[str, Any]], finals: Mapping[R.SlotKey, Mapping[str, Any]]
+) -> dict[str, Any]:
+    """Section 15's counts per (size, harness), per (size, session) and per (size, harness,
+    session) (D56), over the final records (the episodes the analysis reads) and over every
+    episode attempt (``attempts``: first attempts and re-queues, so a loss that was
+    re-queued, and the observations of the attempt it lost, are counted too)."""
+    return {
+        "final_records": {name: _flags_counts(finals, by) for name, by in GROUPINGS.items()},
+        "attempts": {name: _counts(records, by) for name, by in GROUPINGS.items()},
+    }
 
 
 def truncation_labels(finals: Mapping[R.SlotKey, Mapping[str, Any]]) -> dict[str, Any]:
@@ -352,20 +429,33 @@ def report(
     secondary_tasks = base + [t for b in done for t in blocks[b]]
     flagged = list(plan.get("flagged_tasks", []))
 
-    def run(tasks: Sequence[str], **kw: Any) -> dict[str, Any]:
-        y = R.outcome_array(finals, tasks, **kw)
+    def run(
+        tasks: Sequence[str], on: Mapping[R.SlotKey, Mapping[str, Any]] = finals, **kw: Any
+    ) -> dict[str, Any]:
+        y = R.outcome_array(on, tasks, **kw)
         return analyse_array(y, n_boot=n_boot, n_rand=n_rand)
 
+    missing = postconfig_missing(finals)
+    without_postconfig_errors = {k: r for k, r in finals.items() if k not in missing}
+    base_set = set(base)
+    counts = infrastructure_counts(recs, finals)
     out: dict[str, Any] = {
         "primary": run(base),
         "sensitivity_metric_exception_missing": run(base, metric_exception_missing=True),
+        "sensitivity_postconfig_server_error_missing": {
+            "episodes_missing": sum(1 for key in missing if key[2] in base_set),
+            **run(base, without_postconfig_errors),
+        },
         "sensitivity_flagged_tasks_excluded": run([t for t in base if t not in flagged]),
         "secondary_base_plus_completed_extension": {
             "blocks": done,
             **run(secondary_tasks),
         },
         "fractional_score": _f(E.delta(R.outcome_array(finals, base, value="score"))),
-        "cells": _flags_counts(finals),
+        "cells": counts["final_records"]["size_harness"],
+        "cells_by_size_session": counts["final_records"]["size_session"],
+        "cells_by_size_harness_session": counts["final_records"]["size_harness_session"],
+        "attempts": counts["attempts"],
         "truncation": truncation_labels(finals),
         "uncertified_exposure": exposure_strata(finals, base),
         "checker_noise": checker_noise(finals),

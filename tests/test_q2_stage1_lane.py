@@ -6,6 +6,7 @@ import copy
 import json
 import math
 import re
+import shutil
 import threading
 from pathlib import Path
 from typing import Any
@@ -50,9 +51,31 @@ def manifest(**overrides: Any) -> dict[str, Any]:
     return m
 
 
-def test_a_development_manifest_is_valid():
-    out = lane.validate_manifest(manifest(), ROOT)
+AFTER_THE_FREEZE = "runs only after the freeze"
+PRE_FREEZE_REFUSED = "is a pre-freeze purpose and q2-stage1-rescoped-v1 is frozen"
+
+
+@pytest.fixture(scope="module")
+def unfrozen(tmp_path_factory) -> Path:
+    """A source tree with the splits and no ledger: the registration as a draft, whatever
+    state the repository's own ledger is in, so the pre-freeze rules are tested before and
+    after the real freeze (once frozen, the repository's tree refuses every pre-freeze
+    purpose, D56)."""
+    root = tmp_path_factory.mktemp("unfrozen")
+    (root / lane.SPLITS).parent.mkdir(parents=True)
+    shutil.copy(ROOT / lane.SPLITS, root / lane.SPLITS)
+    assert not lane.frozen(root)
+    return root
+
+
+def test_a_development_manifest_is_valid(unfrozen):
+    out = lane.validate_manifest(manifest(), unfrozen)
     assert out["slots"][0]["task_id"] == DEV[0]
+    if lane.frozen(ROOT):  # D56: no pre-freeze job after the freeze
+        with pytest.raises(lane.LaneError, match=PRE_FREEZE_REFUSED):
+            lane.validate_manifest(manifest(), ROOT)
+    else:
+        assert lane.validate_manifest(manifest(), ROOT) == out
 
 
 @pytest.mark.parametrize(
@@ -67,8 +90,8 @@ def test_a_development_manifest_is_valid():
             },
             "fake engine is for development only",
         ),
-        ({"purpose": "a1"}, "runs only after the freeze"),
-        ({"purpose": "anc"}, "runs only after the freeze"),
+        ({"purpose": "a1"}, AFTER_THE_FREEZE),
+        ({"purpose": "anc"}, AFTER_THE_FREEZE),
         ({"mode": "setup-only"}, "runs mode episode"),
         ({"step_cap": 10}, "step_cap is 15"),
         ({"settle_after_reset_s": 0}, "settle after reset"),
@@ -76,28 +99,34 @@ def test_a_development_manifest_is_valid():
         ({"osworld": {"host_dir": f"{RUNS}/x", "commit": "0" * 40}}, "osworld.commit"),
     ],
 )
-def test_manifest_rules(change, message):
+def test_manifest_rules(change, message, unfrozen):
     with pytest.raises(lane.LaneError, match=message):
+        lane.validate_manifest(manifest(**change), unfrozen)
+    # The repository's tree refuses each too. Once it is frozen, a pre-freeze purpose is
+    # refused as such (D56), and an A1 or ANC manifest on dev slots with the fake engine
+    # passes the freeze check and is refused by a later rule (the fake engine), so only the
+    # refusal is required there (section 5.5).
+    with pytest.raises(lane.LaneError, match=None if lane.frozen(ROOT) else message):
         lane.validate_manifest(manifest(**change), ROOT)
 
 
-def test_vm_settings_are_the_action_path_runtime():
+def test_vm_settings_are_the_action_path_runtime(unfrozen):
     for key, value in (("cpu_cores", 2), ("ram_size", "8G"), ("network", "bridge-unpublished")):
         m = manifest()
         m["vm"][key] = value
         with pytest.raises(lane.LaneError, match=f"vm.{key}"):
-            lane.validate_manifest(m, ROOT)
+            lane.validate_manifest(m, unfrozen)
 
 
-def test_setup_check_touches_pool_and_dev_but_runs_nothing_else():
+def test_setup_check_touches_pool_and_dev_but_runs_nothing_else(unfrozen):
     slots = [slot(0, DEV[0]), slot(1, CONFIRM[0])]
     m = manifest(purpose="setup-check", mode="setup-only", engine={"kind": "none"}, slots=slots)
-    assert len(lane.validate_manifest(m, ROOT)["slots"]) == 2
+    assert len(lane.validate_manifest(m, unfrozen)["slots"]) == 2
     with pytest.raises(lane.LaneError, match="runs no engine"):
-        lane.validate_manifest({**m, "engine": {"kind": "fake", "script": {}}}, ROOT)
+        lane.validate_manifest({**m, "engine": {"kind": "fake", "script": {}}}, unfrozen)
     k1 = next(t for t in SPLITS["confirm"] if t.startswith("0a0faba3"))
     with pytest.raises(lane.LaneError, match="not a pool or dev task"):
-        lane.validate_manifest({**m, "slots": [slot(0, k1)]}, ROOT)
+        lane.validate_manifest({**m, "slots": [slot(0, k1)]}, unfrozen)
 
 
 def test_dispatcher_blocks_and_requeue():
@@ -265,7 +294,7 @@ def test_batch_script_holds_no_gpu_and_forwards_usr1():
     assert "label=cotcodec.slurm_job=${SLURM_JOB_ID}" in text
 
 
-def test_bridge_dir_waits_for_the_gpu_job_id(tmp_path):
+def test_bridge_dir_waits_for_the_gpu_job_id(tmp_path, unfrozen):
     docker = FakeDocker({})
     the_lane = make_lane(tmp_path, manifest(), docker)
     id_file = tmp_path / "gpu_job_id"
@@ -281,7 +310,7 @@ def test_bridge_dir_waits_for_the_gpu_job_id(tmp_path):
     m = manifest(purpose="development", engine={"kind": "bridge", "gpu_cap_min": 25,
                  "bridge_dir": f"{RUNS}/gpu/{{gpu_job_id}}/bridge"})  # fmt: skip
     with pytest.raises(lane.LaneError, match="gpu_job_id_file"):
-        lane.validate_manifest(m, ROOT)
+        lane.validate_manifest(m, unfrozen)
 
 
 GPU_TEMPLATE = ROOT / "experiments/manifests/q2-stage1/gpu-engine.template.yaml"
@@ -382,7 +411,7 @@ def test_host_load_limit_is_an_operator_flag_for_development_and_setup_checks():
         assert lane.check_slurm(m, host_load_cpus=8)["cpus"] == 8
 
 
-def test_registered_purposes_pin_the_prompt_date(tmp_path):
+def test_registered_purposes_pin_the_prompt_date(tmp_path, unfrozen):
     """Every A0a/A0b/ANC/A1 episode sees one system-prompt date (plan.PROMPT_DATE), so
     between- and within-session pairs do not differ by a calendar change in the prompt."""
     from harness.q2_stage1 import plan
@@ -394,9 +423,9 @@ def test_registered_purposes_pin_the_prompt_date(tmp_path):
         if date:
             m["date"] = date
         with pytest.raises(lane.LaneError, match="pinned prompt date 2026-10-08"):
-            lane.validate_manifest(m, ROOT)
+            lane.validate_manifest(m, unfrozen)
     with pytest.raises(lane.LaneError, match="YYYY-MM-DD"):
-        lane.validate_manifest(manifest(date="today"), ROOT)
+        lane.validate_manifest(manifest(date="today"), unfrozen)
     m = manifest(date=plan.PROMPT_DATE)
     docker = FakeDocker({})
     make_lane(tmp_path, m, docker).run()
@@ -404,13 +433,13 @@ def test_registered_purposes_pin_the_prompt_date(tmp_path):
     assert json.loads((out / "config.json").read_text())["date"] == "2026-10-08"
 
 
-def test_setup_check_v2_probes_the_postconfig_and_runs_the_diagnostics(tmp_path):
+def test_setup_check_v2_probes_the_postconfig_and_runs_the_diagnostics(tmp_path, unfrozen):
     """G0 item 5's second pass: the postconfig probe and the registered diagnostics reach the
     episode config of a setup-check slot, and no other purpose may ask for the probe."""
     from harness.q2_stage1 import plan
 
     m = json.loads((ROOT / "experiments/manifests/q2-stage1/setup-check-v2.json").read_text())
-    assert lane.validate_manifest(m, ROOT)["postconfig_probe"] is True
+    assert lane.validate_manifest(m, unfrozen)["postconfig_probe"] is True
     assert lane.check_slurm(m, host_load_cpus=8)["cpus"] == 8
     assert len(m["slots"]) == 148 and "requeue" not in m  # a failed slot is re-queued once
     vscode = next(s for s in m["slots"] if s["task_id"].startswith("53ad5833"))
@@ -426,7 +455,7 @@ def test_setup_check_v2_probes_the_postconfig_and_runs_the_diagnostics(tmp_path)
     assert configs[0]["diagnostics"] == expected
     assert configs[1]["diagnostics"] == []
     with pytest.raises(lane.LaneError, match="postconfig_probe belongs to a setup check"):
-        lane.validate_manifest(manifest(postconfig_probe=True), ROOT)
+        lane.validate_manifest(manifest(postconfig_probe=True), unfrozen)
 
 
 def test_a_gpu_device_in_an_episode_container_stops_the_lane(tmp_path):

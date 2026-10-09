@@ -269,7 +269,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "Action path v2 accepted (D53). S1a (q2-stage1-rescoped-v1): fill G0 item 1 from attempt 1 (N* = 32, V = 20, sizes in sequence), classify persistent guest-server observation errors as infrastructure losses, run O1 and A0a (D49 ii), fill the A0 constants, a fresh pre-freeze audit, then the freeze once the section 18 sign-off slots are filled (two are Kevin's). The checker-mutation study waits on Kevin's adjudication (34 items) and spot check (25 items).",
+      "next_action": "S1a is frozen (ledger row 16, freeze commit d5f5798). Run O2 from the freeze commit, then A1 S1 9B and S1 4B, then S2 9B and S2 4B at least 12 h later, under the quiet-host rule; then the registered analysis and an independent verification. The checker-mutation study waits on Kevin's adjudication (34 items) and spot check (25 items).",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -354,9 +354,9 @@
         }
       },
       "stage1_s1a": {
-        "registration": "q2-stage1-rescoped-v1 (draft, not frozen; no ledger row)",
+        "registration": "q2-stage1-rescoped-v1: FROZEN 2026-10-09T22:11:08Z, ledger row 16 (registration sha256 f9db7cc38c4954b3144ac5a1afaf7bf5366449081b06c80bf89888bdf653afd8, row hash bc5e88a0043065f93e3ea494633b6c3cd119973708e250110e7bcf4856507d0f, git_head_at_freeze 70d57e3); freeze commit d5f5798 (the commit that adds the row; O2, A1 and every later export run from it)",
         "branch": "stage0/q2-stage1-rescope",
-        "status": "G0 items 2-9 and 12 built and tested on CPU (D49 iv); a fresh independent audit must read the draft before any freeze; G0 item 1 waits for the action-path v2 acceptance verdict; no GPU job and no GPU episode has run",
+        "status": "FROZEN (D56 program sign-off; D55 Kevin's sign-offs). Pre-freeze O1 and A0a ran (K_base 32, T_A1 110, total caps 477 min = 7.950 GPU-h). Next: O2 (overlay from the freeze commit), then A1 session 1 (9B then 4B), session 2 at least 12 h after session 1's later lane end (9B then 4B). No confirm-split episode has run yet",
         "g0_results": {
           "fetch_lane_and_receipts": "fetch-model-cpu.sbatch (22685e5e...), job 971 CPU only: Qwen3.5-4B receipt efc88487..., OpenCUA-7B receipt 8109da82... (16.6 GB); remote code read and hashed",
           "episode_driver_and_bridge": "harness/q2_stage1 driver, agents (checked against upstream-recorded messages), engine, bridge, lane, osworld_live; dev smoke job 978 with the scripted fake engine: 3/3 episodes scored end to end; rescoring job 983 matched live 3/3",
@@ -366,11 +366,26 @@
           "anchor": "UNAVAILABLE before any GPU job: G0 9.6 excludes 110 of 116 tasks (the public runs predate b138d348 by 14 months: 36 configs and many checker definitions differ); 9.3 dry run (job 998): vLLM 0.31.0 with transformers 5.17.0 cannot load OpenCUA-7B's remote tokenizer; 9.5 the pinned agent cannot reproduce the public runs' L2 system prompt",
           "glmm": "glmm.R in image b15584f3... (R 4.4.2, glmmTMB 1.1.10); acceptance fit job 984 converged (200 refits)"
         },
-        "consequence": "branch 'anchor unavailable before A0b': pre-freeze jobs O1 and A0a only; T_A1 111 min; K_base 32 at the card's high price, and the floor is 32 in this branch whatever item 18 says (D47, D49 i). K = 32 needs a mean A0a slot of at most about 728 s at V = 20 (the card's high slot, 743 s, gives 24), so going back to review after A0a is a live outcome",
+        "consequence": "branch 'anchor unavailable before A0b': pre-freeze jobs O1 and A0a only; T_A1 planned 111 min, realized 110 after the O1 retry (total caps 477 min); the floor is 32 in this branch whatever item 18 says (D47, D49 i). At the realized T_A1, K = 32 needed a mean A0a slot of at most about 721 s at V = 20 (728 s at the planned 111; the card's high slot, 743 s, gives 24). Realized (2026-10-09): A0a's mean slot 219.9 s, so c_proj is the card's high price and K_base is 32; the draft does not go back to review.",
         "correctness_review": "eight blocking items (C1-C8, registration section 22) fixed with tests on 2026-10-08: transport failures the pinned checker swallows are losses (job 1010 on the pinned code: old rule scored 26/26 runs, fix 26/26 transport), restart check after the capture; untypeable text is an IR error; registered VM jobs take section 5.5's CPUs; GPU template seeds []; the K floor follows the anchor branch; A0a's truncation and concurrency gates in code; every registered job's slots rendered from the plan and enforced by the lane; the prompt date pinned (2026-10-08). Found and left for the audit: base task 26150609's offline setup cannot install pygame",
         "evidence": "program/evidence/2026-10-08/q2-stage1-g0/",
-        "tests": "e43549d: 238 S1a tests (237 passed, 1 skipped locally); host full suite in a fresh ~/cotcodec-scratch export under srun -c 8, no GRES: 2521 passed, 41 skipped; ruff clean on the S1a code, scripts and tests",
-        "head": "draft; not frozen, not pushed (see program/log.md, 2026-10-08 correctness review)"
+        "tests": "S1a tests locally: 291 passed, 1 skipped on the draft (new after D56: test_counts_are_also_reported_per_session, test_postconfig_server_error_sensitivity, test_no_pre_freeze_job_runs_after_the_freeze, test_the_program_slot_names_the_decision_that_signs_items_1_16_and_19_27; the pre-freeze manifests are validated on a draft tree); on a scratch frozen copy filled with D56 (row 16): 289 passed, 3 skipped. Full local suite (macOS): 2,528 passed, 88 skipped.",
+        "head": "draft; not frozen, not pushed (see program/log.md, 2026-10-08 correctness review)",
+        "prefreeze_jobs": {
+          "source": "draft commit bb67aa02fa9bce8a2b10a4822a23a2f81fae4d40 (read-only host export; overlay built from a clone of it)",
+          "O1": "1032 FAILED in 1 s (operator error in the source receipt), 1033 COMPLETED in 47 s: overlay sha256:2c5f9b20f6709dd6fdd4743dee50dab3aec3ef753a9b7f11d9e5ce6cd8e4df62",
+          "A0a": "VM 1037 (90 CPUs) + GPU 1039 (9B, 25-min cap): 20/20 scored in one wave; slots 151.6-248.7 s, mean 219.9 s; c_A0a 0.003054 GPU-h; L_A0a 1.887 min; truncation 0/131 (H-OSW-fixed) and 0/125 (H-GA); step p95 1.265 s against 2 x 2.6944 = 5.389 s; no loss, restart or undelivered observation; queue empty before each submission and no foreign job while it ran",
+          "constants": "N* 32, V 20, c_proj 0.011274 (card's high price binds), T_A1 110, total caps 477 min (7.950 GPU-h), K_base 32 (floor 32 met), base unchanged; plan_sha256 6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51",
+          "back_to_review": false,
+          "gpu_hours_physical": 0.1144,
+          "charged_minutes": 31
+        },
+        "d53_iii": "a whole-boot HTTP 500 on a checker read was scored y = 0 (the pinned controller returns None after a 5xx); now a guest_observation loss, with a 150 s bound on guest requests without a timeout and per-episode observation counts; job 1036 on the pinned code: 64/64 server-error runs become losses, 32/32 missing-file runs stay scored. Also fixed: write_capture crashed (runner_crash) when the checker read no file and the task cache was empty",
+        "evidence_prefreeze": "program/evidence/2026-10-09/q2-stage1-prefreeze/",
+        "prefreeze_audit": "2026-10-09, two fresh auditors on 82ff505: every value reproduced from the raw host records, plan re-rendered byte for byte, G0 item 1 checked against ledger rows 13-15. Blocking, fixed: (1) G0 item 10 states exactly what the freeze writes (the placeholder becomes the plan_sha256 field of program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json in backticks, 6a3f0219..., not the file SHA-256 a5f0aadc...), and a prereg test freezes a filled scratch copy and has the lane validate an A1-9B-S1 manifest (and refuse the wrong forms and an edit after the freeze); (2) section 7.3 quotes D53 (iii) and states S1a's reading of 'very slow' (counted per episode as infrastructure, reported beside losses, bounded attempts), which the program's sign-off must accept or send back to review. Non-blocking fixed: stale T_A1 numbers, section 18 header 19-27, the D49 (i) quote, 7.2's transport label, the D11 pointer, the typed renderer inputs, the concurrency gate's looseness disclosed, O2 operation, evidence README notes; the lane's A1/ANC admission now checks the registration's SHA-256 against its ledger row and the chain (lane.frozen_registration; O2 gets preregister.py verify as an operator step); main merged (D54, D55; program total 4.9088). Code changed after A0a: lane.py (post-freeze admission only) and the plan renderer's docstring; neither changes what A0a ran or measured (registration section 22)",
+        "signoffs": "Kevin's two slots filled from D55 (2026-10-09): item 17 accepted including the unanchored read; G0 item 5's offline-setup decisions accepted. Program: D56 (on main, 3ee089f) signs items 1-16 and 19-27 and accepts section 7.3's reading of D53 (iii), the postconfig carve-out on two conditions now stated in sections 7.2 and 15 (per-session counts; the postconfig server-error sensitivity). The program's slot stays TBD until the freeze, which writes D56 there",
+        "freeze_rehearsal": "2026-10-09, a fresh verifier on 51770da (scratch clone, own ledger copy): freeze accepted, A1-9B-S1 validated (128 base slots, 11 fill blocks, T_A1 110), GPU half dry-run ok, a one-byte edit refused by lane, render and verify. Blocking, fixed: (1) three S1a tests assumed an unfrozen tree and failed after the freeze (tests now freeze-independent); (2) the status slot covered only its bold line, so draft-only sentences would have been frozen (the placeholder now names the whole paragraph; section 22 'At the freeze' states the frozen paragraph, the slots and the steps; a test checks it before and after the freeze). Non-blocking fixed: slow-observation tests, 7.3 wording, the postconfig carve-out put to the program's decision, the freeze commit defined (the commit adding the row), item 18's missing slot explained. Re-rehearsed on d0a0529: frozen-tree S1a suite 285 passed, 3 skipped; real ledger unchanged (cfe46a0b); a second verifier on 87ef1dd (frozen-tree S1a suite 285 passed, 3 skipped; full suite 2,522 passed, 90 skipped) found item 13 understating the postconfig carve-out (corrected after D56)",
+        "d56_conditions": "2026-10-09: (1) analysis.infrastructure_counts reports losses by type, the agent's and checker's observation counts and the postconfig replies, failures and server errors (also by step type) per (size, harness), (size, session) and (size, harness, session), over final records and every attempt; (2) the postconfig server-error sensitivity recomputes every primary estimand with episodes missing that have a postconfig reply at HTTP >= 500 or no HTTP reply (HTTP 200 with a non-zero returncode is kept), beside the primary, no decision rule; (3) lane.validate_manifest refuses development, setup-check, A0a and A0b once frozen (job 1037's A0a manifest still validates on the draft tree, 051cdd6e...); (4) a frozen-mode prereg test requires the program slot's id to be a decisions.md heading naming q2-stage1-rescoped-v1 and the section 7.3 reading; (5) item 13 and section 7.2 name the postconfig's own handlers (/setup/activate_window 93 steps in 92 of the 148 pool and dev tasks; close_window, launch, upload, open_file). Code of record changed: analysis.py and lane.py (neither changes what A0a measured; no job runs analysis.py)"
       }
     },
     {
@@ -426,10 +441,9 @@
     "The checker-mutation blind specs (program/evidence/q2-mutation/specs/, public on main since 2026-10-07) quote short passages of OSWorld file-cache documents. The registration lists their release as your sign-off, but they were published with the integration branch before that sign-off. Confirm the release, or ask for removal (a history purge needs a force-push, as with the other purge item)",
     "Q2 action path: q2-action-path-v2 is ACCEPTED on attempt 1 (D53; N* = 32). Still open for you: whether a later registration should observe the shell's side of a grabbed chord directly; the job 851 unprovoked guest-server restart beside the D30 development rate; and the disclosed deviation that A4 and A7 ran before the rung-40 choice was recorded (D51 ratified it after the fact; no verdict changes)",
     "Q3 (D54): K1 v3 ended at an honest exit (gauntlet 45, 51, 55, 56); Q3 rests on the dense pre-check v2 (NEGATIVE_CAPABLE_V3). Yours only if you want K1 reopened: admitting a screen above 8 GPU-h (D24) for more seeds or evidence, plus a new design with a same-language zero-overlap leg. Package: program/preregistrations/q3-k1-localization-screen-v3.md (draft), program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md, program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl",
-    "Q2 S1a (q2-stage1-rescoped-v1; D47, D49): G0 built and reviewed 2026-10-08 (program/evidence/2026-10-08/q2-stage1-g0/). The OpenCUA-7B anchor is UNAVAILABLE (at most 6 of 116 tasks keep the config and checker the public runs used; its tokenizer does not load under vLLM 0.31), so S1a runs unanchored with the 32-task floor. Task 26150609's setup needs network (pip install pygame) and so fails offline. Next: a fresh independent pre-freeze audit, then the freeze after the action-path v2 suite passes (its N* and accepted executor fill the last TBDs). D49 decided the task floor and DR1/DR5 on your behalf; review them",
     "Host limit (needs the host administrator): fs.inotify.max_user_instances is 128 on fal-h100-01, so the action-path ladder's 40-VM rung could not boot 10 of 80 VMs (dnsmasq 'failed to create inotify: Too many open files'). N* is therefore 32, and the registered program kill criterion (N* below 40: cut the Stage-1 task count before adding GPUs) applies. Ask the administrator to raise the limit if 40 concurrent VMs are wanted; attempt 1's rung-40 rerun is not used (D51); running above 32 VMs after a host change needs a registered deviation or a new registration with its own ladder (D53 ii) (evidence: program/evidence/2026-10-08/q2-action-path-v2-acceptance/)"
   ],
-  "gpu_hours_spent_this_program": 4.7944,
+  "gpu_hours_spent_this_program": 4.9088,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -739,6 +753,38 @@
       ],
       "outcome": "review PARSED on attempt 1, total 57, replicates token-identical; wave score 56 (lower of 56 and 57), best 56; honest exit (wave cap 1 of 1, triad 3/3 refuted, decisiveness defect surviving three waves); reviewer inference only, not K1 v3 screen work; max_model_len 196608 to fit the 149,570-token prompt",
       "basis": "physical (scontrol RunTime 00:03:23 = 203 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, GPUs at 0 MiB after the job)"
+    },
+    {
+      "experiment": "q2-stage1-rescoped-v1 pre-freeze O1 (cu129 vLLM overlay from the draft commit bb67aa0; D49 ii)",
+      "gpu_hours": 0.0133,
+      "jobs": [
+        "1032 overlay build (FAILED 2:0 after 1 s: the source receipt named --ref <sha>, the extractor admits only selected_ref HEAD; operator error, nothing built)",
+        "1033 overlay build retry (COMPLETED 0:0, 47 s)"
+      ],
+      "outcome": "overlay sha256:2c5f9b20f6709dd6fdd4743dee50dab3aec3ef753a9b7f11d9e5ce6cd8e4df62 from source archive 83d0d503... (5,803 files, tree 905a5a51); provenance PASS; the retry enters the remainder rule, so T_A1 = 110 min (not 111)",
+      "basis": "physical (scontrol RunTime 00:00:01 and 00:00:47 on 1 H100, 48 s); charged under D22 at both registered caps, 2 x 3 minutes (0.1000 GPU-h), within S1a's 478 minutes"
+    },
+    {
+      "experiment": "q2-stage1-rescoped-v1 pre-freeze A0a (Qwen3.5-9B, 20 dev episodes in one wave at V = 20; D49 ii)",
+      "gpu_hours": 0.1011,
+      "jobs": [
+        "1037 VM lane (CPU only, 90 CPUs, no GRES)",
+        "1038 GPU --test-only (never ran)",
+        "1039 engine and bridge (1 H100, 32 CPUs, --dependency=after:1037)"
+      ],
+      "outcome": "20/20 scored; c_A0a 0.003054 GPU-h, L_A0a 1.887 min, truncation 0/131 and 0/125, step p95 1.265 s against 5.389 s; constants c_proj 0.011274, T_A1 110, total caps 477 min, K_base 32 (floor 32 met); plan_sha256 6a3f0219...; no foreign job seen",
+      "basis": "physical (scontrol RunTime 00:06:04 = 364 s on 1 H100); charged under D22 at its 25-minute cap (0.4167 GPU-h)"
+    },
+    {
+      "experiment": "q2-stage1-rescoped-v1 D53 (iii) check of the observation rule on the pinned OSWorld code (CPU only)",
+      "gpu_hours": 0.0,
+      "jobs": [
+        "1034 (cancelled: too slow)",
+        "1035 (stand-in platform artifact, kept)",
+        "1036 (the result)"
+      ],
+      "outcome": "32 dev tasks: /file answering 500, old rule scored 32/32, new rule 32/32 guest_observation; /file and /execute answering 500, 32/32 and 32/32; missing file (404), both score 32/32, no loss",
+      "basis": "physical: s1a-cpu.sbatch run mode, no GRES, metric image, --network none, no /dev/nvidia* in the container"
     }
   ],
   "results": [

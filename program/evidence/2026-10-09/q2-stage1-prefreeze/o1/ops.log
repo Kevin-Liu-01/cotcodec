@@ -1,0 +1,20 @@
+2026-10-09T17:59:35Z squeue-before-O1: []
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+2026-10-09T17:59:35Z O1 submitted job 1032 git=bb67aa02fa9b
+2026-10-09T18:00:10Z job 1032 FAILED 2:0 in 1 s: the source receipt named --ref bb67aa02fa9bce8a2b10a4822a23a2f81fae4d40 (selected_ref must be HEAD); archive rebuilt from HEAD
+2026-10-09T18:00:23Z squeue-before-O1-retry: []
+2026-10-09T18:00:23Z O1 retry submitted job 1033 git=bb67aa02fa9b
+2026-10-09T18:01:29Z squeue-before-observation-check: []
+2026-10-09T18:01:29Z observation check submitted job 1034 (CPU only) git=bb67aa0
+2026-10-09T18:13:33Z job 1034 cancelled by the operator after 22+ rows (get_file's 5 s pause was not skipped; the job would have hit its 30 min limit)
+2026-10-09T18:13:33Z squeue-before-observation-check-r2: []
+2026-10-09T18:13:33Z observation check r2 submitted job 1035 (CPU only) git=bb67aa0
+2026-10-09T18:14:30Z squeue-before-observation-check-r3: []
+2026-10-09T18:14:30Z observation check r3 submitted job 1036 (CPU only; the stand-in answers the platform query) git=bb67aa0

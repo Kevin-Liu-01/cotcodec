@@ -69,8 +69,27 @@ design decision 35 of action-path v2), so they are here. Upstream: H-OSW is OSWo
   `NRestarts` changed since the warm-up) is recorded as `guest_server_restart` (D30). The
   restart check runs after the 20 s settle and again after the capture (a restart during
   evaluation voids the episode even when no request failed), and a check that cannot reach
-  the guest server, here or at the warm-up, is a transport loss: the episode cannot be
-  shown restart-free.
+  the guest server, or that the server answers with an HTTP error, here or at the warm-up, is
+  a transport loss: the episode cannot be shown restart-free.
+* Guest-server errors on observations (D53 (iii)). The pinned controller treats an HTTP 5xx
+  reply like any other non-200 one: `get_file`, `get_accessibility_tree`,
+  `execute_python_command` and the rest retry and return `None`, and the getter hands `None`
+  to the metric, which scores 0 (upstream scores such an episode, usually 0). The
+  action-path suite saw a guest server answer every `/accessibility` call of one boot with
+  HTTP 500 and no restart (A7 session 193). Under S1a a checker observation (a guest read of
+  `evaluate()` or the capture sweep that is not a postconfig action: no `/setup/*` path, not
+  inside `SetupController.setup`; one controller call with its retries) that got no HTTP
+  status below 500 on any attempt is a `guest_observation` loss, and so is a screenshot of
+  the agent's whose attempts all got an HTTP reply without an image (one that failed in
+  transport stays `transport`). A 404 (a file the agent never wrote) is the agent's state. A
+  postconfig step answered with HTTP 500 is still recorded, not a loss (it acts on the
+  agent's state). Every observation is counted per episode (`observations`: calls,
+  delivered on retry, slower than 30 s, undelivered), reported.
+* A guest request the pinned code sends with no timeout (`/file`, `/accessibility`,
+  `/terminal`, `/setup/execute`, ...) gets a 150 s timeout (the guest server ends its own
+  commands at 120 s); upstream would wait for ever. A hung server then ends in a transport
+  loss instead of holding the slot until the lane's 3,600 s episode timeout. An explicit
+  timeout (`_open_setup`'s 1,810 s) is kept.
 
 ## Runtime (registration section 4)
 

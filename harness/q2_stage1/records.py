@@ -4,7 +4,9 @@ The episode driver (G0 item 3) writes one JSON object per episode attempt with t
 fields below; the analysis reads nothing else. Classification follows section 7.2:
 
 * ``status: "infrastructure"``: a transport, VM, engine, guest-server or executor-device
-  fault (``INFRASTRUCTURE_TYPES``). The slot is re-queued once at the end of its block; a
+  fault (``INFRASTRUCTURE_TYPES``), including an observation the guest server did not
+  deliver (``guest_observation``: HTTP 5xx on every attempt of a screenshot or a checker's
+  read, D53 (iii)). The slot is re-queued once at the end of its block; a
   second loss leaves it missing. Only these count toward DR0.
 * Agent-caused events are not infrastructure. An ``IRError`` raised from model output is
   handled in the episode under that harness's rule for an unparseable reply and counted
@@ -39,9 +41,12 @@ INFRASTRUCTURE_TYPES = (
     "engine_context_fallback",
     "executor_device",
     "transport",
+    "guest_observation",
     "runner_crash",
     "offline_network",
 )
+# The per-episode observation counts the driver writes (``observations``; reported, D53 (iii)).
+OBSERVATION_COUNTS = ("calls", "retried", "slow", "undelivered")
 REQUIRED = (
     "schema",
     "job",
