@@ -5,8 +5,8 @@
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 15 rows). Decisions taken
-on Kevin's behalf are D1-D53 in `program/decisions.md`. GPU-hours are in
-`program/state.json` (`gpu_hours_ledger`, physical hours): 4.74 in total.
+on Kevin's behalf are D1-D54 in `program/decisions.md`. GPU-hours are in
+`program/state.json` (`gpu_hours_ledger`, physical hours): 4.79 in total.
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -19,7 +19,7 @@ on Kevin's behalf are D1-D53 in `program/decisions.md`. GPU-hours are in
 | `q2-action-path-v2` (+ addenda) | **ACCEPTED on attempt 1** (D53): C1-C4, A1-A7 pass, independently verified in two stages; N* = 32 (rung 40 hit the host's inotify limit), so the program kill criterion applies; a whole-boot `/accessibility` failure without restart (1 of 1,245 boots) is outside every criterion | `program/evidence/2026-10-08/q2-action-path-v2-acceptance/` |
 | `q2-evaluator-mutation-v1` | Descriptive (D35): `compare_pptx_files` fails 35 of 36 equivalent shape-order edits (30 confirmed by both raters; family FN share 40.2%); a GUI-faithful save flips 3 of 92 reference golds (confirmed); false positives few; kappa 0.34; adjudication pending | `program/evidence/2026-10-08/q2-mutation-confirm/` |
 
-Gauntlet records: K1 v2 (45, honest exit), Q1 Stage 0 (45, honest exit).
+Gauntlet records: K1 v2 (45, honest exit), K1 v3 (51, 55, 56; honest exit, D54), Q1 Stage 0 (45, honest exit).
 Q1 Stage 0 is closed on the audit-metric study (D46): under TF32 a tolerance
 audit certifies "not grossly wrong", not 1% correctness
 (`program/evidence/2026-10-08/q1-audit-metric-study/`).
@@ -33,12 +33,10 @@ audit certifies "not grossly wrong", not 1% correctness
   auditors then read the draft. Three sign-off slots remain before the freeze
   (two are Kevin's). The OpenCUA anchor is unavailable, so S1a runs
   unanchored with 32 base tasks.
-- **Q3**: the dense pre-check v2 result is Q3's Stage 0 outcome. K1 v3
-  (gauntlet 51, then 55) continues under D52: a CPU-only repair of GO's
-  identification (the long-range spill guard is evaluable for about 20% of
-  families), its cross-direction agreement, the decision simulation's
-  additivity and the screen's low decisiveness, then a fresh gauntlet wave.
-  Admission over 8 GPU-h stays Kevin's (D24).
+- **Q3**: the dense pre-check v2 result (NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base)
+  is Q3's Stage 0 outcome. K1 v3 ended at an honest exit after its third
+  gauntlet wave (D54; 45, 51, 55, 56): its chance of any verdict stayed at
+  0.03-0.25 and GO is not identified against question-side literal priming.
 - **Q1**: Stage 0 closed on the audit-metric study (D46).
 
 ## Waiting on Kevin
@@ -47,7 +45,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D53, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D54, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 
