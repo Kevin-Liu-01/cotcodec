@@ -293,3 +293,23 @@ def test_checker_noise_reads_the_merged_offline_verdict():
     recs[scored[1]] = {**recs[scored[1]], "offline_raw_score": recs[scored[1]]["score"]}
     finals = R.final_records(recs)
     assert A.checker_noise(finals)["live_vs_offline_mismatches"] == 1
+
+
+def test_observation_counts_are_reported_per_cell():
+    """D53 (iii): undelivered and very slow observations are counted per episode and
+    reported per (size, harness), the agent's screenshots and the checker's reads apart."""
+    rows = synthetic(0.3, 0.3, seed=5)
+    rows[0]["observations"] = {
+        "agent": {"calls": 9, "retried": 1, "slow": 0, "undelivered": 0},
+        "checker": {"calls": 2, "retried": 0, "slow": 1, "undelivered": 0},
+    }
+    rows[1].update(status="infrastructure", score=None, infrastructure_type="guest_observation",
+                   observations={"agent": {"calls": 3, "undelivered": 0},
+                                 "checker": {"calls": 1, "undelivered": 1}})  # fmt: skip
+    assert R.slot_key(rows[0])[:4] == R.slot_key(rows[1])[:4]  # one cell, two reruns
+    cell = A._flags_counts(R.final_records(rows))[f"{rows[0]['size']}/{rows[0]['harness']}"]
+    assert cell["observations_agent_calls"] == 12 and cell["observations_agent_retried"] == 1
+    assert cell["observations_checker_calls"] == 3 and cell["observations_checker_slow"] == 1
+    assert cell["observations_checker_undelivered"] == 1
+    assert cell["infra_guest_observation"] == 1
+    assert "guest_observation" in R.INFRASTRUCTURE_TYPES

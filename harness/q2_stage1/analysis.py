@@ -183,6 +183,11 @@ def _flags_counts(finals: Mapping[R.SlotKey, Mapping[str, Any]]) -> dict[str, An
         for key in R.COUNTS:
             cell[key] += int(rec.get(key, 0))
         cell["metric_exceptions"] += int(bool(rec.get("metric_exception")))
+        observations = rec.get("observations") or {}
+        for side in ("agent", "checker"):
+            counts = observations.get(side) or {}
+            for key in R.OBSERVATION_COUNTS:
+                cell[f"observations_{side}_{key}"] += int(counts.get(key) or 0)
         cell["fractional_scores"] += int(rec["status"] == "scored" and 0 < float(rec["score"]) < 1)
     return {k: dict(v) for k, v in sorted(per_cell.items())}
 

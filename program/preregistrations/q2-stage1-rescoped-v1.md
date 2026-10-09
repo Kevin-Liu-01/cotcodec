@@ -48,7 +48,7 @@ every slot on a scratch copy and freezes it).
 
   | Input | Status | Source |
   |---|---|---|
-  | `q2-action-path-v2`, `-inputs`, `-executor` (and any accepted `-executor-a2`/`-a3`) | frozen, ledger rows 13-15; acceptance not yet run | `program/preregistrations/q2-action-path-v2*.md` |
+  | `q2-action-path-v2`, `-inputs`, `-executor` (and any accepted `-executor-a2`/`-a3`) | frozen, ledger rows 13-15; accepted on attempt 1, N* = 32 (D53; G0 item 1) | `program/preregistrations/q2-action-path-v2*.md`; `program/evidence/2026-10-08/q2-action-path-v2-acceptance/` |
   | `serving-throughput-probe-v2` | frozen, job 466 | cost card and engine settings |
   | `q2-holo3-rerun-audit-v2` | confirmatory for its rules (a)-(d) only | the two same-day Holo3 runs differ per task (v1 post-hoc McNemar, D10); v2 showed that checker time-dependence, step-count behaviour and visible environment failures do not explain the shift. A floor measured inside one session may understate the noise between sessions |
   | `q2-evaluator-mutation-v1` | descriptive (D35) | checker corrections and K1 task exclusions |
@@ -104,7 +104,52 @@ S1a does **not** answer:
    fired; N* is that attempt's ladder value. A7 is not required, because S1a
    uses the screenshot setting only (action-path v2 section 7). The executor,
    IR and adapter digests are those of the accepted attempt's executor
-   addendum, pinned by its ledger row: TBD. **If N* < 16, S1a does not start**
+   addendum, pinned by its ledger row: **attempt 1 is accepted** (D53; no repair attempt
+   exists). C1-C4 and A1-A7 pass, and two independent verifications recomputed every verdict
+   with the frozen code from the SHA-256-checked raw records
+   (`independent-verification-stage-a.json`, SHA-256
+   `14b00965b4636db51284bd49af1216e47b3a6198841776a57f626918d0372025`; `-stage-b.json`,
+   `e11bec8f72b3932368b63c20d77aa5f4f56496f50c76dbbfe23678b67e5e4b6d`). Executor addendum
+   `q2-action-path-v2-executor`, ledger row 15 (file SHA-256
+   `cef0cbc603fc5da7c4e88205e738ef4b659ec367f85d8573328951f57e247b08`, row hash
+   `fde44535aa821b22029099bd8109a5ed98f991a119034495b35453dafb357342`, `git_head_at_freeze`
+   `d01982b684437241bf07210a45f73725881aaee7`; every acceptance campaign ran from the
+   read-only export of `bf99a645c3782b2c59a75b6f463461b2515d0d97`, which adds only that row):
+   - executor: `harness/q2/vm/guest/l0_fixed.py`
+     `7f8bed98ad22eee662d92d5422ee564d80459645d2e0c58bb6f3df74a94425f1` and
+     `harness/q2/action_path/executor.py`
+     `d5c43bbb76926da056c15a39ddcbf05e1c328bd7dddb6a726cde3c46c2f9776a`;
+   - adapters: `harness/q2/action_path/adapters.py`
+     `3a62eb109d656a717dfe9cbce31fba3bcf02457e9f5690f3e20639e8becbaf40`,
+     `harness/q2/action_path/upstream/osworld_bfd62bdc_fixed.py`
+     `9558b956004f6c971e881f073c42792e3d5d437396dbe6c0b407b250df3d8fdf` (H-OSW-fixed) and
+     `harness/q2/action_path/upstream/gym_anything_aae6f7607.py`
+     `c624cee586e3b8b8b2ac12102ae1fca91e7de154b494035c4289123f38887aa6` (H-GA), with H-GA's
+     translator `harness/q2/action_path/controls.py`
+     `d96e7b2acdecfef134c08c22f23113c8d78fae9d8a35d0e5ad826a2f0af9cc72` (pinned by row 14,
+     `q2-action-path-v2-inputs`);
+   - IR: `harness/q2/action_path/ir.py`
+     `33dc24771b823597eef453a4994faf730d0364bd090488aa13e9de5e3498d305` (pinned by row 13,
+     `q2-action-path-v2`; the executor addendum lists no IR file of its own).
+
+   `scripts/preregister.py verify` passes for rows 13, 14 and 15 and `check-chain` for all 15
+   rows (2026-10-09), and the tree's files equal these digests. **N* = 32**: rungs 8-32
+   qualify; rung 40 (job 1025) did not count, because 10 of its 80 cold boots hit the host's
+   `fs.inotify.max_user_instances` (D51, corrected by D53 (ii)), and A1 at N* = 32 passes
+   (rung 32, job 1023). A4 (job 1027) and A7 (job 1029) ran at N* = 32. So A0a and A1 run at
+   V = 20 with the sizes one after the other (section 5.5's first row), and N* < 40 brings in
+   action-path v2's program kill criterion (cut the task count before adding GPUs; S1a never
+   runs more than 20 VMs). The concurrency gate's reference (section 6.2) is the accepted
+   attempt's `step_p95_n1_s`, **2.6944 s** (`acceptance/ladder-n-star.json`, SHA-256
+   `340f155368001df093ce3982958c2439e39ecd7932a3ade04003222941dada62`, equal to
+   `acceptance/a1-n1-reference.json`: every A1 step at N = 1, jobs 968 and 970, 2,560
+   steps), so A0a's limit is 5.389 s; A1 at N* = 32's own step p95, 3.248 s
+   (`acceptance/a1-at-n-star.json`), is reported beside it, not used. A7 session 193 showed a
+   failure no criterion bounds: the guest server answered every `/accessibility` call of one
+   boot with HTTP 500 and did not restart (1 of 1,245 accessibility-setting boots); D53 (iii)
+   makes such persistent errors on any observation an infrastructure loss here (section 7.2).
+   Evidence: `program/evidence/2026-10-08/q2-action-path-v2-acceptance/` (README, the
+   `acceptance/*-verdict.json` files and both independent verifications). **If N* < 16, S1a does not start**
    and no GPU job runs (section 5.5). **At N* = 16 the draft goes back to review before
    A0a** (V = 16: the card's high price alone gives K_base 24 unless L_A0a is under about 4
    minutes, below any engine start-up; the lane and the manifest renderer refuse A0a below
@@ -145,6 +190,8 @@ S1a does **not** answer:
      state as score 0, and counts a context-variant fallback of H-GA not
      caused by a context-length rejection as an infrastructure loss (section
      7.2);
+   - counts every observation (the agent's screenshots and the checker's reads) and makes
+     one the guest server did not deliver an infrastructure loss (section 7.2, D53 (iii));
    - writes the episode records of `harness/q2_stage1/records.py` (schema
      `q2-stage1a-episode-v1`) and the step logs of section 7.3;
    - runs on the certified L0-fixed executor through the frozen IR;
@@ -409,7 +456,7 @@ S1a does **not** answer:
 | VM image, guest disk, VM settings, lane | as `q2-action-path-v2` section 2.1 (VM image `happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9`, 4 cores per VM) |
 | Episode container | the checker-mutation study's metric image `sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230` (`infra/q2-mutation/metric/Dockerfile`: OSWorld `b138d348`'s `uv.lock` in `/opt/venv-lock`, Python 3.12.13, Pillow 11.0.0, python-pptx 1.0.2), run GPU-less, read-only, with no capabilities in the VM container's network namespace (`harness/q2_stage1/lane.py`). It replaces the action-path suite's stdlib runner image `sha256:ac2b5815...` for S1a: the harness clients need Pillow for the upstream image processing and the checker needs OSWorld's environment; the transport code it runs is the certified standard-library code, unchanged (`harness/q2_stage1/design_diffs.md`) |
 | OSWorld tree and file cache | the checker-mutation study's inputs: the OSWorld checkout at `b138d348` and the file cache at `1e112283` (447 files, `file-cache-receipts.tsv`), mounted read-only |
-| Executor, IR, harness adapters | file digests of the accepted attempt's executor addendum (G0 item 1), by ledger row: TBD |
+| Executor, IR, harness adapters | attempt 1 (D53): the executor and adapter digests of `q2-action-path-v2-executor`, ledger row 15, with H-GA's translator by row 14 and the IR by row 13; the files and digests are listed in G0 item 1 |
 | H-OSW-fixed upstream | OSWorld `bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06` `mm_agents/qwen35vl_agent.py`, SHA-256 `1f39be92cf5461d9671ab9307a69c05691abf0226aa6b53d2af332003a5096fe`; `lib_run_single.py` `6d27d0fed9f4cbc69332cb3a01de3394b486f33d0309316f69c93036a161f74c`; `scripts/python/run_multienv_qwen35vl.py` `a3bf2a6343f470d1c0b55b136ddea58b0d3bfe5970760025add39e8275ba6bb1` (fetched 2026-10-08; the agent equals `harness/q2/action_path/upstream/PROVENANCE.json`) |
 | H-GA upstream | gym-anything `aae6f7607e0f3d9d6306e1fefbad92bda99ca99a` `agents/agents/qwen35vl.py`, SHA-256 `93666f2751d99dfee0034700f65385ca2db1544e3d9a0d194807050d2edea1a5` (equal to PROVENANCE); its base `agents/agents/qwen3vl.py` `264f6666014ab76f2b9a805739fc12d48e2d76ca9c1b1575f207a16112804010`; runner `agents/evaluation/run_single.py` `f0baa3e86dc0fef7fe600ed1f7446854b598796ec5bbb69cfca9aa9787caf041` (fetched 2026-10-08) |
 | Anchor agent (upstream path) | OSWorld `bfd62bdc` `mm_agents/opencua/opencua_agent.py` `4db7a7615e696a87584e7f2ed64e826ac61ed58b8e8f85f4f1ddca520c61f029`, `prompts.py` `9899d2ae7a362b90e86bf16c5e1ce8e861306e0151ae4921ed27f97d7b002bd4`, `utils.py` `e2c38af08e50709ef2c8ccf575fabc28d6b01bc1a6a0b6e9aa09e4873cee1303`, `__init__.py` `af3781df0c2bc3cb6501c90761a9e60230b61ef87dd078d2028ffb3a2cf5d828`; runner `scripts/python/run_multienv_opencua.py` `02df990ad83c6663a202f2516bf3aedf60079fc7aafe8043ea88e5842a90c1b3` and `lib_run_single.run_single_example_opencua` (fetched 2026-10-08). Its run settings: G0 item 9.5 |
@@ -606,6 +653,10 @@ The full list is `harness/q2/action_path/harness_design_diffs.md`.
   | 24 | 20 | one after the other | 122 | 24 | 32 + 108 = 140 |
   | 16 | the draft goes back to review before A0a (K_base 32 is out of reach at V = 16); no GPU job runs | | | | |
   | 8 or 1 | S1a does not start; no GPU job runs | | | | |
+
+  **N* = 32** (attempt 1, G0 item 1), so the first row applies: A0a and A1 at V = 20, the
+  sizes one after the other, 122 CPUs while an A1 pair runs; the ANC columns do not apply
+  (the anchor is unavailable).
 
   V never exceeds 20 in A1, the card's measured value for this profile. N* was
   qualified on the probe desktop with no engine running, so it is an upper
@@ -896,6 +947,15 @@ An episode is **lost to infrastructure** if any of these occurs:
   and is not a loss: postconfig steps act on the agent's final state;
 - the guest server restarts during the episode (its `NRestarts` counter
   changes or a different server process answers; D30, D33);
+- an observation is not delivered (D53 (iii); `guest_observation`): a screenshot of the
+  agent's, or a checker's read of guest state during `DesktopEnv.evaluate()` or the capture
+  sweep (one controller call with its retries; a postconfig step is an action, not an
+  observation), got no HTTP status below 500 on any attempt. One whose attempts all failed
+  in transport is a `transport` loss. The pinned controller returns `None` after a 5xx as
+  after any other non-200 reply, and the metric then scores 0, so a guest server that fails
+  a read for a whole boot without restarting (action-path v2 A7 session 193) would otherwise
+  be scored as the agent's outcome. A 404 (a file the agent never wrote) is the agent's
+  state;
 - an engine request fails after the client's retries, or times out at 600 s;
 - H-GA's context-variant fallback fires for any reason other than a
   context-length rejection (the same engine fault costs H-OSW the episode);
@@ -912,8 +972,13 @@ its postconfig steps log a failed request and go on), so the runner does not rea
 the checker's outcome: any guest request of task setup, of `DesktopEnv.evaluate()`
 (postconfig included) or of the capture that fails in transport makes the episode a loss,
 whatever the checker returned (`osworld_live`). The restart check runs after the 20 s
-settle and again after the capture; a check that cannot reach the guest server, there or at
-the warm-up, is a transport loss.
+settle and again after the capture; a check that cannot reach the guest server, or that it
+answers with an HTTP error, there or at the warm-up, is a transport loss. A guest request
+the pinned code sends with no timeout (`/file`, `/setup/execute` and others) gets 150 s
+(`osworld_live.GUEST_REQUEST_TIMEOUT_S`; the guest server ends its own commands at 120 s), so
+a hung server ends in a transport loss instead of holding the slot until the lane's 3,600 s
+episode timeout; an explicit upstream timeout is kept. Every observation is counted per
+episode, delivered or not (section 7.3).
 
 These are the `INFRASTRUCTURE_TYPES` of `records.py`. Handling:
 
@@ -966,6 +1031,10 @@ Per episode:
 - the checker score, and whether the metric raised;
 - the hashes of the checker's input files;
 - guest-server restart counts;
+- every observation, the agent's screenshots and the checker's reads apart: how many, how
+  many were delivered only on a retry, how many took longer than 30 s, how many were not
+  delivered (`observations`; D53 (iii) asks that undelivered and very slow observations be
+  counted per episode, not only restarts);
 - **uncertified action-path exposure:** the number of key, chord and hold
   actions, and of click or scroll modifiers, that name a keysym outside the 33
   `catalog.certified_keysyms` of action-path v2 section 4.5
@@ -1406,7 +1475,8 @@ sessions x 2 reruns is justified by power (section 10), not by habit.
   descriptively.
 - DR0-DR5, DR-A and P1-P5.
 - Infrastructure losses by type and cell; `IRError` and metric-exception
-  counts per (size, harness); restarts per episode; cap truncations; the
+  counts per (size, harness); restarts per episode; observations delivered on retry, slower
+  than 30 s or undelivered, per episode and per cell; cap truncations; the
   metric-exception-missing sensitivity.
 - The cost card of section 9 item 10, against the card's central and high
   prices.
@@ -1589,6 +1659,19 @@ ruling); an open one keeps the freeze guard refusing this file.
 - **Real task applications.** Guest-server restarts under LibreOffice and
   GIMP are bounded only through DR0. A7 bounds restarts on the probe desktop
   only, and that bound is for accessibility calls.
+- **Observation service (D53 (iii)).** The action-path suite bounds guest-server restarts,
+  not other observation-service failures, and it saw three kinds: a whole boot whose every
+  `/accessibility` call got HTTP 500 without a restart (A7 session 193, 1 of 1,245
+  accessibility-setting boots), first-call 500s delivered on retry, and two hangs of about
+  125 s delivered on retry. S1a reads screenshots only (session 193 delivered every
+  screenshot) and none of its pool or dev tasks' checkers reads the accessibility tree, but
+  its observations and its checker's reads go through the same guest server. An observation
+  the server does not deliver is an infrastructure loss (section 7.2), re-queued once and
+  counted toward DR0, so a persistent fault costs episodes, not outcomes; an observation
+  delivered on retry or slowly is scored as delivered and counted (section 7.3). A 5xx reply
+  that the agent's state causes (a directory where the checker expects a file) would also be
+  classified as a loss; none is known in these tasks. A step's `/execute` answered slowly is
+  recorded as before (`slow_execute`), not a loss.
 - **Uncertified actions.** The action path is certified for 33 keysyms; key
   actions naming others are counted, not certified.
 - **The anchor is weak.** It catches defects of roughly 8 pp with probability
@@ -1612,10 +1695,10 @@ row (the test fails otherwise), and the freeze pins them.
 |---|---|
 | `harness/q2_stage1/__init__.py` | `0e2190149cf640fac07dab26332a26f696374ff4400c23aab82e8cf766f3b334` |
 | `harness/q2_stage1/estimators.py` | `b43334b0511d17505a24893d65ce79cd55a58351a2a056075ed5b002007d36b3` |
-| `harness/q2_stage1/records.py` | `468bff7150d5d462376cbabf12af8f558b9326e8297f2ef52031cc10b28679e4` |
+| `harness/q2_stage1/records.py` | `8c276018b98312dd8aab5a626be55e6421f3d1470aefc6ceae70a471c9082e85` |
 | `harness/q2_stage1/rules.py` | `63ed09b0362595e85ac65c9bd29b090dc8b1a3a5e4ab3ace559243a82389d8b0` |
 | `harness/q2_stage1/plan.py` | `1f9c77f758ed590d99597488219cc49fae0e0f3c53567d628d14382346fc2187` |
-| `harness/q2_stage1/analysis.py` | `2cb9f2b942a783492a5d418230370cf461a33daf86be1530c479b58814e59bae` |
+| `harness/q2_stage1/analysis.py` | `338139667ad50475bf51c3962d4af3dac6d89e977ec399efa1f91cd7601599c4` |
 | `scripts/render_q2_stage1_manifest.py` | `50344cba078d2d8129b26b43d313c0c29a2ebcb64bf0657faba9b6d63f6ee632` |
 | `scripts/render_q2_stage1_plan.py` | `44825c58dfed70f60f37d7afb55de5c59de486c4d000000f05c1261adf902341` |
 | `scripts/submit_docker_research_job.py` | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
@@ -1624,19 +1707,19 @@ row (the test fails otherwise), and the freeze pins them.
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/cost_s1a.json` | `843a123b2d8e98e34d9f20388edc132e673ba9c93b01645c7668c98d2d80e144` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.py` | `19574910a06026b0b042aaf251e0988a72ed0484fa5833a8ca7597e3ba646a4c` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.json` | `e3c52beb5c6160e5e364ef307fb3c6353c226ffb7b762d9cc534f8fc86239d9e` |
-| `harness/q2_stage1/driver.py` | `3376678eb020c9a947f9c4fd71e333ae9b6ed9d8bac830ef5d7bcb85757fa9c2` |
+| `harness/q2_stage1/driver.py` | `52f835f6a2f8149ec0b3c14720593c02a42e1d410ab25062845fd3700aeee227` |
 | `harness/q2_stage1/agents.py` | `8e72acbd79645b45ccd95cd213d5f8564d7114af538561e28219c12cf0eb0ba1` |
 | `harness/q2_stage1/engine.py` | `3e0942349a8fc5b2aef5294a28c029ca318acff88f4cd897df274bb6e3b51bf9` |
 | `harness/q2_stage1/bridge.py` | `7083f728511477e8f32ed90a026290e6982ae04c9d5f8f61274112f5724d0550` |
 | `harness/q2_stage1/fake_engine.py` | `02e0b66e7b67b3647dc853c4069de21ce3e6234ed01ec4e3842afbd42cd89a00` |
-| `harness/q2_stage1/osworld_live.py` | `dacf6336a02c6a69a5f097be50385b7b31d389d5818abc8ecef4612e95153e12` |
+| `harness/q2_stage1/osworld_live.py` | `38b017c04f67b59e08bc1d764702a2ff91c80ebde8054c8e80bc277746334313` |
 | `harness/q2_stage1/lane.py` | `08847e43f2f2e81e0a77d6cfd3fe234aaefecf6fb67e8255de791529a8f5bf09` |
 | `harness/q2_stage1/rescore.py` | `d240db03e969c8aa5bb97403c5005cd4c9e96016599a78f70e97850415893737` |
 | `harness/q2_stage1/zinv.py` | `64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655` |
 | `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |
 | `harness/q2_stage1/glmm.py` | `73e4d0f9100262eb0efe828a14308d2b45c17a3c827b476392b5045dfe1377e8` |
 | `harness/q2_stage1/glmm.R` | `e3ea337c77bf6a8b9289047b62cfc51053a5f666fe51795071a1ae317f36681d` |
-| `harness/q2_stage1/design_diffs.md` | `ef0ab3e8f4285cab130bb855dc4e082a5ea73adea6ede68c697ed2177f888309` |
+| `harness/q2_stage1/design_diffs.md` | `b5969b53750d2b1fa8410d367f2be7626cc6a3c72888e9825950c21479bbb8c8` |
 | `infra/slurm/host-single-node/s1a-vm.sbatch` | `53fcd31d87678c6f5b4c929e6d843e5bc3177cac122842876f563e5191b09d45` |
 | `infra/slurm/host-single-node/s1a-cpu.sbatch` | `3880d337ad5bb0dc3c0edfc39f41811028118ef574c75efb08faa023dc6dee33` |
 | `infra/slurm/host-single-node/fetch-model-cpu.sbatch` | `22685e5e4dc9f88cd9d6ba7aec7189a89500a4f80d2464b8df86e08e76e33c6d` |
@@ -1703,7 +1786,7 @@ import closure and fails if any file is missing here.
 - cost card: `program/evidence/2026-10-07/serving-throughput-probe-v2/README.md`, `projection-v2.json`
 - Holo3 session shift: `program/evidence/2026-10-07/holo3-v2/RESULTS.md`
 - checker defects: `program/evidence/2026-10-08/q2-mutation-confirm/results/README.md`, `analysis.json`
-- action path: `program/preregistrations/q2-action-path-v2.md` and its addenda; the v2 acceptance evidence: TBD (not yet run; `program/evidence/2026-10-08/q2-action-path-acceptance/` holds v1's C2 result only)
+- action path: `program/preregistrations/q2-action-path-v2.md` and its addenda; the v2 acceptance evidence: `program/evidence/2026-10-08/q2-action-path-v2-acceptance/` (README, `acceptance/`, `independent-verification-stage-a.json` and `-stage-b.json`; attempt 1 accepted, D53); `program/evidence/2026-10-08/q2-action-path-acceptance/` holds v1's C2 result only
 - OSWorld agents and runners at `bfd62bdc`: https://github.com/xlang-ai/OSWorld/blob/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/mm_agents/qwen35vl_agent.py, https://github.com/xlang-ai/OSWorld/blob/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/lib_run_single.py, https://github.com/xlang-ai/OSWorld/blob/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/scripts/python/run_multienv_qwen35vl.py, https://github.com/xlang-ai/OSWorld/blob/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/mm_agents/opencua/opencua_agent.py, https://github.com/xlang-ai/OSWorld/blob/bfd62bdc5a3319809a236dc90ddbbaf3cb4b7e06/scripts/python/run_multienv_opencua.py
 - gym-anything at `aae6f7607`: https://github.com/cmu-l3/gym-anything/blob/aae6f7607e0f3d9d6306e1fefbad92bda99ca99a/agents/agents/qwen35vl.py, https://github.com/cmu-l3/gym-anything/blob/aae6f7607e0f3d9d6306e1fefbad92bda99ca99a/agents/agents/qwen3vl.py, https://github.com/cmu-l3/gym-anything/blob/aae6f7607e0f3d9d6306e1fefbad92bda99ca99a/agents/evaluation/run_single.py
 - Qwen3.5 model cards (OSWorld-Verified 35.6 for 4B and 41.8 for 9B, first-party, evaluation settings not stated): https://huggingface.co/Qwen/Qwen3.5-4B, https://huggingface.co/Qwen/Qwen3.5-9B
@@ -1867,8 +1950,21 @@ Non-blocking items:
 | A GPU job that starts late | Stated with the pairing rule (section 5.5) |
 | Anchor branch slot of section 6.2 | Filled: unavailable before A0b, n = 0 |
 
+### After the action-path verdict (2026-10-09, D53)
+
+The action path was accepted on attempt 1 (D53). One owner filled the slots that waited on
+the verdict, made persistent guest-server errors on observations infrastructure losses (D53
+(iii)) and ran the pre-freeze jobs O1 and A0a (D49 (ii)). Like the tables above, this is for
+the fresh pre-freeze audit.
+
+| Item | Finding or change | Where |
+|---|---|---|
+| G0 item 1 | Filled from attempt 1: executor addendum row 15 and the executor, adapter, translator and IR digests (each equal to the tree), N* = 32 (V = 20, sizes in turn), the concurrency gate's reference `step_p95_n1_s` 2.6944 s with its source, and the evidence; section 1's input row, section 4's executor row, section 5.5's applicable row and section 21's evidence line follow | 1, 3.1 item 1, 4, 5.5, 21 |
+| D53 (iii) | The pinned controller treats an HTTP 5xx like any non-200 reply (retry, then `None`), and the getters hand `None` to the metric, which scores 0: a guest server failing a checker's read for a whole boot without restarting (A7 session 193's pattern) was scored y = 0 under the draft; a 500 on the agent's screenshot was already a loss (`transport`), and a whole-boot failure of `/screenshot`, `/execute` or `/setup/*` already ended in `vm_boot` (no screenshot within 300 s), `executor_device` (the warm-up) or `task_setup` (a task with setup steps). Fixed: an observation (the agent's screenshot, or a checker read of `evaluate()` or the capture sweep that is not a postconfig action; one controller call with its retries) with no HTTP status below 500 on any attempt is a `guest_observation` loss; every observation is counted per episode (delivered on retry, slower than 30 s, undelivered); a restart check answered with an HTTP error is a transport loss. Tests drive the real `LiveTask` against a stand-in guest that answers 500, once or always, hangs, or answers 404 | 3.1 item 3, 7.2, 7.3, 15, 19; `osworld_live.py`, `driver.py`, `records.py`, `analysis.py`, `design_diffs.md` |
+| D53 (iii), hangs | The pinned controller sends `/file`, `/accessibility`, `/terminal` and `/setup/execute` with no timeout, so a hung guest server held the slot until the lane's 3,600 s episode timeout (`runner_crash`; in A0a, a cut slot and so back to review). Fixed: a guest request without a timeout gets 150 s, above the guest server's own 120 s command limit; it then ends in a transport loss | 7.2; `osworld_live.py` |
+| Found while testing D53 (iii) | `LiveTask.write_capture` made the capture directory only when it copied a file, so an episode whose checker read no file (the agent never wrote it) and whose task cache was empty crashed the runner after scoring: a `runner_crash` loss where the registration scores y = 0. Fixed (the directory is made first), with the test that found it. None of A0a's five dev tasks could reach it (each setup downloads into the task cache) | `osworld_live.py` |
+
 Open slots until the freeze (each carries the placeholder the guard refuses): the status
-line; G0 item 1 (accepted attempt) and item 10 (frozen plan); section 4's executor row;
-section 6.2's constants other than the anchor branch; section 18's three sign-offs; section
-21's v2 acceptance evidence.
+line; G0 item 10's frozen plan digest; section 6.2's constants other than the anchor branch,
+N* and V; section 18's three sign-offs.
 
