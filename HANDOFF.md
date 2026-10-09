@@ -4,9 +4,9 @@
 
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
-`uv run python scripts/preregister.py check-chain`, 15 rows). Decisions taken
-on Kevin's behalf are D1-D54 in `program/decisions.md`. GPU-hours are in
-`program/state.json` (`gpu_hours_ledger`, physical hours): 4.79 in total.
+`uv run python scripts/preregister.py check-chain`, 16 rows). Decisions taken
+on Kevin's behalf are D1-D56 in `program/decisions.md`. GPU-hours are in
+`program/state.json` (`gpu_hours_ledger`, physical hours): 4.91 in total.
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -26,13 +26,14 @@ audit certifies "not grossly wrong", not 1% correctness
 
 ## In progress
 
-- **Q2 S1a** (`q2-stage1-rescoped-v1`, D47, D49, D53): G0 built, audited and
-  re-checked. With the suite accepted, a single owner fills G0 item 1 (N* =
-  32, V = 20), makes persistent guest-server observation errors infrastructure
-  losses, runs O1 and A0a (D49 ii) and fills the A0 constants; two fresh
-  auditors then read the draft. Three sign-off slots remain before the freeze
-  (two are Kevin's). The OpenCUA anchor is unavailable, so S1a runs
-  unanchored with 32 base tasks.
+- **Q2 S1a** (`q2-stage1-rescoped-v1`, D47, D49, D53, D55, D56): **frozen**
+  2026-10-09 as ledger row 16 (freeze commit `d5f5798`). Pre-freeze O1 and A0a
+  ran (A0a: 20 of 20 dev episodes, mean slot 220 s against the card's 743 s;
+  K_base 32, T_A1 110 min, caps 477 min = 7.95 GPU-h). Kevin signed item 17 (DR1
+  and DR5 replace the kill lines; S1a read unanchored) and the offline-setup
+  exclusions (D55); D56 signed the rest and accepted S1a's reading of D53 (iii).
+  Next: O2 from the freeze commit, A1 session 1 (9B then 4B), session 2 at least
+  12 h later (9B then 4B), then the registered analysis.
 - **Q3**: the dense pre-check v2 result (NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base)
   is Q3's Stage 0 outcome. K1 v3 ended at an honest exit after its third
   gauntlet wave (D54; 45, 51, 55, 56): its chance of any verdict stayed at
@@ -45,7 +46,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D54, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D56, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 
