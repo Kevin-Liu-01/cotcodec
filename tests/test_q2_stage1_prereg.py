@@ -19,6 +19,7 @@ from harness.q2_stage1 import plan as P
 ROOT = Path(__file__).resolve().parents[1]
 PREREG = ROOT / "program/preregistrations/q2-stage1-rescoped-v1.md"
 LEDGER = ROOT / "program/preregistrations/ledger.jsonl"
+DECISIONS = ROOT / "program/decisions.md"
 SIM = ROOT / "program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.json"
 ROW = re.compile(r"^\| `([^`]+)` \| (`([0-9a-f]{64})`|TBD) \|$")
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -93,6 +94,61 @@ def test_sign_off_slots():
     assert program in joined
     if not _frozen():
         assert program + "TBD" in joined and joined.count(": TBD") == 1
+
+
+# Section 18's program slot: one decision id, filled at the freeze.
+PROGRAM_SLOT = re.compile(
+    r"^- Program sign-off of items 1-16 and 19-27 \(decision id\): (.*)$", re.M
+)
+DECISION_HEADING = re.compile(r"^\*\*(D\d+)\. (.+?)\*\*", re.M | re.S)
+
+
+def _decision_entries(decisions: str) -> dict[str, tuple[str, str]]:
+    """Each decision of ``program/decisions.md`` by id: its bold heading and its whole entry
+    (to the next decision heading), whitespace folded."""
+    heads = list(DECISION_HEADING.finditer(decisions))
+    out = {}
+    for i, head in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(decisions)
+        fold = " ".join(decisions[head.start() : end].split())
+        out[head.group(1)] = (" ".join(head.group(2).split()), fold)
+    return out
+
+
+def _check_program_decision(text: str, decisions: str) -> str:
+    """The program's slot holds one decision id whose heading in ``program/decisions.md``
+    names this registration and S1a's reading of D53 (iii), and whose entry accepts that
+    reading as section 7.3 states it (item 13): what the program's sign-off must state."""
+    slots = PROGRAM_SLOT.findall(text)
+    assert len(slots) == 1, "section 18 has one program sign-off slot"
+    decision_id = slots[0].strip()
+    assert re.fullmatch(r"D\d+", decision_id), f"the slot takes one decision id: {decision_id!r}"
+    entries = _decision_entries(decisions)
+    assert decision_id in entries, f"{decision_id} is not a decision heading in decisions.md"
+    heading, entry = entries[decision_id]
+    assert f"`{P.EXPERIMENT_ID}`" in heading, f"{decision_id}'s heading does not name the id"
+    assert "reading of D53 (iii)" in heading, f"{decision_id}'s heading does not name the reading"
+    assert "items 1-16 and 19-27" in heading
+    assert "reading of D53 (iii) (section 7.3) is accepted" in entry
+    return decision_id
+
+
+def test_the_program_slot_names_the_decision_that_signs_items_1_16_and_19_27():
+    """Frozen: the decision id in section 18's program slot is a decision of
+    ``program/decisions.md`` that names ``q2-stage1-rescoped-v1`` and the section 7.3 reading
+    of D53 (iii). Draft: D56, the program's sign-off, passes the check on a scratch copy
+    filled as the freeze fills it, and an id that is not that decision is refused."""
+    decisions = DECISIONS.read_text(encoding="utf-8")
+    text = _text()
+    if _frozen():
+        _check_program_decision(text, decisions)
+        return
+    slot = "- Program sign-off of items 1-16 and 19-27 (decision id): TBD"
+    assert text.count(slot) == 1
+    assert _check_program_decision(text.replace(slot, slot[:-3] + "D56"), decisions) == "D56"
+    for wrong in ("D55", "D53", "D99", "D56, D55", "TBD"):  # D55: Kevin's rulings only
+        with pytest.raises(AssertionError):
+            _check_program_decision(text.replace(slot, slot[:-3] + wrong), decisions)
 
 
 # G0 item 10's slot, which ``lane.load_frozen_plan`` reads: the frozen plan file's
@@ -245,8 +301,9 @@ def test_the_status_paragraph_is_replaced_whole_at_the_freeze(tmp_path):
     rel, plan = _named_plan()
     filled = filled.replace(
         "Frozen plan SHA-256: TBD.", f"Frozen plan SHA-256: `{plan['plan_sha256']}`."
-    ).replace("(decision id): TBD", "(decision id): D99")
+    ).replace("(decision id): TBD", "(decision id): D56")
     _check_frozen_status(filled)
+    _check_program_decision(filled, DECISIONS.read_text(encoding="utf-8"))
     root = _source_tree(tmp_path / "frozen", filled, rel)  # the guard accepts it; row added
     row = preregister.verify(P.EXPERIMENT_ID, ledger=root / lane.LEDGER, root=root)
     assert row["sha256"] == lane.frozen_registration(root)["sha256"]

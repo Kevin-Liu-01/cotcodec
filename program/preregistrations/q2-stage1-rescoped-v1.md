@@ -9,15 +9,16 @@ only after the action-path suite passes. Freezing needs the G0 items of section 
 constants of section 6.2 written into their open slots, a fresh pre-freeze audit, and the
 sign-offs of section 18: item 17 with the acceptance of an unanchored read, and G0 item 5's
 offline-setup decisions, are Kevin's alone (both filled from his rulings, D55); the
-program's sign-off is an open slot. A material change after the freeze is a new experiment
-id. Every slot that is filled only at the freeze carries the placeholder that
-`scripts/preregister.py freeze` refuses, so the guard refuses this file until each is
-filled (section 22 lists them); no other text in this file trips the guard (a test fills
-every slot on a scratch copy and freezes it).
+program's sign-off is D56, whose id fills its open slot at the freeze. A material change
+after the freeze is a new experiment id. Every slot that is filled only at the freeze
+carries the placeholder that `scripts/preregister.py freeze` refuses, so the guard refuses
+this file until each is filled (section 22 lists them); no other text in this file trips
+the guard (a test fills every slot on a scratch copy and freezes it).
 
 - Drafted 2026-10-08 on branch `stage0/q2-stage1-rescope`; revised the same day after
   three adversarial pre-freeze reviews, and on 2026-10-09 after the action-path verdict, O1
-  and A0a and a fresh two-auditor pre-freeze audit (section 22).
+  and A0a, a fresh two-auditor pre-freeze audit, two freeze rehearsals and the program's
+  sign-off, D56 (section 22).
 - Gauntlet proposal: `program/proposals/2026-10-08-q2-stage1-rescoped.md`.
 - Design panel: three designs, two judges; this file is the winning design (A)
   with grafts from both judges, recorded in the proposal's iteration log.
@@ -759,6 +760,12 @@ The full list is `harness/q2/action_path/harness_design_diffs.md`.
   the operator runs `scripts/preregister.py verify q2-stage1-rescoped-v1` and `check-chain`
   in the clone the overlay is built from and keeps the output with O2's evidence; a failure
   stops the submission and is reported.
+- **No pre-freeze job after the freeze (D56).** Once the source tree's ledger has this id's
+  row, `lane.validate_manifest` refuses every pre-freeze purpose (development, setup check,
+  A0a and A0b; `lane.PRE_FREEZE_PURPOSES`) at `lane validate`, at `lane submit` and when the
+  VM job starts, so no GPU half of A0a or A0b can be rendered either. O1 has no lane
+  manifest; it is not submitted after the freeze (O2 is the post-freeze overlay build). The
+  VM manifest A0a ran (job 1037) still validates on the draft tree, unchanged.
 - **Overlay for the A1 GPU halves.** O2 builds the overlay from the freeze commit (the
   commit that adds the ledger row, not `git_head_at_freeze`; section 1) as O1 did: the
   source receipt is made with `selected_ref: HEAD` in a clean clone at that commit
@@ -1029,8 +1036,9 @@ An episode is **lost to infrastructure** if any of these occurs:
   pass, so no remaining task fails deterministically, and no deterministic
   offline failure is tolerated or disclosed in its place. A postconfig reply
   that fails during `DesktopEnv.evaluate()` is recorded
-  (`postconfig_replies`, `postconfig_failures`, reported per (size, harness))
-  and is not a loss: postconfig steps act on the agent's final state;
+  (`postconfig_replies`, `postconfig_failures`; reported per (size, harness), per (size,
+  session) and per (size, harness, session), section 15) and is not a loss: postconfig
+  steps act on the agent's final state (the postconfig carve-out below);
 - the guest server restarts during the episode (its `NRestarts` counter
   changes or a different server process answers; D30, D33);
 - an observation is not delivered (D53 (iii); `guest_observation`): a screenshot of the
@@ -1069,13 +1077,54 @@ a hung server ends in a transport loss instead of holding the slot until the lan
 episode timeout; an explicit upstream timeout is kept. Every observation is counted per
 episode, delivered or not (section 7.3).
 
+**The postconfig carve-out (accepted by D56, on the two conditions below).** A postconfig
+step is an action on the agent's final state, not an observation, so a guest reply to it
+that fails (`osworld_live.setup_reply_failed`: not HTTP 200, or a non-zero `returncode`) is
+recorded and the episode is scored. A fault of the whole guest server, or of its `/execute`
+handler (which also answers `/setup/execute`), that lasts a boot is caught before the
+postconfig runs: by task setup, the warm-up's and the steps' `/execute` and the restart
+check. The postconfig also calls handlers of the guest server that nothing earlier in most
+episodes calls. On the pinned OSWorld tree (`b138d348`, checked on the host on 2026-10-09),
+the postconfigs of the 148 pool and dev tasks hold 437 steps: 197 `sleep` steps (no request),
+128 that call `/setup/execute` (127 `execute`, 1 `command`), and 112 that call five other
+handlers, each separate from `/execute`:
+
+- `/setup/activate_window`: 93 steps in 92 tasks; the task's own setup calls it in only 2
+  of the 92 (97 steps counting the four K1 raw-gold failures outside the pool);
+- `/setup/close_window`: 6 steps in 6 tasks, none of whose setups calls it;
+- `/setup/launch`: 8 steps in 4 tasks;
+- `/setup/upload`: 4 `download` steps in 4 tasks;
+- `/setup/open_file`: 1 step in 1 task.
+
+On Linux `activate_window` and `close_window` answer HTTP 200 whatever `wmctrl` does, so a
+5xx from either is the server's own failure (a handler that raised); `open_file` answers
+404 for a path that does not exist. So the carve-out leaves a guest-server fault on a
+postconfig step, whether intermittent or lasting a whole boot in one of these handlers,
+scored as the agent's outcome. D56 accepts the carve-out on two conditions, both met here:
+
+- the postconfig replies, failures and server errors, like the observation counts, are
+  reported per (size, harness), per (size, session) and per (size, harness, session)
+  (section 15; `analysis.infrastructure_counts`), because the session excess (P1) is the
+  estimand a guest server that degrades in one session would bias;
+- the **postconfig server-error sensitivity** recomputes every primary estimand of section 9
+  on the primary set with each episode treated as missing that has any postconfig reply
+  (`postconfig_replies`) at HTTP 500 or above or with no HTTP reply
+  (`analysis.postconfig_missing`). A non-zero `returncode` under HTTP 200 is the agent's state
+  and does not count, nor does a 4xx. A postconfig request that gets no HTTP reply at all
+  already makes the episode a transport loss (above), so in practice the sensitivity drops
+  the scored episodes with a postconfig 5xx. It is reported beside the primary with the
+  number of episodes it drops (section 15) and changes no decision rule: DR0-DR5 and P1-P5
+  read the primary.
+
 These are the `INFRASTRUCTURE_TYPES` of `records.py`. Handling:
 
 - A lost episode is re-queued once: at the end of its block while that block
   still has slots waiting; once its block is fully dispatched, at the head of the
   block being dispatched, so it runs next (`lane.Dispatcher.requeue`). A second
   loss leaves the slot missing.
-- Losses are reported per (job, size, harness, type).
+- Losses are reported by type per (size, harness), per (size, session) and per (size,
+  harness, session) (each A1 job is one size and session), over the final records and over
+  every attempt, re-queued losses included (section 15).
 - Cap truncation is not an infrastructure loss (section 5.6).
 
 **Agent-caused events are not infrastructure** and never count toward DR0:
@@ -1124,8 +1173,9 @@ Per episode:
   many were delivered only on a retry, how many took longer than 30 s, how many were not
   delivered (`observations`). D53 (iii) reads: "Any Stage-1 registration counts
   undelivered, and very slow, observations per episode as infrastructure, not only
-  restarts". S1a meets it as follows, a reading the program's sign-off of item 13 (section
-  18) must state:
+  restarts". S1a meets it as follows; the program's sign-off of item 13 (section 18) is
+  D56, which accepts this reading, with the postconfig carve-out of section 7.2 on that
+  section's two conditions:
   - an undelivered observation is an infrastructure loss (section 7.2);
   - every attempt is bounded: the agent's screenshot by the certified executor's 10 s per
     attempt (three attempts); a checker read by the pinned code's own timeout where it
@@ -1137,8 +1187,9 @@ Per episode:
     read with any attempt that fails in transport, a timeout included, makes the episode a
     transport loss (section 7.2), so no attempt slower than 150 s is ever scored;
   - an observation delivered after more than 30 s, or only on a retry, is counted per
-    episode as an infrastructure event and reported per cell beside the losses (section
-    15), and the episode is scored. A delivered observation carries the guest's own state.
+    episode as an infrastructure event and reported per cell (per (size, harness), per (size,
+    session) and per (size, harness, session)) beside the losses (section 15), and the
+    episode is scored. A delivered observation carries the guest's own state.
     A delay can change the moment that state is sampled (with no pause after an action, a
     screenshot delivered late can show a more settled screen than a prompt one would), but
     not whose state it is, and the same executor and guest server deliver both harnesses'
@@ -1590,6 +1641,21 @@ sessions x 2 reruns is justified by power (section 10), not by habit.
   counts per (size, harness); restarts per episode; observations delivered on retry, slower
   than 30 s or undelivered, per episode and per cell; cap truncations; the
   metric-exception-missing sensitivity.
+- Per session (D56). The counts of the cells, among them the losses by type, the agent's
+  and the checker's observations (calls, delivered only on a retry, slower than 30 s,
+  undelivered), and the postconfig replies, failed postconfig replies (`postconfig_failures`),
+  postconfig server errors (HTTP 500 or above, or no HTTP reply; also by step type) and
+  episodes with one, are reported per (size, harness), per (size, session) and per (size,
+  harness, session), over the final records and over every episode attempt, re-queued
+  losses included (`analysis.infrastructure_counts`; the report's `cells`,
+  `cells_by_size_session`, `cells_by_size_harness_session` and `attempts`). The session
+  excess (P1) is the estimand a guest server that degrades in one session would bias.
+- The postconfig server-error sensitivity (section 7.2; `analysis.postconfig_missing`):
+  every primary estimand of section 9, with its interval, recomputed on the primary set
+  with each episode treated as missing that has a postconfig reply at HTTP 500 or above or
+  with no HTTP reply (a non-zero `returncode` under HTTP 200 does not count), reported
+  beside the primary with the number of episodes it drops
+  (`sensitivity_postconfig_server_error_missing`). It changes no decision rule.
 - The cost card of section 9 item 10, against the card's central and high
   prices.
 - Truncation rates per cell: the share of steps whose reply hit 2,048 tokens,
@@ -1679,12 +1745,19 @@ rules produce (the second Kevin slot below).
     15) while the episode is scored. A guest-server error on a postconfig step inside
     `DesktopEnv.evaluate()` is recorded (`postconfig_failures`) and is not a loss, because a
     postconfig step is an action on the agent's final state, not an observation (section
-    7.2); a fault that lasts a whole boot is caught earlier (task setup, the warm-up's and
-    the steps' `/execute`, the restart check), so what this carve-out leaves is an
-    intermittent server fault on a postconfig step. The program's sign-off decision states
-    whether this reading, the postconfig carve-out included, meets D53 (iii)'s "very slow"
-    clause and its persistent-error duty; if it does not, the draft goes back to review
-    (registering a delay limit changes the driver after A0, so A0a is repeated).
+    7.2). A fault of the whole server, or of its `/execute` handler, that lasts a boot is
+    caught earlier (task setup, the warm-up's and the steps' `/execute`, the restart check),
+    but the postconfig also calls handlers that nothing earlier in most episodes calls:
+    `/setup/activate_window` (93 postconfig steps in 92 of the 148 pool and dev tasks, whose
+    setup calls it in 2), `/setup/close_window`, `/setup/launch`, `/setup/upload` and
+    `/setup/open_file`. So this carve-out leaves a server fault on a postconfig step, whether
+    intermittent or lasting a whole boot in one of those handlers. The program's sign-off
+    decision, D56, accepts this reading, the carve-out included, as meeting D53 (iii), on
+    two conditions this file states (section 7.2): the observation counts and the postconfig
+    replies and server errors are also reported per session (section 15), and a postconfig
+    server-error sensitivity recomputes the primary estimands with every episode treated as
+    missing that has a postconfig reply at HTTP 500 or above or with no HTTP reply (a
+    non-zero `returncode` under HTTP 200 does not count); it changes no decision rule.
 14. Raw verdicts primary; z-order-corrected verdicts secondary; the flagged
     tasks of section 8.
 15. X as the mean squared per-task harness effect with the sign-flip test
@@ -1729,7 +1802,12 @@ rules produce (the second Kevin slot below).
 **Sign-off slots.** Each is filled before the freeze (with the decision id or Kevin's
 ruling); an open one keeps the freeze guard refusing this file. The program's decision
 names, under item 13, whether S1a's reading of D53 (iii)'s "very slow" clause (section 7.3)
-is accepted, the postconfig carve-out of section 7.2 included.
+is accepted, the postconfig carve-out of section 7.2 included. D56 is that decision: it
+signs items 1-16 and 19-27 and accepts the reading, the carve-out on the two conditions
+section 7.2 states; its id fills the program's slot at the freeze (section 22, "At the
+freeze"). `tests/test_q2_stage1_prereg.py` requires the id in that slot to be a decision of
+`program/decisions.md` whose heading names `q2-stage1-rescoped-v1` and S1a's reading of D53
+(iii), and whose entry accepts the reading of section 7.3.
 
 - Kevin: item 17 (DR1 and DR5 replace the question file's kill lines), and acceptance that
   S1a is read without the D11 runtime check (the anchor is UNAVAILABLE by G0 item 9.6, so
@@ -1803,11 +1881,16 @@ is accepted, the postconfig carve-out of section 7.2 included.
   counted toward DR0, so a persistent fault costs episodes, not outcomes; an observation
   delivered on retry or slowly (an attempt is bounded at 10 s for a screenshot and at 150 s
   for a checker read sent without a timeout of its own) is scored as delivered and counted
-  per episode as infrastructure, which is S1a's reading of D53 (iii)'s "very slow" clause
-  and needs the program's sign-off (sections 7.3, 18 item 13). A 5xx reply
+  per episode as infrastructure, which is S1a's reading of D53 (iii)'s "very slow" clause,
+  accepted by the program's sign-off, D56 (sections 7.3, 18 item 13). A 5xx reply
   that the agent's state causes (a directory where the checker expects a file) would also be
   classified as a loss; none is known in these tasks. A step's `/execute` answered slowly is
-  recorded as before (`slow_execute`), not a loss.
+  recorded as before (`slow_execute`), not a loss. A guest-server error on a postconfig step
+  is not a loss (the postconfig carve-out of section 7.2): a fault of a handler only the
+  postconfig calls (`/setup/activate_window` above all) is scored as the agent's outcome,
+  intermittent or lasting a whole boot. It is bounded by reporting, not by design: the
+  postconfig server errors per session and the postconfig server-error sensitivity
+  (sections 7.2, 15; D56).
 - **Uncertified actions.** The action path is certified for 33 keysyms; key
   actions naming others are counted, not certified.
 - **The anchor is weak.** It catches defects of roughly 8 pp with probability
@@ -1834,7 +1917,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/records.py` | `8c276018b98312dd8aab5a626be55e6421f3d1470aefc6ceae70a471c9082e85` |
 | `harness/q2_stage1/rules.py` | `63ed09b0362595e85ac65c9bd29b090dc8b1a3a5e4ab3ace559243a82389d8b0` |
 | `harness/q2_stage1/plan.py` | `1f9c77f758ed590d99597488219cc49fae0e0f3c53567d628d14382346fc2187` |
-| `harness/q2_stage1/analysis.py` | `338139667ad50475bf51c3962d4af3dac6d89e977ec399efa1f91cd7601599c4` |
+| `harness/q2_stage1/analysis.py` | `eacc57160e5af1a77e62029d49d0588407df96151de2a0955906f2f74d7849c5` |
 | `scripts/render_q2_stage1_manifest.py` | `50344cba078d2d8129b26b43d313c0c29a2ebcb64bf0657faba9b6d63f6ee632` |
 | `scripts/render_q2_stage1_plan.py` | `14d17871718eee1e1b14fc6cce530ef9334256576db49942abe77558afc05e3b` |
 | `scripts/submit_docker_research_job.py` | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
@@ -1849,7 +1932,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/bridge.py` | `7083f728511477e8f32ed90a026290e6982ae04c9d5f8f61274112f5724d0550` |
 | `harness/q2_stage1/fake_engine.py` | `02e0b66e7b67b3647dc853c4069de21ce3e6234ed01ec4e3842afbd42cd89a00` |
 | `harness/q2_stage1/osworld_live.py` | `38b017c04f67b59e08bc1d764702a2ff91c80ebde8054c8e80bc277746334313` |
-| `harness/q2_stage1/lane.py` | `83a7dd4630786b14f4c25d734d066ae8f56ae4fe753e6594f9352b094ecf6794` |
+| `harness/q2_stage1/lane.py` | `d646b144f857d5947ed20d27a5d33107123913321969c89af22729674246eaa5` |
 | `harness/q2_stage1/rescore.py` | `d240db03e969c8aa5bb97403c5005cd4c9e96016599a78f70e97850415893737` |
 | `harness/q2_stage1/zinv.py` | `64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655` |
 | `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |
@@ -2145,23 +2228,35 @@ sign-off slots are filled from his rulings (D55); the program's stays open.
 ### Code changes after A0a (2026-10-09)
 
 A0a ran from the export of `bb67aa0`. Since then, through the merges of `main`, no file
-under `harness/`, `scripts/`, `infra/` or `experiments/` changed except these two, and
-neither changes what A0a ran or measured:
+under `harness/`, `scripts/`, `infra/` or `experiments/` changed except these three, and
+none changes what A0a ran or measured:
 
 - `scripts/render_q2_stage1_plan.py`: the module docstring only (Evidence 5 above). Its
   freeze mode re-renders `plan-a0a.json` byte for byte from the copied host records
   (`a5f0aadc...`); its draft mode still gives `4679ac95...`.
 - `harness/q2_stage1/lane.py`: `frozen_registration` (Readiness 8) and its call in
-  `validate_manifest` for the post-freeze purposes (A1, ANC), plus one docstring sentence.
-  A0a is a pre-freeze purpose and takes no new branch: the VM manifest job 1037 ran (its
-  canonical form `051cdd6e...`) still validates unchanged against this tree, and the
-  episode driver, agents, engine, bridge, `osworld_live`, `plan`, `records` and `analysis`
-  are the files A0a ran.
+  `validate_manifest` for the post-freeze purposes (A1, ANC); after D56, the refusal of
+  every pre-freeze purpose (development, setup check, A0a, A0b) once the source tree's
+  ledger has this id's row, with the slot rule that branch made redundant
+  (`DEV_ONLY_PURPOSES`) folded into it; and docstring sentences. Both new rules fire only
+  on a frozen tree, and A0a ran on an unfrozen one: the VM manifest job 1037 ran (its
+  canonical form `051cdd6e...`) still validates unchanged on the draft tree, which a test
+  now checks (`test_no_pre_freeze_job_runs_after_the_freeze`).
+- `harness/q2_stage1/analysis.py` (after D56): section 15's counts per (size, session) and
+  per (size, harness, session), over the final records and over every attempt, with the
+  postconfig replies, failures and server errors (`infrastructure_counts`), and the
+  postconfig server-error sensitivity (`postconfig_missing`; section 7.2). No job runs
+  `analysis.py`: it reads the A1 records after the last A1 job.
 
-The tests changed with them (`tests/test_q2_stage1_manifests.py`: the frozen-tree fixture
-now freezes its registration with `preregister.freeze`, and the new test above;
-`tests/test_q2_stage1_prereg.py`: the frozen-plan slot test and the filled Kevin slots), as
-did the D12 device stub of `83f4127` (`tests/test_q2_stage1_driver.py`; no code change).
+The episode driver, agents, engine, bridge, `osworld_live`, `plan` and `records` are
+unchanged since A0a. The tests changed with them (`tests/test_q2_stage1_manifests.py`: the
+frozen-tree fixture now freezes its registration with `preregister.freeze`, the post-freeze
+test of Readiness 8, and after D56 the draft-tree fixture and the post-freeze refusal of
+the pre-freeze purposes; `tests/test_q2_stage1_lane.py`: the pre-freeze manifests are
+validated on a draft tree; `tests/test_q2_stage1_analysis.py`: the per-session counts and
+the sensitivity; `tests/test_q2_stage1_prereg.py`: the frozen-plan slot test, the filled
+Kevin slots and the program-decision test), as did the D12 device stub of `83f4127`
+(`tests/test_q2_stage1_driver.py`; no code change).
 
 ### Freeze rehearsal (2026-10-09)
 
@@ -2189,12 +2284,47 @@ file only).
 | Item 18 | Kevin's item 18 stays unsigned in the frozen file | Item 18 states it has no slot and why: with the anchor UNAVAILABLE it changes nothing (K_base 32) | 18 |
 | Audit closure and merge | Every earlier audit item closed (fixed or justified). Against `main` at `a3b306f`: `decisions.md`, the questions, proposals and gauntlet records and `HANDOFF.md` are byte-identical, `log.md` removes nothing, `state.json` keeps `main`'s 29 GPU-hour ledger rows in order and adds 3, and the program total, 4.9088, equals the ledger's sum | No change needed | |
 
+### Second freeze rehearsal and the program's sign-off (2026-10-09, D56)
+
+A second verifier rehearsed the freeze on a scratch clone of `87ef1dd` with its own copy of
+the ledger (the real ledger unchanged): with the slots filled (a stand-in decision id in
+the program's), the freeze was accepted (row 16), the A1-9B-S1 VM manifest rendered from
+`plan-a0a.json` and its GPU half passed the docker submitter's dry run (one H100, 32 CPUs,
+`--time=01:50:00`, USR1 at 180 s), and on the frozen copy the S1a suite passed (285 passed,
+3 skipped) and so did the full suite (2,522 passed, 90 skipped). It found item 13
+understating what the postconfig carve-out leaves. The program then signed items 1-16 and
+19-27 and accepted S1a's reading of D53 (iii), the carve-out on two conditions the
+registration states before the freeze (D56, on `main` at `3ee089f`, merged here). Each is
+done below. No GPU job ran and no A0 job is repeated; two files of section 20 changed
+(`lane.py`, `analysis.py`; the subsection "Code changes after A0a" lists them) and section
+20 is refreshed.
+
+| Item | Finding or condition | Change | Where |
+|---|---|---|---|
+| Item 13 | "A fault that lasts a whole boot is caught earlier ..., so what this carve-out leaves is an intermittent server fault on a postconfig step": but the postconfig calls guest-server handlers of its own, `/setup/activate_window`, `/setup/close_window`, `/setup/open_file` and `/setup/launch` (and `/setup/upload` for a `download` step), which task setup, the warm-up, the steps and the restart check mostly never call. The rehearsal counted `activate_window` in 97 postconfig steps over the 152 confirm and dev tasks; on the 148 pool and dev tasks it is 93 steps in 92 tasks, 2 of whose setups call it (the pinned tree, counted on the host) | Item 13 and section 7.2 name the handlers with their counts and state that the carve-out leaves a server fault on a postconfig step, whether intermittent or lasting a whole boot in one of those handlers (on Linux `activate_window` and `close_window` answer 200 whatever `wmctrl` does, so their 5xx is the server's own); section 19 discloses it | 7.2, 18 item 13, 19 |
+| D56, first condition | The observation counts and the postconfig server errors are also reported per session | `analysis.infrastructure_counts`: every count of the cells (losses by type, the agent's and the checker's observations, the postconfig replies, failures and server errors, the server errors also by step type, and the episodes with one) per (size, harness), per (size, session) and per (size, harness, session), over the final records and over every attempt; the report's `cells`, `cells_by_size_session`, `cells_by_size_harness_session` and `attempts`. Test: `test_counts_are_also_reported_per_session` | 7.2, 7.3, 15; `analysis.py` |
+| D56, second condition | The postconfig server-error sensitivity | `analysis.postconfig_missing` and the report's `sensitivity_postconfig_server_error_missing`: every primary estimand recomputed on the primary set with each scored episode treated as missing that has a postconfig reply at HTTP 500 or above or with no HTTP reply, and the number of episodes it drops; a non-zero `returncode` under HTTP 200, and a 4xx, keep the episode; no decision rule reads it. Test: `test_postconfig_server_error_sensitivity` (an HTTP-200, `returncode` 1 episode is kept) | 7.2, 15; `analysis.py` |
+| D56, no pre-freeze job after the freeze | The lane gated only the post-freeze purposes: a development, setup-check, A0a or A0b manifest still validated on a frozen tree | `lane.validate_manifest` refuses every pre-freeze purpose once the source tree's ledger has this id's row, at validate, submit and job start, so no GPU half of A0a can be rendered. Job 1037's manifest still validates on the draft tree. The tests that validated pre-freeze manifests on the repository's tree now validate them on a draft tree and require the repository's tree to refuse them once frozen, so the S1a suite still holds after the freeze (V-B1's pattern). Test: `test_no_pre_freeze_job_runs_after_the_freeze` | 5.5; `lane.py`; `tests/test_q2_stage1_lane.py`, `tests/test_q2_stage1_manifests.py` |
+| D56, the program's slot | Nothing checked that the id written into section 18's program slot is the decision that signs the program's items and states the reading | `test_the_program_slot_names_the_decision_that_signs_items_1_16_and_19_27`: after the freeze the slot's id must be a decision heading of `program/decisions.md` that names `q2-stage1-rescoped-v1` and S1a's reading of D53 (iii), and whose entry accepts the reading of section 7.3; before it, D56 passes on a scratch copy and D53, D55, D99 and a list of ids are refused. The slot stays open until the freeze | 18, 22; `tests/test_q2_stage1_prereg.py` |
+| D56 cited | Section 7.3, item 13, the sign-off lead-in, section 19 and the status paragraph said the program's decision would state the reading | Each cites D56 | header, 7.3, 18, 19 |
+| Found while implementing | Section 7.2 said losses are reported per (job, size, harness, type), but the report counted final records only, so a first-attempt loss that was re-queued and then scored appeared nowhere in it | The attempts view counts every attempt per (size, harness, session) (each A1 job is one size and session); section 7.2's sentence says so | 7.2, 15; `analysis.py` |
+
+Checked again on a scratch clone of this branch with these changes, filled as "At the
+freeze" states (the bare id D56 in the program's slot) and frozen into its own copy of the
+ledger (row 16; `check-chain` 16 rows and `verify` pass; the real ledger unchanged): the S1a
+suite gives 289 passed, 3 skipped (the R container test and the two draft-only prereg
+tests); `lane validate` refuses job 1037's manifest and the committed development and
+setup-check manifests there as pre-freeze purposes and accepts an A1-9B-S1 manifest
+rendered from `plan-a0a.json` (128 slots), while on the draft tree job 1037's manifest
+validates with its canonical SHA-256 `051cdd6e...`.
+
 ### At the freeze
 
 Slots filled only at the freeze (in the draft each holds the placeholder the guard
 refuses): the status paragraph; G0 item 10's frozen plan digest (the frozen plan file's
-`plan_sha256` in backticks, as G0 item 10 states); section 18's program sign-off (Kevin's
-two are filled, D55).
+`plan_sha256` in backticks, as G0 item 10 states); section 18's program sign-off, whose
+placeholder becomes the bare id D56, with nothing else on its line (Kevin's two are filled,
+D55).
 
 The freeze replaces the whole status paragraph at the top of this file, from its first
 line to the line before the first bullet, with the paragraph below, word for word (its
@@ -2207,13 +2337,15 @@ line breaks may differ). Nothing else in that paragraph survives.
 > constants of section 6.2 and G0 item 10's frozen plan come from A0a's records, and
 > section 18 records the sign-offs. O2 and every A1 job run from an export of the freeze
 > commit, the commit that adds this file's ledger row (section 1), and the lane admits an
-> A1 job only while this file's SHA-256 equals that row's (section 5.5). A material change
-> after the freeze is a new experiment id.
+> A1 job only while this file's SHA-256 equals that row's and refuses every pre-freeze
+> purpose (section 5.5; D56). A material change after the freeze is a new experiment id.
 
 The steps, in order:
 
-1. The program's sign-off decision is recorded on `main` and merged into this branch; its
-   id fills section 18's slot.
+1. The program's sign-off decision, D56, is recorded on `main` (`3ee089f`) and merged into
+   this branch (`2beb6d6`); the bare id D56 fills section 18's program slot, and
+   `tests/test_q2_stage1_prereg.py` then requires it to be a decision of
+   `program/decisions.md` that names this registration and the reading of section 7.3.
 2. The status paragraph and G0 item 10's slot are filled as stated. On a scratch copy of
    the tree frozen into a copy of the ledger, `scripts/preregister.py freeze` is accepted,
    `check-chain` and `verify` pass and the S1a suite (`tests/test_q2_stage1_*.py`) passes;
@@ -2223,4 +2355,7 @@ The steps, in order:
    `verify` pass; the row is committed alone. That commit is the freeze commit (section 1).
 4. After the freeze commit: `program/state.json` (the S1a registration field and next
    action) and `program/log.md` record the freeze and its row, and `HANDOFF.md` is
-   refreshed on `main` when the branch is merged.
+   refreshed on `main` when the branch is merged. From the freeze commit on, no pre-freeze
+   job (O1, A0a, A0b, a development or setup-check job) is submitted (D56; the lane refuses
+   every pre-freeze purpose, section 5.5), and O2, A1 and every later export run from the
+   freeze commit (section 1).
