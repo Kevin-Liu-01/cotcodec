@@ -1,0 +1,50 @@
+{
+  "boot_upper_bound_family_95": 0.004741,
+  "class_actions": {
+    "click_left": 10170,
+    "click_other": 10150,
+    "drag": 10150,
+    "key": 10216,
+    "move": 10148,
+    "scroll": 10150,
+    "type": 10148
+  },
+  "class_upper_bound_family_95": {
+    "click_left": 0.0004989,
+    "click_other": 0.0004999,
+    "drag": 0.0004999,
+    "key": 0.0004967,
+    "move": 0.0005,
+    "scroll": 0.0004999,
+    "type": 0.0005
+  },
+  "failures": 0,
+  "guest_server": {
+    "accessibility_calls": 36515,
+    "accessibility_calls_counting": 36515,
+    "development_rate": {
+      "accessibility_calls": 8114,
+      "interval_95": [
+        3.1202622608195517e-06,
+        0.0006866703710794798
+      ],
+      "rate": 0.00012324377618930243,
+      "restarts": 1
+    },
+    "restarts": 0,
+    "sessions_with_unattributed_restarts": [],
+    "trials_hit": []
+  },
+  "pass": true,
+  "problems": [],
+  "repair_restart_rate": null,
+  "restart_only_trials": 0,
+  "restart_only_trials_counting": 0,
+  "state_not_observed": {
+    "by_entry": {},
+    "no_processed_press_before": [],
+    "read_without_state": [],
+    "trials": 64028
+  },
+  "trials": 64028
+}

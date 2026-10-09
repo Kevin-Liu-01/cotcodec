@@ -1,0 +1,16 @@
+{
+ "1027": {
+  "foreign_jobs_seen": [],
+  "max_containers_ours": 62,
+  "max_containers_running_total": 63,
+  "max_loadavg_1min": 57.29,
+  "snapshots": 2138
+ },
+ "1029": {
+  "foreign_jobs_seen": [],
+  "max_containers_ours": 62,
+  "max_containers_running_total": 63,
+  "max_loadavg_1min": 58.56,
+  "snapshots": 1034
+ }
+}

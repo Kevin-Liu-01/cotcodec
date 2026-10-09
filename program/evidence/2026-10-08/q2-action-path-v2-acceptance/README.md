@@ -1,20 +1,389 @@
-# q2-action-path-v2: validity controls, acceptance at N = 1 and the concurrency ladder (2026-10-08)
+# q2-action-path-v2: validity controls, acceptance, the concurrency ladder and the volume campaigns (2026-10-08)
 
-This bundle holds three operator stages of `q2-action-path-v2`. All three ran
+This bundle holds four operator stages of `q2-action-path-v2`. All four ran
 from the same read-only export of `bf99a64`.
 
-1. **The concurrency ladder** (the third stage, jobs 1017-1025, 2026-10-09
+1. **The volume campaigns** (the fourth stage, jobs 1027 and 1029,
+   2026-10-09 UTC). A4 and A7 ran at N\* = 32 and both pass. A5's final
+   judgement passes. **A1-A6 all hold, so Stage 1 may start; A7 holds, so
+   the screenshot-plus-accessibility setting may be used.** N\* = 32 < 40,
+   so the program kill criterion applies. See "Fourth stage" just below.
+2. **The concurrency ladder** (the third stage, jobs 1017-1025, 2026-10-09
    UTC). Rungs N = 8, 16, 24 and 32 qualify. Rung N = 40 did not count: 10
-   of its 80 cold boots failed on a host limit. **N\* = 32** as the ladder
-   stands, and A1 at N\* passes. See "Third stage" just below.
-2. **Acceptance at N = 1** (the second stage, jobs 964-1015). It ran A5's
+   of its 80 cold boots failed on a host limit. **N\* = 32**, and A1 at N\*
+   passes. See "Third stage" further down.
+3. **Acceptance at N = 1** (the second stage, jobs 964-1015). It ran A5's
    boot-reset campaign, A1 with C4, A2, A3 and A6. Every criterion it could
    judge passes. See "Second stage" further down.
-3. **Validity controls** (the first stage, jobs 864-962, commit `a491c0e`).
+4. **Validity controls** (the first stage, jobs 864-962, commit `a491c0e`).
    C2, C1 and C3 all pass. See "First stage" further down.
 
-The second and first stages' text is unchanged, apart from their headings
-and this list.
+The earlier stages' text is unchanged, apart from their headings and this
+list. The third stage left rung 40's rerun to Kevin; decision D51
+(`program/decisions.md`) settled it: A4 and A7 run at N\* = 32, and rung 40
+is not rerun under attempt 1.
+
+## Fourth stage: A4 and A7 at N\* = 32, A5's final judgement and the overall verdict
+
+**Result: A4, A7 and A5 pass.** With the earlier stages, every acceptance
+criterion of section 7 holds:
+
+- **A1-A6 all hold, so Stage 1 may start.**
+- **A7 holds, so Stage-1 episodes may use the screenshot-plus-accessibility
+  setting.**
+- **N\* = 32 < 40, so section 9's program kill criterion applies:** cut the
+  Stage-1 task count before adding GPUs.
+
+| Criterion | Campaign | Job | Run time | Sessions | Trials | Result |
+|---|---|---:|---|---:|---:|---|
+| A4 | `q2ap-v2-a4-l0fixed-n32-a1` (`volume_plan.json`, both settings) | 1027 | 1 h 37 min 55 s | 1,068 | 64,028 | **PASS**: 64,028 of 64,028 trials passed; no excused trial; 0 restarts in 36,515 `/accessibility` calls |
+| A7 | `q2ap-v2-a7-l0fixed-n32-a1` (G x 360, accessibility setting only) | 1029 | 1 h 20 min 20 s | 516 | 30,960 | **PASS**: 0 restarts in 39,036 `/accessibility` calls; exact upper 95% bound 7.67 x 10^-5 per call, against 5 x 10^-4 |
+| A5 | the boot-reset campaign and all 15 acceptance campaigns' receipts | 964 + 15 jobs | - | - | - | **PASS**: 20 of 20 pristine; every counting receipt shows `System.qcow2` unchanged and nothing left |
+
+Each ran at attempt 1. Nothing was rerun or repaired. Both jobs ended
+`COMPLETED` 0:0 by the watcher and by the batch record
+(`driver_exit=0 labelled_containers_left=0`), and neither was requeued
+(`Requeue=1 Restarts=0`).
+
+One finding is reported and not judged: in **one A7 session the guest
+server answered every `/accessibility` call with HTTP 500 for the whole
+boot, without restarting.** A7 bounds restarts, so this does not count
+against it. No criterion of this suite bounds it. See "A7 session 193"
+below.
+
+### How they ran
+
+- **N\*.** `acceptance.n_star` over attempt 1's A1 campaigns (968, 970) and
+  attempt 1's ladder (1017-1025) gives 32. `ops/analyze_volume.py`
+  recomputes it before judging A4 and A7, and gets 32 again. Decision D51
+  records running A4 and A7 at 32 and not rerunning rung 40 under attempt 1.
+  The volume stage's operator decided it when submitting; D51 was written
+  after both jobs had run and confirms it.
+- **Manifests.** `ops/render_volume.sh 32 A4` and `32 A7` ran the frozen
+  renderer from the export at 03:21 UTC, before A4 was submitted. Settings:
+  `--seed 43 --layer L0-fixed --concurrency 32 --host-root
+  ~/cotcodec-runs/q2-action-path-v2`, with the default runner CPUs
+  `manifest.runner_cpus(32)` = 16.
+  - The renderer's worst-case budgets are 1,350 min (A4) and 660 min (A7),
+    both within the lane's 24 h. So each campaign ran as one job with no
+    session range (section 9 splits a campaign only when one job would
+    exceed 24 h).
+  - The same script run locally on a fresh local export wrote both files
+    byte-identical. No field was edited.
+- **Submission.** `ops/submit_volume.sh` is `ops/submit_rung.sh` with its
+  own queue-check log. It ran the submitter's `--dry-run` and
+  `--test-only`, read the whole Slurm queue (every user, every state), and
+  submitted only on an empty queue. Both checks found it empty
+  (`ops/volume-queue-checks.log`). It then started
+  `scripts/record_slurm_end_states.sh` for the job, which caught both end
+  states (`slurm-state/`).
+  - A4 ran 03:21:55-04:59:50 UTC. A7 was submitted at 05:00:32, after A4
+    had left the queue, and ran to 06:20:52.
+  - No Slurm job other than the campaign's own appears in any of the
+    3,172 host snapshots (`checks/host-snapshots-volume.json`).
+  - The `--test-only` calls took job ids 1026 and 1028.
+- **Shape.** Each job is CPU only: TRES `cpu=144,mem=226G`, one node, no
+  GRES. The 32 VMs used 128 vCPUs, each VM pinned to its own 4 CPUs
+  (0-127). The 32 runners shared CPUs 128-143. `checks/run-checks-volume.json`
+  checks this and every other registered field (below).
+- **No boot failed.** All 1,584 cold boots served a screenshot (boot p95
+  20.8 s in A4, 21.0 s in A7, max 23.2 s). Every VM container got
+  `dnsmasq` (`nat_mode: nat` in all 1,584 records; no "Too many open files"
+  in any VM log). So at N = 32 the host's inotify limit, which failed 10 of
+  rung 40's boots, was not reached.
+- **Operator load on the host.** The first A4 analysis (one Python process,
+  about a minute) and the SHA-256 listing of job 1027's 2.4 GB ran on the
+  host at 05:01-05:02 UTC, during A7's first two minutes. Neither is a
+  Slurm job, and section 9's rule against submitting while a campaign runs
+  binds only a ladder rung. Disclosed for completeness.
+
+### A4 (volume): PASS
+
+Frozen `acceptance.a4(campaigns, 32)` gives `pass: true` with no problems
+(`acceptance/a4-verdict.json`).
+
+- **Zero failures.** 64,028 of 64,028 trials passed. No trial had an
+  infrastructure failure, so none was a restart-only trial and none was
+  excused (`restart_only_trials` 0 over every attempt, 0 in the counting
+  one).
+- **Plan.** The frozen code checks that the run's sessions tile the plan
+  and that the realized order equals `volume.sessions(plan, 43)`. All 86 G
+  entries ran their planned repetitions (70 to 10,078), split evenly
+  between the two settings, in 1,068 sessions (534 per setting).
+- **Executed actions per class**, from each entry's class counts in
+  `volume_plan.json` over the trials that ran (`acceptance/a4-report.json`):
+
+  | Class | Actions | Family-wise 95% bound |
+  |---|---:|---:|
+  | left click | 10,170 | 4.99 x 10^-4 |
+  | other click | 10,150 | 5.00 x 10^-4 |
+  | move | 10,148 | 5.00 x 10^-4 |
+  | drag | 10,150 | 5.00 x 10^-4 |
+  | scroll | 10,150 | 5.00 x 10^-4 |
+  | type | 10,148 | 5.00 x 10^-4 |
+  | key or chord | 10,216 | 4.97 x 10^-4 |
+
+  Each class has at least `volume.ACTIONS_PER_CLASS` (10,148). With zero
+  failures, section 9's eight statements hold together at family-wise 95%:
+  each class's per-action failure rate (over the catalog's instances, as
+  the plan weights them) is at most 5 x 10^-4, and the per-session (per-boot)
+  rate at most 0.47%. Together that is at most about 1.5 pp per 20-action
+  episode. Section 9 also says what A4 does not bound: any single entry at
+  that level (each entry's own bound is in `a4-report.json`, `per_entry`),
+  and Stage-1 instances the catalog does not contain.
+- **Per-session results.** All 1,068 sessions passed every trial, and every
+  reset observation was delivered (`a4-report.json`,
+  `sessions_every_attempt`).
+- **Guest-server restarts.** None in 36,515 `/accessibility` calls, and no
+  session's restart counter moved. The development rate (1 in 8,114 calls,
+  exact 95% interval 3.1 x 10^-6 to 6.9 x 10^-4) is reported with the
+  verdict. D30's remaining exposure (a restart outside an observation call
+  still counts, section 9) did not arise.
+- **Observation retries.** Five `/accessibility` calls were delivered on
+  retry: four step observations and one reset observation. One of the four
+  first timed out, so that step (`click_left_center`, session 995) took
+  127.7 s; its trial passed. Every other observation was delivered at its
+  first attempt.
+- **Timing.** Boot p50/p95 20.42/20.83 s. Step p50/p95 2.124/3.313 s over
+  71,962 steps (max 127.7 s, the retried call above).
+- **Section 12, key events read without their state.** None over the
+  64,028 trials (`acceptance/a4-section12-state-not-observed.json`).
+
+### A7 (observation service): PASS
+
+Frozen `acceptance.a7(campaigns, 32)` gives `pass: true` with no problems
+(`acceptance/a7-verdict.json`).
+
+- **Restarts k = 0**, summed over every attempt (there is one).
+- **Calls n = 39,036**: the counting attempt's calls are 39,036, exactly
+  the plan's 39,036, so the cap does not bind. Every attempt together also
+  made 39,036.
+- **Rate 0.** The exact one-sided 95% upper bound is
+  `poisson_upper(0) / n` = 2.996 / 39,036 = **7.67 x 10^-5** per call,
+  against the bound 5 x 10^-4.
+- **Per session** (reported, not judged): 0 of 516 sessions had a restart;
+  the upper 95% bound is 5.8 x 10^-3 restarts per session. Calls per
+  session: mean 75.7, range 63-95.
+- **N\*.** A7 ran under attempt 1 at attempt 1's N\* = 32. No later attempt
+  exists, so there is no other N\* to report beside it (section 12).
+- **Trial verdicts** (reported, not judged): 30,901 of 30,960 passed. All
+  59 failures are in one session (session 193), below.
+- **Observation retries.** Eleven `/accessibility` calls, in 11 other
+  sessions, were delivered on retry. Each was the session's first step
+  observation (seq 0), whose first attempt answered HTTP 500 after 1.3-1.7 s
+  (19,672-19,689 bytes) and whose retry answered 200.
+- **Timing.** Boot p50/p95 20.41/21.01 s. Step p50/p95 2.628/3.437 s over
+  38,520 steps (max 13.5 s, in session 193).
+- **Section 12, key events read without their state.** None over the
+  30,960 trials (`acceptance/a7-section12-state-not-observed.json`).
+
+### A7 session 193: the accessibility service failed for a whole boot (reported, not judged)
+
+What the records show (`runs/1029/raw-sha256sums.txt` hashes
+`cycles/cycle-193.json` and the rest; summary in
+`acceptance/a7-campaigns.json`):
+
+- The session booted normally (first screenshot after 20.4 s) and ran
+  05:27-05:41 UTC.
+- Its reset observation and every one of its 69 step observations got
+  HTTP 500 on all three of `DesktopEnv`'s attempts: 210 attempts, each
+  answered in 0.11-0.34 s with the same 19,527-byte body. Every screenshot
+  was delivered.
+- The guest server did not restart. The same server process (pid 1737)
+  answered every guard, and systemd's `NRestarts` for its unit was 1 (the
+  boot's own) at the session's start and end. So the session's restart
+  count is 0, and A7 counts nothing.
+- So 59 of its 60 trials failed with `infra: accessibility`, the first of
+  them also charged with the undelivered reset observation. The one trial
+  that passed, `no_action_control`, makes no step and so no observation
+  call. Every action was executed, and the guard found no violation.
+- The response body is not recorded, so the records cannot say why the
+  service failed. Its size and speed differ from the eleven transient 500s
+  above (19,672-19,689 bytes after about 1.5 s).
+
+How rare it was, over every accessibility-setting session of the acceptance
+suite that served observations (an operator count from the raw records,
+reported only):
+
+- 1,245 sessions: A1 18, A2 17, A3 42, the ladder 118 (rung 40's five
+  failed boots excluded), A4 534 and A7 516.
+- 91,800 `/accessibility` calls. 70 were not delivered, all in session 193.
+  17 were delivered on retry.
+- So 1 of 1,245 boots. The exact one-sided 95% upper bound is
+  `poisson_upper(1) / 1,245` = 3.8 x 10^-3 per boot.
+
+What it means:
+
+- Section 6.1 makes an undelivered `/accessibility` tree an infrastructure
+  failure. Had this session been in A4 or a rung, its 59 trials would have
+  counted as failures: they carry no restart, so they are not excused.
+  A4 would then have failed.
+- In Stage 1, an episode on such a boot gets no accessibility tree on any
+  step. Stage 1 counts guest-server restarts per episode (section 7, "What
+  Stage 1 inherits from D30"). This failure has no restart, so it would be
+  missed by that count. Each step's undelivered tree is still an
+  infrastructure failure of the episode.
+- So the Stage-1 preregistration should count undelivered `/accessibility`
+  observations per episode as well as restarts, and say how such an
+  episode enters the analysis. That is for Kevin and the Stage-1
+  registration; nothing here changes a verdict.
+
+### A5: final judgement, PASS
+
+`acceptance.a5` over the boot-reset campaign (job 964) and the counting
+attempts of all 15 acceptance campaigns gives `pass: true` with no problems
+(`acceptance/a5-final/`).
+
+- The 15 campaigns are A1 (968, 970), A2 (974, 991), A3 (1004, 1008, 1013),
+  A6 (1015), the five rungs (1017-1025, rung 40's single attempt included),
+  A4 (1027) and A7 (1029).
+- Job 964 shows 20 of 20 pristine reset-sentinel checks at the frozen SHA.
+- Every receipt shows `System.qcow2` unchanged and no labelled container or
+  volume left.
+- No campaign has an earlier attempt, so `earlier_attempts` is empty.
+- Rung 40's receipt is judged here like the others; it is clean. Its end
+  state (`FAILED` 3:0) is the reason it did not count for the ladder, not
+  an A5 matter.
+
+### The registered overall verdict (section 7)
+
+| Criterion | Verdict | Where |
+|---|---|---|
+| C1, C2, C3 (validity controls) | PASS | first stage |
+| C4 (R-dev agreement) | PASS | second stage |
+| A1 at N = 1 (seeds 43 and 44, both settings) | PASS | second stage |
+| A1 at N\* = 32 (rung 32's first five repetitions) | PASS | third stage |
+| A2 | PASS | second stage |
+| A3 | PASS | second stage |
+| A4 | PASS | this stage |
+| A5 | PASS | this stage (final) |
+| A6 | PASS | second stage |
+| A7 | PASS | this stage |
+| N\* | 32 | third stage; D51 |
+
+- "All of A1-A6 must hold. If any fails, Stage 1 does not start." **All of
+  A1-A6 hold, so Stage 1 may start.**
+- "A7 must also hold before any Stage-1 episode uses the
+  screenshot-plus-accessibility setting." **A7 holds, so Stage-1 episodes
+  may use that setting.**
+- **N\* = 32 < 40, so section 9's program kill criterion applies: cut the
+  Stage-1 task count before adding GPUs.** Stage 1 runs at most 32
+  concurrent VMs on this host as it is configured.
+- What this verdict does not cover:
+  - the per-entry and out-of-catalog limits of section 9;
+  - the guest server under Stage-1 task applications, whose accessibility
+    trees are larger (section 9);
+  - the whole-boot accessibility failure above, which no criterion bounds.
+
+### Section 12 for A4 and A7
+
+- **Session wall time.** A4: p50 99.7 s (screenshot) and 230.4 s
+  (accessibility). A7: p50 249.7 s; session 193 took 828.5 s, because every
+  step waited through three failed attempts.
+- **Overlay growth.** A4: p50 67 MB (screenshot) and 245 MB (accessibility),
+  max 365 MB. A7: p50 248 MB, max 368 MB.
+- **CPU utilization and steal.** The frozen lane records neither. The
+  operator sampled the host's `/proc/stat` every 30 s over `ssh`, read-only
+  (`checks/procstat/procstat-1027.log` and `-1029.log`,
+  `checks/procstat-summary-volume.json`). These are host-wide and reported
+  only.
+  - A4: busy 46.8 CPU-equivalents of 208; steal 0.02 (fraction 1e-4).
+  - A7: busy 54.5, steal 0.02. The A7 sampler stopped at 05:53:51 UTC,
+    when the earlier operator session ended, so it covers 53 of the job's
+    80 minutes.
+- **Host load.** The largest 1-minute load average was 57.3 (A4) and 58.6
+  (A7). The snapshots counted at most 63 running containers on the host, at
+  most 62 of them the job's own.
+- **Restarts and excused trials.** None, so no restart report lists a trial,
+  and no session has an unattributed restart.
+- **Earlier attempts and unreadable files.** None.
+
+### How it was run
+
+1. **Export.** The earlier stages' read-only export of `bf99a64` on the host
+   was checked again before the analysis. It matched on tree digest
+   `abbbfe6c...`, mode `dr-xr-xr-x`, no `__pycache__`, and no writable entry
+   other than its 27 symlinks. The batch script, `acceptance.py`,
+   `volume_plan.json`, `manifest.py`, `driver.py`, renderer, submitter and
+   watcher are at their frozen digests.
+   - A fresh local export gave the same digests. It passed `check-chain`
+     (15 rows), `verify` of all three ids, and the pin and admission tests
+     (51 passed) (`checks/volume-export-and-reproduction.json`).
+2. **Manifests and submission.** As above. The dry-run and test-only
+   output of each manifest is in `ops/dryrun/a4-*` and `ops/dryrun/a7-*`.
+3. **Analysis.**
+   - `ops/make_attempts.py` (unchanged) wrote `ops/attempts-a4.json` and
+     `ops/attempts-a7.json` from the submission log.
+   - `ops/analyze_volume.py`, run on the host from the export, loads the
+     run directories with `acceptance.load`, recomputes N\* with
+     `acceptance.n_star`, and calls `acceptance.a4` or `acceptance.a7`. It
+     writes each verdict, its section-12 report, a per-attempt summary and
+     a report: A4's per-entry trials and bounds, executed actions per class
+     and every session's result; A7's trial verdicts, calls per session and
+     the plan-call check.
+   - `ops/analyze_acceptance.py` (unchanged) ran A5 over the boot-reset
+     campaign and the 15 acceptance campaigns.
+   - Every judgement is the frozen code's. What the scripts add is
+     reported, never judged.
+4. **Reproduction and run checks.**
+   - Run directories 1027 (5,344 files, 2.3 GB) and 1029 (2,584 files,
+     1.2 GB) were copied to a local scratch directory. Every file's SHA-256
+     equals its `raw-sha256sums.txt` entry. The 14 other acceptance run
+     directories that A5 reads were checked the same way.
+   - The A4 analysis ran on the host twice (05:01 and 16:46 UTC), with
+     byte-identical output.
+   - The local export under Python 3.13 gave all A4, A7 and A5 output
+     byte-identical to the host's (Python 3.10).
+   - `ops/check_runs_volume.py` (`checks/run-checks-volume.json`) checks
+     each job:
+     - the manifest equals the rendered one, and its canonical digest is
+       the batch record's;
+     - the batch script, tree, git SHA, receipt, campaign, manifest and
+       session-plan digests agree;
+     - the job started after row 15;
+     - no GPU appears in the receipt or the TRES;
+     - `System.qcow2` is unchanged and nothing was left;
+     - Slurm is COMPLETED 0:0, runs the export's batch script and was
+       never requeued;
+     - the registered shape holds: L0-fixed, seed 43, attempt 1, N\* = 32
+       VMs, 16 runner CPUs, 128 vCPUs, one disjoint 4-CPU set per VM inside
+       the allocation, the runners' set apart, 144 Slurm CPUs; A4 both
+       settings, `volume` cells, 1,068 sessions and 64,028 trials; A7 the
+       accessibility setting only, 360 repetitions of G, 516 sessions and
+       30,960 trials; no session range.
+   - Every check passes for both jobs. The only IPv4 address in those
+     files is the guest VM's internal NAT address in each manifest, as in
+     the earlier stages.
+
+### VM time
+
+A4 and A7 occupied **85.12 VM-hours**, CPU only. This is the sum of each
+session's span from its host snapshot before boot to the one after teardown,
+as for the ladder.
+
+| Campaign | VM-hours occupied | Sized (section 9) | Allocated (run time x 32) |
+|---|---:|---:|---:|
+| A4 | 49.21 | 44.0 | 52.22 |
+| A7 | 35.92 | 31.1 | 42.84 |
+
+- v2 has now used **109.12 VM-hours** (24.00 before this stage), against
+  the 98.4 that section 9 sized.
+- No GPU was requested or used.
+
+### Files (fourth stage)
+
+| Path | What it is |
+|---|---|
+| `manifests/rendered/a{4,7}-l0fixed-seed43-n32-a1.yaml` | the two manifests as rendered and submitted; `manifests/rendered-sha256sums-volume.txt`, `checks/local-render-sha256sums-volume.txt` |
+| `runs/1027/`, `runs/1029/` | `manifest.json`, `preflight.txt` (batch record), `receipt.json`, `session_plan.json`, `slurm-<job>.out`, `raw-sha256sums.txt` (every raw file left on the host, 3.5 GB) |
+| `slurm-state/1027.txt`, `slurm-state/1029.txt` | the watcher's `scontrol show job` record of each job |
+| `acceptance/a4-verdict.json`, `acceptance/a7-verdict.json` | the frozen `acceptance.a4` and `acceptance.a7` output |
+| `acceptance/a{4,7}-section12-state-not-observed.json` | their section-12 reports |
+| `acceptance/a{4,7}-campaigns.json`, `acceptance/a{4,7}-report.json` | per-attempt summaries; A4's per-entry, per-class and per-session report; A7's trial verdicts and calls per session |
+| `acceptance/a5-final/` | A5's final judgement over every acceptance receipt |
+| `checks/volume-export-and-reproduction.json`, `checks/run-checks-volume.json`, `checks/host-snapshots-volume.json`, `checks/procstat/procstat-10{27,29}.log`, `checks/procstat-summary-volume.json` | export, rendering, reproduction and run checks, host snapshots and host CPU samples |
+| `ops/render_volume.sh`, `ops/submit_volume.sh`, `ops/analyze_volume.py`, `ops/check_runs_volume.py` | this stage's operator scripts, byte-identical to the copies that ran on the host |
+| `ops/submissions.log`, `ops/volume-queue-checks.log`, `ops/attempts-a{4,7}.json`, `ops/dryrun/a{4,7}-*` | the submission log (all stages), the queue checks, the attempt maps and each manifest's dry-run and test-only output |
 
 ## Third stage: the concurrency ladder (rungs N = 8-40, attempt 1)
 

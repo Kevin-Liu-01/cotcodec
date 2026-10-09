@@ -1,0 +1,383 @@
+[
+  {
+    "accessibility_calls": 36515,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 23.218,
+      "n": 1068,
+      "p50": 20.422,
+      "p95": 20.831
+    },
+    "campaign_id": "q2ap-v2-a4-l0fixed-n32-a1",
+    "counting_problems": [],
+    "cpusets": [
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "0-3",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "4-7",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "8-11",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "12-15",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "16-19",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "20-23",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "24-27",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "28-31",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "32-35",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "36-39",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "40-43",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "44-47",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "48-51",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "52-55",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "56-59",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "60-63",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "64-67",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "68-71",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "72-75",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "76-79",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "80-83",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "84-87",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "88-91",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "92-95",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "96-99",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "100-103",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "104-107",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "108-111",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "112-115",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "116-119",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "120-123",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "124-127",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      }
+    ],
+    "criterion": "A4",
+    "earlier_attempts": [],
+    "excused_trials": [],
+    "failed_trials": [],
+    "finished_at": 1791521989.1024265,
+    "gating_trials": 64028,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "host": {
+      "foreign_abort_reading_reported_only": [],
+      "foreign_jobs_seen": [],
+      "max_containers_ours": 62,
+      "max_containers_running_total": 63,
+      "max_loadavg_1min": 57.29,
+      "session_snapshots": 2136,
+      "snapshots": 2138
+    },
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "1027",
+    "jobs": [
+      "1027"
+    ],
+    "labelled_containers_left": [],
+    "leaked_volumes": [],
+    "manifest_json_sha256": "39f5b41bd0af1fb7160d13f1a5c097a13dd90b7d17bd81fdd4dbd9200aa282ec",
+    "n": 32,
+    "no_gpu_all": true,
+    "observation_retries": {
+      "accessibility": 4
+    },
+    "overlay_bytes_per_session": {
+      "max": 364904448,
+      "n": 1068,
+      "p50": 73269248.0
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "ad57352e59dda850c87877e3b2142d1528c625cc071a3f788f5801a2d6562855",
+    "registered_shape": {
+      "attempt_1": true,
+      "n_is_n_star": true,
+      "runner_cpus_registered": true,
+      "vm_vcpus": 128,
+      "vm_vcpus_at_most_160": true
+    },
+    "reset_observations_not_delivered": [],
+    "reset_observations_retried": {
+      "accessibility": 1
+    },
+    "restarts": 0,
+    "runner_cpus": 16,
+    "session_errors": [],
+    "session_range": null,
+    "sessions": 1068,
+    "sessions_planned": 1068,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "snapshot_problems_reported_only": [],
+    "started_at": 1791516116.2769916,
+    "step_s": {
+      "max": 127.7075,
+      "n": 71962,
+      "p50": 2.1237,
+      "p95": 3.3131
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 64028,
+    "trials_pass": 64028,
+    "trials_planned": 64028,
+    "unreadable": []
+  }
+]

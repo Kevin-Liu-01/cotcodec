@@ -2847,3 +2847,62 @@ they say so.)
   verdicts, the concurrency table, section-12 reports, checks, raw SHA-256
   lists and operator scripts.
 - Not run: rung 40's rerun, A4 and A7. Nothing pushed or merged.
+
+## 2026-10-09 — Q2 action-path v2 volume campaigns operated (branch `ops/q2-action-path-v2`): A4, A7 and A5 PASS; A1-A6 hold, Stage 1 may start; A7 holds
+
+- Ran A4 and A7 at attempt 1's N\* = 32 (D51), attempt 1, each as one job
+  from the same read-only export of `bf99a64` (tree `abbbfe6c...`).
+  - The renderer's worst-case budgets (1,350 and 660 min) fit the lane's
+    24 h, so neither campaign was split into session ranges.
+  - Each was submitted only on an empty whole-queue check
+    (`ops/submit_volume.sh`). No foreign Slurm job appears in any of the
+    3,172 host snapshots.
+  - A4 (job 1027) ran 03:21:55-04:59:50 UTC; A7 (job 1029) ran
+    05:00:32-06:20:52 UTC. Both ended `COMPLETED` 0:0 by the watcher
+    and the batch record, and neither was requeued (`Restarts=0`).
+  - All 1,584 cold boots got `dnsmasq` and served a screenshot; the
+    inotify limit that failed rung 40 was not reached at N = 32.
+- **A4 PASS.** 64,028 of 64,028 trials passed, over all 86 G entries in
+  1,068 sessions.
+  - No trial was excused, and there were 0 restarts in 36,515
+    `/accessibility` calls.
+  - Each of the seven action classes got 10,148-10,216 executed actions.
+    So each class's per-action failure rate is at most 5 x 10^-4 and the
+    per-boot rate at most 0.47%, together at family-wise 95%.
+- **A7 PASS.** 0 restarts in 39,036 `/accessibility` calls (exactly the
+  plan's; the cap does not bind). The exact upper 95% bound is 7.67 x 10^-5
+  per call, against 5 x 10^-4.
+- **A5 PASS (final).** Over the boot-reset campaign and the counting
+  receipts of all 15 acceptance campaigns (A1-A4, A6, A7 and the five
+  rungs), `System.qcow2` was unchanged and nothing was left.
+- **Overall (section 7): A1-A6 all hold, so Stage 1 may start; A7 holds, so
+  Stage-1 episodes may use the screenshot-plus-accessibility setting.**
+  N\* = 32 < 40, so the program kill criterion applies: cut the Stage-1
+  task count before adding GPUs.
+- Reported, not judged: in one A7 session (193), the guest server answered
+  every `/accessibility` call with HTTP 500 for the whole boot, without
+  restarting.
+  - 59 of its 60 trials failed with `infra: accessibility`. A7 counts
+    restarts only, so it does not count this.
+  - It is 1 of 1,245 accessibility-setting boots across the acceptance
+    suite (exact upper 95% bound 3.8 x 10^-3 per boot). No other session
+    lost a tree; 17 calls were delivered on retry.
+  - Had it struck A4, A4 would have failed. Stage 1 counts restarts per
+    episode and would miss it, so the Stage-1 preregistration should count
+    undelivered trees per episode too.
+- Reported, not judged: one A4 step took 127.7 s, because its
+  `/accessibility` call first timed out (the retry delivered it, and the
+  trial passed). No key event was read without its state in either
+  campaign.
+- All A4, A7 and A5 JSON reproduces byte for byte locally under Python 3.13
+  (host 3.10), from raw records whose 7,928 files were SHA-256 checked. The
+  run checks pass for both jobs.
+- 85.12 VM-hours occupied, CPU only (A4 49.21, A7 35.92; sized 44.0 and
+  31.1). That brings v2 to 109.12 VM-hours (sized 98.4). No GPU.
+- Evidence: the fourth-stage section of
+  `program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md`, with
+  the manifests, run, receipt and Slurm records, the A4, A7 and final A5
+  verdicts, section-12 reports, checks, raw SHA-256 lists and operator
+  scripts.
+- Not done: `program/state.json` and `HANDOFF.md` are not updated, and
+  nothing is pushed or merged.
