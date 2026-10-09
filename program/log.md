@@ -2906,3 +2906,23 @@ they say so.)
   scripts.
 - Not done: `program/state.json` and `HANDOFF.md` are not updated, and
   nothing is pushed or merged.
+
+## 2026-10-09 — Q2 action path v2 accepted on attempt 1 (D53)
+
+- Stage B's volume stage (resumed after the session restart) judged A4 (job
+  1027: 64,028 of 64,028 trials over 1,068 sessions; per-class bounds at most
+  5.0e-4, per-boot 0.47%, family-wise 95%) and A7 (job 1029: 0 restarts in
+  39,036 accessibility calls, upper bound 7.67e-5 per call) at N* = 32, and A5's
+  final judgement over all 16 receipts: all PASS. Neither job was resubmitted.
+- A fresh verifier recomputed every stage B verdict with the frozen code from
+  SHA-256-checked copies of the run directories, re-rendered the 7 manifests
+  (byte-identical) and re-judged 107,988 trials (0 mismatches):
+  `independent-verification-stage-b.json`, verdicts reproduced. With stage A,
+  the registered verdict holds: Stage 1 may start; the screenshot-plus-
+  accessibility setting may be used; N* < 40 triggers the program kill criterion.
+- Findings recorded in D53: A4 and A7 ran before the rung-40 choice was recorded
+  (a disclosed governance deviation); D51's repair-attempt sentence corrected;
+  the whole-boot `/accessibility` failure in A7 session 193 and the first-call
+  500s and hangs are outside every criterion, so Stage-1 registrations count
+  undelivered and very slow observations per episode.
+- Merged `ops/q2-action-path-v2` into main. Next: the S1a pre-freeze work.
