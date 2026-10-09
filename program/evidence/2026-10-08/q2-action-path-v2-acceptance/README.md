@@ -1,14 +1,326 @@
-# q2-action-path-v2: validity controls and acceptance at N = 1 (2026-10-08)
+# q2-action-path-v2: validity controls, acceptance at N = 1 and the concurrency ladder (2026-10-08)
 
-This bundle holds two operator stages of `q2-action-path-v2`. Both ran from the
-same read-only export of `bf99a64`.
+This bundle holds three operator stages of `q2-action-path-v2`. All three ran
+from the same read-only export of `bf99a64`.
 
-1. **Acceptance at N = 1** (the second stage, jobs 964-1015). It ran A5's
+1. **The concurrency ladder** (the third stage, jobs 1017-1025, 2026-10-09
+   UTC). Rungs N = 8, 16, 24 and 32 qualify. Rung N = 40 did not count: 10
+   of its 80 cold boots failed on a host limit. **N\* = 32** as the ladder
+   stands, and A1 at N\* passes. See "Third stage" just below.
+2. **Acceptance at N = 1** (the second stage, jobs 964-1015). It ran A5's
    boot-reset campaign, A1 with C4, A2, A3 and A6. Every criterion it could
-   judge passes. See "Second stage" just below.
-2. **Validity controls** (the first stage, jobs 864-962, commit `a491c0e`).
-   C2, C1 and C3 all pass. See "First stage" further down. That text is
-   unchanged, apart from its heading.
+   judge passes. See "Second stage" further down.
+3. **Validity controls** (the first stage, jobs 864-962, commit `a491c0e`).
+   C2, C1 and C3 all pass. See "First stage" further down.
+
+The second and first stages' text is unchanged, apart from their headings
+and this list.
+
+## Third stage: the concurrency ladder (rungs N = 8-40, attempt 1)
+
+**Result: N\* = 32.** `acceptance.n_star` over attempt 1's A1 campaigns
+(jobs 968 and 970) and the five rungs gives N\* = 32:
+
+- Rungs 8, 16, 24 and 32 qualify. Every one of their 9,800 trials passed.
+- Rung 40 (job 1025) did not count, so it does not qualify. Ten of its 80
+  cold boots never served a screenshot. Inside each of those VM containers,
+  `dnsmasq` failed with "failed to create inotify: Too many open files".
+  The image then fell back to usermode networking, and the guest server's
+  port never opened.
+- No rung aborted. No foreign Slurm job appears in any of the 502 host
+  snapshots.
+- A1 at N\* = 32 passes. Rung 32's first five repetitions (A1's seed-43
+  shuffle, both settings) passed 1,000 of 1,000 trials, all 860 gating
+  trials included, with no excused trial.
+- Since N\* < 40, the program kill criterion of section 9 applies
+  (`program_kill_criterion: true`).
+- Section 6.1 allows rung 40 one rerun, because it did not count. That
+  rerun was **not** submitted; "Rung 40" below says why. It stays available.
+
+Every rung ran at attempt 1, in the order 8, 16, 24, 32, 40, one rung at a
+time. Nothing was repaired. No job was requeued: every Slurm record shows
+`Requeue=1 Restarts=0`.
+
+| N | Job | r_N | Sessions | Trials run / planned | Run time | Boots | Boot p50 / p95 (s) | Step p50 / p95 (s) | p95 / N=1 | Trials PASS | `/accessibility` calls | Restarts | Excused | Qualifies |
+|---:|---:|---:|---:|---|---|---:|---|---|---:|---|---:|---:|---:|---|
+| 1 (A1) | 968, 970 | 5 | 36 | 2,000 | 2 x 43-44 min | 36 | 17.24 / 17.92 | 1.823 / 2.694 | 1.00 | 2,000 | 1,298 | 0 | 0 | reference |
+| 8 | 1017 | 6 | 20 | 1,200 / 1,200 | 9 min 40 s | 20 | 18.12 / 18.33 | 1.825 / 2.714 | 1.01 | 1,200 | 778 | 0 | 0 | yes |
+| 16 | 1019 | 10 | 34 | 2,000 / 2,000 | 9 min 36 s | 34 | 19.38 / 20.31 | 1.950 / 2.885 | 1.07 | 2,000 | 1,297 | 0 | 0 | yes |
+| 24 | 1021 | 14 | 48 | 2,800 / 2,800 | 6 min 50 s | 48 | 20.77 / 22.07 | 2.114 / 3.132 | 1.16 | 2,800 | 1,816 | 0 | 0 | yes |
+| 32 | 1023 | 19 | 64 | 3,800 / 3,800 | 7 min 8 s | 64 | 21.14 / 21.84 | 2.106 / 3.170 | 1.18 | 3,800 | 2,464 | 0 | 0 | **yes (N\*)** |
+| 40 | 1025 | 24 | 70 of 80 | 4,200 / 4,800 | 10 min 38 s | 70 of 80 | 21.26 / 22.24 | 2.084 / 3.173 | 1.18 | 4,200 | 2,722 | 0 | 0 | no (did not count) |
+
+The limits are: boot p95 at most 180 s; step p95 at most 2 x 2.694 =
+5.389 s; at least 20 cold boots; at most two excused trials.
+
+- Every job is CPU only. TRES is `cpu=36,mem=58G`, `cpu=72,mem=114G`,
+  `cpu=108,mem=170G`, `cpu=144,mem=226G` and `cpu=180,mem=282G` (4N VM CPUs
+  plus the runners'), one node, no GRES.
+- The VMs use 32, 64, 96, 128 and 160 vCPUs, never more than 160. Each VM
+  is pinned to its own 4 CPUs of the job's allocation. The runners share
+  `manifest.runner_cpus(N)` CPUs (4, 8, 12, 16, 20) apart from the VMs'.
+  The receipts' `cpusets` record this, and `checks/run-checks-ladder.json`
+  checks it.
+- Rungs 8-32 counted. Each ended `COMPLETED` 0:0 by the watcher and by the
+  batch record (`driver_exit=0 labelled_containers_left=0`), with
+  `infra_gates_pass` true, `System.qcow2` unchanged and nothing left.
+- Their `/accessibility` calls (778, 1,297, 1,816 and 2,464) are exactly the
+  registered counts (section 9).
+
+### Rung 40 (job 1025): did not count, rerun held
+
+What happened:
+
+- In 10 sessions the cold boot served no valid `/screenshot` within 300 s.
+  They were cycles 16, 19, 22, 24 and 33 (screenshot setting) and 56, 59,
+  62, 64 and 73 (accessibility setting). That is an infrastructure failure
+  of the boot (section 6.1). The 600 trials of those sessions were never
+  run.
+- Each of the 10 VM logs (`cycles/vm-NN.log` on the host, hashed in
+  `runs/1025/raw-sha256sums.txt`) shows the same three lines:
+  - `dnsmasq: failed to create inotify: Too many open files`;
+  - "Failed to start dnsmasq";
+  - "falling back to usermode networking!".
+- The driver recorded `nat_mode: usermode-fallback` for these 10 sessions
+  and `nat` for the other 70. The guest server's TCP port never opened
+  (`t_tcp_open` is null).
+- The driver exited 3. Slurm (watcher) gives `FAILED` 3:0 and the batch
+  record `driver_exit=3 labelled_containers_left=0`. The receipt has
+  `infra_gates_pass` false, `System.qcow2` unchanged and nothing left.
+- `acceptance.rung` gives four problems: the job's Slurm state, its batch
+  end, its infrastructure gates, and "the trials run (4200) are not the
+  realized order (4800)". `foreign_abort` is empty, so this is not an
+  abort.
+- The 4,200 trials that ran all passed. That includes 3,612 of 3,612 gating
+  trials, with no excused trial and no guest-server restart. So the earlier
+  attempt carries no failed or excused trial into a rerun. Boot and step
+  p95 were within the limits (22.24 s; 3.173 s).
+
+The cause is a host limit:
+
+- The host's `fs.inotify.max_user_instances` is 128 (read without
+  privilege). The VM containers' processes run as host root and share that
+  per-user limit.
+- The failures came only when 40 VM containers ran at once. In the first
+  wave, 40 containers started together and 35 got `dnsmasq`. The five
+  later failures started 319 s into the job, in the slots the first five
+  failed boots freed, while 35 sessions were running.
+- No boot failed at N <= 32 (166 boots in rungs 8-32), in the N = 1 stages,
+  or in the controls.
+- So about 35 concurrent VM containers can get `dnsmasq` on this host as it
+  is configured now.
+
+Why the rerun was held:
+
+- A campaign that did not count "may be rerun once" (section 6.1), and
+  `acceptance.rung` would admit the rerun.
+- A rerun under the same host configuration would meet the same limit, as
+  both waves of job 1025 did. It would use up rung 40's only rerun
+  (`MAX_ATTEMPTS` 2; no third attempt) and fix N\* at 32 under attempt 1.
+  A7 runs at attempt 1's N\* and is never judged again (section 11).
+- Raising the limit needs root (`sysctl`). This operator has none and may
+  not use it.
+- The rerun is a rerun, not a repair: same manifest, same executor, same
+  rules.
+- Section 2.1 pins no host kernel parameter. Whether raising the host limit
+  and then rerunning rung 40 once is acceptable is the owner's decision.
+
+Choosing for Kevin:
+
+1. **Keep N\* = 32.** A4 and A7 run at 32 VMs, and the kill criterion
+   applies.
+2. **Raise the limit, then rerun.** An admin raises
+   `fs.inotify.max_user_instances` on the host. Rung 40 is then rerun once
+   as a new attempt from the same rendered manifest. It must run on a quiet
+   host, before A4 and A7. Both attempts are reported, and N\* is then
+   whatever `acceptance.n_star` gives.
+
+Either way, A4 and A7 at N\* = 32 would run about 3 VM containers below the
+limit observed here.
+
+### A1 at N\* (section 7)
+
+No frozen function computes "A1 at N\* > 1", so `ops/analyze_ladder.py`
+does it from the frozen helpers:
+
+- It takes rung N\*'s trials at positions 0-499 of each setting's order,
+  which are the first five repetitions.
+- It checks that, in each setting, they are exactly A1's seed-43 shuffle
+  (`order.shuffle_order(ids, 43, 5)`).
+- It reads every G entry on its counted trials with `acceptance.outcomes`
+  (restart-only trials excused) and `acceptance.entry_status`, as
+  `acceptance.rung` reads the whole rung. The rung's rule of at most two
+  excused trials, which may fall in one entry, applies (section 6.1).
+
+At N\* = 32 (job 1023):
+
+- 1,000 of 1,000 trials passed, including 860 of 860 gating trials. All 100
+  entries are PASS.
+- No trial was excused. The step p95 is 3.248 s.
+- Rung 32 qualifies as a whole (`acceptance/a1-at-n-star.json`).
+
+### Foreign load and the operator's rule (section 9)
+
+- Before each rung, `ops/submit_rung.sh` ran the submitter's `--dry-run`
+  and `--test-only`, then read the whole Slurm queue: every user, every
+  state.
+- It submitted only when the queue was empty. All five checks found it
+  empty (`ops/ladder-queue-checks.log`), so no wait was needed.
+- Each rung was submitted only after the previous one had left the queue
+  (finished 02:27:10, submitted 02:27:50; 02:37:26 then 02:37:55; 02:44:46
+  then 02:45:27; 02:52:34 then 02:53:11 UTC).
+- While a rung ran, nothing else was submitted to Slurm. The operator's
+  own reads were `ssh` polls of `squeue`, `scontrol` and `/proc/stat`,
+  never a Slurm job.
+- `acceptance.foreign_abort` is empty for all five rungs. Every snapshot's
+  `squeue_foreign` is empty: 42, 70, 98, 130 and 162 snapshots
+  (`checks/host-snapshots-ladder.json`). No rung attempt is missing
+  snapshots (`snapshot_problems` is empty).
+
+### Section 12: the concurrency table and the rest
+
+- **Concurrency table.** `acceptance/ladder-concurrency-table.json` (per
+  rung) and `acceptance/ladder-campaigns.json` (per attempt) hold boot and
+  step p50 and p95, the pass rate, excused trials, restarts and calls, the
+  host snapshots, CPU sets, overlay growth, failed sessions and the abort
+  reading.
+- **Session wall time** grows with N:
+  - screenshot sessions, p50 95.3, 101.1, 105.7, 107.7 and 107.3 s at
+    N = 8-40, against 88.4 s in A1's seed-43 job;
+  - accessibility sessions, 214.1, 227.3, 246.7, 255.0 and 256.2 s,
+    against 197.2 s.
+- **Overlay growth** per session (`vm_measurements.overlay_bytes`) is about
+  68 MB in the screenshot setting at every N. In the accessibility setting
+  it is 234, 246, 248, 249 and 259 MB (p50) at N = 8-40, against 198 MB in
+  A1. The maximum is 381 MB.
+- **CPU utilization and steal.** The frozen lane records neither. The
+  operator sampled the host's aggregate `/proc/stat` every 30 s over
+  `ssh`, read-only (`checks/procstat/`, `ops/procstat_summary.py`,
+  `checks/procstat-summary-ladder.json`). These are host-wide, every
+  process included. Reported, not judged.
+  - Busy: 8.0, 15.3, 36.0, 44.2 and 32.8 CPU-equivalents of 208.
+  - Steal: at most 0.02 CPU-equivalents (fraction at most 1e-4).
+  - The 1-minute load average peaked at 12.7, 27.1, 41.7, 54.2 and 63.9.
+- **Restarts.** None in the rungs' 9,077 `/accessibility` calls, so no
+  trial was excused.
+  - One observation retry occurred: rung 40, session 41, `drag_vertical`
+    seq 2. Its `/accessibility` call was delivered on retry, and the trial
+    passed.
+  - Every reset observation was delivered.
+- **Key events read without their state.** The section-12 report
+  (`acceptance/ladder-section12-state-not-observed.json`) covers the
+  14,000 trials that ran. No key event was read without its state, and
+  none lacked Mod2 without a preceding processed press.
+- **Aborted rungs and missing snapshots:** none.
+- **Earlier attempts:** none. Each rung has one attempt
+  (`ops/attempts-ladder.json`).
+
+### A5 after the ladder
+
+`acceptance.a5` was run again over the boot-reset campaign and the counting
+attempts of all 13 acceptance campaigns: A1-A3, A6 and the five rungs, rung
+40's single attempt included.
+
+- It gives `pass: true` with no problems (`acceptance/a5-after-ladder/`).
+- Every ladder receipt shows `System.qcow2` unchanged and no labelled
+  container or volume left.
+- A5 is judged again once A4 and A7 have run.
+
+### How it was run
+
+1. **Export.** The earlier stages' read-only export of `bf99a64` on the host
+   was checked again before the first submission. It matched on tree digest
+   `abbbfe6c...`, mode `dr-xr-xr-x`, no `__pycache__`, no writable entry,
+   and the batch script, `acceptance.py`, `manifest.py`, `driver.py`,
+   renderer, submitter and watcher at their frozen digests.
+   - A fresh local export gave the same digests. It passed `check-chain`
+     (15 rows), `verify` of all three ids, and the pin and admission tests
+     (51 passed) (`checks/ladder-export-and-reproduction.json`).
+2. **Manifests.** `ops/render_ladder.sh` ran the frozen renderer from the
+   export: `ladder --seed 43 --layer L0-fixed --concurrency N --host-root
+   ~/cotcodec-runs/q2-action-path-v2`, with the renderer's default runner
+   CPUs `manifest.runner_cpus(N)`.
+   - It wrote the 5 manifests, each validated against the ledger: r_N = 6,
+     10, 14, 19 and 24, with 20, 34, 48, 64 and 80 sessions.
+   - The same script run locally on the local export wrote 5
+     byte-identical files. No field was edited.
+3. **Submission.** `ops/submit_rung.sh` is `ops/submit.sh` with one change:
+   the quiet-queue check before the submission.
+   - It ran the submitter's `--dry-run` (batch script `3d86820d...`) and
+     `--test-only`, then the queue check, then the submission.
+   - It then started `scripts/record_slurm_end_states.sh` for the job,
+     detached. It caught all five end states (`slurm-state/`).
+   - While each rung ran, the operator watched `scontrol` every 60 s for a
+     state change, a requeue (`Restarts`) or a foreign queue row. There
+     was none.
+4. **Analysis.**
+   - `ops/make_attempts.py` (unchanged) wrote `ops/attempts-ladder.json`
+     from the submission log.
+   - `ops/analyze_ladder.py`, run from the export after each rung, loaded
+     the run directories with `acceptance.load` and called
+     `acceptance.n_star`. That function calls `acceptance.rung`, which
+     calls `foreign_abort` and `snapshot_problems`.
+   - The script wrote the verdict, the section-12 reports, the
+     concurrency table, the per-attempt summaries and A1 at N\*.
+   - Every judgement is the frozen code's, except the A1-at-N\* reading
+     described above.
+5. **Reproduction and run checks.**
+   - The 5 raw run directories (1,240 files, 541 MB) and A1's two were
+     copied to a local scratch directory. Every file's SHA-256 equals its
+     `raw-sha256sums.txt` entry.
+   - The local export under Python 3.13 gave all 5 ladder JSON files and
+     both A5 files byte-identical to the host's (Python 3.10).
+   - `ops/check_runs_ladder.py` (`checks/run-checks-ladder.json`) checks
+     each job:
+     - the manifest equals the rendered one and its canonical digest is
+       the batch record's;
+     - the batch script, tree, git SHA, receipt, campaign, manifest and
+       session-plan digests agree;
+     - the job started after row 15;
+     - no GPU appears in the receipt or the TRES;
+     - `System.qcow2` is unchanged and nothing was left;
+     - Slurm is COMPLETED 0:0 and was never requeued;
+     - the registered shape holds: L0-fixed, seed 43, both settings,
+       attempt 1, r_N, sessions and trials, runner CPUs, vCPUs at most
+       160, one disjoint 4-CPU set per VM inside the allocation, and the
+       runners' set apart.
+   - Every check passes for jobs 1017-1023. Job 1025 fails exactly
+     `batch_end` and `slurm_completed`, its end state above.
+   - The only IPv4 address in those files is the guest VM's internal NAT
+     address in each manifest, as in the earlier stages.
+
+### VM time
+
+The ladder occupied **12.40 VM-hours**, CPU only. This is the sum of each
+session's span from its host snapshot before boot to the one after
+teardown:
+
+| Rung | 8 | 16 | 24 | 32 | 40 |
+|---|---:|---:|---:|---:|---:|
+| VM-hours | 0.86 | 1.55 | 2.36 | 3.22 | 4.41 |
+
+- Section 9 sized the five rungs at 11.0. Rung 40's ten failed boots held a
+  VM for 300 s each, about 0.8 VM-hours.
+- The allocations (run time x N) come to 17.45 VM-slot-hours.
+- v2 has now used 24.00 VM-hours (11.60 before this stage).
+- Wall clock ran from 02:17:29 to 03:03:49 UTC on 2026-10-09.
+- No GPU was requested or used.
+
+### Files (third stage)
+
+| Path | What it is |
+|---|---|
+| `manifests/rendered/ladder-n{08,16,24,32,40}-seed43-a1.yaml` | the 5 manifests as rendered and submitted; `manifests/rendered-sha256sums-ladder.txt`, `checks/local-render-sha256sums-ladder.txt` |
+| `runs/{1017,1019,1021,1023,1025}/` | `manifest.json`, `preflight.txt` (batch record), `receipt.json`, `session_plan.json`, `slurm-<job>.out`, `raw-sha256sums.txt` (every raw file left on the host, 541 MB) |
+| `slurm-state/<job>.txt` | the watcher's `scontrol show job` record of each job |
+| `acceptance/ladder-n-star.json` | the frozen `acceptance.n_star` output: N\*, the N = 1 reference and each rung's `acceptance.rung` verdict |
+| `acceptance/ladder-concurrency-table.json`, `acceptance/ladder-campaigns.json` | the concurrency table and per-attempt summaries |
+| `acceptance/ladder-section12-state-not-observed.json` | each rung's section-12 report |
+| `acceptance/a1-at-n-star.json` | A1 at N\* from rung N\*'s first five repetitions |
+| `acceptance/a5-after-ladder/` | A5 over every acceptance receipt so far |
+| `checks/ladder-export-and-reproduction.json`, `checks/run-checks-ladder.json`, `checks/host-snapshots-ladder.json`, `checks/procstat/`, `checks/procstat-summary-ladder.json` | export, rendering, reproduction and run checks, host snapshots and host CPU samples |
+| `ops/render_ladder.sh`, `ops/submit_rung.sh`, `ops/analyze_ladder.py`, `ops/check_runs_ladder.py`, `ops/procstat_summary.py` | this stage's operator scripts (the first three are byte-identical to the copies that ran on the host) |
+| `ops/submissions.log`, `ops/ladder-queue-checks.log`, `ops/attempts-ladder.json`, `ops/dryrun/ladder-*` | the submission log (all stages), the queue checks, the attempt map and each manifest's dry-run and test-only output |
 
 ## Second stage: acceptance at N = 1 (A5, A1 with C4, A2, A3, A6)
 

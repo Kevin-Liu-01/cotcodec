@@ -1,0 +1,1184 @@
+{
+ "jobs": 5,
+ "problems": [
+  "job 1025: ['batch_end', 'slurm_completed']"
+ ],
+ "ipv4_addresses_in_files_read": {
+  "20.20.20.21": 10
+ },
+ "runs": [
+  {
+   "job": "1017",
+   "label": "ladder-attempt1",
+   "submitted": "2026-10-09T02:17:29Z",
+   "campaign_id": "q2ap-v2-ladder-n08-a1",
+   "n": 8,
+   "reps": 6,
+   "trials": 1200,
+   "sessions": 20,
+   "tres": "cpu=36,mem=58G,node=1,billing=36",
+   "run_time": "00:09:40",
+   "requeue_restarts": "0",
+   "started_at": "2026-10-09T02:17:30+00:00",
+   "finished_at": "2026-10-09T02:27:10+00:00",
+   "cpusets": [
+    {
+     "allocated": "0-35",
+     "runner": "32-35",
+     "vm": "0-3",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-35",
+     "runner": "32-35",
+     "vm": "4-7",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-35",
+     "runner": "32-35",
+     "vm": "8-11",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-35",
+     "runner": "32-35",
+     "vm": "12-15",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-35",
+     "runner": "32-35",
+     "vm": "16-19",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-35",
+     "runner": "32-35",
+     "vm": "20-23",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-35",
+     "runner": "32-35",
+     "vm": "24-27",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-35",
+     "runner": "32-35",
+     "vm": "28-31",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    }
+   ],
+   "failed_checks": []
+  },
+  {
+   "job": "1019",
+   "label": "ladder-attempt1",
+   "submitted": "2026-10-09T02:27:50Z",
+   "campaign_id": "q2ap-v2-ladder-n16-a1",
+   "n": 16,
+   "reps": 10,
+   "trials": 2000,
+   "sessions": 34,
+   "tres": "cpu=72,mem=114G,node=1,billing=72",
+   "run_time": "00:09:36",
+   "requeue_restarts": "0",
+   "started_at": "2026-10-09T02:27:51+00:00",
+   "finished_at": "2026-10-09T02:37:26+00:00",
+   "cpusets": [
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "0-3",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "4-7",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "8-11",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "12-15",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "16-19",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "20-23",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "24-27",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "28-31",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "32-35",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "36-39",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "40-43",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "44-47",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "48-51",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "52-55",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "56-59",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-71",
+     "runner": "64-71",
+     "vm": "60-63",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    }
+   ],
+   "failed_checks": []
+  },
+  {
+   "job": "1021",
+   "label": "ladder-attempt1",
+   "submitted": "2026-10-09T02:37:55Z",
+   "campaign_id": "q2ap-v2-ladder-n24-a1",
+   "n": 24,
+   "reps": 14,
+   "trials": 2800,
+   "sessions": 48,
+   "tres": "cpu=108,mem=170G,node=1,billing=108",
+   "run_time": "00:06:50",
+   "requeue_restarts": "0",
+   "started_at": "2026-10-09T02:37:56+00:00",
+   "finished_at": "2026-10-09T02:44:46+00:00",
+   "cpusets": [
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "0-3",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "4-7",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "8-11",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "12-15",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "16-19",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "20-23",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "24-27",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "28-31",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "32-35",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "36-39",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "40-43",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "44-47",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "48-51",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "52-55",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "56-59",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "60-63",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "64-67",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "68-71",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "72-75",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "76-79",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "80-83",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "84-87",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "88-91",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-107",
+     "runner": "96-107",
+     "vm": "92-95",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    }
+   ],
+   "failed_checks": []
+  },
+  {
+   "job": "1023",
+   "label": "ladder-attempt1",
+   "submitted": "2026-10-09T02:45:27Z",
+   "campaign_id": "q2ap-v2-ladder-n32-a1",
+   "n": 32,
+   "reps": 19,
+   "trials": 3800,
+   "sessions": 64,
+   "tres": "cpu=144,mem=226G,node=1,billing=144",
+   "run_time": "00:07:08",
+   "requeue_restarts": "0",
+   "started_at": "2026-10-09T02:45:28+00:00",
+   "finished_at": "2026-10-09T02:52:34+00:00",
+   "cpusets": [
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "0-3",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "4-7",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "8-11",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "12-15",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "16-19",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "20-23",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "24-27",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "28-31",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "32-35",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "36-39",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "40-43",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "44-47",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "48-51",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "52-55",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "56-59",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "60-63",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "64-67",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "68-71",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "72-75",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "76-79",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "80-83",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "84-87",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "88-91",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "92-95",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "96-99",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "100-103",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "104-107",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "108-111",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "112-115",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "116-119",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "120-123",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-143",
+     "runner": "128-143",
+     "vm": "124-127",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    }
+   ],
+   "failed_checks": []
+  },
+  {
+   "job": "1025",
+   "label": "ladder-attempt1",
+   "submitted": "2026-10-09T02:53:11Z",
+   "campaign_id": "q2ap-v2-ladder-n40-a1",
+   "n": 40,
+   "reps": 24,
+   "trials": 4800,
+   "sessions": 80,
+   "tres": "cpu=180,mem=282G,node=1,billing=180",
+   "run_time": "00:10:38",
+   "requeue_restarts": "0",
+   "started_at": "2026-10-09T02:53:12+00:00",
+   "finished_at": "2026-10-09T03:03:49+00:00",
+   "cpusets": [
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "0-3",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "4-7",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "8-11",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "12-15",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "16-19",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "20-23",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "24-27",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "28-31",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "32-35",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "36-39",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "40-43",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "44-47",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "48-51",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "52-55",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "56-59",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "60-63",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "64-67",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "68-71",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "72-75",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "76-79",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "80-83",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "84-87",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "88-91",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "92-95",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "96-99",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "100-103",
+     "vm_mems": "0",
+     "vm_numa_nodes": [
+      0
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "104-107",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "108-111",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "112-115",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "116-119",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "120-123",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "124-127",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "128-131",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "132-135",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "136-139",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "140-143",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "144-147",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "148-151",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "152-155",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    },
+    {
+     "allocated": "0-179",
+     "runner": "160-179",
+     "vm": "156-159",
+     "vm_mems": "1",
+     "vm_numa_nodes": [
+      1
+     ]
+    }
+   ],
+   "failed_checks": [
+    "batch_end",
+    "slurm_completed"
+   ]
+  }
+ ]
+}

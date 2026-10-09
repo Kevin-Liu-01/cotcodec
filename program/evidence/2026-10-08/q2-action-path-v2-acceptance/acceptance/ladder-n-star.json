@@ -1,0 +1,182 @@
+{
+  "n_star": 32,
+  "program_kill_criterion": true,
+  "rungs": {
+    "8": {
+      "abort_reasons": [],
+      "aborted": false,
+      "boot_p95_s": 18.33,
+      "boots": 20,
+      "earlier_attempts": [],
+      "excused_trials": 0,
+      "guest_server": {
+        "accessibility_calls": 778,
+        "accessibility_calls_counting": 778,
+        "development_rate": {
+          "accessibility_calls": 8114,
+          "interval_95": [
+            3.1202622608195517e-06,
+            0.0006866703710794798
+          ],
+          "rate": 0.00012324377618930243,
+          "restarts": 1
+        },
+        "restarts": 0,
+        "sessions_with_unattributed_restarts": [],
+        "trials_hit": []
+      },
+      "n": 8,
+      "problems": [],
+      "qualifies": true,
+      "state_not_observed": {
+        "by_entry": {},
+        "no_processed_press_before": [],
+        "read_without_state": [],
+        "trials": 1200
+      },
+      "step_p95_s": 2.7136
+    },
+    "16": {
+      "abort_reasons": [],
+      "aborted": false,
+      "boot_p95_s": 20.306,
+      "boots": 34,
+      "earlier_attempts": [],
+      "excused_trials": 0,
+      "guest_server": {
+        "accessibility_calls": 1297,
+        "accessibility_calls_counting": 1297,
+        "development_rate": {
+          "accessibility_calls": 8114,
+          "interval_95": [
+            3.1202622608195517e-06,
+            0.0006866703710794798
+          ],
+          "rate": 0.00012324377618930243,
+          "restarts": 1
+        },
+        "restarts": 0,
+        "sessions_with_unattributed_restarts": [],
+        "trials_hit": []
+      },
+      "n": 16,
+      "problems": [],
+      "qualifies": true,
+      "state_not_observed": {
+        "by_entry": {},
+        "no_processed_press_before": [],
+        "read_without_state": [],
+        "trials": 2000
+      },
+      "step_p95_s": 2.8852
+    },
+    "24": {
+      "abort_reasons": [],
+      "aborted": false,
+      "boot_p95_s": 22.069,
+      "boots": 48,
+      "earlier_attempts": [],
+      "excused_trials": 0,
+      "guest_server": {
+        "accessibility_calls": 1816,
+        "accessibility_calls_counting": 1816,
+        "development_rate": {
+          "accessibility_calls": 8114,
+          "interval_95": [
+            3.1202622608195517e-06,
+            0.0006866703710794798
+          ],
+          "rate": 0.00012324377618930243,
+          "restarts": 1
+        },
+        "restarts": 0,
+        "sessions_with_unattributed_restarts": [],
+        "trials_hit": []
+      },
+      "n": 24,
+      "problems": [],
+      "qualifies": true,
+      "state_not_observed": {
+        "by_entry": {},
+        "no_processed_press_before": [],
+        "read_without_state": [],
+        "trials": 2800
+      },
+      "step_p95_s": 3.1323
+    },
+    "32": {
+      "abort_reasons": [],
+      "aborted": false,
+      "boot_p95_s": 21.841,
+      "boots": 64,
+      "earlier_attempts": [],
+      "excused_trials": 0,
+      "guest_server": {
+        "accessibility_calls": 2464,
+        "accessibility_calls_counting": 2464,
+        "development_rate": {
+          "accessibility_calls": 8114,
+          "interval_95": [
+            3.1202622608195517e-06,
+            0.0006866703710794798
+          ],
+          "rate": 0.00012324377618930243,
+          "restarts": 1
+        },
+        "restarts": 0,
+        "sessions_with_unattributed_restarts": [],
+        "trials_hit": []
+      },
+      "n": 32,
+      "problems": [],
+      "qualifies": true,
+      "state_not_observed": {
+        "by_entry": {},
+        "no_processed_press_before": [],
+        "read_without_state": [],
+        "trials": 3800
+      },
+      "step_p95_s": 3.17
+    },
+    "40": {
+      "abort_reasons": [],
+      "aborted": false,
+      "boot_p95_s": 22.238,
+      "boots": 70,
+      "earlier_attempts": [],
+      "excused_trials": 0,
+      "guest_server": {
+        "accessibility_calls": 2722,
+        "accessibility_calls_counting": 2722,
+        "development_rate": {
+          "accessibility_calls": 8114,
+          "interval_95": [
+            3.1202622608195517e-06,
+            0.0006866703710794798
+          ],
+          "rate": 0.00012324377618930243,
+          "restarts": 1
+        },
+        "restarts": 0,
+        "sessions_with_unattributed_restarts": [],
+        "trials_hit": []
+      },
+      "n": 40,
+      "problems": [
+        "job 1025: Slurm FAILED 3:0",
+        "job 1025: batch script ended with driver_exit=3 labelled_containers_left=0",
+        "job 1025: infra_gates_pass is not true",
+        "rung N=40: the trials run (4200) are not the realized order (4800)"
+      ],
+      "qualifies": false,
+      "state_not_observed": {
+        "by_entry": {},
+        "no_processed_press_before": [],
+        "read_without_state": [],
+        "trials": 4200
+      },
+      "step_p95_s": 3.1725
+    }
+  },
+  "step_p95_n1_s": 2.6944
+}
