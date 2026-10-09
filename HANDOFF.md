@@ -1,11 +1,11 @@
-# Handoff — 2026-10-08 (late)
+# Handoff — 2026-10-09
 
 ## State
 
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 15 rows). Decisions taken
-on Kevin's behalf are D1-D50 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D52 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 4.74 in total.
 
 | Registration | Outcome | Evidence |
@@ -28,16 +28,22 @@ audit certifies "not grossly wrong", not 1% correctness
 - **Q2 action path v2** (frozen, ledger rows 13-15): stage A passed and was
   independently verified (C1-C4; A1 at N = 1, 2,000 of 2,000; A2; A3; A6; A5
   so far; `program/evidence/2026-10-08/q2-action-path-v2-acceptance/`). Stage
-  B is running: the concurrency ladder (no other Slurm job may start during a
-  rung, so nothing else is submitted meanwhile), then A4 and A7 at N*, then
-  A5 over every receipt and the suite's overall verdict.
+  B: the concurrency ladder gave N* = 32 (rung 40 hit the host's inotify
+  limit and is not rerun under attempt 1, D51); A4 (job 1027) and A7 (job
+  1029) ran at N* = 32. Their judgment, A5 over every receipt and the
+  suite's overall verdict are being produced and then independently
+  verified.
 - **Q2 S1a** (`q2-stage1-rescoped-v1`, D47, D49): G0 built, audited and
   re-checked (ready once the action-path suite passes). Its last TBDs (N*,
   the accepted executor, the A1 step p95 reference, A0a's GPU timing) and
   three sign-off slots wait on the suite verdict and on A0a; the OpenCUA
   anchor is unavailable, so S1a runs unanchored with 32 base tasks.
-- **Q3**: K1 v3 paused after its gauntlet's second wave (D50, score 55);
-  the dense pre-check v2 result is Q3's Stage 0 outcome.
+- **Q3**: the dense pre-check v2 result is Q3's Stage 0 outcome. K1 v3
+  (gauntlet 51, then 55) continues under D52: a CPU-only repair of GO's
+  identification (the long-range spill guard is evaluable for about 20% of
+  families), its cross-direction agreement, the decision simulation's
+  additivity and the screen's low decisiveness, then a fresh gauntlet wave.
+  Admission over 8 GPU-h stays Kevin's (D24).
 - **Q1**: Stage 0 closed on the audit-metric study (D46).
 
 ## Waiting on Kevin
@@ -46,7 +52,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D50, the K1 continue-or-stop question (D50), and the outward actions (disclosures
+before their sign-off, review of D1-D52, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 
