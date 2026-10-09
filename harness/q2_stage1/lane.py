@@ -62,6 +62,11 @@ REGISTERED_PURPOSES = ("a0a", "a1")
 EPISODE_IMAGE_ID = "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230"
 EPISODE_TIMEOUT_S = 3600.0
 FIXED_KEYS = ("requeue", "episode_timeout_s", "episode_python")
+# Slurm accounting is off on the host and scontrol forgets a finished job within minutes, so
+# the lane records the GPU job's end itself: after vm.done it polls scontrol this long for a
+# final state (the GPU job ends once its bridge stops).
+GPU_END_WAIT_S = 180.0
+GPU_FINAL_STATES = ("COMPLETED", "FAILED", "CANCELLED", "TIMEOUT", "NODE_FAIL", "OUT_OF_MEMORY")
 OSWORLD_COMMIT = "b138d348256078fa634fc3b73567a7337c793e6b"
 SPLITS = "program/evidence/q2-mutation/splits.json"
 LEDGER = "program/preregistrations/ledger.jsonl"
@@ -349,8 +354,9 @@ def session_two_blocks(a1: Mapping[str, Any], plan: Mapping[str, Any], prior: Pr
 
 def earliest_start(m: Mapping[str, Any]) -> float | None:
     """A session-2 A1 job starts at least 12 hours after the later session-1 job ends
-    (section 5.5): the later S1 lane receipt's ``t_end`` plus ``plan.S2_GAP_H``. The receipts
-    are the ones ``check_prior_jobs`` verified by digest."""
+    (section 5.5): the later of each S1 pair's ends (the lane's ``t_end`` and its GPU job's
+    recorded EndTime), plus ``plan.S2_GAP_H``. The receipts are the ones
+    ``check_prior_jobs`` verified by digest."""
     from harness.q2_stage1 import plan as P
 
     a1 = m.get("a1") or {}
@@ -360,7 +366,8 @@ def earliest_start(m: Mapping[str, Any]) -> float | None:
     for item in a1.get("prior_jobs") or []:
         if str(item.get("job", "")).endswith("-S1"):
             receipt = json.loads(Path(item["receipt"]["path"]).read_text(encoding="utf-8"))
-            ends.append(float(receipt["t_end"]))
+            gpu_end = (receipt.get("gpu_job_end") or {}).get("end_epoch")
+            ends.append(max(float(receipt["t_end"]), float(gpu_end or 0.0)))
     _require(len(ends) == len(P.SIZES), "a session-2 job needs both session-1 receipts")
     return max(ends) + P.S2_GAP_H * 3600
 
@@ -541,6 +548,7 @@ class Lane:
         self.slurm_job = slurm_job or slurm_job_info
         self.gpu_job_id: str | None = None
         self.gpu_job: dict[str, Any] | None = None
+        self.gpu_job_end: dict[str, Any] | None = None
         self.engine_ready: dict[str, Any] | None = None
         self.m = cfg.manifest
         self.docker = docker or DockerOps()
@@ -602,6 +610,26 @@ class Lane:
         start = (self.gpu_job or {}).get("start_epoch")
         base = float(start) if isinstance(start, int | float) else float(status["t_start"])
         self.usr1_epoch = base + engine["gpu_cap_min"] * 60 - 180
+
+    def wait_gpu_end(self, wait_s: float = GPU_END_WAIT_S, poll_s: float = 5.0) -> dict | None:
+        """The GPU job's final ``scontrol`` state and EndTime, polled after vm.done (the
+        realized-cost input of section 9 item 10); None when there is no GPU job or Slurm did
+        not report a final state in time (the bridge's ``stopped.json`` then stands in)."""
+        if self.gpu_job_id is None:
+            return None
+        end = time.monotonic() + wait_s
+        while True:
+            try:
+                info = self.slurm_job(self.gpu_job_id)
+            except Exception as exc:  # noqa: BLE001 - forgotten or unreachable: recorded
+                return {"job_id": self.gpu_job_id, "error": f"{exc}"[:300]}
+            if info.get("state") in GPU_FINAL_STATES:
+                return {"job_id": self.gpu_job_id, **info}
+            if time.monotonic() > end:
+                # A running job's EndTime is its projected limit, not an end: dropped.
+                seen = {k: v for k, v in info.items() if not k.startswith("end_")}
+                return {"job_id": self.gpu_job_id, "error": "no final state", **seen}
+            time.sleep(poll_s)
 
     def check_registered_engine(self, status: Mapping[str, Any]) -> None:
         """A0a and A1 dispatch only against the registered engine: the GPU job's argv is
@@ -878,6 +906,7 @@ class Lane:
             )
         receipt.update(
             gpu_job=self.gpu_job, engine_ready=self.engine_ready,
+            bridge_dir=str(self.engine_dir) if self.engine_dir is not None else None,
             first_dispatch=self.first_dispatch, usr1_epoch=self.usr1_epoch,
         )  # fmt: skip
         receipt.update(
@@ -885,10 +914,20 @@ class Lane:
             records=len(self.records), fill=self.fill_log, snapshots=self.snapshots,
             statuses=dict(collections.Counter(r.get("status") for r in self.records)),
         )  # fmt: skip
-        (self.cfg.run_dir / "lane-receipt.json").write_text(
-            json.dumps(receipt, indent=1, sort_keys=True), encoding="utf-8"
-        )
+        self.write_receipt(receipt)
+        # The GPU job's end comes after vm.done; the receipt is written first so a VM job
+        # that reaches its own limit while waiting still leaves one (section 9 item 10).
+        self.gpu_job_end = self.wait_gpu_end()
+        if self.gpu_job_end is not None:
+            receipt["gpu_job_end"] = self.gpu_job_end
+            self.write_receipt(receipt)
         return receipt
+
+    def write_receipt(self, receipt: Mapping[str, Any]) -> None:
+        path = self.cfg.run_dir / "lane-receipt.json"
+        tmp = path.with_name(f".{path.name}.tmp")
+        tmp.write_text(json.dumps(receipt, indent=1, sort_keys=True), encoding="utf-8")
+        os.replace(tmp, path)
 
 
 def parse_time_limit(value: str) -> int | None:
@@ -917,10 +956,11 @@ def parse_scontrol(text: str) -> dict[str, Any]:
                            "start_epoch": None}  # fmt: skip
     if fields.get("TimeLimit"):
         out["time_limit_min"] = parse_time_limit(fields["TimeLimit"])
-    start = fields.get("StartTime", "")
-    if re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", start):
-        out["start_epoch"] = time.mktime(time.strptime(start, "%Y-%m-%dT%H:%M:%S"))
-        out["start_time"] = start
+    for key, name in (("start", "StartTime"), ("end", "EndTime")):
+        value = fields.get(name, "")
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", value):
+            out[f"{key}_epoch"] = time.mktime(time.strptime(value, "%Y-%m-%dT%H:%M:%S"))
+            out[f"{key}_time"] = value
     return out
 
 

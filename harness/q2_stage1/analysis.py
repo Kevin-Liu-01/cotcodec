@@ -11,8 +11,8 @@ each A1 job's realized cost (DR4, P5), built from the lane records by::
 
     python -m harness.q2_stage1.analysis costs --run-dir A1_RUN [--run-dir ...] --out costs.json
 
-(section 9 item 10: the GPU job's Slurm elapsed hours over the job's episodes that ran to an
-end, ``realized_costs``). The primary analysis
+(section 9 item 10: the GPU job's Slurm elapsed hours, as the VM lane recorded it, over the
+job's episodes that ran to an end; ``realized_costs``, ``gpu_elapsed``). The primary analysis
 set is the base, fixed at the freeze; base plus the extension blocks completed in all four
 A1 jobs is the registered secondary (the fill rule's block count depends on episode
 lengths, so on outcomes).
@@ -39,6 +39,7 @@ N_BOOT = 10_000
 N_RANDOMIZATION = 10_000
 SEED = 42
 NOT_ANCHORED = "not externally anchored"
+GPU_FINAL_STATES = ("COMPLETED", "FAILED", "CANCELLED", "TIMEOUT", "NODE_FAIL", "OUT_OF_MEMORY")
 
 
 def _f(x: Any) -> Any:
@@ -426,8 +427,9 @@ def realized_costs(
     * Episodes: the job's episode attempts that ran to an end, ``scored`` or
       ``infrastructure`` (first attempts and re-queues, base and fill blocks); a
       ``cap_truncated`` attempt is not one.
-    * GPU-h per episode: the GPU job's Slurm elapsed time (``sacct`` ElapsedRaw: start to
-      end, engine start-up included) in hours over those episodes.
+    * GPU-h per episode: the GPU job's Slurm elapsed time (``gpu_elapsed_s``, from
+      ``gpu_elapsed``: start to end, engine start-up included) in hours over those
+      episodes.
     * Per harness: both harnesses share one engine, so the job's GPU-h is split between them
       in proportion to their summed slot occupancy (dispatch to teardown) over those
       episodes, then divided by each harness's episodes.
@@ -485,27 +487,36 @@ def costs_by_size(costs: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
     return out
 
 
-def sacct_elapsed_s(job_id: str) -> float:
-    """The GPU job's Slurm elapsed seconds (``sacct -X ElapsedRaw``), on the host."""
-    import subprocess
+def gpu_elapsed(receipt: Mapping[str, Any], stopped: Mapping[str, Any] | None) -> dict:
+    """The GPU job's Slurm elapsed seconds from the VM lane's receipt (section 9 item 10).
 
-    done = subprocess.run(["sacct", "-j", str(job_id), "-X", "-n", "-P", "-o", "ElapsedRaw"],
-                          capture_output=True, text=True, timeout=60, check=True)  # fmt: skip
-    return float(done.stdout.split()[0])
+    Slurm accounting is off on the host, so ``sacct`` cannot give it. The lane records the
+    GPU job's ``scontrol`` StartTime when its engine is ready and its EndTime after vm.done:
+    elapsed is EndTime minus StartTime. When the lane could not see the end (Slurm forgot
+    the job, or no final state came in time), the bridge's ``stopped.json`` ``t_end`` (the
+    workload's end, seconds before the job's) stands in for EndTime.
+    """
+    start = (receipt.get("gpu_job") or {}).get("start_epoch")
+    if not isinstance(start, int | float):
+        raise ValueError("the lane receipt lacks the GPU job's Slurm start")
+    ended = receipt.get("gpu_job_end") or {}
+    end = ended.get("end_epoch")
+    final = ended.get("state") in GPU_FINAL_STATES and not ended.get("error")
+    if final and isinstance(end, int | float):  # a running job's EndTime is only its limit
+        return {"gpu_elapsed_s": float(end) - float(start), "source": "scontrol EndTime"}
+    t_end = (stopped or {}).get("t_end")
+    if isinstance(t_end, int | float):
+        return {"gpu_elapsed_s": float(t_end) - float(start), "source": "bridge stopped.json"}
+    raise ValueError("neither the GPU job's EndTime nor the bridge's stop time is recorded")
 
 
 def costs_main(argv: Sequence[str]) -> int:
     parser = argparse.ArgumentParser(description="S1a realized cost per A1 job (DR4, P5)")
     parser.add_argument("--run-dir", type=Path, action="append", required=True)
-    parser.add_argument(
-        "--elapsed", action="append", default=[],
-        help="JOB=SECONDS, the GPU job's Slurm elapsed time (else sacct)",
-    )  # fmt: skip
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.out.exists():
         raise SystemExit(f"{args.out} exists; cost files are never overwritten")
-    given = dict(item.split("=", 1) for item in args.elapsed)
     out: dict[str, Any] = {}
     for run_dir in args.run_dir:
         manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
@@ -513,12 +524,20 @@ def costs_main(argv: Sequence[str]) -> int:
         job = f"A1-{a1.get('size')}-{a1.get('session')}"
         receipt = json.loads((run_dir / "lane-receipt.json").read_text(encoding="utf-8"))
         rows = R.read_jsonl(run_dir / "episodes.jsonl")
-        elapsed = given.get(job)
-        if elapsed is None:
-            elapsed = sacct_elapsed_s(str((receipt.get("gpu_job") or {})["job_id"]))
-        out[job] = realized_costs(
-            rows, job=job, v=int(manifest["vm"]["concurrency"]), gpu_elapsed_s=float(elapsed)
+        stopped_path = Path(str(receipt.get("bridge_dir") or "")) / "stopped.json"
+        stopped = (
+            json.loads(stopped_path.read_text(encoding="utf-8"))
+            if receipt.get("bridge_dir") and stopped_path.is_file()
+            else None
         )
+        elapsed = gpu_elapsed(receipt, stopped)
+        out[job] = {
+            **realized_costs(
+                rows, job=job, v=int(manifest["vm"]["concurrency"]),
+                gpu_elapsed_s=elapsed["gpu_elapsed_s"],
+            ),
+            "gpu_elapsed_source": elapsed["source"],
+        }  # fmt: skip
     args.out.write_text(json.dumps(out, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     return 0
 
