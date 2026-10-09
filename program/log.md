@@ -3076,7 +3076,8 @@ they say so.)
   Every gate holds, so nothing sends the draft back to review. Section 6.2's table and
   section 22 record them.
 - GPU-h: 0.1144 physical (1032 1 s, 1033 47 s, 1039 364 s); 31 minutes charged at caps
-  (D22). The program total is 4.852.
+  (D22). The program total is 4.852 on this branch (4.9088 once `main`'s reviewer job
+  1031, 0.0564 GPU-h, is merged in; corrected 2026-10-09).
 - Left open: the status line, the frozen plan digest (both written at the freeze) and the
   three section 18 sign-offs (two Kevin's, one the program's decision id).
 - Tests: S1a 282 passed, 1 skipped locally (12 new). On the host, a fresh export of
@@ -3091,3 +3092,81 @@ they say so.)
     byte as they ran.
 - Evidence: `program/evidence/2026-10-09/q2-stage1-prefreeze/`. Not done: no freeze, no
   push. Next: a fresh pre-freeze audit.
+
+## 2026-10-09 — Q2 S1a: the fresh pre-freeze audit answered, Kevin's sign-offs filled (branch `stage0/q2-stage1-rescope`, draft, not frozen)
+
+- Two fresh auditors read the draft at `82ff505`. Both reproduced every verdict and
+  constant from the raw host records. One found the draft ready to freeze except for the
+  sign-offs. The other returned two blocking items. I fixed both and every non-blocking
+  item that asked for a change, and rejected none. No GPU job ran and no A0 job is owed.
+- Merged `main` twice: D54 (K1 v3 wave 3) and D55 (Kevin's S1a rulings). The program total
+  is 4.9088 GPU-h: main's reviewer job 1031 (0.0564) plus S1a's 0.1144. Job 1031 ran before
+  O1, with the queue empty. The earlier S1a entry's "4.852" was the branch total before the
+  merge; it is corrected in place.
+- Blocking 1, the frozen-plan slot. `lane.load_frozen_plan` admits an A1 manifest only if
+  the registration holds G0 item 10's label followed by the plan file's `plan_sha256` field
+  in backticks. The file's SHA-256 (`a5f0aadc...`), printed beside it, or a value without
+  backticks would make the lane refuse every A1 job under the frozen id.
+  - G0 item 10 now states exactly what the freeze writes: the placeholder, and nothing else
+    on its line, becomes the `plan_sha256` of
+    `program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json` in backticks
+    (`6a3f0219...`).
+  - A new prereg test fills the slot on a scratch copy, freezes it into a copy of the
+    ledger and has the lane accept an A1-9B-S1 manifest rendered from the plan. It checks
+    that the lane refuses the two wrong forms and the frozen copy once edited. After the
+    freeze it checks the real slot.
+  - I ran the same with the CLIs on a scratch copy of the tree: freeze to row 16,
+    `check-chain` (16 rows), `verify`, the A1 renderer and `lane validate` (128 base
+    slots, 11 fill blocks, T_A1 110, 120 min, 90 CPUs). With one line appended to the
+    frozen copy, `lane validate` and `verify` both refuse. The real ledger is unchanged.
+- Blocking 2, D53 (iii)'s "very slow" clause. Section 7.3 now quotes D53 (iii) verbatim and
+  states S1a's reading, with no code change:
+  - an undelivered observation is a loss;
+  - every attempt is bounded: a screenshot at 10 s, a checker read at the pinned 120 s or
+    else at 150 s, then a transport loss;
+  - an observation delivered slowly or on a retry is counted per episode as
+    infrastructure and reported per cell beside the losses, and the episode is scored.
+  - The program's sign-off decision must state whether this reading is accepted.
+    Otherwise the draft goes back to review: a registered delay limit would change the
+    driver after A0 and so repeat A0a.
+  - I checked the pinned OSWorld tree on the host (read only): the pool and dev tasks'
+    checkers read the guest only through `/file` and `/execute`.
+- Lane admission (readiness note 8), now in code. The lane admitted A1 once the ledger had
+  any row for the id. `lane.frozen_registration` now makes the checks of `preregister.py
+  verify` and `check-chain`: the chain holds, the row names the registration, and the
+  file's SHA-256 equals the row's. `validate_manifest` requires this for A1 and ANC at
+  validate, submit and job start. The GPU half is rendered only from a validated VM
+  manifest, so it is refused too.
+  - O2 has no lane manifest. Before O2 the operator runs `verify` and `check-chain`
+    (section 5.5).
+  - New test: an edited registration refuses A1, ANC and the GPU half's rendering. A row
+    moved to the edited digest breaks the chain, and a row naming only the id is refused.
+    The frozen-tree fixture now freezes with `preregister.freeze`.
+- Code changed after A0a (disclosed in section 22): `lane.py` (post-freeze admission only)
+  and the plan renderer's docstring. Neither changes what A0a ran or measured. The VM
+  manifest job 1037 ran still validates unchanged, and freeze mode still re-renders
+  `plan-a0a.json` byte for byte.
+- Sign-offs. Kevin's two slots in section 18 are filled from D55: item 17 accepted,
+  including the unanchored read; G0 item 5's offline-setup decisions accepted. The
+  program's slot (items 1-16 and 19-27; the lead-in now agrees) stays open for the
+  orchestrator's decision id. That decision also states whether section 7.3's reading of
+  D53 (iii) is accepted.
+- Non-blocking fixes:
+  - stale T_A1 numbers (6.3 now 160 VM-h and 110 min; the floor at 110 is about 721 s);
+  - D49 (i) quoted exactly;
+  - 7.2's transport label follows `driver.observation_loss_kind`;
+  - the D11 pointer in section 2;
+  - "whose `step_p95_n1_s` equals" in G0 item 1;
+  - the three typed renderer inputs named in 3.2 and in the renderer's docstring;
+  - the concurrency gate's looseness disclosed;
+  - the O2 receipt and overlay rule;
+  - evidence README notes (the two manifest digests, the empty test-only file, the host's
+    registry container, checked on the host);
+  - the section 22 table that a blank line had split.
+- `state.json`: the S1a status, next action and audit fields are refreshed. The S1a entry
+  leaves Kevin's pending list, since D55 ruled on both of his items. `HANDOFF.md` is left to
+  `main`.
+- Tests: S1a 284 passed, 1 skipped locally (2 new tests). Full local suite (macOS):
+  2,521 passed, 88 skipped. ruff is clean on `harness/q2_stage1`, `tests` and `scripts`;
+  whole-repo ruff's 251 findings are all in `main`'s K1 v3 evidence scripts.
+- Not done: no freeze, no push. Next: the program's sign-off, then the freeze.
