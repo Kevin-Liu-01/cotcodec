@@ -1,0 +1,20 @@
+{
+  "acceptance_campaigns_read": [
+    "q2ap-v2-a1-l0fixed-s43-a1",
+    "q2ap-v2-a1-l0fixed-s44-a1",
+    "q2ap-v2-a2-hga-a1",
+    "q2ap-v2-a2-hoswfixed-a1",
+    "q2ap-v2-a3-hga-a1",
+    "q2ap-v2-a3-hoswfixed-a1",
+    "q2ap-v2-a3-l0fixed-a1",
+    "q2ap-v2-a6-canary-a1",
+    "q2ap-v2-ladder-n08-a1",
+    "q2ap-v2-ladder-n16-a1",
+    "q2ap-v2-ladder-n24-a1",
+    "q2ap-v2-ladder-n32-a1",
+    "q2ap-v2-ladder-n40-a1"
+  ],
+  "earlier_attempts": [],
+  "pass": true,
+  "problems": []
+}

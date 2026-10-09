@@ -1,0 +1,1155 @@
+[
+  {
+    "accessibility_calls": 39036,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 23.101,
+      "n": 516,
+      "p50": 20.409,
+      "p95": 21.01
+    },
+    "campaign_id": "q2ap-v2-a7-l0fixed-n32-a1",
+    "counting_problems": [],
+    "cpusets": [
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "0-3",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "4-7",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "8-11",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "12-15",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "16-19",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "20-23",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "24-27",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "28-31",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "32-35",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "36-39",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "40-43",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "44-47",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "48-51",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "52-55",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "56-59",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "60-63",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "64-67",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "68-71",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "72-75",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "76-79",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "80-83",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "84-87",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "88-91",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "92-95",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "96-99",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "100-103",
+        "vm_mems": "0",
+        "vm_numa_nodes": [
+          0
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "104-107",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "108-111",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "112-115",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "116-119",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "120-123",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      },
+      {
+        "allocated": "0-143",
+        "runner": "128-143",
+        "vm": "124-127",
+        "vm_mems": "1",
+        "vm_numa_nodes": [
+          1
+        ]
+      }
+    ],
+    "criterion": "A7",
+    "earlier_attempts": [],
+    "excused_trials": [],
+    "failed_trials": [
+      {
+        "cell": "click_burst_5",
+        "cycle": 193,
+        "infra": [
+          "accessibility",
+          "reset_observation"
+        ],
+        "reasons": [
+          "infra: accessibility",
+          "infra: reset_observation"
+        ],
+        "restart_only": false,
+        "seq": 0,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_menu",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 1,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "type_long_500",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 2,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 3,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "click_triple_left",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 4,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "chord_shift_alone",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 5,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_pagedown",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 6,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_arrow_right",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 7,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "scroll_at_offcenter_position",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 8,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "click_then_type",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 9,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "type_symbols_shifted",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 10,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_f12",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 11,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "type_single_char",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 12,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "chord_ctrl_a",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 13,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_esc",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 14,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "click_corner_bottomright",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 15,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "chord_super_d",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 16,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "drag_to_corner",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 17,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_f5",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 18,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "click_ctrl_shift_right",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 19,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "type_digits",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 20,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "drag_short",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 21,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "type_multiline_tabs",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 22,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "scroll_down_1",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 23,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_arrow_left",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 24,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "scroll_down_then_up_net_zero",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 25,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_home",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 26,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_space_chord",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 27,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_delete",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 28,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "click_double_slow",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 29,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "scroll_down_10",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 30,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_f12",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 31,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "scroll_down_then_up_net_zero",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 32,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_home",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 33,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_arrow_up",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 34,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "drag_vertical",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 35,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_tab",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 36,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "move_only",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 37,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_insert",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 38,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "chord_alt_f4",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 39,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "chord_shift_arrow_left",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 40,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "type_single_char",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 41,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "drag_to_corner",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 42,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "type_long_200",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 43,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "chord_ctrl_shift_arrow",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 44,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "scroll_up_3",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 45,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "caps_lock_roundtrip",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 46,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "drag_slow_small",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 47,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "type_rtl",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 48,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "chord_super_d",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_pageup",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 51,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_end",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 52,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "scroll_at_offcenter_position",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 53,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "chord_ctrl_c",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 54,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_pagedown",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 55,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "click_ctrl_left",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 56,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "key_arrow_left",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 57,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "scroll_ctrl_down_3",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 58,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "scroll_shift_down_3",
+        "cycle": 193,
+        "infra": [
+          "accessibility"
+        ],
+        "reasons": [
+          "infra: accessibility"
+        ],
+        "restart_only": false,
+        "seq": 59,
+        "setting": "screenshot+a11y"
+      }
+    ],
+    "finished_at": 1791526851.4270449,
+    "gating_trials": 30960,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "host": {
+      "foreign_abort_reading_reported_only": [],
+      "foreign_jobs_seen": [],
+      "max_containers_ours": 62,
+      "max_containers_running_total": 63,
+      "max_loadavg_1min": 58.56,
+      "session_snapshots": 1032,
+      "snapshots": 1034
+    },
+    "infra_gates_pass": true,
+    "infra_types": {
+      "accessibility": 59,
+      "reset_observation": 1
+    },
+    "job": "1029",
+    "jobs": [
+      "1029"
+    ],
+    "labelled_containers_left": [],
+    "leaked_volumes": [],
+    "manifest_json_sha256": "747f861be3d36d9466f0460e8ebd9c073249feb55a4b449e6edbaeeda43a5c8a",
+    "n": 32,
+    "no_gpu_all": true,
+    "observation_retries": {
+      "accessibility": 11
+    },
+    "overlay_bytes_per_session": {
+      "max": 368246784,
+      "n": 516,
+      "p50": 248381440.0
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "daf0445aac0f53fb224549c9d0d3ca7146e546ce22eed62d750e19ee6119f6ff",
+    "registered_shape": {
+      "attempt_1": true,
+      "n_is_n_star": true,
+      "runner_cpus_registered": true,
+      "vm_vcpus": 128,
+      "vm_vcpus_at_most_160": true
+    },
+    "reset_observations_not_delivered": [
+      193
+    ],
+    "reset_observations_retried": {},
+    "restarts": 0,
+    "runner_cpus": 16,
+    "session_errors": [],
+    "session_range": null,
+    "sessions": 516,
+    "sessions_planned": 516,
+    "settings": [
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "snapshot_problems_reported_only": [],
+    "started_at": 1791522032.811748,
+    "step_s": {
+      "max": 13.473,
+      "n": 38520,
+      "p50": 2.6275,
+      "p95": 3.4369
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 30960,
+    "trials_pass": 30901,
+    "trials_planned": 30960,
+    "unreadable": []
+  }
+]

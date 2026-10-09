@@ -1,0 +1,37 @@
+{
+ "1017": {
+  "foreign_jobs_seen": [],
+  "max_containers_ours": 14,
+  "max_containers_running_total": 15,
+  "max_loadavg_1min": 12.71,
+  "snapshots": 42
+ },
+ "1019": {
+  "foreign_jobs_seen": [],
+  "max_containers_ours": 30,
+  "max_containers_running_total": 31,
+  "max_loadavg_1min": 27.11,
+  "snapshots": 70
+ },
+ "1021": {
+  "foreign_jobs_seen": [],
+  "max_containers_ours": 46,
+  "max_containers_running_total": 47,
+  "max_loadavg_1min": 41.72,
+  "snapshots": 98
+ },
+ "1023": {
+  "foreign_jobs_seen": [],
+  "max_containers_ours": 62,
+  "max_containers_running_total": 63,
+  "max_loadavg_1min": 54.21,
+  "snapshots": 130
+ },
+ "1025": {
+  "foreign_jobs_seen": [],
+  "max_containers_ours": 78,
+  "max_containers_running_total": 79,
+  "max_loadavg_1min": 63.92,
+  "snapshots": 162
+ }
+}

@@ -2778,3 +2778,131 @@ they say so.)
   the manifests, run, receipt and Slurm records, verdicts, section-12
   reports, summaries, checks, raw SHA-256 lists and operator scripts.
 - Not run: the ladder, A4 and A7. Nothing pushed or merged.
+
+## 2026-10-09 — Q2 action-path v2 concurrency ladder operated (branch `ops/q2-action-path-v2`): N* = 32; rung 40 did not count (host inotify limit), rerun held
+
+- Ran from the earlier stages' read-only export of `bf99a64` (tree
+  `abbbfe6c`), checked again first.
+  - A fresh local export passed `check-chain` (15 rows), `verify` of all
+    three registrations and the pin and admission tests (51 passed).
+  - The frozen renderer (`ladder --concurrency N`, given the host root)
+    wrote the 5 rung manifests. All 5 reproduce byte for byte locally, and
+    none was edited.
+  - r_N was 6, 10, 14, 19 and 24, with 20, 34, 48, 64 and 80 sessions.
+    Runner CPUs were 4-20, and the VMs used at most 160 vCPUs.
+- Ran rungs 8, 16, 24, 32 and 40 in that order, attempt 1, one rung at a
+  time (jobs 1017, 1019, 1021, 1023 and 1025), 02:17-03:04 UTC.
+  - Each rung was submitted only after an empty whole-queue check
+    (`ops/submit_rung.sh`). Nothing else was submitted while a rung ran.
+  - No foreign Slurm job appears in any of the 502 host snapshots, so
+    `foreign_abort` is empty for every rung.
+  - No requeue: every record shows `Requeue=1 Restarts=0`.
+- Rungs 8-32 qualify. Each ended `COMPLETED` 0:0 and passed every trial
+  (9,800 of 9,800).
+  - Boot p95 was 18.3-22.1 s, against a limit of 180.
+  - Step p95 was 2.714, 2.885, 3.132 and 3.170 s, against a limit of 5.389
+    (2 x A1's 2.694).
+  - There were no restarts, so no trial was excused. The rungs'
+    `/accessibility` calls were exactly the registered counts.
+- Rung 40 (job 1025) did not count: `FAILED` 3:0, `driver_exit=3`,
+  infrastructure gates false.
+  - 10 of its 80 cold boots served no screenshot within 300 s: 5 in each
+    setting, and 600 trials were not run.
+  - In each of those VM containers, `dnsmasq` failed with "failed to
+    create inotify: Too many open files". The VM fell back to usermode
+    networking, and the guest server's port never opened.
+  - The host's `fs.inotify.max_user_instances` is 128. About 35 concurrent
+    VM containers get `dnsmasq`.
+  - The 4,200 trials that did run all passed.
+- **N\* = 32** by `acceptance.n_star`, so the program kill criterion
+  applies (N\* < 40).
+  - A1 at N\* passes: rung 32's first five repetitions passed 1,000 of
+    1,000 trials (860 gating).
+- Section 6.1 allows rung 40 one rerun, because it did not count. **It was
+  not submitted.**
+  - Under the same host limit, a rerun would fail the same way and use up
+    the rung's last attempt. A7 runs at attempt 1's N\* and is never judged
+    again.
+  - Raising the limit needs root.
+  - Kevin decides: keep N\* = 32, or have an admin raise the limit and then
+    rerun rung 40 once, before A4 and A7.
+- Reported, not judged:
+  - session wall time grows with N, by up to 30%;
+  - overlay growth is about 68 MB per screenshot session and 234-259 MB per
+    accessibility session;
+  - the host was 8-44 CPU-equivalents busy, with steal at most 1e-4
+    (operator `/proc/stat` samples);
+  - one accessibility retry (rung 40) was delivered on retry;
+  - no key event was read without its state, over 14,000 trials.
+- A5 over all 13 acceptance campaigns' counting receipts plus the
+  boot-reset campaign still passes.
+- All ladder and A5 JSON reproduces byte for byte locally from the raw
+  records (1,240 files, SHA-256 checked) under Python 3.13 (host 3.10).
+  - The run checks pass for 1017-1023, and for 1025 except its end state.
+- 12.40 VM-hours occupied, CPU only (17.45 allocated; sized 11.0). That
+  brings v2 to 24.00 VM-hours. No GPU.
+- Evidence: the third-stage section of
+  `program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md`, with
+  the manifests, run, receipt and Slurm records, the n_star and A1-at-N\*
+  verdicts, the concurrency table, section-12 reports, checks, raw SHA-256
+  lists and operator scripts.
+- Not run: rung 40's rerun, A4 and A7. Nothing pushed or merged.
+
+## 2026-10-09 — Q2 action-path v2 volume campaigns operated (branch `ops/q2-action-path-v2`): A4, A7 and A5 PASS; A1-A6 hold, Stage 1 may start; A7 holds
+
+- Ran A4 and A7 at attempt 1's N\* = 32 (D51), attempt 1, each as one job
+  from the same read-only export of `bf99a64` (tree `abbbfe6c...`).
+  - The renderer's worst-case budgets (1,350 and 660 min) fit the lane's
+    24 h, so neither campaign was split into session ranges.
+  - Each was submitted only on an empty whole-queue check
+    (`ops/submit_volume.sh`). No foreign Slurm job appears in any of the
+    3,172 host snapshots.
+  - A4 (job 1027) ran 03:21:55-04:59:50 UTC; A7 (job 1029) ran
+    05:00:32-06:20:52 UTC. Both ended `COMPLETED` 0:0 by the watcher
+    and the batch record, and neither was requeued (`Restarts=0`).
+  - All 1,584 cold boots got `dnsmasq` and served a screenshot; the
+    inotify limit that failed rung 40 was not reached at N = 32.
+- **A4 PASS.** 64,028 of 64,028 trials passed, over all 86 G entries in
+  1,068 sessions.
+  - No trial was excused, and there were 0 restarts in 36,515
+    `/accessibility` calls.
+  - Each of the seven action classes got 10,148-10,216 executed actions.
+    So each class's per-action failure rate is at most 5 x 10^-4 and the
+    per-boot rate at most 0.47%, together at family-wise 95%.
+- **A7 PASS.** 0 restarts in 39,036 `/accessibility` calls (exactly the
+  plan's; the cap does not bind). The exact upper 95% bound is 7.67 x 10^-5
+  per call, against 5 x 10^-4.
+- **A5 PASS (final).** Over the boot-reset campaign and the counting
+  receipts of all 15 acceptance campaigns (A1-A4, A6, A7 and the five
+  rungs), `System.qcow2` was unchanged and nothing was left.
+- **Overall (section 7): A1-A6 all hold, so Stage 1 may start; A7 holds, so
+  Stage-1 episodes may use the screenshot-plus-accessibility setting.**
+  N\* = 32 < 40, so the program kill criterion applies: cut the Stage-1
+  task count before adding GPUs.
+- Reported, not judged: in one A7 session (193), the guest server answered
+  every `/accessibility` call with HTTP 500 for the whole boot, without
+  restarting.
+  - 59 of its 60 trials failed with `infra: accessibility`. A7 counts
+    restarts only, so it does not count this.
+  - It is 1 of 1,245 accessibility-setting boots across the acceptance
+    suite (exact upper 95% bound 3.8 x 10^-3 per boot). No other session
+    lost a tree; 17 calls were delivered on retry.
+  - Had it struck A4, A4 would have failed. Stage 1 counts restarts per
+    episode and would miss it, so the Stage-1 preregistration should count
+    undelivered trees per episode too.
+- Reported, not judged: one A4 step took 127.7 s, because its
+  `/accessibility` call first timed out (the retry delivered it, and the
+  trial passed). No key event was read without its state in either
+  campaign.
+- All A4, A7 and A5 JSON reproduces byte for byte locally under Python 3.13
+  (host 3.10), from raw records whose 7,928 files were SHA-256 checked. The
+  run checks pass for both jobs.
+- 85.12 VM-hours occupied, CPU only (A4 49.21, A7 35.92; sized 44.0 and
+  31.1). That brings v2 to 109.12 VM-hours (sized 98.4). No GPU.
+- Evidence: the fourth-stage section of
+  `program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md`, with
+  the manifests, run, receipt and Slurm records, the A4, A7 and final A5
+  verdicts, section-12 reports, checks, raw SHA-256 lists and operator
+  scripts.
+- Not done: `program/state.json` and `HANDOFF.md` are not updated, and
+  nothing is pushed or merged.

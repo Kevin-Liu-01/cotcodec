@@ -1,0 +1,56 @@
+{
+ "stage": "the concurrency ladder, rungs N = 8, 16, 24, 32 and 40, attempt 1 (jobs 1017-1025)",
+ "export_commit": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+ "why_this_commit": "the export the validity controls and the N = 1 acceptance stage ran from (the commit that records ledger row 15)",
+ "local_export": {
+  "how": "git archive bf99a64 | tar -x into the session scratch directory, again for this stage",
+  "preregister_check_chain": {
+   "rows": 15,
+   "status": "PASS"
+  },
+  "preregister_verify": [
+   "q2-action-path-v2",
+   "q2-action-path-v2-inputs",
+   "q2-action-path-v2-executor"
+  ],
+  "pins_and_admission_tests": "uv run --locked --extra dev pytest -q -p no:cacheprovider tests/test_q2_prereg_inputs.py tests/test_q2_acceptance_admission.py in the export: 51 passed",
+  "source_tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23"
+ },
+ "host_export": {
+  "path": "~/cotcodec-runs/q2-action-path-v2/src/bf99a645c3782b2c59a75b6f463461b2515d0d97 (the earlier stages' export, unchanged; never ~/cotcodec)",
+  "checked_before_the_first_submission": {
+   "source_tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+   "mode": "dr-xr-xr-x",
+   "pycache_dirs": 0,
+   "writable_entries": 0,
+   "file_sha256": {
+    "infra/slurm/host-single-node/vm-campaign.sbatch": "3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a",
+    "harness/q2/action_path/acceptance.py": "ae5470e56e00a4a4a31fb591d41654efe29f7f0a4f45203c9cb03419ec55c573",
+    "harness/q2/vm/manifest.py": "f238f12bdb8470919c8892eff46fe8b721e1e0c83ad08a60c0293ed8da3b9e2e",
+    "harness/q2/vm/driver.py": "06f3a29f39ad3a5de55efafd23fdfdfe121914f0f7f5dba281f4aabb68f74f7c",
+    "scripts/render_q2_action_path_manifest.py": "0d547c7af6c440f108526a4306870091da09e7b99419334d76a4bdd116b90845",
+    "scripts/submit_vm_campaign.py": "f08aafc8bc693cd6eb6850ff972a3401f3bddc99f3c14e03187b4d313fcc5917",
+    "scripts/record_slurm_end_states.sh": "33532668a2b41c068f76c4c65b1d60994fcd1746441bc405f6a438b9ccf2813f"
+   },
+   "same_digests_in_the_local_export": true
+  },
+  "pycache_dirs_after_all_runs_and_analyses": 0,
+  "python": "3.10.12"
+ },
+ "manifests": {
+  "rendered_on_host": 5,
+  "how": "ops/render_ladder.sh (the frozen renderer, criterion ladder, --seed 43 --layer L0-fixed --concurrency N, run from the host export with --host-root ~/cotcodec-runs/q2-action-path-v2); each validated with the ledger by the renderer",
+  "rendered_again_locally_from_the_local_export_with_the_same_arguments": 5,
+  "byte_identical": true,
+  "list": "checks/local-render-sha256sums-ladder.txt against manifests/rendered-sha256sums-ladder.txt",
+  "edited_after_rendering": false,
+  "registered_shape": "r_N 6, 10, 14, 19, 24; sessions 20, 34, 48, 64, 80; trials 1,200, 2,000, 2,800, 3,800, 4,800; runner CPUs 4, 8, 12, 16, 20 (manifest.runner_cpus); VM vCPUs 32, 64, 96, 128, 160; Slurm CPUs 36, 72, 108, 144, 180"
+ },
+ "verdicts_reproduced": {
+  "raw_records": "the 5 ladder run directories (1,240 files, 541 MB) and A1's 968 and 970 copied to the session scratch directory; every file's SHA-256 equal to its runs/<job>/raw-sha256sums.txt entry, and each list covers exactly the files on disk; the watcher records and receipts equal the bundle's copies",
+  "local": "ops/analyze_ladder.py run with the local export under Python 3.13.14 over the same attempt maps: all 5 JSON files (acceptance/ladder-n-star.json, ladder-campaigns.json, ladder-concurrency-table.json, ladder-section12-state-not-observed.json, a1-at-n-star.json) byte-identical to the host's (Python 3.10.12); ops/analyze_acceptance.py A5 over the 14 acceptance campaigns: both files of acceptance/a5-after-ladder/ byte-identical to the host's",
+  "analysis_scripts": "ops/render_ladder.sh, ops/submit_rung.sh and ops/analyze_ladder.py as committed are byte-identical to the copies that ran on the host; make_attempts.py, analyze_acceptance.py and collect_evidence.sh are the earlier stages' scripts, unchanged"
+ },
+ "run_checks": "checks/run-checks-ladder.json (ops/check_runs_ladder.py): every check passes for jobs 1017, 1019, 1021 and 1023; job 1025 fails exactly batch_end and slurm_completed (FAILED 3:0, driver_exit=3), the rung N = 40 end state reported in the README",
+ "host_load": "checks/host-snapshots-ladder.json (ops/host_snapshots.py) and ladder-campaigns.json's host field: no foreign Slurm job in any of the 502 host snapshots; checks/procstat-summary-ladder.json: host CPU busy and steal fractions from the operator's read-only /proc/stat samples (reported only)"
+}
