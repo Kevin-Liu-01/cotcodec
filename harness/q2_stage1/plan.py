@@ -13,6 +13,8 @@ import hashlib
 import json
 import math
 import random
+import re
+import shlex
 from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -279,6 +281,12 @@ def a0a_gate_problems(gates: Mapping[str, Any]) -> list[str]:
     return problems
 
 
+def _steps(run_dir: Path, record: Mapping[str, Any]) -> list[dict[str, Any]]:
+    name = f"{str(record['slot']).replace(':', '_')}.a{record['attempt']}"
+    steps = run_dir / "episodes" / name / "steps.jsonl"
+    return [json.loads(x) for x in steps.read_text(encoding="utf-8").splitlines() if x.strip()]
+
+
 def load_a0a_episodes(run_dir: Path) -> list[dict[str, Any]]:
     """A0a's completed episodes and their step logs from a lane run directory (the host's
     ``episodes.jsonl`` and ``episodes/<slot>.a<attempt>/steps.jsonl``)."""
@@ -290,11 +298,113 @@ def load_a0a_episodes(run_dir: Path) -> list[dict[str, Any]]:
         record = json.loads(line)
         if record.get("status") != "scored":
             continue
-        name = f"{str(record['slot']).replace(':', '_')}.a{record['attempt']}"
-        steps = run_dir / "episodes" / name / "steps.jsonl"
-        rows = [json.loads(x) for x in steps.read_text(encoding="utf-8").splitlines() if x.strip()]
-        out.append({"harness": record["harness"], "slot": record["slot"], "steps": rows})
+        out.append(
+            {"harness": record["harness"], "slot": record["slot"], "steps": _steps(run_dir, record)}
+        )
     return out
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def a0a_measurements(
+    run_dir: Path, bridge_dir: Path, *, action_path_step_p95_s: float
+) -> dict[str, Any]:
+    """Every A0a input of ``freeze_constants`` from A0a's records (section 6.2), never typed:
+
+    * ``a0a_slot_seconds``: the slot occupancy (lane dispatch to teardown,
+      ``host.slot_occupancy_s``) of each of A0a's V slots' final, scored attempt;
+    * ``launch_a0a_min`` (L_A0a): from the GPU job's Slurm start (``scontrol`` StartTime, which
+      the lane records in its receipt) to the lane's first dispatch. The first slot's boot,
+      setup and settle are inside its slot, so L stops at the dispatch, not the first request;
+    * ``a0a_gates``: the truncation and concurrency gates over the same V episodes.
+
+    It refuses (back to review, section 6.2) when any A0a slot was cut at the cap or never
+    dispatched, or fewer than V episodes completed, so the longest episodes cannot drop out of
+    c_A0a or the gates. The bridge's first forwarded request is reported beside L.
+    """
+    manifest_path = run_dir / "manifest.json"
+    episodes_path = run_dir / "episodes.jsonl"
+    receipt_path = run_dir / "lane-receipt.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("purpose") != "a0a":
+        raise PlanError(f"{run_dir} is not A0a's run directory")
+    v = int(manifest["vm"]["concurrency"])
+    planned = {str(slot["slot"]) for slot in manifest["slots"]}
+    rows = [
+        json.loads(line)
+        for line in episodes_path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    cut = sorted({str(r["slot"]) for r in rows if r.get("status") == "cap_truncated"})
+    if cut:
+        raise PlanError(f"A0a slots cut at the cap or never dispatched: {cut}; back to review")
+    finals: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        slot = str(row["slot"])
+        if slot not in finals or int(row["attempt"]) > int(finals[slot]["attempt"]):
+            finals[slot] = row
+    missing = sorted(planned - set(finals))
+    if missing:
+        raise PlanError(f"A0a slots with no record: {missing}; back to review")
+    scored = [finals[slot] for slot in sorted(planned) if finals[slot].get("status") == "scored"]
+    if len(planned) != v or len(scored) < v:
+        raise PlanError(f"A0a completed {len(scored)} of V = {v} episodes; back to review")
+    seconds = [float(r["host"]["slot_occupancy_s"]) for r in scored]
+    episodes = [{"harness": r["harness"], "slot": r["slot"], "steps": _steps(run_dir, r)}
+                for r in scored]  # fmt: skip
+    gates = a0a_gates(episodes, action_path_step_p95_s)
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    start = (receipt.get("gpu_job") or {}).get("start_epoch")
+    first = receipt.get("first_dispatch")
+    if not isinstance(start, int | float) or not isinstance(first, int | float):
+        raise PlanError("A0a's receipt lacks the GPU job's Slurm start or the first dispatch")
+    stopped_path = bridge_dir / "stopped.json"
+    stopped = json.loads(stopped_path.read_text(encoding="utf-8"))
+    first_request = stopped.get("t_first_request")
+    files = {"manifest.json": manifest_path, "episodes.jsonl": episodes_path,
+             "lane-receipt.json": receipt_path, "bridge/stopped.json": stopped_path}  # fmt: skip
+    return {
+        "a0a_slot_seconds": seconds,
+        "launch_a0a_min": round((float(first) - float(start)) / 60, 3),
+        "a0a_gates": gates,
+        "measured": {
+            "v": v,
+            "episodes": len(scored),
+            "gpu_job": receipt.get("gpu_job"),
+            "first_dispatch": first,
+            "first_request": first_request,
+            "launch_to_first_request_min": (
+                round((float(first_request) - float(start)) / 60, 3)
+                if isinstance(first_request, int | float)
+                else None
+            ),
+            "files_sha256": {name: _sha256(path) for name, path in files.items()},
+        },
+    }
+
+
+def freeze_inputs(
+    measurements: Mapping[str, Any], *, n_star: int, prefreeze_jobs: Sequence[str]
+) -> dict[str, Any]:
+    """``freeze_constants``'s arguments in the branch S1a is in (the anchor unavailable
+    before A0b): A0a's measured inputs, N* of the accepted action-path attempt, and the caps of
+    the pre-freeze GPU jobs that ran (``prefreeze_jobs``, e.g. ``["O1", "A0a"]``; a repeat is
+    listed again), from ``CAP_MINUTES``."""
+    unknown = sorted(set(prefreeze_jobs) - {"O1", "A0a"})
+    if unknown:
+        raise PlanError(f"pre-freeze GPU jobs are O1 and A0a (and repeats), not {unknown}")
+    if "A0a" not in prefreeze_jobs:
+        raise PlanError("A0a must have run before the freeze")
+    return {
+        "n_star": n_star,
+        "a0a_slot_seconds": list(measurements["a0a_slot_seconds"]),
+        "launch_a0a_min": float(measurements["launch_a0a_min"]),
+        "prefreeze_caps": [CAP_MINUTES[job] for job in prefreeze_jobs],
+        "anchor_available": False,
+        "a0a_gates": measurements["a0a_gates"],
+    }
 
 
 @dataclass(frozen=True)
@@ -385,7 +495,182 @@ def freeze_constants(
 
 
 def task_pool(confirm_ids: Sequence[str]) -> list[str]:
+    """The confirm split minus the four K1 raw-gold failures (116 tasks)."""
     return sorted(t for t in confirm_ids if t[:8] not in K1_RAW_GOLD_FAILURES)
+
+
+# ---- Offline-setup exclusion (section 5.4, G0 item 5) ------------------------------ #
+# Registered before G0 item 5's second pass ran and applied once, before any GPU episode and
+# before the draw. It reads only the task configs (as the setup-check records keep them) and
+# the setup-only records: no agent acted and no checker produced a verdict, so it is
+# outcome-blind. A pool or dev task leaves the eligible set if
+#   (a) a setup or postconfig step installs software from the network: a ``pip install`` of
+#       a package name (not a local file), a ``code --install-extension`` of a Marketplace id
+#       (not a local ``.vsix``), or any apt, apt-get or snap install. The VMs run with
+#       ``--network none``, so the step fails in every episode;
+#   (b) in the second setup-only pass the task's setup did not complete cleanly: a setup
+#       step's guest reply was not HTTP 200 or carried a non-zero returncode, a step raised,
+#       the slot was lost, or a registered diagnostic did not show the step's product
+#       (``SETUP_DIAGNOSTICS``: ``code --list-extensions`` lacks the installed extension);
+#   (c) a postconfig step that installs software (any of (a)'s installers, local or not)
+#       failed on the untouched initial state in that pass.
+# Other postconfig steps are not judged on the initial state: they act on the agent's final
+# state (a window the agent must open, a file it must write), so a failure there can be the
+# agent's. ``offline_exclusions`` computes the set; ``OFFLINE_EXCLUDED`` holds it.
+
+_SHELLS = ("bash", "sh", "/bin/bash", "/bin/sh")
+_SEPARATORS = ("&&", "||", ";", "|")
+_LOCAL_PIP = re.compile(r"^(/|\./|~/|\.\./)|\.(whl|tar\.gz|zip)$")
+
+
+def _commands(argv: Any) -> list[list[str]]:
+    """The simple commands in a step's argv (a list, a shell string, or ``bash -c``)."""
+    if isinstance(argv, list) and len(argv) >= 3 and argv[0] in _SHELLS and argv[1] == "-c":
+        argv = argv[2]
+    if isinstance(argv, str):
+        try:
+            tokens = shlex.split(argv)
+        except ValueError:
+            tokens = argv.split()
+    else:
+        tokens = [str(a) for a in (argv or [])]
+    out: list[list[str]] = [[]]
+    for token in tokens:
+        if token in _SEPARATORS:
+            out.append([])
+        else:
+            out[-1].append(token)
+    return [c for c in out if c]
+
+
+def install_targets(argv: Any) -> list[tuple[str, str, bool]]:
+    """(installer, target, from the network) for each software install in a step's argv."""
+    found: list[tuple[str, str, bool]] = []
+    for cmd in _commands(argv):
+        names = [Path(t).name for t in cmd]
+        for i, name in enumerate(names):
+            pip = name in ("pip", "pip3") or (
+                name in ("python", "python3") and cmd[i + 1 : i + 3] == ["-m", "pip"]
+            )
+            if pip:
+                rest = cmd[i + 1 :]
+                if rest[:2] == ["-m", "pip"]:
+                    rest = rest[2:]
+                if rest[:1] == ["install"]:
+                    for target in (t for t in rest[1:] if not t.startswith("-")):
+                        found.append(("pip", target, not _LOCAL_PIP.search(target)))
+                break
+            if name == "code" and "--install-extension" in cmd[i:]:
+                j = cmd.index("--install-extension", i)
+                if j + 1 < len(cmd):
+                    target = cmd[j + 1]
+                    found.append(("code", target, not target.endswith(".vsix")))
+                break
+            if name in ("apt", "apt-get", "snap") and "install" in cmd[i:]:
+                for target in (
+                    t for t in cmd[cmd.index("install", i) + 1 :] if not t.startswith("-")
+                ):
+                    found.append((name, target, True))
+                break
+    return found
+
+
+def final_setup_records(rows: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
+    """The last attempt of each task in a setup-check record file."""
+    out: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        task = str(row["task_id"])
+        if task not in out or int(row.get("attempt", 1)) >= int(out[task].get("attempt", 1)):
+            out[task] = dict(row)
+    return out
+
+
+def offline_exclusion_reasons(record: Mapping[str, Any]) -> list[str]:
+    """Rules (a)-(c) for one task's final setup-check-v2 record (see above)."""
+    reasons: list[str] = []
+    setup = record.get("setup") if isinstance(record.get("setup"), dict) else {}
+    probe = (
+        record.get("postconfig_probe") if isinstance(record.get("postconfig_probe"), dict) else {}
+    )
+    for phase, block in (("setup", setup), ("postconfig", probe)):
+        for step in block.get("config_steps") or []:
+            for installer, target, network in install_targets(step.get("argv")):
+                if network:
+                    reasons.append(f"(a) {phase} step {step['step']}: {installer} install {target}")
+    failures = list(setup.get("failures") or [])
+    for failure in failures:
+        reasons.append(f"(b) {str(failure)[:200]}")
+    if record.get("status") != "setup_ok" and not failures:
+        detail = record.get("infrastructure_detail") or record.get("infrastructure_type")
+        reasons.append(f"(b) setup {record.get('status')}: {str(detail)[:200]}")
+    for item in record.get("diagnostics") or []:
+        if item.get("expect") and not item.get("found"):
+            reasons.append(f"(b) diagnostic {' '.join(item['argv'])} lacks {item['expect']}")
+    if record.get("status") == "setup_ok" and not probe:
+        reasons.append("(c) postconfig not probed")
+    installs = {
+        int(step["step"])
+        for step in probe.get("config_steps") or []
+        if install_targets(step.get("argv"))
+    }
+    for reply in probe.get("replies") or []:
+        failed = reply.get("status") != 200 or reply.get("returncode") not in (None, 0)
+        if failed and reply.get("step") in installs:
+            reasons.append(
+                f"(c) postconfig step {reply['step']} install failed on the initial state: "
+                f"HTTP {reply.get('status')} rc={reply.get('returncode')}"
+            )
+    return list(dict.fromkeys(reasons))
+
+
+def offline_exclusions(
+    rows: Iterable[Mapping[str, Any]], tasks: Sequence[str]
+) -> dict[str, list[str]]:
+    """The offline-setup exclusion of section 5.4 over ``tasks`` (pool and dev) from G0
+    item 5's second-pass records; a task with no record is excluded."""
+    finals = final_setup_records(rows)
+    out: dict[str, list[str]] = {}
+    for task in sorted(tasks):
+        record = finals.get(task)
+        reasons = (
+            ["(b) no setup-check-v2 record"]
+            if record is None
+            else (offline_exclusion_reasons(record))
+        )
+        if reasons:
+            out[task] = reasons
+    return out
+
+
+#: The offline-setup exclusion's result (section 5.4): task id -> reasons, computed by
+#: ``offline_exclusions`` from G0 item 5's second-pass records (a test recomputes it).
+OFFLINE_EXCLUDED: dict[str, tuple[str, ...]] = {
+    '26150609-0da3-4a7d-8868-0faf9c5f01bb': (
+        '(a) setup step 2: pip install pygame',
+        "(b) setup step 2 (command): /setup/execute HTTP 500 rc=None Command '['p"
+        "ip', 'install', 'pygame']' timed out after 120 seconds",
+    ),
+    '982d12a5-beab-424f-8d38-d2a48429e511': (
+        '(b) setup step 1 (command): /setup/execute HTTP 200 rc=127 /bin/sh: 1: j'
+        'q: not found',
+    ),
+    'e2b5e914-ffe1-44d2-8e92-58f8c5d92bb2': (
+        '(a) setup step 1: code install ms-python.python',
+        '(b) setup step 1 (command): /setup/execute HTTP 200 rc=1 Error while ins'
+        'talling extensions: getaddrinfo EAI_AGAIN marketplace.visualstudio.com\ng'
+        'etaddrinfo EAI_AGAIN marketplace.visualstudio.com',
+        '(b) diagnostic code --list-extensions --show-versions lacks (?im)^ms-pyt'
+        'hon\\.python@',
+    ),
+}  # fmt: skip
+
+
+def eligible_pool(
+    confirm_ids: Sequence[str], excluded: Mapping[str, Any] | Iterable[str] = ()
+) -> list[str]:
+    """The pool the base is drawn from: ``task_pool`` minus the offline-setup exclusions."""
+    drop = set(excluded)
+    return [t for t in task_pool(confirm_ids) if t not in drop]
 
 
 def apportion(k: int, counts: Mapping[str, int]) -> dict[str, int]:
@@ -507,11 +792,40 @@ A0A_JOB = "A0a"
 A0A_SIZE = "9B"
 A0A_SESSION = "S1"
 FILL_BLOCK_EPISODES = 32  # section 5.6: 8 tasks x 2 harnesses x 2 reruns
-SETUP_CHECK_RECORDS = "program/evidence/2026-10-08/q2-stage1-g0/setup-check/setup.jsonl"
+# G0 item 5's records that decide the offline-setup exclusion and the dev tasks, and their
+# SHA-256 as the registration states it; ``load_setup_check`` refuses any other file.
+SETUP_CHECK_RECORDS = "program/evidence/2026-10-08/q2-stage1-g0/setup-check-v2/setup.jsonl"
+SETUP_CHECK_SHA256 = "97e792f72a52ff3a380f74dd52ca57c85ed0e496d0e0faf90d685d9d8a94a4ca"
+# G0 item 5's second pass (setup-check-v2): diagnostics run in the guest after a task's setup.
+# ``expect`` is the pattern the output must show for the step's product to count as present
+# (rule (b) of section 5.4): the two VS Code tasks whose setup installs an extension.
+SETUP_DIAGNOSTICS: dict[str, tuple[dict[str, Any], ...]] = {
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb": (
+        {"argv": ["code", "--list-extensions", "--show-versions"], "expect": r"(?im)^\S*eval\S*@"},
+    ),
+    "e2b5e914-ffe1-44d2-8e92-58f8c5d92bb2": (
+        {"argv": ["code", "--list-extensions", "--show-versions"],
+         "expect": r"(?im)^ms-python\.python@"},
+    ),
+}  # fmt: skip
 
 
 def a1_job(size: str, session: str) -> str:
     return f"A1-{size}-{session}"
+
+
+S2_GAP_H = 12  # section 5.5: the S2 jobs start at least 12 h after the later S1 job ends
+# N* = 16 (V = 16): the card's high price alone gives K_base 24 unless L_A0a is under about 4
+# minutes, below any engine start, so the draft goes back to review without spending A0a's
+# 25 minutes (section 5.5); A0a runs only at N* >= 24.
+A0A_MIN_NSTAR = 24
+
+
+def a1_job_order() -> list[str]:
+    """The A1 jobs in their registered order: session 1 then session 2, each in the seeded
+    size order (``session_jobs``). A job may start only after every earlier one has ended
+    and passed DR0 (section 11)."""
+    return [a1_job(size, session) for session in ("S1", "S2") for size in size_order()]
 
 
 def block_slots(
@@ -541,8 +855,23 @@ def block_slots(
 
 
 def setup_ok_from_records(rows: Iterable[Mapping[str, Any]]) -> dict[str, bool]:
-    """G0 item 5's verdict per task from the setup check's records."""
-    return {str(r["task_id"]): r.get("status") == "setup_ok" for r in rows}
+    """G0 item 5's verdict per task from the setup check's records (final attempts)."""
+    return {t: r.get("status") == "setup_ok" for t, r in final_setup_records(rows).items()}
+
+
+def dev_setup_ok(rows: Iterable[Mapping[str, Any]]) -> dict[str, bool]:
+    """The dev filter of section 5.4: setup completed offline and not excluded by the
+    offline-setup rule (``OFFLINE_EXCLUDED``)."""
+    return {t: ok and t not in OFFLINE_EXCLUDED for t, ok in setup_ok_from_records(rows).items()}
+
+
+def load_setup_check(source_dir: Path) -> list[dict[str, Any]]:
+    """G0 item 5's committed records, refused unless their SHA-256 is the registered one."""
+    path = Path(source_dir) / SETUP_CHECK_RECORDS
+    data = path.read_bytes()
+    if hashlib.sha256(data).hexdigest() != SETUP_CHECK_SHA256:
+        raise PlanError(f"{SETUP_CHECK_RECORDS} is not the registered setup-check record file")
+    return [json.loads(x) for x in data.decode("utf-8").splitlines() if x.strip()]
 
 
 def a0a_slots(dev_ids: Sequence[str], setup_ok: Mapping[str, bool], v: int) -> list[dict]:
@@ -728,10 +1057,12 @@ def render_plan(
     splits_sha256: str,
     constants: FreezeConstants | None = None,
     dev_setup_ok: Mapping[str, bool] | None = None,
+    measured: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """The plan file: draw, orders, jobs and engine arguments. With ``constants`` it is the
-    frozen plan; without, the draft plan at the largest base (K = 32) with no jobs."""
-    pool = task_pool(confirm_ids)
+    frozen plan; without, the draft plan at the largest base (K = 32) with no jobs. The draw
+    runs on the eligible pool (``task_pool`` minus ``OFFLINE_EXCLUDED``)."""
+    pool = eligible_pool(confirm_ids, OFFLINE_EXCLUDED)
     k = constants.k_base if constants else K_MAX
     draw = draw_tasks(pool, domain, k)
     orders = episode_orders(draw)
@@ -740,6 +1071,8 @@ def render_plan(
         "experiment_id": EXPERIMENT_ID,
         "status": "frozen-constants" if constants else "draft",
         "splits_sha256": splits_sha256,
+        "offline_excluded": {t: list(r) for t, r in sorted(OFFLINE_EXCLUDED.items())},
+        "setup_check_sha256": SETUP_CHECK_SHA256,
         "base": draw["base"],
         "seats": draw["seats"],
         "extension_blocks": {str(i): b for i, b in enumerate(draw["extension_blocks"], 1)},
@@ -757,7 +1090,10 @@ def render_plan(
         "caps_minutes": dict(CAP_MINUTES),
     }
     if dev_setup_ok is not None:
-        plan["dev_tasks_a0b"] = dev_tasks(dev_ids, dev_setup_ok, 4)
+        passing = sum(1 for t in dev_ids if dev_setup_ok.get(t, False))
+        plan["dev_order"] = dev_tasks(dev_ids, dev_setup_ok, passing)
+    if measured is not None:
+        plan["a0a_measurements"] = dict(measured)
     if constants:
         plan["constants"] = constants.as_dict()
         plan["anchor_tasks"] = anchor[: constants.anchor_tasks]
@@ -774,19 +1110,23 @@ def render_plan(
 
 
 def main(argv: list[str] | None = None) -> int:
-    """``a0a-gates``: A0a's gates from its lane run directory (on the host), as the
-    ``a0a_gates`` input of the freeze constants (``scripts/render_q2_stage1_plan.py``)."""
+    """``a0a-measurements``: every A0a input of the freeze constants from A0a's lane run
+    directory and its GPU job's bridge directory (on the host); the plan renderer
+    (``scripts/render_q2_stage1_plan.py``) calls the same function."""
     import argparse
 
     parser = argparse.ArgumentParser(description="S1a plan tools")
     sub = parser.add_subparsers(dest="command", required=True)
-    gates = sub.add_parser("a0a-gates", help="A0a's truncation and concurrency gates")
-    gates.add_argument("--run-dir", type=Path, required=True)
-    gates.add_argument("--action-path-step-p95", type=float, required=True)
+    cmd = sub.add_parser("a0a-measurements", help="A0a's slot times, L_A0a and gates")
+    cmd.add_argument("--run-dir", type=Path, required=True)
+    cmd.add_argument("--bridge-dir", type=Path, required=True)
+    cmd.add_argument("--action-path-step-p95", type=float, required=True)
     args = parser.parse_args(argv)
-    result = a0a_gates(load_a0a_episodes(args.run_dir), args.action_path_step_p95)
+    result = a0a_measurements(
+        args.run_dir, args.bridge_dir, action_path_step_p95_s=args.action_path_step_p95
+    )
     print(json.dumps(result, indent=1, sort_keys=True))
-    return 3 if result["problems"] else 0
+    return 3 if result["a0a_gates"]["problems"] else 0
 
 
 if __name__ == "__main__":

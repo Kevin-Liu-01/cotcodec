@@ -77,8 +77,10 @@ rescoring, the corrected comparator, the anchor's CPU checks and the GLMM.
 |---|---|
 | Change an estimator, rule or the plan | Run `uv run pytest -q tests/test_q2_stage1_*.py`, then update section 20 of the registration |
 | Re-run operating characteristics | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/sim_s1a_v2.py` (sections in parallel, then `merge`) |
-| Fill the freeze constants | On the host, `python3 -m harness.q2_stage1.plan a0a-gates --run-dir <A0a run> --action-path-step-p95 <accepted attempt's step_p95_n1_s>` gives `a0a_gates`; then `scripts/render_q2_stage1_plan.py --constants a0.json --dev-setup dev.json --out plan.json` |
-| Run a VM job (dev smoke, setup check, A0, A1) | A0a and A1: render the lane manifest from the plan (`scripts/render_q2_stage1_manifest.py vm --purpose a0a --n-star N` or `--purpose a1 --plan <frozen plan> --size Z --session S1`, S2 with `--s1-records`); the lane refuses slots that differ. Development and setup checks: write it by hand (`experiments/manifests/q2-stage1/`). Check `squeue`, then on the host from the exported tree `python3 -E -s -m harness.q2_stage1.lane submit MANIFEST --source-dir .`; a registered job takes exactly `plan.vm_job_cpus(V)` CPUs, and a temporary host-load cap (`--host-load-max-cpus 8`) is for development and setup-check jobs only |
+| Fill the freeze constants | On the host, `scripts/render_q2_stage1_plan.py --a0a-run-dir <A0a lane run> --a0a-bridge-dir <its GPU job's bridge dir> --n-star N --action-path-step-p95 <accepted attempt's step_p95_n1_s> --out plan.json` (it calls `plan.a0a_measurements`: nothing is typed; `python3 -m harness.q2_stage1.plan a0a-measurements` prints the same inputs) |
+| Run a VM job (dev smoke, setup check, A0, A1) | A0a and A1: render the lane manifest from the plan (`scripts/render_q2_stage1_manifest.py vm --purpose a0a --n-star N`, or `--purpose a1 --plan <frozen plan> --size Z --session S --prior-run-dirs <every earlier A1 job's run dir>`), then the GPU half from it (`... gpu --vm-manifest <VM manifest> --vm-job-id ID --values V`); the lane refuses slots that differ, an earlier A1 job that fired DR0, an S2 job before the 12 h gap, and a GPU job whose engine argv or Slurm limit is not the registered one. Development and setup checks: write it by hand (`experiments/manifests/q2-stage1/`). Check `squeue`, then on the host from the exported tree `python3 -E -s -m harness.q2_stage1.lane submit MANIFEST --source-dir .`; a registered job takes exactly `plan.vm_job_cpus(V)` CPUs, and a temporary host-load cap (`--host-load-max-cpus 8`) is for development and setup-check jobs only |
+| Judge an A1 job (DR0) | `python3 -m harness.q2_stage1.rules dr0 --run-dir <its lane run dir> --plan <frozen plan>` (exit 3: DR0 fired, no further job starts) |
+| Cost card (DR4, P5) | `python3 -m harness.q2_stage1.analysis costs --run-dir <A1 run dir> [...] --out costs.json` (the GPU job's Slurm EndTime minus StartTime as the VM lane recorded them, over the episodes that ran to an end; accounting is off on the host) |
 | Rescore captures / validate the comparator | `s1a-cpu.sbatch` run mode, metric image: `python -m harness.q2_stage1.rescore capture|merge|validate-zinv` |
 | Change a harness client | Regenerate nothing: `tests/test_q2_stage1_agents.py` must still match the upstream fixture; record any intended difference in `design_diffs.md` |
 
@@ -98,3 +100,7 @@ rescoring, the corrected comparator, the anchor's CPU checks and the GLMM.
 - The lane runs under the host's Python 3.10 with the standard library plus
   numpy and PyYAML; keep `lane.py` and what it imports 3.10-compatible.
 - `fake_engine.py` is refused for anything but `purpose: development`.
+- The offline-setup exclusion (`plan.offline_exclusions`, registration section 5.4) is
+  applied once from G0 item 5's second-pass records; `plan.OFFLINE_EXCLUDED` holds it and
+  the draw runs on `plan.eligible_pool`. A failed setup reply (not 200, or a non-zero
+  `returncode`) is a `task_setup` loss; a failed postconfig reply is recorded only.

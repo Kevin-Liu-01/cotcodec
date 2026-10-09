@@ -7,7 +7,12 @@ Usage (CPU, after the last A1 job)::
 
 ``plan.json`` is the frozen plan (``scripts/render_q2_stage1_plan.py``): base tasks,
 extension blocks, flagged tasks, task domains and the anchor tasks; ``costs.json`` holds
-each A1 job's realized GPU-h per episode and V from its receipt (DR4). The primary analysis
+each A1 job's realized cost (DR4, P5), built from the lane records by::
+
+    python -m harness.q2_stage1.analysis costs --run-dir A1_RUN [--run-dir ...] --out costs.json
+
+(section 9 item 10: the GPU job's Slurm elapsed hours, as the VM lane recorded it, over the
+job's episodes that ran to an end; ``realized_costs``, ``gpu_elapsed``). The primary analysis
 set is the base, fixed at the freeze; base plus the extension blocks completed in all four
 A1 jobs is the registered secondary (the fill rule's block count depends on episode
 lengths, so on outcomes).
@@ -18,6 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import sys
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
@@ -32,6 +38,8 @@ from harness.q2_stage1 import rules
 N_BOOT = 10_000
 N_RANDOMIZATION = 10_000
 SEED = 42
+NOT_ANCHORED = "not externally anchored"
+GPU_FINAL_STATES = ("COMPLETED", "FAILED", "CANCELLED", "TIMEOUT", "NODE_FAIL", "OUT_OF_MEMORY")
 
 
 def _f(x: Any) -> Any:
@@ -75,6 +83,7 @@ def statistics(y: np.ndarray) -> dict[str, np.ndarray]:
         "X_bernoulli": np.nanmean(E.x_bernoulli_by_size(y), axis=-1),
         "pi_4B": pis[..., 0],
         "pi_9B": pis[..., 1],
+        # pi_small is this mean unless DR1 drops 4B (then pi_9B): analyse_array applies it.
         "pi_small": np.nanmean(pis, axis=-1),
         "scale_screen_pi": pis[..., 0] - pis[..., 1],
         "session_shift_4B": E.session_shift(y)[..., 0],
@@ -120,6 +129,12 @@ def analyse_array(
     common = E.session_common_share(y)
     succ = E.success(y)
     drop_4b = rules.dr1(list(succ[0]))
+    # Section 9 item 4: pi_small is the mean of pi_4B and pi_9B, or pi_9B alone if DR1 drops
+    # 4B. DR2 and DR5 read it, and the report (and S1b) carry it, by that rule; the two-size
+    # mean stays beside it.
+    est["pi_mean_4B_9B"] = est["pi_small"]
+    if drop_4b:
+        est["pi_small"] = dict(est["pi_9B"])
     dr2 = rules.dr2(
         float(t["p"]),
         p_x,
@@ -148,6 +163,7 @@ def analyse_array(
         "delta_session_heterogeneity": {k: _f(v) for k, v in het.items()},
         "session_common_share": {k: _f(v) for k, v in common.items()},
         "DR1_drop_4B": drop_4b,
+        "pi_small_rule": "pi_9B (DR1 drops 4B)" if drop_4b else "mean of pi_4B and pi_9B",
         "DR2": dr2,
         "DR5": dr5,
     }
@@ -218,7 +234,8 @@ def checker_noise(finals: Mapping[R.SlotKey, Mapping[str, Any]]) -> dict[str, in
         if rec["status"] != "scored":
             continue
         by_cell[(z, t, h)].append(rec)
-        off = rec.get("offline_score")
+        # ``rescore.merge`` writes the offline raw verdict as ``offline_raw_score``.
+        off = rec.get("offline_raw_score", rec.get("offline_score"))
         if off is not None and float(off) != float(rec["score"]):
             mismatches += 1
     same_hash_discordant = 0
@@ -375,6 +392,7 @@ def report(
     if costs:
         dr4 = rules.dr4({job: (c["gpu_h_per_episode"], c["V"]) for job, c in costs.items()})
         out["DR4"] = dr4
+        out["cost_card"] = {"jobs": dict(costs), "by_size": costs_by_size(costs)}
         exceeds = dr4["exceeds_high"]
     prim = out["primary"]
     est = prim["estimates"]
@@ -386,10 +404,148 @@ def report(
         dr4_exceeds=exceeds,
     )
     out["conditional_on"] = "the realized sessions (tasks resampled, sessions fixed)"
+    # DR-A: without a passing anchor every output carries this label (section 11).
+    anchor_runs = bool((plan.get("constants") or {}).get("anchor_runs")) and bool(
+        plan.get("anchor_tasks")
+    )
+    out["external_anchor"] = (
+        {"outcome": "pending ANC", "label": None}
+        if anchor_runs
+        else {"outcome": "ANCHOR-UNAVAILABLE", "label": NOT_ANCHORED}
+    )
     return out
 
 
+# --------------------------------------------------------------------------- cost card
+
+
+def realized_costs(
+    records: Iterable[Mapping[str, Any]], *, job: str, v: int, gpu_elapsed_s: float
+) -> dict[str, Any]:
+    """One A1 job's realized cost (section 9 item 10; DR4 and P5 read ``gpu_h_per_episode``).
+
+    * Episodes: the job's episode attempts that ran to an end, ``scored`` or
+      ``infrastructure`` (first attempts and re-queues, base and fill blocks); a
+      ``cap_truncated`` attempt is not one.
+    * GPU-h per episode: the GPU job's Slurm elapsed time (``gpu_elapsed_s``, from
+      ``gpu_elapsed``: start to end, engine start-up included) in hours over those
+      episodes.
+    * Per harness: both harnesses share one engine, so the job's GPU-h is split between them
+      in proportion to their summed slot occupancy (dispatch to teardown) over those
+      episodes, then divided by each harness's episodes.
+    * VM-h per episode: summed slot occupancy over those episodes (each slot holds one VM).
+    """
+    rows = [r for r in records if r.get("job") == job and r.get("status") in
+            ("scored", "infrastructure")]  # fmt: skip
+    if not rows:
+        raise ValueError(f"{job}: no episode ran to an end")
+    gpu_h = float(gpu_elapsed_s) / 3600
+    occupancy = {h: 0.0 for h in R.HARNESSES}
+    count = {h: 0 for h in R.HARNESSES}
+    for r in rows:
+        occupancy[r["harness"]] += float((r.get("host") or {}).get("slot_occupancy_s") or 0.0)
+        count[r["harness"]] += 1
+    total_s = sum(occupancy.values())
+    by_harness = {}
+    for h in R.HARNESSES:
+        share = occupancy[h] / total_s if total_s else count[h] / len(rows)
+        by_harness[h] = {
+            "episodes": count[h],
+            "gpu_h_share": round(share, 6),
+            "gpu_h_per_episode": round(share * gpu_h / count[h], 6) if count[h] else None,
+            "vm_h_per_episode": round(occupancy[h] / 3600 / count[h], 6) if count[h] else None,
+        }
+    return {
+        "job": job,
+        "V": int(v),
+        "size": rows[0]["size"],
+        "episodes": len(rows),
+        "gpu_elapsed_s": float(gpu_elapsed_s),
+        "gpu_h": round(gpu_h, 6),
+        "gpu_h_per_episode": round(gpu_h / len(rows), 6),
+        "vm_h_per_episode": round(total_s / 3600 / len(rows), 6),
+        "by_harness": by_harness,
+    }
+
+
+def costs_by_size(costs: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
+    """GPU-h and VM-h per episode by size, pooled over the size's A1 jobs."""
+    out: dict[str, Any] = {}
+    for size in R.SIZES:
+        jobs = [c for c in costs.values() if c.get("size") == size]
+        n = sum(int(c["episodes"]) for c in jobs)
+        if not n:
+            continue
+        out[size] = {
+            "jobs": sorted(c["job"] for c in jobs),
+            "episodes": n,
+            "gpu_h_per_episode": round(sum(float(c["gpu_h"]) for c in jobs) / n, 6),
+            "vm_h_per_episode": round(
+                sum(float(c["vm_h_per_episode"]) * int(c["episodes"]) for c in jobs) / n, 6
+            ),
+        }
+    return out
+
+
+def gpu_elapsed(receipt: Mapping[str, Any], stopped: Mapping[str, Any] | None) -> dict:
+    """The GPU job's Slurm elapsed seconds from the VM lane's receipt (section 9 item 10).
+
+    Slurm accounting is off on the host, so ``sacct`` cannot give it. The lane records the
+    GPU job's ``scontrol`` StartTime when its engine is ready and its EndTime after vm.done:
+    elapsed is EndTime minus StartTime. When the lane could not see the end (Slurm forgot
+    the job, or no final state came in time), the bridge's ``stopped.json`` ``t_end`` (the
+    workload's end, seconds before the job's) stands in for EndTime.
+    """
+    start = (receipt.get("gpu_job") or {}).get("start_epoch")
+    if not isinstance(start, int | float):
+        raise ValueError("the lane receipt lacks the GPU job's Slurm start")
+    ended = receipt.get("gpu_job_end") or {}
+    end = ended.get("end_epoch")
+    final = ended.get("state") in GPU_FINAL_STATES and not ended.get("error")
+    if final and isinstance(end, int | float):  # a running job's EndTime is only its limit
+        return {"gpu_elapsed_s": float(end) - float(start), "source": "scontrol EndTime"}
+    t_end = (stopped or {}).get("t_end")
+    if isinstance(t_end, int | float):
+        return {"gpu_elapsed_s": float(t_end) - float(start), "source": "bridge stopped.json"}
+    raise ValueError("neither the GPU job's EndTime nor the bridge's stop time is recorded")
+
+
+def costs_main(argv: Sequence[str]) -> int:
+    parser = argparse.ArgumentParser(description="S1a realized cost per A1 job (DR4, P5)")
+    parser.add_argument("--run-dir", type=Path, action="append", required=True)
+    parser.add_argument("--out", type=Path, required=True)
+    args = parser.parse_args(argv)
+    if args.out.exists():
+        raise SystemExit(f"{args.out} exists; cost files are never overwritten")
+    out: dict[str, Any] = {}
+    for run_dir in args.run_dir:
+        manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+        a1 = manifest.get("a1") or {}
+        job = f"A1-{a1.get('size')}-{a1.get('session')}"
+        receipt = json.loads((run_dir / "lane-receipt.json").read_text(encoding="utf-8"))
+        rows = R.read_jsonl(run_dir / "episodes.jsonl")
+        stopped_path = Path(str(receipt.get("bridge_dir") or "")) / "stopped.json"
+        stopped = (
+            json.loads(stopped_path.read_text(encoding="utf-8"))
+            if receipt.get("bridge_dir") and stopped_path.is_file()
+            else None
+        )
+        elapsed = gpu_elapsed(receipt, stopped)
+        out[job] = {
+            **realized_costs(
+                rows, job=job, v=int(manifest["vm"]["concurrency"]),
+                gpu_elapsed_s=elapsed["gpu_elapsed_s"],
+            ),
+            "gpu_elapsed_source": elapsed["source"],
+        }  # fmt: skip
+    args.out.write_text(json.dumps(out, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
+    raw = list(argv) if argv is not None else sys.argv[1:]
+    if raw[:1] == ["costs"]:
+        return costs_main(raw[1:])
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--records", type=Path, required=True)
     parser.add_argument("--plan", type=Path, required=True)
@@ -399,7 +555,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--anchor", type=Path, help="ANC episode records (JSONL)")
     parser.add_argument("--public", type=Path, help="task id -> three public scores (JSON)")
     parser.add_argument("--out", type=Path, required=True)
-    args = parser.parse_args(argv)
+    args = parser.parse_args(raw)
     if args.out.exists():
         raise SystemExit(f"{args.out} exists; reports are never overwritten")
     plan = json.loads(args.plan.read_text(encoding="utf-8"))
@@ -419,6 +575,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             public,
             excluded=plan.get("anchor_excluded_tasks", []),
         )
+        outcome = result["anchor"]["outcome"]
+        result["external_anchor"] = {
+            "outcome": outcome,
+            "label": None if outcome == "ANCHOR-PASS" else NOT_ANCHORED,
+        }
     args.out.write_text(json.dumps(result, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     return 0
 

@@ -83,6 +83,36 @@ def test_floor_drops_4b_and_switches_the_share():
     assert rep["predictions"]["P4"]["falsified"] is True
 
 
+def test_dr2_reads_pi_9b_when_dr1_drops_4b(monkeypatch):
+    """Section 9 item 4: with 4B at the floor, pi_small is pi_9B, so DR2's Near-equivalent
+    bound is pi_9B's, not half of it (the two-size mean with pi_4B = 0)."""
+    rng = np.random.default_rng(11)
+    y = np.zeros((2, 32, 2, 2, 2))
+    effect = rng.choice([-0.35, 0.0, 0.35], size=32)  # task-specific harness effects in 9B
+    base = rng.uniform(0.2, 0.6, size=32)
+    for h, sign in ((0, -0.5), (1, 0.5)):
+        p = np.clip(base + sign * effect, 0, 1)[:, None, None]
+        y[1, :, h] = (rng.random((32, 2, 2)) < p).astype(float)
+    seen = {}
+    real = A.rules.dr2
+
+    def spy(p_delta, p_x, ci90, pi_small_ub95):
+        seen["ub"] = pi_small_ub95
+        return real(p_delta, p_x, ci90, pi_small_ub95)
+
+    monkeypatch.setattr(A.rules, "dr2", spy)
+    out = A.analyse_array(y, n_boot=400, n_rand=200)
+    est = out["estimates"]
+    assert seen["ub"] == est["pi_9B"]["one_sided_95"][1]  # not the two-size mean's bound
+    assert out["DR1_drop_4B"] is True and est["pi_4B"]["estimate"] == 0.0
+    assert est["pi_small"]["estimate"] == est["pi_9B"]["estimate"] > 0
+    assert est["pi_small"]["one_sided_95"] == est["pi_9B"]["one_sided_95"]
+    assert out["pi_small_rule"].startswith("pi_9B")
+    assert est["pi_mean_4B_9B"]["estimate"] == pytest.approx(est["pi_9B"]["estimate"] / 2, abs=1e-5)
+    assert est["pi_mean_4B_9B"]["one_sided_95"][1] < est["pi_9B"]["one_sided_95"][1]
+    assert out["DR5"]["share"] == "pi_9B"
+
+
 def test_metric_exception_sensitivity_and_divergence():
     recs = synthetic(0.5, 0.5, 5)
     recs[0] = {**recs[0], "score": 0.0, "metric_exception": True}
@@ -188,3 +218,78 @@ def test_cli_writes_the_report_with_costs_and_anchor(tmp_path, monkeypatch):
     rep = json.loads(out.read_text())
     assert rep["DR4"]["jobs"] == ["A1-9B-S1"] and rep["predictions"]["P5"]["falsified"]
     assert rep["anchor"]["tasks_read"] == 60
+
+
+def test_realized_costs_follow_section_9_item_10(tmp_path):
+    """GPU-h per episode = the GPU job's Slurm elapsed hours over its episodes that ran to an
+    end (scored or infrastructure, base and fill); per harness by slot-occupancy share."""
+    rows = []
+    for i in range(10):
+        h = R.HARNESSES[i % 2]
+        status = "cap_truncated" if i == 9 else ("infrastructure" if i == 0 else "scored")
+        rows.append({"job": "A1-9B-S1", "size": "9B", "harness": h, "status": status,
+                     "host": {"slot_occupancy_s": 600.0 if h == "H-GA" else 300.0}})  # fmt: skip
+    rows.append({"job": "A1-4B-S1", "size": "4B", "harness": "H-GA", "status": "scored"})
+    c = A.realized_costs(rows, job="A1-9B-S1", v=20, gpu_elapsed_s=0.9 * 3600)
+    assert c["episodes"] == 9 and c["gpu_h_per_episode"] == pytest.approx(0.1)
+    osw, ga = c["by_harness"]["H-OSW-fixed"], c["by_harness"]["H-GA"]
+    assert (osw["episodes"], ga["episodes"]) == (5, 4)
+    assert osw["gpu_h_share"] == pytest.approx(1500 / 3900, abs=1e-6)
+    assert ga["gpu_h_per_episode"] == pytest.approx(2400 / 3900 * 0.9 / 4, abs=1e-6)
+    assert c["vm_h_per_episode"] == pytest.approx(3900 / 3600 / 9, abs=1e-6)
+    run = tmp_path / "run"
+    run.mkdir()
+    (run / "manifest.json").write_text(
+        json.dumps(
+            {"purpose": "a1", "vm": {"concurrency": 20}, "a1": {"size": "9B", "session": "S1"}}
+        )
+    )
+    recs = [dict(r, schema=R.SCHEMA, session="S1", task_id="t", rerun=1, extension_block=None,
+                 attempt=1, score=1.0 if r["status"] == "scored" else None,
+                 infrastructure_type="transport" if r["status"] == "infrastructure" else None)
+            for r in rows if r["job"] == "A1-9B-S1"]  # fmt: skip
+    (run / "episodes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in recs))
+    bridge = tmp_path / "bridge"
+    bridge.mkdir()
+    (bridge / "stopped.json").write_text(json.dumps({"t_end": 5000.0 + 3200}))
+    receipt = {"gpu_job": {"job_id": "88", "start_epoch": 5000.0},
+               "gpu_job_end": {"job_id": "88", "state": "COMPLETED", "end_epoch": 5000.0 + 3240},
+               "bridge_dir": str(bridge)}  # fmt: skip
+    (run / "lane-receipt.json").write_text(json.dumps(receipt))
+    out = tmp_path / "costs.json"
+    assert A.main(["costs", "--run-dir", str(run), "--out", str(out)]) == 0
+    costs = json.loads(out.read_text())
+    assert costs["A1-9B-S1"]["gpu_h_per_episode"] == pytest.approx(0.1)
+    assert costs["A1-9B-S1"]["gpu_elapsed_source"] == "scontrol EndTime"
+    # Slurm forgot the job before the lane saw its end: the bridge's stop stands in.
+    forgot = {**receipt, "gpu_job_end": {"job_id": "88", "error": "Invalid job id"}}
+    assert A.gpu_elapsed(forgot, {"t_end": 8200.0}) == {
+        "gpu_elapsed_s": 3200.0, "source": "bridge stopped.json"}  # fmt: skip
+    running = {**receipt, "gpu_job_end": {"state": "RUNNING", "end_epoch": 5000.0 + 6660}}
+    assert A.gpu_elapsed(running, {"t_end": 8200.0})["source"] == "bridge stopped.json"
+    with pytest.raises(ValueError, match="Slurm start"):
+        A.gpu_elapsed({}, {"t_end": 1.0})
+    assert A.costs_by_size(costs)["9B"]["episodes"] == 9
+    assert rules_dr4(costs) == ["A1-9B-S1"]  # above the V = 20 high price
+
+
+def rules_dr4(costs):
+    from harness.q2_stage1 import rules
+
+    return rules.dr4({j: (c["gpu_h_per_episode"], c["V"]) for j, c in costs.items()})["jobs"]
+
+
+def test_report_labels_an_unanchored_run():
+    rep = A.report(synthetic(0.3, 0.3, 9), PLAN, n_boot=50, n_rand=50)
+    assert rep["external_anchor"] == {"outcome": "ANCHOR-UNAVAILABLE",
+                                      "label": "not externally anchored"}  # fmt: skip
+
+
+def test_checker_noise_reads_the_merged_offline_verdict():
+    """``rescore.merge`` writes ``offline_raw_score``; a live-versus-offline mismatch counts."""
+    recs = synthetic(0.5, 0.5, 12)
+    scored = [i for i, r in enumerate(recs) if r["status"] == "scored"]
+    recs[scored[0]] = {**recs[scored[0]], "offline_raw_score": 1.0 - recs[scored[0]]["score"]}
+    recs[scored[1]] = {**recs[scored[1]], "offline_raw_score": recs[scored[1]]["score"]}
+    finals = R.final_records(recs)
+    assert A.checker_noise(finals)["live_vs_offline_mismatches"] == 1

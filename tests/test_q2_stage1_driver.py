@@ -54,6 +54,9 @@ class FakeGuest:
         self.drop_execute: Any = None
         self.files: dict[str, bytes] = {}
         self.setup_calls: list[str] = []
+        # (path, request body) -> (HTTP status, reply object) or None for the default success
+        self.setup_reply: Any = None
+        self.diagnostic_output = ""
         self._server: socketserver.TCPServer | None = None
 
     def start(self) -> FakeGuest:
@@ -102,6 +105,11 @@ class FakeGuest:
                     return
                 if self.path.startswith("/setup/"):
                     guest.setup_calls.append(self.path)
+                    custom = guest.setup_reply(self.path, raw) if guest.setup_reply else None
+                    if custom is not None:
+                        status, out = custom
+                        self.reply(status, json.dumps(out).encode())
+                        return
                     out = {"status": "success", "output": "ok\n", "error": "", "returncode": 0}
                     self.reply(200, json.dumps(out).encode())
                     return
@@ -145,6 +153,8 @@ class FakeGuest:
             return {**ok, "output": "0::/system.slice/osworld.service\n"}
         if argv[0] == "systemctl":
             return {**ok, "output": "0\n"}
+        if argv[0] == "code":
+            return {**ok, "output": self.diagnostic_output}
         if argv[0] == "python" and argv[1] == "-c":
             return {**ok, "output": "{}", "returncode": self.executor_rc,
                     "error": "" if self.executor_rc == 0 else self.executor_error}  # fmt: skip
@@ -457,6 +467,9 @@ FAKE_OSWORLD = {
                 except requests.exceptions.RequestException:
                     pass  # logged and ignored upstream
 
+            def _command_setup(self, command, **kwargs):
+                self._execute_setup(command, **kwargs)
+
             def _open_setup(self, path):
                 payload = json.dumps({"path": path})
                 try:
@@ -736,3 +749,136 @@ def test_untypeable_text_is_an_ir_error_not_an_executor_loss(guest):
     assert not guest.executor_commands()  # nothing reached the executor
     steps = [json.loads(line) for line in (out / "steps.jsonl").read_text().splitlines()]
     assert "U+000D" in steps[0]["parse_error"] and steps[0]["ir"] == []
+
+
+# --------------------------------------------------------------------------- setup replies
+# The pinned code goes on after a setup step that fails inside the guest (an HTTP 500 for a
+# command that timed out, or HTTP 200 with a non-zero returncode). The shim records every
+# /setup/* reply with its step; the driver reads them (section 7.2).
+
+PIP_TASK = {
+    "id": "t-1",
+    "instruction": "Do it.",
+    "config": [
+        {"type": "command", "parameters": {"command": ["mkdir", "-p", "/home/user/x"]}},
+        {"type": "command", "parameters": {"command": ["pip", "install", "pygame"]}},
+    ],
+    "evaluator": {
+        "postconfig": [{"type": "execute", "parameters": {"command": ["pip", "install",
+                                                                      "/home/user/a.whl"]}}],
+        "func": "check_text",
+        "result": {"type": "vm_file", "path": "/home/user/out.txt", "dest": "out.txt"},
+    },
+}  # fmt: skip
+
+
+def fails(word: str, status: int = 200, rc: int = 1):
+    """A guest whose /setup/execute fails for commands holding ``word``."""
+
+    def reply(path, raw):
+        if path == "/setup/execute" and word in raw.decode():
+            if status != 200:
+                return status, {"status": "error", "message": f"{word} timed out after 120 s"}
+            return 200, {"status": "success", "output": "", "error": f"{word}: no net",
+                         "returncode": rc}  # fmt: skip
+        return None
+
+    return reply
+
+
+def test_setup_replies_are_recorded_per_step(guest, osworld, tmp_path):
+    guest.files["/home/user/out.txt"] = b"good"
+    record, out, _ = run_live(guest, PIP_TASK, osworld, tmp_path)
+    assert record["status"] == "scored" and record["score"] == 1.0
+    replies = record["setup"]["replies"]
+    assert [(r["phase"], r["step"], r["type"], r["status"], r["returncode"]) for r in replies] == [
+        ("setup", 1, "command", 200, 0), ("setup", 2, "command", 200, 0)]  # fmt: skip
+    assert record["setup"]["failures"] == []
+    assert record["setup"]["config_steps"][1]["argv"] == ["pip", "install", "pygame"]
+    assert record["postconfig_failures"] == 0
+    assert [(r["phase"], r["step"], r["type"]) for r in record["postconfig_replies"]] == [
+        ("evaluate", 1, "execute")
+    ]
+    capture = json.loads((out / "capture" / "capture.json").read_text())
+    assert len(capture["setup_replies"]) == 3
+    # stdout tails stay in the capture on the host, never in the episode record (section 16)
+    assert all("output_tail" not in r for r in replies + record["postconfig_replies"])
+    assert all(r["output_tail"] == "ok\n" for r in capture["setup_replies"])
+
+
+@pytest.mark.parametrize(("status", "rc", "shown"), [(500, None, "HTTP 500"), (200, 1, "rc=1")])
+def test_a_setup_step_that_fails_in_the_guest_is_a_setup_loss(guest, osworld, tmp_path, status,
+                                                              rc, shown):  # fmt: skip
+    guest.files["/home/user/out.txt"] = b"good"
+    guest.setup_reply = fails("pygame", status, rc or 0)
+    record, _, session = run_live(guest, PIP_TASK, osworld, tmp_path)
+    assert record["status"] == "infrastructure" and record["infrastructure_type"] == "task_setup"
+    assert "setup step 2 (command)" in record["infrastructure_detail"]
+    assert shown in record["infrastructure_detail"]
+    assert record["score"] is None and not guest.executor_commands()  # no agent step ran
+    validate(record)
+
+
+def test_a_failed_postconfig_step_is_recorded_not_a_loss(guest, osworld, tmp_path):
+    """Postconfig steps act on the agent's final state, so a failure there can be the agent's."""
+    guest.files["/home/user/out.txt"] = b"good"
+    guest.setup_reply = fails("a.whl")
+    record, _, _ = run_live(guest, PIP_TASK, osworld, tmp_path)
+    assert record["status"] == "scored" and record["postconfig_failures"] == 1
+    assert record["postconfig_replies"][0]["returncode"] == 1
+
+
+def test_setup_check_records_replies_postconfig_probe_and_diagnostics(guest, osworld, tmp_path):
+    guest.diagnostic_output = "ms-python.python@2024.1.0\n"
+    diagnostics = [{"argv": ["code", "--list-extensions"], "expect": r"(?m)^ms-python\.python@"},
+                   {"argv": ["code", "--list-extensions"], "expect": r"(?m)^other@"}]  # fmt: skip
+    factory, _ = live(guest, PIP_TASK, osworld, tmp_path)
+    record, _, _ = run(guest, [], session=None, _factory=factory, mode="setup-only",
+                       postconfig_probe=True, diagnostics=diagnostics)  # fmt: skip
+    assert record["status"] == "setup_ok" and record["ended"] == "setup-only"
+    assert [d["found"] for d in record["diagnostics"]] == [True, False]
+    probe = record["postconfig_probe"]
+    assert probe["failures"] == [] and probe["replies"][0]["phase"] == "postconfig_probe"
+    assert probe["config_steps"][0]["argv"] == ["pip", "install", "/home/user/a.whl"]
+    assert record["steps"] == 0 and record["score"] is None  # no model, no checker
+    guest.setup_reply = fails("a.whl")
+    factory, _ = live(guest, PIP_TASK, osworld, tmp_path / "again")
+    again, _, _ = run(guest, [], session=None, _factory=factory, mode="setup-only",
+                      postconfig_probe=True)  # fmt: skip
+    assert again["status"] == "setup_ok"  # the postconfig probe is recorded, never a loss
+    assert again["postconfig_probe"]["failures"][0].startswith("postconfig_probe step 1")
+
+
+def test_setup_check_marks_a_step_that_failed_in_the_guest(guest, osworld, tmp_path):
+    guest.setup_reply = fails("pygame", 500)
+    factory, _ = live(guest, PIP_TASK, osworld, tmp_path)
+    record, _, _ = run(guest, [], session=None, _factory=factory, mode="setup-only",
+                       postconfig_probe=True)  # fmt: skip
+    assert record["status"] == "setup_failed" and record["infrastructure_type"] == "task_setup"
+    assert record["setup"]["failures"] and "postconfig_probe" in record
+
+
+def test_a_visible_gpu_device_ends_the_episode_before_anything_runs(guest, tmp_path, monkeypatch):
+    (tmp_path / "nvidia0").write_text("")
+    monkeypatch.setattr(driver, "GPU_DEVICE_GLOB", str(tmp_path / "nvidia*"))
+    record, _, session = run(guest, [DONE])
+    assert (
+        record["infrastructure_type"] == "runner_crash" and "D12" in record["infrastructure_detail"]
+    )
+    assert record["gpu_devices"] and session.last_action == "unset" and guest.shots == 0
+
+
+def test_a_checker_that_needs_the_network_is_an_infrastructure_loss(guest):
+    from harness.q2_stage1.osworld_live import OfflineNetworkRefused
+
+    try:
+        try:
+            raise OfflineNetworkRefused("https://example.org/x")
+        except OfflineNetworkRefused as inner:
+            raise Exception("getter failed") from inner
+    except Exception as wrapped:  # noqa: BLE001
+        error = wrapped
+    record, _, _ = run(guest, [DONE], session=FakeSession(evaluate_error=error))
+    assert record["status"] == "infrastructure"
+    assert record["infrastructure_type"] == "offline_network" and not record["metric_exception"]
+    validate(record)

@@ -32,7 +32,6 @@ HOST = {
     "vm": {**lane.VM_PINS, "guest_ip": "20.20.20.21",
            "qcow2": {"host_path": f"{RUNS}/../q2-action-path/vm/Ubuntu.qcow2",
                      "sha256": lane.QCOW2_SHA256, "size_bytes": lane.QCOW2_BYTES}},
-    "episode_image_id": "sha256:" + "2" * 64,
     "osworld": {"host_dir": f"{RUNS}/inputs/OSWorld", "commit": lane.OSWORLD_COMMIT},
     "file_cache": {"host_dir": f"{RUNS}/inputs/files"},
     "engine": {"bridge_dir": f"{RUNS}/gpu/{{gpu_job_id}}/bridge",
@@ -58,10 +57,17 @@ def test_a0a_manifest_is_the_plans_and_the_lane_accepts_it():
     assert set(cells.values()) == {1} and len(cells) == 20
     assert {(s["block"], s["rerun"]) for s in slots} == {("a0a.1", 1), ("a0a.2", 2)}
     assert {(s["job"], s["size"], s["session"]) for s in slots} == {("A0a", "9B", "S1")}
-    small = a0a(16)
-    assert len(small["slots"]) == 16 and small["slurm"]["cpus"] == 72
-    assert sorted({s["task_id"][:8] for s in small["slots"]}) == sorted(DEV_A0A[:4])
-    lane.validate_manifest(small, ROOT)
+    assert m["episode_image_id"] == lane.EPISODE_IMAGE_ID
+    assert not set(lane.FIXED_KEYS) & set(m)
+    with pytest.raises(ValueError, match="back to review before A0a"):
+        a0a(16)  # N* = 16: K_base 32 is out of reach at V = 16 (section 5.5)
+    small = P.a0a_slots(json.loads((ROOT / lane.SPLITS).read_text())["dev"],
+                        P.dev_setup_ok(P.load_setup_check(ROOT)),
+                        16)  # fmt: skip
+    assert sorted({s["task_id"][:8] for s in small}) == sorted(DEV_A0A[:4])
+    with pytest.raises(ValueError, match="may not set"):
+        builder.vm_manifest(purpose="a0a", host={**HOST, "episode_timeout_s": 60},
+                            source_dir=ROOT, n_star=40)  # fmt: skip
 
 
 @pytest.mark.parametrize(
@@ -71,10 +77,15 @@ def test_a0a_manifest_is_the_plans_and_the_lane_accepts_it():
         (lambda m: m["slots"][0].update(rerun=2), "slots differ"),
         (lambda m: m["slots"].pop(), "slots differ"),
         (lambda m: m.update(n_star=24), None),  # N* = 24 is V = 20 too: still valid
-        (lambda m: m.update(n_star=16), "A1's V = 16"),
+        (lambda m: m.update(n_star=16), "back to review before A0a"),
         (lambda m: m.update(n_star=8), "S1a does not start"),
         (lambda m: m.pop("n_star"), "n_star is required"),
         (lambda m: m["engine"].update(gpu_cap_min=30), "GPU cap is 25"),
+        (lambda m: m.update(episode_image_id="sha256:" + "2" * 64), "registered metric image"),
+        (lambda m: m.update(requeue=False), "requeue is fixed"),
+        (lambda m: m.update(episode_timeout_s=60), "episode_timeout_s is fixed"),
+        (lambda m: m.update(episode_python="/usr/bin/python3"), "episode_python is fixed"),
+        (lambda m: m["engine"].update(bridge_dir=f"{RUNS}/gpu/1/bridge"), "gpu_job_id"),
     ],
 )
 def test_a0a_manifest_that_differs_from_the_plan_is_refused(tamper, message):
@@ -131,16 +142,38 @@ def frozen_tree(tmp_path_factory) -> tuple[Path, dict[str, Any]]:
     return root, plan
 
 
-def a1(tree: tuple[Path, dict[str, Any]], size: str, session: str, records=()) -> dict:
+def a1(tree: tuple[Path, dict[str, Any]], size: str, session: str, prior=()) -> dict:
     return builder.vm_manifest(
         purpose="a1", host=HOST, source_dir=tree[0], plan_path="plan/plan-frozen.json",
-        size=size, session=session, s1_records=records,
+        size=size, session=session, prior_run_dirs=prior,
     )  # fmt: skip
+
+
+def run_dir(tmp: Path, job: str, rows: list[dict[str, Any]], t_end: float = 1.0e9,
+            error: str | None = None) -> Path:  # fmt: skip
+    """A finished A1 job's lane run directory: manifest, records and receipt."""
+    _, size, session = job.split("-")
+    out = tmp / job
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "manifest.json").write_text(
+        json.dumps({"purpose": "a1", "a1": {"size": size, "session": session}})
+    )
+    (out / "episodes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    receipt = {"t_end": t_end, **({"error": error} if error else {})}
+    (out / "lane-receipt.json").write_text(json.dumps(receipt))
+    return out
+
+
+def scored_base(plan: dict[str, Any], size: str, session: str) -> list[dict[str, Any]]:
+    slots, _ = P.a1_slots(plan, size, session, [] if session == "S2" else None)
+    common = {"schema": "q2-stage1a-episode-v1", "attempt": 1, "status": "scored", "score": 1.0}
+    return [{**s, **common} for s in slots if s["extension_block"] is None]
 
 
 def test_a1_session_one_manifest_is_the_plans(frozen_tree):
     root, plan = frozen_tree
     m = a1(frozen_tree, "9B", "S1")
+    assert P.a1_job_order()[0] == "A1-9B-S1" and m["a1"]["prior_jobs"] == []
     lane.validate_manifest(m, root)
     base = plan["base"]
     assert len(base) == 32 and len(m["slots"]) == 32 * 2 * 2
@@ -159,7 +192,8 @@ def test_a1_session_one_manifest_is_the_plans(frozen_tree):
         rerun = int(sub["label"][-1])
         assert {(s["rerun"], s["extension_block"]) for s in sub["slots"]} == {(rerun, 1)}
         assert sorted({s["task_id"] for s in sub["slots"]}) == sorted(plan["extension_blocks"]["1"])
-    assert len(fill["blocks"][-1]["sub_blocks"][0]["slots"]) == 8  # the last block has 4 tasks
+    last = plan["extension_blocks"][str(len(fill["blocks"]))]
+    assert len(fill["blocks"][-1]["sub_blocks"][0]["slots"]) == 2 * len(last) < 16  # short last
     for slot in m["slots"]:
         validate(
             {**slot, "schema": "q2-stage1a-episode-v1", "attempt": 1, "status": "cap_truncated"}
@@ -173,7 +207,7 @@ def test_a1_session_one_manifest_is_the_plans(frozen_tree):
         (lambda m: m["slots"][3].update(rerun=2), "slots differ"),
         (lambda m: m["fill"]["blocks"].pop(0), "fill differs"),
         (lambda m: m["fill"]["blocks"][0]["sub_blocks"].reverse(), "fill differs"),
-        (lambda m: m["a1"].update(size="4B"), "slots differ"),
+        (lambda m: m["a1"].update(size="4B"), "prior_jobs must be \\['A1-9B-S1'\\]"),
         (lambda m: m["engine"].update(gpu_cap_min=120), "T_A1 = 111"),
         (lambda m: m["plan"].update(sha256="0" * 64), "does not match its digest"),
     ],
@@ -191,22 +225,55 @@ def test_a1_needs_the_registered_frozen_plan(frozen_tree, tmp_path):
     shutil.copytree(root, other)
     (other / lane.REGISTRATION).write_text("Frozen plan SHA-256: TBD.\n")
     with pytest.raises(lane.LaneError, match="does not name this plan"):
-        lane.validate_manifest(a1(frozen_tree, "4B", "S1"), other)
+        lane.validate_manifest(a1(frozen_tree, "9B", "S1"), other)
     draft = P.render_plan(**renderer.load_inputs(ROOT))
     (other / "plan/draft.json").write_text(json.dumps(draft))
     (other / lane.REGISTRATION).write_text(f"Frozen plan SHA-256: `{draft['plan_sha256']}`.\n")
-    m = a1(frozen_tree, "4B", "S1")
+    m = a1(frozen_tree, "9B", "S1")
     m["plan"] = {"path": "plan/draft.json", "sha256": draft["plan_sha256"]}
     with pytest.raises(lane.LaneError, match="frozen plan"):
         lane.validate_manifest(m, other)
 
 
-def s1_records(plan: dict[str, Any], tmp: Path, done: dict[str, set[int]]) -> list[Path]:
-    """Both session-1 jobs' lane records: the base scored, the extension blocks in
+def test_a1_jobs_run_in_order_and_stop_when_dr0_fired(frozen_tree, tmp_path, monkeypatch):
+    """Section 11: each A1 job names every earlier one's records and receipt by digest (9B
+    then 4B, session 1 then 2), and none may have fired DR0."""
+    root, plan = frozen_tree
+    monkeypatch.setattr(lane, "RUN_ROOT", "/")  # the run directories live in tmp_path here
+    with pytest.raises(ValueError, match="needs the run directories of \\['A1-9B-S1'\\]"):
+        a1(frozen_tree, "4B", "S1")  # 4B before 9B's session-1 job ran
+    good = run_dir(tmp_path / "ok", "A1-9B-S1", scored_base(plan, "9B", "S1"))
+    m = a1(frozen_tree, "4B", "S1", [good])
+    lane.validate_manifest(m, root)
+    # DR0 fires on the earlier job: more than 5% of a cell's first attempts lost.
+    rows = scored_base(plan, "9B", "S1")
+    for row in rows[:8]:
+        row.update(status="infrastructure", score=None, infrastructure_type="transport")
+    rows += [dict(r, attempt=2, status="scored", score=1.0, infrastructure_type=None)
+             for r in rows[:8]]  # fmt: skip
+    lossy = run_dir(tmp_path / "lossy", "A1-9B-S1", rows)
+    with pytest.raises(lane.LaneError, match="DR0 fired for A1-9B-S1 .cell loss"):
+        lane.validate_manifest(a1(frozen_tree, "4B", "S1", [lossy]), root)
+    incomplete = run_dir(tmp_path / "short", "A1-9B-S1", scored_base(plan, "9B", "S1")[:-3])
+    with pytest.raises(lane.LaneError, match="base incomplete"):
+        lane.validate_manifest(a1(frozen_tree, "4B", "S1", [incomplete]), root)
+    refused = run_dir(tmp_path / "err", "A1-9B-S1", scored_base(plan, "9B", "S1"),
+                      error="LaneError: engine argv")  # fmt: skip
+    with pytest.raises(lane.LaneError, match="gate of section 3"):
+        lane.validate_manifest(a1(frozen_tree, "4B", "S1", [refused]), root)
+    tampered = a1(frozen_tree, "4B", "S1", [good])
+    (good / "episodes.jsonl").write_text("")
+    with pytest.raises(lane.LaneError, match="does not match its digest"):
+        lane.validate_manifest(tampered, root)
+
+
+def s1_records(plan: dict[str, Any], tmp: Path, done: dict[str, set[int]],
+               t_end: float = 1.0e9) -> list[Path]:  # fmt: skip
+    """Both session-1 jobs' lane run directories: the base scored, the extension blocks in
     ``done[size]`` final (one slot lost after its re-queue), the next block cut at USR1."""
     tmp.mkdir(parents=True, exist_ok=True)
     files = []
-    for size in P.SIZES:
+    for size in P.size_order():
         slots, fill = P.a1_slots(plan, size, "S1")
         blocks = {int(b["label"][1:]): b for b in fill["blocks"]}
         cut_block = max(done[size], default=0) + 1
@@ -218,9 +285,7 @@ def s1_records(plan: dict[str, Any], tmp: Path, done: dict[str, set[int]]) -> li
         rows += [{**s, **common, "status": "cap_truncated", "score": None} for s in cut]
         rows += [dict(rows[len(slots)], attempt=2, status="infrastructure", score=None,
                       infrastructure_type="transport")] if finished else []  # fmt: skip
-        path = tmp / f"{size}-S1-episodes.jsonl"
-        path.write_text("".join(json.dumps(r) + "\n" for r in rows))
-        files.append(path)
+        files.append(run_dir(tmp, P.a1_job(size, "S1"), rows, t_end=t_end))
     return files
 
 
@@ -230,8 +295,10 @@ def test_a1_session_two_runs_the_blocks_both_session_one_jobs_completed(
     root, plan = frozen_tree
     monkeypatch.setattr(lane, "RUN_ROOT", "/")  # the record files live in tmp_path here
     files = s1_records(plan, tmp_path / "both", {"9B": {1, 2}, "4B": {1, 2}})
-    m = a1(frozen_tree, "4B", "S2", files)
+    s2_9b = run_dir(tmp_path / "both", "A1-9B-S2", scored_base(plan, "9B", "S2"))
+    m = a1(frozen_tree, "4B", "S2", files + [s2_9b])
     assert m["a1"]["s2_extension_blocks"] == [1, 2] and "fill" not in m
+    assert [j["job"] for j in m["a1"]["prior_jobs"]] == P.a1_job_order()[:3]
     lane.validate_manifest(m, root)
     blocks = [s["block"] for s in m["slots"]]
     assert blocks == ["b1"] * 64 + ["b2"] * 64 + ["x01.1"] * 16 + ["x01.2"] * 16 + [
@@ -241,8 +308,8 @@ def test_a1_session_two_runs_the_blocks_both_session_one_jobs_completed(
         "S2:4B:x01.1"]  # fmt: skip
     for tamper, message in (
         (lambda x: x["a1"].update(s2_extension_blocks=[1, 2, 3]), "must be \\[1, 2\\]"),
-        (lambda x: x["a1"]["s1_records"].pop(), "both S1 jobs"),
-        (lambda x: x["a1"]["s1_records"][0].update(sha256="0" * 64), "does not match"),
+        (lambda x: x["a1"]["prior_jobs"].pop(0), "prior_jobs must be"),
+        (lambda x: x["a1"]["prior_jobs"][0]["records"].update(sha256="0" * 64), "does not match"),
         (lambda x: x["slots"].pop(), "slots differ"),
     ):
         bad = copy.deepcopy(m)
@@ -254,6 +321,47 @@ def test_a1_session_two_runs_the_blocks_both_session_one_jobs_completed(
     m = a1(frozen_tree, "9B", "S2", uneven)
     assert m["a1"]["s2_extension_blocks"] == [1]
     lane.validate_manifest(m, root)
+
+
+def test_session_two_waits_twelve_hours_after_session_one(frozen_tree, tmp_path, monkeypatch):
+    """Section 5.5: the S2 jobs start at least 12 h after the later S1 job ends. The lane
+    refuses to start earlier, and the submission holds the job with --begin."""
+    root, plan = frozen_tree
+    monkeypatch.setattr(lane, "RUN_ROOT", "/")
+    ends = 1.9e9
+    files = s1_records(plan, tmp_path / "s1", {"9B": set(), "4B": set()}, t_end=ends)
+    m = a1(frozen_tree, "9B", "S2", files)
+    lane.validate_manifest(m, root)
+    assert lane.earliest_start(m) == ends + 12 * 3600
+    assert lane.earliest_start(a1(frozen_tree, "9B", "S1")) is None
+    now = [ends + 11 * 3600]
+    cfg = lane.LaneConfig(m, "999", tmp_path / "run", root)
+    cfg.run_dir.mkdir()
+    early = lane.Lane(cfg, docker=object(), certified=["Return"], clock=lambda: now[0])
+    receipt = early.run()
+    assert "at least 12 h" in receipt["error"] and receipt["dispatched"] == []
+    assert receipt["statuses"] == {"cap_truncated": len(m["slots"])}  # never dispatched
+
+
+def test_gpu_half_comes_from_the_vm_manifest(frozen_tree):
+    """The GPU half's size and minutes are the VM manifest's (A0a: 9B for 25 minutes; A1:
+    its size for the frozen T_A1), never free arguments."""
+    import yaml
+
+    template = (ROOT / builder.GPU_TEMPLATE).read_text()
+    values = {
+        "FILL_JOB": "x", "FILL_OVERLAY_IMAGE_ID": "sha256:" + "3" * 64,
+        "FILL_GIT_SHA": "1234567" * 5 + "89abc", "FILL_SOURCE_SHA256": "5" * 64,
+        "FILL_RECEIPT_SHA256": "6" * 64, "FILL_ARTIFACT_ROOT_SHA256": "7" * 64,
+    }  # fmt: skip
+    gpu = yaml.safe_load(builder.gpu_for_vm_manifest(template, a0a(), vm_job_id="5", values=values))
+    assert gpu["resources"]["minutes"] == 25 and gpu["command"][-5] == "9B"
+    one = a1(frozen_tree, "9B", "S1")
+    gpu = yaml.safe_load(builder.gpu_for_vm_manifest(template, one, vm_job_id="5", values=values))
+    assert gpu["resources"]["minutes"] == 111 and gpu["model"]["model_id"] == "qwen3.5-9b"
+    with pytest.raises(ValueError, match="may hold only"):
+        builder.gpu_for_vm_manifest(template, one, vm_job_id="5",
+                                    values={**values, "FILL_CAP_MINUTES": "200"})  # fmt: skip
 
 
 def test_gpu_half_from_the_builder_passes_the_docker_submitter():

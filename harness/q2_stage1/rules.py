@@ -7,8 +7,12 @@ changing one after the freeze is a new experiment id.
 
 from __future__ import annotations
 
+import argparse
+import hashlib
+import json
 import math
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -61,6 +65,73 @@ def dr0(
     if gate_breach:
         reasons.append("a gate of section 3 did not hold")
     return {"fires": bool(reasons), "reasons": reasons}
+
+
+def job_dr0(
+    records: Iterable[Mapping[str, Any]],
+    *,
+    job: str,
+    size: str,
+    session: str,
+    base: Sequence[str],
+    receipt: Mapping[str, Any] | None = None,
+    gate_breach: str | None = None,
+) -> dict[str, Any]:
+    """DR0 for one A1 job from its lane record file (and its lane receipt).
+
+    The cell losses and base completion come from the records (``records.first_attempt_losses``
+    and ``records.base_complete``, infrastructure only, no outcome); a lane receipt that
+    holds an error (the lane refused to dispatch: an engine or Slurm check, D12) or a named
+    ``gate_breach`` is a gate of section 3 that did not hold.
+    """
+    from harness.q2_stage1 import records as R
+
+    rows = [R.validate(r) for r in records if r.get("job") == job]
+    losses = R.first_attempt_losses(rows, job)
+    complete = R.base_complete(rows, job, size, session, base)
+    breaches = []
+    if receipt is not None and receipt.get("error"):
+        breaches.append(f"lane: {str(receipt['error'])[:200]}")
+    if gate_breach:
+        breaches.append(str(gate_breach)[:200])
+    out = dr0(losses, complete, bool(breaches))
+    out["reasons"] += breaches
+    out.update(
+        job=job,
+        base_complete=complete,
+        cell_losses={
+            f"{z}/{h}": {"first_attempts": c.first_attempts, "infrastructure": c.infrastructure}
+            for (z, h), c in losses.items()
+        },
+    )
+    return out
+
+
+def run_dir_dr0(run_dir: Path, plan: Mapping[str, Any], gate_breach: str | None = None) -> dict:
+    """DR0 for the A1 job whose lane run directory this is (``manifest.json``,
+    ``episodes.jsonl``, ``lane-receipt.json``), with the files' digests."""
+    manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+    a1 = manifest.get("a1") or {}
+    size, session = a1.get("size"), a1.get("session")
+    job = f"A1-{size}-{session}"
+    if manifest.get("purpose") != "a1":
+        raise ValueError("DR0 judges A1 jobs only (ANC is judged by DR-A)")
+    episodes, receipt_path = run_dir / "episodes.jsonl", run_dir / "lane-receipt.json"
+    rows = [
+        json.loads(line)
+        for line in episodes.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    out = job_dr0(
+        rows, job=job, size=size, session=session, base=plan["base"], receipt=receipt,
+        gate_breach=gate_breach,
+    )  # fmt: skip
+    out["files"] = {
+        path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in (run_dir / "manifest.json", episodes, receipt_path)
+    }
+    return out
 
 
 # --------------------------------------------------------------------------- DR-A
@@ -208,3 +279,26 @@ def predictions(
         "P4": {"falsified": dr1_fires, "read": "DR1"},
         "P5": {"falsified": dr4_exceeds, "read": "DR4"},
     }
+
+
+# --------------------------------------------------------------------------- command line
+
+
+def main(argv: list[str] | None = None) -> int:
+    """``dr0``: DR0 for one A1 job from its lane run directory and the frozen plan; exits 3
+    when it fires (no further job may start, section 11)."""
+    parser = argparse.ArgumentParser(description="S1a decision rules")
+    sub = parser.add_subparsers(dest="command", required=True)
+    cmd = sub.add_parser("dr0", help="DR0 of one A1 job (infrastructure records only)")
+    cmd.add_argument("--run-dir", type=Path, required=True)
+    cmd.add_argument("--plan", type=Path, required=True)
+    cmd.add_argument("--gate-breach", help="a gate of section 3 that did not hold (recorded)")
+    args = parser.parse_args(argv)
+    plan = json.loads(args.plan.read_text(encoding="utf-8"))
+    out = run_dir_dr0(args.run_dir, plan, args.gate_breach)
+    print(json.dumps(out, indent=1, sort_keys=True))
+    return 3 if out["fires"] else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
