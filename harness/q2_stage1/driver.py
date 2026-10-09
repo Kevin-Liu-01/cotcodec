@@ -30,13 +30,19 @@ server restart (at the check after the 20 s settle or at the one after the captu
 checker getter or postconfig step that loses its transport (``osworld_live``: any guest
 request of the evaluation or the sweep that failed in transport, even one the pinned code
 swallowed) are infrastructure losses, and so is a checker that asks for a URL the offline
-run cannot serve (``offline_network``). A failed postconfig reply during ``evaluate()`` is
-recorded (``postconfig_failures``), not a loss: postconfig steps act on the agent's final
-state. The episode container must see no GPU device (D12): a visible ``/dev/nvidia*`` ends
-the episode before the boot wait, and the lane stops dispatching. A restart check that
-cannot reach the guest server is a transport loss: the episode cannot be shown
-restart-free. A reply that yields no valid IR (``IRError`` or a parser exception) is
-handled under the harness's rule and counted
+run cannot serve (``offline_network``). An observation the guest server did not deliver is a
+``guest_observation`` loss (D53 (iii)): a screenshot of the agent's whose attempts all got an
+HTTP reply that was no image (a 5xx), or a checker read (``osworld_live``: a guest read of
+``evaluate()`` or the capture sweep that got HTTP 5xx on every attempt, which the pinned code
+would hand the metric as ``None`` and score 0); one whose attempts failed in transport stays
+a ``transport`` loss. Every observation is counted per episode (``observations``: calls,
+delivered on retry, slow, undelivered), reported. A failed postconfig reply during
+``evaluate()`` is recorded (``postconfig_failures``), not a loss: postconfig steps act on the
+agent's final state. The episode container must see no GPU device (D12): a visible
+``/dev/nvidia*`` ends the episode before the boot wait, and the lane stops dispatching. A
+restart check that cannot reach the guest server, or that the server answers with an HTTP
+error, is a transport loss: the episode cannot be shown restart-free. A reply that yields no
+valid IR (``IRError`` or a parser exception) is handled under the harness's rule and counted
 (``ir_errors``); a checker metric that raises scores 0 (``metric_exception``). The record
 follows ``records.SCHEMA``; the step log, raw replies and capture stay under the episode's
 output directory on the host.
@@ -146,6 +152,17 @@ def sha256_json(value: Any) -> str:
 
 
 SLOW_EXECUTE_S = 30.0
+SLOW_OBSERVATION_S = 30.0  # an observation that took longer is counted as slow (reported)
+
+
+def observation_loss_kind(attempts: Any) -> str:
+    """The loss of an undelivered screenshot: ``transport`` when an attempt failed in
+    transport (no HTTP reply), else ``guest_observation`` (the guest server answered every
+    attempt with no image, a 5xx; D53 (iii))."""
+    rows = list(attempts or [])
+    if not rows or any("error" in (row or {}) for row in rows):
+        return "transport"
+    return "guest_observation"
 
 
 def step_losses(record: Mapping[str, Any]) -> list[str]:
@@ -202,6 +219,10 @@ class Runner:
         self.out = Path(cfg.out_dir)
         self.out.mkdir(parents=True, exist_ok=True)
         self.timings: dict[str, float] = {}
+        self.agent_observations: dict[str, Any] = {
+            "calls": 0, "retried": 0, "slow": 0, "undelivered": 0, "max_s": None,
+        }  # fmt: skip
+        self.session: Session | None = None
         self.record: dict[str, Any] = {
             "schema": SCHEMA,
             "job": cfg.job,
@@ -237,12 +258,16 @@ class Runner:
                 out["server_pid"] = self.guest.run_script(SERVER_PID_SCRIPT).get("server_pid")
             if isinstance(out["server_pid"], int):
                 cgroup = self.guest.execute(["cat", f"/proc/{out['server_pid']}/cgroup"], 30.0)
+                if cgroup.get("http_status") != 200:
+                    raise RuntimeError(f"/execute answered HTTP {cgroup.get('http_status')}")
                 unit = unit_of_cgroup(str(cgroup.get("output", "")))
                 out["unit"] = unit
                 if unit:
                     result = self.guest.execute(
                         ["systemctl", "show", "--property=NRestarts", "--value", unit], 30.0
                     )
+                    if result.get("http_status") != 200:
+                        raise RuntimeError(f"/execute answered HTTP {result.get('http_status')}")
                     value = str(result.get("output", "")).strip()
                     out["n_restarts"] = int(value) if value.isdigit() else None
         except Exception as exc:  # noqa: BLE001 - recorded; the restart rule reads what exists
@@ -278,6 +303,7 @@ class Runner:
             t = self.clock()
             try:
                 session = self.session_factory(self.cfg, self.task)
+                self.session = session
                 self.record["setup"] = for_record(session.setup())
             except agents.InfraLoss:
                 raise
@@ -333,6 +359,8 @@ class Runner:
         return self.finish(t0)
 
     def finish(self, t0: float) -> dict[str, Any]:
+        if self.cfg.mode == "episode":
+            self.record["observations"] = self.observation_counts()
         self.record["t_end"] = self.clock()
         self.timings["runner_s"] = round(self.record["t_end"] - t0, 3)
         self.record["timings"] = self.timings
@@ -342,6 +370,28 @@ class Runner:
             json.dumps(self.record, indent=1, sort_keys=True), encoding="utf-8"
         )
         return self.record
+
+    def observe(self, attempts: Any, seconds: float, delivered: bool) -> None:
+        """Count one of the agent's screenshots (section 7.3, D53 (iii)): delivered on a
+        retry (its first attempt was not an image), slow (over ``SLOW_OBSERVATION_S``) or
+        undelivered."""
+        stats, rows = self.agent_observations, list(attempts or [])
+        stats["calls"] += 1
+        first = rows[0] if rows else {}
+        stats["retried"] += int(delivered and (first.get("status") != 200 or len(rows) > 1))
+        stats["slow"] += int(seconds > SLOW_OBSERVATION_S)
+        stats["undelivered"] += int(not delivered)
+        stats["max_s"] = round(max(seconds, stats["max_s"] or 0.0), 3)
+
+    def observation_counts(self) -> dict[str, Any]:
+        """The episode's observations: the agent's screenshots and, when the session
+        records them, the checker's reads (``osworld_live.LiveTask.observation_summary``)."""
+        out: dict[str, Any] = {"agent": dict(self.agent_observations), "slow_s": SLOW_OBSERVATION_S}
+        summary = getattr(self.session, "observation_summary", None)
+        if callable(summary):
+            with contextlib.suppress(Exception):  # counts only; never changes the record
+                out["checker"] = summary()
+        return out
 
     def check_no_gpu(self) -> None:
         """D12: the episode container is GPU-less; a visible device ends the episode."""
@@ -422,8 +472,11 @@ class Runner:
         return changed_pid or counted, count
 
     def restart_behind(self, loss: agents.InfraLoss) -> str:
-        """A transport loss behind which the guest server restarted is a restart (D30)."""
-        if loss.kind != "transport" or not self.record.get("server_start"):
+        """A transport or guest-observation loss behind which the guest server restarted is
+        a restart (D30)."""
+        if loss.kind not in ("transport", "guest_observation") or not self.record.get(
+            "server_start"
+        ):
             return loss.kind
         start, end = self.record["server_start"], self.server_identity()
         self.record["server_after_loss"] = end
@@ -458,9 +511,12 @@ class Runner:
         )
         self.record["date_line"] = client.date_line
         certified = set(self.cfg.certified_keysyms)
+        t = self.clock()
         shot, attempts = desktop.get_screenshot(self.guest)
+        self.observe(attempts, self.clock() - t, shot is not None)
         if shot is None:
-            raise agents.InfraLoss("transport", f"first observation failed: {attempts}")
+            kind = observation_loss_kind(attempts)
+            raise agents.InfraLoss(kind, f"first observation failed: {attempts}")
         last_action: str | None = None
         self.record["ended"] = "step_cap"
         t_loop = self.clock()
@@ -490,6 +546,11 @@ class Runner:
                     break
                 command = step_command(action)
                 rec, new_shot = desktop.step(self.guest, command, pause=0.0)
+                self.observe(
+                    rec.get("screenshot_attempts"),
+                    float((rec.get("timing_s") or {}).get("screenshot") or 0.0),
+                    new_shot is not None,
+                )
                 result = ((rec.get("execute") or {}).get("result")) or {}
                 executed.append(
                     {
@@ -502,7 +563,12 @@ class Runner:
                 )
                 infra = step_losses(rec)
                 if infra:
-                    raise agents.InfraLoss("transport", f"step {step} {action['op']}: {infra}")
+                    kind = (
+                        "transport"
+                        if "execute" in infra
+                        else observation_loss_kind(rec.get("screenshot_attempts"))
+                    )
+                    raise agents.InfraLoss(kind, f"step {step} {action['op']}: {infra}")
                 if result.get("returncode") not in (0, None):
                     raise agents.InfraLoss(
                         "executor_device",
@@ -515,9 +581,12 @@ class Runner:
                 last_action = "FAIL" if terminated == "failure" else "DONE"
                 self.record["ended"] = f"terminate_{terminated}"
             elif not executed and self.cfg.harness == "H-GA":
+                t = self.clock()
                 fresh, attempts = desktop.get_screenshot(self.guest)
+                self.observe(attempts, self.clock() - t, fresh is not None)
                 if fresh is None:
-                    raise agents.InfraLoss("transport", f"step {step} capture failed: {attempts}")
+                    kind = observation_loss_kind(attempts)
+                    raise agents.InfraLoss(kind, f"step {step} capture failed: {attempts}")
                 shot = fresh
             steps_log.write(
                 json.dumps(
@@ -557,6 +626,7 @@ class Runner:
 
     def evaluate(self, session: Session, last_action: str | None) -> None:
         from harness.q2_stage1.osworld_live import (
+            is_observation_failure,
             is_offline_refusal,
             is_transport_error,
             setup_reply_failed,
@@ -569,6 +639,8 @@ class Runner:
             self.record_postconfig(session, setup_reply_failed)
             if is_transport_error(exc):
                 raise agents.InfraLoss("transport", f"evaluate: {exc}") from exc
+            if is_observation_failure(exc):
+                raise agents.InfraLoss("guest_observation", f"evaluate: {exc}") from exc
             if is_offline_refusal(exc):
                 raise agents.InfraLoss("offline_network", f"evaluate: {exc}") from exc
             error = f"{type(exc).__name__}: {exc}"[:500]
@@ -590,6 +662,8 @@ class Runner:
         except Exception as exc:  # noqa: BLE001 - a lost transport voids the episode
             if is_transport_error(exc):
                 raise agents.InfraLoss("transport", f"capture: {exc}") from exc
+            if is_observation_failure(exc):
+                raise agents.InfraLoss("guest_observation", f"capture: {exc}") from exc
             self.record["capture_sweep_error"] = f"{type(exc).__name__}: {exc}"[:300]
         manifest = session.write_capture(self.out / "capture")
         self.timings["capture_s"] = round(self.clock() - t, 3)
