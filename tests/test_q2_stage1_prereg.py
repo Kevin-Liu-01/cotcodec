@@ -183,6 +183,80 @@ def test_frozen_plan_slot_takes_the_plan_sha256_the_lane_reads(tmp_path):
             lane.validate_manifest(_a1_9b_s1(bad_root, rel), bad_root)
 
 
+# D32 and D39: the freeze rewrites the whole status paragraph to the frozen wording, which
+# section 22 states under "At the freeze", so no draft-only sentence is frozen with it.
+STATUS_FORBIDDEN = ("DRAFT", "not frozen", "no ledger row", "open slot")
+FROZEN_STATUS_START = "**Status: frozen in `program/preregistrations/ledger.jsonl`;"
+
+
+def _status_paragraph(text: str) -> str:
+    """The status paragraph at the top: from the line that starts with ``**Status:`` (the
+    file's third) to the first blank line, its line breaks folded."""
+    lines = text.split("\n")
+    assert lines[2].startswith("**Status:"), "the status paragraph starts on the third line"
+    end = lines.index("", 2)
+    return " ".join(" ".join(lines[2:end]).split())
+
+
+def _stated_frozen_status(text: str) -> str:
+    """The frozen status paragraph section 22 states under "At the freeze": its one block
+    quote, line breaks folded."""
+    parts = text.split("\n### At the freeze\n")
+    assert len(parts) == 2, "section 22 has one 'At the freeze' subsection"
+    lines = parts[1].split("\n")
+    start = next(i for i, line in enumerate(lines) if line.startswith("> "))
+    quote = []
+    for line in lines[start:]:
+        if not line.startswith(">"):
+            break
+        quote.append(line[1:])
+    assert not any(line.startswith(">") for line in lines[start + len(quote) :]), "one quote"
+    return " ".join(" ".join(quote).split())
+
+
+def _check_frozen_status(text: str) -> None:
+    status = _status_paragraph(text)
+    assert status == _stated_frozen_status(text), "the status paragraph must be section 22's"
+    assert status.startswith(FROZEN_STATUS_START)
+    for phrase in STATUS_FORBIDDEN:
+        assert phrase not in status, f"the frozen status paragraph says {phrase!r}"
+
+
+def test_the_status_paragraph_is_replaced_whole_at_the_freeze(tmp_path):
+    """Before the freeze: the placeholder names the whole paragraph, the stated frozen
+    paragraph passes the post-freeze check, and a scratch copy filled as section 22 says the
+    freeze fills it is accepted by the guard, frozen into a copy of the ledger, verified and
+    passes the check. After the freeze: the status paragraph is the stated one."""
+    text = _text()
+    frozen = _stated_frozen_status(text)
+    assert frozen.startswith(FROZEN_STATUS_START)
+    assert not re.search(r"\bTBD\b|<[A-Za-z_ -]+>", frozen)
+    for phrase in STATUS_FORBIDDEN:
+        assert phrase not in frozen, phrase
+    if _frozen():
+        _check_frozen_status(text)
+        return
+    status = _status_paragraph(text)
+    assert status.startswith("**Status: DRAFT, not frozen (TBD: at the freeze this whole paragraph")
+    assert status.count("TBD") == 1
+    lines = text.split("\n")
+    end = lines.index("", 2)
+    filled = "\n".join(lines[:2] + [frozen] + lines[end:])
+    rel, plan = _named_plan()
+    filled = filled.replace(
+        "Frozen plan SHA-256: TBD.", f"Frozen plan SHA-256: `{plan['plan_sha256']}`."
+    ).replace("(decision id): TBD", "(decision id): D99")
+    _check_frozen_status(filled)
+    root = _source_tree(tmp_path / "frozen", filled, rel)  # the guard accepts it; row added
+    row = preregister.verify(P.EXPERIMENT_ID, ledger=root / lane.LEDGER, root=root)
+    assert row["sha256"] == lane.frozen_registration(root)["sha256"]
+    _check_frozen_status((root / lane.REGISTRATION).read_text(encoding="utf-8"))
+    # Rewriting only the bold line, as the old slot said, leaves draft sentences: refused.
+    bold_only = re.sub(r"\bTBD\b", "filled", text)
+    with pytest.raises(AssertionError, match="section 22's"):
+        _check_frozen_status(bold_only)
+
+
 def test_code_of_record_matches_the_tree():
     rows = _code_table()
     assert len(rows) >= 12

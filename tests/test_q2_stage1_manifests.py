@@ -99,11 +99,23 @@ def test_a0a_manifest_that_differs_from_the_plan_is_refused(tamper, message):
         lane.validate_manifest(m, ROOT)
 
 
-def test_anchor_purposes_are_refused():
-    for purpose in ("a0b", "anc"):
+def test_anchor_purposes_are_refused(tmp_path):
+    """The anchor is UNAVAILABLE (G0 item 9.6). Before the freeze A0b meets that rule and ANC
+    the freeze check, in a tree with no ledger row whatever the repository's own ledger
+    holds; the repository's tree refuses both too. After the freeze an ANC manifest on these
+    dev slots is refused as outside the pool, and one on the plan's pool slots by the anchor
+    rule (``test_post_freeze_jobs_need_the_registration_the_ledger_froze``)."""
+    unfrozen = tmp_path / "src"
+    (unfrozen / lane.SPLITS).parent.mkdir(parents=True)
+    shutil.copy(ROOT / lane.SPLITS, unfrozen / lane.SPLITS)
+    assert not lane.frozen(unfrozen)
+    for purpose, message in (("a0b", "anchor is UNAVAILABLE"), ("anc", "runs only after")):
         m = a0a()
         m["purpose"] = purpose
-        with pytest.raises(lane.LaneError, match="anchor is UNAVAILABLE|runs only after"):
+        with pytest.raises(lane.LaneError, match=message):
+            lane.validate_manifest(m, unfrozen)
+        after = lane.frozen(ROOT) and purpose == "anc"
+        with pytest.raises(lane.LaneError, match="outside the pool" if after else message):
             lane.validate_manifest(m, ROOT)
 
 
