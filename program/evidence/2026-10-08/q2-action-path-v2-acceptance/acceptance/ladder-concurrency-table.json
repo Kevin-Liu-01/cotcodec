@@ -1,0 +1,136 @@
+[
+  {
+    "jobs": [
+      "968",
+      "970"
+    ],
+    "n": 1,
+    "step_p95_s": 2.6944,
+    "what": "A1 (N = 1 reference, both shuffles and settings pooled)"
+  },
+  {
+    "abort_reasons": [],
+    "aborted": false,
+    "accessibility_calls": 778,
+    "boot_p50_s": 18.12,
+    "boot_p95_s": 18.33,
+    "boots": 20,
+    "counting_job": "1017",
+    "earlier_attempts": [],
+    "excused_trials": 0,
+    "jobs": [
+      "1017"
+    ],
+    "n": 8,
+    "problems": [],
+    "qualifies": true,
+    "reps": 6,
+    "restarts": 0,
+    "step_p50_s": 1.8251,
+    "step_p95_limit_s": 5.3888,
+    "step_p95_s": 2.7136,
+    "trials": 1200,
+    "trials_pass": 1200
+  },
+  {
+    "abort_reasons": [],
+    "aborted": false,
+    "accessibility_calls": 1297,
+    "boot_p50_s": 19.38,
+    "boot_p95_s": 20.306,
+    "boots": 34,
+    "counting_job": "1019",
+    "earlier_attempts": [],
+    "excused_trials": 0,
+    "jobs": [
+      "1019"
+    ],
+    "n": 16,
+    "problems": [],
+    "qualifies": true,
+    "reps": 10,
+    "restarts": 0,
+    "step_p50_s": 1.9501,
+    "step_p95_limit_s": 5.3888,
+    "step_p95_s": 2.8852,
+    "trials": 2000,
+    "trials_pass": 2000
+  },
+  {
+    "abort_reasons": [],
+    "aborted": false,
+    "accessibility_calls": 1816,
+    "boot_p50_s": 20.773,
+    "boot_p95_s": 22.069,
+    "boots": 48,
+    "counting_job": "1021",
+    "earlier_attempts": [],
+    "excused_trials": 0,
+    "jobs": [
+      "1021"
+    ],
+    "n": 24,
+    "problems": [],
+    "qualifies": true,
+    "reps": 14,
+    "restarts": 0,
+    "step_p50_s": 2.1139,
+    "step_p95_limit_s": 5.3888,
+    "step_p95_s": 3.1323,
+    "trials": 2800,
+    "trials_pass": 2800
+  },
+  {
+    "abort_reasons": [],
+    "aborted": false,
+    "accessibility_calls": 2464,
+    "boot_p50_s": 21.142,
+    "boot_p95_s": 21.841,
+    "boots": 64,
+    "counting_job": "1023",
+    "earlier_attempts": [],
+    "excused_trials": 0,
+    "jobs": [
+      "1023"
+    ],
+    "n": 32,
+    "problems": [],
+    "qualifies": true,
+    "reps": 19,
+    "restarts": 0,
+    "step_p50_s": 2.1056,
+    "step_p95_limit_s": 5.3888,
+    "step_p95_s": 3.17,
+    "trials": 3800,
+    "trials_pass": 3800
+  },
+  {
+    "abort_reasons": [],
+    "aborted": false,
+    "accessibility_calls": 2722,
+    "boot_p50_s": 21.255,
+    "boot_p95_s": 22.238,
+    "boots": 70,
+    "counting_job": "1025",
+    "earlier_attempts": [],
+    "excused_trials": 0,
+    "jobs": [
+      "1025"
+    ],
+    "n": 40,
+    "problems": [
+      "job 1025: Slurm FAILED 3:0",
+      "job 1025: batch script ended with driver_exit=3 labelled_containers_left=0",
+      "job 1025: infra_gates_pass is not true",
+      "rung N=40: the trials run (4200) are not the realized order (4800)"
+    ],
+    "qualifies": false,
+    "reps": 24,
+    "restarts": 0,
+    "step_p50_s": 2.0842,
+    "step_p95_limit_s": 5.3888,
+    "step_p95_s": 3.1725,
+    "trials": 4200,
+    "trials_pass": 4200
+  }
+]

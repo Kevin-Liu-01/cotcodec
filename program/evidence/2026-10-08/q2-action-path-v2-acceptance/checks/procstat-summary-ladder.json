@@ -1,0 +1,47 @@
+{
+ "1017": {
+  "busy_cpu_equivalents": 8.0,
+  "busy_fraction": 0.0386,
+  "iowait_fraction": 6.2e-05,
+  "samples_running": 18,
+  "steal_cpu_equivalents": 0.003,
+  "steal_fraction": 1.7e-05,
+  "window_s": 527
+ },
+ "1019": {
+  "busy_cpu_equivalents": 15.3,
+  "busy_fraction": 0.0733,
+  "iowait_fraction": 0.000125,
+  "samples_running": 19,
+  "steal_cpu_equivalents": 0.005,
+  "steal_fraction": 2.3e-05,
+  "window_s": 557
+ },
+ "1021": {
+  "busy_cpu_equivalents": 36.0,
+  "busy_fraction": 0.1729,
+  "iowait_fraction": 0.00023,
+  "samples_running": 12,
+  "steal_cpu_equivalents": 0.012,
+  "steal_fraction": 5.8e-05,
+  "window_s": 346
+ },
+ "1023": {
+  "busy_cpu_equivalents": 44.2,
+  "busy_fraction": 0.2127,
+  "iowait_fraction": 0.000421,
+  "samples_running": 14,
+  "steal_cpu_equivalents": 0.02,
+  "steal_fraction": 9.5e-05,
+  "window_s": 407
+ },
+ "1025": {
+  "busy_cpu_equivalents": 32.8,
+  "busy_fraction": 0.1575,
+  "iowait_fraction": 0.000361,
+  "samples_running": 21,
+  "steal_cpu_equivalents": 0.017,
+  "steal_fraction": 8.4e-05,
+  "window_s": 629
+ }
+}

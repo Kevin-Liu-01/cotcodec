@@ -2778,3 +2778,72 @@ they say so.)
   the manifests, run, receipt and Slurm records, verdicts, section-12
   reports, summaries, checks, raw SHA-256 lists and operator scripts.
 - Not run: the ladder, A4 and A7. Nothing pushed or merged.
+
+## 2026-10-09 — Q2 action-path v2 concurrency ladder operated (branch `ops/q2-action-path-v2`): N* = 32; rung 40 did not count (host inotify limit), rerun held
+
+- Ran from the earlier stages' read-only export of `bf99a64` (tree
+  `abbbfe6c`), checked again first.
+  - A fresh local export passed `check-chain` (15 rows), `verify` of all
+    three registrations and the pin and admission tests (51 passed).
+  - The frozen renderer (`ladder --concurrency N`, given the host root)
+    wrote the 5 rung manifests. All 5 reproduce byte for byte locally, and
+    none was edited.
+  - r_N was 6, 10, 14, 19 and 24, with 20, 34, 48, 64 and 80 sessions.
+    Runner CPUs were 4-20, and the VMs used at most 160 vCPUs.
+- Ran rungs 8, 16, 24, 32 and 40 in that order, attempt 1, one rung at a
+  time (jobs 1017, 1019, 1021, 1023 and 1025), 02:17-03:04 UTC.
+  - Each rung was submitted only after an empty whole-queue check
+    (`ops/submit_rung.sh`). Nothing else was submitted while a rung ran.
+  - No foreign Slurm job appears in any of the 502 host snapshots, so
+    `foreign_abort` is empty for every rung.
+  - No requeue: every record shows `Requeue=1 Restarts=0`.
+- Rungs 8-32 qualify. Each ended `COMPLETED` 0:0 and passed every trial
+  (9,800 of 9,800).
+  - Boot p95 was 18.3-22.1 s, against a limit of 180.
+  - Step p95 was 2.714, 2.885, 3.132 and 3.170 s, against a limit of 5.389
+    (2 x A1's 2.694).
+  - There were no restarts, so no trial was excused. The rungs'
+    `/accessibility` calls were exactly the registered counts.
+- Rung 40 (job 1025) did not count: `FAILED` 3:0, `driver_exit=3`,
+  infrastructure gates false.
+  - 10 of its 80 cold boots served no screenshot within 300 s: 5 in each
+    setting, and 600 trials were not run.
+  - In each of those VM containers, `dnsmasq` failed with "failed to
+    create inotify: Too many open files". The VM fell back to usermode
+    networking, and the guest server's port never opened.
+  - The host's `fs.inotify.max_user_instances` is 128. About 35 concurrent
+    VM containers get `dnsmasq`.
+  - The 4,200 trials that did run all passed.
+- **N\* = 32** by `acceptance.n_star`, so the program kill criterion
+  applies (N\* < 40).
+  - A1 at N\* passes: rung 32's first five repetitions passed 1,000 of
+    1,000 trials (860 gating).
+- Section 6.1 allows rung 40 one rerun, because it did not count. **It was
+  not submitted.**
+  - Under the same host limit, a rerun would fail the same way and use up
+    the rung's last attempt. A7 runs at attempt 1's N\* and is never judged
+    again.
+  - Raising the limit needs root.
+  - Kevin decides: keep N\* = 32, or have an admin raise the limit and then
+    rerun rung 40 once, before A4 and A7.
+- Reported, not judged:
+  - session wall time grows with N, by up to 30%;
+  - overlay growth is about 68 MB per screenshot session and 234-259 MB per
+    accessibility session;
+  - the host was 8-44 CPU-equivalents busy, with steal at most 1e-4
+    (operator `/proc/stat` samples);
+  - one accessibility retry (rung 40) was delivered on retry;
+  - no key event was read without its state, over 14,000 trials.
+- A5 over all 13 acceptance campaigns' counting receipts plus the
+  boot-reset campaign still passes.
+- All ladder and A5 JSON reproduces byte for byte locally from the raw
+  records (1,240 files, SHA-256 checked) under Python 3.13 (host 3.10).
+  - The run checks pass for 1017-1023, and for 1025 except its end state.
+- 12.40 VM-hours occupied, CPU only (17.45 allocated; sized 11.0). That
+  brings v2 to 24.00 VM-hours. No GPU.
+- Evidence: the third-stage section of
+  `program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md`, with
+  the manifests, run, receipt and Slurm records, the n_star and A1-at-N\*
+  verdicts, the concurrency table, section-12 reports, checks, raw SHA-256
+  lists and operator scripts.
+- Not run: rung 40's rerun, A4 and A7. Nothing pushed or merged.
