@@ -1,8 +1,9 @@
 # Preregistration: q2-stage1-rescoped-v1 (Q2 Stage 1a: rerun-noise floor and harness screen on the certified harness pair)
 
-**Status: DRAFT, not frozen (TBD: rewrite this line to the frozen wording at the freeze, as
-D32 and D39 required).** This file has no ledger row. No confirm-split episode may run
-under it. D49 (ii) admitted the pre-freeze development jobs O1 and A0a within S1a's caps
+**Status: DRAFT, not frozen (TBD: at the freeze this whole paragraph, not only this line,
+is replaced word for word by the frozen status paragraph that section 22 states under "At
+the freeze", as D32 and D39 required).** This file has no ledger row. No confirm-split
+episode may run under it. D49 (ii) admitted the pre-freeze development jobs O1 and A0a within S1a's caps
 (A0b is not submitted while the anchor is unavailable); like every GPU episode they run
 only after the action-path suite passes. Freezing needs the G0 items of section 3, the
 constants of section 6.2 written into their open slots, a fresh pre-freeze audit, and the
@@ -56,8 +57,13 @@ every slot on a scratch copy and freezes it).
   | `q2-evaluator-mutation-v1` | descriptive (D35) | checker corrections and K1 task exclusions |
 
 - **Code revision.** O1, A0a and A0b run from an export of the draft commit
-  named in their manifests; O2, ANC and A1 from an export of the freeze commit,
-  whose ledger row's git head is the code of record. Any change after A0 to the
+  named in their manifests; O2, ANC and A1 from an export of the freeze commit. The
+  freeze commit is the commit that adds this file's ledger row and nothing else (as
+  `bf99a64` did for action-path v2); its parent, the row's `git_head_at_freeze`, holds
+  the code of record and this file as frozen, so the two trees differ only by the row.
+  The export, and O2's `FILL_GIT_SHA` and source archive, are the freeze commit itself,
+  not its parent: the lane reads the row from the export's tree (section 5.5), and the
+  parent's tree has no row. Any change after A0 to the
   engine launcher, the episode driver, either harness client or the checker
   invocation requires that A0 job to be repeated (section 6.2).
 
@@ -753,8 +759,9 @@ The full list is `harness/q2/action_path/harness_design_diffs.md`.
   the operator runs `scripts/preregister.py verify q2-stage1-rescoped-v1` and `check-chain`
   in the clone the overlay is built from and keeps the output with O2's evidence; a failure
   stops the submission and is reported.
-- **Overlay for the A1 GPU halves.** O2 builds the overlay from the freeze commit as O1
-  did: the source receipt is made with `selected_ref: HEAD` in a clean clone at that commit
+- **Overlay for the A1 GPU halves.** O2 builds the overlay from the freeze commit (the
+  commit that adds the ledger row, not `git_head_at_freeze`; section 1) as O1 did: the
+  source receipt is made with `selected_ref: HEAD` in a clean clone at that commit
   (the extractor refuses any other ref; job 1032). Every A1 GPU half uses the O2 overlay
   built from the exact commit its A1 export runs from (its manifest's `FILL_GIT_SHA` and
   `FILL_SOURCE_SHA256` are that commit and O2's source archive), and the GPU job's container
@@ -1131,10 +1138,13 @@ Per episode:
     transport loss (section 7.2), so no attempt slower than 150 s is ever scored;
   - an observation delivered after more than 30 s, or only on a retry, is counted per
     episode as an infrastructure event and reported per cell beside the losses (section
-    15), and the episode is scored. A delivered observation carries the guest's state, so
-    its delay alone does not change what the agent saw or what the checker read. S1a
-    registers no delay above which a delivered observation voids the episode; doing so
-    would change the episode driver after A0 and so repeat A0a (section 6.2);
+    15), and the episode is scored. A delivered observation carries the guest's own state.
+    A delay can change the moment that state is sampled (with no pause after an action, a
+    screenshot delivered late can show a more settled screen than a prompt one would), but
+    not whose state it is, and the same executor and guest server deliver both harnesses'
+    screenshots, so the effect is the same mechanism under each. S1a registers no delay
+    above which a delivered observation voids the episode; doing so would change the
+    episode driver after A0 and so repeat A0a (section 6.2);
 - **uncertified action-path exposure:** the number of key, chord and hold
   actions, and of click or scroll modifiers, that name a keysym outside the 33
   `catalog.certified_keysyms` of action-path v2 section 4.5
@@ -1666,8 +1676,14 @@ rules produce (the second Kevin slot below).
     an undelivered observation is a loss, every attempt is bounded (a checker read at
     most 150 s, then a transport loss), and an observation delivered slowly or on a retry is
     counted per episode as infrastructure and reported per cell beside the losses (section
-    15) while the episode is scored. The program's sign-off decision states whether this
-    meets D53 (iii)'s "very slow" clause; if it does not, the draft goes back to review
+    15) while the episode is scored. A guest-server error on a postconfig step inside
+    `DesktopEnv.evaluate()` is recorded (`postconfig_failures`) and is not a loss, because a
+    postconfig step is an action on the agent's final state, not an observation (section
+    7.2); a fault that lasts a whole boot is caught earlier (task setup, the warm-up's and
+    the steps' `/execute`, the restart check), so what this carve-out leaves is an
+    intermittent server fault on a postconfig step. The program's sign-off decision states
+    whether this reading, the postconfig carve-out included, meets D53 (iii)'s "very slow"
+    clause and its persistent-error duty; if it does not, the draft goes back to review
     (registering a delay limit changes the driver after A0, so A0a is repeated).
 14. Raw verdicts primary; z-order-corrected verdicts secondary; the flagged
     tasks of section 8.
@@ -1688,7 +1704,9 @@ rules produce (the second Kevin slot below).
     unavailable. (2026-10-08: G0 item 9.6 makes the anchor unavailable before any GPU
     job, so the floor is 32 whether or not this item is signed. If A0a's price
     lowers K_base below 32, the draft goes back to review; the amendment does not
-    apply without the anchor.)
+    apply without the anchor.) Item 18 has no sign-off slot and stays unsigned in the
+    frozen file: with the anchor UNAVAILABLE it changes nothing (K_base is 32, section
+    6.2), and a registration that ran the anchor would be a new experiment id.
 19. Caps of section 6.1 with the remainder rule, and the A0-derived K_base
     rule of section 6.2 (it can only lower K).
 20. The OpenCUA-7B anchor on the upstream action path, sized from A0b, read
@@ -1711,7 +1729,7 @@ rules produce (the second Kevin slot below).
 **Sign-off slots.** Each is filled before the freeze (with the decision id or Kevin's
 ruling); an open one keeps the freeze guard refusing this file. The program's decision
 names, under item 13, whether S1a's reading of D53 (iii)'s "very slow" clause (section 7.3)
-is accepted.
+is accepted, the postconfig carve-out of section 7.2 included.
 
 - Kevin: item 17 (DR1 and DR5 replace the question file's kill lines), and acceptance that
   S1a is read without the D11 runtime check (the anchor is UNAVAILABLE by G0 item 9.6, so
@@ -2145,7 +2163,64 @@ now freezes its registration with `preregister.freeze`, and the new test above;
 `tests/test_q2_stage1_prereg.py`: the frozen-plan slot test and the filled Kevin slots), as
 did the D12 device stub of `83f4127` (`tests/test_q2_stage1_driver.py`; no code change).
 
-Open slots until the freeze (each carries the placeholder the guard refuses): the status
-line; G0 item 10's frozen plan digest (the frozen plan file's `plan_sha256` in backticks,
-as G0 item 10 states); section 18's program sign-off (Kevin's two are filled, D55).
+### Freeze rehearsal (2026-10-09)
 
+A fresh verifier rehearsed the freeze on a scratch clone of `51770da` with its own copy of
+the ledger (the real ledger unchanged). The guard refused the unfilled draft on its three
+slots only. With the slots filled, the freeze was accepted (row 16, chain intact, `verify`
+passes); the A1-9B-S1 VM manifest rendered from `plan-a0a.json` validated (128 base slots,
+11 fill blocks, V = 20, T_A1 = 110, 90 CPUs, 126 GB, 120 minutes); its GPU half passed the
+docker submitter's dry run (one H100, 32 CPUs, `--time=01:50:00`, USR1 at 180 s,
+`--dependency=after:` the VM job); and a one-byte edit of the frozen copy made `lane
+validate`, `lane submit --dry-run`, the GPU half's rendering and `preregister.py verify`
+refuse. It returned two blocking items. Both are fixed, and so is every cheap non-blocking
+item; none is rejected. No GPU job ran, and no file of section 20 changed (tests and this
+file only).
+
+| Item | Finding (short) | Disposition | Where |
+|---|---|---|---|
+| V-B1 | Three S1a tests failed on the frozen tree (`test_manifest_rules` for A1 and ANC, `test_anchor_purposes_are_refused`): they validated against the repository's tree and expected the pre-freeze message, while after the freeze the lane refuses the same manifests by a later rule (the fake engine; a dev task outside the pool) | Fixed in the tests, no code change: each validates against a source tree holding the splits and no ledger, where the pre-freeze message is required, and requires a refusal from the repository's tree in either state (the pre-freeze message while it is unfrozen). The post-freeze ANC refusal on the plan's pool slots stays in `test_post_freeze_jobs_need_the_registration_the_ledger_froze`. The S1a suite passes on a scratch copy frozen as "At the freeze" below states | `tests/test_q2_stage1_lane.py`, `tests/test_q2_stage1_manifests.py` |
+| V-B2 | The status slot covered only its bold line, the draft never stated the frozen wording, and the rest of the paragraph keeps draft-only statements ("This file has no ledger row. No confirm-split episode may run under it.") the guard cannot see: the D32 defect class | Fixed: the placeholder names the whole paragraph; "At the freeze" below states the frozen paragraph word for word. `test_the_status_paragraph_is_replaced_whole_at_the_freeze`: before the freeze it checks the stated paragraph, fills every slot on a scratch copy as the freeze does, freezes it into a copy of the ledger and applies the post-freeze check to the copy; after the freeze it requires the status paragraph to equal the stated one, to start with "**Status: frozen in" and to hold none of "DRAFT", "not frozen", "no ledger row" and "open slot" | header, 22; `tests/test_q2_stage1_prereg.py` |
+| Slow observations | No committed test showed a delivered-slow observation counted and scored | Fixed: two driver tests, the checker's `/file` read and the agent's screenshots each delivered after the slow threshold (set to 0.5 s) and within their bounds: counted slow, neither retried nor undelivered, the episode scored | `tests/test_q2_stage1_driver.py` |
+| 7.3 wording | "its delay alone does not change what the agent saw" overstated the case: with no pause, a late screenshot samples the screen later | Reworded: a delay can change the moment the guest's state is sampled, not whose state it is, and both harnesses' screenshots come through the same executor and server | 7.3 |
+| Postconfig carve-out | A postconfig `/setup/*` 5xx inside `evaluate()` is recorded, not a loss; an intermittent mid-episode server fault there is the exposure left | Item 13 and the sign-off lead-in now put the carve-out to the program's decision with the "very slow" reading | 18 |
+| Freeze commit | "The freeze commit" could be read as `git_head_at_freeze` | Section 1 and 5.5: the freeze commit adds the ledger row and nothing else; the exports and O2's `FILL_GIT_SHA` are that commit, never its parent | 1, 5.5 |
+| Freeze-time updates | `state.json`'s registration field, the present-tense closing sentence of this section, and `HANDOFF.md` on `main` | The closing sentence is replaced by "At the freeze" below, which reads right before and after the freeze and lists the updates; `state.json` and `HANDOFF.md` change after the freeze commit | 22 |
+| Item 18 | Kevin's item 18 stays unsigned in the frozen file | Item 18 states it has no slot and why: with the anchor UNAVAILABLE it changes nothing (K_base 32) | 18 |
+| Audit closure and merge | Every earlier audit item closed (fixed or justified). Against `main` at `a3b306f`: `decisions.md`, the questions, proposals and gauntlet records and `HANDOFF.md` are byte-identical, `log.md` removes nothing, `state.json` keeps `main`'s 29 GPU-hour ledger rows in order and adds 3, and the program total, 4.9088, equals the ledger's sum | No change needed | |
+
+### At the freeze
+
+Slots filled only at the freeze (in the draft each holds the placeholder the guard
+refuses): the status paragraph; G0 item 10's frozen plan digest (the frozen plan file's
+`plan_sha256` in backticks, as G0 item 10 states); section 18's program sign-off (Kevin's
+two are filled, D55).
+
+The freeze replaces the whole status paragraph at the top of this file, from its first
+line to the line before the first bullet, with the paragraph below, word for word (its
+line breaks may differ). Nothing else in that paragraph survives.
+
+> **Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the
+> freeze time and `git_head_at_freeze`.** The pre-freeze jobs O1 and A0a ran under D49 (ii)
+> after the action-path suite passed (D53), from the draft commit named in their
+> manifests; A0b was not submitted, because the anchor is UNAVAILABLE (section 5.7). The
+> constants of section 6.2 and G0 item 10's frozen plan come from A0a's records, and
+> section 18 records the sign-offs. O2 and every A1 job run from an export of the freeze
+> commit, the commit that adds this file's ledger row (section 1), and the lane admits an
+> A1 job only while this file's SHA-256 equals that row's (section 5.5). A material change
+> after the freeze is a new experiment id.
+
+The steps, in order:
+
+1. The program's sign-off decision is recorded on `main` and merged into this branch; its
+   id fills section 18's slot.
+2. The status paragraph and G0 item 10's slot are filled as stated. On a scratch copy of
+   the tree frozen into a copy of the ledger, `scripts/preregister.py freeze` is accepted,
+   `check-chain` and `verify` pass and the S1a suite (`tests/test_q2_stage1_*.py`) passes;
+   only then is the real freeze run.
+3. The filled file is committed; `scripts/preregister.py freeze q2-stage1-rescoped-v1
+   program/preregistrations/q2-stage1-rescoped-v1.md` adds the row; `check-chain` and
+   `verify` pass; the row is committed alone. That commit is the freeze commit (section 1).
+4. After the freeze commit: `program/state.json` (the S1a registration field and next
+   action) and `program/log.md` record the freeze and its row, and `HANDOFF.md` is
+   refreshed on `main` when the branch is merged.

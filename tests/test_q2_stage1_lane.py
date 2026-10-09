@@ -6,6 +6,7 @@ import copy
 import json
 import math
 import re
+import shutil
 import threading
 from pathlib import Path
 from typing import Any
@@ -55,6 +56,21 @@ def test_a_development_manifest_is_valid():
     assert out["slots"][0]["task_id"] == DEV[0]
 
 
+AFTER_THE_FREEZE = "runs only after the freeze"
+
+
+@pytest.fixture(scope="module")
+def unfrozen(tmp_path_factory) -> Path:
+    """A source tree with the splits and no ledger: the registration as a draft, whatever
+    state the repository's own ledger is in, so the pre-freeze refusals are tested before
+    and after the real freeze."""
+    root = tmp_path_factory.mktemp("unfrozen")
+    (root / lane.SPLITS).parent.mkdir(parents=True)
+    shutil.copy(ROOT / lane.SPLITS, root / lane.SPLITS)
+    assert not lane.frozen(root)
+    return root
+
+
 @pytest.mark.parametrize(
     "change, message",
     [
@@ -67,8 +83,8 @@ def test_a_development_manifest_is_valid():
             },
             "fake engine is for development only",
         ),
-        ({"purpose": "a1"}, "runs only after the freeze"),
-        ({"purpose": "anc"}, "runs only after the freeze"),
+        ({"purpose": "a1"}, AFTER_THE_FREEZE),
+        ({"purpose": "anc"}, AFTER_THE_FREEZE),
         ({"mode": "setup-only"}, "runs mode episode"),
         ({"step_cap": 10}, "step_cap is 15"),
         ({"settle_after_reset_s": 0}, "settle after reset"),
@@ -76,8 +92,14 @@ def test_a_development_manifest_is_valid():
         ({"osworld": {"host_dir": f"{RUNS}/x", "commit": "0" * 40}}, "osworld.commit"),
     ],
 )
-def test_manifest_rules(change, message):
+def test_manifest_rules(change, message, unfrozen):
     with pytest.raises(lane.LaneError, match=message):
+        lane.validate_manifest(manifest(**change), unfrozen)
+    # The repository's tree refuses each too. Once it is frozen, an A1 or ANC manifest on
+    # dev slots with the fake engine passes the freeze check and is refused by a later rule
+    # (the fake engine), so only the refusal is required there (section 5.5).
+    after = lane.frozen(ROOT) and message == AFTER_THE_FREEZE
+    with pytest.raises(lane.LaneError, match=None if after else message):
         lane.validate_manifest(manifest(**change), ROOT)
 
 

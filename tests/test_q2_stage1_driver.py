@@ -976,6 +976,45 @@ def test_a_server_error_delivered_on_retry_is_counted_not_a_loss(guest, osworld,
     assert checker["unusual"][0]["attempts"] == [500, 200]
 
 
+def test_a_slow_checker_read_that_is_delivered_is_counted_and_scored(
+    guest, osworld, tmp_path, monkeypatch
+):
+    """Section 7.3: a checker read delivered after more than ``SLOW_OBSERVATION_S`` (30 s;
+    0.5 s here), within its 150 s bound, is counted per episode as slow and reported, and the
+    episode is scored from what it read."""
+    from harness.q2_stage1 import osworld_live
+
+    monkeypatch.setattr(osworld_live, "SLOW_OBSERVATION_S", 0.5)
+    guest.files["/home/user/out.txt"] = b"good"
+    guest.hang_s = 1.0
+    record, _, session = run_live(
+        guest, VM_FILE_TASK, osworld, tmp_path, before=lambda: guest.hang.add("/file")
+    )
+    assert record["status"] == "scored" and record["score"] == 1.0
+    assert not session.guest_errors and not record["metric_exception"]
+    checker = record["observations"]["checker"]
+    assert checker["slow"] >= 1 and checker["retried"] == checker["undelivered"] == 0
+    assert checker["max_s"] >= 1.0
+    assert checker["unusual"] and all(o["delivered"] for o in checker["unusual"])
+    validate(record)
+
+
+def test_a_slow_screenshot_that_is_delivered_is_counted_and_scored(guest, monkeypatch):
+    """Section 7.3: the agent's screenshot delivered after more than ``SLOW_OBSERVATION_S``
+    (0.5 s here), within the certified executor's 10 s per attempt, is counted per episode as
+    slow, and the episode is scored."""
+    monkeypatch.setattr(driver, "SLOW_OBSERVATION_S", 0.5)
+    guest.hang_s = 1.0
+    guest.hang.add("/screenshot")
+    record, _, _ = run(guest, [CLICK, DONE])
+    assert record["status"] == "scored" and record["score"] == 1.0
+    agent = record["observations"]["agent"]
+    assert agent["calls"] == 2 and agent["slow"] == 2  # the first observation and step 1's
+    assert agent["retried"] == agent["undelivered"] == 0 and agent["max_s"] >= 1.0
+    assert record["observations"]["slow_s"] == 0.5
+    validate(record)
+
+
 def test_a_postconfig_action_answered_with_500_stays_a_recorded_postconfig_failure(
     guest, osworld, tmp_path
 ):
