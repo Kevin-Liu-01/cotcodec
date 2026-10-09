@@ -11,6 +11,7 @@ import sys
 import tempfile
 import textwrap
 import threading
+import time
 import urllib.parse
 from pathlib import Path
 from typing import Any
@@ -37,7 +38,13 @@ class FakeGuest:
 
     ``drop`` names paths whose requests are answered by closing the connection (the client
     sees a reset, a ``requests`` ``ConnectionError``); ``drop_execute`` does the same for
-    the ``/execute`` commands it matches; ``files`` is what ``/file`` serves.
+    the ``/execute`` commands it matches; ``files`` is what ``/file`` serves. ``server_error``
+    names paths the guest server answers with HTTP 500 and a JSON error body, as the pinned
+    server does when its handler fails (A7 session 193 got this for a whole boot);
+    ``error_execute`` does the same for the ``/execute`` commands it matches, and
+    ``error_once`` for one request per path; ``hang`` names paths answered only after
+    ``hang_s``; after ``screenshots_ok`` screenshots, ``/screenshot`` answers HTTP 500 (or
+    resets the connection with ``screenshot_reset``).
     """
 
     def __init__(self) -> None:
@@ -57,6 +64,13 @@ class FakeGuest:
         # (path, request body) -> (HTTP status, reply object) or None for the default success
         self.setup_reply: Any = None
         self.diagnostic_output = ""
+        self.server_error: set[str] = set()
+        self.error_execute: Any = None
+        self.error_once: set[str] = set()
+        self.hang: set[str] = set()
+        self.hang_s = 3.0
+        self.screenshots_ok: int | None = None
+        self.screenshot_reset = False
         self._server: socketserver.TCPServer | None = None
 
     def start(self) -> FakeGuest:
@@ -76,12 +90,29 @@ class FakeGuest:
             def hang_up(self) -> None:
                 self.close_connection = True  # no reply: the client sees the reset
 
+            def server_failed(self) -> bool:
+                """The pinned server's answer when its handler fails: HTTP 500, JSON body."""
+                if self.path in guest.hang:
+                    time.sleep(guest.hang_s)
+                once = self.path in guest.error_once
+                if self.path in guest.server_error or once:
+                    guest.error_once.discard(self.path)
+                    self.reply(500, b'{"status": "error", "message": "handler failed"}')
+                    return True
+                return False
+
             def do_GET(self) -> None:  # noqa: N802
                 if self.path in guest.drop:
                     self.hang_up()
+                elif self.server_failed():
+                    return
                 elif self.path == "/screenshot":
-                    if guest.fail_screenshots:
-                        self.reply(500, b"no")
+                    budget = guest.screenshots_ok
+                    if guest.fail_screenshots or (budget is not None and guest.shots >= budget):
+                        if guest.screenshot_reset:
+                            self.hang_up()
+                        else:
+                            self.reply(500, b"no")
                         return
                     guest.shots += 1
                     self.reply(200, png(guest.shots), "image/png")
@@ -94,6 +125,8 @@ class FakeGuest:
                 raw = self.rfile.read(int(self.headers.get("Content-Length") or 0))
                 if self.path in guest.drop:
                     self.hang_up()
+                    return
+                if self.server_failed():
                     return
                 if self.path == "/file":
                     form = urllib.parse.parse_qs(raw.decode())
@@ -117,6 +150,9 @@ class FakeGuest:
                 guest.commands.append(argv)
                 if guest.drop_execute is not None and guest.drop_execute(argv):
                     self.hang_up()
+                    return
+                if guest.error_execute is not None and guest.error_execute(argv):
+                    self.reply(500, b'{"status": "error", "message": "handler failed"}')
                     return
                 self.reply(200, json.dumps(guest.execute(argv)).encode())
 
@@ -213,6 +249,13 @@ GIVE_UP = call("terminate", status="failure")
 @pytest.fixture(autouse=True)
 def fast_retries(monkeypatch):
     monkeypatch.setattr(desktop, "RETRY_INTERVAL_S", 0.0)
+
+
+@pytest.fixture(autouse=True)
+def no_gpu_device_files(monkeypatch, tmp_path):
+    """The runner's D12 check reads ``/dev/nvidia*``, which a GPU host's bare metal has; the
+    tests stand in for the GPU-less episode container (the D12 test sets its own glob)."""
+    monkeypatch.setattr(driver, "GPU_DEVICE_GLOB", str(tmp_path / "no-gpu-devices" / "nvidia*"))
 
 
 @pytest.fixture
@@ -882,3 +925,164 @@ def test_a_checker_that_needs_the_network_is_an_infrastructure_loss(guest):
     assert record["status"] == "infrastructure"
     assert record["infrastructure_type"] == "offline_network" and not record["metric_exception"]
     validate(record)
+
+
+# --------------------------------------------------------------------------- observations (D53)
+# D53 (iii): the action-path suite saw a guest server answer every /accessibility call of a
+# boot with HTTP 500 and no restart (A7 session 193), first-call 500s delivered on retry and
+# ~125 s hangs. The pinned controller returns None after a 5xx like after any non-200 reply,
+# and the getter hands None to the metric, which scores 0. Persistent guest-server errors on
+# an observation are infrastructure losses; every observation is counted per episode.
+
+
+def test_a_whole_boot_server_error_on_a_checker_read_is_an_infrastructure_loss(
+    guest, osworld, tmp_path
+):
+    guest.files["/home/user/out.txt"] = b"good"
+    record, out, session = run_live(
+        guest, VM_FILE_TASK, osworld, tmp_path, before=lambda: guest.server_error.add("/file")
+    )
+    assert record["status"] == "infrastructure" and record["score"] is None
+    assert record["infrastructure_type"] == "guest_observation"
+    assert "/file (500, 500, 500)" in record["infrastructure_detail"]
+    assert not record["metric_exception"] and not session.guest_errors  # no transport fault
+    checker = record["observations"]["checker"]
+    assert checker["undelivered"] == 1 and checker["calls"] == 1
+    validate(record)
+    # What the pinned code made of it: get_vm_file returned None and the metric scored 0.
+    from desktop_env.evaluators import getters, metrics
+
+    assert getters.get_vm_file(session.env, VM_FILE_TASK["evaluator"]["result"]) is None
+    assert metrics.check_text(None) == 0.0
+
+
+def test_a_404_for_a_file_the_agent_never_wrote_is_the_agents_state(guest, osworld, tmp_path):
+    record, _, _ = run_live(guest, VM_FILE_TASK, osworld, tmp_path)
+    assert record["status"] == "scored", record.get("infrastructure_detail")
+    assert record["score"] == 0.0
+    checker = record["observations"]["checker"]
+    assert checker["undelivered"] == 0 and checker["calls"] >= 1  # 404 is an answer
+    assert checker["unusual"] == []
+
+
+def test_a_server_error_delivered_on_retry_is_counted_not_a_loss(guest, osworld, tmp_path):
+    guest.files["/home/user/out.txt"] = b"good"
+    record, _, _ = run_live(
+        guest, VM_FILE_TASK, osworld, tmp_path, before=lambda: guest.error_once.add("/file")
+    )
+    assert record["status"] == "scored" and record["score"] == 1.0
+    checker = record["observations"]["checker"]
+    assert checker["retried"] == 1 and checker["undelivered"] == 0
+    assert checker["unusual"][0]["attempts"] == [500, 200]
+
+
+def test_a_slow_checker_read_that_is_delivered_is_counted_and_scored(
+    guest, osworld, tmp_path, monkeypatch
+):
+    """Section 7.3: a checker read delivered after more than ``SLOW_OBSERVATION_S`` (30 s;
+    0.5 s here), within its 150 s bound, is counted per episode as slow and reported, and the
+    episode is scored from what it read."""
+    from harness.q2_stage1 import osworld_live
+
+    monkeypatch.setattr(osworld_live, "SLOW_OBSERVATION_S", 0.5)
+    guest.files["/home/user/out.txt"] = b"good"
+    guest.hang_s = 1.0
+    record, _, session = run_live(
+        guest, VM_FILE_TASK, osworld, tmp_path, before=lambda: guest.hang.add("/file")
+    )
+    assert record["status"] == "scored" and record["score"] == 1.0
+    assert not session.guest_errors and not record["metric_exception"]
+    checker = record["observations"]["checker"]
+    assert checker["slow"] >= 1 and checker["retried"] == checker["undelivered"] == 0
+    assert checker["max_s"] >= 1.0
+    assert checker["unusual"] and all(o["delivered"] for o in checker["unusual"])
+    validate(record)
+
+
+def test_a_slow_screenshot_that_is_delivered_is_counted_and_scored(guest, monkeypatch):
+    """Section 7.3: the agent's screenshot delivered after more than ``SLOW_OBSERVATION_S``
+    (0.5 s here), within the certified executor's 10 s per attempt, is counted per episode as
+    slow, and the episode is scored."""
+    monkeypatch.setattr(driver, "SLOW_OBSERVATION_S", 0.5)
+    guest.hang_s = 1.0
+    guest.hang.add("/screenshot")
+    record, _, _ = run(guest, [CLICK, DONE])
+    assert record["status"] == "scored" and record["score"] == 1.0
+    agent = record["observations"]["agent"]
+    assert agent["calls"] == 2 and agent["slow"] == 2  # the first observation and step 1's
+    assert agent["retried"] == agent["undelivered"] == 0 and agent["max_s"] >= 1.0
+    assert record["observations"]["slow_s"] == 0.5
+    validate(record)
+
+
+def test_a_postconfig_action_answered_with_500_stays_a_recorded_postconfig_failure(
+    guest, osworld, tmp_path
+):
+    """Postconfig steps are actions on the agent's state, not observations: a 500 there is
+    recorded (section 7.2), and so is the setup controller's /terminal probe."""
+    guest.files["/home/user/out.txt"] = b"good"
+    guest.setup_reply = fails("a.whl", status=500)
+
+    def break_probe():
+        guest.server_error.add("/terminal")
+
+    record, _, _ = run_live(guest, PIP_TASK, osworld, tmp_path, before=break_probe)
+    assert record["status"] == "scored" and record["score"] == 1.0
+    assert record["postconfig_failures"] == 1 and record["postconfig_replies"][0]["status"] == 500
+    assert record["observations"]["checker"]["undelivered"] == 0
+
+
+def test_a_hung_guest_request_is_bounded_and_a_transport_loss(
+    guest, osworld, tmp_path, monkeypatch
+):
+    """The pinned controller sends ``/file`` with no timeout, so a hung server would hold
+    the slot until the lane's episode timeout; the shim bounds it."""
+    from harness.q2_stage1 import osworld_live
+
+    monkeypatch.setattr(osworld_live, "GUEST_REQUEST_TIMEOUT_S", 0.3)
+    guest.files["/home/user/out.txt"] = b"good"
+    guest.hang_s = 2.0
+    started = time.monotonic()
+    record, _, session = run_live(
+        guest, VM_FILE_TASK, osworld, tmp_path, before=lambda: guest.hang.add("/file")
+    )
+    assert record["status"] == "infrastructure" and record["infrastructure_type"] == "transport"
+    assert "Timeout" in record["infrastructure_detail"]
+    assert len(session.guest_errors) == 3 and time.monotonic() - started < 30
+    assert record["observations"]["checker"]["undelivered"] == 1
+
+
+@pytest.mark.parametrize(("budget", "where"), [(1, "first observation"), (2, "step 1")])
+def test_a_screenshot_the_guest_answers_with_500_is_a_guest_observation_loss(guest, budget,
+                                                                             where):  # fmt: skip
+    guest.screenshots_ok = budget  # the boot's screenshot (and the first observation) only
+    record, _, session = run(guest, [CLICK, DONE])
+    assert record["status"] == "infrastructure"
+    assert record["infrastructure_type"] == "guest_observation"
+    assert where in record["infrastructure_detail"] and session.last_action == "unset"
+    assert record["observations"]["agent"]["undelivered"] == 1
+    guest.screenshot_reset, guest.shots = True, 0  # no HTTP reply at all: transport
+    record, _, _ = run(guest, [CLICK, DONE])
+    assert record["infrastructure_type"] == "transport"
+
+
+def test_healthy_episode_counts_its_observations(guest):
+    record, _, _ = run(guest, [CLICK, CLICK, DONE])
+    agent = record["observations"]["agent"]
+    assert agent["calls"] == 3  # the first observation and one per executed action
+    assert agent["retried"] == agent["slow"] == agent["undelivered"] == 0
+    assert record["observations"]["slow_s"] == driver.SLOW_OBSERVATION_S
+
+
+def test_a_restart_check_answered_with_500_cannot_verify_the_server(guest):
+    guest.error_execute = lambda argv: argv[0] == "cat"
+    record, _, _ = run(guest, [DONE])
+    assert record["infrastructure_type"] == "transport"
+    assert "identity at warm-up" in record["infrastructure_detail"]
+    assert "HTTP 500" in record["infrastructure_detail"]
+
+
+def test_observation_loss_kind():
+    assert driver.observation_loss_kind([{"status": 500}, {"status": 500}]) == "guest_observation"
+    assert driver.observation_loss_kind([{"status": 500}, {"error": "reset"}]) == "transport"
+    assert driver.observation_loss_kind([]) == "transport"

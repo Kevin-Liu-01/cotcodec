@@ -1,0 +1,2044 @@
+{
+ "rows": [
+  {
+   "task": "01b269ae",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "01b269ae",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "01b269ae",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "08c73485",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "08c73485",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "08c73485",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "0e47de2a",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "0e47de2a",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "0e47de2a",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "12382c62",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "12382c62",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "12382c62",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "20236825",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "20236825",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "20236825",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "276cc624",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "276cc624",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "276cc624",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "2b94c692",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "2b94c692",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "2b94c692",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "347ef137",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "347ef137",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "347ef137",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "3f28fe4f",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "3f28fe4f",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "3f28fe4f",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "415ef462",
+   "getters": [
+    "vm_file",
+    "cache_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "415ef462",
+   "getters": [
+    "vm_file",
+    "cache_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "415ef462",
+   "getters": [
+    "vm_file",
+    "cache_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "4172ea6e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "4172ea6e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "4172ea6e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "4ed5abd0",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "4ed5abd0",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "4ed5abd0",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "5bc63fb9",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "5bc63fb9",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "5bc63fb9",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "5cfb9197",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "5cfb9197",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "5cfb9197",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "6a33f9b9",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "6a33f9b9",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "6a33f9b9",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "6e99a1ad",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "6e99a1ad",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "6e99a1ad",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "72f83cdc",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "72f83cdc",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "72f83cdc",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "8ba5ae7a",
+   "getters": [
+    "vlc_config"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "raised": "TypeError",
+    "message": "a bytes-like object is required, not 'NoneType'"
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 3,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "8ba5ae7a",
+   "getters": [
+    "vlc_config"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "raised": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /execute (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "8ba5ae7a",
+   "getters": [
+    "vlc_config"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "raised": "TypeError",
+    "message": "a bytes-like object is required, not 'NoneType'"
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "live": {
+    "raised": "TypeError",
+    "message": "a bytes-like object is required, not 'NoneType'"
+   },
+   "new_runner": "scored (metric_exception, 0)",
+   "observations": {
+    "calls": 3,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "9219480b",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 4 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 4,
+    "retried": 0,
+    "undelivered": 4
+   }
+  },
+  {
+   "task": "9219480b",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 4 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 4,
+    "retried": 0,
+    "undelivered": 4
+   }
+  },
+  {
+   "task": "9219480b",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 4,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "936321ce",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "936321ce",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "936321ce",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "9d425400",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "9d425400",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "9d425400",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "aa4b5023",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "aa4b5023",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "aa4b5023",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "ac9bb6cb",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "raised": "AttributeError",
+    "message": "'NoneType' object has no attribute 'seek'"
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "ac9bb6cb",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "raised": "AttributeError",
+    "message": "'NoneType' object has no attribute 'seek'"
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "ac9bb6cb",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "raised": "AttributeError",
+    "message": "'NoneType' object has no attribute 'seek'"
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "live": {
+    "raised": "AttributeError",
+    "message": "'NoneType' object has no attribute 'seek'"
+   },
+   "new_runner": "scored (metric_exception, 0)",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "af23762e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "af23762e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "af23762e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "b5062e3e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "b5062e3e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "b5062e3e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "bb83cab4",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "bb83cab4",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "bb83cab4",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "bf4e9888",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "bf4e9888",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "bf4e9888",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "d52d6308",
+   "getters": [
+    "gimp_config_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 3,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "d52d6308",
+   "getters": [
+    "gimp_config_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "raised": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+   },
+   "old_runner": "scored (metric_exception, 0)",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /execute (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "d52d6308",
+   "getters": [
+    "gimp_config_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 3,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "d681960f",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "d681960f",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "d681960f",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "e4ef0baf",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "e4ef0baf",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 2 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 2
+   }
+  },
+  {
+   "task": "e4ef0baf",
+   "getters": [
+    "vm_file",
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 2,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "e528b65e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "e528b65e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "e528b65e",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0"
+   },
+   "old_runner": "scored 0",
+   "live": {
+    "returned": "0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  },
+  {
+   "task": "f4aec372",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "file500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "f4aec372",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "reads500",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "raised": "GuestObservationFailure",
+    "message": "evaluate: 1 checker observation(s) undelivered, first /file (500, 500, 500)"
+   },
+   "new_runner": "guest_observation",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 1
+   }
+  },
+  {
+   "task": "f4aec372",
+   "getters": [
+    "vm_file"
+   ],
+   "mode": "missing404",
+   "pinned": {
+    "returned": "0.0"
+   },
+   "old_runner": "scored 0.0",
+   "live": {
+    "returned": "0.0"
+   },
+   "new_runner": "scored",
+   "observations": {
+    "calls": 1,
+    "retried": 0,
+    "undelivered": 0
+   }
+  }
+ ],
+ "summary": {
+  "rows": 96,
+  "by_mode": {
+   "file500": {
+    "old_runner_scored": 32,
+    "new_runner": {
+     "guest_observation": 32,
+     "scored": 0,
+     "scored (metric_exception, 0)": 0
+    }
+   },
+   "reads500": {
+    "old_runner_scored": 32,
+    "new_runner": {
+     "guest_observation": 32,
+     "scored": 0,
+     "scored (metric_exception, 0)": 0
+    }
+   },
+   "missing404": {
+    "old_runner_scored": 32,
+    "new_runner": {
+     "guest_observation": 0,
+     "scored": 30,
+     "scored (metric_exception, 0)": 2
+    }
+   }
+  }
+ }
+}

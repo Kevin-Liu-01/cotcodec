@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import collections
 import copy
+import hashlib
 import json
 import shutil
 import sys
@@ -23,6 +24,7 @@ from harness.q2_stage1.records import validate
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
+import preregister  # noqa: E402
 import render_q2_stage1_manifest as builder  # noqa: E402
 import render_q2_stage1_plan as renderer  # noqa: E402
 
@@ -38,15 +40,33 @@ HOST = {
                "gpu_job_id_file": f"{RUNS}/pairs/a1/gpu_job_id"},
 }  # fmt: skip
 DEV_A0A = ["6a33f9b9", "bf4e9888", "d681960f", "4172ea6e", "12382c62"]  # G0 item 5
+# A0a as it ran (job 1037, from the export of bb67aa0): the VM manifest and its canonical
+# form's SHA-256, the digest `lane submit` stored and submitted.
+A0A_JOB_1037 = "program/evidence/2026-10-09/q2-stage1-prefreeze/a0a/vm-1037/manifest.json"
+A0A_JOB_1037_SHA256 = "051cdd6e6380ee62987109815e79cdcb740052e84603b634ba9e08d430205a79"
+PRE_FREEZE_REFUSED = "is a pre-freeze purpose and q2-stage1-rescoped-v1 is frozen"
 
 
 def a0a(n_star: int = 40) -> dict[str, Any]:
     return builder.vm_manifest(purpose="a0a", host=HOST, source_dir=ROOT, n_star=n_star)
 
 
-def test_a0a_manifest_is_the_plans_and_the_lane_accepts_it():
+@pytest.fixture(scope="module")
+def draft(tmp_path_factory) -> Path:
+    """A source tree as the draft has it, whatever state the repository's ledger is in: the
+    splits and the registered setup-check records (A0a's dev tasks), no ledger row. The
+    pre-freeze purposes are validated here, since a frozen tree refuses them (D56)."""
+    root = tmp_path_factory.mktemp("draft")
+    for rel in (lane.SPLITS, P.SETUP_CHECK_RECORDS):
+        (root / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(ROOT / rel, root / rel)
+    assert not lane.frozen(root)
+    return root
+
+
+def test_a0a_manifest_is_the_plans_and_the_lane_accepts_it(draft):
     m = a0a()
-    assert lane.validate_manifest(m, ROOT)["slots"] == m["slots"]
+    assert lane.validate_manifest(m, draft)["slots"] == m["slots"]
     assert m["vm"]["concurrency"] == 20 and m["slurm"]["cpus"] == 90
     assert m["slurm"]["minutes"] == 35 and m["engine"]["gpu_cap_min"] == 25
     assert m["date"] == P.PROMPT_DATE and "fill" not in m
@@ -88,28 +108,83 @@ def test_a0a_manifest_is_the_plans_and_the_lane_accepts_it():
         (lambda m: m["engine"].update(bridge_dir=f"{RUNS}/gpu/1/bridge"), "gpu_job_id"),
     ],
 )
-def test_a0a_manifest_that_differs_from_the_plan_is_refused(tamper, message):
+def test_a0a_manifest_that_differs_from_the_plan_is_refused(tamper, message, draft):
     m = a0a()
     tamper(m)
     if message is None:
-        lane.validate_manifest(m, ROOT)
+        lane.validate_manifest(m, draft)
         return
     with pytest.raises(lane.LaneError, match=message):
-        lane.validate_manifest(m, ROOT)
+        lane.validate_manifest(m, draft)
 
 
-def test_anchor_purposes_are_refused():
-    for purpose in ("a0b", "anc"):
+def test_anchor_purposes_are_refused(draft):
+    """The anchor is UNAVAILABLE (G0 item 9.6). Before the freeze A0b meets that rule and ANC
+    the freeze check, in a tree with no ledger row whatever the repository's own ledger
+    holds; the repository's tree refuses both too. After the freeze A0b is refused as a
+    pre-freeze purpose (D56), an ANC manifest on these dev slots as outside the pool, and one
+    on the plan's pool slots by the anchor rule
+    (``test_post_freeze_jobs_need_the_registration_the_ledger_froze``)."""
+    after = {"a0b": PRE_FREEZE_REFUSED, "anc": "outside the pool"}
+    for purpose, message in (("a0b", "anchor is UNAVAILABLE"), ("anc", "runs only after")):
         m = a0a()
         m["purpose"] = purpose
-        with pytest.raises(lane.LaneError, match="anchor is UNAVAILABLE|runs only after"):
+        with pytest.raises(lane.LaneError, match=message):
+            lane.validate_manifest(m, draft)
+        with pytest.raises(lane.LaneError, match=after[purpose] if lane.frozen(ROOT) else message):
             lane.validate_manifest(m, ROOT)
 
 
-def test_committed_development_manifests_still_validate():
-    for name in ("dev-smoke-v1", "setup-check-v1"):
+COMMITTED_PRE_FREEZE = ("dev-smoke-v1", "setup-check-v1", "setup-check-v2")
+
+
+def test_committed_development_manifests_still_validate(draft):
+    for name in COMMITTED_PRE_FREEZE:
         m = json.loads((ROOT / f"experiments/manifests/q2-stage1/{name}.json").read_text())
-        assert lane.validate_manifest(m, ROOT)["purpose"] in ("development", "setup-check")
+        assert lane.validate_manifest(m, draft)["purpose"] in ("development", "setup-check")
+        if lane.frozen(ROOT):
+            with pytest.raises(lane.LaneError, match=PRE_FREEZE_REFUSED):
+                lane.validate_manifest(m, ROOT)
+        else:
+            assert lane.validate_manifest(m, ROOT)["purpose"] == m["purpose"]
+
+
+def test_no_pre_freeze_job_runs_after_the_freeze(draft, frozen_tree, tmp_path):
+    """D56: after the freeze no pre-freeze job purpose is submitted. Once the ledger has this
+    id's row, the lane refuses development, setup-check, A0a and A0b manifests at validate,
+    at submit and at job start (``lane main run``), so A0a's GPU half cannot be rendered
+    either (it is rendered only from a validated VM manifest; O1 has no lane manifest). The
+    VM manifest A0a ran (job 1037) still validates on the draft tree, unchanged."""
+    ran = json.loads((ROOT / A0A_JOB_1037).read_text(encoding="utf-8"))
+    assert hashlib.sha256(lane.canonical(ran).encode()).hexdigest() == A0A_JOB_1037_SHA256
+    assert lane.validate_manifest(ran, draft)["slots"] == ran["slots"]
+    assert ran["slots"] == a0a(32)["slots"]  # the plan's slots, as rendered for N* = 32
+    root, _ = frozen_tree
+    assert lane.frozen(root)
+    a0b = {**a0a(), "purpose": "a0b"}
+    committed = [json.loads((ROOT / f"experiments/manifests/q2-stage1/{n}.json").read_text())
+                 for n in COMMITTED_PRE_FREEZE]  # fmt: skip
+    for m in [ran, a0a(), a0b, *committed]:
+        assert m["purpose"] in lane.PRE_FREEZE_PURPOSES
+        with pytest.raises(lane.LaneError, match=PRE_FREEZE_REFUSED):
+            lane.validate_manifest(m, root)
+    assert set(lane.PRE_FREEZE_PURPOSES) == {"development", "setup-check", "a0a", "a0b"}
+    path = tmp_path / "a0a.json"
+    path.write_text(json.dumps(ran), encoding="utf-8")
+    with pytest.raises(lane.LaneError, match=PRE_FREEZE_REFUSED):
+        lane.submit(path, root, dry_run=True)
+    with pytest.raises(lane.LaneError, match=PRE_FREEZE_REFUSED):
+        lane.main(["run", "--manifest", str(path), "--run-dir", str(tmp_path / "run"),
+                   "--source-dir", str(root), "--job-id", "1"])  # fmt: skip
+    values = tmp_path / "values.json"
+    values.write_text(json.dumps({"FILL_JOB": "a0a"}), encoding="utf-8")
+    with pytest.raises(lane.LaneError, match=PRE_FREEZE_REFUSED):
+        builder.main(["gpu", "--vm-manifest", str(path), "--source-dir", str(root),
+                      "--vm-job-id", "1037", "--values", str(values),
+                      "--out", str(tmp_path / "gpu.yaml")])  # fmt: skip
+    assert not (tmp_path / "gpu.yaml").exists()
+    # An A1 manifest is not a pre-freeze purpose: the frozen tree admits it.
+    lane.validate_manifest(a1(frozen_tree, "9B", "S1"), root)
 
 
 # --------------------------------------------------------------------------- A1 (frozen)
@@ -135,11 +210,19 @@ def frozen_tree(tmp_path_factory) -> tuple[Path, dict[str, Any]]:
     plan = P.render_plan(**inputs, constants=constants)
     (root / "plan").mkdir()
     (root / "plan/plan-frozen.json").write_text(json.dumps(plan, indent=1, sort_keys=True))
-    ledger = root / lane.LEDGER
-    ledger.parent.mkdir(parents=True, exist_ok=True)
-    ledger.write_text(json.dumps({"experiment_id": lane.EXPERIMENT_ID}) + "\n")
-    (root / lane.REGISTRATION).write_text(f"Frozen plan SHA-256: `{plan['plan_sha256']}`.\n")
+    freeze(root, f"Frozen plan SHA-256: `{plan['plan_sha256']}`.\n")
     return root, plan
+
+
+def freeze(root: Path, registration: str) -> None:
+    """Write the registration and freeze it into a fresh ledger, as ``scripts/preregister.py
+    freeze`` does."""
+    path = root / lane.REGISTRATION
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(registration, encoding="utf-8")
+    ledger = root / lane.LEDGER
+    ledger.unlink(missing_ok=True)
+    preregister.freeze(path, lane.EXPERIMENT_ID, ledger=ledger, root=root)
 
 
 def a1(tree: tuple[Path, dict[str, Any]], size: str, session: str, prior=()) -> dict:
@@ -223,16 +306,65 @@ def test_a1_needs_the_registered_frozen_plan(frozen_tree, tmp_path):
     root, plan = frozen_tree
     other = tmp_path / "src"
     shutil.copytree(root, other)
-    (other / lane.REGISTRATION).write_text("Frozen plan SHA-256: TBD.\n")
+    freeze(other, "Frozen plan SHA-256: (not stated).\n")
     with pytest.raises(lane.LaneError, match="does not name this plan"):
         lane.validate_manifest(a1(frozen_tree, "9B", "S1"), other)
     draft = P.render_plan(**renderer.load_inputs(ROOT))
     (other / "plan/draft.json").write_text(json.dumps(draft))
-    (other / lane.REGISTRATION).write_text(f"Frozen plan SHA-256: `{draft['plan_sha256']}`.\n")
+    freeze(other, f"Frozen plan SHA-256: `{draft['plan_sha256']}`.\n")
     m = a1(frozen_tree, "9B", "S1")
     m["plan"] = {"path": "plan/draft.json", "sha256": draft["plan_sha256"]}
     with pytest.raises(lane.LaneError, match="frozen plan"):
         lane.validate_manifest(m, other)
+
+
+def test_post_freeze_jobs_need_the_registration_the_ledger_froze(frozen_tree, tmp_path):
+    """Section 5.5: A1 and ANC are admitted only while the source tree's registration has
+    its ledger row's SHA-256 and the chain holds (what ``preregister.py verify`` and
+    ``check-chain`` check), not merely while a row exists; the GPU half is rendered only from
+    a VM manifest the lane validates, so it is refused too."""
+    root, _ = frozen_tree
+    row = lane.frozen_registration(root)
+    assert row["path"] == lane.REGISTRATION
+    assert row["sha256"] == lane.sha256_file(root / lane.REGISTRATION)
+    m = a1(frozen_tree, "9B", "S1")
+    lane.validate_manifest(m, root)
+    anc = copy.deepcopy(m)
+    anc["purpose"] = "anc"
+    anc.pop("fill")
+    with pytest.raises(lane.LaneError, match="anchor is UNAVAILABLE"):
+        lane.validate_manifest(anc, root)
+
+    edited = tmp_path / "edited"
+    shutil.copytree(root, edited)
+    reg = edited / lane.REGISTRATION
+    reg.write_text(reg.read_text(encoding="utf-8") + "A rule added after the freeze.\n")
+    for manifest in (m, anc):
+        with pytest.raises(lane.LaneError, match="changed after the freeze"):
+            lane.validate_manifest(manifest, edited)
+    (tmp_path / "a1.json").write_text(json.dumps(m))
+    (tmp_path / "values.json").write_text("{}")
+    with pytest.raises(lane.LaneError, match="changed after the freeze"):
+        builder.main(["gpu", "--vm-manifest", str(tmp_path / "a1.json"), "--source-dir",
+                      str(edited), "--vm-job-id", "5", "--values", str(tmp_path / "values.json"),
+                      "--out", str(tmp_path / "gpu.yaml")])  # fmt: skip
+    assert not (tmp_path / "gpu.yaml").exists()
+
+    # A ledger row moved to the edited file's digest breaks the chain.
+    ledger = edited / lane.LEDGER
+    rows = [json.loads(line) for line in ledger.read_text().splitlines() if line.strip()]
+    rows[-1]["sha256"] = lane.sha256_file(reg)
+    ledger.write_text("".join(json.dumps(r, sort_keys=True) + "\n" for r in rows))
+    with pytest.raises(lane.LaneError, match="hash chain does not hold"):
+        lane.validate_manifest(m, edited)
+
+    # A row that names only the id (no digest) is not a freeze.
+    bare = tmp_path / "bare"
+    shutil.copytree(root, bare)
+    (bare / lane.LEDGER).write_text(json.dumps({"experiment_id": lane.EXPERIMENT_ID}) + "\n")
+    assert lane.frozen(bare)
+    with pytest.raises(lane.LaneError, match="hash chain does not hold"):
+        lane.validate_manifest(m, bare)
 
 
 def test_a1_jobs_run_in_order_and_stop_when_dr0_fired(frozen_tree, tmp_path, monkeypatch):

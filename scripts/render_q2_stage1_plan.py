@@ -7,8 +7,11 @@ and the engine and sampling arguments. Freeze mode (on the host) reads A0a's rec
 takes N* and the action path's A1 step p95 from the accepted attempt and the list of
 pre-freeze GPU jobs that ran, applies the registered rules of preregistration section 6.2
 (gates, floor, K-rule) and writes the frozen constants, the measurements with the digests of
-the files they came from, the base and the job list. No constant is typed by hand. Nothing
-is submitted; the output is never overwritten.
+the files they came from, the base and the job list. No A0a measurement is typed by hand;
+N* (``--n-star``), the action path's step p95 (``--action-path-step-p95``) and the
+pre-freeze jobs (``--prefreeze-jobs``) are command-line inputs, checked against their
+sources (preregistration section 3.2). Nothing is submitted; the output is never
+overwritten.
 """
 
 from __future__ import annotations

@@ -293,3 +293,135 @@ def test_checker_noise_reads_the_merged_offline_verdict():
     recs[scored[1]] = {**recs[scored[1]], "offline_raw_score": recs[scored[1]]["score"]}
     finals = R.final_records(recs)
     assert A.checker_noise(finals)["live_vs_offline_mismatches"] == 1
+
+
+def test_observation_counts_are_reported_per_cell():
+    """D53 (iii): undelivered and very slow observations are counted per episode and
+    reported per (size, harness), the agent's screenshots and the checker's reads apart."""
+    rows = synthetic(0.3, 0.3, seed=5)
+    rows[0]["observations"] = {
+        "agent": {"calls": 9, "retried": 1, "slow": 0, "undelivered": 0},
+        "checker": {"calls": 2, "retried": 0, "slow": 1, "undelivered": 0},
+    }
+    rows[1].update(status="infrastructure", score=None, infrastructure_type="guest_observation",
+                   observations={"agent": {"calls": 3, "undelivered": 0},
+                                 "checker": {"calls": 1, "undelivered": 1}})  # fmt: skip
+    assert R.slot_key(rows[0])[:4] == R.slot_key(rows[1])[:4]  # one cell, two reruns
+    cell = A._flags_counts(R.final_records(rows))[f"{rows[0]['size']}/{rows[0]['harness']}"]
+    assert cell["observations_agent_calls"] == 12 and cell["observations_agent_retried"] == 1
+    assert cell["observations_checker_calls"] == 3 and cell["observations_checker_slow"] == 1
+    assert cell["observations_checker_undelivered"] == 1
+    assert cell["infra_guest_observation"] == 1
+    assert "guest_observation" in R.INFRASTRUCTURE_TYPES
+
+
+def _cell(rec):
+    return rec["size"], rec["harness"], rec["session"]
+
+
+def test_counts_are_also_reported_per_session():
+    """D56: the observation counts and the postconfig replies and server errors are reported
+    per (size, harness), per (size, session) and per (size, harness, session), over the final
+    records and over every attempt (a loss that was re-queued is counted there)."""
+    rows = synthetic(0.3, 0.3, seed=13)
+    first = next(i for i, r in enumerate(rows) if _cell(r) == ("9B", "H-GA", "S2"))
+    other = next(i for i, r in enumerate(rows) if _cell(r) == ("9B", "H-OSW-fixed", "S1"))
+    rows[first]["observations"] = {
+        "agent": {"calls": 9, "retried": 1, "slow": 2, "undelivered": 0},
+        "checker": {"calls": 4, "retried": 1, "slow": 1, "undelivered": 0},
+    }
+    rows[first]["postconfig_replies"] = [
+        {"path": "/setup/activate_window", "type": "activate_window", "status": 500},
+        {"path": "/setup/execute", "status": 200, "returncode": 1},
+    ]
+    rows[first]["postconfig_failures"] = 2
+    rows[other]["observations"] = {"agent": {"calls": 5}, "checker": {"calls": 2}}
+    rows[other]["postconfig_replies"] = [{"path": "/setup/execute", "status": 200}]
+    # The same slot as ``first``, lost on attempt 1 (an undelivered read) and re-queued: the
+    # final record is ``first`` (attempt 2); the attempts view keeps the loss.
+    lost = {
+        **rows[first],
+        "attempt": 1,
+        "status": "infrastructure",
+        "score": None,
+        "infrastructure_type": "guest_observation",
+        "postconfig_replies": [],
+        "postconfig_failures": 0,
+        "observations": {"agent": {"calls": 3}, "checker": {"calls": 1, "undelivered": 1}},
+    }
+    rows[first] = {**rows[first], "attempt": 2}
+    rows.insert(0, lost)
+    rep = A.report(rows, PLAN, n_boot=50, n_rand=50)
+    by_session = rep["cells_by_size_session"]
+    assert set(by_session) == {f"{z}/{s}" for z in R.SIZES for s in R.SESSIONS}
+    s2 = by_session["9B/S2"]
+    assert s2["observations_agent_retried"] == 1 and s2["observations_agent_slow"] == 2
+    assert s2["observations_checker_calls"] == 4 and s2["observations_checker_undelivered"] == 0
+    assert s2["postconfig_replies"] == 2 and s2["postconfig_failures"] == 2
+    assert s2["postconfig_server_errors"] == 1 and s2["episodes_with_postconfig_server_error"] == 1
+    assert s2["postconfig_server_errors_activate_window"] == 1  # by step type
+    s1 = by_session["9B/S1"]
+    assert s1["observations_agent_calls"] == 5 and s1["postconfig_replies"] == 1
+    assert s1["postconfig_server_errors"] == 0
+    cells = rep["cells_by_size_harness_session"]
+    assert len(cells) == 8
+    assert cells["9B/H-GA/S2"]["postconfig_server_errors"] == 1
+    assert cells["9B/H-OSW-fixed/S2"]["postconfig_server_errors"] == 0
+    assert cells["9B/H-OSW-fixed/S1"]["observations_checker_calls"] == 2
+    assert rep["cells"]["9B/H-GA"]["postconfig_server_errors"] == 1  # per (size, harness)
+    # Final records: one episode per slot. Every attempt: the re-queued loss too.
+    assert "infra_guest_observation" not in cells["9B/H-GA/S2"]
+    attempts = rep["attempts"]["size_harness_session"]["9B/H-GA/S2"]
+    assert attempts["episodes"] == cells["9B/H-GA/S2"]["episodes"] + 1
+    assert attempts["infra_guest_observation"] == 1
+    assert attempts["observations_checker_undelivered"] == 1
+    assert attempts["observations_agent_calls"] == 12
+    assert rep["attempts"]["size_session"]["9B/S2"]["infra_guest_observation"] == 1
+    assert rep["attempts"]["size_harness"]["9B/H-GA"]["infra_guest_observation"] == 1
+    json.dumps(rep)
+
+
+def test_postconfig_server_error_sensitivity():
+    """Section 7.2 (D56): every primary estimand recomputed with each episode treated as
+    missing that has a postconfig reply at HTTP 500 or above or with no HTTP reply. A failed
+    step under HTTP 200 (a non-zero returncode) is the agent's state: that episode is kept, and
+    so is a 404. The sensitivity is reported beside the primary; the decisions read the
+    primary."""
+    rows = synthetic(0.4, 0.4, seed=14)
+    scored = [i for i, r in enumerate(rows) if r["status"] == "scored" and r["task_id"] in BASE]
+    replies = {
+        scored[0]: [{"status": 200}, {"status": 503}],  # a server error: missing
+        scored[1]: [{"status": None}],  # no HTTP reply: missing
+        scored[2]: [{"status": 200, "returncode": 1}],  # the agent's state: kept
+        scored[3]: [{"status": 404}],  # a window or file the agent's state lacks: kept
+        scored[4]: [{"status": 200, "returncode": 0}],  # kept
+    }
+    for i, block in replies.items():
+        rows[i] = {**rows[i], "postconfig_replies": block,
+                   "postconfig_failures": sum(r["status"] != 200 or r.get("returncode", 0) != 0
+                                              for r in block)}  # fmt: skip
+    finals = R.final_records(rows)
+    assert [A.postconfig_server_errors(rows[i]) for i in sorted(replies)] == [1, 1, 0, 0, 0]
+    missing = A.postconfig_missing(finals)
+    assert missing == {R.slot_key(rows[scored[0]]), R.slot_key(rows[scored[1]])}
+    assert R.slot_key(rows[scored[2]]) not in missing  # HTTP 200, returncode 1: kept
+    rep = A.report(rows, PLAN, n_boot=100, n_rand=100)
+    sens = rep["sensitivity_postconfig_server_error_missing"]
+    assert sens["episodes_missing"] == 2
+    kept = {k: v for k, v in finals.items() if k not in missing}
+    y = R.outcome_array(kept, BASE)
+    assert int(np.isnan(y).sum()) == 2
+    z, s, t, h, r = R.slot_key(rows[scored[2]])
+    at = (R.SIZES.index(z), BASE.index(t), R.HARNESSES.index(h), R.SESSIONS.index(s))
+    assert not np.isnan(y[(*at, R.RERUNS.index(r))])  # HTTP 200, returncode 1: scored
+    expected = A.analyse_array(y, n_boot=100, n_rand=100)
+    assert sens["estimates"] == expected["estimates"]
+    assert set(sens["estimates"]) == set(rep["primary"]["estimates"])
+    # The primary reads every scored episode; the decisions and predictions read the primary.
+    assert rep["primary"]["estimates"] == A.analyse_array(
+        R.outcome_array(finals, BASE), n_boot=100, n_rand=100)["estimates"]  # fmt: skip
+    assert rep["predictions"]["P3"]["falsified"] == (rep["primary"]["DR2"]["class"] == "Present")
+    # The reading is the guest server's own threshold.
+    from harness.q2_stage1 import osworld_live
+
+    assert A.SERVER_ERROR == osworld_live.SERVER_ERROR

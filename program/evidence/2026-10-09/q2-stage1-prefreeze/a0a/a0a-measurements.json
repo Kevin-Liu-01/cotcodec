@@ -1,0 +1,67 @@
+{
+ "a0a_gates": {
+  "action_path_step_p95_s": 2.6944,
+  "problems": [],
+  "step_p95_limit_s": 5.3888,
+  "step_p95_s": 1.2652,
+  "steps_timed": 255,
+  "truncated_without_tool_call": {
+   "H-GA": 0,
+   "H-OSW-fixed": 0
+  },
+  "truncation_gate": 0.2,
+  "truncation_share": {
+   "H-GA": 0.0,
+   "H-OSW-fixed": 0.0
+  },
+  "turns": {
+   "H-GA": 125,
+   "H-OSW-fixed": 131
+  }
+ },
+ "a0a_slot_seconds": [
+  204.615,
+  163.594,
+  223.679,
+  243.702,
+  234.633,
+  173.628,
+  233.661,
+  245.64,
+  224.643,
+  243.744,
+  210.669,
+  248.67,
+  151.576,
+  187.591,
+  237.693,
+  239.661,
+  242.669,
+  217.632,
+  231.665,
+  238.625
+ ],
+ "launch_a0a_min": 1.887,
+ "measured": {
+  "episodes": 20,
+  "files_sha256": {
+   "bridge/stopped.json": "a95a0f61540f763a5ff1207dccbaa5df9f2590173f3550fcfa0769073a0fce8b",
+   "episodes.jsonl": "8b2ce375ac444b8fce4a9796b1900d169a9e40da5bbc7e34ea386f03a8f0c724",
+   "lane-receipt.json": "d5389962a722037096a45e803acc0183265455f5ce539d24beb0e3f8a34eaceb",
+   "manifest.json": "057b6353ca1bc7c9020968ca2aede2350e24655eeffdaf38080a827172af64a5"
+  },
+  "first_dispatch": 1791569855.2434015,
+  "first_request": 1791569957.074876,
+  "gpu_job": {
+   "end_epoch": 1791571242.0,
+   "end_time": "2026-10-09T18:40:42",
+   "job_id": "1039",
+   "start_epoch": 1791569742.0,
+   "start_time": "2026-10-09T18:15:42",
+   "state": "RUNNING",
+   "time_limit_min": 25
+  },
+  "launch_to_first_request_min": 3.585,
+  "v": 20
+ }
+}
