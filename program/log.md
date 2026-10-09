@@ -3269,3 +3269,17 @@ they say so.)
 - No GPU job ran, nothing was frozen and nothing was pushed. Next: the freeze steps of
   section 22 ("At the freeze"; the program slot takes D56), then O2 and the A1 jobs from
   the freeze commit.
+
+## 2026-10-09 — Q2 S1a frozen: `q2-stage1-rescoped-v1`, ledger row 16
+
+- After the D56 conditions (per-session counts, the postconfig server-error
+  sensitivity, the lane's refusal of pre-freeze purposes, the decision-id test)
+  and a third freeze rehearsal with nothing blocking, the freeze followed section
+  22 "At the freeze": the three slots filled (the frozen status paragraph, G0 item
+  10's `plan_sha256` 6a3f0219..., the program slot D56), the filled file committed
+  (70d57e3); a scratch freeze into a copy of the ledger passed check-chain (16 rows)
+  and verify, and the S1a suite passed on the frozen copy (289 passed, 3 skipped);
+  then the real freeze: row 16, registration SHA-256 f9db7cc3..., row hash
+  bc5e88a0..., previous hash fde44535 (row 15), check-chain PASS, verify PASS;
+  the row committed alone as the freeze commit d5f5798.
+- Next: O2 and the four A1 jobs (section 5.5), each from an export of d5f5798.
