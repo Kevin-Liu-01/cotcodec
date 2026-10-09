@@ -29,7 +29,8 @@ action-path v2 runtime, the fake engine is for development only, a setup check r
 model and no checker, and before the freeze no episode may touch a confirm task (G0 item 5's
 setup-only check is the sole confirm contact, section 3.2). After the freeze, a job (A1,
 ANC) runs only from a source tree whose registration still has its ledger row's SHA-256
-(``frozen_registration``).
+(``frozen_registration``), and no pre-freeze purpose (development, setup check, A0a, A0b)
+runs at all (D56).
 """
 
 from __future__ import annotations
@@ -54,8 +55,9 @@ from typing import Any
 SCHEMA = "q2-stage1a-lane-v1"
 EXPERIMENT_ID = "q2-stage1-rescoped-v1"
 PURPOSES = ("development", "setup-check", "a0a", "a0b", "anc", "a1")
+# Refused once the registration is frozen (D56: no pre-freeze job after the freeze; O1, the
+# other pre-freeze job, has no lane manifest).
 PRE_FREEZE_PURPOSES = ("development", "setup-check", "a0a", "a0b")
-DEV_ONLY_PURPOSES = ("development", "a0a", "a0b")
 # Registered model jobs (the anchor's are refused while it is UNAVAILABLE): their episode
 # image, re-queue rule and episode timeout are the registration's, never a manifest's.
 REGISTERED_PURPOSES = ("a0a", "a1")
@@ -173,6 +175,11 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
         purpose in PRE_FREEZE_PURPOSES or is_frozen,
         f"{purpose} runs only after the freeze (no ledger row for {EXPERIMENT_ID})",
     )
+    _require(
+        purpose not in PRE_FREEZE_PURPOSES or not is_frozen,
+        f"{purpose} is a pre-freeze purpose and {EXPERIMENT_ID} is frozen: no pre-freeze "
+        "job runs after the freeze (D56)",
+    )
     if purpose not in PRE_FREEZE_PURPOSES:
         frozen_registration(source_dir)  # A1, ANC: the frozen file, unchanged (section 5.5)
     vm = m.get("vm") or {}
@@ -244,7 +251,7 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
         task = slot["task_id"]
         if purpose == "setup-check":
             _require(task in sets["dev"] | sets["pool"], f"{task} is not a pool or dev task")
-        elif not is_frozen or purpose in DEV_ONLY_PURPOSES:
+        elif not is_frozen:  # development, A0a, A0b (every other purpose is refused above)
             _require(task in sets["dev"], f"{task} is not a dev-split task (section 3.2)")
         else:
             _require(task in sets["pool"], f"{task} is outside the pool")

@@ -3212,3 +3212,60 @@ they say so.)
 - No file of the code of record changed, no GPU job ran, no freeze, no push. Next: the
   program's sign-off decision (items 1-16 and 19-27, with section 7.3's reading of D53 (iii)
   and the postconfig carve-out), then the freeze steps of section 22.
+
+## 2026-10-09 — Q2 S1a: D56's conditions implemented (branch `stage0/q2-stage1-rescope`, draft, not frozen)
+
+- Merged `main` (D56, `3ee089f`) into the branch (`2beb6d6`). D56 signs items 1-16 and
+  19-27 and accepts section 7.3's reading of D53 (iii). It accepts the postconfig carve-out
+  on two conditions the registration must state before the freeze.
+- Condition 1, per-session reporting. `analysis.infrastructure_counts` now reports every
+  count of the cells per (size, harness), per (size, session) and per (size, harness,
+  session): losses by type, the agent's and the checker's observations (calls, retried,
+  slower than 30 s, undelivered), and the postconfig replies, failures and server errors
+  (also by step type). It counts over the final records and over every attempt. Found while
+  doing this: section 7.2 promised losses per job, but the report counted final records
+  only, so a re-queued loss that later scored appeared nowhere. The attempts view fixes
+  that.
+- Condition 2, the postconfig server-error sensitivity (`analysis.postconfig_missing`,
+  `sensitivity_postconfig_server_error_missing`). It recomputes every primary estimand with
+  an episode treated as missing if it has any postconfig reply at HTTP >= 500 or with no
+  HTTP reply. An HTTP-200 reply with a non-zero `returncode` keeps the episode, as does a 4xx.
+  The sensitivity is reported beside the primary with the count of dropped episodes. No
+  decision rule reads it. Sections 7.2 and 15 state it.
+- Lane. Once the source tree's ledger has this id's row, `lane.validate_manifest` refuses
+  every pre-freeze purpose (development, setup-check, A0a, A0b) at validate, submit and job
+  start, which also blocks rendering A0a's GPU half. Job 1037's A0a manifest still validates
+  on a draft tree (canonical `051cdd6e...`), and a test checks that. Tests that validated
+  pre-freeze manifests against the repository's tree now use a draft tree, so the S1a suite
+  holds before and after the freeze.
+- Prereg. A frozen-mode test requires the program slot's id to be a `decisions.md` heading
+  that names `q2-stage1-rescoped-v1` and S1a's reading of D53 (iii), with an entry that
+  accepts the section 7.3 reading. In draft mode, D56 passes and D53, D55, D99 and a list
+  are refused. The slot stays TBD. At the freeze it becomes the bare id D56.
+- Item 13 and section 7.2's understatement, checked on the pinned OSWorld tree on the host.
+  The postconfig calls handlers separate from `/execute`, which nothing earlier in most
+  episodes calls. `/setup/activate_window` covers 93 postconfig steps in 92 of the 148 pool
+  and dev tasks; only 2 of those tasks call it in setup. The rehearsal's 97 counted the four
+  K1 raw-gold failures as well. The other handlers are close_window (6 steps), launch (8),
+  upload (4) and open_file (1). On Linux, activate_window and close_window answer 200
+  whatever `wmctrl` does. So the carve-out leaves a server fault on a postconfig step, either
+  intermittent or lasting a whole boot in one of those handlers. Section 19 discloses it.
+  D56 is cited where the draft said the decision "will state" the reading.
+- Section 20: `analysis.py` `338139...` -> `eacc5716...`; `lane.py` `83a7dd46...` ->
+  `d646b144...`. Section 22's "Code changes after A0a" lists them. Neither changes what A0a
+  measured: the lane rules fire only on a frozen tree, and no job runs `analysis.py`.
+  `records.py` and the driver are unchanged. Section 22 has a new D56 subsection. "At the
+  freeze" names D56 for the slot, and the frozen status paragraph says the lane refuses
+  pre-freeze purposes.
+- Frozen check on a scratch clone of these changes (filled with D56, frozen into its own
+  ledger copy, row 16, `check-chain` and `verify` PASS): S1a suite 289 passed, 3 skipped.
+  `lane validate` refuses job 1037's manifest and the committed dev and setup-check
+  manifests, and accepts A1-9B-S1 (128 slots). The real ledger is unchanged (`cfe46a0b`).
+- Tests on the draft: the S1a suite has 291 passed and 1 skipped (the R container test).
+  There are 4 new tests and 11 tests changed to validate pre-freeze manifests on a draft
+  tree. The full local suite (macOS) has 2,528 passed and 88 skipped. ruff is clean on
+  `harness/q2_stage1`, `tests` and `scripts`. All 251 whole-repo ruff findings are in
+  `main`'s K1 v3 evidence scripts.
+- No GPU job ran, nothing was frozen and nothing was pushed. Next: the freeze steps of
+  section 22 ("At the freeze"; the program slot takes D56), then O2 and the A1 jobs from
+  the freeze commit.
