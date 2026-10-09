@@ -1,19 +1,14 @@
 # Preregistration: q2-stage1-rescoped-v1 (Q2 Stage 1a: rerun-noise floor and harness screen on the certified harness pair)
 
-**Status: DRAFT, not frozen (TBD: at the freeze this whole paragraph, not only this line,
-is replaced word for word by the frozen status paragraph that section 22 states under "At
-the freeze", as D32 and D39 required).** This file has no ledger row. No confirm-split
-episode may run under it. D49 (ii) admitted the pre-freeze development jobs O1 and A0a within S1a's caps
-(A0b is not submitted while the anchor is unavailable); like every GPU episode they run
-only after the action-path suite passes. Freezing needs the G0 items of section 3, the
-constants of section 6.2 written into their open slots, a fresh pre-freeze audit, and the
-sign-offs of section 18: item 17 with the acceptance of an unanchored read, and G0 item 5's
-offline-setup decisions, are Kevin's alone (both filled from his rulings, D55); the
-program's sign-off is D56, whose id fills its open slot at the freeze. A material change
-after the freeze is a new experiment id. Every slot that is filled only at the freeze
-carries the placeholder that `scripts/preregister.py freeze` refuses, so the guard refuses
-this file until each is filled (section 22 lists them); no other text in this file trips
-the guard (a test fills every slot on a scratch copy and freezes it).
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the
+freeze time and `git_head_at_freeze`.** The pre-freeze jobs O1 and A0a ran under D49 (ii)
+after the action-path suite passed (D53), from the draft commit named in their
+manifests; A0b was not submitted, because the anchor is UNAVAILABLE (section 5.7). The
+constants of section 6.2 and G0 item 10's frozen plan come from A0a's records, and
+section 18 records the sign-offs. O2 and every A1 job run from an export of the freeze
+commit, the commit that adds this file's ledger row (section 1), and the lane admits an
+A1 job only while this file's SHA-256 equals that row's and refuses every pre-freeze
+purpose (section 5.5; D56). A material change after the freeze is a new experiment id.
 
 - Drafted 2026-10-08 on branch `stage0/q2-stage1-rescope`; revised the same day after
   three adversarial pre-freeze reviews, and on 2026-10-09 after the action-path verdict, O1
@@ -457,7 +452,7 @@ S1a does **not** answer:
       freeze it requires the slot to hold the named plan file's `plan_sha256` and the lane to
       accept that manifest from the tree.
 
-    Frozen plan SHA-256: TBD.
+    Frozen plan SHA-256: `6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51`.
 
     Every registered VM job's lane manifest is rendered from the plan by
     `scripts/render_q2_stage1_manifest.py` (section 5.5), and the lane refuses one
@@ -1818,7 +1813,7 @@ freeze"). `tests/test_q2_stage1_prereg.py` requires the id in that slot to be a 
   audit), `982d12a5` and `e2b5e914` leave the pool by the offline-setup exclusion, and
   `53ad5833` and `d38192b0` stay (section 5.4; the base re-drawn on 113 tasks): accepted
   (Kevin's ruling of 2026-10-09, D55 (ii))
-- Program sign-off of items 1-16 and 19-27 (decision id): TBD
+- Program sign-off of items 1-16 and 19-27 (decision id): D56
 
 ## 19. Disclosures and known limitations
 
