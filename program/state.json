@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-08",
+  "updated": "2026-10-09",
   "program": "Checker adequacy and calibrated measurement for verifiable machine work",
   "program_doc": "program/PROGRAM.md",
   "stage": "stage-0",
@@ -428,7 +428,7 @@
     "Q2 S1a (q2-stage1-rescoped-v1; D47, D49): G0 built and reviewed 2026-10-08 (program/evidence/2026-10-08/q2-stage1-g0/). The OpenCUA-7B anchor is UNAVAILABLE (at most 6 of 116 tasks keep the config and checker the public runs used; its tokenizer does not load under vLLM 0.31), so S1a runs unanchored with the 32-task floor. Task 26150609's setup needs network (pip install pygame) and so fails offline. Next: a fresh independent pre-freeze audit, then the freeze after the action-path v2 suite passes (its N* and accepted executor fill the last TBDs). D49 decided the task floor and DR1/DR5 on your behalf; review them",
     "Host limit (needs the host administrator): fs.inotify.max_user_instances is 128 on fal-h100-01, so the action-path ladder's 40-VM rung could not boot 10 of 80 VMs (dnsmasq 'failed to create inotify: Too many open files'). N* is therefore 32, and the registered program kill criterion (N* below 40: cut the Stage-1 task count before adding GPUs) applies. Ask the administrator to raise the limit if 40 concurrent VMs are wanted; the rung's one registered rerun is held until then (evidence: program/evidence/2026-10-08/q2-action-path-v2-acceptance/)"
   ],
-  "gpu_hours_spent_this_program": 4.738,
+  "gpu_hours_spent_this_program": 4.7944,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -728,6 +728,15 @@
         "1002 qwen3.6-35b-a3b review"
       ],
       "outcome": "review PARSED on attempt 1, total 70, replicates token-identical; wave score 55 (lower of 55 and 70), best 55; honest exit (wave cap 1 of 1, token counter over the declared 8M, triad 3/3 refuted); reviewer inference only, not K1 v3 screen work",
+      "basis": "physical (scontrol RunTime 00:03:23 = 203 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, GPUs at 0 MiB after the job)"
+    },
+    {
+      "experiment": "K1 v3 gauntlet wave 3 (fresh run under D52) open-weight review (D24)",
+      "gpu_hours": 0.0564,
+      "jobs": [
+        "1031 qwen3.6-35b-a3b review"
+      ],
+      "outcome": "review PARSED on attempt 1, total 57, replicates token-identical; wave score 56 (lower of 56 and 57), best 56; honest exit (wave cap 1 of 1, triad 3/3 refuted, decisiveness defect surviving three waves); reviewer inference only, not K1 v3 screen work; max_model_len 196608 to fit the 149,570-token prompt",
       "basis": "physical (scontrol RunTime 00:03:23 = 203 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, GPUs at 0 MiB after the job)"
     }
   ],
