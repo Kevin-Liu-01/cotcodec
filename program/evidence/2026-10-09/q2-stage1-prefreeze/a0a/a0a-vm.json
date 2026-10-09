@@ -1,0 +1,269 @@
+{
+ "date": "2026-10-08",
+ "engine": {
+  "bridge_dir": "/home/kevin/cotcodec-runs/stage0/q2-stage1/gpu/{gpu_job_id}/bridge",
+  "gpu_cap_min": 25,
+  "gpu_job_id_file": "/home/kevin/cotcodec-runs/stage0/q2-stage1/pairs/a0a-n32/gpu_job_id",
+  "kind": "bridge"
+ },
+ "episode_image_id": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+ "experiment_id": "q2-stage1-rescoped-v1",
+ "file_cache": {
+  "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/file_cache_1e112283/files"
+ },
+ "mode": "episode",
+ "n_star": 32,
+ "name": "a0a-n32",
+ "osworld": {
+  "commit": "b138d348256078fa634fc3b73567a7337c793e6b",
+  "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/OSWorld"
+ },
+ "purpose": "a0a",
+ "run_root": "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs",
+ "schema": "q2-stage1a-lane-v1",
+ "slots": [
+  {
+   "block": "a0a.1",
+   "extension_block": null,
+   "harness": "H-GA",
+   "job": "A0a",
+   "rerun": 1,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.1:000",
+   "task_id": "4172ea6e-6b77-4edb-a9cc-c0014bd1603b"
+  },
+  {
+   "block": "a0a.1",
+   "extension_block": null,
+   "harness": "H-GA",
+   "job": "A0a",
+   "rerun": 1,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.1:001",
+   "task_id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2"
+  },
+  {
+   "block": "a0a.1",
+   "extension_block": null,
+   "harness": "H-OSW-fixed",
+   "job": "A0a",
+   "rerun": 1,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.1:002",
+   "task_id": "4172ea6e-6b77-4edb-a9cc-c0014bd1603b"
+  },
+  {
+   "block": "a0a.1",
+   "extension_block": null,
+   "harness": "H-GA",
+   "job": "A0a",
+   "rerun": 1,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.1:003",
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+  },
+  {
+   "block": "a0a.1",
+   "extension_block": null,
+   "harness": "H-OSW-fixed",
+   "job": "A0a",
+   "rerun": 1,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.1:004",
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+  },
+  {
+   "block": "a0a.1",
+   "extension_block": null,
+   "harness": "H-OSW-fixed",
+   "job": "A0a",
+   "rerun": 1,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.1:005",
+   "task_id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2"
+  },
+  {
+   "block": "a0a.1",
+   "extension_block": null,
+   "harness": "H-OSW-fixed",
+   "job": "A0a",
+   "rerun": 1,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.1:006",
+   "task_id": "bf4e9888-f10f-47af-8dba-76413038b73c"
+  },
+  {
+   "block": "a0a.1",
+   "extension_block": null,
+   "harness": "H-OSW-fixed",
+   "job": "A0a",
+   "rerun": 1,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.1:007",
+   "task_id": "d681960f-7bc3-4286-9913-a8812ba3261a"
+  },
+  {
+   "block": "a0a.1",
+   "extension_block": null,
+   "harness": "H-GA",
+   "job": "A0a",
+   "rerun": 1,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.1:008",
+   "task_id": "bf4e9888-f10f-47af-8dba-76413038b73c"
+  },
+  {
+   "block": "a0a.1",
+   "extension_block": null,
+   "harness": "H-GA",
+   "job": "A0a",
+   "rerun": 1,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.1:009",
+   "task_id": "d681960f-7bc3-4286-9913-a8812ba3261a"
+  },
+  {
+   "block": "a0a.2",
+   "extension_block": null,
+   "harness": "H-OSW-fixed",
+   "job": "A0a",
+   "rerun": 2,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.2:000",
+   "task_id": "4172ea6e-6b77-4edb-a9cc-c0014bd1603b"
+  },
+  {
+   "block": "a0a.2",
+   "extension_block": null,
+   "harness": "H-OSW-fixed",
+   "job": "A0a",
+   "rerun": 2,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.2:001",
+   "task_id": "d681960f-7bc3-4286-9913-a8812ba3261a"
+  },
+  {
+   "block": "a0a.2",
+   "extension_block": null,
+   "harness": "H-GA",
+   "job": "A0a",
+   "rerun": 2,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.2:002",
+   "task_id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2"
+  },
+  {
+   "block": "a0a.2",
+   "extension_block": null,
+   "harness": "H-OSW-fixed",
+   "job": "A0a",
+   "rerun": 2,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.2:003",
+   "task_id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2"
+  },
+  {
+   "block": "a0a.2",
+   "extension_block": null,
+   "harness": "H-GA",
+   "job": "A0a",
+   "rerun": 2,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.2:004",
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+  },
+  {
+   "block": "a0a.2",
+   "extension_block": null,
+   "harness": "H-GA",
+   "job": "A0a",
+   "rerun": 2,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.2:005",
+   "task_id": "d681960f-7bc3-4286-9913-a8812ba3261a"
+  },
+  {
+   "block": "a0a.2",
+   "extension_block": null,
+   "harness": "H-OSW-fixed",
+   "job": "A0a",
+   "rerun": 2,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.2:006",
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+  },
+  {
+   "block": "a0a.2",
+   "extension_block": null,
+   "harness": "H-GA",
+   "job": "A0a",
+   "rerun": 2,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.2:007",
+   "task_id": "4172ea6e-6b77-4edb-a9cc-c0014bd1603b"
+  },
+  {
+   "block": "a0a.2",
+   "extension_block": null,
+   "harness": "H-OSW-fixed",
+   "job": "A0a",
+   "rerun": 2,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.2:008",
+   "task_id": "bf4e9888-f10f-47af-8dba-76413038b73c"
+  },
+  {
+   "block": "a0a.2",
+   "extension_block": null,
+   "harness": "H-GA",
+   "job": "A0a",
+   "rerun": 2,
+   "session": "S1",
+   "size": "9B",
+   "slot": "A0a:a0a.2:009",
+   "task_id": "bf4e9888-f10f-47af-8dba-76413038b73c"
+  }
+ ],
+ "slurm": {
+  "cpus": 90,
+  "memory_gb": 126,
+  "minutes": 35
+ },
+ "vm": {
+  "concurrency": 20,
+  "cpu_cores": 4,
+  "disk_size": "32G",
+  "guest_ip": "20.20.20.21",
+  "hmp_port": 7100,
+  "image": "happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+  "image_id": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+  "memory_gb": 6,
+  "network": "none-netns",
+  "qcow2": {
+   "host_path": "/home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2",
+   "sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+   "size_bytes": 24460197888
+  },
+  "ram_size": "4G",
+  "server_port": 5000
+ }
+}

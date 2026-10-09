@@ -1,0 +1,12 @@
+2026-10-09T18:15:40Z squeue-before-A0a-VM: []
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+2026-10-09T18:15:40Z A0a VM job submitted: 1037
+2026-10-09T18:15:41Z squeue-before-A0a-GPU (foreign): []
+2026-10-09T18:15:41Z A0a GPU job submitted: 1039 (after:1037)

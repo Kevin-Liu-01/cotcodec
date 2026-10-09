@@ -65,17 +65,15 @@ def handler(mode):
                 self.reply(404, b'{"error": "not found"}')
 
         def do_POST(self):  # noqa: N802
-            raw = self.rfile.read(int(self.headers.get("Content-Length") or 0))
+            self.rfile.read(int(self.headers.get("Content-Length") or 0))
             path = self.path.split("?")[0]
             if self.failing(path):
                 self.reply(500, ERROR)
             elif path == "/file":
                 self.reply(404, b'{"error": "File not found"}')
             elif path.startswith("/setup/") or path == "/execute":
-                # The guest is Linux (the vlc and gimp getters ask); any other command prints
-                # a path that does not exist.
-                output = "Linux\n" if b"platform.system" in raw else "/home/user/missing\n"
-                out = {"status": "success", "output": output, "error": "", "returncode": 0}
+                out = {"status": "success", "output": "/home/user/missing\n", "error": "",
+                       "returncode": 0}
                 self.reply(200, json.dumps(out).encode())
             else:
                 self.reply(404, b'{"error": "not found"}')
