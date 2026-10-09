@@ -1325,3 +1325,27 @@ and locally, and it wrote byte-identical outputs to the copy that ran first.
 `c2_prediction_table.py` and `check_runs.py` ran locally on the collected
 bundle. After their own ruff fixes they were run again, with the same
 results.
+
+## Independent verification of stage B (ladder, A4, A7, A5 final)
+
+`independent-verification-stage-b.json`: a fresh verifier, read-only in the
+repository and on the host, recomputed every stage B verdict with the frozen
+`acceptance.py` from SHA-256-checked copies of the 16 run directories, re-rendered
+the 7 stage B manifests (byte-identical), re-judged all 107,988 ladder, A4 and A7
+trials (0 mismatches) and checked binding, CPU pinning, end states and foreign
+load. `verdicts_reproduced: true`: N* = 32 (rungs 8-32 qualify; rung 40 did not
+count and did not abort), A1 at N* = 32, A4, A7 and A5 (final) PASS. With stage A,
+the registered overall verdict holds: A1-A6 hold (Stage 1 may start), A7 holds
+(the screenshot-plus-accessibility setting may be used), and N* < 40 triggers
+section 9's program kill criterion.
+
+The verifier's findings, all low or informational: A4 and A7 were rendered and
+submitted before the rung-40 choice was recorded (D51 ratified it afterwards);
+D51's last sentence names a repair attempt as the path to a higher N* after a
+host change, which section 11 does not provide (only a registered deviation or a
+new registration does; D53); A4's PASS was exposed to the unbounded whole-boot
+`/accessibility` failure seen in A7 session 193 (no-draw probability about 0.65
+at the observed rate); the cumulative VM-hour total mixes receipt-span and
+occupied-span definitions; and the no-foreign-job evidence for A7's window rests on
+the driver's fail-open squeue snapshots. What the verdict licenses and does not
+license for Stage 1 is in its `interpretation_notes`.
