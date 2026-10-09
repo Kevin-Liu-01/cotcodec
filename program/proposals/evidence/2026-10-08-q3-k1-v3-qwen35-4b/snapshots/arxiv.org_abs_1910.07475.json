@@ -1,0 +1,35 @@
+{
+  "url": "https://arxiv.org/abs/1910.07475",
+  "fetched_at": "2026-10-09T17:22:26Z",
+  "http_status": 200,
+  "content_type": "text/html; charset=utf-8",
+  "raw_bytes": 43714,
+  "raw_sha256": "812812942b252c45aba2a14c7df32cf80d4ec85b00194ae44fb4481e3b579699",
+  "raw_stored": false,
+  "extract": {
+    "title": "MLQA: Evaluating Cross-lingual Extractive Question Answering",
+    "authors": [
+      "Lewis, Patrick",
+      "Oğuz, Barlas",
+      "Rinott, Ruty",
+      "Riedel, Sebastian",
+      "Schwenk, Holger"
+    ],
+    "citation_date": "2019/10/16",
+    "submission_history": [
+      {
+        "version": "v1",
+        "date": "Wed, 16 Oct 2019 17:05:21 UTC"
+      },
+      {
+        "version": "v2",
+        "date": "Thu, 7 Nov 2019 05:46:56 UTC"
+      },
+      {
+        "version": "v3",
+        "date": "Sun, 3 May 2020 10:13:02 UTC"
+      }
+    ],
+    "abstract": "Question answering (QA) models have shown rapid progress enabled by the availability of large, high-quality benchmark datasets. Such annotated datasets are difficult and costly to collect, and rarely exist in languages other than English, making training QA systems in other languages challenging. An alternative to building large monolingual training datasets is to develop cross-lingual systems which can transfer to a target language without requiring training data in that language. In order to develop such systems, it is crucial to invest in high quality multilingual evaluation benchmarks to measure progress. We present MLQA, a multi-way aligned extractive QA evaluation benchmark intended to spur research in this area. MLQA contains QA instances in 7 languages, namely English, Arabic, German, Spanish, Hindi, Vietnamese and Simplified Chinese. It consists of over 12K QA instances in English and 5K in each other language, with each QA instance being parallel between 4 languages on average. MLQA is built using a novel alignment context strategy on Wikipedia articles, and serves as a cross-lingual extension to existing extractive QA datasets. We evaluate current state-of-the-art cross-lingual representations on MLQA, and also provide machine-translation-based baselines. In all cases, transfer results are shown to be significantly behind training-language performance."
+  }
+}
