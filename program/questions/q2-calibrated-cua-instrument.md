@@ -104,8 +104,11 @@ observation study on a certified harness variant that reads the accessibility
 tree, or more sessions at 4B and 9B, would each be a new proposal.
 
 The proposal also asks to restate the "paired MDE about 7-8 pp" kill line
-below in share units, as DR5 does. The kill criteria are unchanged until
-Kevin rules.
+below in share units, as DR5 does. Kevin ruled on 2026-10-09 (D55): for S1a,
+DR1 replaces the 122B-A10B swap and DR5 replaces the paired-MDE line, and S1a
+is read unanchored (every output labelled "not externally anchored"; nothing
+replaces the Holo3 2-SE line, because no anchor runs). The lines below are
+kept as written for the record and for any design outside S1a.
 
 The original design is kept for the record: four sizes x 2 harnesses x 2
 observations x 3 reruns x 120 tasks (5,760 episodes), plus a Holo3 rerun on

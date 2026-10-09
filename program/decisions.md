@@ -820,3 +820,18 @@ proposal and gauntlet record stay on main as the package if K1 is reopened.
 The record notes three unedited errors: the 0.64 at registration lines
 341-342, which should read 0.500 at offset 0 and 0.445 at offsets 1-2; the
 bundle's repair wall time; and the proposal's scorecard line.
+
+**D55. Kevin's rulings on S1a's reserved sign-offs (2026-10-09).** Kevin was
+asked directly and ruled on the two items in `q2-stage1-rescoped-v1` section
+18 that are his. (i) Item 17: accepted. DR1 (drop 4B from the ladder if its
+pooled success is below 10% under both harnesses) replaces the question
+file's unfunded swap to 122B-A10B. DR5 (S1b's GO rule on the share π_small
+against M = 0.13, or π_9B against M = 0.18) replaces the "paired MDE about
+7-8 pp" line. S1a is read without the D11 runtime check: the OpenCUA-7B anchor
+is unavailable, every output is labelled "not externally anchored", and
+nothing replaces the question file's Holo3 kill line. (ii) G0 item 5: the
+registered offline-setup exclusion is accepted. `26150609` (the audit's
+option (b)), `982d12a5` and `e2b5e914` leave the pool; `53ad5833` and
+`d38192b0` stay; the base is re-drawn on the 113 remaining tasks. The draft's
+two Kevin slots cite this entry. The remaining program sign-off (items 1-16
+and 19-27) is recorded after the pre-freeze audit.
