@@ -1,9 +1,9 @@
 {
  "doctor": "Novelty",
  "status": "FAIL",
- "evaluated_on": "2026-10-08",
- "evaluated_by": "repair pass under D48 by the single synthesis owner (Claude agent); not an independent review; supersedes the wave-1 record of the same name (wave-1 versions are in git history at 6969519)",
+ "evaluated_on": "2026-10-09",
+ "evaluated_by": "repair pass under D52 by the single synthesis owner (Claude agent), 2026-10-09; not an independent review; supersedes the D48 record of the same name (in git history at fcb303d)",
  "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
- "evidence": "No direct prior found by any wave-1 cell, refuter or reviewer, or by the repair's six queries and its screening of the ten ids the wave-1 novelty refuter named (NARROWED; the core measurement STILL_OPEN). Wave-1 blind discrimination passed under the rule; the wave-1 novelty refuter refuted on the trivial-recombination prong only (about 0.65). The repair states the structural identity with Lost in Compression in C06, closest prior 3 and two new ledger rows, and supplies fresh blind packets (repaired proposal, fresh Oracle-Guided paragraph, Lost in Compression, SpotAttention) for this run's critic. Coverage gaps remain: OpenReview, ACL Anthology full text, code content, backward citations; the Japanese and Korean queries returned nothing on topic.",
- "remediation": "This run's blind critic on the fresh packets (including Lost in Compression) and the novelty refuter with at least six queries; a code and OpenReview search."
+ "evidence": "No direct prior found by any wave-1 or wave-2 discovery cell, refuter or reviewer, or by the D48 (6) and D52 (2) repair queries (merged verdict NARROWED, core STILL_OPEN). Wave-1 blind discrimination passed; wave 2's was void (the closest-prior packet carried a note naming the prior); both novelty refuters refuted on the trivial-recombination prong only. D52: ledger row 3 corrected to credit XProvence's seen and unseen training-language split (full text re-read), MLQA's G-XLT credited for the direction decomposition, fresh blind packets with no notes (proposal e4578790, Oracle-Guided 52321202, XProvence 9606bfd6). Coverage gaps: ACL Anthology full text, Hugging Face model cards, patents, X, Reddit, backward citations.",
+ "remediation": "Run this run's blind critic once per prior packet (Oracle-Guided, Lost in Compression, SpotAttention, XProvence) and the novelty refuter with at least six queries; search ACL Anthology and model cards."
 }

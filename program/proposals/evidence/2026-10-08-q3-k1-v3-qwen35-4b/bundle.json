@@ -1,12 +1,13 @@
 {
  "schema_version": 1,
  "proposal": "program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md",
- "proposal_sha256": "4def0af9e253997248ae07d83fec8467e6cb493f07158dc37f72031964305d2e",
+ "proposal_sha256": "ae995bc96039e90ab60e6ac46da5339ae6db09bc1471244da0be97b03b2e5332",
  "draft_registration": {
   "path": "program/preregistrations/q3-k1-localization-screen-v3.md",
-  "sha256": "08fa52ca28898b8c99752d5e914d63a2068a276d5fb1da57ed4d1407916abdeb",
-  "status": "DRAFT, repaired under D48, not frozen",
-  "wave1_sha256": "f4ce9a00f501f712247dd5ebb5964043c5f40d721c21db19c411475d3cce3b2c"
+  "sha256": "bdbe5e9ae1ea693c44fc6207fb1c1474b85e34fe5d89954f803ee75a5bafb58d",
+  "status": "DRAFT, repaired under D48 and D52, not frozen",
+  "wave1_sha256": "f4ce9a00f501f712247dd5ebb5964043c5f40d721c21db19c411475d3cce3b2c",
+  "wave2_sha256": "08fa52ca28898b8c99752d5e914d63a2068a276d5fb1da57ed4d1407916abdeb"
  },
  "source_snapshots": [
   {
@@ -458,16 +459,43 @@
    "raw_bytes": 43724,
    "artifact": "snapshots/arxiv.org_abs_2607.15555.json",
    "sha256": "0e28604d5d96074524eb4d18b18c7c9f0b59e2918e8db4907edba8be79c6c703"
+  },
+  {
+   "url": "https://arxiv.org/abs/1910.07475",
+   "http_status": 200,
+   "fetched_at": "2026-10-09T17:22:26Z",
+   "raw_sha256": "812812942b252c45aba2a14c7df32cf80d4ec85b00194ae44fb4481e3b579699",
+   "raw_bytes": 43714,
+   "artifact": "snapshots/arxiv.org_abs_1910.07475.json",
+   "sha256": "50e667a8014c2e335f644280ba3c1db696552aa2b16f8a7732fce46a5e92161a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.27309",
+   "http_status": 200,
+   "fetched_at": "2026-10-09T17:22:26Z",
+   "raw_sha256": "a2adda3b90e702db8ccb22ecce87ef1b5fc3278592d63c53e85e56b5ff42cf2a",
+   "raw_bytes": 42947,
+   "artifact": "snapshots/arxiv.org_abs_2608.27309.json",
+   "sha256": "8c5f009bab863f86514c6753c6ff9482686a5ffa0ee8dfc62f54bc2ba92447f9"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.15545",
+   "http_status": 200,
+   "fetched_at": "2026-10-09T17:22:26Z",
+   "raw_sha256": "866fcd488a8c337f1c32d0a2779f22634121c076272634e01a920763339716ee",
+   "raw_bytes": 44635,
+   "artifact": "snapshots/arxiv.org_abs_2609.15545.json",
+   "sha256": "5d6be8c10b321776f3dca319994155ca21bae4f5beb4076cdf8c3fbd42892485"
   }
  ],
  "query_log": {
   "artifact": "query-log.json",
-  "sha256": "f30cc7e57663269e3ef4b160335846a5dbd9562cb4e4a496eb92650f1e9fb037",
-  "queries_against_budget": 6,
-  "note": "This run's counted queries (repair RP-Q1 to RP-Q6) against its declared 60; wave 1's 148 (cells and synthesis) and 23 (refuters and reviewer 1) are recorded in the same file and in the wave-1 gauntlet row."
+  "sha256": "c1feffbdac1cc68c7a562f68afea2ef6c81c20088b45d6c36c13b16dbcf266ef",
+  "queries_against_budget": 2,
+  "note": "This run's counted queries (the D52 repair's RP3-Q1 and RP3-Q2, block repair3_run) against its declared 60. Wave 2's 34 (repair_run 6 plus refuters and reviewer 1) are in the wave-2 gauntlet row; wave 1's 148 (cells and synthesis) and 23 (refuters and reviewer 1) are in this file and in the wave-1 row."
  },
  "reviews": [],
- "reviews_status": "NOT_RUN for this run: the repair precedes the blind critic, the refute-first triad and the two reviewers. Wave 1's reviews (51 and 55) are in program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl. No Ed25519 trust store exists (D24).",
+ "reviews_status": "NOT_RUN for this run: the D52 repair precedes the blind critic, the refute-first triad and the two reviewers. Wave 1's reviews (51 and 55) and wave 2's (55 and 70) are in program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl. No Ed25519 trust store exists (D24).",
  "compute": {
   "scope": "q3-k1-localization-screen-v3 is a DRAFT; it has no compute attestation of its own (compute/v3-attestations-not-run.md). The image, manifest and supplementary attestations are those of the dense pre-check v2 Qwen3.5-4B-Base lane (Slurm 862), which ran the 4B dense evaluation path v3 extends.",
   "image_digest": "127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9",
@@ -646,17 +674,93 @@
     "artifact": "compute/repair-cost-model.json",
     "sha256": "5b8d9935bb664f4ea290c049cb9401967cab89ed59c7d82637887348b6f4f4e0",
     "note": ""
+   },
+   {
+    "label": "D52 repair: development stage-0 facts script (model-free; real tokenizer, K1 split, anchor rule)",
+    "status": "INFO",
+    "return_code": null,
+    "artifact": "compute/repair3-stage0-dev-facts.py",
+    "sha256": "47465481e56de5fcaaff5e85f90ebab960f866a32902900e44f3f7afce051a6a",
+    "note": "no model; per-family counts only"
+   },
+   {
+    "label": "D52 repair: development stage-0 facts output (REPAIR_MEASUREMENT)",
+    "status": "INFO",
+    "return_code": null,
+    "artifact": "compute/repair3-stage0-dev-facts.json",
+    "sha256": "2f30a98cafe84100a4836cbf2f93ebcd579b91f506300ab0c9890544ec94ca8d",
+    "note": "PRE per-family 32-token rule 0.20-0.22; pooled PRE 0.53-0.67 of families; LF r=2 0.67; 110 controlled questions in 66 links; stop lists sha256 2bcebd74..."
+   },
+   {
+    "label": "D52 repair: stop-list proxy script (run on the H100 host CPU in a temporary directory; output not committed)",
+    "status": "INFO",
+    "return_code": null,
+    "artifact": "compute/repair3-host-stoplists.py",
+    "sha256": "081e6b8c1c279c375f8be70acabece9f0b7cfbd27e2c5ec49d59506820569ab3",
+    "note": "output stoplists.json sha256 2bcebd74b763b67a6fada2a69e351a26de7fba147ef85d4725dbd77a52ab8ed2"
+   },
+   {
+    "label": "D52 repair simulation S3: decision rules on measured inputs (not the registered decision-62 simulation)",
+    "status": "INFO",
+    "return_code": null,
+    "artifact": "compute/repair3-decision-sim.py",
+    "sha256": "dc0cbdd60893aa17fae0fe6f53183f6c88b4edf2572385359531f7e86fc4db8e",
+    "note": "imports repair-decision-sim.py; K1 validation 6.2e-15; generic statistics 2.9e-14; CRC32 scenario seeds, design seed 42"
+   },
+   {
+    "label": "S3 output",
+    "status": "INFO",
+    "return_code": null,
+    "artifact": "compute/repair3-decision-sim.json",
+    "sha256": "179d76ceff52d7659f31cbc58e7ba77be0d1957d51637cbd13ac9461cf202fdf",
+    "note": "137 rows; 400 reads per cell, 800 for identification rows"
+   },
+   {
+    "label": "D52 cost projection (synthesis arithmetic, not a probe)",
+    "status": "INFO",
+    "return_code": null,
+    "artifact": "compute/repair3-cost-model.py",
+    "sha256": "62af14772d7da3312996a5ec068bc2e153465a1db28972cb85ed9f071f2518ea",
+    "note": "caps 6.96 central, 9.46 high; seed top-up 1.72 / 2.30 in the extension's 2.17 / 3.04 slot"
+   },
+   {
+    "label": "D52 cost projection output",
+    "status": "INFO",
+    "return_code": null,
+    "artifact": "compute/repair3-cost-model.json",
+    "sha256": "81557bdb3d5e1e238e5a9c9b093697c92d8251e058e27431dbd4c92754b86324",
+    "note": ""
+   },
+   {
+    "label": "D52 chance of a verdict (S3 rows times judged and predictive gate probabilities)",
+    "status": "INFO",
+    "return_code": null,
+    "artifact": "compute/repair3-decisiveness.py",
+    "sha256": "be9a63af304d974d5ccd003ab995a70d5bc63e3cd41d0023c660ad23c97a6652",
+    "note": ""
+   },
+   {
+    "label": "D52 chance of a verdict output",
+    "status": "INFO",
+    "return_code": null,
+    "artifact": "compute/repair3-decisiveness.json",
+    "sha256": "30cbeb4575ac5400cc7a9305b65a8c1a27b4c65654b7fbd5a0a916c87e343690",
+    "note": "unconditional about 0.13-0.25 at seed SD 1, 0.12-0.21 at 2, 0.07-0.14 at 3"
    }
   ],
   "pilot_gpu_hours_projection": {
-   "central_caps": 6.94,
+   "central_caps": 6.96,
    "high_caps": 9.46,
    "ceiling_stated": 10,
    "wave1": {
     "central_caps": 7.21,
     "high_caps": 9.79
    },
-   "over_8_gpu_h": "at the high end (the V1 extension's worst case); admission is Kevin's (D24)"
+   "over_8_gpu_h": "at the high end (the V1 extension's worst case; the seed top-up shares its slot); admission is Kevin's (D24)",
+   "wave2": {
+    "central_caps": 6.94,
+    "high_caps": 9.46
+   }
   }
  },
  "doctors": [
@@ -664,41 +768,41 @@
    "name": "Source",
    "status": "PASS",
    "artifact": "doctors/source.json",
-   "sha256": "9610c8ac777b2c0afd381a67d3455d549a4a27856d3faa2c179daa61704745f9"
+   "sha256": "e6743e1cf7d8c405556dc6231ba040564a8b2f0a97463ce400b8a479a38906c0"
   },
   {
    "name": "Citation",
    "status": "PASS",
    "artifact": "doctors/citation.json",
-   "sha256": "a7c72c9d5bedbf054c49f7cf2c8b1f8dff47b7f4f5adf029723c71fc4992c74f"
+   "sha256": "ba7febdb0d4eccba688dec055ee3e2c00dad4f429c251cca87e376ad1684d5ea"
   },
   {
    "name": "Novelty",
    "status": "FAIL",
    "artifact": "doctors/novelty.json",
-   "sha256": "69799023ababadb35468377711d0b6ece4bc0184e02d0f21ccfb95b633a19c55"
+   "sha256": "8cf42cf88d9e881960a185774cce1d7ab046706e9d4789e48d47ae8b5f7f9466"
   },
   {
    "name": "Design",
    "status": "FAIL",
    "artifact": "doctors/design.json",
-   "sha256": "6cc7162eb29dad09dc5468d5c6807ffbec3fca48818f9d9d64955e71f2b4a4a1"
+   "sha256": "0d11a9b2a4603032e89159c5449d89d19e62620079728472334dab33a41fbb2c"
   },
   {
    "name": "Compute",
    "status": "FAIL",
    "artifact": "doctors/compute.json",
-   "sha256": "aed6ee495a2a5a01e2b99abb5988b2146459db832465b35f1d7a039e5bde55a9"
+   "sha256": "4a4a285d8892853d37e2a47752edab3b9d7b03f94ecd264fcdd508f3d9619d54"
   },
   {
    "name": "Safety",
    "status": "PASS",
    "artifact": "doctors/safety.json",
-   "sha256": "0b226e8e3a7f889c2c93e983569daa1b2fb4962ec6ab8f88522873fb864a99e9"
+   "sha256": "018e41f43d781f554063d87ba63c603353644a69061d78ccd3ce8273256bfdd0"
   }
  ],
  "audit_log": null,
- "audit_log_status": "This run's row is appended to program/gauntlet/ with scripts/research_gauntlet_record.py after its reviewers score. Wave 1's row (hash fd00353a...) is in the same file.",
+ "audit_log_status": "This run's row is appended to program/gauntlet/ with scripts/research_gauntlet_record.py after its reviewers score. Rows 1 (wave 1, hash fd00353a...) and 2 (wave 2) are in the same file.",
  "budget_ledger": {
   "declared_this_run": {
    "queries": 60,
@@ -709,11 +813,11 @@
    "gpu_hours": 0.3
   },
   "used_by_repair": {
-   "queries": 6,
+   "queries": 2,
    "gpu_hours": 0.0,
-   "wall_minutes_estimate": "about 100 (elapsed, 2026-10-08T16:10Z to the commit; CPU simulations under heavy host load)",
+   "wall_minutes_estimate": "about 140 (elapsed, 2026-10-09T16:44Z to the commit)",
    "tokens_estimate": "not metered by the repair agent; the recorder meters from transcripts",
-   "dollars": "no external API spend; CPU simulations on the development Mac",
+   "dollars": "no external API spend; CPU work on the development Mac and, niced and without a GPU, on the H100 host's CPU",
    "waves": "0 (the repair precedes this run's wave)"
   },
   "wave1": {
@@ -733,10 +837,56 @@
     "gpu_hours": 0.0569,
     "waves": 1
    }
+  },
+  "wave2": {
+   "declared": {
+    "queries": 60,
+    "wall_minutes": 600,
+    "tokens": 8000000,
+    "dollars": 150,
+    "waves": 1,
+    "gpu_hours": 0.3
+   },
+   "used": {
+    "queries": 34,
+    "tokens_counter": 8615847,
+    "dollars": 114.62,
+    "wall_minutes": 176.1,
+    "gpu_hours": 0.0564,
+    "waves": 1
+   },
+   "used_by_d48_repair": {
+    "queries": 6,
+    "gpu_hours": 0.0,
+    "wall_minutes_estimate": "about 100 (elapsed, 2026-10-08T16:10Z to the commit; CPU simulations under heavy host load)",
+    "tokens_estimate": "not metered by the repair agent; the recorder meters from transcripts",
+    "dollars": "no external API spend; CPU simulations on the development Mac",
+    "waves": "0 (the repair precedes this run's wave)"
+   }
   }
  },
  "blind_discrimination_packet": {
-  "this_run": {
+  "wave1": {
+   "proposal": {
+    "artifact": "blind/paragraph-e942c63a.txt",
+    "sha256": "f0e5a25e20a876d537b04b3978c4426076336586a7dc85f3785399ad479c7b3b",
+    "text_sha256": "e942c63abf9bf947b831deac102b00c089341bb6723796a242c1bd26c410e5a5"
+   },
+   "closest_prior": {
+    "artifact": "blind/paragraph-38ab2fa1.txt",
+    "sha256": "dea50bcd381f1fde3e3975e01fd4014cf50cd899a19c375f81f51d38d458292e",
+    "text_sha256": "38ab2fa1dd57e0844bbb3c97337e82d04fa31d047f572c335483c5e528e15257"
+   },
+   "closest_prior_id": "arXiv:2606.07703 (How Much Dense Attention is Necessary? Oracle-Guided Sparse Prefill for Full/GQA Layers in Hybrid Long-Context Models, Wang et al., v1 2026-06-05)",
+   "supplementary_prior": {
+    "artifact": "blind/paragraph-91fa8475.txt",
+    "sha256": "51061f5a26e5ef4df9c069adcbe12d8f91785374ff98051860e4c60a6d0296b7",
+    "text_sha256": "91fa8475fe52f77d2d219d236e573caa90d44816715ecc507974ed48476e916e"
+   },
+   "supplementary_prior_id": "arXiv:2606.22874 (SpotAttention: Plug-In Block-Sparse Routing for Pretrained Long-Context Transformers, Ahmad and Yun, v1 2026-06-22), the direct apparatus prior on Qwen3.5-4B",
+   "note": "File names carry no role. The critic receives two texts in randomized order without this mapping; the mapping here is for the record."
+  },
+  "wave2": {
    "proposal": {
     "artifact": "blind/paragraph-0ccbe84a.txt",
     "sha256": "88f2dd345470292999b2aab4a4f07fa242aae4f6468d99a9bef5d7bb903cda31",
@@ -760,33 +910,46 @@
     "text_sha256": "91fa8475fe52f77d2d219d236e573caa90d44816715ecc507974ed48476e916e"
    },
    "supplementary_prior_id": "arXiv:2606.22874 (SpotAttention: Plug-In Block-Sparse Routing for Pretrained Long-Context Transformers, Ahmad and Yun, v1 2026-06-22), the direct apparatus prior on Qwen3.5-4B",
-   "note": "File names carry no role. Each critic call receives the proposal and one prior in randomized order without this mapping. Fresh paragraphs written by the repair owner on 2026-10-08 (proposal: the repaired mechanism; closest prior: re-read of 2606.07703; second prior: re-read of 2608.26175)."
+   "note": "File names carry no role. Each critic call receives the proposal and one prior in randomized order without this mapping. Fresh paragraphs written by the repair owner on 2026-10-08 (proposal: the repaired mechanism; closest prior: re-read of 2606.07703; second prior: re-read of 2608.26175).",
+   "note_after_wave2": "Wave 2's blind test was void: the repair's returned closest-prior field carried a provenance note naming the prior and the workflow passed it to the critic; the files themselves held only the paragraphs."
   },
-  "wave1": {
+  "this_run": {
    "proposal": {
-    "artifact": "blind/paragraph-e942c63a.txt",
-    "sha256": "f0e5a25e20a876d537b04b3978c4426076336586a7dc85f3785399ad479c7b3b",
-    "text_sha256": "e942c63abf9bf947b831deac102b00c089341bb6723796a242c1bd26c410e5a5"
+    "artifact": "blind/paragraph-e4578790.txt",
+    "sha256": "50b02fa30eb83f71296c064bcba477f6961567b600c67930b1e450b4ec5d327d",
+    "text_sha256": "e457879026aa5f30e3b9e6485870c48d8b45d98bebe054df3dcc5e22f61e360c"
    },
    "closest_prior": {
-    "artifact": "blind/paragraph-38ab2fa1.txt",
-    "sha256": "dea50bcd381f1fde3e3975e01fd4014cf50cd899a19c375f81f51d38d458292e",
-    "text_sha256": "38ab2fa1dd57e0844bbb3c97337e82d04fa31d047f572c335483c5e528e15257"
+    "artifact": "blind/paragraph-52321202.txt",
+    "sha256": "ede366f205629f7c0beff6282aa11a3c6ccb2138a984a8ef9eac2dde94852f74",
+    "text_sha256": "5232120234f016a02d22d9696f1eee558bf595b3e3527e1b54cd32152e4a3ef0"
    },
    "closest_prior_id": "arXiv:2606.07703 (How Much Dense Attention is Necessary? Oracle-Guided Sparse Prefill for Full/GQA Layers in Hybrid Long-Context Models, Wang et al., v1 2026-06-05)",
+   "second_prior": {
+    "artifact": "blind/paragraph-93f4dd72.txt",
+    "sha256": "008e1d352eb8ec6fa3fbff3eb01118f1cbe4ddc7cee69fe0c5f6f6053c800dc3",
+    "text_sha256": "93f4dd724e785db97525a654d25126d32674d6db9b1633891ea24951e021e411"
+   },
+   "second_prior_id": "arXiv:2608.26175 (Lost in Compression, Lukauskas, v1 2026-07-27); packet from the D48 repair, not judged in wave 2",
    "supplementary_prior": {
     "artifact": "blind/paragraph-91fa8475.txt",
     "sha256": "51061f5a26e5ef4df9c069adcbe12d8f91785374ff98051860e4c60a6d0296b7",
     "text_sha256": "91fa8475fe52f77d2d219d236e573caa90d44816715ecc507974ed48476e916e"
    },
-   "supplementary_prior_id": "arXiv:2606.22874 (SpotAttention: Plug-In Block-Sparse Routing for Pretrained Long-Context Transformers, Ahmad and Yun, v1 2026-06-22), the direct apparatus prior on Qwen3.5-4B",
-   "note": "File names carry no role. The critic receives two texts in randomized order without this mapping; the mapping here is for the record."
+   "supplementary_prior_id": "arXiv:2606.22874 (SpotAttention, Ahmad and Yun, v1 2026-06-22); packet from wave 1, not judged in wave 2",
+   "third_prior": {
+    "artifact": "blind/paragraph-9606bfd6.txt",
+    "sha256": "87f4502e0df933cccbb2d58de15f41ec4de50c29b8d130fd735c7ed3c5a7c128",
+    "text_sha256": "9606bfd63741985d5e3f1e42c137e5a32b75eab0acb75d6009061a88850228a2"
+   },
+   "third_prior_id": "arXiv:2601.18886 (XProvence: Zero-Cost Multilingual Context Pruning for Retrieval-Augmented Generation, Mohamed et al., v1 2026-01-26); the wave-2 novelty refuter's request",
+   "note": "File names carry no role and every file holds only its paragraph. Each critic call should receive the proposal and one prior in randomized order, read from these files by path, without this mapping or any other text. Fresh paragraphs written by the D52 repair owner on 2026-10-09 (proposal: the D52 mechanism; closest prior: re-worded from the D48 packet of 2606.07703; third prior: from a full-text re-read of 2601.18886)."
   }
  },
- "evidence_root_sha256": "6766b36553c63476105632494b45a2497c7e65ce9cdad33825f39e84c2c064b5",
+ "evidence_root_sha256": "2568e90c03be7b816a0ced5362ad3cdaf89a2738e727de6ef8cdffae484e2e40",
  "direction_doctor_run": {
   "artifact": "doctors/research-direction-doctor-output.json",
-  "sha256": "23b9cd35671bfd4017edba9ed48d94e2e533ad369e226c6715e22625293d52b3",
+  "sha256": "468c285ef945a39d87dfe956e4dde05b3a156f32b26186bfda06c4f6bd43516c",
   "command": "uv run --locked python scripts/research_direction_doctor.py program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md",
   "note": "Outside evidence_root by design: the doctor output depends on this bundle."
  }

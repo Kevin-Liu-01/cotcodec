@@ -2778,3 +2778,38 @@ they say so.)
   the manifests, run, receipt and Slurm records, verdicts, section-12
   reports, summaries, checks, raw SHA-256 lists and operator scripts.
 - Not run: the ladder, A4 and A7. Nothing pushed or merged.
+
+## 2026-10-09 — K1 v3 repair under D52, before a fresh gauntlet run (branch `gauntlet/k1-v3`, not merged)
+
+- Single-owner, CPU-only repair of the DRAFT
+  `program/preregistrations/q3-k1-localization-screen-v3.md` and the proposal
+  `program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md` (new section "Changes
+  after wave 2"), aimed at the defects wave 2 named. Fresh run budgets:
+  queries 60, wall 600 min, tokens 8M, dollars 150, waves 1, gpu_hours 0.3.
+  No GPU; 2 counted orx queries (RP3-Q1, RP3-Q2), 4 full-text reads.
+- Development facts (model-free, real Qwen3.5-4B-Base tokenizer, K1 split,
+  proxy stop lists from K1's haystack sources): 110 of 224 questions
+  controlled in 66 of 122 links; the D48 per-family PRE rule holds for 0.20
+  to 0.22 of controlled unseen families (the wave-2 refuters' figure
+  reproduced), the pooled PRE for 0.53 to 0.67 (17 percent of unmasked
+  tokens); LF 0.67; mask exclusion 1.5 to 1.6 percent; answer-sentence kappa
+  bound LF 0.74 to 0.77, PRE 1.15 to 1.17.
+- GO: PRE pooled over every family with a complete pre-literal block (the D48
+  40 percent fallback withdrawn; a coverage rule can only make GO
+  unavailable); both directions at least 5 with lower bounds above 0; a
+  direction floor; a log-retention co-statistic; pre-step item 9 gates the
+  literal-free sensitivity.
+- Simulation S3 on measured inputs (67 clusters, per-family evidence sizes,
+  LF and PRE as statistics, multiplicative and floor-saturating generators;
+  validation against K1 6.2e-15): constructed false GOs at most 0.01 (wave-2
+  draft as it would freeze: 0.23 under spill +10, 0.99 under +15, 0.71 under
+  a multiplicative null); P(NEGATIVE | no excess) 0.60 to 0.71 at seed SD 1
+  (S2 said 0.81 to 0.86); the seed top-up in the V1 extension's slot raises
+  it to 0.55 to 0.59 at seed SD 2 without new caps.
+- Chance of a verdict, stated: about 0.13 to 0.25 at seed SD 1, 0.12 to 0.21
+  at 2, 0.07 to 0.14 at 3. Caps 6.96 / 9.46 GPU-h (high over 8; D24).
+- XProvence credited in ledger row 3 and as closest prior 4; fresh blind
+  packets with no notes (e4578790, 52321202, 9606bfd6). Doctor FAIL as
+  expected (Novelty, Design, Compute; trust store; integer budget parser).
+- Host CPU (nice 19, temporary directory, removed) ran the stop lists and
+  most of S3; no Slurm job, no image. Not frozen, not admitted, not pushed.
