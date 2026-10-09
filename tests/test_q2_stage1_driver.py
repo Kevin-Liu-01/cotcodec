@@ -251,6 +251,13 @@ def fast_retries(monkeypatch):
     monkeypatch.setattr(desktop, "RETRY_INTERVAL_S", 0.0)
 
 
+@pytest.fixture(autouse=True)
+def no_gpu_device_files(monkeypatch, tmp_path):
+    """The runner's D12 check reads ``/dev/nvidia*``, which a GPU host's bare metal has; the
+    tests stand in for the GPU-less episode container (the D12 test sets its own glob)."""
+    monkeypatch.setattr(driver, "GPU_DEVICE_GLOB", str(tmp_path / "no-gpu-devices" / "nvidia*"))
+
+
 @pytest.fixture
 def guest():
     fake = FakeGuest().start()
