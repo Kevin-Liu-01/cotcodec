@@ -26,11 +26,13 @@ audit certifies "not grossly wrong", not 1% correctness
 
 ## In progress
 
-- **Q2 S1a** (`q2-stage1-rescoped-v1`, D47, D49): G0 built, audited and
-  re-checked (ready once the action-path suite passes). Its last TBDs (N*,
-  the accepted executor, the A1 step p95 reference, A0a's GPU timing) and
-  three sign-off slots wait on the suite verdict and on A0a; the OpenCUA
-  anchor is unavailable, so S1a runs unanchored with 32 base tasks.
+- **Q2 S1a** (`q2-stage1-rescoped-v1`, D47, D49, D53): G0 built, audited and
+  re-checked. With the suite accepted, a single owner fills G0 item 1 (N* =
+  32, V = 20), makes persistent guest-server observation errors infrastructure
+  losses, runs O1 and A0a (D49 ii) and fills the A0 constants; two fresh
+  auditors then read the draft. Three sign-off slots remain before the freeze
+  (two are Kevin's). The OpenCUA anchor is unavailable, so S1a runs
+  unanchored with 32 base tasks.
 - **Q3**: the dense pre-check v2 result is Q3's Stage 0 outcome. K1 v3
   (gauntlet 51, then 55) continues under D52: a CPU-only repair of GO's
   identification (the long-range spill guard is evaluable for about 20% of
