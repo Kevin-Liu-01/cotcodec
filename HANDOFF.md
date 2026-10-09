@@ -5,7 +5,7 @@
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 15 rows). Decisions taken
-on Kevin's behalf are D1-D52 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D53 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 4.74 in total.
 
 | Registration | Outcome | Evidence |
@@ -16,6 +16,7 @@ on Kevin's behalf are D1-D52 in `program/decisions.md`. GPU-hours are in
 | `q3-dense-headroom-precheck-v1` | INCOMPLETE (null job id in receipts; 4B lane CPU-bound) | `program/evidence/2026-10-08/q3-dense-headroom-precheck/` |
 | `q3-dense-headroom-precheck-v2` | **NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base** (H1_CX 42.15, 99% 35.8-48.2); 0.6B reproduces v1 exactly and stays NOT_VIABLE; seven requirements for any K1 v3 | `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/` |
 | `q2-action-path-v1` (+ addenda) | Invalid on C2: `chord_super_d` failed under raw PyAutoGUI; the cause is the tap's record of key events queued during GNOME Shell's synchronous grab, not delivery (D43) | `program/evidence/2026-10-08/q2-action-path-acceptance/` |
+| `q2-action-path-v2` (+ addenda) | **ACCEPTED on attempt 1** (D53): C1-C4, A1-A7 pass, independently verified in two stages; N* = 32 (rung 40 hit the host's inotify limit), so the program kill criterion applies; a whole-boot `/accessibility` failure without restart (1 of 1,245 boots) is outside every criterion | `program/evidence/2026-10-08/q2-action-path-v2-acceptance/` |
 | `q2-evaluator-mutation-v1` | Descriptive (D35): `compare_pptx_files` fails 35 of 36 equivalent shape-order edits (30 confirmed by both raters; family FN share 40.2%); a GUI-faithful save flips 3 of 92 reference golds (confirmed); false positives few; kappa 0.34; adjudication pending | `program/evidence/2026-10-08/q2-mutation-confirm/` |
 
 Gauntlet records: K1 v2 (45, honest exit), Q1 Stage 0 (45, honest exit).
@@ -25,14 +26,6 @@ audit certifies "not grossly wrong", not 1% correctness
 
 ## In progress
 
-- **Q2 action path v2** (frozen, ledger rows 13-15): stage A passed and was
-  independently verified (C1-C4; A1 at N = 1, 2,000 of 2,000; A2; A3; A6; A5
-  so far; `program/evidence/2026-10-08/q2-action-path-v2-acceptance/`). Stage
-  B: the concurrency ladder gave N* = 32 (rung 40 hit the host's inotify
-  limit and is not rerun under attempt 1, D51); A4 (job 1027) and A7 (job
-  1029) ran at N* = 32. Their judgment, A5 over every receipt and the
-  suite's overall verdict are being produced and then independently
-  verified.
 - **Q2 S1a** (`q2-stage1-rescoped-v1`, D47, D49): G0 built, audited and
   re-checked (ready once the action-path suite passes). Its last TBDs (N*,
   the accepted executor, the A1 step p95 reference, A0a's GPU timing) and
@@ -52,7 +45,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D52, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D53, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 
