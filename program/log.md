@@ -2975,5 +2975,15 @@ they say so.)
   (D22). The program total is 4.852.
 - Left open: the status line, the frozen plan digest (both written at the freeze) and the
   three section 18 sign-offs (two Kevin's, one the program's decision id).
+- Tests: S1a 282 passed, 1 skipped locally (12 new). On the host, a fresh export of
+  `83f4127` ran under `srun -c 8` with no GRES (job 1043): 2,566 passed, 41 skipped, and
+  ruff was clean on `harness/q2_stage1`, `tests` and `scripts`.
+  - The first host run (job 1041) found 38 driver tests failing. The runner's D12 check reads
+    `/dev/nvidia*`, which the host's bare metal has, and the tests did not stub it. That
+    check came with the audit fixes, after the last host run (`e43549d`). `83f4127` makes
+    the tests stand in for the GPU-less container; the code is unchanged.
+  - Jobs 1040 (the sync left out the dev extra) and 1042 (a debugging `srun`) were CPU only.
+  - The two evidence copies of `observation_check.py` keep one long line each, byte for
+    byte as they ran.
 - Evidence: `program/evidence/2026-10-09/q2-stage1-prefreeze/`. Not done: no freeze, no
   push. Next: a fresh pre-freeze audit.
