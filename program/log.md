@@ -3170,3 +3170,45 @@ they say so.)
   2,521 passed, 88 skipped. ruff is clean on `harness/q2_stage1`, `tests` and `scripts`;
   whole-repo ruff's 251 findings are all in `main`'s K1 v3 evidence scripts.
 - Not done: no freeze, no push. Next: the program's sign-off, then the freeze.
+
+## 2026-10-09 — Q2 S1a: the freeze rehearsal answered (branch `stage0/q2-stage1-rescope`, draft, not frozen)
+
+- A fresh verifier rehearsed the freeze on a scratch clone of `51770da` with its own ledger
+  copy (the real ledger unchanged, `cfe46a0b`). The guard refused the unfilled draft on its
+  three slots only; filled, the freeze was accepted (row 16, `check-chain` and `verify`
+  pass); A1-9B-S1 rendered from `plan-a0a.json` validated (128 base slots, 11 fill blocks,
+  V 20, T_A1 110, 90 CPUs, 126 GB, 120 min) and its GPU half passed the docker submitter's
+  dry run; a one-byte edit of the frozen copy was refused by `lane validate`, `lane submit
+  --dry-run`, the GPU half's rendering and `verify`. It found the D53 (iii) reading
+  faithful, sound and implemented as stated, provided the program's decision accepts it.
+  Not ready: two blocking items, both fixed (registration section 22, "Freeze rehearsal").
+- Blocking 1: three S1a tests failed on the frozen tree (`test_manifest_rules` for A1 and
+  ANC, `test_anchor_purposes_are_refused`); they expected the pre-freeze message from the
+  repository's tree. Fixed in the tests only: they validate against a tree with the splits
+  and no ledger, and require a refusal from the repository's tree in either state.
+- Blocking 2: the status slot covered only its bold line, and the rest of the paragraph
+  ("This file has no ledger row. No confirm-split episode may run under it.") would have
+  been frozen unseen by the guard (D32's defect class). Fixed: the placeholder names the
+  whole paragraph; section 22 "At the freeze" states the frozen paragraph word for word,
+  the three slots and the freeze steps (scratch freeze and S1a suite first; the row
+  committed alone as the freeze commit; `state.json`, this log and `HANDOFF.md` after it).
+  New test `test_the_status_paragraph_is_replaced_whole_at_the_freeze`.
+- Non-blocking, fixed: two driver tests for delivered-slow observations (a checker `/file`
+  read and the agent's screenshots: counted slow, scored); 7.3's delay sentence reworded
+  (a late screenshot samples the screen later; same mechanism for both harnesses); item 13
+  and the sign-off lead-in put the postconfig carve-out to the program's decision; the
+  freeze commit is the commit that adds the ledger row (exports and O2's `FILL_GIT_SHA`),
+  not `git_head_at_freeze` (sections 1, 5.5); item 18's missing slot explained (moot
+  without the anchor).
+- Re-rehearsed here on a scratch clone of `d0a0529`: filled as section 22 states (the
+  frozen paragraph, `plan_sha256` `6a3f0219...` in backticks, a stand-in decision id),
+  the guard accepted it, row 16 (`check-chain` 16 rows PASS, `verify` PASS); on the frozen
+  tree the S1a suite gives 285 passed, 3 skipped (the R container test and the two
+  draft-only prereg tests) and the other 16 test files that read the ledger 388 passed, 8
+  skipped; an A1-9B-S1 manifest rendered there validated (128 slots) and was refused after
+  a one-byte edit, as `verify` was. The real ledger is unchanged (`cfe46a0b`).
+- Tests on the draft: S1a 287 passed, 1 skipped (3 new tests). Full local suite (macOS):
+  2,524 passed, 88 skipped. ruff clean on the changed tests.
+- No file of the code of record changed, no GPU job ran, no freeze, no push. Next: the
+  program's sign-off decision (items 1-16 and 19-27, with section 7.3's reading of D53 (iii)
+  and the postconfig carve-out), then the freeze steps of section 22.
