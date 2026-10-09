@@ -1,0 +1,150 @@
+{
+ "rule": "repair3",
+ "prior": [
+  [
+   0.0,
+   0.5
+  ],
+  [
+   5.0,
+   0.3
+  ],
+  [
+   12.0,
+   0.1
+  ],
+  [
+   15.0,
+   0.1
+  ]
+ ],
+ "conditional": {
+  "s1.0|H20.0|3 seeds": {
+   "P_verdict": 0.473,
+   "P_GO": 0.117,
+   "P_NEG": 0.357
+  },
+  "s1.0|H20.0|5 seeds (top-up)": {
+   "P_verdict": 0.502,
+   "P_GO": 0.117,
+   "P_NEG": 0.385
+  },
+  "s1.0|H30.0|3 seeds": {
+   "P_verdict": 0.468,
+   "P_GO": 0.145,
+   "P_NEG": 0.323
+  },
+  "s1.0|H30.0|5 seeds (top-up)": {
+   "P_verdict": 0.504,
+   "P_GO": 0.153,
+   "P_NEG": 0.351
+  },
+  "s1.0|H40.0|3 seeds": {
+   "P_verdict": 0.55,
+   "P_GO": 0.153,
+   "P_NEG": 0.397
+  },
+  "s1.0|H40.0|5 seeds (top-up)": {
+   "P_verdict": 0.568,
+   "P_GO": 0.152,
+   "P_NEG": 0.415
+  },
+  "s2.0|H20.0|3 seeds": {
+   "P_verdict": 0.369,
+   "P_GO": 0.118,
+   "P_NEG": 0.251
+  },
+  "s2.0|H20.0|5 seeds (top-up)": {
+   "P_verdict": 0.442,
+   "P_GO": 0.115,
+   "P_NEG": 0.327
+  },
+  "s2.0|H30.0|3 seeds": {
+   "P_verdict": 0.314,
+   "P_GO": 0.147,
+   "P_NEG": 0.167
+  },
+  "s2.0|H30.0|5 seeds (top-up)": {
+   "P_verdict": 0.454,
+   "P_GO": 0.146,
+   "P_NEG": 0.307
+  },
+  "s2.0|H40.0|3 seeds": {
+   "P_verdict": 0.329,
+   "P_GO": 0.156,
+   "P_NEG": 0.173
+  },
+  "s2.0|H40.0|5 seeds (top-up)": {
+   "P_verdict": 0.453,
+   "P_GO": 0.152,
+   "P_NEG": 0.3
+  },
+  "s3.0|H20.0|3 seeds": {
+   "P_verdict": 0.128,
+   "P_GO": 0.113,
+   "P_NEG": 0.015
+  },
+  "s3.0|H20.0|5 seeds (top-up)": {
+   "P_verdict": 0.312,
+   "P_GO": 0.113,
+   "P_NEG": 0.199
+  },
+  "s3.0|H30.0|3 seeds": {
+   "P_verdict": 0.146,
+   "P_GO": 0.143,
+   "P_NEG": 0.004
+  },
+  "s3.0|H30.0|5 seeds (top-up)": {
+   "P_verdict": 0.263,
+   "P_GO": 0.147,
+   "P_NEG": 0.117
+  },
+  "s3.0|H40.0|3 seeds": {
+   "P_verdict": 0.169,
+   "P_GO": 0.157,
+   "P_NEG": 0.013
+  },
+  "s3.0|H40.0|5 seeds (top-up)": {
+   "P_verdict": 0.267,
+   "P_GO": 0.153,
+   "P_NEG": 0.114
+  }
+ },
+ "unconditional": {
+  "seed SD 1.0": {
+   "given_gates": [
+    0.468,
+    0.55
+   ],
+   "unconditional": [
+    0.128,
+    0.251
+   ]
+  },
+  "seed SD 2.0": {
+   "given_gates": [
+    0.442,
+    0.454
+   ],
+   "unconditional": [
+    0.121,
+    0.207
+   ]
+  },
+  "seed SD 3.0": {
+   "given_gates": [
+    0.263,
+    0.312
+   ],
+   "unconditional": [
+    0.072,
+    0.142
+   ]
+  }
+ },
+ "policy": "topup",
+ "gates_pass": [
+  0.273,
+  0.456
+ ]
+}

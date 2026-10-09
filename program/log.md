@@ -2926,3 +2926,107 @@ they say so.)
   500s and hangs are outside every criterion, so Stage-1 registrations count
   undelivered and very slow observations per episode.
 - Merged `ops/q2-action-path-v2` into main. Next: the S1a pre-freeze work.
+
+## 2026-10-09 — K1 v3 repair under D52, before a fresh gauntlet run (branch `gauntlet/k1-v3`, not merged)
+
+- Single-owner, CPU-only repair of the DRAFT
+  `program/preregistrations/q3-k1-localization-screen-v3.md` and the proposal
+  `program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md` (new section "Changes
+  after wave 2"), aimed at the defects wave 2 named. Fresh run budgets:
+  queries 60, wall 600 min, tokens 8M, dollars 150, waves 1, gpu_hours 0.3.
+  No GPU; 2 counted orx queries (RP3-Q1, RP3-Q2), 4 full-text reads.
+- Development facts (model-free, real Qwen3.5-4B-Base tokenizer, K1 split,
+  proxy stop lists from K1's haystack sources): 110 of 224 questions
+  controlled in 66 of 122 links; the D48 per-family PRE rule holds for 0.20
+  to 0.22 of controlled unseen families (the wave-2 refuters' figure
+  reproduced), the pooled PRE for 0.53 to 0.67 (17 percent of unmasked
+  tokens); LF 0.67; mask exclusion 1.5 to 1.6 percent; answer-sentence kappa
+  bound LF 0.74 to 0.77, PRE 1.15 to 1.17.
+- GO: PRE pooled over every family with a complete pre-literal block (the D48
+  40 percent fallback withdrawn; a coverage rule can only make GO
+  unavailable); both directions at least 5 with lower bounds above 0; a
+  direction floor; a log-retention co-statistic; pre-step item 9 gates the
+  literal-free sensitivity.
+- Simulation S3 on measured inputs (67 clusters, per-family evidence sizes,
+  LF and PRE as statistics, multiplicative and floor-saturating generators;
+  validation against K1 6.2e-15): constructed false GOs at most 0.01 (wave-2
+  draft as it would freeze: 0.23 under spill +10, 0.99 under +15, 0.71 under
+  a multiplicative null); P(NEGATIVE | no excess) 0.60 to 0.71 at seed SD 1
+  (S2 said 0.81 to 0.86); the seed top-up in the V1 extension's slot raises
+  it to 0.55 to 0.59 at seed SD 2 without new caps.
+- Chance of a verdict, stated: about 0.13 to 0.25 at seed SD 1, 0.12 to 0.21
+  at 2, 0.07 to 0.14 at 3. Caps 6.96 / 9.46 GPU-h (high over 8; D24).
+- XProvence credited in ledger row 3 and as closest prior 4; fresh blind
+  packets with no notes (e4578790, 52321202, 9606bfd6). Doctor FAIL as
+  expected (Novelty, Design, Compute; trust store; integer budget parser).
+- Host CPU (nice 19, temporary directory, removed) ran the stop lists and
+  most of S3; no Slurm job, no image. Not frozen, not admitted, not pushed.
+
+## 2026-10-09 — K1 v3 gauntlet wave 3 (fresh run under D52): score 56, honest exit (branch `gauntlet/k1-v3`, not merged)
+
+- Fresh run (workflow `wf_b33e58fd-bfa`; budgets queries 60, wall_minutes
+  600, tokens 8,000,000, dollars 150, waves 1, gpu_hours 0.3) on the
+  D52-repaired proposal (`ae995bc9...`, commit `1d34eaa`) and DRAFT
+  registration (`bdbe5e9a...`, not frozen, not admitted). Audit row 3
+  appended to `program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl` (wave 3
+  of the gauntlet, wave 1 of this run), row hash
+  `7e322aa7e7f70f5cfb8962dad76fafb121b65c99acf0a166017cc1c0d19ca34d`.
+- Reviews: 56 (claude-opus-5-5) and 57 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1031). Both totals equal their dimension sums and sit below every cap (74,
+  79, 89). Score 56, best 56. Trajectory: 45 (K1 v2), 51, 55, 56. Neither
+  review is signed (D24).
+- Refute-first triad: 3 of 3 refuted, as in every K1 wave. Novelty:
+  recombination only (about 0.65); it found two priors the v3 ledger omits,
+  Allchin 2607.21692 (KL-distilled block router scored on evidence recall,
+  outside the model) and PHSA 2601.02819 (in-model selector with a
+  language-coverage deficit). Neither is a direct prior. Identification: GO
+  is not identified against question-side literal priming (MN questions share
+  0.38-0.68 of content tokens with the needle, CX 0.00-0.04; LF and PRE clean
+  only the evidence). NEGATIVE is well identified. Feasibility: decisiveness
+  (below). No direct prior found through 2026-10-09 under this run's 35
+  counted queries plus waves 1 and 2.
+- Blind discrimination: valid this time (the packets match the bundle files
+  exactly and name nothing) and passed by the rule's letter. The critic
+  judged the prior, Oracle-Guided 2606.07703, the stronger contribution but
+  the proposal "more novel and more rigorous, but much narrower", so the prior
+  is not strictly dominant. That is weaker than wave 1. Only one critic call
+  ran again; the XProvence, Lost in Compression and SpotAttention packets were
+  not judged. Reviewer 2 read the result as a failure. Cap 74 applies for
+  incomplete coverage either way, so the score is unchanged.
+- Largest defect: decisiveness. E19 omits the registered V1-at-every-seed rule
+  and V1_AFTER_TOPUP. With them, the unconditional chance of GO or NEGATIVE is
+  0.10-0.25, 0.05-0.17 and 0.03-0.11 at seed SD 1, 2 and 3 (E19 states
+  0.13-0.25, 0.12-0.21 and 0.07-0.14), and the seed top-up's gain is not
+  established. The new direction floor adds no identification in S3's nulls
+  but cuts P(GO | excess 15, beta 10) from 0.89 to 0.30. H2 is still the
+  likeliest stop. That is about 10-50 GPU-h per decisive verdict. Second: GO's
+  question-side literal channel (R10 and decision 91 relabel it rather than
+  measure it). Registration lines 341-342 also misstate the pooled-PRE
+  per-pair minimum (0.64 is the E-only variant; the registered proxy gives
+  0.500).
+- Honest exit: wave cap (1 of 1), binding; triad stop. The recorder also
+  reads "the same fatal defect survives three waves" as applying in
+  substance to decisiveness. It is part of the largest defect in all three
+  rows of this gauntlet, and D52's repair aimed at it did not move it. Under
+  row 2's stricter reading (identical headline, reject-level) it would not
+  formally apply. Not applying: tokens 3.44M of 8M, $56.74 of $150, 89 of
+  600 minutes, queries 35 of 60, GPU 0.0564 of 0.3. Under two points of gain
+  across three waves: no (+5 over rows 1-3), but this wave gained 1, so a
+  fourth wave must reach 57. Doctor re-run byte-identical to the bundle copy
+  (FAIL as expected).
+- GPU: reviewer 2 job 1031 used 0.0564 GPU-h (scontrol RunTime 00:03:23 on 1
+  H100, COMPLETED 0:0, no leftover container; max_model_len 196608 to fit the
+  149,570-token prompt). Added to the ledger as "K1 v3 gauntlet wave 3 (fresh
+  run under D52) open-weight review (D24)". Program total 4.7944. No screen
+  GPU work ran.
+- Waiting on Kevin: whether K1 continues. Four K1 waves (45, 51, 55, 56) have
+  stopped 3 of 3 at the triad, and decisiveness has not moved across three.
+  The levers that could move it are his: decision 64, five seeds at every
+  rate, a probe-scale 4B indexer run, and the lane-862 CPU reads. CPU repairs
+  in the DRAFT, if it continues: model V1 in S3/E19, drop or relativize the
+  direction floor, add a same-language zero-overlap leg or narrow GO's
+  reading, restore Allchin and PHSA, correct lines 341-342, and run one
+  blinded critic per prior packet. Also pending: the novelty bar for a first
+  measurement, and D24 admission (high cap 9.46 GPU-h). The Q3 lines in
+  `program/state.json` (pending decision and next_action) still describe
+  wave 2; update them at merge.
