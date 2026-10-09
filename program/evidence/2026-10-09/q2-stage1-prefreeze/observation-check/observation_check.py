@@ -10,7 +10,8 @@ like the pinned guest server when a handler fails (HTTP 500, JSON body):
 * ``missing404``: a healthy server on which no file exists (``/file`` answers 404): the
   agent's state, which both rules must score.
 
-time.sleep is skipped (control flow only: the pinned retries sleep 5 s). No file content is
+time.sleep and the get_file retry pause are skipped (control flow only: the pinned retries
+sleep 5 s). No file content is
 recorded.
 """
 import glob
@@ -29,6 +30,8 @@ OSW = "/inputs/OSWorld"
 CACHE = Path("/inputs/file_cache_1e112283/files")
 L.import_osworld(OSW)
 time.sleep = lambda s: None
+# get_file's retry pause reads this module constant through a sleep bound at import time.
+L.GET_FILE_INTERVAL_S = 0.0
 SPLITS = json.loads(Path("/src/program/evidence/q2-mutation/splits.json").read_text())
 ERROR = b'{"status": "error", "message": "handler failed"}'
 
@@ -62,15 +65,17 @@ def handler(mode):
                 self.reply(404, b'{"error": "not found"}')
 
         def do_POST(self):  # noqa: N802
-            self.rfile.read(int(self.headers.get("Content-Length") or 0))
+            raw = self.rfile.read(int(self.headers.get("Content-Length") or 0))
             path = self.path.split("?")[0]
             if self.failing(path):
                 self.reply(500, ERROR)
             elif path == "/file":
                 self.reply(404, b'{"error": "File not found"}')
             elif path.startswith("/setup/") or path == "/execute":
-                out = {"status": "success", "output": "/home/user/missing\n", "error": "",
-                       "returncode": 0}
+                # The guest is Linux (the vlc and gimp getters ask); any other command prints
+                # a path that does not exist.
+                output = "Linux\n" if b"platform.system" in raw else "/home/user/missing\n"
+                out = {"status": "success", "output": output, "error": "", "returncode": 0}
                 self.reply(200, json.dumps(out).encode())
             else:
                 self.reply(404, b'{"error": "not found"}')

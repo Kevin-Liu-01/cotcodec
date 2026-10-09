@@ -2926,3 +2926,54 @@ they say so.)
   500s and hangs are outside every criterion, so Stage-1 registrations count
   undelivered and very slow observations per episode.
 - Merged `ops/q2-action-path-v2` into main. Next: the S1a pre-freeze work.
+
+## 2026-10-09 — Q2 S1a: G0 item 1 filled, D53 (iii) observation rule, O1 and A0a run, A0 constants filled (branch `stage0/q2-stage1-rescope`, draft, not frozen)
+
+- Merged `main` (D53) into the branch. G0 item 1 is filled from action-path v2 attempt 1:
+  executor addendum row 15 (`cef0cbc6...`), L0-fixed, executor and adapter digests, H-GA's
+  translator (row 14) and the IR (row 13). `preregister.py verify` passes for rows 13-15
+  and `check-chain` for 15 rows; every file equals its digest. N* = 32 gives V = 20 with
+  the sizes in turn. The concurrency gate's reference is `step_p95_n1_s` = 2.6944 s
+  (`acceptance/ladder-n-star.json`). Sections 1, 4, 5.5 and 21 follow.
+- D53 (iii). Checked how the runner classifies a guest server that answers HTTP 500 for a
+  whole boot:
+  - A failed screenshot, `/execute` or `/setup/*` was already an infrastructure loss.
+  - A checker's read was not. The pinned controller returns `None` after a 5xx, and the
+    metric scored 0 (y = 0). A read with no timeout could hang until the 3,600 s episode
+    timeout.
+  - Fixed in `bb67aa0`. A checker observation, or a screenshot, that got no HTTP status
+    below 500 on any attempt is a `guest_observation` loss. Every observation is counted
+    per episode: retried, slower than 30 s, undelivered. A guest request with no timeout
+    gets 150 s. A restart check answered with an HTTP error is a transport loss.
+  - Found by the new tests: `write_capture` crashed the runner when the checker read no file
+    and the task cache was empty. Fixed.
+  - The registration (sections 3.1, 7.2, 7.3, 15, 19, 20, 22) and `design_diffs.md` are
+    updated.
+  - Job 1036 (CPU only, pinned OSWorld, 32 dev tasks) confirms it on the pinned code. Every
+    server-error run is a loss (64 of 64; the old rule scored all 64). Every missing-file
+    run stays scored (32 of 32). Job 1034 was cancelled as too slow; job 1035 had a
+    stand-in artifact.
+- O1 (D49 ii) ran from the draft commit `bb67aa0`. Job 1032 failed in 1 s on my error: the
+  source receipt named the commit through `--ref`, and the extractor admits only HEAD. Its
+  3 minutes count and the retry enters the remainder rule, so T_A1 = 110, not 111. Job 1033
+  built overlay `sha256:2c5f9b20...` in 47 s.
+- A0a (D49 ii) ran from the read-only export of `bb67aa0`, with both halves rendered from
+  the plan: VM job 1037 (90 CPUs, no GRES) and GPU job 1039 (9B, 25-minute cap, after
+  1037; job 1038 was the test-only call).
+  - The queue was empty before each submission. No foreign job appeared while A0a ran (25
+    queue samples, 4 lane snapshots), and job ids 1032-1039 are all mine.
+  - 20 of 20 episodes scored in one wave. Slot mean 219.9 s, so c_A0a = 0.003054 GPU-h;
+    L_A0a = 1.887 min.
+  - Truncation was 0 of 131 and 0 of 125 turns. The step p95 was 1.265 s against 5.389 s.
+    There were no losses, restarts or undelivered observations.
+- Constants (`render_q2_stage1_plan.py` freeze mode on the host, reproduced locally):
+  c_proj 0.011274 (the card's high price binds), T_A1 110, total caps 477 min (7.950
+  GPU-h), K_base 32 at the floor of 32, base unchanged, `plan_sha256` `6a3f0219...`.
+  Every gate holds, so nothing sends the draft back to review. Section 6.2's table and
+  section 22 record them.
+- GPU-h: 0.1144 physical (1032 1 s, 1033 47 s, 1039 364 s); 31 minutes charged at caps
+  (D22). The program total is 4.852.
+- Left open: the status line, the frozen plan digest (both written at the freeze) and the
+  three section 18 sign-offs (two Kevin's, one the program's decision id).
+- Evidence: `program/evidence/2026-10-09/q2-stage1-prefreeze/`. Not done: no freeze, no
+  push. Next: a fresh pre-freeze audit.

@@ -411,7 +411,9 @@ S1a does **not** answer:
     section 20) writes the draw, the seeded orders, the anchor order, the
     engine and sampling arguments and, at the freeze, the constants and the job
     list. Draft plan SHA-256 (K = 32 on the eligible pool, no constants):
-    `4679ac954847e3eab13973300993befd1af1f46938a89b714706ea792fb1bd21`. Frozen plan SHA-256: TBD.
+    `4679ac954847e3eab13973300993befd1af1f46938a89b714706ea792fb1bd21`. The plan rendered from
+    A0a's records (2026-10-09; section 6.2) has `plan_sha256`
+    `6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51`. Frozen plan SHA-256: TBD.
     Every registered VM job's lane manifest is rendered from the plan by
     `scripts/render_q2_stage1_manifest.py` (section 5.5), and the lane refuses one
     whose slots differ.
@@ -437,7 +439,8 @@ S1a does **not** answer:
 
 ### 3.2 Before any confirm-split episode
 
-1. O1 and A0a have run (A0b only if the anchor were available; it is not). The
+1. O1 and A0a have run (A0b only if the anchor were available; it is not): O1 as jobs 1032
+   (failed) and 1033, A0a as jobs 1037 (VM) and 1039 (GPU), 2026-10-09. The
    constants of section 6.2 are computed from their records by
    `harness.q2_stage1.plan.a0a_measurements` and `plan.freeze_constants`
    (`scripts/render_q2_stage1_plan.py` reads A0a's lane run directory and its GPU
@@ -798,6 +801,10 @@ The A1 cap and the total under each branch:
 | Anchor unavailable after A0b (G0 9.3 fails, or n < 58) | 104 | 476 | 7.933 | 32 |
 | Anchor unavailable before A0b | 111 | 478 | 7.967 | 32 |
 
+Realized (2026-10-09, section 6.2): O1 ran twice (job 1032 failed in 1 s on an operator
+error in its source receipt; the retry, job 1033, built the overlay), so T_A1 = 110 minutes
+and the caps total 477 minutes (7.950 GPU-h) in the branch S1a is in.
+
 - Central and high are from `analysis/cost_s1a.json` (key `s1a_v2`). Prices,
   GPU-h per episode, at T = 15, H2-thinking-screenshot profile, Qwen3.5-9B. The
   slot now holds VM setup (central 90 s, high 180 s) and the matched 80 s of
@@ -881,14 +888,14 @@ The constants (filled from the A0 records at the freeze):
 
 | Constant | Value |
 |---|---|
-| N* (accepted attempt) | TBD |
-| V for A0a and A1 | TBD |
-| A0a: completed episodes, c_A0a (GPU-h), L_A0a (min); its records' SHA-256 (episodes, lane receipt, bridge `stopped.json`) | TBD |
-| A0a truncation share per harness; step p95 against the action-path A1 p95 | TBD |
-| c_proj (GPU-h) | TBD |
+| N* (accepted attempt) | 32 (action-path v2 attempt 1, D53; G0 item 1) |
+| V for A0a and A1 | 20 (section 5.5's first row; the sizes one after the other) |
+| A0a: completed episodes, c_A0a (GPU-h), L_A0a (min); its records' SHA-256 (episodes, lane receipt, bridge `stopped.json`) | 20 of 20 scored in one wave at V = 20 (VM job 1037, GPU job 1039; slots 151.6-248.7 s, mean 219.9 s); c_A0a = **0.003054**; L_A0a = **1.887** (the GPU job's Slurm start to the lane's first dispatch; its first forwarded request came at 3.585); `episodes.jsonl` `8b2ce375ac444b8fce4a9796b1900d169a9e40da5bbc7e34ea386f03a8f0c724`, `lane-receipt.json` `d5389962a722037096a45e803acc0183265455f5ce539d24beb0e3f8a34eaceb`, `bridge/stopped.json` `a95a0f61540f763a5ff1207dccbaa5df9f2590173f3550fcfa0769073a0fce8b` (the lane's `manifest.json` `057b6353ca1bc7c9020968ca2aede2350e24655eeffdaf38080a827172af64a5`) |
+| A0a truncation share per harness; step p95 against the action-path A1 p95 | 0 of 131 H-OSW-fixed turns and 0 of 125 H-GA turns ended at 2,048 tokens without a complete tool call (gate 20%); `DesktopEnv.step` p95 **1.265 s** over 255 steps against 2 x 2.6944 = 5.389 s (G0 item 1). Both gates hold |
+| c_proj (GPU-h) | **0.011274**, the card's high price at V = 20 (1.25 x c_A0a = 0.003818 is below it) |
 | Anchor branch; A0b L_A0b and longest slot d (min); n | unavailable before A0b (G0 item 9.6): A0b not run, L_A0b and d not measured, n = 0 |
-| T_A1 (min) and total caps (min) | TBD |
-| K_base and the base task list (by plan SHA-256) | TBD |
+| T_A1 (min) and total caps (min) | **110** and **477** (7.950 GPU-h): the remainder rule over O1 twice (job 1032 failed its source check, its retry 1033 built the overlay; section 6.1, "Repeats and retries"), A0a, O2 and O2's pre-funded retry, with the anchor not running |
+| K_base and the base task list (by plan SHA-256) | **32**, the floor, met: ((110 − 3 − 1.887)/60)/(4 x 1.05 x 0.011274) = 37.0 tasks, 32 after the rounding to a multiple of 8 and the cap at 32. The base is section 5.4's K = 32 draw, unchanged. Plan rendered from A0a's records (`scripts/render_q2_stage1_plan.py` freeze mode, `--prefreeze-jobs O1 O1 A0a`): `plan_sha256` `6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51` (file SHA-256 `a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806`; `program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json`) |
 
 ### 6.3 VM time (CPU-only lane, D12)
 
@@ -1962,9 +1969,12 @@ the fresh pre-freeze audit.
 | G0 item 1 | Filled from attempt 1: executor addendum row 15 and the executor, adapter, translator and IR digests (each equal to the tree), N* = 32 (V = 20, sizes in turn), the concurrency gate's reference `step_p95_n1_s` 2.6944 s with its source, and the evidence; section 1's input row, section 4's executor row, section 5.5's applicable row and section 21's evidence line follow | 1, 3.1 item 1, 4, 5.5, 21 |
 | D53 (iii) | The pinned controller treats an HTTP 5xx like any non-200 reply (retry, then `None`), and the getters hand `None` to the metric, which scores 0: a guest server failing a checker's read for a whole boot without restarting (A7 session 193's pattern) was scored y = 0 under the draft; a 500 on the agent's screenshot was already a loss (`transport`), and a whole-boot failure of `/screenshot`, `/execute` or `/setup/*` already ended in `vm_boot` (no screenshot within 300 s), `executor_device` (the warm-up) or `task_setup` (a task with setup steps). Fixed: an observation (the agent's screenshot, or a checker read of `evaluate()` or the capture sweep that is not a postconfig action; one controller call with its retries) with no HTTP status below 500 on any attempt is a `guest_observation` loss; every observation is counted per episode (delivered on retry, slower than 30 s, undelivered); a restart check answered with an HTTP error is a transport loss. Tests drive the real `LiveTask` against a stand-in guest that answers 500, once or always, hangs, or answers 404 | 3.1 item 3, 7.2, 7.3, 15, 19; `osworld_live.py`, `driver.py`, `records.py`, `analysis.py`, `design_diffs.md` |
 | D53 (iii), hangs | The pinned controller sends `/file`, `/accessibility`, `/terminal` and `/setup/execute` with no timeout, so a hung guest server held the slot until the lane's 3,600 s episode timeout (`runner_crash`; in A0a, a cut slot and so back to review). Fixed: a guest request without a timeout gets 150 s, above the guest server's own 120 s command limit; it then ends in a transport loss | 7.2; `osworld_live.py` |
+| D53 (iii) on the pinned code | Job 1036 (2026-10-09; CPU only, metric image, `--network none`, no VM, dev tasks only, from the export of `bb67aa0`) ran the pinned `DesktopEnv.evaluate()` as the old runner did and `LiveTask.evaluate()` as the new one does, for all 32 dev tasks, against stand-in guests answering like the pinned server when a handler fails: with `/file` answering HTTP 500, the old rule scored 32 of 32 runs (0, or a metric exception scored 0) and the new one records 32 of 32 as `guest_observation`; with `/file` and `/execute` answering 500, 32 and 32; with a healthy server on which no file exists (404), both score 32 of 32 and the new rule records no loss. Job 1034 was cancelled (the pinned `get_file`'s 5 s pause was not skipped, so it would have outrun its limit) and job 1035's stand-in answered the platform query with a path, so two tasks raised before any file read; both are kept | `program/evidence/2026-10-09/q2-stage1-prefreeze/observation-check/` |
 | Found while testing D53 (iii) | `LiveTask.write_capture` made the capture directory only when it copied a file, so an episode whose checker read no file (the agent never wrote it) and whose task cache was empty crashed the runner after scoring: a `runner_crash` loss where the registration scores y = 0. Fixed (the directory is made first), with the test that found it. None of A0a's five dev tasks could reach it (each setup downloads into the task cache) | `osworld_live.py` |
 
+| O1 | Run from the draft commit `bb67aa02fa9bce8a2b10a4822a23a2f81fae4d40` (the code fix above included; tree `905a5a51214eff228a5c71070ab421d7573ba3d1`), as job 464 ran: `build_vllm_overlay_on_h100.sh` under `sbatch` on one H100 (8 CPUs, the 3 minute cap). Job 1032 failed in 1 s: the source receipt was made with `--ref` and the commit id, and the extractor admits only `selected_ref: HEAD` (an operator error; nothing was built). Its 3 minutes count (D22) and enter the remainder rule as an O1 retry, so T_A1 is 110, not 111. The retry, job 1033, built overlay `sha256:2c5f9b20f6709dd6fdd4743dee50dab3aec3ef753a9b7f11d9e5ce6cd8e4df62` in 47 s from source archive `83d0d5032105cb5cac156eb635fd7918917d9f9ddf006d6b8cc5f3c8862cfcbb` (5,803 files; builder `aa43283e...` and extractor `9b4d21a8...`, job 464's) | 6.1, 6.2 |
+| A0a | Run from the read-only export of `bb67aa0`: the VM manifest rendered by `render_q2_stage1_manifest.py vm --purpose a0a --n-star 32` and validated by the lane, submitted through `lane submit` (90 CPUs, 126 GB, 35 minutes, no GRES), job 1037; the GPU half rendered from it (9B, 25 minutes, overlay of job 1033, 32 CPUs, one H100, `--dependency=after:1037`), dry-run and test-only (job 1038), job 1039. The queue was empty before each submission; 25 queue samples and the lane's 4 host snapshots show no foreign job while A0a ran, and job ids 1032-1039 are all this operator's. The engine was ready 96.6 s after the bridge started; the lane dispatched all 20 slots in one wave; 20 of 20 scored; no infrastructure loss, `IRError`, metric exception, restart, truncation at the cap, postconfig failure or undelivered, retried or slow observation (275 screenshots, 40 checker reads). Both gates hold and K_base is 32: nothing here sends the draft back to review | 6.2; `program/evidence/2026-10-09/q2-stage1-prefreeze/` |
+
 Open slots until the freeze (each carries the placeholder the guard refuses): the status
-line; G0 item 10's frozen plan digest; section 6.2's constants other than the anchor branch,
-N* and V; section 18's three sign-offs.
+line; G0 item 10's frozen plan digest; section 18's three sign-offs.
 
