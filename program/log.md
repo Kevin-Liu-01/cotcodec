@@ -2672,3 +2672,109 @@ they say so.)
   test run; at most one of mine at a time, beside the action-path acceptance job.
 - Not done: no freeze, no push, no GPU job. Next: the fresh pre-freeze audit (D49 iv), then
   O1 and A0a after the action-path suite passes.
+
+## 2026-10-08 — Q2 action-path v2 validity controls operated (branch `ops/q2-action-path-v2`): C2, C1 and C3 PASS
+
+- Ran from a read-only `git archive` export of `bf99a64`, the commit
+  recording ledger row 15, extracted to
+  `~/cotcodec-runs/q2-action-path-v2/src/` on the host. Its tree digest is
+  `abbbfe6c`.
+  - A local export of the same commit passed `check-chain` (15 rows),
+    `verify` of all three registrations and the pin and admission tests
+    (51 passed).
+  - The frozen renderer took the host root as a parameter (D40), so no
+    manifest field was moved. All 50 manifests reproduce byte for byte
+    locally.
+  - Every job checked the ledger, the pinned files and the closed world at
+    submission and again inside the job.
+- C2 (job 864) is a reproduction test on its own seed (45) and is not
+  a-priori. It ran L0-raw, 100 entries x 5, screenshot setting, N = 1.
+  - End state: `COMPLETED` 0:0 by the watcher and the batch record. The
+    campaign counts, with no infrastructure failure, retry or restart.
+  - `acceptance.c2` gives PASS: the failing set is exactly the predicted 8.
+  - `chord_super_d` passed 5 of 5. Under D45's rule its queued `d` press,
+    `d` release and Super_L release were read without their state, each
+    0-2 ms after the processed Super_L press.
+  - Section 12: 53 events in 20 trials were read without their state, all
+    in the four shell chords and all after a processed press of the chord's
+    grab key. No event lacked Mod2 without a preceding processed press.
+  - Under section 5 as written, 454 of 500 trials passed. The four shell
+    chords now pass too. Three entries were FLAKY on stale markers only.
+  - v1's a-priori result (job 768, one unpredicted failure) is reported
+    beside it.
+- C1 (jobs 866 and 868): H-OSW-up failed R08-R11 and H-GA-buggy failed R01,
+  R02 and R05-R07, each in 5 of 5. PASS.
+- C3 (jobs 870-962, 47 campaigns, 4,617 trials): PASS.
+  - 42 of 44 scored mutants were killed. M12 and M13 on H-OSW-fixed came
+    out equivalent, as predicted.
+  - The reference runs failed only outside-spec R cells.
+  - No infrastructure failure, and no event was read without its state.
+  - Three predicted killers did not kill, the same three as in development
+    (M01 on H-OSW-fixed `scroll_ctrl_down_3`, M21 `mixed_gesture_state`,
+    M26 `seq_long_mixed`). Each of those mutants was killed by other cells.
+  - C3 repeated development's conditions.
+- Every campaign was attempt 1 and counted, so no rerun and no repair.
+  - Each manifest is N = 1. C1's two campaigns and up to six C3 campaigns
+    ran as concurrent separate jobs, as the development mutant runs did.
+  - The verdicts reproduce byte for byte on the host and locally from the
+    raw records.
+  - 2.95 VM-hours, CPU only (C2 0.17, C1 0.11, C3 2.68), and no GPU.
+- Evidence: `program/evidence/2026-10-08/q2-action-path-v2-acceptance/`.
+  It holds the manifests, the batch, receipt and Slurm records, the verdicts
+  with their section-12 reports, the per-campaign summaries, the
+  prediction table, the checks, the raw SHA-256 lists and the operator
+  scripts.
+- A1-A7, the ladder and A5 did not run. Nothing pushed or merged.
+
+## 2026-10-08 — Q2 action-path v2 acceptance at N = 1 operated (branch `ops/q2-action-path-v2`): A1, C4, A2, A3 and A6 PASS; A5 passes so far
+
+- Ran from the controls' read-only export of `bf99a64` (tree `abbbfe6c`),
+  checked again first.
+  - A fresh local export passed `check-chain` (15 rows), `verify` of all
+    three registrations and the pin and admission tests (51 passed).
+  - The frozen renderer, given the host root, wrote 9 manifests. All 9
+    reproduce byte for byte locally, and none was edited.
+- Ran in the registered order, attempt 1, one campaign at a time, N = 1:
+  A5's boot-reset campaign, A1 (seeds 43 and 44), A2 (H-OSW-fixed, H-GA),
+  A3 (L0-fixed, H-OSW-fixed, H-GA), then A6 (jobs 964-1015).
+  - Every job ended `COMPLETED` 0:0 by the watcher and the batch record, and
+    counted.
+  - No infrastructure failure, observation retry, guest-server restart or
+    excused trial occurred. So there was no rerun and no repair.
+- A5: the boot-reset campaign (job 964, 21 cold boots) shows 20 of 20
+  pristine reset-sentinel checks. The 8 acceptance receipts are clean.
+  `acceptance.a5` passes. It is judged again once A4, A7 and the ladder have
+  run.
+- A1 at N = 1 (jobs 968 and 970): L0-fixed passed all 100 entries 5 of 5 in
+  both seeds' shuffles and both settings, 2,000 of 2,000 trials. PASS.
+  - The part at N* > 1 waits for the ladder.
+  - N = 1 reference for the ladder: step p95 2.694 s (2,560 steps), boot p95
+    17.92 s (36 boots).
+- C4: 700 of 700 key, chord and Caps Lock trials agree with the R-dev
+  reference. PASS.
+- A2 (jobs 974 and 991): every in-spec cell passed 10 of 10. PASS.
+  - H-OSW-fixed: 97 of 97 in-spec cells; R03 and R09 failed (outside spec).
+  - H-GA: 87 of 87 in-spec cells; R02, R04, R06 and R10 failed (outside
+    spec).
+  - These are the same outside-spec failures as in development and C3.
+- A3 (jobs 1004, 1008 and 1013): 4,980 of 4,980 trials. PASS.
+- A6 (job 1015): 300 of 300 trials, with every app at 100%. PASS.
+- No restart in 7,172 accessibility calls (A1 1,298, A2 1,452, A3 4,422;
+  the registered counts).
+- Section 12: no key event was read without its state in any criterion, and
+  none lacked Mod2 without a preceding processed press. `chord_super_d` on
+  the L0-fixed path passed 40 of 40 (A1 and A2) with every state processed.
+- All 18 verdict and summary files reproduce byte for byte locally from the
+  raw records (914 files, SHA-256 checked) under Python 3.13 (host 3.10). The
+  run checks pass for all 9 jobs.
+- 8.65 VM-hours, CPU only (A5 0.29, A1 1.46, A2 1.56, A3 4.51, A6 0.83,
+  against 9.1 sized). That brings v2 to 11.60. No GPU.
+  - Wall clock: 15:28-00:19 UTC.
+  - Other sessions' Slurm jobs (`s1a-*` CPU jobs and an open-weight reviewer
+    GPU job) ran during A5, A2 and A3, but not during A1 or A6. They are
+    recorded and not judged at N = 1.
+- Evidence: the second-stage sections of
+  `program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md`, with
+  the manifests, run, receipt and Slurm records, verdicts, section-12
+  reports, summaries, checks, raw SHA-256 lists and operator scripts.
+- Not run: the ladder, A4 and A7. Nothing pushed or merged.

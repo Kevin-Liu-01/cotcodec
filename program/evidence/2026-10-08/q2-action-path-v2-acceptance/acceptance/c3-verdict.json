@@ -1,0 +1,856 @@
+{
+  "mutants": {
+    "M01-modifier-released-early H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R02",
+        "R04",
+        "click_alt_left",
+        "click_ctrl_left",
+        "click_ctrl_shift_right",
+        "click_shift_left"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R02",
+        "R04",
+        "click_ctrl_left",
+        "scroll_ctrl_down_3"
+      ],
+      "reference_not_clean": []
+    },
+    "M01-modifier-released-early L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "click_alt_left",
+        "click_ctrl_left",
+        "click_ctrl_shift_right",
+        "click_shift_left",
+        "drag_alt_held",
+        "drag_ctrl_held",
+        "drag_shift_held",
+        "scroll_ctrl_down_3",
+        "scroll_shift_down_3"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "click_ctrl_left",
+        "click_shift_left",
+        "click_alt_left",
+        "click_ctrl_shift_right",
+        "scroll_ctrl_down_3",
+        "scroll_shift_down_3"
+      ],
+      "reference_not_clean": []
+    },
+    "M02-button-swap-left-right L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "click_alt_left",
+        "click_burst_5",
+        "click_corner_bottomright",
+        "click_corner_topleft",
+        "click_ctrl_left",
+        "click_ctrl_shift_right",
+        "click_double_left",
+        "click_double_slow",
+        "click_left_center",
+        "click_right",
+        "click_shift_left",
+        "click_then_type",
+        "click_triple_left",
+        "click_two_positions_ordered",
+        "drag_alt_held",
+        "drag_ctrl_held",
+        "drag_long_diagonal",
+        "drag_multipoint_l_shape",
+        "drag_right_button",
+        "drag_shift_held",
+        "drag_short",
+        "drag_slow_small",
+        "drag_to_corner",
+        "drag_vertical",
+        "mixed_gesture_state",
+        "press_hold_release_left",
+        "press_hold_release_right",
+        "seq_drag_then_click",
+        "seq_long_mixed"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "click_left_center",
+        "click_right",
+        "drag_short"
+      ],
+      "reference_not_clean": []
+    },
+    "M03-middle-click-noop H-GA": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R01",
+        "click_middle"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R01",
+        "click_middle"
+      ],
+      "reference_not_clean": []
+    },
+    "M03-middle-click-noop H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R01",
+        "click_middle"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R01",
+        "click_middle"
+      ],
+      "reference_not_clean": []
+    },
+    "M03-middle-click-noop L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "click_middle"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "click_middle"
+      ],
+      "reference_not_clean": []
+    },
+    "M04-coordinate-shift-5px L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "click_alt_left",
+        "click_burst_5",
+        "click_button_back",
+        "click_button_forward",
+        "click_corner_topleft",
+        "click_ctrl_left",
+        "click_ctrl_shift_right",
+        "click_double_left",
+        "click_double_slow",
+        "click_left_center",
+        "click_middle",
+        "click_right",
+        "click_shift_left",
+        "click_then_type",
+        "click_triple_left",
+        "click_two_positions_ordered",
+        "drag_alt_held",
+        "drag_ctrl_held",
+        "drag_long_diagonal",
+        "drag_middle_button",
+        "drag_multipoint_l_shape",
+        "drag_right_button",
+        "drag_shift_held",
+        "drag_short",
+        "drag_slow_small",
+        "drag_to_corner",
+        "drag_vertical",
+        "mixed_gesture_state",
+        "move_only",
+        "press_hold_release_left",
+        "press_hold_release_right",
+        "scroll_at_offcenter_position",
+        "scroll_ctrl_down_3",
+        "scroll_diagonal",
+        "scroll_down_1",
+        "scroll_down_10",
+        "scroll_down_25",
+        "scroll_down_3",
+        "scroll_down_then_up_net_zero",
+        "scroll_left_3",
+        "scroll_right_3",
+        "scroll_shift_down_3",
+        "scroll_up_3",
+        "seq_drag_then_click",
+        "seq_long_mixed"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "click_left_center",
+        "move_only",
+        "drag_short"
+      ],
+      "reference_not_clean": []
+    },
+    "M05-scroll-sign-flip H-GA": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R05",
+        "scroll_at_offcenter_position",
+        "scroll_down_1",
+        "scroll_down_10",
+        "scroll_down_3",
+        "scroll_down_then_up_net_zero",
+        "scroll_up_3",
+        "seq_long_mixed"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "scroll_down_1",
+        "scroll_up_3",
+        "R05"
+      ],
+      "reference_not_clean": []
+    },
+    "M05-scroll-sign-flip H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R05",
+        "R10",
+        "scroll_at_offcenter_position",
+        "scroll_ctrl_down_3",
+        "scroll_down_1",
+        "scroll_down_10",
+        "scroll_down_25",
+        "scroll_down_3",
+        "scroll_down_then_up_net_zero",
+        "scroll_shift_down_3",
+        "scroll_up_3",
+        "seq_long_mixed"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "scroll_down_1",
+        "scroll_up_3",
+        "R05"
+      ],
+      "reference_not_clean": []
+    },
+    "M05-scroll-sign-flip L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "scroll_at_offcenter_position",
+        "scroll_ctrl_down_3",
+        "scroll_diagonal",
+        "scroll_down_1",
+        "scroll_down_10",
+        "scroll_down_25",
+        "scroll_down_3",
+        "scroll_down_then_up_net_zero",
+        "scroll_shift_down_3",
+        "scroll_up_3",
+        "seq_long_mixed"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "scroll_down_1",
+        "scroll_up_3"
+      ],
+      "reference_not_clean": []
+    },
+    "M06-scroll-ticks-doubled L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "scroll_at_offcenter_position",
+        "scroll_ctrl_down_3",
+        "scroll_diagonal",
+        "scroll_down_1",
+        "scroll_down_10",
+        "scroll_down_25",
+        "scroll_down_3",
+        "scroll_down_then_up_net_zero",
+        "scroll_left_3",
+        "scroll_right_3",
+        "scroll_shift_down_3",
+        "scroll_up_3",
+        "seq_long_mixed"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "scroll_down_1",
+        "scroll_down_3"
+      ],
+      "reference_not_clean": []
+    },
+    "M07-text-drop-last-char L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "click_then_type",
+        "seq_long_mixed",
+        "seq_type_chord_type",
+        "type_combining",
+        "type_digits",
+        "type_emoji",
+        "type_emoji_zwj",
+        "type_long_200",
+        "type_long_500",
+        "type_mixed_case",
+        "type_multiline_tabs",
+        "type_plain",
+        "type_repeated_chars",
+        "type_rtl",
+        "type_shell_hostile",
+        "type_single_char",
+        "type_spaces",
+        "type_symbols_shifted",
+        "type_unicode_bmp",
+        "type_with_correction"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "type_single_char",
+        "type_plain"
+      ],
+      "reference_not_clean": []
+    },
+    "M08-text-nfc-normalize L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "type_combining"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "type_combining"
+      ],
+      "reference_not_clean": []
+    },
+    "M09-text-drop-non-ascii L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "type_combining",
+        "type_emoji",
+        "type_emoji_zwj",
+        "type_rtl",
+        "type_unicode_bmp"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "type_unicode_bmp",
+        "type_emoji",
+        "type_rtl",
+        "type_combining",
+        "type_emoji_zwj"
+      ],
+      "reference_not_clean": []
+    },
+    "M10-less-to-greater L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "type_long_500",
+        "type_shell_hostile",
+        "type_symbols_shifted"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "type_symbols_shifted",
+        "type_shell_hostile",
+        "type_long_500"
+      ],
+      "reference_not_clean": []
+    },
+    "M11-unknown-key-dropped H-GA": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R13",
+        "caps_lock_roundtrip",
+        "chord_super_d",
+        "key_kp_add",
+        "key_kp_enter",
+        "key_menu"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R13",
+        "key_kp_enter",
+        "key_menu"
+      ],
+      "reference_not_clean": []
+    },
+    "M11-unknown-key-dropped H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R13",
+        "caps_lock_roundtrip",
+        "chord_super_d",
+        "key_kp_add",
+        "key_kp_enter",
+        "key_menu"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R13",
+        "key_kp_enter",
+        "key_menu"
+      ],
+      "reference_not_clean": []
+    },
+    "M11-unknown-key-dropped L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "caps_lock_roundtrip",
+        "chord_super_d",
+        "key_kp_add",
+        "key_kp_enter",
+        "key_menu"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "key_kp_enter",
+        "key_kp_add",
+        "key_menu",
+        "caps_lock_roundtrip",
+        "chord_super_d"
+      ],
+      "reference_not_clean": []
+    },
+    "M12-triple-to-double H-GA": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R08",
+        "click_triple_left"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R08",
+        "click_triple_left"
+      ],
+      "reference_not_clean": []
+    },
+    "M12-triple-to-double H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [],
+      "outcome": "equivalent",
+      "predicted_killers": [],
+      "reference_not_clean": []
+    },
+    "M12-triple-to-double L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "click_triple_left"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "click_triple_left"
+      ],
+      "reference_not_clean": []
+    },
+    "M13-hscroll-to-vscroll H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [],
+      "outcome": "equivalent",
+      "predicted_killers": [],
+      "reference_not_clean": []
+    },
+    "M13-hscroll-to-vscroll L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "scroll_diagonal",
+        "scroll_left_3",
+        "scroll_right_3"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "scroll_left_3",
+        "scroll_right_3",
+        "scroll_diagonal"
+      ],
+      "reference_not_clean": []
+    },
+    "M14-chord-release-order L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "chord_alt_f4",
+        "chord_alt_tab",
+        "chord_ctrl_a",
+        "chord_ctrl_alt_shift_r",
+        "chord_ctrl_c",
+        "chord_ctrl_home",
+        "chord_ctrl_shift_arrow",
+        "chord_ctrl_shift_t",
+        "chord_shift_arrow_left",
+        "chord_shift_tab",
+        "chord_super_d",
+        "click_ctrl_shift_right"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "chord_ctrl_c",
+        "chord_ctrl_shift_t",
+        "chord_ctrl_alt_shift_r"
+      ],
+      "reference_not_clean": []
+    },
+    "M15-duplicate-click L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "click_alt_left",
+        "click_burst_5",
+        "click_button_back",
+        "click_button_forward",
+        "click_corner_bottomright",
+        "click_corner_topleft",
+        "click_ctrl_left",
+        "click_ctrl_shift_right",
+        "click_double_slow",
+        "click_left_center",
+        "click_middle",
+        "click_right",
+        "click_shift_left",
+        "click_then_type",
+        "click_two_positions_ordered",
+        "mixed_gesture_state",
+        "seq_drag_then_click",
+        "seq_long_mixed"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "click_left_center",
+        "click_burst_5"
+      ],
+      "reference_not_clean": []
+    },
+    "M16-double-click-interval-600ms L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "click_double_left",
+        "click_triple_left"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "click_double_left",
+        "click_triple_left"
+      ],
+      "reference_not_clean": []
+    },
+    "M17-drag-teleport L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "drag_alt_held",
+        "drag_ctrl_held",
+        "drag_long_diagonal",
+        "drag_middle_button",
+        "drag_multipoint_l_shape",
+        "drag_right_button",
+        "drag_shift_held",
+        "drag_short",
+        "drag_slow_small",
+        "drag_to_corner",
+        "drag_vertical",
+        "seq_drag_then_click"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "drag_short",
+        "drag_long_diagonal",
+        "drag_vertical"
+      ],
+      "reference_not_clean": []
+    },
+    "M18-first-tool-call-only H-GA": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R05",
+        "R07"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R05",
+        "R07"
+      ],
+      "reference_not_clean": []
+    },
+    "M18-first-tool-call-only H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R05",
+        "R06",
+        "R07"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R05",
+        "R06",
+        "R07"
+      ],
+      "reference_not_clean": []
+    },
+    "M19-last-tool-call-only H-GA": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R05",
+        "R07"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R05",
+        "R07"
+      ],
+      "reference_not_clean": []
+    },
+    "M19-last-tool-call-only H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R05",
+        "R06",
+        "R07"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R05",
+        "R07"
+      ],
+      "reference_not_clean": []
+    },
+    "M20-terminate-failure-to-done H-GA": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R11"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R11"
+      ],
+      "reference_not_clean": []
+    },
+    "M20-terminate-failure-to-done H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R11"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R11"
+      ],
+      "reference_not_clean": []
+    },
+    "M21-hold-not-released L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "click_alt_left",
+        "click_ctrl_left",
+        "click_ctrl_shift_right",
+        "click_shift_left",
+        "drag_alt_held",
+        "drag_ctrl_held",
+        "drag_shift_held",
+        "scroll_ctrl_down_3",
+        "scroll_shift_down_3"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "click_ctrl_left",
+        "scroll_ctrl_down_3",
+        "mixed_gesture_state"
+      ],
+      "reference_not_clean": []
+    },
+    "M22-keypad-to-main H-GA": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R13",
+        "key_kp_add",
+        "key_kp_enter"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "key_kp_enter",
+        "key_kp_add",
+        "R13"
+      ],
+      "reference_not_clean": []
+    },
+    "M22-keypad-to-main H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R13",
+        "key_kp_add",
+        "key_kp_enter"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "key_kp_enter",
+        "key_kp_add",
+        "R13"
+      ],
+      "reference_not_clean": []
+    },
+    "M22-keypad-to-main L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "key_kp_add",
+        "key_kp_enter"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "key_kp_enter",
+        "key_kp_add"
+      ],
+      "reference_not_clean": []
+    },
+    "M23-caps-lock-dropped L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "caps_lock_roundtrip"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "caps_lock_roundtrip"
+      ],
+      "reference_not_clean": []
+    },
+    "M24-grid-1000-instead-of-999 H-GA": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R14",
+        "click_corner_bottomright",
+        "click_two_positions_ordered",
+        "drag_to_corner",
+        "drag_vertical",
+        "move_only",
+        "seq_long_mixed"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R14"
+      ],
+      "reference_not_clean": []
+    },
+    "M24-grid-1000-instead-of-999 H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R14",
+        "click_alt_left",
+        "click_corner_bottomright",
+        "click_two_positions_ordered",
+        "drag_to_corner",
+        "drag_vertical",
+        "move_only",
+        "seq_long_mixed"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R14"
+      ],
+      "reference_not_clean": []
+    },
+    "M25-shell-expansion L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "click_then_type",
+        "seq_long_mixed",
+        "type_combining",
+        "type_digits",
+        "type_emoji",
+        "type_emoji_zwj",
+        "type_long_200",
+        "type_long_500",
+        "type_mixed_case",
+        "type_multiline_tabs",
+        "type_plain",
+        "type_repeated_chars",
+        "type_rtl",
+        "type_shell_hostile",
+        "type_spaces",
+        "type_symbols_shifted",
+        "type_unicode_bmp",
+        "type_with_correction"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "type_shell_hostile"
+      ],
+      "reference_not_clean": []
+    },
+    "M26-newline-dropped L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "type_multiline_tabs"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "type_multiline_tabs",
+        "seq_long_mixed"
+      ],
+      "reference_not_clean": []
+    },
+    "M27-extra-buttons-dropped L0-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "click_button_back",
+        "click_button_forward"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "click_button_back",
+        "click_button_forward"
+      ],
+      "reference_not_clean": []
+    },
+    "M28-modifier-text-ignored H-OSW-fixed": {
+      "earlier_attempts": [],
+      "infra_cells": [],
+      "killers": [
+        "R02",
+        "R04",
+        "click_alt_left",
+        "click_ctrl_left",
+        "click_ctrl_shift_right",
+        "click_shift_left"
+      ],
+      "outcome": "killed",
+      "predicted_killers": [
+        "R02",
+        "R04",
+        "click_ctrl_left"
+      ],
+      "reference_not_clean": []
+    }
+  },
+  "pass": true,
+  "problems": [],
+  "state_not_observed": {
+    "by_entry": {},
+    "no_processed_press_before": [],
+    "read_without_state": [],
+    "trials": 4617
+  }
+}

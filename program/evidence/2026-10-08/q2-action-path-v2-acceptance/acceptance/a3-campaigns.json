@@ -1,0 +1,958 @@
+[
+  {
+    "accessibility_calls": 1332,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.99,
+      "n": 24,
+      "p50": 17.277,
+      "p95": 17.959
+    },
+    "c4_flags": {
+      "True": 540
+    },
+    "campaign_id": "q2ap-v2-a3-hga-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A3",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791502021.640442,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "1013",
+    "jobs": [
+      "1013"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "H-GA",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "2bd439c3aa9b20c2702b3c68dc9d2ffe555328789f930644634014f2f1ec7eae",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "caps_lock_roundtrip": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_tab": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_burst_5": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_slow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_triple_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_short": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_slow_small": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_kp_enter": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_menu": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "seq_long_mixed": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_combining": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_long_500": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_with_correction": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "788c1e71778b17db684ad04b569cbf9e2044f8a6e43b5b700cba9e0ce52bef4d",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 24,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791497131.892205,
+    "step_s": {
+      "n": 2640,
+      "p50": 1.8271,
+      "p95": 2.6667
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 1440,
+    "trials_pass": 1440,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 1665,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.929,
+      "n": 30,
+      "p50": 17.212,
+      "p95": 17.92
+    },
+    "c4_flags": {
+      "True": 540
+    },
+    "campaign_id": "q2ap-v2-a3-hoswfixed-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A3",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791497108.6565073,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "1008",
+    "jobs": [
+      "1008"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "H-OSW-fixed",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "54f4346cd9bb0d59601e8ee865319345f769fd90097f1dc87a205f9ccf8a917d",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "caps_lock_roundtrip": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_tab": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_alt_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_burst_5": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_ctrl_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_ctrl_shift_right": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_slow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_shift_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_short": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_slow_small": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_kp_enter": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_menu": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_ctrl_down_3": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_shift_down_3": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "seq_long_mixed": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_combining": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_long_500": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_with_correction": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "c1a733bf2497e748c1072748c8cad0056a8ddfc87b85612d905d50e652155d12",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 30,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791491186.4004443,
+    "step_s": {
+      "n": 3300,
+      "p50": 1.8669,
+      "p95": 2.576
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 1740,
+    "trials_pass": 1740,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 1425,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.934,
+      "n": 30,
+      "p50": 17.202,
+      "p95": 17.934
+    },
+    "c4_flags": {
+      "True": 540
+    },
+    "campaign_id": "q2ap-v2-a3-l0fixed-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A3",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791491122.8289466,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "1004",
+    "jobs": [
+      "1004"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "L0-fixed",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "e209476ed95591c7d5f2c86f7f34ee0f1f861808d03b8402ddadb8f35e179433",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "caps_lock_roundtrip": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_tab": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_alt_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_burst_5": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_ctrl_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_ctrl_shift_right": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_slow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_shift_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_triple_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_short": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_slow_small": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_kp_enter": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_menu": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_ctrl_down_3": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_shift_down_3": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "seq_long_mixed": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_combining": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_long_500": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_with_correction": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "72337b28b11c9d3f7b5d21dc98eb69bd4a7c25e913aa614ecab96accb88c498f",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 30,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791485691.849618,
+    "step_s": {
+      "n": 2820,
+      "p50": 1.9402,
+      "p95": 2.8637
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 1800,
+    "trials_pass": 1800,
+    "unreadable": []
+  }
+]

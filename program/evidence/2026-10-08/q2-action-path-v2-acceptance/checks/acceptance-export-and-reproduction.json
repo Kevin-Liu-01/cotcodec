@@ -1,0 +1,50 @@
+{
+ "stage": "acceptance at N = 1 (A5's boot-reset campaign, A1 with C4, A2, A3, A6)",
+ "export_commit": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+ "why_this_commit": "the same export the validity controls ran from (the commit that records ledger row 15); git diff --stat bf99a64 a491c0e over harness/, scripts/, infra/, experiments/ and program/preregistrations/ is empty",
+ "local_export": {
+  "how": "git archive bf99a64 | tar -x into the session scratch directory, again for this stage",
+  "preregister_check_chain": {
+   "rows": 15,
+   "status": "PASS"
+  },
+  "preregister_verify": [
+   "q2-action-path-v2",
+   "q2-action-path-v2-inputs",
+   "q2-action-path-v2-executor"
+  ],
+  "pins_and_admission_tests": "uv run --locked --extra dev pytest -q -p no:cacheprovider tests/test_q2_prereg_inputs.py tests/test_q2_acceptance_admission.py in the export: 51 passed",
+  "source_tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23"
+ },
+ "host_export": {
+  "path": "~/cotcodec-runs/q2-action-path-v2/src/bf99a645c3782b2c59a75b6f463461b2515d0d97 (the controls stage's export, unchanged; never ~/cotcodec)",
+  "checked_before_the_first_submission": {
+   "source_tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+   "mode": "dr-xr-xr-x",
+   "pycache_dirs": 0,
+   "file_sha256": {
+    "infra/slurm/host-single-node/vm-campaign.sbatch": "3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a",
+    "harness/q2/action_path/acceptance.py": "ae5470e56e00a4a4a31fb591d41654efe29f7f0a4f45203c9cb03419ec55c573",
+    "scripts/render_q2_action_path_manifest.py": "0d547c7af6c440f108526a4306870091da09e7b99419334d76a4bdd116b90845",
+    "scripts/submit_vm_campaign.py": "f08aafc8bc693cd6eb6850ff972a3401f3bddc99f3c14e03187b4d313fcc5917"
+   }
+  },
+  "pycache_dirs_after_all_runs_and_analyses": 0,
+  "python": "3.10.12"
+ },
+ "manifests": {
+  "rendered_on_host": 9,
+  "how": "ops/render_acceptance.sh A5, A1, A2, A3, A6 (the frozen renderer run from the host export with --host-root ~/cotcodec-runs/q2-action-path-v2); each validated with the ledger by the renderer",
+  "rendered_again_locally_from_the_local_export_with_the_same_arguments": 9,
+  "byte_identical": true,
+  "list": "checks/local-render-sha256sums-acceptance.txt against manifests/rendered-sha256sums-acceptance.txt",
+  "edited_after_rendering": false
+ },
+ "verdicts_reproduced": {
+  "raw_records": "the 9 run directories (914 files, 446 MB) copied to the session scratch directory; every file's SHA-256 equal to its runs/<job>/raw-sha256sums.txt entry",
+  "local": "ops/analyze_acceptance.py run with the local export under Python 3.13.14 over the same attempt maps: all 18 JSON files (acceptance/a1-*, a2-*, a3-*, a5-*, a6-*, c4-*, a1-n1-reference.json and acceptance/a5-after-boot-reset/) byte-identical to the host's (Python 3.10.12)",
+  "analysis_script": "ops/analyze_acceptance.py and ops/render_acceptance.sh as committed are byte-identical to the copies that ran on the host"
+ },
+ "run_checks": "checks/run-checks-acceptance.json (ops/check_runs_acceptance.py): 9 jobs, no problem",
+ "host_load": "checks/host-snapshots-acceptance.json (ops/host_snapshots.py): foreign Slurm jobs and load average in each campaign's host snapshots; reported, not judged at N = 1"
+}

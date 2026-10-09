@@ -1,0 +1,9 @@
+{
+  "boot_p50_s": 17.24,
+  "boot_p95_s": 17.923,
+  "boots": 36,
+  "step_p50_s": 1.8228,
+  "step_p95_s": 2.6944,
+  "steps": 2560,
+  "what": "A1's N = 1 reference for the ladder (section 9): every A1 step, both shuffles and both settings pooled, excused trials included (acceptance.n_star)"
+}

@@ -1,0 +1,46 @@
+{
+ "export_commit": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+ "why_this_commit": "the commit that records ledger row 15 (q2-action-path-v2-executor); main at e6f5bf1 and 6b6251c differs from it only outside harness/, scripts/, infra/, experiments/ and program/preregistrations/ (git diff --stat bf99a64 HEAD over those paths is empty)",
+ "local_export": {
+  "how": "git archive bf99a64 | tar -x into the session scratch directory",
+  "preregister_check_chain": {
+   "rows": 15,
+   "status": "PASS"
+  },
+  "preregister_verify": [
+   "q2-action-path-v2",
+   "q2-action-path-v2-inputs",
+   "q2-action-path-v2-executor"
+  ],
+  "registration_sha256": {
+   "q2-action-path-v2": "6f690bb53b0986f8c6381e477f30aa717c0548dd25b4adfe0e8b6283c49b998f",
+   "q2-action-path-v2-inputs": "efa182d009e5af64299d05784add3a4610c8d855a02061528e40114377629f22",
+   "q2-action-path-v2-executor": "cef0cbc603fc5da7c4e88205e738ef4b659ec367f85d8573328951f57e247b08"
+  },
+  "pins_and_admission_tests": "uv run --locked --extra dev pytest -q tests/test_q2_prereg_inputs.py tests/test_q2_acceptance_admission.py in the export: 51 passed",
+  "source_tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23"
+ },
+ "host_export": {
+  "path": "~/cotcodec-runs/q2-action-path-v2/src/bf99a645c3782b2c59a75b6f463461b2515d0d97",
+  "how": "the same git archive stream piped over ssh and extracted, then chmod -R a-w (dr-xr-xr-x); never ~/cotcodec",
+  "source_tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+  "file_sha256": {
+   "infra/slurm/host-single-node/vm-campaign.sbatch": "3d86820d176e3a9f0699814a19f62154cde00f88da1777a33c804e884288ac8a",
+   "harness/q2/action_path/acceptance.py": "ae5470e56e00a4a4a31fb591d41654efe29f7f0a4f45203c9cb03419ec55c573"
+  },
+  "pycache_dirs_after_all_runs_and_analyses": 0,
+  "note": "scripts/preregister.py needs Python 3.11 (datetime.UTC) and does not run under the host's Python 3.10; the ledger was checked locally, and manifest.check_ledger (hash chain, registration digests, every frozen-table file, closed world) passed in the renderer, the submitter and inside every job"
+ },
+ "manifests": {
+  "rendered_on_host": 50,
+  "rendered_again_locally_from_the_local_export_with_the_same_arguments": 50,
+  "byte_identical": true,
+  "list": "checks/local-render-sha256sums.txt against manifests/rendered-sha256sums.txt"
+ },
+ "verdicts_reproduced": {
+  "host_second_run": "analyze_controls.py run again on the host into a temporary directory: diff -r against verdicts/ empty",
+  "local": "the 201 MB of raw run directories copied to the session scratch directory (every file's SHA-256 equal to runs/<job>/raw-sha256sums.txt), analyze_controls.py run with the local export under Python 3.13: all nine JSON files byte-identical to acceptance/",
+  "analysis_script": "ops/analyze_controls.py as committed (SHA-256 c7c1c526...) differs from the copy that ran first (40dbcd6b...) by one ruff line-length edit; the committed copy, run again on the host and locally, wrote all nine JSON files byte-identical to acceptance/"
+ },
+ "run_checks": "checks/run-checks.json (ops/check_runs.py): 50 jobs, no problem"
+}

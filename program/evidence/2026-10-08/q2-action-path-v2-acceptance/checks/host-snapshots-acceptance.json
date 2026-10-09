@@ -1,0 +1,199 @@
+{
+ "1004": {
+  "foreign_jobs_seen": [
+   [
+    "1005",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-full-suite"
+   ],
+   [
+    "1006",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-full-suite"
+   ],
+   [
+    "982",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-setup-check-v1"
+   ]
+  ],
+  "max_containers_ours": 0,
+  "max_containers_running_total": 3,
+  "max_loadavg_1min": 3.43,
+  "snapshots": 62
+ },
+ "1008": {
+  "foreign_jobs_seen": [
+   [
+    "1009",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-tests"
+   ],
+   [
+    "1010",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "cotcodec-s1a-cpu"
+   ],
+   [
+    "1011",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-setup-check-v2"
+   ]
+  ],
+  "max_containers_ours": 0,
+  "max_containers_running_total": 3,
+  "max_loadavg_1min": 3.68,
+  "snapshots": 62
+ },
+ "1013": {
+  "foreign_jobs_seen": [
+   [
+    "1011",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-setup-check-v2"
+   ]
+  ],
+  "max_containers_ours": 0,
+  "max_containers_running_total": 3,
+  "max_loadavg_1min": 3.81,
+  "snapshots": 50
+ },
+ "1015": {
+  "foreign_jobs_seen": [],
+  "max_containers_ours": 0,
+  "max_containers_running_total": 1,
+  "max_loadavg_1min": 1.19,
+  "snapshots": 12
+ },
+ "964": {
+  "foreign_jobs_seen": [
+   [
+    "966",
+    "kevin",
+    "RUNNING",
+    "16",
+    "gres:gpu:h100:1",
+    "owr-k1v3-w1-r2"
+   ]
+  ],
+  "max_containers_ours": 0,
+  "max_containers_running_total": 2,
+  "max_loadavg_1min": 2.39,
+  "snapshots": 44
+ },
+ "968": {
+  "foreign_jobs_seen": [],
+  "max_containers_ours": 0,
+  "max_containers_running_total": 1,
+  "max_loadavg_1min": 1.75,
+  "snapshots": 38
+ },
+ "970": {
+  "foreign_jobs_seen": [],
+  "max_containers_ours": 0,
+  "max_containers_running_total": 1,
+  "max_loadavg_1min": 5.12,
+  "snapshots": 38
+ },
+ "974": {
+  "foreign_jobs_seen": [
+   [
+    "978",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-dev-smoke-v1"
+   ],
+   [
+    "980",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-zinv-validation"
+   ],
+   [
+    "982",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-setup-check-v1"
+   ],
+   [
+    "984",
+    "kevin",
+    "RUNNING",
+    "2",
+    "N/A",
+    "s1a-glmm-synthetic"
+   ]
+  ],
+  "max_containers_ours": 0,
+  "max_containers_running_total": 5,
+  "max_loadavg_1min": 11.7,
+  "snapshots": 38
+ },
+ "991": {
+  "foreign_jobs_seen": [
+   [
+    "1000",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-zinv-validation"
+   ],
+   [
+    "1002",
+    "kevin",
+    "RUNNING",
+    "16",
+    "gres:gpu:h100:1",
+    "owr-k1v3-run2-w1-r2"
+   ],
+   [
+    "982",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-setup-check-v1"
+   ],
+   [
+    "995",
+    "kevin",
+    "RUNNING",
+    "8",
+    "N/A",
+    "s1a-zinv-validation"
+   ]
+  ],
+  "max_containers_ours": 0,
+  "max_containers_running_total": 5,
+  "max_loadavg_1min": 13.91,
+  "snapshots": 34
+ }
+}
