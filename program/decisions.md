@@ -795,3 +795,28 @@ attempt 1 (N* = 32, so V = 20 with the sizes run in sequence). O1 and A0a run
 under D49 (ii), followed by a fresh pre-freeze audit. The freeze still waits on
 the sign-off slots of the draft's section 18, two of which are the program
 owner's own.
+
+**D54. Q3 K1 v3 ends at its honest exit; Q3 rests on the dense pre-check.**
+The fresh gauntlet run under D52 scored 56 (reviewers: Claude 56,
+open-weight 57). All three refuters refuted, and blind discrimination
+passed by the rule's letter only. The trajectory is 45 (K1 v2), 51, 55, 56.
+The D52 repair fixed what it targeted on spill and additivity. A
+multiplicative null's false-GO rate fell from 0.71 to 0.00, and the spill
+guard now covers 0.53-0.67 of families instead of 0.20. The defect named in
+all three waves did not move: decisiveness. With the registered V1 rules
+modelled, the unconditional chance of GO or NEGATIVE is 0.10-0.25, 0.05-0.17
+and 0.03-0.11 at seed SD 1, 2 and 3. That is roughly 10-50 GPU-h per
+decisive verdict. GO is also still not identified against question-side
+literal priming: question content overlap is 0.38-0.68 on MN against
+0.00-0.04 on CX, and no same-language zero-overlap leg exists. Decided: no
+fourth wave and no further CPU repair. K1 v3's gauntlet ends at an honest
+exit (the wave cap, and the same fatal defect surviving three waves). The
+levers that could raise decisiveness (five seeds at every rate, a larger
+probe, more evidence) push the screen above 8 GPU-h, so they are Kevin's
+admission question under D24. They also leave the question-side confound
+open, which needs a new design. Q3's Stage 0 outcome is the dense
+pre-check v2: NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base. The K1 v3 draft,
+proposal and gauntlet record stay on main as the package if K1 is reopened.
+The record notes three unedited errors: the 0.64 at registration lines
+341-342, which should read 0.500 at offset 0 and 0.445 at offsets 1-2; the
+bundle's repair wall time; and the proposal's scorecard line.
