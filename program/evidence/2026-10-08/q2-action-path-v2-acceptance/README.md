@@ -1,4 +1,276 @@
-# q2-action-path-v2: validity controls C2, C1 and C3 (2026-10-08)
+# q2-action-path-v2: validity controls and acceptance at N = 1 (2026-10-08)
+
+This bundle holds two operator stages of `q2-action-path-v2`. Both ran from the
+same read-only export of `bf99a64`.
+
+1. **Acceptance at N = 1** (the second stage, jobs 964-1015). It ran A5's
+   boot-reset campaign, A1 with C4, A2, A3 and A6. Every criterion it could
+   judge passes. See "Second stage" just below.
+2. **Validity controls** (the first stage, jobs 864-962, commit `a491c0e`).
+   C2, C1 and C3 all pass. See "First stage" further down. That text is
+   unchanged, apart from its heading.
+
+## Second stage: acceptance at N = 1 (A5, A1 with C4, A2, A3, A6)
+
+**Result: A1 at N = 1, C4, A2, A3 and A6 pass. A5 passes on everything it
+can read so far.** Each criterion ran at attempt 1, in the registered order
+(A5's boot-reset campaign, A1, A2, A3, A6), one campaign at a time and N = 1.
+Every campaign counted at its first attempt, so nothing was rerun. Nothing was
+repaired. No trial had an infrastructure failure, an observation retry or a
+guest-server restart.
+
+- **A5** (reset and hygiene). The boot-reset campaign at `bf99a64` shows 20
+  of 20 pristine reset-sentinel checks. The receipts of all 8 acceptance
+  campaigns of this stage show `System.qcow2` unchanged and no labelled
+  container or volume left. A5 judges every acceptance campaign's receipt,
+  so it is judged again once A4, A7 and the ladder have run.
+- **A1** (runtime layer) at N = 1. L0-fixed passed every one of the 100
+  entries 5 of 5 in the seed-43 and seed-44 shuffles, under both observation
+  settings: 2,000 of 2,000 trials. The 86 entries of G gate. A1's part at
+  N* > 1 is read later from the ladder rung N* (section 7).
+- **C4** (R-dev agreement). All 700 A1 trials of the 35 key, chord and Caps
+  Lock entries agree with the R-dev reference.
+- **A2** (harness layer). H-OSW-fixed passed all 97 of its in-spec cells and
+  H-GA all 87 of its in-spec cells, 5 of 5 in each setting. The only
+  failures are outside-spec R cells, the same ones as in development and in
+  C3's reference runs.
+- **A3** (stress). 4,980 of 4,980 trials passed: L0-fixed 1,800 (30 entries),
+  H-OSW-fixed 1,740 (29) and H-GA 1,440 (24).
+- **A6** (cross-app canary). 300 of 300 trials passed. Each app passed 100%:
+  Writer, Chrome and VS Code 16 entries each, GNOME Terminal 12.
+
+Not in this stage, and not run: the concurrency ladder, A4 and A7. N*,
+A1's part at N* > 1 and A5's final judgement wait for them.
+
+| Criterion | Campaign | Job | Run time | Sessions | Trials | PASS | Not PASS (all outside spec) |
+|---|---|---:|---|---:|---:|---:|---|
+| A5 | `q2ap-v2-a5-bootreset-a1` (21 cold boots, 20 reset checks) | 964 | 17 min 20 s | 21 | - | 20/20 checks | - |
+| A1 | `q2ap-v2-a1-l0fixed-s43-a1` (L0-fixed, seed 43) | 968 | 43 min 41 s | 18 | 1,000 | 1,000 | - |
+| A1 | `q2ap-v2-a1-l0fixed-s44-a1` (L0-fixed, seed 44) | 970 | 43 min 54 s | 18 | 1,000 | 1,000 | - |
+| A2 | `q2ap-v2-a2-hoswfixed-a1` (H-OSW-fixed) | 974 | 48 min 20 s | 18 | 990 | 970 | R03, R09 (0 of 10 each) |
+| A2 | `q2ap-v2-a2-hga-a1` (H-GA) | 991 | 45 min 10 s | 16 | 930 | 890 | R02, R04, R06, R10 (0 of 10 each) |
+| A3 | `q2ap-v2-a3-l0fixed-a1` (L0-fixed) | 1004 | 1 h 30 min 31 s | 30 | 1,800 | 1,800 | - |
+| A3 | `q2ap-v2-a3-hoswfixed-a1` (H-OSW-fixed) | 1008 | 1 h 38 min 42 s | 30 | 1,740 | 1,740 | - |
+| A3 | `q2ap-v2-a3-hga-a1` (H-GA) | 1013 | 1 h 21 min 30 s | 24 | 1,440 | 1,440 | - |
+| A6 | `q2ap-v2-a6-canary-a1` (four apps, screenshot setting) | 1015 | 49 min 40 s | 5 | 300 | 300 | - |
+
+Every job is CPU only (`TRES=cpu=6,mem=12G,node=1`, no GRES). Each ended
+`COMPLETED` 0:0, by the watcher's Slurm record and by the batch record
+(`driver_exit=0 labelled_containers_left=0`); the two agree. Each has an
+empty `counting_problems`, `infra_gates_pass` true, `System.qcow2` unchanged,
+nothing left and no unreadable file. Every cold boot served its first valid
+screenshot in 16.9-18.5 s.
+
+### A5: the boot-reset campaign and the receipts
+
+- Job 964 ran 21 cold boots at `bf99a64` (the manifest's `git_sha`; frozen
+  `acceptance.a5` checks it). Each boot after the first checked that the
+  previous boot's sentinel (a file, a dconf key and a gsettings key) was
+  gone: 20 of 20 pristine. Every boot read back its own sentinel.
+- `acceptance.a5` over that campaign and the 8 acceptance campaigns gives
+  `pass: true`. No campaign has an earlier attempt.
+- The 50 control campaigns of the first stage also show `System.qcow2`
+  unchanged and nothing left (`checks/run-checks.json`).
+- Reported, not judged: HMP `sendkey menu` reached X in 0 of 21 boots, and
+  `compose` (Menu) in 21 of 21. Section 4.3 records this from job 374 (0 of
+  22). So the receipt's `hmp_cycles_all_ok` is 0, as in job 374, and its
+  infrastructure gates pass.
+- `acceptance/a5-after-boot-reset/` is the same analysis run right after job
+  964, before any acceptance campaign existed.
+
+### A1 at N = 1 and C4
+
+- `acceptance.a1` gives `pass: true` with no problems. Every entry is PASS in
+  both seeds, the 14 non-gating entries included.
+- No trial was excused for a guest-server restart. No entry is over D33's
+  limit (`entries_over_restart_limit` is empty in both seeds).
+- `acceptance.c4` gives `pass: true` over 700 trials. Every A1 trial of an
+  entry with a reference had `c4` true. No earlier attempt exists.
+- `chord_super_d` passed 20 of 20 in A1 and 20 of 20 in A2 (10 per harness).
+  In none of these 40 L0-fixed-path trials was a key event read without its
+  state, so no slow shell answer (section 26) occurred.
+- **A1's N = 1 reference for the ladder** (`acceptance/a1-n1-reference.json`,
+  computed as `acceptance.n_star` computes it): step p95 2.694 s over 2,560
+  steps (both shuffles and both settings pooled), step p50 1.823 s; boot p95
+  17.92 s over 36 boots. A ladder rung needs step p95 at most 2 x 2.694 s =
+  5.389 s. No foreign Slurm job ran during either A1 job (host snapshots).
+
+### A2
+
+`acceptance.a2` gives `pass: true` with no problems. Each in-spec cell
+(gating or declared deviation) passed in 10 of 10 trials (5 per setting).
+The outside-spec cells failed 10 of 10, for the same reasons as in
+development jobs 852 and 853 and in C3's reference runs 872 and 870.
+
+- H-OSW-fixed:
+  - R03: Ctrl in `keys` was not pressed. `keys` on clicks is not in its
+    prompt.
+  - R09: the scroll ran at the pointer park point (1234, 777), not at the
+    given coordinate. Coordinates on scroll are not in its prompt.
+- H-GA:
+  - R02 and R04: modifiers given in `text` were not pressed.
+  - R06: a one-point drag pressed at the target with no motion.
+  - R10: hscroll sent no event.
+  - Its other outside-spec cells, R03 and R09, passed.
+
+### A3
+
+`acceptance.a3` gives `pass: true` with no problems. Every stress entry
+passed 60 of 60 on every layer where it is expressible.
+
+### A6
+
+`acceptance.a6` gives `pass: true` with no problems. All 60 app-entry cells
+passed 5 of 5 (`acceptance/a6-verdict.json`, `entries`, by
+`app:entry`). The canary's own read-back judges these trials. The tap is not
+read, so section 12's report covers 300 trials with no tap window.
+
+### Guest-server restarts and observations (sections 6.1 and 12)
+
+- Restarts: 0 in 7,172 accessibility calls. That is A1 1,298, A2 1,452
+  (H-OSW-fixed 759, H-GA 693) and A3 4,422 (L0-fixed 1,425, H-OSW-fixed
+  1,665, H-GA 1,332), exactly the registered counts (section 9).
+- At the development rate (1 in 8,114 calls) no restart in these calls had
+  probability about 0.41 (section 9). The development rate's exact interval
+  is in every restart report.
+- No trial was hit, none was excused, and no session's restart count
+  exceeded those attributed to its trials. A6 runs the screenshot setting.
+  A5's boot-reset campaign is infrastructure validation: its latency probe
+  made 63 `/accessibility` calls, and no criterion counts them.
+- No observation retry of any type. Every reset observation was delivered.
+
+### Section 12: key events read without their state
+
+Each criterion's analysis carries `acceptance.state_not_observed_report`
+(`acceptance/*-section12-state-not-observed.json`): A1 and C4 over 2,000
+trials, A2 over 1,920, A3 over 4,980 and A6 over 300. No key event was read
+without its state, and no key event lacked Mod2 without a preceding processed
+press. Every key event the tap recorded carried the guard's lock bit.
+
+### How it was run
+
+1. **Export.** The controls' read-only export of `bf99a64` on the host was
+   checked again before the first submission: tree digest `abbbfe6c...`,
+   `dr-xr-xr-x`, no `__pycache__`, and the batch script, `acceptance.py`,
+   renderer and submitter at their frozen digests. A fresh local export of
+   the same commit passed `check-chain` (15 rows), `verify` of all three ids,
+   and the pin and admission tests (51 passed)
+   (`checks/acceptance-export-and-reproduction.json`).
+2. **Manifests.** `ops/render_acceptance.sh` ran the frozen renderer from the
+   export with `--host-root ~/cotcodec-runs/q2-action-path-v2`. It wrote the
+   9 manifests (A5; A1 seeds 43 and 44; A2 and A3 per layer; A6), each
+   validated against the ledger. The same renderer, run locally with the same
+   arguments, wrote 9 byte-identical files. No field was edited.
+3. **Submission.** `ops/submit.sh` is the controls stage's script, unchanged.
+   For each manifest it ran `--dry-run` (batch script `3d86820d...`),
+   `--test-only` and the submission, then started
+   `scripts/record_slurm_end_states.sh` for the job (`slurm-state/`).
+   - One campaign ran at a time, in the registered order.
+   - Each submission came after the previous job had left the queue and its
+     end state was read. Before each one, `squeue` showed no job of this
+     stage pending or running.
+   - So at most one VM of this stage ran at any time.
+4. **Analysis.**
+   - `ops/make_attempts.py` (unchanged) built each criterion's attempt map
+     from the submission log (`ops/attempts-a*.json`).
+   - `ops/analyze_acceptance.py`, run from the export, loaded each run
+     directory with `acceptance.load` and called `acceptance.a1` (and `c4`),
+     `a2`, `a3`, `a6` and `a5`.
+   - It wrote each verdict, its section-12 report and per-campaign summaries
+     (end state, counting problems, per-cell pass counts per setting, every
+     failed trial with its reasons, retries, boots, steps, restarts, calls).
+   - It only groups run directories and writes JSON. Every judgement is the
+     frozen code's.
+5. **Reproduction and run checks.**
+   - The 9 raw run directories (914 files, 446 MB) were copied to a local
+     scratch directory. Every file's SHA-256 equals its
+     `raw-sha256sums.txt` entry.
+   - The local export under Python 3.13 gave all 18 JSON files
+     byte-identical to the host's (Python 3.10).
+   - `ops/check_runs_acceptance.py` (`checks/run-checks-acceptance.json`)
+     checks each of the 9 jobs: its `manifest.json` equals the rendered one
+     and its canonical digest is the batch record's; batch script, tree,
+     git SHA, receipt, campaign, manifest and session-plan digests agree; it
+     started after row 15; no GPU in the receipt or the Slurm TRES;
+     `System.qcow2` unchanged and nothing left; Slurm and the batch record
+     both COMPLETED 0:0; N = 1, attempt 1, and the registered seed, layer,
+     settings and repetitions.
+   - Every check passed. The only IPv4 address in those files is the guest
+     VM's internal NAT address in each manifest, which the first stage's
+     manifests already carry.
+
+### Operator notes
+
+These are disclosed operator choices. None changed what a registration fixes.
+
+- **The same export as the controls.** The suite's controls and acceptance
+  campaigns ran from one source tree (`bf99a64`, tree `abbbfe6c...`).
+- **One campaign at a time.** The registrations require N = 1 within each of
+  these campaigns. They do not order separate campaigns, and the first
+  stage ran some concurrently. This stage ran them strictly one after
+  another, for two reasons:
+  - A1's step p95 is the ladder's N = 1 reference, so it should measure one
+    VM;
+  - no trial of these criteria should fail on load from this stage itself.
+
+  Wall-clock time was 8 h 50 min, from 15:28:50 to 00:18:44 UTC
+  (2026-10-09).
+- **Foreign load.** Other sessions' Slurm jobs ran on the host during some
+  campaigns, recorded in each campaign's host snapshots
+  (`checks/host-snapshots-acceptance.json`, `ops/host_snapshots.py`):
+  - the `s1a-*` CPU jobs, 2-8 CPUs each, during A2 and A3;
+  - an open-weight reviewer job on one GPU during A5 and A2.
+
+  None ran during A1 or A6. The largest 1-minute load average seen was
+  13.9, on 208 CPUs. The registrations judge foreign load only for a ladder
+  rung. Here it is context.
+- **A5's acceptance receipts.** A5 was given the 8 acceptance campaigns of
+  this stage (section 7 names A1-A7). The 50 control campaigns are reported
+  separately above.
+- **A5's manifest header.** The frozen renderer writes its `--seed` value
+  into the YAML header comment, so `a5-bootreset-a1.yaml` says "seed 43".
+  The manifest itself is deterministic (`seeds: []`).
+- **Job ids.** Each `--test-only` takes a job id, and other sessions
+  submitted jobs in between. This stage's jobs are exactly 964, 968, 970,
+  974, 991, 1004, 1008, 1013 and 1015 (`ops/submissions.log`).
+- **Requeue.** Every Slurm record of both stages (and v1's job 768) shows
+  `Requeue=1`: the VM submitter does not pass `--no-requeue`. Every record
+  also shows `Restarts=0`, so no job was requeued. The lane is frozen, and
+  this is noted for the longer campaigns still to come (A4, A7 and the
+  ladder).
+
+### VM time
+
+The 9 jobs used 8.65 VM-hours, CPU only (run time times one VM):
+
+| Criterion | VM-hours | Sized (section 9) |
+|---|---:|---:|
+| A5 | 0.29 | 0.3 |
+| A1 | 1.46 | 1.5 |
+| A2 | 1.56 | 1.6 |
+| A3 | 4.51 | 4.8 |
+| A6 | 0.83 | 0.9 |
+
+With the first stage's 2.95, v2 has used 11.60 VM-hours. No GPU was
+requested or used.
+
+### Files (second stage)
+
+| Path | What it is |
+|---|---|
+| `manifests/rendered/a*.yaml` | the 9 manifests as the frozen renderer wrote them and as submitted; `manifests/rendered-sha256sums-acceptance.txt` |
+| `runs/<job>/` for jobs 964-1015 | `manifest.json`, `preflight.txt` (batch record), `receipt.json`, `session_plan.json` (not for A5), `slurm-<job>.out`, `raw-sha256sums.txt` (every raw file left on the host, 447 MB for the 9 jobs) |
+| `slurm-state/<job>.txt` | the watcher's `scontrol show job` record of each job |
+| `acceptance/a{1,2,3,5,6}-verdict.json`, `c4-verdict.json` | the frozen `acceptance.a1`/`a2`/`a3`/`a5`/`a6`/`c4` output, each with its section-12 report under `state_not_observed` (not for A5) |
+| `acceptance/*-section12-state-not-observed.json` | the same section-12 reports on their own |
+| `acceptance/a{1,2,3,5,6}-campaigns.json` | per-campaign summaries |
+| `acceptance/a1-n1-reference.json` | A1's step and boot quantiles, the ladder's N = 1 reference |
+| `acceptance/a5-after-boot-reset/` | A5 computed right after job 964, before any acceptance campaign |
+| `checks/acceptance-export-and-reproduction.json`, `checks/local-render-sha256sums-acceptance.txt`, `checks/run-checks-acceptance.json`, `checks/host-snapshots-acceptance.json` | export, rendering, reproduction and run checks, and the host load per campaign |
+| `ops/render_acceptance.sh`, `ops/analyze_acceptance.py`, `ops/check_runs_acceptance.py`, `ops/host_snapshots.py` | this stage's operator scripts (the render and analysis scripts are byte-identical to the copies that ran on the host) |
+| `ops/submissions.log`, `ops/attempts-a*.json`, `ops/dryrun/a*` | the submission log (both stages), the attempt maps and each manifest's dry-run and test-only output |
+
+## First stage: validity controls C2, C1 and C3
 
 **Result: C2, C1 and C3 all pass.** None of the validity controls run in this
 stage invalidates the suite for `q2-action-path-v2`. Each control was scored

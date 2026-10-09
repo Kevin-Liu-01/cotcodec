@@ -1,0 +1,11 @@
+{
+  "pass": true,
+  "problems": [],
+  "state_not_observed": {
+    "by_entry": {},
+    "no_processed_press_before": [],
+    "read_without_state": [],
+    "trials": 2000
+  },
+  "trials_checked": 700
+}

@@ -1,0 +1,1118 @@
+[
+  {
+    "accessibility_calls": 649,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.91,
+      "n": 18,
+      "p50": 17.228,
+      "p95": 17.91
+    },
+    "c4_flags": {
+      "True": 350
+    },
+    "campaign_id": "q2ap-v2-a1-l0fixed-s43-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A1",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791477090.80153,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "968",
+    "jobs": [
+      "968"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "L0-fixed",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "50fb76af31e7d067f63fc2ee71fe86e92e6827926f6c1464534450e4ef0797b7",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "caps_lock_roundtrip": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_f4": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_a": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alt_shift_r": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_super_d": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_alt_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_burst_5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_button_back": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_button_forward": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_bottomright": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_topleft": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_shift_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_slow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_left_center": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_middle": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_shift_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_then_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_triple_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_two_positions_ordered": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_alt_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_ctrl_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_middle_button": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_multipoint_l_shape": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_right_button": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_shift_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_short": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_slow_small": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_to_corner": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_vertical": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_down": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_up": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_delete": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_end": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_esc": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f9": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_insert": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_add": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_menu": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pagedown": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pageup": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_space_chord": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "mixed_gesture_state": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "move_only": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "no_action_control": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "press_hold_release_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "press_hold_release_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_at_offcenter_position": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_ctrl_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_10": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_25": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_left_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_right_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_shift_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_up_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_drag_then_click": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_long_mixed": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_type_chord_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_combining": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_digits": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_200": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_500": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_mixed_case": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_multiline_tabs": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_plain": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_repeated_chars": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_rtl": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_shell_hostile": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_single_char": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_spaces": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_with_correction": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "7eff8a083e58231c7944b59fde4ac4610e27a96c2bdfdd21153ae775ce4c4f76",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 18,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791474469.4926949,
+    "step_s": {
+      "n": 1280,
+      "p50": 1.8262,
+      "p95": 2.6962
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 1000,
+    "trials_pass": 1000,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 649,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 18.5,
+      "n": 18,
+      "p50": 17.24,
+      "p95": 18.5
+    },
+    "c4_flags": {
+      "True": 350
+    },
+    "campaign_id": "q2ap-v2-a1-l0fixed-s44-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A1",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791479841.6066573,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "970",
+    "jobs": [
+      "970"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "L0-fixed",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "717def54370468e1755e836cd9f9bc489ebffaefbd3619e64be2cd3dce7a5693",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "caps_lock_roundtrip": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_f4": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_a": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alt_shift_r": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_super_d": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_alt_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_burst_5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_button_back": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_button_forward": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_bottomright": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_topleft": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_shift_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_slow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_left_center": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_middle": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_shift_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_then_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_triple_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_two_positions_ordered": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_alt_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_ctrl_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_middle_button": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_multipoint_l_shape": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_right_button": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_shift_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_short": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_slow_small": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_to_corner": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_vertical": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_down": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_up": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_delete": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_end": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_esc": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f9": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_insert": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_add": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_menu": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pagedown": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pageup": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_space_chord": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "mixed_gesture_state": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "move_only": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "no_action_control": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "press_hold_release_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "press_hold_release_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_at_offcenter_position": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_ctrl_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_10": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_25": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_left_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_right_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_shift_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_up_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_drag_then_click": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_long_mixed": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_type_chord_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_combining": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_digits": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_200": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_500": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_mixed_case": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_multiline_tabs": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_plain": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_repeated_chars": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_rtl": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_shell_hostile": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_single_char": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_spaces": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_with_correction": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "a24d1bbfe153836fa67b0b7e398c5be8579b1db2a94f425620fc34edb6c1f0c1",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      44
+    ],
+    "session_errors": [],
+    "sessions": 18,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791477208.0966187,
+    "step_s": {
+      "n": 1280,
+      "p50": 1.8208,
+      "p95": 2.6842
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 1000,
+    "trials_pass": 1000,
+    "unreadable": []
+  }
+]

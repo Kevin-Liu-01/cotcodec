@@ -1,0 +1,4228 @@
+[
+  {
+    "accessibility_calls": 649,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.91,
+      "n": 18,
+      "p50": 17.228,
+      "p95": 17.91
+    },
+    "c4_flags": {
+      "True": 350
+    },
+    "campaign_id": "q2ap-v2-a1-l0fixed-s43-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A1",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791477090.80153,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "968",
+    "jobs": [
+      "968"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "L0-fixed",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "50fb76af31e7d067f63fc2ee71fe86e92e6827926f6c1464534450e4ef0797b7",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "caps_lock_roundtrip": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_f4": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_a": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alt_shift_r": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_super_d": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_alt_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_burst_5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_button_back": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_button_forward": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_bottomright": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_topleft": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_shift_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_slow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_left_center": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_middle": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_shift_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_then_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_triple_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_two_positions_ordered": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_alt_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_ctrl_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_middle_button": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_multipoint_l_shape": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_right_button": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_shift_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_short": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_slow_small": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_to_corner": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_vertical": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_down": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_up": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_delete": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_end": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_esc": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f9": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_insert": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_add": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_menu": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pagedown": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pageup": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_space_chord": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "mixed_gesture_state": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "move_only": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "no_action_control": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "press_hold_release_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "press_hold_release_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_at_offcenter_position": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_ctrl_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_10": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_25": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_left_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_right_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_shift_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_up_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_drag_then_click": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_long_mixed": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_type_chord_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_combining": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_digits": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_200": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_500": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_mixed_case": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_multiline_tabs": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_plain": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_repeated_chars": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_rtl": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_shell_hostile": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_single_char": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_spaces": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_with_correction": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "7eff8a083e58231c7944b59fde4ac4610e27a96c2bdfdd21153ae775ce4c4f76",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 18,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791474469.4926949,
+    "step_s": {
+      "n": 1280,
+      "p50": 1.8262,
+      "p95": 2.6962
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 1000,
+    "trials_pass": 1000,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 649,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 18.5,
+      "n": 18,
+      "p50": 17.24,
+      "p95": 18.5
+    },
+    "c4_flags": {
+      "True": 350
+    },
+    "campaign_id": "q2ap-v2-a1-l0fixed-s44-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A1",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791479841.6066573,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "970",
+    "jobs": [
+      "970"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "L0-fixed",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "717def54370468e1755e836cd9f9bc489ebffaefbd3619e64be2cd3dce7a5693",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "caps_lock_roundtrip": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_f4": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_a": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alt_shift_r": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_super_d": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_alt_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_burst_5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_button_back": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_button_forward": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_bottomright": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_topleft": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_shift_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_slow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_left_center": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_middle": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_shift_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_then_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_triple_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_two_positions_ordered": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_alt_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_ctrl_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_middle_button": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_multipoint_l_shape": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_right_button": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_shift_held": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_short": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_slow_small": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_to_corner": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_vertical": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_down": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_up": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_delete": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_end": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_esc": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f9": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_insert": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_add": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_menu": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pagedown": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pageup": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_space_chord": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "mixed_gesture_state": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "move_only": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "no_action_control": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "press_hold_release_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "press_hold_release_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_at_offcenter_position": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_ctrl_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_10": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_25": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_left_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_right_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_shift_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_up_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_drag_then_click": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_long_mixed": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_type_chord_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_combining": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_digits": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_200": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_500": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_mixed_case": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_multiline_tabs": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_plain": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_repeated_chars": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_rtl": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_shell_hostile": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_single_char": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_spaces": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_with_correction": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "a24d1bbfe153836fa67b0b7e398c5be8579b1db2a94f425620fc34edb6c1f0c1",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      44
+    ],
+    "session_errors": [],
+    "sessions": 18,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791477208.0966187,
+    "step_s": {
+      "n": 1280,
+      "p50": 1.8208,
+      "p95": 2.6842
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 1000,
+    "trials_pass": 1000,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 693,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 18.075,
+      "n": 16,
+      "p50": 17.938,
+      "p95": 18.075
+    },
+    "c4_flags": {
+      "True": 350
+    },
+    "campaign_id": "q2ap-v2-a2-hga-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A2",
+    "earlier_attempts": [],
+    "failed_trials": [
+      {
+        "cell": "R02",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 20,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 26,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 0,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 46,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 5,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 34,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 47,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 54,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 9,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 14,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 28,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 3,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 19,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 55,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 5,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 22,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 5,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 55,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R10",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 35,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 57,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R04",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 7,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R06",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R02",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 20,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R10",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 26,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R06",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 46,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R04",
+        "cycle": 9,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 5,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R02",
+        "cycle": 9,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 34,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R06",
+        "cycle": 9,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 47,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R04",
+        "cycle": 10,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 54,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R10",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 9,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R10",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 14,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R04",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 28,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R02",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R06",
+        "cycle": 12,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 19,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R06",
+        "cycle": 12,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 55,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R02",
+        "cycle": 13,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 5,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R04",
+        "cycle": 13,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 22,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R10",
+        "cycle": 13,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 55,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R10",
+        "cycle": 14,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562], ['ButtonPress', 6, 999, 562], ['ButtonRelease', 6, 999, 562]], observed []"
+        ],
+        "restart_only": false,
+        "seq": 35,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R02",
+        "cycle": 14,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 270], ['ButtonRelease', 1, 576, 270]]"
+        ],
+        "restart_only": false,
+        "seq": 57,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R04",
+        "cycle": 15,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Shift_L'], ['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['KeyRelease', 'Shift_L'], ['KeyPress', 'Alt_L'], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['KeyRelease', 'Alt_L'], ['KeyPress', 'Control_L'], ['KeyPress', 'Shift_L'], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378], ['KeyRelease', 'Shift_L'], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 672, 378], ['ButtonRelease', 1, 672, 378], ['ButtonPress', 1, 768, 378], ['ButtonRelease', 1, 768, 378], ['ButtonPress', 1, 864, 378], ['ButtonRelease', 1, 864, 378]]"
+        ],
+        "restart_only": false,
+        "seq": 7,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R06",
+        "cycle": 15,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 1, 480, 756], ['ButtonRelease', 1, 768, 810]], observed [['ButtonPress', 1, 768, 810], ['ButtonRelease', 1, 768, 810]]",
+          "0 motion events < 3"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot+a11y"
+      }
+    ],
+    "finished_at": 1791485614.4236805,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "991",
+    "jobs": [
+      "991"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "H-GA",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "7ed96743830b98aea9e9e35cac99229915a0feb01f3ad45b593f13b75a3c1962",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "R01": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R02": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R03": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R04": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R05": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R06": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R07": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R08": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R09": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R10": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R11": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R13": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R14": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "caps_lock_roundtrip": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_f4": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_a": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alt_shift_r": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_super_d": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_burst_5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_bottomright": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_topleft": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_slow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_left_center": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_middle": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_then_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_triple_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_two_positions_ordered": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_short": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_slow_small": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_to_corner": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_vertical": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_down": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_up": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_delete": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_end": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_esc": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f9": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_insert": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_add": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_menu": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pagedown": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pageup": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_space_chord": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "move_only": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "no_action_control": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_at_offcenter_position": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_10": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_up_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_drag_then_click": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_long_mixed": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_type_chord_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_combining": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_digits": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_200": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_500": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_mixed_case": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_multiline_tabs": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_plain": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_repeated_chars": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_rtl": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_shell_hostile": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_single_char": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_spaces": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_with_correction": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "095f33816314305b720997ab950a321058d515de311bd475fe00fcbb8e062068",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 16,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791482904.7796798,
+    "step_s": {
+      "n": 1370,
+      "p50": 1.8028,
+      "p95": 2.6852
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 930,
+    "trials_pass": 890,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 759,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.94,
+      "n": 18,
+      "p50": 17.276,
+      "p95": 17.94
+    },
+    "c4_flags": {
+      "True": 350
+    },
+    "campaign_id": "q2ap-v2-a2-hoswfixed-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A2",
+    "earlier_attempts": [],
+    "failed_trials": [
+      {
+        "cell": "R03",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 12,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 1,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 26,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 45,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 2,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 53,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 18,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 4,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 46,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 0,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 6,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 7,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 19,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R09",
+        "cycle": 8,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 43,
+        "setting": "screenshot"
+      },
+      {
+        "cell": "R03",
+        "cycle": 10,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 12,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R09",
+        "cycle": 10,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 26,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R09",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 45,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R03",
+        "cycle": 11,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 53,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R03",
+        "cycle": 13,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 18,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R09",
+        "cycle": 13,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 46,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R09",
+        "cycle": 15,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 0,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R03",
+        "cycle": 15,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 49,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R03",
+        "cycle": 16,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['KeyPress', 'Control_L'], ['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324], ['KeyRelease', 'Control_L']], observed [['ButtonPress', 1, 576, 324], ['ButtonRelease', 1, 576, 324]]"
+        ],
+        "restart_only": false,
+        "seq": 19,
+        "setting": "screenshot+a11y"
+      },
+      {
+        "cell": "R09",
+        "cycle": 17,
+        "infra": [],
+        "reasons": [
+          "events differ: expected [['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324], ['ButtonPress', 5, 1345, 324], ['ButtonRelease', 5, 1345, 324]], observed [['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777], ['ButtonPress', 5, 1234, 777], ['ButtonRelease', 5, 1234, 777]]",
+          "final pointer [1234, 777] != [1345, 324]"
+        ],
+        "restart_only": false,
+        "seq": 43,
+        "setting": "screenshot+a11y"
+      }
+    ],
+    "finished_at": 1791482824.0372086,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "974",
+    "jobs": [
+      "974"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "H-OSW-fixed",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "8423708f596ca10313d02619e00df62aac275e6d0070e534152361bed1ab6288",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "R01": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R02": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R03": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R04": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R05": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R06": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R07": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R08": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R09": {
+        "screenshot": "0/5",
+        "screenshot+a11y": "0/5"
+      },
+      "R10": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R11": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R13": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "R14": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "caps_lock_roundtrip": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_f4": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_alt_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_a": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_alt_shift_r": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_alone": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_shift_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "chord_super_d": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_alt_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_burst_5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_bottomright": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_corner_topleft": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_ctrl_shift_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_double_slow": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_left_center": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_middle": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_shift_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_then_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "click_two_positions_ordered": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_short": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_slow_small": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_to_corner": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "drag_vertical": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_down": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_left": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_right": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_arrow_up": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_delete": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_end": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_esc": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f12": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f5": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_f9": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_home": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_insert": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_add": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_kp_enter": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_menu": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pagedown": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_pageup": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_space_chord": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "key_tab": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "move_only": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "no_action_control": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_at_offcenter_position": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_ctrl_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_1": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_10": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_25": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_shift_down_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "scroll_up_3": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_drag_then_click": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_long_mixed": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "seq_type_chord_type": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_combining": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_digits": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_200": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_long_500": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_mixed_case": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_multiline_tabs": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_plain": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_repeated_chars": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_rtl": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_shell_hostile": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_single_char": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_spaces": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      },
+      "type_with_correction": {
+        "screenshot": "5/5",
+        "screenshot+a11y": "5/5"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "a4f8d0a9d3a8a6906e894c18a884463f8c4a248b12d6314addb78988da10faa9",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 18,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791479924.687692,
+    "step_s": {
+      "n": 1500,
+      "p50": 1.7908,
+      "p95": 2.6201
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 990,
+    "trials_pass": 970,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 1332,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.99,
+      "n": 24,
+      "p50": 17.277,
+      "p95": 17.959
+    },
+    "c4_flags": {
+      "True": 540
+    },
+    "campaign_id": "q2ap-v2-a3-hga-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A3",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791502021.640442,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "1013",
+    "jobs": [
+      "1013"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "H-GA",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "2bd439c3aa9b20c2702b3c68dc9d2ffe555328789f930644634014f2f1ec7eae",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "caps_lock_roundtrip": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_tab": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_burst_5": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_slow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_triple_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_short": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_slow_small": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_kp_enter": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_menu": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "seq_long_mixed": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_combining": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_long_500": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_with_correction": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "788c1e71778b17db684ad04b569cbf9e2044f8a6e43b5b700cba9e0ce52bef4d",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 24,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791497131.892205,
+    "step_s": {
+      "n": 2640,
+      "p50": 1.8271,
+      "p95": 2.6667
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 1440,
+    "trials_pass": 1440,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 1665,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.929,
+      "n": 30,
+      "p50": 17.212,
+      "p95": 17.92
+    },
+    "c4_flags": {
+      "True": 540
+    },
+    "campaign_id": "q2ap-v2-a3-hoswfixed-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A3",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791497108.6565073,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "1008",
+    "jobs": [
+      "1008"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "H-OSW-fixed",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "54f4346cd9bb0d59601e8ee865319345f769fd90097f1dc87a205f9ccf8a917d",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "caps_lock_roundtrip": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_tab": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_alt_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_burst_5": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_ctrl_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_ctrl_shift_right": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_slow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_shift_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_short": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_slow_small": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_kp_enter": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_menu": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_ctrl_down_3": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_shift_down_3": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "seq_long_mixed": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_combining": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_long_500": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_with_correction": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "c1a733bf2497e748c1072748c8cad0056a8ddfc87b85612d905d50e652155d12",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 30,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791491186.4004443,
+    "step_s": {
+      "n": 3300,
+      "p50": 1.8669,
+      "p95": 2.576
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 1740,
+    "trials_pass": 1740,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 1425,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.934,
+      "n": 30,
+      "p50": 17.202,
+      "p95": 17.934
+    },
+    "c4_flags": {
+      "True": 540
+    },
+    "campaign_id": "q2ap-v2-a3-l0fixed-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A3",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791491122.8289466,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "1004",
+    "jobs": [
+      "1004"
+    ],
+    "kind": "suite-acceptance",
+    "labelled_containers_left": [],
+    "layer": "L0-fixed",
+    "leaked_volumes": [],
+    "manifest_json_sha256": "e209476ed95591c7d5f2c86f7f34ee0f1f861808d03b8402ddadb8f35e179433",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "caps_lock_roundtrip": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_c": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_arrow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_ctrl_shift_t": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_alone": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "chord_shift_tab": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_alt_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_burst_5": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_ctrl_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_ctrl_shift_right": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_double_slow": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_shift_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "click_triple_left": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_long_diagonal": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_short": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "drag_slow_small": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_kp_enter": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "key_menu": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_ctrl_down_3": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_down_then_up_net_zero": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "scroll_shift_down_3": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "seq_long_mixed": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_combining": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_emoji_zwj": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_long_500": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_symbols_shifted": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_unicode_bmp": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      },
+      "type_with_correction": {
+        "screenshot": "30/30",
+        "screenshot+a11y": "30/30"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "72337b28b11c9d3f7b5d21dc98eb69bd4a7c25e913aa614ecab96accb88c498f",
+    "reset_observations": [
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      },
+      {
+        "delivered": true,
+        "failed": [],
+        "retried": []
+      }
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 30,
+    "settings": [
+      "screenshot",
+      "screenshot+a11y"
+    ],
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791485691.849618,
+    "step_s": {
+      "n": 2820,
+      "p50": 1.9402,
+      "p95": 2.8637
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 1800,
+    "trials_pass": 1800,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 0,
+    "attempt": null,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.906,
+      "n": 21,
+      "p50": 17.129,
+      "p95": 17.88
+    },
+    "c4_flags": {},
+    "campaign_id": "q2ap-v2-a5-bootreset-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A5",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791474370.5842605,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "964",
+    "jobs": [
+      "964"
+    ],
+    "kind": "boot-reset-validation",
+    "labelled_containers_left": [],
+    "layer": null,
+    "leaked_volumes": [],
+    "manifest_json_sha256": "8e2d7615a833abfa9cc63d697f2667b15fb623a9db8b1823c1480963bd5d0843",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {},
+    "qcow2_unchanged": true,
+    "receipt_sha256": "066d19521ec94027466fb12c6537ab25396072481977416b9da753a45ea08abf",
+    "receipt_summary": {
+      "boot_s": {
+        "max": 17.906,
+        "n": 21,
+        "p50": 17.129,
+        "p95": 17.88
+      },
+      "boots_ok": 21,
+      "containers_removed_all": true,
+      "cycles": 21,
+      "distinct_boot_ids": 21,
+      "errors": [],
+      "hmp_cycles_all_ok": 0,
+      "hmp_step_pass_counts": {
+        "button_left": "21/21",
+        "button_middle": "21/21",
+        "button_right": "21/21",
+        "caps_lock_off": "21/21",
+        "caps_lock_on": "21/21",
+        "chord_shift_comma": "21/21",
+        "key_a": "21/21",
+        "key_compose": "21/21",
+        "key_esc_after_compose": "21/21",
+        "key_esc_after_menu": "21/21",
+        "key_esc_after_right": "21/21",
+        "key_kp_add": "21/21",
+        "key_kp_enter": "21/21",
+        "key_less_102nd": "21/21",
+        "key_menu": "0/21",
+        "rel_motion": "21/21",
+        "wheel_dz_neg": "21/21",
+        "wheel_dz_pos": "21/21"
+      },
+      "infra_gates_pass": true,
+      "latency_s": {
+        "accessibility_s": {
+          "n": 63,
+          "p50": 1.2858,
+          "p95": 1.542
+        },
+        "execute_noop_s": {
+          "n": 63,
+          "p50": 0.0145,
+          "p95": 0.0163
+        },
+        "screenshot_s": {
+          "n": 63,
+          "p50": 0.5537,
+          "p95": 0.5782
+        }
+      },
+      "leaked_volumes": [],
+      "nat_modes": [
+        "nat"
+      ],
+      "no_gpu_all": true,
+      "no_published_ports_all": true,
+      "sentinel_pristine": 20,
+      "sentinel_readback_dconf": 21,
+      "sentinel_readback_file": 21,
+      "sentinel_readback_gsettings": 21,
+      "sentinel_reset_checks": 20,
+      "settled_s": {
+        "n": 21,
+        "p50": 20.432,
+        "p95": 22.688
+      },
+      "tap_selftest_ok": 0
+    },
+    "reset_observations": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "restarts": 0,
+    "seed": [],
+    "session_errors": [],
+    "sessions": 21,
+    "settings": null,
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791473331.1917076,
+    "step_s": {
+      "n": 0,
+      "p50": null,
+      "p95": null
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 0,
+    "trials_pass": 0,
+    "unreadable": []
+  },
+  {
+    "accessibility_calls": 0,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.905,
+      "n": 5,
+      "p50": 17.151,
+      "p95": 17.905
+    },
+    "c4_flags": {},
+    "campaign_id": "q2ap-v2-a6-canary-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A6",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791505072.0915747,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "1015",
+    "jobs": [
+      "1015"
+    ],
+    "kind": "canary-acceptance",
+    "labelled_containers_left": [],
+    "layer": null,
+    "leaked_volumes": [],
+    "manifest_json_sha256": "6d604095d2808beb088b142ba630d64f3b5437f2c299ace85e95954b58622686",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "chrome:ctrl_home_insert": {
+        "screenshot": "5/5"
+      },
+      "chrome:drag_select_word": {
+        "screenshot": "5/5"
+      },
+      "chrome:key_kp_enter": {
+        "screenshot": "5/5"
+      },
+      "chrome:select_all_copy_end_paste": {
+        "screenshot": "5/5"
+      },
+      "chrome:triple_click_line": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_combining": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_digits": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_emoji": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_long_200": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_multiline_tabs": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_plain": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_rtl": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_spaces": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_symbols_shifted": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_unicode_bmp": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_with_correction": {
+        "screenshot": "5/5"
+      },
+      "terminal:key_kp_enter": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_combining": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_digits": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_emoji": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_long_200": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_multiline_tabs": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_plain": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_rtl": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_spaces": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_symbols_shifted": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_unicode_bmp": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_with_correction": {
+        "screenshot": "5/5"
+      },
+      "vscode:ctrl_home_insert": {
+        "screenshot": "5/5"
+      },
+      "vscode:drag_select_word": {
+        "screenshot": "5/5"
+      },
+      "vscode:key_kp_enter": {
+        "screenshot": "5/5"
+      },
+      "vscode:select_all_copy_end_paste": {
+        "screenshot": "5/5"
+      },
+      "vscode:triple_click_line": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_combining": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_digits": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_emoji": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_long_200": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_multiline_tabs": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_plain": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_rtl": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_spaces": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_symbols_shifted": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_unicode_bmp": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_with_correction": {
+        "screenshot": "5/5"
+      },
+      "writer:ctrl_home_insert": {
+        "screenshot": "5/5"
+      },
+      "writer:drag_select_word": {
+        "screenshot": "5/5"
+      },
+      "writer:key_kp_enter": {
+        "screenshot": "5/5"
+      },
+      "writer:select_all_copy_end_paste": {
+        "screenshot": "5/5"
+      },
+      "writer:triple_click_line": {
+        "screenshot": "5/5"
+      },
+      "writer:type_combining": {
+        "screenshot": "5/5"
+      },
+      "writer:type_digits": {
+        "screenshot": "5/5"
+      },
+      "writer:type_emoji": {
+        "screenshot": "5/5"
+      },
+      "writer:type_long_200": {
+        "screenshot": "5/5"
+      },
+      "writer:type_multiline_tabs": {
+        "screenshot": "5/5"
+      },
+      "writer:type_plain": {
+        "screenshot": "5/5"
+      },
+      "writer:type_rtl": {
+        "screenshot": "5/5"
+      },
+      "writer:type_spaces": {
+        "screenshot": "5/5"
+      },
+      "writer:type_symbols_shifted": {
+        "screenshot": "5/5"
+      },
+      "writer:type_unicode_bmp": {
+        "screenshot": "5/5"
+      },
+      "writer:type_with_correction": {
+        "screenshot": "5/5"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "0b4a70c3884a68a82396b1befa7386902f7300aaa441559585d827fdcadc5a37",
+    "reset_observations": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 5,
+    "settings": null,
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791502093.256829,
+    "step_s": {
+      "n": 625,
+      "p50": 1.0171,
+      "p95": 1.8418
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 300,
+    "trials_pass": 300,
+    "unreadable": []
+  }
+]
