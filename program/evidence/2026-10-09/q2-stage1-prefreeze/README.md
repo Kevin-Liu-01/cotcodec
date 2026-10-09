@@ -90,19 +90,35 @@ How it ran, as the draft and D49 (ii) prescribe:
   the five dev tasks of `plan.a0a_slots` (`6a33f9b9`, `bf4e9888`, `d681960f`, `4172ea6e`,
   `12382c62`) x 2 harnesses x 2 reruns in the seeded block orders, prompt date 2026-10-08,
   90 CPUs, 35 minutes. `lane validate` accepted it, and `lane submit` wrote the canonical
-  manifest (`vm-1037/manifest.json`, SHA-256 `057b6353...`). The GPU half, `a0a-gpu.yaml`,
+  manifest. It has two digests, of one content: `lane submit` stores and submits the
+  compact canonical form (`lane.canonical`: sorted keys, no spaces), SHA-256
+  `051cdd6e6380ee62987109815e79cdcb740052e84603b634ba9e08d430205a79`, which `vm-submit.json`
+  and `vm-1037/preflight.txt` name; the run directory keeps it indented,
+  `vm-1037/manifest.json`, SHA-256
+  `057b6353ca1bc7c9020968ca2aede2350e24655eeffdaf38080a827172af64a5`, which the draft, the
+  plan and `a0a-measurements.json` name. `lane.canonical` of `vm-1037/manifest.json` gives
+  `051cdd6e...` again (checked 2026-10-09). The GPU half, `a0a-gpu.yaml`,
   was rendered from the validated VM manifest (9B, 25 minutes, `gpu-values.json`: the O1
   overlay, the commit, the archive digest, the 9B receipt `0a9e052d...` and artifact root
   `9845026d...`) and passed the submitter's `--dry-run` (`gpu-dry-run.json`) and
-  `--test-only`.
+  `--test-only` (job 1038). `gpu-test-only.txt` is empty (one newline): `sbatch
+  --test-only` reports on stderr, which was not saved. That the call passed is shown by the
+  narrative and by the job-id sequence (1038 allocated to the test, 1039 to the
+  submission); a later run saves the test-only call's stderr.
 - **CPUs**: 90 for the VM job and 32 for the GPU job, 122 in all, at most 200 (section 5.5).
 - **Quiet host**: `squeue -a` was empty before the VM submission, and showed no foreign job
   before the GPU submission (`ops.log`). While A0a ran, a 15 s queue watcher took 25 samples
   (`squeue-watch.log`) and the lane took 4 host snapshots (`vm-1037/lane-receipt.json`). They
   show only the pair's own jobs 1037 and 1039; the lane's `squeue_foreign` lists only 1039,
-  its GPU partner. Job ids 1032-1039 are all this operator's. The other workflow's reviewer
-  job did not appear, so no foreign job had to be waited for or judged under the draft's
-  rules (section 5.5 "Quiet host"; section 15 reports any foreign load).
+  its GPU partner. Job ids 1032-1039 are all this operator's. The snapshots' container
+  counts are not foreign compute: `containers_ours` counts containers labelled with the VM
+  job's id and is 0 at every snapshot (each is taken at the start, as a block's first slot
+  is dispatched and before its VM container starts, or after the last teardown);
+  `containers_running_total` is 1 at the start, the host's long-running local image
+  registry (`cotcodec-registry`, up 8 weeks and the only running container when checked on
+  2026-10-09), and 2 while GPU job 1039's engine container runs. The other workflow's
+  reviewer job did not appear, so no foreign job had to be waited for or judged under the
+  draft's rules (section 5.5 "Quiet host"; section 15 reports any foreign load).
 - **End states**: `scripts/record_slurm_end_states.sh` caught both (`slurm-state/`). The lane
   recorded the GPU job's Slurm start and end, so the registered stand-in for a missed end
   was not needed.
@@ -151,9 +167,14 @@ applied `plan.freeze_constants`:
   (file SHA-256 `a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806`). Run
   locally on `a0a-measurements.json` and the committed inputs, `plan.freeze_constants` and
   `plan.render_plan` give the same constants and the same `plan_sha256`.
-- This is not yet the frozen plan. The freeze step pins the plan file in the source tree and
-  writes its digest into G0 item 10, after the fresh pre-freeze audit and the sign-offs of
-  section 18.
+- This is not yet the frozen plan. If no A0 job is repeated, this committed file is the
+  frozen plan: A1 manifests name it (`--plan
+  program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json`), and the freeze
+  writes its **`plan_sha256` field** (`6a3f0219...`), in backticks, into G0 item 10's slot,
+  not the file's SHA-256 (`a5f0aadc...`): `lane.load_frozen_plan` refuses every A1 manifest
+  unless the registration states the field in that form (G0 item 10). That happens after
+  the program's sign-off of section 18 (Kevin's two slots are filled from D55); the fresh
+  pre-freeze audit is answered (registration section 22).
 
 ## Records' SHA-256
 

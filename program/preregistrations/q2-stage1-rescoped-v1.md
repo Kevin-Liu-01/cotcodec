@@ -6,15 +6,17 @@ under it. D49 (ii) admitted the pre-freeze development jobs O1 and A0a within S1
 (A0b is not submitted while the anchor is unavailable); like every GPU episode they run
 only after the action-path suite passes. Freezing needs the G0 items of section 3, the
 constants of section 6.2 written into their open slots, a fresh pre-freeze audit, and the
-sign-offs of section 18 (each an open slot), of which item 17 and the acceptance of an
-unanchored read are Kevin's alone. A material change after the freeze is a new experiment
+sign-offs of section 18: item 17 with the acceptance of an unanchored read, and G0 item 5's
+offline-setup decisions, are Kevin's alone (both filled from his rulings, D55); the
+program's sign-off is an open slot. A material change after the freeze is a new experiment
 id. Every slot that is filled only at the freeze carries the placeholder that
 `scripts/preregister.py freeze` refuses, so the guard refuses this file until each is
 filled (section 22 lists them); no other text in this file trips the guard (a test fills
 every slot on a scratch copy and freezes it).
 
 - Drafted 2026-10-08 on branch `stage0/q2-stage1-rescope`; revised the same day after
-  three adversarial pre-freeze reviews (section 22).
+  three adversarial pre-freeze reviews, and on 2026-10-09 after the action-path verdict, O1
+  and A0a and a fresh two-auditor pre-freeze audit (section 22).
 - Gauntlet proposal: `program/proposals/2026-10-08-q2-stage1-rescoped.md`.
 - Design panel: three designs, two judges; this file is the winning design (A)
   with grafts from both judges, recorded in the proposal's iteration log.
@@ -79,7 +81,9 @@ S1a stands on its own. Every exit is a reportable Q2 result.
    setup/eval/queue times and infrastructure loss. It replaces the synthetic
    431.5 GPU-h projection.
 6. **External runtime check (D11).** OpenCUA-7B at 15 steps against its three
-   public 15-step runs on the same tasks.
+   public 15-step runs on the same tasks. Not decided in this run: the anchor is
+   UNAVAILABLE before any GPU job (G0 item 9.6, section 5.7), so A0b and ANC are not
+   submitted and every S1a output carries the label "not externally anchored" (DR-A).
 7. **Admission rule for the scale ladder.** A pre-specified GO / NO-GO /
    INCONCLUSIVE rule (DR5). Under D47 only GO lets the ladder (S1b) go to the
    gauntlet.
@@ -141,10 +145,12 @@ S1a does **not** answer:
    action-path v2's program kill criterion (cut the task count before adding GPUs; S1a never
    runs more than 20 VMs). The concurrency gate's reference (section 6.2) is the accepted
    attempt's `step_p95_n1_s`, **2.6944 s** (`acceptance/ladder-n-star.json`, SHA-256
-   `340f155368001df093ce3982958c2439e39ecd7932a3ade04003222941dada62`, equal to
-   `acceptance/a1-n1-reference.json`: every A1 step at N = 1, jobs 968 and 970, 2,560
-   steps), so A0a's limit is 5.389 s; A1 at N* = 32's own step p95, 3.248 s
-   (`acceptance/a1-at-n-star.json`), is reported beside it, not used. A7 session 193 showed a
+   `340f155368001df093ce3982958c2439e39ecd7932a3ade04003222941dada62`, whose
+   `step_p95_n1_s` equals the `step_p95_s` of `acceptance/a1-n1-reference.json`, SHA-256
+   `9ad3bcf964237086f6be1eb11bbf6d07a34dc11f8ffada45ccb94b6ef623b185`: every A1 step at
+   N = 1, both settings pooled, jobs 968 and 970, 2,560 steps, p50 1.8228 s), so A0a's
+   limit is 5.389 s; A1 at N* = 32's own step p95, 3.248 s (`acceptance/a1-at-n-star.json`),
+   is reported beside it, not used. A7 session 193 showed a
    failure no criterion bounds: the guest server answered every `/accessibility` call of one
    boot with HTTP 500 and did not restart (1 of 1,245 accessibility-setting boots); D53 (iii)
    makes such persistent errors on any observation an infrastructure loss here (section 7.2).
@@ -299,7 +305,8 @@ S1a does **not** answer:
      the registered seeded procedure (section 5.4). Option (a), keeping it under a rule that
      a step failing the same way in every episode counts as completed when the checker does
      not read its product, is not taken: the agent's VM would lack the pygame the upstream
-     setup installs, a task different from upstream. Kevin's sign-off: section 18.
+     setup installs, a task different from upstream. Kevin's sign-off: section 18 (accepted
+     on 2026-10-09, D55 (ii)).
 6. **Final-state capture and offline rescoring.** After the checker runs, the
    files the checker read are copied off the VM and hashed, and a CPU tool
    rescores a captured state with the raw and the corrected checker, so every
@@ -393,8 +400,9 @@ S1a does **not** answer:
    same holds after O1. The A1 caps then follow the remainder rule of section 6.1.
    **Outcome (2026-10-08): item 6 fails, so the anchor is UNAVAILABLE before any GPU
    job**, A0b and ANC are not submitted, and the branch is "anchor unavailable before
-   A0b" (T_A1 111 minutes, total caps 478 minutes, K_base 32 at the card's high price;
-   section 6.1). Item 3's development dry run fails as well (below). Items 1, 2 and 4
+   A0b" (planned: T_A1 111 minutes, total caps 478 minutes, K_base 32 at the card's high
+   price; section 6.1. Realized after O1's retry: T_A1 110 minutes, total caps 477 minutes,
+   K_base 32; section 6.2). Item 3's development dry run fails as well (below). Items 1, 2 and 4
    pass: the vLLM v0.31.0 registry lists the architecture (dry run below); D49 (iii)
    admits the remote code, read and hashed in
    `program/evidence/2026-10-08/q2-stage1-g0/opencua-remote-code/README.md`; the archive
@@ -412,8 +420,38 @@ S1a does **not** answer:
     engine and sampling arguments and, at the freeze, the constants and the job
     list. Draft plan SHA-256 (K = 32 on the eligible pool, no constants):
     `4679ac954847e3eab13973300993befd1af1f46938a89b714706ea792fb1bd21`. The plan rendered from
-    A0a's records (2026-10-09; section 6.2) has `plan_sha256`
-    `6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51`. Frozen plan SHA-256: TBD.
+    A0a's records (2026-10-09; section 6.2) is the committed file
+    `program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json` (status
+    `frozen-constants`); its `plan_sha256` field is
+    `6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51`, and the file's own
+    SHA-256, `a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806`, is not what
+    the slot below takes.
+    - **What the freeze writes in the slot below.** It replaces the placeholder, and nothing
+      else on that line, with the `plan_sha256` field of the frozen plan file
+      `program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json`, set between two
+      backticks: the label, its one space and the closing full stop stay, and no line break
+      falls inside. With no A0 job repeated, that field is
+      `6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51`, and the slot then
+      holds exactly those 64 characters between backticks. `lane.load_frozen_plan` admits an A1
+      manifest only if this file holds the label, one space and the backticked field as one
+      unbroken run of text. The file's SHA-256 (`a5f0aadc...`), the value without its
+      backticks, or a line break inside makes the lane refuse every A1 job under this id,
+      which only a new experiment id would repair.
+    - Every A1 manifest names that plan file inside the export's tree
+      (`render_q2_stage1_manifest.py vm --purpose a1 --plan
+      program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json`), so the file
+      must be in the freeze commit's tree at that path (it is committed). If an A0 job is
+      repeated, the new plan file and its `plan_sha256` replace both here before the freeze.
+    - `tests/test_q2_stage1_prereg.py` checks the slot. Before the freeze it fills the slot
+      on a scratch copy with that `plan_sha256` in backticks, freezes the copy into a copy of
+      the ledger, and has `lane.validate_manifest` accept an A1-9B-S1 manifest rendered from
+      the plan file. It also checks that the lane refuses the file's SHA-256, the value
+      without backticks, and the frozen copy once it is edited (section 5.5). After the
+      freeze it requires the slot to hold the named plan file's `plan_sha256` and the lane to
+      accept that manifest from the tree.
+
+    Frozen plan SHA-256: TBD.
+
     Every registered VM job's lane manifest is rendered from the plan by
     `scripts/render_q2_stage1_manifest.py` (section 5.5), and the lane refuses one
     whose slots differ.
@@ -444,8 +482,14 @@ S1a does **not** answer:
    constants of section 6.2 are computed from their records by
    `harness.q2_stage1.plan.a0a_measurements` and `plan.freeze_constants`
    (`scripts/render_q2_stage1_plan.py` reads A0a's lane run directory and its GPU
-   job's bridge directory itself; no constant is typed) and written into section
-   6.2's open slots. A0a's gates hold (section 6.2).
+   job's bridge directory itself, so no A0a measurement is typed) and written into section
+   6.2's open slots. Three inputs are typed on the renderer's command line, each checked
+   against its source: N* (`--n-star 32`, `acceptance/ladder-n-star.json`), the concurrency
+   gate's reference (`--action-path-step-p95 2.6944`, its `step_p95_n1_s`) and the
+   pre-freeze GPU jobs that ran (`--prefreeze-jobs O1 O1 A0a`, the Slurm records of jobs
+   1032, 1033 and 1039). The plan file records the first two as `n_star` and
+   `action_path_step_p95_s`, and the third through its caps (T_A1 110, total 477). A0a's
+   gates hold (section 6.2).
 2. Fresh pre-freeze audit, then freeze (`scripts/preregister.py freeze`).
 3. No model episode and no checker run on agent state touches a confirm task
    before the freeze. G0 item 5's setup-only check is the sole contact. A0a and
@@ -698,6 +742,25 @@ The full list is `harness/q2/action_path/harness_design_diffs.md`.
   (`rules.job_dr0`, section 11). A session-2 VM job is submitted with Slurm
   `--begin` at the later session-1 lane's end plus 12 hours, and the lane refuses
   to start before that time (`lane.earliest_start`).
+- **Only the frozen registration admits a post-freeze job.** The lane admits an A1 or ANC
+  manifest only from a source tree whose ledger's hash chain holds, whose row for this id
+  names this file, and whose copy of this file has that row's SHA-256
+  (`lane.frozen_registration`: the checks of `scripts/preregister.py verify` and
+  `check-chain`), and only if this file names the plan (G0 item 10). It checks this at
+  `lane validate`, at `lane submit` and again when the VM job starts, and the GPU half is
+  rendered only from a VM manifest the lane has validated, so a registration edited after
+  the freeze refuses the pair. O2 has no lane manifest: before submitting O2 (or its retry)
+  the operator runs `scripts/preregister.py verify q2-stage1-rescoped-v1` and `check-chain`
+  in the clone the overlay is built from and keeps the output with O2's evidence; a failure
+  stops the submission and is reported.
+- **Overlay for the A1 GPU halves.** O2 builds the overlay from the freeze commit as O1
+  did: the source receipt is made with `selected_ref: HEAD` in a clean clone at that commit
+  (the extractor refuses any other ref; job 1032). Every A1 GPU half uses the O2 overlay
+  built from the exact commit its A1 export runs from (its manifest's `FILL_GIT_SHA` and
+  `FILL_SOURCE_SHA256` are that commit and O2's source archive), and the GPU job's container
+  refuses to start unless the overlay's embedded `git_sha` and `source_sha256` equal its
+  manifest's (`scripts/verify_compute_provenance.py`; A0a's PASS is
+  `a0a/gpu-1039/provenance-verification.txt` in the pre-freeze evidence).
 - **Quiet host.** While an S1a job runs, the operator submits no other Slurm
   job. Every block records host snapshots (time, load average, foreign Slurm
   jobs and their CPUs, container counts).
@@ -822,7 +885,8 @@ and the caps total 477 minutes (7.950 GPU-h) in the branch S1a is in.
 - **Repeats and retries.** An A0 repeat (section 6.2) or an O1 retry is a
   pre-freeze job whose cap enters the remainder rule, so it lowers T_A1. O2 has
   one pre-funded retry; a second O2 failure stops S1a before ANC and is
-  reported. No other job is retried.
+  reported. No other job is retried. How O2 is run so that its one retry is not spent on
+  the receipt error that failed job 1032: section 5.5, "Overlay for the A1 GPU halves".
 - **Maximum.** In every branch the caps sum to at most 478 minutes of one H100,
   7.967 GPU-h. S1a therefore needs no gauntlet. An amendment that would raise
   any cap above this total is not made, and the design goes to the gauntlet
@@ -853,10 +917,12 @@ The rules, applied by `plan.freeze_constants` to the A0 records only:
   lowers this floor. With the anchor running, the floor is 24 (K_base < 24 goes back to
   review) once the item 18 amendment is signed (D49 (i) states it), and 32 until then.
   `plan.freeze_constants` takes the floor from the branch: it defaults to 32 and applies
-  `k_floor=24` only when the anchor runs. In the unanchored branch (T_A1 = 111 minutes)
-  K_base = 32 needs c_A0a of at most about 0.01012 GPU-h, a mean A0a slot of at most
-  about 728 s at V = 20 and L_A0a = 6 minutes; the card's own high slot (743 s) gives 24,
-  so going back to review after A0a is a live outcome. At V = 16 the card's high price
+  `k_floor=24` only when the anchor runs. In the unanchored branch as planned (T_A1 = 111
+  minutes) K_base = 32 needed c_A0a of at most about 0.01012 GPU-h, a mean A0a slot of at
+  most about 728 s at V = 20 and L_A0a = 6 minutes; at the realized T_A1 = 110 (after O1's
+  retry) the limits are about 0.01002 GPU-h and 721 s. The card's own high slot (743 s)
+  gives 24 at either value, so going back to review after A0a was a live outcome (A0a's
+  mean slot was 219.9 s; the table below). At V = 16 the card's high price
   alone gives 24 unless L_A0a is under 4 minutes, so at N* = 16 the draft goes back to
   review before A0a runs (G0 item 1).
 - **Truncation gate.** If more than 20% of A0a's steps under either harness
@@ -871,6 +937,12 @@ The rules, applied by `plan.freeze_constants` to the A0 records only:
   statistic: the ceil(0.95 n)-th smallest `timing_s.total` of every
   `DesktopEnv.step` (A0a: every executed action of its completed episodes,
   harnesses pooled; the action path: the accepted attempt's `step_p95_n1_s`).
+  The two are not like for like, and the difference makes the gate looser:
+  `step_p95_n1_s` pools both A1 settings, and in the screenshot-plus-accessibility
+  setting each step's `timing_s.total` includes the accessibility fetch, while A0a reads
+  screenshots only (no pause after execution). The realized gate holds under any of the
+  readings: A0a's p95 of 1.265 s is below the reference's own N = 1 p50 (1.8228 s), below
+  2 x 2.6944 = 5.389 s and below 2 x 3.2481 = 6.496 s (A1 at N* = 32).
 - Both gates are computed by `plan.a0a_gates` over the same V episodes as
   c_A0a, inside `plan.a0a_measurements` (`python -m harness.q2_stage1.plan
   a0a-measurements` on the host, or the plan renderer's freeze mode), and
@@ -905,13 +977,13 @@ that binds, VM setup and the matched settle included).
 | Job | Central VM-h | High VM-h | Reservation bound VM-h |
 |---|---:|---:|---:|
 | A1, K = 24, V = 20 | 69 | 87 | 135 (4 jobs x 101 min x 20 VMs) |
-| A1, K = 32, V = 20 (anchor unavailable) | 92 | 115 | 161 (4 x 121 min x 20) |
+| A1, K = 32, V = 20 (anchor unavailable) | 92 | 115 | 160 (4 x 120 min x 20, at the realized T_A1 = 110; 161 at the planned 111) |
 | A0a (V = 20) | 3.5 | 4.1 | 12 |
 | A0b (V = 4) | 0.8 | 0.9 | 2.4 |
 | ANC (V = 32) | | | 33 (62 min x 32) |
 
-- Wall-clock: at most T_A1 = 111 minutes of GPU time per A1 job (about 1.7 h at
-  the card's high price with K = 32), so at most about 3.7 h per session with the
+- Wall-clock: at most T_A1 = 110 minutes of GPU time per A1 job (the realized cap; about
+  1.7 h at the card's high price with K = 32), so at most about 3.7 h per session with the
   two sizes in turn, plus the 12-hour gap.
 - The action-path suite that gates S1a needs 98.4 VM-h.
 
@@ -957,8 +1029,11 @@ An episode is **lost to infrastructure** if any of these occurs:
 - an observation is not delivered (D53 (iii); `guest_observation`): a screenshot of the
   agent's, or a checker's read of guest state during `DesktopEnv.evaluate()` or the capture
   sweep (one controller call with its retries; a postconfig step is an action, not an
-  observation), got no HTTP status below 500 on any attempt. One whose attempts all failed
-  in transport is a `transport` loss. The pinned controller returns `None` after a 5xx as
+  observation), got no HTTP status below 500 on any attempt. If any of its attempts failed
+  in transport (no HTTP reply), the loss is typed `transport` instead
+  (`driver.observation_loss_kind`; for the checker's reads, the transport rule below); the
+  type is a label only, and either way the episode is lost, re-queued once and counted
+  toward DR0. The pinned controller returns `None` after a 5xx as
   after any other non-200 reply, and the metric then scores 0, so a guest server that fails
   a read for a whole boot without restarting (action-path v2 A7 session 193) would otherwise
   be scored as the agent's outcome. A 404 (a file the agent never wrote) is the agent's
@@ -1040,8 +1115,26 @@ Per episode:
 - guest-server restart counts;
 - every observation, the agent's screenshots and the checker's reads apart: how many, how
   many were delivered only on a retry, how many took longer than 30 s, how many were not
-  delivered (`observations`; D53 (iii) asks that undelivered and very slow observations be
-  counted per episode, not only restarts);
+  delivered (`observations`). D53 (iii) reads: "Any Stage-1 registration counts
+  undelivered, and very slow, observations per episode as infrastructure, not only
+  restarts". S1a meets it as follows, a reading the program's sign-off of item 13 (section
+  18) must state:
+  - an undelivered observation is an infrastructure loss (section 7.2);
+  - every attempt is bounded: the agent's screenshot by the certified executor's 10 s per
+    attempt (three attempts); a checker read by the pinned code's own timeout where it
+    sets one (120 s for the controller's `execute_python_command`) and otherwise by 150 s
+    (`osworld_live.GUEST_REQUEST_TIMEOUT_S`). The pool and dev tasks' checkers read the
+    guest only through `/file` (no pinned timeout) and `/execute` (the controller's
+    `execute_python_command`, and `get_vm_command_line` inside `vscode_config`, which sets
+    no timeout; checked on the pinned OSWorld tree on 2026-10-09). A checker
+    read with any attempt that fails in transport, a timeout included, makes the episode a
+    transport loss (section 7.2), so no attempt slower than 150 s is ever scored;
+  - an observation delivered after more than 30 s, or only on a retry, is counted per
+    episode as an infrastructure event and reported per cell beside the losses (section
+    15), and the episode is scored. A delivered observation carries the guest's state, so
+    its delay alone does not change what the agent saw or what the checker read. S1a
+    registers no delay above which a delivered observation voids the episode; doing so
+    would change the episode driver after A0 and so repeat A0a (section 6.2);
 - **uncertified action-path exposure:** the number of key, chord and hold
   actions, and of click or scroll modifiers, that name a keysym outside the 33
   `catalog.certified_keysyms` of action-path v2 section 4.5
@@ -1364,7 +1457,8 @@ the ladder drops 4B, and π_small = π_9B: DR2's bound, DR5's share and the
 reported π_small (handed to S1b) are then all π_9B's (`analysis.analyse_array`;
 the two-size mean is reported beside it as `pi_mean_4B_9B`). This is the dossier's criterion as a
 ladder decision. It replaces the question file's swap to 122B-A10B, which is
-not funded; that replacement is Kevin's to accept (section 18, item 17).
+not funded; that replacement is Kevin's to accept (section 18, item 17), and he accepted
+it on 2026-10-09 (D55 (i)).
 
 **DR2, harness pair (reported classification, for the realized sessions).**
 
@@ -1433,7 +1527,8 @@ Otherwise S1b is projected from realized costs x 1.2.
   0.72-0.86. NO-GO is the expected exit for a near-equivalent pair, and GO
   needs a share well above M.
 - DR5 replaces, for the scale question, the question file's "paired MDE about
-  7-8 pp" line. That replacement is Kevin's to accept (section 18, item 17).
+  7-8 pp" line. That replacement is Kevin's to accept (section 18, item 17), and he
+  accepted it on 2026-10-09 (D55 (i)).
 
 ## 12. Predictions (each with its falsifier; read on the primary set, for the realized sessions)
 
@@ -1538,9 +1633,10 @@ TPOT against V up to 40, the front-end fix). The proposal gives the details.
 
 ## 18. Design decisions for sign-off
 
-The program may sign off items 1-16 and 19-26; items 17 and 18 are Kevin's
+The program may sign off items 1-16 and 19-27; items 17 and 18 are Kevin's
 alone, because they change the question file's kill criteria or D47's stated
-floor.
+floor. Kevin also rules on G0 item 5's offline-setup decisions, which item 27's
+rules produce (the second Kevin slot below).
 
 1. Rescope Stage 1 to S1a, at most 8 GPU-h by caps (at most 7.967), and a
    gated S1b (D47).
@@ -1566,7 +1662,13 @@ floor.
 12. Continuous dispatch; the cost-based fill rule in session-1 jobs, its
     blocks in the secondary set only.
 13. Infrastructure-loss definition, agent-caused events kept apart, and a
-    single replacement (section 7.2).
+    single replacement (section 7.2), including S1a's reading of D53 (iii) (section 7.3):
+    an undelivered observation is a loss, every attempt is bounded (a checker read at
+    most 150 s, then a transport loss), and an observation delivered slowly or on a retry is
+    counted per episode as infrastructure and reported per cell beside the losses (section
+    15) while the episode is scored. The program's sign-off decision states whether this
+    meets D53 (iii)'s "very slow" clause; if it does not, the draft goes back to review
+    (registering a delay limit changes the driver after A0, so A0a is repeated).
 14. Raw verdicts primary; z-order-corrected verdicts secondary; the flagged
     tasks of section 8.
 15. X as the mean squared per-task harness effect with the sign-flip test
@@ -1576,11 +1678,12 @@ floor.
     realized sessions.
 17. **(Kevin)** DR1 as a ladder decision in place of the 122B-A10B swap, and
     DR5 in place of the "paired MDE about 7-8 pp" line; the question file says
-    the kill criteria are unchanged until Kevin rules.
+    the kill criteria are unchanged until Kevin rules. Kevin ruled on 2026-10-09
+    (D55 (i)): accepted, with the unanchored read; the question file records it.
 18. **(Kevin)** D47 states "at least 32 confirm tasks". With the anchor
     running, the A0 rule gives 24 at the card's high price (section 6.1). The
-    proposed amendment, as D49 (i) states it: "a base of at least 24 confirm tasks
-    with the anchor running, and at least 32 without it". Without the amendment the
+    proposed amendment is D49 (i)'s: D47's "at least 32" "becomes at least 24 with the
+    anchor (32 without it)". Without the amendment the
     floor is 32 in both branches, and S1a can freeze only when the anchor is
     unavailable. (2026-10-08: G0 item 9.6 makes the anchor unavailable before any GPU
     job, so the floor is 32 whether or not this item is signed. If A0a's price
@@ -1606,15 +1709,19 @@ floor.
     5's second pass ran, and the definition of a failed task setup in section 7.2.
 
 **Sign-off slots.** Each is filled before the freeze (with the decision id or Kevin's
-ruling); an open one keeps the freeze guard refusing this file.
+ruling); an open one keeps the freeze guard refusing this file. The program's decision
+names, under item 13, whether S1a's reading of D53 (iii)'s "very slow" clause (section 7.3)
+is accepted.
 
 - Kevin: item 17 (DR1 and DR5 replace the question file's kill lines), and acceptance that
   S1a is read without the D11 runtime check (the anchor is UNAVAILABLE by G0 item 9.6, so
   A1 runs with every output labelled "not externally anchored" and nothing replaces the
-  question file's Holo3 kill criterion): TBD
+  question file's Holo3 kill criterion): accepted, including the unanchored read (Kevin's
+  ruling of 2026-10-09, D55 (i))
 - Kevin: G0 item 5's decisions on the offline setup: `26150609` (option (b) of the
   audit), `982d12a5` and `e2b5e914` leave the pool by the offline-setup exclusion, and
-  `53ad5833` and `d38192b0` stay (section 5.4; the base re-drawn on 113 tasks): TBD
+  `53ad5833` and `d38192b0` stay (section 5.4; the base re-drawn on 113 tasks): accepted
+  (Kevin's ruling of 2026-10-09, D55 (ii))
 - Program sign-off of items 1-16 and 19-27 (decision id): TBD
 
 ## 19. Disclosures and known limitations
@@ -1636,8 +1743,9 @@ ruling); an open one keeps the freeze guard refusing this file.
   A0a measures the real cost on 9B only and in one wave.
 - **Base size.** When the anchor runs, the A0 rule gives 24 base tasks at the
   card's high price; 32 needs the anchor's minutes. Without the anchor the floor is
-  32, and a mean A0a slot above about 728 s (the card's high slot is 743 s) sends the
-  draft back to review rather than to a smaller base.
+  32, and a mean A0a slot above about 728 s at the planned T_A1 = 111 (about 721 s at the
+  realized 110; the card's high slot is 743 s) sends the draft back to review rather than
+  to a smaller base. A0a's mean slot was 219.9 s, so K_base is 32 (section 6.2).
 - **Prompt date pinned.** Both upstream agents put today's date in the system
   prompt; S1a pins it to Thursday, October 08, 2026 for every A0a and A1
   episode, so the session excess (P1) is not confounded with a calendar change
@@ -1675,7 +1783,10 @@ ruling); an open one keeps the freeze guard refusing this file.
   its observations and its checker's reads go through the same guest server. An observation
   the server does not deliver is an infrastructure loss (section 7.2), re-queued once and
   counted toward DR0, so a persistent fault costs episodes, not outcomes; an observation
-  delivered on retry or slowly is scored as delivered and counted (section 7.3). A 5xx reply
+  delivered on retry or slowly (an attempt is bounded at 10 s for a screenshot and at 150 s
+  for a checker read sent without a timeout of its own) is scored as delivered and counted
+  per episode as infrastructure, which is S1a's reading of D53 (iii)'s "very slow" clause
+  and needs the program's sign-off (sections 7.3, 18 item 13). A 5xx reply
   that the agent's state causes (a directory where the checker expects a file) would also be
   classified as a loss; none is known in these tasks. A step's `/execute` answered slowly is
   recorded as before (`slow_execute`), not a loss.
@@ -1707,7 +1818,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/plan.py` | `1f9c77f758ed590d99597488219cc49fae0e0f3c53567d628d14382346fc2187` |
 | `harness/q2_stage1/analysis.py` | `338139667ad50475bf51c3962d4af3dac6d89e977ec399efa1f91cd7601599c4` |
 | `scripts/render_q2_stage1_manifest.py` | `50344cba078d2d8129b26b43d313c0c29a2ebcb64bf0657faba9b6d63f6ee632` |
-| `scripts/render_q2_stage1_plan.py` | `44825c58dfed70f60f37d7afb55de5c59de486c4d000000f05c1261adf902341` |
+| `scripts/render_q2_stage1_plan.py` | `14d17871718eee1e1b14fc6cce530ef9334256576db49942abe77558afc05e3b` |
 | `scripts/submit_docker_research_job.py` | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
 | `harness/q2/vm/manifest.py` | `f238f12bdb8470919c8892eff46fe8b721e1e0c83ad08a60c0293ed8da3b9e2e` |
 | `program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/cost_s1a.py` | `704cae408ff536ccb0c3f1415adad8f54037a4fcf3fc9d23684e40c71f7e4e35` |
@@ -1720,7 +1831,7 @@ row (the test fails otherwise), and the freeze pins them.
 | `harness/q2_stage1/bridge.py` | `7083f728511477e8f32ed90a026290e6982ae04c9d5f8f61274112f5724d0550` |
 | `harness/q2_stage1/fake_engine.py` | `02e0b66e7b67b3647dc853c4069de21ce3e6234ed01ec4e3842afbd42cd89a00` |
 | `harness/q2_stage1/osworld_live.py` | `38b017c04f67b59e08bc1d764702a2ff91c80ebde8054c8e80bc277746334313` |
-| `harness/q2_stage1/lane.py` | `08847e43f2f2e81e0a77d6cfd3fe234aaefecf6fb67e8255de791529a8f5bf09` |
+| `harness/q2_stage1/lane.py` | `83a7dd4630786b14f4c25d734d066ae8f56ae4fe753e6594f9352b094ecf6794` |
 | `harness/q2_stage1/rescore.py` | `d240db03e969c8aa5bb97403c5005cd4c9e96016599a78f70e97850415893737` |
 | `harness/q2_stage1/zinv.py` | `64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655` |
 | `harness/q2_stage1/anchor.py` | `6c0a31cf1abb261a3522573847ee6dc1798925143b286cf9c02a3550f1c93b7a` |
@@ -1971,10 +2082,70 @@ the fresh pre-freeze audit.
 | D53 (iii), hangs | The pinned controller sends `/file`, `/accessibility`, `/terminal` and `/setup/execute` with no timeout, so a hung guest server held the slot until the lane's 3,600 s episode timeout (`runner_crash`; in A0a, a cut slot and so back to review). Fixed: a guest request without a timeout gets 150 s, above the guest server's own 120 s command limit; it then ends in a transport loss | 7.2; `osworld_live.py` |
 | D53 (iii) on the pinned code | Job 1036 (2026-10-09; CPU only, metric image, `--network none`, no VM, dev tasks only, from the export of `bb67aa0`) ran the pinned `DesktopEnv.evaluate()` as the old runner did and `LiveTask.evaluate()` as the new one does, for all 32 dev tasks, against stand-in guests answering like the pinned server when a handler fails: with `/file` answering HTTP 500, the old rule scored 32 of 32 runs (0, or a metric exception scored 0) and the new one records 32 of 32 as `guest_observation`; with `/file` and `/execute` answering 500, 32 and 32; with a healthy server on which no file exists (404), both score 32 of 32 and the new rule records no loss. Job 1034 was cancelled (the pinned `get_file`'s 5 s pause was not skipped, so it would have outrun its limit) and job 1035's stand-in answered the platform query with a path, so two tasks raised before any file read; both are kept | `program/evidence/2026-10-09/q2-stage1-prefreeze/observation-check/` |
 | Found while testing D53 (iii) | `LiveTask.write_capture` made the capture directory only when it copied a file, so an episode whose checker read no file (the agent never wrote it) and whose task cache was empty crashed the runner after scoring: a `runner_crash` loss where the registration scores y = 0. Fixed (the directory is made first), with the test that found it. None of A0a's five dev tasks could reach it (each setup downloads into the task cache) | `osworld_live.py` |
-
 | O1 | Run from the draft commit `bb67aa02fa9bce8a2b10a4822a23a2f81fae4d40` (the code fix above included; tree `905a5a51214eff228a5c71070ab421d7573ba3d1`), as job 464 ran: `build_vllm_overlay_on_h100.sh` under `sbatch` on one H100 (8 CPUs, the 3 minute cap). Job 1032 failed in 1 s: the source receipt was made with `--ref` and the commit id, and the extractor admits only `selected_ref: HEAD` (an operator error; nothing was built). Its 3 minutes count (D22) and enter the remainder rule as an O1 retry, so T_A1 is 110, not 111. The retry, job 1033, built overlay `sha256:2c5f9b20f6709dd6fdd4743dee50dab3aec3ef753a9b7f11d9e5ce6cd8e4df62` in 47 s from source archive `83d0d5032105cb5cac156eb635fd7918917d9f9ddf006d6b8cc5f3c8862cfcbb` (5,803 files; builder `aa43283e...` and extractor `9b4d21a8...`, job 464's) | 6.1, 6.2 |
 | A0a | Run from the read-only export of `bb67aa0`: the VM manifest rendered by `render_q2_stage1_manifest.py vm --purpose a0a --n-star 32` and validated by the lane, submitted through `lane submit` (90 CPUs, 126 GB, 35 minutes, no GRES), job 1037; the GPU half rendered from it (9B, 25 minutes, overlay of job 1033, 32 CPUs, one H100, `--dependency=after:1037`), dry-run and test-only (job 1038), job 1039. The queue was empty before each submission; 25 queue samples and the lane's 4 host snapshots show no foreign job while A0a ran, and job ids 1032-1039 are all this operator's. The engine was ready 96.6 s after the bridge started; the lane dispatched all 20 slots in one wave; 20 of 20 scored; no infrastructure loss, `IRError`, metric exception, restart, truncation at the cap, postconfig failure or undelivered, retried or slow observation (275 screenshots, 40 checker reads). Both gates hold and K_base is 32: nothing here sends the draft back to review | 6.2; `program/evidence/2026-10-09/q2-stage1-prefreeze/` |
 
+### Pre-freeze audit after O1 and A0a (2026-10-09)
+
+Two fresh auditors read the draft at `82ff505` (D53): one recomputed every filled value
+from the raw host records of jobs 1037 and 1039 and O1, re-rendered the plan byte for byte
+and checked G0 item 1 against ledger rows 13-15 and the acceptance evidence; the other read
+the draft as a frozen registration (freeze guard on a scratch ledger, internal consistency,
+the sign-off items, the session-193 disclosure and the D53 (iii) rule in code and tests).
+Both reproduced the verdicts and constants. One auditor found it ready to freeze except for
+the sign-offs; the other returned two blocking items. Both are fixed below, and so is every
+non-blocking item that asked for a change; none is rejected. No GPU job ran and no A0 job
+is repeated. Two code-of-record files changed, neither in what A0a ran or measured (the
+next subsection lists every code change after A0a); section 20 is refreshed. Kevin's two
+sign-off slots are filled from his rulings (D55); the program's stays open.
+
+| Item | Finding (short) | Disposition | Where |
+|---|---|---|---|
+| F-B1 | G0 item 10's slot did not say what to write, and `lane.load_frozen_plan` accepts one form only (the plan file's `plan_sha256` in backticks); the file's SHA-256 printed beside it, or a value without backticks, would make the lane refuse every A1 job under the frozen id | Fixed: G0 item 10 names the plan file (`plan-a0a.json`, committed at the path A1 manifests give), states that the slot takes its `plan_sha256` field in backticks on one unbroken run, gives the value and says the file's SHA-256 is not it. A new test (`test_frozen_plan_slot_takes_the_plan_sha256_the_lane_reads`) fills the slot on a scratch copy, freezes it into a copy of the ledger (row 16, chain intact), renders A1-9B-S1 from the plan and has the lane accept it, and checks that the file's SHA-256 and an unquoted value are refused, and that the lane refuses the frozen copy once it is edited; after the freeze it requires the slot to equal the named file's `plan_sha256`. G0 item 10 now states exactly what the freeze writes: the placeholder, and nothing else on its line, becomes the plan file's `plan_sha256` between backticks. The same was run by hand with the CLIs on a scratch export (freeze, `check-chain` 16 rows, `verify`, `render_q2_stage1_manifest.py vm --purpose a1`, `lane validate`: 128 base slots, 11 fill blocks, T_A1 110, 120 min, 90 CPUs; then, with one line appended to the frozen copy, `lane validate` and `verify` both refuse), repeated after the lane change below; the real ledger is unchanged | 3.1 item 10, 22; `tests/test_q2_stage1_prereg.py` |
+| F-B2 | D53 (iii) says that Stage-1 registrations count "undelivered, and very slow, observations per episode as infrastructure"; the draft scores an observation delivered after 30-150 s and paraphrased D53 without "as infrastructure" | Fixed in the text, no code change: section 7.3 quotes D53 (iii) verbatim and states S1a's reading (undelivered: a loss; every attempt bounded, a screenshot at 10 s and a checker read sent without a timeout at 150 s, then a transport loss; delivered slowly or on a retry: counted per episode as infrastructure, reported per cell beside the losses, episode scored, because a delivered observation carries the guest's state). Item 13 and the sign-off slots make the program's decision state whether this meets the "very slow" clause; if not, the draft goes back to review, since a registered delay limit changes the driver after A0 and repeats A0a | 7.2, 7.3, 18, 19 |
+| Evidence 1 | Every value reproduced from the raw host records; plan byte-identical; G0 item 1, dev-only contact and digests confirmed | No change needed | |
+| Evidence 2; readiness 3 | Numbers that depend on T_A1 still read 111 (3.1 item 9's outcome; 6.2's floor; 6.3's reservation bound 161 and wall-clock; 19's base-size limitation; `state.json`'s consequence) | Fixed: 6.3 reads 160 (4 x 120 min x 20) and 110 minutes; 3.1 item 9, 6.2 and 19 give the planned and realized values (at T_A1 = 110 the floor needs c_A0a of about 0.01002 GPU-h, a mean slot of about 721 s); `state.json` follows | 3.1 item 9, 6.2, 6.3, 19 |
+| Evidence 3 | The branch was three commits behind `main`; with main's reviewer job 1031 (0.0564 GPU-h) the program total is 4.9088, not 4.8524 | Fixed: `main` merged into the branch (D54 is the newest decision); `gpu_hours_spent_this_program` is 4.9088, the ledger's sum, and the S1a log line that read 4.852 is corrected. Job 1031 ran before 1032 with the queue empty at 17:59:35 UTC, so it did not overlap O1 or A0a. `main` (D55) was merged again before the sign-offs below | `program/state.json`, `program/log.md` |
+| Evidence 4 | Freeze-step hazard on G0 item 10's digest | Fixed with F-B1 | 3.1 item 10 |
+| Evidence 5 | "No constant is typed" (3.2 item 1 and the renderer's docstring), while N*, the step-p95 reference and the pre-freeze job list are typed on the command line | Fixed: both now say no A0a measurement is typed and name the three typed inputs and the sources each was checked against; the plan records N* and the reference, and its caps show the job list | 3.2; `render_q2_stage1_plan.py` docstring |
+| Evidence 6 | The concurrency gate's reference pools both A1 settings (the accessibility fetch inside `timing_s.total`) while A0a reads screenshots only, so the gate is loose | Disclosed in section 6.2 with the readings under which it holds: A0a's 1.265 s is below the reference's N = 1 p50 (1.8228 s), below 5.389 s and below 2 x 3.2481 s | 6.2 |
+| Evidence 7 | `a0a/gpu-test-only.txt` is one newline | Disclosed in the evidence README (`sbatch --test-only` reports on stderr, not saved; the job-id sequence shows it passed); later runs save the stderr | evidence README |
+| Evidence 8 | Lane snapshots show one running container that is not the job's | Explained in the evidence README: the host's local image registry (checked on the host: the only running container, up 8 weeks); the second during the run is GPU job 1039's engine | evidence README |
+| Evidence 9 | `vm-submit.json` and `preflight.txt` name manifest `051cdd6e...`, the draft and plan `057b6353...` | The evidence README names both: the compact canonical form `lane submit` stores and submits, and the indented copy in the run directory; `lane.canonical` of the latter gives the former | evidence README |
+| Readiness 1 | Section 18's lead-in said items 19-26, the slot 19-27 | Fixed: 19-27 | 18 |
+| Readiness 2 | Item 18 put a paraphrase of D49 (i) in quotation marks | Fixed: D49 (i)'s own words | 18 |
+| Readiness 4 | Section 7.2 said an observation whose attempts all failed in transport is a transport loss; the code types it `transport` if any attempt failed in transport | Fixed: the text follows `driver.observation_loss_kind` and the checker's transport rule; the type is a label, both are losses | 7.2 |
+| Readiness 5 | Section 2 item 6 listed the D11 runtime check without its UNAVAILABLE status | Fixed: points to G0 item 9.6, section 5.7 and the "not externally anchored" label | 2 |
+| Readiness 6 | G0 item 1 called `ladder-n-star.json` equal to `a1-n1-reference.json`; only the value is | Fixed: "whose `step_p95_n1_s` equals", with the second file's SHA-256 | 3.1 item 1 |
+| Readiness 7 | O2's source receipt must use `selected_ref: HEAD` (job 1032's error), and A1's GPU halves must use the O2 overlay of the exact commit their export runs from | Fixed: section 5.5 "Overlay for the A1 GPU halves", with a pointer from 6.1's retry rule | 5.5, 6.1 |
+| Readiness 8 | `lane.validate_manifest` admits A1 once the ledger has a row and does not compare this file with the row's SHA-256 | Fixed in the lane: `lane.frozen_registration` makes `preregister.py verify`'s and `check-chain`'s checks (the chain holds, the row names this file, the file's SHA-256 equals the row's), and `validate_manifest` requires it for every post-freeze purpose (A1, ANC) at validate, submit and job start; the GPU half is rendered only from a validated VM manifest. O2 has no lane manifest, so before O2 the operator runs `preregister.py verify` and `check-chain` and keeps the output. Test: `test_post_freeze_jobs_need_the_registration_the_ledger_froze` (an edited registration refuses A1, ANC and the GPU half's rendering; a ledger row moved to the edited digest breaks the chain; a row naming only the id is refused) | 5.5; `lane.py`; `tests/test_q2_stage1_manifests.py` |
+| Readiness 9 | `state.json`'s pending decision for Kevin on S1a predates D53, and `HANDOFF.md` was not refreshed | Fixed in `state.json`: Kevin has since ruled on both of his slots (D55), so the S1a entry leaves his pending list, and the S1a status and next action describe the state after A0a, this audit and D55. `HANDOFF.md` is the program's, kept on `main`, and is not edited on this branch | `program/state.json` |
+| Readiness 10-14 | Freeze guard, action-path verdicts, A0a constants, code and tests, and the D53 (iii) scope verified | No change needed | |
+| Found while fixing | The last two rows of the table above (O1 and A0a) were cut off from it by a blank line, so they would not render as table rows | Fixed: the blank line is removed | 22 |
+| Sign-offs (D55) | Kevin's two slots in section 18 | Filled from Kevin's rulings of 2026-10-09: item 17 accepted, including the unanchored read (D55 (i)); G0 item 5's offline-setup decisions accepted (D55 (ii)). The program's slot (items 1-16 and 19-27) stays open: its decision also states whether section 7.3's reading of D53 (iii) is accepted. Section 18's lead-in and the program slot both read 19-27 | 18; header; 3.1 item 5; 11 |
+
+### Code changes after A0a (2026-10-09)
+
+A0a ran from the export of `bb67aa0`. Since then, through the merges of `main`, no file
+under `harness/`, `scripts/`, `infra/` or `experiments/` changed except these two, and
+neither changes what A0a ran or measured:
+
+- `scripts/render_q2_stage1_plan.py`: the module docstring only (Evidence 5 above). Its
+  freeze mode re-renders `plan-a0a.json` byte for byte from the copied host records
+  (`a5f0aadc...`); its draft mode still gives `4679ac95...`.
+- `harness/q2_stage1/lane.py`: `frozen_registration` (Readiness 8) and its call in
+  `validate_manifest` for the post-freeze purposes (A1, ANC), plus one docstring sentence.
+  A0a is a pre-freeze purpose and takes no new branch: the VM manifest job 1037 ran (its
+  canonical form `051cdd6e...`) still validates unchanged against this tree, and the
+  episode driver, agents, engine, bridge, `osworld_live`, `plan`, `records` and `analysis`
+  are the files A0a ran.
+
+The tests changed with them (`tests/test_q2_stage1_manifests.py`: the frozen-tree fixture
+now freezes its registration with `preregister.freeze`, and the new test above;
+`tests/test_q2_stage1_prereg.py`: the frozen-plan slot test and the filled Kevin slots), as
+did the D12 device stub of `83f4127` (`tests/test_q2_stage1_driver.py`; no code change).
+
 Open slots until the freeze (each carries the placeholder the guard refuses): the status
-line; G0 item 10's frozen plan digest; section 18's three sign-offs.
+line; G0 item 10's frozen plan digest (the frozen plan file's `plan_sha256` in backticks,
+as G0 item 10 states); section 18's program sign-off (Kevin's two are filled, D55).
 

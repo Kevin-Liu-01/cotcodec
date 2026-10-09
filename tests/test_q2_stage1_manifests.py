@@ -23,6 +23,7 @@ from harness.q2_stage1.records import validate
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
+import preregister  # noqa: E402
 import render_q2_stage1_manifest as builder  # noqa: E402
 import render_q2_stage1_plan as renderer  # noqa: E402
 
@@ -135,11 +136,19 @@ def frozen_tree(tmp_path_factory) -> tuple[Path, dict[str, Any]]:
     plan = P.render_plan(**inputs, constants=constants)
     (root / "plan").mkdir()
     (root / "plan/plan-frozen.json").write_text(json.dumps(plan, indent=1, sort_keys=True))
-    ledger = root / lane.LEDGER
-    ledger.parent.mkdir(parents=True, exist_ok=True)
-    ledger.write_text(json.dumps({"experiment_id": lane.EXPERIMENT_ID}) + "\n")
-    (root / lane.REGISTRATION).write_text(f"Frozen plan SHA-256: `{plan['plan_sha256']}`.\n")
+    freeze(root, f"Frozen plan SHA-256: `{plan['plan_sha256']}`.\n")
     return root, plan
+
+
+def freeze(root: Path, registration: str) -> None:
+    """Write the registration and freeze it into a fresh ledger, as ``scripts/preregister.py
+    freeze`` does."""
+    path = root / lane.REGISTRATION
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(registration, encoding="utf-8")
+    ledger = root / lane.LEDGER
+    ledger.unlink(missing_ok=True)
+    preregister.freeze(path, lane.EXPERIMENT_ID, ledger=ledger, root=root)
 
 
 def a1(tree: tuple[Path, dict[str, Any]], size: str, session: str, prior=()) -> dict:
@@ -223,16 +232,65 @@ def test_a1_needs_the_registered_frozen_plan(frozen_tree, tmp_path):
     root, plan = frozen_tree
     other = tmp_path / "src"
     shutil.copytree(root, other)
-    (other / lane.REGISTRATION).write_text("Frozen plan SHA-256: TBD.\n")
+    freeze(other, "Frozen plan SHA-256: (not stated).\n")
     with pytest.raises(lane.LaneError, match="does not name this plan"):
         lane.validate_manifest(a1(frozen_tree, "9B", "S1"), other)
     draft = P.render_plan(**renderer.load_inputs(ROOT))
     (other / "plan/draft.json").write_text(json.dumps(draft))
-    (other / lane.REGISTRATION).write_text(f"Frozen plan SHA-256: `{draft['plan_sha256']}`.\n")
+    freeze(other, f"Frozen plan SHA-256: `{draft['plan_sha256']}`.\n")
     m = a1(frozen_tree, "9B", "S1")
     m["plan"] = {"path": "plan/draft.json", "sha256": draft["plan_sha256"]}
     with pytest.raises(lane.LaneError, match="frozen plan"):
         lane.validate_manifest(m, other)
+
+
+def test_post_freeze_jobs_need_the_registration_the_ledger_froze(frozen_tree, tmp_path):
+    """Section 5.5: A1 and ANC are admitted only while the source tree's registration has
+    its ledger row's SHA-256 and the chain holds (what ``preregister.py verify`` and
+    ``check-chain`` check), not merely while a row exists; the GPU half is rendered only from
+    a VM manifest the lane validates, so it is refused too."""
+    root, _ = frozen_tree
+    row = lane.frozen_registration(root)
+    assert row["path"] == lane.REGISTRATION
+    assert row["sha256"] == lane.sha256_file(root / lane.REGISTRATION)
+    m = a1(frozen_tree, "9B", "S1")
+    lane.validate_manifest(m, root)
+    anc = copy.deepcopy(m)
+    anc["purpose"] = "anc"
+    anc.pop("fill")
+    with pytest.raises(lane.LaneError, match="anchor is UNAVAILABLE"):
+        lane.validate_manifest(anc, root)
+
+    edited = tmp_path / "edited"
+    shutil.copytree(root, edited)
+    reg = edited / lane.REGISTRATION
+    reg.write_text(reg.read_text(encoding="utf-8") + "A rule added after the freeze.\n")
+    for manifest in (m, anc):
+        with pytest.raises(lane.LaneError, match="changed after the freeze"):
+            lane.validate_manifest(manifest, edited)
+    (tmp_path / "a1.json").write_text(json.dumps(m))
+    (tmp_path / "values.json").write_text("{}")
+    with pytest.raises(lane.LaneError, match="changed after the freeze"):
+        builder.main(["gpu", "--vm-manifest", str(tmp_path / "a1.json"), "--source-dir",
+                      str(edited), "--vm-job-id", "5", "--values", str(tmp_path / "values.json"),
+                      "--out", str(tmp_path / "gpu.yaml")])  # fmt: skip
+    assert not (tmp_path / "gpu.yaml").exists()
+
+    # A ledger row moved to the edited file's digest breaks the chain.
+    ledger = edited / lane.LEDGER
+    rows = [json.loads(line) for line in ledger.read_text().splitlines() if line.strip()]
+    rows[-1]["sha256"] = lane.sha256_file(reg)
+    ledger.write_text("".join(json.dumps(r, sort_keys=True) + "\n" for r in rows))
+    with pytest.raises(lane.LaneError, match="hash chain does not hold"):
+        lane.validate_manifest(m, edited)
+
+    # A row that names only the id (no digest) is not a freeze.
+    bare = tmp_path / "bare"
+    shutil.copytree(root, bare)
+    (bare / lane.LEDGER).write_text(json.dumps({"experiment_id": lane.EXPERIMENT_ID}) + "\n")
+    assert lane.frozen(bare)
+    with pytest.raises(lane.LaneError, match="hash chain does not hold"):
+        lane.validate_manifest(m, bare)
 
 
 def test_a1_jobs_run_in_order_and_stop_when_dr0_fired(frozen_tree, tmp_path, monkeypatch):

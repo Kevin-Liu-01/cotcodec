@@ -6,14 +6,15 @@ import ast
 import hashlib
 import json
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
 
+from harness.q2_stage1 import lane, rules
 from harness.q2_stage1 import plan as P
-from harness.q2_stage1 import rules
 
 ROOT = Path(__file__).resolve().parents[1]
 PREREG = ROOT / "program/preregistrations/q2-stage1-rescoped-v1.md"
@@ -22,6 +23,7 @@ SIM = ROOT / "program/proposals/evidence/2026-10-08-q2-stage1-rescoped/analysis/
 ROW = re.compile(r"^\| `([^`]+)` \| (`([0-9a-f]{64})`|TBD) \|$")
 sys.path.insert(0, str(ROOT / "scripts"))
 import preregister  # noqa: E402
+import render_q2_stage1_manifest as builder  # noqa: E402
 
 
 def _text() -> str:
@@ -72,14 +74,113 @@ def test_only_the_open_slots_keep_the_draft_from_freezing(tmp_path):
     assert row["experiment_id"] == P.EXPERIMENT_ID
 
 
-def test_sign_offs_are_open_slots():
-    """Kevin's rulings and the program's sign-off are slots the freeze guard checks."""
+def test_sign_off_slots():
+    """Kevin's rulings and the program's sign-off are slots the freeze guard checks. Kevin's
+    two are filled from his rulings (D55); the program's stays open until its decision, and
+    the lead-in names the same items as its slot."""
     section = _text().split("## 18. Design decisions for sign-off", 1)[1].split("\n## ", 1)[0]
     joined = " ".join(section.split())
-    assert "Kevin: item 17" in joined and "without the D11 runtime check" in joined
-    assert "Kevin: G0 item 5's decisions" in joined and "`26150609`" in joined
-    assert "Program sign-off of items 1-16 and 19-27 (decision id): TBD" in joined
-    assert joined.count(": TBD") == 3
+    assert "The program may sign off items 1-16 and 19-27;" in joined
+    kevin_17 = joined.split("- Kevin: item 17", 1)[1].split("- Kevin: G0 item 5", 1)[0]
+    assert "without the D11 runtime check" in kevin_17
+    assert kevin_17.rstrip().endswith(
+        ": accepted, including the unanchored read (Kevin's ruling of 2026-10-09, D55 (i))"
+    )
+    kevin_g0 = joined.split("- Kevin: G0 item 5's decisions", 1)[1].split("- Program", 1)[0]
+    assert "`26150609`" in kevin_g0
+    assert kevin_g0.rstrip().endswith(": accepted (Kevin's ruling of 2026-10-09, D55 (ii))")
+    program = "- Program sign-off of items 1-16 and 19-27 (decision id): "
+    assert program in joined
+    if not _frozen():
+        assert program + "TBD" in joined and joined.count(": TBD") == 1
+
+
+# G0 item 10's slot, which ``lane.load_frozen_plan`` reads: the frozen plan file's
+# ``plan_sha256`` field in backticks, on one unbroken run of text.
+FROZEN_PLAN_SLOT = re.compile(r"Frozen plan SHA-256: (TBD|`([0-9a-f]{64})`)\.")
+PLAN_NAMED = re.compile(r"--purpose a1 --plan (\S+\.json)`")
+RUNS = "/home/kevin/cotcodec-runs/stage0/q2-stage1"
+HOST = {
+    "run_root": f"{RUNS}/runs",
+    "vm": {**lane.VM_PINS, "guest_ip": "20.20.20.21",
+           "qcow2": {"host_path": f"{RUNS}/../q2-action-path/vm/Ubuntu.qcow2",
+                     "sha256": lane.QCOW2_SHA256, "size_bytes": lane.QCOW2_BYTES}},
+    "osworld": {"host_dir": f"{RUNS}/inputs/OSWorld", "commit": lane.OSWORLD_COMMIT},
+    "file_cache": {"host_dir": f"{RUNS}/inputs/files"},
+    "engine": {"bridge_dir": f"{RUNS}/gpu/{{gpu_job_id}}/bridge",
+               "gpu_job_id_file": f"{RUNS}/pairs/a1/gpu_job_id"},
+}  # fmt: skip
+
+
+def _named_plan() -> tuple[str, dict]:
+    """The plan file G0 item 10 tells the A1 manifests to name, checked as the lane does."""
+    paths = set(PLAN_NAMED.findall(" ".join(_text().split())))
+    assert len(paths) == 1, f"G0 item 10 must name one plan file for A1, got {paths}"
+    rel = paths.pop()
+    plan = json.loads((ROOT / rel).read_text(encoding="utf-8"))
+    body = {k: v for k, v in plan.items() if k != "plan_sha256"}
+    assert plan["plan_sha256"] == P.digest(body), f"{rel} does not match its plan_sha256"
+    assert plan["status"] == "frozen-constants", f"{rel} is not a frozen-constants plan"
+    return rel, plan
+
+
+def _source_tree(root: Path, registration: str, plan_rel: str) -> Path:
+    """A source tree as an A1 export would hold it: the splits, the plan file, this
+    registration (as given) frozen into a copy of the real ledger."""
+    for rel in (lane.SPLITS, plan_rel):
+        (root / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(ROOT / rel, root / rel)
+    prereg = root / lane.REGISTRATION
+    prereg.parent.mkdir(parents=True, exist_ok=True)
+    prereg.write_text(registration, encoding="utf-8")
+    ledger = root / lane.LEDGER
+    shutil.copy(LEDGER, ledger)
+    before = preregister.read_ledger(ledger)
+    row = preregister.freeze(prereg, P.EXPERIMENT_ID, ledger=ledger, root=root)
+    rows = preregister.read_ledger(ledger)  # the chain holds with the new row
+    assert len(rows) == len(before) + 1 and row["previous_hash"] == before[-1]["hash"]
+    return root
+
+
+def _a1_9b_s1(root: Path, plan_rel: str) -> dict:
+    return builder.vm_manifest(purpose="a1", host=HOST, source_dir=root, plan_path=plan_rel,
+                               size="9B", session="S1")  # fmt: skip
+
+
+def test_frozen_plan_slot_takes_the_plan_sha256_the_lane_reads(tmp_path):
+    """G0 item 10's slot must hold the frozen plan file's ``plan_sha256`` in backticks:
+    ``lane.load_frozen_plan`` refuses every A1 manifest otherwise, and only a new experiment
+    id would repair a frozen file that states the file's SHA-256 or drops the backticks."""
+    text = _text()
+    slots = FROZEN_PLAN_SLOT.findall(text)
+    assert len(slots) == 1 and text.count("Frozen plan SHA-256:") == 1
+    rel, plan = _named_plan()
+    sha = plan["plan_sha256"]
+    filled = slots[0][1]
+    if filled:  # frozen: the slot is the named plan file's plan_sha256, and the lane takes it
+        assert filled == sha, "the slot must be the plan file's plan_sha256 field"
+        assert f"Frozen plan SHA-256: `{sha}`" in text
+        lane.validate_manifest(_a1_9b_s1(ROOT, rel), ROOT)
+        return
+    assert not _frozen()
+    assert f"`{sha}`" in text, "G0 item 10 states the value the slot takes"
+    slot = "Frozen plan SHA-256: TBD."
+    good = re.sub(r"\bTBD\b", "filled", text.replace(slot, f"Frozen plan SHA-256: `{sha}`."))
+    root = _source_tree(tmp_path / "good", good, rel)
+    m = _a1_9b_s1(root, rel)
+    assert m["plan"] == {"path": rel, "sha256": sha}
+    assert lane.validate_manifest(m, root)["slots"] == m["slots"]
+    edited = root / lane.REGISTRATION  # an edit after the freeze: the ledger row binds the file
+    edited.write_text(good + "\nAn edit after the freeze.\n", encoding="utf-8")
+    with pytest.raises(lane.LaneError, match="changed after the freeze"):
+        lane.validate_manifest(m, root)
+    file_sha = hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()
+    assert file_sha != sha
+    for name, wrong in (("file-digest", f"`{file_sha}`"), ("unquoted", sha)):
+        bad = re.sub(r"\bTBD\b", "filled", text.replace(slot, f"Frozen plan SHA-256: {wrong}."))
+        bad_root = _source_tree(tmp_path / name, bad, rel)
+        with pytest.raises(lane.LaneError, match="does not name this plan"):
+            lane.validate_manifest(_a1_9b_s1(bad_root, rel), bad_root)
 
 
 def test_code_of_record_matches_the_tree():
