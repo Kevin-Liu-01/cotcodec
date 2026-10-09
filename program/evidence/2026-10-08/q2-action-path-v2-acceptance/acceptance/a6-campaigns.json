@@ -1,0 +1,250 @@
+[
+  {
+    "accessibility_calls": 0,
+    "attempt": 1,
+    "batch": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+    },
+    "boot_s": {
+      "max": 17.905,
+      "n": 5,
+      "p50": 17.151,
+      "p95": 17.905
+    },
+    "c4_flags": {},
+    "campaign_id": "q2ap-v2-a6-canary-a1",
+    "concurrency": 1,
+    "counting_problems": [],
+    "criterion": "A6",
+    "earlier_attempts": [],
+    "failed_trials": [],
+    "finished_at": 1791505072.0915747,
+    "git_sha": "bf99a645c3782b2c59a75b6f463461b2515d0d97",
+    "infra_gates_pass": true,
+    "infra_types": {},
+    "job": "1015",
+    "jobs": [
+      "1015"
+    ],
+    "kind": "canary-acceptance",
+    "labelled_containers_left": [],
+    "layer": null,
+    "leaked_volumes": [],
+    "manifest_json_sha256": "6d604095d2808beb088b142ba630d64f3b5437f2c299ace85e95954b58622686",
+    "no_gpu_all": true,
+    "observation_retries": {},
+    "per_cell_pass": {
+      "chrome:ctrl_home_insert": {
+        "screenshot": "5/5"
+      },
+      "chrome:drag_select_word": {
+        "screenshot": "5/5"
+      },
+      "chrome:key_kp_enter": {
+        "screenshot": "5/5"
+      },
+      "chrome:select_all_copy_end_paste": {
+        "screenshot": "5/5"
+      },
+      "chrome:triple_click_line": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_combining": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_digits": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_emoji": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_long_200": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_multiline_tabs": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_plain": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_rtl": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_spaces": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_symbols_shifted": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_unicode_bmp": {
+        "screenshot": "5/5"
+      },
+      "chrome:type_with_correction": {
+        "screenshot": "5/5"
+      },
+      "terminal:key_kp_enter": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_combining": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_digits": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_emoji": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_long_200": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_multiline_tabs": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_plain": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_rtl": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_spaces": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_symbols_shifted": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_unicode_bmp": {
+        "screenshot": "5/5"
+      },
+      "terminal:type_with_correction": {
+        "screenshot": "5/5"
+      },
+      "vscode:ctrl_home_insert": {
+        "screenshot": "5/5"
+      },
+      "vscode:drag_select_word": {
+        "screenshot": "5/5"
+      },
+      "vscode:key_kp_enter": {
+        "screenshot": "5/5"
+      },
+      "vscode:select_all_copy_end_paste": {
+        "screenshot": "5/5"
+      },
+      "vscode:triple_click_line": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_combining": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_digits": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_emoji": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_long_200": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_multiline_tabs": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_plain": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_rtl": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_spaces": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_symbols_shifted": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_unicode_bmp": {
+        "screenshot": "5/5"
+      },
+      "vscode:type_with_correction": {
+        "screenshot": "5/5"
+      },
+      "writer:ctrl_home_insert": {
+        "screenshot": "5/5"
+      },
+      "writer:drag_select_word": {
+        "screenshot": "5/5"
+      },
+      "writer:key_kp_enter": {
+        "screenshot": "5/5"
+      },
+      "writer:select_all_copy_end_paste": {
+        "screenshot": "5/5"
+      },
+      "writer:triple_click_line": {
+        "screenshot": "5/5"
+      },
+      "writer:type_combining": {
+        "screenshot": "5/5"
+      },
+      "writer:type_digits": {
+        "screenshot": "5/5"
+      },
+      "writer:type_emoji": {
+        "screenshot": "5/5"
+      },
+      "writer:type_long_200": {
+        "screenshot": "5/5"
+      },
+      "writer:type_multiline_tabs": {
+        "screenshot": "5/5"
+      },
+      "writer:type_plain": {
+        "screenshot": "5/5"
+      },
+      "writer:type_rtl": {
+        "screenshot": "5/5"
+      },
+      "writer:type_spaces": {
+        "screenshot": "5/5"
+      },
+      "writer:type_symbols_shifted": {
+        "screenshot": "5/5"
+      },
+      "writer:type_unicode_bmp": {
+        "screenshot": "5/5"
+      },
+      "writer:type_with_correction": {
+        "screenshot": "5/5"
+      }
+    },
+    "qcow2_unchanged": true,
+    "receipt_sha256": "0b4a70c3884a68a82396b1befa7386902f7300aaa441559585d827fdcadc5a37",
+    "reset_observations": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "restarts": 0,
+    "seed": [
+      43
+    ],
+    "session_errors": [],
+    "sessions": 5,
+    "settings": null,
+    "slurm": {
+      "exit_code": "0:0",
+      "state": "COMPLETED"
+    },
+    "started_at": 1791502093.256829,
+    "step_s": {
+      "n": 625,
+      "p50": 1.0171,
+      "p95": 1.8418
+    },
+    "tree_sha256": "abbbfe6cb74c4573856ac1e6cd906f8332f48836e636c53aac4c65fa634dbf23",
+    "trials": 300,
+    "trials_pass": 300,
+    "unreadable": []
+  }
+]

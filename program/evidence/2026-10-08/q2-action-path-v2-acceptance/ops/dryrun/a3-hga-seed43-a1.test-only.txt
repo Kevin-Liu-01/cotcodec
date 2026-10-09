@@ -1,0 +1,1 @@
+sbatch: Job 1012 to start at 2026-10-08T22:05:30 using 6 processors on nodes fal-h100-01 in partition research
