@@ -3383,3 +3383,67 @@ they say so.)
   found three blocking items in turn, each fixed; the last was a runbook wait
   before the merge of rescoring output. Evidence:
   `program/evidence/2026-10-10/q2-stage1-d59-tooling/`.
+
+## 2026-10-10 — E4 gate gauntlet run 2 (D60): score 60, honest exit; E4 ends (branch `gauntlet/e4-d19`, not merged)
+
+- Fresh run under D60 in workflow `wf_65f4f5ac-a69`, with new budgets: queries
+  80 (30 reserved for the triad), wall_minutes 600, tokens 8,000,000, dollars
+  150, waves 1, gpu_hours 0.3. A single owner did the CPU-only repair: proposal
+  `f27ece07...`, DRAFT registration `e4-icl-write-rule-gate-v2` (`8f935cc4...`;
+  v1 unedited and superseded), registered estimator as code, family table rebuilt
+  under the teacher's tokenizer, I1/I2 window, priors cited after OpenReview and
+  ACL Anthology searches (commit `300bb62`; not frozen, not admitted). Audit
+  row 2 (gauntlet wave 2, run wave 1) appended to
+  `program/gauntlet/2026-10-10-e4-icl-write-rule-gate.jsonl`, row hash
+  `8ccad64644134faec52e9e480c72f8aaa13fac89063cc222ccfbd38cf24948db`.
+- Reviews: 60 (claude-opus-5-5) and 64 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1061). Reviewer 2 returned total 59, but its ten scores sum to 64 and no cap
+  binds. Its schema has the consumer re-check the total, so the record uses 64
+  and keeps 59 beside it. Score 60 (59 if the produced total were kept), best
+  60. Trajectory 49 -> 60. Neither review is signed (D24).
+- Blind discrimination: passed by the letter, weakly. The critic told the gate
+  and Attention Matching with Cartridges (2602.16284, 2506.06266, 2609.17346)
+  apart, and judged the prior the stronger contribution but not strictly
+  dominant. The packets match the bundle files exactly. Only one prior was
+  judged; the dual-form packet was not.
+- Refute-first triad: 3 of 3 refuted (each refuter ran at least six orx
+  queries: 10 plus 1 OpenReview, 7, 6). Novelty: a recombination, no direct
+  prior. 2605.16591 (an in-span decomposition of the n-shot state with a
+  mismatched-dictionary null) was retrieved four times in wave 1 and never
+  opened; 2508.17032 and 2305.12766 are uncited (cap 74).
+- Largest defect: identification, again (both reviewers). The registered
+  S_span key set includes a family-fitted key map B, unconstrained in rank and
+  chosen by development fit. When a family's per-episode write reads from a
+  fixed subspace of 8 dimensions or fewer, B collapses onto it, and
+  key-independent writers read TIE 6/6 through every gate STOP_SPAN needs.
+  Retrieval among stored tasks that share a read subspace does the same.
+  Swapping in another episode's keys leaves the fit unchanged (0.966 vs 0.966),
+  while a first-order writer drops (0.949 to 0.523). Reviewer 1 replicated this
+  with its own code. The registration has no key-resample placebo, and I1 reads
+  raw read energy.
+  Runner-up (decisiveness): the lookup families A1 and A2 are SPAN_VACUOUS by
+  construction, yet still pass through I3 and I7, whose failure ends the whole
+  gate as INSTRUMENT_FAIL. On lookup-structured planted episodes I7 fails 6/6
+  and I3 5/6, so the gate's expected end once K2 passes is INSTRUMENT_FAIL.
+- Honest exit: D60's stop line (identification is still the largest defect),
+  the wave cap (waves=1) and the triad stop. Under D60, E4 ends here. Not
+  exits: queries 57 of 80, tokens 4.96M of 8M, $89.28 of $150, 415.6 of 600
+  minutes (about 217 of them a host wait for S1a), GPU 0.0533 of 0.3. The
+  doctor re-run is byte-identical to the bundle copy (FAIL, as expected).
+- GPU: reviewer 2's job 1061 used 0.0533 GPU-h (scontrol RunTime 00:03:12 on 1
+  H100, COMPLETED 0:0, 14:05:59-14:09:11 UTC, no leftover container). It was
+  submitted after S1a's session-2 9B jobs 1051 and 1053 completed, with the
+  queue empty and re-checked in the submit command. S1a's operator saw it and
+  waited, then submitted the 4B session-2 jobs 1062 and 1064 at 14:09:27, at
+  most about 3.5 minutes later than otherwise. No S1a job ran during it. Added
+  to the ledger as "E4 gate gauntlet wave 2 (fresh run 2 under D60,
+  e4-icl-write-rule-gate-v2 draft) open-weight review (D24)". Program total
+  7.3963 on this branch (S1a session-2 jobs are not yet in the ledger). The gate
+  itself used no GPU.
+- Waiting on Kevin: nothing, to stop. Reopening E4 would be a new owner
+  decision. It would need a decision-bearing key-resample placebo (or a
+  rank-constrained B), I1 on the task-relevant subspace, and per-family
+  I2/I3/I7 with the lookup families exempt, all in one new version. It would
+  also need d90, noise SDs and planted recovery measured on real residuals
+  (the 2.7 GB teacher download), and the 2605.16591, 2508.17032 and 2305.12766
+  delta rows.
