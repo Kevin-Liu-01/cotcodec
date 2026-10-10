@@ -157,7 +157,7 @@ def cmd_fit(args: argparse.Namespace) -> int:
     s1a = D.load()
     y = s1a.y_base if args.set == "base" else s1a.y_pool
     t0 = time.time()
-    res = F.fit(y, log=log)
+    res = F.fit(y, harness=args.harness, log=log)
     x, like = res["x"], res["likelihood"]
     sizes, rho_a, rho_b = F.unpack(x)
     se, se_info = _ses(like, x)
@@ -170,6 +170,7 @@ def cmd_fit(args: argparse.Namespace) -> int:
     bank.update(pool=s1a.pool, n_base=len(s1a.base), domains=s1a.domains)
     out = {
         "set": args.set,
+        "harness": args.harness,
         "tasks": int(y.shape[1]),
         "episodes": int(np.isfinite(y).sum()),
         "method": F.__doc__.strip(),
@@ -182,6 +183,7 @@ def cmd_fit(args: argparse.Namespace) -> int:
             "sizes": dict(zip(M.SIZES, sizes, strict=True)),
             "rho_a": rho_a,
             "rho_b": rho_b,
+            "w_b": F.w_of(x),
         },  # fmt: skip
         "se": dict(zip(M.SIZES, se, strict=True)),
         "se_info": se_info,
@@ -504,7 +506,7 @@ def cmd_recovery(args: argparse.Namespace) -> int:
         "fit": args.fit, "truth_name": args.truth, "seed": args.seed,
         "truth": truth.to_json(),
         "estimate": {"sizes": dict(zip(M.SIZES, sizes, strict=True)), "rho_a": rho_a,
-                     "rho_b": rho_b},
+                     "rho_b": rho_b, "w_b": F.w_of(res["x"])},
         "loglik": res["loglik"], "converged": res["converged"],
         "observed_success": np.nanmean(y[0], axis=(1, 3, 4)),
         "provenance": provenance(),
@@ -549,6 +551,13 @@ def cmd_summary(args: argparse.Namespace) -> int:
     out["fit_base"]["prob_scale_shares"] = {
         z: v["shares"] for z, v in fit["prob_scale_components"].items()
     }
+    ss = E_ / "fit-base-spikeslab.json"
+    if ss.exists():
+        fs = json.loads(ss.read_text())
+        out["fit_base_spikeslab"] = {k: fs[k] for k in (
+            "estimates", "se", "session_variances", "loglik", "population_parametric",
+            "population_pool_posterior")}  # fmt: skip
+        out["fit_base_spikeslab"]["lr_vs_normal"] = 2 * (fs["loglik"] - fit["loglik"])
     pool = E_ / "fit-pool.json"
     if pool.exists():
         fp = json.loads(pool.read_text())
@@ -565,10 +574,13 @@ def cmd_summary(args: argparse.Namespace) -> int:
                 k: {"size_estimate": est[k], **profile_bounds(rows, est[k])}
                 for k, rows in v["profiles"].items()
             }
-    val = E_ / "validation-base.json"
-    if val.exists():
+    for key, name in (("validation", "validation-base.json"),
+                      ("validation_spikeslab", "validation-spikeslab.json")):  # fmt: skip
+        val = E_ / name
+        if not val.exists():
+            continue
         vv = json.loads(val.read_text())
-        out["validation"] = {
+        out[key] = {
             "observed": vv["observed"]["widths"],
             "observed_readings": {k: vv["observed"]["reading"][k] for k in ("dr2", "dr5")},
             "matches_committed_report": vv["observed"]["matches_committed_report"],
@@ -615,6 +627,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("fit")
     p.add_argument("--set", choices=("base", "pool"), required=True)
+    p.add_argument("--harness", choices=("normal", "spike-slab"), default="normal")
     p.add_argument("--out", required=True)
     p = sub.add_parser("profile")
     p.add_argument("--fit", required=True)
