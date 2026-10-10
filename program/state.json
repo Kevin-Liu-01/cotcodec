@@ -470,7 +470,7 @@
     "Host limit (needs the host administrator): fs.inotify.max_user_instances is 128 on fal-h100-01, so the action-path ladder's 40-VM rung could not boot 10 of 80 VMs (dnsmasq 'failed to create inotify: Too many open files'). N* is therefore 32, and the registered program kill criterion (N* below 40: cut the Stage-1 task count before adding GPUs) applies. Ask the administrator to raise the limit if 40 concurrent VMs are wanted; attempt 1's rung-40 rerun is not used (D51); running above 32 VMs after a host change needs a registered deviation or a new registration with its own ladder (D53 ii) (evidence: program/evidence/2026-10-08/q2-action-path-v2-acceptance/)",
     "Q2 S1a (q2-stage1-rescoped-v1) ended DR5 INCONCLUSIVE (pi_small 0.055, one-sided 95% [0.000, 0.260] vs M 0.13) and DR2 Inconclusive, so S1b does not start (D47). Yours: whether to commission the registered follow-up after INCONCLUSIVE (more sessions at 4B and 9B, a new proposal with its own gauntlet) or close Q2 Stage 1 at S1a (program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md)"
   ],
-  "gpu_hours_spent_this_program": 9.8013,
+  "gpu_hours_spent_this_program": 9.8563,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -893,6 +893,15 @@
       ],
       "outcome": "registered per-job checks only (no outcome read): manifest names A1-9B-S1's, A1-4B-S1's and A1-9B-S2's records and receipts by SHA-256 (A1-9B-S2: records 53559050..., receipt d7e8575b...); 452 dispatched, 452 scored (base complete and the 11 extension blocks, no fill); 0 infrastructure losses of 226 first attempts per harness, no re-queue, no cap truncation, no USR1; DR0 does not fire; provenance PASS, engine argv = plan.engine_argv(4B), Slurm limit 110 = T_A1; 0.002497 GPU-h per episode (DR4 input); no foreign job while it ran",
       "basis": "physical (scontrol RunTime 01:07:43 = 4,063 s on 1 H100, 14:09:42-15:17:25 UTC 2026-10-10); charged under D22 at its 110-minute cap (1.8333 GPU-h)"
+    },
+    {
+      "experiment": "E3 Stage-0 headroom probe gauntlet wave 1 (e3-byte-boundary-headroom-v1 draft, D67) open-weight review (D24)",
+      "gpu_hours": 0.055,
+      "jobs": [
+        "1085 qwen3.6-35b-a3b review"
+      ],
+      "outcome": "review PARSED on attempt 1, total 57 (ten scores sum to 57, no cap binding), replicates byte-identical; wave score 52 (lower of 52 and 57), best 52; honest exit (query budget 137 of 150 cannot fund a compliant wave 2; triad 3/3 refuted); reviewer inference only, not E3 probe work; submitted 23:14:16 UTC 2026-10-10 when only the C5 gauntlet's reviewer-2 job 1083 was running (no s1a-a1-* or q2s1a-* job running or pending), ran 23:14:17-23:17:35 UTC on its own GPU (prolog: exclusive)",
+      "basis": "physical (scontrol RunTime 00:03:18 = 198 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, GPUs at 0 MiB after the job)"
     }
   ],
   "results": [
