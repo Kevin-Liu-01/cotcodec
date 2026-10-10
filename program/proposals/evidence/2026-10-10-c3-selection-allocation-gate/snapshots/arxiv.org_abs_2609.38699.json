@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2609.38699",
+ "fetched_at": "2026-10-10T15:31:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42765,
+ "raw_sha256": "e9bdde2f10ecfa3eaec739a6abb433dc9c2e56869f8a3ba99e8e75857195cda6",
+ "raw_stored": false,
+ "extract": {
+  "title": "Budget Boundary Effects in Test-Time Mathematical Reasoning",
+  "authors": [
+   "Zhang, Guilin",
+   "Tan, Ziqi",
+   "Guo, Wulan",
+   "Zhao, Kai",
+   "Yang, Hongyun",
+   "Luo, Mei",
+   "Ning, Qi",
+   "Yang, Feng"
+  ],
+  "citation_date": "2026/09/30",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 30 Sep 2026 00:28:34 UTC"
+   }
+  ],
+  "abstract": "A cumulative token cap can fall inside a mathematical derivation, forcing a test-time controller to choose between stopping at the cap (strict) and allowing the current attempt to finish (advisory). We measure this boundary choice with paired offline replays of 19,200 public traces: 120 AIME, BrUMO and HMMT problems and two archive configurations of one model. Candidate order and a 16-attempt cap are fixed, and answer selection is blind to reference answers and correctness labels. Three findings emerge. First, at the 4k cap, most advisory accuracy gains replace abstention with a correct answer; strict stopping pays for an unfinished prefix that the completed-only selector cannot use. Second, comparisons along realized cost differ from same-cap comparisons: advisory 4k in low has higher accuracy than strict 8k at comparable mean completion cost, while in high its observed accuracy is 0.42 points below strict 32k using 59% of its mean tokens. These aggregate comparisons do not establish equal-compute superiority or accuracy equivalence. Third, increased candidate coverage does not guarantee higher answer accuracy: a log-probability selector loses accuracy while coverage rises, including after a source-grade consistency repair. Same-cap majority-accuracy differences shrink below 1.3 percentage points at 32k. Budget curves should jointly state the cap, realized cost, eligible candidates, stopping rule and selector information.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

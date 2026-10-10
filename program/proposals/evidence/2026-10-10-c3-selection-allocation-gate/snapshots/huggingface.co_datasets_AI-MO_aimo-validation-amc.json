@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/datasets/AI-MO/aimo-validation-amc",
+ "fetched_at": "2026-10-10T15:31:12Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 396201,
+ "raw_sha256": "b4c3396a2fd2d427e2d9d8adeda6b14c61be4c9abd1bcd9a52f40b7c2e16ec8a",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "AI-MO/aimo-validation-amc · Datasets at Hugging Face"
+ }
+}

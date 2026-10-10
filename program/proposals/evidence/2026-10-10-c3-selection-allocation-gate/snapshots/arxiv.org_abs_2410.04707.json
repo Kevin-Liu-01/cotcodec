@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2410.04707",
+ "fetched_at": "2026-10-10T15:31:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42764,
+ "raw_sha256": "192dbc747d3a10945fa5a9a1f255334c41ff4f52afaa2b29a10acd2ce7c71c59",
+ "raw_stored": false,
+ "extract": {
+  "title": "Learning How Hard to Think: Input-Adaptive Allocation of LM Computation",
+  "authors": [
+   "Damani, Mehul",
+   "Shenfeld, Idan",
+   "Peng, Andi",
+   "Bobu, Andreea",
+   "Andreas, Jacob"
+  ],
+  "citation_date": "2024/10/07",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 7 Oct 2024 02:52:30 UTC"
+   }
+  ],
+  "abstract": "Computationally intensive decoding procedures--including search, reranking, and self-critique--can improve the quality of language model (LM) outputs in problems spanning code generation, numerical reasoning, and dialog. Existing work typically applies the same decoding procedure for every input to an LM. But not all inputs require the same amount of computation to process. Can we allocate decoding computation adaptively, using more resources to answer questions whose answers will be harder to compute? We present an approach that predicts the distribution of rewards given an input and computation budget, then allocates additional computation to inputs for which it is predicted to be most useful. We apply this approach in two decoding procedures: first, an adaptive best-of-k procedure that dynamically selects the number of samples to generate as input to a reranker; second, a routing procedure that dynamically responds to a query using a decoding procedure that is expensive but accurate, or one that is cheaper but less capable. Across a suite of programming, mathematics, and dialog tasks, we show that accurate computation-allocation procedures can be learned, and reduce computation by up to 50% at no cost to response quality, or improve quality by up to 10% at a fixed computational budget.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

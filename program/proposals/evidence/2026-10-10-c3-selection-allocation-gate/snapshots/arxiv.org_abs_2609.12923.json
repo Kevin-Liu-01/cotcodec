@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2609.12923",
+ "fetched_at": "2026-10-10T15:31:09Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41522,
+ "raw_sha256": "59e48b739deda800316f0613a33b07268184eca05d62357c72e4944f37749c3d",
+ "raw_stored": false,
+ "extract": {
+  "title": "Dissecting GPU Utilization for LLM Inference on Nvidia Hopper",
+  "authors": [
+   "Siavashi, Mohammad",
+   "Maguire Jr., Gerald Q.",
+   "Kostic, Dejan",
+   "Chiesa, Marco"
+  ],
+  "citation_date": "2026/09/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 11 Sep 2026 14:49:05 UTC"
+   }
+  ],
+  "abstract": "A single SM utilization percentage can make an LLM inference workload look compute-saturated while hiding how much useful work is being done. The problem is not that the counter is wrong, but that it collapses several different mechanisms into one number. This is most severe during decode, where each request contributes only one new token and dense projection GEMMs become small-row matrix multiplications. On Hopper, the bfloat16 GMMA path executes these operations in fixed 64-row matrix fragments, so small-batch decode can fill only a small fraction of each fragment with real token rows. In this paper, we profile vLLM with FlashAttention-3 and cuBLASLt on an H100 NVL across cold prefill, warm prefill, and decode, sweeping sequence length and batch size. We replace the usual single utilization number with eight counter-validated views derived from raw Nsight Compute reports, each pinned to an NCU counter or explicit formula. Together, these views map utilization gaps to concrete mechanisms - fragment fill, occupancy limits, stall signatures, wave quantization, and kernel selection - across four production models and six per-layer kernel roles.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

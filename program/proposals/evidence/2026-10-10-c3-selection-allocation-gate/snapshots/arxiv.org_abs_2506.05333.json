@@ -1,0 +1,37 @@
+{
+ "url": "https://arxiv.org/abs/2506.05333",
+ "fetched_at": "2026-10-10T15:31:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44025,
+ "raw_sha256": "bfa5d23de2a0ddf8bd2e801100071320fd1d3bb0b6a79182197955c5712e6fa5",
+ "raw_stored": false,
+ "extract": {
+  "title": "Kinetics: Rethinking Test-Time Scaling Laws",
+  "authors": [
+   "Sadhukhan, Ranajoy",
+   "Chen, Zhuoming",
+   "Zheng, Haizhong",
+   "Zhou, Yang",
+   "Strubell, Emma",
+   "Chen, Beidi"
+  ],
+  "citation_date": "2025/06/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 5 Jun 2025 17:59:24 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 6 Jun 2025 16:11:19 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Fri, 20 Jun 2025 01:25:25 UTC"
+   }
+  ],
+  "abstract": "We rethink test-time scaling laws from a practical efficiency perspective, revealing that the effectiveness of smaller models is significantly overestimated. Prior work, grounded in compute-optimality, overlooks critical memory access bottlenecks introduced by inference-time strategies (e.g., Best-of-$N$, long CoTs). Our holistic analysis, spanning models from 0.6B to 32B parameters, reveals a new Kinetics Scaling Law that better guides resource allocation by incorporating both computation and memory access costs. Kinetics Scaling Law suggests that test-time compute is more effective when used on models above a threshold than smaller ones. A key reason is that in TTS, attention, rather than parameter count, emerges as the dominant cost factor. Motivated by this, we propose a new scaling paradigm centered on sparse attention, which lowers per-token cost and enables longer generations and more parallel samples within the same resource budget. Empirically, we show that sparse attention models consistently outperform dense counterparts, achieving over 60 points gains in low-cost regimes and over 5 points gains in high-cost regimes for problem-solving accuracy on AIME, encompassing evaluations on state-of-the-art MoEs. These results suggest that sparse attention is essential and increasingly important with more computing invested, for realizing the full potential of test-time scaling where, unlike training, accuracy has yet to saturate as a function of computation, and continues to improve through increased generation. The code is available at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

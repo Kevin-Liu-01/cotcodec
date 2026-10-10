@@ -1,0 +1,708 @@
+{
+ "schema_version": 1,
+ "proposal": "program/proposals/2026-10-10-c3-selection-allocation-gate.md",
+ "proposal_sha256": "366b353715a44b1c49e47163b69ebdb4072e1b1ced0b6191149eb2679cee6523",
+ "draft_registration": {
+  "path": "program/preregistrations/c3-selection-allocation-gate-v1.md",
+  "sha256": "2de3359e3f48a0622ebc8ab853d50c641ece19533873a2feb88d8ce621280372",
+  "status": "DRAFT, not frozen, no ledger row"
+ },
+ "source_snapshots": [
+  {
+   "url": "https://aclanthology.org/2026.findings-acl.1085/",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:05Z",
+   "raw_sha256": "5104a258aa159991fa9f0d2768eae8d8b6c0e282f53a2edb37ebe86842d12264",
+   "raw_bytes": 43914,
+   "artifact": "snapshots/aclanthology.org_2026.findings-acl.1085.json",
+   "sha256": "74b391a0242bbf69dce4268da62241e23c1ceb36b2233aed89e5b9a637852105"
+  },
+  {
+   "url": "https://arxiv.org/abs/1003.5956",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:05Z",
+   "raw_sha256": "c115c5fa0c1298679ad74cfda58734fdddc4390521031f6aafadf79d22446d8e",
+   "raw_bytes": 45672,
+   "artifact": "snapshots/arxiv.org_abs_1003.5956.json",
+   "sha256": "18857ee8815cea665f9b31d01f6231293edf0e8018b3dcb41da55b196386908e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2410.04707",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:05Z",
+   "raw_sha256": "192dbc747d3a10945fa5a9a1f255334c41ff4f52afaa2b29a10acd2ce7c71c59",
+   "raw_bytes": 42764,
+   "artifact": "snapshots/arxiv.org_abs_2410.04707.json",
+   "sha256": "08316f76a7c5fc91a0bf68edf64beaba0c8a49cd70e14a66aa18b9e8695351db"
+  },
+  {
+   "url": "https://arxiv.org/abs/2504.05419",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:06Z",
+   "raw_sha256": "d46a5c47f90fd4095a850b92f79440a62a7e5e76d960cf2bccb29d341ee4649c",
+   "raw_bytes": 41935,
+   "artifact": "snapshots/arxiv.org_abs_2504.05419.json",
+   "sha256": "4817522a693566865c524f7d008fcd48f044cf8bc1ce01256ea9f748bf9f55bb"
+  },
+  {
+   "url": "https://arxiv.org/abs/2505.09388",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:06Z",
+   "raw_sha256": "006225337c190863a34263dcfd995fd679868d307ccb34d257dda6682733979d",
+   "raw_bytes": 51042,
+   "artifact": "snapshots/arxiv.org_abs_2505.09388.json",
+   "sha256": "064747a470869f09c7ca2aab61987b5a53d95fed257cee092f3dcdc6e412d349"
+  },
+  {
+   "url": "https://arxiv.org/abs/2506.05333",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:06Z",
+   "raw_sha256": "bfa5d23de2a0ddf8bd2e801100071320fd1d3bb0b6a79182197955c5712e6fa5",
+   "raw_bytes": 44025,
+   "artifact": "snapshots/arxiv.org_abs_2506.05333.json",
+   "sha256": "8df220eb86c9f1ddd8a8a0910f1003087ec2114e9e1b7efcc8628125d41fa2ec"
+  },
+  {
+   "url": "https://arxiv.org/abs/2508.15260",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:06Z",
+   "raw_sha256": "da01b415f1a6c5a77e8610c1c026d37fd47305f866779cd91e30494d2f75da1d",
+   "raw_bytes": 40886,
+   "artifact": "snapshots/arxiv.org_abs_2508.15260.json",
+   "sha256": "d1b59ff9a4b3f2c35b3f36b51a070125aac70d3dea0b0e3f568e575952bf99fd"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.10494",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:06Z",
+   "raw_sha256": "011db47acf1249cd6d9cd968f7654dc4d682a6137d067f732adff72c2577d52c",
+   "raw_bytes": 42449,
+   "artifact": "snapshots/arxiv.org_abs_2510.10494.json",
+   "sha256": "d723f32b1706d99a70c8901cd5249e2091a47ce36849f60cbb388894acf9272f"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.16449",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:06Z",
+   "raw_sha256": "5fc395182c783af5f4f36e4ad61cfcb410c3ad6931d3b21ba674a63b98610620",
+   "raw_bytes": 43042,
+   "artifact": "snapshots/arxiv.org_abs_2510.16449.json",
+   "sha256": "004b4048e165c36f2a8869126887c69e17f3e887818552dac87b21b119403f18"
+  },
+  {
+   "url": "https://arxiv.org/abs/2512.01457",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:07Z",
+   "raw_sha256": "ebf7f70c356e4be1db398910fcb42865626c4fd37a1150e0584172decfc49e7b",
+   "raw_bytes": 44988,
+   "artifact": "snapshots/arxiv.org_abs_2512.01457.json",
+   "sha256": "15dbbef2c000790ee2736d0960c659c553ff362d85286a5d07e6a42e21881225"
+  },
+  {
+   "url": "https://arxiv.org/abs/2601.09093",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:07Z",
+   "raw_sha256": "34e7cf32c25fd77bfe69a93d3e7078f5d1d3778fc61204a893ad7859ff3a43c3",
+   "raw_bytes": 42262,
+   "artifact": "snapshots/arxiv.org_abs_2601.09093.json",
+   "sha256": "e7ffb80639897fa2c1a2e98e542c8cd2db3993d8455ebf7d316bc53891a46802"
+  },
+  {
+   "url": "https://arxiv.org/abs/2601.21619",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:07Z",
+   "raw_sha256": "b8ac6ccbbce57532f8f1d661fc92fc854ed65bfa37ae766fb2961783bf9626b1",
+   "raw_bytes": 42485,
+   "artifact": "snapshots/arxiv.org_abs_2601.21619.json",
+   "sha256": "a439eeac8920be79f262ad36af1647898e0403ded854784e64df477647193f22"
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.05868",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:07Z",
+   "raw_sha256": "c0ef5948eba929631424f65129897d8d32fa5011ab5fe280b2001efa37d88ebb",
+   "raw_bytes": 42236,
+   "artifact": "snapshots/arxiv.org_abs_2604.05868.json",
+   "sha256": "739d98d60400a7ab6c7a0f24bd84b33bcba633e4ce9361a75a06c54bfab3bad0"
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.14853",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:07Z",
+   "raw_sha256": "2cc7d74004cc061c1dc04b658411df7c7033b842aaa342172b2fec67634dc51a",
+   "raw_bytes": 43475,
+   "artifact": "snapshots/arxiv.org_abs_2604.14853.json",
+   "sha256": "c87a0c298c65e62867d6d337da67ea12830dd1f5fe23bb95997fe73b53cc6572"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.12935",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:07Z",
+   "raw_sha256": "f49d1df78624eb422b1cc5db659e9fdb428f7f008f84559b06c1ffd6b5ebf785",
+   "raw_bytes": 42149,
+   "artifact": "snapshots/arxiv.org_abs_2606.12935.json",
+   "sha256": "269dde46dbaac736aae895e2911da63e783c999e224203a8135b2ba96293cedd"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.19808",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:07Z",
+   "raw_sha256": "30d15679f419fdf7e61eca9a9b5c16490c5e6a7f541b07edc4b224fd6339b9b1",
+   "raw_bytes": 42514,
+   "artifact": "snapshots/arxiv.org_abs_2606.19808.json",
+   "sha256": "62b057d1ebad17a7bedd4f895eed50c45af2efd432b6054808790a0119afeb7a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2607.08665",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:07Z",
+   "raw_sha256": "eaa17146952c55449712076d917146486319b9c2a24f4dcaa9565507fd5bb0c4",
+   "raw_bytes": 43509,
+   "artifact": "snapshots/arxiv.org_abs_2607.08665.json",
+   "sha256": "e0e32b744877b5965fe5ba5e373d59d42c88690a03921421578ee8183aa823c3"
+  },
+  {
+   "url": "https://arxiv.org/abs/2607.17531",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:08Z",
+   "raw_sha256": "84f5a23e497340d49d99eba1c18cd88a380aa597d7398bafc359526d35885bf7",
+   "raw_bytes": 42599,
+   "artifact": "snapshots/arxiv.org_abs_2607.17531.json",
+   "sha256": "cbaab2648bf85344a73ca128db1dcc2b0e388015b2ec2485194dee792bed3eb5"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.00026",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:08Z",
+   "raw_sha256": "9a0e9bea7cdd97ad90d3bed5d7ebd7cb5779c26b21575c6eb25a16197eea0e8c",
+   "raw_bytes": 43064,
+   "artifact": "snapshots/arxiv.org_abs_2608.00026.json",
+   "sha256": "dd2591ae525af94a2f630b144f50167ba6b8a69844738a7295098545bbe1248a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.02244",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:08Z",
+   "raw_sha256": "df8db6b51794e5de4e7de5087fc7282255cff235fd1692e34ab8bae528a7fa74",
+   "raw_bytes": 42111,
+   "artifact": "snapshots/arxiv.org_abs_2608.02244.json",
+   "sha256": "5d84847939b84cbb44b5befc94747855220858898e3a6c3595bca391ecf2ca26"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.03961",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:08Z",
+   "raw_sha256": "309561b3b2607fafa9a60080790260e7e3a0d9f243cd162af39c3a1dcd88c81f",
+   "raw_bytes": 41195,
+   "artifact": "snapshots/arxiv.org_abs_2608.03961.json",
+   "sha256": "9e1eca9390cf2335298a239f327e8f6d2275cc98886ded7966edc9254fcf5229"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.04001",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:08Z",
+   "raw_sha256": "b8e4acb9876df490811be33ba3752321aa1aab053c656e93bf5636acdb815077",
+   "raw_bytes": 46822,
+   "artifact": "snapshots/arxiv.org_abs_2608.04001.json",
+   "sha256": "41c09536a74e16f5208469525ee7a21c5e634fc0d3dd330571ec03b75e730234"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.11403",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:08Z",
+   "raw_sha256": "ddceb1bad69a188f65985a19879606823a705f2b38b76dce5a4fb63c9b94faa7",
+   "raw_bytes": 44173,
+   "artifact": "snapshots/arxiv.org_abs_2608.11403.json",
+   "sha256": "0cfe8455cc9ed3f343fa3bd0b9ba199137b29b782d20e7273084d48daed1ca48"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.12150",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:08Z",
+   "raw_sha256": "5b88af54f1ee72028097c09ba1fe0f8fcb73ae35e12d35fd0f90edad158b779e",
+   "raw_bytes": 40884,
+   "artifact": "snapshots/arxiv.org_abs_2608.12150.json",
+   "sha256": "ff71494adfc558374359bbbd5debd955807d4ca2b06426d9c022aedc71425389"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.13087",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:09Z",
+   "raw_sha256": "ee73bd340bd537eb0f7e747e2a6c73dd1c9197245aa0bb5f1e2ef8322c161f7e",
+   "raw_bytes": 44877,
+   "artifact": "snapshots/arxiv.org_abs_2608.13087.json",
+   "sha256": "d5c79c172b4503eb755d38cdb2d806e0032879a29731a0d09e6dad3aa593c6ae"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.17124",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:09Z",
+   "raw_sha256": "a46145d9aeccad69738e287190f4a87124b4c839b1d1d049ce3278176a02b4c8",
+   "raw_bytes": 42980,
+   "artifact": "snapshots/arxiv.org_abs_2608.17124.json",
+   "sha256": "1d417175df0dca084dd28ab501618bac69ea759baa48af22a153820557d8687d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.21262",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:09Z",
+   "raw_sha256": "0d3da3ad8391a4c3da5e935f6e48546a93a862698d4b9d22b7c567ad9571caad",
+   "raw_bytes": 42156,
+   "artifact": "snapshots/arxiv.org_abs_2608.21262.json",
+   "sha256": "056d828fd5f496603d6f305034bbaaa0c568af26b0cb9bb383b0106a8d9a0f6f"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.30841",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:09Z",
+   "raw_sha256": "80176cfddd458f9b736d68496122f58606c0e6fb55ac249589644a6cfe098844",
+   "raw_bytes": 41396,
+   "artifact": "snapshots/arxiv.org_abs_2608.30841.json",
+   "sha256": "f49a8ba67a7ebcdbcef3a589ebc2d9ed7ef7a7bdaf24dcc8f59d2ffca8533c03"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.12923",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:09Z",
+   "raw_sha256": "59e48b739deda800316f0613a33b07268184eca05d62357c72e4944f37749c3d",
+   "raw_bytes": 41522,
+   "artifact": "snapshots/arxiv.org_abs_2609.12923.json",
+   "sha256": "cdda4eddbd20d3d73848a2e094a401f05f508cb7c1ce47a987a31b5257314ddb"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.13257",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:09Z",
+   "raw_sha256": "24312b70a898967e748c831e95958b832a95ada2aa207a93abaaab4e2a53011b",
+   "raw_bytes": 42895,
+   "artifact": "snapshots/arxiv.org_abs_2609.13257.json",
+   "sha256": "f69e36da43e7dfe4e39711b13ffa915eff474f45c52257a91649950e87854aea"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.19499",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:09Z",
+   "raw_sha256": "1565f6d673368800bd834356c7cbf462c523c26327c754513cb3e34e93c0b0e6",
+   "raw_bytes": 45066,
+   "artifact": "snapshots/arxiv.org_abs_2609.19499.json",
+   "sha256": "7396bd4333568087e9bf61e118b4a52124d9cd1901b29425c293bb1bf2baccf2"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.27917",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:10Z",
+   "raw_sha256": "df6e23e000d7e0aa1d66f54d5b3a7daba1fa3d66184a128efe364a0faa735b06",
+   "raw_bytes": 44023,
+   "artifact": "snapshots/arxiv.org_abs_2609.27917.json",
+   "sha256": "76f42f92b6cffa1d8265fcf5675336cdc66036d1f0c9ccadb477d13d54f81409"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.32035",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:10Z",
+   "raw_sha256": "265af451fcc37a6027eaef1345760ceea7f7e3bd78948e5a4b23d4874533d380",
+   "raw_bytes": 42123,
+   "artifact": "snapshots/arxiv.org_abs_2609.32035.json",
+   "sha256": "b71699df340657cd4b6a56331275f5b6ea6acd3f6296b45386985afc2fb32e41"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.33290",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:10Z",
+   "raw_sha256": "e20a98d0803d2cfe0a4de37ba9c71417f72a773fda9f60ba0e32f7617523f76d",
+   "raw_bytes": 42767,
+   "artifact": "snapshots/arxiv.org_abs_2609.33290.json",
+   "sha256": "5ac6268ea88f45022e9116ad0d039d9d94204aa76754bbcf51adf19f80f0ea24"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.34864",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:10Z",
+   "raw_sha256": "3aad507d9ef7b9f5502cf4fbdc2ac92cac03e84270802cdc91417e1e3de2f882",
+   "raw_bytes": 40776,
+   "artifact": "snapshots/arxiv.org_abs_2609.34864.json",
+   "sha256": "f57f996233d924f1bf3d66348e7ce25c7bbf78c011bcd8ee0699c71f5710fe50"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.38699",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:10Z",
+   "raw_sha256": "e9bdde2f10ecfa3eaec739a6abb433dc9c2e56869f8a3ba99e8e75857195cda6",
+   "raw_bytes": 42765,
+   "artifact": "snapshots/arxiv.org_abs_2609.38699.json",
+   "sha256": "ac336a156ae96022ec2ed3e5f6c47ec8fe1cd55c6ae84593e12afd3483effef9"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.38956",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:10Z",
+   "raw_sha256": "9ff55162d26788769906fffc66a49817fddc1c76125a8fcf119d6cbf8b037801",
+   "raw_bytes": 43580,
+   "artifact": "snapshots/arxiv.org_abs_2609.38956.json",
+   "sha256": "178db9df4d047b2761548e40087fe4309cda1b6ed4a01ff45c2000a618488854"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.40190",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:10Z",
+   "raw_sha256": "87f6a62828bb531f3416e3521dc3db5ce47976e97f000d3ddd587d4d868a550c",
+   "raw_bytes": 45163,
+   "artifact": "snapshots/arxiv.org_abs_2609.40190.json",
+   "sha256": "414f4d6772a98dbda6268d9abd58452cfed38869cabb37b5eb00caa14c182609"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.02808",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:11Z",
+   "raw_sha256": "dcd1a03fc2d5f3c44cc55f21430004799a0c8ce749896679503cb9fb641e1431",
+   "raw_bytes": 44203,
+   "artifact": "snapshots/arxiv.org_abs_2610.02808.json",
+   "sha256": "5b173178a0d01c0e30ecb3e09ce957fd195b19ccb24fa92a92b3f3a33e42c09b"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.05685",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:11Z",
+   "raw_sha256": "db21d52ebeffcc7195822d7ae2705e033f92ecf73acd166a92261754bff4677d",
+   "raw_bytes": 41379,
+   "artifact": "snapshots/arxiv.org_abs_2610.05685.json",
+   "sha256": "23c6c7adc273be4fa46e9872173a55d31dcd0dad84f82d5d0ad3ecc575ce8e06"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.08544",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:11Z",
+   "raw_sha256": "9d70456c91ac6353fc2ef7ab51bede1e5afa51dd4c281200e6664f7094eab631",
+   "raw_bytes": 42128,
+   "artifact": "snapshots/arxiv.org_abs_2610.08544.json",
+   "sha256": "4b64f7465505278434798486189a1bb3e812d5ea689d645794be8ffa67a23974"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.08719",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:11Z",
+   "raw_sha256": "b0816e86dc5269c2f8dcfa29c321faee50c20fdd0a3d547417b041b36790fe65",
+   "raw_bytes": 41148,
+   "artifact": "snapshots/arxiv.org_abs_2610.08719.json",
+   "sha256": "612e537a73fc45226c37266809dd3921673620b0d80eab36e9ffaf1fcb66e6c2"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.09239",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:11Z",
+   "raw_sha256": "ad0a5850eb5d1aac6b2df1b8bc9c9cbea76f9a08fae9a15b587a044c56d0aac8",
+   "raw_bytes": 55273,
+   "artifact": "snapshots/arxiv.org_abs_2610.09239.json",
+   "sha256": "8f5c42eee9ef56832fdbdb87a74a977057ce68958c16b11025f63714d11687e1"
+  },
+  {
+   "url": "https://huggingface.co/Qwen/Qwen3-8B",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:11Z",
+   "raw_sha256": "0cbeaeeab3f62b2557a102da13a31fc5644ce80b2f76247a070b3c60e4a7447b",
+   "raw_bytes": 310147,
+   "artifact": "snapshots/huggingface.co_Qwen_Qwen3-8B.json",
+   "sha256": "48f0beadefc00d77383b0318e160759eea285d47069e5d6057e022ca830babd9"
+  },
+  {
+   "url": "https://huggingface.co/datasets/AI-MO/aimo-validation-aime",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:12Z",
+   "raw_sha256": "fea5cedcede98ca75db235bfb782dc4ffa45bf3ef870035ebed64d6e884718d5",
+   "raw_bytes": 467312,
+   "artifact": "snapshots/huggingface.co_datasets_AI-MO_aimo-validation-aime.json",
+   "sha256": "9c32f2fbdc12fa8623ba33b177aaa52b2a411b3480cc010ba7ba52883bbf3332"
+  },
+  {
+   "url": "https://huggingface.co/datasets/AI-MO/aimo-validation-amc",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:12Z",
+   "raw_sha256": "b4c3396a2fd2d427e2d9d8adeda6b14c61be4c9abd1bcd9a52f40b7c2e16ec8a",
+   "raw_bytes": 396201,
+   "artifact": "snapshots/huggingface.co_datasets_AI-MO_aimo-validation-amc.json",
+   "sha256": "e661f86833840eb9715adb15363f4798af641ff7faf6db17be408cda18b06d57"
+  },
+  {
+   "url": "https://huggingface.co/datasets/EleutherAI/hendrycks_math",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:13Z",
+   "raw_sha256": "5a65dd121a68823df0b049ed463ff65adb75cd4d604da1fbae3c784f716b73dc",
+   "raw_bytes": 533790,
+   "artifact": "snapshots/huggingface.co_datasets_EleutherAI_hendrycks_math.json",
+   "sha256": "e259c982f81a56c79bfc35b8a4af59376dcbb7d99600b5c3cc919cc41d658b33"
+  },
+  {
+   "url": "https://huggingface.co/datasets/Hothan/OlympiadBench",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:13Z",
+   "raw_sha256": "9587024741e07f85d4bfc062b2fd3e424b4d402e8c21aef57353bd5928d336b9",
+   "raw_bytes": 1929276,
+   "artifact": "snapshots/huggingface.co_datasets_Hothan_OlympiadBench.json",
+   "sha256": "5015898cec61378a617224ff54e9b44d86423ae03008f598e9e469dd3a164a6e"
+  },
+  {
+   "url": "https://huggingface.co/datasets/KbsdJames/Omni-MATH",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:13Z",
+   "raw_sha256": "3f7f866da38a373c9601b513f4586ae5d281e27246056873c6e21e913e1ba49a",
+   "raw_bytes": 788173,
+   "artifact": "snapshots/huggingface.co_datasets_KbsdJames_Omni-MATH.json",
+   "sha256": "74e40da6cee1c5fdc82d5ae48c36db9bd034d1a4e79a0db5ea1b45608eb5ba09"
+  },
+  {
+   "url": "https://openreview.net/forum?id=BLOx9TYfgl",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:14Z",
+   "raw_sha256": "d1362ee80b28289a09d8922c41d3fc10a72340fba28b41cc58473a2db1dddd55",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_BLOx9TYfgl.json",
+   "sha256": "a4dc1bb1fd3aa7f554be7b19e67df077bdfb00f91591bf1515b8a943332e2119",
+   "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=ND39qPOQ0h",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:14Z",
+   "raw_sha256": "cf7d8e070e9c981a8f3c4eca33c59bab7a921f398ea76e9a9c9a35d27bc9ab78",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_ND39qPOQ0h.json",
+   "sha256": "614afeaa196ffe9d91a9f2786f8fa496ba29a7dffc15976b9fd1e86f9e2eac3c",
+   "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=RJtxGvLeYP",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:15Z",
+   "raw_sha256": "aed57e52e2a2090c4e1f0f9c9809693f00430d39982d9144cae089b3edeef4a9",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_RJtxGvLeYP.json",
+   "sha256": "693beda22c36e8d65068347102fddbc417997dc7308013c022cf773359630b9c",
+   "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=SId4cvKz6D",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:15Z",
+   "raw_sha256": "d71832d296901b177cd1c52aa20032e14ed25cb0a1cffa225e6b9629fbd406dc",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_SId4cvKz6D.json",
+   "sha256": "1185e2359e42fddf2400c4e11626c4ffa67500292457180c1d942962d1b6db22",
+   "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=X7X1K0xfZe",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T15:31:15Z",
+   "raw_sha256": "c7a6c32ace8503b9d41a794eb99148d8b1cd1a897568bd1d9ed2278c74d43a8a",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_X7X1K0xfZe.json",
+   "sha256": "5d89a2a6b0c761ecb3efdbb591d85df6fe8b4ada17471c0f9162b5754b770319",
+   "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
+  }
+ ],
+ "query_log": {
+  "artifact": "query-log.json",
+  "sha256": "769cc61be3035294a3c1d5ddfe65e462e00d5b3ad5b599b6b49fe98c5d2c5547",
+  "queries_against_budget": {
+   "declared": 150,
+   "reserve_for_refuters": 30,
+   "counted_by_stage": {
+    "cell:frontier": 45,
+    "cell:killshot": 39,
+    "cell:cross-domain": 31,
+    "cell:asset": 12,
+    "synthesis": 0
+   },
+   "counted_total": 127,
+   "remaining_under_declared": 23,
+   "reservation_breached_by": 7,
+   "uncounted_other_searches_by_stage": {
+    "cell:frontier": 10,
+    "cell:cross-domain": 7,
+    "cell:asset": 5,
+    "cell:killshot": 2
+   },
+   "total_if_other_searches_counted": 151
+  },
+  "note": "127 counted orx discover queries (cells 127, synthesis 0) against the declared 150; the triad's reserve of 30 was breached by 7 before synthesis; 24 uncounted OpenReview, web and OpenAlex API searches (151 if counted); 94 cell paper reads and 7 synthesis re-reads, not counted."
+ },
+ "reviews": [],
+ "reviews_status": "NOT_RUN: the blind critic, the refute-first triad and both reviewers run after synthesis. No trusted Ed25519 store exists (D24), so no review can be signed.",
+ "compute": {
+  "scope": "c3-selection-allocation-gate-v1 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: simulation S1 (decision-rule operating characteristics and the identification of the spread target) and S2 (cost model, cap formula and N rule), each script with its output.",
+  "image_digest": "docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f",
+  "image_scope": "generation base image; the cu129 overlay is built per source commit by scripts/build_vllm_overlay_on_h100.sh (probe v2 overlay image ID sha256:a59d7782755ac7db3e5ffdeaa1dd023af169b0ed6a5e04213ebbecbc7d5c30fc); it served the Qwen3-8B architecture with dummy weights in serving-throughput-probe-v1 job B (Slurm 446)",
+  "extraction_image_digest": "127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9",
+  "real_model_loop": false,
+  "real_model_loop_scope": "none: the generation driver, answer-position extractor and HF extraction job are not written; Qwen3-8B real weights are not on the host",
+  "benchmark_adapter": null,
+  "benchmark_adapter_scope": "none: data manifest builder, graders and family builder are not written",
+  "manifest": null,
+  "manifest_scope": "no Slurm manifest exists for the smoke, P0, G-decode or G-extraction jobs",
+  "container_smoke": {
+   "label": "container_smoke",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "d20d54a12aa1dce470ade1bf59276fdb7154a80945817a89c479a54b9a8257be"
+  },
+  "slurm_test": {
+   "label": "slurm_test",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "d20d54a12aa1dce470ade1bf59276fdb7154a80945817a89c479a54b9a8257be"
+  },
+  "provenance_verification": {
+   "label": "provenance_verification",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "d20d54a12aa1dce470ade1bf59276fdb7154a80945817a89c479a54b9a8257be"
+  },
+  "registered_caps_gpu_h": {
+   "smoke": 0.25,
+   "P0": 1.0,
+   "G_decode": "1.2 x high projection after P0 (formula fixed before P0)",
+   "G_extraction": "1.2 x projected time at 0.8 x P0-measured MFU + 0.05",
+   "sum_limit": 8.0,
+   "example_N800_meanL6000_cv075": {
+    "G_decode": 5.33,
+    "G_extraction": 0.74,
+    "sum": 7.32
+   }
+  },
+  "supplementary_cpu_evidence": [
+   {
+    "label": "S1 decision-rule operating characteristics and identification of the spread target (assumed distributions; 600 replicates per cell over seeds 42/43/44; B = 1,000)",
+    "script": {
+     "artifact": "compute/gate-sim.py",
+     "sha256": "5ce9fe38bc055b66089a23bf3eeda4d55bc00ac7dd3f8659dcb8970223e564c6"
+    },
+    "output": {
+     "artifact": "compute/gate-sim.json",
+     "sha256": "f9b156ec1352ce10e31e66e8511b59cd37391eb03d5d76afde1131d73d10fbfd"
+    }
+   },
+   {
+    "label": "S2 GPU-hour estimate, cap formula and N rule (calibrated on probe v1 job B dummy-weight points; real-weight throughput unmeasured)",
+    "script": {
+     "artifact": "compute/cost-model.py",
+     "sha256": "3b4e4de83708c4c38b52fce3e3e69af54cb5f5b49052cca83b70059127cb08df"
+    },
+    "output": {
+     "artifact": "compute/cost-model.json",
+     "sha256": "57749081497290da046c67b1a8d10b6ff13e9ee924cf00ac1a5bac5436b8512a"
+    }
+   },
+   {
+    "label": "query-log builder (parses the cells' raw orx outputs from the session scratchpad)",
+    "script": {
+     "artifact": "compute/build-query-log.py",
+     "sha256": "edf807166a43f576935d94d98aeae5b68539096e403f7d202fd8ac5c9ad47897"
+    }
+   },
+   {
+    "label": "snapshot script for source_snapshots",
+    "script": {
+     "artifact": "compute/snapshot-sources.py",
+     "sha256": "729d1e5e75507415184b1ca3dfd4ec313c1f329a935a9d698b6026e8f1a4203c"
+    }
+   }
+  ],
+  "repository_evidence_used": {
+   "serving_probe_v1_job_B_points": "program/evidence/2026-10-07/serving-throughput-probe-v1/jobs/b-446/probe/points/{b1a,b1b,b1c,b2,b3,b6}.json",
+   "serving_probe_v2": "program/evidence/2026-10-07/serving-throughput-probe-v2/README.md",
+   "qwen3_8b_metadata_receipt": "program/evidence/2026-10-07/serving-throughput-probe-v1/metadata/qwen3-8b.receipt.json"
+  }
+ },
+ "doctors": [
+  {
+   "name": "Source",
+   "status": "PASS",
+   "artifact": "doctors/source.json",
+   "sha256": "fcb761773c4c16b6d483bae4d5206a374dfcbafbda4ff25a8f3e2029573b6354"
+  },
+  {
+   "name": "Citation",
+   "status": "PASS",
+   "artifact": "doctors/citation.json",
+   "sha256": "51546855e4442dc325fae02898ca87fdd9eeccbacec6e6ac5a09fdf6d1713656"
+  },
+  {
+   "name": "Novelty",
+   "status": "FAIL",
+   "artifact": "doctors/novelty.json",
+   "sha256": "e70b7837d73a8db1cef8e06c1b81b3d53a4ffff1d74a4c06124de5c95f5b25b5"
+  },
+  {
+   "name": "Design",
+   "status": "FAIL",
+   "artifact": "doctors/design.json",
+   "sha256": "6de54b779f29cd77c65d314d3719dfd5986d9756f0062a375e032895c5983ff0"
+  },
+  {
+   "name": "Compute",
+   "status": "FAIL",
+   "artifact": "doctors/compute.json",
+   "sha256": "3faa81515db2115e765ca1c48e5ac36c7cbaa9f52dc54fde8d8e632a9aaef773"
+  },
+  {
+   "name": "Safety",
+   "status": "PASS",
+   "artifact": "doctors/safety.json",
+   "sha256": "0f9e6598f556c9dc5807b1b0c4a643f6a7e87ecce0456fe9cd83b2d66a859053"
+  }
+ ],
+ "audit_log": null,
+ "audit_log_status": "This gauntlet's wave-1 row is appended to program/gauntlet/2026-10-10-c3-selection-allocation-gate.jsonl with scripts/research_gauntlet_record.py after its reviewers score.",
+ "evidence_root_sha256": "7b8612b996c2f2dc84810e573d22dd35d9d73cb2d751e7cdeb1217b8e97c2962",
+ "blind_discrimination_packet": {
+  "proposal": {
+   "artifact": "blind/paragraph-c68f50d9.txt",
+   "sha256": "b25e8973fd0b9c25d7480de158bcf45d702238726e2888cf4cea88600e3a3790",
+   "text_sha256": "c68f50d9f6e10a3945394fe051fac119b2d5082c2fda521511a22ce472d7e944"
+  },
+  "closest_prior": {
+   "artifact": "blind/paragraph-f9ee1c7f.txt",
+   "sha256": "e0310d9a1db2045d848d6eb8546e33bb85aa83c40684760b2e87d5f1cc4ae3fc",
+   "text_sha256": "f9ee1c7f3d598658a7f2a1a881c46453cbd407d9a1cdd7b9eb62fcb228cf3b62"
+  },
+  "closest_prior_id": "arXiv:2608.17124 (A decodability criterion predicts when hidden-state selection beats majority voting in large language models (CASE), Wang, Hong and Bagci, v1 2026-08-17); full text read by the frontier, kill-shot, asset and cross-domain cells and re-read by synthesis on 2026-10-10 (Secs. 3.1-3.5, 4, 5, 6.4, 6.7)",
+  "note": "File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text."
+ },
+ "budget_ledger": {
+  "declared": {
+   "queries": 150,
+   "wall_minutes": 600,
+   "tokens": 8000000,
+   "dollars": 150,
+   "waves": 3,
+   "gpu_hours": 0.3
+  },
+  "used_by_discovery_cells": {
+   "queries": 127,
+   "uncounted_searches": 24,
+   "paper_reads": 94,
+   "gpu_hours": 0.0,
+   "wall_minutes_reported": "kill-shot about 45; others not reported (cells finished by about 14:37 UTC)",
+   "host": "read-only ssh by the asset and cross-domain cells (squeue, point files, receipts); no host job"
+  },
+  "used_by_synthesis": {
+   "queries": 0,
+   "paper_reads": "7 re-reads of cell-fetched texts; Hugging Face API reads for the model and datasets (auxiliary)",
+   "gpu_hours": 0.0,
+   "host": "one read-only squeue at 14:50 UTC (S1a jobs 1062 and 1064 RUNNING); no host job",
+   "cpu": "S1 (about 160 s) and S2 on the development Mac",
+   "tokens_and_dollars": "not metered by the synthesis agent; the recorder meters from transcripts"
+  },
+  "remaining_queries": 23,
+  "refuter_reserve_shortfall": 7
+ },
+ "direction_doctor_run": {
+  "artifact": "doctors/research-direction-doctor-output.json",
+  "sha256": "cb2034817957223aac1f1b80bb72013ba26b9a1e25bb2a4d546cb96bef43d692",
+  "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-c3-selection-allocation-gate.md",
+  "note": "Outside evidence_root by design: the doctor output depends on this bundle."
+ }
+}

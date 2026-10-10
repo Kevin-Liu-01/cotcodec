@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2608.17124",
+ "fetched_at": "2026-10-10T15:31:09Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42980,
+ "raw_sha256": "a46145d9aeccad69738e287190f4a87124b4c839b1d1d049ce3278176a02b4c8",
+ "raw_stored": false,
+ "extract": {
+  "title": "A decodability criterion predicts when hidden-state selection beats majority voting in large language models",
+  "authors": [
+   "wang, Zhixiang",
+   "Hong, Ziliang",
+   "Bagci, Ulas"
+  ],
+  "citation_date": "2026/08/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 17 Aug 2026 21:02:10 UTC"
+   }
+  ],
+  "abstract": "Combining the answers a large language model (LLM) samples for a question into one decision is a test-time information fusion problem, usually solved by majority voting. Voting is unreliable on difficult questions, where the sampled answers share correlated errors, so the wrong answer can win and drawing more samples makes the decision worse. Selecting a candidate by reading a correctness signal from the model's hidden states is a promising alternative, but its accuracy varies across models and tasks, and no measure indicates when it can be trusted. In this paper, we propose CASE (Correctness-Axis SElection), a dynamic selection combiner that trains a linear gate on the answer-token hidden state and selects the highest-scoring candidate. Its main contribution is decodability, a leakage-free measure of how well the gate ranks a question's correct candidates above its incorrect ones, which predicts whether hidden-state selection will outperform voting. A conventional probe appears accurate only because of question-identity leakage, which vanishes under question-grouped evaluation. On held-out data, decodability predicts the accuracy gain of selection over voting with a Pearson correlation r=0.75 and a decision threshold near AUC=0.60. Across general and medical LLMs, CASE improves over voting by up to 19 points on medium-difficulty questions and 16.8 points on hard questions. Decodability depends on the aligned knowledge a model must recall, not on its scale, and its prediction transfers to an unseen scientific domain within 3.8 points. It thus provides a practical criterion, measurable in advance for a given model and task, for choosing between learned selection and majority voting.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

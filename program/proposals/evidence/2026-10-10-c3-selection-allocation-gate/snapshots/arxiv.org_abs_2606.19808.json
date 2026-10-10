@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2606.19808",
+ "fetched_at": "2026-10-10T15:31:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42514,
+ "raw_sha256": "30d15679f419fdf7e61eca9a9b5c16490c5e6a7f541b07edc4b224fd6339b9b1",
+ "raw_stored": false,
+ "extract": {
+  "title": "Think Again or Think Longer? Selective Verification for Budget-Aware Reasoning",
+  "authors": [
+   "Dip, Sajib Acharjee",
+   "Zhou, Dawei",
+   "Zhang, Liqing"
+  ],
+  "citation_date": "2026/06/18",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 18 Jun 2026 05:25:43 UTC"
+   }
+  ],
+  "abstract": "Test-time reasoning is increasingly used as a serving-time control knob, but extra reasoning is not uniformly valuable: it can repair failed attempts, waste compute on already-correct answers, or introduce harmful answer changes. We study this as a deployment allocation problem rather than a new-verifier problem. We introduce \\sevra, Selective Verification for Reasoning Allocation, a serving-layer controller that decides whether to preserve a frozen solver's initial answer or invoke active verification. Using a frozen Qwen3-4B solver, we log intervention outcomes and train recoverability-aware gates from serving-visible attempt state. On \\mathfive, selective verification reaches 76.3\\% accuracy, compared with 75.5\\% for always verifying, while reducing post-generation tokens by 26.8\\% and harmful flips from 2.2\\% to 1.0\\%. However, an 8,192-token initial solve reaches 76.0\\% accuracy with 28\\% fewer total model tokens, showing that selective recovery is useful but not the best tested cost frontier. In frozen transfer to \\gsm, the selective policy verifies only 3.0\\% of examples, improves accuracy from 93.4\\% to 94.5\\%, and reduces verification tokens by 91.2\\% relative to always verifying; again, a longer initial solve matches its accuracy with fewer realized tokens. On CommonsenseQA, always-on verification hurts, while Self-Consistency@5 improves accuracy at about five times the realized token cost. The resulting deployment rule is: tune the initial budget first, then use selective recovery when explicit checks, bounded retries, auditability, or regression-risk control matter.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

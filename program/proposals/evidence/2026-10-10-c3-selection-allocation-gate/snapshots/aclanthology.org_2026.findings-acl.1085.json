@@ -1,0 +1,12 @@
+{
+ "url": "https://aclanthology.org/2026.findings-acl.1085/",
+ "fetched_at": "2026-10-10T15:31:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43914,
+ "raw_sha256": "5104a258aa159991fa9f0d2768eae8d8b6c0e282f53a2edb37ebe86842d12264",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "Reliability-Aware Adaptive Self-Consistency for Efficient Sampling in LLM Reasoning - ACL Anthology"
+ }
+}
