@@ -3475,3 +3475,46 @@ they say so.)
   also need d90, noise SDs and planted recovery measured on real residuals
   (the 2.7 GB teacher download), and the 2605.16591, 2508.17032 and 2305.12766
   delta rows.
+
+## 2026-10-10 — Q2 S1a registered analysis: DR2 Inconclusive, DR5 INCONCLUSIVE (S1b not admitted); not externally anchored
+
+- One analyst followed `ops/s1a-analysis/RUNBOOK.md` at `6d85529` (D59, D61, D62)
+  on the host, from the read-only export of the freeze commit `d5f5798`. The code
+  of record was unchanged and provenance passed. Every Slurm job was CPU-only
+  with no GRES: rescoring 1065-1068 (`--time=08:00:00`, 3 h 08-3 h 12 each,
+  exit 0), report 1071, identity 1072, first divergence 1073, GLMM 1074 and
+  assembler 1075, 15:23-18:56 UTC. Labels: data complete, "not externally
+  anchored".
+- Primary set (base, 32 tasks, 512 episodes): success 4B 28.91% (H-OSW-fixed)
+  and 26.56% (H-GA); 9B 32.81% and 28.91%. δ = −3.12 pp (paired t p = 0.367,
+  90% t interval [−8.91, 2.66]). X sign flip p = 0.459. D_b = 11.33% [5.86,
+  17.19] and D_w = 12.50%. Excess −1.17 pp (one-sided UB 0.78). π_small = 0.055
+  (one-sided [0.000, 0.260]).
+- Rules: DR0 and DR1 do not fire. DR2 is Inconclusive: not Present, and not
+  near-equivalent (the δ interval crosses −7.5 pp and the π bound is above
+  0.12). DR4 does not fire (at most 0.002702 GPU-h per episode against
+  0.011274). DR5 is INCONCLUSIVE against M = 0.13, so S1b does not go to the
+  gauntlet (D47). DR-A: ANCHOR-UNAVAILABLE. Predictions: P1 falsified; P2-P5
+  stand.
+- Sensitivities: corrected verdicts 0 flips. Metric-exception-missing (1
+  episode) and postconfig server-error-missing (0 episodes, D56) are identical
+  to the primary. With flagged tasks excluded, δ is −2.50 pp; DR2 and DR5 read
+  the same. Secondary set (113 tasks): δ −1.11 pp, π_small 0.084 [0.020, 0.162];
+  it enters no rule. GLMM: the primary fit (the registered reading) did not
+  converge and its LRT was not computed. The secondary fit converged (task:harness
+  LRT p 0.045), which is not a decision input. 9B session shift +5.47 pp
+  (p 0.016), which no rule reads.
+- Infrastructure over 1,808 episodes: 0 losses, 0 restarts, 0 retried, slow or
+  undelivered observations, 0 postconfig server errors. Truncation at most
+  0.44% (no label). Rescoring 452/452 rows per job; 16 secondary verdicts fell
+  back to live scores (`53ad5833` needs live state).
+- Deviation: D59 (i)'s wrapper only. The identity check passed in fractional
+  mode (14 fractional base scores). D61 and D62 were not triggered. Merges and
+  the report reproduced byte for byte on the Mac. The runbook's independent
+  verification (step 12) and a second check of the session-2 per-job lane
+  checks are still open.
+- GPU: none for the analysis; ledger unchanged at 9.746.
+- Evidence: `program/evidence/2026-10-10/q2-stage1-analysis/`; results:
+  `program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md`. Waiting on Kevin:
+  whether to commission the registered follow-up after INCONCLUSIVE (more
+  sessions at 4B and 9B, as a new proposal with its own gauntlet).

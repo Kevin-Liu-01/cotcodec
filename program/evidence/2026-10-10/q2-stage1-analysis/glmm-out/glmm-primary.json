@@ -1,0 +1,76 @@
+{
+  "schema": "q2-stage1a-glmm-v1",
+  "formula_full": "y ~ size * harness + (1 | task) + (1 | task:size) + (1 | task:harness) + (1 | task:size:harness) + (1 | session) + (1 | harness:session) + (1 | task:session) + (1 | task:harness:session)",
+  "formula_reduced": "y ~ size * harness + (1 | task) + (1 | task:size) + (1 | task:size:harness) + (1 | session) + (1 | harness:session) + (1 | task:session) + (1 | task:harness:session)",
+  "n_episodes": 512,
+  "n_tasks": 32,
+  "seed": 42,
+  "n_boot": 200,
+  "glmmTMB_version": "1.1.10",
+  "TMB_version": "1.9.16",
+  "R_version": "R version 4.4.2 (2024-10-31)",
+  "full": {
+    "ok": false,
+    "optimizer_convergence": 1,
+    "optimizer_message": "singular convergence (7)",
+    "pdHess": false,
+    "logLik": null,
+    "df": 12
+  },
+  "reduced": {
+    "ok": false,
+    "optimizer_convergence": 0,
+    "optimizer_message": "relative convergence (4)",
+    "pdHess": false,
+    "logLik": null,
+    "df": 11
+  },
+  "fixed_effects": {
+    "(Intercept)": -4.53471382200975,
+    "size9B": 0.0733728473627525,
+    "harnessH-OSW-fixed": 0.274385785495552,
+    "size9B:harnessH-OSW-fixed": 0.360491820653099
+  },
+  "variance_components": {
+    "task": 32.6420032599919,
+    "task:size": 3.22526625490192,
+    "task:harness": 1.43778645525205,
+    "task:size:harness": 5.32527994911889e-158,
+    "session": 0.0881334760052706,
+    "harness:session": 3.65089829598867e-166,
+    "task:session": 2.53428586916936e-103,
+    "task:harness:session": 6.56202144193383e-08
+  },
+  "latent_shares": {
+    "task": 0.802348819119015,
+    "task:size": 0.0792778724502095,
+    "task:harness": 0.0353411601404601,
+    "task:size:harness": 1.30896748113822e-159,
+    "session": 0.00216634346349552,
+    "harness:session": 8.97400172770787e-168,
+    "task:session": 6.22933971987644e-105,
+    "task:harness:session": 1.61296171470653e-09
+  },
+  "bootstrap": {
+    "refits_failed": 0,
+    "refits_not_converged": 98,
+    "refits_used": 200,
+    "shares_ci95": {
+      "task": [0.418189582010217, 0.963049081244844],
+      "task:size": [5.45366656309375e-12, 0.501894411491243],
+      "task:harness": [6.98363084933365e-12, 0.15059822229022],
+      "task:size:harness": [1.26566327938329e-98, 0.0461750152506985],
+      "session": [3.25431228233773e-44, 0.00653591523193187],
+      "harness:session": [3.67278331809616e-79, 0.00372474591558952],
+      "task:session": [3.08441642439374e-84, 0.0327971307188604],
+      "task:harness:session": [6.46785368424985e-40, 0.0304103135720508]
+    }
+  },
+  "lrt_task_harness": {
+    "statistic": null,
+    "df": 1,
+    "p_value": null,
+    "p_value_boundary_corrected": null,
+    "both_converged": false
+  }
+}

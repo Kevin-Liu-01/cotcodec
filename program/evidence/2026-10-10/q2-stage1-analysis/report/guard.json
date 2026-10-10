@@ -1,0 +1,138 @@
+{
+ "completeness": {
+  "dr0_fired": [],
+  "incomplete": false,
+  "jobs": {
+   "A1-4B-S1": {
+    "dr0_fires": false,
+    "dr0_from_records_fires": false,
+    "dr0_from_records_reasons": [],
+    "dr0_reasons": [],
+    "records": true
+   },
+   "A1-4B-S2": {
+    "dr0_fires": false,
+    "dr0_from_records_fires": false,
+    "dr0_from_records_reasons": [],
+    "dr0_reasons": [],
+    "records": true
+   },
+   "A1-9B-S1": {
+    "dr0_fires": false,
+    "dr0_from_records_fires": false,
+    "dr0_from_records_reasons": [],
+    "dr0_reasons": [],
+    "records": true
+   },
+   "A1-9B-S2": {
+    "dr0_fires": false,
+    "dr0_from_records_fires": false,
+    "dr0_from_records_reasons": [],
+    "dr0_reasons": [],
+    "records": true
+   }
+  },
+  "jobs_absent": [],
+  "jobs_present": [
+   "A1-9B-S1",
+   "A1-4B-S1",
+   "A1-9B-S2",
+   "A1-4B-S2"
+  ],
+  "reasons": [],
+  "registered_job_order": [
+   "A1-9B-S1",
+   "A1-4B-S1",
+   "A1-9B-S2",
+   "A1-4B-S2"
+  ],
+  "sizes": {
+   "4B": {
+    "base_tasks_scored_by_session": {
+     "S1": 32,
+     "S2": 32
+    },
+    "base_tasks_scored_in_both_sessions": 32,
+    "sessions": [
+     "S1",
+     "S2"
+    ],
+    "two_sessions": true
+   },
+   "9B": {
+    "base_tasks_scored_by_session": {
+     "S1": 32,
+     "S2": 32
+    },
+    "base_tasks_scored_in_both_sessions": 32,
+    "sessions": [
+     "S1",
+     "S2"
+    ],
+    "two_sessions": true
+   }
+  },
+  "sizes_with_two_sessions": [
+   "4B",
+   "9B"
+  ],
+  "sizes_without_two_sessions": []
+ },
+ "d59": "(i) estimators._check widened to [0, 1] and NaN; (ii) incomplete-data guard",
+ "fractional_base_scores": 14,
+ "guarded_report": {
+  "kind": "registered report with the guard's readings",
+  "path": "report-guarded.json",
+  "sha256": "6bda751e55c049b9edbd3613d9004f8ab2285a43b2ca890274991c74de7ee655"
+ },
+ "inputs": {
+  "costs": "8a03f13c6fdb795032f7245e159cac6f7f2d12aa6e68a72f95384bd2358a08d5",
+  "dr0": {
+   "A1-4B-S1": "7db4f60a6709503831497e7f7be75bbdb4caa144f5298eb726c405c9ba74c806",
+   "A1-4B-S2": "7a7ed9f045334e2905badedfc975f3165a586375675bcc1d21fb262af8176e95",
+   "A1-9B-S1": "0bccd1f95c3dae92c1a601d79201f323f0389012d303fb7d52b7142df750e1da",
+   "A1-9B-S2": "9d45ef217eb3e9cae3cd38adddffa1e726ef67b5da46511e74f5c2a82997a944"
+  },
+  "plan": "a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806",
+  "records": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0"
+ },
+ "interpretation": {
+  "all_nan": "no p-value is read from a statistic with no finite entry",
+  "incomplete": "every output is labelled incomplete when DR0 fired for any A1 job (its rules dr0 output, or recomputed from the records), when a registered A1 job has no records, or when a size lacks two sessions of scored base records (D59 (ii), section 11)",
+  "no_size_with_two_sessions": "the delta-only report: delta with its intervals and paired t tests, the descriptive, infrastructure and cost counts, DR1 on the sessions present and DR4; D_b, D_w, X, pi, the X test, the session test, DR2, DR5, P1, P2 and P3 are not estimable",
+  "one_size_with_one_session": "D61 (b): that size's session test (and its harness-by-session and common-share entries) is not estimable; DR1 is read on the sessions it holds (session 1); DR5 is not evaluable as registered, and pi_9B is shown against both M as a description only; DR2 is kept as the registered code computes it, with a note: its X test and its pi_small bound then come from the size with two sessions (pi_9B is the registered pi_small only when DR1 drops 4B); P1 and P2 read the size with two sessions; each pooled estimate lists the sizes it averages (pooled_from_sizes)",
+  "registered_dr5_raises": "D62: when the registered report raises only because a DR5 share has no finite bound (rules.dr5 compares None) although a size holds two sessions, report.json is absent and the guarded report is analysis.report recomputed with that rules.dr5 call returning 'not evaluable as registered'; every other value is the registered code's, and the readings above apply",
+  "that_size": "D61 (a): D59 (ii)'s 'that size' is a size left without two sessions of scored base records. A size whose session-2 job fired DR0 but which still holds scored base records in both sessions (a job cut or failed after its first block) is labelled incomplete and the DR0 masks nothing else: its session test (and DR1, for 4B) are read as the registered code computes them on the data collected, and DR5 is masked only when a size lacks two sessions or its pi is undefined ('undefined_pi'). Section 11 reports 'data already collected' as incomplete, and the dry-run checker's B3 handling, from which D59 (ii) was written, names the single-session size",
+  "undefined_pi": "D62: a size that holds both sessions but has, in a set, no task with both harness cells scored in both sessions (a session-2 job cut after a few episodes) has no X and no pi there, so the registered pi_small (the mean of pi_4B and pi_9B) is undefined. For pi it is read as a one-session size: DR5 is not evaluable as registered (pi_9B against both M as a description only), DR2 carries the note, and pooled_from_sizes lists the sizes each pooled estimate averages. Its session test and DR1 are still read as registered"
+ },
+ "label": null,
+ "labels": {
+  "external_anchor": "not externally anchored",
+  "incomplete": null,
+  "incomplete_reasons": []
+ },
+ "read": "read report-guarded.json. report.json is the registered computation (D59 (i)) and is kept for the identity check; on incomplete data it still holds every value the guard changed (for example a single-session size's session p-value of 1/(n+1), or DR5 read against M = 0.13), so it must not be read directly",
+ "readings": [],
+ "registered_report": {
+  "argv": [
+   "python3",
+   "-E",
+   "-s",
+   "-B",
+   "-m",
+   "harness.q2_stage1.analysis",
+   "--records",
+   "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/a1.jsonl",
+   "--plan",
+   "/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca/program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json",
+   "--costs",
+   "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/costs.json",
+   "--out",
+   "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/report/report.json"
+  ],
+  "error": null,
+  "sha256": "9c4d483aec6dfc9316f1d3a2d1798aaf1c8ed5c57ba5365cecc0015bad3e8d5b",
+  "written": true
+ },
+ "schema": "q2-s1a-ops-v1-guard"
+}

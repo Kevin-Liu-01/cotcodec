@@ -380,7 +380,8 @@ episode records keep setup and postconfig replies without their stdout tails
 2. An independent verification of the session-2 per-job checks, as D57 did for session 1.
 3. The registered analysis under D59, D61 and D62 (`ops/s1a-analysis/RUNBOOK.md`) on the four A1
    run directories (VM jobs 1045, 1048, 1051, 1062): offline rescoring, the report, DR1-DR5 and
-   P1-P5, every output labelled "not externally anchored".
+   P1-P5, every output labelled "not externally anchored". **Done on 2026-10-10:** see
+   `RESULTS.md` here and `../q2-stage1-analysis/`.
 
 ## Session 2 begin time moved (D57)
 
