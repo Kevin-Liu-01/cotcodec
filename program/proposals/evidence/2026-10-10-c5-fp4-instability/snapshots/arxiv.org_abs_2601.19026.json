@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2601.19026",
+ "fetched_at": "2026-10-10T21:57:04Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44382,
+ "raw_sha256": "672de38760c06135bdbeaa860905d7d362c8f71d697591ec6bb0d1cd4b274212",
+ "raw_stored": false,
+ "extract": {
+  "title": "Is Finer Better? The Limits of Microscaling Formats in Large Language Models",
+  "authors": [
+   "Fasoli, Andrea",
+   "Kar, Monodeep",
+   "Liu, Chi-Chun",
+   "Venkataramani, Swagath",
+   "Srinivasan, Viji",
+   "Chang, Leland",
+   "Wang, Naigang"
+  ],
+  "citation_date": "2026/01/26",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 26 Jan 2026 23:21:24 UTC"
+   }
+  ],
+  "abstract": "Microscaling data formats leverage per-block tensor quantization to enable aggressive model compression with limited loss in accuracy. Unlocking their potential for efficient training and inference necessitates hardware-friendly implementations that handle matrix multiplications in a native format and adopt efficient error-mitigation strategies. Herein, we report the emergence of a surprising behavior associated with microscaling quantization, whereas the output of a quantized model degrades as block size is decreased below a given threshold. This behavior clashes with the expectation that a smaller block size should allow for a better representation of the tensor elements. We investigate this phenomenon both experimentally and theoretically, decoupling the sources of quantization error behind it. Experimentally, we analyze the distributions of several Large Language Models and identify the conditions driving the anomalous behavior. Theoretically, we lay down a framework showing remarkable agreement with experimental data from pretrained model distributions and ideal ones. Overall, we show that the anomaly is driven by the interplay between narrow tensor distributions and the limited dynamic range of the quantized scales. Based on these insights, we propose the use of FP8 unsigned E5M3 (UE5M3) as a novel hardware-friendly format for the scales in FP4 microscaling data types. We demonstrate that UE5M3 achieves comparable performance to the conventional FP8 unsigned E4M3 scales while obviating the need of global scaling operations on weights and activations.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

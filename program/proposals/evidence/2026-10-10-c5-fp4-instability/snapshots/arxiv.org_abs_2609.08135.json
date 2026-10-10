@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2609.08135",
+ "fetched_at": "2026-10-10T21:57:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41730,
+ "raw_sha256": "ab5e8401a346c4f487e9bbb4422aab0d993e755880c9240cd6e69c698aa6b4e1",
+ "raw_stored": false,
+ "extract": {
+  "title": "KBBQ: A Predictive Noise Law and the Limits of Spectrum Flattening in FP4 Quantization",
+  "authors": [
+   "Whalen, Lexington",
+   "Ito, Yuki",
+   "Sakamoto, Ryo"
+  ],
+  "citation_date": "2026/09/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 8 Sep 2026 02:12:30 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 27 Sep 2026 23:11:27 UTC"
+   }
+  ],
+  "abstract": "We develop a second-order theory of quantization noise in matrix multiplication in which the quantization format is characterized by the variance it assigns to each element. The constant variance profile of integer quantization recovers existing integer-noise theory, while the multiplicative profile of floating-point rounding reduces the data dependence to a scalar, the participation factor $\\kappa$, yielding a closed-form signal-to-noise-ratio law. The resulting functional also admits a closed-form upper bound $\\kappa^{*}$ that no function-preserving linear transform can exceed and that is attained by a recent state-of-the-art method. Building on this analysis, we introduce KBBQ (\\textbf{K}appa-\\textbf{B}raked \\textbf{B}lockwise \\textbf{Q}uantization), which parameterizes the extent to which a transform approaches this ceiling. At W4A4, across four base models and two FP4 formats, KBBQ outperforms the prior state of the art without additional deployment-time computation.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

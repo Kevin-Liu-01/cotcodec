@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2606.09686",
+ "fetched_at": "2026-10-10T21:57:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43875,
+ "raw_sha256": "bf3ea1b84259cde9a78d30fb48ad506305abcee30b285167da729e043535d7ce",
+ "raw_stored": false,
+ "extract": {
+  "title": "Golden Ruler: A Numeric Format Catalog with Bit-Exact Conformance Vectors for FP8, BF16, MXFP4, and Microscaling Formats",
+  "authors": [
+   "Vasilev, Dmitrii"
+  ],
+  "citation_date": "2026/06/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 8 Jun 2026 16:04:15 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 22 Jun 2026 12:28:45 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Fri, 4 Sep 2026 16:34:12 UTC"
+   }
+  ],
+  "abstract": "Numeric format proliferation in machine learning hardware -- FP8 (E4M3 and E5M2), BF16, MXFP4, microscaling block formats, and dozens of research variants -- has outpaced the availability of vendor-neutral, bit-exact reference material. Engineers porting models across accelerators encounter silent divergences that are difficult to diagnose without a shared ruler. This paper describes a catalog of 109 numeric formats spanning 12 clusters (83 at v2; the count is a catalog invariant, not a fixed number), a suite of six bit-exact conformance packs covering GF16, MXFP4 element, BF16, FP8 E4M3, FP8 E5M2, and E8M0 block scale, and an IEEE P3109 v3.2.0 cross-walk that maps each pack to its corresponding standards-track configured format. Each pack is a self-contained JSON document with a SHA-256 fingerprint, a shared row schema, and an anchor vector that encodes 3.0 -- the identity phi^2 + 1/phi^2 = 3 -- as a cross-pack sanity check. Packs are cross-validated against ml_dtypes 0.5.4 (Google/JAX); any divergence is documented explicitly and interpreted as a spec-permitted interpretation gap rather than hidden. The work is framed as registry filling: it does not propose new formats, make model-accuracy claims, or assert superiority over any vendor's implementation. All artifacts are publicly available at this https URL under an open license.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

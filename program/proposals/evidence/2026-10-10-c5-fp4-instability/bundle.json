@@ -1,0 +1,656 @@
+{
+ "schema_version": 1,
+ "proposal": "program/proposals/2026-10-10-c5-fp4-instability.md",
+ "proposal_sha256": "3195b9a2415e70f77f1911db98059e98caefaf772afe8a4feefdf492213f7ed0",
+ "draft_registration": {
+  "path": "program/preregistrations/c5-fp4-instability-v1.md",
+  "sha256": "6d1a786a09a8c1e750c900422758138f4f805067e5b55531278642987438f6ff",
+  "status": "DRAFT, not frozen, no ledger row"
+ },
+ "source_snapshots": [
+  {
+   "url": "https://aclanthology.org/2026.findings-acl.241.pdf",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:02Z",
+   "raw_sha256": "980ce92300424660f2dc9c5e5ef255e345e7bc73a09adff418b44ededaf65747",
+   "raw_bytes": 727334,
+   "artifact": "snapshots/aclanthology.org_2026.findings-acl.241.pdf.json",
+   "sha256": "6b0495da1fb39c69ce60aeef53e27348ab08c5a0e0ab62bd496bb8f1c0f621b9"
+  },
+  {
+   "url": "https://arxiv.org/abs/2002.06305",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:03Z",
+   "raw_sha256": "79a9aaebb060aa91e5d0bb240fa206e0243a7400b1840afd316216d8cd9ec85c",
+   "raw_bytes": 43182,
+   "artifact": "snapshots/arxiv.org_abs_2002.06305.json",
+   "sha256": "e6367fb25348b1aa6e9e680c3a76aebe44954953c8189cfe16f0525d8a38b7c5"
+  },
+  {
+   "url": "https://arxiv.org/abs/2103.04514",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:03Z",
+   "raw_sha256": "d44db908d004455994721ce28f7e67c307d61966a067a593d52073e44a005b60",
+   "raw_bytes": 41871,
+   "artifact": "snapshots/arxiv.org_abs_2103.04514.json",
+   "sha256": "fc97abd93aa2c792e54b66d7c65ffd6a7b272450d36db0254203ce2e56a7cb52"
+  },
+  {
+   "url": "https://arxiv.org/abs/2309.14322",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:03Z",
+   "raw_sha256": "2aa1aa0b44630ff6123b054886f71498736f6616f8a771229bc25da4f91386ef",
+   "raw_bytes": 45111,
+   "artifact": "snapshots/arxiv.org_abs_2309.14322.json",
+   "sha256": "b0636f06f984f5e5dae797f04e246e6f89556f649829c63c2578aadf73925fd7"
+  },
+  {
+   "url": "https://arxiv.org/abs/2409.12517",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:03Z",
+   "raw_sha256": "93d23a93d029e104583be91bca44c3f94b2ae0ba5c1d5b344564b8548a59c187",
+   "raw_bytes": 42033,
+   "artifact": "snapshots/arxiv.org_abs_2409.12517.json",
+   "sha256": "fed26355d114c61e398987ff7e29a208d171fa39a48452bdf4140e18021d33a3"
+  },
+  {
+   "url": "https://arxiv.org/abs/2501.00656",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:03Z",
+   "raw_sha256": "743e6cfd4e33b9a7731064296fb359fe2be8fbb5e1b3ddb8e08b7d38f0ebc3ca",
+   "raw_bytes": 48717,
+   "artifact": "snapshots/arxiv.org_abs_2501.00656.json",
+   "sha256": "1e630357649ea5ed8b3331eb7f6351180cc8b2c4933a912f1c88bec4199ae95a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2501.02423",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:03Z",
+   "raw_sha256": "c0f49126c9dc8d18b6ba9a325a997d17a8392e534ba548a3dc710da48b117f08",
+   "raw_bytes": 45064,
+   "artifact": "snapshots/arxiv.org_abs_2501.02423.json",
+   "sha256": "5582074c813830e848013e33e67b8fe22f36ffa25984275cc0fa25ff26dd69a8"
+  },
+  {
+   "url": "https://arxiv.org/abs/2504.20634",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:03Z",
+   "raw_sha256": "57f0dc235b4810c24a3d6cb540aefa7fd493e90578aaa5930eb8e0f802161a63",
+   "raw_bytes": 41902,
+   "artifact": "snapshots/arxiv.org_abs_2504.20634.json",
+   "sha256": "35abda7caad0add5e09cae5d95e0035b78ecbd712f12df710ae15dc8cd51e81e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2505.19115",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:03Z",
+   "raw_sha256": "a377ee36e815c65268d908a9031128f8f8304c436dcbad127be5cf8d76d9954a",
+   "raw_bytes": 42423,
+   "artifact": "snapshots/arxiv.org_abs_2505.19115.json",
+   "sha256": "4dc23599fb5a1e99aebd3598de262506401b8c3044c18241e11a2242f76f9eb5"
+  },
+  {
+   "url": "https://arxiv.org/abs/2506.01863",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:03Z",
+   "raw_sha256": "f29f19a19b32a8a7ed6300f66b9765dc232486c30b57fc65a810c8e8bede3627",
+   "raw_bytes": 42928,
+   "artifact": "snapshots/arxiv.org_abs_2506.01863.json",
+   "sha256": "cc0aa7425bed57691b92c4cb191c3cc7618dadd1336413127f924402b3e7abd4"
+  },
+  {
+   "url": "https://arxiv.org/abs/2506.20752",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:03Z",
+   "raw_sha256": "d7e62afe4021f3a1b3b03fd80747222b06aa8eece47dbafa6278e3041a46afb5",
+   "raw_bytes": 44642,
+   "artifact": "snapshots/arxiv.org_abs_2506.20752.json",
+   "sha256": "681c925f9f0fc03b9bf3b6a95eb460035151cd0dd36b7d3d0dc98342cfe3f40a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2509.17791",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:04Z",
+   "raw_sha256": "affa1781486854079f9694568e56f9c6de9186b9be7e134adeba3d9a11680d8a",
+   "raw_bytes": 42438,
+   "artifact": "snapshots/arxiv.org_abs_2509.17791.json",
+   "sha256": "375a44d71215e24ca587b2ec642f80c95100840c4c790911808343787f92b95e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2509.25149",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:04Z",
+   "raw_sha256": "bbcf3d19ecfd86b013258e90eef56c46a304ac5a17b449b91ba15a7b9c5fd267",
+   "raw_bytes": 57928,
+   "artifact": "snapshots/arxiv.org_abs_2509.25149.json",
+   "sha256": "f24c65a96ef0da8b315d296e26653cbd4958c263e0b393904e36de53ac72e9c0"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.25602",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:04Z",
+   "raw_sha256": "0086b7bc5032ff2e45417f7ab70a3fff60a3158a48929a8b3ebedf3c9beabdc0",
+   "raw_bytes": 44343,
+   "artifact": "snapshots/arxiv.org_abs_2510.25602.json",
+   "sha256": "059b521a14bd93b10bf5701a1b9ba99f58a5b4bf4e23e43e80e87527746e40a7"
+  },
+  {
+   "url": "https://arxiv.org/abs/2512.07004",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:04Z",
+   "raw_sha256": "6e986e0d96d5c4a628ba6115420740f8cbf7b35008a8046f04a4f53addeac54f",
+   "raw_bytes": 43392,
+   "artifact": "snapshots/arxiv.org_abs_2512.07004.json",
+   "sha256": "fd975dc2fb72a29f2d44556812747cb24f2163f5325eb739c623dd6053c27312"
+  },
+  {
+   "url": "https://arxiv.org/abs/2601.19026",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:04Z",
+   "raw_sha256": "672de38760c06135bdbeaa860905d7d362c8f71d697591ec6bb0d1cd4b274212",
+   "raw_bytes": 44382,
+   "artifact": "snapshots/arxiv.org_abs_2601.19026.json",
+   "sha256": "eaf2b46f263ed147b47cf61b7bb438d0d16e0ca4d134cd4f0900e7ed4adcf1d8"
+  },
+  {
+   "url": "https://arxiv.org/abs/2603.28765",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:04Z",
+   "raw_sha256": "0f22633ebc853c9058469f58f3161fec9ff5273df798be45f4a732dfabb9db56",
+   "raw_bytes": 42274,
+   "artifact": "snapshots/arxiv.org_abs_2603.28765.json",
+   "sha256": "47312fcd943023beef17c5a3bdcc61eabeee985f834460e2ce09e245aaf8f56a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.08826",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:04Z",
+   "raw_sha256": "5d5c6d4f5a537d164d1842b09ed2df68c79cf781e96871ce623ecdeceb531522",
+   "raw_bytes": 46807,
+   "artifact": "snapshots/arxiv.org_abs_2604.08826.json",
+   "sha256": "c81bd7e7867ad24b22eecd174b23d62f58aeb18e1b10fed3f2e9bf066dcd7b51"
+  },
+  {
+   "url": "https://arxiv.org/abs/2605.08565",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:04Z",
+   "raw_sha256": "d2b2d5347b762b212640fc56b926aeb41672c8cca48a6c74a9916ffc2d10a7f6",
+   "raw_bytes": 43338,
+   "artifact": "snapshots/arxiv.org_abs_2605.08565.json",
+   "sha256": "4a11698dcfc0c0646e5d34d3c20c9ad6146361a537f721926750987aa3e5f997"
+  },
+  {
+   "url": "https://arxiv.org/abs/2605.09825",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:05Z",
+   "raw_sha256": "61bf77a646b9e170809dc28c7c5b4030309967d4830cd1e8eb1d5cfd52eb0223",
+   "raw_bytes": 43409,
+   "artifact": "snapshots/arxiv.org_abs_2605.09825.json",
+   "sha256": "b0d27cd58777cf886a20829311f5fa50b60026ae6374e4106d9613551cf0810d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2605.12327",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:05Z",
+   "raw_sha256": "1e2e24f0149e28df7041807523d0cacd1f8e6632c21cc8b6178265ff5c781dc5",
+   "raw_bytes": 42800,
+   "artifact": "snapshots/arxiv.org_abs_2605.12327.json",
+   "sha256": "a2310c994f2937fe705e7e7cb1ce13b3cb51fc924570016162bddd289efac7fd"
+  },
+  {
+   "url": "https://arxiv.org/abs/2605.31035",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:05Z",
+   "raw_sha256": "906fb2883c3dc56682e96c1c9dba6a4be93cf69905137b827c0748e356a293c4",
+   "raw_bytes": 40195,
+   "artifact": "snapshots/arxiv.org_abs_2605.31035.json",
+   "sha256": "177c0cff4447223cc68177f672052566c2844d80021b0b1e534c98ea8c8b306e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.04028",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:05Z",
+   "raw_sha256": "6c4e2de445ee8f8889c0a32bc55ebe777e40464724ece64a694dc7fe136b6694",
+   "raw_bytes": 41805,
+   "artifact": "snapshots/arxiv.org_abs_2606.04028.json",
+   "sha256": "a84d90cae92431d2986730dd0bc866c93d58a2a996b0d68a8287b197537b0bb9"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.09686",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:05Z",
+   "raw_sha256": "bf3ea1b84259cde9a78d30fb48ad506305abcee30b285167da729e043535d7ce",
+   "raw_bytes": 43875,
+   "artifact": "snapshots/arxiv.org_abs_2606.09686.json",
+   "sha256": "0111b2c1125162457921db4650d024cd18e4abc50bf0234d211a7340f9bfa3a9"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.20381",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:05Z",
+   "raw_sha256": "7bd617df77280ff99fbadae5048a9b027c5dea477223ca6d6490330a4e4726c9",
+   "raw_bytes": 43565,
+   "artifact": "snapshots/arxiv.org_abs_2606.20381.json",
+   "sha256": "84d3466308b3a3457061b510c557f4a232d18d489845210fdbbe1450dd982959"
+  },
+  {
+   "url": "https://arxiv.org/abs/2607.12915",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:05Z",
+   "raw_sha256": "433fc37ded1dcaf2f41227ad71f81a0d76711db5cd38d4a8b1812b3e7faab786",
+   "raw_bytes": 41141,
+   "artifact": "snapshots/arxiv.org_abs_2607.12915.json",
+   "sha256": "fda3c8efa064b2fc29fe4f1df55d1d6adaae707a6c9235f5cf0062bd120bd828"
+  },
+  {
+   "url": "https://arxiv.org/abs/2607.24953",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:06Z",
+   "raw_sha256": "85b0ef20ad0443c8e788f656bba03ec3812226b03764adb2b3d67b532fc12e6e",
+   "raw_bytes": 44015,
+   "artifact": "snapshots/arxiv.org_abs_2607.24953.json",
+   "sha256": "c81117de715489aba587b050af75ebb167df276492ec682fdd421f8d2f16f60c"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.11859",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:06Z",
+   "raw_sha256": "accda608b5ee10eb0cfddb6ed312d6decb3b5f624d716a8cc186289691ec4d81",
+   "raw_bytes": 42727,
+   "artifact": "snapshots/arxiv.org_abs_2608.11859.json",
+   "sha256": "64fb7c811e5a1eefabc81f842a31c6435fed823ec7829f879b1ae3cb18c9ca39"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.02846",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:06Z",
+   "raw_sha256": "6e9772dcc7664b2b42fdbe898d202a150c5c00df566dccf9be126f50716ebbb8",
+   "raw_bytes": 42047,
+   "artifact": "snapshots/arxiv.org_abs_2609.02846.json",
+   "sha256": "f66d156b89adfb0a28de7c23244d1a59ce7e6ce164ecf7849784c85436e5fc6e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.08135",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:06Z",
+   "raw_sha256": "ab5e8401a346c4f487e9bbb4422aab0d993e755880c9240cd6e69c698aa6b4e1",
+   "raw_bytes": 41730,
+   "artifact": "snapshots/arxiv.org_abs_2609.08135.json",
+   "sha256": "46306b99b2dee04077e7a75e4ef96d40e0ba6a8b156b94acf396f3fd34ff709a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.11356",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:06Z",
+   "raw_sha256": "b25aa653f21c8d7616b10cba0fe2dc0d2d88782c05101dc0e2eecfce441b42f2",
+   "raw_bytes": 43719,
+   "artifact": "snapshots/arxiv.org_abs_2609.11356.json",
+   "sha256": "dcdfa03b7102ff3079855863b718022cf509e3dfa169c217705ca40f49e0ce95"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.00053",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:06Z",
+   "raw_sha256": "75370a1cce41f0e85eb0b1ec5d8e42506fcec014c9a1cbe33986063f899363ae",
+   "raw_bytes": 41050,
+   "artifact": "snapshots/arxiv.org_abs_2610.00053.json",
+   "sha256": "c643ce35a838f7722c9f0f960432f42e6ba9045fd316bf71add1e6cdbe2fcf34"
+  },
+  {
+   "url": "https://github.com/Anonymous1252022/fp4-all-the-way",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:09Z",
+   "raw_sha256": "eb65731f08ed5f0a0d4d7e2025a24da002aaa7b7499f6018b5cd0c756a538900",
+   "raw_bytes": 422042,
+   "artifact": "snapshots/github.com_Anonymous1252022_fp4-all-the-way.json",
+   "sha256": "aaaed070c7bf31449696911fafd6c014d8b966624e0ff2e2a37b2b2b8f57e268"
+  },
+  {
+   "url": "https://github.com/ChenMnZ/INT_vs_FP",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:11Z",
+   "raw_sha256": "ea838d3e2ce2f4d93f3ccaf7b5186bf0850e69e2c0fb24cf9f122689081f7157",
+   "raw_bytes": 296793,
+   "artifact": "snapshots/github.com_ChenMnZ_INT_vs_FP.json",
+   "sha256": "61a207c0eb6b3b52c8624dad6222e4549efe0bfda586685fff355832bfc2d4c3"
+  },
+  {
+   "url": "https://github.com/MrHuff/ue5m3-fp4",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:13Z",
+   "raw_sha256": "fb4341de09b51e886dfa6994922a641b85ac56adf89918c87adca2f19b0eec2e",
+   "raw_bytes": 375106,
+   "artifact": "snapshots/github.com_MrHuff_ue5m3-fp4.json",
+   "sha256": "6d8583edfbeae16ca8d97c2a44ec3c8028b0246d2be7ee5cfa197aa4740de529"
+  },
+  {
+   "url": "https://github.com/NVIDIA/TransformerEngine",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:14Z",
+   "raw_sha256": "9bcd4a490455048462c0200751bee1c1e83af8f3d227e059401ae3b55369be7f",
+   "raw_bytes": 348995,
+   "artifact": "snapshots/github.com_NVIDIA_TransformerEngine.json",
+   "sha256": "4a7440635915d724d91d803d11d15e3a8f48cf15d9b018393843bbc57ec941da"
+  },
+  {
+   "url": "https://github.com/graphcore-research/gfloat",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:16Z",
+   "raw_sha256": "e4d30c05a82e2f626bf9dd64a582b934d62a4a760c34c361615fb04ff0c3d9dd",
+   "raw_bytes": 296315,
+   "artifact": "snapshots/github.com_graphcore-research_gfloat.json",
+   "sha256": "55d8b18f065d63d288d9326ec91b3dfe74b203f764abcf85d11857e7f407c680"
+  },
+  {
+   "url": "https://github.com/microsoft/microxcaling",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:19Z",
+   "raw_sha256": "4b87054ab582a29c853dc85f0d4a18d9ded43c86156d500e32b445b157f93add",
+   "raw_bytes": 387398,
+   "artifact": "snapshots/github.com_microsoft_microxcaling.json",
+   "sha256": "d918e06b873031738d5a391d4897724407d681236a947cfebc5d6852563ffca1"
+  },
+  {
+   "url": "https://github.com/mit-han-lab/fouroversix",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:21Z",
+   "raw_sha256": "59808af17c86249a4751a3a4823996499eaaeeacd31226ae48861ccda8469687",
+   "raw_bytes": 353858,
+   "artifact": "snapshots/github.com_mit-han-lab_fouroversix.json",
+   "sha256": "6250827378b1764ec1486ae283a6762f0388024c7ec352bbb5af2a793213243e"
+  },
+  {
+   "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:21Z",
+   "raw_sha256": "266596b55b30651ad8538e69323e9f94645a47650b95ef40a2c595dcc0ec0903",
+   "raw_bytes": 1418108,
+   "artifact": "snapshots/huggingface.co_datasets_HuggingFaceFW_fineweb-edu.json",
+   "sha256": "7c2ed6264d7551cb37106b19fedc9da15fa0afe4e8ebf6573088b71648e79582"
+  },
+  {
+   "url": "https://huggingface.co/mistralai/Mistral-7B-v0.1",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:22Z",
+   "raw_sha256": "cdbc3da7a9ba17238ab306c29ea2dc9e881d7276d6f52c7dbcbe4e09f57fb195",
+   "raw_bytes": 250503,
+   "artifact": "snapshots/huggingface.co_mistralai_Mistral-7B-v0.1.json",
+   "sha256": "cf035e42317eb620978c2a590d6b7c8f44d697e0309cc89c6d05ed51b468234b"
+  },
+  {
+   "url": "https://openreview.net/forum?id=18UVn4y0SO",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:22Z",
+   "raw_sha256": "286e1789887f1f3eee540b4f5d7d5e641dbb44993cd764a79a4be374e3e08b32",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_18UVn4y0SO.json",
+   "sha256": "75da7c00c5e7370c523f0c138ea2cd9ccd81e72b5f16cecf19faca29870b1c7c",
+   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=IuigXFBGHI",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:23Z",
+   "raw_sha256": "e57f40a96f827bd994f5583753fccd0a767ed14ae9dd244ed08306677bc4c2f8",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_IuigXFBGHI.json",
+   "sha256": "edc2b8437129bdacb47fd9fcb667a942bbf0cd0b29173f66bdb13fd33a8c1488",
+   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=OEXOAMvsc6",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:23Z",
+   "raw_sha256": "5a8acd428aa7888d22c3d799a2869942779bb27c9949123e29e18fd3170397e4",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_OEXOAMvsc6.json",
+   "sha256": "0a545ee3fa18bec87c58b796bb7c43b06e7a85c77381c31dd2d1712e9f261633",
+   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=bub7HTzeSv",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:23Z",
+   "raw_sha256": "7badacc4a54091c4b60b3f2ee482031e9bc98471d4c83ff23dd52becd08f4800",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_bub7HTzeSv.json",
+   "sha256": "d4a4c1c898f1c980c6e60f766298b1d8d7ad69923e9e236fed94843e0916d889",
+   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=jlkIyaG32w",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:24Z",
+   "raw_sha256": "e20306553fdd6ad1a6bf2d4f66b63e609d3ecf6659f7635f58ad5470d486c1e2",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_jlkIyaG32w.json",
+   "sha256": "ec2abdbe225bf0994ca8a854f1eae3c01b8accd4f988bb7d4b8f3766bce64f27",
+   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=kuzye4EPLR",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:57:24Z",
+   "raw_sha256": "23d0dede3567c303826b820ffe0a4744fb3b14b03b59f44593f046c88757687f",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_kuzye4EPLR.json",
+   "sha256": "aaf52309b0dcc0b59794d9deea4c3227e07bd13ad368f2d80730fc6f92821f5a",
+   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+  }
+ ],
+ "query_log": {
+  "artifact": "query-log.json",
+  "sha256": "1b02ea97eac2f6a08a105d4379a7ab25d388dd3bd5d30af662d5810dbecfea59",
+  "queries_against_budget": 114,
+  "note": "114 counted orx discover invocations (frontier 38, kill-shot 26, cross-domain 35, asset 8, synthesis 7), of which 11 were rejected by the backend; 36 remain of the declared 150, above the triad's reserve of 30; paper reads and non-orx searches recorded, not counted."
+ },
+ "reviews": [],
+ "reviews_status": "NOT_RUN: the blind critic, the refute-first triad and both reviewers run after synthesis. No trusted Ed25519 store exists (D24), so no review can be signed.",
+ "compute": {
+  "scope": "c5-fp4-instability-v1 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: N1 exact numerics, N2 tensor-level prediction, D1 design estimability, S1 decision-rule simulation, S2 cost model, each script with its output.",
+  "image_digest": "127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9",
+  "image_scope": "architecture image (build 855; torch 2.11.0+cu128, Triton 3.6.0, ml_dtypes present); holds no C5 code; a rebuild at the freeze commit is required",
+  "real_model_loop": false,
+  "real_model_loop_scope": "none: no LM pretraining loop, model, loader, checkpointing or evaluation exists for this study",
+  "benchmark_adapter": null,
+  "benchmark_adapter_scope": "none: FineWeb-Edu files and the tokenizer are not on the host; no tokenized shards",
+  "manifest": null,
+  "manifest_scope": "no Slurm manifest exists for J0 to J3 or for any Phase 1 job",
+  "container_smoke": {
+   "label": "container_smoke",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "8406a3f160efed80c6199bc7e09ee69ae8b784d04b932c2c9e48bf8caa2d3bc1"
+  },
+  "slurm_test": {
+   "label": "slurm_test",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "8406a3f160efed80c6199bc7e09ee69ae8b784d04b932c2c9e48bf8caa2d3bc1"
+  },
+  "provenance_verification": {
+   "label": "provenance_verification",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "8406a3f160efed80c6199bc7e09ee69ae8b784d04b932c2c9e48bf8caa2d3bc1"
+  },
+  "registered_caps_gpu_h": {
+   "phase0": {
+    "J0": 0.1,
+    "J1": 2.2,
+    "J2": 0.45,
+    "J3": 0.3,
+    "sum": 3.05
+   },
+   "phase1": "formula fixed in the registration; S2 cap values 29.4 (low, 2 per GPU) to 326.0 (high); admission under D24"
+  },
+  "supplementary_cpu_evidence": [
+   {
+    "label": "N1 exact numerics: grids, scale codebooks, decoded-operand representability, folded tensor scale, metamorphic identity, storage, 2505.19115 Table 4 SD, tie handling",
+    "script": {
+     "artifact": "compute/numerics.py",
+     "sha256": "c4373c5b186b2a673c8f78f46ce224928f7388d94141f2abbdc1058bc7e80f44"
+    },
+    "output": {
+     "artifact": "compute/numerics.json",
+     "sha256": "7ecbb40578864a5ec3e38e1a7c5c9f9940242c055e943c310c437d31ad34f6aa"
+    }
+   },
+   {
+    "label": "N2 tensor-level prediction of the grid effect per scale configuration (numpy reference quantizer, five synthetic distributions, with and without RHT; seeds 42-44)",
+    "script": {
+     "artifact": "compute/crest_prediction.py",
+     "sha256": "fd19888c1ff04f2494afec0fe6b93ae5cefe50eab075c2b09d591374ea55e5bd"
+    },
+    "output": {
+     "artifact": "compute/crest-prediction.json",
+     "sha256": "2badf6ed5fb478d3ae266d4e08b54a1bc72c6a97daf275085d777ef1d230bdbb"
+    }
+   },
+   {
+    "label": "D1 estimability of the dossier, registered and extended cell sets; contrast SEs and MDEs in sigma units",
+    "script": {
+     "artifact": "compute/doe.py",
+     "sha256": "47fa5267a398d67abca3e4a93e584657178d401414b0ea76e2924bb71104c42c"
+    },
+    "output": {
+     "artifact": "compute/doe.json",
+     "sha256": "7a77858efc3c2b295edd84fc7f52f0d2eb80eed6748608d864abeb100a1715a0"
+    }
+   },
+   {
+    "label": "S1 operating characteristics of G1 and the Stage 1b verdicts with LR tuning (2,000 replicates per setting; seeds 42-44); SR test power; exact Spearman critical values for n = 8",
+    "script": {
+     "artifact": "compute/power_sim.py",
+     "sha256": "5b501fb2161aef40ec14a93acc05968f33051d7f395aff1b2824562cf504bf4d"
+    },
+    "output": {
+     "artifact": "compute/power-sim.json",
+     "sha256": "1ddf13a3405911b68150a921d38d9ea991552005c5351b7b529b598f0c9a9807"
+    }
+   },
+   {
+    "label": "S2 Phase 0 caps and Phase 1 projections (assumed throughput; caps by the registered formula)",
+    "script": {
+     "artifact": "compute/cost_model.py",
+     "sha256": "84e0b485f5cb387f4844ae61c0e7ad19ee92bbb2d36368e0ac6450795024717f"
+    },
+    "output": {
+     "artifact": "compute/cost-model.json",
+     "sha256": "ceae76ea8160bec43ecc9755d4f127e64e286ee92cce1cb3745f7c7668677006"
+    }
+   },
+   {
+    "label": "query-log builder (parses the cells' and synthesis's raw orx outputs from the session scratchpad)",
+    "script": {
+     "artifact": "compute/build-query-log.py",
+     "sha256": "11c33d58d84d379ae65d5db712efe0143419d7e1d39aef6d9677ff8bf328de99"
+    }
+   },
+   {
+    "label": "snapshot script for source_snapshots",
+    "script": {
+     "artifact": "compute/snapshot-sources.py",
+     "sha256": "729d1e5e75507415184b1ca3dfd4ec313c1f329a935a9d698b6026e8f1a4203c"
+    }
+   }
+  ],
+  "repository_evidence_used": {
+   "fla_throughput_anchor": "legacy/research/evidence/infrastructure/fla-throughput-h100-2026-09-01.json",
+   "fla_throughput_doctor": "scripts/fla_throughput_doctor.py (tests pass on main per the asset cell)"
+  },
+  "host_state": "read-only ssh at 2026-10-10T21:21:22Z: squeue empty, all eight GPUs at 0 MiB; no host job submitted by synthesis"
+ },
+ "doctors": [
+  {
+   "name": "Source",
+   "status": "PASS",
+   "artifact": "doctors/source.json",
+   "sha256": "598a4a795e9ec33e45dd4442b886cde6f1b392c3a91603fa6df611897be6d6e6"
+  },
+  {
+   "name": "Citation",
+   "status": "PASS",
+   "artifact": "doctors/citation.json",
+   "sha256": "8196aa5d03e81b2638c40f4c557668eb116d4cdd7078e5d390cd8cc42ffd4bf9"
+  },
+  {
+   "name": "Novelty",
+   "status": "FAIL",
+   "artifact": "doctors/novelty.json",
+   "sha256": "c82d3bfc12c0bbee0d44396e9c4ced4fca1d866f62bfe1735755670109af988a"
+  },
+  {
+   "name": "Design",
+   "status": "FAIL",
+   "artifact": "doctors/design.json",
+   "sha256": "bb6afd7445fb5c38e862b3a1ab2b752e91f927c601baa9fe63408b3d08f935f8"
+  },
+  {
+   "name": "Compute",
+   "status": "FAIL",
+   "artifact": "doctors/compute.json",
+   "sha256": "c07bb241a065a8cb0a23419562d8a42f63d7c930515b72faa389d90272948a6b"
+  },
+  {
+   "name": "Safety",
+   "status": "PASS",
+   "artifact": "doctors/safety.json",
+   "sha256": "49efee6e818911adf924783fddeedc642e93ae587c9ee3e6bdf687f412b7c0f5"
+  }
+ ],
+ "audit_log": null,
+ "audit_log_status": "This gauntlet's wave-1 row is appended to program/gauntlet/2026-10-10-c5-fp4-instability.jsonl with scripts/research_gauntlet_record.py after its reviewers score.",
+ "evidence_root_sha256": "5c254eda19921806b3d1bdcb480f570e99322c6a1810281f24bfe7462f3a3d4f",
+ "blind_discrimination_packet": {
+  "proposal": {
+   "artifact": "blind/paragraph-43655420.txt",
+   "sha256": "e6a93b13b44addae6f17eb1d4fdd7bd20a7ecfa0487ae49c6ef0d5e46752d18c",
+   "text_sha256": "5e56b4ce968aa6cad2262941d9b29315c732fb4fa6bcf4f98d63382a615883ff"
+  },
+  "closest_prior": {
+   "artifact": "blind/paragraph-201f330b.txt",
+   "sha256": "e1a41f6be5748a0a0c437224c971b03e62e1247efc4d3197918dcdbb10ee3ff7",
+   "text_sha256": "051add454ba003ed0153090de22dcc94dc83a8a48f9e1c8252cac7caadb81243"
+  },
+  "closest_prior_id": "arXiv:2505.19115 (FP4 All the Way: Fully Quantized Training of LLMs, Chmiel, Fishman, Banner and Soudry, v1 2025-05-25, v2 2025-08-10, NeurIPS 2025 spotlight per OpenReview kuzye4EPLR); full text read by the frontier and kill-shot cells and re-read by synthesis on 2026-10-10 (Abstract, Sec. 3.1, Figs. 1-3 and 7, Sec. 4, App. Table 4)",
+  "note": "File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text."
+ },
+ "budget_ledger": {
+  "declared": {
+   "queries": 150,
+   "wall_minutes": 600,
+   "tokens": 8000000,
+   "dollars": 150,
+   "waves": 3,
+   "gpu_hours": 0.3
+  },
+  "used_by_discovery_cells": {
+   "queries": 107,
+   "queries_rejected_by_backend": 10,
+   "full_text_reads": 58,
+   "gpu_hours": 0.0,
+   "host": "read-only ssh by the frontier cell (arXiv API relay) and one docker import check by the asset cell (no GPU, no Slurm job)"
+  },
+  "used_by_synthesis": {
+   "queries": 7,
+   "queries_rejected_by_backend": 1,
+   "full_text_rereads": 16,
+   "gpu_hours": 0.0,
+   "host": "read-only ssh: one squeue/nvidia-smi read and two Semantic Scholar relay calls; no host job",
+   "cpu": "N1 (about 100 s), N2 (about 60 s), D1, S1 (about 5 s), S2 on the development Mac",
+   "tokens_and_dollars": "not metered by the synthesis agent; the recorder meters from transcripts"
+  },
+  "remaining_queries": 36,
+  "refuter_reserve_shortfall": 0
+ },
+ "direction_doctor_run": {
+  "artifact": "doctors/research-direction-doctor-output.json",
+  "sha256": "aaeb213b8e5802570d41528d72853aa35dbeeb7f1c5be82adf9aacde368e8dad",
+  "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-c5-fp4-instability.md",
+  "note": "Outside evidence_root by design: the doctor output depends on this bundle."
+ }
+}

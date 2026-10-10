@@ -3852,3 +3852,76 @@ they say so.)
     Griffin, 2609.33093 and SWAX.
   - Stopping is also reasonable: even a repaired gate is a weak lever on
     E7's main question (owner's prior P(PASS) about 0.1).
+## 2026-10-10 — C5 FP4 instability gauntlet wave 1 (D67): score 54, no honest exit (branch `gauntlet/c5-fp4`, not merged)
+
+- Wave 1 ran in workflow `wf_32e68e61-0d6` with declared cumulative budgets:
+  queries 150 (at least 30 reserved for the triad), wall_minutes 600, tokens
+  8,000,000, dollars 150, waves 3, gpu_hours 0.3. Four discovery cells fed one
+  synthesis owner, who wrote proposal `3195b9a2...`, DRAFT registration
+  `c5-fp4-instability-v1` (`6d1a786a...`; not frozen, not admitted) and the
+  evidence bundle (evidence root `5c254eda...`) at `341e314`. Scope: Phase 0
+  (registered caps 3.05 GPU-h) and the design of Phase 1 (central 45.0 GPU-h
+  with two runs per GPU, 68.1 without). Audit row 1 is appended to
+  `program/gauntlet/2026-10-10-c5-fp4-instability.jsonl`, row hash
+  `65266173a930eeb1dcda24d4825e8dc9482afa36fd33bdc5da47e89e21cb621c`.
+- Reviews: 54 (claude-opus-5-5) and 65 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1083). Each total equals the sum of its ten scores, and no cap binds (74,
+  79 and 89 all apply). Score 54, best 54. Neither review is signed (D24).
+- Blind discrimination passed by the letter, weakly. The critic judged the
+  proposal and 2505.19115 ("FP4 All the Way") different mechanisms, with the
+  prior the stronger contribution, and called the proposal "methodologically
+  cleaner" and a gap-filler, so the prior is stronger but not strictly
+  dominant. The packets match the bundle files exactly. Reviewer 1 notes the
+  packet tests the wrong prior for the mechanism claim: 2510.25602 had no
+  packet.
+- Refute-first triad: 3 of 3 refuted.
+  - Novelty: NARROWED, not OCCUPIED. No paper trains E2M1 and INT4 crossed
+    with power-of-two and non-power-of-two scales. But H_int ("power-of-two
+    scales penalise INT4 more"), which the proposal calls its own mechanism,
+    is 2510.25602 Theorems 1-2. ARITH 2025 (labelled closed access, but open
+    on NSF PAR) has the block-size leg at tensor level. 2302.08007 (returned
+    by KS-20, never cited) already ties a tensor metric to training loss.
+  - Identification: G1's runs are reused as two Stage 1b cells, which biases
+    P2 toward REFUTED given G1 (0.086-0.178 against about 0.05 with fresh
+    seeds). I_blk measures crest factor, not power-of-two waste. I_fmt also
+    changes UE4M3 range. The endpoint carries forward-pass quantization noise.
+  - Feasibility: Phase 0 only certifies the instrument. The kill result (G1,
+    P about 0.5) first appears in Stage 1a above 8 GPU-h, and sigma is never
+    measured below 8 GPU-h. Within-budget defects: the J0 cap is copied from
+    another job, Inductor's FP32 division rounding is unpinned, and
+    determinism is stated for J2 only.
+- Largest defect: identification of the central registered test (P2/H_int),
+  framed by uncredited published theory. This is reviewer 1's choice;
+  reviewer 2 named the gate-reuse part together with the sigma point. Neither
+  a CONFIRMED nor a REFUTED P2 could be attributed to the stated mechanism.
+  Second: decisiveness (no step under 8 GPU-h measures sigma or the anchor
+  gap).
+- No honest exit applies at wave 1. Exits checked: wave 1 of 3; tokens
+  3.66M of 8M; $67.63 of $150 (list-price equivalent); 158.2 of 600 minutes;
+  GPU 0.0583 of 0.3; no novelty invalidation (narrowed, no reject); Safety
+  PASS. The query budget binds. On the bundle's rule (every orx discover
+  invocation counts, including rejections), 132 of 150 are used and 18 remain.
+  That is exactly a compliant wave-2 triad, with nothing left over for the
+  synthesis owner. On the narrower reading (results only), 115 are used. No
+  wave 3 is fundable. The candidate does not proceed as drafted (triad 3/3).
+  Whether wave 2 runs is the orchestrator's and Kevin's call.
+- The doctor re-run at record time is byte-identical to the bundle copy
+  (FAIL: Novelty, Design and Compute). Process defects:
+  - The feasibility refuter ran no orx query.
+  - The synthesis note gives a stale registration hash ("fc3b29cc...").
+  - OpenAlex rejected 17 of 132 invocations.
+- GPU: reviewer 2's job 1083 used 0.0583 GPU-h (scontrol RunTime 00:03:30 on
+  1 H100, COMPLETED 0:0, 23:12:37-23:16:07 UTC, no leftover container). It
+  was submitted after three empty read-only squeue checks (no S1a job), so
+  the host rule held. It is added to the ledger as "C5 FP4 instability
+  gauntlet wave 1 ... open-weight review (D24)". The program total is 9.8596
+  on this branch. Phase 0 and Phase 1 used no GPU.
+- Waiting on Kevin or the orchestrator:
+  - whether C5 runs wave 2, repairing the largest defect in a new versioned
+    attempt: credit 2510.25602 and ARITH; restrict P2 to I_fmt or add a
+    UE4M3+FP32/B32 pair; register a range-confound rule; use fresh seeds for
+    the gate cells; pin autocast off; rerun the blind critic against the
+    mechanism prior;
+  - whether to register a sigma-and-anchor probe under 8 GPU-h after J1;
+  - the FineWeb-Edu and tokenizer downloads (possibly already covered by D1);
+  - Phase 1 admission (D24), whatever the score.

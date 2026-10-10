@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2610.00053",
+ "fetched_at": "2026-10-10T21:57:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41050,
+ "raw_sha256": "75370a1cce41f0e85eb0b1ec5d8e42506fcec014c9a1cbe33986063f899363ae",
+ "raw_stored": false,
+ "extract": {
+  "title": "Format-Aware Fusion for Fast FP4 Pretraining",
+  "authors": [
+   "Hu, Robert"
+  ],
+  "citation_date": "2026/09/04",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 4 Sep 2026 00:42:51 UTC"
+   }
+  ],
+  "abstract": "Four-bit floating-point (FP4) Tensor Cores accelerate matrix multiplication, but scale computation, operand packing, layout construction, and saved backward state can erase the gain. We present \\emph{format-aware fusion}, which co-designs each quantization producer with its scale domain and consumer layout for native \\mxfp{}, global \\nvfp{}, and cooperative-thread-array-local \\nvfp{}. We evaluate Llama-3-family 8B pretraining through 160 billion tokens using bfloat16 output projections and compiled cross entropy. In matched same-accelerator probes, bfloat16 and Transformer Engine \\nvfp{} reach 18.8K and 27.6K tokens/s/GPU, while our fastest custom route reaches 37.9K. \\mxfp{} with row-gradient stochastic rounding and fixed-sign 32-value Hadamard weight-gradient preconditioning reaches 37.2K tokens/s/GPU (86.3\\% bfloat16 model FLOP utilization) and ends 2.11\\% above the raw bfloat16 training-loss endpoint. A Transformer Engine recipe with four final bfloat16 blocks ends 0.87\\% above bfloat16 at 27.1K tokens/s/GPU. Downstream rankings differ from training-loss rankings, showing that FP4 outcomes depend jointly on scale contract, operand, and execution path.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

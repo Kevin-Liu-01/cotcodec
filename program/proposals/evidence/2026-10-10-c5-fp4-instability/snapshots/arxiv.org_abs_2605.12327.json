@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2605.12327",
+ "fetched_at": "2026-10-10T21:57:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42800,
+ "raw_sha256": "1e2e24f0149e28df7041807523d0cacd1f8e6632c21cc8b6178265ff5c781dc5",
+ "raw_stored": false,
+ "extract": {
+  "title": "Grid Games: The Power of Multiple Grids for Quantizing Large Language Models",
+  "authors": [
+   "Egiazarian, Vage",
+   "Schultheis, Erik",
+   "Panferov, Andrei",
+   "Killian, Earl",
+   "Hoefler, Torsten",
+   "Alistarh, Dan"
+  ],
+  "citation_date": "2026/05/12",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 12 May 2026 16:09:02 UTC"
+   }
+  ],
+  "abstract": "A major recent advance in quantization is given by microscaled 4-bit formats such as NVFP4 and MXFP4, quantizing values into small groups sharing a scale, assuming a fixed floating-point grid. In this paper, we study the following natural extension: assume that, for each group of values, we are free to select the \"better\" among two or more 4-bit grids marked by one or more bits in the scale value. We formalize the power-of-two-grids (PO2) problem, and provide theoretical results showing that practical small-group formats such as MXFP or NVFP can benefit significantly from PO2 grids, while the advantage vanishes for very large groups. On the practical side, we instantiate several grid families, including 1) PO2(NF4), which pairs the standard NF4 normal grid with a learned grid, 2) MPO2, a grid pair that is fully learned over real weights and activations, 3) PO2(Split87), an explicit-zero asymmetric grid and 4) SFP4, a TensorCore-implementable triple which pairs NVFP4 with two shifted variants. Results for post-training quantization of standard open models and pre-training of Llama-like models show that adaptive grids consistently improve accuracy vs single-grid FP4 under both weight-only and weight+activation. Source code is available at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

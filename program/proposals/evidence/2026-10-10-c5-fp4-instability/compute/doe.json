@@ -1,0 +1,173 @@
+{
+ "script": "doe.py",
+ "cell_sets": {
+  "dossier": {
+   "cells": 8,
+   "rank": 8,
+   "parameters": 10,
+   "estimable": [
+    "BF16",
+    "INT4:BF16"
+   ],
+   "not_estimable": [
+    "mu",
+    "INT4",
+    "B32",
+    "UE4M3",
+    "UE5M3",
+    "INT4:B32",
+    "INT4:UE4M3",
+    "INT4:UE5M3"
+   ]
+  },
+  "registered": {
+   "cells": 8,
+   "rank": 8,
+   "parameters": 8,
+   "estimable": [
+    "mu",
+    "INT4",
+    "B32",
+    "UE4M3",
+    "BF16",
+    "INT4:B32",
+    "INT4:UE4M3",
+    "INT4:BF16"
+   ],
+   "not_estimable": []
+  },
+  "extended": {
+   "cells": 10,
+   "rank": 10,
+   "parameters": 10,
+   "estimable": [
+    "mu",
+    "INT4",
+    "B32",
+    "UE4M3",
+    "UE5M3",
+    "BF16",
+    "INT4:B32",
+    "INT4:UE4M3",
+    "INT4:UE5M3",
+    "INT4:BF16"
+   ],
+   "not_estimable": []
+  }
+ },
+ "contrasts": {
+  "Delta_G (INT4 - E2M1, mean over S)": {
+   "coefficients": {
+    "E2M1/S1": -0.25,
+    "E2M1/S2": -0.25,
+    "E2M1/S3": -0.25,
+    "E2M1/S5": -0.25,
+    "INT4/S1": 0.25,
+    "INT4/S2": 0.25,
+    "INT4/S3": 0.25,
+    "INT4/S5": 0.25
+   },
+   "SE_over_sigma_n3": 0.4082,
+   "MDE80_over_sigma_n3": 1.015,
+   "SE_over_sigma_n5": 0.3162,
+   "MDE80_over_sigma_n5": 0.786
+  },
+  "C_blk (S1 - S2: E8M0 B32 - B16)": {
+   "coefficients": {
+    "E2M1/S1": 0.5,
+    "E2M1/S2": -0.5,
+    "INT4/S1": 0.5,
+    "INT4/S2": -0.5
+   },
+   "SE_over_sigma_n3": 0.5774,
+   "MDE80_over_sigma_n3": 1.436,
+   "SE_over_sigma_n5": 0.4472,
+   "MDE80_over_sigma_n5": 1.112
+  },
+  "C_fmt (S2 - S3: E8M0 - UE4M3+PTS at B16)": {
+   "coefficients": {
+    "E2M1/S2": 0.5,
+    "E2M1/S3": -0.5,
+    "INT4/S2": 0.5,
+    "INT4/S3": -0.5
+   },
+   "SE_over_sigma_n3": 0.5774,
+   "MDE80_over_sigma_n3": 1.436,
+   "SE_over_sigma_n5": 0.4472,
+   "MDE80_over_sigma_n5": 1.112
+  },
+  "C_iso (S5 - S3: BF16/B32 - UE4M3+PTS/B16, 4.5 b)": {
+   "coefficients": {
+    "E2M1/S3": -0.5,
+    "E2M1/S5": 0.5,
+    "INT4/S3": -0.5,
+    "INT4/S5": 0.5
+   },
+   "SE_over_sigma_n3": 0.5774,
+   "MDE80_over_sigma_n3": 1.436,
+   "SE_over_sigma_n5": 0.4472,
+   "MDE80_over_sigma_n5": 1.112
+  },
+  "C_anchor (S1 - S3, E2M1 only: MX-like - NV-like)": {
+   "coefficients": {
+    "E2M1/S1": 1.0,
+    "E2M1/S3": -1.0
+   },
+   "SE_over_sigma_n3": 0.8165,
+   "MDE80_over_sigma_n3": 2.031,
+   "SE_over_sigma_n5": 0.6325,
+   "MDE80_over_sigma_n5": 1.573
+  },
+  "I_blk": {
+   "coefficients": {
+    "E2M1/S1": -1.0,
+    "E2M1/S2": 1.0,
+    "INT4/S1": 1.0,
+    "INT4/S2": -1.0
+   },
+   "SE_over_sigma_n3": 1.1547,
+   "MDE80_over_sigma_n3": 2.872,
+   "SE_over_sigma_n5": 0.8944,
+   "MDE80_over_sigma_n5": 2.224
+  },
+  "I_fmt": {
+   "coefficients": {
+    "E2M1/S2": -1.0,
+    "E2M1/S3": 1.0,
+    "INT4/S2": 1.0,
+    "INT4/S3": -1.0
+   },
+   "SE_over_sigma_n3": 1.1547,
+   "MDE80_over_sigma_n3": 2.872,
+   "SE_over_sigma_n5": 0.8944,
+   "MDE80_over_sigma_n5": 2.224
+  },
+  "I_iso": {
+   "coefficients": {
+    "E2M1/S3": 1.0,
+    "E2M1/S5": -1.0,
+    "INT4/S3": -1.0,
+    "INT4/S5": 1.0
+   },
+   "SE_over_sigma_n3": 1.1547,
+   "MDE80_over_sigma_n3": 2.872,
+   "SE_over_sigma_n5": 0.8944,
+   "MDE80_over_sigma_n5": 2.224
+  },
+  "D1 = C_fmt - 2 Delta_G": {
+   "coefficients": {
+    "E2M1/S1": 0.5,
+    "E2M1/S2": 1.0,
+    "E2M1/S5": 0.5,
+    "INT4/S1": -0.5,
+    "INT4/S3": -1.0,
+    "INT4/S5": -0.5
+   },
+   "SE_over_sigma_n3": 1.0,
+   "MDE80_over_sigma_n3": 2.487,
+   "SE_over_sigma_n5": 0.7746,
+   "MDE80_over_sigma_n5": 1.926
+  }
+ },
+ "cov_Cfmt_DeltaG_over_sigma2_n3": 0.0
+}

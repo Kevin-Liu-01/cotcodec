@@ -1,0 +1,52 @@
+{
+ "url": "https://arxiv.org/abs/2604.08826",
+ "fetched_at": "2026-10-10T21:57:04Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 46807,
+ "raw_sha256": "5d5c6d4f5a537d164d1842b09ed2df68c79cf781e96871ce623ecdeceb531522",
+ "raw_stored": false,
+ "extract": {
+  "title": "HiFloat4 Format for Language Model Pre-training on Ascend NPUs",
+  "authors": [
+   "Taghian, Mehran",
+   "Peng, Yunke",
+   "Huang, Xing",
+   "Wang, Yao",
+   "Wang, Yaoyuan",
+   "Guo, Wei",
+   "Luo, Yuanyong",
+   "Hu, Tianchi",
+   "Wang, Junsong",
+   "Wang, Xin",
+   "Liu, Hu",
+   "Cheng, Yu",
+   "Yu, Ziwei",
+   "Li, Hongliang",
+   "Rahimifar, Mehdi",
+   "Yan, Lei",
+   "Wang, Xuefei",
+   "Ma, Zhuang",
+   "Liu, Lei",
+   "Yu, Hui",
+   "Raju, Anandharaju Durai",
+   "Le, Hoang",
+   "Mak, Hei Yi",
+   "Rahman, Tanzila",
+   "Golestan, Shadan"
+  ],
+  "citation_date": "2026/04/09",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 9 Apr 2026 23:50:56 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 25 Sep 2026 19:17:30 UTC"
+   }
+  ],
+  "abstract": "Training large foundation models at low numerical precision is one of the most promising directions for reducing the compute and memory cost of modern AI. Recent 4-bit floating-point formats such as MXFP4 and NVFP4 can be applied to linear GEMM operations in LLMs, but their limited dynamic range introduces numerical instability that prior work addresses by stacking stabilization mechanisms, typically executed at higher precision and partially eroding the efficiency gains that motivate FP4. In this work, we argue that numerical format design is itself a first-class lever for stable FP4 training, and present the first systematic study of FP4 LLM pretraining on energy-efficient Huawei Ascend NPUs. We compare the recently proposed HiFloat4 (HiF4) format against both MXFP4 and NVFP4, holding one recipe fixed across all three formats across dense (OpenPangu-1B, Llama3-8B) and Mixture-of-Experts (Qwen3-MoE-30B) architectures and executing all linear and expert GEMMs in FP4. At matched storage --- NVFP4 and HiF4 both spend 4.5 bits per value --- the three formats differ far more in what they require before they will train at all than in final accuracy. HiF4 reaches a relative loss of 1.55\\% with no stabilization, below fully stabilized MXFP4 (1.79\\%) and below NVFP4 carrying the per-tensor scaling it cannot train without (2.00\\%); NVFP4 diverges under every combination of stochastic rounding and Hadamard transform we tried. Our results suggest that stable, accurate FP4 training does not require an ever-growing stack of stabilization techniques; it requires the right numerical format.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

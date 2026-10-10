@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2505.19115",
+ "fetched_at": "2026-10-10T21:57:03Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42423,
+ "raw_sha256": "a377ee36e815c65268d908a9031128f8f8304c436dcbad127be5cf8d76d9954a",
+ "raw_stored": false,
+ "extract": {
+  "title": "FP4 All the Way: Fully Quantized Training of LLMs",
+  "authors": [
+   "Chmiel, Brian",
+   "Fishman, Maxim",
+   "Banner, Ron",
+   "Soudry, Daniel"
+  ],
+  "citation_date": "2025/05/25",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 25 May 2025 12:14:25 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 10 Aug 2025 07:10:29 UTC"
+   }
+  ],
+  "abstract": "We demonstrate, for the first time, fully quantized training (FQT) of large language models (LLMs) using predominantly 4-bit floating-point (FP4) precision for weights, activations, and gradients on datasets up to 200 billion tokens. We extensively investigate key design choices for FP4, including block sizes, scaling formats, and rounding methods. Our analysis shows that the NVFP4 format, where each block of 16 FP4 values (E2M1) shares a scale represented in E4M3, provides optimal results. We use stochastic rounding for backward and update passes and round-to-nearest for the forward pass to enhance stability. Additionally, we identify a theoretical and empirical threshold for effective quantized training: when the gradient norm falls below approximately $\\sqrt{3}$ times the quantization noise, quantized training becomes less effective. Leveraging these insights, we successfully train a 7-billion-parameter model on 256 Intel Gaudi2 accelerators. The resulting FP4-trained model achieves downstream task performance comparable to a standard BF16 baseline, confirming that FP4 training is a practical and highly efficient approach for large-scale LLM training. A reference implementation is supplied in this https URL .",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
