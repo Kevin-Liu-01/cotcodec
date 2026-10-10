@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2610.12144",
+ "fetched_at": "2026-10-10T21:26:39Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43103,
+ "raw_sha256": "a9a2dc96fa196b22954d5324ff3af95f7dffd04f17b6cfc7c11c0f7cec9ed7f9",
+ "raw_stored": false,
+ "extract": {
+  "title": "Language-Specific Effects of Tokenizer Choice in Multilingual Language Models",
+  "authors": [
+   "Meister, Clara",
+   "Altıntaş, Gül Sena",
+   "Bosselut, Antoine"
+  ],
+  "citation_date": "2026/10/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 8 Oct 2026 15:29:37 UTC"
+   }
+  ],
+  "abstract": "Tokenizer choice affects multilingual language modeling, but vocabulary capacity is finite and vocabulary size is often constrained: improving representation for some languages often comes at the expense of others. We therefore ask whether tokenizer choice matters equally across languages, a question that the current literature leave unanswered. To this end, we train 123 language models spanning 54 tokenizers. In the main comparison, architecture, training corpus, training-token budget, and optimization are held fixed, so the models differ only in their tokenizer. We find that tokenizer choice matters more for languages with less language-model training data: across the 54 tokenizers, the standard deviation of a language's bits-per-byte (BPB) increases as its model training-data share decreases (Spearman rho = -0.52 over the 31 trained languages and -0.69 over the 28 written with word boundaries). Leaving a language out of tokenizer training raises its BPB in every language we study, and the penalty tends to be larger for languages with less language-model training data. Giving lower-resource languages a larger share of tokenizer-training data, however, does not unconditionally help those languages: both equal weighting and an allocation inverting the shares with respect to the language model training data increase their BPB, particularly when language-model training repeats data. Finally, which intrinsic tokenizer properties are associated with better BPB differs across languages, providing further evidence that what makes a good tokenizer depends on the language. We find that the metrics quantifying these properties can be successfully used to predict downstream models' pairwise BPB rankings, suggesting a practical strategy for screening tokenizer candidates before training language models.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

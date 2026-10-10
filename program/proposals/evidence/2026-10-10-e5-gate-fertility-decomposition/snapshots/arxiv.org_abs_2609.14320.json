@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2609.14320",
+ "fetched_at": "2026-10-10T21:26:39Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42901,
+ "raw_sha256": "66040815852090ee2131ab3336336401f7b8542c403aa77b10a941fcba3f150e",
+ "raw_stored": false,
+ "extract": {
+  "title": "SpectralShift: Effective Context Window Extension of Gated DeltaNet via Spectral Reparameterization",
+  "authors": [
+   "Liu, Zian",
+   "Hu, Yiwen",
+   "Dong, Zican",
+   "Xie, Tian",
+   "Zhao, Wayne Xin",
+   "Ding, Yucheng",
+   "Tao, Ran",
+   "Dai, Bryan"
+  ],
+  "citation_date": "2026/09/13",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 13 Sep 2026 06:30:16 UTC"
+   }
+  ],
+  "abstract": "Recently, linear attention layers have been increasingly adopted to replace softmax attention at scale for long-context modeling. However, existing context extension approaches typically apply continued pretraining directly without modifying these layers, overlooking the spectral properties of linear attention state dynamics. In this work, we study long-context extension of Gated DeltaNet (GDN) from a spectral perspective of transition matrix and identify two essential factors governing long-range information retrieval: (1) a sufficiently broad slow spectral band aligned with the target dependency length, and (2) the preservation of fast-decaying modes for state clearing and context switching. Based on this observation, we propose SpectralShift, a spectral reparameterization approach for long-context continual pretraining of GDNs. Specifically, SpectralShift reparameterizes the alpha projections initialization to reshape the decay spectrum by enhancing slow propagation capacity, and further introduces a learning-rate scaling for alpha projections to facilitate long-context training. Experiments show that SpectralShift consistently improves long-context capabilities over training, providing an effective and efficient solution for extending context windows of linear attention models. The code has been open-sourced at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

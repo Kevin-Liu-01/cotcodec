@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2603.10771",
+ "fetched_at": "2026-10-10T21:26:38Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41288,
+ "raw_sha256": "d23c1edc17cc84a4bcbdd40d20a13141f8b31110870154a3831ac582ab181426",
+ "raw_stored": false,
+ "extract": {
+  "title": "Word Recovery in Large Language Models Enables Character-Level Tokenization Robustness",
+  "authors": [
+   "Yang, Zhipeng",
+   "Yang, Shu",
+   "Hu, Lijie",
+   "Wang, Di"
+  ],
+  "citation_date": "2026/03/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 11 Mar 2026 13:49:14 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 4 Aug 2026 12:18:46 UTC"
+   }
+  ],
+  "abstract": "Large language models (LLMs) trained with canonical tokenization exhibit surprising robustness to non-canonical inputs such as character-level tokenization, yet the mechanisms underlying this robustness remain unclear. We study this phenomenon through mechanistic interpretability and identify a core process we term word recovery. We first introduce a decoding-based method to detect word recovery, showing that hidden states reconstruct canonical word-level token identities from character-level inputs. We then provide causal evidence by removing the corresponding subspace from hidden states, which consistently degrades downstream task performance. Finally, we conduct a fine-grained attention analysis and show that in-group attention among characters belonging to the same canonical token is critical for word recovery: masking such attention in early layers substantially reduces both recovery scores and task performance. Together, our findings provide a mechanistic explanation for tokenization robustness and identify word recovery as a key mechanism enabling LLMs to process character-level inputs.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

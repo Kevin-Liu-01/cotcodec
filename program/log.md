@@ -3623,3 +3623,84 @@ they say so.)
   p-values (X 0.4531, session 4B 0.5625, 9B 0.0156; registered Monte Carlo
   0.4588, 0.5631, 0.0163) and the DR3 inputs.
 - The runbook's step-12 verification still has no committed record. GPU: none.
+
+## 2026-10-10 — E5 first-step gauntlet wave 1 (D67): score 54, honest exit (branch `gauntlet/e5-d20`, not merged)
+
+- Wave 1 ran in workflow `wf_a885a6df-60d` with declared cumulative budgets:
+  queries 150 (at least 30 reserved for the triad), wall_minutes 600, tokens
+  8,000,000, dollars 150, waves 3, gpu_hours 0.3. Scope: the language-free
+  decomposition only (decay against interference under re-segmentation of
+  English episodes on GatedDeltaNet-1.3B and RWKV-7 1.5B World); translation
+  work is out of scope. Four discovery cells fed one synthesis owner, who wrote
+  proposal `5c12ae3a...`, DRAFT registration
+  `e5-gate-fertility-decomposition-v1` (`f4abf428...`; not frozen, not
+  admitted) and the evidence bundle (evidence root `dab86d8e...`) at
+  `31dd50b`. Audit row 1 is appended to
+  `program/gauntlet/2026-10-10-e5-gate-fertility-decomposition.jsonl`, row hash
+  `8b808c0c5a91720c6ee9152a71488a64e22cfd740b2bb6275ecb8b86b9d05800`.
+- Reviews: 57 (claude-opus-5-5) and 54 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1081). Each total equals the sum of its ten scores, and no cap binds (74,
+  79 and 89 all apply). Score 54, best 54. Neither review is signed (D24).
+- Blind discrimination is recorded as PASS by the rule's letter, and weak. The
+  critic told the proposal and Lee et al. (2609.33093) apart
+  (same_mechanism=false) and judged the prior the stronger contribution, but
+  called the proposal "the cleaner causal test of one sub-question", so the
+  prior is stronger, not strictly dominant. Reviewer 2 wrote "strictly
+  dominant", which the critic did not. Both reviewers apply 74 for incomplete
+  coverage anyway. The packets match the bundle files exactly. Only Lee et al.
+  was judged.
+- Refute-first triad: 3 of 3 refuted.
+  - Novelty: a trivial recombination. The per-token clamp is Tallec and
+    Ollivier's time-warping condition (1804.11188) applied to the decay term,
+    and it is already legacy D20's span oracle; patching NIE as mediation is
+    2606.27510. No direct prior was found.
+  - Identification: the K = 1 foils are fresh codes, so K = 1 is a presence
+    test likely at ceiling, which halves beta; the clamp's NIE absorbs the
+    decay-by-write interaction (S1's own worlds: pure decay cost 16-45
+    points against NIE 8-14; the audit row's "17-45" is a rounding slip, the
+    W6 K = 4 value is 16.2).
+  - Feasibility: the registered reading is not decisive at its line; no
+    harness, adapter, manifest or measured throughput exists; subject G is
+    neither on the host nor licensed.
+- Largest defect: the identification and decisiveness of the registered kill
+  reading (both reviewers; the identification and feasibility refuters). With
+  the registered estimator, a true K = 4 decay secant at the 3-point line reads
+  KILL with probability 0.955 / 0.776 / 0.636 at discordance 0.1 / 0.2 / 0.3
+  (reviewer 1's rerun), against a stated false-kill rate of 0.05-0.11. S1 and
+  S2 never run the f_p fallback, the line is carried from exact match to
+  forced choice without calibration, and passages cluster within at most 120
+  WikiText-103 articles. All of these push toward KILL, the expected reading,
+  which leads to the same action as not running the step.
+- Honest exit applies for two reasons.
+  - Query budget: 135 of 150 are used (cells 120, novelty refuter 10,
+    identification refuter 5, feasibility refuter 0; 8 OpenAlex calls were
+    refused with HTTP 429 and are not counted). The 15 left cannot fund a
+    rule-compliant wave-2 triad, which needs at least 18.
+  - Triad stop: 0 of 3 refuters failed to refute.
+- Exits that do not apply: tokens 3.27M of 8M (main-session tokens shared
+  with four other gauntlets included), $54.81 of $150, 142.9 of 600 minutes,
+  wave 1 of 3. The doctor re-run at record time is byte-identical to the
+  bundle copy (FAIL, accepted 0, cap 89, as expected).
+- GPU: reviewer 2's job 1081 used 0.0544 GPU-h (scontrol RunTime 00:03:16 on
+  1 H100, COMPLETED 0:0, 22:42:29-22:45:45 UTC, no leftover container). It
+  was submitted after S2's reviewer job 1079 cleared and no S1a job was
+  running or pending, so the host rule held. It is added to the ledger as "E5
+  first-step gauntlet wave 1 ... open-weight review (D24)". The program total
+  is 9.8557 on this branch. The step itself used no GPU.
+- Process defects: the feasibility refuter ran no discover query and the
+  identification refuter 5, below six each; one critic call only; seven
+  background ledger sources closed on abstracts; reviewer 2's operator wrote
+  one scontrol snapshot into the host run root and removed it at once
+  (disclosed).
+- Waiting on Kevin: whether E5 continues.
+  - To stop: close D20 by citing 2609.33093, the dossier's own fallback.
+  - To continue, a fresh run with new budgets would need a v2 registration
+    that drops the K = 1 presence test from the primary statistic (or uses
+    in-episode foils) under a ceiling gate, adds a DECAY-ONLY arm at canonical
+    writes and reports PIE, NIE and INT, recalibrates the line in
+    forced-choice units, re-runs S1 and S2 through primary_f with
+    article-level clustering, conditions KILL on median R_F >= 1.5, and
+    credits the span oracle, Tallec and Ollivier, and 2606.27510.
+  - Either way, data-rights decision 1: subject G
+    (m-a-p/1.3B-100B-GatedDeltaNet-pure@930ed6ae) has no licence; the
+    apache-2.0 fallback differs in architecture and data.

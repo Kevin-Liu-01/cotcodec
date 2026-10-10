@@ -1,0 +1,18 @@
+{
+ "doctor": "Source",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
+ "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac; arxiv.org abstract pages, the Hugging Face model, tree and dataset APIs and github.com reachable; 120 counted orx discover queries (frontier 47, kill-shot 24, cross-domain 43, asset 6, synthesis 0) with returned ids and raw-output SHA-256 in query-log.json (one asset raw output not saved, ids from the cell's result); 9 OpenReview term searches, 7 web searches, 2 ACL Anthology fetches and 2 failures logged as uncounted; 57 cell paper reads (40 distinct); source cutoff 2026-10-10; every primary URL snapshotted with HTTP 200.",
+ "degraded_coverage": [
+  "Semantic Scholar and the arXiv API unreachable from the Mac; the host relay was not used",
+  "OpenReview: most ICLR 2027 forum titles hidden or HTTP 403; note pages behind a browser challenge, not bypassed",
+  "ACL Anthology only through restricted web searches and two page fetches, not its own index",
+  "patents, X, Reddit, GitHub code search and Chinese-language venues not searched; citation graph only through OpenAlex",
+  "orx 0.2.2 reports itself outdated against 0.2.18; the alphaXiv keyword index leans to recent papers",
+  "psychology sources read as OpenAlex metadata or abstracts only; LongMamba, ReMamba and LAMB not opened",
+  "full texts read by targeted section, not end to end"
+ ],
+ "remediation": "Semantic Scholar forward citations for 2609.33093 and 2609.16183 through the host relay; a full OpenReview sweep when accessible."
+}

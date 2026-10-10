@@ -1,0 +1,45 @@
+{
+ "url": "https://arxiv.org/abs/2503.14456",
+ "fetched_at": "2026-10-10T21:26:37Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44564,
+ "raw_sha256": "40573f508270ee99b48e0ad83a2ed56fbc500141d00e931910bfaabb2dad6323",
+ "raw_stored": false,
+ "extract": {
+  "title": "RWKV-7 \"Goose\" with Expressive Dynamic State Evolution",
+  "authors": [
+   "Peng, Bo",
+   "Zhang, Ruichong",
+   "Goldstein, Daniel",
+   "Alcaide, Eric",
+   "Du, Xingjian",
+   "Hou, Haowen",
+   "Lin, Jiaju",
+   "Liu, Jiaxing",
+   "Lu, Janna",
+   "Merrill, William",
+   "Song, Guangyu",
+   "Tan, Kaifeng",
+   "Utpala, Saiteja",
+   "Wilce, Nathan",
+   "Wind, Johan S.",
+   "Wu, Tianyi",
+   "Wuttke, Daniel",
+   "Zhou-Zheng, Christian"
+  ],
+  "citation_date": "2025/03/18",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 18 Mar 2025 17:31:05 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 30 Mar 2025 13:46:44 UTC"
+   }
+  ],
+  "abstract": "We present RWKV-7 \"Goose\", a new sequence modeling architecture with constant memory usage and constant inference time per token. Despite being trained on dramatically fewer tokens than other top models, our 2.9 billion parameter language model achieves a new 3B SoTA on multilingual tasks and matches the current 3B SoTA on English language downstream performance. RWKV-7 introduces a newly generalized formulation of the delta rule with vector-valued gating and in-context learning rates, as well as a relaxed value replacement rule. We show that RWKV-7 can perform state tracking and recognize all regular languages, while retaining parallelizability of training. This exceeds the capabilities of Transformers under standard complexity conjectures, which are limited to $\\mathsf{TC}^0$. To demonstrate RWKV-7's language modeling capability, we also present an extended open source 3.1 trillion token multilingual corpus, and train four RWKV-7 models ranging from 0.19 billion to 2.9 billion parameters on this dataset. To foster openness, reproduction, and adoption, we release our models and dataset component listing at this https URL, and our training and inference code at this https URL all under the Apache 2.0 License.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

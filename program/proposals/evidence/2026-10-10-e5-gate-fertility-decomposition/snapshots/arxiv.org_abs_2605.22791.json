@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2605.22791",
+ "fetched_at": "2026-10-10T21:26:38Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43125,
+ "raw_sha256": "d7bc060276744cbf5ba04f017f43a087fcf05ee24ccbe505c3068f519e00d186",
+ "raw_stored": false,
+ "extract": {
+  "title": "Gated DeltaNet-2: Decoupling Erase and Write in Linear Attention",
+  "authors": [
+   "Hatamizadeh, Ali",
+   "Choi, Yejin",
+   "Kautz, Jan"
+  ],
+  "citation_date": "2026/05/21",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 21 May 2026 17:44:57 UTC"
+   }
+  ],
+  "abstract": "Linear attention replaces the unbounded cache of softmax attention with a fixed-size recurrent state, reducing sequence mixing to linear time and decoding to constant memory. The hard part is not just what to forget, but how to edit this compressed memory without scrambling existing associations. Delta-rule models subtract the current read before writing a new value, and Kimi Delta Attention (KDA) sharpens forgetting with channel-wise decay. But the active edit still uses a single scalar gate to control two different things: how much old content to erase on the key side and how much new content to commit on the value side. We introduce Gated DeltaNet-2, which generalizes both Gated DeltaNet and KDA by inheriting adaptive forgetting and channel-wise decay while addressing their shared limitation, the scalar tie between erasing and writing. Gated Delta Rule-2 separates these roles with a channel-wise erase gate b_t and a channel-wise write gate w_t, reducing to KDA when both gates collapse to the same scalar and to Gated DeltaNet when the decay also collapses. We derive a fast-weight update view, a chunkwise WY algorithm with channel-wise decay absorbed into asymmetric erase factors, and a gate-aware backward pass that preserves efficient parallel training. At 1.3B parameters trained on 100B FineWeb-Edu tokens, Gated DeltaNet-2 achieves the strongest overall results among Mamba-2, Gated DeltaNet, KDA, and Mamba-3 variants across language modeling, commonsense reasoning, and retrieval. Its advantage is most pronounced on long-context RULER needle-in-a-haystack benchmarks, where it improves the evaluated multi-key retrieval setting and remains strong in both recurrent and hybrid settings. Code is available at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

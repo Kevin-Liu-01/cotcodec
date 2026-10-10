@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2404.03646",
+ "fetched_at": "2026-10-10T21:26:37Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41924,
+ "raw_sha256": "abb56f37246c25b8cb14b8d3e0a2b9ee0372db1415d0dd5ef096a61c0b5aac2d",
+ "raw_stored": false,
+ "extract": {
+  "title": "Locating and Editing Factual Associations in Mamba",
+  "authors": [
+   "Sharma, Arnab Sen",
+   "Atkinson, David",
+   "Bau, David"
+  ],
+  "citation_date": "2024/04/04",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 4 Apr 2024 17:58:31 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 2 Aug 2024 21:29:25 UTC"
+   }
+  ],
+  "abstract": "We investigate the mechanisms of factual recall in the Mamba state space model. Our work is inspired by previous findings in autoregressive transformer language models suggesting that their knowledge recall is localized to particular modules at specific token locations; we therefore ask whether factual recall in Mamba can be similarly localized. To investigate this, we conduct four lines of experiments on Mamba. First, we apply causal tracing or interchange interventions to localize key components inside Mamba that are responsible for recalling facts, revealing that specific components within middle layers show strong causal effects at the last token of the subject, while the causal effect of intervening on later layers is most pronounced at the last token of the prompt, matching previous findings on autoregressive transformers. Second, we show that rank-one model editing methods can successfully insert facts at specific locations, again resembling findings on transformer LMs. Third, we examine the linearity of Mamba's representations of factual relations. Finally we adapt attention-knockout techniques to Mamba in order to dissect information flow during factual recall. We compare Mamba directly to a similar-sized autoregressive transformer LM and conclude that despite significant differences in architectural approach, when it comes to factual recall, the two architectures share many similarities.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
