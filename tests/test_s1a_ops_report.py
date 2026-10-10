@@ -343,7 +343,7 @@ def test_short_session_2_job_without_a_paired_task(scenarios, tmp_path):
     """DR0 fires at A1-4B-S2 after four scored base episodes, all H-GA: 4B holds both
     sessions, but no task holds both harness cells in both, so X_4B and pi_4B are all-NaN.
     The registered code then reads DR5 on pi_9B against M_SMALL under the label 'mean of
-    pi_4B and pi_9B'; the guard reads 4B's pi as a one-session size's (D61 (a) addendum)."""
+    pi_4B and pi_9B'; the guard reads 4B's pi as a one-session size's (D62)."""
     out = wrapper(scenarios["short4bs2"], tmp_path / "w")
     report = json.loads(out["report"].read_text())
     rp = report["primary"]
