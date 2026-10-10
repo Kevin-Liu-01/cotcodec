@@ -956,3 +956,29 @@ command.
 
 The wrapper and the operator scripts are written, tested on synthetic records
 and independently verified before session 2 ends.
+
+**D60. E4 continues for one fresh repair run after wave 1 (49, honest exit).**
+E4's gate gauntlet (D58) scored 49, the lower of the two reviews (Claude 55,
+open-weight 49). All three refuters refuted, and the query budget was overrun
+(159 of 150). Blind discrimination against 2608.13385 passed. The largest
+defect is identification. S1, the evidence for the episode-specificity and
+span verdicts, does not use the registered estimator. With the registered
+family constant (rank 8, four probes), a teacher with no episode-specific
+behaviour passes the guard, and gradient-form teachers flip from TIE to GAP.
+A label-prior shift and contextualised keys also give false GAPs that pass
+every gate. Feasibility: the teacher's tokenizer has no single-token digit
+answers, so five families drop and the family table cannot be built as
+registered. I1 and I2 rarely pass together at 16 fitting probes, and more
+probes push the high case towards 7.5 GPU-h. Novelty: structural priors went
+uncited (2212.10559, 2311.07772, 2506.06266, 2602.16284, 2609.17346), and
+OpenReview and the ACL Anthology were not searched. Decided: one CPU-only
+repair by a single owner, then a fresh gauntlet run with new budgets and a
+query share reserved for the triad. The repair aligns S1 with the registered
+estimator, or registers the estimator S1 validates, and shows the constant
+teacher reads EPISODE_CONSTANT under it. It makes the placebo
+decision-bearing, adds controls for label-prior calibration and contextualised
+keys, rebuilds the family table under the real tokenizer, and reconciles I1
+and I2 with the probe budget inside 8 GPU-h. It also cites and differentiates
+the uncited priors after searching OpenReview and the ACL Anthology. If the
+fresh run scores below 60, or identification is still the largest defect, E4
+ends at an honest exit. Its reviewer lane job runs only outside an S1a job.
