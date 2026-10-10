@@ -1132,3 +1132,36 @@ from `legacy/` where one exists, and writes a proposal and a draft
 registration for its first step only. Each then runs wave 1. Every agent
 prompt carries the command rule (no command may block more than about 4
 minutes). Nothing is submitted to the host but the reviewers' lane jobs.
+
+**D68. The five D67 lines after wave 1: one repair run each, under D60's stop
+line.** Wave-1 scores (the lower of the two reviews):
+- S2 (Arabic computer-use locale) 49. Blind discrimination judged the
+  proposal stronger than macOSWorld, and no direct prior was found. The
+  largest defect is that Relay's 18 tasks cannot power Phase 1 (frontier
+  models complete 0 of 12 Relay workflows from pixels), and the bidi fixture
+  confounds the off-diagonal cells.
+- C5 (FP4 instability) 54 (open-weight 65). Its central mechanism (power-of-two
+  scales penalise INT4) is published theory, 2510.25602, and was uncredited.
+  Gate reuse biases the factorial. The training-time grid-by-scale crossing
+  is unpublished but narrowed.
+- E5 (recurrent gates and fertility) 54. The kill reading is biased towards
+  KILL: K = 1 sits at ceiling, and the clamp mixes decay with a decay-by-write
+  interaction.
+- E3 (byte-boundary headroom) 52. At the registered operating point (EN-ZH)
+  the statistic measures Chinese density and English word-end misses, not
+  translation-specific placement, and NO_HEADROOM is unreachable.
+- E7 (equivariant writes G1 gate) 51. The CUT check, first in the verdict
+  order, rests on a false premise (SWA relays the facts past the state reset),
+  and the gate itself claims no novelty (prior 2610.06750).
+All three refuters refuted every line. Each defect is a design defect a CPU
+repair can address. Decided: one fresh repair run per line, by a single
+owner, with new budgets and a query share reserved for the triad. S2's repair
+moves the study onto Q2's certified OSWorld stack (applications with Arabic
+interfaces, the D53 action path, S1a's measured noise floor) and fixes the
+fixture so text direction and layout direction vary separately. Each run ends
+at an honest exit if it scores below 60, or if its wave-1 largest defect is
+still the largest. A structural note for Kevin: no candidate can score 100
+without the protected trust store (D24), because the caps of 79 for a
+missing executable pilot and 89 for unsigned reviews bind. So whatever these
+scores, running any of these first steps needs his admission ruling, or the
+trust store.
