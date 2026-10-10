@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/fla-hub/transformer-2.7B-100B",
+ "fetched_at": "2026-10-10T06:13:16Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 117505,
+ "raw_sha256": "9635e80bc111722fcb6ab1bba4c7fe608b1929462e862a67ec69bd750ca65345",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "fla-hub/transformer-2.7B-100B · Hugging Face"
+ }
+}

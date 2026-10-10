@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2609.08692",
+ "fetched_at": "2026-10-10T06:13:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42987,
+ "raw_sha256": "c0a5d4cef665cb8f8237627657d28b0918a742ce6ebf2f902fd57bf1b017826d",
+ "raw_stored": false,
+ "extract": {
+  "title": "Global Divergence, Local Convergence: Representation Geometry in SSMs and Transformers",
+  "authors": [
+   "Ben-Artzy, Amit",
+   "Schwartz, Roy"
+  ],
+  "citation_date": "2026/09/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 8 Sep 2026 12:57:30 UTC"
+   }
+  ],
+  "abstract": "Recent state-space models (SSMs) such as Mamba achieve language modeling performance comparable to transformers despite relying on fundamentally different architectures. This raises an important question: how do these structural differences influence the geometry and functional nature of their internal representations? We study this question through a multi-scale analysis of representations in transformers, SSMs, and hybrid architecture. First, we find that SSMs distribute their representational information evenly across all dimensions, whereas transformer representations are heavily dominated by a single principal direction. By evaluating hybrid architectures, we observe that the representation space becomes increasingly skewed toward a single dominant direction after each attention layer. Next, we explore how the different geometric spread of representations impacts representational capacity through compressibility. Surprisingly, we find that despite their contrasting geometric structures, both architectures exhibit tightly matched effective capacities. We further investigate whether this skewed geometry affects how concepts are encoded. Using rank-constrained probes, we demonstrate that both architectures encode concepts in subspaces of surprisingly similar dimensionality. Furthermore, we demonstrate that the transformers' dominant principal direction does not inherently encode more conceptual information. Finally, we zoom in and examine the alignment between manifolds, either by analyzing representations of specific topics or by looking at the nearest neighborhoods of tokens, and find that they are highly aligned. Ultimately, our analysis suggests that while transformers and SSMs induce different usage of latent space, they display a striking functional convergence at the level of local semantic manifolds.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

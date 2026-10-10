@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2106.07682",
+ "fetched_at": "2026-10-10T06:13:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43543,
+ "raw_sha256": "c2fd4c79405fdf3ef1036c00720ac85a5a5bb5413f6115d644842701041b3098",
+ "raw_stored": false,
+ "extract": {
+  "title": "Revisiting Model Stitching to Compare Neural Representations",
+  "authors": [
+   "Bansal, Yamini",
+   "Nakkiran, Preetum",
+   "Barak, Boaz"
+  ],
+  "citation_date": "2021/06/14",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 14 Jun 2021 18:05:10 UTC"
+   }
+  ],
+  "abstract": "We revisit and extend model stitching (Lenc & Vedaldi 2015) as a methodology to study the internal representations of neural networks. Given two trained and frozen models $A$ and $B$, we consider a \"stitched model'' formed by connecting the bottom-layers of $A$ to the top-layers of $B$, with a simple trainable layer between them. We argue that model stitching is a powerful and perhaps under-appreciated tool, which reveals aspects of representations that measures such as centered kernel alignment (CKA) cannot. Through extensive experiments, we use model stitching to obtain quantitative verifications for intuitive statements such as \"good networks learn similar representations'', by demonstrating that good networks of the same architecture, but trained in very different ways (e.g.: supervised vs. self-supervised learning), can be stitched to each other without drop in performance. We also give evidence for the intuition that \"more is better'' by showing that representations learnt with (1) more data, (2) bigger width, or (3) more training time can be \"plugged in'' to weaker models to improve performance. Finally, our experiments reveal a new structural property of SGD which we call \"stitching connectivity'', akin to mode-connectivity: typical minima reached by SGD can all be stitched to each other with minimal change in accuracy.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

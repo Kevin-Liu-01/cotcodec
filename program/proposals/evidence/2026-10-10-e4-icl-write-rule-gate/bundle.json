@@ -1,0 +1,518 @@
+{
+ "schema_version": 1,
+ "proposal": "program/proposals/2026-10-10-e4-icl-write-rule-gate.md",
+ "proposal_sha256": "22429938f22f81ac97417d1f136b245d0cb2f393dcaa733b220a7f8394c6c824",
+ "draft_registration": {
+  "path": "program/preregistrations/e4-icl-write-rule-gate-v1.md",
+  "sha256": "4cef1c1c4c8586718bb8677a97ebdbedcf6390e59750b00ace8b3ab2efc216e2",
+  "status": "DRAFT, not frozen, no ledger row"
+ },
+ "source_snapshots": [
+  {
+   "url": "https://arxiv.org/abs/1703.04813",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:07Z",
+   "raw_sha256": "a8d530afc32254c28427a92ff62c11199a8896f9cd080145ee49bd0ef057311a",
+   "raw_bytes": 44811,
+   "artifact": "snapshots/arxiv.org_abs_1703.04813.json",
+   "sha256": "5ecfab5e9a09372c1f04828724e98463c664970a8439394a45c1abc456c7a6d7"
+  },
+  {
+   "url": "https://arxiv.org/abs/1907.09720",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:07Z",
+   "raw_sha256": "0116d22d2f93b28fd2124cb25c6f9743d0924cf9f0ed00e13bc75e1decc2b867",
+   "raw_bytes": 41098,
+   "artifact": "snapshots/arxiv.org_abs_1907.09720.json",
+   "sha256": "9f04f440cce336d7fd0c1819b5c5fdf5f03dbdd961a3b421049339542f96c93f"
+  },
+  {
+   "url": "https://arxiv.org/abs/2006.16736",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:07Z",
+   "raw_sha256": "02003ca4c97d9fb2dc8630e890d2faa6029ef691da05d403cd465e266fe71dde",
+   "raw_bytes": 45080,
+   "artifact": "snapshots/arxiv.org_abs_2006.16736.json",
+   "sha256": "5e42a8e1b48218376bcbaa4d6141f54c629e4fe248ce34c23b836cd0f76e46c8"
+  },
+  {
+   "url": "https://arxiv.org/abs/2012.14905",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:07Z",
+   "raw_sha256": "c675ca008d080045721d41af970c315388a9af788586990949087c7710eb327a",
+   "raw_bytes": 42507,
+   "artifact": "snapshots/arxiv.org_abs_2012.14905.json",
+   "sha256": "d0518192939c9fa82ef275c19c9b639e2a7ade5331a3fbdecf2e3befd60c576d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2102.09690",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:08Z",
+   "raw_sha256": "b746e72c882c9c7bbd5dbdffe58d6d2a3498fe25655ff7d465163b7020e104b7",
+   "raw_bytes": 42475,
+   "artifact": "snapshots/arxiv.org_abs_2102.09690.json",
+   "sha256": "a25535817a8ad5deb8c821f3be14379863a7f45fc2dbc5a9c20415ea9a0c1793"
+  },
+  {
+   "url": "https://arxiv.org/abs/2106.05945",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:08Z",
+   "raw_sha256": "eb397a55c99df19495c5ec094ac42f18bb8e2fbb6f334a71cffe59acffea5abd",
+   "raw_bytes": 42341,
+   "artifact": "snapshots/arxiv.org_abs_2106.05945.json",
+   "sha256": "9c8cdd918393d3bc982f22324bcb335e899762da15c05c1b98f15b0f8dd85000"
+  },
+  {
+   "url": "https://arxiv.org/abs/2106.07682",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:08Z",
+   "raw_sha256": "c2fd4c79405fdf3ef1036c00720ac85a5a5bb5413f6115d644842701041b3098",
+   "raw_bytes": 43543,
+   "artifact": "snapshots/arxiv.org_abs_2106.07682.json",
+   "sha256": "801c73122984a0555f73c525205d80c73ba41369ead30c980b0c322e36a5bad1"
+  },
+  {
+   "url": "https://arxiv.org/abs/2110.14633",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:08Z",
+   "raw_sha256": "31f6d10f242d7d3b58276decb3ba4ef0f62a532e5257ec9bb12a46bf258b5da4",
+   "raw_bytes": 42040,
+   "artifact": "snapshots/arxiv.org_abs_2110.14633.json",
+   "sha256": "5ba6f21028849c3dfc7a1170284962eb271ccc75aacc9a984777bd3d45e7b03d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2202.05798",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:08Z",
+   "raw_sha256": "62740a84142706af02d86ff88aab97ea3cbe42fe084bc4c8d550ce4d273df8d0",
+   "raw_bytes": 42396,
+   "artifact": "snapshots/arxiv.org_abs_2202.05798.json",
+   "sha256": "a47022fe37a1e3bdbd3f2aece90544f2d04b3b8e02d42c058f1aabdcb26e8535"
+  },
+  {
+   "url": "https://arxiv.org/abs/2202.12837",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:09Z",
+   "raw_sha256": "8d656fc6bd548cee065215b4183b130ef48372a84d2318c129d6c6695ed94cf7",
+   "raw_bytes": 42478,
+   "artifact": "snapshots/arxiv.org_abs_2202.12837.json",
+   "sha256": "83df81a3621a8bade85ad6a3eeef4685783d5d50dee40fff6a7dee771c1b04df"
+  },
+  {
+   "url": "https://arxiv.org/abs/2305.09731",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:09Z",
+   "raw_sha256": "a9bcb3f6d0b02e8ca353fa9cba50f46264f493a6505baa62dafc58934e3c41c6",
+   "raw_bytes": 41967,
+   "artifact": "snapshots/arxiv.org_abs_2305.09731.json",
+   "sha256": "5423d5d0d16c9242f3294e649a2f4373447196f700f657f79873d172d6a114df"
+  },
+  {
+   "url": "https://arxiv.org/abs/2306.00297",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:10Z",
+   "raw_sha256": "1bd91cac1d05ce93430797279e1e02d2f106c9884a89d045ff2ed294f6e5e7d5",
+   "raw_bytes": 42808,
+   "artifact": "snapshots/arxiv.org_abs_2306.00297.json",
+   "sha256": "403197da39ae553586843e1a541d844b4cb63955466b79276b97a849f67ead15"
+  },
+  {
+   "url": "https://arxiv.org/abs/2306.15063",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:10Z",
+   "raw_sha256": "6ce7245689ac7af6bf63f2626214b0c76be041c556aae93fb9b5b3ab07338908",
+   "raw_bytes": 44064,
+   "artifact": "snapshots/arxiv.org_abs_2306.15063.json",
+   "sha256": "c61fffa7a97f62a7c6d71728e0af91ecb680c05e04633a63fbd1a517d9071a05"
+  },
+  {
+   "url": "https://arxiv.org/abs/2309.05858",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:10Z",
+   "raw_sha256": "2cbb9703da559336fd090cb5450ee67759d974e8c099e62a27370e42afa00736",
+   "raw_bytes": 42692,
+   "artifact": "snapshots/arxiv.org_abs_2309.05858.json",
+   "sha256": "ffc0e9666b504afd74d6089e671e3797ee7f83055a11a0d7739e787ba798e76c"
+  },
+  {
+   "url": "https://arxiv.org/abs/2310.08540",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:10Z",
+   "raw_sha256": "7a51db5d324d35cec8fb8e565df065b4c869030c3199182319bafaaa848e2457",
+   "raw_bytes": 42728,
+   "artifact": "snapshots/arxiv.org_abs_2310.08540.json",
+   "sha256": "e2d06c55cb44ad567bcf49d9f1a592834e5e112e1c93197581b93c340cb59d72"
+  },
+  {
+   "url": "https://arxiv.org/abs/2310.15213",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:11Z",
+   "raw_sha256": "1eaddff203ae705b77e94499d93511d5f1e1417a0d898d17d9c30bcfccc9c72f",
+   "raw_bytes": 42084,
+   "artifact": "snapshots/arxiv.org_abs_2310.15213.json",
+   "sha256": "8fbac808f1f8fe2b1547de3fd1f1ceae6fb754578a5109cfb771424734761571"
+  },
+  {
+   "url": "https://arxiv.org/abs/2310.15916",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:11Z",
+   "raw_sha256": "bb85f9c610555fff0b9cc444d9800423ac4730efe956745e94dd07ff13837bc7",
+   "raw_bytes": 39961,
+   "artifact": "snapshots/arxiv.org_abs_2310.15916.json",
+   "sha256": "072c032f6f9447bdc2712607becb0f8e3cf15f5af1eb9b28f06ba0bb47373478"
+  },
+  {
+   "url": "https://arxiv.org/abs/2404.03592",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:11Z",
+   "raw_sha256": "491dc5a190392f96744d9fa17dfcc116decbe1271a48cf30080b7329b9469551",
+   "raw_bytes": 42565,
+   "artifact": "snapshots/arxiv.org_abs_2404.03592.json",
+   "sha256": "07b1005f0bb1ddc820c9cddcac0713d3982e33fbbe0e3480c2060ae70842c024"
+  },
+  {
+   "url": "https://arxiv.org/abs/2410.10254",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:11Z",
+   "raw_sha256": "cc27cab0dddb41ca22a55b7e96fba85c8c7923ed9d5bfe654fc15f2515efd052",
+   "raw_bytes": 44990,
+   "artifact": "snapshots/arxiv.org_abs_2410.10254.json",
+   "sha256": "69280ea63a01dd46f25b0fe11d12d64fb2d78b38154bae6ce0f7cec74752b203"
+  },
+  {
+   "url": "https://arxiv.org/abs/2412.11299",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:11Z",
+   "raw_sha256": "ade4853ecc8f78e34124dcc0a48578b93168e296f402b89443ac9fcdcb40901b",
+   "raw_bytes": 43903,
+   "artifact": "snapshots/arxiv.org_abs_2412.11299.json",
+   "sha256": "41301b59b53c1c1abe89e0e217f4d3a16f9c19721ad408f3d57ffc1cf9972035"
+  },
+  {
+   "url": "https://arxiv.org/abs/2509.04661",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:12Z",
+   "raw_sha256": "257d6f57aaf3658214ac5e7ab6818e90d52ac0d0df7176903b81d760994d0725",
+   "raw_bytes": 44337,
+   "artifact": "snapshots/arxiv.org_abs_2509.04661.json",
+   "sha256": "726fc1740874e56b9b9de2fe70afb849c028230579e2388db51789580170653f"
+  },
+  {
+   "url": "https://arxiv.org/abs/2511.21038",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:12Z",
+   "raw_sha256": "3d9babcf1180df9178bc484b1ac3c8f6d775eff4f2b821601dfe47f7173f3879",
+   "raw_bytes": 42583,
+   "artifact": "snapshots/arxiv.org_abs_2511.21038.json",
+   "sha256": "78d6f4035e11c4ae1762700d890b43ad57debd1c23e76179d74a273e566ac565"
+  },
+  {
+   "url": "https://arxiv.org/abs/2603.22329",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:12Z",
+   "raw_sha256": "9356b5b7aaae3767d004bbba02169607bd8450346304708d6e1466687643ac5d",
+   "raw_bytes": 42053,
+   "artifact": "snapshots/arxiv.org_abs_2603.22329.json",
+   "sha256": "32bcfb5309f09b3cca137d730ec3020ed19c8a55d716c6fdf85f1f158de90474"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.01672",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:12Z",
+   "raw_sha256": "559b4fbdc7d9296c3b21047cda45680e726aaba1868a3928d6c1b25043c4457f",
+   "raw_bytes": 42911,
+   "artifact": "snapshots/arxiv.org_abs_2608.01672.json",
+   "sha256": "accf55c4e4f05e262589bc23a414c99ff120e8b5c1b6fc468d1c7744173e0484"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.09521",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:13Z",
+   "raw_sha256": "2c384cd1cdc726487cfa290916ba7027873dd2fa1dfff18907d63e50b2946b2e",
+   "raw_bytes": 41128,
+   "artifact": "snapshots/arxiv.org_abs_2608.09521.json",
+   "sha256": "2c87f9a38b4cb45e62616a59f3a8b81811064e0dda342380ca2b25dddc207321"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.13385",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:13Z",
+   "raw_sha256": "ab985551e10e2ba736fabc69c90e5d861d5000621dec33e9286cdc64c225cb17",
+   "raw_bytes": 42040,
+   "artifact": "snapshots/arxiv.org_abs_2608.13385.json",
+   "sha256": "d4710dcca2e8d69f32be66557636a3fc58da0a93ca1278fe99c00ecdd3a3aacd"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.07816",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:13Z",
+   "raw_sha256": "56c3857d189ab1917f85c32c83b71817faddd46819d6506863cf33421f354ba2",
+   "raw_bytes": 43266,
+   "artifact": "snapshots/arxiv.org_abs_2609.07816.json",
+   "sha256": "9eea061c33885a528fbe464febbb87c7fd7aaf219c4399a4427566c286ab894a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.08692",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:13Z",
+   "raw_sha256": "c0a5d4cef665cb8f8237627657d28b0918a742ce6ebf2f902fd57bf1b017826d",
+   "raw_bytes": 42987,
+   "artifact": "snapshots/arxiv.org_abs_2609.08692.json",
+   "sha256": "6c7bcf3a80c54f004472343f3226ea95d42384e659c5eef21223822e29e35041"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.00526",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:14Z",
+   "raw_sha256": "226d928f901c0420c9556fb4d8e2d2d28499679251cc242d5efdb5acbddd07c6",
+   "raw_bytes": 43560,
+   "artifact": "snapshots/arxiv.org_abs_2610.00526.json",
+   "sha256": "83e02e5016e40fd4aa51db21ec02a709b7eadcf37e94d13dceed07264aaa11b4"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.01054",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:14Z",
+   "raw_sha256": "251d5ed7146f21fe63e0f6556492a513fb0b4b933bcac519b62aee44e8751104",
+   "raw_bytes": 42642,
+   "artifact": "snapshots/arxiv.org_abs_2610.01054.json",
+   "sha256": "b7cc5a3b50e9e41c42382da61399ce70f7553408a8a11281599bc08780dae6a8"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.07270",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:14Z",
+   "raw_sha256": "8f83efdbaf6070106b0103ffe8bf1ac96aec8cbff59a8e6d25353dd1a842fbf0",
+   "raw_bytes": 42011,
+   "artifact": "snapshots/arxiv.org_abs_2610.07270.json",
+   "sha256": "74ae955b1a2a3b20a7f5c4b1700f988464bfbe14b36fc0808540415ddea250a1"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.11715",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:14Z",
+   "raw_sha256": "2865f6b543068d1cec81779e3466a32b3ce64020bc6caba0515e232750758bbc",
+   "raw_bytes": 41569,
+   "artifact": "snapshots/arxiv.org_abs_2610.11715.json",
+   "sha256": "a8e425ae1e19330f4603d02dc4d75b9e33f5a3b7bc94dfe51058f2712e40c131"
+  },
+  {
+   "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:15Z",
+   "raw_sha256": "8673cf448a82423102b98bf789f152f3465da8a4463bf183db1de8baf15ecd59",
+   "raw_bytes": 1418103,
+   "artifact": "snapshots/huggingface.co_datasets_HuggingFaceFW_fineweb-edu.json",
+   "sha256": "09a5391d4a61907a56b4c568fcb9b05e5c55a4d7143e2e1bbe17834065e86110"
+  },
+  {
+   "url": "https://huggingface.co/fla-hub/transformer-1.3B-100B",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:15Z",
+   "raw_sha256": "8006fec063ae16ae0af6204e7961177c310813605a8fa1467c34bebe35850f0f",
+   "raw_bytes": 123582,
+   "artifact": "snapshots/huggingface.co_fla-hub_transformer-1.3B-100B.json",
+   "sha256": "5daf6ad5dd097d5ed1dae7cd8f20435f0d6534c814688216c38a0864dedd1359"
+  },
+  {
+   "url": "https://huggingface.co/fla-hub/transformer-2.7B-100B",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:16Z",
+   "raw_sha256": "9635e80bc111722fcb6ab1bba4c7fe608b1929462e862a67ec69bd750ca65345",
+   "raw_bytes": 117505,
+   "artifact": "snapshots/huggingface.co_fla-hub_transformer-2.7B-100B.json",
+   "sha256": "d6eb376f285e0171673c8daf0e852c8dfad3e22907cf6ba3ce31c78163aadd10"
+  },
+  {
+   "url": "https://labs.ramp.com/research/portal-portable-task-adaptation/",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T06:13:16Z",
+   "raw_sha256": "8d1d07233ef87285e4b91be6efc81df09d9d59783ee76db12c546302a211e99d",
+   "raw_bytes": 553293,
+   "artifact": "snapshots/labs.ramp.com_research_portal-portable-task-adaptation.json",
+   "sha256": "27aee39c5529cb00622e027d579e9ba438cf953ac644853f2143c2ee69621c5c"
+  }
+ ],
+ "query_log": {
+  "artifact": "query-log.json",
+  "sha256": "a89759bacf4acd322b8fd4bacd25a8236a65be3c2f340649c98e259f42025bee",
+  "queries_against_budget": 150,
+  "note": "150 counted discover queries against the declared 150 (cells 144, synthesis 6); 73 paper reads, not counted."
+ },
+ "reviews": [],
+ "reviews_status": "NOT_RUN: the blind critic, the refute-first triad and both reviewers run after synthesis. No trusted Ed25519 store exists (D24), so no review can be signed.",
+ "compute": {
+  "scope": "e4-icl-write-rule-gate-v1 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: simulations S1 (oracle-class semantics, KILL A), S2 (decision-rule operating characteristics) and S3 (cost model), each script with its output.",
+  "image_digest": "127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9",
+  "image_scope": "build 855, commit ed5d5a93 (torch 2.11.0+cu128, transformers 5.15.0, flash-linear-attention 0.5.2, tilelang 0.1.13); no flash-attn, so the fla teacher needs the registration's Llama remap or SDPA shim, neither written",
+  "real_model_loop": false,
+  "real_model_loop_scope": "none: harness/e4_gate.py does not exist; no fla-hub checkpoint has been loaded in any image",
+  "benchmark_adapter": null,
+  "benchmark_adapter_scope": "none: the family generators and manifest builder are not written",
+  "manifest": null,
+  "manifest_scope": "no Slurm manifest exists for any of the four registered jobs",
+  "container_smoke": {
+   "label": "container_smoke",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "a2f1cf0ba8547b0cb91557897db28b02c7026ad35c3f3567ef31cefe82a2ac83"
+  },
+  "slurm_test": {
+   "label": "slurm_test",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "a2f1cf0ba8547b0cb91557897db28b02c7026ad35c3f3567ef31cefe82a2ac83"
+  },
+  "provenance_verification": {
+   "label": "provenance_verification",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "a2f1cf0ba8547b0cb91557897db28b02c7026ad35c3f3567ef31cefe82a2ac83"
+  },
+  "registered_caps_gpu_h": {
+   "S0_smoke": 0.17,
+   "S1_eligibility": 0.75,
+   "S2_oracle_main": 4.0,
+   "S2_oracle_p_conditional": 1.5,
+   "sum": 6.42
+  },
+  "supplementary_cpu_evidence": [
+   {
+    "label": "S1 oracle-class semantics and KILL A replication (linear surrogate, seeds 42/43/44)",
+    "script": {
+     "artifact": "compute/oracle-class-semantics.py",
+     "sha256": "377cf184427b4cbf867fc704a87faa1030eec7010c4a03b0b2bca364cb846041"
+    },
+    "output": {
+     "artifact": "compute/oracle-class-semantics.json",
+     "sha256": "847ca30b504b7bca47690df0c3d8147a2c66f6bb561068b75c2099a0be4489ac"
+    }
+   },
+   {
+    "label": "S2 decision-rule operating characteristics (assumed noise; 4,000 replicates per scenario, design seed 42)",
+    "script": {
+     "artifact": "compute/decision-sim.py",
+     "sha256": "de4166633eb0e6c7bd3604ee95b6747951e89968f0806bf6454c99b821ce5517"
+    },
+    "output": {
+     "artifact": "compute/decision-sim.json",
+     "sha256": "eb9f9344e157f1212b5bcca52cfea6e655151f3e099ff912eeae0c2b6cf9f1f2"
+    }
+   },
+   {
+    "label": "S3 GPU-hour estimate and caps (FLOP model; no measured throughput)",
+    "script": {
+     "artifact": "compute/cost-model.py",
+     "sha256": "dc9e1c7ff7fe2283e093833aca45da7d512d6b873aeec7aca3d057fdea435fc8"
+    },
+    "output": {
+     "artifact": "compute/cost-model.json",
+     "sha256": "10c4d9ca51ae903b2711a08b3da951c1c930b49321b41fd901a88e3ec358122b"
+    }
+   },
+   {
+    "label": "snapshot script for source_snapshots",
+    "script": {
+     "artifact": "compute/snapshot-sources.py",
+     "sha256": "729d1e5e75507415184b1ca3dfd4ec313c1f329a935a9d698b6026e8f1a4203c"
+    }
+   }
+  ],
+  "legacy_reference_not_counted": {
+   "what": "D19 phase-0 CPU doctor as an orx node (synthetic regime; tests none of the gate's quantities)",
+   "orx_run_id": "e20eeccb-8c51-42de-891b-007e52282bf4",
+   "node_commit": "bc05cc496bcf98445b61db12a35f3a2b8de20f55",
+   "receipt_sha256": "d05f0cc93e70915e4135b6850a3eaa9b9139af3a31d6ce7fc896106bebe1babd",
+   "source": "legacy/research/evidence/infrastructure/orx-phase0-doctor-runs-2026-09-14.json"
+  }
+ },
+ "doctors": [
+  {
+   "name": "Source",
+   "status": "PASS",
+   "artifact": "doctors/source.json",
+   "sha256": "06531ad143cfe36e81b5131a2aafac1adc388bdb45df71a4d6e8a99f8e734251"
+  },
+  {
+   "name": "Citation",
+   "status": "PASS",
+   "artifact": "doctors/citation.json",
+   "sha256": "1dd97802c8969a3903d9200afbbdb67891e8bf648db7b6fe1843c73034723980"
+  },
+  {
+   "name": "Novelty",
+   "status": "FAIL",
+   "artifact": "doctors/novelty.json",
+   "sha256": "ac755a4822e18abb7ed66a9f12383e52be7be8ad1e2a8de381878bf95e1bc55b"
+  },
+  {
+   "name": "Design",
+   "status": "FAIL",
+   "artifact": "doctors/design.json",
+   "sha256": "f7ed2c1fe52a9a2e316f55e9b8342d5bf47e8f0217322d61daa974f7f5a67445"
+  },
+  {
+   "name": "Compute",
+   "status": "FAIL",
+   "artifact": "doctors/compute.json",
+   "sha256": "9d03a4ccd9ac6a779200241eacd5fca301b5df8ce2418eb060ab7864f013b551"
+  },
+  {
+   "name": "Safety",
+   "status": "PASS",
+   "artifact": "doctors/safety.json",
+   "sha256": "78cff723ff04498b5607877649fdf5cc34d40059a5be4fde4977814056881c96"
+  }
+ ],
+ "audit_log": null,
+ "audit_log_status": "This gauntlet's first wave row is appended to program/gauntlet/ with scripts/research_gauntlet_record.py after its reviewers score.",
+ "evidence_root_sha256": "4a3c82b82b9a8536d442b6e77963dce05a16d2d89cd5cdec292630c7a31369ec",
+ "blind_discrimination_packet": {
+  "proposal": {
+   "artifact": "blind/paragraph-b8b5e36a.txt",
+   "sha256": "aa5404b8bd199073ba16a6e76b89d9a79c136192493eafaf4c6438fdf01c306f",
+   "text_sha256": "b8b5e36a63afc486554a5cc616a37156b37e3f3bd60b16967b1705196a2607b2"
+  },
+  "closest_prior": {
+   "artifact": "blind/paragraph-c840d8c6.txt",
+   "sha256": "6b1c4bb23b2138e9d50237a5b2294256aa5adaeed7a0f364f5794e70a58987ba",
+   "text_sha256": "c840d8c6fbee812fb6bb900f5db7e70dd06c9ae7b5d32b0a2b7757251f67fdd4"
+  },
+  "closest_prior_id": "arXiv:2608.13385 (When Is a Task Vector Enough? An Empirical Theory of Implicit Multimodal ICL, Li, v1 2026-08-13); full text read by synthesis on 2026-10-10",
+  "note": "File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text."
+ },
+ "budget_ledger": {
+  "declared": {
+   "queries": 150,
+   "wall_minutes": 600,
+   "tokens": 8000000,
+   "dollars": 150,
+   "waves": 3,
+   "gpu_hours": 0.3
+  },
+  "used_by_discovery_cells": {
+   "queries": 144,
+   "paper_reads": 63,
+   "gpu_hours": 0.0,
+   "wall_minutes_reported": "frontier about 10, cross-domain about 45; kill-shot and asset not reported",
+   "host": "read-only ssh by the asset cell before 11:30 UTC; no host job"
+  },
+  "used_by_synthesis": {
+   "queries": 6,
+   "paper_reads": 10,
+   "gpu_hours": 0.0,
+   "wall_minutes_estimate": "about 120 for this owner (2026-10-10T05:37Z onward), plus an earlier owner's stalled run",
+   "tokens_and_dollars": "not metered by the synthesis agent; the recorder meters from transcripts"
+  },
+  "remaining_queries": 0
+ },
+ "direction_doctor_run": {
+  "artifact": "doctors/research-direction-doctor-output.json",
+  "sha256": "8888c190694d22467b59ad8132a34fcc9401890cf4c7887e3d02825e1f823aeb",
+  "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-e4-icl-write-rule-gate.md",
+  "note": "Outside evidence_root by design: the doctor output depends on this bundle."
+ }
+}

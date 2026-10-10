@@ -1,0 +1,37 @@
+{
+ "url": "https://arxiv.org/abs/2012.14905",
+ "fetched_at": "2026-10-10T06:13:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42507,
+ "raw_sha256": "c675ca008d080045721d41af970c315388a9af788586990949087c7710eb327a",
+ "raw_stored": false,
+ "extract": {
+  "title": "Meta Learning Backpropagation And Improving It",
+  "authors": [
+   "Kirsch, Louis",
+   "Schmidhuber, Jürgen"
+  ],
+  "citation_date": "2020/12/29",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 29 Dec 2020 18:56:10 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 16 Feb 2021 17:28:31 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Fri, 29 Oct 2021 09:00:33 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Sun, 13 Mar 2022 11:41:05 UTC"
+   }
+  ],
+  "abstract": "Many concepts have been proposed for meta learning with neural networks (NNs), e.g., NNs that learn to reprogram fast weights, Hebbian plasticity, learned learning rules, and meta recurrent NNs. Our Variable Shared Meta Learning (VSML) unifies the above and demonstrates that simple weight-sharing and sparsity in an NN is sufficient to express powerful learning algorithms (LAs) in a reusable fashion. A simple implementation of VSML where the weights of a neural network are replaced by tiny LSTMs allows for implementing the backpropagation LA solely by running in forward-mode. It can even meta learn new LAs that differ from online backpropagation and generalize to datasets outside of the meta training distribution without explicit gradient calculation. Introspection reveals that our meta learned LAs learn through fast association in a way that is qualitatively different from gradient descent.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

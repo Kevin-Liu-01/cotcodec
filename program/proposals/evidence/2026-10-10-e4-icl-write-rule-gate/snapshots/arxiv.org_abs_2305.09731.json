@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2305.09731",
+ "fetched_at": "2026-10-10T06:13:09Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41967,
+ "raw_sha256": "a9bcb3f6d0b02e8ca353fa9cba50f46264f493a6505baa62dafc58934e3c41c6",
+ "raw_stored": false,
+ "extract": {
+  "title": "What In-Context Learning \"Learns\" In-Context: Disentangling Task Recognition and Task Learning",
+  "authors": [
+   "Pan, Jane",
+   "Gao, Tianyu",
+   "Chen, Howard",
+   "Chen, Danqi"
+  ],
+  "citation_date": "2023/05/16",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 16 May 2023 18:05:19 UTC"
+   }
+  ],
+  "abstract": "Large language models (LLMs) exploit in-context learning (ICL) to solve tasks with only a few demonstrations, but its mechanisms are not yet well-understood. Some works suggest that LLMs only recall already learned concepts from pre-training, while others hint that ICL performs implicit learning over demonstrations. We characterize two ways through which ICL leverages demonstrations. Task recognition (TR) captures the extent to which LLMs can recognize a task through demonstrations -- even without ground-truth labels -- and apply their pre-trained priors, whereas task learning (TL) is the ability to capture new input-label mappings unseen in pre-training. Using a wide range of classification datasets and three LLM families (GPT-3, LLaMA and OPT), we design controlled experiments to disentangle the roles of TR and TL in ICL. We show that (1) models can achieve non-trivial performance with only TR, and TR does not further improve with larger models or more demonstrations; (2) LLMs acquire TL as the model scales, and TL's performance consistently improves with more demonstrations in context. Our findings unravel two different forces behind ICL and we advocate for discriminating them in future ICL research due to their distinct nature.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2106.05945",
+ "fetched_at": "2026-10-10T06:13:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42341,
+ "raw_sha256": "eb397a55c99df19495c5ec094ac42f18bb8e2fbb6f334a71cffe59acffea5abd",
+ "raw_stored": false,
+ "extract": {
+  "title": "Does Knowledge Distillation Really Work?",
+  "authors": [
+   "Stanton, Samuel",
+   "Izmailov, Pavel",
+   "Kirichenko, Polina",
+   "Alemi, Alexander A.",
+   "Wilson, Andrew Gordon"
+  ],
+  "citation_date": "2021/06/10",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 10 Jun 2021 17:44:02 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 6 Dec 2021 18:19:02 UTC"
+   }
+  ],
+  "abstract": "Knowledge distillation is a popular technique for training a small student network to emulate a larger teacher model, such as an ensemble of networks. We show that while knowledge distillation can improve student generalization, it does not typically work as it is commonly understood: there often remains a surprisingly large discrepancy between the predictive distributions of the teacher and the student, even in cases when the student has the capacity to perfectly match the teacher. We identify difficulties in optimization as a key reason for why the student is unable to match the teacher. We also show how the details of the dataset used for distillation play a role in how closely the student matches the teacher -- and that more closely matching the teacher paradoxically does not always lead to better student generalization.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
