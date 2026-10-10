@@ -1,0 +1,42 @@
+{
+ "url": "https://arxiv.org/abs/2506.06266",
+ "fetched_at": "2026-10-10T09:33:27Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44065,
+ "raw_sha256": "863f858718deae28ab2baed8c56267970b43990e28bbbfb0023d3ad10fc5083c",
+ "raw_stored": false,
+ "extract": {
+  "title": "Cartridges: Lightweight and general-purpose long context representations via self-study",
+  "authors": [
+   "Eyuboglu, Sabri",
+   "Ehrlich, Ryan",
+   "Arora, Simran",
+   "Guha, Neel",
+   "Zinsley, Dylan",
+   "Liu, Emily",
+   "Tennien, Will",
+   "Rudra, Atri",
+   "Zou, James",
+   "Mirhoseini, Azalia",
+   "Re, Christopher"
+  ],
+  "citation_date": "2025/06/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 6 Jun 2025 17:48:23 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 9 Jun 2025 05:21:52 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Fri, 13 Jun 2025 17:58:55 UTC"
+   }
+  ],
+  "abstract": "Large language models are often used to answer queries grounded in large text corpora (e.g. codebases, legal documents, or chat histories) by placing the entire corpus in the context window and leveraging in-context learning (ICL). Although current models support contexts of 100K-1M tokens, this setup is costly to serve because the memory consumption of the KV cache scales with input length. We explore an alternative: training a smaller KV cache offline on each corpus. At inference time, we load this trained KV cache, which we call a Cartridge, and decode a response. Critically, the cost of training a Cartridge can be amortized across all the queries referencing the same corpus. However, we find that the naive approach of training the Cartridge with next-token prediction on the corpus is not competitive with ICL. Instead, we propose self-study, a training recipe in which we generate synthetic conversations about the corpus and train the Cartridge with a context-distillation objective. We find that Cartridges trained with self-study replicate the functionality of ICL, while being significantly cheaper to serve. On challenging long-context benchmarks, Cartridges trained with self-study match ICL performance while using 38.6x less memory and enabling 26.4x higher throughput. Self-study also extends the model's effective context length (e.g. from 128k to 484k tokens on MTOB) and surprisingly, leads to Cartridges that can be composed at inference time without retraining.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

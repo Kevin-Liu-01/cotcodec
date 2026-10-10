@@ -2,19 +2,22 @@
  "doctor": "Citation",
  "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "D60 repair pass by the single owner (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
  "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, source tracing, cross-referencing)",
- "claim_registry": "Proposal section 'Primary-Source Evidence', claims C01 to C30, each with locator, date, read depth and status",
- "evidence": "Every cited primary URL snapshotted with HTTP 200 and version history (snapshots/, bundle.json source_snapshots). Synthesis re-read the full texts of 2608.13385, 2610.01054, 2610.00526, 2608.01672, 2306.00297, 2309.05858, 2202.05798 and 2610.11715 (digests in query-log.json) and opened the PorTAL blog to verify its ~98% / ~94% headline. First-party numbers are labelled (2608.13385, 2610.00526, 2610.11715, 2609.08692, PorTAL). Abstract-only claims are labelled (C14 2609.07816, C27 2610.07270; C26 2306.15063 via an alphaXiv report). The dossier's description of Jeong's write rule as Hebbian is corrected (C08).",
+ "claim_registry": "Proposal section 'Primary-Source Evidence', claims C01 to C44 (C31-C44 added by the D60 repair), each with locator, date, read depth and status",
+ "evidence": "Every cited primary URL snapshotted (snapshots/, bundle.json source_snapshots). The six priors wave 1 left uncited (2212.10559, 2311.07772, 2404.11225, 2506.06266, 2602.16284, 2609.17346) and four more (2507.04221, 2507.16003, 2310.19698, 2610.05885) read with orx paper --full by the repair owner (sections listed in query-log-run2.json). OpenReview-only claims (C41) and ACL abstracts (C42, C43) labelled abstract-only. The tokenizer facts (C44) verified by running the tokenizer at the pinned revision (sha256 fc4f0bd7..., matching the feasibility refuter's copy). First-party numbers labelled (C35, C40 added).",
  "verdicts": {
-  "verified_full_text": 23,
-  "abstract_or_report_only": 3,
+  "verified_full_text": 31,
+  "verified_by_section_or_outline": 2,
+  "abstract_or_report_only": 7,
   "metadata_only": 1,
   "first_party_blog": 1,
-  "verified_from_model_card_or_repository_files": 2,
+  "verified_by_running": 1,
+  "verified_from_model_card_or_repository_files": 1,
   "unverifiable_access": 0,
-  "total_claims": 30
+  "total_claims": 44
  },
- "remediation": "If Wilson and Collins 2019 or Nili et al. 2014 is ever cited for a specific rule or number, open the body first."
+ "remediation": "Read the bodies of the ICLR 2027 submissions in C41 once a person can pass OpenReview's challenge.",
+ "supersedes_sha256": "1dd97802c8969a3903d9200afbbdb67891e8bf648db7b6fe1843c73034723980"
 }

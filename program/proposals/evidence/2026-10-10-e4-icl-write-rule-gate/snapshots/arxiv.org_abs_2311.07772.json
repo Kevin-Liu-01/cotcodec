@@ -1,0 +1,39 @@
+{
+ "url": "https://arxiv.org/abs/2311.07772",
+ "fetched_at": "2026-10-10T09:33:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41226,
+ "raw_sha256": "ea8fd57ee8f0da677e1e85b0ad9b749786813edf3ea8880a274241772af66a56",
+ "raw_stored": false,
+ "extract": {
+  "title": "In-context Learning and Gradient Descent Revisited",
+  "authors": [
+   "Deutch, Gilad",
+   "Magar, Nadav",
+   "Natan, Tomer Bar",
+   "Dar, Guy"
+  ],
+  "citation_date": "2023/11/13",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 13 Nov 2023 21:42:38 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 15 Nov 2023 15:29:05 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Sat, 18 Nov 2023 19:58:27 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Sun, 31 Mar 2024 19:33:50 UTC"
+   }
+  ],
+  "abstract": "In-context learning (ICL) has shown impressive results in few-shot learning tasks, yet its underlying mechanism is still not fully understood. A recent line of work suggests that ICL performs gradient descent (GD)-based optimization implicitly. While appealing, much of the research focuses on simplified settings, where the parameters of a shallow model are optimized. In this work, we revisit evidence for ICL-GD correspondence on realistic NLP tasks and models. We find gaps in evaluation, both in terms of problematic metrics and insufficient baselines. We show that surprisingly, even untrained models achieve comparable ICL-GD similarity scores despite not exhibiting ICL. Next, we explore a major discrepancy in the flow of information throughout the model between ICL and GD, which we term Layer Causality. We propose a simple GD-based optimization procedure that respects layer causality, and show it improves similarity scores significantly.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

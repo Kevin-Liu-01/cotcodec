@@ -1,0 +1,2297 @@
+{
+ "check": "E4 gate repair G1: episode-constant guards on a categorical teacher (exact)",
+ "claim_boundary": "a categorical model of the teacher's answer distribution; not a model run",
+ "payload_sha256": "461ffea20bf428b31ca6d2391c40c9afa8d59c5871194bf7ef170577b0d20e7e",
+ "rows": [
+  {
+   "KL_const_over_KL_S0": 0.0124,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0124,
+   "KL_shift_over_KL_LD": 0.4458,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0124,
+   "KL_shift_over_KL_LD": 0.247,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0124,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0242,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.0242,
+   "KL_shift_over_KL_LD": 0.4458,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.0242,
+   "KL_shift_over_KL_LD": 0.247,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.0242,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.0455,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.0455,
+   "KL_shift_over_KL_LD": 0.4458,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.0455,
+   "KL_shift_over_KL_LD": 0.247,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.0455,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.0601,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0601,
+   "KL_shift_over_KL_LD": 0.4521,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0601,
+   "KL_shift_over_KL_LD": 0.2333,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0601,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1122,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1122,
+   "KL_shift_over_KL_LD": 0.4521,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1122,
+   "KL_shift_over_KL_LD": 0.2333,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1122,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1956,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1956,
+   "KL_shift_over_KL_LD": 0.4521,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1956,
+   "KL_shift_over_KL_LD": 0.2333,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1956,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1486,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1486,
+   "KL_shift_over_KL_LD": 0.4731,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1486,
+   "KL_shift_over_KL_LD": 0.1883,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1486,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2564,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2564,
+   "KL_shift_over_KL_LD": 0.4731,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2564,
+   "KL_shift_over_KL_LD": 0.1883,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2564,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3988,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3988,
+   "KL_shift_over_KL_LD": 0.4731,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3988,
+   "KL_shift_over_KL_LD": 0.1883,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3988,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 2,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.0148,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0148,
+   "KL_shift_over_KL_LD": 0.5703,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0148,
+   "KL_shift_over_KL_LD": 0.3397,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0148,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0289,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.0289,
+   "KL_shift_over_KL_LD": 0.5703,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.0289,
+   "KL_shift_over_KL_LD": 0.3397,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.0289,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.0542,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.0542,
+   "KL_shift_over_KL_LD": 0.5703,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.0542,
+   "KL_shift_over_KL_LD": 0.3397,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.0542,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.0622,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0622,
+   "KL_shift_over_KL_LD": 0.5721,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0622,
+   "KL_shift_over_KL_LD": 0.3359,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0622,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1159,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1159,
+   "KL_shift_over_KL_LD": 0.5721,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1159,
+   "KL_shift_over_KL_LD": 0.3359,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1159,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2014,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.2014,
+   "KL_shift_over_KL_LD": 0.5721,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.2014,
+   "KL_shift_over_KL_LD": 0.3359,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.2014,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1357,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1357,
+   "KL_shift_over_KL_LD": 0.578,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1357,
+   "KL_shift_over_KL_LD": 0.3177,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1357,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2367,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2367,
+   "KL_shift_over_KL_LD": 0.578,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2367,
+   "KL_shift_over_KL_LD": 0.3177,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2367,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3737,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3737,
+   "KL_shift_over_KL_LD": 0.578,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3737,
+   "KL_shift_over_KL_LD": 0.3177,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3737,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.2348,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2348,
+   "KL_shift_over_KL_LD": 0.5945,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2348,
+   "KL_shift_over_KL_LD": 0.2593,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2348,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.3774,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3774,
+   "KL_shift_over_KL_LD": 0.5945,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3774,
+   "KL_shift_over_KL_LD": 0.2593,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3774,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.5383,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.5383,
+   "KL_shift_over_KL_LD": 0.5945,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.5383,
+   "KL_shift_over_KL_LD": 0.2593,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.5383,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 3,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.04,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.04,
+   "KL_shift_over_KL_LD": 0.6301,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.04,
+   "KL_shift_over_KL_LD": 0.3926,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.04,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0761,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.0761,
+   "KL_shift_over_KL_LD": 0.6301,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.0761,
+   "KL_shift_over_KL_LD": 0.3926,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.0761,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1368,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1368,
+   "KL_shift_over_KL_LD": 0.6301,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1368,
+   "KL_shift_over_KL_LD": 0.3926,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1368,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1039,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1039,
+   "KL_shift_over_KL_LD": 0.6326,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1039,
+   "KL_shift_over_KL_LD": 0.3882,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1039,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1863,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1863,
+   "KL_shift_over_KL_LD": 0.6326,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1863,
+   "KL_shift_over_KL_LD": 0.3882,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1863,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3058,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3058,
+   "KL_shift_over_KL_LD": 0.6326,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3058,
+   "KL_shift_over_KL_LD": 0.3882,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3058,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1867,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1867,
+   "KL_shift_over_KL_LD": 0.6381,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1867,
+   "KL_shift_over_KL_LD": 0.3678,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1867,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.312,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.312,
+   "KL_shift_over_KL_LD": 0.6381,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.312,
+   "KL_shift_over_KL_LD": 0.3678,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.312,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.4659,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.4659,
+   "KL_shift_over_KL_LD": 0.6381,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.4659,
+   "KL_shift_over_KL_LD": 0.3678,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.4659,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.2869,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2869,
+   "KL_shift_over_KL_LD": 0.652,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2869,
+   "KL_shift_over_KL_LD": 0.3026,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2869,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.4428,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.4428,
+   "KL_shift_over_KL_LD": 0.652,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.4428,
+   "KL_shift_over_KL_LD": 0.3026,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.4428,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.6045,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.6045,
+   "KL_shift_over_KL_LD": 0.652,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.6045,
+   "KL_shift_over_KL_LD": 0.3026,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.6045,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 4,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.0831,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0831,
+   "KL_shift_over_KL_LD": 0.6904,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0831,
+   "KL_shift_over_KL_LD": 0.4564,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.0831,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1519,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1519,
+   "KL_shift_over_KL_LD": 0.6904,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1519,
+   "KL_shift_over_KL_LD": 0.4564,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.1519,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2562,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.2562,
+   "KL_shift_over_KL_LD": 0.6904,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.2562,
+   "KL_shift_over_KL_LD": 0.4564,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.2562,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1624,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1624,
+   "KL_shift_over_KL_LD": 0.6938,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1624,
+   "KL_shift_over_KL_LD": 0.4511,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1624,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2769,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2769,
+   "KL_shift_over_KL_LD": 0.6938,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2769,
+   "KL_shift_over_KL_LD": 0.4511,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2769,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.4241,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.4241,
+   "KL_shift_over_KL_LD": 0.6938,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.4241,
+   "KL_shift_over_KL_LD": 0.4511,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.4241,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.2517,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2517,
+   "KL_shift_over_KL_LD": 0.6991,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2517,
+   "KL_shift_over_KL_LD": 0.4283,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2517,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.3992,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3992,
+   "KL_shift_over_KL_LD": 0.6991,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3992,
+   "KL_shift_over_KL_LD": 0.4283,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3992,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.561,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.561,
+   "KL_shift_over_KL_LD": 0.6991,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.561,
+   "KL_shift_over_KL_LD": 0.4283,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.561,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3498,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.3498,
+   "KL_shift_over_KL_LD": 0.7102,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.3498,
+   "KL_shift_over_KL_LD": 0.356,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.3498,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.5152,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.5152,
+   "KL_shift_over_KL_LD": 0.7102,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.5152,
+   "KL_shift_over_KL_LD": 0.356,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.5152,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.6715,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.6715,
+   "KL_shift_over_KL_LD": 0.7102,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.6715,
+   "KL_shift_over_KL_LD": 0.356,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.6715,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 6,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.1153,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1153,
+   "KL_shift_over_KL_LD": 0.7222,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1153,
+   "KL_shift_over_KL_LD": 0.4956,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.1153,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": true,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2047,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2047,
+   "KL_shift_over_KL_LD": 0.7222,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2047,
+   "KL_shift_over_KL_LD": 0.4956,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.2047,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3312,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3312,
+   "KL_shift_over_KL_LD": 0.7222,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3312,
+   "KL_shift_over_KL_LD": 0.4956,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3312,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.45,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.2016,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2016,
+   "KL_shift_over_KL_LD": 0.7263,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2016,
+   "KL_shift_over_KL_LD": 0.4896,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2016,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.3328,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3328,
+   "KL_shift_over_KL_LD": 0.7263,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3328,
+   "KL_shift_over_KL_LD": 0.4896,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.3328,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.4896,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.4896,
+   "KL_shift_over_KL_LD": 0.7263,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.4896,
+   "KL_shift_over_KL_LD": 0.4896,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.4896,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.6,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.2928,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2928,
+   "KL_shift_over_KL_LD": 0.7314,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2928,
+   "KL_shift_over_KL_LD": 0.4655,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.2928,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.4499,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.4499,
+   "KL_shift_over_KL_LD": 0.7314,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.4499,
+   "KL_shift_over_KL_LD": 0.4655,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.4499,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.6114,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.6114,
+   "KL_shift_over_KL_LD": 0.7314,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.6114,
+   "KL_shift_over_KL_LD": 0.4655,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.6114,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.75,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.3883,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.3883,
+   "KL_shift_over_KL_LD": 0.741,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.3883,
+   "KL_shift_over_KL_LD": 0.3896,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.3883,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.05
+  },
+  {
+   "KL_const_over_KL_S0": 0.5563,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.5563,
+   "KL_shift_over_KL_LD": 0.741,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.5563,
+   "KL_shift_over_KL_LD": 0.3896,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.5563,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.2
+  },
+  {
+   "KL_const_over_KL_S0": 0.7069,
+   "KL_shift_over_KL_LD": 1.0,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "flat",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.7069,
+   "KL_shift_over_KL_LD": 0.741,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "half",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.7069,
+   "KL_shift_over_KL_LD": 0.3896,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": false,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "follow",
+   "zero_shot_candidate_mass": 0.4
+  },
+  {
+   "KL_const_over_KL_S0": 0.7069,
+   "KL_shift_over_KL_LD": 0.0,
+   "accuracy": 0.9,
+   "m": 8,
+   "new_guard_reads_EPISODE_CONSTANT": true,
+   "old_guard_reads_EPISODE_CONSTANT": false,
+   "shuf_mode": "label_prior",
+   "zero_shot_candidate_mass": 0.4
+  }
+ ],
+ "summary": {
+  "label_dependent_settings": 171,
+  "label_prior_settings": 57,
+  "max_new_ratio_label_prior": 0.0,
+  "min_new_ratio_label_dependent": 0.1883,
+  "new_guard_catches_label_prior": 57,
+  "new_guard_false_EPISODE_CONSTANT": 0,
+  "old_guard_catches_label_prior": 23,
+  "old_guard_false_EPISODE_CONSTANT": 69
+ }
+}

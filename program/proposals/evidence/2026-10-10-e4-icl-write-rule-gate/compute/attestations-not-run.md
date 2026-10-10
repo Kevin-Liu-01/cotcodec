@@ -25,3 +25,9 @@ target of the bundle's `container_smoke`, `slurm_test` and
 
 The deterministic research-direction doctor therefore reports FAIL, which is
 the expected and honest state.
+
+D60 repair (2026-10-10): still none. The repair ran only CPU simulations and
+the tokenizer-based family table on the development Mac; no harness, adapter,
+manifest, container smoke, Slurm dry run or provenance verification exists for
+`e4-icl-write-rule-gate-v2`, and no host job may run while a Q2 S1a job is
+running or pending.
