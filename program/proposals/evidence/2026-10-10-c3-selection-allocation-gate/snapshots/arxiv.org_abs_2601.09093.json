@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2601.09093",
+ "fetched_at": "2026-10-10T15:31:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42262,
+ "raw_sha256": "34e7cf32c25fd77bfe69a93d3e7078f5d1d3778fc61204a893ad7859ff3a43c3",
+ "raw_stored": false,
+ "extract": {
+  "title": "Hidden States as Early Signals: Step-level Trace Evaluation and Pruning for Efficient Test-Time Scaling",
+  "authors": [
+   "Liang, Zhixiang",
+   "Huang, Beichen",
+   "Wang, Zheng",
+   "Zhang, Minjia"
+  ],
+  "citation_date": "2026/01/14",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 14 Jan 2026 02:54:55 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 28 Apr 2026 04:40:33 UTC"
+   }
+  ],
+  "abstract": "Large Language Models (LLMs) can enhance reasoning capabilities through test-time scaling by generating multiple traces. However, the combination of lengthy reasoning traces with multiple sampling introduces substantial computation and high end-to-end latency. Prior work on accelerating this process has relied on similarity-based or confidence-based pruning, but these signals do not reliably indicate trace quality. To address these limitations, we propose STEP: Step-level Trace Evaluation and Pruning, a novel pruning framework that evaluates reasoning steps using hidden states and dynamically prunes unpromising traces during generation. We train a lightweight step scorer to estimate trace quality, and design a GPU memory-aware pruning strategy that triggers pruning as the GPU memory is saturated by KV cache to reduce end-to-end latency. Experiments across challenging reasoning benchmarks demonstrate that STEP reduces end-to-end inference latency by 45%-70% on average compared to self-consistency while also improving reasoning accuracy. Our code is released at: this https URL",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

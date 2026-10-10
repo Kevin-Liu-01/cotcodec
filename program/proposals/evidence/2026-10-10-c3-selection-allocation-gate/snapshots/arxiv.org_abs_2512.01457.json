@@ -1,0 +1,41 @@
+{
+ "url": "https://arxiv.org/abs/2512.01457",
+ "fetched_at": "2026-10-10T15:31:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44988,
+ "raw_sha256": "ebf7f70c356e4be1db398910fcb42865626c4fd37a1150e0584172decfc49e7b",
+ "raw_stored": false,
+ "extract": {
+  "title": "Zero-Overhead Introspection for Adaptive Test-Time Compute",
+  "authors": [
+   "Manvi, Rohin",
+   "Hong, Joey",
+   "Seyde, Tim",
+   "Labonne, Maxime",
+   "Lechner, Mathias",
+   "Levine, Sergey"
+  ],
+  "citation_date": "2025/12/01",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 1 Dec 2025 09:44:31 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 3 Dec 2025 08:00:15 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Mon, 22 Dec 2025 02:26:36 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Tue, 23 Dec 2025 08:18:03 UTC"
+   }
+  ],
+  "abstract": "Large language models excel at reasoning but lack key aspects of introspection, including anticipating their own success and the computation required to achieve it. Humans use real-time introspection to decide how much effort to invest, when to make multiple attempts, when to stop, and when to signal success or failure. Without this, LLMs struggle to make intelligent meta-cognition decisions. Test-time scaling methods like Best-of-N drive up cost and latency by using a fixed budget of samples regardless of the marginal benefit of each one at any point in generation, and the absence of confidence signals can mislead people, prevent appropriate escalation to better tools, and undermine trustworthiness. Learned verifiers or reward models can provide confidence estimates, but do not enable adaptive inference and add substantial cost by requiring extra models or forward passes. We present ZIP-RC, which equips models with zero-overhead introspective predictions of reward and cost. At every token, ZIP-RC reuses reserved or unused logits in the same forward pass as next-token prediction to output a joint distribution over final reward and remaining length -- no extra models, architecture change, or inference overhead. This full joint distribution is used to compute a sampling utility which is the linear combination of the expected maximum reward, total compute, and latency of set of samples if generated to completion. During inference, we maximize this utility with meta-actions that determine which prefix of tokens to continue or initiate sampling from. On mixed-difficulty mathematical benchmarks, ZIP-RC improves accuracy by up to 12% over majority voting at equal or lower average cost, and traces smooth Pareto frontiers between quality, compute, and latency. By providing real-time reward-cost introspection, ZIP-RC enables adaptive, efficient reasoning.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

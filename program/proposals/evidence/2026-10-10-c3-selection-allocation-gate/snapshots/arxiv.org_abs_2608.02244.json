@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2608.02244",
+ "fetched_at": "2026-10-10T15:31:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42111,
+ "raw_sha256": "df8db6b51794e5de4e7de5087fc7282255cff235fd1692e34ab8bae528a7fa74",
+ "raw_stored": false,
+ "extract": {
+  "title": "Efficiency and Cost Alignment in Batched LLM Serving via Resource-Fair Scheduling",
+  "authors": [
+   "Yao, Dayi",
+   "Zhou, Zijie"
+  ],
+  "citation_date": "2026/08/03",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 3 Aug 2026 13:55:20 UTC"
+   }
+  ],
+  "abstract": "This paper studies a resource-allocation inefficiency in batched large language model (LLM) serving: heterogeneous requests that share a decode batch impose max-driven computational costs on one another. Because the wall-clock cost of a batch step is largely governed by the largest active KV-cache footprint, a short request co-batched with a long request can experience latency and GPU-resource consumption disproportionate to its own token workload. We formalize this phenomenon as a resource-fair scheduling problem. We develop a mathematical scheduling model that connects within-batch resource fairness to system throughput. The proposed fairness constraint bounds the disparity in decode progress, equivalently KV-cache footprint, among co-batched requests. Based on this model, we design the Insert-Short-Jobs-with-Limit (ISJL) algorithm, a parameterized hybrid batching policy. We prove that ISJL achieves a global competitive-ratio lower bound of $3/4$. We further examine the profit implications of resource-fair scheduling under the token-metered pricing convention used by commercial LLM APIs. Numerical experiments show that ISJL occupies a favorable middle ground between FCFS, which has large batching externalities, and LJF, which is cost-aligned but sacrifices batching flexibility. Thus, ISJL provides a bi-criterion scheduling policy: it maintains high throughput while aligning max-driven batch cost with token-metered revenue.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

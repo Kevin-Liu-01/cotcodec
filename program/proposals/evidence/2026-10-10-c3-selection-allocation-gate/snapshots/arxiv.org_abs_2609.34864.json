@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2609.34864",
+ "fetched_at": "2026-10-10T15:31:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40776,
+ "raw_sha256": "3aad507d9ef7b9f5502cf4fbdc2ac92cac03e84270802cdc91417e1e3de2f882",
+ "raw_stored": false,
+ "extract": {
+  "title": "On the Limits of Metacognitive Monitoring in LLMs",
+  "authors": [
+   "Han, Dongqi",
+   "Yang, Yifan",
+   "Li, Dongsheng"
+  ],
+  "citation_date": "2026/09/28",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 28 Sep 2026 10:53:12 UTC"
+   }
+  ],
+  "abstract": "Reliable decisions depend on recognizing when an answer may be wrong. In biological cognition, metacognitive monitoring can dissociate from task performance, raising the question of how closely solving and judging are linked in language models. Here we study the confidence reports of four frontier models across 15 benchmarks. High task accuracy can coexist with weak error discrimination: a model solves 97% of competition mathematics problems while its answer-time confidence ranks correct answers above errors barely better than chance. Confidence separates correct answers from errors more effectively on questions solved by a separate reference model, while review brings limited improvement on reference-hard questions. Aggregate discrimination also rewards ranking correct answers on easy questions above errors on hard ones, which question-only forecasts already do well. Cross-evaluation helps most where the evaluator answered correctly, and errors shared by the two models usually retain high confidence. Hard questions and shared errors remain difficult targets for prompted self-review and peer oversight, even in models with strong problem-solving performance.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2608.00026",
+ "fetched_at": "2026-10-10T15:31:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43064,
+ "raw_sha256": "9a0e9bea7cdd97ad90d3bed5d7ebd7cb5779c26b21575c6eb25a16197eea0e8c",
+ "raw_stored": false,
+ "extract": {
+  "title": "Request-Level Energy Attribution for Batched LLM Serving",
+  "authors": [
+   "Luo, Qi",
+   "Li, Kunlin",
+   "Wang, Ziwen",
+   "Wang, Dongsheng",
+   "Chen, Yun"
+  ],
+  "citation_date": "2026/07/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 11 Jul 2026 07:41:28 UTC"
+   }
+  ],
+  "abstract": "Batched LLM serving improves throughput but complicates energy accounting. GPU power telemetry is aggregate, whereas sustainability reporting, chargeback, and workload analysis often require request-level energy charges. Existing inference-energy benchmarks report model-, phase-, or token-level energy, and recent carbon-accounting work motivates Shapley fairness conceptually. Neither provides measured request-level ground truth, so how far the accounting rules used in practice deviate from a fair allocation has remained unknown. We present JouleShare, an attribution framework with two components. An offline harness establishes this ground truth by replaying request subsets under vLLM with a reproducible protocol, integrating GPU power telemetry, and computing exact Shapley energy for each request. A lightweight calibration model, JCalib, then learns to predict Shapley shares from cheap request features for use at serving time. Across 16 model/workload runs, token-proportional attribution differs from exact Shapley by 0.440 normalized L1 on average under static batching and by 0.458 under continuous batching, a gap that reproduces across three data-center GPUs. JCalib reduces this error to 0.116 under static batching and 0.177 under continuous batching, below even a standalone-measurement baseline that is unavailable online, while preserving exact batch-energy efficiency. Sampled Shapley extends the measured reference to larger group sizes, where the gap persists and a single offline calibration remains the most accurate deployable rule. The results show that token attribution is not a reliable proxy for marginal energy under batched execution, and that measured Shapley ground truth can calibrate low-cost request features toward fairer attribution.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

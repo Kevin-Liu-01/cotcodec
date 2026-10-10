@@ -1,0 +1,18 @@
+{
+ "doctor": "Source",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
+ "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac; arxiv.org and export.arxiv.org abstract pages, the Hugging Face model, dataset and datasets-server APIs, and aclanthology.org reachable; the OpenReview search API answered 12 searches before returning a browser challenge (HTTP 403 ChallengeRequiredError); 127 counted orx discover queries with returned ids and raw-output SHA-256, 24 uncounted OpenReview, web and OpenAlex API searches, 3 recorded fetch failures and 94 cell paper reads logged in query-log.json; source cutoff 2026-10-10 (alphaXiv's newest items 2610.12xxx dated 2026-10-08); 54 primary URLs snapshotted with HTTP 200.",
+ "degraded_coverage": [
+  "Semantic Scholar and the arXiv API unreachable from the Mac; the H100 host relay was not used while Q2 S1a jobs 1062 and 1064 were running",
+  "OpenReview full texts and per-note pages are behind a browser challenge; every OpenReview item is abstract-only (UNVERIFIABLE_ACCESS for full text); the five OpenReview snapshots are HTTP 200 challenge pages that verify nothing about content",
+  "ACL Anthology checked only through web search restricted to aclanthology.org and an OpenAlex venue filter, not the Anthology's own index",
+  "patents, X, Reddit, Hacker News and Chinese-language venues not searched; citation-graph traversal limited to OpenAlex",
+  "orx 0.2.2 reports itself outdated against 0.2.18; alphaXiv indexing lags by 2 to 3 days",
+  "classical statistics sources read as OpenAlex abstracts only; Gelman's post returned HTTP 403",
+  "full texts read by targeted section, not end to end; the asset cell's raw output for two length queries was saved truncated (ids recovered from the top-level id lines); two raw outputs were not saved (KS-K0, XD-00; ids from the cells' structured results)"
+ ],
+ "remediation": "After S1a, run Semantic Scholar forward citations for 2608.17124, 2608.30841 and 2609.32035 through the host relay; read the ICLR 2027 submissions (SANE, Discrimination Is Not Selection, Holding the Answer Fixed) when accessible."
+}

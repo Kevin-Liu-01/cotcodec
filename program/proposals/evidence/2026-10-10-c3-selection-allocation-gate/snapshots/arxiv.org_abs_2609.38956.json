@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2609.38956",
+ "fetched_at": "2026-10-10T15:31:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43580,
+ "raw_sha256": "9ff55162d26788769906fffc66a49817fddc1c76125a8fcf119d6cbf8b037801",
+ "raw_stored": false,
+ "extract": {
+  "title": "Routing Probes Can Improve Without New Information: An Exact-Null Audit of Uncertainty Beyond Model Outputs",
+  "authors": [
+   "Liang, Wenhao",
+   "Yue, Lin",
+   "Zhang, Wei Emma",
+   "Guo, Mingyu",
+   "Maennel, Olaf",
+   "Chen, Weitong"
+  ],
+  "citation_date": "2026/09/30",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 30 Sep 2026 04:22:18 UTC"
+   }
+  ],
+  "abstract": "Routing signals of modern vision transformers -- expert gates, attention-residual weights and halting scores -- often improve probes that predict whether the model is correct, and the improvement is commonly read as evidence that routing carries information about errors beyond the model's outputs. We test this inference directly: keeping real output-routing pairs, we redraw correctness labels from a frozen output-only generator fitted on disjoint data, so that routing is uninformative by construction. Under this exact label null, a width-matched MLP comparison still reports a routing gain in 51.3% of confidence-only evaluations (308/600), while a linear comparison reports none. Holding each training trajectory fixed on a six-model panel and selecting the checkpoint by validation log loss instead of validation accuracy removes the detections (50/120 to 0/120, and 83/120 to 0/120 in an independently implemented probe), identifying accuracy-based checkpoint selection as the cause; across all output views the raw detection rate falls from 27.5% (528/1,920) to zero observed detections. The repaired comparison is not sensitive, detecting an implanted signal of about 0.005 nats in 0/20 replicates in each of two matched settings, whereas a conditional permutation test built on an estimated routing law detects it in 11/20 and 10/20 and rejects rarely under the null. On real correctness labels, the conditional analysis yields model-relative evidence in five DeiT attention-residual families; in four it persists under two specified variants of the conditional law, and no family passes an additional noise criterion. Fitting a better probe and testing for incremental information are different problems, and each needs its own validation.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

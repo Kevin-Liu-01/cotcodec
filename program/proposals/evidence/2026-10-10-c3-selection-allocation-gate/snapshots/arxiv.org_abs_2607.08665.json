@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2607.08665",
+ "fetched_at": "2026-10-10T15:31:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43509,
+ "raw_sha256": "eaa17146952c55449712076d917146486319b9c2a24f4dcaa9565507fd5bb0c4",
+ "raw_stored": false,
+ "extract": {
+  "title": "Resample or Reroute? Recoverable Stopping Debt Without Identified Action Selection",
+  "authors": [
+   "Chen, Teng-Ruei"
+  ],
+  "citation_date": "2026/07/09",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 9 Jul 2026 16:34:15 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 10 Jul 2026 17:35:50 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 2 Sep 2026 11:48:21 UTC"
+   }
+  ],
+  "abstract": "After a weak verifier accepts a large-language-model response, a second call may resample or reroute. Because correctness is hidden, action selection is an identification problem. We order three gates: recoverable stopping debt, two-sided FIT action support, and held-out value from an outcome-blind selector. In a pinned 152-query MBPP+ experiment, a Qwen2.5-14B Base-only false-positive stop leaves +2.592 percentage points of Qwen2.5-7B recovery (query-cluster 95% interval [+1.618, +3.664]). Separately, after 7B Base-test rejection, fixed escalation to 14B exceeds leave-one-out 7B resampling by +2.882 points [+0.931, +5.201]; this is fixed-action ranking, not conditional selection. An all-episode audit produces a +2.697-point realized-maximum gap, but for two actions this statistic equals (1/2)E|Delta| - (1/2)|E Delta| and contains no observable-history term. It lies inside an exact-fold exchangeable reference (mean +3.158; 95% interval [+2.434, +3.947]). The audit unconditionally acts on 1,520 episodes: 1,240 observable stops and 280 verifier rejections; 198 stops are evaluator-only false positives. Neither tested outcome-blind controller improves on fixed rerouting. A separate LiveCodeBench ladder has all-zero FIT action advantages despite exclusive TEST rescues. A preregistered BigCodeBench support gate then finds only 23/19 and 22/19 signed episodes/queries against minima of 25/20, so L1-L4, DEV, and TEST stay unopened. Stopping debt exists, but current evidence does not identify when to resample rather than reroute.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

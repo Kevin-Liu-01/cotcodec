@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2610.08544",
+ "fetched_at": "2026-10-10T15:31:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42128,
+ "raw_sha256": "9d70456c91ac6353fc2ef7ab51bede1e5afa51dd4c281200e6664f7094eab631",
+ "raw_stored": false,
+ "extract": {
+  "title": "How High Is 0.6? Floors, Ceilings, and Headroom in Interpretability Probing",
+  "authors": [
+   "Garg, Pranjal"
+  ],
+  "citation_date": "2026/10/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 6 Oct 2026 15:32:25 UTC"
+   }
+  ],
+  "abstract": "Probes are the workhorse of interpretability. If a model's hidden states predict a variable, the model is said to represent it. But a probe score has no fixed meaning. An $R^2$ of 0.6 may only reflect what the input already gives away, and the same score can mean different things on different data. We propose reading every probe score against two reference points: a floor, what a declared set of simple inputs already predicts, and a ceiling, what the full input can predict. The gap between them, the headroom, is the range in which a probe can show that a model computes something beyond the simple inputs. We prove that headroom vanishes in two ways: the target stops depending on a hidden variable the model must infer, or the input stops revealing it. We test this on transformers trained for in-context meta-analysis, which must infer the hidden heterogeneity between studies to weight them correctly, and where both reference points are known. Under distribution shift, probe scores fall and prediction error rises $12$--$15\\times$, yet the model recovers a similar share of the headroom, indicating that the data lost information, not the representation. We then analyze the real models. The single-cell foundation model scGPT encodes biological variability only partially. We also revisit four influential LLM probing studies, which claim that models represent geography, the state of an Othello board, truth, and the demographics of their users. Against a floor computed from the input text alone, some of these claims hold, while others are largely explained by the text itself.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

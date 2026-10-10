@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/1003.5956",
+ "fetched_at": "2026-10-10T15:31:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 45672,
+ "raw_sha256": "c115c5fa0c1298679ad74cfda58734fdddc4390521031f6aafadf79d22446d8e",
+ "raw_stored": false,
+ "extract": {
+  "title": "Unbiased Offline Evaluation of Contextual-bandit-based News Article Recommendation Algorithms",
+  "authors": [
+   "Li, Lihong",
+   "Chu, Wei",
+   "Langford, John",
+   "Wang, Xuanhui"
+  ],
+  "citation_date": "2010/03/31",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 31 Mar 2010 01:20:07 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 1 Mar 2012 23:33:07 UTC"
+   }
+  ],
+  "abstract": "Contextual bandit algorithms have become popular for online recommendation systems such as Digg, Yahoo! Buzz, and news recommendation in general. \\emph{Offline} evaluation of the effectiveness of new algorithms in these applications is critical for protecting online user experiences but very challenging due to their \"partial-label\" nature. Common practice is to create a simulator which simulates the online environment for the problem at hand and then run an algorithm against this simulator. However, creating simulator itself is often difficult and modeling bias is usually unavoidably introduced. In this paper, we introduce a \\emph{replay} methodology for contextual bandit algorithm evaluation. Different from simulator-based approaches, our method is completely data-driven and very easy to adapt to different applications. More importantly, our method can provide provably unbiased evaluations. Our empirical results on a large-scale news article recommendation dataset collected from Yahoo! Front Page conform well with our theoretical results. Furthermore, comparisons between our offline replay and online bucket evaluation of several contextual bandit algorithms show accuracy and effectiveness of our offline evaluation method.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

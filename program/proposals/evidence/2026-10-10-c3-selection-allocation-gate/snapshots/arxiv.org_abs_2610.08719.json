@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2610.08719",
+ "fetched_at": "2026-10-10T15:31:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41148,
+ "raw_sha256": "b0816e86dc5269c2f8dcfa29c321faee50c20fdd0a3d547417b041b36790fe65",
+ "raw_stored": false,
+ "extract": {
+  "title": "Holdout Best-of-N: Unbiased Evaluation and Its Cost",
+  "authors": [
+   "Shah, Shrey",
+   "Li, Yinheng"
+  ],
+  "citation_date": "2026/10/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 6 Oct 2026 17:26:05 UTC"
+   }
+  ],
+  "abstract": "Reusing the scores that select a Best-of-$N$ winner can overstate its expected reward. We study evaluation from a fixed matrix of $K$ independent scores per candidate for a policy that selects using $J$ fresh scores. A single estimator based only on this matrix is exactly unbiased for expected judge reward under every independent, stable collection of candidate-specific score laws if and only if $J<K$, for every pool size $M\\ge N\\ge2$. At $J=K-1$, the selector deepens as $K$ grows. For independent Gaussian scores with common variance and fixed $M\\ge N\\ge2$, the unbiased minimax risk in this regime is of order $\\sigma^2/\\sqrt K$, attained by Holdout; allowing bias improves the rate to $\\sigma^2/K$. For two candidates, we derive the minimum-variance unbiased estimator at known variance and the sharp asymptotic unbiased minimax constant $1/(\\pi\\sqrt2)$, which Holdout attains without knowing the variance. The cyclic average over subsets and ties can be computed in $O(MK\\log M)$ operations. At fixed selector depth, cyclic evaluation of bounded scores has $O(K^{-1})$ risk uniformly in pool size. The impossibility result concerns the fixed matrix: one additional fresh winner score permits unbiased evaluation of the all-$K$ policy.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

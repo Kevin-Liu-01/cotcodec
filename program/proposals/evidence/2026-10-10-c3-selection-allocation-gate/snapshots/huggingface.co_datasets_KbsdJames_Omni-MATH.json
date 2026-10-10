@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/datasets/KbsdJames/Omni-MATH",
+ "fetched_at": "2026-10-10T15:31:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 788173,
+ "raw_sha256": "3f7f866da38a373c9601b513f4586ae5d281e27246056873c6e21e913e1ba49a",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "KbsdJames/Omni-MATH · Datasets at Hugging Face"
+ }
+}

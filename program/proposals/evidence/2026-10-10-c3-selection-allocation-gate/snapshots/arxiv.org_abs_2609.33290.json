@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2609.33290",
+ "fetched_at": "2026-10-10T15:31:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42767,
+ "raw_sha256": "e20a98d0803d2cfe0a4de37ba9c71417f72a773fda9f60ba0e32f7617523f76d",
+ "raw_stored": false,
+ "extract": {
+  "title": "Calibration, Not Answer Selection: Distilling Internal Confidence in Reasoning Models",
+  "authors": [
+   "Xi, Yadong",
+   "Zhang, Rongsheng",
+   "Lv, Tangjie",
+   "Luo, Ziyang",
+   "Zhao, Ruochen"
+  ],
+  "citation_date": "2026/09/27",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 27 Sep 2026 06:52:17 UTC"
+   }
+  ],
+  "abstract": "Reinforcement learning with binary correctness rewards trains correctness, not calibrated confidence. The confidence that reasoning models verbalize is systematically overconfident, and the problem is not merely one of scale: verbalized confidence tracks how willing a model is to commit to an answer, not how likely the answer is to be right. Post-hoc rescaling therefore fits one distribution but rarely transfers. We look inside the model instead. On factual question answering, a linear probe on the hidden state between the chain of thought and the answer is substantially better calibrated: its expected calibration error is 5 to 38 times lower than that of the verbalized score across four benchmarks and two model families. However, when used to pick among N sampled answers, that same probe nearly ties majority voting yet falls far short of the oracle. Internal states answer \"how certain am I\" well and \"which answer is right\" poorly, so the signal should be reported as a confidence rather than used to select answers. As a result, we introduce probe-guided self-distillation (Probe-SD): score a model's own sampled traces with the probe, overwrite the confidence each trace states, and finetune the base checkpoint of the same family, so nothing but the model itself remains at test time. On Qwen3-14B, Probe-SD cuts ECE from 0.178 to 0.024 in-domain and from 0.542 to 0.113 out-of-domain, where it also beats post-hoc recalibration and self-consistency distillation. The resulting confidence is well-calibrated and useful for weighted voting, behaviors previously attributed to online RL, here obtained with supervised finetuning alone.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
