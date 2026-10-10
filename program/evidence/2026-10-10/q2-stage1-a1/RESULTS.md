@@ -15,18 +15,20 @@ D62. Evidence: `program/evidence/2026-10-10/q2-stage1-analysis/`. Read the repor
 
 ## Outcome in one paragraph
 
-On the 32 primary base tasks, under greedy decoding with 15 steps and a 2,048-token thinking
-budget, the two certified harnesses did not differ detectably. δ (H-GA minus H-OSW-fixed) was
-−3.1 pp, with a 90% t interval of −8.9 to +2.7 pp and paired-t p = 0.37. The X sign-flip test
-gave p = 0.46. That interval is too wide to call the pair near-equivalent at the ±7.5 pp margin,
-so **DR2 is Inconclusive**. The harness share π_small was 0.055, with one-sided 95% bounds of
-0.000 and 0.260. The bounds straddle M = 0.13, so **DR5 is INCONCLUSIVE**. Under D47 only GO
-admits S1b, so **S1b does not go to the gauntlet**. The between-session floor D_b was 11.3%
-(95% interval 5.9-17.2%), and the within-session floor D_w was 12.5%. The session excess
-D_b − D_w was −1.2 pp, with a one-sided 95% upper bound of 0.78 pp, below the registered 1 pp,
-so **P1 is falsified**. P2-P5 stand. 4B is not at the floor (**DR1 does not fire**). Realized
-cost was 0.0025-0.0027 GPU-h per episode, about 24% of the card's high price (**DR4 does not
-fire**). No episode was lost to infrastructure in 1,808.
+For the two realized serving sessions per size, on the 32 primary base tasks, under greedy
+decoding with 15 steps and a 2,048-token thinking budget, the two certified harnesses did not
+differ detectably. δ (H-GA minus H-OSW-fixed) was −3.1 pp, with a 90% t interval of −8.9 to
++2.7 pp and paired-t p = 0.37. The X sign-flip test gave p = 0.46. That interval is too wide to
+call the pair near-equivalent at the ±7.5 pp margin, so **DR2 is Inconclusive**. The harness
+share π_small was 0.055, with one-sided 95% bounds of 0.000 and 0.260. The bounds straddle
+M = 0.13, so **DR5 is INCONCLUSIVE**. Under D47 only GO admits S1b, so **S1b does not go to the
+gauntlet**. The between-session floor D_b was 11.3% (95% interval 5.9-17.2%), and the
+within-session floor D_w was 12.5%. The session excess D_b − D_w was −1.2 pp, with a one-sided
+95% upper bound of 0.78 pp, below the registered 1 pp, so **P1 is falsified**. 4B decides that
+reading: 9B's excess is exactly 0, while 9B's own registered session test rejects (S2 − S1 =
++5.5 pp, p = 0.016). P2-P5 stand. 4B is not at the floor (**DR1 does not fire**). Realized cost
+was 0.0025-0.0027 GPU-h per episode, about 24% of the card's high price (**DR4 does not fire**).
+No episode was lost to infrastructure in 1,808.
 
 ## What was registered (sections 2, 5, 8-12, 15)
 
@@ -59,7 +61,7 @@ fire**). No episode was lost to infrastructure in 1,808.
 |---|---|---|---:|---:|---:|---:|
 | A1-9B-S1 | 9B, S1 | 1045 / 1047 (2026-10-09 22:21-23:34 UTC) | 452 of 452 | 0 | 1.2203 | 0.002700 |
 | A1-4B-S1 | 4B, S1 | 1048 / 1050 (23:36-00:45) | 452 of 452 | 0 | 1.1469 | 0.002537 |
-| A1-9B-S2 | 9B, S2 | 1051 / 1053 (2026-10-10 12:50-14:03) | 452 of 452 | 0 | 1.2211 | 0.002702 |
+| A1-9B-S2 | 9B, S2 | 1051 / 1053 (2026-10-10 12:50-14:03; begin moved to 12:50:00, D57 (ii), disclosure 8) | 452 of 452 | 0 | 1.2211 | 0.002702 |
 | A1-4B-S2 | 4B, S2 | 1062 / 1064 (14:09-15:17) | 452 of 452 | 0 | 1.1286 | 0.002497 |
 
 The four jobs scored 1,808 episodes: 512 on the base and 1,296 on extension blocks 1-11.
@@ -67,8 +69,10 @@ Session-1 jobs completed all 11 fill blocks, so session 2 ran the same 11. The p
 are in `README.md` in this directory. The A1 jobs used 4.7169 GPU-h physical; S1a's caps total
 474 of 477 charged minutes (D22). The analysis used no GPU: all nine of its Slurm jobs were
 CPU-only (1065-1068 rescoring, 1071 report, 1072 identity check, 1073 first divergence, 1074
-GLMM, 1075 section 15 assembler). It ran 15:23-18:56 UTC on 2026-10-10. The step-by-step record
-is `../q2-stage1-analysis/README.md`.
+GLMM, 1075 section 15 assembler). No batch script or recorded `sbatch` command requests a GRES,
+each batch script refuses to start if Slurm assigned a GPU, and the container lane
+(`s1a-cpu.sbatch`) refuses to run if its container sees any `/dev/nvidia*` node. The analysis
+ran 15:23-18:56 UTC on 2026-10-10. The step-by-step record is `../q2-stage1-analysis/README.md`.
 
 ## Decision rules
 
@@ -87,7 +91,7 @@ does not go to the gauntlet. The registration says that after INCONCLUSIVE the r
 more sessions at 4B and 9B. Any such follow-up would be a new proposal with its own gauntlet,
 and whether to pursue one is the program owner's choice. Nothing here starts it.
 
-## Predictions (read once, on the primary set)
+## Predictions (read once, on the primary set, for the realized sessions)
 
 | | Prediction | Falsifier | Reading | Verdict |
 |---|---|---|---|---|
@@ -137,7 +141,11 @@ percentiles (10,000 resamples, seed 42), and sessions are held fixed.
 Tests. δ paired t: p = 0.3671, with a 90% t interval of [−8.91, +2.66] pp. Per size (secondary):
 4B p = 0.5401, 9B p = 0.3045. X sign flip (primary, one-sided): p = 0.4588. X label permutation
 (sensitivity): p = 0.2796. Session sign flip (primary, two-sided, per size): 4B p = 0.5631, 9B
-p = 0.0163.
+p = 0.0163. The sign-flip p-values are Monte Carlo (10,000 flips, PCG64 seed 42), as registered.
+Few tasks have a non-zero statistic (q_t for 7 tasks; u_zt for 8 tasks in 4B and 7 in 9B, all
+seven positive), so the exact randomization p-values can be enumerated over their sign patterns:
+X 58/128 = 0.4531, session 4B 144/256 = 0.5625 and 9B 2/128 = 0.0156. They agree with the
+registered values, and no reading changes (`../q2-stage1-analysis/post-review/post-review.json`).
 
 **Note on the 9B excess.** On the base, every discordant 9B (task, harness) cell is a 3-to-1
 split of its four reruns: 11 such cells, the odd rerun in session 1 in 6 and in session 2 in 5.
@@ -148,10 +156,18 @@ Of the six, five split within each session and one split by session.
 
 **DR3 components** (reported, no decision; `s15.json` `dr3`):
 
-| Size | Success H-OSW-fixed / H-GA | D_b | D_w | X | X_c | ρ (common session share) | Session shift | Harness effect by session (δ_S1 − δ_S2) |
-|---|---|---|---|---|---|---|---|---|
-| 4B | 28.91% / 26.56% | 14.06% [7.03, 21.88] | 16.41% [7.81, 25.78] | 0.0078 | 0.0084 | not defined: the session-variance estimate is −0.0117, at or below 0, and D_b − D_w ≤ 0 | +2.34 pp (p 0.563) | +4.69 pp (SE 6.87) |
-| 9B | 32.81% / 28.91% | 8.59% [3.91, 14.06] | 8.59% [3.91, 14.06] | 0.0156 | 0.0150 | not defined: the session-variance estimate is 0 | +5.47 pp (p 0.016) | +1.56 pp (SE 6.14) |
+| Size | Success H-OSW-fixed / H-GA | D_b | D_w | X | X_c | C_z (common session covariance) | V_z = (D_b − D_w)/2 | ρ (common session share) | Session shift | Harness effect by session (δ_S1 − δ_S2) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 4B | 28.91% / 26.56% | 14.06% [7.03, 21.88] | 16.41% [7.81, 25.78] | 0.0078 | 0.0084 | −0.0078 | −0.0117 | not defined (V_z < 0) | +2.34 pp (p 0.563) | +4.69 pp (SE 6.87) |
+| 9B | 32.81% / 28.91% | 8.59% [3.91, 14.06] | 8.59% [3.91, 14.06] | 0.0156 | 0.0150 | −0.0078 | 0 | not defined (V_z = 0) | +5.47 pp (p 0.016) | +1.56 pp (SE 6.14) |
+
+ρ follows the code of record: `estimators.session_common_share` returns ρ_z = C_z / V_z
+truncated to [0, 1], and NaN when V_z ≤ 0 (`report-guarded.json` `primary.session_common_share`).
+Section 9 item 8 writes the formula without that condition. Read literally, it gives 4B
+C_z / V_z = −0.0078 / −0.0117 = 0.667, the ratio of two negative estimates, and has no value for
+9B (V_z = 0). Neither reading enters a rule. C_z, the numerator DR3 hands to S1b, is −0.0078 for
+each size: in these sessions the two harnesses' session deviations showed no positive
+covariance (`../q2-stage1-analysis/post-review/post-review.json` `dr3_common_session_share`).
 
 The 9B session shift is significant at 0.05 by its own per-size test. No decision rule reads it,
 there are two per-size tests, and it describes these two sessions only. 9B succeeded more often
@@ -185,11 +201,19 @@ descriptions and decide nothing. The full secondary tables are in `report-guarde
 | **Primary** (base, 512 episodes, 32 tasks): the registered reading | **No.** Full fit: optimizer code 1, "singular convergence (7)", no positive-definite Hessian, logLik not returned. Reduced fit: "relative convergence (4)", no positive-definite Hessian | task 32.6, task:size 3.23, task:harness 1.44, session 0.088; the other components below 1e-7 | task 0.80 [0.42, 0.96], task:size 0.079 [0, 0.50], task:harness 0.035 [0, 0.15], session 0.002 [0, 0.007]. Taken from the fit that did not converge; 98 of the 200 refits did not converge | **not computed** (the fits did not both converge; statistic null) |
 | Secondary (base + blocks 1-11, 1,808 episodes, 113 tasks): reported beside it | Yes, both fits (relative convergence, positive-definite Hessian) | task 98.1, task:size 3.44, task:harness 1.32, task:size:harness 0.31, task:harness:session 0.074; session, harness:session and task:session about 0 | task 0.92 [0.89, 0.98], task:size 0.032 [0.005, 0.062], task:harness 0.012 [0, 0.026], task:harness:session 0.0007 [0, 0.008]. 93 of the 200 refits did not converge | χ² = 4.00, df 1, p = 0.045 (boundary-corrected 0.023) |
 
-The registered reading of the GLMM is the primary fit, and it did not converge. The registration
-says a fit that does not converge is reported as such, so the GLMM gives no registered evidence
-on harness-specific task variance. The secondary fit's test (p = 0.045, boundary-corrected 0.023)
-comes from a secondary model on the secondary set. It is not a decision input and supports no
-interaction claim (section 10.1).
+The registered reading of the GLMM is the primary-set fit (D59 (iii)), and it did not converge.
+The registration says a fit that does not converge is reported as such, so the GLMM gives no
+registered evidence on harness-specific task variance. Section 10.1 names the GLMM's
+(1|task:harness) test as the secondary evidence for a task-by-harness interaction. The
+secondary-set fit, reported beside the registered one under D59 (iii), converged, and its test
+gives χ² = 4.00, p = 0.045 (boundary-corrected 0.023). That is secondary, non-confirmatory
+evidence of harness-specific task variance on the 113-task set. It is not the registered reading
+and not a decision input. It agrees with the other secondary-set signals, which come from 9B:
+X_9B = 0.0376 (95% interval [0.0022, 0.0796]; its task-specific part X_c,9B [0.0023, 0.0789]) and
+π_9B with a one-sided lower bound of 0.038. On the same set the primary X test (sign flip,
+pooled) does not reject (p = 0.157). Its label-permutation sensitivity, which assumes
+exchangeable episodes within a cell and which section 10.2 shows can be anti-conservative under a
+session excess, gives p = 0.035.
 
 ## Infrastructure, per cell and per session (section 15; D56)
 
@@ -218,7 +242,8 @@ Over all 1,808 episode attempts (finals and attempts are the same here: no re-qu
   (34), 9B/H-GA 24 (43), 9B/H-OSW-fixed 22 (29). 18 base tasks have an exposed episode and 14
   have none. δ by stratum (descriptive): exposed −4.86 pp, unexposed −0.89 pp.
 - **Host.** While each A1 job ran, the lane's 26 snapshots per job show no foreign Slurm job; the
-  highest one-minute load average was 15.5.
+  highest one-minute load average was 15.5. Between the jobs, E4's reviewer GPU job 1061 ran in the
+  session-2 gap, while no S1a job ran (D63; disclosure 9).
 
 Per-cell, per-session and per-attempt tables: `report-guarded.json` (`cells`,
 `cells_by_size_session`, `cells_by_size_harness_session`, `attempts`). Per-episode counts:
@@ -238,13 +263,28 @@ Per-cell, per-session and per-attempt tables: `report-guarded.json` (`cells`,
 GPU-h per episode is the GPU job's Slurm elapsed time (`scontrol` EndTime minus StartTime,
 engine start-up included) over the episodes that ran to an end, all four at V = 20. The total is
 about 90.0 VM-h, against the registered central 92 and high 115. Steps on the base, mean per
-episode: 4B/H-GA 12.41, 4B/H-OSW-fixed 12.27, 9B/H-GA 11.77, 9B/H-OSW-fixed 11.81. Episodes
+episode: 4B/H-GA 12.41, 4B/H-OSW-fixed 12.27, 9B/H-GA 11.77, 9B/H-OSW-fixed 11.80. Episodes
 ending at the 15-step cap without `terminate`: 72, 75, 57 and 65 of 128. Output tokens per
 episode, mean over each job's 452 episodes: 9B 4,393 (S1) and 4,359 (S2); 4B 4,862 and 4,715.
 That is 362-386 per step. The step-of-termination and step-of-success distributions censored at
 15 are in `s15.json` (`steps`, `output_tokens`, `cost_card_prices`). DR4 does not fire: no job
 exceeds the high price. This card replaces the synthetic 431.5 GPU-h projection's per-episode
 price for this profile, under these settings, on this host.
+
+**Setup, evaluation and queue times** (section 2 item 5). The registered report and `s15.json`
+do not summarise them, so they were summarised after review from the committed records and
+bridge samples (`../q2-stage1-analysis/post-review/post-review.json`; descriptive, no rule).
+Median and 90th percentile per size, over each size's 904 final records:
+
+| | Boot (VM start to first screenshot) | Setup (session start, OSWorld import included, and the task's setup steps) | Keyboard warm-up | Evaluation | Final-state capture | Slot occupancy |
+|---|---|---|---|---|---|---|
+| 4B | 19.4 s, 19.6 s | 12.9 s, 16.7 s | 0.2 s, 0.2 s | 1.9 s, 15.2 s | 0.007 s, 15.0 s | 170.5 s, 205.6 s |
+| 9B | 19.4 s, 19.6 s | 12.9 s, 16.8 s | 0.2 s, 0.2 s | 1.9 s, 15.2 s | 0.007 s, 15.0 s | 187.6 s, 221.7 s |
+
+One base task, `185f29bd`, takes 105 s to capture in every episode. The settles are the fixed
+60 s and 20 s. The engine queued no request: in every job, the queue-time histogram counts one
+request per step (5,437-5,699 per job), its mean is below 0.01 ms per request, and no 30-second
+sample shows a waiting request. The prefix-cache hit share was 0.855-0.858.
 
 ## Truncation (section 15)
 
@@ -265,8 +305,11 @@ truncation-confounded**. As a description, the base-only shares are 0.50%, 0.64%
   `UnidentifiedImageError` on the same image the live metric failed to read.
 - **Corrected verdicts.** Primary: all 512 base verdicts have a corrected score. 511 come from
   offline rescoring. The metric-exception episode gets 0 by the registered merge rule (a metric
-  exception scores 0), so no base verdict fell back to the live score. Secondary: 1,792 from
-  rescoring and **16 fell back to live scores** (`53ad5833`).
+  exception scores 0; its `offline_raw_score` is null), so no base verdict fell back to the live
+  score. Secondary: 1,791 from rescoring, the same episode at 0 by the merge rule, and **16 fell
+  back to live scores** (`53ad5833`). `rescore-coverage.json` `verdict_sources` counts every
+  record with a non-null corrected score as `corrected_from_offline_rescoring` (512 and 1,792), so
+  its label includes the merge rule's 0; the split here is read from the records.
 - **Flips: 0.** The corrected comparator applied to 72 episodes per job (`compare_pptx_files`
   tasks) and changed no verdict on the base or the secondary set. Live versus offline raw replay
   mismatches: **0** on every record replayed. The checker-correction split, with replay
@@ -327,13 +370,22 @@ tables are in `s15.json` `per_domain`.
    guard recomputed DR0 from the records, and `provenance.py` checked the registration, the
    frozen plan and the 75 code-of-record files (PASS). The session-2 jobs' other lane checks
    (provenance, engine argv, Slurm limit) were not re-verified by a second person.
-5. **The runbook's independent verifier (its step 12) has not run.** As a self-check on the Mac,
-   the registered merge reproduced all four merged files and `a1.jsonl` byte for byte from the
-   committed files, and `run_report.py` reproduced `report.json` and `report-guarded.json` byte
-   for byte (numpy 2.5.2 against the host's 1.21.5). This is not the independent verification.
+5. **The runbook's independent verifier (its step 12): no committed record yet.** As a self-check
+   on the Mac, the registered merge reproduced all four merged files and `a1.jsonl` byte for byte
+   from the committed files, and `run_report.py` reproduced `report.json` and
+   `report-guarded.json` byte for byte (numpy 2.5.2 against the host's 1.21.5). This is not the
+   independent verification. After this file's first version, a review re-ran step 12's
+   re-runnable steps off the host from SHA-256-checked copies (the merges, the report through
+   `run_report.py` and through the plain registered CLI, the identity comparison, DR0 and the GLMM
+   input writer) and re-implemented the estimands, rules and sensitivities from the raw records.
+   It reported every output reproduced. It did not re-fit the GLMM: R is not installed on the
+   Mac, and a re-fit on the host would be a new Slurm job. For the GLMM it checked the inputs, the
+   image, the package lock, the exit codes and that the summary agrees with the fits. Its working
+   files are not in this repository, so the step-12 record is still to be committed.
 6. **Host activity during the analysis.** One job of other work, 1070 (a C3 gauntlet reviewer job
    from another workflow), was in the queue at one poll during the rescoring (about 15:58 UTC).
-   The quiet-host rule covers the A1 jobs, which had all ended. The analysis outputs do not
+   The quiet-host rule covers the A1 jobs, which had all ended, and D64 states that S1a's CPU
+   analysis jobs do not block the reviewer's lane job. The analysis outputs do not
    depend on host load: they are deterministic, and the report reproduced byte for byte off the
    host. The GLMM job (1074) ran with no other job in the queue at its submission or at any poll.
 7. **Ops commit.** The operator scripts ran from `6d85529`: the last commit to touch
@@ -342,13 +394,38 @@ tables are in `s15.json` `per_domain`.
    merged into `ops/q2-s1a`. The conflicts in `program/log.md` and `program/state.json` were
    resolved by keeping both sides, and the program total became 9.746 GPU-h (the ledger sum).
    This is repository housekeeping, not a deviation.
-8. **Evidence location.** The runbook puts the analysis evidence in
-   `program/evidence/2026-10-10/q2-stage1-analysis/`, where it is. This RESULTS file sits beside
-   the per-job evidence, as the analysis assignment specified.
-9. **No job was rerun or resubmitted**, and no frozen file was changed (`git diff d5f5798 --
-   harness/ scripts/ infra/ experiments/` is empty). No registered stop condition fired:
-   provenance passed, the report and identity check exited 0, and the GLMM collector found the
-   registered package lock.
+8. **Session-1 disclosures (D57).** (i) Both 4B GPU jobs, 1050 (session 1) and 1064 (session 2),
+   verified the model receipt `75ebfc53...`, the file `docker-research.sbatch` reads, not the
+   CPU-lane receipt `efc88487...` that G0 item 2 names. The two differ only in
+   `registry_sha256`: revision `851bf6e8...`, file list, total bytes and artifact root
+   `3b8a0751...` are equal, and each job checked the files against that root. (ii) The session-2
+   9B VM job 1051 was submitted with `--begin` at `lane.earliest_start`, the later session-1 GPU
+   job's end (00:45:18) plus 12 h. Its begin time was moved to 12:50:00 UTC (`scontrol update`,
+   before it started), so that it also started at least 12 h after VM job 1048's Slurm end
+   (00:45:21), the other reading of section 5.5. D57 rules both to be disclosures, not
+   deviations: the registered quantity is the model's files, which are identical, and a later
+   start changes nothing the registration fixes. No number or rule changes. Details: `README.md`
+   here.
+9. **A reviewer job in the session-2 gap (D63).** E4's open-weight reviewer lane job 1061 (one
+   H100, 14:05:59-14:09:11 UTC, 0.0533 GPU-h) ran after A1-9B-S2 had left the queue (14:03:45) and
+   before the A1-4B-S2 pair was submitted. No S1a job ran during it, so the quiet-host rule, which
+   binds while an S1a job runs, held. The operator waited for an empty queue and idle GPUs, so the
+   4B pair (1062/1064) started at most about 3.5 minutes later than it otherwise would have.
+   Nothing S1a registers depends on that start time.
+10. **Descriptions added after review.** `../q2-stage1-analysis/post-review/post_review.py`
+    (standard library only; it reads only committed files: `a1.jsonl`, the four GPU jobs' bridge
+    `gpu.jsonl` and `guard.json`) wrote `post-review.json` (SHA-256 `ea6bc2fa...`): the setup,
+    evaluation and queue times of section 2 item 5, the exact sign-flip p-values and DR3's C_z and
+    V_z with both readings of ρ. It is a description outside the runbook. It changes no estimand,
+    rule or decision, and every value it shares with the registered report agrees (D_b, D_w, X,
+    the session shifts, C_z and V_z).
+11. **Evidence location.** The runbook puts the analysis evidence in
+    `program/evidence/2026-10-10/q2-stage1-analysis/`, where it is. This RESULTS file sits beside
+    the per-job evidence, as the analysis assignment specified.
+12. **No job was rerun or resubmitted**, and no frozen file was changed (`git diff d5f5798 --
+    harness/ scripts/ infra/ experiments/` is empty). No registered stop condition fired:
+    provenance passed, the report and identity check exited 0, and the GLMM collector found the
+    registered package lock.
 
 **Deviations from the registration:** D59 (i)'s wrapper only (item 1).
 
@@ -356,13 +433,20 @@ tables are in `s15.json` `per_domain`.
 
 For these two serving sessions per size, this configuration (greedy decoding, T = 15, 2,048
 output tokens with thinking passed back, the matched settle, V = 20 on vLLM v0.31.0, offline
-VMs) and the 32 base tasks, all labelled "not externally anchored":
+VMs), this host, VM image and lane as configured (the scope within which D53 certifies the
+action path) and the 32 base tasks, all labelled "not externally anchored":
 
 - The **rerun-noise floor** on the base. D_b = 11.3% (95% interval 5.9-17.2%; 4B 14.1%, 9B 8.6%)
-  and D_w = 12.5%. There is no evidence of a positive between-session excess: the one-sided upper
-  bound is 0.78 pp, so P1 is falsified. In the secondary set, 10.4% and 10.2%.
+  and D_w = 12.5%. In the secondary set, 10.4% and 10.2%.
+- **No positive between-session excess by the registered P1 test.** The one-sided upper bound of
+  the pooled excess is 0.78 pp, so P1 is falsified. 4B's 2-to-2 cells decide this: 9B's excess
+  is exactly 0 in every resample, because each discordant 9B cell is a 3-to-1 split (the note
+  under the primary estimands). It does not mean the sessions made no difference: 9B's
+  registered session test rejects for these two sessions (S2 − S1 = +5.5 pp, p = 0.016).
 - **No detectable harness main effect.** δ = −3.1 pp, 90% t interval [−8.9, +2.7] pp. DR2
   classifies the pair **Inconclusive**: not Present, and not shown near-equivalent at ±7.5 pp.
+  δ is the harness effect in these two sessions: with two sessions per size, a harness x session
+  effect common to a session's tasks is part of δ and cannot be separated from it (section 19).
 - **DR5 INCONCLUSIVE.** π_small = 0.055 with one-sided 95% bounds [0.000, 0.260] around
   M = 0.13. Under D47, **S1b does not go to the gauntlet**. The registered pointer after
   INCONCLUSIVE is more sessions at 4B and 9B, as a new proposal.
@@ -376,10 +460,18 @@ VMs) and the 32 base tasks, all labelled "not externally anchored":
 
 - Any claim about the population of sessions. Every interval resamples tasks with the two
   sessions per size held fixed (section 9).
+- A harness effect net of session-level effects. A harness x session effect common to a
+  session's tasks enters δ and is neither modelled nor tested; with two sessions it is not
+  separable from δ (sections 9 and 19).
+- Anything on another host, VM image, kernel setting or lane configuration, or above 32
+  concurrent VMs. D53 certifies the action path on this host as configured, at no more than 32
+  concurrent VMs; S1a ran 20.
 - That the two harnesses are equivalent. DR2 is Inconclusive, not Near-equivalent.
-- Any task-by-harness interaction claim. The X test does not reject (and an X rejection would
-  support only "an effect is present"). The GLMM's registered fit did not converge, and its
-  secondary-set test is not a decision input.
+- Any confirmatory task-by-harness interaction claim. The X test does not reject (and an X
+  rejection would support only "an effect is present"). The GLMM's registered (primary-set) fit
+  did not converge. The secondary-set fit's test (p = 0.045, boundary-corrected 0.023) is
+  secondary, non-confirmatory evidence of harness-specific task variance on the 113-task set,
+  and decides nothing.
 - Any claim about scale. 4B against 9B is a screen (δ difference +1.6 pp, π difference −0.056,
   MDE about 17 pp), and S1a makes no shrinkage claim.
 - Anything about other harnesses, the observation factor (accessibility tree), step caps of 50 or
@@ -403,4 +495,6 @@ VMs) and the 32 base tasks, all labelled "not externally anchored":
 - `../q2-stage1-analysis/rescore-coverage.json`, `first-divergence.json`, `costs.json`,
   `identity/identity.json`, `provenance.json`; `../q2-stage1-analysis/README.md`: steps,
   commands and digests.
+- `../q2-stage1-analysis/post-review/post-review.json` (`ea6bc2fa...`) and `post_review.py`:
+  the descriptions added after review (disclosure 10).
 - `README.md` (this directory): the per-job evidence for O2 and the four A1 jobs.
