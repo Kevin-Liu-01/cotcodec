@@ -53,6 +53,10 @@ SIZE_BOUNDS = {
     "sigma_f": (0.0, 5.0),
 }
 RHO_BOUNDS = (math.atanh(-0.99), math.atanh(0.995))
+# Spike-and-slab harness contrast (coordinate 18, logit of w): a share w of tasks is
+# harness-sensitive in both sizes (slab: the BVN with the sigma_b SDs), the rest has no
+# task-specific harness effect (spike at beta = c). Without coordinate 18, w = 1 (normal).
+W_BOUNDS = (-6.0, 6.0)
 CELL_KEYS = ("c", "omega", "kappa", "sigma_e", "sigma_f")  # enter the per-size grids
 
 
@@ -189,8 +193,27 @@ def pack(sizes: Sequence[dict[str, float]], rho_a: float, rho_b: float) -> np.nd
     return np.array(x + [math.atanh(rho_a), math.atanh(rho_b)])
 
 
-def bounds() -> list[tuple[float, float]]:
-    return [SIZE_BOUNDS[k] for k in SIZE_KEYS] * 2 + [RHO_BOUNDS, RHO_BOUNDS]
+def bounds(n: int = 18) -> list[tuple[float, float]]:
+    out = [SIZE_BOUNDS[k] for k in SIZE_KEYS] * 2 + [RHO_BOUNDS, RHO_BOUNDS]
+    return out + [W_BOUNDS] if n == 19 else out
+
+
+def w_of(x: np.ndarray) -> float:
+    """The harness-sensitive share w (1 for the normal model)."""
+    return float(1 / (1 + math.exp(-x[18]))) if len(x) > 18 else 1.0
+
+
+def harness_matrix(
+    v: np.ndarray, sizes: Sequence[dict[str, float]], rho_b: float, w: float
+) -> np.ndarray:
+    """The discretised prior of (beta_4B - c_4B, beta_9B - c_9B): the BVN slab, mixed with
+    a spike at 0 in both sizes when w < 1."""
+    B = bvn_matrix(v, (0.0, 0.0), (sizes[0]["sigma_b"], sizes[1]["sigma_b"]), rho_b)
+    if w < 1.0:
+        i0 = int(np.argmin(np.abs(v)))
+        B = w * B
+        B[i0, i0] += 1.0 - w
+    return B
 
 
 class Likelihood:
@@ -230,7 +253,7 @@ class Likelihood:
         L9 = self.grids(1, sizes[1])
         A = bvn_matrix(self.grid.u, (sizes[0]["mu"], sizes[1]["mu"]),
                        (sizes[0]["sigma_a"], sizes[1]["sigma_a"]), rho_a)  # fmt: skip
-        B = bvn_matrix(self.grid.v, (0.0, 0.0), (sizes[0]["sigma_b"], sizes[1]["sigma_b"]), rho_b)
+        B = harness_matrix(self.grid.v, sizes, rho_b, w_of(x))
         M = {q: A @ L9[q] @ B.T for q in sorted(set(self.index[1]))}
         lik = np.array(
             [np.sum(L4[self.index[0, k]] * M[self.index[1, k]]) for k in range(self.y.shape[1])]
@@ -276,6 +299,7 @@ def fit(
     grid: Grid | None = None,
     fixed: dict[int, float] | None = None,
     x0: np.ndarray | None = None,
+    harness: str = "normal",
     log=print,
 ) -> dict[str, Any]:
     """ML fit: per-size fits from the start values, then the joint fit with rho_a, rho_b.
@@ -297,8 +321,12 @@ def fit(
             log({"stage": "per-size", "size": SIZES[zi], "loglik": -res.fun, "nit": res.nit,
                  "seconds": round(time.time() - t0, 1)})  # fmt: skip
         x0 = np.concatenate(per_size + [np.array([math.atanh(0.8), math.atanh(0.5)])])
+        if harness == "spike-slab":
+            x0[[3, 11]] += math.log(math.sqrt(2.0))  # slab SDs start wider than the normal's
+            x0 = np.concatenate([x0, [0.0]])  # w = 0.5
     x0 = np.array(x0, dtype=float)
-    free = [i for i in range(18) if i not in fixed]
+    bnds = bounds(len(x0))
+    free = [i for i in range(len(x0)) if i not in fixed]
 
     def full(v: np.ndarray) -> np.ndarray:
         x = x0.copy()
@@ -374,6 +402,7 @@ def to_params(x: np.ndarray, sess: dict[str, Any]) -> Params:
         },
         rho_a=rho_a,
         rho_b=rho_b,
+        w_b=w_of(x),
     )
 
 
@@ -407,7 +436,7 @@ def posterior_bank(
     L4, L9 = like.grids(0, sizes[0]), like.grids(1, sizes[1])
     A = bvn_matrix(g.u, (sizes[0]["mu"], sizes[1]["mu"]),
                    (sizes[0]["sigma_a"], sizes[1]["sigma_a"]), rho_a)  # fmt: skip
-    B = bvn_matrix(g.v, (0.0, 0.0), (sizes[0]["sigma_b"], sizes[1]["sigma_b"]), rho_b)
+    B = harness_matrix(g.v, sizes, rho_b, w_of(x))
     du, dv = g.u[1] - g.u[0], g.v[1] - g.v[0]
     K = like.y.shape[1]
     eta0 = np.empty((K, n_draws, 2))

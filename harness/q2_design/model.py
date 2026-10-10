@@ -64,10 +64,13 @@ class Params:
     sizes: dict[str, SizeParams]
     rho_a: float  # task-effect correlation across sizes
     rho_b: float  # harness-contrast correlation across sizes
+    # Share of harness-sensitive tasks (spike-and-slab contrast; 1 = the normal model): with
+    # probability 1 - w_b a task's contrast is c_z in both sizes, else c_z plus the BVN slab.
+    w_b: float = 1.0
 
     def to_json(self) -> dict[str, Any]:
         return {"sizes": {z: asdict(p) for z, p in self.sizes.items()},
-                "rho_a": self.rho_a, "rho_b": self.rho_b}  # fmt: skip
+                "rho_a": self.rho_a, "rho_b": self.rho_b, "w_b": self.w_b}  # fmt: skip
 
     @staticmethod
     def from_json(obj: dict[str, Any]) -> Params:
@@ -75,6 +78,7 @@ class Params:
             sizes={z: SizeParams(**v) for z, v in obj["sizes"].items()},
             rho_a=float(obj["rho_a"]),
             rho_b=float(obj["rho_b"]),
+            w_b=float(obj.get("w_b", 1.0)),
         )
 
 
@@ -116,7 +120,7 @@ class Scenario:
                 sigma_e=p.sigma_e if self.sigma_e is None else float(self.sigma_e[z]),
                 sigma_f=p.sigma_f if self.sigma_f is None else float(self.sigma_f[z]),
             )
-        return Params(sizes=sizes, rho_a=params.rho_a, rho_b=params.rho_b), c_fit
+        return replace(params, sizes=sizes), c_fit
 
 
 @dataclass(frozen=True)
@@ -229,6 +233,8 @@ def task_effects(
     if source == "parametric":
         a = _bvn(rng, (nsim, design.K), (sp[0].sigma_a, sp[1].sigma_a), params.rho_a)
         b = _bvn(rng, (nsim, design.K), (sp[0].sigma_b, sp[1].sigma_b), params.rho_b)
+        if params.w_b < 1.0:  # spike-and-slab; no extra draw for the normal model
+            b = b * (rng.random((nsim, design.K, 1)) < params.w_b)
         eta0 = a + np.array([p.mu for p in sp])
         beta = b + np.array([p.c for p in sp])
         return eta0, beta, None
