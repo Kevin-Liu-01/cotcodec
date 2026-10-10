@@ -1076,3 +1076,35 @@ Decided: C3 ends; no repair run, because no repair leaves a residual worth the
 gate. New backfill pauses until S1a's registered result is in. That result is
 the Q2 noise floor that gates S2 and S3, which outrank the remaining backfill
 items (E3, E5, E7). The program's next direction is chosen from it.
+
+**D66. Q2 S1a's registered outcome: no harness difference detected; S1b is
+not admitted; a CPU design study sizes the next Q2 step.**
+`q2-stage1-rescoped-v1` ran as registered: four A1 jobs, 1,808 episodes,
+DR0 never fired, and not one infrastructure loss, restart or undelivered
+observation. Two fresh verifiers reproduced the analysis, one recomputing it
+from the raw records and one checking every claim (RESULTS.md, `aa02952`).
+For the realized sessions, not externally anchored, on this host:
+- DR2 is Inconclusive. Pooled δ (H-OSW-fixed minus H-GA) is −3.1 pp, with a
+  90% interval of [−8.9, +2.7].
+- DR5 is INCONCLUSIVE. π_small is 0.055, with one-sided bounds [0, 0.26]
+  against M = 0.13. Under D47, S1b does not go to the gauntlet.
+- P1 is falsified: there is no between-session excess, with an upper bound of
+  0.78 pp. 4B's split cells decide it, and 9B's session test rejects (+5.5 pp,
+  p 0.016).
+- Rerun disagreement is about 11-12% of cells.
+- Realized cost is 0.22-0.24 of the cost card's high price.
+- D59 mattered: 14 fractional base scores would have crashed the registered
+  code.
+The registration points to more sessions at 4B and 9B after INCONCLUSIVE.
+S1a's intervals, however, are driven by between-task heterogeneity on 32
+tasks, and cost was a quarter of the planned price. So the next step is
+chosen by evidence, not by default. Decided: a CPU-only design study on S1a's
+records (its variance components and realized cost) compares successor
+designs within 8 GPU-h: more sessions on the same tasks, more tasks from the
+113-task pool, and more reruns. For each design it gives the probability of a
+decisive DR2 (Present or Near-equivalent) and DR5 (GO or NO-GO) under
+scenarios anchored to S1a's estimates. It also sizes S2's power gate (about
+5 pp MDE) with S1a's noise floor. A successor that only repeats S1a's design
+with more data is not a new mechanism. Under 8 GPU-h it needs a registration
+and a pre-freeze audit, not a gauntlet. A design that adds a factor goes
+through the gauntlet. The checker-mutation adjudication is still Kevin's.
