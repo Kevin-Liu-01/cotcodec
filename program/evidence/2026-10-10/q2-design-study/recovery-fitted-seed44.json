@@ -1,0 +1,92 @@
+{
+ "converged": true,
+ "estimate": {
+  "rho_a": 0.990246,
+  "rho_b": 0.44038,
+  "sizes": {
+   "4B": {
+    "c": 0.620355,
+    "kappa": -1.665903,
+    "mu": -2.032276,
+    "omega": -0.620153,
+    "sigma_a": 4.053321,
+    "sigma_b": 0.021292,
+    "sigma_e": 0.0,
+    "sigma_f": 0.0
+   },
+   "9B": {
+    "c": 0.95898,
+    "kappa": -2.968897,
+    "mu": -7.576,
+    "omega": 1.485448,
+    "sigma_a": 12.0,
+    "sigma_b": 2.702662,
+    "sigma_e": 0.0,
+    "sigma_f": 0.0
+   }
+  }
+ },
+ "fit": "program/evidence/2026-10-10/q2-design-study/fit-base.json",
+ "loglik": -120.657151,
+ "observed_success": [
+  [
+   0.320312,
+   0.367188
+  ],
+  [
+   0.28125,
+   0.3125
+  ]
+ ],
+ "provenance": {
+  "argv": [
+   "/Users/kevinliu/repos/cotcodec-wt-q2-design/harness/q2_design/study.py",
+   "recovery",
+   "--fit",
+   "program/evidence/2026-10-10/q2-design-study/fit-base.json",
+   "--truth",
+   "fitted",
+   "--seed",
+   "44",
+   "--out",
+   "program/evidence/2026-10-10/q2-design-study/recovery-fitted-seed44.json"
+  ],
+  "git_head": "34a57a8af0b42192ad96d4e9919d9d5132027d34",
+  "harness_dirty": false,
+  "numpy": "2.5.2",
+  "python": "3.13.14",
+  "scipy": "1.18.0"
+ },
+ "seed": 44,
+ "truth": {
+  "rho_a": 0.917416,
+  "rho_b": 0.995,
+  "sizes": {
+   "4B": {
+    "c": -0.240216,
+    "kappa": -0.652826,
+    "mu": -2.862854,
+    "omega": 0.326626,
+    "sigma_a": 4.817518,
+    "sigma_b": 1.456636,
+    "sigma_e": 0.0,
+    "sigma_f": 0.0,
+    "sigma_g": 0.546821,
+    "sigma_k": 0.0
+   },
+   "9B": {
+    "c": -0.796789,
+    "kappa": -0.259733,
+    "mu": -4.02993,
+    "omega": 1.375539,
+    "sigma_a": 7.986537,
+    "sigma_b": 2.311876,
+    "sigma_e": 0.0,
+    "sigma_f": 0.0,
+    "sigma_g": 0.546821,
+    "sigma_k": 0.0
+   }
+  }
+ },
+ "truth_name": "fitted"
+}

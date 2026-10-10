@@ -570,8 +570,8 @@ def cmd_summary(args: argparse.Namespace) -> int:
         for z, v in pr["sizes"].items():
             est = dict(zip(F.SIZE_KEYS, v["size_estimate"], strict=True))
             est["log_sigma_b"] = math.exp(est["log_sigma_b"])
-            out["profile_base"][z] = {
-                k: {"size_estimate": est[k], **profile_bounds(rows, est[k])}
+            out["profile_base"][z] = {  # log_sigma_b rows hold sigma_b values
+                k.replace("log_", ""): {"size_estimate": est[k], **profile_bounds(rows, est[k])}
                 for k, rows in v["profiles"].items()
             }
     for key, name in (("validation", "validation-base.json"),
