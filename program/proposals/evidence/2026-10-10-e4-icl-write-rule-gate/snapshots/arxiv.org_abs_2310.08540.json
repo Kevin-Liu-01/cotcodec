@@ -1,0 +1,42 @@
+{
+ "url": "https://arxiv.org/abs/2310.08540",
+ "fetched_at": "2026-10-10T06:13:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42728,
+ "raw_sha256": "7a51db5d324d35cec8fb8e565df065b4c869030c3199182319bafaaa848e2457",
+ "raw_stored": false,
+ "extract": {
+  "title": "Do pretrained Transformers Learn In-Context by Gradient Descent?",
+  "authors": [
+   "Shen, Lingfeng",
+   "Mishra, Aayush",
+   "Khashabi, Daniel"
+  ],
+  "citation_date": "2023/10/12",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 12 Oct 2023 17:32:09 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 24 Nov 2023 20:24:52 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Thu, 30 Nov 2023 01:34:31 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Thu, 29 Feb 2024 18:47:18 UTC"
+   },
+   {
+    "version": "v5",
+    "date": "Mon, 3 Jun 2024 04:18:11 UTC"
+   }
+  ],
+  "abstract": "The emergence of In-Context Learning (ICL) in LLMs remains a remarkable phenomenon that is partially understood. To explain ICL, recent studies have created theoretical connections to Gradient Descent (GD). We ask, do such connections hold up in actual pre-trained language models? We highlight the limiting assumptions in prior works that make their setup considerably different from the practical setup in which language models are trained. For example, their experimental verification uses \\emph{ICL objective} (training models explicitly for ICL), which differs from the emergent ICL in the wild. Furthermore, the theoretical hand-constructed weights used in these studies have properties that don't match those of real LLMs. We also look for evidence in real models. We observe that ICL and GD have different sensitivity to the order in which they observe demonstrations. Finally, we probe and compare the ICL vs. GD hypothesis in a natural setting. We conduct comprehensive empirical analyses on language models pre-trained on natural data (LLaMa-7B). Our comparisons of three performance metrics highlight the inconsistent behavior of ICL and GD as a function of various factors such as datasets, models, and the number of demonstrations. We observe that ICL and GD modify the output distribution of language models differently. These results indicate that \\emph{the equivalence between ICL and GD remains an open hypothesis} and calls for further studies.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

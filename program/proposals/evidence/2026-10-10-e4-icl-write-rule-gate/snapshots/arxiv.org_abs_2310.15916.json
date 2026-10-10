@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2310.15916",
+ "fetched_at": "2026-10-10T06:13:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 39961,
+ "raw_sha256": "bb85f9c610555fff0b9cc444d9800423ac4730efe956745e94dd07ff13837bc7",
+ "raw_stored": false,
+ "extract": {
+  "title": "In-Context Learning Creates Task Vectors",
+  "authors": [
+   "Hendel, Roee",
+   "Geva, Mor",
+   "Globerson, Amir"
+  ],
+  "citation_date": "2023/10/24",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 24 Oct 2023 15:17:14 UTC"
+   }
+  ],
+  "abstract": "In-context learning (ICL) in Large Language Models (LLMs) has emerged as a powerful new learning paradigm. However, its underlying mechanism is still not well understood. In particular, it is challenging to map it to the \"standard\" machine learning framework, where one uses a training set $S$ to find a best-fitting function $f(x)$ in some hypothesis class. Here we make progress on this problem by showing that the functions learned by ICL often have a very simple structure: they correspond to the transformer LLM whose only inputs are the query $x$ and a single \"task vector\" calculated from the training set. Thus, ICL can be seen as compressing $S$ into a single task vector $\\boldsymbol{\\theta}(S)$ and then using this task vector to modulate the transformer to produce the output. We support the above claim via comprehensive experiments across a range of models and tasks.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

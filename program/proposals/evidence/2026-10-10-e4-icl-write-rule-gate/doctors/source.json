@@ -1,0 +1,16 @@
+{
+ "doctor": "Source",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
+ "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac; arxiv.org and export.arxiv.org abstract pages, the Hugging Face API, the GitHub API and the PorTAL blog reachable; 150 counted discover queries and 73 paper reads logged with returned ids and digests in query-log.json; source cutoff 2026-10-09 (alphaXiv's newest item 2026-10-08).",
+ "degraded_coverage": [
+  "Semantic Scholar and the arXiv API unreachable from the Mac; the H100 host relay was not used because the host is reserved for Q2 S1a",
+  "OpenReview bodies (including ICLR 2027 submissions), ACL Anthology full text (one ACL 2026 abstract via OpenAlex), patents, X, Reddit, Hacker News and Chinese-language venues not searched",
+  "citation graph degraded: OpenAlex reports cited_by_count 0 for every prior, including a 2023 paper",
+  "orx 0.2.2 reports itself outdated against 0.2.18",
+  "full texts read by targeted section, not end to end; Wilson and Collins 2019 and Nili et al. 2014 read as abstracts only"
+ ],
+ "remediation": "After S1a's session 2, run Semantic Scholar forward citations for 2608.13385, 2610.01054, 2610.00526 and 2608.01672 through the host relay; search OpenReview and ACL Anthology."
+}

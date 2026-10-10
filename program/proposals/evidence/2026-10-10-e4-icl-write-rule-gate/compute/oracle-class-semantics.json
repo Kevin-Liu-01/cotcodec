@@ -1,0 +1,684 @@
+{
+ "check": "E4 gate S1: oracle state-class semantics (linear surrogate)",
+ "claim_boundary": "instrument semantics in a synthetic linear surrogate; no model, no teacher, no data",
+ "config": {
+  "D_B": 128,
+  "M_OUT": 64,
+  "NOISE": 0.02,
+  "N_DEMO": 8,
+  "N_EP": 12,
+  "N_EVAL": 8,
+  "N_FAM": 2,
+  "N_FIT": 16,
+  "RANK": 8,
+  "RIDGE": 0.001,
+  "W": 32,
+  "numpy": "2.5.2",
+  "seeds": [
+   42,
+   43,
+   44
+  ]
+ },
+ "payload_sha256": "e9c0508698338ddd6e657ada381bc0c8b37cda261191f6991418ca70245507e8",
+ "summary_by_port_and_teacher": {
+  "fullrank_port/constant": {
+   "D_span_B": [
+    null,
+    null,
+    null
+   ],
+   "D_span_I": [
+    null,
+    null,
+    null
+   ],
+   "ES": [
+    -0.0017,
+    -0.0017,
+    -0.002
+   ],
+   "E_free": [
+    null,
+    null,
+    null
+   ],
+   "R_const": [
+    0.9948,
+    0.9947,
+    0.9951
+   ],
+   "R_free": [
+    0.9931,
+    0.9931,
+    0.9931
+   ],
+   "episode_specific_families": [
+    0,
+    0,
+    0
+   ],
+   "families_selecting_fitted_B": [
+    0,
+    0,
+    0
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.7366,
+    0.772,
+    0.7544
+   ]
+  },
+  "fullrank_port/first_order": {
+   "D_span_B": [
+    -0.2739,
+    -0.2816,
+    -0.2435
+   ],
+   "D_span_I": [
+    -0.2739,
+    -0.2816,
+    -0.2435
+   ],
+   "ES": [
+    0.3989,
+    0.3843,
+    0.4065
+   ],
+   "E_free": [
+    0.3982,
+    0.3851,
+    0.3847
+   ],
+   "R_const": [
+    -0.0026,
+    0.0009,
+    -0.0488
+   ],
+   "R_free": [
+    0.3962,
+    0.3852,
+    0.3577
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    0,
+    0,
+    0
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.7653,
+    0.7517,
+    0.7292
+   ]
+  },
+  "fullrank_port/lookup": {
+   "D_span_B": [
+    0.0008,
+    0.0008,
+    0.001
+   ],
+   "D_span_I": [
+    0.0006,
+    0.0007,
+    0.0006
+   ],
+   "ES": [
+    0.5603,
+    0.5659,
+    0.5828
+   ],
+   "E_free": [
+    0.9909,
+    0.9903,
+    0.9887
+   ],
+   "R_const": [
+    0.4345,
+    0.4286,
+    0.4106
+   ],
+   "R_free": [
+    0.9948,
+    0.9945,
+    0.9933
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    2,
+    1,
+    2
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.007,
+    0.0074,
+    0.0076
+   ]
+  },
+  "fullrank_port/preconditioned": {
+   "D_span_B": [
+    0.8173,
+    0.7116,
+    0.6808
+   ],
+   "D_span_I": [
+    0.8173,
+    0.7656,
+    0.6808
+   ],
+   "ES": [
+    0.4126,
+    0.3623,
+    0.3736
+   ],
+   "E_free": [
+    0.3908,
+    0.3365,
+    0.3314
+   ],
+   "R_const": [
+    -0.0575,
+    -0.0769,
+    -0.1274
+   ],
+   "R_free": [
+    0.3551,
+    0.2854,
+    0.2462
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    0,
+    1,
+    0
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.7254,
+    0.7465,
+    0.7346
+   ]
+  },
+  "fullrank_port/retrieval": {
+   "D_span_B": [
+    0.6484,
+    0.6153,
+    0.5662
+   ],
+   "D_span_I": [
+    0.6484,
+    0.7402,
+    0.5319
+   ],
+   "ES": [
+    0.243,
+    0.2573,
+    0.2496
+   ],
+   "E_free": [
+    0.319,
+    0.3525,
+    0.2948
+   ],
+   "R_const": [
+    0.2385,
+    0.2725,
+    0.1555
+   ],
+   "R_free": [
+    0.4815,
+    0.5299,
+    0.4051
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    0,
+    1,
+    1
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.7762,
+    0.7387,
+    0.733
+   ]
+  },
+  "fullrank_port/rls": {
+   "D_span_B": [
+    -0.1646,
+    -0.2944,
+    -0.271
+   ],
+   "D_span_I": [
+    -0.1646,
+    -0.2944,
+    -0.271
+   ],
+   "ES": [
+    0.4078,
+    0.3379,
+    0.3505
+   ],
+   "E_free": [
+    0.3968,
+    0.3268,
+    0.3589
+   ],
+   "R_const": [
+    -0.0288,
+    -0.0329,
+    0.0231
+   ],
+   "R_free": [
+    0.379,
+    0.305,
+    0.3736
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    0,
+    0,
+    0
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.7627,
+    0.753,
+    0.748
+   ]
+  },
+  "fullrank_port/value_directed": {
+   "D_span_B": [
+    1.213,
+    0.784,
+    0.8437
+   ],
+   "D_span_I": [
+    1.213,
+    0.6043,
+    0.8437
+   ],
+   "ES": [
+    0.3847,
+    0.3802,
+    0.3928
+   ],
+   "E_free": [
+    0.3713,
+    0.3663,
+    0.3717
+   ],
+   "R_const": [
+    -0.0355,
+    -0.0312,
+    -0.0557
+   ],
+   "R_free": [
+    0.3491,
+    0.349,
+    0.3371
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    0,
+    1,
+    0
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.7569,
+    0.7511,
+    0.7506
+   ]
+  },
+  "rank8_port/constant": {
+   "D_span_B": [
+    null,
+    null,
+    null
+   ],
+   "D_span_I": [
+    null,
+    null,
+    null
+   ],
+   "ES": [
+    -0.0004,
+    -0.0002,
+    -0.0002
+   ],
+   "E_free": [
+    null,
+    null,
+    null
+   ],
+   "R_const": [
+    0.9993,
+    0.9995,
+    0.9996
+   ],
+   "R_free": [
+    0.9989,
+    0.9992,
+    0.9993
+   ],
+   "episode_specific_families": [
+    0,
+    0,
+    0
+   ],
+   "families_selecting_fitted_B": [
+    0,
+    2,
+    0
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rank8_port/first_order": {
+   "D_span_B": [
+    0.0,
+    -0.0,
+    0.0
+   ],
+   "D_span_I": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ES": [
+    0.9551,
+    0.9274,
+    0.9486
+   ],
+   "E_free": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "R_const": [
+    0.0449,
+    0.0726,
+    0.0514
+   ],
+   "R_free": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    1,
+    2,
+    1
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rank8_port/lookup": {
+   "D_span_B": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "D_span_I": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ES": [
+    0.4721,
+    0.6884,
+    0.7883
+   ],
+   "E_free": [
+    0.9413,
+    0.7623,
+    0.9119
+   ],
+   "R_const": [
+    0.497,
+    0.1102,
+    0.1369
+   ],
+   "R_free": [
+    0.9691,
+    0.7986,
+    0.9252
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    0,
+    1,
+    1
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rank8_port/preconditioned": {
+   "D_span_B": [
+    -0.0,
+    0.0,
+    0.0
+   ],
+   "D_span_I": [
+    -0.0,
+    0.0,
+    0.0
+   ],
+   "ES": [
+    0.9655,
+    0.9526,
+    0.9452
+   ],
+   "E_free": [
+    1.0,
+    1.0,
+    0.9999
+   ],
+   "R_const": [
+    0.0345,
+    0.0473,
+    0.0548
+   ],
+   "R_free": [
+    1.0,
+    1.0,
+    0.9999
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    0,
+    2,
+    1
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rank8_port/retrieval": {
+   "D_span_B": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "D_span_I": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "ES": [
+    0.623,
+    0.7892,
+    0.7631
+   ],
+   "E_free": [
+    0.9998,
+    0.9998,
+    0.9999
+   ],
+   "R_const": [
+    0.3769,
+    0.2106,
+    0.2368
+   ],
+   "R_free": [
+    0.9999,
+    0.9999,
+    0.9999
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    1,
+    2,
+    1
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rank8_port/rls": {
+   "D_span_B": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "D_span_I": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ES": [
+    0.7534,
+    0.7717,
+    0.7845
+   ],
+   "E_free": [
+    0.9997,
+    0.9997,
+    0.9998
+   ],
+   "R_const": [
+    0.2463,
+    0.2281,
+    0.2154
+   ],
+   "R_free": [
+    0.9998,
+    0.9998,
+    0.9998
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    1,
+    0,
+    1
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rank8_port/value_directed": {
+   "D_span_B": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "D_span_I": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ES": [
+    0.8491,
+    0.9049,
+    0.8535
+   ],
+   "E_free": [
+    0.9999,
+    0.9999,
+    0.9999
+   ],
+   "R_const": [
+    0.1508,
+    0.0949,
+    0.1464
+   ],
+   "R_free": [
+    0.9999,
+    0.9999,
+    0.9999
+   ],
+   "episode_specific_families": [
+    2,
+    2,
+    2
+   ],
+   "families_selecting_fitted_B": [
+    0,
+    2,
+    1
+   ],
+   "probe_energy_outside_key_span_median": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ }
+}

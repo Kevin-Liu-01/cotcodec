@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2202.05798",
+ "fetched_at": "2026-10-10T06:13:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42396,
+ "raw_sha256": "62740a84142706af02d86ff88aab97ea3cbe42fe084bc4c8d550ce4d273df8d0",
+ "raw_stored": false,
+ "extract": {
+  "title": "The Dual Form of Neural Networks Revisited: Connecting Test Time Predictions to Training Patterns via Spotlights of Attention",
+  "authors": [
+   "Irie, Kazuki",
+   "Csordás, Róbert",
+   "Schmidhuber, Jürgen"
+  ],
+  "citation_date": "2022/02/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 11 Feb 2022 17:49:22 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 17 Jun 2022 13:22:42 UTC"
+   }
+  ],
+  "abstract": "Linear layers in neural networks (NNs) trained by gradient descent can be expressed as a key-value memory system which stores all training datapoints and the initial weights, and produces outputs using unnormalised dot attention over the entire training experience. While this has been technically known since the 1960s, no prior work has effectively studied the operations of NNs in such a form, presumably due to prohibitive time and space complexities and impractical model sizes, all of them growing linearly with the number of training patterns which may get very large. However, this dual formulation offers a possibility of directly visualising how an NN makes use of training patterns at test time, by examining the corresponding attention weights. We conduct experiments on small scale supervised image classification tasks in single-task, multi-task, and continual learning settings, as well as language modelling, and discuss potentials and limits of this view for better understanding and interpreting how NNs exploit training patterns. Our code is public.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

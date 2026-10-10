@@ -1,0 +1,12 @@
+{
+ "url": "https://labs.ramp.com/research/portal-portable-task-adaptation/",
+ "fetched_at": "2026-10-10T06:13:16Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 553293,
+ "raw_sha256": "8d1d07233ef87285e4b91be6efc81df09d9d59783ee76db12c546302a211e99d",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "PorTAL: Portable Task Adaptation for LoRA · Ramp Labs Research"
+ }
+}

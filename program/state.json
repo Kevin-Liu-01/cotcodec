@@ -455,7 +455,7 @@
     "Q3 (D54): K1 v3 ended at an honest exit (gauntlet 45, 51, 55, 56); Q3 rests on the dense pre-check v2 (NEGATIVE_CAPABLE_V3). Yours only if you want K1 reopened: admitting a screen above 8 GPU-h (D24) for more seeds or evidence, plus a new design with a same-language zero-overlap leg. Package: program/preregistrations/q3-k1-localization-screen-v3.md (draft), program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md, program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl",
     "Host limit (needs the host administrator): fs.inotify.max_user_instances is 128 on fal-h100-01, so the action-path ladder's 40-VM rung could not boot 10 of 80 VMs (dnsmasq 'failed to create inotify: Too many open files'). N* is therefore 32, and the registered program kill criterion (N* below 40: cut the Stage-1 task count before adding GPUs) applies. Ask the administrator to raise the limit if 40 concurrent VMs are wanted; attempt 1's rung-40 rerun is not used (D51); running above 32 VMs after a host change needs a registered deviation or a new registration with its own ladder (D53 ii) (evidence: program/evidence/2026-10-08/q2-action-path-v2-acceptance/)"
   ],
-  "gpu_hours_spent_this_program": 7.2891,
+  "gpu_hours_spent_this_program": 7.343,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -829,6 +829,15 @@
       ],
       "outcome": "registered per-job checks only (no outcome read): manifest names A1-9B-S1's records a05dbf84... and receipt 692b9a2a...; 452 dispatched, 452 scored (base complete, all 11 extension blocks); 0 infrastructure losses of 226 first attempts per harness, no re-queue, no cap truncation, no USR1; DR0 does not fire; provenance PASS, engine argv = plan.engine_argv(4B), Slurm limit 110 = T_A1; 0.002537 GPU-h per episode (DR4 input); no foreign job",
       "basis": "physical (scontrol RunTime 01:08:49 = 4,129 s on 1 H100); charged under D22 at its 110-minute cap (1.8333 GPU-h)"
+    },
+    {
+      "experiment": "E4 gate gauntlet wave 1 (e4-icl-write-rule-gate, D58) open-weight review (D24)",
+      "gpu_hours": 0.0539,
+      "jobs": [
+        "1059 qwen3.6-35b-a3b review"
+      ],
+      "outcome": "review PARSED on attempt 1, total 49, replicates token-identical; wave score 49 (lower of 55 and 49), best 49; honest exit (query budget 159 of 150, triad 3/3 refuted); reviewer inference only, not E4 gate work; submitted and ended 07:11-07:14 UTC 2026-10-10, before the 11:30 UTC S1a reservation",
+      "basis": "physical (scontrol RunTime 00:03:14 = 194 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, GPUs at 0 MiB after the job)"
     }
   ],
   "results": [
