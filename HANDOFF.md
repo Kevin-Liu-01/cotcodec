@@ -1,21 +1,16 @@
-# Handoff — 2026-10-10 (saved 01:50 UTC)
+# Handoff — 2026-10-10 (evening)
 
-## Resume here (saved 2026-10-10 01:50 UTC)
+## Resume here (2026-10-10 evening)
 
-- **On the host, unattended:** S1a's session-2 9B pair, VM job 1051 (Slurm
-  begin 12:50 UTC 2026-10-10, D57) and GPU job 1053 (`after:1051`), about 75
-  minutes. Session-2 4B is not submitted: its manifest must name 9B's records.
-  Next, in order: collect 1051/1053 and check DR0, submit S2 4B, collect it,
-  then the registered analysis with two independent verifiers (recompute;
-  claims). Submit nothing else while an S1a job runs (quiet host).
-- **Interrupted if the session ends:** a blind dry run of the frozen S1a
-  analysis on synthetic records (writes nothing to the repository), and E4's
-  gauntlet wave 1 (four discovery cells finished; the synthesis owner works on
-  branch `gauntlet/e4-d19`, nothing committed yet). Relaunch both from their
-  saved scripts with a resume note; the E4 reviewer's lane job must not overlap
-  an S1a job.
-- The operator's workflow scripts and a runbook with local paths are archived
-  privately (outside this repository).
+- S1a is complete and verified (D66): no harness difference detected, DR5
+  INCONCLUSIVE, so no S1b. The host is idle.
+- Running: a CPU-only design study on S1a's records. It compares successor
+  designs within 8 GPU-h and sizes S2's power gate, on branch
+  `stage0/q2-design-study`, and its recommendation decides Q2's next step.
+  If the session ends, relaunch it from its saved script (archived privately);
+  it writes nothing outside its branch.
+- Backfill is paused (D65). E4 and C3 ended at honest exits (D63, D65), and
+  C5 waits for a D24 ruling.
 
 ## State
 
