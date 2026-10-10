@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2509.17791",
+ "fetched_at": "2026-10-10T21:57:04Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42438,
+ "raw_sha256": "affa1781486854079f9694568e56f9c6de9186b9be7e134adeba3d9a11680d8a",
+ "raw_stored": false,
+ "extract": {
+  "title": "Elucidating the Design Space of FP4 training",
+  "authors": [
+   "Hu, Robert",
+   "Luschi, Carlo",
+   "Balanca, Paul"
+  ],
+  "citation_date": "2025/09/22",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 22 Sep 2025 13:50:40 UTC"
+   }
+  ],
+  "abstract": "The increasing computational demands of foundation models have spurred research into low-precision training, with 4-bit floating-point (\\texttt{FP4}) formats emerging as a frontier for maximizing hardware throughput. While numerous techniques have been proposed to stabilize \\texttt{FP4} training, they often present isolated solutions with varying, and not always clear, computational overheads. This paper aims to provide a unified view of the design space of \\texttt{FP4} training. We introduce a comprehensive, quantisation gradient-based framework for microscaling quantization that allows for a theoretical analysis of the computational costs associated with different stabilization methods on both the forward and backward passes. Using a simulator built on this framework, we conduct an extensive empirical study across a wide range of machine learning tasks, including regression, image classification, diffusion models, and language models. By systematically evaluating thousands of combinations of techniques, such as novel gradient approximations, rounding strategies, and scaling methods, we identify which configurations offer the most favourable performance-to-overhead trade-off. We find that the techniques enabling the best trade-off involve carefully combining Hadamard transformations, tensor scaling and stochastic rounding. We further find that using \\texttt{UE5M3} as a scaling factor potentially offers a good compromise between range and precision with manageable computational overhead.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

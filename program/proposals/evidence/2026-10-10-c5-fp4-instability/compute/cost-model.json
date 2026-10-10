@@ -1,0 +1,157 @@
+{
+ "script": "cost_model.py",
+ "tokens_per_step": 65536,
+ "train_tokens_per_run": 1200029696,
+ "cases": {
+  "low": {
+   "bf16": 850000.0,
+   "F": 1.2,
+   "F_bf16path": 1.1,
+   "compile": 60,
+   "F_eager": 2.5,
+   "eta2": 1.7,
+   "eta4": 2.4
+  },
+  "central": {
+   "bf16": 600000.0,
+   "F": 2.0,
+   "F_bf16path": 1.6,
+   "compile": 120,
+   "F_eager": 3.0,
+   "eta2": 1.5,
+   "eta4": 2.0
+  },
+  "high": {
+   "bf16": 400000.0,
+   "F": 4.0,
+   "F_bf16path": 2.5,
+   "compile": 300,
+   "F_eager": 6.0,
+   "eta2": 1.0,
+   "eta4": 1.0
+  }
+ },
+ "phase0": {
+  "low": {
+   "J0_gpu_conformance_s": 47.52,
+   "J1_throughput_smoke_s": 1293.06,
+   "J2_resume_s": 265.513,
+   "J3_capture_s": 361.304,
+   "total_gpu_h": 0.546
+  },
+  "central": {
+   "J0_gpu_conformance_s": 47.52,
+   "J1_throughput_smoke_s": 2490.991,
+   "J2_resume_s": 521.072,
+   "J3_capture_s": 517.68,
+   "total_gpu_h": 0.994
+  },
+  "high": {
+   "J0_gpu_conformance_s": 47.52,
+   "J1_throughput_smoke_s": 6575.117,
+   "J2_resume_s": 1323.216,
+   "J3_capture_s": 861.52,
+   "total_gpu_h": 2.446
+  }
+ },
+ "phase1": {
+  "low": {
+   "pack1": {
+    "pack_k": 1,
+    "bf16_run_gpu_h": 0.417,
+    "fp4_run_gpu_h": 0.497,
+    "stage1a_gpu_h": 11.291,
+    "stage1a_max_gpu_h": 12.702,
+    "stage1b_gpu_h": 17.891,
+    "stage1b_max_gpu_h": 23.855,
+    "emulation_control_gpu_h": 1.372,
+    "stage1c_conditional_gpu_h": 3.976,
+    "total_no_extensions_gpu_h": 30.553,
+    "total_max_gpu_h": 41.904,
+    "registered_cap_formula_value_gpu_h": 50.285
+   },
+   "pack2": {
+    "pack_k": 2,
+    "bf16_run_gpu_h": 0.244,
+    "fp4_run_gpu_h": 0.291,
+    "stage1a_gpu_h": 6.6,
+    "stage1a_max_gpu_h": 7.425,
+    "stage1b_gpu_h": 10.462,
+    "stage1b_max_gpu_h": 13.95,
+    "emulation_control_gpu_h": 0.802,
+    "stage1c_conditional_gpu_h": 2.325,
+    "total_no_extensions_gpu_h": 17.864,
+    "total_max_gpu_h": 24.502,
+    "registered_cap_formula_value_gpu_h": 29.402
+   }
+  },
+  "central": {
+   "pack1": {
+    "pack_k": 1,
+    "bf16_run_gpu_h": 0.6,
+    "fp4_run_gpu_h": 1.164,
+    "stage1a_gpu_h": 23.417,
+    "stage1a_max_gpu_h": 26.344,
+    "stage1b_gpu_h": 41.89,
+    "stage1b_max_gpu_h": 55.853,
+    "emulation_control_gpu_h": 2.814,
+    "stage1c_conditional_gpu_h": 9.309,
+    "total_no_extensions_gpu_h": 68.121,
+    "total_max_gpu_h": 94.32,
+    "registered_cap_formula_value_gpu_h": 113.184
+   },
+   "pack2": {
+    "pack_k": 2,
+    "bf16_run_gpu_h": 0.394,
+    "fp4_run_gpu_h": 0.77,
+    "stage1a_gpu_h": 15.467,
+    "stage1a_max_gpu_h": 17.4,
+    "stage1b_gpu_h": 27.71,
+    "stage1b_max_gpu_h": 36.947,
+    "emulation_control_gpu_h": 1.858,
+    "stage1c_conditional_gpu_h": 6.158,
+    "total_no_extensions_gpu_h": 45.035,
+    "total_max_gpu_h": 62.362,
+    "registered_cap_formula_value_gpu_h": 74.835
+   }
+  },
+  "high": {
+   "pack1": {
+    "pack_k": 1,
+    "bf16_run_gpu_h": 0.932,
+    "fp4_run_gpu_h": 3.469,
+    "stage1a_gpu_h": 62.951,
+    "stage1a_max_gpu_h": 70.82,
+    "stage1b_gpu_h": 124.87,
+    "stage1b_max_gpu_h": 166.493,
+    "emulation_control_gpu_h": 6.601,
+    "stage1c_conditional_gpu_h": 27.749,
+    "total_no_extensions_gpu_h": 194.422,
+    "total_max_gpu_h": 271.663,
+    "registered_cap_formula_value_gpu_h": 325.995
+   },
+   "pack2": {
+    "pack_k": 2,
+    "bf16_run_gpu_h": 0.889,
+    "fp4_run_gpu_h": 3.426,
+    "stage1a_gpu_h": 61.918,
+    "stage1a_max_gpu_h": 69.658,
+    "stage1b_gpu_h": 123.32,
+    "stage1b_max_gpu_h": 164.426,
+    "emulation_control_gpu_h": 6.471,
+    "stage1c_conditional_gpu_h": 27.404,
+    "total_no_extensions_gpu_h": 191.709,
+    "total_max_gpu_h": 267.96,
+    "registered_cap_formula_value_gpu_h": 321.552
+   }
+  }
+ },
+ "phase0_registered_caps_gpu_h": {
+  "J0": 0.1,
+  "J1": 2.2,
+  "J2": 0.45,
+  "J3": 0.3,
+  "sum": 3.05
+ },
+ "phase0_cap_rule": "cap = 1.2 x the high case, rounded up to 0.05 GPU-h; J0 fixed at 0.10 (about 7.6x three job-516 anchors)"
+}

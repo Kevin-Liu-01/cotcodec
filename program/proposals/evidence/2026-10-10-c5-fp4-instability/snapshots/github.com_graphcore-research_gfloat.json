@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/graphcore-research/gfloat",
+ "fetched_at": "2026-10-10T21:57:16Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 296315,
+ "raw_sha256": "e4d30c05a82e2f626bf9dd64a582b934d62a4a760c34c361615fb04ff0c3d9dd",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - graphcore-research/gfloat: Generic floating-point types in Python · GitHub"
+ }
+}

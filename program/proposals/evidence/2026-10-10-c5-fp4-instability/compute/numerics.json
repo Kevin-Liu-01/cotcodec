@@ -1,0 +1,350 @@
+{
+ "script": "numerics.py",
+ "exact_arithmetic": "fractions.Fraction (dyadic rationals)",
+ "grids": {
+  "E2M1": {
+   "magnitudes": [
+    "0",
+    "1/2",
+    "1",
+    "3/2",
+    "2",
+    "3",
+    "4",
+    "6"
+   ],
+   "distinct_signed_values": 15,
+   "q_max": "6"
+  },
+  "INT4_sym": {
+   "magnitudes": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+   ],
+   "distinct_signed_values": 15,
+   "q_max": "7"
+  },
+  "E1M2_bias1": {
+   "magnitudes": [
+    "0",
+    "1/4",
+    "1/2",
+    "3/4",
+    "1",
+    "5/4",
+    "3/2",
+    "7/4"
+   ],
+   "distinct_signed_values": 15,
+   "q_max": "7/4"
+  },
+  "INT4_twos_complement_distinct_values": 16,
+  "E1M2_equals_INT4_over_4": true
+ },
+ "scale_codebooks": {
+  "E8M0": {
+   "n_positive_codes": 255,
+   "min": "1/170141183460469231731687303715884105728",
+   "max": "170141183460469231731687303715884105728",
+   "max_float": 1.7014118346046923e+38,
+   "log2_range": 254
+  },
+  "UE4M3": {
+   "n_positive_codes": 126,
+   "min": "1/512",
+   "max": "448",
+   "max_float": 448.0,
+   "log2_range": 17
+  },
+  "UE5M3_topexp_reserved": {
+   "n_positive_codes": 247,
+   "min": "1/131072",
+   "max": "61440",
+   "max_float": 61440.0,
+   "log2_range": 32
+  },
+  "UE5M3_maxcode_0xFE": {
+   "n_positive_codes": 254,
+   "min": "1/131072",
+   "max": "114688",
+   "max_float": 114688.0,
+   "log2_range": 33
+  },
+  "BF16_all": {
+   "n_positive_codes": 32639,
+   "min": "1/10889035741470030830827987437816582766592",
+   "max": "338953138925153547590470800371487866880",
+   "max_float": 3.3895313892515355e+38,
+   "log2_range": 260
+  },
+  "BF16_core_exp_-60_60": {
+   "n_positive_codes": 15488,
+   "min": "1/1152921504606846976",
+   "max": "2296835809958952960",
+   "max_float": 2.296835809958953e+18,
+   "log2_range": 120
+  }
+ },
+ "decoded_operand_representability": {
+  "E2M1 x E8M0": {
+   "n_products": 1785,
+   "max_significant_bits": 2,
+   "not_exact_in_BF16": 6,
+   "frac_not_exact_in_BF16": 0.0034,
+   "not_exact_in_TF32": 6,
+   "frac_not_exact_in_TF32": 0.0034,
+   "not_exact_in_FP32": 6,
+   "frac_not_exact_in_FP32": 0.0034
+  },
+  "E2M1 x UE4M3": {
+   "n_products": 882,
+   "max_significant_bits": 6,
+   "not_exact_in_BF16": 0,
+   "frac_not_exact_in_BF16": 0.0,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "E2M1 x UE5M3_topexp_reserved": {
+   "n_products": 1729,
+   "max_significant_bits": 6,
+   "not_exact_in_BF16": 0,
+   "frac_not_exact_in_BF16": 0.0,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "E2M1 x UE5M3_maxcode_0xFE": {
+   "n_products": 1778,
+   "max_significant_bits": 6,
+   "not_exact_in_BF16": 0,
+   "frac_not_exact_in_BF16": 0.0,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "E2M1 x BF16_all": {
+   "n_products": 228473,
+   "max_significant_bits": 10,
+   "not_exact_in_BF16": 65580,
+   "frac_not_exact_in_BF16": 0.287,
+   "not_exact_in_TF32": 1023,
+   "frac_not_exact_in_TF32": 0.0045,
+   "not_exact_in_FP32": 1023,
+   "frac_not_exact_in_FP32": 0.0045
+  },
+  "E2M1 x BF16_core_exp_-60_60": {
+   "n_products": 108416,
+   "max_significant_bits": 10,
+   "not_exact_in_BF16": 30855,
+   "frac_not_exact_in_BF16": 0.2846,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "INT4_sym x E8M0": {
+   "n_products": 1785,
+   "max_significant_bits": 3,
+   "not_exact_in_BF16": 10,
+   "frac_not_exact_in_BF16": 0.0056,
+   "not_exact_in_TF32": 10,
+   "frac_not_exact_in_TF32": 0.0056,
+   "not_exact_in_FP32": 10,
+   "frac_not_exact_in_FP32": 0.0056
+  },
+  "INT4_sym x UE4M3": {
+   "n_products": 882,
+   "max_significant_bits": 7,
+   "not_exact_in_BF16": 0,
+   "frac_not_exact_in_BF16": 0.0,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "INT4_sym x UE5M3_topexp_reserved": {
+   "n_products": 1729,
+   "max_significant_bits": 7,
+   "not_exact_in_BF16": 0,
+   "frac_not_exact_in_BF16": 0.0,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "INT4_sym x UE5M3_maxcode_0xFE": {
+   "n_products": 1778,
+   "max_significant_bits": 7,
+   "not_exact_in_BF16": 0,
+   "frac_not_exact_in_BF16": 0.0,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "INT4_sym x BF16_all": {
+   "n_products": 228473,
+   "max_significant_bits": 11,
+   "not_exact_in_BF16": 97836,
+   "frac_not_exact_in_BF16": 0.4282,
+   "not_exact_in_TF32": 1610,
+   "frac_not_exact_in_TF32": 0.007,
+   "not_exact_in_FP32": 1610,
+   "frac_not_exact_in_FP32": 0.007
+  },
+  "INT4_sym x BF16_core_exp_-60_60": {
+   "n_products": 108416,
+   "max_significant_bits": 11,
+   "not_exact_in_BF16": 46222,
+   "frac_not_exact_in_BF16": 0.4263,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "E1M2_bias1 x E8M0": {
+   "n_products": 1785,
+   "max_significant_bits": 3,
+   "not_exact_in_BF16": 0,
+   "frac_not_exact_in_BF16": 0.0,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "E1M2_bias1 x UE4M3": {
+   "n_products": 882,
+   "max_significant_bits": 7,
+   "not_exact_in_BF16": 0,
+   "frac_not_exact_in_BF16": 0.0,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "E1M2_bias1 x UE5M3_topexp_reserved": {
+   "n_products": 1729,
+   "max_significant_bits": 7,
+   "not_exact_in_BF16": 0,
+   "frac_not_exact_in_BF16": 0.0,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "E1M2_bias1 x UE5M3_maxcode_0xFE": {
+   "n_products": 1778,
+   "max_significant_bits": 7,
+   "not_exact_in_BF16": 0,
+   "frac_not_exact_in_BF16": 0.0,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  },
+  "E1M2_bias1 x BF16_all": {
+   "n_products": 228473,
+   "max_significant_bits": 11,
+   "not_exact_in_BF16": 97815,
+   "frac_not_exact_in_BF16": 0.4281,
+   "not_exact_in_TF32": 245,
+   "frac_not_exact_in_TF32": 0.0011,
+   "not_exact_in_FP32": 245,
+   "frac_not_exact_in_FP32": 0.0011
+  },
+  "E1M2_bias1 x BF16_core_exp_-60_60": {
+   "n_products": 108416,
+   "max_significant_bits": 11,
+   "not_exact_in_BF16": 46222,
+   "frac_not_exact_in_BF16": 0.4263,
+   "not_exact_in_TF32": 0,
+   "frac_not_exact_in_TF32": 0.0,
+   "not_exact_in_FP32": 0,
+   "frac_not_exact_in_FP32": 0.0
+  }
+ },
+ "pts_folded_into_operand": {
+  "cells": "E2M1 x UE4M3 x random FP32 tensor scale (2000 drawn, 250 used per pair, seed 42)",
+  "n": 70000,
+  "not_exact_in_FP32": 55510,
+  "frac": 0.793,
+  "rule": "apply the FP32 tensor scales in the GEMM epilogue (y = s_ta * s_tb * sum(q_a s_ba q_b s_bb)), as hardware does"
+ },
+ "storage_bits_per_element": {
+  "S1 E8M0/B32": {
+   "block_scale_bits": 8,
+   "block": 32,
+   "per_tensor_scale_bits": 0,
+   "bits_per_element": 4.25,
+   "note": ""
+  },
+  "S2 E8M0/B16": {
+   "block_scale_bits": 8,
+   "block": 16,
+   "per_tensor_scale_bits": 0,
+   "bits_per_element": 4.5,
+   "note": ""
+  },
+  "S3 UE4M3+FP32/B16": {
+   "block_scale_bits": 8,
+   "block": 16,
+   "per_tensor_scale_bits": 32,
+   "bits_per_element": 4.5,
+   "note": "+32 bits per tensor (negligible)"
+  },
+  "S4 UE5M3/B16 (deferred)": {
+   "block_scale_bits": 8,
+   "block": 16,
+   "per_tensor_scale_bits": 0,
+   "bits_per_element": 4.5,
+   "note": ""
+  },
+  "S5 BF16/B32": {
+   "block_scale_bits": 16,
+   "block": 32,
+   "per_tensor_scale_bits": 0,
+   "bits_per_element": 4.5,
+   "note": ""
+  }
+ },
+ "storage_collinearity": "bits/element = 4 + scale_bits / B, so at fixed storage scale width and block size move together: at 4.5 b, B16 pairs only with 8-bit scales and B32 only with 16-bit scales",
+ "fp4_all_the_way_table4": {
+  "losses": [
+   3.03,
+   3.027,
+   3.025,
+   3.027,
+   3.029
+  ],
+  "seeds": [
+   1337,
+   1234,
+   2345,
+   3456,
+   4567
+  ],
+  "sample_sd": 0.00195,
+  "population_sd": 0.00174,
+  "stated_sd": 0.001,
+  "note": "125M Llama, 30B tokens, FP4 recipe, training loss; the printed values give about 0.002"
+ },
+ "tie_rounding_check": {
+  "domain": "positive BF16 inputs in [2^-6, 2^6) x UE4M3 scales in [1/64, 64], in-range pairs",
+  "n_pairs": 103047,
+  "exact_midpoint_ties": 602,
+  "frac_ties": 0.00584,
+  "fl32_division_disagrees_with_exact": 0,
+  "fl32_reciprocal_multiply_disagrees": 30,
+  "frac_reciprocal_disagrees": 0.000291
+ }
+}

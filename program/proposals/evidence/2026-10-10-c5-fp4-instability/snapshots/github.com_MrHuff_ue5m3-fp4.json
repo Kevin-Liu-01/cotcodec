@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/MrHuff/ue5m3-fp4",
+ "fetched_at": "2026-10-10T21:57:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 375106,
+ "raw_sha256": "fb4341de09b51e886dfa6994922a641b85ac56adf89918c87adca2f19b0eec2e",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - MrHuff/ue5m3-fp4: UE5M3 FP4 pretraining: Triton kernels, TorchTitan recipes, quantized evaluation, and audited paper artifacts · GitHub"
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/microsoft/microxcaling",
+ "fetched_at": "2026-10-10T21:57:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 387398,
+ "raw_sha256": "4b87054ab582a29c853dc85f0d4a18d9ded43c86156d500e32b445b157f93add",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - microsoft/microxcaling: PyTorch emulation library for Microscaling (MX)-compatible data formats · GitHub"
+ }
+}

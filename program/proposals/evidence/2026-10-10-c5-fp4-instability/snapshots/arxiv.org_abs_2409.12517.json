@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2409.12517",
+ "fetched_at": "2026-10-10T21:57:03Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42033,
+ "raw_sha256": "93d23a93d029e104583be91bca44c3f94b2ae0ba5c1d5b344564b8548a59c187",
+ "raw_stored": false,
+ "extract": {
+  "title": "Scaling FP8 training to trillion-token LLMs",
+  "authors": [
+   "Fishman, Maxim",
+   "Chmiel, Brian",
+   "Banner, Ron",
+   "Soudry, Daniel"
+  ],
+  "citation_date": "2024/09/19",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 19 Sep 2024 07:15:58 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 10 Feb 2025 09:37:59 UTC"
+   }
+  ],
+  "abstract": "We train, for the first time, large language models using FP8 precision on datasets up to 2 trillion tokens -- a 20-fold increase over previous limits. Through these extended training runs, we uncover critical instabilities in FP8 training that were not observable in earlier works with shorter durations. We trace these instabilities to outlier amplification by the SwiGLU activation function. Interestingly, we show, both analytically and empirically, that this amplification happens only over prolonged training periods, and link it to a SwiGLU weight alignment process. To address this newly identified issue, we introduce Smooth-SwiGLU, a novel modification that ensures stable FP8 training without altering function behavior. We also demonstrate, for the first time, FP8 quantization of both Adam optimizer moments. Combining these innovations, we successfully train a 7B parameter model using FP8 precision on 256 Intel Gaudi2 accelerators, achieving on-par results with the BF16 baseline while delivering up to a $\\sim 34 \\%$ throughput improvement. A reference implementation is supplied in this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
