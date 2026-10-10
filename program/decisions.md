@@ -1039,3 +1039,18 @@ job ran during it. The S1a operator waited, so the 4B pair (1062/1064) started
 at most about 3.5 minutes later than it otherwise would have. The quiet-host
 rule binds while an S1a job runs, so it was not broken, and nothing S1a
 registers depends on the exact start time of the 4B pair.
+
+**D64. Backfill C3 (does answer selection stack with per-question
+re-attempts?) gets a contract and a first gauntlet wave; C5 waits for a D24
+ruling.** With E4 closed (D63), the queue's next items are C5's Phase 1 (FP4
+training instability, about 47 GPU-h) and C3's Stage 0 (about 6 GPU-h). C5's
+first experiment is over 8 GPU-h, so its admission is Kevin's under D24
+whatever its gauntlet score. C3's Stage-0 gate is under 8 GPU-h, so a scored,
+reviewed package is actionable within the program. Decided: C3 first. The
+dossier corrected C3's question and narrowed its novelty (2608.03961,
+2607.17531, 2609.13257, 2608.13087, CASE 2608.17124). A contract, a proposal
+and a draft registration are written for the Stage-0 precondition gate only:
+held-out family-grouped decodability and the difficulty spread, with the
+dossier's kill lines. Then gauntlet wave 1 runs with declared budgets.
+Nothing runs on the host while an S1a VM or GPU job runs. S1a's CPU analysis
+jobs do not block the reviewer's lane job.
