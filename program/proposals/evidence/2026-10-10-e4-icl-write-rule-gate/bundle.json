@@ -1,13 +1,35 @@
 {
  "schema_version": 1,
  "proposal": "program/proposals/2026-10-10-e4-icl-write-rule-gate.md",
- "proposal_sha256": "22429938f22f81ac97417d1f136b245d0cb2f393dcaa733b220a7f8394c6c824",
+ "proposal_sha256": "f27ece070f8559b690b00bde8caa315244faae3131fb308a4ea80ad9c35bd9f7",
  "draft_registration": {
-  "path": "program/preregistrations/e4-icl-write-rule-gate-v1.md",
-  "sha256": "4cef1c1c4c8586718bb8677a97ebdbedcf6390e59750b00ace8b3ab2efc216e2",
-  "status": "DRAFT, not frozen, no ledger row"
+  "path": "program/preregistrations/e4-icl-write-rule-gate-v2.md",
+  "sha256": "8f935cc41faa4bbc5ed34b338bdbcb1f780dd4e0f2ae58bb9c2883bcd1d28987",
+  "status": "DRAFT, not frozen, no ledger row; supersedes v1",
+  "superseded_v1": {
+   "path": "program/preregistrations/e4-icl-write-rule-gate-v1.md",
+   "sha256": "4cef1c1c4c8586718bb8677a97ebdbedcf6390e59750b00ace8b3ab2efc216e2"
+  }
  },
  "source_snapshots": [
+  {
+   "url": "https://aclanthology.org/2023.acl-long.783/",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:10Z",
+   "raw_sha256": "823be6eab8ff28f1c44dc2a189494f5520396adbca7938bd889c3b4d5b023176",
+   "raw_bytes": 43368,
+   "artifact": "snapshots/aclanthology.org_2023.acl-long.783.json",
+   "sha256": "a16dad65fdffdf758f116f860b2466205d3fe5daaf10bd8dddcc01ce10101f02"
+  },
+  {
+   "url": "https://aclanthology.org/2025.findings-acl.345/",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:13Z",
+   "raw_sha256": "99e498b0f42aa292facef7ba3ca326907b0b76e79047c1bea5e98f45a3a3f4f1",
+   "raw_bytes": 42635,
+   "artifact": "snapshots/aclanthology.org_2025.findings-acl.345.json",
+   "sha256": "419912864939a05f854953f856c676096ba1551cb8ac6cf26d4d49f7449caea3"
+  },
   {
    "url": "https://arxiv.org/abs/1703.04813",
    "http_status": 200,
@@ -99,6 +121,15 @@
    "sha256": "83df81a3621a8bade85ad6a3eeef4685783d5d50dee40fff6a7dee771c1b04df"
   },
   {
+   "url": "https://arxiv.org/abs/2212.10559",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:15Z",
+   "raw_sha256": "96dd9ff94537efacfad4f7ccc237244d6f9f6af96a2650b07a0a8332a2e19c82",
+   "raw_bytes": 43390,
+   "artifact": "snapshots/arxiv.org_abs_2212.10559.json",
+   "sha256": "46ec7b229da291a34a9e5adfe83b83711f2d869762967186f8ce64a9cc65b3cf"
+  },
+  {
    "url": "https://arxiv.org/abs/2305.09731",
    "http_status": 200,
    "fetched_at": "2026-10-10T06:13:09Z",
@@ -162,6 +193,24 @@
    "sha256": "072c032f6f9447bdc2712607becb0f8e3cf15f5af1eb9b28f06ba0bb47373478"
   },
   {
+   "url": "https://arxiv.org/abs/2310.19698",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:17Z",
+   "raw_sha256": "4d157c3e06157f7eb251b4a1ce7d16ce5d5cb104b225849e4aed4038bc4a2bd2",
+   "raw_bytes": 42276,
+   "artifact": "snapshots/arxiv.org_abs_2310.19698.json",
+   "sha256": "7e55291452e2e5fda4a16f01180d803ad6492ab4c4b827a18f1164aa4f69665e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2311.07772",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:20Z",
+   "raw_sha256": "ea8fd57ee8f0da677e1e85b0ad9b749786813edf3ea8880a274241772af66a56",
+   "raw_bytes": 41226,
+   "artifact": "snapshots/arxiv.org_abs_2311.07772.json",
+   "sha256": "111cb00bd2cb850cd2eccdfdee447762cea9d419b29a2f583bc7994451b90e4d"
+  },
+  {
    "url": "https://arxiv.org/abs/2404.03592",
    "http_status": 200,
    "fetched_at": "2026-10-10T06:13:11Z",
@@ -169,6 +218,15 @@
    "raw_bytes": 42565,
    "artifact": "snapshots/arxiv.org_abs_2404.03592.json",
    "sha256": "07b1005f0bb1ddc820c9cddcac0713d3982e33fbbe0e3480c2060ae70842c024"
+  },
+  {
+   "url": "https://arxiv.org/abs/2404.11225",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:23Z",
+   "raw_sha256": "a558906db40606569acf01647e59ad504387234e0bfff681449d31031ea2a2e6",
+   "raw_bytes": 42693,
+   "artifact": "snapshots/arxiv.org_abs_2404.11225.json",
+   "sha256": "e4684a6b46dc0945282403091b8270eadab1c0de05d47c66e43115bfd81ca5b6"
   },
   {
    "url": "https://arxiv.org/abs/2410.10254",
@@ -189,6 +247,33 @@
    "sha256": "41301b59b53c1c1abe89e0e217f4d3a16f9c19721ad408f3d57ffc1cf9972035"
   },
   {
+   "url": "https://arxiv.org/abs/2506.06266",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:27Z",
+   "raw_sha256": "863f858718deae28ab2baed8c56267970b43990e28bbbfb0023d3ad10fc5083c",
+   "raw_bytes": 44065,
+   "artifact": "snapshots/arxiv.org_abs_2506.06266.json",
+   "sha256": "6962aea5446d5f5c42ec18300a950041bee6d681570640c8726dc1981a371df5"
+  },
+  {
+   "url": "https://arxiv.org/abs/2507.04221",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:32Z",
+   "raw_sha256": "ec979ec61f6e2f66524ccf29991fb5a99865dce671fefe34437cce7c8592b0aa",
+   "raw_bytes": 40925,
+   "artifact": "snapshots/arxiv.org_abs_2507.04221.json",
+   "sha256": "00abf320c985bd26b2e51c7c95035c8f2cdddb65c9d0bc74d499b6f9ea4d1c01"
+  },
+  {
+   "url": "https://arxiv.org/abs/2507.16003",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:35Z",
+   "raw_sha256": "422e831f58016f31cc984a90e8a3369992317be91f0e26c4a048173f6cdcc763",
+   "raw_bytes": 41444,
+   "artifact": "snapshots/arxiv.org_abs_2507.16003.json",
+   "sha256": "7d0fbdd41267973a684c210f3ab747e6d03278fcf92907d95bdd166eee17134b"
+  },
+  {
    "url": "https://arxiv.org/abs/2509.04661",
    "http_status": 200,
    "fetched_at": "2026-10-10T06:13:12Z",
@@ -205,6 +290,15 @@
    "raw_bytes": 42583,
    "artifact": "snapshots/arxiv.org_abs_2511.21038.json",
    "sha256": "78d6f4035e11c4ae1762700d890b43ad57debd1c23e76179d74a273e566ac565"
+  },
+  {
+   "url": "https://arxiv.org/abs/2602.16284",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:36Z",
+   "raw_sha256": "16c342415511cc332b6c86ae385e3cedc8dacd637593185a7c31deeb71dcc85a",
+   "raw_bytes": 41533,
+   "artifact": "snapshots/arxiv.org_abs_2602.16284.json",
+   "sha256": "75e63016fb0e5b8e2ece970a57a22a50178d3f78c0524547eba33e8e649ae67a"
   },
   {
    "url": "https://arxiv.org/abs/2603.22329",
@@ -261,6 +355,15 @@
    "sha256": "6c7bcf3a80c54f004472343f3226ea95d42384e659c5eef21223822e29e35041"
   },
   {
+   "url": "https://arxiv.org/abs/2609.17346",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:38Z",
+   "raw_sha256": "5c6fb45cc599034d8d38745d49a7347dc7da9e9e22c484dbfae8c4ee91741067",
+   "raw_bytes": 41785,
+   "artifact": "snapshots/arxiv.org_abs_2609.17346.json",
+   "sha256": "2df516d38040f1d4b79ccb9f2823b77e7bcc3cda5d1ac7673cefd45879f3f33c"
+  },
+  {
    "url": "https://arxiv.org/abs/2610.00526",
    "http_status": 200,
    "fetched_at": "2026-10-10T06:13:14Z",
@@ -277,6 +380,15 @@
    "raw_bytes": 42642,
    "artifact": "snapshots/arxiv.org_abs_2610.01054.json",
    "sha256": "b7cc5a3b50e9e41c42382da61399ce70f7553408a8a11281599bc08780dae6a8"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.05885",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:40Z",
+   "raw_sha256": "57dece4a22eca19e2ca6a3b24f95ad4890bd3efd77f0a643edc9a91b9e69fa3d",
+   "raw_bytes": 41480,
+   "artifact": "snapshots/arxiv.org_abs_2610.05885.json",
+   "sha256": "1b8fa5e3aba1b216ef6244487a6b0126f24521467e9f9f47ad81b47aacc39d07"
   },
   {
    "url": "https://arxiv.org/abs/2610.07270",
@@ -315,6 +427,15 @@
    "sha256": "5daf6ad5dd097d5ed1dae7cd8f20435f0d6534c814688216c38a0864dedd1359"
   },
   {
+   "url": "https://huggingface.co/fla-hub/transformer-1.3B-100B/blob/d6f66f4181fa669e5863327815b44533e3a395e7/tokenizer.json",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T09:33:42Z",
+   "raw_sha256": "82c3063a4aa2d9d7322e45fb773dc1ad9f4496f480edef053ce0ce8c63c46cf8",
+   "raw_bytes": 97427,
+   "artifact": "snapshots/huggingface.co_fla-hub_transformer-1.3B-100B_blob_d6f66f4181fa669e5863327815b44533e3a395e7_tokenizer.json.json",
+   "sha256": "b1bf482b0460422badc2cfc3cebd44af59a60b0f8e8677f4dee9bd05b7e68fd2"
+  },
+  {
    "url": "https://huggingface.co/fla-hub/transformer-2.7B-100B",
    "http_status": 200,
    "fetched_at": "2026-10-10T06:13:16Z",
@@ -334,21 +455,27 @@
   }
  ],
  "query_log": {
-  "artifact": "query-log.json",
-  "sha256": "a89759bacf4acd322b8fd4bacd25a8236a65be3c2f340649c98e259f42025bee",
-  "queries_against_budget": 150,
-  "note": "150 counted discover queries against the declared 150 (cells 144, synthesis 6); 73 paper reads, not counted."
+  "artifact": "query-log-run2.json",
+  "sha256": "a6a39a03204bffbc86b1c82a4a67951fd7e885b04b89327883043c102e063a65",
+  "queries_against_budget": 33,
+  "declared_budget": 80,
+  "reserved_for_refuters": 30,
+  "wave1_query_log": {
+   "artifact": "query-log.json",
+   "sha256": "a89759bacf4acd322b8fd4bacd25a8236a65be3c2f340649c98e259f42025bee"
+  },
+  "note": "This run's counted queries so far (the repair's 33); wave 1's 159 are in query-log.json and the wave-1 record."
  },
  "reviews": [],
- "reviews_status": "NOT_RUN: the blind critic, the refute-first triad and both reviewers run after synthesis. No trusted Ed25519 store exists (D24), so no review can be signed.",
+ "reviews_status": "NOT_RUN for this run: the blind critic, the refute-first triad and both reviewers run after the repair. Wave 1's reviews are in program/gauntlet/2026-10-10-e4-icl-write-rule-gate.jsonl. No trusted Ed25519 store exists (D24).",
  "compute": {
-  "scope": "e4-icl-write-rule-gate-v1 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: simulations S1 (oracle-class semantics, KILL A), S2 (decision-rule operating characteristics) and S3 (cost model), each script with its output.",
+  "scope": "e4-icl-write-rule-gate-v2 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: wave 1's S1-S3 (kept unedited) and the D60 repair's F1 (family table under the teacher's tokenizer), S1v2 (the registered estimator on the linear surrogate, central run and identifiability grid), G1 (guard), S2v2 (decision path) and S3v2 (cost), each script with its output.",
   "image_digest": "127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9",
   "image_scope": "build 855, commit ed5d5a93 (torch 2.11.0+cu128, transformers 5.15.0, flash-linear-attention 0.5.2, tilelang 0.1.13); no flash-attn, so the fla teacher needs the registration's Llama remap or SDPA shim, neither written",
   "real_model_loop": false,
-  "real_model_loop_scope": "none: harness/e4_gate.py does not exist; no fla-hub checkpoint has been loaded in any image",
+  "real_model_loop_scope": "none: harness/e4_gate.py does not exist; no fla-hub checkpoint has been loaded in any image; the D60 repair ran on the Mac CPU only",
   "benchmark_adapter": null,
-  "benchmark_adapter_scope": "none: the family generators and manifest builder are not written",
+  "benchmark_adapter_scope": "none: the family generators exist only as the repair's table builder (compute/repair-d60/family-table.py), not as a manifest builder",
   "manifest": null,
   "manifest_scope": "no Slurm manifest exists for any of the four registered jobs",
   "container_smoke": {
@@ -356,32 +483,105 @@
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "a2f1cf0ba8547b0cb91557897db28b02c7026ad35c3f3567ef31cefe82a2ac83"
+   "sha256": "caf5e7b339d505fe6a89406463b73e5c1625e98ed38a11796449329d46828add"
   },
   "slurm_test": {
    "label": "slurm_test",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "a2f1cf0ba8547b0cb91557897db28b02c7026ad35c3f3567ef31cefe82a2ac83"
+   "sha256": "caf5e7b339d505fe6a89406463b73e5c1625e98ed38a11796449329d46828add"
   },
   "provenance_verification": {
    "label": "provenance_verification",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "a2f1cf0ba8547b0cb91557897db28b02c7026ad35c3f3567ef31cefe82a2ac83"
+   "sha256": "caf5e7b339d505fe6a89406463b73e5c1625e98ed38a11796449329d46828add"
   },
   "registered_caps_gpu_h": {
    "S0_smoke": 0.17,
-   "S1_eligibility": 0.75,
-   "S2_oracle_main": 4.0,
-   "S2_oracle_p_conditional": 1.5,
-   "sum": 6.42
+   "S1_eligibility": 0.55,
+   "S2_oracle_main": 5.5,
+   "S2_conditional": 1.5,
+   "sum": 7.72
   },
   "supplementary_cpu_evidence": [
    {
-    "label": "S1 oracle-class semantics and KILL A replication (linear surrogate, seeds 42/43/44)",
+    "label": "F1 family table under the teacher's tokenizer (d6f66f41, tokenizer.json sha256 fc4f0bd7...)",
+    "script": {
+     "artifact": "compute/repair-d60/family-table.py",
+     "sha256": "0a9b5235c2a7379928e2ddfa2da7bc09b76874bd7839ee532b3f6b9ae47f88a6"
+    },
+    "output": {
+     "artifact": "compute/repair-d60/family-table.json",
+     "sha256": "0ea7047c6ee6cfda1f4151f7b5b57e1ba51677a35d9c189bd9bc73c0c0501774"
+    }
+   },
+   {
+    "label": "S1v2 registered v2 estimator on the linear surrogate (central regime, wave-1 regime, misfit scenario; seeds 42/43/44)",
+    "script": {
+     "artifact": "compute/repair-d60/oracle-estimator-v2.py",
+     "sha256": "6ea70c82b7b36c2334ccd79b6353c7a96883260b006f8cc9718681c7a6df1b45"
+    },
+    "output": {
+     "artifact": "compute/repair-d60/oracle-estimator-v2.json",
+     "sha256": "fa98812e6cdcf4ffa9c888ef737a3a53a1a4f114ea052f131a0d9a50a602b25c"
+    }
+   },
+   {
+    "label": "S1v2 identifiability grid (d_task x fitting probes; seed 42)",
+    "script": {
+     "artifact": "compute/repair-d60/oracle-estimator-v2.py",
+     "sha256": "6ea70c82b7b36c2334ccd79b6353c7a96883260b006f8cc9718681c7a6df1b45"
+    },
+    "output": {
+     "artifact": "compute/repair-d60/oracle-estimator-v2-grid.json",
+     "sha256": "06f117cbc93dae17156633793f62b53ae9251f00aa251427766200119a8f8cff"
+    }
+   },
+   {
+    "label": "G1 episode-constant guards on a categorical teacher (exact)",
+    "script": {
+     "artifact": "compute/repair-d60/guard-sim.py",
+     "sha256": "67df3bed998a4ecae9b5811450890fd76f08e3b06007a52c78406d0c9a978d13"
+    },
+    "output": {
+     "artifact": "compute/repair-d60/guard-sim.json",
+     "sha256": "f6cfe3f73a211808bdaf1534b9aa12ea96bce3c175de47fcb82ca125a277ef57"
+    }
+   },
+   {
+    "label": "S2v2 decision path end to end (2,000 replicates per cell; design seed 42)",
+    "script": {
+     "artifact": "compute/repair-d60/decision-sim-v2.py",
+     "sha256": "805a650cddc9e304f1d478c88c30388bcab03262e6c60bc330493efcd5287922"
+    },
+    "output": {
+     "artifact": "compute/repair-d60/decision-sim-v2.json",
+     "sha256": "4ed8a50ae1500fd3f4230f892332160c8f288c45ed7c108bc587e8dfe5855a12"
+    }
+   },
+   {
+    "label": "S3v2 GPU-hour arithmetic and caps",
+    "script": {
+     "artifact": "compute/repair-d60/cost-model-v2.py",
+     "sha256": "8f0d449a37e4941d66ed5bac5b4255f31a6b6e9e0f451ee86cabe223629be15a"
+    },
+    "output": {
+     "artifact": "compute/repair-d60/cost-model-v2.json",
+     "sha256": "b0ecb7630d2268f3fc30c6d5a8a5fbdb5a3c93bb8ce04bc8a06c6de1fef2bbc4"
+    }
+   },
+   {
+    "label": "run-2 query log builder",
+    "script": {
+     "artifact": "compute/repair-d60/build-query-log-run2.py",
+     "sha256": "40c89b79ad20afa23c6e9eb4ed5f22cd425ab33587c4db86a4fbee455aa41799"
+    }
+   },
+   {
+    "label": "wave-1 S1 oracle-class semantics and KILL A (kept unedited)",
     "script": {
      "artifact": "compute/oracle-class-semantics.py",
      "sha256": "377cf184427b4cbf867fc704a87faa1030eec7010c4a03b0b2bca364cb846041"
@@ -392,7 +592,7 @@
     }
    },
    {
-    "label": "S2 decision-rule operating characteristics (assumed noise; 4,000 replicates per scenario, design seed 42)",
+    "label": "wave-1 S2 decision-rule operating characteristics (kept unedited)",
     "script": {
      "artifact": "compute/decision-sim.py",
      "sha256": "de4166633eb0e6c7bd3604ee95b6747951e89968f0806bf6454c99b821ce5517"
@@ -403,7 +603,7 @@
     }
    },
    {
-    "label": "S3 GPU-hour estimate and caps (FLOP model; no measured throughput)",
+    "label": "wave-1 S3 cost model (kept unedited)",
     "script": {
      "artifact": "compute/cost-model.py",
      "sha256": "dc9e1c7ff7fe2283e093833aca45da7d512d6b873aeec7aca3d057fdea435fc8"
@@ -420,98 +620,107 @@
      "sha256": "729d1e5e75507415184b1ca3dfd4ec313c1f329a935a9d698b6026e8f1a4203c"
     }
    }
-  ],
-  "legacy_reference_not_counted": {
-   "what": "D19 phase-0 CPU doctor as an orx node (synthetic regime; tests none of the gate's quantities)",
-   "orx_run_id": "e20eeccb-8c51-42de-891b-007e52282bf4",
-   "node_commit": "bc05cc496bcf98445b61db12a35f3a2b8de20f55",
-   "receipt_sha256": "d05f0cc93e70915e4135b6850a3eaa9b9139af3a31d6ce7fc896106bebe1babd",
-   "source": "legacy/research/evidence/infrastructure/orx-phase0-doctor-runs-2026-09-14.json"
-  }
+  ]
  },
  "doctors": [
   {
    "name": "Source",
    "status": "PASS",
    "artifact": "doctors/source.json",
-   "sha256": "06531ad143cfe36e81b5131a2aafac1adc388bdb45df71a4d6e8a99f8e734251"
+   "sha256": "c5c64bb881fc550642cddda5f3ec8c1b2a59b2aea5c5a31b1b8250fef1607179"
   },
   {
    "name": "Citation",
    "status": "PASS",
    "artifact": "doctors/citation.json",
-   "sha256": "1dd97802c8969a3903d9200afbbdb67891e8bf648db7b6fe1843c73034723980"
+   "sha256": "75201879ed2b66cab2c09765f4b4e704adc359e6adce5e2f4cc2915aea5395e2"
   },
   {
    "name": "Novelty",
    "status": "FAIL",
    "artifact": "doctors/novelty.json",
-   "sha256": "ac755a4822e18abb7ed66a9f12383e52be7be8ad1e2a8de381878bf95e1bc55b"
+   "sha256": "e8343852266a46ea761d3dc8136e73f6c26bbd63a34f242c65cd1f09d3f58839"
   },
   {
    "name": "Design",
    "status": "FAIL",
    "artifact": "doctors/design.json",
-   "sha256": "f7ed2c1fe52a9a2e316f55e9b8342d5bf47e8f0217322d61daa974f7f5a67445"
+   "sha256": "758e77cd849ef6ec5a10eef139b37bb54e80b229aa1cab54d30dad9df317ae74"
   },
   {
    "name": "Compute",
    "status": "FAIL",
    "artifact": "doctors/compute.json",
-   "sha256": "9d03a4ccd9ac6a779200241eacd5fca301b5df8ce2418eb060ab7864f013b551"
+   "sha256": "3728810f5fbf891611f8d6c1c9ba43ca337b26fa670d7efbcc597f7f2320dd83"
   },
   {
    "name": "Safety",
    "status": "PASS",
    "artifact": "doctors/safety.json",
-   "sha256": "78cff723ff04498b5607877649fdf5cc34d40059a5be4fde4977814056881c96"
+   "sha256": "a076042adecc1eb4e5b896454e84072b0f76344b8d430eee1a7264a7d89a46c1"
   }
  ],
  "audit_log": null,
- "audit_log_status": "This gauntlet's first wave row is appended to program/gauntlet/ with scripts/research_gauntlet_record.py after its reviewers score.",
- "evidence_root_sha256": "4a3c82b82b9a8536d442b6e77963dce05a16d2d89cd5cdec292630c7a31369ec",
+ "audit_log_status": "Wave 1's row is the first row of program/gauntlet/2026-10-10-e4-icl-write-rule-gate.jsonl (hash b658a265...); this run's row is appended after its reviewers score.",
+ "evidence_root_sha256": "d8089eb9b04c636e1a2ffb4b6f8148ac192f6250a076e936d340d4782d373d71",
  "blind_discrimination_packet": {
   "proposal": {
-   "artifact": "blind/paragraph-b8b5e36a.txt",
-   "sha256": "aa5404b8bd199073ba16a6e76b89d9a79c136192493eafaf4c6438fdf01c306f",
-   "text_sha256": "b8b5e36a63afc486554a5cc616a37156b37e3f3bd60b16967b1705196a2607b2"
+   "artifact": "blind/paragraph-3f069de8.txt",
+   "sha256": "894b143fa10399c3d4dfa57efd3c7306f8c9ab46165cd2e853c295962df0db47",
+   "text_sha256": "3f069de81380d45f7569656e7fcbdd142baecf8069c5dd13f2c36fe9b0ac8510"
   },
   "closest_prior": {
-   "artifact": "blind/paragraph-c840d8c6.txt",
-   "sha256": "6b1c4bb23b2138e9d50237a5b2294256aa5adaeed7a0f364f5794e70a58987ba",
-   "text_sha256": "c840d8c6fbee812fb6bb900f5db7e70dd06c9ae7b5d32b0a2b7757251f67fdd4"
+   "artifact": "blind/paragraph-b2df9deb.txt",
+   "sha256": "1db94d64ac8c3839e932e11582c132ff8faaed9bfb5bf513b2716efc2216140c",
+   "text_sha256": "b2df9debc924fe61c4c52f2bd8b12ee77810cb2dee496d2cb211a2a136690f7d"
   },
-  "closest_prior_id": "arXiv:2608.13385 (When Is a Task Vector Enough? An Empirical Theory of Implicit Multimodal ICL, Li, v1 2026-08-13); full text read by synthesis on 2026-10-10",
-  "note": "File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text."
+  "closest_prior_id": "arXiv:2602.16284 (Fast KV Compaction via Attention Matching, Zweiger, Fu, Guo, Kim; ICML 2026), with its free comparator arXiv:2506.06266 (Cartridges) and the controlled comparison arXiv:2609.17346; full texts read on 2026-10-10. Chosen as the structural closest prior (a state confined to the context's own keys against a free state, both fitted to the model's own context-conditioned behaviour), the line the wave-1 novelty refuter named.",
+  "additional_prior_packets": [
+   {
+    "packet": {
+     "artifact": "blind/paragraph-e982ff03.txt",
+     "sha256": "df3050ea2ffb4b914f443b1d60cce9b42cff9f80e03703f9f4208e6e337b062e",
+     "text_sha256": "e982ff032bca81654a057200dfb921c2c64ad5b4eb80f19772eef90faa497eaf"
+    },
+    "prior": "arXiv:2212.10559 (Dai et al., Why Can GPT Learn In-Context?, ACL Findings 2023); full text read 2026-10-10"
+   },
+   {
+    "packet": {
+     "artifact": "blind/paragraph-c840d8c6.txt",
+     "sha256": "6b1c4bb23b2138e9d50237a5b2294256aa5adaeed7a0f364f5794e70a58987ba",
+     "text_sha256": "c840d8c6fbee812fb6bb900f5db7e70dd06c9ae7b5d32b0a2b7757251f67fdd4"
+    },
+    "prior": "arXiv:2608.13385 (When Is a Task Vector Enough?, Li, 2026-08-13); the wave-1 measurement prior, packet unchanged"
+   }
+  ],
+  "wave1_packets": {
+   "proposal": "blind/paragraph-b8b5e36a.txt",
+   "closest_prior": "blind/paragraph-c840d8c6.txt",
+   "role_map": "compute/blind-roles.json"
+  },
+  "note": "File names carry no role and each file holds only its paragraph. One critic call per prior packet, each with the proposal paragraph, in randomized order, read by path, without the role map or any other text."
  },
  "budget_ledger": {
   "declared": {
-   "queries": 150,
+   "queries": 80,
    "wall_minutes": 600,
    "tokens": 8000000,
    "dollars": 150,
-   "waves": 3,
+   "waves": 1,
    "gpu_hours": 0.3
   },
-  "used_by_discovery_cells": {
-   "queries": 144,
-   "paper_reads": 63,
-   "gpu_hours": 0.0,
-   "wall_minutes_reported": "frontier about 10, cross-domain about 45; kill-shot and asset not reported",
-   "host": "read-only ssh by the asset cell before 11:30 UTC; no host job"
-  },
-  "used_by_synthesis": {
-   "queries": 6,
+  "used_by_repair": {
+   "queries": 33,
    "paper_reads": 10,
    "gpu_hours": 0.0,
-   "wall_minutes_estimate": "about 120 for this owner (2026-10-10T05:37Z onward), plus an earlier owner's stalled run",
-   "tokens_and_dollars": "not metered by the synthesis agent; the recorder meters from transcripts"
+   "host": "none (no ssh, no host job)",
+   "wall_minutes_and_tokens": "metered by the recorder from transcripts"
   },
-  "remaining_queries": 0
+  "remaining_queries": 47
  },
  "direction_doctor_run": {
   "artifact": "doctors/research-direction-doctor-output.json",
-  "sha256": "8888c190694d22467b59ad8132a34fcc9401890cf4c7887e3d02825e1f823aeb",
+  "sha256": "f3d23e134db5b4386e440c0ac7aa31f3641fd4d065671f5713890ce232f6cdd5",
   "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-e4-icl-write-rule-gate.md",
   "note": "Outside evidence_root by design: the doctor output depends on this bundle."
  }

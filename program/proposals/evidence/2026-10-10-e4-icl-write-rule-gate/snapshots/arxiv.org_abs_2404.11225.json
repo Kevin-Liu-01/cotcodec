@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2404.11225",
+ "fetched_at": "2026-10-10T09:33:23Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42693,
+ "raw_sha256": "a558906db40606569acf01647e59ad504387234e0bfff681449d31031ea2a2e6",
+ "raw_stored": false,
+ "extract": {
+  "title": "In-Context Learning State Vector with Inner and Momentum Optimization",
+  "authors": [
+   "Li, Dongfang",
+   "Liu, Zhenyu",
+   "Hu, Xinshuo",
+   "Sun, Zetian",
+   "Hu, Baotian",
+   "Zhang, Min"
+  ],
+  "citation_date": "2024/04/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 17 Apr 2024 10:19:15 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 4 Jul 2024 11:52:11 UTC"
+   }
+  ],
+  "abstract": "Large Language Models (LLMs) have exhibited an impressive ability to perform In-Context Learning (ICL) from only a few examples. Recent works have indicated that the functions learned by ICL can be represented through compressed vectors derived from the transformer. However, the working mechanisms and optimization of these vectors are yet to be thoroughly explored. In this paper, we address this gap by presenting a comprehensive analysis of these compressed vectors, drawing parallels to the parameters trained with gradient descent, and introduce the concept of state vector. Inspired by the works on model soup and momentum-based gradient descent, we propose inner and momentum optimization methods that are applied to refine the state vector progressively as test-time adaptation. Moreover, we simulate state vector aggregation in the multiple example setting, where demonstrations comprising numerous examples are usually too lengthy for regular ICL, and further propose a divide-and-conquer aggregation method to address this challenge. We conduct extensive experiments using Llama-2 and GPT-J in both zero-shot setting and few-shot setting. The experimental results show that our optimization method effectively enhances the state vector and achieves the state-of-the-art performance on diverse tasks. Code is available at this https URL",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
