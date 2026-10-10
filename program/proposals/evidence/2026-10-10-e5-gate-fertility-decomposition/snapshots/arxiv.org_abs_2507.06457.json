@@ -1,0 +1,39 @@
+{
+ "url": "https://arxiv.org/abs/2507.06457",
+ "fetched_at": "2026-10-10T21:26:38Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43636,
+ "raw_sha256": "f29a39a61f65ca9c5b7ec42acdf3c846e20e0b8ced32eb5b555aea73cf7a99c0",
+ "raw_stored": false,
+ "extract": {
+  "title": "A Systematic Analysis of Hybrid Linear Attention",
+  "authors": [
+   "Wang, Dustin",
+   "Zhu, Rui-Jie",
+   "Abreu, Steven",
+   "Shan, Yong",
+   "Kergan, Taylor",
+   "Pan, Yuqi",
+   "Chou, Yuhong",
+   "Li, Zheng",
+   "Wu, Jibin",
+   "Zhang, Ge",
+   "Huang, Wenhao",
+   "Eshraghian, Jason"
+  ],
+  "citation_date": "2025/07/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 8 Jul 2025 23:54:11 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 24 Jun 2026 00:07:31 UTC"
+   }
+  ],
+  "abstract": "Transformers face quadratic complexity and memory issues with long sequences, prompting the adoption of linear attention mechanisms using fixed-size hidden states. However, linear models often suffer from limited recall performance, leading to hybrid architectures that combine linear and full attention layers. Despite extensive hybrid architecture research, the choice of linear attention component has not been deeply explored. We systematically evaluate various linear attention models across generations - vector recurrences to advanced gating mechanisms - both standalone and hybridized. To enable this comprehensive analysis, we trained and open-sourced 72 models: 36 at 340M parameters (20B tokens) and 36 at 1.3B parameters (100B tokens), covering six linear attention variants across five hybridization ratios. Benchmarking on standard language modeling and recall tasks reveals that superior standalone linear models do not necessarily excel in hybrids. While language modeling remains stable across linear-to-full attention ratios, recall significantly improves with increased full attention layers, particularly below a 3:1 ratio. Our study highlights selective gating, hierarchical recurrence, and controlled forgetting as critical for effective hybrid models. We recommend architectures such as HGRN-2 or GatedDeltaNet with a linear-to-full ratio between 3:1 and 6:1 to achieve Transformer-level recall efficiently. Our models are open-sourced at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

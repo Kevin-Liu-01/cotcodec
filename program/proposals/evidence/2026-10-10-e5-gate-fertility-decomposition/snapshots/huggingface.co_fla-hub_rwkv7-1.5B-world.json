@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/fla-hub/rwkv7-1.5B-world",
+ "fetched_at": "2026-10-10T21:51:23Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 214793,
+ "raw_sha256": "30d6729e4f810decdf15b35c113a37a30850e9a8b13a33bafc34d9c566859d52",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "fla-hub/rwkv7-1.5B-world · Hugging Face"
+ }
+}

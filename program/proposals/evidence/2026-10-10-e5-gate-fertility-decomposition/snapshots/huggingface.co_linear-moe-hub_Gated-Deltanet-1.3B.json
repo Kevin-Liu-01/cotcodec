@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/linear-moe-hub/Gated-Deltanet-1.3B",
+ "fetched_at": "2026-10-10T21:51:23Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 128004,
+ "raw_sha256": "4bb40ef396ae2d12951fa801877d9acbd790c01646bd8bd293465a7b41bff259",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "linear-moe-hub/Gated-Deltanet-1.3B · Hugging Face"
+ }
+}

@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2606.15521",
+ "fetched_at": "2026-10-10T21:26:38Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43539,
+ "raw_sha256": "c1c77a5d1884f8757c9845ec88011a785803420e849ec3121f97324b606ef32c",
+ "raw_stored": false,
+ "extract": {
+  "title": "Emergent retokenization symmetry in large language models: phenomenology and applications",
+  "authors": [
+   "Jain, Kanishk",
+   "Day, Matthew",
+   "Can, Tankut"
+  ],
+  "citation_date": "2026/06/14",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 14 Jun 2026 00:38:50 UTC"
+   }
+  ],
+  "abstract": "Tokenization introduces representational redundancy: under a fixed token vocabulary, every byte string admits many valid token encodings, or segmentations, that decode to the same surface string. However, given a prompt, most language model tokenizers break this representational symmetry by returning a canonical segmentation. Training only on canonical segmentations should influence inference behavior, and there is little reason to expect models to respect segmentation symmetry on downstream tasks. We find that this symmetry partially emerges during training. Here, we probe this emergent symmetry through experiments testing token compositional understanding, representation diversity, and task focused benchmark performance. We primarily use \\textbf{retokenization} -- replacing a prompt's canonical tokenization with an alternative segmentation while preserving its bytes exactly. Relative to other prompt perturbations, retokenization is unusually clean because it isolates segmentation effects without changing syntax, semantics or surface form. We use retokenization to study sensitivity and robustness to semantically identical input representations across pretraining and post-training. Moreover, this partial retokenization symmetry suggests a distinct inference-time sampling axis. While temperature sampling generates diverse outputs from the model using its next-token probability distribution, retokenization generates diversity from the model's internal computations through semantically equivalent input representations. We find that while this retokenization sampling strategy can hurt performance on easy problems, it can also recover solutions that conventional sampling does not find. Overall, our work presents retokenization as a simple yet powerful probe of large language models, shedding light on compositional understanding and prompt sensitivity, and offering a novel sampling strategy.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

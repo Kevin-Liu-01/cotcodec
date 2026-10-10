@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2510.05381",
+ "fetched_at": "2026-10-10T21:26:38Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44198,
+ "raw_sha256": "8739ec437121c64f3e1d87c37775e791582b1cf1bdf49da645cbe1f0c3b8dde1",
+ "raw_stored": false,
+ "extract": {
+  "title": "Context Length Alone Hurts LLM Performance Despite Perfect Retrieval",
+  "authors": [
+   "Du, Yufeng",
+   "Tian, Minyang",
+   "Ronanki, Srikanth",
+   "Rongali, Subendhu",
+   "Bodapati, Sravan",
+   "Galstyan, Aram",
+   "Wells, Azton",
+   "Schwartz, Roy",
+   "Huerta, Eliu A",
+   "Peng, Hao"
+  ],
+  "citation_date": "2025/10/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 6 Oct 2025 21:17:13 UTC"
+   }
+  ],
+  "abstract": "Large language models (LLMs) often fail to scale their performance on long-context tasks performance in line with the context lengths they support. This gap is commonly attributed to retrieval failures -- the models' inability to identify relevant information in the long inputs. Accordingly, recent efforts often focus on evaluating and improving LLMs' retrieval performance: if retrieval is perfect, a model should, in principle, perform just as well on a long input as it does on a short one -- or should it? This paper presents findings that the answer to this question may be negative. Our systematic experiments across 5 open- and closed-source LLMs on math, question answering, and coding tasks reveal that, even when models can perfectly retrieve all relevant information, their performance still degrades substantially (13.9%--85%) as input length increases but remains well within the models' claimed lengths. This failure occurs even when the irrelevant tokens are replaced with minimally distracting whitespace, and, more surprisingly, when they are all masked and the models are forced to attend only to the relevant tokens. A similar performance drop is observed when all relevant evidence is placed immediately before the question. Our findings reveal a previously-unrealized limitation: the sheer length of the input alone can hurt LLM performance, independent of retrieval quality and without any distraction. They motivate our simple, model-agnostic mitigation strategy that transforms a long-context task into a short-context one by prompting the model to recite the retrieved evidence before attempting to solve the problem. On RULER, we observe a consistent improvement of GPT-4o up to 4% on an already strong baseline.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
