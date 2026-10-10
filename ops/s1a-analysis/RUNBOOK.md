@@ -35,44 +35,67 @@ are at the end.
   seconds and run directly, as `collect-pair.sh` does for DR0. No command blocks for more
   than about a minute.
 - **Write once.** Every output is written once, and every script refuses to overwrite one.
+  The registered `rescore merge` does not check, so step 4 checks before each merge.
   If a step must be redone, move its output aside (for example `mv X X.failed-<slurm id>`)
   and record why. Nothing is deleted.
 - **Data handling (section 16).** Step logs, captures, replies and stdout tails stay on the
   host. Only the files listed in step 12 go to `program/evidence/`.
 - **Stop conditions.** Stop and record the cause, without patching any frozen file, if any
   of these happens: `provenance.py` exits 3; `run_report.py` exits non-zero;
-  `check_identity.py` exits 3; a rescoring or GLMM receipt shows a non-zero
-  `exit_status` with no rows written.
+  `check_identity.py` exits 3; `glmm_inputs.py collect` exits 3 (the image's R package
+  lock does not hash to the registered `abb8871d...`); a rescoring or GLMM receipt shows a
+  non-zero `exit_status` with no rows written. Any other operator script that exits non-zero
+  has written nothing; fix the input it names and run it again.
+- **Labels.** `guard.json` `labels` (step 6) is the label of every file of this analysis:
+  incomplete or not (D59 (ii)), and "not externally anchored" (ANCHOR-UNAVAILABLE).
+  `report-guarded.json`, `rescore-coverage.json`, `first-divergence.json`,
+  `glmm-summary.json`, `s15.json` and `provenance.json` carry it. The registered CLIs'
+  outputs (`dr0-*.json`, `merged-*.jsonl`, `a1.jsonl`, `costs.json`, `report.json`) and
+  `identity.json` cannot carry it and fall under it.
 
 ## 0. Ship the operator scripts and set the variables
 
-On the Mac, from the verified commit of `ops/s1a-analysis` on `ops/q2-s1a`:
+On the Mac, from the verified commit of `ops/s1a-analysis` on `ops/q2-s1a` (replace
+`FILL-IN` with that commit; as written the line fails and nothing is shipped):
 
 ```bash
-OPSC=$(git rev-parse <verified ops commit>)
+OPSC=$(git rev-parse --verify 'FILL-IN^{commit}') &&
 git archive --format=tar "$OPSC" ops/s1a-analysis | ssh -o BatchMode=yes fal-h100-01 \
-  "mkdir -p /home/kevin/cotcodec-runs/stage0/q2-stage1/ops/$OPSC && tar -x -C /home/kevin/cotcodec-runs/stage0/q2-stage1/ops/$OPSC"
+  "mkdir -p /home/kevin/cotcodec-runs/stage0/q2-stage1/ops/$OPSC && tar -x -C /home/kevin/cotcodec-runs/stage0/q2-stage1/ops/$OPSC" &&
+echo "$OPSC"
 ```
 
 On the host (`ssh -o BatchMode=yes fal-h100-01`, in the operator's tmux, bash), write the
-environment once. The chain stops if the analysis directory already exists (write once).
-Every later step starts with
+environment once. Replace the two `FILL-IN` placeholders first, and edit `COSTVMS` if a job
+was refused before any episode ran. `s1a_env_ok` refuses a placeholder left in place, a
+commit whose scripts were not shipped, a VM job without a run directory and a `COSTVMS`
+entry outside `VMS`; the chain then stops before it creates anything. It also stops if the
+analysis directory already exists (write once). Every later step starts with
 `. /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh`, so each step also
 works from a fresh ssh command:
 
 ```bash
+OPSC=FILL-IN                             # the verified ops commit: its full 40-hex sha, as on the Mac
+VMS="1045 1048 1051 FILL-IN"             # the A1 VM jobs that ran, registered order; FILL-IN: A1-4B-S2's
+COSTVMS="$VMS"                           # VMS minus a job refused before any episode ran to an end
 R=/home/kevin/cotcodec-runs/stage0/q2-stage1
 A=$R/analysis/s1a-v1
-mkdir -p $R/analysis && mkdir $A && mkdir $A/logs && cat > $A/env.sh <<EOF
+s1a_env_ok() {
+  [[ $OPSC =~ ^[0-9a-f]{40}$ && -d $R/ops/$OPSC/ops/s1a-analysis ]] || { echo "OPSC: not a shipped full sha: $OPSC" >&2; return 1; }
+  [[ -n $VMS ]] || { echo "VMS is empty" >&2; return 1; }
+  for VM in $VMS; do [[ $VM =~ ^[0-9]+$ && -f $R/runs/$VM/manifest.json ]] || { echo "VMS: no run directory for $VM" >&2; return 1; }; done
+  for VM in $COSTVMS; do [[ " $VMS " == *" $VM "* ]] || { echo "COSTVMS: $VM is not in VMS" >&2; return 1; }; done
+}
+s1a_env_ok && mkdir -p $R/analysis && mkdir $A && mkdir $A/logs && cat > $A/env.sh <<EOF
 R=$R
 X=\$R/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca
 PLAN=\$X/program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json
-OPSC=<ops commit sha>                    # fill in, as on the Mac
+OPSC=$OPSC
 OPS=\$R/ops/\$OPSC/ops/s1a-analysis
 A=$A
 INPUTS=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs
-VMS="1045 1048 1051 <vm of A1-4B-S2>"   # only the A1 jobs that ran, registered order
-COSTVMS="\$VMS"                          # minus a job with no scored or infrastructure attempt
+VMS="$VMS"
+COSTVMS="$COSTVMS"
 RUNS=(); for VM in \$VMS; do RUNS+=(--run-dir \$R/runs/\$VM); done
 COSTRUNS=(); for VM in \$COSTVMS; do COSTRUNS+=(--run-dir \$R/runs/\$VM); done
 DR0S=(); for VM in \$VMS; do DR0S+=(--dr0 \$A/dr0-\$VM.json); done
@@ -112,9 +135,13 @@ cat $A/dr0-exits.txt                              # exit 3 = DR0 fired: every ou
 
 ```bash
 . /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
-python3 -E -s -B $OPS/rescore_jobs.py submit --export $X --analysis-dir $A --inputs $INPUTS "${RUNS[@]}" --dry-run
+python3 -E -s -B $OPS/rescore_jobs.py submit --export $X --analysis-dir $A --inputs $INPUTS "${RUNS[@]}" --out $A/rescore-jobs.json --dry-run
 python3 -E -s -B $OPS/rescore_jobs.py submit --export $X --analysis-dir $A --inputs $INPUTS "${RUNS[@]}" --out $A/rescore-jobs.json
 ```
+
+The first line prints one `sbatch` line per job and writes nothing (`--out` is optional with
+`--dry-run`, and it must not exist yet). The second line submits the same commands and
+writes `rescore-jobs.json`.
 
 Each job is one `s1a-cpu.sbatch` run in the metric image `2006c1a9...` with
 `--time=08:00:00`. The run directory is mounted read-only at `/ro/run`, and the job writes
@@ -145,12 +172,13 @@ reports this.
 
 ```bash
 . /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
-for VM in $VMS; do (cd $X && python3 -E -s -B -m harness.q2_stage1.rescore merge --episodes $R/runs/$VM/episodes.jsonl --rescored $A/rescore-$VM/rescored.jsonl --out $A/merged-$VM.jsonl); done
+for VM in $VMS; do test ! -e $A/merged-$VM.jsonl || { echo "exists: $A/merged-$VM.jsonl" >&2; break; }; (cd $X && python3 -E -s -B -m harness.q2_stage1.rescore merge --episodes $R/runs/$VM/episodes.jsonl --rescored $A/rescore-$VM/rescored.jsonl --out $A/merged-$VM.jsonl); done
 for VM in $VMS; do cat $A/merged-$VM.jsonl; done > $A/a1.jsonl
-python3 -E -s -B $OPS/rescore_jobs.py coverage --export $X --analysis-dir $A "${RUNS[@]}" --records $A/a1.jsonl --plan $PLAN --out $A/rescore-coverage.json
+python3 -E -s -B $OPS/rescore_jobs.py coverage --export $X --analysis-dir $A "${RUNS[@]}" --records $A/a1.jsonl --plan $PLAN "${DR0S[@]}" --out $A/rescore-coverage.json
 ```
 
-For each job, `rescore-coverage.json` lists:
+`rescore-coverage.json` carries the labels (from the same completeness test as the guard
+in step 6). For each job it lists:
 
 - scored attempts, and those with a capture;
 - rows, matched rows, rows with `*_error` (by field), scored attempts with no row;
@@ -161,7 +189,10 @@ For the primary and secondary sets it adds:
 - how many corrected verdicts came from rescoring and how many fell back to the live score;
 - the corrected-verdict flips by task, split into `checker_correction` (the corrected
   comparator applies) and `replay_mismatch` (no correction applies, so the flip is a
-  live-versus-offline replay mismatch). This split is disclosed beside the flips.
+  live-versus-offline replay mismatch). This split is disclosed beside the flips. A
+  checker-correction flip whose raw replay already differed from the live score is also
+  counted under `checker_correction_raw_replay_also_differs` (a subset of
+  `checker_correction`).
 
 ## 5. Cost card input (seconds; registered CLI, on the host)
 
@@ -187,8 +218,9 @@ The step writes three files:
   (bug B2).
 - `$A/report/guard.json`: the inputs' digests, the registered argv, the registered error if
   any, `fractional_base_scores`, completeness (DR0 per job from the files and recomputed
-  from the records, the jobs present and absent, the sessions per size) and every reading
-  the guard changed.
+  from the records, the jobs present and absent, the sessions per size), every reading
+  the guard changed, the `labels` every later output copies, the `read` note and the
+  `interpretation` (below).
 - `$A/report/report-guarded.json`: the report to read. With complete data it is
   `report.json` plus a `guard` block. With incomplete data the guard changes these
   readings:
@@ -202,6 +234,25 @@ The step writes three files:
   If no size holds two sessions, the file is the delta-only report: δ and the descriptive
   and infrastructure counts. D_b, D_w, X, π, the X test, DR2, DR5, P1, P2, the session test
   and P3 are then not estimable.
+
+**Read `report-guarded.json`, never `report.json` directly.** On incomplete data
+`report.json` still holds every value the guard changed: for example a single-session
+size's session p-value of 1/(n+1), or DR5 read against M = 0.13. It is kept for the
+identity check (step 7). `guard.json` says so in `read`.
+
+**The guard's readings of D59 (ii)** are fixed in `run_report.py` before any A1 outcome is
+read and are written to `guard.json` `interpretation`:
+
+| Case | Reading |
+|---|---|
+| DR0 fired for any A1 job, a registered job has no records, or a size lacks two sessions of scored base records | Every output is labelled `incomplete` |
+| A size's session-2 job fired DR0, but the size still holds scored base records in both sessions (cut or failed after its first block) | Labelled `incomplete`; the DR0 masks nothing else: that size's session test (and DR1, for 4B) are read as registered on the data collected, and a `guard.json` reading says so. D59's "that size" is read as the size left with one session: section 11 reports the data already collected as incomplete, and the dry-run checker's B3 handling, from which D59 (ii) was written, names the single-session size |
+| One size holds one session, the other two | That size's session test (and its harness-by-session and common-share entries) is `not_estimable`; DR1 is read on the sessions it holds; DR5 is "not evaluable as registered", with π_9B against both M as a description; DR2 is kept as the registered code computes it, with an `incomplete_note` (its X test and π_small bound then come from the size with two sessions; π_9B is the registered π_small only when DR1 drops 4B); P1 and P2 read the size with two sessions; `pooled_from_sizes` lists the sizes each pooled estimate averages (pooled D_w, δ and the Bernoulli X average the single-session size's session with the other size's two) |
+| No size holds two sessions | The delta-only report above |
+| Any statistic with no finite entry | No p-value is read from it |
+
+The second and third rows answer questions D59 leaves open. Record them in a program
+decision before this step runs.
 
 ## 7. Identity check (Slurm CPU, about one more report)
 
@@ -225,7 +276,7 @@ Exit 3 stops the analysis.
 
 ```bash
 . /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
-J=$(step divergence first_divergence.py --export $X --plan $PLAN --records $A/a1.jsonl "${RUNS[@]}" --out $A/first-divergence.json); echo $J
+J=$(step divergence first_divergence.py --export $X --plan $PLAN --records $A/a1.jsonl "${RUNS[@]}" --guard $A/report/guard.json --out $A/first-divergence.json); echo $J
 tail -2 $A/logs/s1a-divergence-$J.out
 ```
 
@@ -241,7 +292,7 @@ python3 -E -s -B $OPS/glmm_inputs.py submit --export $X --inputs-dir $A/glmm-inp
 python3 -E -s -B $OPS/glmm_inputs.py submit --export $X --inputs-dir $A/glmm-inputs --out-dir $A/glmm-out --out $A/glmm-job.json
 squeue -h -o '%i %j %T %M' | grep s1a-glmm || echo none-running
 cat $A/glmm-out/primary.exit $A/glmm-out/secondary.exit
-python3 -E -s -B $OPS/glmm_inputs.py collect --out-dir $A/glmm-out --out $A/glmm-summary.json
+python3 -E -s -B $OPS/glmm_inputs.py collect --out-dir $A/glmm-out --guard $A/report/guard.json --out $A/glmm-summary.json; echo "exit=$?"
 ```
 
 The job runs the registered image `b15584f3...` with `glmm.R` (200 refits, seed 42). It
@@ -254,6 +305,7 @@ completed blocks, reported beside it) in parallel.
   the bootstrap counts exactly as `glmm.R` writes them. It adds a note when the bootstrap
   came from a full fit that did not converge, or includes refits that did not converge.
 - **Package lock.** It checks the copied `/opt/q2/r-packages.json` against `abb8871d...`.
+  A mismatch is written to `glmm-summary.json` and the collector exits 3: stop (see Rules).
 
 ## 10. Section 15 assembler (Slurm CPU, about one analysis)
 
@@ -272,8 +324,12 @@ IN=(); for f in $PLAN $A/dr0-*.json $A/rescore-jobs.json $A/rescore-*/rescored.j
   $A/first-divergence.json $A/glmm-inputs/* $A/glmm-out/glmm-*.json $A/glmm-out/*.exit $A/glmm-out/r-packages.json \
   $A/glmm-summary.json $A/s15.json; do IN+=(--input $f); done
 for VM in $VMS; do for f in manifest.json episodes.jsonl lane-receipt.json; do IN+=(--input $R/runs/$VM/$f); done; done
-python3 -E -s -B $OPS/provenance.py --export $X --plan $PLAN --ops-commit $OPSC "${IN[@]}" --out $A/provenance.json; echo "exit=$?"
+python3 -E -s -B $OPS/provenance.py --export $X --plan $PLAN --ops-commit $OPSC --guard $A/report/guard.json "${IN[@]}" --out $A/provenance.json; echo "exit=$?"
 ```
+
+A pattern that matches nothing (for example a GLMM output that was never written) reaches
+`provenance.py` as written. It is recorded under `inputs_missing` and fails no check, so
+read that list.
 
 ## 12. Evidence (from the Mac)
 
@@ -304,7 +360,8 @@ re-runs steps 4 to 10 from the copied inputs and compares the SHA-256 of `report
   estimator outcome check to [0, 1] and NaN. `identity.json` shows which case applies:
   byte-identical, or only the fractional outputs changed.
 - **Operator rules (D59 (ii)), when the data are incomplete.** These are the guard's
-  readings in `guard.json` and `report-guarded.json`.
+  readings in `guard.json` and `report-guarded.json`, and its reading of the cases D59
+  leaves open (`guard.json` `interpretation`; the table in step 6).
 - **Operator steps (D59 (iii)), each with its command above:**
   - offline rescoring `--time=08:00:00`, with coverage and live-score fallbacks;
   - replay mismatches shown beside the flips;

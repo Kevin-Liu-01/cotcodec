@@ -476,4 +476,5 @@ SCENARIOS: dict[str, dict[str, Any]] = {
     "baseincomplete": {"seed": 7, "cut": {"A1-4B-S2": 0.4}},
     "s2allinfra": {"seed": 8, "jobs": JOBS[:3], "all_infra": (JOBS[2],)},
     "fractional": {"seed": 9, "fractional": 5},
+    "dr0latefloor": {"seed": 10, "jobs": JOBS[:3], "floor_4b": True},
 }

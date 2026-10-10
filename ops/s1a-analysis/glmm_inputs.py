@@ -20,10 +20,12 @@ exit status) and copies the image's package lock. ``--dry-run`` prints the comma
 
 ``collect``: each fit's exit code, convergence exactly as ``glmm.R`` writes it (``full``,
 ``reduced``, ``lrt_task_harness``, the bootstrap counts), a note when the bootstrap intervals
-come from a full fit that did not converge or include refits that did not converge, and the
-package lock's SHA-256 against the registered ``abb8871d...``::
+come from a full fit that did not converge or include refits that did not converge, the
+package lock's SHA-256 against the registered ``abb8871d...`` (exit 3, after writing the
+summary, when it differs) and the labels of ``run_report.py``'s ``guard.json``::
 
-    python3 -E -s -B glmm_inputs.py collect --out-dir A/glmm-out --out A/glmm-summary.json
+    python3 -E -s -B glmm_inputs.py collect --out-dir A/glmm-out --guard A/report/guard.json \
+        --out A/glmm-summary.json
 """
 
 from __future__ import annotations
@@ -219,14 +221,24 @@ def collect_summary(out_dir: Path) -> dict[str, Any]:
 def collect(args: argparse.Namespace) -> int:
     if args.out.exists():
         raise O.OpsError(f"{args.out} exists; operator outputs are never overwritten")
-    out = collect_summary(args.out_dir)
+    labels = O.labels_from_guard(args.guard)
+    out = {"labels": labels, **collect_summary(args.out_dir)}
+    out["inputs"] = {"guard": O.sha256_file(args.guard)}
     O.write_new(args.out, O.dumps(out))
-    print(json.dumps({"r_packages_match": out["r_packages"]["matches_registered"],
+    match = out["r_packages"]["matches_registered"]
+    print(json.dumps({"r_packages_match": match, "label": labels.get("incomplete"),
                       **{n: f.get("exit_code") for n, f in out["fits"].items()}}))  # fmt: skip
+    if not match:
+        print(
+            "stop: the copied /opt/q2/r-packages.json does not hash to the registered "
+            f"{O.R_PACKAGES_SHA256} (G0 item 12); record the cause",
+            file=sys.stderr,
+        )
+        return 3
     return 0
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
     w = sub.add_parser("write", help="primary.csv and secondary.csv with glmm.rows_from_records")
@@ -242,8 +254,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     s.add_argument("--dry-run", action="store_true")
     c = sub.add_parser("collect", help="exit codes, convergence and the package digest")
     c.add_argument("--out-dir", type=Path, required=True)
+    c.add_argument(
+        "--guard", type=Path, required=True,
+        help="run_report.py's guard.json: the labels this output carries",
+    )  # fmt: skip
     c.add_argument("--out", type=Path, required=True)
-    args = parser.parse_args(argv)
+    return parser.parse_args(argv)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = parse_args(argv)
     return {"write": write, "submit": submit, "collect": collect}[args.command](args)
 
 

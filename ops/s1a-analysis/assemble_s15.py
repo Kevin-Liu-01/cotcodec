@@ -586,11 +586,7 @@ def assemble(
             "secondary": f"base plus completed extension "
             f"blocks {done} (records.completed_extension_blocks)",
         },  # fmt: skip
-        "labels": {
-            "incomplete": RR.INCOMPLETE if comp["incomplete"] else None,
-            "incomplete_reasons": comp["reasons"],
-            "external_anchor": A.NOT_ANCHORED,
-        },
+        "labels": RR.labels(comp, plan),
         "completeness": comp,
         "dr0_per_job": {"source": "rules.run_dir_dr0 (receipt included); exit 3 = fires", **dr0},
         "output_tokens": output_tokens(finals, recs, sets),
@@ -683,7 +679,7 @@ def assemble(
     return out
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--export", type=Path, required=True)
     parser.add_argument("--plan", type=Path, required=True)
@@ -693,7 +689,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--analysis-dir", type=Path, help="holds rescore-<vm>/rescored.jsonl")
     parser.add_argument("--report-guarded", type=Path)
     parser.add_argument("--out", type=Path, required=True)
-    args = parser.parse_args(argv)
+    return parser.parse_args(argv)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = parse_args(argv)
     O.use_export(args.export)
     if args.out.exists():
         raise O.OpsError(f"{args.out} exists; operator outputs are never overwritten")
