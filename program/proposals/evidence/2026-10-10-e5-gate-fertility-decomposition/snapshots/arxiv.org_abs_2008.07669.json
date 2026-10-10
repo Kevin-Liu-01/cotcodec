@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2008.07669",
+ "fetched_at": "2026-10-10T21:26:37Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44095,
+ "raw_sha256": "4340901bd0003e58663ee09d6cc067103a783ee31bf3ddbce2d40d70cc325a53",
+ "raw_stored": false,
+ "extract": {
+  "title": "HiPPO: Recurrent Memory with Optimal Polynomial Projections",
+  "authors": [
+   "Gu, Albert",
+   "Dao, Tri",
+   "Ermon, Stefano",
+   "Rudra, Atri",
+   "Re, Christopher"
+  ],
+  "citation_date": "2020/08/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 17 Aug 2020 23:39:33 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 23 Oct 2020 02:48:03 UTC"
+   }
+  ],
+  "abstract": "A central problem in learning from sequential data is representing cumulative history in an incremental fashion as more data is processed. We introduce a general framework (HiPPO) for the online compression of continuous signals and discrete time series by projection onto polynomial bases. Given a measure that specifies the importance of each time step in the past, HiPPO produces an optimal solution to a natural online function approximation problem. As special cases, our framework yields a short derivation of the recent Legendre Memory Unit (LMU) from first principles, and generalizes the ubiquitous gating mechanism of recurrent neural networks such as GRUs. This formal framework yields a new memory update mechanism (HiPPO-LegS) that scales through time to remember all history, avoiding priors on the timescale. HiPPO-LegS enjoys the theoretical benefits of timescale robustness, fast updates, and bounded gradients. By incorporating the memory dynamics into recurrent neural networks, HiPPO RNNs can empirically capture complex temporal dependencies. On the benchmark permuted MNIST dataset, HiPPO-LegS sets a new state-of-the-art accuracy of 98.3%. Finally, on a novel trajectory classification task testing robustness to out-of-distribution timescales and missing data, HiPPO-LegS outperforms RNN and neural ODE baselines by 25-40% accuracy.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

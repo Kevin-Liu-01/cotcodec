@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2606.06203",
+ "fetched_at": "2026-10-10T21:26:38Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41736,
+ "raw_sha256": "10c7475bcee1ce0ac72120fa9d0b6c400701c7600f93f9223e0c7f8674e37147",
+ "raw_stored": false,
+ "extract": {
+  "title": "Dense Contexts Are Hard Contexts: Lexical Density Limits Effective Context in LLMs",
+  "authors": [
+   "Dettori, Giovanni",
+   "Boffa, Matteo",
+   "Giordano, Danilo",
+   "Drago, Idilio",
+   "Mellia, Marco"
+  ],
+  "citation_date": "2026/06/04",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 4 Jun 2026 14:08:30 UTC"
+   }
+  ],
+  "abstract": "Input length and the position of relevant information are widely cited as the primary causes of degraded LLM long-context performance. Here, we study lexical density -- the rate at which a context introduces distinct information -- as a third, largely overlooked factor that systematically reduces the effective context window of LLMs. We quantify the impact of lexical density on open-weight LLMs (9B-685B) using three \"find-the-needle\" style benchmarks with identical length (~12k tokens) and controlled needle position, but increasing density of information. We observe a sharp performance collapse in higher-density benchmarks: models that are near-perfect in sparse contexts drop below 60% retrieval score on denser ones. To rule out task-type confounds, we vary and control the density within each benchmark while keeping all other properties unchanged. Reducing density generally restores performance, especially in the high-density regimes where degradation appears. These results show that effective context capacity is a function of lexical density, with direct implications for real-world LLM systems operating on compact, information-rich inputs.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

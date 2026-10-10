@@ -1,0 +1,473 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
+ "protocol": "ARS claim-verification protocol: claim registry, locators, read status and verdict per claim; abstract-only and report-level reads labelled as such",
+ "evidence": "Claim registry of 42 claims parsed from the proposal; every arXiv and Hugging Face URL snapshotted with HTTP 200 and arXiv version histories; Lee et al. Secs. 2.2-2.3, 4.1-4.2 and App. A, Boesch and Wee Sec. 4, 2507.06457 Sec. 3 and Limitations, 2506.19004 Sec. 4.1, SpectralShift abstract and App. B.2 and MambaExtend's abstract re-read by synthesis in the cells' full texts; first-party labels on card and release-paper numbers.",
+ "claim_registry": [
+  {
+   "claim_id": "C01",
+   "claim": "K 1 to 16 lowers recall by about 30-40 pp; 128 to 1024 filler tokens at K = 4 cause \"only a modest decline\"",
+   "source": "[2609.33093](https://arxiv.org/abs/2609.33093) v1 2026-09-27",
+   "urls": [
+    "https://arxiv.org/abs/2609.33093"
+   ],
+   "locator": "Sec. 4.2, Fig. 7(a-b)",
+   "read_status": "full, re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C02",
+   "claim": "Elapsed-context panel legend lists GLA-340M and GDN-340M only; GDN-1.3B at K = 32 reaches 69%",
+   "source": "same",
+   "urls": [],
+   "locator": "Fig. 7 legend; Fig. 8; Sec. 4.2",
+   "read_status": "full, re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C03",
+   "claim": "Recall scored among four balanced candidates by conditional likelihood; WikiText-103 source-disjoint passages; target logit margin",
+   "source": "same",
+   "urls": [],
+   "locator": "Sec. 2.3",
+   "read_status": "full, re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C04",
+   "claim": "Exact decomposition of the state into contributions transformed by all later transitions (Eqs. 3-5)",
+   "source": "same",
+   "urls": [],
+   "locator": "Sec. 2.2",
+   "read_status": "full, re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C05",
+   "claim": "Aligning a later write key with the target lowers the target margin by 0.27-0.44 logits",
+   "source": "same",
+   "urls": [],
+   "locator": "Sec. 4.2, Fig. 7(c)",
+   "read_status": "full, re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C06",
+   "claim": "m-a-p checkpoint commit 930ed6ae; 32,000-token Mistral vocabulary; 1.466B parameters",
+   "source": "same",
+   "urls": [],
+   "locator": "App. A",
+   "read_status": "full, re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C07",
+   "claim": "Hybrid Qwen3.5-4B: recurrent interventions recover 0.2-3.6%, KV interventions 96-100%",
+   "source": "same",
+   "urls": [],
+   "locator": "Sec. 4.1",
+   "read_status": "full (dossier VERIFIED; frontier)",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C08",
+   "claim": "Convolution dominates matched recall (about +0.5); decay has no measurable cost (0.561 vs 0.518 at K = 32, p = 0.86); distance gives a flat wall attributed to interference",
+   "source": "[2609.16183](https://arxiv.org/abs/2609.16183) v1 2026-09-14",
+   "urls": [
+    "https://arxiv.org/abs/2609.16183"
+   ],
+   "locator": "Sec. 4 \"Axis 3\", Table 1, Sec. 5",
+   "read_status": "full, re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C09",
+   "claim": "m-a-p models pretrained on FineWeb-Edu; 1.3B models on 100B tokens; 4,096-token window in Limitations",
+   "source": "[2507.06457](https://arxiv.org/abs/2507.06457) v2 2026-06-24",
+   "urls": [
+    "https://arxiv.org/abs/2507.06457"
+   ],
+   "locator": "Sec. 3; Limitations",
+   "read_status": "full, re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C10",
+   "claim": "m-a-p config: max_position_embeddings 2048, 8 heads, head dim 256, conv 4; no licence or card",
+   "source": "[model page](https://huggingface.co/m-a-p/1.3B-100B-GatedDeltaNet-pure)",
+   "urls": [
+    "https://huggingface.co/m-a-p/1.3B-100B-GatedDeltaNet-pure"
+   ],
+   "locator": "config.json and HF API at 930ed6ae, 2026-10-10",
+   "read_status": "synthesis read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C11",
+   "claim": "RWKV World card: apache-2.0; languages en, zh, ja, ko, fr, ar, es, pt",
+   "source": "[model page](https://huggingface.co/fla-hub/rwkv7-1.5B-world)",
+   "urls": [
+    "https://huggingface.co/fla-hub/rwkv7-1.5B-world"
+   ],
+   "locator": "card; HF API",
+   "read_status": "frontier, kill-shot",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C12",
+   "claim": "Fallback GDN-1.3B: apache-2.0, SlimPajama, 4 heads, use_short_conv false",
+   "source": "[model page](https://huggingface.co/linear-moe-hub/Gated-Deltanet-1.3B)",
+   "urls": [
+    "https://huggingface.co/linear-moe-hub/Gated-Deltanet-1.3B"
+   ],
+   "locator": "config.json and HF API at 87107937",
+   "read_status": "synthesis read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C13",
+   "claim": "Pretrained-only models given character-level context fail to write fluently (spelling at best 0.317, grammaticality 0.260); Word Repeat 90.8",
+   "source": "[2506.19004](https://arxiv.org/abs/2506.19004) v2 2026-02-02",
+   "urls": [
+    "https://arxiv.org/abs/2506.19004"
+   ],
+   "locator": "Sec. 4.1, Fig. 3; Table 4",
+   "read_status": "full, re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C14",
+   "claim": "Robustness to non-canonical tokenization does not generalise beyond English; drops of 23.7%, 11.4%, 9.9%; most of the gap survives length matching",
+   "source": "[2607.26831](https://arxiv.org/abs/2607.26831) v1 2026-07-29",
+   "urls": [
+    "https://arxiv.org/abs/2607.26831"
+   ],
+   "locator": "Abstract; Sec. 5.2; App. Table 6",
+   "read_status": "full",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C15",
+   "claim": "Character-level robustness relies on early-layer attention among a word's characters",
+   "source": "[2603.10771](https://arxiv.org/abs/2603.10771)",
+   "urls": [
+    "https://arxiv.org/abs/2603.10771"
+   ],
+   "locator": "Abstract; Sec. 5",
+   "read_status": "full",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C16",
+   "claim": "Segmentation invariance arises mainly in post-training (OLMo-2 checkpoints)",
+   "source": "[2606.15521](https://arxiv.org/abs/2606.15521)",
+   "urls": [
+    "https://arxiv.org/abs/2606.15521"
+   ],
+   "locator": "Sec. 3.2",
+   "read_status": "full",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C17",
+   "claim": "Mamba-2 and RWKV-6 fail to forget beyond the training length; minimum training length to learn forgetting scales with state size",
+   "source": "[2410.07145](https://arxiv.org/abs/2410.07145) v4 2026-01-13",
+   "urls": [
+    "https://arxiv.org/abs/2410.07145"
+   ],
+   "locator": "Abstract; Sec. 3",
+   "read_status": "full",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C18",
+   "claim": "SpectralShift rescales GDN alpha projections before continual pretraining; two factors, including \"preservation of fast-decaying modes for state clearing\"",
+   "source": "[2609.14320](https://arxiv.org/abs/2609.14320) v1 2026-09-13",
+   "urls": [
+    "https://arxiv.org/abs/2609.14320"
+   ],
+   "locator": "Abstract; App. B.2; Sec. 5.3",
+   "read_status": "full, re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C19",
+   "claim": "Training-free calibration of per-layer discretization scaling factors extends Mamba context",
+   "source": "MambaExtend, [ICLR 2025 proceedings](https://proceedings.iclr.cc/paper_files/paper/2025/file/f1922bd718528ac3eab114eabbbfa7a0-Paper-Conference.pdf)",
+   "urls": [
+    "https://proceedings.iclr.cc/paper_files/paper/2025/file/f1922bd718528ac3eab114eabbbfa7a0-Paper-Conference.pdf"
+   ],
+   "locator": "Abstract; Sec. 3",
+   "read_status": "full (frontier, pdftotext), re-read abstract",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C20",
+   "claim": "Scaling the transition matrix A, not only the step, improves Mamba length generalisation",
+   "source": "[2509.19633](https://arxiv.org/abs/2509.19633)",
+   "urls": [
+    "https://arxiv.org/abs/2509.19633"
+   ],
+   "locator": "Abstract; Sec. 6.1",
+   "read_status": "full",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C21",
+   "claim": "DeciMamba: Mamba's limited length generalisation traced to the training-length receptive field; a context-extension method",
+   "source": "[2406.14528](https://arxiv.org/abs/2406.14528)",
+   "urls": [
+    "https://arxiv.org/abs/2406.14528"
+   ],
+   "locator": "Abstract",
+   "read_status": "abstract",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C22",
+   "claim": "In Gated DeltaNet and KDA one scalar gate controls both erase and write",
+   "source": "[2605.22791](https://arxiv.org/abs/2605.22791)",
+   "urls": [
+    "https://arxiv.org/abs/2605.22791"
+   ],
+   "locator": "Abstract",
+   "read_status": "abstract",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C23",
+   "claim": "Hybrids only; OneRULER at fixed token length; Qwen3.5 tokenizer 2.6x longer in Yoruba; deficit initially larger outside English",
+   "source": "[2609.35378](https://arxiv.org/abs/2609.35378) v1 2026-09-28",
+   "urls": [
+    "https://arxiv.org/abs/2609.35378"
+   ],
+   "locator": "Sec. 4, Table 2",
+   "read_status": "full",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C24",
+   "claim": "REC-ONLY split-prefill drops KV retrieval to 0% in Qwen3.5-4B and Falcon-H1-3B; KV-ONLY keeps 64-98%",
+   "source": "[2609.04434](https://arxiv.org/abs/2609.04434)",
+   "urls": [
+    "https://arxiv.org/abs/2609.04434"
+   ],
+   "locator": "Sec. 4",
+   "read_status": "report",
+   "verdict": "VERIFIED_REPORT_LEVEL"
+  },
+  {
+   "claim_id": "C25",
+   "claim": "Length hurts even with whitespace or masked distractors (13.9% to 85%)",
+   "source": "[2510.05381](https://arxiv.org/abs/2510.05381)",
+   "urls": [
+    "https://arxiv.org/abs/2510.05381"
+   ],
+   "locator": "Secs. 4.1-4.2",
+   "read_status": "full",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C26",
+   "claim": "Learnable gates give quasi-invariance to time transformations",
+   "source": "[1804.11188](https://arxiv.org/abs/1804.11188)",
+   "urls": [
+    "https://arxiv.org/abs/1804.11188"
+   ],
+   "locator": "Abstract",
+   "read_status": "abstract",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C27",
+   "claim": "Causal mediation with model components as mediators; natural direct and indirect effects",
+   "source": "[2004.12265](https://arxiv.org/abs/2004.12265)",
+   "urls": [
+    "https://arxiv.org/abs/2004.12265"
+   ],
+   "locator": "Abstract",
+   "read_status": "abstract (synthesis addition)",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C28",
+   "claim": "Causal tracing and interchange interventions localise factual recall in Mamba",
+   "source": "[2404.03646](https://arxiv.org/abs/2404.03646)",
+   "urls": [
+    "https://arxiv.org/abs/2404.03646"
+   ],
+   "locator": "Abstract",
+   "read_status": "abstract (synthesis addition)",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C29",
+   "claim": "Experimental designs that identify mechanisms by manipulating the mediator",
+   "source": "[Imai et al. 2013](https://doi.org/10.1111/j.1467-985x.2012.01032.x)",
+   "urls": [
+    "https://doi.org/10.1111/j.1467-985x.2012.01032.x"
+   ],
+   "locator": "Abstract (OpenAlex)",
+   "read_status": "abstract",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C30",
+   "claim": "Filled delays impair; lengthening them adds little; interference model fits best",
+   "source": "[Oberauer and Lewandowsky 2008](https://doi.org/10.1037/0033-295x.115.3.544)",
+   "urls": [
+    "https://doi.org/10.1037/0033-295x.115.3.544"
+   ],
+   "locator": "Abstract (OpenAlex)",
+   "read_status": "abstract",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C31",
+   "claim": "Noncrossover interactions are removable by monotone transforms",
+   "source": "[Wagenmakers et al. 2012](https://doi.org/10.3758/s13421-011-0158-0)",
+   "urls": [
+    "https://doi.org/10.3758/s13421-011-0158-0"
+   ],
+   "locator": "Abstract (OpenAlex)",
+   "read_status": "abstract",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C32",
+   "claim": "Fisher memory curve: a decaying linear memory trades signal for accumulated interference",
+   "source": "[Ganguli et al. 2008](https://doi.org/10.1073/pnas.0804451105)",
+   "urls": [
+    "https://doi.org/10.1073/pnas.0804451105"
+   ],
+   "locator": "Abstract (OpenAlex)",
+   "read_status": "abstract",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C33",
+   "claim": "WikiText-103 corpus",
+   "source": "[1609.07843](https://arxiv.org/abs/1609.07843); [dataset](https://huggingface.co/datasets/Salesforce/wikitext)",
+   "urls": [
+    "https://arxiv.org/abs/1609.07843",
+    "https://huggingface.co/datasets/Salesforce/wikitext"
+   ],
+   "locator": "CC BY-SA 3.0 and GFDL (HF tags)",
+   "read_status": "abstract; HF API",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C34",
+   "claim": "fla 0.5.2 computes GDN's gate in-kernel from the a_proj output, A_log and dt_bias; RWKV-7's log-decay is -0.6065 sigmoid(w_lora)",
+   "source": "[flash-linear-attention](https://github.com/fla-org/flash-linear-attention)",
+   "urls": [
+    "https://github.com/fla-org/flash-linear-attention"
+   ],
+   "locator": "layer sources read by the asset cell; re-read by synthesis",
+   "read_status": "code read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C35",
+   "claim": "Measured training throughput 73,045 tok/s/GPU (422M GDN hybrid, fla 0.5.2 image)",
+   "source": "`docs/h100-node.md`",
+   "urls": [],
+   "locator": "table",
+   "read_status": "repository",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C36",
+   "claim": "The same text can take up to 15 times as many tokens across languages",
+   "source": "[2305.15425](https://arxiv.org/abs/2305.15425)",
+   "urls": [
+    "https://arxiv.org/abs/2305.15425"
+   ],
+   "locator": "Abstract",
+   "read_status": "abstract",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C37",
+   "claim": "The gated delta rule combines gating (rapid erasure) with the delta update (targeted modification)",
+   "source": "[2412.06464](https://arxiv.org/abs/2412.06464)",
+   "urls": [
+    "https://arxiv.org/abs/2412.06464"
+   ],
+   "locator": "Abstract",
+   "read_status": "abstract",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C38",
+   "claim": "RWKV-7: generalised delta rule with vector-valued gating; models, data listing and code released under Apache 2.0",
+   "source": "[2503.14456](https://arxiv.org/abs/2503.14456) v2",
+   "urls": [
+    "https://arxiv.org/abs/2503.14456"
+   ],
+   "locator": "Abstract",
+   "read_status": "abstract",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C39",
+   "claim": "Single-token retention rate as a tokenizer metric beside mean fertility",
+   "source": "[2510.09947](https://arxiv.org/abs/2510.09947)",
+   "urls": [
+    "https://arxiv.org/abs/2510.09947"
+   ],
+   "locator": "alphaXiv report",
+   "read_status": "report",
+   "verdict": "VERIFIED_REPORT_LEVEL"
+  },
+  {
+   "claim_id": "C40",
+   "claim": "Tokenizer choice matters more for low-resource languages (transformers, 54 tokenizers)",
+   "source": "[2610.12144](https://arxiv.org/abs/2610.12144) v1 2026-10-08",
+   "urls": [
+    "https://arxiv.org/abs/2610.12144"
+   ],
+   "locator": "Sec. 3 (report)",
+   "read_status": "report",
+   "verdict": "VERIFIED_REPORT_LEVEL"
+  },
+  {
+   "claim_id": "C41",
+   "claim": "Recurrent LLMs overflow; chunked inference mitigates it",
+   "source": "[2505.07793](https://arxiv.org/abs/2505.07793)",
+   "urls": [
+    "https://arxiv.org/abs/2505.07793"
+   ],
+   "locator": "alphaXiv report",
+   "read_status": "report",
+   "verdict": "VERIFIED_REPORT_LEVEL"
+  },
+  {
+   "claim_id": "C42",
+   "claim": "Lexical density limits effective context separately from length",
+   "source": "[2606.06203](https://arxiv.org/abs/2606.06203)",
+   "urls": [
+    "https://arxiv.org/abs/2606.06203"
+   ],
+   "locator": "Abstract",
+   "read_status": "full",
+   "verdict": "VERIFIED"
+  }
+ ],
+ "dossier_corrections": [
+  "GDN-1.3B training data is documented first-party (FineWeb-Edu, 100B tokens; 2507.06457 Sec. 3); the checkpoint has no licence",
+  "the 'modest decline' over 128 to 1024 filler tokens is measured on the 340M models only, with filler that writes to the state",
+  "a halved decay rate cannot identify the decay share (S1)",
+  "600 episodes per cell gives P(KILL | no decay share) of 0.59 at discordance 0.30 (S2)",
+  "the 16-language fund branch has no valid subject",
+  "the 3 GPU-h estimate: S3 central 1.26, high 3.29; caps 4.0"
+ ],
+ "cell_corrections": [
+  "cross-domain cell: duplicated pieces without write normalisation are not decay-only in a delta-rule memory (S1 world W5: decay share 0.41 to 0.44)",
+  "asset cell: the 73,045 tok/s anchor was measured in image 0b3ecef0-architecture, not ed5d5a93"
+ ],
+ "remediation": "Open the psychology sources cited from metadata only before any write-up; read DeciMamba and GDN-2 in full if a delta row ever depends on more than their abstracts."
+}

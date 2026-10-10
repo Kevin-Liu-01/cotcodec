@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2510.09947",
+ "fetched_at": "2026-10-10T21:26:38Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41364,
+ "raw_sha256": "d0351e860771f14979b54966563a587bc9ed651c44e46283226a9c0ce2eb3429",
+ "raw_stored": false,
+ "extract": {
+  "title": "Beyond Fertility: Analyzing STRR as a Metric for Multilingual Tokenization Evaluation",
+  "authors": [
+   "Nayeem, Mir Tafseer",
+   "Alqahtani, Sawsan",
+   "Laskar, Md Tahmid Rahman",
+   "Mohiuddin, Tasnim",
+   "Bari, M Saiful"
+  ],
+  "citation_date": "2025/10/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 11 Oct 2025 01:22:31 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 26 Oct 2025 01:32:06 UTC"
+   }
+  ],
+  "abstract": "Tokenization is a crucial but under-evaluated step in large language models (LLMs). The standard metric, fertility (the average number of tokens per word), captures compression efficiency but obscures how vocabularies are allocated across languages and domains. We analyze six widely used tokenizers across seven languages and two domains, finding stable fertility for English, high fertility for Chinese, and little domain sensitivity. To address fertility's blind spots, we propose the Single Token Retention Rate (STRR), which measures the proportion of words preserved as single tokens. STRR reveals systematic prioritization of English, strong support for Chinese, and fragmentation in Hindi, offering an interpretable view of cross-lingual fairness. Our results show that STRR complements fertility and provides practical guidance for designing more equitable multilingual tokenizers.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

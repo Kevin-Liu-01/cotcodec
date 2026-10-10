@@ -1,0 +1,524 @@
+{
+ "schema_version": 1,
+ "proposal": "program/proposals/2026-10-10-e5-gate-fertility-decomposition.md",
+ "proposal_sha256": "5c12ae3aeb516f676a940c426304778c9ea3ee32260dfa3c08d41dd849c20efb",
+ "draft_registration": {
+  "path": "program/preregistrations/e5-gate-fertility-decomposition-v1.md",
+  "sha256": "f4abf4282ae6d80fc24fcc5fa2fda3c01017d3c84d8a41a220b5bf19098c174b",
+  "status": "DRAFT, not frozen, no ledger row"
+ },
+ "source_snapshots": [
+  {
+   "url": "https://arxiv.org/abs/1609.07843",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:36Z",
+   "raw_sha256": "df982cfe3b145d9e2fcbca0da286ebaafa803c2aa1c1d1f4c70af410c7755cc9",
+   "raw_bytes": 41113,
+   "artifact": "snapshots/arxiv.org_abs_1609.07843.json",
+   "sha256": "2b74f2a1ba44c634ec77b67531237acfe0cde0e308146c326cc532ff8ad0db63"
+  },
+  {
+   "url": "https://arxiv.org/abs/1804.11188",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:36Z",
+   "raw_sha256": "bef565b9e6d59a35b19235d49ee33e0544d79f7cd733c60b3e6d567e8457924e",
+   "raw_bytes": 41139,
+   "artifact": "snapshots/arxiv.org_abs_1804.11188.json",
+   "sha256": "f2fbcecf2dfff25f468059a5fb332187fa02ae43fc58aaded36fa08b0fd54749"
+  },
+  {
+   "url": "https://arxiv.org/abs/2004.12265",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:37Z",
+   "raw_sha256": "f1edc03aed2bdeab09e537c919c0e2d094aa3c6e56f085904e11b7b956253015",
+   "raw_bytes": 43214,
+   "artifact": "snapshots/arxiv.org_abs_2004.12265.json",
+   "sha256": "8010f3196b7afc1e340ad6b643fce2d8db87bfae6af56b22e0372085003f9b80"
+  },
+  {
+   "url": "https://arxiv.org/abs/2008.07669",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:37Z",
+   "raw_sha256": "4340901bd0003e58663ee09d6cc067103a783ee31bf3ddbce2d40d70cc325a53",
+   "raw_bytes": 44095,
+   "artifact": "snapshots/arxiv.org_abs_2008.07669.json",
+   "sha256": "f9cd1474c80d66d32504a8ad8cb6b812f6ff489791c9b66d9b5e93d64957f99d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2305.15425",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:37Z",
+   "raw_sha256": "e141cd5306915b2f9b699ed78bd2597e0fbee75703b5d0b4cdbf447663f81a1f",
+   "raw_bytes": 41417,
+   "artifact": "snapshots/arxiv.org_abs_2305.15425.json",
+   "sha256": "77fe67717a53c0337c57c543f179436ef0edfd11ab06598b19d2f2ccdd465371"
+  },
+  {
+   "url": "https://arxiv.org/abs/2404.03646",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:37Z",
+   "raw_sha256": "abb56f37246c25b8cb14b8d3e0a2b9ee0372db1415d0dd5ef096a61c0b5aac2d",
+   "raw_bytes": 41924,
+   "artifact": "snapshots/arxiv.org_abs_2404.03646.json",
+   "sha256": "de1db6ade143241fa942ad185b9fce9d23f12fdb7e962f4bb266161771b60a9b"
+  },
+  {
+   "url": "https://arxiv.org/abs/2406.14528",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:37Z",
+   "raw_sha256": "165cf81acad442404f481c6b28179857f0f46c0f96536f5c9968f787a1e633c8",
+   "raw_bytes": 42924,
+   "artifact": "snapshots/arxiv.org_abs_2406.14528.json",
+   "sha256": "c2fd6b2d243d8fd4a1956c2e796748694a86cb57089ae5c632706efdc83c04d3"
+  },
+  {
+   "url": "https://arxiv.org/abs/2410.07145",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:37Z",
+   "raw_sha256": "0d9086eb8b14ca9f13d262c1217e9a0b4c63bea45c3632a2696f87b4ae34ae8a",
+   "raw_bytes": 43374,
+   "artifact": "snapshots/arxiv.org_abs_2410.07145.json",
+   "sha256": "80205475be5c7230b9cdd1a4531cff7b1339e5c4dcdf45444d737c5b3c934561"
+  },
+  {
+   "url": "https://arxiv.org/abs/2412.06464",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:37Z",
+   "raw_sha256": "d0a92ce36f5e29dabab54be7beda8e5305c921257a90625a68db7c212a7bda5e",
+   "raw_bytes": 41238,
+   "artifact": "snapshots/arxiv.org_abs_2412.06464.json",
+   "sha256": "49a3da8a195654e5354c34bb243e46e54348031d81e8b068ccc273116fb9a358"
+  },
+  {
+   "url": "https://arxiv.org/abs/2503.14456",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:37Z",
+   "raw_sha256": "40573f508270ee99b48e0ad83a2ed56fbc500141d00e931910bfaabb2dad6323",
+   "raw_bytes": 44564,
+   "artifact": "snapshots/arxiv.org_abs_2503.14456.json",
+   "sha256": "b728d598e03da3936a4d189aa0d278fdcc712e471e78999c2711ce725accf932"
+  },
+  {
+   "url": "https://arxiv.org/abs/2505.07793",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:37Z",
+   "raw_sha256": "a7bbe32e8a91a81d709f59cb6a362275afe62069635e7b45912efddb056360a4",
+   "raw_bytes": 43027,
+   "artifact": "snapshots/arxiv.org_abs_2505.07793.json",
+   "sha256": "6cd75ae98dad8e5391cdec28e8deab4d4b3a73166d8e8ab319356240a942846c"
+  },
+  {
+   "url": "https://arxiv.org/abs/2506.19004",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:38Z",
+   "raw_sha256": "8228a09ba2fc26d0a892f4415c562f8da56010982ab653de27c7f7541f0ff86b",
+   "raw_bytes": 43243,
+   "artifact": "snapshots/arxiv.org_abs_2506.19004.json",
+   "sha256": "d5fc6a4ca62ccea6a3841a0fe580fa9971b939e6c360b80a6a7e34ff814309cf"
+  },
+  {
+   "url": "https://arxiv.org/abs/2507.06457",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:38Z",
+   "raw_sha256": "f29a39a61f65ca9c5b7ec42acdf3c846e20e0b8ced32eb5b555aea73cf7a99c0",
+   "raw_bytes": 43636,
+   "artifact": "snapshots/arxiv.org_abs_2507.06457.json",
+   "sha256": "fd6fb2b125ef3352aa80497f6ab6986b77192754ef2b208855bb3a83cf40e006"
+  },
+  {
+   "url": "https://arxiv.org/abs/2509.19633",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:38Z",
+   "raw_sha256": "5e326718a5804d08093d3414223715e2d6288eb8daee5a97205c03ca8bdf22fa",
+   "raw_bytes": 44272,
+   "artifact": "snapshots/arxiv.org_abs_2509.19633.json",
+   "sha256": "75edcfa72d6105add7d926a394ffcfdab67cd89f4c1fa4bdb3f6c162915d5a5b"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.05381",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:38Z",
+   "raw_sha256": "8739ec437121c64f3e1d87c37775e791582b1cf1bdf49da645cbe1f0c3b8dde1",
+   "raw_bytes": 44198,
+   "artifact": "snapshots/arxiv.org_abs_2510.05381.json",
+   "sha256": "c57ac3acd6623bac0784a56826a00400534f396aa8c470dded37b58289e461b9"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.09947",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:38Z",
+   "raw_sha256": "d0351e860771f14979b54966563a587bc9ed651c44e46283226a9c0ce2eb3429",
+   "raw_bytes": 41364,
+   "artifact": "snapshots/arxiv.org_abs_2510.09947.json",
+   "sha256": "ba6957c7efabb6d819d25d6b970553e3a2d6bb5408c02ff944523c626024ac3a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2603.10771",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:38Z",
+   "raw_sha256": "d23c1edc17cc84a4bcbdd40d20a13141f8b31110870154a3831ac582ab181426",
+   "raw_bytes": 41288,
+   "artifact": "snapshots/arxiv.org_abs_2603.10771.json",
+   "sha256": "2e653470f229caa89cf361c0f8c20da0c7ff36b90a9218f6808379810ab88b76"
+  },
+  {
+   "url": "https://arxiv.org/abs/2605.22791",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:38Z",
+   "raw_sha256": "d7bc060276744cbf5ba04f017f43a087fcf05ee24ccbe505c3068f519e00d186",
+   "raw_bytes": 43125,
+   "artifact": "snapshots/arxiv.org_abs_2605.22791.json",
+   "sha256": "ac9e294f300984cb5a57e435f8956d95fdd0acf1cdd47a7579193a044bfc673b"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.06203",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:38Z",
+   "raw_sha256": "10c7475bcee1ce0ac72120fa9d0b6c400701c7600f93f9223e0c7f8674e37147",
+   "raw_bytes": 41736,
+   "artifact": "snapshots/arxiv.org_abs_2606.06203.json",
+   "sha256": "e2777ecc89d0d3665f3c8257eaf3bdf2c086527b78c5e541a916c179464d2146"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.15521",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:38Z",
+   "raw_sha256": "c1c77a5d1884f8757c9845ec88011a785803420e849ec3121f97324b606ef32c",
+   "raw_bytes": 43539,
+   "artifact": "snapshots/arxiv.org_abs_2606.15521.json",
+   "sha256": "34116ed5128a2a3ac141c136157ad2b915aa8236ab9b94899b57d4a8e3a9eb7f"
+  },
+  {
+   "url": "https://arxiv.org/abs/2607.26831",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:38Z",
+   "raw_sha256": "2b1772a011cc285a781a1fb5aca5c076615aced54e84df8835228ec35d94a78b",
+   "raw_bytes": 43002,
+   "artifact": "snapshots/arxiv.org_abs_2607.26831.json",
+   "sha256": "e4f51bf1bb4d3914acf46d590cede5ecbc781688ee461f8add1c93a2581b894a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.04434",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:38Z",
+   "raw_sha256": "6f08276dc080a838eebbd1ffe17454987ab1246889920291c1358ef93a08df56",
+   "raw_bytes": 41432,
+   "artifact": "snapshots/arxiv.org_abs_2609.04434.json",
+   "sha256": "27ffb86ff7d0dc0e9a6b5cf67fbe267f59dc3e86aaa4a1cdb0708d83fa7c4fb7"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.14320",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:39Z",
+   "raw_sha256": "66040815852090ee2131ab3336336401f7b8542c403aa77b10a941fcba3f150e",
+   "raw_bytes": 42901,
+   "artifact": "snapshots/arxiv.org_abs_2609.14320.json",
+   "sha256": "20b8fb3695934ec62ef043c808e48c2410533beb572435ebec700216e7cb1968"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.16183",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:39Z",
+   "raw_sha256": "d6b5684f91e8c2da940a43cb4a7d9eb1650140a1757c9d5871f2511b10aff4e2",
+   "raw_bytes": 45041,
+   "artifact": "snapshots/arxiv.org_abs_2609.16183.json",
+   "sha256": "71bd5a9b7a2ff6c923788bcda3c1712a209618968304f4ccc9b806605617ee03"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.33093",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:39Z",
+   "raw_sha256": "63e5b1c7c4d752747a5bac17a2d2046ef0ffc3fd12025b1ed2c601c71de62085",
+   "raw_bytes": 42909,
+   "artifact": "snapshots/arxiv.org_abs_2609.33093.json",
+   "sha256": "ebce0c5f2d0b26a80e9a65cf5ebde6c3d9918aca40be813f8b9e33227cf4348f"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.35378",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:39Z",
+   "raw_sha256": "bbe7e17ead5ff8f0f3f9d584c5d6c5d712108937570d039d98b8c57614026009",
+   "raw_bytes": 41664,
+   "artifact": "snapshots/arxiv.org_abs_2609.35378.json",
+   "sha256": "144f0acd99a694c100a401eb968ea59bf6d28f12032d7c242c0c9662a4fc6a7a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.12144",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:26:39Z",
+   "raw_sha256": "a9a2dc96fa196b22954d5324ff3af95f7dffd04f17b6cfc7c11c0f7cec9ed7f9",
+   "raw_bytes": 43103,
+   "artifact": "snapshots/arxiv.org_abs_2610.12144.json",
+   "sha256": "c91a7b39134314a1e9b468e00302bf03fd2503b14f239d1e6722c20c77422334"
+  },
+  {
+   "url": "https://github.com/fla-org/flash-linear-attention",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:51:22Z",
+   "raw_sha256": "b79de7d9bcfb7211a0b01b1cb010600557f253e90baa05075869ecc5d3b73dd7",
+   "raw_bytes": 569045,
+   "artifact": "snapshots/github.com_fla-org_flash-linear-attention.json",
+   "sha256": "66ee9be727b657e174c998d91633db920f7d5d8891bf72e3c693a050230998eb"
+  },
+  {
+   "url": "https://huggingface.co/datasets/Salesforce/wikitext",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:51:22Z",
+   "raw_sha256": "39aaaf2fcc1ef4a9e2f2659179df3eebd3668a944a3b8eecbc2f66f5d7024feb",
+   "raw_bytes": 393913,
+   "artifact": "snapshots/huggingface.co_datasets_Salesforce_wikitext.json",
+   "sha256": "b4439a82144787bbeb8787ad69433f838d1bfe61f60ff15d85da7dfe8a8a70d1"
+  },
+  {
+   "url": "https://huggingface.co/fla-hub/rwkv7-1.5B-world",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:51:23Z",
+   "raw_sha256": "30d6729e4f810decdf15b35c113a37a30850e9a8b13a33bafc34d9c566859d52",
+   "raw_bytes": 214793,
+   "artifact": "snapshots/huggingface.co_fla-hub_rwkv7-1.5B-world.json",
+   "sha256": "7e4704b1fcabf317b5b4bfd3e617371729e8a81ecd4e9135760753d576eacccf"
+  },
+  {
+   "url": "https://huggingface.co/linear-moe-hub/Gated-Deltanet-1.3B",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:51:23Z",
+   "raw_sha256": "4bb40ef396ae2d12951fa801877d9acbd790c01646bd8bd293465a7b41bff259",
+   "raw_bytes": 128004,
+   "artifact": "snapshots/huggingface.co_linear-moe-hub_Gated-Deltanet-1.3B.json",
+   "sha256": "05746d9c8d81d9aca98c72d674a0c8ecdeac3d922f4fa2a354b32c4c276310cf"
+  },
+  {
+   "url": "https://huggingface.co/m-a-p/1.3B-100B-GatedDeltaNet-pure",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:51:23Z",
+   "raw_sha256": "f17dad165ce1aa242a8dc4b0963ab59e7126b6ddc044057c82c7911a7496e81b",
+   "raw_bytes": 100707,
+   "artifact": "snapshots/huggingface.co_m-a-p_1.3B-100B-GatedDeltaNet-pure.json",
+   "sha256": "0ab544e3016075bf1ef91ce23225a9c58d4e2dd8c86437099f171c407e632f20"
+  }
+ ],
+ "query_log": {
+  "artifact": "query-log.json",
+  "sha256": "73416f0c053191ff118ba437b663e1b3ae57788e7e445e8253d067141fa6b0ad",
+  "queries_against_budget": 120,
+  "note": "120 counted orx discover queries (frontier 47, kill-shot 24, cross-domain 43, asset 6, synthesis 0) against the declared 150; exactly the triad's reserve of 30 remains; uncounted OpenReview, web and Anthology searches and 57 cell paper reads logged separately."
+ },
+ "reviews": [],
+ "reviews_status": "NOT_RUN: the blind critic, the refute-first triad and both reviewers run after synthesis. No trusted Ed25519 store exists (D24), so no review can be signed.",
+ "compute": {
+  "scope": "e5-gate-fertility-decomposition-v1 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: S1 identification simulation, S2 operating characteristics, S3 cost model, S4 splitting rules on the real tokenizers, and the registered estimator as code.",
+  "image_digest": "127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9",
+  "image_scope": "build 855 from commit ed5d5a93 (image ID sha256:500f3b027173a2d772b7d6ea00ea667dbe1bc956df51e3c2c4455d9c08a2714b; fla and fla-core 0.5.2, torch 2.11.0, transformers 5.15.0); neither subject has been loaded in it on this host",
+  "real_model_loop": false,
+  "real_model_loop_scope": "none: the harness (model loop, hooks, forced-choice scorer, ledgers, checkpoint and resume) is not written",
+  "benchmark_adapter": null,
+  "benchmark_adapter_scope": "none: the episode builder is not written; the splitting rules exist only as the CPU prototype compute/resegment.py",
+  "manifest": null,
+  "manifest_scope": "no Slurm manifest exists for the smoke or the two main jobs",
+  "container_smoke": {
+   "label": "container_smoke",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "e7ff2ff20a818734daf5039c12741935e42b4f516df97b05279ffaade8493667"
+  },
+  "slurm_test": {
+   "label": "slurm_test",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "e7ff2ff20a818734daf5039c12741935e42b4f516df97b05279ffaade8493667"
+  },
+  "provenance_verification": {
+   "label": "provenance_verification",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "e7ff2ff20a818734daf5039c12741935e42b4f516df97b05279ffaade8493667"
+  },
+  "registered_caps_gpu_h": {
+   "smoke": 0.25,
+   "gdn_main": 1.25,
+   "rwkv_main": 2.5,
+   "sum": 4.0,
+   "d22_limit": 8.0
+  },
+  "estimate_gpu_h": {
+   "central": 1.257,
+   "high": 3.291
+  },
+  "supplementary_cpu_evidence": [
+   {
+    "label": "registered estimator and decision rules as code",
+    "script": {
+     "artifact": "compute/estimator.py",
+     "sha256": "5e0a02b1a6f8d45278bdba25007a96a5348cd1f5953994e0070d579311f15c06"
+    }
+   },
+   {
+    "label": "S1 identification: per-token decay clamp against the uniform r = 2 rescale on a NumPy gated delta-rule memory, six worlds, seeds 42/43/44 x 600 episodes per load",
+    "script": {
+     "artifact": "compute/mech-sim.py",
+     "sha256": "f8deaa1dab4e05baa95376bd3c5175b5fc8403127c34c293a6434cf1f168ae0d"
+    },
+    "output": {
+     "artifact": "compute/mech-sim.json",
+     "sha256": "d1d9654ef7522aa8070797978198742de13763b3d1f666d41f63f4e9cbeef79f"
+    }
+   },
+   {
+    "label": "S2 operating characteristics of every threshold (paired, passage-clustered; assumed discordance 0.05 to 0.30; 4,000 replicates per cell; bootstrap coverage check)",
+    "script": {
+     "artifact": "compute/power-sim.py",
+     "sha256": "1d5e56174c2215884f7ae7801af29d617b99c1d8315a335268407d2bf08cfaaa"
+    },
+    "output": {
+     "artifact": "compute/power-sim.json",
+     "sha256": "05c210d0c92f6d599787c04953ebe7e0aa370c9aec47f9950b25a6184978a684"
+    }
+   },
+   {
+    "label": "S3 token counts, GPU-hour estimate, caps and degradation ladder (assumed throughputs; no inference throughput measured on the host)",
+    "script": {
+     "artifact": "compute/cost-model.py",
+     "sha256": "e82fa1672f5e1b268be6b828dbae8dbf46390e124507bae8a9f43ca477195979"
+    },
+    "output": {
+     "artifact": "compute/cost-model.json",
+     "sha256": "496ceda3946dec6c24c99fce9b3e5d5ae08bf2a930322777b507cab558d0c6a7"
+    }
+   },
+   {
+    "label": "S4 splitting rules R(f, seed) and B(seed) on the real m-a-p and RWKV World tokenizers (CC0 arXiv abstracts as stand-in text)",
+    "script": {
+     "artifact": "compute/resegment.py",
+     "sha256": "cc27a085a8249f7ab827cf7d13ec2f59cb2a432d99d99ef29f292d392a75d1a9"
+    },
+    "output": {
+     "artifact": "compute/resegment.json",
+     "sha256": "c9616374b8c4d06dbbec92e73cd8622cbd3af3854a06b287961b0c121b0fb7e1"
+    }
+   },
+   {
+    "label": "query-log builder (parses the cells' raw orx outputs from the session scratchpad)",
+    "script": {
+     "artifact": "compute/build-query-log.py",
+     "sha256": "5559a9ccd37ec8edbeed421d5b4bc5338a7eb86f18ff31527be489b4abdc47e8"
+    }
+   },
+   {
+    "label": "doctor-record builder (claim registry parsed from the proposal)",
+    "script": {
+     "artifact": "compute/build-doctors.py",
+     "sha256": "032bb9a102cdfce3ee02077f8c48c8909a989cedaddd5eecddf82134fe1a9025"
+    }
+   },
+   {
+    "label": "snapshot script for source_snapshots",
+    "script": {
+     "artifact": "compute/snapshot-sources.py",
+     "sha256": "c68fddc9e8a473279094a64f5be3b2a9634d0550a9c545585bc786ae56f837c9"
+    }
+   }
+  ],
+  "tokenizer_inputs": {
+   "m-a-p tokenizer.json": {
+    "sha256": "1d5b9634c23bdd4540f633d327120e1fa4b57a2a723a56d7a92debfc4d15c061",
+    "git_blob_sha1": "b667161bc937dfaed6f27e9e7849a664c3e869b3",
+    "hf_tree_oid": "b667161bc937dfaed6f27e9e7849a664c3e869b3"
+   },
+   "rwkv_vocab_v20230424.txt": {
+    "sha256": "e6dee3d4e31b4d5c40ac99508ac6c701ceef4bed681bf2167ce9a908552bca89"
+   },
+   "location": "session scratchpad (fetched by the frontier cell); not committed"
+  }
+ },
+ "doctors": [
+  {
+   "name": "Source",
+   "status": "PASS",
+   "artifact": "doctors/source.json",
+   "sha256": "feedcc71402f6b0064f47a4d4529bf3ab7205b9bdc0c327baf786245257262b8"
+  },
+  {
+   "name": "Citation",
+   "status": "PASS",
+   "artifact": "doctors/citation.json",
+   "sha256": "e1c9649466b51c872aad91b39295bd32b38096b9d61587a98c2042676a3122b3"
+  },
+  {
+   "name": "Novelty",
+   "status": "FAIL",
+   "artifact": "doctors/novelty.json",
+   "sha256": "58436dbb37e4223071d35c084494f5a6a4cf40c2460e6c7284784a4c97235711"
+  },
+  {
+   "name": "Design",
+   "status": "FAIL",
+   "artifact": "doctors/design.json",
+   "sha256": "a94dfbe6f24268146c0f7c1c31d04d6746163b9ad6a262758df88ed3246e5cfa"
+  },
+  {
+   "name": "Compute",
+   "status": "FAIL",
+   "artifact": "doctors/compute.json",
+   "sha256": "c19779a001e64c536792cd02b14287ed5eec35ac133afa55bccbca7c6bdb4565"
+  },
+  {
+   "name": "Safety",
+   "status": "PASS",
+   "artifact": "doctors/safety.json",
+   "sha256": "9ce1c91f006294557a79fdc759693c7d652e55a00a2efcc9d60ff0536d5abb63"
+  }
+ ],
+ "audit_log": null,
+ "audit_log_status": "This gauntlet's wave-1 row is appended to program/gauntlet/2026-10-10-e5-gate-fertility-decomposition.jsonl with scripts/research_gauntlet_record.py after its reviewers score.",
+ "evidence_root_sha256": "dab86d8e00cbd00c5057b28308cf8c8f4b6a7e74934423656283000a9a49f53b",
+ "blind_discrimination_packet": {
+  "proposal": {
+   "artifact": "blind/paragraph-b4bd575e.txt",
+   "sha256": "cf42b2c3c08161e5dc2b4db66d48daf69cc1fb4e4a5ee639e96cfc65883367b5",
+   "text_sha256": "4af0aa163e8103e82abc73a525c93b29910f8b9b2c6fa6d0b31f87c95aa0b8e6"
+  },
+  "closest_prior": {
+   "artifact": "blind/paragraph-ac4ee22c.txt",
+   "sha256": "aab5a112f761f44f9d4a85a4793af67a242c3a4958d6affc0be80ae13ad2f003",
+   "text_sha256": "a8e9b804e1cdac075dc4d13143818653778f77a296ad4608f1da66ef0fa44b1c"
+  },
+  "closest_prior_id": "arXiv:2609.33093 (How Linear Attention Remembers, Lee, Park, Kim and Ko, v1 2026-09-27); full text read by the frontier, kill-shot and cross-domain cells and re-read by synthesis on 2026-10-10 (Secs. 2.2-2.3, 4.1-4.2, App. A)",
+  "note": "File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text."
+ },
+ "budget_ledger": {
+  "declared": {
+   "queries": 150,
+   "wall_minutes": 600,
+   "tokens": 8000000,
+   "dollars": 150,
+   "waves": 3,
+   "gpu_hours": 0.3
+  },
+  "used_by_discovery_cells": {
+   "queries": 120,
+   "uncounted_searches": 18,
+   "paper_reads": 57,
+   "gpu_hours": 0.0,
+   "host": "read-only ssh by the kill-shot and asset cells (squeue empty; cached cards, receipts, tokenizer files); no host job"
+  },
+  "used_by_synthesis": {
+   "queries": 0,
+   "paper_reads": "re-reads of cell-fetched full texts (2609.33093, 2609.16183, 2507.06457, 2506.19004, 2609.14320, 2410.07145, MambaExtend); 32 arXiv and Hugging Face snapshot fetches (auxiliary)",
+   "gpu_hours": 0.0,
+   "host": "one read-only squeue at 21:41 UTC (empty); no host job",
+   "cpu": "S1 (612 s), S2 (79 s), S3 and S4 (159 s wall) on the development Mac",
+   "tokens_and_dollars": "not metered by the synthesis agent; the recorder meters from transcripts"
+  },
+  "remaining_queries": 30,
+  "refuter_reserve_shortfall": 0
+ },
+ "direction_doctor_run": {
+  "artifact": "doctors/research-direction-doctor-output.json",
+  "sha256": "c6e5aa8cd1fdd8f691034baa39a56e2bba0454b50008c5953633d1f0fc2bb7da",
+  "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-e5-gate-fertility-decomposition.md",
+  "note": "Outside evidence_root by design: the doctor output depends on this bundle."
+ }
+}

@@ -1,0 +1,36 @@
+{
+ "url": "https://arxiv.org/abs/2004.12265",
+ "fetched_at": "2026-10-10T21:26:37Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43214,
+ "raw_sha256": "f1edc03aed2bdeab09e537c919c0e2d094aa3c6e56f085904e11b7b956253015",
+ "raw_stored": false,
+ "extract": {
+  "title": "Causal Mediation Analysis for Interpreting Neural NLP: The Case of Gender Bias",
+  "authors": [
+   "Vig, Jesse",
+   "Gehrmann, Sebastian",
+   "Belinkov, Yonatan",
+   "Qian, Sharon",
+   "Nevo, Daniel",
+   "Sakenis, Simas",
+   "Huang, Jason",
+   "Singer, Yaron",
+   "Shieber, Stuart"
+  ],
+  "citation_date": "2020/04/26",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 26 Apr 2020 01:53:03 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 22 Nov 2020 07:58:08 UTC"
+   }
+  ],
+  "abstract": "Common methods for interpreting neural models in natural language processing typically examine either their structure or their behavior, but not both. We propose a methodology grounded in the theory of causal mediation analysis for interpreting which parts of a model are causally implicated in its behavior. It enables us to analyze the mechanisms by which information flows from input to output through various model components, known as mediators. We apply this methodology to analyze gender bias in pre-trained Transformer language models. We study the role of individual neurons and attention heads in mediating gender bias across three datasets designed to gauge a model's sensitivity to gender bias. Our mediation analysis reveals that gender bias effects are (i) sparse, concentrated in a small part of the network; (ii) synergistic, amplified or repressed by different components; and (iii) decomposable into effects flowing directly from the input and indirectly through the mediators.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
