@@ -3383,3 +3383,31 @@ they say so.)
   found three blocking items in turn, each fixed; the last was a runbook wait
   before the merge of rescoring output. Evidence:
   `program/evidence/2026-10-10/q2-stage1-d59-tooling/`.
+
+## 2026-10-10 — Q2 S1a session 2: A1-9B-S2 and A1-4B-S2 ran; DR0 does not fire
+
+- One operator, from the read-only export of the freeze commit `d5f5798`
+  (`q2-stage1-rescoped-v1`, ledger row 16). Registered per-job checks only; no
+  score, success rate or harness comparison was read.
+- A1-9B-S2: VM 1051 and GPU 1053, 12:50-14:03 UTC. The VM job began at 12:50:00
+  (D57), more than 12 hours after the later session-1 job. 452 of 452 episodes
+  scored: the base, then the 11 extension blocks both session-1 jobs completed,
+  with no fill. No infrastructure loss, re-queue, cap truncation or USR1.
+  DR0 does not fire. Provenance, engine argv and the Slurm limit (110 = T_A1)
+  pass. 1.2211 GPU-h physical; 0.002702 GPU-h per episode.
+- A1-4B-S2 was rendered after A1-9B-S2's DR0. Its manifest names A1-9B-S1's,
+  A1-4B-S1's and A1-9B-S2's records and receipts by SHA-256, and `lane
+  validate` accepted it. E4's reviewer job 1061 ran from 14:05:59, after
+  A1-9B-S2 ended, so the operator waited for an empty queue and idle GPUs. Then
+  `ops/submit-pair.sh` submitted it as in session 1: verify and check-chain
+  PASS, VM 1062, test-only 1063, GPU 1064 with the session-1 4B values.
+- A1-4B-S2 ran 14:09-15:17 UTC: 452 of 452 scored, 0 losses, DR0 does not
+  fire, every check passes. 1.1286 GPU-h physical; 0.002497 GPU-h per episode.
+- No job of other work ran while an S1a job ran. While the session-2 9B pair was held, the
+  D59 dry run's CPU jobs and E4's reviewer job 1059 ran. Between the two
+  session-2 pairs, E4's reviewer job 1061 ran. Deviations: none.
+- GPU: S1a post-freeze physical 4.7300 GPU-h (O2 plus four A1 jobs). Charged
+  under D22: 474 of 477 minutes. Program total 9.6927 (ledger sum).
+- Evidence: `program/evidence/2026-10-10/q2-stage1-a1/` (`a1-9b-s2/`,
+  `a1-4b-s2/`, README extended). Next: an independent verification of the
+  session-2 checks, then the registered analysis under the D59 runbook.
