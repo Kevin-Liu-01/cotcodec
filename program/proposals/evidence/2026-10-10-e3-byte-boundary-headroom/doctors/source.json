@@ -1,0 +1,19 @@
+{
+ "doctor": "Source",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
+ "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac; arxiv.org and export.arxiv.org abstract pages, the Hugging Face model and dataset APIs, the GitHub API and raw files, aclanthology.org and nature.com reachable; 118 counted orx discover calls (frontier 62, kill-shot 24, cross-domain 27, asset 5; 2 failed with OpenAlex HTTP 429) with returned ids and raw-output SHA-256 in query-log.json; 11 OpenReview API searches, 5 web searches, 1 web fetch and metadata reads logged uncounted; synthesis made 0 counted queries; source cutoff 2026-10-10 (newest alphaXiv ids 2610.12xxx); every cited primary URL snapshotted (snapshots/).",
+ "degraded_coverage": [
+  "Semantic Scholar and the arXiv API unreachable from the Mac; the H100 host relay was not used",
+  "OpenReview per-note pages return a 403 browser challenge; every OpenReview item is abstract-only (UNVERIFIABLE_ACCESS for full text); OpenReview snapshots are HTTP 200 challenge pages that verify nothing about content",
+  "ACL Anthology only through OpenAlex DOIs and two direct pages; EMNLP 2026 proceedings not yet in the Anthology (acceptances self-reported)",
+  "patents, X, Reddit, Hacker News, Chinese- and Korean-language venues not searched; citation-graph traversal limited to OpenAlex",
+  "orx 0.2.2 reports itself outdated against 0.2.18; alphaXiv indexing lags by 2 to 3 days",
+  "several cross-domain sources at abstract or title level only (STTC, gamma, regioneR, Fraser and Marcu, Victor-Purpura, jitter); Fournier 2013 and Rasanen 2009 from landing-page snippets",
+  "the Bolmo Nature article read as HTML only; Supplementary Information not read",
+  "no FLORES+ file, checkpoint or aligner was downloaded or run; all real-data statements are metadata-based"
+ ],
+ "remediation": "After the host is quiet, Semantic Scholar forward citations for 2502.06468 and 2601.22805 through the host relay; read the ICLR 2027 submissions (B-Net, Multi-Level Transformer) when accessible."
+}

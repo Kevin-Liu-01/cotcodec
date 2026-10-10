@@ -1,0 +1,36 @@
+{
+ "url": "https://arxiv.org/abs/1910.12958",
+ "fetched_at": "2026-10-10T21:58:04Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42579,
+ "raw_sha256": "fc80569bd83ccc28f8c6237f0d2af05837786ce4303599f12a56dc9205b4e98b",
+ "raw_stored": false,
+ "extract": {
+  "title": "Sinkhorn Divergences for Unbalanced Optimal Transport",
+  "authors": [
+   "Séjourné, Thibault",
+   "Feydy, Jean",
+   "Vialard, François-Xavier",
+   "Trouvé, Alain",
+   "Peyré, Gabriel"
+  ],
+  "citation_date": "2019/10/28",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 28 Oct 2019 20:40:37 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 19 Mar 2021 08:02:09 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Mon, 16 Jan 2023 16:36:08 UTC"
+   }
+  ],
+  "abstract": "Optimal transport induces the Earth Mover's (Wasserstein) distance between probability distributions, a geometric divergence that is relevant to a wide range of problems. Over the last decade, two relaxations of optimal transport have been studied in depth: unbalanced transport, which is robust to the presence of outliers and can be used when distributions don't have the same total mass; entropy-regularized transport, which is robust to sampling noise and lends itself to fast computations using the Sinkhorn algorithm. This paper combines both lines of work to put robust optimal transport on solid ground. Our main contribution is a generalization of the Sinkhorn algorithm to unbalanced transport: our method alternates between the standard Sinkhorn updates and the pointwise application of a contractive function. This implies that entropic transport solvers on grid images, point clouds and sampled distributions can all be modified easily to support unbalanced transport, with a proof of linear convergence that holds in all settings. We then show how to use this method to define pseudo-distances on the full space of positive measures that satisfy key geometric axioms: (unbalanced) Sinkhorn divergences are differentiable, positive, definite, convex, statistically robust and avoid any \"entropic bias\" towards a shrinkage of the measures' supports.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

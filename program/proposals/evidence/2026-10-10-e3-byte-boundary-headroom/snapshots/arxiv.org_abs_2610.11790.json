@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2610.11790",
+ "fetched_at": "2026-10-10T21:58:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44122,
+ "raw_sha256": "fb3eb2af037fa0cd3dc951960dabe41b3c5eb2d53091984a9d95306853847241",
+ "raw_stored": false,
+ "extract": {
+  "title": "Easy to anticipate, hard to compute: boundary dependence finds the computed outputs that entropy patching misses",
+  "authors": [
+   "Zúñiga, Nicolás Vera"
+  ],
+  "citation_date": "2026/10/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 8 Oct 2026 12:03:45 UTC"
+   }
+  ],
+  "abstract": "Byte-level language models such as the Byte Latent Transformer (BLT) group bytes into patches and run their large global model once per patch. BLT starts a patch where a small model's next-byte entropy is high, so global compute goes where the next byte is hard to predict. We show that this rule has a systematic blind spot: positions whose type is predictable but whose value must be computed, such as the number after \"=\" in a worked math solution. Under tight patch budgets, entropy-triggered layouts skip these positions, and accuracy on them collapses. In Meta's BLT-1B with patch starts on 10% of bytes, the entropy rule puts a patch start at 16% of the computed results in GSM8K solutions and gets 19.0% of them exactly right; a boundary after each \"=\" at the same patch count gets 51.8%, and entropy combined with a label-free boundary-dependence signal gets 67.1% (default layout at 26% of bytes: 76.8%). The gap survives adapting BLT-1B to the budget with low-rank fine-tuning (32.9% vs 72.7%, three runs per rule, paired p < 1e-200) and grows with model size in byte models trained from scratch at a 10% budget: at 1M, 12M and 50M parameters, boundary dependence beats entropy on final answers by -1.6, +10.1 and +19.8 points, and at 50M it gets 35.9% of computed results against 13.9% (3 seeds each). BLT's entropy-jump rule helps neither target at 50M. The entropy trigger of Scratchpad Patching is likewise indistinguishable from random scratchpads on final answers (5.6% vs 5.9%, 5 seeds), while answer-start scratchpads give 38.1%. The effect is specific to computed values: copies and lookups gain little, and values the model cannot compute gain nothing. Boundary dependence, the rise in the model's own loss when a patch start is removed, measured per two-byte context, finds these positions without labels: combined with entropy it beats the hand-written rule on computed results.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

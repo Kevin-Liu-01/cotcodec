@@ -1,0 +1,20 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
+ "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, source tracing, cross-referencing); unreachable sources marked UNVERIFIABLE_ACCESS",
+ "claim_registry": "Proposal section 'Primary-Source Evidence', claims C01 to C52, each with locator, date, read depth and status",
+ "evidence": "Every cited primary URL snapshotted with its HTTP status and, for arXiv, its version history. Synthesis re-read in the cells' saved full texts: 2502.06468 (Secs. 3.2, 4.1, 5, 6), 2601.22805 (Secs. 3.4, 3.5), 2507.07955 (Sec. 2.2 Eq. 4, Sec. 3 Fig. 4 bullets, Chinese setup), 2512.15586 (Secs. 3.1.1, 3.2.1, 3.2.2), 2610.01921 (abstract, Sec. 1). Synthesis verified through APIs: H-Net checkpoint files, sizes, LFS hashes and missing licence; goombalab/hnet routing code (dc.py lines 92-104) and generate.py's weights_only=False; Bolmo-1B, Bwen-8B, OLMo-2, Qwen3, LaBSE and XLM-R revisions and licences; CTFAlign, SimAlign, awesome-align, OmniAlign, bolmo-core, XL-WA, MAGNET and jieba repository licences; FLORES+ revision, licence and gate. Synthesis re-ran the legacy boundary doctor (payload SHA-256 6d8c24be..., identical to the 2026-08-10 output) and checked uv.lock for H-Net dependencies (none). First-party numbers labelled (2610.11790, 2512.17083, 2608.03599's Bolmo statement). Six dossier statements corrected.",
+ "verdicts": {
+  "full_text_or_synthesis_reread_or_reproduced": 39,
+  "repository_or_api_only": 3,
+  "abstract_report_or_snippet_only": 10,
+  "of_which_unverifiable_access_full_text": 2,
+  "total_claims": 52,
+  "method": "counted from the registry's Depth column: any F or S counts as full text or synthesis; else any R or M as repository or API; else abstract"
+ },
+ "known_limits": "C18 and C19 (B-Net, Multi-Level Transformer) from OpenReview search payloads only; C33, C39, C40, C45 abstract-level; C41, C42 landing-page snippets; C08 HTML only.",
+ "remediation": "Read the Bolmo Supplementary ('Exactness of the stage 1 objective') to quantify the Bolmo-tokenizer residual; read the ICLR 2027 submissions when accessible."
+}

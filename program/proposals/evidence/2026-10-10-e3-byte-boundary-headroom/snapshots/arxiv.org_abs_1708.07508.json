@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/1708.07508",
+ "fetched_at": "2026-10-10T21:58:04Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43269,
+ "raw_sha256": "4facabee23ace33db18ba5f657eaa108d67a870f24f1b3adc9890aafc0788026",
+ "raw_stored": false,
+ "extract": {
+  "title": "Which spike train distance is most suitable for distinguishing rate and temporal coding?",
+  "authors": [
+   "Satuvuori, Eero",
+   "Kreuz, Thomas"
+  ],
+  "citation_date": "2017/08/23",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 23 Aug 2017 21:53:15 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 7 Nov 2017 18:14:38 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 21 Feb 2018 08:29:15 UTC"
+   }
+  ],
+  "abstract": "Background: It is commonly assumed in neuronal coding that repeated presentations of a stimulus to a coding neuron elicit similar responses. One common way to assess similarity are spike train distances. These can be divided into spike-resolved, such as the Victor-Purpura and the van Rossum distance, and time-resolved, e.g. the ISI-, the SPIKE- and the RI-SPIKE-distance. New Method: We use independent steady-rate Poisson processes as surrogates for spike trains with fixed rate and no timing information to address two basic questions: How does the sensitivity of the different spike train distances to temporal coding depend on the rates of the two processes and how do the distances deal with very low rates? Results: Spike-resolved distances always contain rate information even for parameters indicating time coding. This is an issue for reasonably high rates but beneficial for very low rates. In contrast, the operational range for detecting time coding of time-resolved distances is superior at normal rates, but these measures produce artefacts at very low rates. The RI-SPIKE-distance is the only measure that is sensitive to timing information only. Comparison with Existing Methods: While our results on rate-dependent expectation values for the spike-resolved distances agree with \\citet{Chicharro11}, we here go one step further and specifically investigate applicability for very low rates. Conclusions: The most appropriate measure depends on the rates of the data being analysed. Accordingly, we summarize our results in one table that allows an easy selection of the preferred measure for any kind of data.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

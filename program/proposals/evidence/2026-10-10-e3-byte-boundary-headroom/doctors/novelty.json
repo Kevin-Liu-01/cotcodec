@@ -1,0 +1,15 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "evidence": "118 counted orx discover calls across four cells (74 keyword including every closest prior's title phrase, 21 embedding with the mechanism in plain words, 23 OpenAlex), 11 OpenReview searches, 5 web searches; every closest prior read in full by at least one cell and the five gate priors re-read by synthesis. Merged verdict NARROWED (frontier, kill-shot and cross-domain cells; none OCCUPIED). No direct prior found for measuring aligned-span boundary correspondence of learned byte boundaries across translations, or for supervising a learned byte boundary head with translation spans. The measurement idea is shared with token alignability (2502.06468); the loss form with SOMBRERO (2601.22805); translation-supervised allocation with MoE router alignment (2610.01921).",
+ "why_fail": [
+  "the blind closest-prior critic and the novelty refuter have not run",
+  "the owner's own reading is that the delta over token alignability is a change of unit (learned byte boundaries) plus chance correction and budget matching; a blind critic may judge the prior the stronger contribution (cap 74)",
+  "OpenReview full texts unreadable (bot-check); ACL Anthology only through OpenAlex; no citation-graph traversal beyond OpenAlex",
+  "32 of the 150 declared queries remain for the triad, whose reserve is 30"
+ ],
+ "remediation": "Run the blind critic on blind/ and the novelty refuter; Semantic Scholar forward citations of 2502.06468 through the host relay."
+}

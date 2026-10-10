@@ -1,0 +1,34 @@
+{
+ "url": "https://arxiv.org/abs/2412.16063",
+ "fetched_at": "2026-10-10T21:58:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42348,
+ "raw_sha256": "e4d3887feacc43cade7574b7eeecf6027dabfe3cea05c3e6c709599a7c855815",
+ "raw_stored": false,
+ "extract": {
+  "title": "Examining Entropic Unbalanced Optimal Transport and Sinkhorn Divergences for Spatial Forecast Verification",
+  "authors": [
+   "Francis, Jacob J. M.",
+   "Cotter, Colin J.",
+   "Mittermaier, Marion P."
+  ],
+  "citation_date": "2024/12/20",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 20 Dec 2024 17:06:53 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 30 Apr 2025 11:12:36 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Fri, 25 Jul 2025 17:13:43 UTC"
+   }
+  ],
+  "abstract": "An optimal transport (OT) problem seeks to find the cheapest mapping between two distributions with equal total density, given the cost of transporting density from one place to another. Unbalanced OT allows for different total density in each distribution. This is the typical setting for precipitation forecast and observation data, when considering the densities as accumulated rainfall, or intensity. In this work, entropic unbalanced OT and its associated Sinkhorn divergence are examined as a spatial forecast verification method for precipitation data. It offers many attractive features, such as morphing one field into another, defining a distance between fields and providing feature based optimal assignment. It is found that the Sinkhorn divergence is robust against the common double penalty problem (a form of phase error), on average aligns with expert assessments of model performance, and allows for a variety of novel pictorial illustrations of error. It provides informative summary scores, and has few limitations to its application. Combined, these findings place unbalanced entropy regularised optimal transport and the Sinkhorn divergence as an informative method which follows geometric intuition.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

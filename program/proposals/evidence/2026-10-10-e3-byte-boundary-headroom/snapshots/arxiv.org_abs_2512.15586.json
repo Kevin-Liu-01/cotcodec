@@ -1,0 +1,36 @@
+{
+ "url": "https://arxiv.org/abs/2512.15586",
+ "fetched_at": "2026-10-10T21:58:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43179,
+ "raw_sha256": "955adc7966da819c6d5d5a4ac3801c86abcb41778db0d002f1a57eed23246d6b",
+ "raw_stored": false,
+ "extract": {
+  "title": "Bolmo: Byteifying the Next Generation of Language Models",
+  "authors": [
+   "Minixhofer, Benjamin",
+   "Murray, Tyler",
+   "Limisiewicz, Tomasz",
+   "Korhonen, Anna",
+   "Zettlemoyer, Luke",
+   "Smith, Noah A.",
+   "Ponti, Edoardo M.",
+   "Soldaini, Luca",
+   "Hofmann, Valentin"
+  ],
+  "citation_date": "2025/12/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 17 Dec 2025 16:46:11 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 9 Feb 2026 17:20:03 UTC"
+   }
+  ],
+  "abstract": "Recent advances in generative AI have been largely driven by large language models (LLMs), deep neural networks that operate over discrete units called tokens. To represent text, the vast majority of LLMs use words or word fragments as the tokens, known as subword tokenization. Subword tokenization obscures fine-grained information, which is problematic, especially for scientific data - such as computer code or biological sequences - where meaning depends on the individual characters. Models that instead operate directly on the byte encoding of text avoid these limitations, but until now they have lagged behind subword-based models in performance. Here we introduce Bolmo, a family of fully open byte-level LLMs that approach the capabilities of subword-based systems. Using a two-stage conversion procedure, we transform existing subword-based models into byte-level models with minimal additional training. The resulting models outperform prior byte-level approaches and excel on character-level reasoning tasks, while remaining competitive across standard benchmarks. By efficiently processing byte-level information, these models achieve practical inference speeds and can be adapted at low cost using the existing ecosystem around the source LLM. Our results remove a long-standing performance barrier to end-to-end byte-level language modeling, demonstrating that models operating on raw text encodings can scale competitively while offering advantages in domains requiring fine-grained textual understanding.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

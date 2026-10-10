@@ -1,0 +1,12 @@
+{
+ "url": "https://aclanthology.org/2025.naacl-short.63/",
+ "fetched_at": "2026-10-10T21:58:03Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43331,
+ "raw_sha256": "ee46cfa1f1539ae2a9f5af9bb5bc9cbd5934a4ae3fbdbbc453d86404ad979ae0",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "Beyond Literal Token Overlap: Token Alignability for Multilinguality - ACL Anthology"
+ }
+}

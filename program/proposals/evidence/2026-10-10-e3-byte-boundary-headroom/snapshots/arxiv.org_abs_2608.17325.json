@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2608.17325",
+ "fetched_at": "2026-10-10T21:58:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41533,
+ "raw_sha256": "30f7975da9f76f1d00a7caf3448d76e63d6ec40d0369feaa2e03eab888beaa08",
+ "raw_stored": false,
+ "extract": {
+  "title": "What Tokens are Learned when Tokenization is Optimized Jointly with Language Modeling?",
+  "authors": [
+   "Vemula, Saketh Reddy",
+   "Krishnamurthy, Parameswari"
+  ],
+  "citation_date": "2026/08/18",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 18 Aug 2026 03:34:56 UTC"
+   }
+  ],
+  "abstract": "Tokenization is a fundamental component of language modeling pipelines. Despite its importance, it is often fixed, even though it significantly impacts model performance across languages. In this work, we analyze what tokens are learned when tokenization is jointly optimized with language modeling. We compare tokenizer-free approaches such as SSLMs and H-Nets with fixed tokenizers across 18 typologically and script-diverse languages. Our results show that joint optimization fundamentally alters token structure. SSLMs recover morphologically aligned and contextually efficient tokens, whereas H-Nets prioritize byte-level efficiency, producing longer tokens with very low overlap with standard subword vocabularies. We further show that tokenization behavior varies across language typologies. Agglutinative languages exhibit more dynamic segmentation patterns while learning. Through downstream evaluation, with pretrained-then-finetuned BERT models, we find that SSLM-based pretokenization consistently reduces language modeling perplexity and achieves competitive downstream performance despite distinct vocabularies. Overall, tokenizer-free approaches optimize for contextual and computational efficiency rather than strict morphological structure, resulting in fundamentally different yet effective vocabularies for downstream NLP.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
