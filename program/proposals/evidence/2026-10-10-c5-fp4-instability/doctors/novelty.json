@@ -1,0 +1,15 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "evidence": "114 counted orx discover invocations across four cells and synthesis (keyword with exact terms and every closest prior's title phrase, embedding with the mechanism in plain words including the final mechanism paragraph SY-02, OpenAlex), 10 OpenReview searches, Semantic Scholar forward citations of seven works (74 unique citing works screened by title), 58 cell full-text reads and 16 synthesis re-reads; every closest prior read in full. Merged verdict NARROWED (frontier, kill-shot and cross-domain cells; none OCCUPIED). No direct prior found for a training crossing of grid with separable block-scale configurations at equal storage with seeds and a frozen tensor-level interaction prediction.",
+ "why_fail": [
+  "the blind closest-prior critic and the novelty refuter have not run",
+  "ARITH 2025 (C34) lists the same factor families for MX formats and is unread (UNVERIFIABLE_ACCESS)",
+  "the delta is narrow: three of the four factors were swept one at a time in training by 2505.19115, and the grid was varied at one scale setting by 2603.28765 and 2606.20381; blind discrimination may judge 2505.19115 the stronger contribution (cap 74)",
+  "MXFP4-MARS and Agrusa et al. abstract-only; patents and Chinese-language venues not searched"
+ ],
+ "remediation": "Run the blind critic on blind/ and the novelty refuter (36 queries remain against the 30 reserved); resolve C34 with IEEE access"
+}

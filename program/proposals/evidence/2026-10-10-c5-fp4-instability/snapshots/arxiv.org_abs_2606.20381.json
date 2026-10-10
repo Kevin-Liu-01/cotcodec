@@ -1,0 +1,35 @@
+{
+ "url": "https://arxiv.org/abs/2606.20381",
+ "fetched_at": "2026-10-10T21:57:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43565,
+ "raw_sha256": "7bd617df77280ff99fbadae5048a9b027c5dea477223ca6d6490330a4e4726c9",
+ "raw_stored": false,
+ "extract": {
+  "title": "Rethinking Shrinkage Bias in LLM FP4 Pretraining: Geometric Origin, Systemic Impact, and UFP4 Recipe",
+  "authors": [
+   "Zhao, Qian",
+   "Chen, Kunlong",
+   "Tian, Changxin",
+   "Jiang, Zhonghui",
+   "Zhang, Haitao",
+   "Yu, Chaofan",
+   "Jiang, Peijie",
+   "Gong, Mingliang",
+   "Liu, Jia",
+   "Liu, Ziqi",
+   "Zhang, Zhiqiang",
+   "Zhou, Jun"
+  ],
+  "citation_date": "2026/06/18",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 18 Jun 2026 15:40:51 UTC"
+   }
+  ],
+  "abstract": "FP4 training promises substantial reductions in memory and computation cost for LLM pretraining, yet current FP4 hardware paths and recipes, including NVIDIA Blackwell/Rubin-class systems and AMD MI350-series GPUs, remain centered on E2M1 data elements. In this study, we identify a fundamental limitation of that choice: non-uniform formats such as E2M1 inherently suffer from Shrinkage Bias, a systematic negative rounding error caused by the geometric asymmetry of their representable bins. We show that this bias accumulates multiplicatively across layers and is amplified by the Random Hadamard Transform (RHT), providing a unified explanation for the training instability observed in existing E2M1-based FP4 recipes. In contrast, uniform grids (E1M2/INT4) bypass this grid-geometry error and better convert the improved bucket utilization from RHT into higher quantization quality. Based on this finding, we propose UFP4, a uniform 4-bit training recipe that applies RHT to all three training GEMMs while restricting stochastic rounding to dY alone. On Dense 1.5B, MoE 7.9B, and MoE 124B long-run pretraining, UFP4 consistently achieves lower BF16-relative loss degradation than strong E2M1-based baselines, supported by scaling-law analysis and ablation studies. Our results suggest that future accelerators should support E1M2/INT4-style uniform 4-bit grids as first-class training primitives alongside E2M1.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

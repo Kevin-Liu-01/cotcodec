@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2103.04514",
+ "fetched_at": "2026-10-10T21:57:03Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41871,
+ "raw_sha256": "d44db908d004455994721ce28f7e67c307d61966a067a593d52073e44a005b60",
+ "raw_stored": false,
+ "extract": {
+  "title": "Nondeterminism and Instability in Neural Network Optimization",
+  "authors": [
+   "Summers, Cecilia",
+   "Dinneen, Michael J."
+  ],
+  "citation_date": "2021/03/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 8 Mar 2021 02:28:18 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 1 Jun 2021 00:54:16 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Sat, 10 Jul 2021 21:58:40 UTC"
+   }
+  ],
+  "abstract": "Nondeterminism in neural network optimization produces uncertainty in performance, making small improvements difficult to discern from run-to-run variability. While uncertainty can be reduced by training multiple model copies, doing so is time-consuming, costly, and harms reproducibility. In this work, we establish an experimental protocol for understanding the effect of optimization nondeterminism on model diversity, allowing us to isolate the effects of a variety of sources of nondeterminism. Surprisingly, we find that all sources of nondeterminism have similar effects on measures of model diversity. To explain this intriguing fact, we identify the instability of model training, taken as an end-to-end procedure, as the key determinant. We show that even one-bit changes in initial parameters result in models converging to vastly different values. Last, we propose two approaches for reducing the effects of instability on run-to-run variability.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

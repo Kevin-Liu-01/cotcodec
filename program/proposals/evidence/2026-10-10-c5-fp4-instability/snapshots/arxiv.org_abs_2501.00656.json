@@ -1,0 +1,74 @@
+{
+ "url": "https://arxiv.org/abs/2501.00656",
+ "fetched_at": "2026-10-10T21:57:03Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 48717,
+ "raw_sha256": "743e6cfd4e33b9a7731064296fb359fe2be8fbb5e1b3ddb8e08b7d38f0ebc3ca",
+ "raw_stored": false,
+ "extract": {
+  "title": "2 OLMo 2 Furious",
+  "authors": [
+   "OLMo, Team",
+   "Walsh, Pete",
+   "Soldaini, Luca",
+   "Groeneveld, Dirk",
+   "Lo, Kyle",
+   "Arora, Shane",
+   "Bhagia, Akshita",
+   "Gu, Yuling",
+   "Huang, Shengyi",
+   "Jordan, Matt",
+   "Lambert, Nathan",
+   "Schwenk, Dustin",
+   "Tafjord, Oyvind",
+   "Anderson, Taira",
+   "Atkinson, David",
+   "Brahman, Faeze",
+   "Clark, Christopher",
+   "Dasigi, Pradeep",
+   "Dziri, Nouha",
+   "Ettinger, Allyson",
+   "Guerquin, Michal",
+   "Heineman, David",
+   "Ivison, Hamish",
+   "Koh, Pang Wei",
+   "Liu, Jiacheng",
+   "Malik, Saumya",
+   "Merrill, William",
+   "Miranda, Lester James V.",
+   "Morrison, Jacob",
+   "Murray, Tyler",
+   "Nam, Crystal",
+   "Poznanski, Jake",
+   "Pyatkin, Valentina",
+   "Rangapur, Aman",
+   "Schmitz, Michael",
+   "Skjonsberg, Sam",
+   "Wadden, David",
+   "Wilhelm, Christopher",
+   "Wilson, Michael",
+   "Zettlemoyer, Luke",
+   "Farhadi, Ali",
+   "Smith, Noah A.",
+   "Hajishirzi, Hannaneh"
+  ],
+  "citation_date": "2024/12/31",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 31 Dec 2024 21:55:10 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 15 Jan 2025 01:44:16 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 8 Oct 2025 07:50:45 UTC"
+   }
+  ],
+  "abstract": "We present OLMo 2, the next generation of our fully open language models. OLMo 2 includes a family of dense autoregressive language models at 7B, 13B and 32B scales with fully released artifacts -- model weights, full training data, training code and recipes, training logs and thousands of intermediate checkpoints. In this work, we describe our modified model architecture and training recipe, focusing on techniques for achieving better training stability and improved per-token efficiency. Our updated pretraining data mixture introduces a new, specialized data mix called Dolmino Mix 1124, which significantly improves model capabilities across many downstream task benchmarks when introduced via late-stage curriculum training (i.e. specialized data during the annealing phase of pretraining). Finally, we incorporate best practices from Tülu 3 to develop OLMo 2-Instruct, focusing on permissive data and extending our final-stage reinforcement learning with verifiable rewards (RLVR). Our OLMo 2 base models sit at the Pareto frontier of performance to training compute, often matching or outperforming open-weight only models like Llama 3.1, Qwen 2.5, and Gemma 2 while using fewer FLOPs and with fully transparent training data, code, and recipe. Our fully open OLMo 2-Instruct models are competitive with open-weight only models of comparable size and even some proprietary models like GPT-3.5 Turbo and GPT 4o Mini.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

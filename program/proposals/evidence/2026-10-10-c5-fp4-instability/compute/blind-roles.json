@@ -1,0 +1,10 @@
+{
+ "proposal": "paragraph-43655420.txt",
+ "closest_prior": "paragraph-201f330b.txt",
+ "closest_prior_id": "arXiv:2505.19115 (FP4 All the Way: Fully Quantized Training of LLMs, Chmiel, Fishman, Banner and Soudry, v1 2025-05-25, v2 2025-08-10, NeurIPS 2025 spotlight per OpenReview kuzye4EPLR); full text read by the frontier and kill-shot cells and re-read by synthesis on 2026-10-10 (Abstract, Sec. 3.1, Figs. 1-3 and 7, Sec. 4, App. Table 4)",
+ "runner_up_prior_ids": [
+  "arXiv:2509.17791 (Elucidating the Design Space of FP4 Training, Hu, Luschi and Balanca, v1 2025-09-22; ICLR 2026 rejected): thousands of configurations, E2M1 fixed, 'Scale Representation is the Primary Bottleneck'; no packet written",
+  "arXiv:2603.28765 (Adaptive Block-Scaled Data Types, Cook et al., v1 2026-03-30): NVFP4 vs NVINT4 vs IF4 in W4A4G4 pretraining at 340M; no packet written"
+ ],
+ "note": "Role mapping for the recorder only. Never give this file to the critic. Both paragraphs avoid author, product and paper names and hardware identifiers."
+}

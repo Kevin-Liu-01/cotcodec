@@ -1,0 +1,9 @@
+{
+ "doctor": "Safety",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Safety, monitorability, data rights, and project red lines addressed",
+ "evidence": "FineWeb-Edu ODC-BY 1.0 (ungated, revision pinned) with attribution; Mistral-7B-v0.1 tokenizer Apache-2.0 (ungated, revision pinned), tokenizer files only; data text and captured tensors kept off the public repository (ids, hashes, configs, trajectories and metrics only); no model weights downloaded or released; no untrusted code executed (quantizers, harness and any Triton kernel are reviewed project code under D7; third-party kernels read as references only); host rule respected (no host job; read-only ssh only, for squeue and the arXiv and Semantic Scholar relays); public-repository hygiene (no credentials, no host addresses beyond the documented local registry name).",
+ "remediation": "none"
+}

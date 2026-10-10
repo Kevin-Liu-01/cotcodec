@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/NVIDIA/TransformerEngine",
+ "fetched_at": "2026-10-10T21:57:14Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 348995,
+ "raw_sha256": "9bcd4a490455048462c0200751bee1c1e83af8f3d227e059401ae3b55369be7f",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - NVIDIA/TransformerEngine: A library for accelerating Transformer models on NVIDIA GPUs, including using 8-bit and 4-bit floating point (FP8 and FP4) precision on Hopper, Ada and Blackwell GPUs, to provide better performance with lower memory utilization in both training and inference. · GitHub"
+ }
+}

@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2607.12915",
+ "fetched_at": "2026-10-10T21:57:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41141,
+ "raw_sha256": "433fc37ded1dcaf2f41227ad71f81a0d76711db5cd38d4a8b1812b3e7faab786",
+ "raw_stored": false,
+ "extract": {
+  "title": "Simulation of Custom-Precision OCP MX Block Floating-Point Formats and Arithmetic",
+  "authors": [
+   "Islam, Maliha",
+   "Mikaitis, Mantas"
+  ],
+  "citation_date": "2026/07/14",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 14 Jul 2026 15:50:40 UTC"
+   }
+  ],
+  "abstract": "We present MXsim v0.1: a MATLAB library for simulating the OCP MX block floating-point arithmetic and formats. The library is built on top of a custom-precision floating-point simulator, CPFloat, which allows custom variants of non-block IEEE 754 floating-point formats to be simulated. MXsim is a MATLAB simulator, and is targeted at mixed-precision algorithm development community to perform experimentation in OCP MX block floating-point arithmetic by using a simple and well-documented interface in MATLAB, which is especially useful when access to the latest NVIDIA and AMD GPUs is not available. Furthermore, due to full customisation of exponents, precisions of input and output formats, and the precision of the accumulator within the dot product operation, MXsim allows experimenting with custom variants of the OCP MX block floating point for research. Finally, since the bit-wise numerical behavior of OCP MX formats is not documented by GPU vendors, and the precision and rounding are not prescribed by the OCP specification itself, MXsim allows experiments with various possible settings in order to determine the effects on mixed-precision numerical algorithms.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

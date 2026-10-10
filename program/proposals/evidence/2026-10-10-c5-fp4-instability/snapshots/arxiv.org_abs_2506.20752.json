@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2506.20752",
+ "fetched_at": "2026-10-10T21:57:03Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44642,
+ "raw_sha256": "d7e62afe4021f3a1b3b03fd80747222b06aa8eece47dbafa6278e3041a46afb5",
+ "raw_stored": false,
+ "extract": {
+  "title": "Characterization and Mitigation of Training Instabilities in Microscaling Formats",
+  "authors": [
+   "Su, Huangyuan",
+   "Kwun, Mujin",
+   "Gil, Stephanie",
+   "Kakade, Sham",
+   "Anand, Nikhil"
+  ],
+  "citation_date": "2025/06/25",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 25 Jun 2025 18:25:08 UTC"
+   }
+  ],
+  "abstract": "Training large language models is an expensive, compute-bound process that must be repeated as models scale, algorithms improve, and new data is collected. To address this, next-generation hardware accelerators increasingly support lower-precision arithmetic formats, such as the Microscaling (MX) formats introduced in NVIDIA's Blackwell architecture. These formats use a shared scale within blocks of parameters to extend representable range and perform forward/backward GEMM operations in reduced precision for efficiency gains. In this work, we investigate the challenges and viability of block-scaled precision formats during model training. Across nearly one thousand language models trained from scratch -- spanning compute budgets from $2 \\times 10^{17}$ to $4.8 \\times 10^{19}$ FLOPs and sweeping over a broad range of weight-activation precision combinations -- we consistently observe that training in MX formats exhibits sharp, stochastic instabilities in the loss, particularly at larger compute scales. To explain this phenomenon, we conduct controlled experiments and ablations on a smaller proxy model that exhibits similar behavior as the language model, sweeping across architectural settings, hyperparameters, and precision formats. These experiments motivate a simple model in which multiplicative gradient bias introduced by the quantization of layer-norm affine parameters and a small fraction of activations can trigger runaway divergence. Through \\emph{in situ} intervention experiments on our proxy model, we demonstrate that instabilities can be averted or delayed by modifying precision schemes mid-training. Guided by these findings, we evaluate stabilization strategies in the LLM setting and show that certain hybrid configurations recover performance competitive with full-precision training. We release our code at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

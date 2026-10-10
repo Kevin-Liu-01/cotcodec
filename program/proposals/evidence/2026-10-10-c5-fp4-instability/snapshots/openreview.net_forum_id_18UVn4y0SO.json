@@ -1,0 +1,12 @@
+{
+ "url": "https://openreview.net/forum?id=18UVn4y0SO",
+ "fetched_at": "2026-10-10T21:57:22Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 4787,
+ "raw_sha256": "286e1789887f1f3eee540b4f5d7d5e641dbb44993cd764a79a4be374e3e08b32",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "Verifying your browser | OpenReview"
+ }
+}
