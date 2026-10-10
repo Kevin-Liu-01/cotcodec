@@ -22,8 +22,8 @@
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 16 rows). Decisions taken
-on Kevin's behalf are D1-D65 in `program/decisions.md`. GPU-hours are in
-`program/state.json` (`gpu_hours_ledger`, physical hours): 7.40 in total (S1a session 2 not yet added).
+on Kevin's behalf are D1-D66 in `program/decisions.md`. GPU-hours are in
+`program/state.json` (`gpu_hours_ledger`, physical hours): 9.80 in total.
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -34,6 +34,7 @@ on Kevin's behalf are D1-D65 in `program/decisions.md`. GPU-hours are in
 | `q3-dense-headroom-precheck-v2` | **NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base** (H1_CX 42.15, 99% 35.8-48.2); 0.6B reproduces v1 exactly and stays NOT_VIABLE; seven requirements for any K1 v3 | `program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/` |
 | `q2-action-path-v1` (+ addenda) | Invalid on C2: `chord_super_d` failed under raw PyAutoGUI; the cause is the tap's record of key events queued during GNOME Shell's synchronous grab, not delivery (D43) | `program/evidence/2026-10-08/q2-action-path-acceptance/` |
 | `q2-action-path-v2` (+ addenda) | **ACCEPTED on attempt 1** (D53): C1-C4, A1-A7 pass, independently verified in two stages; N* = 32 (rung 40 hit the host's inotify limit), so the program kill criterion applies; a whole-boot `/accessibility` failure without restart (1 of 1,245 boots) is outside every criterion | `program/evidence/2026-10-08/q2-action-path-v2-acceptance/` |
+| `q2-stage1-rescoped-v1` (S1a) | **DR2 Inconclusive** (pooled δ −3.1 pp, 90% [−8.9, +2.7]); **DR5 INCONCLUSIVE** (π_small 0.055, [0, 0.26] vs M 0.13), so no S1b; P1 falsified (no between-session excess, upper bound 0.78 pp); 1,808 episodes, 0 infrastructure losses; realized cost 0.22-0.24 of the card's high price; not externally anchored; independently verified (D66) | `program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md` |
 | `q2-evaluator-mutation-v1` | Descriptive (D35): `compare_pptx_files` fails 35 of 36 equivalent shape-order edits (30 confirmed by both raters; family FN share 40.2%); a GUI-faithful save flips 3 of 92 reference golds (confirmed); false positives few; kappa 0.34; adjudication pending | `program/evidence/2026-10-08/q2-mutation-confirm/` |
 
 Gauntlet records: K1 v2 (45, honest exit), K1 v3 (51, 55, 56; honest exit, D54), Q1 Stage 0 (45, honest exit).
@@ -43,30 +44,10 @@ audit certifies "not grossly wrong", not 1% correctness
 
 ## In progress
 
-- **Q2 S1a** (`q2-stage1-rescoped-v1`, D47, D49, D53, D55, D56): **frozen**
-  2026-10-09 as ledger row 16 (freeze commit `d5f5798`). Pre-freeze O1 and A0a
-  ran (A0a: 20 of 20 dev episodes, mean slot 220 s against the card's 743 s;
-  K_base 32, T_A1 110 min, caps 477 min = 7.95 GPU-h). Kevin signed item 17 (DR1
-  and DR5 replace the kill lines; S1a read unanchored) and the offline-setup
-  exclusions (D55); D56 signed the rest and accepted S1a's reading of D53 (iii).
-  O2 (job 1044) and A1 session 1 ran on 2026-10-09/10: 9B (1045/1047) and 4B
-  (1048/1050), 452 of 452 episodes scored each, no infrastructure loss, DR0 did
-  not fire, independently verified (D57 records two disclosures). Session 2's
-  9B pair (1051/1053) is held by Slurm until 12:50 UTC 2026-10-10; 4B follows
-  once 9B's records exist; then the registered analysis (a blind dry run on
-  synthetic records checks the frozen analysis code meanwhile).
-- **Backfill E4** (D19; D58, D60, D63): ended at an honest exit after two
-  gauntlet waves (49, 60); identification (the span verdict never tests
-  key dependence) survived both.
-- **Backfill C3** (D64, D65): ended at an honest exit after wave 1 (54; blind
-  discrimination failed, the gate is indecisive by construction, and the
-  selector arm is occupied). New backfill pauses until S1a's result, which
-  gates the Q2 studies S2 and S3. C5 waits for a D24 ruling.
-- **S1a analysis** (D59): a blind dry run found 11 defects in the frozen
-  analysis code (a fractional base score crashes the report; incomplete data
-  crash or mislead; serial rescoring; missing section 15 items). D59 fixes
-  their handling before any outcome is read: a wrapper, incomplete-data rules
-  and operator steps, built under `ops/s1a-analysis/`.
+- **Q2 next step** (D66): S1a is done (above). A CPU design study calibrated on
+  S1a's records compares successor designs within 8 GPU-h (more sessions, more
+  tasks, mixed) for decisive DR2/DR5, and sizes S2's power gate with S1a's
+  noise floor.
 - **Q3**: the dense pre-check v2 result (NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base)
   is Q3's Stage 0 outcome. K1 v3 ended at an honest exit after its third
   gauntlet wave (D54; 45, 51, 55, 56): its chance of any verdict stayed at
@@ -79,7 +60,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D65, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D66, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 
