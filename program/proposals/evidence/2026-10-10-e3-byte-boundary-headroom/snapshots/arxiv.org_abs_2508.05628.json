@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2508.05628",
+ "fetched_at": "2026-10-10T21:58:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41200,
+ "raw_sha256": "a46aa889ddc305772e99bcb883c9892271ff237f95161fc624d1609f345ee8cd",
+ "raw_stored": false,
+ "extract": {
+  "title": "H-Net++: Hierarchical Dynamic Chunking for Tokenizer-Free Language Modelling in Morphologically-Rich Languages",
+  "authors": [
+   "Zakershahrak, Mehrdad",
+   "Ghodratnama, Samira"
+  ],
+  "citation_date": "2025/08/07",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 7 Aug 2025 17:59:01 UTC"
+   }
+  ],
+  "abstract": "Byte-level language models eliminate fragile tokenizers but face computational challenges in morphologically-rich languages (MRLs), where words span many bytes. We propose H-NET++, a hierarchical dynamic-chunking model that learns linguistically-informed segmentation through end-to-end training. Key innovations include: (1) a lightweight Transformer context-mixer (1.9M parameters) for cross-chunk attention, (2) a two-level latent hyper-prior for document-level consistency, (3) specialized handling of orthographic artifacts (e.g. Persian ZWNJ), and (4) curriculum-based training with staged sequence lengths. On a 1.4B-token Persian corpus, H-NET++ achieves state-of-the-art results: 0.159 BPB reduction versus BPE-based GPT-2-fa (12% better compression), 5.4pp gain on ParsGLUE, 53% improved robustness to ZWNJ corruption, and 73.8% F1 on gold morphological boundaries. Our learned chunks align with Persian morphology without explicit supervision, demonstrating that hierarchical dynamic chunking provides an effective tokenizer-free solution for MRLs while maintaining computational efficiency.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

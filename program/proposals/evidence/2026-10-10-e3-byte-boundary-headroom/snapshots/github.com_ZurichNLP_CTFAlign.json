@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/ZurichNLP/CTFAlign",
+ "fetched_at": "2026-10-10T21:58:16Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 340910,
+ "raw_sha256": "fd1e8f1eaed22b464c5aa2e38e0e5523b46bdcdd8c0b3eea3a470790604ce82c",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - ZurichNLP/CTFAlign: Package for training- and segmentation-free document-level word alignment. · GitHub"
+ }
+}

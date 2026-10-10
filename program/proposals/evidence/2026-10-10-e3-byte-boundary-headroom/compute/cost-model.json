@@ -1,0 +1,87 @@
+{
+ "assumptions": {
+  "sentences_per_language": 2009,
+  "bytes_per_sentence_estimate": {
+   "eng_Latn": 130,
+   "cmn_Hans": 125,
+   "kor_Hang": 140,
+   "pol_Latn": 140
+  },
+  "high_bytes_factor": 1.5,
+  "checkpoints": {
+   "cartesia-ai/hnet_2stage_XL": {
+    "params": 1600000000.0,
+    "file_gb": 6.41,
+    "role": "English learned boundaries (decision arm, EN side)"
+   },
+   "cartesia-ai/hnet_2stage_XL_chinese": {
+    "params": 1755000000.0,
+    "file_gb": 7.02,
+    "role": "Chinese learned boundaries (decision arm, ZH side)"
+   },
+   "cartesia-ai/hnet_1stage_XL": {
+    "params": 1300000000.0,
+    "file_gb": 5.08,
+    "role": "English 1-stage boundaries (descriptive arm)"
+   }
+  },
+  "central_flop_fraction_of_upper_bound": 0.3333333333333333,
+  "effective_tflops": {
+   "central": 30.0,
+   "high": 20.0
+  },
+  "overhead_minutes": {
+   "container_start_and_env_check": {
+    "central": 3.0,
+    "high": 4.0
+   },
+   "per_checkpoint_load_and_kernel_jit": {
+    "central": 2.5,
+    "high": 4.0
+   },
+   "aligners_two_models_6027_pairs": {
+    "central": 2.0,
+    "high": 3.0
+   },
+   "hashing_and_writing": {
+    "central": 1.5,
+    "high": 2.0
+   }
+  },
+  "measured_on_host": "nothing: no H-Net, Bolmo or aligner throughput exists on this host"
+ },
+ "estimate": {
+  "central": {
+   "bytes": 1074815,
+   "flops": "3.336e+15",
+   "compute_minutes": 1.85,
+   "overhead_minutes": 14.0,
+   "total_minutes": 15.85,
+   "gpu_hours_one_gpu": 0.264
+  },
+  "high": {
+   "bytes": 1612222,
+   "flops": "1.501e+16",
+   "compute_minutes": 12.51,
+   "overhead_minutes": 21.0,
+   "total_minutes": 33.51,
+   "gpu_hours_one_gpu": 0.558
+  }
+ },
+ "caps": {
+  "smoke_job_cap_gpu_h": 0.2,
+  "smoke_job_scope": "one GPU: imports, weights_only load of all three checkpoints, one forward of the 2-stage XL model on 64 synthetic byte strings (no FLORES text), a determinism check (two runs bit-identical), and a kill-and-resume check of the per-checkpoint output files",
+  "probe_job_cap_gpu_h": 0.6,
+  "probe_cap_over_high_estimate": 1.075,
+  "probe_cap_rule": "cap >= 1.05 x high estimate: 0.6 >= 0.586",
+  "sum_of_caps_gpu_h": 0.8,
+  "d22_counting": "sum of registered caps of every job whatever its outcome; the overlay image build is a host CPU job (0 GPU-h); CPU analysis runs on the development Mac (0 GPU-h)",
+  "threshold_gpu_h": 8.0,
+  "under_threshold": true
+ },
+ "cpu_analysis_estimate": {
+  "pbd_scoring": "6,027 sentence pairs x about 26 boundary systems x 2 aligners x about 5 ms = about 26 CPU-minutes (NumPy; measured order of magnitude from compute/instrument_sim.py on the development Mac under load average 40-85)",
+  "uot_secondary": "300 devtest pairs per language x 10 systems x 6 evaluator calls x about 0.27 s (one call measured at 0.266 s under load average about 85) = about 4.0 CPU-hours, about 30 minutes on 8 processes",
+  "bootstrap": "B = 2,000 sentence-cluster resamples of per-sentence counts: seconds"
+ }
+}

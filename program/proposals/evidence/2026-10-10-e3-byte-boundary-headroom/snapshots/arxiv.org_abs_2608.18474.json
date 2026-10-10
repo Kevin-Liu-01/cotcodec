@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2608.18474",
+ "fetched_at": "2026-10-10T21:58:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43070,
+ "raw_sha256": "269a5fdf64b588a8d10697421b9a671a58b7d0f88edc401a69da310f521c21a5",
+ "raw_stored": false,
+ "extract": {
+  "title": "OmniAlign: A Unified Multilingual Aligner for Word and Sentence Alignment",
+  "authors": [
+   "Yang, Mengpeng",
+   "Yang, Jingxu",
+   "Chen, Chao",
+   "Xia, Tian",
+   "Sun, Yabo",
+   "Liu, Qiang"
+  ],
+  "citation_date": "2026/08/19",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 19 Aug 2026 03:02:43 UTC"
+   }
+  ],
+  "abstract": "Cross-lingual sequence alignment is fundamental for building and exploiting parallel corpora, spanning mappings from documents and sentences down to words and subwords. Existing tools, however, typically specialize in a single granularity, so practitioners often need separate systems for word- and sentence-level alignment---especially in multilingual and long-text settings. We present OmniAlign, a unified multilingual aligner that supports both word-level and sentence-level alignment with a single lightweight model. Built on an encoder-only backbone with strong long-context modeling, OmniAlign induces word alignments from contextualized token similarity matrices, and obtains document-level $m$--$n$ sentence alignments via sentence embeddings combined with dynamic programming. To balance fine-grained alignment accuracy and sentence-representation quality, we use a four-stage training pipeline: alignment-oriented continued pre-training, self-supervised learning, supervised fine-tuning on human annotations, and sentence-embedding distillation from a strong multilingual teacher. Experiments show that OmniAlign achieves highly competitive performance on both word- and sentence-alignment benchmarks and generalizes well to unseen language pairs. Surprisingly, later-stage supervised fine-tuning on short texts further improves alignment quality while retaining the long-context understanding acquired in earlier training, keeping the model robust on long-text word alignment. \\normalsize {\\color{blue}\\textbf{Code}: this https URL}\\par {\\color{blue}\\textbf{Model}: this https URL}",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

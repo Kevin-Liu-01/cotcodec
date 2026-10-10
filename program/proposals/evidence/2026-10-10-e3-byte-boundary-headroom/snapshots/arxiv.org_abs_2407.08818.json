@@ -1,0 +1,34 @@
+{
+ "url": "https://arxiv.org/abs/2407.08818",
+ "fetched_at": "2026-10-10T21:58:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43059,
+ "raw_sha256": "c62e51afc369226e727470c006fbc31cea1fe81a935fe9beb73de692b4171618",
+ "raw_stored": false,
+ "extract": {
+  "title": "MAGNET: Improving the Multilingual Fairness of Language Models with Adaptive Gradient-Based Tokenization",
+  "authors": [
+   "Ahia, Orevaoghene",
+   "Kumar, Sachin",
+   "Gonen, Hila",
+   "Hofmann, Valentin",
+   "Limisiewicz, Tomasz",
+   "Tsvetkov, Yulia",
+   "Smith, Noah A."
+  ],
+  "citation_date": "2024/07/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 11 Jul 2024 18:59:21 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 17 Nov 2024 00:41:01 UTC"
+   }
+  ],
+  "abstract": "In multilingual settings, non-Latin scripts and low-resource languages are usually disadvantaged in terms of language models' utility, efficiency, and cost. Specifically, previous studies have reported multiple modeling biases that the current tokenization algorithms introduce to non-Latin script languages, the main one being over-segmentation. In this work, we propose MAGNET; multilingual adaptive gradient-based tokenization to reduce over-segmentation via adaptive gradient-based subword tokenization. MAGNET learns to predict segment boundaries between byte tokens in a sequence via sub-modules within the model, which act as internal boundary predictors (tokenizers). Previous gradient-based tokenization methods aimed for uniform compression across sequences by integrating a single boundary predictor during training and optimizing it end-to-end through stochastic reparameterization alongside the next token prediction objective. However, this approach still results in over-segmentation for non-Latin script languages in multilingual settings. In contrast, MAGNET offers a customizable architecture where byte-level sequences are routed through language-script-specific predictors, each optimized for its respective language script. This modularity enforces equitable segmentation granularity across different language scripts compared to previous methods. Through extensive experiments, we demonstrate that in addition to reducing segmentation disparities, MAGNET also enables faster language modelling and improves downstream utility.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

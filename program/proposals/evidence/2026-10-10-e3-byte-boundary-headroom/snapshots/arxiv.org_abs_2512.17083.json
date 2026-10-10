@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2512.17083",
+ "fetched_at": "2026-10-10T21:58:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42768,
+ "raw_sha256": "7d2d51eca4797e5b9ad02f4072a0061e7b361fc792cca8837c49dd94155763d9",
+ "raw_stored": false,
+ "extract": {
+  "title": "When F1 Fails: Granularity-Aware Evaluation for Dialogue Topic Segmentation",
+  "authors": [
+   "Coen, Michael H."
+  ],
+  "citation_date": "2025/12/18",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 18 Dec 2025 21:29:43 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 24 Dec 2025 18:05:57 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 31 Dec 2025 08:52:33 UTC"
+   }
+  ],
+  "abstract": "Dialogue topic segmentation supports summarization, retrieval, memory management, and conversational continuity. Despite decades of work, evaluation practice remains dominated by strict boundary matching and F1-based metrics. Modern large language model (LLM) based conversational systems increasingly rely on segmentation to manage conversation history beyond fixed context windows. In such systems, unstructured context accumulation degrades efficiency and coherence. This paper introduces an evaluation framework that reports boundary density and segment alignment diagnostics (purity and coverage) alongside window-tolerant F1 (W-F1). By separating boundary scoring from boundary selection, we evaluate segmentation quality across density regimes rather than at a single operating point. Cross-dataset evaluation shows that reported performance differences often reflect annotation granularity mismatch rather than boundary placement quality alone. We evaluate structurally distinct segmentation strategies across eight dialogue datasets spanning task-oriented, open-domain, meeting-style, and synthetic interactions. Boundary-based metrics are strongly coupled to boundary density: threshold sweeps produce larger W-F1 changes than switching between methods. These findings support viewing topic segmentation as a granularity selection problem rather than prediction of a single correct boundary set. This motivates separating boundary scoring from boundary selection for analyzing and tuning segmentation under varying annotation granularities.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

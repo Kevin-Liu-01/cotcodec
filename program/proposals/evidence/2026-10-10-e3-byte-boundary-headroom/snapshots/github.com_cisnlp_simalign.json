@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/cisnlp/simalign",
+ "fetched_at": "2026-10-10T21:58:18Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 307202,
+ "raw_sha256": "06a73cdbfec5d0439f24ebf3f6aa924bf84ae73d9ed134667d7b2d5d6e9dc423",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - cisnlp/simalign: [EMNLP 2020] Obtain Word Alignments using Pretrained Language Models (e.g., mBERT) · GitHub"
+ }
+}

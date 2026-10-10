@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/cartesia-ai/hnet_1stage_XL",
+ "fetched_at": "2026-10-10T21:58:22Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 87644,
+ "raw_sha256": "605848624ef805410dd3c80850069745a2e729798901e6a0b985cc89c02ae207",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "cartesia-ai/hnet_1stage_XL · Hugging Face"
+ }
+}

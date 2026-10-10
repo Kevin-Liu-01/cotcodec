@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/FacebookAI/xlm-roberta-base",
+ "fetched_at": "2026-10-10T21:58:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 258014,
+ "raw_sha256": "7dfbfa392d9877f9210a44d3888da6f5739d560dde46d488a4fee581e8c4b5b4",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "FacebookAI/xlm-roberta-base · Hugging Face"
+ }
+}

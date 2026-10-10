@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2201.00730",
+ "fetched_at": "2026-10-10T21:58:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41538,
+ "raw_sha256": "ab7167b4d928a82961f97f2f489635e5e06820e56911b903f7470e6cf051628a",
+ "raw_stored": false,
+ "extract": {
+  "title": "Faster Unbalanced Optimal Transport: Translation invariant Sinkhorn and 1-D Frank-Wolfe",
+  "authors": [
+   "Séjourné, Thibault",
+   "Vialard, François-Xavier",
+   "Peyré, Gabriel"
+  ],
+  "citation_date": "2022/01/03",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 3 Jan 2022 16:07:57 UTC"
+   }
+  ],
+  "abstract": "Unbalanced optimal transport (UOT) extends optimal transport (OT) to take into account mass variations to compare distributions. This is crucial to make OT successful in ML applications, making it robust to data normalization and outliers. The baseline algorithm is Sinkhorn, but its convergence speed might be significantly slower for UOT than for OT. In this work, we identify the cause for this deficiency, namely the lack of a global normalization of the iterates, which equivalently corresponds to a translation of the dual OT potentials. Our first contribution leverages this idea to develop a provably accelerated Sinkhorn algorithm (coined 'translation invariant Sinkhorn') for UOT, bridging the computational gap with OT. Our second contribution focusses on 1-D UOT and proposes a Frank-Wolfe solver applied to this translation invariant formulation. The linear oracle of each steps amounts to solving a 1-D OT problems, resulting in a linear time complexity per iteration. Our last contribution extends this method to the computation of UOT barycenter of 1-D measures. Numerical simulations showcase the convergence speed improvement brought by these three approaches.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2608.03599",
+ "fetched_at": "2026-10-10T21:58:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40231,
+ "raw_sha256": "bca4e81e32691c4265bba4b52d4def9110f88a696f0aa8953b12952407b2ef81",
+ "raw_stored": false,
+ "extract": {
+  "title": "Disentangling Language Modeling and Boundaries",
+  "authors": [
+   "Haltiuk, Mykola"
+  ],
+  "citation_date": "2026/08/04",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 4 Aug 2026 12:51:21 UTC"
+   }
+  ],
+  "abstract": "Byte-level language models are usually argued for on the grounds of robustness, multilingual fairness, and character-level skills. We point to a different, structural advantage: because they read and write bytes, any two of them share an output space, so knowledge transfer between them is exact and independent of how either was originally tokenized. We hypothesize that the two distributions a byte-level model produces, one over the next byte, one over where its patch boundaries fall, can be disentangled and changed almost independently. A model could absorb a teacher's capability while keeping its own boundaries, or change how it places those boundaries while keeping its capabilities. We lay out the two experiments that would settle the hypothesis, alongside preliminary measurements of the properties they rest on. We argue that the community should move toward a byte-level interface as a shared standard: if the hypothesis holds, then once byte-level models are the norm, transferring capabilities and reshaping boundaries between them become cheap and routine, free of the per-model tokenizer that blocks them today.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

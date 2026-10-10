@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2605.28128",
+ "fetched_at": "2026-10-10T21:58:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40913,
+ "raw_sha256": "3c738561b26eb788c9c7aaa460119a5a132dfa54f467269ed0a2b6282863674c",
+ "raw_stored": false,
+ "extract": {
+  "title": "Chinese Word Boundary Recovery through Character Alignment Projection",
+  "authors": [
+   "Wang, Lusha",
+   "Li, Yuchen",
+   "Yuan, Su",
+   "Park, Jungyeul"
+  ],
+  "citation_date": "2026/05/27",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 27 May 2026 08:17:09 UTC"
+   }
+  ],
+  "abstract": "Chinese word segmentation is especially fragile in non-standard text, where language learner errors and other character-level divergences disrupt the word boundaries assumed by downstream annotation and evaluation. This paper formulates Chinese word boundary recovery as an alignment-based projection task. Given a noisy source sentence and a cleaner target counterpart, we first align the two strings at the character level and then project target-side word boundaries back onto the source. Beyond the recovery method itself, we introduce two evaluation resources: a manually checked learner Chinese benchmark based on MuCGEC and a controlled synthetic benchmark derived from the Chinese Penn Treebank. Experiments show that direct segmentation remains vulnerable to compound fragmentation in learner input, whereas the proposed two step projection method corrects many over-segmentation errors by using the corrected target to recover source-side word spans. The results show that word boundary recovery is distinct from ordinary segmentation and that alignment projection provides a principled mechanism for stabilizing Chinese annotation and evaluation under noisy input.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

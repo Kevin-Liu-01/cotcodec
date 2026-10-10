@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2608.21023",
+ "fetched_at": "2026-10-10T21:58:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41415,
+ "raw_sha256": "45dac5c8ded605be54e862e6285e08f61efc112b203cd57941db718e4e666b86",
+ "raw_stored": false,
+ "extract": {
+  "title": "Scaling Unsupervised Word Alignment to Documents via Structural Constraints",
+  "authors": [
+   "Wastl, Michelle",
+   "Vamvas, Jannis",
+   "Sennrich, Rico"
+  ],
+  "citation_date": "2026/08/21",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 21 Aug 2026 12:13:21 UTC"
+   }
+  ],
+  "abstract": "Word alignment has traditionally been studied between sentences, but many cross-lingual tasks increasingly require correspondences across full documents. While recent multilingual embedding models can encode long inputs, we show that applying algorithms designed for sentences directly to documents leads to performance degradation. To address this, we introduce CTFAlign, a lightweight, training-free approach for document-level word alignment. CTFAlign applies a coarse-to-fine refinement strategy that restricts the alignment search space to semantically similar regions. Additionally, we introduce MDPAlign, a simpler alternative that constrains alignments by position with a main diagonal prior. Both approaches operate directly on full documents without relying on sentence segmentation or sentence alignment. We evaluate these methods across six language pairs varying in typological distance, resourcedness, and document length. Averaged over three models, CTFAlign reduces word alignment error rate from 0.412 to 0.326. These gains transfer downstream, leading to improvements in document-level translation coverage evaluation and recognition of semantic differences. We release CTFAlign as a Python package and make the code and data to reproduce our experiments publicly available.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

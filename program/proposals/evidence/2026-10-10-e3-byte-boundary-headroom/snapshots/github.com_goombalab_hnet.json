@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/goombalab/hnet",
+ "fetched_at": "2026-10-10T21:58:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 283324,
+ "raw_sha256": "7bb97db5c9d9633cc0265532a2de44d12ca8ce14c95a336b3c367132b8349576",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - goombalab/hnet: H-Net: Hierarchical Network with Dynamic Chunking · GitHub"
+ }
+}

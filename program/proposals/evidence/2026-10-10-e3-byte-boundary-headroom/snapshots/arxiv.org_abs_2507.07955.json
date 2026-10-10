@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2507.07955",
+ "fetched_at": "2026-10-10T21:58:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43567,
+ "raw_sha256": "a155e73b86f1824bdbc9fee8dedd2c280b5f11fc034f44c7a8e0e1b6d0dadc17",
+ "raw_stored": false,
+ "extract": {
+  "title": "Dynamic Chunking for End-to-End Hierarchical Sequence Modeling",
+  "authors": [
+   "Hwang, Sukjun",
+   "Wang, Brandon",
+   "Gu, Albert"
+  ],
+  "citation_date": "2025/07/10",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 10 Jul 2025 17:39:37 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 15 Jul 2025 09:06:11 UTC"
+   }
+  ],
+  "abstract": "Major progress on language models (LMs) in recent years has largely resulted from moving away from specialized models designed for specific tasks, to general models based on powerful architectures (e.g. the Transformer) that learn everything from raw data. Despite this trend, pre-processing steps such as tokenization remain a barrier to true end-to-end foundation models. We introduce a collection of new techniques that enable a dynamic chunking mechanism which automatically learns content- and context- dependent segmentation strategies learned jointly with the rest of the model. Incorporating this into an explicit hierarchical network (H-Net) allows replacing the (implicitly hierarchical) tokenization-LM-detokenization pipeline with a single model learned fully end-to-end. When compute- and data- matched, an H-Net with one stage of hierarchy operating at the byte level outperforms a strong Transformer language model operating over BPE tokens. Iterating the hierarchy to multiple stages further increases its performance by modeling multiple levels of abstraction, demonstrating significantly better scaling with data and matching the token-based Transformer of twice its size. H-Nets pretrained on English show significantly increased character-level robustness, and qualitatively learn meaningful data-dependent chunking strategies without any heuristics or explicit supervision. Finally, the H-Net's improvement over tokenized pipelines is further increased in languages and modalities with weaker tokenization heuristics, such as Chinese and code, or DNA sequences (nearly 4x improvement in data efficiency over baselines), showing the potential of true end-to-end models that learn and scale better from unprocessed data.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

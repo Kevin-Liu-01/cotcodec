@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/SapienzaNLP/XL-WA",
+ "fetched_at": "2026-10-10T21:58:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 287839,
+ "raw_sha256": "8a133f47f215ff38d93821203785082459113a25eef6667a3741a58cd7da80b2",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - SapienzaNLP/XL-WA · GitHub"
+ }
+}
