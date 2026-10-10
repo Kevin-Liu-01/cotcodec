@@ -1,0 +1,62 @@
+{
+ "first_divergence": {
+  "between": {
+   "environment": 512
+  },
+  "within": {
+   "environment": 255,
+   "serving": 1
+  }
+ },
+ "first_divergence_by_size": {
+  "4B": {
+   "between": {
+    "environment": 256
+   },
+   "within": {
+    "environment": 128
+   }
+  },
+  "9B": {
+   "between": {
+    "environment": 256
+   },
+   "within": {
+    "environment": 127,
+    "serving": 1
+   }
+  }
+ },
+ "inputs": {
+  "guard": "6b43dee9fae1ae5ac28457f7a0eb062dc4abfb62c37e09b4f1e298a4efdaa4a2",
+  "plan": "a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806",
+  "records": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+  "run_dirs": {
+   "A1-4B-S1": "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1048",
+   "A1-4B-S2": "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1062",
+   "A1-9B-S1": "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1045",
+   "A1-9B-S2": "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1051"
+  }
+ },
+ "kind_at_step": {
+  "between": {
+   "environment@1": 512
+  },
+  "within": {
+   "environment@1": 255,
+   "serving@2": 1
+  }
+ },
+ "labels": {
+  "external_anchor": "not externally anchored",
+  "incomplete": null,
+  "incomplete_reasons": [],
+  "source": "guard.json (sha256 6b43dee9fae1ae5ac28457f7a0eb062dc4abfb62c37e09b4f1e298a4efdaa4a2)"
+ },
+ "note": "descriptive (section 9 item 11): the guest's top-bar clock is on every screenshot, so nearly every pair parts at step 1 as 'environment'",
+ "scored_base_final_records": 512,
+ "set": "base tasks; scored final records (the last attempt of each slot); the final attempt's steps.jsonl, looked up in its own job's run directory",
+ "step_logs_missing": 0,
+ "step_logs_missing_slots": [],
+ "step_logs_read": 512
+}

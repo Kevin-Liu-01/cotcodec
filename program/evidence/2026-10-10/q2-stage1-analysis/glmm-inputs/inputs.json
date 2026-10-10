@@ -1,0 +1,58 @@
+{
+ "completed_extension_blocks": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11
+ ],
+ "guard": "6b43dee9fae1ae5ac28457f7a0eb062dc4abfb62c37e09b4f1e298a4efdaa4a2",
+ "labels": {
+  "external_anchor": "not externally anchored",
+  "incomplete": null,
+  "incomplete_reasons": [],
+  "source": "guard.json (sha256 6b43dee9fae1ae5ac28457f7a0eb062dc4abfb62c37e09b4f1e298a4efdaa4a2)"
+ },
+ "plan": "a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806",
+ "records": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+ "registered_reading": "primary (the base set): section 11's default analysis set and glmm.py's 'the analysis set'; the secondary fit (base plus completed extension blocks) is reported beside it",
+ "sets": {
+  "primary": {
+   "rows": 512,
+   "sessions": [
+    "4B:S1",
+    "4B:S2",
+    "9B:S1",
+    "9B:S2"
+   ],
+   "sha256": "fa26e44cf8f9a21206df85034e32497e5569e1757b9aa0a5cf904c61f07d03cb",
+   "sizes": [
+    "4B",
+    "9B"
+   ],
+   "tasks": 32
+  },
+  "secondary": {
+   "rows": 1808,
+   "sessions": [
+    "4B:S1",
+    "4B:S2",
+    "9B:S1",
+    "9B:S2"
+   ],
+   "sha256": "fa6e3ac3a6654c63fbfa52aaf544c17f2edc4e73cca86f95ab8d9dba52f7d984",
+   "sizes": [
+    "4B",
+    "9B"
+   ],
+   "tasks": 113
+  }
+ },
+ "writer": "glmm.rows_from_records(records.final_records(records), tasks) + glmm.write_csv"
+}

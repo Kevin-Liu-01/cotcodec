@@ -1,0 +1,22 @@
+{
+ "argv": [
+  "sh",
+  "-c",
+  "cp /opt/q2/r-packages.json /opt/q2/r-packages.sha256 /out/ || exit 90; for f in primary secondary; do ( Rscript /src/harness/q2_stage1/glmm.R /inputs/$f.csv /out/glmm-$f.json 200 42 >/out/$f.log 2>&1; echo $? >/out/$f.exit ) & done; wait; for f in primary secondary; do test \"$(cat /out/$f.exit)\" = 0 || exit 91; done"
+ ],
+ "command": [
+  "sbatch",
+  "--parsable",
+  "--time=02:00:00",
+  "--job-name=s1a-glmm",
+  "--export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID=sha256:b15584f3954f1c83fc3e5067e29c57c5c55e3b2a50ef28e4e68a394e595aabed,Q2M_ARGV_JSON_HEX=5b227368222c20222d63222c20226370202f6f70742f71322f722d7061636b616765732e6a736f6e202f6f70742f71322f722d7061636b616765732e736861323536202f6f75742f207c7c20657869742039303b20666f72206620696e207072696d617279207365636f6e646172793b20646f20282052736372697074202f7372632f6861726e6573732f71325f7374616765312f676c6d6d2e52202f696e707574732f24662e637376202f6f75742f676c6d6d2d24662e6a736f6e20323030203432203e2f6f75742f24662e6c6f6720323e26313b206563686f20243f203e2f6f75742f24662e657869742029202620646f6e653b20776169743b20666f72206620696e207072696d617279207365636f6e646172793b20646f2074657374205c222428636174202f6f75742f24662e65786974295c22203d2030207c7c20657869742039313b20646f6e65225d,Q2M_SOURCE=/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca,Q2M_RUN_DIR=/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-out,Q2M_INPUTS=/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-inputs",
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca/infra/slurm/host-single-node/s1a-cpu.sbatch"
+ ],
+ "labels": {
+  "external_anchor": "not externally anchored",
+  "incomplete": null,
+  "incomplete_reasons": [],
+  "source": "guard.json (sha256 6b43dee9fae1ae5ac28457f7a0eb062dc4abfb62c37e09b4f1e298a4efdaa4a2)"
+ },
+ "slurm_job": "1074"
+}

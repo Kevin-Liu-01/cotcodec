@@ -3384,6 +3384,34 @@ they say so.)
   before the merge of rescoring output. Evidence:
   `program/evidence/2026-10-10/q2-stage1-d59-tooling/`.
 
+## 2026-10-10 — Q2 S1a session 2: A1-9B-S2 and A1-4B-S2 ran; DR0 does not fire
+
+- One operator, from the read-only export of the freeze commit `d5f5798`
+  (`q2-stage1-rescoped-v1`, ledger row 16). Registered per-job checks only; no
+  score, success rate or harness comparison was read.
+- A1-9B-S2: VM 1051 and GPU 1053, 12:50-14:03 UTC. The VM job began at 12:50:00
+  (D57), more than 12 hours after the later session-1 job. 452 of 452 episodes
+  scored: the base, then the 11 extension blocks both session-1 jobs completed,
+  with no fill. No infrastructure loss, re-queue, cap truncation or USR1.
+  DR0 does not fire. Provenance, engine argv and the Slurm limit (110 = T_A1)
+  pass. 1.2211 GPU-h physical; 0.002702 GPU-h per episode.
+- A1-4B-S2 was rendered after A1-9B-S2's DR0. Its manifest names A1-9B-S1's,
+  A1-4B-S1's and A1-9B-S2's records and receipts by SHA-256, and `lane
+  validate` accepted it. E4's reviewer job 1061 ran from 14:05:59, after
+  A1-9B-S2 ended, so the operator waited for an empty queue and idle GPUs. Then
+  `ops/submit-pair.sh` submitted it as in session 1: verify and check-chain
+  PASS, VM 1062, test-only 1063, GPU 1064 with the session-1 4B values.
+- A1-4B-S2 ran 14:09-15:17 UTC: 452 of 452 scored, 0 losses, DR0 does not
+  fire, every check passes. 1.1286 GPU-h physical; 0.002497 GPU-h per episode.
+- No job of other work ran while an S1a job ran. While the session-2 9B pair was held, the
+  D59 dry run's CPU jobs and E4's reviewer job 1059 ran. Between the two
+  session-2 pairs, E4's reviewer job 1061 ran. Deviations: none.
+- GPU: S1a post-freeze physical 4.7300 GPU-h (O2 plus four A1 jobs). Charged
+  under D22: 474 of 477 minutes. Program total 9.6927 (ledger sum).
+- Evidence: `program/evidence/2026-10-10/q2-stage1-a1/` (`a1-9b-s2/`,
+  `a1-4b-s2/`, README extended). Next: an independent verification of the
+  session-2 checks, then the registered analysis under the D59 runbook.
+
 ## 2026-10-10 — E4 gate gauntlet run 2 (D60): score 60, honest exit; E4 ends (branch `gauntlet/e4-d19`, not merged)
 
 - Fresh run under D60 in workflow `wf_65f4f5ac-a69`, with new budgets: queries
@@ -3521,3 +3549,77 @@ they say so.)
     - delta rows for PAIR, 2610.00296 and Xpbbetf285.
   - Alternatively, an admission above 8 GPU-h under D24 (about 13 to 26
     GPU-h of caps for an AMC- or AIME-level workload).
+
+## 2026-10-10 — Q2 S1a registered analysis: DR2 Inconclusive, DR5 INCONCLUSIVE (S1b not admitted); not externally anchored
+
+- One analyst followed `ops/s1a-analysis/RUNBOOK.md` at `6d85529` (D59, D61, D62)
+  on the host, from the read-only export of the freeze commit `d5f5798`. The code
+  of record was unchanged and provenance passed. Every Slurm job was CPU-only
+  with no GRES: rescoring 1065-1068 (`--time=08:00:00`, 3 h 08-3 h 12 each,
+  exit 0), report 1071, identity 1072, first divergence 1073, GLMM 1074 and
+  assembler 1075, 15:23-18:56 UTC. Labels: data complete, "not externally
+  anchored".
+- Primary set (base, 32 tasks, 512 episodes): success 4B 28.91% (H-OSW-fixed)
+  and 26.56% (H-GA); 9B 32.81% and 28.91%. δ = −3.12 pp (paired t p = 0.367,
+  90% t interval [−8.91, 2.66]). X sign flip p = 0.459. D_b = 11.33% [5.86,
+  17.19] and D_w = 12.50%. Excess −1.17 pp (one-sided UB 0.78). π_small = 0.055
+  (one-sided [0.000, 0.260]).
+- Rules: DR0 and DR1 do not fire. DR2 is Inconclusive: not Present, and not
+  near-equivalent (the δ interval crosses −7.5 pp and the π bound is above
+  0.12). DR4 does not fire (at most 0.002702 GPU-h per episode against
+  0.011274). DR5 is INCONCLUSIVE against M = 0.13, so S1b does not go to the
+  gauntlet (D47). DR-A: ANCHOR-UNAVAILABLE. Predictions: P1 falsified; P2-P5
+  stand.
+- Sensitivities: corrected verdicts 0 flips. Metric-exception-missing (1
+  episode) and postconfig server-error-missing (0 episodes, D56) are identical
+  to the primary. With flagged tasks excluded, δ is −2.50 pp; DR2 and DR5 read
+  the same. Secondary set (113 tasks): δ −1.11 pp, π_small 0.084 [0.020, 0.162];
+  it enters no rule. GLMM: the primary fit (the registered reading) did not
+  converge and its LRT was not computed. The secondary fit converged (task:harness
+  LRT p 0.045), which is not a decision input. 9B session shift +5.47 pp
+  (p 0.016), which no rule reads.
+- Infrastructure over 1,808 episodes: 0 losses, 0 restarts, 0 retried, slow or
+  undelivered observations, 0 postconfig server errors. Truncation at most
+  0.44% (no label). Rescoring 452/452 rows per job; 16 secondary verdicts fell
+  back to live scores (`53ad5833` needs live state).
+- Deviation: D59 (i)'s wrapper only. The identity check passed in fractional
+  mode (14 fractional base scores). D61 and D62 were not triggered. Merges and
+  the report reproduced byte for byte on the Mac. The runbook's independent
+  verification (step 12) and a second check of the session-2 per-job lane
+  checks are still open.
+- GPU: none for the analysis; ledger unchanged at 9.746.
+- Evidence: `program/evidence/2026-10-10/q2-stage1-analysis/`; results:
+  `program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md`. Waiting on Kevin:
+  whether to commission the registered follow-up after INCONCLUSIVE (more
+  sessions at 4B and 9B, as a new proposal with its own gauntlet).
+
+## 2026-10-10 — Q2 S1a results: review fixes (no estimand, rule or decision changes)
+
+- Two review lenses (a recompute and a claims check) read `RESULTS.md` at
+  `23fd973`. The recompute reproduced every output it could re-run off the host
+  (not the GLMM fits) and raised four informational items, one a rounding slip.
+  The claims check raised four minor and three informational items. All are
+  fixed in `RESULTS.md` and the analysis README; none is rejected.
+- Added: the D57 disclosures (both 4B GPU jobs' receipt `75ebfc53...`; S2 9B
+  begin moved to 12:50:00), the D63 disclosure (reviewer job 1061 in the
+  session-2 gap) and D64 for job 1070 during the CPU analysis. Licence scope:
+  this host, image and lane (D53), and section 19's harness x session effect
+  inside δ. P1's falsification is decided by 4B; 9B's session test rejects
+  (p 0.016) for these two sessions.
+- GLMM reworded: the registered (primary-set) fit did not converge, so no
+  registered GLMM evidence; the secondary-set LRT (p 0.045, boundary 0.023) is
+  secondary, non-confirmatory evidence of harness-specific task variance, not
+  a decision input. The section 10.1 attribution of "no interaction claim" is
+  dropped.
+- DR3: C_z (−0.0078 each size) and V_z added; ρ undefined by the frozen code
+  (V_z ≤ 0), 0.667 for 4B if section 9 item 8's formula is read literally.
+  Corrected-verdict sources split as 511 + 1 (merge rule) on the base and
+  1,791 + 1 + 16 live on the secondary set. 9B/H-OSW-fixed mean steps 11.80.
+  The CPU-only basis of the analysis jobs restated (receipt fields are
+  constants written after the guards).
+- New descriptive file `q2-stage1-analysis/post-review/post-review.json`
+  (`post_review.py`, committed files only): setup, evaluation and engine queue
+  times (section 2 item 5; the engine queued no request), the exact sign-flip
+  p-values (X 0.4531, session 4B 0.5625, 9B 0.0156; registered Monte Carlo
+  0.4588, 0.5631, 0.0163) and the DR3 inputs.
+- The runbook's step-12 verification still has no committed record. GPU: none.

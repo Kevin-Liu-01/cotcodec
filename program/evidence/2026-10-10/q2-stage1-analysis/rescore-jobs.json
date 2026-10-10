@@ -1,0 +1,71 @@
+{
+ "argv": [
+  "/opt/venv-lock/bin/python",
+  "-m",
+  "harness.q2_stage1.rescore",
+  "capture",
+  "--run-dir",
+  "/ro/run",
+  "--osworld",
+  "/inputs/OSWorld",
+  "--file-cache",
+  "/inputs/file_cache_1e112283/files",
+  "--out",
+  "/out/rescored.jsonl"
+ ],
+ "jobs": {
+  "A1-4B-S1": {
+   "command": [
+    "sbatch",
+    "--parsable",
+    "--time=08:00:00",
+    "--job-name=s1a-rescore-1048",
+    "--export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID=sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230,Q2M_ARGV_JSON_HEX=5b222f6f70742f76656e762d6c6f636b2f62696e2f707974686f6e222c20222d6d222c20226861726e6573732e71325f7374616765312e726573636f7265222c202263617074757265222c20222d2d72756e2d646972222c20222f726f2f72756e222c20222d2d6f73776f726c64222c20222f696e707574732f4f53576f726c64222c20222d2d66696c652d6361636865222c20222f696e707574732f66696c655f63616368655f31653131323238332f66696c6573222c20222d2d6f7574222c20222f6f75742f726573636f7265642e6a736f6e6c225d,Q2M_SOURCE=/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca,Q2M_RUN_DIR=/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1048,Q2M_INPUTS=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs,Q2M_EXTRA_RO=/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1048:/ro/run",
+    "/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca/infra/slurm/host-single-node/s1a-cpu.sbatch"
+   ],
+   "run_dir": "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1048",
+   "slurm_job": "1066",
+   "vm_job": "1048"
+  },
+  "A1-4B-S2": {
+   "command": [
+    "sbatch",
+    "--parsable",
+    "--time=08:00:00",
+    "--job-name=s1a-rescore-1062",
+    "--export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID=sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230,Q2M_ARGV_JSON_HEX=5b222f6f70742f76656e762d6c6f636b2f62696e2f707974686f6e222c20222d6d222c20226861726e6573732e71325f7374616765312e726573636f7265222c202263617074757265222c20222d2d72756e2d646972222c20222f726f2f72756e222c20222d2d6f73776f726c64222c20222f696e707574732f4f53576f726c64222c20222d2d66696c652d6361636865222c20222f696e707574732f66696c655f63616368655f31653131323238332f66696c6573222c20222d2d6f7574222c20222f6f75742f726573636f7265642e6a736f6e6c225d,Q2M_SOURCE=/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca,Q2M_RUN_DIR=/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1062,Q2M_INPUTS=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs,Q2M_EXTRA_RO=/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1062:/ro/run",
+    "/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca/infra/slurm/host-single-node/s1a-cpu.sbatch"
+   ],
+   "run_dir": "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1062",
+   "slurm_job": "1068",
+   "vm_job": "1062"
+  },
+  "A1-9B-S1": {
+   "command": [
+    "sbatch",
+    "--parsable",
+    "--time=08:00:00",
+    "--job-name=s1a-rescore-1045",
+    "--export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID=sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230,Q2M_ARGV_JSON_HEX=5b222f6f70742f76656e762d6c6f636b2f62696e2f707974686f6e222c20222d6d222c20226861726e6573732e71325f7374616765312e726573636f7265222c202263617074757265222c20222d2d72756e2d646972222c20222f726f2f72756e222c20222d2d6f73776f726c64222c20222f696e707574732f4f53576f726c64222c20222d2d66696c652d6361636865222c20222f696e707574732f66696c655f63616368655f31653131323238332f66696c6573222c20222d2d6f7574222c20222f6f75742f726573636f7265642e6a736f6e6c225d,Q2M_SOURCE=/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca,Q2M_RUN_DIR=/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1045,Q2M_INPUTS=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs,Q2M_EXTRA_RO=/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1045:/ro/run",
+    "/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca/infra/slurm/host-single-node/s1a-cpu.sbatch"
+   ],
+   "run_dir": "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1045",
+   "slurm_job": "1065",
+   "vm_job": "1045"
+  },
+  "A1-9B-S2": {
+   "command": [
+    "sbatch",
+    "--parsable",
+    "--time=08:00:00",
+    "--job-name=s1a-rescore-1051",
+    "--export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID=sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230,Q2M_ARGV_JSON_HEX=5b222f6f70742f76656e762d6c6f636b2f62696e2f707974686f6e222c20222d6d222c20226861726e6573732e71325f7374616765312e726573636f7265222c202263617074757265222c20222d2d72756e2d646972222c20222f726f2f72756e222c20222d2d6f73776f726c64222c20222f696e707574732f4f53576f726c64222c20222d2d66696c652d6361636865222c20222f696e707574732f66696c655f63616368655f31653131323238332f66696c6573222c20222d2d6f7574222c20222f6f75742f726573636f7265642e6a736f6e6c225d,Q2M_SOURCE=/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca,Q2M_RUN_DIR=/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1051,Q2M_INPUTS=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs,Q2M_EXTRA_RO=/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1051:/ro/run",
+    "/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca/infra/slurm/host-single-node/s1a-cpu.sbatch"
+   ],
+   "run_dir": "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1051",
+   "slurm_job": "1067",
+   "vm_job": "1051"
+  }
+ },
+ "time_limit": "08:00:00"
+}

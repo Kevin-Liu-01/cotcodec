@@ -1,0 +1,52 @@
+{
+ "code_of_record": {
+  "files": 75,
+  "mismatched": [],
+  "missing": [],
+  "pass": true
+ },
+ "environment": {
+  "implementation": "CPython",
+  "machine": "x86_64",
+  "numpy": "1.21.5",
+  "python": "3.10.12",
+  "scipy": "1.8.0",
+  "system": "Linux"
+ },
+ "export": "/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca",
+ "export_named_by_commit": true,
+ "freeze_commit": "d5f57988ab94e0c098feddb744b78b73b5ad88ca",
+ "frozen_plan": {
+  "expected_file_sha256": "a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806",
+  "expected_plan_sha256": "6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51",
+  "export_copy_equal": true,
+  "file_sha256": "a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806",
+  "pass": true,
+  "plan_sha256": "6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51",
+  "recomputed_plan_sha256": "6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51"
+ },
+ "inputs": {},
+ "inputs_missing": [],
+ "ops_commit": "6d85529b1f84e1c9bd6a01b693c0eab76d0054c6",
+ "ops_files": {
+  "RUNBOOK.md": "7a7a71deb7ea844181ecb8fd205ee80bb18e011f73786811f34c5965bd16dd55",
+  "assemble_s15.py": "7cf6bea0f3d186256b63ad6c4c02ff70d26d74463aa72ac0ef4c694dbc8a2402",
+  "check_identity.py": "01cabbdfaf3a227de7a53481984f96805489a8d8899be74ef80cd8d068345eb2",
+  "cpu-step.sbatch": "b826727239a2faf5245b58a6b50bf7e68e068c7357d79833c6c967643663770d",
+  "first_divergence.py": "d0a650df21be640bc5c583ed10df9614770f84477387efae067150b0145cefaa",
+  "glmm_inputs.py": "72504b713610339ae2782098b2ba4b76cdd61c354541355e748aa30171ed555d",
+  "provenance.py": "277dead758515c0a39673be65281ddfb2629113cd0c92d54c3f2a59724b118ab",
+  "rescore_jobs.py": "569b1c4a69e78bf67413fdec2426a041886e42aff0be8f017da3bdd6001da985",
+  "run_report.py": "19fa772d7f3319be28e5092f2323006c96e3b8feff6eaafd325a4bf9680997b4",
+  "s1a_ops.py": "aee6c485ade3d06384dbdb589ee85f153d33e1d32c4737eb90caf1f16faa126e"
+ },
+ "pass": true,
+ "registration": {
+  "expected_sha256": "f9db7cc38c4954b3144ac5a1afaf7bf5366449081b06c80bf89888bdf653afd8",
+  "experiment_id": "q2-stage1-rescoped-v1",
+  "ledger_row_hash": "bc5e88a0043065f93e3ea494633b6c3cd119973708e250110e7bcf4856507d0f",
+  "pass": true,
+  "sha256": "f9db7cc38c4954b3144ac5a1afaf7bf5366449081b06c80bf89888bdf653afd8"
+ },
+ "schema": "q2-s1a-ops-v1-provenance"
+}

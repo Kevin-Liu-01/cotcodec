@@ -1,0 +1,271 @@
+{
+ "code_of_record": {
+  "files": 75,
+  "mismatched": [],
+  "missing": [],
+  "pass": true
+ },
+ "environment": {
+  "implementation": "CPython",
+  "machine": "x86_64",
+  "numpy": "1.21.5",
+  "python": "3.10.12",
+  "scipy": "1.8.0",
+  "system": "Linux"
+ },
+ "export": "/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca",
+ "export_named_by_commit": true,
+ "freeze_commit": "d5f57988ab94e0c098feddb744b78b73b5ad88ca",
+ "frozen_plan": {
+  "expected_file_sha256": "a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806",
+  "expected_plan_sha256": "6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51",
+  "export_copy_equal": true,
+  "file_sha256": "a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806",
+  "pass": true,
+  "plan_sha256": "6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51",
+  "recomputed_plan_sha256": "6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51"
+ },
+ "inputs": {
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/a1.jsonl": {
+   "bytes": 6243273,
+   "sha256": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/costs.json": {
+   "bytes": 2176,
+   "sha256": "8a03f13c6fdb795032f7245e159cac6f7f2d12aa6e68a72f95384bd2358a08d5"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/dr0-1045.json": {
+   "bytes": 527,
+   "sha256": "0bccd1f95c3dae92c1a601d79201f323f0389012d303fb7d52b7142df750e1da"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/dr0-1048.json": {
+   "bytes": 527,
+   "sha256": "7db4f60a6709503831497e7f7be75bbdb4caa144f5298eb726c405c9ba74c806"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/dr0-1051.json": {
+   "bytes": 527,
+   "sha256": "9d45ef217eb3e9cae3cd38adddffa1e726ef67b5da46511e74f5c2a82997a944"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/dr0-1062.json": {
+   "bytes": 527,
+   "sha256": "7a7ed9f045334e2905badedfc975f3165a586375675bcc1d21fb262af8176e95"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/dr0-exits.txt": {
+   "bytes": 48,
+   "sha256": "2e19175fc76c490a0acc8ab641ba4bcfe3e8b575a64bc6e70d7dee8c70f7a4e2"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh": {
+   "bytes": 851,
+   "sha256": "638eec8bd890e91bbbe1699e26ad6570f07f68eaedc706d4a0504d7a2a64d502"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/first-divergence.json": {
+   "bytes": 1703,
+   "sha256": "dcd6744ee2b68f444ddd8909a9a42933838ec05498cfd4a160963467ee1439fa"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-inputs/inputs.json": {
+   "bytes": 1343,
+   "sha256": "4c439520f9da708ce826a09f59a14d90c1d30c11eb0109c35ff5ec2df706ed76"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-inputs/primary.csv": {
+   "bytes": 30499,
+   "sha256": "fa26e44cf8f9a21206df85034e32497e5569e1757b9aa0a5cf904c61f07d03cb"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-inputs/secondary.csv": {
+   "bytes": 107611,
+   "sha256": "fa6e3ac3a6654c63fbfa52aaf544c17f2edc4e73cca86f95ab8d9dba52f7d984"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-job.json": {
+   "bytes": 1888,
+   "sha256": "ba5fc02524f9ce19b63af5c21680655d24ffcbdc0a60cdfc8db35bd26315ac81"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-out/glmm-primary.json": {
+   "bytes": 2669,
+   "sha256": "c753afdf731b71c84945be13bf4a8c4a7794954409ce87ed0eb4711d71107752"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-out/glmm-secondary.json": {
+   "bytes": 2725,
+   "sha256": "69faad13e6a23148bcd0caf6bfd9367ce258e6c1c524adf6aeaaa12453861303"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-out/primary.exit": {
+   "bytes": 2,
+   "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-out/r-packages.json": {
+   "bytes": 1170,
+   "sha256": "abb8871de4549732cd396dc60fc1f2aec78bf1fffad788cb841e8bf61668bfc7"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-out/receipt-1074.json": {
+   "bytes": 1467,
+   "sha256": "8add955dda757cdf48f19c07b15a638d0e8df6c0404441f144c21d6828e82f26"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-out/secondary.exit": {
+   "bytes": 2,
+   "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/glmm-summary.json": {
+   "bytes": 3493,
+   "sha256": "9691c846f3fb34f7e9936f8f461becdae6b3c7cae8f064579dd3d7dc0d080be3"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/identity/identity.json": {
+   "bytes": 3370,
+   "sha256": "b24902ac14f53852e05ab775f4a685284876978fb8d0a64e560e65b879c7bb3e"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/merged-1045.jsonl": {
+   "bytes": 1560891,
+   "sha256": "75c6e557333ce3700adf2dbae09c68c92a9547510e7c707e1d8ddda04b6463ae"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/merged-1048.jsonl": {
+   "bytes": 1560294,
+   "sha256": "63fa0b7667bf3764b3c82b5dc48eb6baa27245f431a7b799c611f7be24b3169c"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/merged-1051.jsonl": {
+   "bytes": 1560903,
+   "sha256": "f3c1d35731f25ef0dcbbcd15c392df99fa55ea91d069d6794624101df1f002ce"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/merged-1062.jsonl": {
+   "bytes": 1561185,
+   "sha256": "1dd691aa179f6c004f173cbca564e93a5063f01b72f58720e797f22493af082f"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/provenance-pre.json": {
+   "bytes": 2363,
+   "sha256": "01a6c4fae09ad6170c0c5e1951376b1d0d932294775642e821ea01c781dfca06"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/report/guard.json": {
+   "bytes": 6397,
+   "sha256": "6b43dee9fae1ae5ac28457f7a0eb062dc4abfb62c37e09b4f1e298a4efdaa4a2"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/report/report-guarded.json": {
+   "bytes": 68654,
+   "sha256": "6bda751e55c049b9edbd3613d9004f8ab2285a43b2ca890274991c74de7ee655"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/report/report.json": {
+   "bytes": 64009,
+   "sha256": "9c4d483aec6dfc9316f1d3a2d1798aaf1c8ed5c57ba5365cecc0015bad3e8d5b"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1045/receipt-1065.json": {
+   "bytes": 1288,
+   "sha256": "306bb18ba16290a012e9d529b6bfe0df68e27e87a7073428f38f52d00149405a"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1045/rescored.jsonl": {
+   "bytes": 148803,
+   "sha256": "652c0447010078fdb650b38105329aee78581d794db4c4a8aa180fbc022cf39f"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1048/receipt-1066.json": {
+   "bytes": 1288,
+   "sha256": "f1defaf12520ee1ffd6d60c0fa25b5efee53d112b09a00be7148945ec41b18f8"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1048/rescored.jsonl": {
+   "bytes": 148848,
+   "sha256": "2b1a0b8c1e446736bed138fcda0421ac9beb82822a77d29d88372a7b508edfd1"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1051/receipt-1067.json": {
+   "bytes": 1288,
+   "sha256": "ef5f4ac3a1263b336fc07a9e6cb88c831877009fff5a27e1557d88a5a8151641"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1051/rescored.jsonl": {
+   "bytes": 148653,
+   "sha256": "e6dbfc7965143807751607ef93abcdd00bf4df03d1cc0126c792fbd6cf0a1593"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1062/receipt-1068.json": {
+   "bytes": 1288,
+   "sha256": "9befb5cf70dc06e4b327168ab846de541939798d8a3f280d55e0086529832d5c"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-1062/rescored.jsonl": {
+   "bytes": 148593,
+   "sha256": "f1eb94f6617b2f8bff3bbf10acde8e5a4824f04bd0bc11ac700039814de5ec33"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-coverage.json": {
+   "bytes": 3727,
+   "sha256": "61213f197ce7a6f6dd4a40cbf67cddb4e3fea6f9a194f5d41406fc3550533a41"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/rescore-jobs.json": {
+   "bytes": 5434,
+   "sha256": "2a352486538ef36765e3ec68b785ab9e23e12f73c2d5ae1cab542159fc028926"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/s15.json": {
+   "bytes": 85639,
+   "sha256": "f09a8031988133e2d4d4eb3e392d6fc66fa10cc102fa5a3d121436fefdffbcfa"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1045/episodes.jsonl": {
+   "bytes": 1512478,
+   "sha256": "a05dbf8473b83afef8522402e776460ff702e0fae2730f99c25f3978a51f7fc1"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1045/lane-receipt.json": {
+   "bytes": 22357,
+   "sha256": "692b9a2a60c0ab7924cbe13874ae9b05812eae2ed46a37e240734d673802d812"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1045/manifest.json": {
+   "bytes": 162765,
+   "sha256": "d4a0743cc2044130384c9aac6fc07584fa80f0f43b7f070cbe6315f671192fcf"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1048/episodes.jsonl": {
+   "bytes": 1512044,
+   "sha256": "733d73fdc49b7582aedb4f09e91a8e07c54c83941496e980f18fb668266b17bd"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1048/lane-receipt.json": {
+   "bytes": 22361,
+   "sha256": "9cf0950282b6206b148e54543dbb1e879208fa8caacef80985d1a7d0a9a5dc18"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1048/manifest.json": {
+   "bytes": 163231,
+   "sha256": "54b803d3da18831fd41a20871170770fe53b6e2ff5e87fc245427f3b108fdb5e"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1051/episodes.jsonl": {
+   "bytes": 1512580,
+   "sha256": "53559050bdcf66ddc4ee28208aa33d60b5e22db52b3aadf0207a3193a5d53f2a"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1051/lane-receipt.json": {
+   "bytes": 20674,
+   "sha256": "d7e8575b33ba2dc53dafcfcb65882da8334d1920796e1b070fbbf8c4487cb241"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1051/manifest.json": {
+   "bytes": 125309,
+   "sha256": "7b342d20bda98aea979d1c39224b6f37212369fe526a448434a4fde75d8f3dc2"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1062/episodes.jsonl": {
+   "bytes": 1512898,
+   "sha256": "1b33883129f012009e2ff3a5c7ef2d2093d00b8f562cca1f8d309b56978de4c2"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1062/lane-receipt.json": {
+   "bytes": 20686,
+   "sha256": "06bb05aae9dcdc82b9c5973c5735ca58640c1e110ed098766e2790005c33fffe"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1062/manifest.json": {
+   "bytes": 125771,
+   "sha256": "f8440455a5213b5acbc79e9db9f29f7dc37a98dc38e564d3755ec7b3e92d4beb"
+  },
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca/program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json": {
+   "bytes": 152682,
+   "sha256": "a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806"
+  }
+ },
+ "inputs_missing": [],
+ "labels": {
+  "external_anchor": "not externally anchored",
+  "incomplete": null,
+  "incomplete_reasons": [],
+  "source": "guard.json (sha256 6b43dee9fae1ae5ac28457f7a0eb062dc4abfb62c37e09b4f1e298a4efdaa4a2)"
+ },
+ "ops_commit": "6d85529b1f84e1c9bd6a01b693c0eab76d0054c6",
+ "ops_files": {
+  "RUNBOOK.md": "7a7a71deb7ea844181ecb8fd205ee80bb18e011f73786811f34c5965bd16dd55",
+  "assemble_s15.py": "7cf6bea0f3d186256b63ad6c4c02ff70d26d74463aa72ac0ef4c694dbc8a2402",
+  "check_identity.py": "01cabbdfaf3a227de7a53481984f96805489a8d8899be74ef80cd8d068345eb2",
+  "cpu-step.sbatch": "b826727239a2faf5245b58a6b50bf7e68e068c7357d79833c6c967643663770d",
+  "first_divergence.py": "d0a650df21be640bc5c583ed10df9614770f84477387efae067150b0145cefaa",
+  "glmm_inputs.py": "72504b713610339ae2782098b2ba4b76cdd61c354541355e748aa30171ed555d",
+  "provenance.py": "277dead758515c0a39673be65281ddfb2629113cd0c92d54c3f2a59724b118ab",
+  "rescore_jobs.py": "569b1c4a69e78bf67413fdec2426a041886e42aff0be8f017da3bdd6001da985",
+  "run_report.py": "19fa772d7f3319be28e5092f2323006c96e3b8feff6eaafd325a4bf9680997b4",
+  "s1a_ops.py": "aee6c485ade3d06384dbdb589ee85f153d33e1d32c4737eb90caf1f16faa126e"
+ },
+ "pass": true,
+ "registration": {
+  "expected_sha256": "f9db7cc38c4954b3144ac5a1afaf7bf5366449081b06c80bf89888bdf653afd8",
+  "experiment_id": "q2-stage1-rescoped-v1",
+  "ledger_row_hash": "bc5e88a0043065f93e3ea494633b6c3cd119973708e250110e7bcf4856507d0f",
+  "pass": true,
+  "sha256": "f9db7cc38c4954b3144ac5a1afaf7bf5366449081b06c80bf89888bdf653afd8"
+ },
+ "schema": "q2-s1a-ops-v1-provenance"
+}
