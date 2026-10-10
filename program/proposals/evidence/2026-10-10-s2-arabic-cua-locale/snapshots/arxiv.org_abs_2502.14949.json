@@ -1,0 +1,37 @@
+{
+ "url": "https://arxiv.org/abs/2502.14949",
+ "fetched_at": "2026-10-10T21:54:18Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44546,
+ "raw_sha256": "f50c5ce391b16fe47070e7b86d7727a2aa49f98f20e912e2280528bda72e3588",
+ "raw_stored": false,
+ "extract": {
+  "title": "KITAB-Bench: A Comprehensive Multi-Domain Benchmark for Arabic OCR and Document Understanding",
+  "authors": [
+   "Heakl, Ahmed",
+   "Sohail, Abdullah",
+   "Ranjan, Mukul",
+   "Hossam, Rania",
+   "Ahmad, Ghazi Shazan",
+   "El-Geish, Mohamed",
+   "Maher, Omar",
+   "Shen, Zhiqiang",
+   "Khan, Fahad",
+   "Khan, Salman"
+  ],
+  "citation_date": "2025/02/20",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 20 Feb 2025 18:41:23 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 27 Jun 2025 14:31:41 UTC"
+   }
+  ],
+  "abstract": "With the growing adoption of Retrieval-Augmented Generation (RAG) in document processing, robust text recognition has become increasingly critical for knowledge extraction. While OCR (Optical Character Recognition) for English and other languages benefits from large datasets and well-established benchmarks, Arabic OCR faces unique challenges due to its cursive script, right-to-left text flow, and complex typographic and calligraphic features. We present KITAB-Bench, a comprehensive Arabic OCR benchmark that fills the gaps in current evaluation systems. Our benchmark comprises 8,809 samples across 9 major domains and 36 sub-domains, encompassing diverse document types including handwritten text, structured tables, and specialized coverage of 21 chart types for business intelligence. Our findings show that modern vision-language models (such as GPT-4o, Gemini, and Qwen) outperform traditional OCR approaches (like EasyOCR, PaddleOCR, and Surya) by an average of 60% in Character Error Rate (CER). Furthermore, we highlight significant limitations of current Arabic OCR models, particularly in PDF-to-Markdown conversion, where the best model Gemini-2.0-Flash achieves only 65% accuracy. This underscores the challenges in accurately recognizing Arabic text, including issues with complex fonts, numeral recognition errors, word elongation, and table structure detection. This work establishes a rigorous evaluation framework that can drive improvements in Arabic document analysis methods and bridge the performance gap with English OCR technologies.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

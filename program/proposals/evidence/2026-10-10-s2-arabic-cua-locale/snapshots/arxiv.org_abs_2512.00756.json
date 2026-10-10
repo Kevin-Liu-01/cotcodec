@@ -1,0 +1,39 @@
+{
+ "url": "https://arxiv.org/abs/2512.00756",
+ "fetched_at": "2026-10-10T21:54:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43444,
+ "raw_sha256": "0b1f490ba928e16beba377bc15aecd833f1a77889cf78f7de521ba36281d1d9d",
+ "raw_stored": false,
+ "extract": {
+  "title": "MPR-GUI: Benchmarking and Enhancing Multilingual Perception and Reasoning in GUI Agents",
+  "authors": [
+   "Chen, Ruihan",
+   "Li, Qiming",
+   "Feng, Xiaocheng",
+   "Zhong, Weihong",
+   "Yang, Xiaoliang",
+   "Gu, Yuxuan",
+   "Zhou, Zekun",
+   "Lu, Yunfei",
+   "Ren, Haoyu",
+   "Chen, Kun",
+   "Tu, Dandan",
+   "Qin, Bing"
+  ],
+  "citation_date": "2025/11/30",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 30 Nov 2025 06:47:33 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 28 Apr 2026 03:32:32 UTC"
+   }
+  ],
+  "abstract": "Large Vision-Language Models (LVLMs) have shown strong potential as multilingual Graphical User Interface (GUI) agents, as evidenced by existing GUI benchmarks. However, these benchmarks exhibit two primary limitations: (1) although Perception and Reasoning (P&R) capabilities are fundamental for GUI agents, current benchmarks lack fine-grained diagnostics to identify which specific capabilities lead to task failures, hindering targeted improvements; (2) existing benchmarks fail to provide a strictly aligned cross-lingual evaluation environment, introducing confounding factors that prevent isolating the language impact on GUI agent performance. To address these issues, we propose the Multilingual P&R GUI Benchmark (MPR-GUI-Bench), featuring strictly aligned environments across six languages and eight fine-grained P&R tasks. Our benchmark reveals consistent P&R gaps between English and non-English settings, particularly on reasoning-intensive tasks. To leverage the superior English P&R capabilities for bridging cross-lingual gaps, we identify layers sensitive to language and propose GUI-XLI, a GUI Cross-Lingual Intervention method that aligns non-English hidden states with their English counterparts at these layers during inference. Experiments show that GUI-XLI effectively reduces the cross-lingual gaps, with an average gain of 6.5% in non-English settings.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

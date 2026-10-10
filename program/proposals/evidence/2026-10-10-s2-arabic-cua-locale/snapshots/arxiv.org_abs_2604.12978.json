@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2604.12978",
+ "fetched_at": "2026-10-10T21:54:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42312,
+ "raw_sha256": "4b9baf376cbe2b28caf1ba1b1d7a9835935320c9a42f74cdbc904ef1715cf47b",
+ "raw_stored": false,
+ "extract": {
+  "title": "GlotOCR Bench: OCR Models Still Struggle Beyond a Handful of Unicode Scripts",
+  "authors": [
+   "Kargaran, Amir Hossein",
+   "Nikeghbal, Nafiseh",
+   "Diesner, Jana",
+   "Yvon, François",
+   "Schütze, Hinrich"
+  ],
+  "citation_date": "2026/04/14",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 14 Apr 2026 17:12:41 UTC"
+   }
+  ],
+  "abstract": "Optical character recognition (OCR) has advanced rapidly with the rise of vision-language models, yet evaluation has remained concentrated on a small cluster of high- and mid-resource scripts. We introduce GlotOCR Bench, a comprehensive benchmark evaluating OCR generalization across 100+ Unicode scripts. Our benchmark comprises clean and degraded image variants rendered from real multilingual texts. Images are rendered using fonts from the Google Fonts repository, shaped with HarfBuzz and rasterized with FreeType, supporting both LTR and RTL scripts. Samples of rendered images were manually reviewed to verify correct rendering across all scripts. We evaluate a broad suite of open-weight and proprietary vision-language models and find that most perform well on fewer than ten scripts, and even the strongest frontier models fail to generalize beyond thirty scripts. Performance broadly tracks script-level pretraining coverage, suggesting that current OCR systems rely on language model pretraining as much as on visual recognition. Models confronted with unfamiliar scripts either produce random noise or hallucinate characters from similar scripts they already know. We release the benchmark and pipeline for reproducibility. Pipeline Code: this https URL, Benchmark: this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

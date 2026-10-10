@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2609.28565",
+ "fetched_at": "2026-10-10T21:54:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44187,
+ "raw_sha256": "78751a154486d0f415f8ff2b3f6e177fcee14c352065df55ff439b792c1d7529",
+ "raw_stored": false,
+ "extract": {
+  "title": "When Explanations Cannot Be Read: Measuring and Correcting SHAP and LIME Rendering for Right-to-Left Languages",
+  "authors": [
+   "Zia, Rameesha",
+   "Malik, Muhammad Shahid Iqbal"
+  ],
+  "citation_date": "2026/09/23",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 23 Sep 2026 11:04:09 UTC"
+   }
+  ],
+  "abstract": "Post hoc explanation methods such as SHAP and LIME are widely used to interpret text classifiers, but their visualizations are mainly designed for left-to-right languages. When applied to right-to-left (RTL) languages such as Urdu, Arabic, Persian, and Hebrew, the attribution values remain mathematically valid, while their visual presentation fails. Tokens appear out of sequence, connected letterforms break apart, and plot layouts do not follow the natural reading direction. This study addresses this gap as a visualization problem rather than a limitation of the explanation methods themselves. We present SHAP-RTL, a rendering layer that corrects reading direction and script shaping in SHAP and LIME visualizations, with per-language font selection, while preserving the original attribution values, feature ordering, and model outputs. The approach is evaluated on Urdu, Arabic, Hebrew, and Persian hate and offensive-language datasets using TF-IDF and logistic regression classifiers. Rendering correctness is measured by an OCR round trip over 200 feature words per language. Default rendering yields character error rates of 0.820 to 0.979, meaning the label no longer carries its token; the common reshape-and-reorder workaround fails for Urdu at 0.998, worse than no correction; and the Matplotlib 3.11.0 text rewrite inverts that workaround, while SHAP-RTL remains correct under both versions. The framework also verbalizes the same attributions as short contextual explanations in the reader's language, constrained to the identified features. Evaluation in this paper concerns rendering correctness; assessment of the generated explanations is left to future work. The study highlights the importance of language-aware visualization in making post hoc explainability more accessible across different writing systems.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

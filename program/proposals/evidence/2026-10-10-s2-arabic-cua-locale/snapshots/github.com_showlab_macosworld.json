@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/showlab/macosworld",
+ "fetched_at": "2026-10-10T21:54:24Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 355840,
+ "raw_sha256": "dd7262b3940556081ce77afae8ba8a5ee5097607fbcc3946986f9129126b5646",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - showlab/macosworld · GitHub"
+ }
+}

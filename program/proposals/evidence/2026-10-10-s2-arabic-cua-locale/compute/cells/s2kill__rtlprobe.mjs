@@ -1,0 +1,22 @@
+import { chromium } from '/Users/kevinliu/repos/Relay/node_modules/playwright-core/index.mjs';
+const app='http://127.0.0.1:14318', control='http://127.0.0.1:14319', token='REDACTED_LOCAL_TEST_TOKEN';
+const OUT='/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/s2kill';
+const s = await (await fetch(control+'/sessions',{method:'POST',headers:{authorization:`Bearer ${token}`,'content-type':'application/json'},body:JSON.stringify({taskId:'release-sync',seed:42})})).json();
+const browser = await chromium.launch({headless:true});
+const ctx = await browser.newContext({viewport:{width:1440,height:900},locale:'en-US',timezoneId:'UTC'});
+const page = await ctx.newPage();
+await page.goto(`${app}/s/${s.token}`);
+await page.getByRole('textbox',{name:'Search Northstar'}).waitFor({timeout:10000});
+const before = await page.locator('body').ariaSnapshot();
+await page.evaluate(()=>{document.documentElement.dir='rtl';});
+// replace a few chrome strings with Arabic to probe glyph rendering and fallback font
+await page.evaluate(()=>{const map={'Threads':'المحادثات','Saved for later':'المحفوظة لوقت لاحق','Channels':'القنوات','Direct messages':'الرسائل المباشرة','Messages':'الرسائل','Pins':'المثبتة','Details':'التفاصيل','Home':'الرئيسية','Later':'لاحقًا'};
+ const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT); const ns=[]; while(w.nextNode()) ns.push(w.currentNode);
+ for(const n of ns){const t=n.textContent.trim(); if(map[t]) n.textContent=map[t];}});
+await page.waitForTimeout(300);
+await page.screenshot({path:`${OUT}/relay-release-sync-rtl-probe.png`});
+const fonts = await page.evaluate(()=>{const el=[...document.querySelectorAll('*')].find(e=>e.childNodes.length===1&&e.textContent==='القنوات'); return el?getComputedStyle(el).fontFamily:null;});
+const after = await page.locator('body').ariaSnapshot();
+console.log('font-family on Arabic label:', fonts);
+console.log('aria snapshot identical before/after dir=rtl (before string swap would be the fair test):', before===after);
+await browser.close();

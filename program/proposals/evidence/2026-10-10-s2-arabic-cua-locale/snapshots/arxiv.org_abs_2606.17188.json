@@ -1,0 +1,43 @@
+{
+ "url": "https://arxiv.org/abs/2606.17188",
+ "fetched_at": "2026-10-10T21:54:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42354,
+ "raw_sha256": "1852bd537d39c38be4aa4573d001ace49e4dfe34b7a95581ca0ab0bd119d6725",
+ "raw_stored": false,
+ "extract": {
+  "title": "Not Truly Multilingual: Script Consistency as a Missing Dimension in VLM Evaluation",
+  "authors": [
+   "Singh, Prabhjot",
+   "Pawar, Bhushan",
+   "Reddiboina, Madhu",
+   "Sheth, Rajvee"
+  ],
+  "citation_date": "2026/06/15",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 15 Jun 2026 18:25:23 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 17 Jun 2026 04:29:54 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 5 Aug 2026 08:40:48 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Thu, 27 Aug 2026 05:19:27 UTC"
+   },
+   {
+    "version": "v5",
+    "date": "Sun, 30 Aug 2026 13:34:50 UTC"
+   }
+  ],
+  "abstract": "Current multilingual evaluations for Vision-Language Models (VLMs) assume a one-to-one mapping between language and orthography, overlooking billions of users of multi-script languages. We introduce PuMVR (Punjabi Multimodal Visual Reasoning), a benchmark of 1,000 strictly parallel image-text instances across Punjabi's three active scripts: Gurmukhi, Shahmukhi, and Roman. Evaluating 10 state-of-the-art VLMs, we expose a substantial and systematic Script Gap. Models frequently solve visual tasks in one script while failing identical tasks in another, with accuracy deltas reaching 16%. Crucially, visual input boosts absolute performance uniformly yet does not close the orthographic gap. Furthermore, cross-script in-context transfer is highly brittle, exposing script-locked knowledge representation. Supported by McNemar tests across all script pairs, our findings demonstrate that current \"multilingual\" VLMs are not truly multi-script. We propose the Script Consistency Rate (SCR), which falls as low as 24.8% on our benchmark, as a mandatory metric for script-agnostic evaluation to ensure equitable AI access. Data and code are available at: this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
