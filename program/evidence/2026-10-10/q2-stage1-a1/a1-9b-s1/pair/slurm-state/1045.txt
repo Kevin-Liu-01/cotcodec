@@ -1,0 +1,27 @@
+JobId=1045 JobName=s1a-a1-9b-s1
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900715 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=01:13:16 TimeLimit=02:00:00 TimeMin=N/A
+   SubmitTime=2026-10-09T22:21:19 EligibleTime=2026-10-09T22:21:19
+   AccrueTime=2026-10-09T22:21:19
+   StartTime=2026-10-09T22:21:19 EndTime=2026-10-09T23:34:35 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-09T22:21:19 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:3798092
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=90 NumTasks=1 CPUs/Task=90 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=90,mem=126G,node=1,billing=90
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=90 MinMemoryNode=126G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca/infra/slurm/host-single-node/s1a-vm.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca
+   StdErr=/home/kevin/cotcodec-runs/stage0/q2-stage1/slurm/slurm-s1a-a1-9b-s1-1045.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/q2-stage1/slurm/slurm-s1a-a1-9b-s1-1045.out
+   Power=
+   
