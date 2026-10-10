@@ -246,3 +246,13 @@ episode records keep setup and postconfig replies without their stdout tails
    first).
 2. After all four A1 jobs: the registered analysis (`harness.q2_stage1.analysis`), DR1-DR5, P1-P5,
    with the label "not externally anchored".
+
+## Session 2 begin time moved (D57)
+
+At 2026-10-10T01:10Z, after the session-1 verification, the pending S2 9B VM
+job 1051's begin time was moved from 12:45:18 to 12:50:00 UTC (`scontrol update
+JobId=1051 StartTime=2026-10-10T12:50:00`, before it started), so that it starts
+at least 12 hours after the later S1 job's Slurm end (VM job 1048, 00:45:21) as
+well as after `lane.earliest_start` (00:45:18 + 12 h). GPU job 1053 still waits
+on `after:1051`. Before and after: `squeue` showed 1051 PENDING (BeginTime) and
+1053 PENDING (Dependency).
