@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/mit-han-lab/fouroversix",
+ "fetched_at": "2026-10-10T21:57:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 353858,
+ "raw_sha256": "59808af17c86249a4751a3a4823996499eaaeeacd31226ae48861ccda8469687",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - mit-han-lab/fouroversix: Code for the papers: “Four Over Six: More Accurate NVFP4 Quantization with Adaptive Block Scaling” and “Adaptive Block-Scaled Data Types” · GitHub"
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2506.01863",
+ "fetched_at": "2026-10-10T21:57:03Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42928,
+ "raw_sha256": "f29f19a19b32a8a7ed6300f66b9765dc232486c30b57fc65a810c8e8bede3627",
+ "raw_stored": false,
+ "extract": {
+  "title": "Unified Scaling Laws for Compressed Representations",
+  "authors": [
+   "Panferov, Andrei",
+   "Volkova, Alexandra",
+   "Modoranu, Ionut-Vlad",
+   "Egiazarian, Vage",
+   "Safaryan, Mher",
+   "Alistarh, Dan"
+  ],
+  "citation_date": "2025/06/02",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 2 Jun 2025 16:52:51 UTC"
+   }
+  ],
+  "abstract": "Scaling laws have shaped recent advances in machine learning by enabling predictable scaling of model performance based on model size, computation, and data volume. Concurrently, the rise in computational cost for AI has motivated model compression techniques, notably quantization and sparsification, which have emerged to mitigate the steep computational demands associated with large-scale training and inference. This paper investigates the interplay between scaling laws and compression formats, exploring whether a unified scaling framework can accurately predict model performance when training occurs over various compressed representations, such as sparse, scalar-quantized, sparse-quantized or even vector-quantized formats. Our key contributions include validating a general scaling law formulation and showing that it is applicable both individually but also composably across compression types. Based on this, our main finding is demonstrating both theoretically and empirically that there exists a simple \"capacity\" metric -- based on the representation's ability to fit random Gaussian data -- which can robustly predict parameter efficiency across multiple compressed representations. On the practical side, we extend our formulation to directly compare the accuracy potential of different compressed formats, and to derive better algorithms for training over sparse-quantized formats.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

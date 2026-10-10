@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2002.06305",
+ "fetched_at": "2026-10-10T21:57:03Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43182,
+ "raw_sha256": "79a9aaebb060aa91e5d0bb240fa206e0243a7400b1840afd316216d8cd9ec85c",
+ "raw_stored": false,
+ "extract": {
+  "title": "Fine-Tuning Pretrained Language Models: Weight Initializations, Data Orders, and Early Stopping",
+  "authors": [
+   "Dodge, Jesse",
+   "Ilharco, Gabriel",
+   "Schwartz, Roy",
+   "Farhadi, Ali",
+   "Hajishirzi, Hannaneh",
+   "Smith, Noah"
+  ],
+  "citation_date": "2020/02/15",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 15 Feb 2020 02:40:10 UTC"
+   }
+  ],
+  "abstract": "Fine-tuning pretrained contextual word embedding models to supervised downstream tasks has become commonplace in natural language processing. This process, however, is often brittle: even with the same hyperparameter values, distinct random seeds can lead to substantially different results. To better understand this phenomenon, we experiment with four datasets from the GLUE benchmark, fine-tuning BERT hundreds of times on each while varying only the random seeds. We find substantial performance increases compared to previously reported results, and we quantify how the performance of the best-found model varies as a function of the number of fine-tuning trials. Further, we examine two factors influenced by the choice of random seed: weight initialization and training data order. We find that both contribute comparably to the variance of out-of-sample performance, and that some weight initializations perform well across all tasks explored. On small datasets, we observe that many fine-tuning trials diverge part of the way through training, and we offer best practices for practitioners to stop training less promising runs early. We publicly release all of our experimental data, including training and validation scores for 2,100 trials, to encourage further analysis of training dynamics during fine-tuning.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

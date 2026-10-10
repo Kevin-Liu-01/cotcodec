@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/mistralai/Mistral-7B-v0.1",
+ "fetched_at": "2026-10-10T21:57:22Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 250503,
+ "raw_sha256": "cdbc3da7a9ba17238ab306c29ea2dc9e881d7276d6f52c7dbcbe4e09f57fb195",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "mistralai/Mistral-7B-v0.1 · Hugging Face"
+ }
+}

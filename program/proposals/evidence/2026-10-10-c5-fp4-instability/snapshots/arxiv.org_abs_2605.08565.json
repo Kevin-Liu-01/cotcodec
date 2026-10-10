@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2605.08565",
+ "fetched_at": "2026-10-10T21:57:04Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43338,
+ "raw_sha256": "d2b2d5347b762b212640fc56b926aeb41672c8cca48a6c74a9916ffc2d10a7f6",
+ "raw_stored": false,
+ "extract": {
+  "title": "Finer is Better (with the Right Scaling)",
+  "authors": [
+   "Schaefer, Clemens",
+   "Tabak, Gil"
+  ],
+  "citation_date": "2026/05/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 8 May 2026 23:57:11 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 8 Jun 2026 19:25:17 UTC"
+   }
+  ],
+  "abstract": "Microscaling is a critical technique for preserving the quality of Large Language Models (LLMs) quantized to ultra-low precision formats. Intuitively, finer block sizes should yield lower quantization error; however, a paradox recently identified by Fasoli et al. (2026) demonstrates that standard abs-max scaling can actually result in degraded model quality as block sizes shrink. In this work, we investigate the underlying mechanics of this phenomenon. We demonstrate that this degradation is not an inherent limitation of finer granularity, but is primarily driven by how elements in smaller blocks statistically cluster closer to their local block maximum, interacting poorly with the coarse subnormal E4M3 values used as scaling factors. Specifically, we show that i) preventing the scaling factor from underflowing to zero mitigates errors caused by extreme underflow, ii) targeted algorithmic interventions like the 4-over-6 methodology that give more flexibility to the choice of scaling factor resolve the paradox for larger values, and iii) a brute-force search establishes an optimal baseline, confirming that the theoretical Mean Squared Error (MSE) strictly improves with finer block sizes. Ultimately, our findings highlight a critical insight for hardware-software co-design: the block-size paradox is partially an artifact of naive scale selection. While using hierarchical scaling factors or wider formats like UE5M3 interchangeably resolves much of the quality loss, we found the 4-over-6 scale selection heuristic can even further improve quality, especially for very small block sizes. Consequently, maximizing the performance of next-generation ML accelerators will require treating silicon format specifications and software scaling algorithms as tightly coupled design choices.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

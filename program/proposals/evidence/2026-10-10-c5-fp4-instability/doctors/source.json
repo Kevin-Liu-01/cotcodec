@@ -1,0 +1,16 @@
+{
+ "doctor": "Source",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
+ "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac; arXiv abstract pages, the Hugging Face model and dataset APIs, Zenodo, the PyTorch documentation and the ACL Anthology PDF reachable; the arXiv API (frontier cell) and Semantic Scholar Graph API (synthesis: one paper record and forward citations of seven works) reached through the read-only host relay; the OpenReview api2 search answered 10 searches; 114 counted orx discover invocations with returned ids and raw-output SHA-256 (11 rejected by the backend: 10 OpenAlex HTTP 429 or 400, 1 decode error), uncounted searches and reads logged in query-log.json; source cutoff 2026-10-10; every cited primary URL snapshotted (snapshots/).",
+ "degraded_coverage": [
+  "OpenAlex rate-limited on the shared IP (10 rejected calls); OpenAlex citation-graph expansion not completed (Semantic Scholar used instead)",
+  "OpenReview full texts and per-note pages are behind a browser challenge; every OpenReview item is abstract-only (UNVERIFIABLE_ACCESS for full text); OpenReview snapshots are HTTP 200 challenge pages that verify nothing about content",
+  "ARITH 2025 (DOI 10.1109/ARITH64983.2025.00011) closed access: Semantic Scholar openAccessPdf CLOSED, no repository copy",
+  "ACL Anthology not searched (one PDF fetched); patents, X, Reddit, Hacker News, Chinese-language venues, vendor blogs and GitHub issues not searched",
+  "orx 0.2.2 reports itself outdated (latest 0.2.18)"
+ ],
+ "remediation": "Retry OpenAlex citation expansion after its budget resets; search patents and Chinese-language venues; read ARITH 2025 with IEEE access"
+}

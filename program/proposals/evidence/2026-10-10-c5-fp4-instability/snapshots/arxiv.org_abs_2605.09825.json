@@ -1,0 +1,42 @@
+{
+ "url": "https://arxiv.org/abs/2605.09825",
+ "fetched_at": "2026-10-10T21:57:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43409,
+ "raw_sha256": "61bf77a646b9e170809dc28c7c5b4030309967d4830cd1e8eb1d5cfd52eb0223",
+ "raw_stored": false,
+ "extract": {
+  "title": "Pretraining large language models with MXFP4 on Native FP4 Hardware",
+  "authors": [
+   "Cim, Musa",
+   "Arora, Sarthak",
+   "Palangappa, Poovaiah",
+   "Hodak, Miro",
+   "Dwivedula, Ravi",
+   "Arunachalam, Meena",
+   "Kandemir, Mahmut Taylan"
+  ],
+  "citation_date": "2026/05/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 11 May 2026 00:04:07 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 13 May 2026 04:29:10 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Thu, 14 May 2026 02:08:01 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Wed, 12 Aug 2026 13:15:17 UTC"
+   }
+  ],
+  "abstract": "Why does full-pipeline FP4 training of large language models often diverge, even when forward activations and activation gradients remain stable? We address this question through a controlled study of MXFP4 quantization in transformer training, progressively enabling FP4 across forward propagation (Fprop), activation gradients (Dgrad), and weight gradients (Wgrad) while holding all other factors fixed. In full pretraining of Llama 3.1-8B on the C4 dataset, we observe that quantizing Wgrad is the primary driver of convergence degradation, whereas FP4 in Fprop and Dgrad alone introduces only modest additional token requirements. To interpret this behavior, we evaluate both structured and stochastic interventions under a controlled experimental setting. We find that stochastic rounding and randomized Hadamard rotations fail to stabilize training once Wgrad is quantized, whereas deterministic Hadamard rotations consistently restore stable optimization. These results suggest that FP4 training instability is driven by structured micro-scaling errors along sensitive gradient paths, rather than by insufficient stochasticity. We run experiments with native MXFP4 support on AMD Instinct MI355X GPUs, enabling controlled investigation of these effects without reliance on software emulation.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

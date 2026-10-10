@@ -1,0 +1,16 @@
+{
+ "doctor": "Design",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
+ "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data, DOE estimability for the multi-factor design, decision rules with operating characteristics by simulation; K-Dense statistical-analysis for the blocked analysis, contrasts, multiplicity and assumption checks",
+ "evidence": "Full-rank cell set (D1: rank 8 of 8 against the dossier's 8 of 10); positive-control gate G1; emulation-path control; per-configuration LR sweeps with parabolic refinement and fresh seeds; RCBD with seed blocks; registered contrasts with SEs in sigma units; verdict precedence with an omnibus 3-df interaction gate; P2 to P7 with falsifiers; S1 operating characteristics (2,000 replicates per setting over sigma, seed correlation, LR curvature and four truths), revised once before registration; N1 and N2 computations; Phase 0 gates PG1 to PG7 with thresholds and the SR test's power.",
+ "why_fail": [
+  "every distribution in S1 is assumed; sigma at 35M and 1.2B tokens is unmeasured (anchored only on 2505.19115 Table 4 at 125M and 30B tokens)",
+  "at sigma 0.008 most verdicts are INDETERMINATE or G1 stops; interactions below about 2.9 sigma are undetectable at three seeds",
+  "N2 uses synthetic distributions; the calibrated prediction needs J3's tensors",
+  "the harness and the analysis code do not exist, so no rule has been executed on real data"
+ ],
+ "remediation": "Phase 0 J3 and Stage 1a measure sigma; build the analysis and run it as a cpu-doctor orx node on S1's synthetic data"
+}

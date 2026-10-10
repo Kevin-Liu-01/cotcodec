@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2609.11356",
+ "fetched_at": "2026-10-10T21:57:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43719,
+ "raw_sha256": "b25aa653f21c8d7616b10cba0fe2dc0d2d88782c05101dc0e2eecfce441b42f2",
+ "raw_stored": false,
+ "extract": {
+  "title": "Taming Bitwise Behavior in GPU Kernels with Tensor Core: Black-Box Reconstruction, Compiler Enforcement, and Static Verification",
+  "authors": [
+   "Yang, Ziteng",
+   "Riasanovsky, Nicholas J.",
+   "Deng, Warren",
+   "Sarkar, Vivek"
+  ],
+  "citation_date": "2026/09/10",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 10 Sep 2026 10:39:21 UTC"
+   }
+  ],
+  "abstract": "Determinism and numerical reproducibility are increasingly required of GPU kernels in machine learning systems, yet deterministic implementations of the same kernel can still differ bit for bit. Floating-point reduction order is the primary cause, alongside partial-sum precision, fused multiply-add operations, and rounding placement. These choices may be hand-coded, selected by a block-level language such as Triton, or hidden inside a closed-source library such as cuBLAS or rocBLAS. A tile shape chosen for performance therefore also determines the arithmetic, potentially breaking batch invariance. Preserving a fixed order can cost up to 20 percent, while an autotuner cannot identify which configurations are bitwise equivalent. We characterize the factors determining the bitwise behavior of reductions and general matrix multiplication (GEMM). First, we introduce a descriptor of GEMM reduction order, including the partitioning of K in split-K GEMM. Using it, we perform the first black-box reconstruction of a closed-source library's arithmetic for bit-level correctness. Our family of Triton GEMMs matches NVIDIA cuBLAS in all tested cases on Blackwell and Hopper. For realistic LLM shapes with fused epilogues, it matches or exceeds this http URL performance. Second, we enforce balanced-tree reduction during Triton lowering and introduce a data-layout optimization that brings 19 of 27 kernels on GB300 and H100 within 10 percent of free-order performance. Third, we develop sound static checkers for bitwise equivalence between compiled GPU kernels, including the first checker spanning NVIDIA PTX and AMD GCN. Integrated into Triton's autotuner, the checker restricts search to a single bit-equivalence class.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
