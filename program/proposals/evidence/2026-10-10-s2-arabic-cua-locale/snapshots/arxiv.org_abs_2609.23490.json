@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2609.23490",
+ "fetched_at": "2026-10-10T21:54:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43519,
+ "raw_sha256": "08c9f986d8980bea9d1153e510bdc30dbf632c4b382b2e523b0b03a23e801eda",
+ "raw_stored": false,
+ "extract": {
+  "title": "BabelArena: A Large-Scale Multilingual Benchmark for LLM Agents",
+  "authors": [
+   "Kuang, Peng",
+   "Fan, Yuchun",
+   "Li, Jiangnan",
+   "Wu, Minghao",
+   "Tang, Jialong",
+   "Wei, Hao-Ran",
+   "Wang, Weixuan",
+   "Tu, Jianhong",
+   "Yang, Baosong",
+   "Xiao, Tong"
+  ],
+  "citation_date": "2026/09/20",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 20 Sep 2026 09:25:38 UTC"
+   }
+  ],
+  "abstract": "Large language model (LLM) agents increasingly execute multi-step workflows through tool use and interaction with users and environments. However, current agent evaluations are largely English-centric, limiting our understanding of agent capabilities in multilingual settings. We introduce BabelFlow, a benchmark-general agentic workflow that adapts existing agent benchmarks to new languages by analyzing runtime dependencies, coordinating structure-preserving translation, and combining multi-layer verification with human review to preserve task and evaluation semantics. Using BabelFlow, we construct BabelArena, a task-aligned benchmark comprising 16,146 instances derived from 702 canonical tasks across four benchmark families, 13 domains, and 23 languages. Experiments with five frontier models show that no single model dominates across benchmark families and that cross-language disparities extend well beyond task success. Lower-resource languages exhibit distinct failure patterns, with larger shares of tool-use and control-flow errors rather than answer-quality errors alone, pointing to gaps in reliable task execution across the resource levels of these languages. On the same tasks, agents in low-resource languages also consume substantially more tokens than in English (up to roughly twice the input) without proportional increases in interaction length, and language consistency degrades further on tasks requiring structured output, where switches are directed overwhelmingly toward English. We believe BabelArena provides a foundation for advancing research on reliable and efficient multilingual agents.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

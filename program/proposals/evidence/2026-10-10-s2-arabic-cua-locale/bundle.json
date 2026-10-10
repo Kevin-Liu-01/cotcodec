@@ -1,0 +1,537 @@
+{
+ "schema_version": 1,
+ "proposal": "program/proposals/2026-10-10-s2-arabic-cua-locale.md",
+ "proposal_sha256": "e16214cf97df717f3d1a8d7dd32a13bc3640dc0dc1df1e5896b76bf13a2578d0",
+ "draft_registration": {
+  "path": "program/preregistrations/s2-arabic-cua-locale-v1.md",
+  "sha256": "866f994dd07daf565d7d07d6dfde637f42cf08a936dee02da1b54a2d18ef0cac",
+  "experiment_id": "s2-arabic-cua-locale-v1",
+  "status": "DRAFT, not frozen, no ledger row"
+ },
+ "source_snapshots": [
+  {
+   "url": "https://aclanthology.org/2026.mellm-1.13/",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:18Z",
+   "raw_sha256": "bb52001252fb42989b32eba0b9a391a546c616815ef85aaaef3f6167ae8ddf01",
+   "raw_bytes": 42245,
+   "artifact": "snapshots/aclanthology.org_2026.mellm-1.13.json",
+   "sha256": "3e9467a0307d7e5a77bc4676cc637d3559f6fd22795ffc59bef34f714d42879a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2411.00640",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:18Z",
+   "raw_sha256": "951cac93eacd8adf7e184896a3ca3fb203e337e5d010dc18a915e1f72e2ac3d2",
+   "raw_bytes": 39830,
+   "artifact": "snapshots/arxiv.org_abs_2411.00640.json",
+   "sha256": "c9ff0ef98b20134149342784d6637489955ba8a6273fb67cd7b7164e3fb49f60"
+  },
+  {
+   "url": "https://arxiv.org/abs/2502.14949",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:18Z",
+   "raw_sha256": "f50c5ce391b16fe47070e7b86d7727a2aa49f98f20e912e2280528bda72e3588",
+   "raw_bytes": 44546,
+   "artifact": "snapshots/arxiv.org_abs_2502.14949.json",
+   "sha256": "7e009de5be2bad6a426339813dd45ce1c2253e47f7bb3586d67b4dbb9db6afa0"
+  },
+  {
+   "url": "https://arxiv.org/abs/2505.15372",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:19Z",
+   "raw_sha256": "1e12bd24c73141f18dda04b4e438f2e71168fe6e3965d874888518ef30fefdcc",
+   "raw_bytes": 41782,
+   "artifact": "snapshots/arxiv.org_abs_2505.15372.json",
+   "sha256": "58a6e635eb68ff2c636ca8b83c19404e98a91f57bc419539c281099a946f915d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2506.04135",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:19Z",
+   "raw_sha256": "7a9f962b04d2468b012f535f79ebd45b0d0b1a5ef0a5160178a75e6f1f49d4c3",
+   "raw_bytes": 41957,
+   "artifact": "snapshots/arxiv.org_abs_2506.04135.json",
+   "sha256": "e7b9e87f0ab84ec72093f3b48bc7f18f5bd54d9140c8935209d1e73e822994f7"
+  },
+  {
+   "url": "https://arxiv.org/abs/2511.15059",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:19Z",
+   "raw_sha256": "4dee8056436f60868311a94a1320106a333d533c5cf29025a910e6f170a07773",
+   "raw_bytes": 42186,
+   "artifact": "snapshots/arxiv.org_abs_2511.15059.json",
+   "sha256": "94247686a7a290e89ff0ae1f24a76963a4925b205fc544a8e6ae5ded54eec2cf"
+  },
+  {
+   "url": "https://arxiv.org/abs/2512.00756",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:19Z",
+   "raw_sha256": "0b1f490ba928e16beba377bc15aecd833f1a77889cf78f7de521ba36281d1d9d",
+   "raw_bytes": 43444,
+   "artifact": "snapshots/arxiv.org_abs_2512.00756.json",
+   "sha256": "f2602f6f1f8aa523281304a7340fe656d58e141cecc86ad2a78a022294e0874c"
+  },
+  {
+   "url": "https://arxiv.org/abs/2512.18231",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:19Z",
+   "raw_sha256": "2328b058599c3c87e9c4c020aff679125af21ba1135a3624dde1e8270deb1dd9",
+   "raw_bytes": 41315,
+   "artifact": "snapshots/arxiv.org_abs_2512.18231.json",
+   "sha256": "156e63948836a3a1060be0e709e5568fd329da0a211d4f06ac6f49d0eacdd880"
+  },
+  {
+   "url": "https://arxiv.org/abs/2512.21326",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:19Z",
+   "raw_sha256": "c41160ca5c194aff9a4ad1b05cff28c3bb2b9e04c69e77261744054dd06a72c9",
+   "raw_bytes": 41702,
+   "artifact": "snapshots/arxiv.org_abs_2512.21326.json",
+   "sha256": "70bc150dee3916df6cbe49aad9e0848da2d1a75eb3394c2112a8141a2392fe4a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.12978",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:19Z",
+   "raw_sha256": "4b9baf376cbe2b28caf1ba1b1d7a9835935320c9a42f74cdbc904ef1715cf47b",
+   "raw_bytes": 42312,
+   "artifact": "snapshots/arxiv.org_abs_2604.12978.json",
+   "sha256": "ffff0d1fd81d958e7188e44e70171cef0c44042931a9be9448e5d70428e22e3e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.17188",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:20Z",
+   "raw_sha256": "1852bd537d39c38be4aa4573d001ace49e4dfe34b7a95581ca0ab0bd119d6725",
+   "raw_bytes": 42354,
+   "artifact": "snapshots/arxiv.org_abs_2606.17188.json",
+   "sha256": "3b28d4de2b3451c7dac3453894852a48044fb1bc755cca330d60c0d5e5840115"
+  },
+  {
+   "url": "https://arxiv.org/abs/2607.04120",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:20Z",
+   "raw_sha256": "e403a7572bddcb7ce1a1118a6157429b9d10a4f2605c3febe9ee4ff27e9beb13",
+   "raw_bytes": 41257,
+   "artifact": "snapshots/arxiv.org_abs_2607.04120.json",
+   "sha256": "d46eb994721b4f855da7b5e41fe8e57c2c8a42142934bb5a8cb0bad6d0783939"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.08775",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:20Z",
+   "raw_sha256": "2adcfa3247300c12b4cd41dfe477d773afa28fa4f7167898acc4c130bf22c3e4",
+   "raw_bytes": 43717,
+   "artifact": "snapshots/arxiv.org_abs_2608.08775.json",
+   "sha256": "73e169762b17bf1e3acc85b251f150b02969ca159d637599c03954db7860cfe8"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.11110",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:20Z",
+   "raw_sha256": "7049d907bc95b03b909065d33902f5f2f2794663cd300b9c8838a4effe1e9614",
+   "raw_bytes": 43823,
+   "artifact": "snapshots/arxiv.org_abs_2608.11110.json",
+   "sha256": "a0067dae3c4943f179db6a2cb33ba714d2ecded3c07ee0a950411609e1483bc1"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.12333",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:20Z",
+   "raw_sha256": "0c6dbd3ea3a739c9cfd244261ad197f70a2583b8c7bb83e4cd356c7c7fa8dd22",
+   "raw_bytes": 41124,
+   "artifact": "snapshots/arxiv.org_abs_2608.12333.json",
+   "sha256": "35b07ad672645f04af04143e8f419b099abc34aade8a7c1b06f853c341cd090e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.21794",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:20Z",
+   "raw_sha256": "5270d7761da12d38874918f9e222bc069c984fdabee92ef7b59427752fdeb468",
+   "raw_bytes": 41119,
+   "artifact": "snapshots/arxiv.org_abs_2608.21794.json",
+   "sha256": "d673d1aa9c790cf1a02110e09cafd787721cb5910fe383398d7e9cfa4e0746e4"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.25832",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:21Z",
+   "raw_sha256": "e44f92ac521f58e9fb785fbc27b6ce53f7b28c7b574c0c4f75aeca7b7758b0b5",
+   "raw_bytes": 43055,
+   "artifact": "snapshots/arxiv.org_abs_2608.25832.json",
+   "sha256": "cc039f805c7e862ff87820326e3ab211eb9c80906c854e09cf4958e1118319bf"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.23490",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:21Z",
+   "raw_sha256": "08c9f986d8980bea9d1153e510bdc30dbf632c4b382b2e523b0b03a23e801eda",
+   "raw_bytes": 43519,
+   "artifact": "snapshots/arxiv.org_abs_2609.23490.json",
+   "sha256": "284b21b7c73889f26ee3ca469ae1cd8351611b4c72ac7cf6d6336abc462d96fd"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.28565",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:21Z",
+   "raw_sha256": "78751a154486d0f415f8ff2b3f6e177fcee14c352065df55ff439b792c1d7529",
+   "raw_bytes": 44187,
+   "artifact": "snapshots/arxiv.org_abs_2609.28565.json",
+   "sha256": "c24dec3d97073146aa572b1707660b7556d0d0656247d61d7287655104846e39"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.32036",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:21Z",
+   "raw_sha256": "47d6910288c8ec6401d609862ca5b4a18ca511f4bebd84f20e9de01fd307b318",
+   "raw_bytes": 41481,
+   "artifact": "snapshots/arxiv.org_abs_2609.32036.json",
+   "sha256": "b1d72b47a5eabd0b95f999ec5d7de05d411726642f00b768536e0caf8a114a5f"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.35026",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:21Z",
+   "raw_sha256": "0efa7f4df75983823dccc295b2efddab8fc0e6ada4f54f79e2ecaff1fc7ddb73",
+   "raw_bytes": 42231,
+   "artifact": "snapshots/arxiv.org_abs_2609.35026.json",
+   "sha256": "4638ed83ee9c813487860c8803c5560c91f7921c4a2b3f15ddbb40f30a05e8c4"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.35814",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:21Z",
+   "raw_sha256": "3fc2b8d0b03b79887d8d8739e6903de1f4b36b9ed127d991e639976885db501c",
+   "raw_bytes": 43635,
+   "artifact": "snapshots/arxiv.org_abs_2609.35814.json",
+   "sha256": "726d4918fc2b9c77621091ba916ffc6bd72baa0b1d2dc181fdf87c10eed41db8"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.38184",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:21Z",
+   "raw_sha256": "b53708cfbd01f35776b6963c934b7a9410d6b95fc990a87389f9ea06a7b275b3",
+   "raw_bytes": 42818,
+   "artifact": "snapshots/arxiv.org_abs_2609.38184.json",
+   "sha256": "53243c7b7e51c35be4473461b8dc4a6c7f7d598f9a8e2bd0d3f95ea78f314463"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.00651",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:21Z",
+   "raw_sha256": "8d365fcdd7dcb0b16949f0965a8b799ad72798ca02e1df3120c5d3bbebc39c5e",
+   "raw_bytes": 43941,
+   "artifact": "snapshots/arxiv.org_abs_2610.00651.json",
+   "sha256": "f2fd896615dc2405168ec4775492ffbaa04406fb113c943ba304e67855cb75c3"
+  },
+  {
+   "url": "https://github.com/Kevin-Liu-01/Relay",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:23Z",
+   "raw_sha256": "73ef1196cbdb258683ae2a11389c8f42bfd13591b88fca97f6e747034354b1a2",
+   "raw_bytes": 406451,
+   "artifact": "snapshots/github.com_Kevin-Liu-01_Relay.json",
+   "sha256": "ba4c73273a01814b1a787f7c85aea9661cc2239e783d10cc752f92992cd1a009"
+  },
+  {
+   "url": "https://github.com/showlab/macosworld",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:24Z",
+   "raw_sha256": "dd7262b3940556081ce77afae8ba8a5ee5097607fbcc3946986f9129126b5646",
+   "raw_bytes": 355840,
+   "artifact": "snapshots/github.com_showlab_macosworld.json",
+   "sha256": "13586d12a8bc2d7caae9a169e1a51a39fce47de2502a1a450cde646985db77ab"
+  },
+  {
+   "url": "https://huggingface.co/Qwen/Qwen3.5-9B",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:25Z",
+   "raw_sha256": "f64698955fcb04834e9f3c1027187cc636101daa22410c6e6fb814a1fb82f2c7",
+   "raw_bytes": 596773,
+   "artifact": "snapshots/huggingface.co_Qwen_Qwen3.5-9B.json",
+   "sha256": "6c5c1b54be8755eefd6f13fcdf70cebc26e6576d9649567ace26fdc0edab389e"
+  },
+  {
+   "url": "https://openreview.net/forum?id=YJxGJP8feU",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:25Z",
+   "raw_sha256": "1e8373552f90fb615e60d2f607834706ffe0bec9a6843ab347e3fdc948efc28c",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_YJxGJP8feU.json",
+   "sha256": "a324ef5607e68f28a36f8fb7670f0c0b36d99b92f8f648856dbe23560fed5778",
+   "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=irjWqxKeHm",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:54:26Z",
+   "raw_sha256": "8fef0288868a57624a51c6a572cb593a50641783f3105cb03994efdf12589828",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_irjWqxKeHm.json",
+   "sha256": "b6bc12e06467117d8e2dd551eac7e635d598aae871d8384256df1be24b3daedd",
+   "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/source/app/settings.cxx",
+   "http_status": 200,
+   "fetched_at": "2026-10-10T21:55:11Z",
+   "raw_sha256": "95a0ef4c31c0dbf46f70185488466b98ae94a3ea4f64a04eddfc6a32752e0e6c",
+   "raw_bytes": 81277,
+   "artifact": "snapshots/raw.githubusercontent.com_LibreOffice_core_08f5d410_vcl_source_app_settings.cxx.json",
+   "sha256": "872ea37a06c8ea3376cd70c31002e1d9731300e47e549b1fefe3759a7e8af5f8"
+  }
+ ],
+ "query_log": {
+  "artifact": "query-log.json",
+  "sha256": "406943168d4c8302a89e80f102d045ced1999ad00c704bbf7c576081427ba8a3",
+  "queries_against_budget": {
+   "declared": 150,
+   "reserve_for_refuters": 30,
+   "counted_by_stage": {
+    "cell:frontier": 45,
+    "cell:killshot": 33,
+    "cell:cross-domain": 21,
+    "cell:asset": 10,
+    "synthesis": 4
+   },
+   "counted_total": 113,
+   "remaining_under_declared": 37,
+   "reserve_intact": true,
+   "orx_calls_failed_429_by_stage": {
+    "cell:frontier": 5,
+    "cell:cross-domain": 4
+   },
+   "uncounted_other_searches_and_fetches_by_stage": {
+    "cell:frontier": 29,
+    "cell:killshot": 9,
+    "cell:cross-domain": 27
+   },
+   "total_if_other_searches_counted": 178
+  },
+  "note": "113 counted orx discover queries against the declared 150 (remaining 37, reserve of 30 intact); 9 orx calls failed with HTTP 429 (not counted); 65 uncounted searches and fetches (178 if counted)"
+ },
+ "reviews": [],
+ "reviews_status": "NOT_RUN: the blind critic, the refute-first triad and both reviewers run after synthesis. No trusted Ed25519 store exists (D24), so no review can be signed.",
+ "compute": {
+  "scope": "s2-arabic-cua-locale-v1 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: power-gate.py (analytic MDE grid, cost model, gate on transported S1a inputs, Monte Carlo of the staged design) with its output, and the discovery cells' scripts and outputs (compute/cells/, local test tokens redacted).",
+  "image_digest": "docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f",
+  "image_scope": "engine base image (vLLM v0.31.0, commit db9527a4); the cu129 overlay is rebuilt per source commit by scripts/build_vllm_overlay_on_h100.sh, as S1a did; the Relay environment image is not built (E3)",
+  "environment_base_digest": "node:24.13.0-bookworm-slim@sha256:4660b1ca8b28d6d1906fd644abe34b2ed81d15434d26d845ef0aced307cf4b6f",
+  "real_model_loop": false,
+  "real_model_loop_scope": "none for Relay: no local-engine transport (E1) and no qwen35vl adapter for Relay's action set (E2)",
+  "benchmark_adapter": null,
+  "benchmark_adapter_scope": "none: Relay has no locale parameter, catalogs, test ids or gate doctor (Phase 0 creates them)",
+  "manifest": null,
+  "manifest_scope": "no Slurm manifest exists for Stage 1a or Stage 1b (E5)",
+  "container_smoke": {
+   "label": "container_smoke",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "d8d56b1b95734a01323716b81a3854b0db2be0d976f09e7fd8151937a58b4dd0"
+  },
+  "slurm_test": {
+   "label": "slurm_test",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "d8d56b1b95734a01323716b81a3854b0db2be0d976f09e7fd8151937a58b4dd0"
+  },
+  "provenance_verification": {
+   "label": "provenance_verification",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "d8d56b1b95734a01323716b81a3854b0db2be0d976f09e7fd8151937a58b4dd0"
+  },
+  "registered_caps_gpu_h": {
+   "phase0": 0.0,
+   "stage1a": 2.0,
+   "stage1b": "4 x K_inf x n x 1.5 x pilot-measured English GPU-h per episode + 0.10, at most 15.0",
+   "total": 17.0,
+   "d22_line": 8.0,
+   "admission": "D24 ruling (design decision 1 offers a 2.0 GPU-h split for the pilot)"
+  },
+  "supplementary_cpu_evidence": [
+   {
+    "label": "power gate: analytic MDE grid (exact noncentral t), TOST power, cost model, gate on transported S1a inputs, pass region, Monte Carlo of pilot + gate + main study (4 assumed base-rate scenarios x 3 heterogeneity patterns x 4 true effects; 1,500 replicates per cell over seeds 42/43/44)",
+    "script": {
+     "artifact": "compute/power-gate.py",
+     "sha256": "05c05ba34ab6a70d2d540e176d2b6457f106dcddabb5a15c04fbd6bbbb247bb4"
+    },
+    "output": {
+     "artifact": "compute/power-gate.json",
+     "sha256": "8d63c38e5ba5b27eb4ec7433a11e2cd70569a7b8a86dcbf9570d5c9a22f0653c"
+    }
+   },
+   {
+    "label": "query-log builder (parses the cells' raw orx outputs from the session scratchpad)",
+    "script": {
+     "artifact": "compute/build-query-log.py",
+     "sha256": "9c6cca18e22c2ebb047720c6b7fa323dd21c3faad23ab432a84abeaf1ffaa309"
+    }
+   },
+   {
+    "label": "snapshot script for source_snapshots",
+    "script": {
+     "artifact": "compute/snapshot-sources.py",
+     "sha256": "729d1e5e75507415184b1ca3dfd4ec313c1f329a935a9d698b6026e8f1a4203c"
+    }
+   },
+   {
+    "label": "discovery-cell scripts and outputs (kill-shot power simulation and Relay probes; cross-domain MDE grid; asset power and chrome-share measurement); tokens redacted, originals' SHA-256 in ORIGINAL_SHA256.txt",
+    "files": [
+     {
+      "artifact": "compute/cells/s2-asset__chrome-ratio.json",
+      "sha256": "6e6e95fa193fe5aae83aa52e4042c993314fb80254211092b7fd83f324131791"
+     },
+     {
+      "artifact": "compute/cells/s2-asset__chrome-strings.json",
+      "sha256": "7fab5f013d0ffa969c062a0999322fc5146d6968a81f3d648291252e158ac0d4"
+     },
+     {
+      "artifact": "compute/cells/s2-asset__count-strings.mjs",
+      "sha256": "84520934e6aa1cfb2d9d39b8348ea6ece0c14e9e18275f9aeb41e9561bf6be83"
+     },
+     {
+      "artifact": "compute/cells/s2-asset__measure-ratio.mjs",
+      "sha256": "b6771bd8dde9c5457ea89aa12a8417e3945cd96e24a1a0735ef29344e3e849d8"
+     },
+     {
+      "artifact": "compute/cells/s2-asset__power.py",
+      "sha256": "589cefac850db27c00a7b7311f3514ec99f97bb6bec2279ba03d2a3f87b84628"
+     },
+     {
+      "artifact": "compute/cells/s2kill__mirrorcheck.mjs",
+      "sha256": "0cb973cd6e7ce6f78245f90a6defa066f9a9a07bd1fc04e500b2f91a821d9d59"
+     },
+     {
+      "artifact": "compute/cells/s2kill__power_sim.out",
+      "sha256": "44612d78fc461b1b6075ffe217ebbc1c71eca588b3b2358d0f06359bfa207873"
+     },
+     {
+      "artifact": "compute/cells/s2kill__power_sim.py",
+      "sha256": "e1a8aed7fa23c2be04460189baa6a4c58b5ffb8aabb4eac09e1c34665cd38f9f"
+     },
+     {
+      "artifact": "compute/cells/s2kill__power_sim2.py",
+      "sha256": "9b921a144827608145be13c9a9ac2df9846328a2a53b59e6d9a260fb3f6c2fbf"
+     },
+     {
+      "artifact": "compute/cells/s2kill__rtlprobe.mjs",
+      "sha256": "32b23ec6d3509914445c12b4c7efb5135b5f0d63d9e844a96d00f250d7afc56b"
+     },
+     {
+      "artifact": "compute/cells/s2kill__textratio.mjs",
+      "sha256": "aa77f1bd12fa990a64c96b2da4d5f41f1ae76d3ec931983e87cc7febbd3e94ed"
+     },
+     {
+      "artifact": "compute/cells/s2xd__mde.py",
+      "sha256": "72e585f0fcd8ae18ca8772117511b1362b820fc6c970085334b027a042f7ebb0"
+     },
+     {
+      "artifact": "compute/cells/ORIGINAL_SHA256.txt",
+      "sha256": "e0b1e520c87c41d26b444af91fd49acb80115c9d6b5234be4ec6dfcdd2df3720"
+     }
+    ]
+   }
+  ],
+  "repository_evidence_used": {
+   "s1a_records": "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl (SHA-256 in power-gate.json inputs)",
+   "s1a_results": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "s1a_costs": "program/evidence/2026-10-10/q2-stage1-analysis/costs.json",
+   "serving_probe_v2": "program/evidence/2026-10-07/serving-throughput-probe-v2/README.md",
+   "relay": "~/repos/Relay at e6c815e634f6 (read-only; public as github.com/Kevin-Liu-01/Relay)"
+  }
+ },
+ "doctors": [
+  {
+   "name": "Source",
+   "status": "PASS",
+   "artifact": "doctors/source.json",
+   "sha256": "3b873b3b7ef8ba4dd3ad87c92240ae9915ed42b6515d464b327e2d38030ae263"
+  },
+  {
+   "name": "Citation",
+   "status": "PASS",
+   "artifact": "doctors/citation.json",
+   "sha256": "4de35598974fc93bbc56a91b7ecac25136776def9a02618ad922d6c28857caa5"
+  },
+  {
+   "name": "Novelty",
+   "status": "FAIL",
+   "artifact": "doctors/novelty.json",
+   "sha256": "61a662fc8c464d9a8c819d7aa0a62b564b61a9924cd0b8f586bd3a4d7e8aea38"
+  },
+  {
+   "name": "Design",
+   "status": "FAIL",
+   "artifact": "doctors/design.json",
+   "sha256": "a8cdfb37b7816155b67686ffefd40e38fb258d07b698e522b30884f3b2be7715"
+  },
+  {
+   "name": "Compute",
+   "status": "FAIL",
+   "artifact": "doctors/compute.json",
+   "sha256": "f7815806c9bab2d4290894c3101fa518422dcb7d5c0440b4b5dd96abd5af0f9f"
+  },
+  {
+   "name": "Safety",
+   "status": "PASS",
+   "artifact": "doctors/safety.json",
+   "sha256": "8ab11a0cf33c00b66f70e953307a89e991dd78bf61dd81ef2c6830c6e6b2f449"
+  }
+ ],
+ "audit_log": null,
+ "audit_log_status": "This gauntlet's wave-1 row is appended to program/gauntlet/2026-10-10-s2-arabic-cua-locale.jsonl with scripts/research_gauntlet_record.py after its reviewers score.",
+ "evidence_root_sha256": "391126683306c0bbb88ef1c9ad197a549a5e7af3ebb8dd79e4a7046b2af9460d",
+ "blind_discrimination_packet": {
+  "proposal": {
+   "artifact": "blind/paragraph-434639fe.txt",
+   "sha256": "05ef503907e0f0db34de4813d41441b740bcbccabe6619fa4250e3650db5c347",
+   "text_sha256": "434639fe8f6d123afb80d338008d5620f2ec76ce95e25e27f4aa73564baa04eb"
+  },
+  "closest_prior": {
+   "artifact": "blind/paragraph-9242d8b5.txt",
+   "sha256": "7e0053e9431891e485a49291acc1b9a0aaa123c843a38f54de852f3e32f7d552",
+   "text_sha256": "9242d8b5531599c28cc770d32b60a1c41ddd66249fe04e7b3c014df14c7427dc"
+  },
+  "closest_prior_id": "arXiv:2506.04135 (macOSWorld: A Multilingual Interactive Benchmark for GUI Agents, Yang, Ci and Shou, NeurIPS 2025; v4 2025-10-18); full text read by the frontier and kill-shot cells and re-read by synthesis on 2026-10-10 (Secs. 3.2-3.4, 4.1-4.2, 5.1-5.3, Tables 3-4, App. D.1 Tables 6-7, App. Fig. 19 text, checklist item 7)",
+  "note": "File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text."
+ },
+ "budget_ledger": {
+  "declared": {
+   "queries": 150,
+   "wall_minutes": 600,
+   "tokens": 8000000,
+   "dollars": 150,
+   "waves": 3,
+   "gpu_hours": 0.3
+  },
+  "used_by_discovery_cells": {
+   "queries": 109,
+   "failed_orx_calls": 9,
+   "uncounted_searches_and_fetches": 65,
+   "gpu_hours": 0.0,
+   "wall_minutes_reported": "frontier about 60; others not reported",
+   "host": "read-only ssh by the frontier cell for the Semantic Scholar relay; no host job"
+  },
+  "used_by_synthesis": {
+   "queries": 4,
+   "paper_reads": "1 re-read of the closest prior's orx full text (cell file); spot checks of 6 cell-fetched texts; LibreOffice source re-fetched",
+   "gpu_hours": 0.0,
+   "host": "one read-only squeue at 2026-10-10T21:42:52Z (empty); no host job",
+   "cpu": "power-gate.py (about 25 minutes on the development Mac at nrep 500 x 3 seeds), snapshot fetches",
+   "tokens_and_dollars": "not metered by the synthesis agent; the recorder meters from transcripts"
+  },
+  "remaining_queries": 37,
+  "refuter_reserve_intact": true
+ },
+ "direction_doctor_run": {
+  "artifact": "doctors/research-direction-doctor-output.json",
+  "sha256": "912afe7091d5b1de2f4b155c174c1f0589bc66911115454bef32ee1361955342",
+  "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-s2-arabic-cua-locale.md",
+  "note": "Outside evidence_root by design: the doctor output depends on this bundle."
+ }
+}

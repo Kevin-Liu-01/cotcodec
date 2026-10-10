@@ -1,0 +1,370 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
+ "protocol": "ARS claim_verification_protocol: claim registry, source tracing, cross-referencing; paywalled or blocked sources marked UNVERIFIABLE_ACCESS or ABSTRACT_ONLY; first-party numbers labelled",
+ "evidence": "39 claims with locators, dates, read status and verdicts; every primary-domain URL in the proposal snapshotted with HTTP status and body hash (snapshots/); the LibreOffice blob URL returned HTTP 503 twice and is cited by its raw.githubusercontent.com URL instead; the two OpenReview pages return an HTTP 200 browser challenge and verify nothing about content",
+ "claims": [
+  {
+   "claim_id": "C01",
+   "claim": "All-agent mean success excl. Advanced Apps: en 19.3, ru 17.7, zh 17.2, ja 15.8, ar 13.7 (28.8% relative drop); 'Arabic glyphs or the mirrored UI layout, or both'",
+   "source": "https://arxiv.org/abs/2506.04135",
+   "date": "2025-10-18 (v4)",
+   "locator": "Table 4; Sec. 5.2",
+   "read_status": "full text (frontier, kill-shot; synthesis re-read lines 505-528 of the orx text)",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C02",
+   "claim": "Per agent en to ar over 171 tasks, one run: Claude CUA 44.4 to 31.6 (zh 31.6), OpenAI CUA 33.3 to 28.1, Gemini 2.5 Pro 22.8 to 15.8, GPT-4o 8.8 to 2.9, UI-TARS-7B 5.3 to 2.3, ShowUI 1.2 to 1.8",
+   "source": "https://arxiv.org/abs/2506.04135",
+   "date": "2025-10-18 (v4)",
+   "locator": "Table 3",
+   "read_status": "full text; synthesis re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C03",
+   "claim": "OpenAI CUA with English instructions in an Arabic UI 22.8 vs 33.3 en/en and 28.1 ar/ar; System & Interface 13.8 vs 41.4; Claude CUA clicks the non-mirrored Dock location",
+   "source": "https://arxiv.org/abs/2506.04135",
+   "date": "2025-10-18 (v4)",
+   "locator": "App. D.1 Tables 6-7; App. Fig. 19 discussion",
+   "read_status": "full text; synthesis re-read",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C04",
+   "claim": "No error bars or significance tests (checklist item 7: No)",
+   "source": "https://arxiv.org/abs/2506.04135",
+   "date": "2025-10-18 (v4)",
+   "locator": "NeurIPS checklist item 7",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C05",
+   "claim": "MPR-GUI: EN, ZH, FR, RU, JA, TH; static parallel screenshots; no Arabic or RTL; critique of interactive benchmarks' language-irrelevant variation",
+   "source": "https://arxiv.org/abs/2512.00756",
+   "date": "2026-04-28 (v2, ACL 2026)",
+   "locator": "Sec. 1; Sec. 3.1",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C06",
+   "claim": "Skill Issue: Arabic and Hebrew weakest; reasoning-language changes recover performance; Qwen3-4B Belebele Arabic 75.0 vs English 84.1",
+   "source": "https://arxiv.org/abs/2608.25832",
+   "date": "2026-08-26 (v1)",
+   "locator": "Abstract; Table 4",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C07",
+   "claim": "Rerun-reproducibility normalization of cross-lingual policy divergence; frontier models retain 71-73% under greedy decoding",
+   "source": "https://arxiv.org/abs/2608.11110",
+   "date": "2026-08-13 (v2, COLM 2026)",
+   "locator": "Abstract; reproducibility section",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C08",
+   "claim": "RealGUINoise: 7 frameworks, 42 noise types incl. Language Swap (Visual); category-level results; primarily English",
+   "source": "https://arxiv.org/abs/2609.38184",
+   "date": "2026-08-07",
+   "locator": "Table 10; Tables 4/12/13; Limitations",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C09",
+   "claim": "WebPageBench: event-level verification independent of interface language; 152 tasks (65 canonical, 87 variants); Russian interfaces; no locale variant",
+   "source": "https://arxiv.org/abs/2609.35026",
+   "date": "2026-09-28",
+   "locator": "Abstract; Sec. 3.4; App. B",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C10",
+   "claim": "BreakingWeb: 519 pairs, 7 sites, 29 families, grader preserved; agents -22.9%, humans -10.0%; no locale/RTL intervention",
+   "source": "https://arxiv.org/abs/2609.35814",
+   "date": "2026-09-20",
+   "locator": "Abstract; full-text grep",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C11",
+   "claim": "ScreenHaystack: blind zones; Qwen3-VL-8B -16.1 pp inside them on ScreenSpot-Pro; GTA1-7B and UI-TARS-1.5-7B weaker toward the right",
+   "source": "https://arxiv.org/abs/2609.32036",
+   "date": "2026-09-25",
+   "locator": "Abstract; Sec. 4",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C12",
+   "claim": "Left-first description in 97% of cases, including AIN under Arabic prompting",
+   "source": "https://arxiv.org/abs/2512.18231",
+   "date": "2025-12-20",
+   "locator": "Results table rows",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C13",
+   "claim": "PuMVR: script gaps up to 16% across 10 VLMs with language fixed",
+   "source": "https://arxiv.org/abs/2606.17188",
+   "date": "2026-06-15",
+   "locator": "Abstract",
+   "read_status": "abstract only",
+   "verdict": "ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C14",
+   "claim": "SUDFinder: 35 language-setting bugs, 19 RTL",
+   "source": "https://arxiv.org/abs/2607.04120",
+   "date": "2026-07-05",
+   "locator": "Setting-category table",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C15",
+   "claim": "GAIA-v2-LILT: careful alignment raises agent success by up to 32.7% over minimal translation",
+   "source": "https://aclanthology.org/2026.mellm-1.13/",
+   "date": "2026-04-27",
+   "locator": "Abstract",
+   "read_status": "abstract only",
+   "verdict": "ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C16",
+   "claim": "KITAB-Bench Arabic OCR CER: Qwen2.5-VL-7B 1.20, GPT-4o 0.31, Gemini-2.0-Flash 0.13",
+   "source": "https://arxiv.org/abs/2502.14949",
+   "date": "2025-02-20",
+   "locator": "OCR table (orx text lines 885-893)",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C17",
+   "claim": "GlotOCR: Arabic most degraded script, Qwen3-VL-8B included",
+   "source": "https://arxiv.org/abs/2604.12978",
+   "date": "2026-04-14",
+   "locator": "Sec. 5.2",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C18",
+   "claim": "Qwen3.5-9B card: '201 languages and dialects', ScreenSpot Pro 65.2, OSWorld-Verified 41.8; no Arabic GUI/OCR result",
+   "source": "https://huggingface.co/Qwen/Qwen3.5-9B",
+   "date": "fetched 2026-10-10",
+   "locator": "model card",
+   "read_status": "first-party",
+   "verdict": "FIRST_PARTY"
+  },
+  {
+   "claim_id": "C19",
+   "claim": "Lexical coupling in GUI grounding; cross-script concept-binding collapse (M2BIND)",
+   "source": "https://arxiv.org/abs/2608.21794",
+   "date": "2026-08-22; 2608.12333 2026-06-02",
+   "locator": "abstract; M2BIND lines 389-401",
+   "read_status": "abstract (2608.21794); full text (2608.12333)",
+   "verdict": "PARTLY_ABSTRACT"
+  },
+  {
+   "claim_id": "C20",
+   "claim": "S1a: D_w 12.5 (9B 8.59, 4B 16.41), D_b 11.33, excess UB 0.78 pp, 9B session shift +5.5 pp p 0.016, 9B cost 0.0027 GPU-h/episode; synthesis: 9B mean steps 12.04, 59% of 9B base cells at 0, 23% at 1",
+   "source": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "date": "2026-10-10",
+   "locator": "primary estimands table; What ran; compute/power-gate.json A_anchors",
+   "read_status": "repository",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C21",
+   "claim": "Serving probe v2: 2.52-2.57 req/s at 300 output tokens; a11y 1.129 vs screenshot 0.752",
+   "source": "program/evidence/2026-10-07/serving-throughput-probe-v2/README.md",
+   "date": "2026-10-07",
+   "locator": "summary tables",
+   "read_status": "repository",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C22",
+   "claim": "Relay facts at e6c815e (locale en-US env.mjs:64; English-name wait :79; router hosted-endpoint-only :131-140; 18 tasks, maxSteps 60/80; graders return named checks; 48 physical CSS lines, 0 logical; 86 getByRole; seeds 42/43; en-US formats main.jsx:630,716,1178; no Arabic glyphs in fonts)",
+   "source": "https://github.com/Kevin-Liu-01/Relay",
+   "date": "HEAD e6c815e (2026-10-05)",
+   "locator": "files and lines as listed",
+   "read_status": "repository (synthesis read-only; fonts by the cross-domain cell's fontTools count)",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C23",
+   "claim": "Relay English oracle: 91/91 node tests, 27/27 deep-workflow recipes, 14/14 control recipes",
+   "source": "asset cell logs (scratchpad s2-asset/relay-node-tests.log, relay-browser-recipes.log, relay-browser-controls.log)",
+   "date": "2026-10-10",
+   "locator": "logs",
+   "read_status": "first-party, this program",
+   "verdict": "FIRST_PARTY"
+  },
+  {
+   "claim_id": "C24",
+   "claim": "Naive dir=rtl on release-sync: 37 of 88 interactive elements off their mirrored positions; bidi artefacts",
+   "source": "compute/cells/s2kill__mirrorcheck.mjs (kill-shot probe)",
+   "date": "2026-10-10",
+   "locator": "probe output in the kill-shot cell report",
+   "read_status": "first-party, this program",
+   "verdict": "FIRST_PARTY"
+  },
+  {
+   "claim_id": "C25",
+   "claim": "Relay interface study pixel arm 3/24 passed, 19 blocked (14 connection failures)",
+   "source": "Relay evidence/campaigns/interface-study-2026-10-05/analysis.md",
+   "date": "2026-10-05",
+   "locator": "Outcomes",
+   "read_status": "first-party (Relay)",
+   "verdict": "FIRST_PARTY"
+  },
+  {
+   "claim_id": "C26",
+   "claim": "Power ceiling when stimuli are random",
+   "source": "https://doi.org/10.1037/xge0000014",
+   "date": "2014",
+   "locator": "abstract",
+   "read_status": "abstract only (paywalled)",
+   "verdict": "ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C27",
+   "claim": "More similar tasks raise ranking reliability by at most 0.097 when scaffold coverage dominates",
+   "source": "https://arxiv.org/abs/2610.00651",
+   "date": "2026-09-30",
+   "locator": "Abstract result (3)",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C28",
+   "claim": "Clustered and paired SEs; prediction noise exceeds data noise",
+   "source": "https://arxiv.org/abs/2411.00640",
+   "date": "2024-11-01; 2512.21326 2025-12-24",
+   "locator": "Secs. 2-5; abstract and Sec. 1",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C29",
+   "claim": "Few-cluster over-rejection; CR2 small-sample correction",
+   "source": "https://doi.org/10.1162/rest.90.3.414",
+   "date": "2008; 10.1080/07350015.2016.1247004",
+   "locator": "Crossref metadata",
+   "read_status": "metadata only",
+   "verdict": "UNVERIFIABLE_ACCESS"
+  },
+  {
+   "claim_id": "C30",
+   "claim": "TOST for null claims",
+   "source": "https://doi.org/10.1177/2515245918770963",
+   "date": "2018",
+   "locator": "Crossref metadata",
+   "read_status": "metadata only",
+   "verdict": "UNVERIFIABLE_ACCESS"
+  },
+  {
+   "claim_id": "C31",
+   "claim": "GWALI layout graphs: 91% precision, 100% recall on 54 web apps",
+   "source": "https://doi.org/10.1109/icst.2016.36",
+   "date": "2016-04",
+   "locator": "Sec. III-A; Sec. I",
+   "read_status": "author PDF (cross-domain cell)",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C32",
+   "claim": "Mirror and not-mirror lists; logical CSS; dir and dir=auto; CSS Logical Properties WD 2025-12-04",
+   "source": "https://firefox-source-docs.mozilla.org/code-quality/coding-style/rtl_guidelines.html",
+   "date": "accessed 2026-10-10",
+   "locator": "sections cited",
+   "read_status": "full page (cross-domain cell)",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C33",
+   "claim": "Android Force RTL; ICU en-XB; Windows qps-plocm",
+   "source": "https://developer.android.com/training/basics/supporting-devices/languages",
+   "date": "accessed 2026-10-10",
+   "locator": "Force RTL option; pseudo-locale table",
+   "read_status": "full page (cross-domain cell)",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C34",
+   "claim": "SAL_RTL_ENABLED forces RTL; UIMirroring 1 on / 2 off",
+   "source": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/source/app/settings.cxx",
+   "date": "commit 08f5d410",
+   "locator": "lines 2633-2669",
+   "read_status": "source (synthesis re-fetched)",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C35",
+   "claim": "Reading direction manipulated within one script shifts spatial biases",
+   "source": "https://doi.org/10.1038/srep18248",
+   "date": "2015-12-15",
+   "locator": "abstract",
+   "read_status": "abstract only",
+   "verdict": "ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C36",
+   "claim": "Default RTL rendering of SHAP/LIME labels: OCR CER 0.820-0.979",
+   "source": "https://arxiv.org/abs/2609.28565",
+   "date": "2026-09-23",
+   "locator": "Abstract; Sec. 3",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C37",
+   "claim": "X-WebAgentBench: text-only WebShop, 14 languages, no rendering",
+   "source": "https://arxiv.org/abs/2505.15372",
+   "date": "2025-05-21",
+   "locator": "Sec. 2.1, Sec. 3",
+   "read_status": "full text",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C38",
+   "claim": "OmnilingualGAIA2 gap 8.8-18.4 pass@3; BabelArena 23 languages",
+   "source": "https://arxiv.org/abs/2608.08775",
+   "date": "2026-08-09; 2609.23490 2026-09-20",
+   "locator": "abstracts; BabelArena full text",
+   "read_status": "abstract (OmnilingualGAIA2); full text (BabelArena, kill-shot)",
+   "verdict": "PARTLY_ABSTRACT"
+  },
+  {
+   "claim_id": "C39",
+   "claim": "Factorial interface contrast with a resolution threshold (75 tasks, 1,992 episodes), no locale factor",
+   "source": "https://openreview.net/forum?id=irjWqxKeHm",
+   "date": "2026-08-25",
+   "locator": "OpenReview search abstract",
+   "read_status": "abstract only; note page behind browser challenge",
+   "verdict": "UNVERIFIABLE_ACCESS"
+  }
+ ],
+ "counts": {
+  "ABSTRACT_ONLY": 4,
+  "FIRST_PARTY": 4,
+  "PARTLY_ABSTRACT": 2,
+  "UNVERIFIABLE_ACCESS": 3,
+  "VERIFIED": 26
+ },
+ "remediation": "Read PuMVR (2606.17188), GAIA-v2-LILT and the lexical-coupling paper (2608.21794) in full before any delta row rests on them"
+}

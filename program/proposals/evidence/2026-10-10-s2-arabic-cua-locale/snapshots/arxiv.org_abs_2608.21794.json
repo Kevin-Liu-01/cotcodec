@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2608.21794",
+ "fetched_at": "2026-10-10T21:54:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41119,
+ "raw_sha256": "5270d7761da12d38874918f9e222bc069c984fdabee92ef7b59427752fdeb468",
+ "raw_stored": false,
+ "extract": {
+  "title": "Lexical Coupling in GUI Element Grounding: Sentence Embeddings Track Labels across Mobile and Web",
+  "authors": [
+   "Chen, Qijia",
+   "Jacucci, Giulio"
+  ],
+  "citation_date": "2026/08/22",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 22 Aug 2026 06:30:03 UTC"
+   }
+  ],
+  "abstract": "GUI grounding evaluations that expose UI elements as text metadata often treat high instruction-element embedding similarity as evidence of semantic grounding. Across three mobile and web benchmarks, we show that this interpretation is frequently confounded by visible-label recovery. Lexical baselines remain competitive at top-1, label-poor targets remain weak for text-only methods, and encoder top-1 hits are predictable from lexical rank, candidate-pool size, and label type. We evaluate each action as a same-screen ranking task, comparing five off-the-shelf single-vector encoders with lexical baselines. Encoders recover some lexical misses, but deployable fusion gains are much smaller than target-aware oracle gains. These findings show that embedding-based evaluations can conflate visible-label recovery with semantic GUI grounding. Embedding-based evaluations should therefore report lexical baselines, label-type stratification, and deployable-fusion diagnostics. Our released repository provides analysis scripts and detexted per-step panels: this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

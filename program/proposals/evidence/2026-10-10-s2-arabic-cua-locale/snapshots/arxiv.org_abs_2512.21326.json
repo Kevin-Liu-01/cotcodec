@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2512.21326",
+ "fetched_at": "2026-10-10T21:54:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41702,
+ "raw_sha256": "c41160ca5c194aff9a4ad1b05cff28c3bb2b9e04c69e77261744054dd06a72c9",
+ "raw_stored": false,
+ "extract": {
+  "title": "Measuring all the noises of LLM Evals",
+  "authors": [
+   "Wang, Sida"
+  ],
+  "citation_date": "2025/12/24",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 24 Dec 2025 18:54:37 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 29 Mar 2026 00:57:41 UTC"
+   }
+  ],
+  "abstract": "Separating signal from noise is central to experiments. Applying well-established statistical methods effectively to LLM evals requires consideration of their unique noise characteristics. We clearly define and measure three types of noise: prediction noise from generating different answers on a given question, data noise from sampling questions, and their combined total noise following the law of total variance. To emphasize relative comparisons and gain statistical power, we propose the all-pairs paired method, which applies the paired analysis to all pairs of LLMs and measures all the noise components based on millions of question-level predictions across many evals and settings, revealing clear patterns. First, each eval exhibits a characteristic and highly predictable total noise level across all model pairs. Second, paired prediction noise typically exceeds paired data noise, which means reducing prediction noise by averaging can significantly increase statistical power. By measuring all the noises together, we can assess eval results in context, lowering the barrier of using the best analysis to make sound empirical decisions.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

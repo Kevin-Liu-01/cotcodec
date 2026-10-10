@@ -3704,3 +3704,82 @@ they say so.)
   - Either way, data-rights decision 1: subject G
     (m-a-p/1.3B-100B-GatedDeltaNet-pure@930ed6ae) has no licence; the
     apache-2.0 fallback differs in architecture and data.
+## 2026-10-10 — S2 gauntlet wave 1 (D67): score 49, no honest exit; candidate does not proceed as drafted (branch `gauntlet/s2-locale`, not merged)
+
+- Wave 1 ran in workflow `wf_a8edb476-c40` with declared cumulative budgets:
+  queries 150 (at least 30 reserved for the triad), wall_minutes 600, tokens
+  8,000,000, dollars 150, waves 3, gpu_hours 0.3. Four discovery cells fed one
+  synthesis owner, who wrote proposal `e16214cf...`, DRAFT registration
+  `s2-arabic-cua-locale-v1` (`866f994d...`; not frozen, not admitted) and the
+  evidence bundle (evidence root `39112668...`) at `1ac9837`. The scope is
+  Phase 0 (CPU: Relay's chrome strings into catalogs, locale as a fixture
+  parameter, oracle gate G1-G12) and the design of Phase 1 (Stage 1a cap 2.0
+  GPU-h, Stage 1b cap 15.0 GPU-h; admission is Kevin's under D24). Audit row 1
+  is appended to `program/gauntlet/2026-10-10-s2-arabic-cua-locale.jsonl`,
+  row hash `1a24cee8e8ec3a9874ed56cd84b35690709ce3d538b93243f0b51e14ac6e6657`.
+- Reviews: 58 (claude-opus-5-5) and 49 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1079). Each total equals the sum of its ten scores, and no cap binds (74,
+  79 and 89 all apply). Score 49, best 49. Neither review is signed (D24).
+- Blind discrimination: PASS. The critic judged the proposal and macOSWorld
+  (2506.04135) different mechanisms and the proposal the stronger
+  contribution. The packets match the bundle files exactly. Only macOSWorld
+  was judged.
+- Refute-first triad: 3 of 3 refuted.
+  - Novelty: no direct prior, but a textbook 2x2 on a split macOSWorld
+    names. Every cell exists already (Force RTL, en-XB, UIMirroring). G5's
+    reflection rule is claimed by an uncited IBM patent family (US9529606B1
+    and others, priority 2015). The estimand, chrome localization over an
+    English workspace, is narrower than macOSWorld's full localization.
+  - Identification: `<html dir>` also sets the bidi direction of chrome
+    strings. P0.4 isolates content only and G8 checks content only, so en-RTL
+    and ar-LTR each carry their own reordering artefact (a Chromium probe on
+    Relay reproduced them). That biases D by (s_arL - s_enR)/2 and T by the
+    opposite amount. The gate seeds never render the aurora fixture, K3 has
+    no reference hashes for analysed seeds, and G3 contradicts P0.2.
+  - Feasibility: the budget fits, but the first GPU step is not decisive (see
+    the largest defect).
+- Largest defect: decisiveness of the Phase 1 design on Relay. Reviewer 1
+  names it alone; reviewer 2, whose 49 is the score, names it together with
+  the identification confound, which the recorder ranks second (it is a
+  specification repair and matters only if Phase 1 can run).
+  - The proposal's own Monte Carlo gives P(gate PASS) 0.000 in three
+    scenarios and at most 0.039 in the fourth. The unconditional chance of a
+    PRESENT call on a real -5 pp effect is about 0.015.
+  - The feasibility refuter's recomputation: a PASS needs at least 15
+    informative tasks at S1a's variance and the central price, so at least 9
+    of Relay's 12 workflows solved in 2 or more of 8 English pixel episodes.
+    Relay's own record shows 0 of 12 frontier-model pixel workflow runs
+    completed.
+  - The gate's tau2 floor (0.0025) is below the simulated heterogeneity of a
+    -5 pp effect (0.006-0.017), so even a PASS would not give 80% power.
+  - So Stage 1a's 2.0 GPU-h buys an infrastructure exit that can be
+    forecast now at 0 GPU-h. Route R2 (a LibreOffice 2x2 on S1a's harness,
+    about 31-37 informative tasks) is recorded but not designed.
+- No honest exit applies: wave 1 of 3, tokens 3.35M of 8M, $61.57 of $150
+  (list-price equivalent), 141.6 of 600 minutes, no direct prior, no safety
+  failure. The triad result means the candidate does not proceed as
+  drafted, so the row's termination_reason is null. Queries: 123 of 150
+  (cells and synthesis 113, novelty refuter 10; the identification and
+  feasibility refuters ran none, below the rule's six each). The 27 left fund
+  at most one compliant repair wave. The doctor re-run at record time is
+  byte-identical to the bundle copy (FAIL, as expected).
+- The design study (`stage0/q2-design-study`, 79096f8) still has no S2 power
+  section. The S2 gate was sized independently from S1a's records and must
+  be reconciled when that section lands.
+- GPU: reviewer 2's job 1079 used 0.0553 GPU-h (scontrol RunTime 00:03:19 on
+  1 H100, COMPLETED 0:0, 22:38:48-22:42:07 UTC, no leftover container). It
+  was submitted after two read-only squeue checks showed an empty queue, so
+  the host rule held. It is added to the ledger as "S2 gauntlet wave 1 ...
+  open-weight review (D24)". The program total is 9.8566 on this branch.
+  Phase 0 and Phase 1 used no GPU.
+- Waiting on Kevin: whether S2 continues to a repair wave, and with which
+  repair.
+  - (a) Redesign Phase 1 on route R2 and keep Relay Phase 0 as
+    infrastructure only, with the bidi, G3, G6, K3 and aurora fixes.
+  - (b) Keep Relay. Register Phase 0 as infrastructure only and replace
+    Stage 1a with a screen of at most 0.3 GPU-h whose stop rule is the
+    gate's real pass condition, with tau2 fixed at 0.006 or more (design
+    decision 9). By the registration's own text, this closes Phase 1 on
+    Relay now.
+  - Design decision 1 (a standalone 2.0 GPU-h Stage 1a) should not be
+    accepted on the current design.

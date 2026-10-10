@@ -1,0 +1,7019 @@
+{
+ "script": "program/proposals/evidence/2026-10-10-s2-arabic-cua-locale/compute/power-gate.py",
+ "inputs": {
+  "a1_jsonl": "/Users/kevinliu/repos/cotcodec/program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+  "a1_sha256": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+  "a1_rows": 1808
+ },
+ "provenance": {
+  "python": "3.13.14",
+  "numpy": "2.5.2",
+  "scipy": "1.18.0",
+  "argv": [
+   "/Users/kevinliu/repos/cotcodec/program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+   "program/proposals/evidence/2026-10-10-s2-arabic-cua-locale/compute/power-gate.json",
+   "--nrep",
+   "500"
+  ],
+  "seeds": [
+   42,
+   43,
+   44
+  ],
+  "nrep_per_seed_per_cell": 500
+ },
+ "registered_constants": {
+  "alpha": 0.05,
+  "power": 0.8,
+  "margin_pp": 5.0,
+  "tau2_gate": 0.0025,
+  "n_grid": [
+   8,
+   12,
+   16,
+   20,
+   24,
+   28,
+   32,
+   36,
+   40,
+   48,
+   56,
+   64
+  ],
+  "pilot_n": 8,
+  "pilot_min_successes": 2,
+  "K_inf_min": 12,
+  "floor_band": [
+   0.15,
+   0.85
+  ],
+  "cap_ceiling_gpu_h": 15.0,
+  "stage_1b_cap_price": "1.2 x 1.25 x pilot-measured English GPU-h per episode (simulated at the S1a-realized central price; the transported high price is the sensitivity)",
+  "tau2_used_by_gate": "max(0.0025, tau2_logit): the between-task variance of the probability change when one uniform logit shift gives a -5 pp mean change on the informative tasks' Jeffreys-smoothed pilot base rates; the fixed 0.0025 variant is reported for comparison",
+  "sigma2_used_by_gate": "one-sided 80% upper bound of the pilot's mean unbiased within-task variance over informative tasks"
+ },
+ "A_anchors": {
+  "base_9B": {
+   "cells": 64,
+   "reruns_per_cell": [
+    4
+   ],
+   "mean_success": 0.3086,
+   "share_p0": 0.5938,
+   "share_p1": 0.2344,
+   "mean_within_cell_var_unbiased": 0.043
+  },
+  "base_4B": {
+   "cells": 64,
+   "reruns_per_cell": [
+    4
+   ],
+   "mean_success": 0.2773,
+   "share_p0": 0.5781,
+   "share_p1": 0.1562,
+   "mean_within_cell_var_unbiased": 0.0742
+  },
+  "base_pooled": {
+   "cells": 128,
+   "reruns_per_cell": [
+    4
+   ],
+   "mean_success": 0.293,
+   "share_p0": 0.5859,
+   "share_p1": 0.1953,
+   "mean_within_cell_var_unbiased": 0.0586
+  },
+  "all_9B": {
+   "cells": 226,
+   "reruns_per_cell": [
+    4
+   ],
+   "mean_success": 0.3164,
+   "share_p0": 0.5973,
+   "share_p1": 0.2301,
+   "mean_within_cell_var_unbiased": 0.0465
+  },
+  "all_pooled": {
+   "cells": 452,
+   "reruns_per_cell": [
+    4
+   ],
+   "mean_success": 0.3009,
+   "share_p0": 0.604,
+   "share_p1": 0.2058,
+   "mean_within_cell_var_unbiased": 0.0516
+  },
+  "registered_readings": {
+   "D_w_pooled": 0.125,
+   "D_w_9B": 0.0859,
+   "D_w_4B": 0.1641,
+   "D_b_pooled": 0.1133,
+   "X_c_4B": 0.0084,
+   "X_c_9B": 0.015
+  },
+  "sigma2_from_D_w": {
+   "pooled": 0.0625,
+   "9B": 0.04295,
+   "4B": 0.08205
+  },
+  "zibb_fit_9B_all_cells": {
+   "size": "9B",
+   "cells": 226,
+   "pi0_structural_zero": 0.2604,
+   "beta_a": 0.1501,
+   "beta_b": 0.2015,
+   "implied_mean_success": 0.3157,
+   "implied_E_p1mp": 0.0471,
+   "neg_log_lik": 256.6936
+  },
+  "binarisation": "success = raw score >= 1.0 (fractional scores count as failures), as the kill-shot cell did"
+ },
+ "B_analytic_mde_grid": [
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 5.14,
+   "mde_pp_n12": 4.19,
+   "mde_pp_n16": 3.63,
+   "mde_pp_n20": 3.25,
+   "mde_pp_n24": 2.97,
+   "mde_pp_n28": 2.75,
+   "mde_pp_n32": 2.57,
+   "mde_pp_n36": 2.42,
+   "mde_pp_n40": 2.3,
+   "mde_pp_n48": 2.1,
+   "mde_pp_n56": 1.94,
+   "mde_pp_n64": 1.82,
+   "mde_pp_ninf": 0.01
+  },
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 6.22,
+   "mde_pp_n12": 5.47,
+   "mde_pp_n16": 5.05,
+   "mde_pp_n20": 4.78,
+   "mde_pp_n24": 4.59,
+   "mde_pp_n28": 4.45,
+   "mde_pp_n32": 4.34,
+   "mde_pp_n36": 4.26,
+   "mde_pp_n40": 4.19,
+   "mde_pp_n48": 4.08,
+   "mde_pp_n56": 4.01,
+   "mde_pp_n64": 3.95,
+   "mde_pp_ninf": 3.5
+  },
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 7.14,
+   "mde_pp_n12": 6.49,
+   "mde_pp_n16": 6.14,
+   "mde_pp_n20": 5.93,
+   "mde_pp_n24": 5.77,
+   "mde_pp_n28": 5.66,
+   "mde_pp_n32": 5.58,
+   "mde_pp_n36": 5.52,
+   "mde_pp_n40": 5.46,
+   "mde_pp_n48": 5.38,
+   "mde_pp_n56": 5.32,
+   "mde_pp_n64": 5.28,
+   "mde_pp_ninf": 4.95
+  },
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 8.69,
+   "mde_pp_n12": 8.17,
+   "mde_pp_n16": 7.89,
+   "mde_pp_n20": 7.72,
+   "mde_pp_n24": 7.61,
+   "mde_pp_n28": 7.53,
+   "mde_pp_n32": 7.46,
+   "mde_pp_n36": 7.41,
+   "mde_pp_n40": 7.37,
+   "mde_pp_n48": 7.31,
+   "mde_pp_n56": 7.27,
+   "mde_pp_n64": 7.24,
+   "mde_pp_ninf": 7.01
+  },
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 7.27,
+   "mde_pp_n12": 5.93,
+   "mde_pp_n16": 5.14,
+   "mde_pp_n20": 4.59,
+   "mde_pp_n24": 4.19,
+   "mde_pp_n28": 3.88,
+   "mde_pp_n32": 3.63,
+   "mde_pp_n36": 3.42,
+   "mde_pp_n40": 3.25,
+   "mde_pp_n48": 2.97,
+   "mde_pp_n56": 2.75,
+   "mde_pp_n64": 2.57,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 8.07,
+   "mde_pp_n12": 6.89,
+   "mde_pp_n16": 6.22,
+   "mde_pp_n20": 5.78,
+   "mde_pp_n24": 5.47,
+   "mde_pp_n28": 5.23,
+   "mde_pp_n32": 5.05,
+   "mde_pp_n36": 4.9,
+   "mde_pp_n40": 4.78,
+   "mde_pp_n48": 4.59,
+   "mde_pp_n56": 4.45,
+   "mde_pp_n64": 4.34,
+   "mde_pp_ninf": 3.5
+  },
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 8.79,
+   "mde_pp_n12": 7.73,
+   "mde_pp_n16": 7.14,
+   "mde_pp_n20": 6.76,
+   "mde_pp_n24": 6.49,
+   "mde_pp_n28": 6.3,
+   "mde_pp_n32": 6.14,
+   "mde_pp_n36": 6.02,
+   "mde_pp_n40": 5.93,
+   "mde_pp_n48": 5.77,
+   "mde_pp_n56": 5.66,
+   "mde_pp_n64": 5.58,
+   "mde_pp_ninf": 4.95
+  },
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 10.09,
+   "mde_pp_n12": 9.18,
+   "mde_pp_n16": 8.69,
+   "mde_pp_n20": 8.38,
+   "mde_pp_n24": 8.17,
+   "mde_pp_n28": 8.01,
+   "mde_pp_n32": 7.89,
+   "mde_pp_n36": 7.8,
+   "mde_pp_n40": 7.72,
+   "mde_pp_n48": 7.61,
+   "mde_pp_n56": 7.53,
+   "mde_pp_n64": 7.46,
+   "mde_pp_ninf": 7.01
+  },
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 8.76,
+   "mde_pp_n12": 7.15,
+   "mde_pp_n16": 6.19,
+   "mde_pp_n20": 5.54,
+   "mde_pp_n24": 5.06,
+   "mde_pp_n28": 4.68,
+   "mde_pp_n32": 4.38,
+   "mde_pp_n36": 4.13,
+   "mde_pp_n40": 3.92,
+   "mde_pp_n48": 3.58,
+   "mde_pp_n56": 3.31,
+   "mde_pp_n64": 3.1,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 9.43,
+   "mde_pp_n12": 7.96,
+   "mde_pp_n16": 7.12,
+   "mde_pp_n20": 6.55,
+   "mde_pp_n24": 6.15,
+   "mde_pp_n28": 5.85,
+   "mde_pp_n32": 5.61,
+   "mde_pp_n36": 5.42,
+   "mde_pp_n40": 5.26,
+   "mde_pp_n48": 5.01,
+   "mde_pp_n56": 4.82,
+   "mde_pp_n64": 4.68,
+   "mde_pp_ninf": 3.5
+  },
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 10.06,
+   "mde_pp_n12": 8.7,
+   "mde_pp_n16": 7.93,
+   "mde_pp_n20": 7.43,
+   "mde_pp_n24": 7.08,
+   "mde_pp_n28": 6.82,
+   "mde_pp_n32": 6.61,
+   "mde_pp_n36": 6.45,
+   "mde_pp_n40": 6.32,
+   "mde_pp_n48": 6.11,
+   "mde_pp_n56": 5.96,
+   "mde_pp_n64": 5.84,
+   "mde_pp_ninf": 4.95
+  },
+  {
+   "design": "conditional3",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 11.22,
+   "mde_pp_n12": 10.01,
+   "mde_pp_n16": 9.35,
+   "mde_pp_n20": 8.93,
+   "mde_pp_n24": 8.64,
+   "mde_pp_n28": 8.43,
+   "mde_pp_n32": 8.26,
+   "mde_pp_n36": 8.13,
+   "mde_pp_n40": 8.03,
+   "mde_pp_n48": 7.87,
+   "mde_pp_n56": 7.75,
+   "mde_pp_n64": 7.66,
+   "mde_pp_ninf": 7.01
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 5.49,
+   "mde_pp_n12": 4.49,
+   "mde_pp_n16": 3.89,
+   "mde_pp_n20": 3.48,
+   "mde_pp_n24": 3.17,
+   "mde_pp_n28": 2.94,
+   "mde_pp_n32": 2.75,
+   "mde_pp_n36": 2.59,
+   "mde_pp_n40": 2.46,
+   "mde_pp_n48": 2.24,
+   "mde_pp_n56": 2.08,
+   "mde_pp_n64": 1.94,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 6.65,
+   "mde_pp_n12": 5.85,
+   "mde_pp_n16": 5.4,
+   "mde_pp_n20": 5.11,
+   "mde_pp_n24": 4.91,
+   "mde_pp_n28": 4.76,
+   "mde_pp_n32": 4.65,
+   "mde_pp_n36": 4.56,
+   "mde_pp_n40": 4.48,
+   "mde_pp_n48": 4.37,
+   "mde_pp_n56": 4.28,
+   "mde_pp_n64": 4.22,
+   "mde_pp_ninf": 3.75
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 7.63,
+   "mde_pp_n12": 6.94,
+   "mde_pp_n16": 6.57,
+   "mde_pp_n20": 6.34,
+   "mde_pp_n24": 6.18,
+   "mde_pp_n28": 6.06,
+   "mde_pp_n32": 5.97,
+   "mde_pp_n36": 5.9,
+   "mde_pp_n40": 5.84,
+   "mde_pp_n48": 5.75,
+   "mde_pp_n56": 5.69,
+   "mde_pp_n64": 5.64,
+   "mde_pp_ninf": 5.3
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 9.29,
+   "mde_pp_n12": 8.73,
+   "mde_pp_n16": 8.44,
+   "mde_pp_n20": 8.26,
+   "mde_pp_n24": 8.14,
+   "mde_pp_n28": 8.05,
+   "mde_pp_n32": 7.98,
+   "mde_pp_n36": 7.93,
+   "mde_pp_n40": 7.89,
+   "mde_pp_n48": 7.82,
+   "mde_pp_n56": 7.78,
+   "mde_pp_n64": 7.74,
+   "mde_pp_ninf": 7.49
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 7.77,
+   "mde_pp_n12": 6.34,
+   "mde_pp_n16": 5.49,
+   "mde_pp_n20": 4.91,
+   "mde_pp_n24": 4.49,
+   "mde_pp_n28": 4.15,
+   "mde_pp_n32": 3.89,
+   "mde_pp_n36": 3.66,
+   "mde_pp_n40": 3.48,
+   "mde_pp_n48": 3.17,
+   "mde_pp_n56": 2.94,
+   "mde_pp_n64": 2.75,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 8.63,
+   "mde_pp_n12": 7.37,
+   "mde_pp_n16": 6.65,
+   "mde_pp_n20": 6.18,
+   "mde_pp_n24": 5.85,
+   "mde_pp_n28": 5.59,
+   "mde_pp_n32": 5.4,
+   "mde_pp_n36": 5.24,
+   "mde_pp_n40": 5.11,
+   "mde_pp_n48": 4.91,
+   "mde_pp_n56": 4.76,
+   "mde_pp_n64": 4.65,
+   "mde_pp_ninf": 3.75
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 9.41,
+   "mde_pp_n12": 8.27,
+   "mde_pp_n16": 7.63,
+   "mde_pp_n20": 7.23,
+   "mde_pp_n24": 6.94,
+   "mde_pp_n28": 6.73,
+   "mde_pp_n32": 6.57,
+   "mde_pp_n36": 6.44,
+   "mde_pp_n40": 6.34,
+   "mde_pp_n48": 6.18,
+   "mde_pp_n56": 6.06,
+   "mde_pp_n64": 5.97,
+   "mde_pp_ninf": 5.3
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 10.8,
+   "mde_pp_n12": 9.82,
+   "mde_pp_n16": 9.29,
+   "mde_pp_n20": 8.96,
+   "mde_pp_n24": 8.73,
+   "mde_pp_n28": 8.57,
+   "mde_pp_n32": 8.44,
+   "mde_pp_n36": 8.34,
+   "mde_pp_n40": 8.26,
+   "mde_pp_n48": 8.14,
+   "mde_pp_n56": 8.05,
+   "mde_pp_n64": 7.98,
+   "mde_pp_ninf": 7.49
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 9.37,
+   "mde_pp_n12": 7.65,
+   "mde_pp_n16": 6.62,
+   "mde_pp_n20": 5.93,
+   "mde_pp_n24": 5.41,
+   "mde_pp_n28": 5.01,
+   "mde_pp_n32": 4.68,
+   "mde_pp_n36": 4.42,
+   "mde_pp_n40": 4.19,
+   "mde_pp_n48": 3.82,
+   "mde_pp_n56": 3.54,
+   "mde_pp_n64": 3.31,
+   "mde_pp_ninf": 0.03
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 10.09,
+   "mde_pp_n12": 8.52,
+   "mde_pp_n16": 7.61,
+   "mde_pp_n20": 7.01,
+   "mde_pp_n24": 6.58,
+   "mde_pp_n28": 6.25,
+   "mde_pp_n32": 6.0,
+   "mde_pp_n36": 5.79,
+   "mde_pp_n40": 5.62,
+   "mde_pp_n48": 5.35,
+   "mde_pp_n56": 5.16,
+   "mde_pp_n64": 5.0,
+   "mde_pp_ninf": 3.75
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 10.76,
+   "mde_pp_n12": 9.31,
+   "mde_pp_n16": 8.48,
+   "mde_pp_n20": 7.95,
+   "mde_pp_n24": 7.57,
+   "mde_pp_n28": 7.29,
+   "mde_pp_n32": 7.07,
+   "mde_pp_n36": 6.9,
+   "mde_pp_n40": 6.76,
+   "mde_pp_n48": 6.54,
+   "mde_pp_n56": 6.37,
+   "mde_pp_n64": 6.25,
+   "mde_pp_ninf": 5.3
+  },
+  {
+   "design": "conditional3",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 12.0,
+   "mde_pp_n12": 10.71,
+   "mde_pp_n16": 10.0,
+   "mde_pp_n20": 9.55,
+   "mde_pp_n24": 9.24,
+   "mde_pp_n28": 9.01,
+   "mde_pp_n32": 8.84,
+   "mde_pp_n36": 8.7,
+   "mde_pp_n40": 8.59,
+   "mde_pp_n48": 8.41,
+   "mde_pp_n56": 8.29,
+   "mde_pp_n64": 8.19,
+   "mde_pp_ninf": 7.49
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 5.94,
+   "mde_pp_n12": 4.85,
+   "mde_pp_n16": 4.2,
+   "mde_pp_n20": 3.76,
+   "mde_pp_n24": 3.43,
+   "mde_pp_n28": 3.17,
+   "mde_pp_n32": 2.97,
+   "mde_pp_n36": 2.8,
+   "mde_pp_n40": 2.66,
+   "mde_pp_n48": 2.42,
+   "mde_pp_n56": 2.24,
+   "mde_pp_n64": 2.1,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 7.19,
+   "mde_pp_n12": 6.32,
+   "mde_pp_n16": 5.84,
+   "mde_pp_n20": 5.52,
+   "mde_pp_n24": 5.31,
+   "mde_pp_n28": 5.15,
+   "mde_pp_n32": 5.02,
+   "mde_pp_n36": 4.92,
+   "mde_pp_n40": 4.84,
+   "mde_pp_n48": 4.72,
+   "mde_pp_n56": 4.63,
+   "mde_pp_n64": 4.56,
+   "mde_pp_ninf": 4.05
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 8.25,
+   "mde_pp_n12": 7.51,
+   "mde_pp_n16": 7.1,
+   "mde_pp_n20": 6.85,
+   "mde_pp_n24": 6.68,
+   "mde_pp_n28": 6.55,
+   "mde_pp_n32": 6.45,
+   "mde_pp_n36": 6.38,
+   "mde_pp_n40": 6.31,
+   "mde_pp_n48": 6.22,
+   "mde_pp_n56": 6.15,
+   "mde_pp_n64": 6.1,
+   "mde_pp_ninf": 5.73
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 10.05,
+   "mde_pp_n12": 9.44,
+   "mde_pp_n16": 9.13,
+   "mde_pp_n20": 8.93,
+   "mde_pp_n24": 8.8,
+   "mde_pp_n28": 8.7,
+   "mde_pp_n32": 8.63,
+   "mde_pp_n36": 8.57,
+   "mde_pp_n40": 8.53,
+   "mde_pp_n48": 8.46,
+   "mde_pp_n56": 8.41,
+   "mde_pp_n64": 8.37,
+   "mde_pp_ninf": 8.1
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 8.4,
+   "mde_pp_n12": 6.86,
+   "mde_pp_n16": 5.94,
+   "mde_pp_n20": 5.31,
+   "mde_pp_n24": 4.85,
+   "mde_pp_n28": 4.49,
+   "mde_pp_n32": 4.2,
+   "mde_pp_n36": 3.96,
+   "mde_pp_n40": 3.76,
+   "mde_pp_n48": 3.43,
+   "mde_pp_n56": 3.17,
+   "mde_pp_n64": 2.97,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 9.33,
+   "mde_pp_n12": 7.97,
+   "mde_pp_n16": 7.19,
+   "mde_pp_n20": 6.68,
+   "mde_pp_n24": 6.32,
+   "mde_pp_n28": 6.05,
+   "mde_pp_n32": 5.84,
+   "mde_pp_n36": 5.66,
+   "mde_pp_n40": 5.52,
+   "mde_pp_n48": 5.31,
+   "mde_pp_n56": 5.15,
+   "mde_pp_n64": 5.02,
+   "mde_pp_ninf": 4.05
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 10.17,
+   "mde_pp_n12": 8.94,
+   "mde_pp_n16": 8.25,
+   "mde_pp_n20": 7.81,
+   "mde_pp_n24": 7.51,
+   "mde_pp_n28": 7.28,
+   "mde_pp_n32": 7.1,
+   "mde_pp_n36": 6.96,
+   "mde_pp_n40": 6.85,
+   "mde_pp_n48": 6.68,
+   "mde_pp_n56": 6.55,
+   "mde_pp_n64": 6.45,
+   "mde_pp_ninf": 5.73
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 11.67,
+   "mde_pp_n12": 10.61,
+   "mde_pp_n16": 10.05,
+   "mde_pp_n20": 9.69,
+   "mde_pp_n24": 9.44,
+   "mde_pp_n28": 9.26,
+   "mde_pp_n32": 9.13,
+   "mde_pp_n36": 9.02,
+   "mde_pp_n40": 8.93,
+   "mde_pp_n48": 8.8,
+   "mde_pp_n56": 8.7,
+   "mde_pp_n64": 8.63,
+   "mde_pp_ninf": 8.1
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 10.13,
+   "mde_pp_n12": 8.27,
+   "mde_pp_n16": 7.16,
+   "mde_pp_n20": 6.4,
+   "mde_pp_n24": 5.85,
+   "mde_pp_n28": 5.41,
+   "mde_pp_n32": 5.06,
+   "mde_pp_n36": 4.77,
+   "mde_pp_n40": 4.53,
+   "mde_pp_n48": 4.13,
+   "mde_pp_n56": 3.83,
+   "mde_pp_n64": 3.58,
+   "mde_pp_ninf": 0.03
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 10.91,
+   "mde_pp_n12": 9.21,
+   "mde_pp_n16": 8.23,
+   "mde_pp_n20": 7.58,
+   "mde_pp_n24": 7.11,
+   "mde_pp_n28": 6.76,
+   "mde_pp_n32": 6.48,
+   "mde_pp_n36": 6.26,
+   "mde_pp_n40": 6.08,
+   "mde_pp_n48": 5.79,
+   "mde_pp_n56": 5.57,
+   "mde_pp_n64": 5.41,
+   "mde_pp_ninf": 4.05
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 11.63,
+   "mde_pp_n12": 10.06,
+   "mde_pp_n16": 9.17,
+   "mde_pp_n20": 8.59,
+   "mde_pp_n24": 8.19,
+   "mde_pp_n28": 7.88,
+   "mde_pp_n32": 7.65,
+   "mde_pp_n36": 7.46,
+   "mde_pp_n40": 7.3,
+   "mde_pp_n48": 7.06,
+   "mde_pp_n56": 6.89,
+   "mde_pp_n64": 6.76,
+   "mde_pp_ninf": 5.73
+  },
+  {
+   "design": "conditional3",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 12.97,
+   "mde_pp_n12": 11.58,
+   "mde_pp_n16": 10.81,
+   "mde_pp_n20": 10.33,
+   "mde_pp_n24": 9.99,
+   "mde_pp_n28": 9.74,
+   "mde_pp_n32": 9.55,
+   "mde_pp_n36": 9.4,
+   "mde_pp_n40": 9.28,
+   "mde_pp_n48": 9.1,
+   "mde_pp_n56": 8.96,
+   "mde_pp_n64": 8.86,
+   "mde_pp_ninf": 8.1
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 6.52,
+   "mde_pp_n12": 5.32,
+   "mde_pp_n16": 4.61,
+   "mde_pp_n20": 4.12,
+   "mde_pp_n24": 3.76,
+   "mde_pp_n28": 3.48,
+   "mde_pp_n32": 3.26,
+   "mde_pp_n36": 3.07,
+   "mde_pp_n40": 2.91,
+   "mde_pp_n48": 2.66,
+   "mde_pp_n56": 2.46,
+   "mde_pp_n64": 2.3,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 7.89,
+   "mde_pp_n12": 6.93,
+   "mde_pp_n16": 6.4,
+   "mde_pp_n20": 6.06,
+   "mde_pp_n24": 5.82,
+   "mde_pp_n28": 5.65,
+   "mde_pp_n32": 5.51,
+   "mde_pp_n36": 5.4,
+   "mde_pp_n40": 5.31,
+   "mde_pp_n48": 5.18,
+   "mde_pp_n56": 5.08,
+   "mde_pp_n64": 5.0,
+   "mde_pp_ninf": 4.44
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 9.05,
+   "mde_pp_n12": 8.23,
+   "mde_pp_n16": 7.79,
+   "mde_pp_n20": 7.51,
+   "mde_pp_n24": 7.32,
+   "mde_pp_n28": 7.18,
+   "mde_pp_n32": 7.08,
+   "mde_pp_n36": 6.99,
+   "mde_pp_n40": 6.93,
+   "mde_pp_n48": 6.82,
+   "mde_pp_n56": 6.75,
+   "mde_pp_n64": 6.69,
+   "mde_pp_ninf": 6.28
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 11.02,
+   "mde_pp_n12": 10.36,
+   "mde_pp_n16": 10.01,
+   "mde_pp_n20": 9.8,
+   "mde_pp_n24": 9.65,
+   "mde_pp_n28": 9.54,
+   "mde_pp_n32": 9.46,
+   "mde_pp_n36": 9.4,
+   "mde_pp_n40": 9.35,
+   "mde_pp_n48": 9.28,
+   "mde_pp_n56": 9.22,
+   "mde_pp_n64": 9.18,
+   "mde_pp_ninf": 8.89
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 9.21,
+   "mde_pp_n12": 7.52,
+   "mde_pp_n16": 6.52,
+   "mde_pp_n20": 5.83,
+   "mde_pp_n24": 5.32,
+   "mde_pp_n28": 4.92,
+   "mde_pp_n32": 4.61,
+   "mde_pp_n36": 4.34,
+   "mde_pp_n40": 4.12,
+   "mde_pp_n48": 3.76,
+   "mde_pp_n56": 3.48,
+   "mde_pp_n64": 3.26,
+   "mde_pp_ninf": 0.03
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 10.23,
+   "mde_pp_n12": 8.74,
+   "mde_pp_n16": 7.89,
+   "mde_pp_n20": 7.33,
+   "mde_pp_n24": 6.93,
+   "mde_pp_n28": 6.63,
+   "mde_pp_n32": 6.4,
+   "mde_pp_n36": 6.21,
+   "mde_pp_n40": 6.06,
+   "mde_pp_n48": 5.82,
+   "mde_pp_n56": 5.65,
+   "mde_pp_n64": 5.51,
+   "mde_pp_ninf": 4.44
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 11.15,
+   "mde_pp_n12": 9.8,
+   "mde_pp_n16": 9.05,
+   "mde_pp_n20": 8.57,
+   "mde_pp_n24": 8.23,
+   "mde_pp_n28": 7.98,
+   "mde_pp_n32": 7.79,
+   "mde_pp_n36": 7.64,
+   "mde_pp_n40": 7.51,
+   "mde_pp_n48": 7.32,
+   "mde_pp_n56": 7.18,
+   "mde_pp_n64": 7.08,
+   "mde_pp_ninf": 6.28
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 12.8,
+   "mde_pp_n12": 11.64,
+   "mde_pp_n16": 11.02,
+   "mde_pp_n20": 10.63,
+   "mde_pp_n24": 10.36,
+   "mde_pp_n28": 10.16,
+   "mde_pp_n32": 10.01,
+   "mde_pp_n36": 9.89,
+   "mde_pp_n40": 9.8,
+   "mde_pp_n48": 9.65,
+   "mde_pp_n56": 9.54,
+   "mde_pp_n64": 9.46,
+   "mde_pp_ninf": 8.89
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 11.11,
+   "mde_pp_n12": 9.07,
+   "mde_pp_n16": 7.85,
+   "mde_pp_n20": 7.03,
+   "mde_pp_n24": 6.41,
+   "mde_pp_n28": 5.94,
+   "mde_pp_n32": 5.55,
+   "mde_pp_n36": 5.24,
+   "mde_pp_n40": 4.97,
+   "mde_pp_n48": 4.53,
+   "mde_pp_n56": 4.2,
+   "mde_pp_n64": 3.93,
+   "mde_pp_ninf": 0.03
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 11.96,
+   "mde_pp_n12": 10.1,
+   "mde_pp_n16": 9.02,
+   "mde_pp_n20": 8.31,
+   "mde_pp_n24": 7.8,
+   "mde_pp_n28": 7.42,
+   "mde_pp_n32": 7.11,
+   "mde_pp_n36": 6.87,
+   "mde_pp_n40": 6.66,
+   "mde_pp_n48": 6.35,
+   "mde_pp_n56": 6.11,
+   "mde_pp_n64": 5.93,
+   "mde_pp_ninf": 4.44
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 12.76,
+   "mde_pp_n12": 11.03,
+   "mde_pp_n16": 10.06,
+   "mde_pp_n20": 9.43,
+   "mde_pp_n24": 8.98,
+   "mde_pp_n28": 8.65,
+   "mde_pp_n32": 8.39,
+   "mde_pp_n36": 8.18,
+   "mde_pp_n40": 8.01,
+   "mde_pp_n48": 7.75,
+   "mde_pp_n56": 7.56,
+   "mde_pp_n64": 7.41,
+   "mde_pp_ninf": 6.28
+  },
+  {
+   "design": "conditional3",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 14.23,
+   "mde_pp_n12": 12.7,
+   "mde_pp_n16": 11.86,
+   "mde_pp_n20": 11.33,
+   "mde_pp_n24": 10.96,
+   "mde_pp_n28": 10.69,
+   "mde_pp_n32": 10.48,
+   "mde_pp_n36": 10.31,
+   "mde_pp_n40": 10.18,
+   "mde_pp_n48": 9.98,
+   "mde_pp_n56": 9.83,
+   "mde_pp_n64": 9.72,
+   "mde_pp_ninf": 8.89
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 3.63,
+   "mde_pp_n12": 2.97,
+   "mde_pp_n16": 2.57,
+   "mde_pp_n20": 2.3,
+   "mde_pp_n24": 2.1,
+   "mde_pp_n28": 1.94,
+   "mde_pp_n32": 1.82,
+   "mde_pp_n36": 1.71,
+   "mde_pp_n40": 1.62,
+   "mde_pp_n48": 1.48,
+   "mde_pp_n56": 1.37,
+   "mde_pp_n64": 1.28,
+   "mde_pp_ninf": 0.01
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 5.05,
+   "mde_pp_n12": 4.59,
+   "mde_pp_n16": 4.34,
+   "mde_pp_n20": 4.19,
+   "mde_pp_n24": 4.08,
+   "mde_pp_n28": 4.01,
+   "mde_pp_n32": 3.95,
+   "mde_pp_n36": 3.9,
+   "mde_pp_n40": 3.86,
+   "mde_pp_n48": 3.8,
+   "mde_pp_n56": 3.76,
+   "mde_pp_n64": 3.73,
+   "mde_pp_ninf": 3.5
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 6.14,
+   "mde_pp_n12": 5.77,
+   "mde_pp_n16": 5.58,
+   "mde_pp_n20": 5.46,
+   "mde_pp_n24": 5.38,
+   "mde_pp_n28": 5.32,
+   "mde_pp_n32": 5.28,
+   "mde_pp_n36": 5.24,
+   "mde_pp_n40": 5.21,
+   "mde_pp_n48": 5.17,
+   "mde_pp_n56": 5.14,
+   "mde_pp_n64": 5.12,
+   "mde_pp_ninf": 4.95
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 7.89,
+   "mde_pp_n12": 7.61,
+   "mde_pp_n16": 7.46,
+   "mde_pp_n20": 7.37,
+   "mde_pp_n24": 7.31,
+   "mde_pp_n28": 7.27,
+   "mde_pp_n32": 7.24,
+   "mde_pp_n36": 7.21,
+   "mde_pp_n40": 7.19,
+   "mde_pp_n48": 7.16,
+   "mde_pp_n56": 7.14,
+   "mde_pp_n64": 7.12,
+   "mde_pp_ninf": 7.01
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 5.14,
+   "mde_pp_n12": 4.19,
+   "mde_pp_n16": 3.63,
+   "mde_pp_n20": 3.25,
+   "mde_pp_n24": 2.97,
+   "mde_pp_n28": 2.75,
+   "mde_pp_n32": 2.57,
+   "mde_pp_n36": 2.42,
+   "mde_pp_n40": 2.3,
+   "mde_pp_n48": 2.1,
+   "mde_pp_n56": 1.94,
+   "mde_pp_n64": 1.82,
+   "mde_pp_ninf": 0.01
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 6.22,
+   "mde_pp_n12": 5.47,
+   "mde_pp_n16": 5.05,
+   "mde_pp_n20": 4.78,
+   "mde_pp_n24": 4.59,
+   "mde_pp_n28": 4.45,
+   "mde_pp_n32": 4.34,
+   "mde_pp_n36": 4.26,
+   "mde_pp_n40": 4.19,
+   "mde_pp_n48": 4.08,
+   "mde_pp_n56": 4.01,
+   "mde_pp_n64": 3.95,
+   "mde_pp_ninf": 3.5
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 7.14,
+   "mde_pp_n12": 6.49,
+   "mde_pp_n16": 6.14,
+   "mde_pp_n20": 5.93,
+   "mde_pp_n24": 5.77,
+   "mde_pp_n28": 5.66,
+   "mde_pp_n32": 5.58,
+   "mde_pp_n36": 5.52,
+   "mde_pp_n40": 5.46,
+   "mde_pp_n48": 5.38,
+   "mde_pp_n56": 5.32,
+   "mde_pp_n64": 5.28,
+   "mde_pp_ninf": 4.95
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 8.69,
+   "mde_pp_n12": 8.17,
+   "mde_pp_n16": 7.89,
+   "mde_pp_n20": 7.72,
+   "mde_pp_n24": 7.61,
+   "mde_pp_n28": 7.53,
+   "mde_pp_n32": 7.46,
+   "mde_pp_n36": 7.41,
+   "mde_pp_n40": 7.37,
+   "mde_pp_n48": 7.31,
+   "mde_pp_n56": 7.27,
+   "mde_pp_n64": 7.24,
+   "mde_pp_ninf": 7.01
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 6.19,
+   "mde_pp_n12": 5.06,
+   "mde_pp_n16": 4.38,
+   "mde_pp_n20": 3.92,
+   "mde_pp_n24": 3.58,
+   "mde_pp_n28": 3.31,
+   "mde_pp_n32": 3.1,
+   "mde_pp_n36": 2.92,
+   "mde_pp_n40": 2.77,
+   "mde_pp_n48": 2.53,
+   "mde_pp_n56": 2.34,
+   "mde_pp_n64": 2.19,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 7.12,
+   "mde_pp_n12": 6.15,
+   "mde_pp_n16": 5.61,
+   "mde_pp_n20": 5.26,
+   "mde_pp_n24": 5.01,
+   "mde_pp_n28": 4.82,
+   "mde_pp_n32": 4.68,
+   "mde_pp_n36": 4.56,
+   "mde_pp_n40": 4.47,
+   "mde_pp_n48": 4.32,
+   "mde_pp_n56": 4.21,
+   "mde_pp_n64": 4.13,
+   "mde_pp_ninf": 3.5
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 7.93,
+   "mde_pp_n12": 7.08,
+   "mde_pp_n16": 6.61,
+   "mde_pp_n20": 6.32,
+   "mde_pp_n24": 6.11,
+   "mde_pp_n28": 5.96,
+   "mde_pp_n32": 5.84,
+   "mde_pp_n36": 5.75,
+   "mde_pp_n40": 5.68,
+   "mde_pp_n48": 5.56,
+   "mde_pp_n56": 5.48,
+   "mde_pp_n64": 5.42,
+   "mde_pp_ninf": 4.95
+  },
+  {
+   "design": "main2x2",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 9.35,
+   "mde_pp_n12": 8.64,
+   "mde_pp_n16": 8.26,
+   "mde_pp_n20": 8.03,
+   "mde_pp_n24": 7.87,
+   "mde_pp_n28": 7.75,
+   "mde_pp_n32": 7.66,
+   "mde_pp_n36": 7.59,
+   "mde_pp_n40": 7.53,
+   "mde_pp_n48": 7.45,
+   "mde_pp_n56": 7.39,
+   "mde_pp_n64": 7.34,
+   "mde_pp_ninf": 7.01
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 3.89,
+   "mde_pp_n12": 3.17,
+   "mde_pp_n16": 2.75,
+   "mde_pp_n20": 2.46,
+   "mde_pp_n24": 2.24,
+   "mde_pp_n28": 2.08,
+   "mde_pp_n32": 1.94,
+   "mde_pp_n36": 1.83,
+   "mde_pp_n40": 1.74,
+   "mde_pp_n48": 1.59,
+   "mde_pp_n56": 1.47,
+   "mde_pp_n64": 1.37,
+   "mde_pp_ninf": 0.01
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 5.4,
+   "mde_pp_n12": 4.91,
+   "mde_pp_n16": 4.65,
+   "mde_pp_n20": 4.48,
+   "mde_pp_n24": 4.37,
+   "mde_pp_n28": 4.28,
+   "mde_pp_n32": 4.22,
+   "mde_pp_n36": 4.17,
+   "mde_pp_n40": 4.13,
+   "mde_pp_n48": 4.07,
+   "mde_pp_n56": 4.02,
+   "mde_pp_n64": 3.99,
+   "mde_pp_ninf": 3.75
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 6.57,
+   "mde_pp_n12": 6.18,
+   "mde_pp_n16": 5.97,
+   "mde_pp_n20": 5.84,
+   "mde_pp_n24": 5.75,
+   "mde_pp_n28": 5.69,
+   "mde_pp_n32": 5.64,
+   "mde_pp_n36": 5.61,
+   "mde_pp_n40": 5.58,
+   "mde_pp_n48": 5.53,
+   "mde_pp_n56": 5.5,
+   "mde_pp_n64": 5.47,
+   "mde_pp_ninf": 5.3
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 8.44,
+   "mde_pp_n12": 8.14,
+   "mde_pp_n16": 7.98,
+   "mde_pp_n20": 7.89,
+   "mde_pp_n24": 7.82,
+   "mde_pp_n28": 7.78,
+   "mde_pp_n32": 7.74,
+   "mde_pp_n36": 7.72,
+   "mde_pp_n40": 7.69,
+   "mde_pp_n48": 7.66,
+   "mde_pp_n56": 7.64,
+   "mde_pp_n64": 7.62,
+   "mde_pp_ninf": 7.49
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 5.49,
+   "mde_pp_n12": 4.49,
+   "mde_pp_n16": 3.89,
+   "mde_pp_n20": 3.48,
+   "mde_pp_n24": 3.17,
+   "mde_pp_n28": 2.94,
+   "mde_pp_n32": 2.75,
+   "mde_pp_n36": 2.59,
+   "mde_pp_n40": 2.46,
+   "mde_pp_n48": 2.24,
+   "mde_pp_n56": 2.08,
+   "mde_pp_n64": 1.94,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 6.65,
+   "mde_pp_n12": 5.85,
+   "mde_pp_n16": 5.4,
+   "mde_pp_n20": 5.11,
+   "mde_pp_n24": 4.91,
+   "mde_pp_n28": 4.76,
+   "mde_pp_n32": 4.65,
+   "mde_pp_n36": 4.56,
+   "mde_pp_n40": 4.48,
+   "mde_pp_n48": 4.37,
+   "mde_pp_n56": 4.28,
+   "mde_pp_n64": 4.22,
+   "mde_pp_ninf": 3.75
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 7.63,
+   "mde_pp_n12": 6.94,
+   "mde_pp_n16": 6.57,
+   "mde_pp_n20": 6.34,
+   "mde_pp_n24": 6.18,
+   "mde_pp_n28": 6.06,
+   "mde_pp_n32": 5.97,
+   "mde_pp_n36": 5.9,
+   "mde_pp_n40": 5.84,
+   "mde_pp_n48": 5.75,
+   "mde_pp_n56": 5.69,
+   "mde_pp_n64": 5.64,
+   "mde_pp_ninf": 5.3
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 9.29,
+   "mde_pp_n12": 8.73,
+   "mde_pp_n16": 8.44,
+   "mde_pp_n20": 8.26,
+   "mde_pp_n24": 8.14,
+   "mde_pp_n28": 8.05,
+   "mde_pp_n32": 7.98,
+   "mde_pp_n36": 7.93,
+   "mde_pp_n40": 7.89,
+   "mde_pp_n48": 7.82,
+   "mde_pp_n56": 7.78,
+   "mde_pp_n64": 7.74,
+   "mde_pp_ninf": 7.49
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 6.62,
+   "mde_pp_n12": 5.41,
+   "mde_pp_n16": 4.68,
+   "mde_pp_n20": 4.19,
+   "mde_pp_n24": 3.82,
+   "mde_pp_n28": 3.54,
+   "mde_pp_n32": 3.31,
+   "mde_pp_n36": 3.12,
+   "mde_pp_n40": 2.96,
+   "mde_pp_n48": 2.7,
+   "mde_pp_n56": 2.5,
+   "mde_pp_n64": 2.34,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 7.61,
+   "mde_pp_n12": 6.58,
+   "mde_pp_n16": 6.0,
+   "mde_pp_n20": 5.62,
+   "mde_pp_n24": 5.35,
+   "mde_pp_n28": 5.16,
+   "mde_pp_n32": 5.0,
+   "mde_pp_n36": 4.88,
+   "mde_pp_n40": 4.78,
+   "mde_pp_n48": 4.62,
+   "mde_pp_n56": 4.51,
+   "mde_pp_n64": 4.42,
+   "mde_pp_ninf": 3.75
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 8.48,
+   "mde_pp_n12": 7.57,
+   "mde_pp_n16": 7.07,
+   "mde_pp_n20": 6.76,
+   "mde_pp_n24": 6.54,
+   "mde_pp_n28": 6.37,
+   "mde_pp_n32": 6.25,
+   "mde_pp_n36": 6.15,
+   "mde_pp_n40": 6.07,
+   "mde_pp_n48": 5.95,
+   "mde_pp_n56": 5.86,
+   "mde_pp_n64": 5.79,
+   "mde_pp_ninf": 5.3
+  },
+  {
+   "design": "main2x2",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 10.0,
+   "mde_pp_n12": 9.24,
+   "mde_pp_n16": 8.84,
+   "mde_pp_n20": 8.59,
+   "mde_pp_n24": 8.41,
+   "mde_pp_n28": 8.29,
+   "mde_pp_n32": 8.19,
+   "mde_pp_n36": 8.12,
+   "mde_pp_n40": 8.06,
+   "mde_pp_n48": 7.97,
+   "mde_pp_n56": 7.9,
+   "mde_pp_n64": 7.85,
+   "mde_pp_ninf": 7.49
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 4.2,
+   "mde_pp_n12": 3.43,
+   "mde_pp_n16": 2.97,
+   "mde_pp_n20": 2.66,
+   "mde_pp_n24": 2.42,
+   "mde_pp_n28": 2.24,
+   "mde_pp_n32": 2.1,
+   "mde_pp_n36": 1.98,
+   "mde_pp_n40": 1.88,
+   "mde_pp_n48": 1.71,
+   "mde_pp_n56": 1.59,
+   "mde_pp_n64": 1.48,
+   "mde_pp_ninf": 0.01
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 5.84,
+   "mde_pp_n12": 5.31,
+   "mde_pp_n16": 5.02,
+   "mde_pp_n20": 4.84,
+   "mde_pp_n24": 4.72,
+   "mde_pp_n28": 4.63,
+   "mde_pp_n32": 4.56,
+   "mde_pp_n36": 4.51,
+   "mde_pp_n40": 4.47,
+   "mde_pp_n48": 4.4,
+   "mde_pp_n56": 4.35,
+   "mde_pp_n64": 4.31,
+   "mde_pp_ninf": 4.05
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 7.1,
+   "mde_pp_n12": 6.68,
+   "mde_pp_n16": 6.45,
+   "mde_pp_n20": 6.31,
+   "mde_pp_n24": 6.22,
+   "mde_pp_n28": 6.15,
+   "mde_pp_n32": 6.1,
+   "mde_pp_n36": 6.06,
+   "mde_pp_n40": 6.03,
+   "mde_pp_n48": 5.98,
+   "mde_pp_n56": 5.94,
+   "mde_pp_n64": 5.92,
+   "mde_pp_ninf": 5.73
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 9.13,
+   "mde_pp_n12": 8.8,
+   "mde_pp_n16": 8.63,
+   "mde_pp_n20": 8.53,
+   "mde_pp_n24": 8.46,
+   "mde_pp_n28": 8.41,
+   "mde_pp_n32": 8.37,
+   "mde_pp_n36": 8.34,
+   "mde_pp_n40": 8.32,
+   "mde_pp_n48": 8.28,
+   "mde_pp_n56": 8.26,
+   "mde_pp_n64": 8.24,
+   "mde_pp_ninf": 8.1
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 5.94,
+   "mde_pp_n12": 4.85,
+   "mde_pp_n16": 4.2,
+   "mde_pp_n20": 3.76,
+   "mde_pp_n24": 3.43,
+   "mde_pp_n28": 3.17,
+   "mde_pp_n32": 2.97,
+   "mde_pp_n36": 2.8,
+   "mde_pp_n40": 2.66,
+   "mde_pp_n48": 2.42,
+   "mde_pp_n56": 2.24,
+   "mde_pp_n64": 2.1,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 7.19,
+   "mde_pp_n12": 6.32,
+   "mde_pp_n16": 5.84,
+   "mde_pp_n20": 5.52,
+   "mde_pp_n24": 5.31,
+   "mde_pp_n28": 5.15,
+   "mde_pp_n32": 5.02,
+   "mde_pp_n36": 4.92,
+   "mde_pp_n40": 4.84,
+   "mde_pp_n48": 4.72,
+   "mde_pp_n56": 4.63,
+   "mde_pp_n64": 4.56,
+   "mde_pp_ninf": 4.05
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 8.25,
+   "mde_pp_n12": 7.51,
+   "mde_pp_n16": 7.1,
+   "mde_pp_n20": 6.85,
+   "mde_pp_n24": 6.68,
+   "mde_pp_n28": 6.55,
+   "mde_pp_n32": 6.45,
+   "mde_pp_n36": 6.38,
+   "mde_pp_n40": 6.31,
+   "mde_pp_n48": 6.22,
+   "mde_pp_n56": 6.15,
+   "mde_pp_n64": 6.1,
+   "mde_pp_ninf": 5.73
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 10.05,
+   "mde_pp_n12": 9.44,
+   "mde_pp_n16": 9.13,
+   "mde_pp_n20": 8.93,
+   "mde_pp_n24": 8.8,
+   "mde_pp_n28": 8.7,
+   "mde_pp_n32": 8.63,
+   "mde_pp_n36": 8.57,
+   "mde_pp_n40": 8.53,
+   "mde_pp_n48": 8.46,
+   "mde_pp_n56": 8.41,
+   "mde_pp_n64": 8.37,
+   "mde_pp_ninf": 8.1
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 7.16,
+   "mde_pp_n12": 5.85,
+   "mde_pp_n16": 5.06,
+   "mde_pp_n20": 4.53,
+   "mde_pp_n24": 4.13,
+   "mde_pp_n28": 3.83,
+   "mde_pp_n32": 3.58,
+   "mde_pp_n36": 3.38,
+   "mde_pp_n40": 3.2,
+   "mde_pp_n48": 2.92,
+   "mde_pp_n56": 2.71,
+   "mde_pp_n64": 2.53,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 8.23,
+   "mde_pp_n12": 7.11,
+   "mde_pp_n16": 6.48,
+   "mde_pp_n20": 6.08,
+   "mde_pp_n24": 5.79,
+   "mde_pp_n28": 5.57,
+   "mde_pp_n32": 5.41,
+   "mde_pp_n36": 5.27,
+   "mde_pp_n40": 5.16,
+   "mde_pp_n48": 5.0,
+   "mde_pp_n56": 4.87,
+   "mde_pp_n64": 4.78,
+   "mde_pp_ninf": 4.05
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 9.17,
+   "mde_pp_n12": 8.19,
+   "mde_pp_n16": 7.65,
+   "mde_pp_n20": 7.3,
+   "mde_pp_n24": 7.06,
+   "mde_pp_n28": 6.89,
+   "mde_pp_n32": 6.76,
+   "mde_pp_n36": 6.65,
+   "mde_pp_n40": 6.56,
+   "mde_pp_n48": 6.43,
+   "mde_pp_n56": 6.34,
+   "mde_pp_n64": 6.26,
+   "mde_pp_ninf": 5.73
+  },
+  {
+   "design": "main2x2",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 10.81,
+   "mde_pp_n12": 9.99,
+   "mde_pp_n16": 9.55,
+   "mde_pp_n20": 9.28,
+   "mde_pp_n24": 9.1,
+   "mde_pp_n28": 8.96,
+   "mde_pp_n32": 8.86,
+   "mde_pp_n36": 8.78,
+   "mde_pp_n40": 8.71,
+   "mde_pp_n48": 8.61,
+   "mde_pp_n56": 8.54,
+   "mde_pp_n64": 8.49,
+   "mde_pp_ninf": 8.1
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 4.61,
+   "mde_pp_n12": 3.76,
+   "mde_pp_n16": 3.26,
+   "mde_pp_n20": 2.91,
+   "mde_pp_n24": 2.66,
+   "mde_pp_n28": 2.46,
+   "mde_pp_n32": 2.3,
+   "mde_pp_n36": 2.17,
+   "mde_pp_n40": 2.06,
+   "mde_pp_n48": 1.88,
+   "mde_pp_n56": 1.74,
+   "mde_pp_n64": 1.63,
+   "mde_pp_ninf": 0.01
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 6.4,
+   "mde_pp_n12": 5.82,
+   "mde_pp_n16": 5.51,
+   "mde_pp_n20": 5.31,
+   "mde_pp_n24": 5.18,
+   "mde_pp_n28": 5.08,
+   "mde_pp_n32": 5.0,
+   "mde_pp_n36": 4.95,
+   "mde_pp_n40": 4.9,
+   "mde_pp_n48": 4.82,
+   "mde_pp_n56": 4.77,
+   "mde_pp_n64": 4.73,
+   "mde_pp_ninf": 4.44
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 7.79,
+   "mde_pp_n12": 7.32,
+   "mde_pp_n16": 7.08,
+   "mde_pp_n20": 6.93,
+   "mde_pp_n24": 6.82,
+   "mde_pp_n28": 6.75,
+   "mde_pp_n32": 6.69,
+   "mde_pp_n36": 6.65,
+   "mde_pp_n40": 6.61,
+   "mde_pp_n48": 6.56,
+   "mde_pp_n56": 6.52,
+   "mde_pp_n64": 6.49,
+   "mde_pp_ninf": 6.28
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 10.01,
+   "mde_pp_n12": 9.65,
+   "mde_pp_n16": 9.46,
+   "mde_pp_n20": 9.35,
+   "mde_pp_n24": 9.28,
+   "mde_pp_n28": 9.22,
+   "mde_pp_n32": 9.18,
+   "mde_pp_n36": 9.15,
+   "mde_pp_n40": 9.12,
+   "mde_pp_n48": 9.08,
+   "mde_pp_n56": 9.06,
+   "mde_pp_n64": 9.03,
+   "mde_pp_ninf": 8.89
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 6.52,
+   "mde_pp_n12": 5.32,
+   "mde_pp_n16": 4.61,
+   "mde_pp_n20": 4.12,
+   "mde_pp_n24": 3.76,
+   "mde_pp_n28": 3.48,
+   "mde_pp_n32": 3.26,
+   "mde_pp_n36": 3.07,
+   "mde_pp_n40": 2.91,
+   "mde_pp_n48": 2.66,
+   "mde_pp_n56": 2.46,
+   "mde_pp_n64": 2.3,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 7.89,
+   "mde_pp_n12": 6.93,
+   "mde_pp_n16": 6.4,
+   "mde_pp_n20": 6.06,
+   "mde_pp_n24": 5.82,
+   "mde_pp_n28": 5.65,
+   "mde_pp_n32": 5.51,
+   "mde_pp_n36": 5.4,
+   "mde_pp_n40": 5.31,
+   "mde_pp_n48": 5.18,
+   "mde_pp_n56": 5.08,
+   "mde_pp_n64": 5.0,
+   "mde_pp_ninf": 4.44
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 9.05,
+   "mde_pp_n12": 8.23,
+   "mde_pp_n16": 7.79,
+   "mde_pp_n20": 7.51,
+   "mde_pp_n24": 7.32,
+   "mde_pp_n28": 7.18,
+   "mde_pp_n32": 7.08,
+   "mde_pp_n36": 6.99,
+   "mde_pp_n40": 6.93,
+   "mde_pp_n48": 6.82,
+   "mde_pp_n56": 6.75,
+   "mde_pp_n64": 6.69,
+   "mde_pp_ninf": 6.28
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 11.02,
+   "mde_pp_n12": 10.36,
+   "mde_pp_n16": 10.01,
+   "mde_pp_n20": 9.8,
+   "mde_pp_n24": 9.65,
+   "mde_pp_n28": 9.54,
+   "mde_pp_n32": 9.46,
+   "mde_pp_n36": 9.4,
+   "mde_pp_n40": 9.35,
+   "mde_pp_n48": 9.28,
+   "mde_pp_n56": 9.22,
+   "mde_pp_n64": 9.18,
+   "mde_pp_ninf": 8.89
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 7.85,
+   "mde_pp_n12": 6.41,
+   "mde_pp_n16": 5.55,
+   "mde_pp_n20": 4.97,
+   "mde_pp_n24": 4.53,
+   "mde_pp_n28": 4.2,
+   "mde_pp_n32": 3.93,
+   "mde_pp_n36": 3.7,
+   "mde_pp_n40": 3.51,
+   "mde_pp_n48": 3.21,
+   "mde_pp_n56": 2.97,
+   "mde_pp_n64": 2.78,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 9.02,
+   "mde_pp_n12": 7.8,
+   "mde_pp_n16": 7.11,
+   "mde_pp_n20": 6.66,
+   "mde_pp_n24": 6.35,
+   "mde_pp_n28": 6.11,
+   "mde_pp_n32": 5.93,
+   "mde_pp_n36": 5.78,
+   "mde_pp_n40": 5.66,
+   "mde_pp_n48": 5.48,
+   "mde_pp_n56": 5.34,
+   "mde_pp_n64": 5.24,
+   "mde_pp_ninf": 4.44
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 10.06,
+   "mde_pp_n12": 8.98,
+   "mde_pp_n16": 8.39,
+   "mde_pp_n20": 8.01,
+   "mde_pp_n24": 7.75,
+   "mde_pp_n28": 7.56,
+   "mde_pp_n32": 7.41,
+   "mde_pp_n36": 7.29,
+   "mde_pp_n40": 7.2,
+   "mde_pp_n48": 7.05,
+   "mde_pp_n56": 6.95,
+   "mde_pp_n64": 6.87,
+   "mde_pp_ninf": 6.28
+  },
+  {
+   "design": "main2x2",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 11.86,
+   "mde_pp_n12": 10.96,
+   "mde_pp_n16": 10.48,
+   "mde_pp_n20": 10.18,
+   "mde_pp_n24": 9.98,
+   "mde_pp_n28": 9.83,
+   "mde_pp_n32": 9.72,
+   "mde_pp_n36": 9.63,
+   "mde_pp_n40": 9.56,
+   "mde_pp_n48": 9.45,
+   "mde_pp_n56": 9.37,
+   "mde_pp_n64": 9.31,
+   "mde_pp_ninf": 8.89
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 7.27,
+   "mde_pp_n12": 5.93,
+   "mde_pp_n16": 5.14,
+   "mde_pp_n20": 4.59,
+   "mde_pp_n24": 4.19,
+   "mde_pp_n28": 3.88,
+   "mde_pp_n32": 3.63,
+   "mde_pp_n36": 3.42,
+   "mde_pp_n40": 3.25,
+   "mde_pp_n48": 2.97,
+   "mde_pp_n56": 2.75,
+   "mde_pp_n64": 2.57,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 10.09,
+   "mde_pp_n12": 9.18,
+   "mde_pp_n16": 8.69,
+   "mde_pp_n20": 8.38,
+   "mde_pp_n24": 8.17,
+   "mde_pp_n28": 8.01,
+   "mde_pp_n32": 7.89,
+   "mde_pp_n36": 7.8,
+   "mde_pp_n40": 7.72,
+   "mde_pp_n48": 7.61,
+   "mde_pp_n56": 7.53,
+   "mde_pp_n64": 7.46,
+   "mde_pp_ninf": 7.01
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 12.29,
+   "mde_pp_n12": 11.55,
+   "mde_pp_n16": 11.16,
+   "mde_pp_n20": 10.92,
+   "mde_pp_n24": 10.76,
+   "mde_pp_n28": 10.64,
+   "mde_pp_n32": 10.55,
+   "mde_pp_n36": 10.48,
+   "mde_pp_n40": 10.43,
+   "mde_pp_n48": 10.34,
+   "mde_pp_n56": 10.28,
+   "mde_pp_n64": 10.24,
+   "mde_pp_ninf": 9.91
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 15.79,
+   "mde_pp_n12": 15.22,
+   "mde_pp_n16": 14.93,
+   "mde_pp_n20": 14.75,
+   "mde_pp_n24": 14.63,
+   "mde_pp_n28": 14.54,
+   "mde_pp_n32": 14.48,
+   "mde_pp_n36": 14.43,
+   "mde_pp_n40": 14.39,
+   "mde_pp_n48": 14.32,
+   "mde_pp_n56": 14.28,
+   "mde_pp_n64": 14.25,
+   "mde_pp_ninf": 14.01
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 10.27,
+   "mde_pp_n12": 8.39,
+   "mde_pp_n16": 7.27,
+   "mde_pp_n20": 6.5,
+   "mde_pp_n24": 5.93,
+   "mde_pp_n28": 5.49,
+   "mde_pp_n32": 5.14,
+   "mde_pp_n36": 4.84,
+   "mde_pp_n40": 4.59,
+   "mde_pp_n48": 4.19,
+   "mde_pp_n56": 3.88,
+   "mde_pp_n64": 3.63,
+   "mde_pp_ninf": 0.03
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 12.44,
+   "mde_pp_n12": 10.93,
+   "mde_pp_n16": 10.09,
+   "mde_pp_n20": 9.56,
+   "mde_pp_n24": 9.18,
+   "mde_pp_n28": 8.9,
+   "mde_pp_n32": 8.69,
+   "mde_pp_n36": 8.52,
+   "mde_pp_n40": 8.38,
+   "mde_pp_n48": 8.17,
+   "mde_pp_n56": 8.01,
+   "mde_pp_n64": 7.89,
+   "mde_pp_ninf": 7.01
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 14.27,
+   "mde_pp_n12": 12.98,
+   "mde_pp_n16": 12.29,
+   "mde_pp_n20": 11.85,
+   "mde_pp_n24": 11.55,
+   "mde_pp_n28": 11.33,
+   "mde_pp_n32": 11.16,
+   "mde_pp_n36": 11.03,
+   "mde_pp_n40": 10.92,
+   "mde_pp_n48": 10.76,
+   "mde_pp_n56": 10.64,
+   "mde_pp_n64": 10.55,
+   "mde_pp_ninf": 9.91
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 17.38,
+   "mde_pp_n12": 16.33,
+   "mde_pp_n16": 15.79,
+   "mde_pp_n20": 15.45,
+   "mde_pp_n24": 15.22,
+   "mde_pp_n28": 15.05,
+   "mde_pp_n32": 14.93,
+   "mde_pp_n36": 14.83,
+   "mde_pp_n40": 14.75,
+   "mde_pp_n48": 14.63,
+   "mde_pp_n56": 14.54,
+   "mde_pp_n64": 14.48,
+   "mde_pp_ninf": 14.01
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 12.39,
+   "mde_pp_n12": 10.11,
+   "mde_pp_n16": 8.76,
+   "mde_pp_n20": 7.83,
+   "mde_pp_n24": 7.15,
+   "mde_pp_n28": 6.62,
+   "mde_pp_n32": 6.19,
+   "mde_pp_n36": 5.84,
+   "mde_pp_n40": 5.54,
+   "mde_pp_n48": 5.06,
+   "mde_pp_n56": 4.68,
+   "mde_pp_n64": 4.38,
+   "mde_pp_ninf": 0.04
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 14.23,
+   "mde_pp_n12": 12.3,
+   "mde_pp_n16": 11.22,
+   "mde_pp_n20": 10.51,
+   "mde_pp_n24": 10.01,
+   "mde_pp_n28": 9.64,
+   "mde_pp_n32": 9.35,
+   "mde_pp_n36": 9.12,
+   "mde_pp_n40": 8.93,
+   "mde_pp_n48": 8.64,
+   "mde_pp_n56": 8.43,
+   "mde_pp_n64": 8.26,
+   "mde_pp_ninf": 7.01
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 15.86,
+   "mde_pp_n12": 14.16,
+   "mde_pp_n16": 13.23,
+   "mde_pp_n20": 12.63,
+   "mde_pp_n24": 12.22,
+   "mde_pp_n28": 11.92,
+   "mde_pp_n32": 11.69,
+   "mde_pp_n36": 11.5,
+   "mde_pp_n40": 11.35,
+   "mde_pp_n48": 11.13,
+   "mde_pp_n56": 10.96,
+   "mde_pp_n64": 10.83,
+   "mde_pp_ninf": 9.91
+  },
+  {
+   "design": "interaction2x2",
+   "K": 18,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 18.7,
+   "mde_pp_n12": 17.28,
+   "mde_pp_n16": 16.53,
+   "mde_pp_n20": 16.06,
+   "mde_pp_n24": 15.73,
+   "mde_pp_n28": 15.5,
+   "mde_pp_n32": 15.32,
+   "mde_pp_n36": 15.18,
+   "mde_pp_n40": 15.07,
+   "mde_pp_n48": 14.9,
+   "mde_pp_n56": 14.78,
+   "mde_pp_n64": 14.68,
+   "mde_pp_ninf": 14.01
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 7.77,
+   "mde_pp_n12": 6.34,
+   "mde_pp_n16": 5.49,
+   "mde_pp_n20": 4.91,
+   "mde_pp_n24": 4.49,
+   "mde_pp_n28": 4.15,
+   "mde_pp_n32": 3.89,
+   "mde_pp_n36": 3.66,
+   "mde_pp_n40": 3.48,
+   "mde_pp_n48": 3.17,
+   "mde_pp_n56": 2.94,
+   "mde_pp_n64": 2.75,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 10.8,
+   "mde_pp_n12": 9.82,
+   "mde_pp_n16": 9.29,
+   "mde_pp_n20": 8.96,
+   "mde_pp_n24": 8.73,
+   "mde_pp_n28": 8.57,
+   "mde_pp_n32": 8.44,
+   "mde_pp_n36": 8.34,
+   "mde_pp_n40": 8.26,
+   "mde_pp_n48": 8.14,
+   "mde_pp_n56": 8.05,
+   "mde_pp_n64": 7.98,
+   "mde_pp_ninf": 7.49
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 13.14,
+   "mde_pp_n12": 12.35,
+   "mde_pp_n16": 11.94,
+   "mde_pp_n20": 11.68,
+   "mde_pp_n24": 11.51,
+   "mde_pp_n28": 11.38,
+   "mde_pp_n32": 11.29,
+   "mde_pp_n36": 11.21,
+   "mde_pp_n40": 11.15,
+   "mde_pp_n48": 11.06,
+   "mde_pp_n56": 11.0,
+   "mde_pp_n64": 10.95,
+   "mde_pp_ninf": 10.6
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 16.88,
+   "mde_pp_n12": 16.28,
+   "mde_pp_n16": 15.96,
+   "mde_pp_n20": 15.77,
+   "mde_pp_n24": 15.65,
+   "mde_pp_n28": 15.55,
+   "mde_pp_n32": 15.48,
+   "mde_pp_n36": 15.43,
+   "mde_pp_n40": 15.39,
+   "mde_pp_n48": 15.32,
+   "mde_pp_n56": 15.27,
+   "mde_pp_n64": 15.24,
+   "mde_pp_ninf": 14.99
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 10.99,
+   "mde_pp_n12": 8.97,
+   "mde_pp_n16": 7.77,
+   "mde_pp_n20": 6.95,
+   "mde_pp_n24": 6.34,
+   "mde_pp_n28": 5.87,
+   "mde_pp_n32": 5.49,
+   "mde_pp_n36": 5.18,
+   "mde_pp_n40": 4.91,
+   "mde_pp_n48": 4.49,
+   "mde_pp_n56": 4.15,
+   "mde_pp_n64": 3.89,
+   "mde_pp_ninf": 0.03
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 13.3,
+   "mde_pp_n12": 11.69,
+   "mde_pp_n16": 10.8,
+   "mde_pp_n20": 10.22,
+   "mde_pp_n24": 9.82,
+   "mde_pp_n28": 9.52,
+   "mde_pp_n32": 9.29,
+   "mde_pp_n36": 9.11,
+   "mde_pp_n40": 8.96,
+   "mde_pp_n48": 8.73,
+   "mde_pp_n56": 8.57,
+   "mde_pp_n64": 8.44,
+   "mde_pp_ninf": 7.49
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 15.27,
+   "mde_pp_n12": 13.89,
+   "mde_pp_n16": 13.14,
+   "mde_pp_n20": 12.67,
+   "mde_pp_n24": 12.35,
+   "mde_pp_n28": 12.12,
+   "mde_pp_n32": 11.94,
+   "mde_pp_n36": 11.8,
+   "mde_pp_n40": 11.68,
+   "mde_pp_n48": 11.51,
+   "mde_pp_n56": 11.38,
+   "mde_pp_n64": 11.29,
+   "mde_pp_ninf": 10.6
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 18.59,
+   "mde_pp_n12": 17.47,
+   "mde_pp_n16": 16.88,
+   "mde_pp_n20": 16.52,
+   "mde_pp_n24": 16.28,
+   "mde_pp_n28": 16.1,
+   "mde_pp_n32": 15.96,
+   "mde_pp_n36": 15.86,
+   "mde_pp_n40": 15.77,
+   "mde_pp_n48": 15.65,
+   "mde_pp_n56": 15.55,
+   "mde_pp_n64": 15.48,
+   "mde_pp_ninf": 14.99
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 13.25,
+   "mde_pp_n12": 10.82,
+   "mde_pp_n16": 9.37,
+   "mde_pp_n20": 8.38,
+   "mde_pp_n24": 7.65,
+   "mde_pp_n28": 7.08,
+   "mde_pp_n32": 6.62,
+   "mde_pp_n36": 6.25,
+   "mde_pp_n40": 5.93,
+   "mde_pp_n48": 5.41,
+   "mde_pp_n56": 5.01,
+   "mde_pp_n64": 4.68,
+   "mde_pp_ninf": 0.04
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 15.22,
+   "mde_pp_n12": 13.16,
+   "mde_pp_n16": 12.0,
+   "mde_pp_n20": 11.24,
+   "mde_pp_n24": 10.71,
+   "mde_pp_n28": 10.31,
+   "mde_pp_n32": 10.0,
+   "mde_pp_n36": 9.76,
+   "mde_pp_n40": 9.55,
+   "mde_pp_n48": 9.24,
+   "mde_pp_n56": 9.01,
+   "mde_pp_n64": 8.84,
+   "mde_pp_ninf": 7.49
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 16.97,
+   "mde_pp_n12": 15.14,
+   "mde_pp_n16": 14.15,
+   "mde_pp_n20": 13.51,
+   "mde_pp_n24": 13.07,
+   "mde_pp_n28": 12.75,
+   "mde_pp_n32": 12.5,
+   "mde_pp_n36": 12.3,
+   "mde_pp_n40": 12.14,
+   "mde_pp_n48": 11.9,
+   "mde_pp_n56": 11.72,
+   "mde_pp_n64": 11.59,
+   "mde_pp_ninf": 10.6
+  },
+  {
+   "design": "interaction2x2",
+   "K": 16,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 20.01,
+   "mde_pp_n12": 18.49,
+   "mde_pp_n16": 17.68,
+   "mde_pp_n20": 17.17,
+   "mde_pp_n24": 16.83,
+   "mde_pp_n28": 16.58,
+   "mde_pp_n32": 16.39,
+   "mde_pp_n36": 16.24,
+   "mde_pp_n40": 16.12,
+   "mde_pp_n48": 15.94,
+   "mde_pp_n56": 15.8,
+   "mde_pp_n64": 15.7,
+   "mde_pp_ninf": 14.99
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 8.4,
+   "mde_pp_n12": 6.86,
+   "mde_pp_n16": 5.94,
+   "mde_pp_n20": 5.31,
+   "mde_pp_n24": 4.85,
+   "mde_pp_n28": 4.49,
+   "mde_pp_n32": 4.2,
+   "mde_pp_n36": 3.96,
+   "mde_pp_n40": 3.76,
+   "mde_pp_n48": 3.43,
+   "mde_pp_n56": 3.17,
+   "mde_pp_n64": 2.97,
+   "mde_pp_ninf": 0.02
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 11.67,
+   "mde_pp_n12": 10.61,
+   "mde_pp_n16": 10.05,
+   "mde_pp_n20": 9.69,
+   "mde_pp_n24": 9.44,
+   "mde_pp_n28": 9.26,
+   "mde_pp_n32": 9.13,
+   "mde_pp_n36": 9.02,
+   "mde_pp_n40": 8.93,
+   "mde_pp_n48": 8.8,
+   "mde_pp_n56": 8.7,
+   "mde_pp_n64": 8.63,
+   "mde_pp_ninf": 8.1
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 14.21,
+   "mde_pp_n12": 13.35,
+   "mde_pp_n16": 12.91,
+   "mde_pp_n20": 12.63,
+   "mde_pp_n24": 12.44,
+   "mde_pp_n28": 12.31,
+   "mde_pp_n32": 12.2,
+   "mde_pp_n36": 12.12,
+   "mde_pp_n40": 12.06,
+   "mde_pp_n48": 11.96,
+   "mde_pp_n56": 11.89,
+   "mde_pp_n64": 11.84,
+   "mde_pp_ninf": 11.46
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 18.25,
+   "mde_pp_n12": 17.59,
+   "mde_pp_n16": 17.26,
+   "mde_pp_n20": 17.05,
+   "mde_pp_n24": 16.91,
+   "mde_pp_n28": 16.81,
+   "mde_pp_n32": 16.74,
+   "mde_pp_n36": 16.68,
+   "mde_pp_n40": 16.63,
+   "mde_pp_n48": 16.56,
+   "mde_pp_n56": 16.51,
+   "mde_pp_n64": 16.47,
+   "mde_pp_ninf": 16.2
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 11.88,
+   "mde_pp_n12": 9.7,
+   "mde_pp_n16": 8.4,
+   "mde_pp_n20": 7.51,
+   "mde_pp_n24": 6.86,
+   "mde_pp_n28": 6.35,
+   "mde_pp_n32": 5.94,
+   "mde_pp_n36": 5.6,
+   "mde_pp_n40": 5.31,
+   "mde_pp_n48": 4.85,
+   "mde_pp_n56": 4.49,
+   "mde_pp_n64": 4.2,
+   "mde_pp_ninf": 0.03
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 14.38,
+   "mde_pp_n12": 12.64,
+   "mde_pp_n16": 11.67,
+   "mde_pp_n20": 11.05,
+   "mde_pp_n24": 10.61,
+   "mde_pp_n28": 10.29,
+   "mde_pp_n32": 10.05,
+   "mde_pp_n36": 9.85,
+   "mde_pp_n40": 9.69,
+   "mde_pp_n48": 9.44,
+   "mde_pp_n56": 9.26,
+   "mde_pp_n64": 9.13,
+   "mde_pp_ninf": 8.1
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 16.5,
+   "mde_pp_n12": 15.01,
+   "mde_pp_n16": 14.21,
+   "mde_pp_n20": 13.7,
+   "mde_pp_n24": 13.35,
+   "mde_pp_n28": 13.1,
+   "mde_pp_n32": 12.91,
+   "mde_pp_n36": 12.75,
+   "mde_pp_n40": 12.63,
+   "mde_pp_n48": 12.44,
+   "mde_pp_n56": 12.31,
+   "mde_pp_n64": 12.2,
+   "mde_pp_ninf": 11.46
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 20.09,
+   "mde_pp_n12": 18.88,
+   "mde_pp_n16": 18.25,
+   "mde_pp_n20": 17.86,
+   "mde_pp_n24": 17.59,
+   "mde_pp_n28": 17.4,
+   "mde_pp_n32": 17.26,
+   "mde_pp_n36": 17.14,
+   "mde_pp_n40": 17.05,
+   "mde_pp_n48": 16.91,
+   "mde_pp_n56": 16.81,
+   "mde_pp_n64": 16.74,
+   "mde_pp_ninf": 16.2
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 14.32,
+   "mde_pp_n12": 11.69,
+   "mde_pp_n16": 10.13,
+   "mde_pp_n20": 9.06,
+   "mde_pp_n24": 8.27,
+   "mde_pp_n28": 7.66,
+   "mde_pp_n32": 7.16,
+   "mde_pp_n36": 6.75,
+   "mde_pp_n40": 6.4,
+   "mde_pp_n48": 5.85,
+   "mde_pp_n56": 5.41,
+   "mde_pp_n64": 5.06,
+   "mde_pp_ninf": 0.04
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 16.45,
+   "mde_pp_n12": 14.23,
+   "mde_pp_n16": 12.97,
+   "mde_pp_n20": 12.15,
+   "mde_pp_n24": 11.58,
+   "mde_pp_n28": 11.15,
+   "mde_pp_n32": 10.81,
+   "mde_pp_n36": 10.55,
+   "mde_pp_n40": 10.33,
+   "mde_pp_n48": 9.99,
+   "mde_pp_n56": 9.74,
+   "mde_pp_n64": 9.55,
+   "mde_pp_ninf": 8.1
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 18.34,
+   "mde_pp_n12": 16.37,
+   "mde_pp_n16": 15.29,
+   "mde_pp_n20": 14.61,
+   "mde_pp_n24": 14.13,
+   "mde_pp_n28": 13.78,
+   "mde_pp_n32": 13.51,
+   "mde_pp_n36": 13.3,
+   "mde_pp_n40": 13.13,
+   "mde_pp_n48": 12.86,
+   "mde_pp_n56": 12.67,
+   "mde_pp_n64": 12.53,
+   "mde_pp_ninf": 11.46
+  },
+  {
+   "design": "interaction2x2",
+   "K": 14,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 21.62,
+   "mde_pp_n12": 19.98,
+   "mde_pp_n16": 19.11,
+   "mde_pp_n20": 18.56,
+   "mde_pp_n24": 18.19,
+   "mde_pp_n28": 17.92,
+   "mde_pp_n32": 17.71,
+   "mde_pp_n36": 17.55,
+   "mde_pp_n40": 17.42,
+   "mde_pp_n48": 17.23,
+   "mde_pp_n56": 17.08,
+   "mde_pp_n64": 16.98,
+   "mde_pp_ninf": 16.2
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0,
+   "mde_pp_n8": 9.21,
+   "mde_pp_n12": 7.52,
+   "mde_pp_n16": 6.52,
+   "mde_pp_n20": 5.83,
+   "mde_pp_n24": 5.32,
+   "mde_pp_n28": 4.92,
+   "mde_pp_n32": 4.61,
+   "mde_pp_n36": 4.34,
+   "mde_pp_n40": 4.12,
+   "mde_pp_n48": 3.76,
+   "mde_pp_n56": 3.48,
+   "mde_pp_n64": 3.26,
+   "mde_pp_ninf": 0.03
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.0025,
+   "mde_pp_n8": 12.8,
+   "mde_pp_n12": 11.64,
+   "mde_pp_n16": 11.02,
+   "mde_pp_n20": 10.63,
+   "mde_pp_n24": 10.36,
+   "mde_pp_n28": 10.16,
+   "mde_pp_n32": 10.01,
+   "mde_pp_n36": 9.89,
+   "mde_pp_n40": 9.8,
+   "mde_pp_n48": 9.65,
+   "mde_pp_n56": 9.54,
+   "mde_pp_n64": 9.46,
+   "mde_pp_ninf": 8.89
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.005,
+   "mde_pp_n8": 15.58,
+   "mde_pp_n12": 14.65,
+   "mde_pp_n16": 14.16,
+   "mde_pp_n20": 13.85,
+   "mde_pp_n24": 13.65,
+   "mde_pp_n28": 13.5,
+   "mde_pp_n32": 13.39,
+   "mde_pp_n36": 13.3,
+   "mde_pp_n40": 13.23,
+   "mde_pp_n48": 13.12,
+   "mde_pp_n56": 13.04,
+   "mde_pp_n64": 12.98,
+   "mde_pp_ninf": 12.57
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "half_9B",
+   "sigma2": 0.0215,
+   "tau2": 0.01,
+   "mde_pp_n8": 20.02,
+   "mde_pp_n12": 19.3,
+   "mde_pp_n16": 18.93,
+   "mde_pp_n20": 18.7,
+   "mde_pp_n24": 18.55,
+   "mde_pp_n28": 18.44,
+   "mde_pp_n32": 18.36,
+   "mde_pp_n36": 18.3,
+   "mde_pp_n40": 18.24,
+   "mde_pp_n48": 18.17,
+   "mde_pp_n56": 18.11,
+   "mde_pp_n64": 18.07,
+   "mde_pp_ninf": 17.77
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0,
+   "mde_pp_n8": 13.03,
+   "mde_pp_n12": 10.64,
+   "mde_pp_n16": 9.21,
+   "mde_pp_n20": 8.24,
+   "mde_pp_n24": 7.52,
+   "mde_pp_n28": 6.96,
+   "mde_pp_n32": 6.52,
+   "mde_pp_n36": 6.14,
+   "mde_pp_n40": 5.83,
+   "mde_pp_n48": 5.32,
+   "mde_pp_n56": 4.92,
+   "mde_pp_n64": 4.61,
+   "mde_pp_ninf": 0.04
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.0025,
+   "mde_pp_n8": 15.77,
+   "mde_pp_n12": 13.86,
+   "mde_pp_n16": 12.8,
+   "mde_pp_n20": 12.12,
+   "mde_pp_n24": 11.64,
+   "mde_pp_n28": 11.29,
+   "mde_pp_n32": 11.02,
+   "mde_pp_n36": 10.8,
+   "mde_pp_n40": 10.63,
+   "mde_pp_n48": 10.36,
+   "mde_pp_n56": 10.16,
+   "mde_pp_n64": 10.01,
+   "mde_pp_ninf": 8.89
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.005,
+   "mde_pp_n8": 18.1,
+   "mde_pp_n12": 16.47,
+   "mde_pp_n16": 15.58,
+   "mde_pp_n20": 15.03,
+   "mde_pp_n24": 14.65,
+   "mde_pp_n28": 14.37,
+   "mde_pp_n32": 14.16,
+   "mde_pp_n36": 13.99,
+   "mde_pp_n40": 13.85,
+   "mde_pp_n48": 13.65,
+   "mde_pp_n56": 13.5,
+   "mde_pp_n64": 13.39,
+   "mde_pp_ninf": 12.57
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "9B",
+   "sigma2": 0.043,
+   "tau2": 0.01,
+   "mde_pp_n8": 22.04,
+   "mde_pp_n12": 20.71,
+   "mde_pp_n16": 20.02,
+   "mde_pp_n20": 19.59,
+   "mde_pp_n24": 19.3,
+   "mde_pp_n28": 19.09,
+   "mde_pp_n32": 18.93,
+   "mde_pp_n36": 18.8,
+   "mde_pp_n40": 18.7,
+   "mde_pp_n48": 18.55,
+   "mde_pp_n56": 18.44,
+   "mde_pp_n64": 18.36,
+   "mde_pp_ninf": 17.77
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0,
+   "mde_pp_n8": 15.71,
+   "mde_pp_n12": 12.83,
+   "mde_pp_n16": 11.11,
+   "mde_pp_n20": 9.94,
+   "mde_pp_n24": 9.07,
+   "mde_pp_n28": 8.4,
+   "mde_pp_n32": 7.85,
+   "mde_pp_n36": 7.41,
+   "mde_pp_n40": 7.03,
+   "mde_pp_n48": 6.41,
+   "mde_pp_n56": 5.94,
+   "mde_pp_n64": 5.55,
+   "mde_pp_ninf": 0.04
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.0025,
+   "mde_pp_n8": 18.05,
+   "mde_pp_n12": 15.6,
+   "mde_pp_n16": 14.23,
+   "mde_pp_n20": 13.33,
+   "mde_pp_n24": 12.7,
+   "mde_pp_n28": 12.23,
+   "mde_pp_n32": 11.86,
+   "mde_pp_n36": 11.57,
+   "mde_pp_n40": 11.33,
+   "mde_pp_n48": 10.96,
+   "mde_pp_n56": 10.69,
+   "mde_pp_n64": 10.48,
+   "mde_pp_ninf": 8.89
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.005,
+   "mde_pp_n8": 20.12,
+   "mde_pp_n12": 17.96,
+   "mde_pp_n16": 16.77,
+   "mde_pp_n20": 16.02,
+   "mde_pp_n24": 15.5,
+   "mde_pp_n28": 15.11,
+   "mde_pp_n32": 14.82,
+   "mde_pp_n36": 14.59,
+   "mde_pp_n40": 14.4,
+   "mde_pp_n48": 14.11,
+   "mde_pp_n56": 13.9,
+   "mde_pp_n64": 13.74,
+   "mde_pp_ninf": 12.57
+  },
+  {
+   "design": "interaction2x2",
+   "K": 12,
+   "sigma2_name": "pooled",
+   "sigma2": 0.0625,
+   "tau2": 0.01,
+   "mde_pp_n8": 23.72,
+   "mde_pp_n12": 21.92,
+   "mde_pp_n16": 20.96,
+   "mde_pp_n20": 20.36,
+   "mde_pp_n24": 19.95,
+   "mde_pp_n28": 19.66,
+   "mde_pp_n32": 19.43,
+   "mde_pp_n36": 19.25,
+   "mde_pp_n40": 19.11,
+   "mde_pp_n48": 18.89,
+   "mde_pp_n56": 18.74,
+   "mde_pp_n64": 18.62,
+   "mde_pp_ninf": 17.77
+  }
+ ],
+ "B_tost_power_at_zero_main2x2_tau2_gate": {
+  "K18_n12_half_9B": 0.856,
+  "K18_n12_9B": 0.665,
+  "K18_n12_pooled": 0.5,
+  "K18_n16_half_9B": 0.898,
+  "K18_n16_9B": 0.762,
+  "K18_n16_pooled": 0.631,
+  "K18_n24_half_9B": 0.935,
+  "K18_n24_9B": 0.856,
+  "K18_n24_pooled": 0.771,
+  "K16_n12_half_9B": 0.795,
+  "K16_n12_9B": 0.578,
+  "K16_n12_pooled": 0.408,
+  "K16_n16_half_9B": 0.847,
+  "K16_n16_9B": 0.684,
+  "K16_n16_pooled": 0.541,
+  "K16_n24_half_9B": 0.896,
+  "K16_n24_9B": 0.795,
+  "K16_n24_pooled": 0.695,
+  "K14_n12_half_9B": 0.71,
+  "K14_n12_9B": 0.473,
+  "K14_n12_pooled": 0.31,
+  "K14_n16_half_9B": 0.774,
+  "K14_n16_9B": 0.585,
+  "K14_n16_pooled": 0.436,
+  "K14_n24_half_9B": 0.836,
+  "K14_n24_9B": 0.71,
+  "K14_n24_pooled": 0.596
+ },
+ "C_cost_model": {
+  "s1a_9b_gpu_h_per_episode": 0.002701,
+  "s1a_9b_mean_steps": 12.038,
+  "gpu_h_per_step": {
+   "low_gpu_bound": 0.0001343,
+   "central_s1a_realized": 0.0002244,
+   "high": 0.0002917
+  },
+  "step_cap": 40,
+  "mean_steps_assumed": {
+   "low": 24,
+   "central": 24,
+   "high": 36
+  },
+  "gpu_h_per_episode": {
+   "low": 0.00322,
+   "central": 0.00539,
+   "high": 0.0105
+  },
+  "cap_gpu_h_per_episode": 0.0126,
+  "startup_gpu_h_per_job": 0.1,
+  "cap_formula": "cap = 1.2 x episodes x 36 steps x high GPU-h per step + 0.10 GPU-h per job",
+  "designs": {
+   "dossier_864_pixels_and_a11y": {
+    "episodes": 864,
+    "note": "432 pixels + 432 a11y at 1.5x per step (serving probe v2 ratio)",
+    "low": 3.48,
+    "central": 5.82,
+    "high": 11.34,
+    "cap": 13.71
+   },
+   "pilot_1a_144_english_plus_54_smoke": {
+    "episodes": 144,
+    "smoke_episodes": 54,
+    "smoke_step_cap": 3,
+    "low": 0.486,
+    "central": 0.812,
+    "high": 1.559,
+    "cap": 1.971
+   },
+   "main_2x2_K18_n16": {
+    "episodes": 1152,
+    "low": 3.71,
+    "central": 6.2,
+    "high": 12.1,
+    "cap": 14.62
+   },
+   "main_2x2_K18_n24": {
+    "episodes": 1728,
+    "low": 5.57,
+    "central": 9.31,
+    "high": 18.15,
+    "cap": 21.87
+   },
+   "main_2x2_K16_n16": {
+    "episodes": 1024,
+    "low": 3.3,
+    "central": 5.51,
+    "high": 10.75,
+    "cap": 13.0
+   },
+   "main_2x2_K18_n12": {
+    "episodes": 864,
+    "low": 2.79,
+    "central": 4.65,
+    "high": 9.07,
+    "cap": 10.99
+   }
+  }
+ },
+ "gate_on_transported_s1a_inputs": {
+  "measured_central_x1.5|half_9B_K18": {
+   "sigma2": 0.0215,
+   "K_inf": 18,
+   "verdict": "PASS",
+   "n": 12,
+   "largest_n_under_15_gpu_h": 24,
+   "mde_pp_at_that_n": 4.08,
+   "mde_pp_at_that_n_tau2_0.005": 5.38
+  },
+  "measured_central_x1.5|half_9B_K16": {
+   "sigma2": 0.0215,
+   "K_inf": 16,
+   "verdict": "PASS",
+   "n": 12,
+   "largest_n_under_15_gpu_h": 28,
+   "mde_pp_at_that_n": 4.28,
+   "mde_pp_at_that_n_tau2_0.005": 5.69
+  },
+  "measured_central_x1.5|half_9B_K14": {
+   "sigma2": 0.0215,
+   "K_inf": 14,
+   "verdict": "PASS",
+   "n": 20,
+   "largest_n_under_15_gpu_h": 32,
+   "mde_pp_at_that_n": 4.56,
+   "mde_pp_at_that_n_tau2_0.005": 6.1
+  },
+  "measured_central_x1.5|half_9B_K12": {
+   "sigma2": 0.0215,
+   "K_inf": 12,
+   "verdict": "PASS",
+   "n": 36,
+   "largest_n_under_15_gpu_h": 36,
+   "mde_pp_at_that_n": 4.95,
+   "mde_pp_at_that_n_tau2_0.005": 6.65
+  },
+  "measured_central_x1.5|9B_K18": {
+   "sigma2": 0.043,
+   "K_inf": 18,
+   "verdict": "PASS",
+   "n": 20,
+   "largest_n_under_15_gpu_h": 24,
+   "mde_pp_at_that_n": 4.59,
+   "mde_pp_at_that_n_tau2_0.005": 5.77
+  },
+  "measured_central_x1.5|9B_K16": {
+   "sigma2": 0.043,
+   "K_inf": 16,
+   "verdict": "PASS",
+   "n": 24,
+   "largest_n_under_15_gpu_h": 28,
+   "mde_pp_at_that_n": 4.76,
+   "mde_pp_at_that_n_tau2_0.005": 6.06
+  },
+  "measured_central_x1.5|9B_K14": {
+   "sigma2": 0.043,
+   "K_inf": 14,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 32,
+   "mde_pp_at_that_n": 5.02,
+   "mde_pp_at_that_n_tau2_0.005": 6.45
+  },
+  "measured_central_x1.5|9B_K12": {
+   "sigma2": 0.043,
+   "K_inf": 12,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 36,
+   "mde_pp_at_that_n": 5.4,
+   "mde_pp_at_that_n_tau2_0.005": 6.99
+  },
+  "measured_central_x1.5|pooled_K18": {
+   "sigma2": 0.0625,
+   "K_inf": 18,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 24,
+   "mde_pp_at_that_n": 5.01,
+   "mde_pp_at_that_n_tau2_0.005": 6.11
+  },
+  "measured_central_x1.5|pooled_K16": {
+   "sigma2": 0.0625,
+   "K_inf": 16,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 28,
+   "mde_pp_at_that_n": 5.16,
+   "mde_pp_at_that_n_tau2_0.005": 6.37
+  },
+  "measured_central_x1.5|pooled_K14": {
+   "sigma2": 0.0625,
+   "K_inf": 14,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 32,
+   "mde_pp_at_that_n": 5.41,
+   "mde_pp_at_that_n_tau2_0.005": 6.76
+  },
+  "measured_central_x1.5|pooled_K12": {
+   "sigma2": 0.0625,
+   "K_inf": 12,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 36,
+   "mde_pp_at_that_n": 5.78,
+   "mde_pp_at_that_n_tau2_0.005": 7.29
+  },
+  "high_x1.2|half_9B_K18": {
+   "sigma2": 0.0215,
+   "K_inf": 18,
+   "verdict": "PASS",
+   "n": 12,
+   "largest_n_under_15_gpu_h": 16,
+   "mde_pp_at_that_n": 4.34,
+   "mde_pp_at_that_n_tau2_0.005": 5.58
+  },
+  "high_x1.2|half_9B_K16": {
+   "sigma2": 0.0215,
+   "K_inf": 16,
+   "verdict": "PASS",
+   "n": 12,
+   "largest_n_under_15_gpu_h": 16,
+   "mde_pp_at_that_n": 4.65,
+   "mde_pp_at_that_n_tau2_0.005": 5.97
+  },
+  "high_x1.2|half_9B_K14": {
+   "sigma2": 0.0215,
+   "K_inf": 14,
+   "verdict": "PASS",
+   "n": 20,
+   "largest_n_under_15_gpu_h": 20,
+   "mde_pp_at_that_n": 4.84,
+   "mde_pp_at_that_n_tau2_0.005": 6.31
+  },
+  "high_x1.2|half_9B_K12": {
+   "sigma2": 0.0215,
+   "K_inf": 12,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 24,
+   "mde_pp_at_that_n": 5.18,
+   "mde_pp_at_that_n_tau2_0.005": 6.82
+  },
+  "high_x1.2|9B_K18": {
+   "sigma2": 0.043,
+   "K_inf": 18,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 16,
+   "mde_pp_at_that_n": 5.05,
+   "mde_pp_at_that_n_tau2_0.005": 6.14
+  },
+  "high_x1.2|9B_K16": {
+   "sigma2": 0.043,
+   "K_inf": 16,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 16,
+   "mde_pp_at_that_n": 5.4,
+   "mde_pp_at_that_n_tau2_0.005": 6.57
+  },
+  "high_x1.2|9B_K14": {
+   "sigma2": 0.043,
+   "K_inf": 14,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 20,
+   "mde_pp_at_that_n": 5.52,
+   "mde_pp_at_that_n_tau2_0.005": 6.85
+  },
+  "high_x1.2|9B_K12": {
+   "sigma2": 0.043,
+   "K_inf": 12,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 24,
+   "mde_pp_at_that_n": 5.82,
+   "mde_pp_at_that_n_tau2_0.005": 7.32
+  },
+  "high_x1.2|pooled_K18": {
+   "sigma2": 0.0625,
+   "K_inf": 18,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 16,
+   "mde_pp_at_that_n": 5.61,
+   "mde_pp_at_that_n_tau2_0.005": 6.61
+  },
+  "high_x1.2|pooled_K16": {
+   "sigma2": 0.0625,
+   "K_inf": 16,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 16,
+   "mde_pp_at_that_n": 6.0,
+   "mde_pp_at_that_n_tau2_0.005": 7.07
+  },
+  "high_x1.2|pooled_K14": {
+   "sigma2": 0.0625,
+   "K_inf": 14,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 20,
+   "mde_pp_at_that_n": 6.08,
+   "mde_pp_at_that_n_tau2_0.005": 7.3
+  },
+  "high_x1.2|pooled_K12": {
+   "sigma2": 0.0625,
+   "K_inf": 12,
+   "verdict": "FAIL_COST",
+   "n": null,
+   "largest_n_under_15_gpu_h": 24,
+   "mde_pp_at_that_n": 6.35,
+   "mde_pp_at_that_n_tau2_0.005": 7.75
+  }
+ },
+ "gate_pass_region_under_15_gpu_h": {
+  "measured_central_x1.5|K18": {
+   "n_max_under_cap": 24,
+   "max_sigma2_for_pass": 0.0622,
+   "mde_pp_at_sigma2_0": 3.5
+  },
+  "measured_central_x1.5|K17": {
+   "n_max_under_cap": 24,
+   "max_sigma2_for_pass": 0.0545,
+   "mde_pp_at_sigma2_0": 3.62
+  },
+  "measured_central_x1.5|K16": {
+   "n_max_under_cap": 28,
+   "max_sigma2_for_pass": 0.0546,
+   "mde_pp_at_sigma2_0": 3.75
+  },
+  "measured_central_x1.5|K15": {
+   "n_max_under_cap": 28,
+   "max_sigma2_for_pass": 0.0456,
+   "mde_pp_at_sigma2_0": 3.89
+  },
+  "measured_central_x1.5|K14": {
+   "n_max_under_cap": 32,
+   "max_sigma2_for_pass": 0.0419,
+   "mde_pp_at_sigma2_0": 4.05
+  },
+  "measured_central_x1.5|K13": {
+   "n_max_under_cap": 32,
+   "max_sigma2_for_pass": 0.0316,
+   "mde_pp_at_sigma2_0": 4.23
+  },
+  "measured_central_x1.5|K12": {
+   "n_max_under_cap": 36,
+   "max_sigma2_for_pass": 0.024,
+   "mde_pp_at_sigma2_0": 4.44
+  },
+  "high_x1.2|K18": {
+   "n_max_under_cap": 16,
+   "max_sigma2_for_pass": 0.0415,
+   "mde_pp_at_sigma2_0": 3.5
+  },
+  "high_x1.2|K17": {
+   "n_max_under_cap": 16,
+   "max_sigma2_for_pass": 0.0363,
+   "mde_pp_at_sigma2_0": 3.62
+  },
+  "high_x1.2|K16": {
+   "n_max_under_cap": 16,
+   "max_sigma2_for_pass": 0.0312,
+   "mde_pp_at_sigma2_0": 3.75
+  },
+  "high_x1.2|K15": {
+   "n_max_under_cap": 16,
+   "max_sigma2_for_pass": 0.0261,
+   "mde_pp_at_sigma2_0": 3.89
+  },
+  "high_x1.2|K14": {
+   "n_max_under_cap": 20,
+   "max_sigma2_for_pass": 0.0262,
+   "mde_pp_at_sigma2_0": 4.05
+  },
+  "high_x1.2|K13": {
+   "n_max_under_cap": 20,
+   "max_sigma2_for_pass": 0.0198,
+   "mde_pp_at_sigma2_0": 4.23
+  },
+  "high_x1.2|K12": {
+   "n_max_under_cap": 24,
+   "max_sigma2_for_pass": 0.016,
+   "mde_pp_at_sigma2_0": 4.44
+  }
+ },
+ "D_monte_carlo": {
+  "measured_central_x1.5|A_s1a_transport|H1_uniform|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.0187,
+     "FAIL_FLOOR": 0.0393,
+     "FAIL_TASKS": 0.942
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 6.88,
+    "mean_pooled_english_success": 0.3125,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.0187,
+      "FAIL_FLOOR": 0.0393,
+      "FAIL_TASKS": 0.942
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0213,
+     "EQUIVALENT": 0.4087,
+     "INCONCLUSIVE": 0.57
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|A_s1a_transport|H1_uniform|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.0147,
+     "FAIL_FLOOR": 0.038,
+     "FAIL_TASKS": 0.9473
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 6.99,
+    "mean_pooled_english_success": 0.3189,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.0147,
+      "FAIL_FLOOR": 0.038,
+      "FAIL_TASKS": 0.9473
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.058,
+     "EQUIVALENT": 0.2773,
+     "INCONCLUSIVE": 0.6647
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|A_s1a_transport|H1_uniform|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.0173,
+     "FAIL_FLOOR": 0.0407,
+     "FAIL_TASKS": 0.942
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 6.96,
+    "mean_pooled_english_success": 0.3167,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.0173,
+      "FAIL_FLOOR": 0.0407,
+      "FAIL_TASKS": 0.942
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0933,
+     "EQUIVALENT": 0.1527,
+     "INCONCLUSIVE": 0.754
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|A_s1a_transport|H1_uniform|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.012,
+     "FAIL_FLOOR": 0.034,
+     "FAIL_TASKS": 0.954
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 7.04,
+    "mean_pooled_english_success": 0.3198,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.012,
+      "FAIL_FLOOR": 0.034,
+      "FAIL_TASKS": 0.954
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.238,
+     "EQUIVALENT": 0.046,
+     "INCONCLUSIVE": 0.716
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|A_s1a_transport|H2_half|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.0173,
+     "FAIL_FLOOR": 0.04,
+     "FAIL_TASKS": 0.9427
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 7.04,
+    "mean_pooled_english_success": 0.3205,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.0173,
+      "FAIL_FLOOR": 0.04,
+      "FAIL_TASKS": 0.9427
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.03,
+     "EQUIVALENT": 0.3693,
+     "INCONCLUSIVE": 0.6007
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|A_s1a_transport|H2_half|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.0153,
+     "FAIL_FLOOR": 0.0367,
+     "FAIL_TASKS": 0.948
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 6.94,
+    "mean_pooled_english_success": 0.3166,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.0153,
+      "FAIL_FLOOR": 0.0367,
+      "FAIL_TASKS": 0.948
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0347,
+     "EQUIVALENT": 0.2267,
+     "INCONCLUSIVE": 0.7387
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|A_s1a_transport|H2_half|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.0193,
+     "FAIL_FLOOR": 0.0427,
+     "FAIL_TASKS": 0.938
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 6.92,
+    "mean_pooled_english_success": 0.313,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.0193,
+      "FAIL_FLOOR": 0.0427,
+      "FAIL_TASKS": 0.938
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0673,
+     "EQUIVALENT": 0.116,
+     "INCONCLUSIVE": 0.8167
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|A_s1a_transport|H2_half|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.016,
+     "FAIL_FLOOR": 0.0467,
+     "FAIL_TASKS": 0.9373
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 6.83,
+    "mean_pooled_english_success": 0.3112,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.016,
+      "FAIL_FLOOR": 0.0467,
+      "FAIL_TASKS": 0.9373
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0953,
+     "EQUIVALENT": 0.0487,
+     "INCONCLUSIVE": 0.856
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|A_s1a_transport|H3_quarter|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.016,
+     "FAIL_FLOOR": 0.038,
+     "FAIL_TASKS": 0.946
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 7.1,
+    "mean_pooled_english_success": 0.3215,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.016,
+      "FAIL_FLOOR": 0.038,
+      "FAIL_TASKS": 0.946
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0213,
+     "EQUIVALENT": 0.3893,
+     "INCONCLUSIVE": 0.5893
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|A_s1a_transport|H3_quarter|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.014,
+     "FAIL_FLOOR": 0.0513,
+     "FAIL_TASKS": 0.9347
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 6.84,
+    "mean_pooled_english_success": 0.31,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.014,
+      "FAIL_FLOOR": 0.0513,
+      "FAIL_TASKS": 0.9347
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0307,
+     "EQUIVALENT": 0.2233,
+     "INCONCLUSIVE": 0.746
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|A_s1a_transport|H3_quarter|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.016,
+     "FAIL_FLOOR": 0.038,
+     "FAIL_TASKS": 0.946
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 6.94,
+    "mean_pooled_english_success": 0.3136,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.016,
+      "FAIL_FLOOR": 0.038,
+      "FAIL_TASKS": 0.946
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0247,
+     "EQUIVALENT": 0.15,
+     "INCONCLUSIVE": 0.8253
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|A_s1a_transport|H3_quarter|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.0173,
+     "FAIL_FLOOR": 0.0433,
+     "FAIL_TASKS": 0.9393
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 6.96,
+    "mean_pooled_english_success": 0.3154,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.0173,
+      "FAIL_FLOOR": 0.0433,
+      "FAIL_TASKS": 0.9393
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0433,
+     "EQUIVALENT": 0.124,
+     "INCONCLUSIVE": 0.8327
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H1_uniform|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.8747,
+     "FAIL_TASKS": 0.1253
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.73,
+    "mean_pooled_english_success": 0.4505,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.8747,
+      "FAIL_TASKS": 0.1253
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0513,
+     "EQUIVALENT": 0.0007,
+     "INCONCLUSIVE": 0.948
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H1_uniform|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.89,
+     "FAIL_TASKS": 0.11
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.69,
+    "mean_pooled_english_success": 0.4474,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.89,
+      "FAIL_TASKS": 0.11
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0733,
+     "EQUIVALENT": 0.002,
+     "INCONCLUSIVE": 0.9247
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H1_uniform|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.8987,
+     "FAIL_TASKS": 0.1013
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.81,
+    "mean_pooled_english_success": 0.4527,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.8987,
+      "FAIL_TASKS": 0.1013
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.1273,
+     "EQUIVALENT": 0.0007,
+     "INCONCLUSIVE": 0.872
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H1_uniform|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.8867,
+     "FAIL_TASKS": 0.1133
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.68,
+    "mean_pooled_english_success": 0.4499,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.8867,
+      "FAIL_TASKS": 0.1133
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.2807,
+     "EQUIVALENT": 0.0013,
+     "INCONCLUSIVE": 0.718
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H2_half|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.9013,
+     "FAIL_TASKS": 0.0987
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.83,
+    "mean_pooled_english_success": 0.4521,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.9013,
+      "FAIL_TASKS": 0.0987
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0573,
+     "EQUIVALENT": 0.0013,
+     "INCONCLUSIVE": 0.9413
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H2_half|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.882,
+     "FAIL_TASKS": 0.118
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.62,
+    "mean_pooled_english_success": 0.446,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.882,
+      "FAIL_TASKS": 0.118
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.084,
+     "EQUIVALENT": 0.0013,
+     "INCONCLUSIVE": 0.9147
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H2_half|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.8887,
+     "FAIL_TASKS": 0.1113
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.79,
+    "mean_pooled_english_success": 0.4503,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.8887,
+      "FAIL_TASKS": 0.1113
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.1227,
+     "EQUIVALENT": 0.0013,
+     "INCONCLUSIVE": 0.876
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H2_half|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.8967,
+     "FAIL_TASKS": 0.1033
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.77,
+    "mean_pooled_english_success": 0.4523,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.8967,
+      "FAIL_TASKS": 0.1033
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.2173,
+     "EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.7827
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H3_quarter|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.9093,
+     "FAIL_TASKS": 0.0907
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.84,
+    "mean_pooled_english_success": 0.4524,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.9093,
+      "FAIL_TASKS": 0.0907
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.046,
+     "EQUIVALENT": 0.0013,
+     "INCONCLUSIVE": 0.9527
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H3_quarter|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.8907,
+     "FAIL_TASKS": 0.1093
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.79,
+    "mean_pooled_english_success": 0.4513,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.8907,
+      "FAIL_TASKS": 0.1093
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0693,
+     "EQUIVALENT": 0.0013,
+     "INCONCLUSIVE": 0.9293
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H3_quarter|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.8833,
+     "FAIL_TASKS": 0.1167
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.72,
+    "mean_pooled_english_success": 0.4483,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.8833,
+      "FAIL_TASKS": 0.1167
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0827,
+     "EQUIVALENT": 0.0007,
+     "INCONCLUSIVE": 0.9167
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|B_mid_range|H3_quarter|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.8993,
+     "FAIL_TASKS": 0.1007
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 13.82,
+    "mean_pooled_english_success": 0.4518,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.8993,
+      "FAIL_TASKS": 0.1007
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.1393,
+     "EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.8607
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H1_uniform|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.8907,
+     "FAIL_TASKS": 0.1093
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.8,
+    "mean_pooled_english_success": 0.0987,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.8907,
+      "FAIL_TASKS": 0.1093
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0307,
+     "EQUIVALENT": 0.466,
+     "INCONCLUSIVE": 0.5033
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H1_uniform|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.8733,
+     "FAIL_TASKS": 0.1267
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.84,
+    "mean_pooled_english_success": 0.1001,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.8733,
+      "FAIL_TASKS": 0.1267
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.036,
+     "EQUIVALENT": 0.488,
+     "INCONCLUSIVE": 0.476
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H1_uniform|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.8893,
+     "FAIL_TASKS": 0.1107
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.78,
+    "mean_pooled_english_success": 0.0992,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.8893,
+      "FAIL_TASKS": 0.1107
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.05,
+     "EQUIVALENT": 0.47,
+     "INCONCLUSIVE": 0.48
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H1_uniform|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.8713,
+     "FAIL_TASKS": 0.1287
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.86,
+    "mean_pooled_english_success": 0.1012,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.8713,
+      "FAIL_TASKS": 0.1287
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.128,
+     "EQUIVALENT": 0.3907,
+     "INCONCLUSIVE": 0.4813
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H2_half|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.872,
+     "FAIL_TASKS": 0.128
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.86,
+    "mean_pooled_english_success": 0.1014,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.872,
+      "FAIL_TASKS": 0.128
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0307,
+     "EQUIVALENT": 0.4667,
+     "INCONCLUSIVE": 0.5027
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H2_half|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.886,
+     "FAIL_TASKS": 0.114
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.86,
+    "mean_pooled_english_success": 0.1002,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.886,
+      "FAIL_TASKS": 0.114
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0427,
+     "EQUIVALENT": 0.4867,
+     "INCONCLUSIVE": 0.4707
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H2_half|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.8693,
+     "FAIL_TASKS": 0.1307
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.8,
+    "mean_pooled_english_success": 0.0998,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.8693,
+      "FAIL_TASKS": 0.1307
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.048,
+     "EQUIVALENT": 0.4653,
+     "INCONCLUSIVE": 0.4867
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H2_half|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.8827,
+     "FAIL_TASKS": 0.1173
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.71,
+    "mean_pooled_english_success": 0.0977,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.8827,
+      "FAIL_TASKS": 0.1173
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0727,
+     "EQUIVALENT": 0.434,
+     "INCONCLUSIVE": 0.4933
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H3_quarter|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.872,
+     "FAIL_TASKS": 0.128
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.86,
+    "mean_pooled_english_success": 0.0999,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.872,
+      "FAIL_TASKS": 0.128
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0293,
+     "EQUIVALENT": 0.4947,
+     "INCONCLUSIVE": 0.476
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H3_quarter|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.8807,
+     "FAIL_TASKS": 0.1193
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.81,
+    "mean_pooled_english_success": 0.0998,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.8807,
+      "FAIL_TASKS": 0.1193
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0307,
+     "EQUIVALENT": 0.488,
+     "INCONCLUSIVE": 0.4813
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H3_quarter|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.8733,
+     "FAIL_TASKS": 0.1267
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.87,
+    "mean_pooled_english_success": 0.1005,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.8733,
+      "FAIL_TASKS": 0.1267
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0373,
+     "EQUIVALENT": 0.462,
+     "INCONCLUSIVE": 0.5007
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|C_near_floor|H3_quarter|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_FLOOR": 0.8713,
+     "FAIL_TASKS": 0.1287
+    },
+    "p_gate_pass": 0.0,
+    "mean_K_inf": 3.85,
+    "mean_pooled_english_success": 0.1005,
+    "n_chosen_given_pass": {},
+    "decision_given_pass": {
+     "PRESENT": null,
+     "EQUIVALENT": null,
+     "PRESENT_AND_EQUIVALENT": null,
+     "INCONCLUSIVE": null
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0
+    },
+    "mean_realized_tau2_given_any_pass": null,
+    "tau2_gate_quartiles_when_computed": null,
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_FLOOR": 0.8713,
+      "FAIL_TASKS": 0.1287
+     },
+     "p_gate_pass": 0.0,
+     "n_chosen_given_pass": {},
+     "decision_given_pass": {
+      "PRESENT": null,
+      "EQUIVALENT": null,
+      "PRESENT_AND_EQUIVALENT": null,
+      "INCONCLUSIVE": null
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0307,
+     "EQUIVALENT": 0.4433,
+     "INCONCLUSIVE": 0.526
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.0,
+    "44": 0.0
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H1_uniform|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6387,
+     "FAIL_FLOOR": 0.006,
+     "FAIL_TASKS": 0.3213,
+     "PASS": 0.034
+    },
+    "p_gate_pass": 0.034,
+    "mean_K_inf": 12.3,
+    "mean_pooled_english_success": 0.6052,
+    "n_chosen_given_pass": {
+     "8": 9,
+     "16": 3,
+     "20": 6,
+     "24": 5,
+     "28": 8,
+     "32": 20
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.8824,
+     "PRESENT_AND_EQUIVALENT": 0.0392,
+     "INCONCLUSIVE": 0.0784
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.03,
+     "PRESENT_AND_EQUIVALENT": 0.0013,
+     "INCONCLUSIVE": 0.0027
+    },
+    "mean_realized_tau2_given_any_pass": 0.0,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6387,
+      "FAIL_FLOOR": 0.006,
+      "FAIL_TASKS": 0.3213,
+      "PASS": 0.034
+     },
+     "p_gate_pass": 0.034,
+     "n_chosen_given_pass": {
+      "8": 9,
+      "16": 3,
+      "20": 6,
+      "24": 5,
+      "28": 8,
+      "32": 20
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0,
+      "EQUIVALENT": 0.8824,
+      "PRESENT_AND_EQUIVALENT": 0.0196,
+      "INCONCLUSIVE": 0.098
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0233,
+     "EQUIVALENT": 0.308,
+     "INCONCLUSIVE": 0.6687
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.036,
+    "43": 0.036,
+    "44": 0.03
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H1_uniform|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6327,
+     "FAIL_FLOOR": 0.0053,
+     "FAIL_TASKS": 0.3373,
+     "PASS": 0.0247
+    },
+    "p_gate_pass": 0.0247,
+    "mean_K_inf": 12.28,
+    "mean_pooled_english_success": 0.605,
+    "n_chosen_given_pass": {
+     "8": 4,
+     "12": 1,
+     "16": 2,
+     "20": 4,
+     "24": 4,
+     "28": 7,
+     "32": 15
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.1622,
+     "EQUIVALENT": 0.2162,
+     "PRESENT_AND_EQUIVALENT": 0.0811,
+     "INCONCLUSIVE": 0.5405
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.004,
+     "EQUIVALENT": 0.0053,
+     "PRESENT_AND_EQUIVALENT": 0.002,
+     "INCONCLUSIVE": 0.0133
+    },
+    "mean_realized_tau2_given_any_pass": 0.00247,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6327,
+      "FAIL_FLOOR": 0.0053,
+      "FAIL_TASKS": 0.3373,
+      "PASS": 0.0247
+     },
+     "p_gate_pass": 0.0247,
+     "n_chosen_given_pass": {
+      "8": 4,
+      "12": 1,
+      "16": 2,
+      "20": 4,
+      "24": 4,
+      "28": 7,
+      "32": 15
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.1622,
+      "EQUIVALENT": 0.2973,
+      "PRESENT_AND_EQUIVALENT": 0.0541,
+      "INCONCLUSIVE": 0.4865
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0873,
+     "EQUIVALENT": 0.1807,
+     "INCONCLUSIVE": 0.732
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.016,
+    "43": 0.022,
+    "44": 0.036
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H1_uniform|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6313,
+     "FAIL_FLOOR": 0.0067,
+     "FAIL_TASKS": 0.3273,
+     "PASS": 0.0347
+    },
+    "p_gate_pass": 0.0347,
+    "mean_K_inf": 12.35,
+    "mean_pooled_english_success": 0.6075,
+    "n_chosen_given_pass": {
+     "8": 4,
+     "16": 3,
+     "20": 6,
+     "24": 12,
+     "28": 8,
+     "32": 19
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.4038,
+     "EQUIVALENT": 0.0192,
+     "PRESENT_AND_EQUIVALENT": 0.0192,
+     "INCONCLUSIVE": 0.5577
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.014,
+     "EQUIVALENT": 0.0007,
+     "PRESENT_AND_EQUIVALENT": 0.0007,
+     "INCONCLUSIVE": 0.0193
+    },
+    "mean_realized_tau2_given_any_pass": 0.00581,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6313,
+      "FAIL_FLOOR": 0.0067,
+      "FAIL_TASKS": 0.3273,
+      "PASS": 0.0347
+     },
+     "p_gate_pass": 0.0347,
+     "n_chosen_given_pass": {
+      "8": 4,
+      "16": 3,
+      "20": 6,
+      "24": 12,
+      "28": 8,
+      "32": 19
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.5,
+      "EQUIVALENT": 0.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.5
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.158,
+     "EQUIVALENT": 0.0927,
+     "INCONCLUSIVE": 0.7493
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.028,
+    "43": 0.038,
+    "44": 0.038
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H1_uniform|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6253,
+     "FAIL_FLOOR": 0.0053,
+     "FAIL_TASKS": 0.3387,
+     "PASS": 0.0307
+    },
+    "p_gate_pass": 0.0307,
+    "mean_K_inf": 12.29,
+    "mean_pooled_english_success": 0.6051,
+    "n_chosen_given_pass": {
+     "8": 7,
+     "16": 1,
+     "20": 5,
+     "24": 9,
+     "28": 7,
+     "32": 17
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.6957,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.3043
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0213,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0093
+    },
+    "mean_realized_tau2_given_any_pass": 0.01374,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6253,
+      "FAIL_FLOOR": 0.0053,
+      "FAIL_TASKS": 0.3387,
+      "PASS": 0.0307
+     },
+     "p_gate_pass": 0.0307,
+     "n_chosen_given_pass": {
+      "8": 7,
+      "16": 1,
+      "20": 5,
+      "24": 9,
+      "28": 7,
+      "32": 17
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.7826,
+      "EQUIVALENT": 0.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.2174
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.4127,
+     "EQUIVALENT": 0.0153,
+     "INCONCLUSIVE": 0.572
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.036,
+    "43": 0.022,
+    "44": 0.034
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H2_half|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.616,
+     "FAIL_FLOOR": 0.006,
+     "FAIL_TASKS": 0.3393,
+     "PASS": 0.0387
+    },
+    "p_gate_pass": 0.0387,
+    "mean_K_inf": 12.28,
+    "mean_pooled_english_success": 0.6065,
+    "n_chosen_given_pass": {
+     "8": 3,
+     "12": 3,
+     "16": 2,
+     "20": 7,
+     "24": 10,
+     "28": 18,
+     "32": 15
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.9655,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0345
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0373,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0013
+    },
+    "mean_realized_tau2_given_any_pass": 0.0,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.616,
+      "FAIL_FLOOR": 0.006,
+      "FAIL_TASKS": 0.3393,
+      "PASS": 0.0387
+     },
+     "p_gate_pass": 0.0387,
+     "n_chosen_given_pass": {
+      "8": 3,
+      "12": 3,
+      "16": 2,
+      "20": 7,
+      "24": 10,
+      "28": 18,
+      "32": 15
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0172,
+      "EQUIVALENT": 0.9138,
+      "PRESENT_AND_EQUIVALENT": 0.0345,
+      "INCONCLUSIVE": 0.0345
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0387,
+     "EQUIVALENT": 0.3113,
+     "INCONCLUSIVE": 0.65
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.042,
+    "43": 0.026,
+    "44": 0.048
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H2_half|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6273,
+     "FAIL_FLOOR": 0.0033,
+     "FAIL_TASKS": 0.3347,
+     "PASS": 0.0347
+    },
+    "p_gate_pass": 0.0347,
+    "mean_K_inf": 12.25,
+    "mean_pooled_english_success": 0.6011,
+    "n_chosen_given_pass": {
+     "8": 10,
+     "12": 2,
+     "16": 1,
+     "20": 9,
+     "24": 10,
+     "28": 5,
+     "32": 15
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0962,
+     "EQUIVALENT": 0.1731,
+     "PRESENT_AND_EQUIVALENT": 0.0192,
+     "INCONCLUSIVE": 0.7115
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0033,
+     "EQUIVALENT": 0.006,
+     "PRESENT_AND_EQUIVALENT": 0.0007,
+     "INCONCLUSIVE": 0.0247
+    },
+    "mean_realized_tau2_given_any_pass": 0.00545,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6273,
+      "FAIL_FLOOR": 0.0033,
+      "FAIL_TASKS": 0.3347,
+      "PASS": 0.0347
+     },
+     "p_gate_pass": 0.0347,
+     "n_chosen_given_pass": {
+      "8": 10,
+      "12": 2,
+      "16": 1,
+      "20": 9,
+      "24": 10,
+      "28": 5,
+      "32": 15
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0962,
+      "EQUIVALENT": 0.1538,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.75
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0707,
+     "EQUIVALENT": 0.1413,
+     "INCONCLUSIVE": 0.788
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.036,
+    "43": 0.024,
+    "44": 0.044
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H2_half|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6267,
+     "FAIL_FLOOR": 0.0033,
+     "FAIL_TASKS": 0.334,
+     "PASS": 0.036
+    },
+    "p_gate_pass": 0.036,
+    "mean_K_inf": 12.3,
+    "mean_pooled_english_success": 0.6044,
+    "n_chosen_given_pass": {
+     "8": 10,
+     "12": 2,
+     "16": 3,
+     "20": 7,
+     "24": 5,
+     "28": 11,
+     "32": 16
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.1852,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.8148
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0067,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0293
+    },
+    "mean_realized_tau2_given_any_pass": 0.01249,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6267,
+      "FAIL_FLOOR": 0.0033,
+      "FAIL_TASKS": 0.334,
+      "PASS": 0.036
+     },
+     "p_gate_pass": 0.036,
+     "n_chosen_given_pass": {
+      "8": 10,
+      "12": 2,
+      "16": 3,
+      "20": 7,
+      "24": 5,
+      "28": 11,
+      "32": 16
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.1852,
+      "EQUIVALENT": 0.0185,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.7963
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.1273,
+     "EQUIVALENT": 0.0547,
+     "INCONCLUSIVE": 0.818
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.02,
+    "43": 0.06,
+    "44": 0.028
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H2_half|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.656,
+     "FAIL_FLOOR": 0.0093,
+     "FAIL_TASKS": 0.304,
+     "PASS": 0.0307
+    },
+    "p_gate_pass": 0.0307,
+    "mean_K_inf": 12.42,
+    "mean_pooled_english_success": 0.6112,
+    "n_chosen_given_pass": {
+     "8": 7,
+     "16": 2,
+     "20": 2,
+     "24": 8,
+     "28": 8,
+     "32": 19
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.1739,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.8261
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0053,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0253
+    },
+    "mean_realized_tau2_given_any_pass": 0.02611,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.656,
+      "FAIL_FLOOR": 0.0093,
+      "FAIL_TASKS": 0.304,
+      "PASS": 0.0307
+     },
+     "p_gate_pass": 0.0307,
+     "n_chosen_given_pass": {
+      "8": 7,
+      "16": 2,
+      "20": 2,
+      "24": 8,
+      "28": 8,
+      "32": 19
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.2826,
+      "EQUIVALENT": 0.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.7174
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.1933,
+     "EQUIVALENT": 0.006,
+     "INCONCLUSIVE": 0.8007
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.032,
+    "43": 0.032,
+    "44": 0.028
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H3_quarter|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.632,
+     "FAIL_FLOOR": 0.0073,
+     "FAIL_TASKS": 0.3367,
+     "PASS": 0.024
+    },
+    "p_gate_pass": 0.024,
+    "mean_K_inf": 12.32,
+    "mean_pooled_english_success": 0.6052,
+    "n_chosen_given_pass": {
+     "8": 6,
+     "16": 1,
+     "20": 3,
+     "24": 9,
+     "28": 7,
+     "32": 10
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.9444,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0556
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0227,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0013
+    },
+    "mean_realized_tau2_given_any_pass": 0.0,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.632,
+      "FAIL_FLOOR": 0.0073,
+      "FAIL_TASKS": 0.3367,
+      "PASS": 0.024
+     },
+     "p_gate_pass": 0.024,
+     "n_chosen_given_pass": {
+      "8": 6,
+      "16": 1,
+      "20": 3,
+      "24": 9,
+      "28": 7,
+      "32": 10
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0,
+      "EQUIVALENT": 1.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.0
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0293,
+     "EQUIVALENT": 0.284,
+     "INCONCLUSIVE": 0.6867
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.022,
+    "43": 0.026,
+    "44": 0.024
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H3_quarter|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6187,
+     "FAIL_FLOOR": 0.006,
+     "FAIL_TASKS": 0.342,
+     "PASS": 0.0333
+    },
+    "p_gate_pass": 0.0333,
+    "mean_K_inf": 12.31,
+    "mean_pooled_english_success": 0.6058,
+    "n_chosen_given_pass": {
+     "8": 7,
+     "12": 1,
+     "16": 4,
+     "20": 7,
+     "24": 6,
+     "28": 9,
+     "32": 16
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.04,
+     "EQUIVALENT": 0.1,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.86
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0013,
+     "EQUIVALENT": 0.0033,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0287
+    },
+    "mean_realized_tau2_given_any_pass": 0.00776,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6187,
+      "FAIL_FLOOR": 0.006,
+      "FAIL_TASKS": 0.342,
+      "PASS": 0.0333
+     },
+     "p_gate_pass": 0.0333,
+     "n_chosen_given_pass": {
+      "8": 7,
+      "12": 1,
+      "16": 4,
+      "20": 7,
+      "24": 6,
+      "28": 9,
+      "32": 16
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.02,
+      "EQUIVALENT": 0.2,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.78
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.052,
+     "EQUIVALENT": 0.1,
+     "INCONCLUSIVE": 0.848
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.03,
+    "43": 0.03,
+    "44": 0.04
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H3_quarter|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6127,
+     "FAIL_FLOOR": 0.0073,
+     "FAIL_TASKS": 0.3453,
+     "PASS": 0.0347
+    },
+    "p_gate_pass": 0.0347,
+    "mean_K_inf": 12.29,
+    "mean_pooled_english_success": 0.6059,
+    "n_chosen_given_pass": {
+     "8": 4,
+     "12": 1,
+     "16": 5,
+     "20": 2,
+     "24": 9,
+     "28": 6,
+     "32": 25
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0192,
+     "EQUIVALENT": 0.0577,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.9231
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0007,
+     "EQUIVALENT": 0.002,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.032
+    },
+    "mean_realized_tau2_given_any_pass": 0.01743,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6127,
+      "FAIL_FLOOR": 0.0073,
+      "FAIL_TASKS": 0.3453,
+      "PASS": 0.0347
+     },
+     "p_gate_pass": 0.0347,
+     "n_chosen_given_pass": {
+      "8": 4,
+      "12": 1,
+      "16": 5,
+      "20": 2,
+      "24": 9,
+      "28": 6,
+      "32": 25
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0577,
+      "EQUIVALENT": 0.0577,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.8846
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0713,
+     "EQUIVALENT": 0.032,
+     "INCONCLUSIVE": 0.8967
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.028,
+    "43": 0.034,
+    "44": 0.042
+   }
+  },
+  "measured_central_x1.5|D_near_deterministic|H3_quarter|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6253,
+     "FAIL_FLOOR": 0.0047,
+     "FAIL_TASKS": 0.3327,
+     "PASS": 0.0373
+    },
+    "p_gate_pass": 0.0373,
+    "mean_K_inf": 12.31,
+    "mean_pooled_english_success": 0.6061,
+    "n_chosen_given_pass": {
+     "8": 6,
+     "12": 1,
+     "16": 2,
+     "20": 3,
+     "24": 13,
+     "28": 10,
+     "32": 21
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0714,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.9286
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0027,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0347
+    },
+    "mean_realized_tau2_given_any_pass": 0.04063,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6253,
+      "FAIL_FLOOR": 0.0047,
+      "FAIL_TASKS": 0.3327,
+      "PASS": 0.0373
+     },
+     "p_gate_pass": 0.0373,
+     "n_chosen_given_pass": {
+      "8": 6,
+      "12": 1,
+      "16": 2,
+      "20": 3,
+      "24": 13,
+      "28": 10,
+      "32": 21
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0714,
+      "EQUIVALENT": 0.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.9286
+     }
+    },
+    "dossier_fixed_design_decision": {
+     "PRESENT": 0.0933,
+     "EQUIVALENT": 0.0167,
+     "INCONCLUSIVE": 0.89
+    }
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.044,
+    "43": 0.028,
+    "44": 0.04
+   }
+  },
+  "high_x1.2|D_near_deterministic|H1_uniform|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6647,
+     "FAIL_FLOOR": 0.0073,
+     "FAIL_TASKS": 0.3227,
+     "PASS": 0.0053
+    },
+    "p_gate_pass": 0.0053,
+    "mean_K_inf": 12.32,
+    "mean_pooled_english_success": 0.6079,
+    "n_chosen_given_pass": {
+     "8": 5,
+     "16": 1,
+     "20": 2
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.875,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.125
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0047,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0007
+    },
+    "mean_realized_tau2_given_any_pass": 0.0,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6647,
+      "FAIL_FLOOR": 0.0073,
+      "FAIL_TASKS": 0.3227,
+      "PASS": 0.0053
+     },
+     "p_gate_pass": 0.0053,
+     "n_chosen_given_pass": {
+      "8": 5,
+      "16": 1,
+      "20": 2
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0,
+      "EQUIVALENT": 1.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.0
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.0,
+    "43": 0.01,
+    "44": 0.006
+   }
+  },
+  "high_x1.2|D_near_deterministic|H1_uniform|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6567,
+     "FAIL_FLOOR": 0.0067,
+     "FAIL_TASKS": 0.3287,
+     "PASS": 0.008
+    },
+    "p_gate_pass": 0.008,
+    "mean_K_inf": 12.34,
+    "mean_pooled_english_success": 0.6077,
+    "n_chosen_given_pass": {
+     "8": 6,
+     "12": 4,
+     "20": 2
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.25,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.75
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.002,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.006
+    },
+    "mean_realized_tau2_given_any_pass": 0.00237,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6567,
+      "FAIL_FLOOR": 0.0067,
+      "FAIL_TASKS": 0.3287,
+      "PASS": 0.008
+     },
+     "p_gate_pass": 0.008,
+     "n_chosen_given_pass": {
+      "8": 6,
+      "12": 4,
+      "20": 2
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0833,
+      "EQUIVALENT": 0.4167,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.5
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.01,
+    "43": 0.008,
+    "44": 0.006
+   }
+  },
+  "high_x1.2|D_near_deterministic|H1_uniform|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6467,
+     "FAIL_FLOOR": 0.0067,
+     "FAIL_TASKS": 0.3347,
+     "PASS": 0.012
+    },
+    "p_gate_pass": 0.012,
+    "mean_K_inf": 12.28,
+    "mean_pooled_english_success": 0.6034,
+    "n_chosen_given_pass": {
+     "8": 11,
+     "12": 1,
+     "16": 2,
+     "20": 4
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.5,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.5
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.006,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.006
+    },
+    "mean_realized_tau2_given_any_pass": 0.00552,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6467,
+      "FAIL_FLOOR": 0.0067,
+      "FAIL_TASKS": 0.3347,
+      "PASS": 0.012
+     },
+     "p_gate_pass": 0.012,
+     "n_chosen_given_pass": {
+      "8": 11,
+      "12": 1,
+      "16": 2,
+      "20": 4
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.2222,
+      "EQUIVALENT": 0.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.7778
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.01,
+    "43": 0.016,
+    "44": 0.01
+   }
+  },
+  "high_x1.2|D_near_deterministic|H1_uniform|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6687,
+     "FAIL_FLOOR": 0.0093,
+     "FAIL_TASKS": 0.3147,
+     "PASS": 0.0073
+    },
+    "p_gate_pass": 0.0073,
+    "mean_K_inf": 12.42,
+    "mean_pooled_english_success": 0.6097,
+    "n_chosen_given_pass": {
+     "8": 6,
+     "16": 2,
+     "20": 3
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.6364,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.3636
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0047,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0027
+    },
+    "mean_realized_tau2_given_any_pass": 0.01269,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6687,
+      "FAIL_FLOOR": 0.0093,
+      "FAIL_TASKS": 0.3147,
+      "PASS": 0.0073
+     },
+     "p_gate_pass": 0.0073,
+     "n_chosen_given_pass": {
+      "8": 6,
+      "16": 2,
+      "20": 3
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.8182,
+      "EQUIVALENT": 0.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.1818
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.01,
+    "43": 0.008,
+    "44": 0.004
+   }
+  },
+  "high_x1.2|D_near_deterministic|H2_half|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6553,
+     "FAIL_FLOOR": 0.0067,
+     "FAIL_TASKS": 0.3287,
+     "PASS": 0.0093
+    },
+    "p_gate_pass": 0.0093,
+    "mean_K_inf": 12.37,
+    "mean_pooled_english_success": 0.6084,
+    "n_chosen_given_pass": {
+     "8": 7,
+     "16": 2,
+     "20": 5
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0714,
+     "EQUIVALENT": 0.5714,
+     "PRESENT_AND_EQUIVALENT": 0.0714,
+     "INCONCLUSIVE": 0.2857
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0007,
+     "EQUIVALENT": 0.0053,
+     "PRESENT_AND_EQUIVALENT": 0.0007,
+     "INCONCLUSIVE": 0.0027
+    },
+    "mean_realized_tau2_given_any_pass": 0.0,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6553,
+      "FAIL_FLOOR": 0.0067,
+      "FAIL_TASKS": 0.3287,
+      "PASS": 0.0093
+     },
+     "p_gate_pass": 0.0093,
+     "n_chosen_given_pass": {
+      "8": 7,
+      "16": 2,
+      "20": 5
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0,
+      "EQUIVALENT": 0.8571,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.1429
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.01,
+    "43": 0.012,
+    "44": 0.006
+   }
+  },
+  "high_x1.2|D_near_deterministic|H2_half|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6367,
+     "FAIL_FLOOR": 0.0107,
+     "FAIL_TASKS": 0.342,
+     "PASS": 0.0107
+    },
+    "p_gate_pass": 0.0107,
+    "mean_K_inf": 12.27,
+    "mean_pooled_english_success": 0.6031,
+    "n_chosen_given_pass": {
+     "8": 3,
+     "12": 3,
+     "16": 4,
+     "20": 6
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.125,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.875
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0013,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0093
+    },
+    "mean_realized_tau2_given_any_pass": 0.00487,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6367,
+      "FAIL_FLOOR": 0.0107,
+      "FAIL_TASKS": 0.342,
+      "PASS": 0.0107
+     },
+     "p_gate_pass": 0.0107,
+     "n_chosen_given_pass": {
+      "8": 3,
+      "12": 3,
+      "16": 4,
+      "20": 6
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0,
+      "EQUIVALENT": 0.125,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.875
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.006,
+    "43": 0.006,
+    "44": 0.02
+   }
+  },
+  "high_x1.2|D_near_deterministic|H2_half|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.654,
+     "FAIL_FLOOR": 0.0093,
+     "FAIL_TASKS": 0.3273,
+     "PASS": 0.0093
+    },
+    "p_gate_pass": 0.0093,
+    "mean_K_inf": 12.33,
+    "mean_pooled_english_success": 0.6059,
+    "n_chosen_given_pass": {
+     "8": 7,
+     "16": 1,
+     "20": 6
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.1429,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.8571
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0013,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.008
+    },
+    "mean_realized_tau2_given_any_pass": 0.01175,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.654,
+      "FAIL_FLOOR": 0.0093,
+      "FAIL_TASKS": 0.3273,
+      "PASS": 0.0093
+     },
+     "p_gate_pass": 0.0093,
+     "n_chosen_given_pass": {
+      "8": 7,
+      "16": 1,
+      "20": 6
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.2143,
+      "EQUIVALENT": 0.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.7857
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.008,
+    "43": 0.01,
+    "44": 0.01
+   }
+  },
+  "high_x1.2|D_near_deterministic|H2_half|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6573,
+     "FAIL_FLOOR": 0.0067,
+     "FAIL_TASKS": 0.328,
+     "PASS": 0.008
+    },
+    "p_gate_pass": 0.008,
+    "mean_K_inf": 12.34,
+    "mean_pooled_english_success": 0.6068,
+    "n_chosen_given_pass": {
+     "8": 7,
+     "16": 4,
+     "20": 1
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.25,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.75
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.002,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.006
+    },
+    "mean_realized_tau2_given_any_pass": 0.02256,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6573,
+      "FAIL_FLOOR": 0.0067,
+      "FAIL_TASKS": 0.328,
+      "PASS": 0.008
+     },
+     "p_gate_pass": 0.008,
+     "n_chosen_given_pass": {
+      "8": 7,
+      "16": 4,
+      "20": 1
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0833,
+      "EQUIVALENT": 0.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.9167
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.01,
+    "43": 0.012,
+    "44": 0.002
+   }
+  },
+  "high_x1.2|D_near_deterministic|H3_quarter|delta_D=+0.00": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.642,
+     "FAIL_FLOOR": 0.004,
+     "FAIL_TASKS": 0.346,
+     "PASS": 0.008
+    },
+    "p_gate_pass": 0.008,
+    "mean_K_inf": 12.27,
+    "mean_pooled_english_success": 0.6035,
+    "n_chosen_given_pass": {
+     "8": 6,
+     "12": 2,
+     "16": 1,
+     "20": 3
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.9167,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0833
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0073,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0007
+    },
+    "mean_realized_tau2_given_any_pass": 0.0,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.642,
+      "FAIL_FLOOR": 0.004,
+      "FAIL_TASKS": 0.346,
+      "PASS": 0.008
+     },
+     "p_gate_pass": 0.008,
+     "n_chosen_given_pass": {
+      "8": 6,
+      "12": 2,
+      "16": 1,
+      "20": 3
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0,
+      "EQUIVALENT": 0.9167,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.0833
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.004,
+    "43": 0.006,
+    "44": 0.014
+   }
+  },
+  "high_x1.2|D_near_deterministic|H3_quarter|delta_D=-0.03": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.6807,
+     "FAIL_FLOOR": 0.004,
+     "FAIL_TASKS": 0.31,
+     "PASS": 0.0053
+    },
+    "p_gate_pass": 0.0053,
+    "mean_K_inf": 12.41,
+    "mean_pooled_english_success": 0.6088,
+    "n_chosen_given_pass": {
+     "8": 5,
+     "16": 1,
+     "20": 2
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.125,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.875
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0007,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.0047
+    },
+    "mean_realized_tau2_given_any_pass": 0.00729,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.6807,
+      "FAIL_FLOOR": 0.004,
+      "FAIL_TASKS": 0.31,
+      "PASS": 0.0053
+     },
+     "p_gate_pass": 0.0053,
+     "n_chosen_given_pass": {
+      "8": 5,
+      "16": 1,
+      "20": 2
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.25,
+      "EQUIVALENT": 0.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.75
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.006,
+    "43": 0.006,
+    "44": 0.004
+   }
+  },
+  "high_x1.2|D_near_deterministic|H3_quarter|delta_D=-0.05": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.638,
+     "FAIL_FLOOR": 0.008,
+     "FAIL_TASKS": 0.3433,
+     "PASS": 0.0107
+    },
+    "p_gate_pass": 0.0107,
+    "mean_K_inf": 12.28,
+    "mean_pooled_english_success": 0.6052,
+    "n_chosen_given_pass": {
+     "8": 13,
+     "12": 1,
+     "20": 2
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0625,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.9375
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0007,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.01
+    },
+    "mean_realized_tau2_given_any_pass": 0.01792,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.638,
+      "FAIL_FLOOR": 0.008,
+      "FAIL_TASKS": 0.3433,
+      "PASS": 0.0107
+     },
+     "p_gate_pass": 0.0107,
+     "n_chosen_given_pass": {
+      "8": 13,
+      "12": 1,
+      "20": 2
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0625,
+      "EQUIVALENT": 0.0625,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 0.875
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.006,
+    "43": 0.012,
+    "44": 0.014
+   }
+  },
+  "high_x1.2|D_near_deterministic|H3_quarter|delta_D=-0.08": {
+   "pooled_over_seeds": {
+    "nrep": 1500,
+    "gate": {
+     "FAIL_COST": 0.656,
+     "FAIL_FLOOR": 0.0027,
+     "FAIL_TASKS": 0.3333,
+     "PASS": 0.008
+    },
+    "p_gate_pass": 0.008,
+    "mean_K_inf": 12.31,
+    "mean_pooled_english_success": 0.6048,
+    "n_chosen_given_pass": {
+     "8": 7,
+     "16": 1,
+     "20": 4
+    },
+    "decision_given_pass": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 1.0
+    },
+    "decision_unconditional": {
+     "PRESENT": 0.0,
+     "EQUIVALENT": 0.0,
+     "PRESENT_AND_EQUIVALENT": 0.0,
+     "INCONCLUSIVE": 0.008
+    },
+    "mean_realized_tau2_given_any_pass": 0.0355,
+    "tau2_gate_quartiles_when_computed": [
+     0.0025,
+     0.0025,
+     0.0025
+    ],
+    "fixed_tau2_variant": {
+     "gate": {
+      "FAIL_COST": 0.656,
+      "FAIL_FLOOR": 0.0027,
+      "FAIL_TASKS": 0.3333,
+      "PASS": 0.008
+     },
+     "p_gate_pass": 0.008,
+     "n_chosen_given_pass": {
+      "8": 7,
+      "16": 1,
+      "20": 4
+     },
+     "decision_given_pass": {
+      "PRESENT": 0.0,
+      "EQUIVALENT": 0.0,
+      "PRESENT_AND_EQUIVALENT": 0.0,
+      "INCONCLUSIVE": 1.0
+     }
+    },
+    "dossier_fixed_design_decision": null
+   },
+   "p_gate_pass_by_seed": {
+    "42": 0.006,
+    "43": 0.008,
+    "44": 0.01
+   }
+  }
+ },
+ "notes": [
+  "sigma2 is the mean within-task-cell Bernoulli variance E[p(1-p)] = D_w / 2; on Relay the replicates are cosmetic seeds x reruns, so seed variance adds to it unless it is shared across locales (shared variance cancels in the paired contrast; the simulation does not credit that, so it is conservative).",
+  "tau2 is the between-task variance of the true per-task effect on the probability scale. 0.0025 is a 5 pp mean effect carried entirely by half the tasks (in probability). Logit-scale effect models produce more: see mean_realized_tau2_given_any_pass and tau2_gate_quartiles_when_computed; that is why the registered gate uses max(0.0025, tau2_logit).",
+  "Every base-rate scenario is assumed. Scenario A transports S1a's 9B cells (OSWorld VM tasks, 15 steps) to Relay (web app, up to 40 steps); B is mid-range; C is near the floor (frontier models passed 3 of 24 Relay pixel runs, 14 of the 19 blocked runs by connection failures).",
+  "The dossier comparison simulates its fixed design (ar-RTL minus ar-LTR, n = 8 per cell, all 18 tasks, no gate) on the same truth draws; its 'PRESENT' rate under delta_D = 0 is its false-positive rate."
+ ]
+}
