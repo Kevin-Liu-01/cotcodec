@@ -43,3 +43,29 @@ Not present, by design or because it does not exist yet:
 
 The deterministic doctor therefore reports FAIL. That is the expected and
 honest state.
+
+## Fresh run after the D60 repair (2026-10-10)
+
+Wave 1 scored 49 and exited honestly (record:
+`program/gauntlet/2026-10-10-e4-icl-write-rule-gate.jsonl`). D60 ordered one
+CPU-only repair by a single owner and a fresh run. The repair's files are added
+beside wave 1's, which are kept as they were (wave 1's `compute/` scripts and
+outputs, `query-log.json`, `compute/blind-roles.json` and the two wave-1 blind
+packets). `bundle.json` is rebuilt by `compute/repair-d60/build-bundle-v2.py`
+and now points at the draft registration
+`program/preregistrations/e4-icl-write-rule-gate-v2.md`.
+
+| Path | Contents |
+|---|---|
+| `compute/repair-d60/family-table.py`, `.json` | F1: the 15-family table built and checked under the teacher's tokenizer (revision d6f66f41, tokenizer.json sha256 fc4f0bd7...), with the whole-string single-token rule and deliberate digit tokenization; usable inputs and prompt lengths per family |
+| `compute/repair-d60/oracle-estimator-v2.py`, `.json`, `-grid.json` | S1v2: the registered v2 estimator (`estimate_family`) on a linear surrogate, twelve synthetic teachers plus a constant-misfit scenario and wave 1's regime with the v1 estimator beside it; the identifiability grid over d_task and fitting probes |
+| `compute/repair-d60/guard-sim.py`, `.json` | G1: wave 1's KL_S0 guard against the v2 label-prior guard on an exact categorical teacher |
+| `compute/repair-d60/decision-sim-v2.py`, `.json` | S2v2: the v2 decision path end to end under named scenarios (decisiveness) |
+| `compute/repair-d60/cost-model-v2.py`, `.json` | S3v2: GPU-hour arithmetic from measured prompt lengths; caps 7.72 GPU-h |
+| `compute/repair-d60/build-query-log-run2.py`, `query-log-run2.json` | This run's counted queries (33 by the repair: 13 orx, 10 OpenReview API, 10 ACL Anthology) with returned ids and raw-output digests, and the 10 uncounted full-text reads |
+| `compute/repair-d60/blind-roles-run2.json`, `blind/paragraph-3f069de8.txt`, `blind/paragraph-b2df9deb.txt`, `blind/paragraph-e982ff03.txt` | Fresh anonymized packets: the v2 proposal paragraph, Attention Matching with Cartridges (the closest structural prior), and the dual form; the role map is for the recorder only |
+| `doctors/*.json` | Run-2 doctor records (each names the wave-1 record it supersedes by hash) |
+
+The tokenizer files, the ACL bibliography and the paper texts were fetched to
+the scratch directory and are not committed. Reproduce the repair's checks with
+the commands in the proposal's "Compute and Reproducibility" section.

@@ -1017,3 +1017,40 @@ A1-4B-S2 never runs), `report.json` is absent. The guarded report is then the
 registered computation, with that one call returning "not evaluable as
 registered". The D59 tooling's verifier found the case. The tooling's owner
 drafted the reading, and it is recorded here before any A1 outcome is read.
+
+**D63. E4 ends at its honest exit; a gauntlet reviewer job ran in S1a's
+session-2 gap.** E4's repair run under D60 scored 60, the lower of the two
+reviews (Claude 60, open-weight 59); the trajectory is 49, then 60. All three
+refuters refuted. Blind discrimination passed by the letter only: the critic
+judged the prior the stronger contribution. Identification is still the
+largest defect for both reviewers, which is D60's stop line. The span verdict
+never tests whether the per-episode read side depends on the demonstrations.
+The family-fitted key map collapses onto any fixed low-dimensional read
+subspace, so key-independent writers read TIE through every registered gate.
+Swapping in another episode's keys leaves the fit unchanged (0.966 against
+0.966), while a genuine first-order writer drops (0.949 to 0.523). The repair
+did fix the wave-1 estimator failure, the family table under the real
+tokenizer and the cost (caps 7.72 GPU-h). Decided: E4 ends; no further CPU
+repair. Reopening it would need a key-resample placebo and a redesign of the
+span class, as a new proposal with its own gauntlet. Disclosure: the
+open-weight reviewer's lane job 1061 (14:05:59-14:09:11 UTC, 0.0533 GPU-h) ran
+between S1a's session-2 9B job ending and its 4B pair being submitted. No S1a
+job ran during it. The S1a operator waited, so the 4B pair (1062/1064) started
+at most about 3.5 minutes later than it otherwise would have. The quiet-host
+rule binds while an S1a job runs, so it was not broken, and nothing S1a
+registers depends on the exact start time of the 4B pair.
+
+**D64. Backfill C3 (does answer selection stack with per-question
+re-attempts?) gets a contract and a first gauntlet wave; C5 waits for a D24
+ruling.** With E4 closed (D63), the queue's next items are C5's Phase 1 (FP4
+training instability, about 47 GPU-h) and C3's Stage 0 (about 6 GPU-h). C5's
+first experiment is over 8 GPU-h, so its admission is Kevin's under D24
+whatever its gauntlet score. C3's Stage-0 gate is under 8 GPU-h, so a scored,
+reviewed package is actionable within the program. Decided: C3 first. The
+dossier corrected C3's question and narrowed its novelty (2608.03961,
+2607.17531, 2609.13257, 2608.13087, CASE 2608.17124). A contract, a proposal
+and a draft registration are written for the Stage-0 precondition gate only:
+held-out family-grouped decodability and the difficulty spread, with the
+dossier's kill lines. Then gauntlet wave 1 runs with declared budgets.
+Nothing runs on the host while an S1a VM or GPU job runs. S1a's CPU analysis
+jobs do not block the reviewer's lane job.
