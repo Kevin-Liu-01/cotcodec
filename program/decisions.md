@@ -1054,3 +1054,25 @@ held-out family-grouped decodability and the difficulty spread, with the
 dossier's kill lines. Then gauntlet wave 1 runs with declared budgets.
 Nothing runs on the host while an S1a VM or GPU job runs. S1a's CPU analysis
 jobs do not block the reviewer's lane job.
+
+**D65. C3 ends at its honest exit after wave 1; new backfill pauses until
+S1a's result.** C3's Stage-0 gate gauntlet (D64) scored 54, the lower of the
+two reviews (Claude 56, open-weight 54). Blind discrimination failed: the
+critic read the proposal as the closest prior's protocol moved to a new model
+and judged the prior the stronger contribution. All three refuters refuted,
+and the query budget is spent (146 of 150). The largest defect is
+decisiveness. On measured Qwen3-8B thinking-mode data (2609.32035), workloads
+cheap enough to fit the 8 GPU-h cap rule cannot meet the spread line, and
+workloads contested enough to meet it are infeasible under the frontier. So the
+gate ends in STOP_SPREAD with INCONCLUSIVE_N, or in INFEASIBLE, by
+construction. The answer-position definition also lets a linear gate learn an
+answer-format artefact. The novelty residual is largely occupied:
+- hidden-state verification already reaches within-problem AUROC 0.74-0.88 on
+  Qwen3 in thinking mode (2608.30841);
+- a learned hidden-state selector already exists on Qwen3-8B thinking traces
+  (2510.16449);
+- latent signals already both rank and stop sampling (2510.10494, 2508.15260).
+Decided: C3 ends; no repair run, because no repair leaves a residual worth the
+gate. New backfill pauses until S1a's registered result is in. That result is
+the Q2 noise floor that gates S2 and S3, which outrank the remaining backfill
+items (E3, E5, E7). The program's next direction is chosen from it.
