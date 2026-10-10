@@ -22,7 +22,7 @@
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 16 rows). Decisions taken
-on Kevin's behalf are D1-D64 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D65 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 7.40 in total (S1a session 2 not yet added).
 
 | Registration | Outcome | Evidence |
@@ -58,9 +58,10 @@ audit certifies "not grossly wrong", not 1% correctness
 - **Backfill E4** (D19; D58, D60, D63): ended at an honest exit after two
   gauntlet waves (49, 60); identification (the span verdict never tests
   key dependence) survived both.
-- **Backfill C3** (answer selection x re-attempts; D64): contract and gauntlet
-  wave 1 on its Stage-0 gate (under 8 GPU-h). C5 waits for a D24 ruling (its
-  Phase 1 is about 47 GPU-h).
+- **Backfill C3** (D64, D65): ended at an honest exit after wave 1 (54; blind
+  discrimination failed, the gate is indecisive by construction, and the
+  selector arm is occupied). New backfill pauses until S1a's result, which
+  gates the Q2 studies S2 and S3. C5 waits for a D24 ruling.
 - **S1a analysis** (D59): a blind dry run found 11 defects in the frozen
   analysis code (a fractional base score crashes the report; incomplete data
   crash or mislead; serial rescoring; missing section 15 items). D59 fixes
@@ -78,7 +79,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D64, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D65, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 
