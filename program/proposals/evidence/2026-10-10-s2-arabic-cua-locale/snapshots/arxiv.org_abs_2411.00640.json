@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2411.00640",
+ "fetched_at": "2026-10-10T21:54:18Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 39830,
+ "raw_sha256": "951cac93eacd8adf7e184896a3ca3fb203e337e5d010dc18a915e1f72e2ac3d2",
+ "raw_stored": false,
+ "extract": {
+  "title": "Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations",
+  "authors": [
+   "Miller, Evan"
+  ],
+  "citation_date": "2024/11/01",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 1 Nov 2024 14:57:16 UTC"
+   }
+  ],
+  "abstract": "Evaluations are critical for understanding the capabilities of large language models (LLMs). Fundamentally, evaluations are experiments; but the literature on evaluations has largely ignored the literature from other sciences on experiment analysis and planning. This article shows researchers with some training in statistics how to think about and analyze data from language model evaluations. Conceptualizing evaluation questions as having been drawn from an unseen super-population, we present formulas for analyzing evaluation data, measuring differences between two models, and planning an evaluation experiment. We make a number of specific recommendations for running language model evaluations and reporting experiment results in a way that minimizes statistical noise and maximizes informativeness.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

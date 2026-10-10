@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2608.12333",
+ "fetched_at": "2026-10-10T21:54:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41124,
+ "raw_sha256": "0c6dbd3ea3a739c9cfd244261ad197f70a2583b8c7bb83e4cd356c7c7fa8dd22",
+ "raw_stored": false,
+ "extract": {
+  "title": "Vision-Language Models are Fragile Multilingual Associators",
+  "authors": [
+   "Chakraborty, Ritabrata",
+   "Chakraborty, Rajatsubhra",
+   "Palaiahnakote, Shivakumara",
+   "Cangelosi, Angelo",
+   "Pal, Umapada"
+  ],
+  "citation_date": "2026/06/02",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 2 Jun 2026 19:59:11 UTC"
+   }
+  ],
+  "abstract": "Vision-language models must associate visual entities with textual attributes. Whether these associations or concept bindings remain stable when the language of the input changes is unexplored. We introduce M$^2$BIND, a benchmark varying the language of the context and query across multiple languages. We evaluate binding both extrinsically through task performance metrics and intrinsically through causal interventions. We find that binding is not language-invariant: cross-family and cross-script settings trigger significant binding collapse, with the model's internal binding computation shifting to later layers and losing causal strength. Closely related languages preserve associations comparatively better. In a broader sense, our findings indicate how VLMs deployed globally in multilingual settings cannot be assumed to maintain the same association quality observed in monolingual evaluation.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

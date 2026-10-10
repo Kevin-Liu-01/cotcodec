@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2511.15059",
+ "fetched_at": "2026-10-10T21:54:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42186,
+ "raw_sha256": "4dee8056436f60868311a94a1320106a333d533c5cf29025a910e6f170a07773",
+ "raw_stored": false,
+ "extract": {
+  "title": "Evaluating Multimodal Large Language Models on Vertically Written Japanese Text",
+  "authors": [
+   "Sasagawa, Keito",
+   "Kurita, Shuhei",
+   "Kawahara, Daisuke"
+  ],
+  "citation_date": "2025/11/19",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 19 Nov 2025 03:04:22 UTC"
+   }
+  ],
+  "abstract": "Multimodal Large Language Models (MLLMs) have seen rapid advances in recent years and are now being applied to visual document understanding tasks. They are expected to process a wide range of document images across languages, including Japanese. Understanding documents from images requires models to read what are written in them. Since some Japanese documents are written vertically, support for vertical writing is essential. However, research specifically focused on vertically written Japanese text remains limited. In this study, we evaluate the reading capability of existing MLLMs on vertically written Japanese text. First, we generate a synthetic Japanese OCR dataset by rendering Japanese texts into images, and use it for both model fine-tuning and evaluation. This dataset includes Japanese text in both horizontal and vertical writing. We also create an evaluation dataset sourced from the real-world document images containing vertically written Japanese text. Using these datasets, we demonstrate that the existing MLLMs perform worse on vertically written Japanese text than on horizontally written Japanese text. Furthermore, we show that training MLLMs on our synthesized Japanese OCR dataset results in improving the performance of models that previously could not handle vertical writing. The datasets and code are publicly available this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

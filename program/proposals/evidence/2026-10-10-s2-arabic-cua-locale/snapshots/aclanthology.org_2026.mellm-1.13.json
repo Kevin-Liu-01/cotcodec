@@ -1,0 +1,12 @@
+{
+ "url": "https://aclanthology.org/2026.mellm-1.13/",
+ "fetched_at": "2026-10-10T21:54:18Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42245,
+ "raw_sha256": "bb52001252fb42989b32eba0b9a391a546c616815ef85aaaef3f6167ae8ddf01",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GAIA-v2-LILT: Multilingual Adaptation of Agent Benchmark beyond Translation - ACL Anthology"
+ }
+}

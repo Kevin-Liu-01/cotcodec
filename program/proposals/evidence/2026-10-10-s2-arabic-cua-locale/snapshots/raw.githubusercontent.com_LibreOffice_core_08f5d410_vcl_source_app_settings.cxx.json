@@ -1,0 +1,21 @@
+{
+ "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/source/app/settings.cxx",
+ "fetched_at": "2026-10-10T21:55:11Z",
+ "http_status": 200,
+ "content_type": "text/plain; charset=utf-8",
+ "raw_bytes": 81277,
+ "raw_sha256": "95a0ef4c31c0dbf46f70185488466b98ae94a3ea4f64a04eddfc6a32752e0e6c",
+ "raw_stored": false,
+ "extract": {
+  "note": "LibreOffice core source (MPL-2.0); line numbers of the cited switches",
+  "lines": {
+   "2633": "static const char* pEnv = getenv(\"SAL_RTL_ENABLED\" );",
+   "2634": "static int  nUIMirroring = -1;   // -1: undef, 0: auto, 1: on 2: off",
+   "2651": "css::uno::Any aValue = aNode.getNodeValue( u\"UIMirroring\"_ustr );",
+   "2655": "nUIMirroring = bTmp ? 1 : 2;",
+   "2660": "if( nUIMirroring == 0 )  // no config found (eg, setup) or default (nil) was set: check language",
+   "2669": "bRTL = (nUIMirroring == 1);"
+  }
+ },
+ "replaces": "the github.com blob URL, which returned HTTP 503 twice on 2026-10-10"
+}

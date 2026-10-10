@@ -1,0 +1,41 @@
+{
+ "url": "https://arxiv.org/abs/2608.08775",
+ "fetched_at": "2026-10-10T21:54:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43717,
+ "raw_sha256": "2adcfa3247300c12b4cd41dfe477d773afa28fa4f7167898acc4c130bf22c3e4",
+ "raw_stored": false,
+ "extract": {
+  "title": "OmnilingualGAIA2: Evaluating the Multilingual Gap in Frontier AI Agents",
+  "authors": [
+   "Caciolai, Andrea",
+   "Cabot, Pere-Lluís Huguet",
+   "Cheng, Chierh",
+   "Ventayol-Boada, Albert",
+   "Gonzalez, Gabriel Mejia",
+   "Ropers, Christophe",
+   "Bandarkar, Lucas",
+   "Ruder, Sebastian",
+   "Sakakihara, Darlene",
+   "Yun, Elliot",
+   "Andrews, Pierre",
+   "Mialon, Grégoire",
+   "Froger, Romain",
+   "Costa-jussà, Marta R."
+  ],
+  "citation_date": "2026/08/09",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 9 Aug 2026 15:49:00 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 11 Aug 2026 11:49:45 UTC"
+   }
+  ],
+  "abstract": "Agentic benchmarks aim to measure how well AI agents plan, search, execute, and recover within realistic multi-tool environments, but they are almost exclusively in English. As AI agents are globally deployed to a linguistically diverse user base, whether agentic competence measured in English transfers to other languages remains an open question. We introduce OmnilingualGAIA2, a machine-translated expansion (with partial human- expert validation) of the GAIA2 agentic benchmark, covering ten target languages spanning five writing systems, paired with a localised and human-calibrated multilingual verifier. Evaluating seven frontier and open-weight agents, we find a universal cross-lingual gap of 8.8-18.4 pass@3 points that is agent-asymmetric in magnitude, concentrates on tool-orchestration rather than quantitative reasoning, and does not close with model scale. A stratified error attribution decomposes the gap as predominantly model-driven (55%), with a bounded translation-contamination floor of only 6.4% of scenario-language pairs. Human-expert linguistic analysis further identifies morphological cue loss and amplified ambiguity as the primary failure mechanisms in non-Latin-script languages. Our results argue that multilingual agentic evaluation must become a standard part of the reporting protocol for globally deployed agents.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

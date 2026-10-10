@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2609.32036",
+ "fetched_at": "2026-10-10T21:54:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41481,
+ "raw_sha256": "47d6910288c8ec6401d609862ca5b4a18ca511f4bebd84f20e9de01fd307b318",
+ "raw_stored": false,
+ "extract": {
+  "title": "ScreenHaystack: Finding Blind Zones in GUI Grounding",
+  "authors": [
+   "Li, Chenyue",
+   "Sun, Xiaoxiao",
+   "Deng, Yubo",
+   "Zhao, Qinlin",
+   "Yeung-Levy, Serena",
+   "Zhang, Yuhui"
+  ],
+  "citation_date": "2026/09/25",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 25 Sep 2026 22:07:29 UTC"
+   }
+  ],
+  "abstract": "We introduce ScreenHaystack, a dynamic needle-in-a-haystack benchmark for evaluating spatial reliability in GUI grounding. Instead of testing each target at a fixed position, ScreenHaystack systematically relocates controlled target icons across high-resolution GUI backgrounds and measures whether models can localize them consistently. Using this benchmark, we find that leading GUI grounding models, including Qwen3-VL, UI-TARS, GTA, and UI-Venus, exhibit blind zones: spatial regions where grounding accuracy drops sharply despite fixed target appearance and instruction. These blind zones transfer to unseen ScreenSpot-Pro examples: targets inside blind zones are consistently harder to ground, with Qwen3-VL-8B dropping by 16.1 percentage points, and controlled relocation shows that moving targets into blind zones decreases accuracy while moving them out improves accuracy. We further show through controlled synthetic experiments that uneven spatial coverage in training data can induce such blind zones. Therefore, we propose a simple strategy, blind-zone-oriented augmentation, which adds supervision in blind zones and improves ScreenSpot-Pro accuracy over both original and randomly augmented Click-100k fine-tuning.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

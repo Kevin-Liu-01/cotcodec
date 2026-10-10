@@ -1,0 +1,16 @@
+{
+ "doctor": "Compute",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
+ "evidence": "Engine base image digest (vllm/vllm-openai@sha256:b18abb2d...) and Relay's Node base digest (node:24.13.0-bookworm-slim@sha256:4660b1ca...) named; seeds [42, 43, 44]; caps with arithmetic (Stage 1a 2.0, Stage 1b at most 15.0, total 17.0 GPU-h); cost model from S1a's realized price and serving probe v2 (compute/power-gate.json C_cost_model); checkpoint and resume by episode key.",
+ "why_fail": [
+  "no local-engine transport for Relay (its hosted-router transport accepts only one hosted endpoint)",
+  "no qwen35vl agent adapter for Relay's action set",
+  "no environment image (no Node or Chromium image on the host)",
+  "no Slurm manifest, no dry run, no test-only run, no container smoke",
+  "no executable pilot and no orx node"
+ ],
+ "remediation": "E1-E6 in the registration"
+}

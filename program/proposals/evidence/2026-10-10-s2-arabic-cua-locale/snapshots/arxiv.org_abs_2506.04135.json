@@ -1,0 +1,38 @@
+{
+ "url": "https://arxiv.org/abs/2506.04135",
+ "fetched_at": "2026-10-10T21:54:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41957,
+ "raw_sha256": "7a9f962b04d2468b012f535f79ebd45b0d0b1a5ef0a5160178a75e6f1f49d4c3",
+ "raw_stored": false,
+ "extract": {
+  "title": "macOSWorld: A Multilingual Interactive Benchmark for GUI Agents",
+  "authors": [
+   "Yang, Pei",
+   "Ci, Hai",
+   "Shou, Mike Zheng"
+  ],
+  "citation_date": "2025/06/04",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 4 Jun 2025 16:26:56 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 5 Jun 2025 16:03:48 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 16 Jul 2025 05:46:51 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Sat, 18 Oct 2025 12:11:31 UTC"
+   }
+  ],
+  "abstract": "Graphical User Interface (GUI) agents show promising capabilities for automating computer-use tasks and facilitating accessibility, but existing interactive benchmarks are mostly English-only, covering web-use or Windows, Linux, and Android environments, but not macOS. macOS is a major OS with distinctive GUI patterns and exclusive applications. To bridge the gaps, we present macOSWorld, the first comprehensive benchmark for evaluating GUI agents on macOS. macOSWorld features 202 multilingual interactive tasks across 30 applications (28 macOS-exclusive), with task instructions and OS interfaces offered in 5 languages (English, Chinese, Arabic, Japanese, and Russian). As GUI agents are shown to be vulnerable to deception attacks, macOSWorld also includes a dedicated safety benchmarking subset. Our evaluation on six GUI agents reveals a dramatic gap: proprietary computer-use agents lead at above 30% success rate, while open-source lightweight research models lag at below 5\\%, highlighting the need for macOS domain adaptation. Multilingual benchmarks also expose common weaknesses, especially in Arabic, with a 28.8% average degradation compared to English. Results from safety benchmarking also highlight that deception attacks are more general and demand immediate attention. Project page: this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

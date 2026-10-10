@@ -1,0 +1,17 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "protocol": "K-Dense literature-review (PRISMA counts); orx rule: at least six discover queries per candidate including keyword with exact terms and each closest prior's title phrase, embedding with the mechanism paragraph, openalex; orx paper --full for every closest prior",
+ "evidence": "Merged verdict NARROWED with the residual STILL_OPEN (frontier and kill-shot cells independently; none OCCUPIED). Closest prior macOSWorld (2506.04135) read in full by two cells and re-read by synthesis; v4 2025-10-18 is the latest version; 34 Semantic Scholar citers and 27 OpenAlex full-text mentions screened by title with no decomposition. New concurrent work narrows but does not occupy: RealGUINoise 2609.38184, WebPageBench 2609.35026, BreakingWeb 2609.35814 (all read in full). PRISMA-style: about 650 identified, about 120 screened by abstract, about 30 read in full or by section, 0 direct priors.",
+ "why_fail": [
+  "the blind closest-prior critic has not run on blind/",
+  "the novelty refuter of the triad has not run",
+  "the ACL Anthology was not searched directly and Semantic Scholar keyword search failed",
+  "citing-paper lists were screened by title only; a citer whose title hides an RTL analysis could be missed"
+ ],
+ "queries_remaining_for_triad": 37,
+ "remediation": "Run the blind critic and the novelty refuter (37 queries remain, above the reserve of 30)"
+}

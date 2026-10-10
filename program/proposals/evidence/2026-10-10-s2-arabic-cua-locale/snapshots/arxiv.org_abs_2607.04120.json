@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2607.04120",
+ "fetched_at": "2026-10-10T21:54:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41257,
+ "raw_sha256": "e403a7572bddcb7ce1a1118a6157429b9d10a4f2605c3febe9ee4ff27e9beb13",
+ "raw_stored": false,
+ "extract": {
+  "title": "Spotting Setting-Related UI Display Bugs in Android Apps",
+  "authors": [
+   "Huang, Huaxun",
+   "Liu, Wu",
+   "Gu, Jiahao",
+   "Wu, Rongxin"
+  ],
+  "citation_date": "2026/07/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 5 Jul 2026 05:17:42 UTC"
+   }
+  ],
+  "abstract": "Android provides a wide range of system settings that allow users to control the runtime behaviors of apps, such as screen rotation and UI display. However, setting-related bugs occur when developers do not fully align their apps with the extensive range of system settings that users can define. These bugs can commonly affect apps' UI, causing setting-related UI display (SUD) bugs that negatively impact user experience. While existing research has explored automated detection of SUD bugs, these approaches often suffer from false negatives. This limitation stems from an incomplete understanding of how app components should adapt UI elements to diverse system settings. To address this gap, we conducted an empirical study to identify common patterns of unexpected setting adaptations that result in SUD bugs. These patterns then served as the test oracle for our proposed automated tool, SUDFinder. To ensure the test coverage, SUDFinder injects a test activity to visually render the XML configuration files of each UI page. We evaluated SUDFinder on 29 popular, open-source apps on F-Droid and found that it effectively identifies 98 previously unknown SUD bugs, achieving a precision of 0.76. So far, 67 have been confirmed and 37 have been fixed by the app developers.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
