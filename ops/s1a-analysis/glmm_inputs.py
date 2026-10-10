@@ -8,7 +8,7 @@ rule reads the primary set unless it says otherwise; ``glmm.py``: "the analysis 
 ``secondary.csv`` is base plus the completed extension blocks, reported beside it::
 
     python3 -E -s -B glmm_inputs.py write --export X --plan PLAN --records A/a1.jsonl \
-        --out-dir A/glmm-inputs
+        --guard A/report/guard.json --out-dir A/glmm-inputs
 
 ``submit``: one CPU-only ``s1a-cpu.sbatch`` job in the registered image (G0 item 12) that fits
 both sets in parallel with ``glmm.R`` (200 refits, seed 42), writes each fit's exit code to
@@ -16,16 +16,22 @@ both sets in parallel with ``glmm.R`` (200 refits, seed 42), writes each fit's e
 exit status) and copies the image's package lock. ``--dry-run`` prints the command::
 
     python3 -E -s -B glmm_inputs.py submit --export X --inputs-dir A/glmm-inputs \
-        --out-dir A/glmm-out --out A/glmm-job.json
+        --out-dir A/glmm-out --guard A/report/guard.json --out A/glmm-job.json
 
 ``collect``: each fit's exit code, convergence exactly as ``glmm.R`` writes it (``full``,
 ``reduced``, ``lrt_task_harness``, the bootstrap counts), a note when the bootstrap intervals
 come from a full fit that did not converge or include refits that did not converge, the
 package lock's SHA-256 against the registered ``abb8871d...`` (exit 3, after writing the
-summary, when it differs) and the labels of ``run_report.py``'s ``guard.json``::
+summary, when it differs) and the labels of ``run_report.py``'s ``guard.json``. It refuses,
+writing nothing, until the job's receipt (``receipt-<slurm>.json``, which ``s1a-cpu.sbatch``
+writes when the job ends, after both ``.exit`` files) is in the output directory, so it
+cannot run before the fits end::
 
     python3 -E -s -B glmm_inputs.py collect --out-dir A/glmm-out --guard A/report/guard.json \
         --out A/glmm-summary.json
+
+``inputs.json``, ``glmm-job.json`` and ``glmm-summary.json`` carry the labels of
+``guard.json`` (D61: every output of an incomplete case is labelled).
 """
 
 from __future__ import annotations
@@ -71,6 +77,7 @@ def container_argv() -> list[str]:
 
 def write(args: argparse.Namespace) -> int:
     O.use_export(args.export)
+    labels = O.labels_from_guard(args.guard)
     R, G = O.frozen("records"), O.frozen("glmm")
     targets = [args.out_dir / f"{name}.csv" for name in SETS] + [args.out_dir / "inputs.json"]
     for path in targets:
@@ -85,10 +92,12 @@ def write(args: argparse.Namespace) -> int:
     done = R.completed_extension_blocks(recs, blocks)
     tasks = {"primary": base, "secondary": base + [t for b in done for t in blocks[b]]}
     meta: dict[str, Any] = {
+        "labels": labels,
         "registered_reading": REGISTERED_READING,
         "writer": "glmm.rows_from_records(records.final_records(records), tasks) + glmm.write_csv",
         "records": O.sha256_file(args.records),
         "plan": O.sha256_file(args.plan),
+        "guard": O.sha256_file(args.guard),
         "completed_extension_blocks": done,
         "sets": {},
     }
@@ -125,6 +134,7 @@ def sbatch_command(export: Path, inputs_dir: Path, out_dir: Path) -> list[str]:
 
 def submit(args: argparse.Namespace) -> int:
     O.use_export(args.export)
+    labels = O.labels_from_guard(args.guard)
     for name in SETS:
         if not (args.inputs_dir / f"{name}.csv").is_file():
             raise O.OpsError(f"{args.inputs_dir}/{name}.csv is missing (run 'write' first)")
@@ -141,7 +151,8 @@ def submit(args: argparse.Namespace) -> int:
     if done.returncode != 0:
         raise O.OpsError(f"sbatch failed: {done.stderr.strip()}")
     job = done.stdout.strip().split(";")[0]
-    O.write_new(args.out, O.dumps({"slurm_job": job, "command": command, "argv": container_argv()}))
+    record = {"labels": labels, "slurm_job": job, "command": command, "argv": container_argv()}
+    O.write_new(args.out, O.dumps(record))
     print(f"slurm {job}")
     return 0
 
@@ -222,6 +233,15 @@ def collect(args: argparse.Namespace) -> int:
     if args.out.exists():
         raise O.OpsError(f"{args.out} exists; operator outputs are never overwritten")
     labels = O.labels_from_guard(args.guard)
+    receipts = sorted(args.out_dir.glob("receipt-*.json"))
+    if not receipts:
+        raise O.OpsError(
+            f"no receipt-*.json in {args.out_dir}: the GLMM job has not ended (s1a-cpu.sbatch "
+            "writes its receipt last); wait until squeue shows none-running"
+        )
+    missing = [name for name in SETS if not (args.out_dir / f"{name}.exit").is_file()]
+    if missing and all(O.read_json(p).get("exit_status") == 0 for p in receipts):
+        raise O.OpsError(f"{args.out_dir}: no {', '.join(missing)}.exit beside a receipt of exit 0")
     out = {"labels": labels, **collect_summary(args.out_dir)}
     out["inputs"] = {"guard": O.sha256_file(args.guard)}
     O.write_new(args.out, O.dumps(out))
@@ -245,11 +265,13 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     w.add_argument("--export", type=Path, required=True)
     w.add_argument("--plan", type=Path, required=True)
     w.add_argument("--records", type=Path, required=True)
+    w.add_argument("--guard", type=Path, required=True, help="run_report.py's guard.json (labels)")
     w.add_argument("--out-dir", type=Path, required=True)
     s = sub.add_parser("submit", help="fit both sets in the registered image (s1a-cpu.sbatch)")
     s.add_argument("--export", type=Path, required=True)
     s.add_argument("--inputs-dir", type=Path, required=True)
     s.add_argument("--out-dir", type=Path, required=True)
+    s.add_argument("--guard", type=Path, required=True, help="run_report.py's guard.json (labels)")
     s.add_argument("--out", type=Path, required=True)
     s.add_argument("--dry-run", action="store_true")
     c = sub.add_parser("collect", help="exit codes, convergence and the package digest")

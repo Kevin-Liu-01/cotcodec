@@ -25,11 +25,17 @@ Writes three files into DIR (each written once, never overwritten):
   ``report.json`` plus a ``guard`` block. With incomplete data every output is labelled
   ``incomplete``, a single-session size's session test is not estimable, DR1 is read on the
   sessions present, DR5 is "not evaluable as registered" (pi_9B shown against both M values
-  as a description only), and no p-value is surfaced from an all-NaN statistic. When no
-  size holds two sessions it is a delta-only report built from the registered functions:
-  delta (estimates, bootstrap intervals and the paired t), the descriptive and
-  infrastructure counts, and D_b, D_w, X, pi, the X test, DR2, DR5, P1 and P2 (and the
-  session test and P3, which read them) marked not estimable.
+  as a description only), and no p-value is surfaced from an all-NaN statistic. A size whose
+  per-size pi is undefined in a set (it holds both sessions, but no task holds both harness
+  cells in both: a session-2 job cut after a few episodes) is read for pi as a one-session
+  size there: the registered pi_small is undefined, so DR5 is not evaluable as registered
+  (D61 (a) addendum). When the registered report raises only because the DR5 share has no
+  finite bound although a size holds two sessions, the guarded report is
+  ``analysis.report`` recomputed with that one ``rules.dr5`` call returning "not evaluable",
+  and ``report.json`` stays absent. When no size holds two sessions it is a delta-only
+  report built from the registered functions: delta (estimates, bootstrap intervals and the
+  paired t), the descriptive and infrastructure counts, and D_b, D_w, X, pi, the X test,
+  DR2, DR5, P1 and P2 (and the session test and P3, which read them) marked not estimable.
 
 The anchor is UNAVAILABLE in S1a (the registration's "anchor unavailable before A0b"
 branch), so ``--anchor`` and ``--public`` are not offered.
@@ -63,6 +69,8 @@ SET_ORDER = (
 )
 INCOMPLETE = "incomplete"
 DR5_NOT_EVALUABLE = "not evaluable as registered"
+# What the tolerant ``rules.dr5`` returns where the registered one would compare None.
+DR5_SHARE_UNDEFINED = "the DR5 share has no finite bound (the registered rules.dr5 raises)"
 DELTA_NAMES = ("delta", "delta_4B", "delta_9B", "scale_screen_delta")
 # Read only from two sessions of a size (D59 (ii)): not estimable when no size has two.
 NEEDS_TWO_SESSIONS = (
@@ -99,8 +107,9 @@ READ_NOTE = (
     "(for example a single-session size's session p-value of 1/(n+1), or DR5 read against "
     "M = 0.13), so it must not be read directly"
 )
-# The operator's reading of D59 (ii), fixed with this script before any A1 outcome is read and
-# disclosed with the outputs (guard.json "interpretation").
+# The operator's reading of D59 (ii), fixed with this script before any A1 outcome is read,
+# ratified in D61 and its addendum, and disclosed with the outputs (guard.json
+# "interpretation").
 INTERPRETATION = {
     "incomplete": (
         "every output is labelled incomplete when DR0 fired for any A1 job (its rules dr0 "
@@ -108,23 +117,39 @@ INTERPRETATION = {
         "when a size lacks two sessions of scored base records (D59 (ii), section 11)"
     ),
     "that_size": (
-        "D59 (ii)'s 'that size' is a size left without two sessions of scored base records. "
-        "A size whose session-2 job fired DR0 but which still holds scored base records in "
-        "both sessions (a job cut or failed after its first block) is labelled incomplete and "
-        "the DR0 masks nothing else: its session test (and DR1, for 4B) are read as the "
-        "registered code computes them on the data collected, and DR5 is masked only when a "
-        "size lacks two sessions. Section 11 reports 'data already collected' as incomplete, "
-        "and the dry-run checker's B3 handling, from which D59 (ii) was written, names the "
-        "single-session size"
+        "D61 (a): D59 (ii)'s 'that size' is a size left without two sessions of scored base "
+        "records. A size whose session-2 job fired DR0 but which still holds scored base "
+        "records in both sessions (a job cut or failed after its first block) is labelled "
+        "incomplete and the DR0 masks nothing else: its session test (and DR1, for 4B) are "
+        "read as the registered code computes them on the data collected, and DR5 is masked "
+        "only when a size lacks two sessions or its pi is undefined ('undefined_pi'). "
+        "Section 11 reports 'data already collected' as incomplete, and the dry-run checker's "
+        "B3 handling, from which D59 (ii) was written, names the single-session size"
+    ),
+    "undefined_pi": (
+        "D61 (a) addendum: a size that holds both sessions but has, in a set, no task with "
+        "both harness cells scored in both sessions (a session-2 job cut after a few "
+        "episodes) has no X and no pi there, so the registered pi_small (the mean of pi_4B "
+        "and pi_9B) is undefined. For pi it is read as a one-session size: DR5 is not "
+        "evaluable as registered (pi_9B against both M as a description only), DR2 carries "
+        "the note, and pooled_from_sizes lists the sizes each pooled estimate averages. Its "
+        "session test and DR1 are still read as registered"
+    ),
+    "registered_dr5_raises": (
+        "D61 (a) addendum: when the registered report raises only because a DR5 share has no "
+        "finite bound (rules.dr5 compares None) although a size holds two sessions, "
+        "report.json is absent and the guarded report is analysis.report recomputed with that "
+        "rules.dr5 call returning 'not evaluable as registered'; every other value is the "
+        "registered code's, and the readings above apply"
     ),
     "one_size_with_one_session": (
-        "that size's session test (and its harness-by-session and common-share entries) is "
-        "not estimable; DR1 is read on the sessions it holds (session 1); DR5 is not evaluable "
-        "as registered, and pi_9B is shown against both M as a description only; DR2 is kept "
-        "as the registered code computes it, with a note: its X test and its pi_small bound "
-        "then come from the size with two sessions (pi_9B is the registered pi_small only when "
-        "DR1 drops 4B); P1 and P2 read the size with two sessions; each pooled estimate lists "
-        "the sizes it averages (pooled_from_sizes)"
+        "D61 (b): that size's session test (and its harness-by-session and common-share "
+        "entries) is not estimable; DR1 is read on the sessions it holds (session 1); DR5 is "
+        "not evaluable as registered, and pi_9B is shown against both M as a description "
+        "only; DR2 is kept as the registered code computes it, with a note: its X test and "
+        "its pi_small bound then come from the size with two sessions (pi_9B is the "
+        "registered pi_small only when DR1 drops 4B); P1 and P2 read the size with two "
+        "sessions; each pooled estimate lists the sizes it averages (pooled_from_sizes)"
     ),
     "no_size_with_two_sessions": (
         "the delta-only report: delta with its intervals and paired t tests, the descriptive, "
@@ -179,6 +204,32 @@ def widened_check() -> Iterator[None]:
 
 
 @contextlib.contextmanager
+def tolerant_dr5(fired: list[str] | None = None) -> Iterator[None]:
+    """``rules.dr5`` that returns "not evaluable as registered" where its share has no finite
+    bound (``None`` after ``analysis._f``), where the registered function raises on comparing
+    None (the D61 (a) addendum). With finite bounds it is the registered function. Used only
+    for the guarded report and the operator's extra sets, never for ``report.json``; the guard
+    then marks that DR5 not evaluable (its share's per-size pi is undefined). ``fired`` gets
+    one entry per call it changed."""
+    rules = O.frozen("rules")
+    real = rules.dr5
+
+    def dr5(lb95: Any, ub95: Any, drop_4b: bool) -> dict[str, Any]:
+        if lb95 is None or ub95 is None:
+            share = "pi_9B" if drop_4b else "pi_small"
+            if fired is not None:
+                fired.append(share)
+            return {"outcome": DR5_NOT_EVALUABLE, "share": share, "reason": DR5_SHARE_UNDEFINED}
+        return real(lb95, ub95, drop_4b)
+
+    rules.dr5 = dr5
+    try:
+        yield
+    finally:
+        rules.dr5 = real
+
+
+@contextlib.contextmanager
 def captured_arrays(sink: list[np.ndarray]) -> Iterator[None]:
     """Record the y array of every ``analysis.analyse_array`` call (the result unchanged),
     so the guard reads the same arrays the report did."""
@@ -205,6 +256,28 @@ def registered_report(argv: Sequence[str], arrays: list[np.ndarray]) -> str | No
         except Exception as exc:  # noqa: BLE001 - recorded; the guard decides what follows
             return f"{type(exc).__name__}: {exc}"
     return None
+
+
+def tolerant_report(
+    records: Path,
+    plan: Mapping[str, Any],
+    costs: Mapping[str, Any] | None,
+    arrays: list[np.ndarray],
+    fired: list[str],
+) -> tuple:
+    """What ``analysis.main`` computes on these inputs (the same ``report`` call, plan and
+    costs), under the widened check and ``tolerant_dr5``, as the parsed JSON ``main`` would
+    write. Returns (report, None) or (None, error)."""
+    A, R = O.frozen("analysis"), O.frozen("records")
+    full_plan = {**plan, "realized_costs": costs} if costs else dict(plan)
+    with widened_check(), tolerant_dr5(fired), captured_arrays(arrays):
+        try:
+            result = A.report(
+                R.read_jsonl(records), full_plan, n_boot=A.N_BOOT, n_rand=A.N_RANDOMIZATION
+            )
+        except Exception as exc:  # noqa: BLE001 - recorded; the operator stops
+            return None, f"{type(exc).__name__}: {exc}"
+    return json.loads(O.dumps(result)), None
 
 
 # --------------------------------------------------------------------------- completeness
@@ -354,23 +427,37 @@ def pooled_sizes(y: np.ndarray) -> dict[str, list[str]]:
     }
 
 
+def pi_gap_text(z: str, single: Sequence[str]) -> str:
+    """Why size z has no pi in a set: one session, or no task with both harness cells in both
+    sessions (the D61 (a) addendum)."""
+    if z in single:
+        return f"{z} lacks two sessions"
+    return f"{z} has no task with both harness cells scored in both sessions (pi_{z} undefined)"
+
+
 def pooled_note(
-    pooled: Mapping[str, Sequence[str]], comp: Mapping[str, Any], two: Sequence[str]
+    pooled: Mapping[str, Sequence[str]], comp: Mapping[str, Any], no_pi: Sequence[str]
 ) -> str:
+    """Which sizes each pooled estimate averages when a size has no pi (one session, or no
+    task with both harness cells in both sessions)."""
+    R = O.frozen("records")
     single = list(comp["sizes_without_two_sessions"])
+    full = [z for z in R.SIZES if z not in no_pi]
     held = "; ".join(
-        f"{z} holds {', '.join(comp['sizes'][z]['sessions']) or 'no session'}" for z in single
+        f"{z} holds {', '.join(comp['sizes'][z]['sessions']) or 'no session'}"
+        + ("" if z in single else ", but no task with both harness cells scored in both")
+        for z in no_pi
     )
-    mixed = [name for name, sizes in pooled.items() if set(sizes) & set(single)]
-    alone = [name for name, sizes in pooled.items() if list(sizes) == list(two)]
-    parts = [f"read on incomplete data ({held})"]
+    mixed = [name for name, sizes in pooled.items() if set(sizes) & set(no_pi)]
+    alone = [name for name, sizes in pooled.items() if full and list(sizes) == full]
+    parts = [f"{'read on incomplete data' if comp.get('incomplete') else 'read'} ({held})"]
     if mixed:
         parts.append(
-            f"{', '.join(mixed)} average {', '.join(single)}'s data from the sessions it holds "
-            f"with {', '.join(two) or 'no other size'}"
+            f"{', '.join(mixed)} average {', '.join(no_pi)}'s data from the sessions and cells "
+            f"it holds with {', '.join(full) or 'no other size'}"
         )
     if alone:
-        parts.append(f"{', '.join(alone)} come from {', '.join(two)} alone")
+        parts.append(f"{', '.join(alone)} come from {', '.join(full)} alone")
     if "D_w" in mixed:
         parts.append("pooled D_w is descriptive: no rule reads it alone (P1 reads the excess)")
     return "; ".join(parts)
@@ -382,13 +469,19 @@ def mask_block(block: Mapping[str, Any], y: np.ndarray, comp: Mapping[str, Any])
     Returns (guarded block, readings). A test whose statistic has no finite entry, or a
     session test of a size without two sessions, is replaced by ``not_estimable``; DR2 is
     not estimable when either of its tests is; DR5 is not evaluable as registered when a
-    size lacks two sessions."""
+    size has no pi in this set: it lacks two sessions, or (the D61 (a) addendum) it holds
+    both but no task holds both harness cells in both sessions, so the registered pi_small
+    is undefined. Only a one-session size's session test is masked for want of sessions."""
     E, R, rules = O.frozen("estimators"), O.frozen("records"), O.frozen("rules")
     out = copy.deepcopy(dict(block))
     notes: list[str] = []
     tests = out["tests"]
     single = list(comp["sizes_without_two_sessions"])
-    two = list(comp["sizes_with_two_sessions"])
+    pooled = pooled_sizes(y)
+    # The sizes with no pi in this set: one session, or no task pairing both harness cells
+    # across both sessions (pi_z, the per-size value pi_small averages, is then NaN).
+    no_pi = [z for z in R.SIZES if z in single or z not in pooled["pi_mean_4B_9B"]]
+    with_pi = [z for z in R.SIZES if z not in no_pi]
     with _quiet():
         n_delta = _finite_count(E.task_delta(y))
         per_size_delta = [np.nanmean(E.harness_diff(y)[zi], axis=-1) for zi in range(len(R.SIZES))]
@@ -428,42 +521,46 @@ def mask_block(block: Mapping[str, Any], y: np.ndarray, comp: Mapping[str, Any])
                 ]
     delta_p = tests["delta_paired_t"]["p"]
     drop_4b = block.get("DR1_drop_4B") is True
-    registered_pi_small_defined = "9B" in two if drop_4b else not single
+    registered_pi_small_defined = "9B" not in no_pi if drop_4b else not no_pi
     if drop_4b:
         pi_rule = "DR1 drops 4B, so the registered pi_small is pi_9B" + (
-            "" if "9B" in two else ", which needs 9B's two sessions and is undefined here"
+            "" if "9B" not in no_pi else ", which is undefined here"
         )
     else:
         pi_rule = (
             "the registered pi_small, the mean of pi_4B and pi_9B, is undefined; the value "
-            f"shown is the mean over {', '.join(two) or 'no size'}"
+            f"shown is the mean over {', '.join(with_pi) or 'no size'}"
         )
+    gaps = "; ".join(pi_gap_text(z, single) for z in no_pi)
     if x_missing or isinstance(delta_p, dict):
         out["DR2"] = not_estimable("DR2 reads the delta paired t and the X sign-flip test")
         notes.append("DR2: not estimable")
-    elif single:
+    elif no_pi:
         out["DR2"]["incomplete_note"] = (
-            f"read on incomplete data as the registered code computes it: the X test reads "
-            f"{', '.join(two)} alone (two sessions), and the Near-equivalent branch reads the "
-            f"pi_small bound ({pi_rule})"
+            f"{'read on incomplete data ' if comp.get('incomplete') else ''}as the registered code "
+            f"computes it: the X test reads {', '.join(pooled['X'])} alone (the sizes with a "
+            "task holding both harness cells in both sessions), and the Near-equivalent branch "
+            f"reads the pi_small bound ({pi_rule})"
         )
-    if single:
+    if no_pi:
         out["pi_small_rule_note"] = (
-            f"{', '.join(single)} lacks two sessions: {pi_rule}. DR5 is not evaluable as "
-            "registered either way (D59 (ii))"
+            f"{gaps}: {pi_rule}. DR5 is not evaluable as registered either way (D59 (ii), D61)"
         )
         out["registered_pi_small_defined"] = registered_pi_small_defined
-        pooled = pooled_sizes(y)
+        out["pi_undefined_sizes"] = no_pi
         out["pooled_from_sizes"] = {
             "sizes": pooled,
-            "note": pooled_note(pooled, comp, two),
+            "note": pooled_note(pooled, comp, no_pi),
         }
         out["DR5"] = {
             "outcome": DR5_NOT_EVALUABLE,
-            "reason": f"{', '.join(single)} does not hold two sessions (D59 (ii))",
+            "reason": f"{gaps} (D59 (ii); D61)",
             "description_only": pi_9b_description(out["estimates"], rules),
         }
-        notes.append("DR5: not evaluable as registered; pi_9B against both M as a description")
+        notes.append(
+            f"DR5: not evaluable as registered ({gaps}); pi_9B against both M as a description"
+        )
+    if single:
         sessions_4b = comp["sizes"]["4B"]["sessions"]
         if not sessions_4b:
             out["DR1_drop_4B"] = not_estimable("4B has no scored base record")
@@ -495,12 +592,16 @@ def mask_predictions(
 ) -> tuple:
     out = copy.deepcopy(dict(predictions))
     notes: list[str] = []
-    single = list(comp["sizes_without_two_sessions"])
-    two = list(comp["sizes_with_two_sessions"])
-    if single:
-        for name in ("P1", "P2"):
+    # P1 reads the pooled excess and P2 the pooled D_b: name the sizes each averages when a
+    # size has no pi in the primary set (one session, or the D61 (a) addendum's case).
+    pooled = (primary.get("pooled_from_sizes") or {}).get("sizes") or {}
+    if pooled:
+        for name, estimate in (("P1", "excess"), ("P2", "D_b")):
             if name in out and isinstance(out[name], dict):
-                out[name]["incomplete_note"] = f"pooled over {', '.join(two)} only"
+                sizes = list(pooled.get(estimate) or [])
+                out[name]["incomplete_note"] = f"pooled over {', '.join(sizes) or 'no size'}" + (
+                    " only" if len(sizes) < 2 else "; see the primary set's pooled_from_sizes"
+                )
     if isinstance(primary.get("DR2"), dict) and "not_estimable" in primary["DR2"]:
         out["P3"] = not_estimable("P3 reads DR2")
         notes.append("P3: not estimable")
@@ -518,22 +619,32 @@ def mask_predictions(
     return out, notes
 
 
-def kept_as_registered(comp: Mapping[str, Any]) -> list[str]:
-    """The readings of interpretation 'that_size': a size whose later-session job fired DR0
-    but which still holds scored base records in both sessions keeps its readings."""
+def kept_as_registered(comp: Mapping[str, Any], no_pi: Sequence[str] = ()) -> list[str]:
+    """The readings of interpretation 'that_size' (D61 (a)): a size whose later-session job
+    fired DR0 but which still holds scored base records in both sessions keeps its session
+    test (and DR1, for 4B); DR5 is kept only when every size has a pi in the primary set
+    (``no_pi``: the primary set's ``pi_undefined_sizes``; the D61 (a) addendum)."""
     first = O.frozen("records").SESSIONS[0]
     out = []
     for job in comp["dr0_fired"]:
         _, size, session = job.split("-")
         if session != first and size in comp["sizes_with_two_sessions"]:
             kept = [f"{size}'s session test"] + (["DR1"] if size == "4B" else [])
-            if not comp["sizes_without_two_sessions"]:
+            if not comp["sizes_without_two_sessions"] and not no_pi:
                 kept.append("DR5")
-            out.append(
+            text = (
                 f"{job} fired DR0, but {size} holds scored base records in both sessions: "
                 f"{', '.join(kept)} kept as the registered code computes them on the data "
-                "collected (interpretation 'that_size')"
+                "collected (interpretation 'that_size', D61 (a))"
             )
+            if size in no_pi:
+                text += (
+                    f"; pi_{size} is undefined (no base task holds both harness cells in both "
+                    f"of {size}'s sessions), so the registered pi_small is undefined and DR5 is "
+                    "not evaluable as registered (interpretation 'undefined_pi', D61 (a) "
+                    "addendum)"
+                )
+            out.append(text)
     return out
 
 
@@ -553,6 +664,9 @@ def guard_registered(
         readings += [f"{name}: {note}" for note in notes]
     out["predictions"], notes = mask_predictions(out["predictions"], out["primary"], comp, costs)
     readings += [f"predictions: {note}" for note in notes]
+    for name in SET_ORDER:  # a tolerated DR5 (tolerant_dr5) is always replaced by the guard
+        if (out[name].get("DR5") or {}).get("reason") == DR5_SHARE_UNDEFINED:
+            raise O.OpsError(f"{name}: DR5's share has no finite bound but no size lacks a pi")
     if comp["incomplete"]:
         out["label"] = INCOMPLETE
     return out, readings
@@ -721,13 +835,17 @@ def delta_only_report(
 def guarded_analysis(y: np.ndarray, comp: Mapping[str, Any]) -> tuple:
     """``analyse_array`` on one set with the guard applied (for the operator's extra sets,
     such as the secondary set under corrected verdicts); a delta-only block when no size
-    holds two sessions."""
+    holds two sessions. ``tolerant_dr5`` keeps an undefined DR5 share from raising; the guard
+    then marks that DR5 not evaluable (the D61 (a) addendum)."""
     A = O.frozen("analysis")
     if not comp["sizes_with_two_sessions"]:
         return delta_block(y, comp), ["no size holds two sessions: delta-only block"]
-    with widened_check():
+    with widened_check(), tolerant_dr5():
         block = A.analyse_array(y, n_boot=A.N_BOOT, n_rand=A.N_RANDOMIZATION)
-    return mask_block(block, y, comp)
+    guarded, notes = mask_block(block, y, comp)
+    if (guarded.get("DR5") or {}).get("reason") == DR5_SHARE_UNDEFINED:
+        raise O.OpsError("DR5's share has no finite bound but no size lacks a pi")
+    return guarded, notes
 
 
 def fractional_base_scores(records: Sequence[Mapping[str, Any]], base: Sequence[str]) -> int:
@@ -823,13 +941,38 @@ def main(argv: Sequence[str] | None = None) -> int:
         guarded, readings = guard_registered(report, arrays, comp, costs is not None)
         kind = "registered report with the guard's readings"
     else:
-        guard["readings"] = []
-        O.write_new(out_dir / "guard.json", O.dumps(guard))
-        raise O.OpsError(f"the registered report failed with complete-enough data: {error}")
+        # A size holds two sessions, yet the registered report raised. The one known cause is
+        # a DR5 share with no finite bound (the D61 (a) addendum): recompute the report with
+        # that rules.dr5 call tolerated, and stop on anything else.
+        tolerant_arrays: list[np.ndarray] = []
+        fired: list[str] = []
+        report, again = tolerant_report(args.records, plan, costs, tolerant_arrays, fired)
+        guard["tolerant_report"] = {"error": again, "dr5_calls_tolerated": len(fired)}
+        if report is None or not fired:
+            guard["readings"] = []
+            O.write_new(out_dir / "guard.json", O.dumps(guard))
+            raise O.OpsError(
+                f"the registered report failed with complete-enough data: {error}"
+                + (f"; recomputed with an undefined DR5 share tolerated: {again}" if again else "")
+            )
+        guarded, readings = guard_registered(report, tolerant_arrays, comp, costs is not None)
+        readings.insert(
+            0,
+            f"the registered report raised ({error}): a DR5 share has no finite bound in "
+            f"{len(fired)} set(s). report.json is absent; this report is analysis.report "
+            "recomputed with those rules.dr5 calls returning 'not evaluable as registered', "
+            "every other value as the registered code computes it (interpretation "
+            "'registered_dr5_raises', D61 (a) addendum)",
+        )
+        kind = (
+            "registered report recomputed with an undefined DR5 share tolerated, with the "
+            "guard's readings"
+        )
     if comp["incomplete"]:
+        no_pi = guarded.get("primary", {}).get("pi_undefined_sizes") or []
         readings[0:0] = [
             f"every output labelled {INCOMPLETE}: {'; '.join(comp['reasons'])}",
-            *kept_as_registered(comp),
+            *kept_as_registered(comp, no_pi),
         ]
     guard["readings"] = readings
     guard["guarded_report"] = {"path": "report-guarded.json", "kind": kind}

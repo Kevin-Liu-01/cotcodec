@@ -140,9 +140,13 @@ def make_records(
     all_infra: Sequence[str] = (),
     fractional: int = 0,
     trunc: Mapping[str, float] | None = None,
+    ga_only: Mapping[str, Sequence[str]] | None = None,
 ) -> list[dict[str, Any]]:
     """Every attempt of the jobs that ran. ``cut``: job -> share of its base slots cut by
-    USR1 (and every extension slot); ``all_infra``: jobs whose every attempt is lost;
+    USR1 (and every extension slot); ``ga_only``: job -> base tasks whose H-GA rerun-1 slot
+    alone is scored, every other slot of that job cut by USR1 (a job cut after a few
+    episodes, none pairing both harnesses on a task); ``all_infra``: jobs whose every attempt
+    is lost;
     ``loss_every``: every n-th slot loses its first attempt (half of those lose the re-queue
     too), deterministic so that DR0 fires only where a scenario wants it; ``fractional``: base
     episodes given a score strictly between 0 and 1."""
@@ -157,7 +161,14 @@ def make_records(
         n_cut = int(round((cut or {}).get(job, 0.0) * n_base))
         for i, slot in enumerate(slots):
             size, harness = slot["size"], slot["harness"]
-            if n_cut and (i >= n_base - n_cut):  # the rest of the base, then every fill block
+            keep = (ga_only or {}).get(job)
+            short = keep is not None and not (
+                slot["extension_block"] is None
+                and harness == "H-GA"
+                and slot["rerun"] == 1
+                and slot["task_id"] in keep
+            )
+            if short or (n_cut and (i >= n_base - n_cut)):  # the rest of the base, then fills
                 out.append(
                     {
                         **_episode(slot, 1, rng, {}),
@@ -477,4 +488,9 @@ SCENARIOS: dict[str, dict[str, Any]] = {
     "s2allinfra": {"seed": 8, "jobs": JOBS[:3], "all_infra": (JOBS[2],)},
     "fractional": {"seed": 9, "fractional": 5},
     "dr0latefloor": {"seed": 10, "jobs": JOBS[:3], "floor_4b": True},
+    # DR0 at A1-4B-S2 after four scored base episodes, all H-GA: 4B holds both sessions, but
+    # no task pairs both harness cells across them, so pi_4B is undefined (D61 (a) addendum)
+    "short4bs2": {"seed": 11, "ga_only": {JOBS[3]: ("b01", "b02", "b03", "b04")}},
+    # the same at A1-9B-S2, so A1-4B-S2 never runs: the registered rules.dr5 raises
+    "short9bs2": {"seed": 12, "jobs": JOBS[:3], "ga_only": {JOBS[2]: ("b01", "b02", "b03", "b04")}},
 }

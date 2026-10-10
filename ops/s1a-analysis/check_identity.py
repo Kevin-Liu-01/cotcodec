@@ -1,10 +1,15 @@
 """D59 (i)'s claim, checked on the data at hand: the wrapper's ``report.json`` against the
 registered CLI. An operator script, not code of record.
 
-Usage (host, after ``run_report.py``; one more registered report, about 20 s)::
+Usage (host, after ``run_report.py`` has finished; one more registered report, about 20 s)::
 
     python3 -E -s -B check_identity.py --export X --records A/a1.jsonl --plan PLAN \
-        --costs A/costs.json --wrapper-report A/report/report.json --out-dir A/identity
+        --costs A/costs.json --wrapper-report A/report/report.json \
+        --guard A/report/guard.json --out-dir A/identity
+
+``identity.json`` carries the labels of ``guard.json`` (D61: every output of an incomplete
+case is labelled). The check refuses, writing nothing, until ``run_report.py`` has written a
+complete ``guard.json``, so it cannot run early against a report still being written.
 
 * The registered CLI (``python3 -E -s -B -m harness.q2_stage1.analysis``, run in the export) on
   the same inputs. If it writes a report, the wrapper's must be byte-identical (``identical``).
@@ -14,8 +19,9 @@ Usage (host, after ``run_report.py``; one more registered report, about 20 s)::
   (``offline_raw_score`` 0.0 where it equalled the live score, else kept, or the old live
   score where it was 0.0). The two reports must then differ only in ``fractional_score`` and
   the ``fractional_scores`` counts.
-* If both fail (no size holds two sessions: bug B2), the errors are recorded; the guarded
-  report is the delta-only report.
+* If both fail (bug B2: no size holds two sessions, or a DR5 share has no finite bound), the
+  errors are recorded. The guarded report is then the delta-only report, or the report
+  recomputed with that ``rules.dr5`` call tolerated (``run_report.py``, D61 (a) addendum).
 """
 
 from __future__ import annotations
@@ -151,6 +157,10 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--plan", type=Path, required=True)
     parser.add_argument("--costs", type=Path)
     parser.add_argument("--wrapper-report", type=Path, required=True)
+    parser.add_argument(
+        "--guard", type=Path, required=True,
+        help="run_report.py's guard.json: the labels identity.json carries",
+    )  # fmt: skip
     parser.add_argument("--out-dir", type=Path, required=True)
     return parser.parse_args(argv)
 
@@ -160,10 +170,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     export = O.use_export(args.export)
     if (args.out_dir / "identity.json").exists():
         raise O.OpsError(f"{args.out_dir}/identity.json exists")
+    labels = O.labels_from_guard(args.guard)  # refuses before run_report.py has finished
     result = check(
         args.records.resolve(), args.plan.resolve(), args.costs.resolve() if args.costs else None,
         args.wrapper_report.resolve(), args.out_dir.resolve(), subprocess_runner(export),
     )  # fmt: skip
+    result = {"labels": labels, **result, "inputs": {"guard": O.sha256_file(args.guard)}}
     O.write_new(args.out_dir / "identity.json", O.dumps(result))
     print(json.dumps({k: result.get(k) for k in ("mode", "pass", "identical", "differing_paths")}))
     return 0 if result["pass"] else 3

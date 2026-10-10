@@ -16,7 +16,8 @@ Every item states its source and the set it reads. The items (bug B6 and the che
   (``analysis.realized_costs``: attempts ``scored`` or ``infrastructure``);
 * ``steps``: the step distribution and the step-of-termination and step-of-success
   distributions censored at 15 (an episode that reached the cap without a terminate action
-  counts at ``censored_at_15``), per (size, harness), on the sets' scored final records;
+  counts at ``censored_at_15``), per (size, harness), on the sets' scored final records; a
+  step count is a two-digit key (``"03"``), so the sorted JSON lists the steps in order;
 * ``restarts_per_episode``: ``guest_server_restarts`` per episode, over final records and
   every attempt; ``observations_per_episode`` (episodes with an observation delivered on a
   retry, slower than 30 s or undelivered); ``uncertified_exposure_per_episode``;
@@ -135,10 +136,10 @@ def step_distributions(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     for rec in records:
         n = int(rec.get("steps") or 0)
         how = str(rec.get("ended"))
-        steps[str(n)] += 1
+        steps[f"{n:02d}"] += 1  # two digits: O.dumps sorts keys, and "03" sorts before "10"
         ended[how] += 1
         if how.startswith(TERMINATE):
-            where = str(n)
+            where = f"{n:02d}"
         elif how == "step_cap":
             where = f"censored_at_{STEP_CAP}"
         else:

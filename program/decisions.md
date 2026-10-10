@@ -1002,3 +1002,14 @@ keeps the frozen code's values, and RESULTS reads the guarded report.
 Every output file in an incomplete case carries the incomplete label. The
 replay-mismatch disclosure covers every flip whose raw replay differed from
 the live score, whether or not a checker correction applies to that task.
+
+*Addendum to D61 (a), fixed while blind before the analysis runs.* A size can hold scored
+base records in both sessions and still have no π in a set: when no task there has both
+harness cells scored in both sessions (a session-2 job cut after a few episodes), its X and
+π are all-NaN and the registered π_small, the mean of π_4B and π_9B, is undefined, so
+D61 (a)'s premise fails for it. Its π is read as a one-session size's: DR5 is not evaluable
+as registered (π_9B against both M as a description only) and DR2 carries the note, while
+its session test and DR1 stay as registered. If the frozen `rules.dr5` raises on that
+undefined share (as when DR0 fires at A1-9B-S2 after a few episodes and A1-4B-S2 never
+runs), `report.json` is absent and the guarded report is the registered computation with
+that call returning "not evaluable as registered".

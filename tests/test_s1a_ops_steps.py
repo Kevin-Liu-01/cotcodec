@@ -67,14 +67,26 @@ def dr0s(scenario) -> list[str]:
 
 
 def write_guard(path: Path, incomplete: bool = False) -> Path:
-    """A guard.json labels block as run_report.py writes it."""
+    """A guard.json labels block as run_report.py writes it after a successful report."""
     labels = {
         "incomplete": RR.INCOMPLETE if incomplete else None,
         "incomplete_reasons": ["no records from A1-4B-S2"] if incomplete else [],
         "external_anchor": A.NOT_ANCHORED,
     }
-    path.write_text(json.dumps({"labels": labels}))
+    guarded = {"path": "report-guarded.json", "kind": "registered report with the guard's readings"}
+    path.write_text(json.dumps({"labels": labels, "guarded_report": guarded}))
     return path
+
+
+def test_labels_are_refused_until_the_report_step_has_finished(tmp_path):
+    with pytest.raises(SystemExit, match="has not finished"):
+        O.labels_from_guard(tmp_path / "guard.json")
+    failed = tmp_path / "failed.json"  # run_report.py's guard.json when the report failed
+    failed.write_text(json.dumps({"labels": {"incomplete": None}, "readings": []}))
+    with pytest.raises(SystemExit, match="the report step failed"):
+        O.labels_from_guard(failed)
+    labels = O.labels_from_guard(write_guard(tmp_path / "ok.json", incomplete=True))
+    assert labels["incomplete"] == RR.INCOMPLETE
 
 
 # --------------------------------------------------------------------------- first divergence
@@ -462,8 +474,11 @@ def test_step_distributions_censoring():
         {"steps": 15, "ended": "terminate_failure", "score": 0.0},
     ]
     out = AS.step_distributions(recs)
-    assert out["step_of_termination"] == {"3": 1, "15": 1, "censored_at_15": 2}
-    assert out["step_of_success"] == {"3": 1, "censored_at_15": 1}
+    assert out["step_of_termination"] == {"03": 1, "15": 1, "censored_at_15": 2}
+    assert out["step_of_success"] == {"03": 1, "censored_at_15": 1}
+    assert out["steps"] == {"03": 1, "15": 3}
+    # the sorted serialisation keeps the steps in numeric order
+    assert list(json.loads(O.dumps(out))["step_of_termination"]) == ["03", "15", "censored_at_15"]
     assert out["successes"] == 2 and out["not_successful"] == 2
 
 
@@ -480,6 +495,8 @@ def test_glmm_inputs_use_the_registered_writer(sc, tmp_path):
         str(sc["plan"]),
         "--records",
         str(sc["records"]),
+        "--guard",
+        str(write_guard(tmp_path / "guard.json", incomplete=True)),
         "--out-dir",
         str(out_dir),
     ]
@@ -493,6 +510,7 @@ def test_glmm_inputs_use_the_registered_writer(sc, tmp_path):
     assert meta["sets"]["secondary"]["tasks"] == len(SY.TASKS)
     assert meta["sets"]["primary"]["sessions"] == ["4B:S1", "4B:S2", "9B:S1", "9B:S2"]
     assert meta["registered_reading"].startswith("primary")
+    assert meta["labels"]["incomplete"] == RR.INCOMPLETE
 
 
 def test_glmm_container_captures_each_fit_exit_code(tmp_path, capsys):
@@ -511,6 +529,8 @@ def test_glmm_container_captures_each_fit_exit_code(tmp_path, capsys):
         str(tmp_path),
         "--out-dir",
         "/runs/A/glmm-out",
+        "--guard",
+        str(write_guard(tmp_path / "guard.json")),
         "--out",
         str(tmp_path / "job.json"),
     ]
@@ -553,6 +573,12 @@ def test_glmm_collect_checks_the_package_digest_and_reports_convergence(tmp_path
     assert any("non-converged fit" in n for n in out["fits"]["secondary"]["notes"])
     guard = write_guard(tmp_path / "guard.json")
     argv = ["collect", "--out-dir", str(out_dir), "--guard", str(guard)]
+    # before the job's receipt exists (the fits still running) collect writes nothing
+    with pytest.raises(SystemExit, match="has not ended"):
+        GI.main([*argv, "--out", str(tmp_path / "summary.json")])
+    assert not (tmp_path / "summary.json").exists()
+    receipt = {"job_id": "991", "image_id": O.GLMM_IMAGE_ID, "exit_status": 91}
+    (out_dir / "receipt-991.json").write_text(json.dumps(receipt))
     assert GI.main([*argv, "--out", str(tmp_path / "summary.json")]) == 0
     summary = json.loads((tmp_path / "summary.json").read_text())
     assert summary["labels"]["incomplete"] is None

@@ -112,7 +112,7 @@ def test_widened_check_accepts_fractions_and_is_restored():
 
 
 @pytest.mark.parametrize(
-    "name", ["null", "harness", "session", "floor", "dr0late", "baseincomplete"]
+    "name", ["null", "harness", "session", "floor", "dr0late", "baseincomplete", "short4bs2"]
 )
 def test_report_is_byte_identical_to_the_registered_cli(scenarios, tmp_path, name):
     sc = scenarios[name]
@@ -339,6 +339,122 @@ def test_dr0_on_the_last_job_labels_incomplete_but_keeps_two_sessions(scenarios,
     assert "interpretation 'that_size'" in readings[1] and len(readings) == 2
 
 
+def test_short_session_2_job_without_a_paired_task(scenarios, tmp_path):
+    """DR0 fires at A1-4B-S2 after four scored base episodes, all H-GA: 4B holds both
+    sessions, but no task holds both harness cells in both, so X_4B and pi_4B are all-NaN.
+    The registered code then reads DR5 on pi_9B against M_SMALL under the label 'mean of
+    pi_4B and pi_9B'; the guard reads 4B's pi as a one-session size's (D61 (a) addendum)."""
+    out = wrapper(scenarios["short4bs2"], tmp_path / "w")
+    report = json.loads(out["report"].read_text())
+    rp = report["primary"]
+    assert rp["estimates"]["X_4B"]["estimate"] is None
+    assert rp["estimates"]["pi_4B"]["estimate"] is None
+    assert rp["estimates"]["pi_small"] == rp["estimates"]["pi_9B"]
+    assert rp["pi_small_rule"] == "mean of pi_4B and pi_9B" and rp["DR1_drop_4B"] is False
+    assert rp["DR5"]["M"] == 0.13 and rp["DR5"]["outcome"] != RR.DR5_NOT_EVALUABLE
+    comp = out["guard"]["completeness"]
+    assert comp["dr0_fired"] == ["A1-4B-S2"] and comp["sizes_with_two_sessions"] == ["4B", "9B"]
+    assert comp["sizes"]["4B"]["base_tasks_scored_in_both_sessions"] == 4
+    g = out["guarded"]
+    assert g["label"] == RR.INCOMPLETE
+    for name in RR.SET_ORDER:
+        block, raw = g[name], report[name]
+        assert block["pi_undefined_sizes"] == ["4B"], name
+        assert block["DR5"]["outcome"] == RR.DR5_NOT_EVALUABLE
+        assert (
+            "4B has no task with both harness cells scored in both sessions"
+            in (block["DR5"]["reason"])
+        )
+        assert block["DR5"]["description_only"]["pi_9B"] == raw["estimates"]["pi_9B"]
+        assert block["registered_pi_small_defined"] is False
+        assert block["pooled_from_sizes"]["sizes"]["X"] == ["9B"]
+        assert block["pooled_from_sizes"]["sizes"]["pi_mean_4B_9B"] == ["9B"]
+        # the session test and DR1 stay as registered: 4B holds both sessions
+        assert block["tests"]["session_signflip_p"] == raw["tests"]["session_signflip_p"]
+        assert block["DR1_drop_4B"] == raw["DR1_drop_4B"] and "DR1_read_on_sessions" not in block
+        assert "read_on_one_session" not in block
+        assert block["estimates"] == raw["estimates"]
+    prim = g["primary"]
+    assert prim["pi_small_rule_note"].startswith(
+        "4B has no task with both harness cells scored in both sessions (pi_4B undefined): "
+        "the registered pi_small, the mean of pi_4B and pi_9B, is undefined; the value shown "
+        "is the mean over 9B"
+    )
+    if isinstance(prim["DR2"], dict) and "class" in prim["DR2"]:
+        assert "the X test reads 9B alone" in prim["DR2"]["incomplete_note"]
+        assert prim["DR2"]["class"] == rp["DR2"]["class"]
+    assert "GO" not in json.dumps(prim["DR5"]).replace("NO-GO", "")
+    preds = g["predictions"]
+    assert preds["P1"]["incomplete_note"].startswith("pooled over 4B, 9B")
+    assert preds["P4"] == report["predictions"]["P4"]
+    readings = out["guard"]["readings"]
+    assert readings[0] == "every output labelled incomplete: DR0 fired for A1-4B-S2"
+    assert "4B's session test, DR1 kept as the registered code" in readings[1]
+    assert "DR1, DR5 kept" not in readings[1]
+    assert "DR5 is not evaluable as registered (interpretation 'undefined_pi'" in readings[1]
+    assert "undefined_pi" in out["guard"]["interpretation"]
+
+
+def test_short_9b_session_2_job_recomputes_with_dr5_tolerated(scenarios, tmp_path):
+    """DR0 fires at A1-9B-S2 after four H-GA episodes and A1-4B-S2 never runs: 9B holds both
+    sessions, pi_9B and pi_4B are undefined, and the registered rules.dr5 raises on None.
+    The guarded report is the registered computation with that call tolerated."""
+    sc = scenarios["short9bs2"]
+    error = registered(sc, tmp_path / "registered.json")
+    assert error is not None and error.startswith("TypeError")
+    out = wrapper(sc, tmp_path / "w")
+    assert not out["report"].exists()
+    guard, g = out["guard"], out["guarded"]
+    assert guard["registered_report"]["error"].startswith("TypeError")
+    assert guard["tolerant_report"] == {"error": None, "dr5_calls_tolerated": len(RR.SET_ORDER)}
+    assert guard["guarded_report"]["kind"].startswith("registered report recomputed")
+    assert guard["completeness"]["sizes_with_two_sessions"] == ["9B"]
+    assert g["label"] == RR.INCOMPLETE
+    # every value but DR5 is what analyse_array computes on the same array
+    finals = A.R.final_records(A.R.read_jsonl(sc["records"]))
+    y = A.R.outcome_array(finals, SY.BASE)
+    with RR.tolerant_dr5():
+        again = json.loads(O.dumps(A.analyse_array(y, n_boot=N, n_rand=N)))
+    prim = g["primary"]
+    assert prim["estimates"] == again["estimates"]
+    for name in RR.SET_ORDER:
+        block = g[name]
+        assert block["DR5"]["outcome"] == RR.DR5_NOT_EVALUABLE
+        assert block["DR5"]["reason"] != RR.DR5_SHARE_UNDEFINED
+        assert block["pi_undefined_sizes"] == ["4B", "9B"]
+        assert "not_estimable" in block["DR2"]  # the X test reads an all-NaN q_t
+        assert "not_estimable" in block["tests"]["x_signflip_p"]
+        assert "not_estimable" in block["tests"]["session_signflip_p"][0]
+        assert isinstance(block["tests"]["session_signflip_p"][1], float)
+        assert block["DR1_read_on_sessions"] == ["S1"]
+    assert "not_estimable" in g["predictions"]["P3"]
+    assert g["predictions"]["P1"]["incomplete_note"] == "pooled over 9B only"
+    readings = guard["readings"]
+    assert readings[1].startswith("A1-9B-S2 fired DR0, but 9B holds scored base records")
+    assert "interpretation 'registered_dr5_raises'" in readings[2]
+    assert "report.json is absent" in readings[2]
+    # the operator's extra sets (s15) take the same path
+    block, notes = RR.guarded_analysis(y, guard["completeness"])
+    assert block["DR5"]["outcome"] == RR.DR5_NOT_EVALUABLE and notes
+
+
+def test_tolerant_dr5_changes_only_an_undefined_share():
+    rules = A.rules
+    real = rules.dr5
+    fired: list[str] = []
+    with RR.tolerant_dr5(fired):
+        assert rules.dr5(0.2, 0.3, False) == real(0.2, 0.3, False)
+        assert rules.dr5(0.01, 0.1, True) == real(0.01, 0.1, True)
+        assert rules.dr5(None, None, True) == {
+            "outcome": RR.DR5_NOT_EVALUABLE,
+            "share": "pi_9B",
+            "reason": RR.DR5_SHARE_UNDEFINED,
+        }
+    assert fired == ["pi_9B"] and rules.dr5 is real
+    with pytest.raises(TypeError):
+        rules.dr5(None, None, False)
+
+
 def test_without_costs_p5_is_not_evaluated(scenarios, tmp_path):
     out = wrapper(scenarios["null"], tmp_path / "w", costs=False)
     report = json.loads(out["report"].read_text())
@@ -387,6 +503,7 @@ def in_process_runner(records, plan, costs, out):
         ("null", "byte identity", True),
         ("fractional", "fractional", True),
         ("dr0", "registered report failed", True),
+        ("short9bs2", "registered report failed", True),
     ],
 )
 def test_check_identity(scenarios, tmp_path, name, mode, passes):
@@ -413,3 +530,19 @@ def test_check_identity_catches_a_difference(scenarios, tmp_path):
         sc["records"], sc["plan"], sc["costs"], report, tmp_path / "identity", in_process_runner
     )
     assert result["pass"] is False
+
+
+def test_check_identity_waits_for_the_report_step_and_carries_its_labels(scenarios, tmp_path):
+    sc = scenarios["null"]
+    argv = [
+        "--export", str(ROOT), "--records", str(sc["records"]), "--plan", str(sc["plan"]),
+        "--costs", str(sc["costs"]), "--wrapper-report", str(tmp_path / "w" / "report.json"),
+        "--guard", str(tmp_path / "w" / "guard.json"), "--out-dir", str(tmp_path / "identity"),
+    ]  # fmt: skip
+    with pytest.raises(SystemExit, match="has not finished"):  # the report job still running
+        CI.main(argv)
+    assert not (tmp_path / "identity" / "identity.json").exists()
+    out = wrapper(sc, tmp_path / "w")
+    labels = O.labels_from_guard(tmp_path / "w" / "guard.json")
+    assert labels["incomplete"] is None and labels["external_anchor"] == A.NOT_ANCHORED
+    assert out["guard"]["guarded_report"]["path"] == "report-guarded.json"

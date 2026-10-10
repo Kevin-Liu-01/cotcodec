@@ -119,6 +119,24 @@ def test_every_runbook_command_is_accepted_as_written(kind, module, text, tmp_pa
     assert not list(tmp_path.rglob("*")), "a registered CLI wrote a file"
 
 
+def test_every_host_block_sources_env_sh_first():
+    """Each host step works from a fresh ssh command: every bash block after the environment
+    block starts by sourcing env.sh (the Mac block and the environment block excepted)."""
+    source = ". /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh"
+    blocks = bash_blocks()
+    host = [b for b in blocks if "git archive" not in b and "s1a_env_ok" not in b]
+    assert len(host) == len(blocks) - 2 and host
+    for block in host:
+        assert block.splitlines()[0] == source, block
+
+
+def test_glmm_collect_is_its_own_block_after_the_fits():
+    """sbatch returns at once, so collect never shares a block with the GLMM submit."""
+    for block in bash_blocks():
+        if "glmm_inputs.py collect" in block:
+            assert "glmm_inputs.py submit" not in block and "sbatch" not in block
+
+
 def test_rescore_submit_dry_run_needs_no_out_and_submit_needs_one(capsys):
     import rescore_jobs as RJ
 
