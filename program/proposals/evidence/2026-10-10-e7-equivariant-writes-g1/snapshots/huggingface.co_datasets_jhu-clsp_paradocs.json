@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/datasets/jhu-clsp/paradocs",
+ "fetched_at": "2026-10-10T21:49:27Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 96212,
+ "raw_sha256": "e32b0929843bf51be42521604f5b8bb1c7e89b7c4368d261dee0c5250d9ee802",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "jhu-clsp/paradocs · Datasets at Hugging Face"
+ }
+}

@@ -1,0 +1,11 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "protocol": "K-Dense literature-review (PRISMA counts), paper-lookup; orx rule (at least six discover queries per candidate including title phrases of each closest prior; orx paper --full before each delta row)",
+ "evidence": "97 counted orx discover queries across four cells and synthesis (keyword with exact terms and each closest prior's title phrase, embedding with the mechanism in plain words, OpenAlex), 19 OpenReview searches, 4 web searches; 1,295 records identified (727 unique, 550 dated 2026), 52 unique papers read in full; every closest prior (2610.06750, 2509.24552, 2609.04434, 2609.33093, 2609.35378, 2412.06464) read in full before its delta row. Merged verdict NARROWED (frontier and kill-shot); no cell returned OCCUPIED. The gate itself claims no method novelty.",
+ "why_fail": "The blind closest-prior critic and the novelty refuter have not run; ACL Anthology checked only through web search; citation-graph traversal beyond OpenAlex not done.",
+ "remediation": "Run the blind critic on blind/ (role map in compute/blind-roles.json, never given to the critic) and the novelty refuter; 53 queries remain, the refuters' reserve of 30 is intact"
+}

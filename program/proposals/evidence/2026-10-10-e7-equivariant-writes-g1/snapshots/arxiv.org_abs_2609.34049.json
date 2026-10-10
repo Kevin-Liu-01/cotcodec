@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2609.34049",
+ "fetched_at": "2026-10-10T21:49:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42204,
+ "raw_sha256": "b558b8eb97d16e146a638668a5dc8296f6ac6c3cf5c54f85ca88e5a445e13f94",
+ "raw_stored": false,
+ "extract": {
+  "title": "Thinking Outside the Box: Retention and Transmission of Information in Sliding-Window KV Inference",
+  "authors": [
+   "DeLise, Timothy",
+   "Cromelin, Seth"
+  ],
+  "citation_date": "2026/09/28",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 28 Sep 2026 00:18:20 UTC"
+   }
+  ],
+  "abstract": "Sliding-window KV inference refers to processing a sequence incrementally while retaining only a fixed-size cache of recent key and value states. It can be applied to pretrained causal transformers at inference time without additional training, while its KV-cache memory remains fixed as more tokens are processed. Because cached states are computed in the context of earlier tokens, they may carry information from beyond the current window and transmit it to later states. This study presents a series of experiments using five open-weight models spanning Qwen, Llama, Mistral, and Muse Glimmer. We investigate whether information originating outside the immediate context window can persist through a rolling KV cache and remain useful for retrieval. Initial results show that retaining previously computed states improves retrieval across the models tested compared with recomputing the final fixed window from raw tokens. We then measure how far this effect extends and find that Muse Glimmer and Mistral 7B show the strongest \\emph{latent information relay}: they can recover information even after the relevant source tokens have left the cache. Both models incorporate sliding-window attention in their published architectures, an association that motivates testing whether training with sliding windows promotes more reliable information retention.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

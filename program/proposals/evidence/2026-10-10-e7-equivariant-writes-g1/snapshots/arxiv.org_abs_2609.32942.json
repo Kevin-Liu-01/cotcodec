@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2609.32942",
+ "fetched_at": "2026-10-10T21:49:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42229,
+ "raw_sha256": "ee34c699cc5db4c3ec0a11a4049fcf13e426ac7930c8f07696fd125091eca081",
+ "raw_stored": false,
+ "extract": {
+  "title": "The Key Handoff: Retrieval in Hybrid Language Models",
+  "authors": [
+   "Kale, Kaan",
+   "Baser, Oguzhan",
+   "Vishwanath, Sriram"
+  ],
+  "citation_date": "2026/09/26",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 26 Sep 2026 21:07:29 UTC"
+   }
+  ],
+  "abstract": "A two-hop question makes a language model retrieve twice: once to produce a bridge entity, and once to retrieve with it. Transformers resolve that entity in their early layers. Hybrid models replace most of the attention with a recurrent state, so where the key becomes usable, and where it is spent on an answer, is not known. Answering \"Where is the ball?\" from \"the ball belongs to Alice\" and \"Alice is in the garden\" turns on Alice, a name the question does not mention. A model could reach garden through Alice, the key it computed, or through where the fact sits in the prompt. Across twelve models, dense and hybrid, we move a hidden state from one story into another where the two routes lead to different places, and read off which place the model gives. An attention layer converts the key in every model we tested, and crossing that layer removes its usable effect, all of it where no attention follows. In sequential hybrids this makes the answer a handoff: recurrent layers carry the key forward, and attention spends it. Retrieval does not always stop there. Writing a different fact into the memory of the recurrent layers that follow the last attention layer can move the answer toward that fact, multiplying its odds by 1.3 to 2.7, and which hybrids do this is not settled by their architecture or training. That read is addressed by the key, not by position: recurrent state in a hybrid is not only a carrier, but a memory that later layers can query.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

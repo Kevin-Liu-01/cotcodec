@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2606.15378",
+ "fetched_at": "2026-10-10T21:49:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42202,
+ "raw_sha256": "7a3722c52db39385e9819334285196abeed90906b329d7bf89f0e861a281a3f5",
+ "raw_stored": false,
+ "extract": {
+  "title": "Rethinking the Role of Efficient Attention in Hybrid Architectures",
+  "authors": [
+   "Qiao, Ziqing",
+   "Xu, Yinuo",
+   "Xiao, Chaojun",
+   "Su, Zhou",
+   "Zhou, Zihan",
+   "Chen, Yingfa",
+   "Xu, Xiaoyue",
+   "Han, Xu",
+   "Liu, Zhiyuan"
+  ],
+  "citation_date": "2026/06/13",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 13 Jun 2026 16:21:37 UTC"
+   }
+  ],
+  "abstract": "Modern language models increasingly adopt hybrid architectures that combine full attention with efficient attention modules, such as sliding-window attention (SWA) and recurrent sequence mixers. However, how these efficient modules shape model capabilities remains poorly understood. To address this gap, we conduct a systematic analysis across hybrid architectures from three perspectives: scaling behavior, mechanism analysis, and architecture design. First, from a scaling perspective, we find that efficient-attention design primarily affects how fast long-context capability emerges, while different hybrids eventually converge to comparable long-context performance under sufficient training. Second, mechanistically, we show that long-range retrieval is mainly carried by full attention, whereas efficient attention shapes its optimization trajectory. This explains a counter-intuitive phenomenon we call Large-Window Laziness: larger SWA windows can delay the formation of retrieval heads in full-attention layers. Third, guided by this mechanism, we show that applying NoPE to only the full-attention layers of a small-window SWA hybrid substantially improves long-context performance with negligible impact on short-context performance.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
