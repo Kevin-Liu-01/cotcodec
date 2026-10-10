@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2206.13167",
+ "fetched_at": "2026-10-10T21:58:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44802,
+ "raw_sha256": "9046df6a653330d51d604157750211ff24c91a7f1e7813240192c2799b3dd490",
+ "raw_stored": false,
+ "extract": {
+  "title": "Local Evaluation of Time Series Anomaly Detection Algorithms",
+  "authors": [
+   "Huet, Alexis",
+   "Navarro, Jose Manuel",
+   "Rossi, Dario"
+  ],
+  "citation_date": "2022/06/27",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 27 Jun 2022 10:18:41 UTC"
+   }
+  ],
+  "abstract": "In recent years, specific evaluation metrics for time series anomaly detection algorithms have been developed to handle the limitations of the classical precision and recall. However, such metrics are heuristically built as an aggregate of multiple desirable aspects, introduce parameters and wipe out the interpretability of the output. In this article, we first highlight the limitations of the classical precision/recall, as well as the main issues of the recent event-based metrics -- for instance, we show that an adversary algorithm can reach high precision and recall on almost any dataset under weak assumption. To cope with the above problems, we propose a theoretically grounded, robust, parameter-free and interpretable extension to precision/recall metrics, based on the concept of ``affiliation'' between the ground truth and the prediction sets. Our metrics leverage measures of duration between ground truth and predictions, and have thus an intuitive interpretation. By further comparison against random sampling, we obtain a normalized precision/recall, quantifying how much a given set of results is better than a random baseline prediction. By construction, our approach keeps the evaluation local regarding ground truth events, enabling fine-grained visualization and interpretation of algorithmic results. We compare our proposal against various public time series anomaly detection datasets, algorithms and metrics. We further derive theoretical properties of the affiliation metrics that give explicit expectations about their behavior and ensure robustness against adversary strategies.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

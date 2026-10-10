@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/allenai/Bwen-8B",
+ "fetched_at": "2026-10-10T21:58:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 192038,
+ "raw_sha256": "f0a053ccb8adc35b27937fb9e05e1e78e08d21eda87cf07a397e31fee0f32dc5",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "allenai/Bwen-8B · Hugging Face"
+ }
+}

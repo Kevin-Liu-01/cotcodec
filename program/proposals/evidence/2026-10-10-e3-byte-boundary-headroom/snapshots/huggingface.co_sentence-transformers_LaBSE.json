@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/sentence-transformers/LaBSE",
+ "fetched_at": "2026-10-10T21:58:22Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 274504,
+ "raw_sha256": "a36ace6bf95cbeebe380632ac6f5620ec93a2436ceffdafa9b420188f59a6ae4",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "sentence-transformers/LaBSE · Hugging Face"
+ }
+}

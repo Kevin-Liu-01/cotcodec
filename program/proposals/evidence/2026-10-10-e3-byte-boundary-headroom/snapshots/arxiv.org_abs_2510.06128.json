@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2510.06128",
+ "fetched_at": "2026-10-10T21:58:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42191,
+ "raw_sha256": "e37fec7e9ebc0cf7a3f3c510e27268b4664e53aa578c26d8e4f60ef244a56056",
+ "raw_stored": false,
+ "extract": {
+  "title": "Parallel Tokenizers: Rethinking Vocabulary Design in Cross-Lingual Transfer of Low-Resource Languages",
+  "authors": [
+   "Kautsar, Muhammad Dehan Al",
+   "Koto, Fajri"
+  ],
+  "citation_date": "2025/10/07",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 7 Oct 2025 17:05:49 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 27 Jul 2026 08:12:33 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Sat, 26 Sep 2026 14:48:24 UTC"
+   }
+  ],
+  "abstract": "Tokenization forms the basis of multilingual language models, yet existing methods often limit cross-lingual transfer by mapping semantically equivalent words to different embeddings. For example, 'I eat rice' in English and 'Ina cin shinkafa' in Hausa are typically mapped to different vocabulary indices, preventing shared representations and limiting cross-lingual generalization. This problem is even more pronounced in low-resource languages, where shared representations could offer the greatest benefit. We introduce parallel tokenizers, a new framework that first trains tokenizers monolingually and then aligns their vocabularies exhaustively using bilingual dictionaries or word-to-word translation. This alignment enforces a shared semantic space across languages while naturally improving fertility balance. To assess their effectiveness, we pretrain a transformer encoder from scratch on thirteen low-resource languages and evaluate it on sentiment analysis, hate speech detection, emotion classification, and sentence embedding similarity. Across all tasks, models trained with parallel tokenizers outperform conventional multilingual baselines, confirming that rethinking tokenization is essential for advancing multilingual representation learning--especially in low-resource settings.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

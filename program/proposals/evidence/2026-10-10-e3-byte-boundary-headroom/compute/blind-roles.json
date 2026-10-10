@@ -1,0 +1,7 @@
+{
+ "proposal": "paragraph-8110cb24.txt",
+ "closest_prior": "paragraph-a0d3d6e0.txt",
+ "closest_prior_id": "arXiv:2502.06468 (Beyond Literal Token Overlap: Token Alignability for Multilinguality, Hammerl, Limisiewicz, Libovicky and Fraser; NAACL 2025 short, aclanthology 2025.naacl-short.63); full text read by the frontier, kill-shot and cross-domain cells and re-read by synthesis on 2026-10-10 (Secs. 3.2, 4.1, 5, 6)",
+ "runner_up_prior_id": "arXiv:2601.22805 (SOMBRERO, Neitemeier et al., v1 2026-01-30): auxiliary boundary loss on a learned chunker and boundary enrichment against a rate-matched circular-shift null; no packet written",
+ "note": "Role mapping for the recorder only. Never give this file to the critic."
+}
