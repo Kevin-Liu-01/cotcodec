@@ -1,0 +1,21 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
+ "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, source tracing, cross-referencing); unreachable sources marked UNVERIFIABLE_ACCESS",
+ "claim_registry": "Proposal section 'Primary-Source Evidence', claims C01 to C52, each with locator, date, read depth and status",
+ "evidence": "Every cited primary URL snapshotted with HTTP 200 and, for arXiv, its version history (snapshots/; eleven multi-version papers labelled with their latest version, including 2610.05685 v2 2026-10-07 whose numbers came from an alphaXiv text of unrecorded version). Synthesis re-read, in the cells' saved full texts, 2608.17124 (Secs. 3.1-3.5, Props. 1-2, Secs. 5, 6.4, 6.7, Table 6), 2609.32035 (abstract, Sec. 3, Tables 1, 13, Sec. 8; confirmed its probe is a prompted Yes/No probe), 2608.30841 (Secs. 4.1-4.4, 6.6, Table 2), 2608.03961 (Sec. 5), 2609.33290 (Sec. 3.3), 2510.16449 (abstract, Sec. 4, main table) and 2610.05685 (Tables 10, 11, 13). Synthesis verified the Qwen3-8B revision, licence, config, generation config and shard sizes and the dataset licences, fields and sizes through the Hugging Face APIs. First-party numbers labelled. Five dossier statements corrected (Bae framing, replay bias, the 0.60 threshold's provenance, the 6 GPU-h estimate, the undefined family).",
+ "verdicts": {
+  "verified_full_text": 41,
+  "abstract_only": 1,
+  "repository_evidence": 2,
+  "verified_from_model_card_or_api": 2,
+  "abstract_via_web_search": 1,
+  "unverifiable_access_full_text": 5,
+  "total_claims": 52
+ },
+ "known_limits": "C21 (Kinetics) verified at abstract level only; C48 (ReASC) from the Anthology abstract via web search; C43 to C47 abstracts from the OpenReview search API (full text UNVERIFIABLE_ACCESS).",
+ "remediation": "Read SANE's per-selector tables when accessible; it could amount to a partial selector-by-allocator factorial for the later 2x2."
+}

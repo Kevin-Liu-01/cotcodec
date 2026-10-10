@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2510.16449",
+ "fetched_at": "2026-10-10T15:31:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43042,
+ "raw_sha256": "5fc395182c783af5f4f36e4ad61cfcb410c3ad6931d3b21ba674a63b98610620",
+ "raw_stored": false,
+ "extract": {
+  "title": "TrajSelector: Harnessing Latent Representations for Efficient and Effective Best-of-N in Large Reasoning Model",
+  "authors": [
+   "Yu, Bin",
+   "Wang, Xinming",
+   "Lian, Shijie",
+   "Li, Haotian",
+   "Wu, Changti",
+   "Hu, Ruina",
+   "Wang, Bailing",
+   "Wei, Yuliang",
+   "Chen, Kai"
+  ],
+  "citation_date": "2025/10/18",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 18 Oct 2025 11:01:39 UTC"
+   }
+  ],
+  "abstract": "Large language models (LLMs) have shown remarkable progress in complex reasoning tasks, largely enabled by test-time scaling (TTS) paradigms that allocate additional compute during inference. Among these, external TTS (particularly the Best-of-N selection paradigm) yields scalable performance improvements by selecting from multiple independently generated reasoning trajectories. However, this approach faces key limitations: (i) the high computational overhead of deploying process reward models, (ii) the underutilization of the LLM's intrinsic latent representations. We introduce TrajSelector, an efficient and effective Best-of-N framework that exploit the hidden states in the sampler LLM for process-level scoring. A lightweight verifier (with only 0.6B parameters) evaluates the quality of step-wise trajectory, and then aggregates these scores to identify the optimal reasoning trajectory. Our framework employs a fully data-driven, end-to-end training recipe that eliminates reliance on massive step-level annotations. Experiential results across five benchmarks demonstrate that TrajSelector delivers consistent performance gains. In Best-of-32 settings, it surpasses majority voting by 4.61% accuracy and outperforms existing process reward models by 4.31% to 12.21%, all while maintaining lower inference costs.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

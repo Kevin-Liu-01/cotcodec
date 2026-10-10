@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2610.09239",
+ "fetched_at": "2026-10-10T15:31:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 55273,
+ "raw_sha256": "ad0a5850eb5d1aac6b2df1b8bc9c9cbea76f9a08fae9a15b587a044c56d0aac8",
+ "raw_stored": false,
+ "extract": {
+  "title": "The Winner's Curse in LLM Self-Improvement Loops: Selection Noise, Lock-in, and Acceptance Rules",
+  "authors": [
+   "Hu, Litao",
+   "Tang, Yutong"
+  ],
+  "citation_date": "2026/10/07",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 7 Oct 2026 00:05:23 UTC"
+   }
+  ],
+  "abstract": "Self-improving LLM systems propose changes to themselves and keep those that score better on a small evaluation set. We treat this keep-if-better step as selection under measurement noise, model the correlated errors of the candidates in a single decision, and study empirically what happens when the evaluation set is reused. In runs where Qwen models rewrite their own instructions and every candidate is also scored on 600 held-out items, most proposals after the first are harmful, and the model gives the size of the winner's curse of a generation's best candidate. With a prior from a separate pilot, it matches the average overstatement of first-generation commits in native loops, though not setting by setting. In a pre-registered study, the final selection-set score of greedy loops exceeded held-out accuracy by 13 to 20 points with 16 selection items and by 1 to 5 points with 256. Held-out gains grew with the selection set on TREC but not on GSM8K, and the tested acceptance rules did not beat greedy acceptance over whole runs. Gains measured on the selection set also exceeded held-out gains when a current model refined a competent instruction, and in the validation scores of GEPA and MIPROv2. Scoring the starting and the current instruction on 64 items never used for selection removes the average bias of a loop's reported gain, but single estimates remain off by about 6 points. Self-improvement studies should report held-out gains with their uncertainty.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

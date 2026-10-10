@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/datasets/EleutherAI/hendrycks_math",
+ "fetched_at": "2026-10-10T15:31:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 533790,
+ "raw_sha256": "5a65dd121a68823df0b049ed463ff65adb75cd4d604da1fbae3c784f716b73dc",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "EleutherAI/hendrycks_math · Datasets at Hugging Face"
+ }
+}

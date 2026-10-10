@@ -1,0 +1,17 @@
+{
+ "doctor": "Compute",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
+ "evidence": "Generation base image docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f with the cu129 overlay (served the Qwen3-8B architecture with dummy weights in probe v1 job B, Slurm 446); extraction image 127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9; seeds [42, 43, 44]; caps by formula (smoke 0.25, P0 1.0, G-decode and G-extraction 1.2 x high projection, sum at most 8.0 GPU-h, D22); S2 central about 4.0 GPU-h at 800 questions and a mean thinking length of 6,000 tokens; checkpoint every 5 minutes keyed by draw with a kill-and-resume test in the smoke; launch via scripts/submit_docker_research_job.py (dry run, test-only, submit).",
+ "why_fail": [
+  "no real model loop for this gate (the harness does not exist)",
+  "no benchmark adapter (data manifest, graders and family builder unwritten)",
+  "no container smoke, Slurm dry run, manifest or provenance verification",
+  "Qwen3-8B weights are not on the host (metadata receipt only; the registry entry says no weight download is planned); amendment and fetch wait for S1a",
+  "real-weight Qwen3-8B decode throughput never measured on this host; the cost model extrapolates from dummy-weight fixed-length points and underpredicts the long-prompt points b3 and b6",
+  "the gate is admissible under 8 GPU-h only if the selected workload's mean thinking length is at most about 7,700 tokens (CV 0.75); INFEASIBLE is a live outcome"
+ ],
+ "remediation": "Registry amendment and CPU weight fetch after S1a; write the harness and the smoke manifest; dry run and test-only; run the smoke as an orx slurm-manifest node."
+}

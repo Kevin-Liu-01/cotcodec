@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2608.13087",
+ "fetched_at": "2026-10-10T15:31:09Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44877,
+ "raw_sha256": "ee73bd340bd537eb0f7e747e2a6c73dd1c9197245aa0bb5f1e2ef8322c161f7e",
+ "raw_stored": false,
+ "extract": {
+  "title": "Sampling Luck Masquerades as Allocation Gain: Auditing Test-Time Budget Allocation for Neural Combinatorial Optimization",
+  "authors": [
+   "Bae, Jinhyung"
+  ],
+  "citation_date": "2026/08/13",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 13 Aug 2026 10:53:48 UTC"
+   }
+  ],
+  "abstract": "Neural combinatorial optimization (NCO) solvers report the best of many sampled solutions per instance, and the sample count is, by convention, identical for every instance. Whether a non-uniform allocation of a fixed total budget would buy anything has not been measured. We measure it, and we audit the measurement itself. First, on in-distribution workloads the allocation headroom is not detectable. Across three pretrained solvers (POMO, AM, SymNCO) on uniform TSP-100, an oracle allocation computed and evaluated on the same stored samples reports a 2.2-2.6% gain with intervals excluding zero; measured out of sample the same gain is indistinguishable from zero (0.457, 0.015, -0.512 percent). Following the customary in-sample procedure, all three solvers would have supported a published 2%-level gain that does not exist. We calibrate this bias against an instance-wise null in which the true gain is zero by construction; over the ranges we test it does not shrink with more samples or more instances. Second, the same correction that removes the phantom gains preserves a real one. Under distribution shift (a workload mixing uniform and clustered instances), a pre-registered confirmatory experiment finds that allocation guided by held-out sample statistics improves best-of-k by 11.5% (AM, primary endpoint; 95% CI [7.4, 19.7]) and 12.0% (SymNCO, replication) at equal evaluation budget, with the signal-acquisition cost not charged; a pre-registered negative control (POMO, an order of magnitude more robust to shift) shows -0.3% [-0.7, 0.24]. The gain exceeds a frozen distribution-label baseline by 4.2 points [1.9, 7.7]. An exploratory policy charging a 20-sample probe against the same budget retains 3.4% (AM) and 4.6% (SymNCO). We give a correction procedure and a reporting checklist, and release all data, code, and the pre-registration record.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

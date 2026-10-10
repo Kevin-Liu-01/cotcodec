@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2604.05868",
+ "fetched_at": "2026-10-10T15:31:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42236,
+ "raw_sha256": "c0ef5948eba929631424f65129897d8d32fa5011ab5fe280b2001efa37d88ebb",
+ "raw_stored": false,
+ "extract": {
+  "title": "Understanding Performance Gap Between Parallel and Sequential Sampling in Large Reasoning Models",
+  "authors": [
+   "Gu, Xiangming",
+   "De, Soham",
+   "Markeeva, Larisa",
+   "Veličković, Petar",
+   "Pascanu, Razvan"
+  ],
+  "citation_date": "2026/04/07",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 7 Apr 2026 13:28:09 UTC"
+   }
+  ],
+  "abstract": "Large Reasoning Models (LRMs) have shown remarkable performance on challenging questions, such as math and coding. However, to obtain a high quality solution, one may need to sample more than once. In principal, there are two sampling strategies that can be composed to form more complex processes: sequential sampling and parallel sampling. In this paper, we first compare these two approaches with rigor, and observe, aligned with previous works, that parallel sampling seems to outperform sequential sampling even though the latter should have more representation power. To understand the underline reasons, we make three hypothesis on the reason behind this behavior: (i) parallel sampling outperforms due to the aggregator operator; (ii) sequential sampling is harmed by needing to use longer contexts; (iii) sequential sampling leads to less exploration due to conditioning on previous answers. The empirical evidence on various model families and sizes (Qwen3, DeepSeek-R1 distilled models, Gemini 2.5) and question domains (math and coding) suggests that the aggregation and context length do not seem to be the main culprit behind the performance gap. In contrast, the lack of exploration seems to play a considerably larger role, and we argue that this is one main cause for the performance gap.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

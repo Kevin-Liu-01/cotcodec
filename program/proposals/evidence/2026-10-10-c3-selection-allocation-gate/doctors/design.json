@@ -1,0 +1,17 @@
+{
+ "doctor": "Design",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
+ "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data, three-way decisions, operating characteristics by simulation; K-Dense statistical-analysis for clustered intervals",
+ "evidence": "Lines D (0.60), F (increment over an output-only floor), S (contested share kappa6, line 0.10) and H (weighted vote not below voting) with registered falsifiers; instrument gates I1 to I7; family construction and 50/50 family split; layer and C chosen by grouped CV log loss inside training families; label-permutation, prompt-only and grouping controls; 90% family-cluster bootstrap. S1 (compute/gate-sim.py, 600 replicates per cell, seeds 42/43/44) gives the operating characteristics and shows the dossier's spread target is not identified from six draws; S2 (compute/cost-model.py) sets the cap formula and the N rule.",
+ "why_fail": [
+  "every distribution in S1 is assumed; no Qwen3-8B thinking trace exists on this host",
+  "the workload rule, the family builder and the near-duplicate audit are unexecuted on the real sources",
+  "line F is mostly INDETERMINATE unless the true increment is about 0.06 or more, and line S is INDETERMINATE for kappa6 between about 0.08 and 0.14 at 320 held-out questions",
+  "the kappa6 bootstrap interval covered 0.83 to 0.91 at nominal 0.90 in S1 (slightly liberal)",
+  "the analysis harness does not exist, so the design cannot be checked against code"
+ ],
+ "remediation": "Build the analysis pipeline and run it as a cpu-doctor orx node on S1's synthetic pools; then the pre-freeze audit."
+}

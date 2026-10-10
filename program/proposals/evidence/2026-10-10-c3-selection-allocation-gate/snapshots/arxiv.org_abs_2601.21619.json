@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2601.21619",
+ "fetched_at": "2026-10-10T15:31:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42485,
+ "raw_sha256": "b8ac6ccbbce57532f8f1d661fc92fc854ed65bfa37ae766fb2961783bf9626b1",
+ "raw_stored": false,
+ "extract": {
+  "title": "On the Overscaling Curse of Parallel Thinking: System Efficacy Contradicts Sample Efficiency",
+  "authors": [
+   "Wang, Yiming",
+   "Zhang, Zhuosheng",
+   "Wang, Rui"
+  ],
+  "citation_date": "2026/01/29",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 29 Jan 2026 12:22:45 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sat, 9 May 2026 01:57:30 UTC"
+   }
+  ],
+  "abstract": "Parallel thinking improves LLM reasoning through multi-path sampling and aggregation. In standard evaluations, due to a lack of sample-specific priors, all samples share a global budget chosen to maximize dataset accuracy. However, many samples reach their best accuracy with much smaller budgets, causing low budget utilization. This contradiction between system efficacy and sample efficiency constitutes the Overscaling Curse. In this paper, we first provide a formal analysis of the overscaling curse and quantify its prevalence and severity in real-world systems. To break it, we propose Latent Budget Predictor (LanBo), which probes model latent representations to predict sample-specific optimal budgets. LanBo significantly improves budget utilization while maintaining dataset accuracy. We further integrate LanBo into the full decoding pipeline, inspiring Pre-decoding Budget Adaptation (PreAda), a paradigm that allocates budgets before decoding to preserve decoding-time parallelization. LanBo substantially improves hardware-aware efficiency in latency and memory, demonstrating both its practical value and the promise of LanBo for efficient parallel decoding.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
