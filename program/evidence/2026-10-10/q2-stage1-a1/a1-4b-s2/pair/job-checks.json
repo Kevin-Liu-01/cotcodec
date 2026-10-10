@@ -1,0 +1,105 @@
+{
+ "counts": {
+  "attempt_2": 0,
+  "base_slots": 128,
+  "cap_truncated_by_block": {},
+  "first_attempts_ran_to_an_end_by_harness": {
+   "H-GA": 226,
+   "H-OSW-fixed": 226
+  },
+  "gpu_devices_seen": 0,
+  "infrastructure_by_harness_and_type": {},
+  "records": 452,
+  "slot_occupancy_s_sum": 77805.6,
+  "status": {
+   "scored": 452
+  }
+ },
+ "engine_argv": {
+  "engine_argv_sha256": "1c4cffbaafa72526722d7b7fe2c7a5ea6f105e2abea36f9bdeacbd0209b74358",
+  "equals_plan_engine_argv": true,
+  "model_dir": "/model-cache/cotcodec-models/qwen3.5-4b"
+ },
+ "fill": {
+  "blocks_completed_by_this_job": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "blocks_started": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "decisions": []
+ },
+ "gpu_job": "1064",
+ "gpu_physical": {
+  "end": "2026-10-10T15:17:25",
+  "exit_code": "0:0",
+  "gpu_hours": 1.1286,
+  "run_time_s": 4063,
+  "start": "2026-10-10T14:09:42",
+  "state": "COMPLETED"
+ },
+ "gpu_scontrol_source": "1064.txt",
+ "job": "A1-4B-S2",
+ "provenance": {
+  "equals_gpu_manifest": true,
+  "git_sha": "d5f57988ab94e0c098feddb744b78b73b5ad88ca",
+  "source_sha256": "4a59e87c8a04b3005606248f77b1b81b82e1bde127c72206f4113cc1b07349d8",
+  "status": "PASS"
+ },
+ "receipt": {
+  "dispatched": 452,
+  "engine_returncode": 0,
+  "engine_stop_reason": "vm_done",
+  "error": null,
+  "first_dispatch_after_gpu_start_s": 103.2,
+  "gpu_job_end": {
+   "end_epoch": 1791645445.0,
+   "end_time": "2026-10-10T15:17:25",
+   "job_id": "1064",
+   "start_epoch": 1791641382.0,
+   "start_time": "2026-10-10T14:09:42",
+   "state": "COMPLETED",
+   "time_limit_min": 110
+  },
+  "records": 452,
+  "statuses": {
+   "scored": 452
+  },
+  "stopped": false
+ },
+ "slurm_limit": {
+  "equal": true,
+  "frozen_T_A1": 110,
+  "gpu_start": "2026-10-10T14:09:42",
+  "time_limit_min_read_by_lane": 110,
+  "usr1_epoch_equals_start_plus_cap_minus_180": true
+ },
+ "vm_job": "1062",
+ "vm_physical": {
+  "end": "2026-10-10T15:17:29",
+  "exit_code": "0:0",
+  "run_time_s": 4080,
+  "start": "2026-10-10T14:09:29",
+  "state": "COMPLETED"
+ }
+}
