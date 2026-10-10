@@ -1,0 +1,172 @@
+{
+ "counts": {
+  "attempt_2": 0,
+  "base_slots": 128,
+  "cap_truncated_by_block": {},
+  "first_attempts_ran_to_an_end_by_harness": {
+   "H-GA": 226,
+   "H-OSW-fixed": 226
+  },
+  "gpu_devices_seen": 0,
+  "infrastructure_by_harness_and_type": {},
+  "records": 452,
+  "slot_occupancy_s_sum": 84061.7,
+  "status": {
+   "scored": 452
+  }
+ },
+ "engine_argv": {
+  "engine_argv_sha256": "9b307cdcfd01a6d6b3ae523b587453b9c5ff5d90a56f5ded200a828a97136a07",
+  "equals_plan_engine_argv": true,
+  "model_dir": "/model-cache/cotcodec-models/qwen3.5-9b"
+ },
+ "fill": {
+  "blocks_completed_by_this_job": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "blocks_started": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "decisions": [
+   {
+    "allowed": true,
+    "block": "x01",
+    "c_job_h": 0.002909,
+    "minutes_to_usr1": 86.09
+   },
+   {
+    "allowed": true,
+    "block": "x02",
+    "c_job_h": 0.002846,
+    "minutes_to_usr1": 81.04
+   },
+   {
+    "allowed": true,
+    "block": "x03",
+    "c_job_h": 0.002809,
+    "minutes_to_usr1": 75.96
+   },
+   {
+    "allowed": true,
+    "block": "x04",
+    "c_job_h": 0.002773,
+    "minutes_to_usr1": 71.01
+   },
+   {
+    "allowed": true,
+    "block": "x05",
+    "c_job_h": 0.002761,
+    "minutes_to_usr1": 65.86
+   },
+   {
+    "allowed": true,
+    "block": "x06",
+    "c_job_h": 0.002733,
+    "minutes_to_usr1": 61.01
+   },
+   {
+    "allowed": true,
+    "block": "x07",
+    "c_job_h": 0.002678,
+    "minutes_to_usr1": 56.75
+   },
+   {
+    "allowed": true,
+    "block": "x08",
+    "c_job_h": 0.00269,
+    "minutes_to_usr1": 51.37
+   },
+   {
+    "allowed": true,
+    "block": "x09",
+    "c_job_h": 0.002676,
+    "minutes_to_usr1": 46.51
+   },
+   {
+    "allowed": true,
+    "block": "x10",
+    "c_job_h": 0.002653,
+    "minutes_to_usr1": 41.93
+   },
+   {
+    "allowed": true,
+    "block": "x11",
+    "c_job_h": 0.002647,
+    "minutes_to_usr1": 36.98
+   }
+  ]
+ },
+ "gpu_job": "1047",
+ "gpu_physical": {
+  "end": "2026-10-09T23:34:32",
+  "exit_code": "0:0",
+  "gpu_hours": 1.2203,
+  "run_time_s": 4393,
+  "start": "2026-10-09T22:21:19",
+  "state": "COMPLETED"
+ },
+ "gpu_scontrol_source": "1047.txt",
+ "job": "A1-9B-S1",
+ "provenance": {
+  "equals_gpu_manifest": true,
+  "git_sha": "d5f57988ab94e0c098feddb744b78b73b5ad88ca",
+  "source_sha256": "4a59e87c8a04b3005606248f77b1b81b82e1bde127c72206f4113cc1b07349d8",
+  "status": "PASS"
+ },
+ "receipt": {
+  "dispatched": 452,
+  "engine_returncode": 0,
+  "engine_stop_reason": "vm_done",
+  "error": null,
+  "first_dispatch_after_gpu_start_s": 112.9,
+  "gpu_job_end": {
+   "end_epoch": 1791588872.0,
+   "end_time": "2026-10-09T23:34:32",
+   "job_id": "1047",
+   "start_epoch": 1791584479.0,
+   "start_time": "2026-10-09T22:21:19",
+   "state": "COMPLETED",
+   "time_limit_min": 110
+  },
+  "records": 452,
+  "statuses": {
+   "scored": 452
+  },
+  "stopped": false
+ },
+ "slurm_limit": {
+  "equal": true,
+  "frozen_T_A1": 110,
+  "gpu_start": "2026-10-09T22:21:19",
+  "time_limit_min_read_by_lane": 110,
+  "usr1_epoch_equals_start_plus_cap_minus_180": true
+ },
+ "vm_job": "1045",
+ "vm_physical": {
+  "end": "2026-10-09T23:34:35",
+  "exit_code": "0:0",
+  "run_time_s": 4396,
+  "start": "2026-10-09T22:21:19",
+  "state": "COMPLETED"
+ }
+}

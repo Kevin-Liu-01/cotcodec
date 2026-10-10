@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-09",
+  "updated": "2026-10-10",
   "program": "Checker adequacy and calibrated measurement for verifiable machine work",
   "program_doc": "program/PROGRAM.md",
   "stage": "stage-0",
@@ -269,7 +269,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "S1a is frozen (ledger row 16, freeze commit d5f5798). Run O2 from the freeze commit, then A1 S1 9B and S1 4B, then S2 9B and S2 4B at least 12 h later, under the quiet-host rule; then the registered analysis and an independent verification. The checker-mutation study waits on Kevin's adjudication (34 items) and spot check (25 items).",
+      "next_action": "S1a session 1 ran (O2 job 1044; A1-9B-S1 jobs 1045/1047 and A1-4B-S1 jobs 1048/1050, DR0 does not fire for either). Session 2 9B (VM 1051, GPU 1053) is queued and held until 2026-10-10T12:45:18Z (--begin at the later session-1 lane end plus 12 h; GPU half --dependency=after:1051). After it ends: DR0, then render and submit session 2 4B naming the three earlier jobs' records; then the registered analysis and an independent verification. The checker-mutation study waits on Kevin's adjudication (34 items) and spot check (25 items).",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -356,7 +356,7 @@
       "stage1_s1a": {
         "registration": "q2-stage1-rescoped-v1: FROZEN 2026-10-09T22:11:08Z, ledger row 16 (registration sha256 f9db7cc38c4954b3144ac5a1afaf7bf5366449081b06c80bf89888bdf653afd8, row hash bc5e88a0043065f93e3ea494633b6c3cd119973708e250110e7bcf4856507d0f, git_head_at_freeze 70d57e3); freeze commit d5f5798 (the commit that adds the row; O2, A1 and every later export run from it)",
         "branch": "stage0/q2-stage1-rescope",
-        "status": "FROZEN (D56 program sign-off; D55 Kevin's sign-offs). Pre-freeze O1 and A0a ran (K_base 32, T_A1 110, total caps 477 min = 7.950 GPU-h). Next: O2 (overlay from the freeze commit), then A1 session 1 (9B then 4B), session 2 at least 12 h after session 1's later lane end (9B then 4B). No confirm-split episode has run yet",
+        "status": "FROZEN; A1 session 1 complete (both jobs pass DR0), session 2 9B queued and held by Slurm until 2026-10-10T12:45:18Z, session 2 4B not yet submitted. No outcome has been read; the registered analysis waits for all four A1 jobs",
         "g0_results": {
           "fetch_lane_and_receipts": "fetch-model-cpu.sbatch (22685e5e...), job 971 CPU only: Qwen3.5-4B receipt efc88487..., OpenCUA-7B receipt 8109da82... (16.6 GB); remote code read and hashed",
           "episode_driver_and_bridge": "harness/q2_stage1 driver, agents (checked against upstream-recorded messages), engine, bridge, lane, osworld_live; dev smoke job 978 with the scripted fake engine: 3/3 episodes scored end to end; rescoring job 983 matched live 3/3",
@@ -385,7 +385,19 @@
         "prefreeze_audit": "2026-10-09, two fresh auditors on 82ff505: every value reproduced from the raw host records, plan re-rendered byte for byte, G0 item 1 checked against ledger rows 13-15. Blocking, fixed: (1) G0 item 10 states exactly what the freeze writes (the placeholder becomes the plan_sha256 field of program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json in backticks, 6a3f0219..., not the file SHA-256 a5f0aadc...), and a prereg test freezes a filled scratch copy and has the lane validate an A1-9B-S1 manifest (and refuse the wrong forms and an edit after the freeze); (2) section 7.3 quotes D53 (iii) and states S1a's reading of 'very slow' (counted per episode as infrastructure, reported beside losses, bounded attempts), which the program's sign-off must accept or send back to review. Non-blocking fixed: stale T_A1 numbers, section 18 header 19-27, the D49 (i) quote, 7.2's transport label, the D11 pointer, the typed renderer inputs, the concurrency gate's looseness disclosed, O2 operation, evidence README notes; the lane's A1/ANC admission now checks the registration's SHA-256 against its ledger row and the chain (lane.frozen_registration; O2 gets preregister.py verify as an operator step); main merged (D54, D55; program total 4.9088). Code changed after A0a: lane.py (post-freeze admission only) and the plan renderer's docstring; neither changes what A0a ran or measured (registration section 22)",
         "signoffs": "Kevin's two slots filled from D55 (2026-10-09): item 17 accepted including the unanchored read; G0 item 5's offline-setup decisions accepted. Program: D56 (on main, 3ee089f) signs items 1-16 and 19-27 and accepts section 7.3's reading of D53 (iii), the postconfig carve-out on two conditions now stated in sections 7.2 and 15 (per-session counts; the postconfig server-error sensitivity). The program's slot stays TBD until the freeze, which writes D56 there",
         "freeze_rehearsal": "2026-10-09, a fresh verifier on 51770da (scratch clone, own ledger copy): freeze accepted, A1-9B-S1 validated (128 base slots, 11 fill blocks, T_A1 110), GPU half dry-run ok, a one-byte edit refused by lane, render and verify. Blocking, fixed: (1) three S1a tests assumed an unfrozen tree and failed after the freeze (tests now freeze-independent); (2) the status slot covered only its bold line, so draft-only sentences would have been frozen (the placeholder now names the whole paragraph; section 22 'At the freeze' states the frozen paragraph, the slots and the steps; a test checks it before and after the freeze). Non-blocking fixed: slow-observation tests, 7.3 wording, the postconfig carve-out put to the program's decision, the freeze commit defined (the commit adding the row), item 18's missing slot explained. Re-rehearsed on d0a0529: frozen-tree S1a suite 285 passed, 3 skipped; real ledger unchanged (cfe46a0b); a second verifier on 87ef1dd (frozen-tree S1a suite 285 passed, 3 skipped; full suite 2,522 passed, 90 skipped) found item 13 understating the postconfig carve-out (corrected after D56)",
-        "d56_conditions": "2026-10-09: (1) analysis.infrastructure_counts reports losses by type, the agent's and checker's observation counts and the postconfig replies, failures and server errors (also by step type) per (size, harness), (size, session) and (size, harness, session), over final records and every attempt; (2) the postconfig server-error sensitivity recomputes every primary estimand with episodes missing that have a postconfig reply at HTTP >= 500 or no HTTP reply (HTTP 200 with a non-zero returncode is kept), beside the primary, no decision rule; (3) lane.validate_manifest refuses development, setup-check, A0a and A0b once frozen (job 1037's A0a manifest still validates on the draft tree, 051cdd6e...); (4) a frozen-mode prereg test requires the program slot's id to be a decisions.md heading naming q2-stage1-rescoped-v1 and the section 7.3 reading; (5) item 13 and section 7.2 name the postconfig's own handlers (/setup/activate_window 93 steps in 92 of the 148 pool and dev tasks; close_window, launch, upload, open_file). Code of record changed: analysis.py and lane.py (neither changes what A0a measured; no job runs analysis.py)"
+        "d56_conditions": "2026-10-09: (1) analysis.infrastructure_counts reports losses by type, the agent's and checker's observation counts and the postconfig replies, failures and server errors (also by step type) per (size, harness), (size, session) and (size, harness, session), over final records and every attempt; (2) the postconfig server-error sensitivity recomputes every primary estimand with episodes missing that have a postconfig reply at HTTP >= 500 or no HTTP reply (HTTP 200 with a non-zero returncode is kept), beside the primary, no decision rule; (3) lane.validate_manifest refuses development, setup-check, A0a and A0b once frozen (job 1037's A0a manifest still validates on the draft tree, 051cdd6e...); (4) a frozen-mode prereg test requires the program slot's id to be a decisions.md heading naming q2-stage1-rescoped-v1 and the section 7.3 reading; (5) item 13 and section 7.2 name the postconfig's own handlers (/setup/activate_window 93 steps in 92 of the 148 pool and dev tasks; close_window, launch, upload, open_file). Code of record changed: analysis.py and lane.py (neither changes what A0a measured; no job runs analysis.py)",
+        "post_freeze_jobs": {
+          "source": "freeze commit d5f57988ab94e0c098feddb744b78b73b5ad88ca: read-only host export (tree digest a63a0378...) for A1; clean clone detached at the commit for O2; preregister verify and check-chain PASS (16 rows) before O2 and before each pair",
+          "O2": "1044 COMPLETED in 47 s: overlay sha256:10327c706dcf2a9bd06e2449908e37d4fa4e46e7030a85e66f30626a1bafecde, archive 4a59e87c... (selected_ref HEAD, pre-validated on CPU); no retry",
+          "A1-9B-S1": "VM 1045 + GPU 1047 (2026-10-09 22:21-23:34 UTC): 452/452 dispatched and scored (base and all 11 extension blocks), 0 losses, DR0 does not fire; provenance, engine argv and Slurm limit checks pass; 1.2203 GPU-h physical",
+          "A1-4B-S1": "VM 1048 + GPU 1050 (23:36-00:45 UTC): names A1-9B-S1's records and receipt by SHA-256; 452/452 dispatched and scored, 0 losses, DR0 does not fire; checks pass; 1.1469 GPU-h physical",
+          "A1-9B-S2": "VM 1051 PENDING (BeginTime, --begin=2026-10-10T12:45:18 = job 1050's EndTime + 12 h), GPU 1053 PENDING (Dependency after:1051); manifest names both S1 jobs' records and receipts; 452 slots (base and the 11 blocks both S1 jobs completed), no fill",
+          "A1-4B-S2": "not submitted: its manifest needs A1-9B-S2's records",
+          "charged_minutes_so_far": 254,
+          "gpu_hours_physical": 2.3803,
+          "disclosures": "4B GPU job verified receipt cotcodec-receipts/qwen3.5-4b.json (75ebfc53...), which differs from G0 item 2's CPU-lane receipt efc88487... only in registry_sha256 (same revision, files and artifact root 3b8a0751...); no deviation from the registration"
+        },
+        "evidence_a1": "program/evidence/2026-10-10/q2-stage1-a1/"
       }
     },
     {
@@ -443,7 +455,7 @@
     "Q3 (D54): K1 v3 ended at an honest exit (gauntlet 45, 51, 55, 56); Q3 rests on the dense pre-check v2 (NEGATIVE_CAPABLE_V3). Yours only if you want K1 reopened: admitting a screen above 8 GPU-h (D24) for more seeds or evidence, plus a new design with a same-language zero-overlap leg. Package: program/preregistrations/q3-k1-localization-screen-v3.md (draft), program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md, program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl",
     "Host limit (needs the host administrator): fs.inotify.max_user_instances is 128 on fal-h100-01, so the action-path ladder's 40-VM rung could not boot 10 of 80 VMs (dnsmasq 'failed to create inotify: Too many open files'). N* is therefore 32, and the registered program kill criterion (N* below 40: cut the Stage-1 task count before adding GPUs) applies. Ask the administrator to raise the limit if 40 concurrent VMs are wanted; attempt 1's rung-40 rerun is not used (D51); running above 32 VMs after a host change needs a registered deviation or a new registration with its own ladder (D53 ii) (evidence: program/evidence/2026-10-08/q2-action-path-v2-acceptance/)"
   ],
-  "gpu_hours_spent_this_program": 4.9088,
+  "gpu_hours_spent_this_program": 7.2891,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -785,6 +797,37 @@
       ],
       "outcome": "32 dev tasks: /file answering 500, old rule scored 32/32, new rule 32/32 guest_observation; /file and /execute answering 500, 32/32 and 32/32; missing file (404), both score 32/32, no loss",
       "basis": "physical: s1a-cpu.sbatch run mode, no GRES, metric image, --network none, no /dev/nvidia* in the container"
+    },
+    {
+      "experiment": "q2-stage1-rescoped-v1 O2 (cu129 vLLM overlay from the freeze commit d5f5798; post-freeze, section 5.5)",
+      "gpu_hours": 0.0131,
+      "jobs": [
+        "1044 overlay build (COMPLETED 0:0, 47 s; no retry needed)"
+      ],
+      "outcome": "overlay sha256:10327c706dcf2a9bd06e2449908e37d4fa4e46e7030a85e66f30626a1bafecde from source archive 4a59e87c... (5,879 files, tree c299515c, selected_ref HEAD in a clean clone at d5f5798, pre-validated on CPU with the pinned extractor); provenance PASS; the pre-funded O2 retry stays unspent",
+      "basis": "physical (scontrol RunTime 00:00:47 on 1 H100); charged under D22 at its 3-minute cap (0.0500 GPU-h), within S1a's 477 minutes"
+    },
+    {
+      "experiment": "q2-stage1-rescoped-v1 A1-9B-S1 (Qwen3.5-9B, session 1, V = 20; export of the freeze commit d5f5798)",
+      "gpu_hours": 1.2203,
+      "jobs": [
+        "1045 VM lane (CPU only, 90 CPUs, no GRES)",
+        "1046 GPU --test-only (never ran)",
+        "1047 engine and bridge (1 H100, 32 CPUs, --dependency=after:1045, O2 overlay)"
+      ],
+      "outcome": "registered per-job checks only (no outcome read): 452 dispatched, 452 scored (base 128 complete, all 11 extension blocks); 0 infrastructure losses of 226 first attempts per harness, no re-queue, no cap truncation, no USR1; DR0 does not fire; provenance PASS, engine argv = plan.engine_argv(9B), Slurm limit 110 = T_A1; 0.002700 GPU-h per episode (DR4 input; high price 0.011274); no foreign job",
+      "basis": "physical (scontrol RunTime 01:13:13 = 4,393 s on 1 H100); charged under D22 at its 110-minute cap (1.8333 GPU-h)"
+    },
+    {
+      "experiment": "q2-stage1-rescoped-v1 A1-4B-S1 (Qwen3.5-4B, session 1, V = 20; export of the freeze commit d5f5798)",
+      "gpu_hours": 1.1469,
+      "jobs": [
+        "1048 VM lane (CPU only, 90 CPUs, no GRES)",
+        "1049 GPU --test-only (never ran)",
+        "1050 engine and bridge (1 H100, 32 CPUs, --dependency=after:1048, O2 overlay)"
+      ],
+      "outcome": "registered per-job checks only (no outcome read): manifest names A1-9B-S1's records a05dbf84... and receipt 692b9a2a...; 452 dispatched, 452 scored (base complete, all 11 extension blocks); 0 infrastructure losses of 226 first attempts per harness, no re-queue, no cap truncation, no USR1; DR0 does not fire; provenance PASS, engine argv = plan.engine_argv(4B), Slurm limit 110 = T_A1; 0.002537 GPU-h per episode (DR4 input); no foreign job",
+      "basis": "physical (scontrol RunTime 01:08:49 = 4,129 s on 1 H100); charged under D22 at its 110-minute cap (1.8333 GPU-h)"
     }
   ],
   "results": [

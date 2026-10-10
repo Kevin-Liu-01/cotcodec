@@ -1,0 +1,39 @@
+{
+  "batch_script_sha256": "2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec",
+  "command": [
+    "python",
+    "-m",
+    "harness.q2_stage1.bridge",
+    "serve",
+    "--size",
+    "9B",
+    "--bridge-dir",
+    "/outputs/bridge",
+    "--health-timeout-s",
+    "900"
+  ],
+  "container_profile": "vllm",
+  "cpus": 32,
+  "git_sha": "d5f57988ab94e0c098feddb744b78b73b5ad88ca",
+  "gpu_type": "h100",
+  "gpus": 1,
+  "image_id": "sha256:10327c706dcf2a9bd06e2449908e37d4fa4e46e7030a85e66f30626a1bafecde",
+  "max_gpu_hours": 1.8334,
+  "memory_gb": 160,
+  "minutes": 110,
+  "model": {
+    "artifact_root_sha256": "9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3.5-9b",
+    "receipt_sha256": "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3",
+    "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+  },
+  "name": "q2s1a-a1-9b-s1",
+  "randomness_contract": "deterministic",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/q2-stage1/gpu",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seeds": [],
+  "source_sha256": "4a59e87c8a04b3005606248f77b1b81b82e1bde127c72206f4113cc1b07349d8",
+  "start_after_job_id": "1045"
+}
