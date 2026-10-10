@@ -1,0 +1,16 @@
+{
+ "doctor": "Design",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
+ "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data (2x2 factorial blocked by task and seed, one serving session, seeded interleaving), power by exact noncentral-t computation and Monte Carlo (compute/power-gate.py, seeds 42/43/44); K-Dense statistical-analysis and ARS statistical reporting standards for paired, clustered inference and TOST",
+ "evidence": "Intervention (catalog language x document direction), controls (en baseline, en-RTL, exact CPU A/A checks G2b and G4), manipulation checks (G5-G10), falsifiers P1-P6, kill criteria K0-K6, primary estimand D with a three-way decision, a registered power gate on pilot-measured inputs, moderators frozen before GPU, leakage controls (disjoint pilot and main seeds, fresh English baseline).",
+ "why_fail": [
+  "every base-rate distribution in the simulation is assumed; no Relay pixel measurement exists for a local model",
+  "the between-task heterogeneity tau2 of the locale effect cannot be measured before treatment; logit-scale effect models give realized tau2 of about 0.006-0.02 against the gate's 0.0025 floor",
+  "the simulated probability that the gate passes is at most a few percent in every assumed scenario, and conditional power given a pass is low for effects concentrated in a quarter or half of the tasks",
+  "no Phase 0 code exists, so the gate thresholds (4 px, 98%, 0.05 CER margin) are unexercised"
+ ],
+ "remediation": "Build Phase 0 and run its gate as a cpu-doctor orx node; run the Stage 1a pilot to replace the transport; consider design decision 9's alternative (fixed tau2 0.006), which closes Phase 1 on Relay"
+}

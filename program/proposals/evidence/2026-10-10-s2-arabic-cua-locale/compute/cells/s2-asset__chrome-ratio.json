@@ -1,0 +1,149 @@
+{
+ "rows": [
+  {
+   "taskId": "channel-topic",
+   "visibleChars": 1557,
+   "chromeChars": 343,
+   "chromeShare": 0.22,
+   "nodes": 78,
+   "chromeNodes": 31
+  },
+  {
+   "taskId": "thread-reply",
+   "visibleChars": 1557,
+   "chromeChars": 343,
+   "chromeShare": 0.22,
+   "nodes": 78,
+   "chromeNodes": 31
+  },
+  {
+   "taskId": "edit-message",
+   "visibleChars": 1557,
+   "chromeChars": 343,
+   "chromeShare": 0.22,
+   "nodes": 78,
+   "chromeNodes": 31
+  },
+  {
+   "taskId": "incident-triage",
+   "visibleChars": 1557,
+   "chromeChars": 343,
+   "chromeShare": 0.22,
+   "nodes": 78,
+   "chromeNodes": 31
+  },
+  {
+   "taskId": "delete-draft",
+   "visibleChars": 1557,
+   "chromeChars": 343,
+   "chromeShare": 0.22,
+   "nodes": 78,
+   "chromeNodes": 31
+  },
+  {
+   "taskId": "handoff-dm",
+   "visibleChars": 1557,
+   "chromeChars": 343,
+   "chromeShare": 0.22,
+   "nodes": 78,
+   "chromeNodes": 31
+  },
+  {
+   "taskId": "release-sync",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  },
+  {
+   "taskId": "incident-closeout",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  },
+  {
+   "taskId": "saved-cleanup",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  },
+  {
+   "taskId": "decision-record",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  },
+  {
+   "taskId": "handoff-repair",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  },
+  {
+   "taskId": "qa-signoff",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  },
+  {
+   "taskId": "publish-update",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  },
+  {
+   "taskId": "oncall-briefing",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  },
+  {
+   "taskId": "thread-repair",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  },
+  {
+   "taskId": "pin-refresh",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  },
+  {
+   "taskId": "design-handoff",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  },
+  {
+   "taskId": "release-retrospective",
+   "visibleChars": 1587,
+   "chromeChars": 403,
+   "chromeShare": 0.254,
+   "nodes": 78,
+   "chromeNodes": 33
+  }
+ ],
+ "pooledChromeShare": 0.243
+}

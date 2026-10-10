@@ -1,0 +1,7 @@
+{
+ "proposal": "paragraph-434639fe.txt",
+ "closest_prior": "paragraph-9242d8b5.txt",
+ "closest_prior_id": "arXiv:2506.04135 (macOSWorld: A Multilingual Interactive Benchmark for GUI Agents, Yang, Ci and Shou, NeurIPS 2025; v4 2025-10-18); full text read by the frontier and kill-shot cells and re-read by synthesis on 2026-10-10 (Secs. 3.2-3.4, 4.1-4.2, 5.1-5.3, Tables 3-4, App. D.1 Tables 6-7, App. Fig. 19 text, checklist item 7)",
+ "runner_up_prior_id": "arXiv:2609.38184 (RealGUINoise, 2026-08-07): a 'Language Swap' interface perturbation bundled with 41 other noise types, results by category only; no packet written",
+ "note": "Role mapping for the recorder only. Never give this file to the critic."
+}
