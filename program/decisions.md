@@ -982,3 +982,23 @@ and I2 with the probe budget inside 8 GPU-h. It also cites and differentiates
 the uncited priors after searching OpenReview and the ACL Anthology. If the
 fresh run scores below 60, or identification is still the largest defect, E4
 ends at an honest exit. Its reviewer lane job runs only outside an S1a job.
+
+**D61. Q2 S1a: D59 (ii)'s incomplete-data rules, two edge cases ratified
+while blind.** D59's tooling and its verifier reached two cases D59 (ii)
+leaves open. Each reading is fixed now, before any A1 outcome is read. (a) If
+DR0 fires for a session-2 job but that size still holds scored base records
+in both sessions (the job was cut part-way), every output is labelled
+incomplete. The size's estimates are computed as the registered code computes
+them, and no statistic is masked. The not-estimable markings of D59 (ii)
+apply only where a size has one session, because only then does the frozen
+code report a p-value from an all-NaN statistic. (b) If one size has one
+session and the other has two, DR2 is reported as the registered code
+computes it, with a note that its X test and its π bound come from the
+two-session size alone. The single-session size's session test is not
+estimable, and DR5 is not evaluable as registered. Where DR1 drops 4B, the
+registered π_small is π_9B; DR5 is still reported as not evaluable, because
+the session-2 data are incomplete. Three more rules apply. The raw report
+keeps the frozen code's values, and RESULTS reads the guarded report.
+Every output file in an incomplete case carries the incomplete label. The
+replay-mismatch disclosure covers every flip whose raw replay differed from
+the live score, whether or not a checker correction applies to that task.
