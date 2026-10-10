@@ -1,0 +1,39 @@
+{
+ "url": "https://arxiv.org/abs/2410.10254",
+ "fetched_at": "2026-10-10T06:13:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44990,
+ "raw_sha256": "cc27cab0dddb41ca22a55b7e96fba85c8c7923ed9d5bfe654fc15f2515efd052",
+ "raw_stored": false,
+ "extract": {
+  "title": "LoLCATs: On Low-Rank Linearizing of Large Language Models",
+  "authors": [
+   "Zhang, Michael",
+   "Arora, Simran",
+   "Chalamala, Rahul",
+   "Wu, Alan",
+   "Spector, Benjamin",
+   "Singhal, Aaryan",
+   "Ramesh, Krithik",
+   "Ré, Christopher"
+  ],
+  "citation_date": "2024/10/14",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 14 Oct 2024 08:10:34 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 25 Oct 2024 17:59:04 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 5 Mar 2025 21:57:04 UTC"
+   }
+  ],
+  "abstract": "Recent works show we can linearize large language models (LLMs) -- swapping the quadratic attentions of popular Transformer-based LLMs with subquadratic analogs, such as linear attention -- avoiding the expensive pretraining costs. However, linearizing LLMs often significantly degrades model quality, still requires training over billions of tokens, and remains limited to smaller 1.3B to 7B LLMs. We thus propose Low-rank Linear Conversion via Attention Transfer (LoLCATs), a simple two-step method that improves LLM linearizing quality with orders of magnitudes less memory and compute. We base these steps on two findings. First, we can replace an LLM's softmax attentions with closely-approximating linear attentions, simply by training the linear attentions to match their softmax counterparts with an output MSE loss (\"attention transfer\"). Then, this enables adjusting for approximation errors and recovering LLM quality simply with low-rank adaptation (LoRA). LoLCATs significantly improves linearizing quality, training efficiency, and scalability. We significantly reduce the linearizing quality gap and produce state-of-the-art subquadratic LLMs from Llama 3 8B and Mistral 7B v0.1, leading to 20+ points of improvement on 5-shot MMLU. Furthermore, LoLCATs does so with only 0.2% of past methods' model parameters and 0.4% of their training tokens. Finally, we apply LoLCATs to create the first linearized 70B and 405B LLMs (50x larger than prior work). When compared with prior approaches under the same compute budgets, LoLCATs significantly improves linearizing quality, closing the gap between linearized and original Llama 3.1 70B and 405B LLMs by 77.8% and 78.1% on 5-shot MMLU.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

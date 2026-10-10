@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/1907.09720",
+ "fetched_at": "2026-10-10T06:13:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41098,
+ "raw_sha256": "0116d22d2f93b28fd2124cb25c6f9743d0924cf9f0ed00e13bc75e1decc2b867",
+ "raw_stored": false,
+ "extract": {
+  "title": "Metalearned Neural Memory",
+  "authors": [
+   "Munkhdalai, Tsendsuren",
+   "Sordoni, Alessandro",
+   "Wang, Tong",
+   "Trischler, Adam"
+  ],
+  "citation_date": "2019/07/23",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 23 Jul 2019 07:04:07 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 3 Dec 2019 14:16:23 UTC"
+   }
+  ],
+  "abstract": "We augment recurrent neural networks with an external memory mechanism that builds upon recent progress in metalearning. We conceptualize this memory as a rapidly adaptable function that we parameterize as a deep neural network. Reading from the neural memory function amounts to pushing an input (the key vector) through the function to produce an output (the value vector). Writing to memory means changing the function; specifically, updating the parameters of the neural network to encode desired information. We leverage training and algorithmic techniques from metalearning to update the neural memory function in one shot. The proposed memory-augmented model achieves strong performance on a variety of learning problems, from supervised question answering to reinforcement learning.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

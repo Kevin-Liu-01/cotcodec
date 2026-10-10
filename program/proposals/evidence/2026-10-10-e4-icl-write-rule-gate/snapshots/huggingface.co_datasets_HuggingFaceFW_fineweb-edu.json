@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu",
+ "fetched_at": "2026-10-10T06:13:15Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 1418103,
+ "raw_sha256": "8673cf448a82423102b98bf789f152f3465da8a4463bf183db1de8baf15ecd59",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "HuggingFaceFW/fineweb-edu · Datasets at Hugging Face"
+ }
+}

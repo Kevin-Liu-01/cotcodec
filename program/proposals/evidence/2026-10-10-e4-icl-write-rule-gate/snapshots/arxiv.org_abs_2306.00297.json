@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2306.00297",
+ "fetched_at": "2026-10-10T06:13:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42808,
+ "raw_sha256": "1bd91cac1d05ce93430797279e1e02d2f106c9884a89d045ff2ed294f6e5e7d5",
+ "raw_stored": false,
+ "extract": {
+  "title": "Transformers learn to implement preconditioned gradient descent for in-context learning",
+  "authors": [
+   "Ahn, Kwangjun",
+   "Cheng, Xiang",
+   "Daneshmand, Hadi",
+   "Sra, Suvrit"
+  ],
+  "citation_date": "2023/06/01",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 1 Jun 2023 02:35:57 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 9 Nov 2023 21:46:18 UTC"
+   }
+  ],
+  "abstract": "Several recent works demonstrate that transformers can implement algorithms like gradient descent. By a careful construction of weights, these works show that multiple layers of transformers are expressive enough to simulate iterations of gradient descent. Going beyond the question of expressivity, we ask: Can transformers learn to implement such algorithms by training over random problem instances? To our knowledge, we make the first theoretical progress on this question via an analysis of the loss landscape for linear transformers trained over random instances of linear regression. For a single attention layer, we prove the global minimum of the training objective implements a single iteration of preconditioned gradient descent. Notably, the preconditioning matrix not only adapts to the input distribution but also to the variance induced by data inadequacy. For a transformer with $L$ attention layers, we prove certain critical points of the training objective implement $L$ iterations of preconditioned gradient descent. Our results call for future theoretical studies on learning algorithms by training transformers.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

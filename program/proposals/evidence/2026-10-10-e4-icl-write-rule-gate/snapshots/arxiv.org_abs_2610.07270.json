@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2610.07270",
+ "fetched_at": "2026-10-10T06:13:14Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42011,
+ "raw_sha256": "8f83efdbaf6070106b0103ffe8bf1ac96aec8cbff59a8e6d25353dd1a842fbf0",
+ "raw_stored": false,
+ "extract": {
+  "title": "Does the Model Use the Feature? Separating Steering from Mechanism in LLMs",
+  "authors": [
+   "Che, Tong",
+   "Li, Yilong"
+  ],
+  "citation_date": "2026/10/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 5 Oct 2026 19:11:42 UTC"
+   }
+  ],
+  "abstract": "Internal features in LLMs are often interpreted as mechanisms when they track a concept and their manipulation changes a related behavior. Yet steering can push a feature far outside its natural range, where its effects need not reflect the model's own computation. We examine this inference and propose an empirical contract whose tests evaluate features at values observed on natural inputs. One test copies a feature's value from an input that shows a behavior into a matched input that does not (installation) or the reverse (removal); the other restores the feature after an upstream edit (downstream rescue). Installation measures how far the feature suffices for the behavior; removal and downstream rescue measure how much the model uses it. Applied to three kinds of representations, the two strengths separate sharply. The published unknown-entity latent strongly steers knowledge abstention, yet installing observed values from either published latent into matched prompts transfers only a small fraction of the natural known--unknown abstention contrast. Dense known--unknown directions show opposite asymmetries between installation and removal in Gemma and Llama, and how fully a released subject--verb agreement feature set reproduces and restores the behavior depends on how its values are written into the model. Tracking a concept and steering a behavior therefore do not by themselves show that the model uses a feature, and each conclusion holds only for the intervention tested.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

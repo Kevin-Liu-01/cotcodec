@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2509.04661",
+ "fetched_at": "2026-10-10T06:13:12Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44337,
+ "raw_sha256": "257d6f57aaf3658214ac5e7ab6818e90d52ac0d0df7176903b81d760994d0725",
+ "raw_stored": false,
+ "extract": {
+  "title": "Flexible inference for animal learning rules using neural networks",
+  "authors": [
+   "Liu, Yuhan Helena",
+   "Geadah, Victor",
+   "Pillow, Jonathan"
+  ],
+  "citation_date": "2025/09/04",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 4 Sep 2025 21:20:11 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 5 Feb 2026 17:21:21 UTC"
+   }
+  ],
+  "abstract": "Understanding how animals learn is a central challenge in neuroscience, with growing relevance to the development of animal- or human-aligned artificial intelligence. However, existing approaches tend to assume fixed parametric forms for the learning rule (e.g., Q-learning, policy gradient), which may not accurately describe the complex forms of learning employed by animals in realistic settings. Here we address this gap by developing a framework to infer learning rules directly from behavioral data collected during de novo task learning. We assume that animals follow a decision policy parameterized by a generalized linear model (GLM), and we model their learning rule -- the mapping from task covariates to per-trial weight updates -- using a deep neural network (DNN). This formulation allows flexible, data-driven inference of learning rules while maintaining an interpretable form of the decision policy itself. To capture more complex learning dynamics, we introduce a recurrent neural network (RNN) variant that relaxes the Markovian assumption that learning depends solely on covariates of the current trial, allowing for learning rules that integrate information over multiple trials. Simulations demonstrate that the framework can recover ground-truth learning rules. We applied our DNN and RNN-based methods to a large behavioral dataset from mice learning to perform a sensory decision-making task and found that they outperformed traditional RL learning rules at predicting the learning trajectories of held-out mice. The inferred learning rules exhibited reward-history-dependent learning dynamics, with larger updates following sequences of rewarded trials. Overall, these methods provide a flexible framework for inferring learning rules from behavioral data in de novo learning tasks, setting the stage for improved animal training protocols and the development of behavioral digital twins.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
