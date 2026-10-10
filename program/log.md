@@ -3305,3 +3305,68 @@ they say so.)
   verified the receipt file the GPU lane reads (`75ebfc53...`), which differs from G0 item
   2's CPU-lane receipt only in its registry digest (disclosed). Evidence:
   `program/evidence/2026-10-10/q2-stage1-a1/`.
+
+## 2026-10-10 — E4 gate gauntlet wave 1 (D58): score 49, honest exit (branch `gauntlet/e4-d19`, not merged)
+
+- Gauntlet `e4-icl-write-rule-gate` (backfill E4 = legacy D19; the gate only:
+  teacher eligibility and oracle interface ceiling). Budgets: queries 150,
+  wall_minutes 600, tokens 8,000,000, dollars 150, waves 3, gpu_hours 0.3.
+  Discovery ran in workflow `wf_9f15e9e8-487`. Its synthesis owner stalled on a
+  long recursive grep and committed nothing, so `wf_476629c2-5bc` resumed from
+  synthesis. Proposal `22429938...` and DRAFT registration `4cef1c1c...`
+  (commit `89ed377`; not frozen, not admitted). Audit row 1 appended to
+  `program/gauntlet/2026-10-10-e4-icl-write-rule-gate.jsonl`, row hash
+  `b658a26559a35d9d0da1e30c850fbc11d0079d4e87807eed1a87669587d7048f`.
+- Reviews: 55 (claude-opus-5-5) and 49 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1059). Both totals equal their dimension sums and sit below every cap (74,
+  79, 89). Score 49, best 49. Neither review is signed (D24).
+- Blind discrimination: valid and passed. The critic judged the gate and
+  2608.13385 (task vectors in multimodal ICL) different mechanisms, with the gate
+  the stronger contribution. The packets match the bundle files exactly and
+  name nothing. Only one prior was judged.
+- Refute-first triad: 3 of 3 refuted. Novelty: the method combines published
+  parts. The key-span class is the dual form (2212.10559), and the
+  confined-versus-free contrast is published for KV compaction (2602.16284,
+  2506.06266, 2609.17346). Those, plus 2311.07772 and 2404.11225, are uncited.
+  No paper runs this measurement on few-shot ICL, so no direct prior was found.
+  Identification and feasibility: below.
+- Largest defect: identification. The registration fits the family constant at
+  rank 8 on 4 probes per episode, while S1 (the evidence offered) fits it at full
+  rank on all 16. Under the registered fit, S1's own code gives these readings:
+  - A constant teacher passes the EPISODE_CONSTANT guard (D_span_B 0.63-1.33).
+  - First-order and RLS teachers flip from TIE to GAP in 6 of 6 families.
+  - The resample placebo that would expose this is report-only. Reviewer 1
+    replicated the run byte for byte.
+  Alone-encoded keys and a probe-independent per-episode shift are two more
+  routes to a false GAP.
+  Runner-up (feasibility, tokenizer confirmed by the recorder): the family table
+  cannot be built under the registration's own rules. The teacher's tokenizer
+  has no single-token digit answers, and the 40-input rule drops five families,
+  while K2 stays an absolute 8 of 14. I1 and I2 rarely pass together at 16
+  fitting probes, and more probes break the Step-2 cap.
+- Honest exit, as in the K1 v2, Q1 and K1 v3 wave-1 rows:
+  - Query budget: 159 of 150 counted queries. The cells used 144 and synthesis
+    6, then the novelty refuter's 9 overran the budget.
+  - Triad stop.
+  - Tokens: 2.86M of 8M remain, less than any K1 v3 repair wave used.
+  Not exits: tokens 5.14M of 8M, $87.33 of $150, 372.7 of 600 minutes (elapsed,
+  including about 144 stalled minutes), GPU 0.0539 of 0.3. The doctor re-run is
+  byte-identical to the bundle copy (FAIL, as expected).
+- GPU: reviewer 2's job 1059 used 0.0539 GPU-h (scontrol RunTime 00:03:14 on 1
+  H100, COMPLETED 0:0, 07:11-07:14 UTC, before the 11:30 S1a reservation; no
+  leftover container). Added to the ledger as "E4 gate gauntlet wave 1
+  (e4-icl-write-rule-gate, D58) open-weight review (D24)". Program total 7.3430.
+  The gate itself used no GPU.
+- Waiting on Kevin: whether E4 continues as a fresh run with new budgets and a
+  query share reserved for the triad. A v2 DRAFT would need these CPU repairs:
+  - Fit C_f on all probes, and make E and D_span count only relative to the
+    placebo.
+  - Add a constant-column shift to every class, and planted writers for
+    contextualised keys and for the probe-independent shift.
+  - Build a family table that can actually be built, with K2 counted relative to
+    the families that survive.
+  - Measure the I1/I2 window on real residuals. This needs approval for the
+    2.7 GB teacher download.
+  - Normalise the STOP_TR guard by the GOLD-versus-SHUF KL.
+  - Write delta rows and blind packets for the dual-form and KV-compaction
+    priors.
