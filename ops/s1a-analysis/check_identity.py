@@ -21,7 +21,7 @@ complete ``guard.json``, so it cannot run early against a report still being wri
   the ``fractional_scores`` counts.
 * If both fail (bug B2: no size holds two sessions, or a DR5 share has no finite bound), the
   errors are recorded. The guarded report is then the delta-only report, or the report
-  recomputed with that ``rules.dr5`` call tolerated (``run_report.py``, D61 (a) addendum).
+  recomputed with that ``rules.dr5`` call tolerated (``run_report.py``, D62).
 """
 
 from __future__ import annotations

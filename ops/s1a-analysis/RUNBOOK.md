@@ -2,7 +2,7 @@
 
 Operator steps for the S1a analysis on the host. These scripts are operator tooling, not
 code of record. They import the frozen modules from the read-only export of the freeze
-commit `d5f5798` and never change them. D59, with D61 and its addendum for the edge cases
+commit `d5f5798` and never change them. D59, with D61 and D62 for the edge cases
 D59 leaves open, fixed every rule they apply before any A1 outcome was read. This runbook
 supersedes the dry run's runbook and closes the checker's gaps. Each step is listed with its
 exact command. Section 15 items and where they come from are at the end.
@@ -251,7 +251,7 @@ The step writes three files:
     M = 0.18 as a description only;
   - a size that holds both sessions but has no task with both harness cells scored in both
     (a session-2 job cut after a few episodes) has no π: it is read for π as a one-session
-    size, so DR5 is "not evaluable as registered" there too (D61 (a) addendum);
+    size, so DR5 is "not evaluable as registered" there too (D62);
   - no p-value is shown from an all-NaN statistic.
 
   If a size holds two sessions but the registered report raises because a DR5 share has no
@@ -259,7 +259,7 @@ The step writes three files:
   episodes, so A1-4B-S2 never runs), `report.json` is absent. `report-guarded.json` is then
   `analysis.report` recomputed with those `rules.dr5` calls returning "not evaluable as
   registered", every other value as the registered code computes it, with the readings
-  above. `guard.json` `tolerant_report` counts the calls (D61 (a) addendum).
+  above. `guard.json` `tolerant_report` counts the calls (D62).
 
   If no size holds two sessions, the file is the delta-only report: δ and the descriptive
   and infrastructure counts. D_b, D_w, X, π, the X test, DR2, DR5, P1, P2, the session test
@@ -271,20 +271,20 @@ size's session p-value of 1/(n+1), or DR5 read against M = 0.13. It is kept for 
 identity check (step 7). `guard.json` says so in `read`.
 
 **The guard's readings of D59 (ii)** are fixed in `run_report.py` before any A1 outcome is
-read, ratified in D61 and its addendum, and written to `guard.json` `interpretation`:
+read, ratified in D61 and D62, and written to `guard.json` `interpretation`:
 
 | Case | Reading |
 |---|---|
 | DR0 fired for any A1 job, a registered job has no records, or a size lacks two sessions of scored base records | Every output is labelled `incomplete` |
 | A size's session-2 job fired DR0, but the size still holds scored base records in both sessions (cut or failed after its first block) | D61 (a). Labelled `incomplete`; the DR0 masks nothing else: that size's session test (and DR1, for 4B) are read as registered on the data collected, and a `guard.json` reading says so. D59's "that size" is read as the size left with one session: section 11 reports the data already collected as incomplete, and the dry-run checker's B3 handling, from which D59 (ii) was written, names the single-session size |
-| A size holds both sessions, but in a set no task has both harness cells scored in both (its X and π are all-NaN) | D61 (a) addendum. For π it is read as a one-session size in that set: DR5 is "not evaluable as registered" (π_9B against both M as a description), DR2 carries an `incomplete_note`, `pi_undefined_sizes`, `registered_pi_small_defined` and `pooled_from_sizes` are written, and the DR0 reading says DR5 is not kept. Its session test and DR1 stay as registered |
-| A size holds two sessions, but the registered report raises on a DR5 share with no finite bound | D61 (a) addendum. `report.json` is absent; `report-guarded.json` is the registered computation with those `rules.dr5` calls returning "not evaluable as registered", then the readings above |
+| A size holds both sessions, but in a set no task has both harness cells scored in both (its X and π are all-NaN) | D62. For π it is read as a one-session size in that set: DR5 is "not evaluable as registered" (π_9B against both M as a description), DR2 carries an `incomplete_note`, `pi_undefined_sizes`, `registered_pi_small_defined` and `pooled_from_sizes` are written, and the DR0 reading says DR5 is not kept. Its session test and DR1 stay as registered |
+| A size holds two sessions, but the registered report raises on a DR5 share with no finite bound | D62. `report.json` is absent; `report-guarded.json` is the registered computation with those `rules.dr5` calls returning "not evaluable as registered", then the readings above |
 | One size holds one session, the other two | D61 (b). That size's session test (and its harness-by-session and common-share entries) is `not_estimable`; DR1 is read on the sessions it holds; DR5 is "not evaluable as registered", with π_9B against both M as a description; DR2 is kept as the registered code computes it, with an `incomplete_note` (its X test and π_small bound then come from the size with two sessions; π_9B is the registered π_small only when DR1 drops 4B); P1 and P2 read the size with two sessions; `pooled_from_sizes` lists the sizes each pooled estimate averages (pooled D_w, δ and the Bernoulli X average the single-session size's session with the other size's two) |
 | No size holds two sessions | The delta-only report above |
 | Any statistic with no finite entry | No p-value is read from it |
 
 Rows two to five answer questions D59 leaves open. D61 (a) and (b) ratify rows two and
-five, and D61's addendum rows three and four, all fixed before any A1 outcome was read.
+five, and D62's rows three and four, all fixed before any A1 outcome was read.
 
 ## 7. Identity check (Slurm CPU, about one more report)
 
@@ -422,7 +422,7 @@ the host.
   byte-identical, or only the fractional outputs changed.
 - **Operator rules (D59 (ii)), when the data are incomplete.** These are the guard's
   readings in `guard.json` and `report-guarded.json`, and its reading of the cases D59
-  leaves open, ratified in D61 and its addendum (`guard.json` `interpretation`; the table
+  leaves open, ratified in D61 and D62 (`guard.json` `interpretation`; the table
   in step 6).
 - **Operator steps (D59 (iii)), each with its command above:**
   - offline rescoring `--time=08:00:00`, with coverage and live-score fallbacks;
