@@ -1,0 +1,5786 @@
+{
+ "check": "E4 gate repair S1v2: registered v2 estimator on a linear surrogate (identifiability grid)",
+ "claim_boundary": "estimator semantics in a synthetic linear surrogate; no model, no teacher, no data",
+ "config": {
+  "D_B": 128,
+  "M_OUT": 64,
+  "NOISE": 0.02,
+  "N_DEMO": 8,
+  "N_DEV": 14,
+  "N_EVAL": 32,
+  "N_FAM": 2,
+  "N_SCORE": 8,
+  "RANK": 8,
+  "RIDGE": 0.001,
+  "W": 32,
+  "numpy": "2.5.2",
+  "seeds": [
+   42,
+   43,
+   44
+  ]
+ },
+ "payload_sha256": "dd734fe77fe7b7222d0dfcd0539d899787118c8c352217387dcd3d692f4e9ba1",
+ "results": [
+  {
+   "d_task": 6,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.0055,
+      "D_span_hi": 0.009,
+      "D_span_lo": 0.0021,
+      "Delta_res": 1.7747,
+      "Delta_res_lo": 1.6144,
+      "E_free": 0.9366,
+      "E_free_lo": 0.929,
+      "E_resample": -0.8381,
+      "E_span": 0.9311,
+      "E_span_alone": 0.9311,
+      "E_span_ctx": 0.9313,
+      "I0_mean_part_gain": -0.0273,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0514,
+      "R_const": 0.0389,
+      "R_shift": 0.8342,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5258,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         0.005,
+         0.002,
+         0.003,
+         0.009,
+         0.003,
+         0.003,
+         0.009,
+         0.003
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.037,
+        "Delta_res_lo": -0.082
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.001,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         0.999,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         -0.001,
+         -0.001,
+         -0.0,
+         -0.001,
+         0.0,
+         0.0
+        ],
+        "recovery": [
+         0.998,
+         0.996,
+         0.998,
+         0.998,
+         0.999,
+         0.999
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.046,
+         0.04,
+         -0.015,
+         0.075,
+         0.069,
+         0.034
+        ],
+        "recovery": [
+         0.933,
+         0.96,
+         0.87,
+         0.888,
+         0.717,
+         0.96
+        ]
+       },
+       "probe_read_d90": 6,
+       "span": {
+        "D_span_pl": [
+         -0.001,
+         -0.002,
+         -0.001,
+         -0.001,
+         -0.001,
+         -0.002
+        ],
+        "recovery": [
+         1.0,
+         0.999,
+         0.999,
+         0.999,
+         0.999,
+         0.999
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.0048,
+      "D_span_hi": 0.0106,
+      "D_span_lo": -0.0011,
+      "Delta_res": 1.7894,
+      "Delta_res_lo": 1.6132,
+      "E_free": 0.9285,
+      "E_free_lo": 0.9196,
+      "E_resample": -0.861,
+      "E_span": 0.9237,
+      "E_span_alone": 0.9237,
+      "E_span_ctx": 0.9238,
+      "I0_mean_part_gain": -0.0224,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0549,
+      "R_const": 0.0286,
+      "R_shift": 0.8413,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5288,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         0.008,
+         0.001,
+         0.001,
+         0.012,
+         0.005,
+         0.011,
+         0.004,
+         -0.002
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.039,
+        "Delta_res_lo": -0.062
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.005,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         0.999,
+         0.999,
+         0.994,
+         0.999,
+         1.0,
+         1.0,
+         1.0,
+         0.999
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.0,
+         0.001,
+         0.0,
+         0.002,
+         0.001,
+         0.0
+        ],
+        "recovery": [
+         0.999,
+         0.998,
+         0.998,
+         0.998,
+         0.998,
+         0.998
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.052,
+         0.217,
+         0.057,
+         0.207,
+         0.033,
+         0.051
+        ],
+        "recovery": [
+         0.889,
+         0.813,
+         0.885,
+         0.865,
+         0.877,
+         0.88
+        ]
+       },
+       "probe_read_d90": 5,
+       "span": {
+        "D_span_pl": [
+         -0.002,
+         -0.002,
+         -0.001,
+         -0.001,
+         -0.001,
+         -0.001
+        ],
+        "recovery": [
+         0.999,
+         0.999,
+         0.999,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 6,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.007,
+      "D_span_hi": 0.0103,
+      "D_span_lo": 0.0036,
+      "Delta_res": 1.9138,
+      "Delta_res_lo": 1.7115,
+      "E_free": 0.9677,
+      "E_free_lo": 0.964,
+      "E_resample": -0.9461,
+      "E_span": 0.9607,
+      "E_span_alone": 0.9607,
+      "E_span_ctx": 0.961,
+      "I0_mean_part_gain": -0.0319,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.052,
+      "R_const": 0.0211,
+      "R_shift": 0.819,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.536,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         0.002,
+         0.001,
+         0.004,
+         -0.008,
+         0.007,
+         0.003,
+         0.004,
+         0.007
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.003,
+        "Delta_res_lo": -0.161
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         0.999
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         -0.0,
+         0.0,
+         0.001,
+         0.001,
+         0.0,
+         0.0
+        ],
+        "recovery": [
+         0.998,
+         0.999,
+         1.0,
+         0.999,
+         0.999,
+         0.999
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.062,
+         0.02,
+         0.076,
+         0.075,
+         0.022,
+         0.041
+        ],
+        "recovery": [
+         0.929,
+         0.99,
+         0.911,
+         0.938,
+         0.981,
+         0.976
+        ]
+       },
+       "probe_read_d90": 6,
+       "span": {
+        "D_span_pl": [
+         -0.0,
+         -0.001,
+         -0.001,
+         -0.0,
+         -0.001,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.0019,
+      "D_span_hi": 0.0055,
+      "D_span_lo": -0.0016,
+      "Delta_res": 1.9095,
+      "Delta_res_lo": 1.738,
+      "E_free": 0.9642,
+      "E_free_lo": 0.959,
+      "E_resample": -0.9453,
+      "E_span": 0.9623,
+      "E_span_alone": 0.9623,
+      "E_span_ctx": 0.9622,
+      "I0_mean_part_gain": -0.0244,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0512,
+      "R_const": 0.0232,
+      "R_shift": 0.8548,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5018,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         0.002,
+         0.003,
+         0.004,
+         0.003,
+         0.002,
+         0.003,
+         0.003,
+         0.003
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.015,
+        "Delta_res_lo": -0.175
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         0.999,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.001,
+         0.0,
+         0.0,
+         0.001,
+         0.0,
+         0.001
+        ],
+        "recovery": [
+         0.999,
+         1.0,
+         0.999,
+         0.999,
+         0.999,
+         0.999
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.213,
+         0.025,
+         0.069,
+         0.126,
+         0.044,
+         0.053
+        ],
+        "recovery": [
+         0.837,
+         0.987,
+         0.98,
+         0.88,
+         0.971,
+         0.974
+        ]
+       },
+       "probe_read_d90": 6,
+       "span": {
+        "D_span_pl": [
+         -0.0,
+         -0.001,
+         -0.0,
+         -0.0,
+         -0.001,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 6,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.0067,
+      "D_span_hi": 0.0079,
+      "D_span_lo": 0.0056,
+      "Delta_res": 1.8303,
+      "Delta_res_lo": 1.6746,
+      "E_free": 0.9816,
+      "E_free_lo": 0.9805,
+      "E_resample": -0.8487,
+      "E_span": 0.9748,
+      "E_span_alone": 0.9748,
+      "E_span_ctx": 0.9749,
+      "I0_mean_part_gain": -0.0372,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0655,
+      "R_const": 0.0328,
+      "R_shift": 0.8536,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5375,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         0.003,
+         0.003,
+         0.005,
+         0.002,
+         0.001,
+         0.002,
+         0.004,
+         0.003
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.016,
+        "Delta_res_lo": -0.128
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         0.0,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.001,
+         0.001,
+         0.0,
+         0.001,
+         0.0,
+         0.001
+        ],
+        "recovery": [
+         0.999,
+         0.999,
+         1.0,
+         0.999,
+         0.999,
+         0.999
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.134,
+         0.017,
+         0.018,
+         0.15,
+         0.028,
+         0.075
+        ],
+        "recovery": [
+         0.933,
+         0.992,
+         0.995,
+         0.93,
+         0.995,
+         0.96
+        ]
+       },
+       "probe_read_d90": 6,
+       "span": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.001,
+         -0.0,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.0088,
+      "D_span_hi": 0.0101,
+      "D_span_lo": 0.0075,
+      "Delta_res": 1.8917,
+      "Delta_res_lo": 1.7306,
+      "E_free": 0.9813,
+      "E_free_lo": 0.9803,
+      "E_resample": -0.9104,
+      "E_span": 0.9726,
+      "E_span_alone": 0.9726,
+      "E_span_ctx": 0.9726,
+      "I0_mean_part_gain": -0.0378,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0818,
+      "R_const": 0.0327,
+      "R_shift": 0.8545,
+      "key_set": "ctx",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.4763,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         0.01,
+         0.007,
+         0.011,
+         0.007,
+         0.013,
+         0.006,
+         0.004,
+         0.014
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.019,
+        "Delta_res_lo": -0.176
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.001,
+         0.0,
+         0.0,
+         0.001,
+         0.001,
+         0.002
+        ],
+        "recovery": [
+         1.0,
+         0.999,
+         1.0,
+         0.999,
+         0.999,
+         0.999
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.047,
+         0.038,
+         0.011,
+         0.028,
+         0.063,
+         0.031
+        ],
+        "recovery": [
+         0.989,
+         0.995,
+         0.992,
+         0.991,
+         0.974,
+         0.993
+        ]
+       },
+       "probe_read_d90": 6,
+       "span": {
+        "D_span_pl": [
+         -0.001,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 8,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.007,
+      "D_span_hi": 0.0006,
+      "D_span_lo": -0.0146,
+      "Delta_res": 1.7173,
+      "Delta_res_lo": 1.5453,
+      "E_free": 0.9048,
+      "E_free_lo": 0.8941,
+      "E_resample": -0.8125,
+      "E_span": 0.9118,
+      "E_span_alone": 0.9118,
+      "E_span_ctx": 0.9128,
+      "I0_mean_part_gain": -0.0363,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.1642,
+      "R_const": 0.0148,
+      "R_shift": 0.866,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.4858,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         0.003,
+         0.006,
+         -0.008,
+         0.005,
+         -0.0,
+         0.002,
+         0.001,
+         0.002
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.039,
+        "Delta_res_lo": -0.343
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.001,
+         -0.001,
+         -0.001,
+         -0.0,
+         -0.0,
+         -0.001,
+         -0.001,
+         -0.001
+        ],
+        "recovery": [
+         0.998,
+         0.999,
+         0.999,
+         0.999,
+         1.0,
+         0.999,
+         0.999,
+         0.999
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.007,
+         0.034,
+         0.001,
+         0.078,
+         0.015,
+         0.0
+        ],
+        "recovery": [
+         0.999,
+         0.998,
+         0.998,
+         0.991,
+         0.982,
+         0.995
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.046,
+         0.332,
+         0.135,
+         1.783,
+         0.127,
+         0.167
+        ],
+        "recovery": [
+         0.984,
+         0.946,
+         0.988,
+         0.982,
+         0.944,
+         0.962
+        ]
+       },
+       "probe_read_d90": 7,
+       "span": {
+        "D_span_pl": [
+         -0.003,
+         -0.002,
+         -0.004,
+         -0.002,
+         -0.001,
+         -0.0
+        ],
+        "recovery": [
+         0.999,
+         1.0,
+         0.999,
+         0.999,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.0243,
+      "D_span_hi": -0.0105,
+      "D_span_lo": -0.0381,
+      "Delta_res": 1.8108,
+      "Delta_res_lo": 1.6328,
+      "E_free": 0.8879,
+      "E_free_lo": 0.8713,
+      "E_resample": -0.9229,
+      "E_span": 0.9122,
+      "E_span_alone": 0.9122,
+      "E_span_ctx": 0.9117,
+      "I0_mean_part_gain": -0.0278,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.1652,
+      "R_const": 0.0396,
+      "R_shift": 0.8757,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5043,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         -0.005,
+         0.0,
+         0.003,
+         0.001,
+         0.002,
+         0.008,
+         0.005,
+         0.002
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.01,
+        "Delta_res_lo": -0.316
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.001,
+         -0.001,
+         -0.001,
+         -0.0,
+         -0.001,
+         0.001,
+         -0.003,
+         -0.001
+        ],
+        "recovery": [
+         0.998,
+         0.999,
+         0.999,
+         0.999,
+         0.998,
+         0.999,
+         0.996,
+         0.998
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.012,
+         0.028,
+         0.004,
+         0.031,
+         0.014,
+         0.015
+        ],
+        "recovery": [
+         0.998,
+         0.999,
+         0.996,
+         0.999,
+         0.999,
+         0.999
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.029,
+         0.073,
+         0.078,
+         0.056,
+         0.166,
+         0.036
+        ],
+        "recovery": [
+         0.987,
+         0.938,
+         0.989,
+         0.966,
+         0.987,
+         0.971
+        ]
+       },
+       "probe_read_d90": 7,
+       "span": {
+        "D_span_pl": [
+         -0.027,
+         -0.002,
+         -0.001,
+         -0.019,
+         -0.009,
+         -0.011
+        ],
+        "recovery": [
+         0.999,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 8,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.0012,
+      "D_span_hi": 0.0026,
+      "D_span_lo": -0.0049,
+      "Delta_res": 1.8787,
+      "Delta_res_lo": 1.7136,
+      "E_free": 0.9618,
+      "E_free_lo": 0.9579,
+      "E_resample": -0.9169,
+      "E_span": 0.9629,
+      "E_span_alone": 0.9629,
+      "E_span_ctx": 0.9619,
+      "I0_mean_part_gain": -0.032,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.1857,
+      "R_const": 0.0176,
+      "R_shift": 0.8339,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5186,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         0.001,
+         -0.006,
+         0.002,
+         0.006,
+         0.001,
+         0.0,
+         0.003,
+         0.004
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.029,
+        "Delta_res_lo": -0.144
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.003,
+         -0.001,
+         -0.0,
+         -0.0,
+         -0.001,
+         -0.002
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         0.997,
+         0.999,
+         1.0,
+         1.0,
+         0.999,
+         0.997
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.009,
+         0.116,
+         -0.0,
+         0.012,
+         0.015,
+         0.114
+        ],
+        "recovery": [
+         0.999,
+         0.999,
+         0.998,
+         0.999,
+         0.999,
+         0.999
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.221,
+         0.035,
+         0.025,
+         0.033,
+         0.064,
+         0.119
+        ],
+        "recovery": [
+         0.99,
+         0.989,
+         0.974,
+         0.991,
+         0.996,
+         0.99
+        ]
+       },
+       "probe_read_d90": 7,
+       "span": {
+        "D_span_pl": [
+         -0.001,
+         -0.002,
+         -0.009,
+         -0.0,
+         -0.0,
+         -0.016
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.0019,
+      "D_span_hi": 0.0043,
+      "D_span_lo": -0.0005,
+      "Delta_res": 1.8621,
+      "Delta_res_lo": 1.6701,
+      "E_free": 0.9665,
+      "E_free_lo": 0.964,
+      "E_resample": -0.8956,
+      "E_span": 0.9646,
+      "E_span_alone": 0.9646,
+      "E_span_ctx": 0.9637,
+      "I0_mean_part_gain": -0.0372,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.1899,
+      "R_const": 0.0376,
+      "R_shift": 0.8628,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5528,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         0.001,
+         0.0,
+         0.009,
+         0.003,
+         0.018,
+         0.002,
+         0.002,
+         0.003
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.09,
+        "Delta_res_lo": -0.222
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.001,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.001,
+         -0.0,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         0.999,
+         1.0,
+         1.0,
+         1.0,
+         0.999,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.011,
+         0.002,
+         0.028,
+         0.235,
+         0.013,
+         -0.0
+        ],
+        "recovery": [
+         0.999,
+         1.0,
+         0.998,
+         0.997,
+         0.999,
+         0.998
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.033,
+         0.748,
+         0.029,
+         0.023,
+         0.009,
+         1.409
+        ],
+        "recovery": [
+         0.987,
+         0.991,
+         0.995,
+         0.988,
+         0.993,
+         0.974
+        ]
+       },
+       "probe_read_d90": 7,
+       "span": {
+        "D_span_pl": [
+         -0.0,
+         -0.001,
+         -0.0,
+         -0.001,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 8,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.0049,
+      "D_span_hi": 0.0069,
+      "D_span_lo": 0.0028,
+      "Delta_res": 1.8797,
+      "Delta_res_lo": 1.7371,
+      "E_free": 0.9778,
+      "E_free_lo": 0.9755,
+      "E_resample": -0.902,
+      "E_span": 0.9729,
+      "E_span_alone": 0.9729,
+      "E_span_ctx": 0.9719,
+      "I0_mean_part_gain": -0.0316,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.1621,
+      "R_const": 0.0361,
+      "R_shift": 0.8697,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.525,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         0.002,
+         0.003,
+         0.002,
+         0.004,
+         0.001,
+         0.002,
+         0.002,
+         0.004
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.02,
+        "Delta_res_lo": -0.046
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         0.0,
+         -0.0,
+         -0.0,
+         0.0,
+         0.0,
+         0.0,
+         -0.001,
+         0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         0.999,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.039,
+         0.119,
+         0.007,
+         0.003,
+         -0.006,
+         0.022
+        ],
+        "recovery": [
+         0.999,
+         1.0,
+         1.0,
+         1.0,
+         0.991,
+         1.0
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.063,
+         0.3,
+         0.06,
+         0.411,
+         0.044,
+         0.081
+        ],
+        "recovery": [
+         0.99,
+         0.994,
+         0.997,
+         0.995,
+         0.989,
+         0.994
+        ]
+       },
+       "probe_read_d90": 7,
+       "span": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.001
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.0044,
+      "D_span_hi": 0.0054,
+      "D_span_lo": 0.0034,
+      "Delta_res": 2.023,
+      "Delta_res_lo": 1.8262,
+      "E_free": 0.9795,
+      "E_free_lo": 0.9784,
+      "E_resample": -1.0435,
+      "E_span": 0.9751,
+      "E_span_alone": 0.9751,
+      "E_span_ctx": 0.9743,
+      "I0_mean_part_gain": -0.0392,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.1643,
+      "R_const": 0.0406,
+      "R_shift": 0.8564,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5121,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": false,
+       "I5": {
+        "D_span_pl": [
+         0.006,
+         0.002,
+         0.006,
+         0.003,
+         0.004,
+         0.003,
+         0.012,
+         0.005
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.054,
+        "Delta_res_lo": -0.119
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.0,
+         0.0,
+         0.0,
+         -0.0,
+         -0.001,
+         -0.0,
+         0.0,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         0.999,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.058,
+         0.003,
+         0.11,
+         0.043,
+         0.001,
+         0.009
+        ],
+        "recovery": [
+         1.0,
+         0.999,
+         1.0,
+         0.998,
+         1.0,
+         0.999
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.488,
+         0.17,
+         0.432,
+         0.039,
+         0.019,
+         0.009
+        ],
+        "recovery": [
+         0.996,
+         0.991,
+         0.996,
+         0.99,
+         0.994,
+         0.997
+        ]
+       },
+       "probe_read_d90": 7,
+       "span": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.001,
+         -0.001,
+         -0.0,
+         -0.001
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 12,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.2351,
+      "D_span_hi": -0.1257,
+      "D_span_lo": -0.3444,
+      "Delta_res": 1.6681,
+      "Delta_res_lo": 1.4652,
+      "E_free": 0.6606,
+      "E_free_lo": 0.5517,
+      "E_resample": -1.0076,
+      "E_span": 0.8956,
+      "E_span_alone": 0.8956,
+      "E_span_ctx": 0.8856,
+      "I0_mean_part_gain": -0.0263,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.3875,
+      "R_const": 0.0188,
+      "R_shift": 0.8891,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5591,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.029,
+         0.209,
+         0.12,
+         0.306,
+         0.088,
+         0.128,
+         0.182,
+         0.058
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.131,
+        "Delta_res_lo": -0.288
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.001,
+         -0.001,
+         -0.001,
+         -0.001,
+         -0.001,
+         -0.012,
+         -0.004,
+         -0.097
+        ],
+        "recovery": [
+         0.996,
+         0.997,
+         0.997,
+         0.999,
+         0.998,
+         0.987,
+         0.993,
+         0.901
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.25,
+         0.627,
+         0.859,
+         0.446,
+         0.111,
+         0.525
+        ],
+        "recovery": [
+         0.962,
+         0.966,
+         0.854,
+         0.97,
+         0.996,
+         0.966
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         2.137,
+         2.01,
+         1.184,
+         0.961,
+         1.455,
+         2.523
+        ],
+        "recovery": [
+         0.98,
+         0.957,
+         0.995,
+         0.986,
+         0.987,
+         0.991
+        ]
+       },
+       "probe_read_d90": 10,
+       "span": {
+        "D_span_pl": [
+         -0.005,
+         -0.001,
+         -0.013,
+         -0.035,
+         -0.052,
+         -0.003
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         0.999,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.1343,
+      "D_span_hi": -0.0962,
+      "D_span_lo": -0.1723,
+      "Delta_res": 1.7698,
+      "Delta_res_lo": 1.571,
+      "E_free": 0.7719,
+      "E_free_lo": 0.7336,
+      "E_resample": -0.998,
+      "E_span": 0.9062,
+      "E_span_alone": 0.9062,
+      "E_span_ctx": 0.8976,
+      "I0_mean_part_gain": -0.028,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.4428,
+      "R_const": 0.0257,
+      "R_shift": 0.8927,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.551,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.03,
+         0.011,
+         0.097,
+         0.089,
+         0.046,
+         0.054,
+         0.114,
+         -0.068
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.245,
+        "Delta_res_lo": -0.881
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.002,
+         0.0,
+         -0.002,
+         -0.008,
+         -0.003,
+         -0.001,
+         0.005,
+         0.002
+        ],
+        "recovery": [
+         0.998,
+         0.998,
+         0.997,
+         0.992,
+         0.996,
+         0.996,
+         0.999,
+         0.997
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.663,
+         0.079,
+         0.367,
+         0.494,
+         1.033,
+         0.957
+        ],
+        "recovery": [
+         0.973,
+         0.743,
+         0.989,
+         0.987,
+         0.962,
+         0.88
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         3.264,
+         1.412,
+         0.946,
+         1.574,
+         1.516,
+         2.19
+        ],
+        "recovery": [
+         0.964,
+         0.977,
+         0.993,
+         0.983,
+         0.986,
+         0.985
+        ]
+       },
+       "probe_read_d90": 10,
+       "span": {
+        "D_span_pl": [
+         -0.007,
+         -0.063,
+         -0.016,
+         -0.067,
+         -0.023,
+         -0.017
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 12,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.0153,
+      "D_span_hi": -0.0069,
+      "D_span_lo": -0.0236,
+      "Delta_res": 1.9774,
+      "Delta_res_lo": 1.7961,
+      "E_free": 0.9337,
+      "E_free_lo": 0.9241,
+      "E_resample": -1.0437,
+      "E_span": 0.9489,
+      "E_span_alone": 0.9489,
+      "E_span_ctx": 0.9389,
+      "I0_mean_part_gain": -0.0383,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.3891,
+      "R_const": 0.0424,
+      "R_shift": 0.9087,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.4856,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.069,
+         0.006,
+         0.069,
+         0.014,
+         0.014,
+         0.015,
+         0.025,
+         0.017
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.079,
+        "Delta_res_lo": -0.12
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.0,
+         0.0,
+         0.0,
+         0.0,
+         0.001,
+         0.0,
+         0.001,
+         0.002
+        ],
+        "recovery": [
+         0.999,
+         1.0,
+         0.997,
+         0.999,
+         0.999,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.301,
+         0.369,
+         0.198,
+         0.352,
+         0.23,
+         0.278
+        ],
+        "recovery": [
+         0.998,
+         0.999,
+         0.994,
+         0.966,
+         0.995,
+         0.986
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.964,
+         1.145,
+         0.994,
+         0.577,
+         1.717,
+         0.95
+        ],
+        "recovery": [
+         0.995,
+         0.996,
+         0.996,
+         0.997,
+         0.978,
+         0.984
+        ]
+       },
+       "probe_read_d90": 10,
+       "span": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.01,
+         -0.002,
+         -0.013,
+         -0.001
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.044,
+      "D_span_hi": -0.0103,
+      "D_span_lo": -0.0777,
+      "Delta_res": 1.864,
+      "Delta_res_lo": 1.6967,
+      "E_free": 0.9157,
+      "E_free_lo": 0.8816,
+      "E_resample": -0.9483,
+      "E_span": 0.9597,
+      "E_span_alone": 0.9597,
+      "E_span_ctx": 0.9527,
+      "I0_mean_part_gain": -0.0279,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.3982,
+      "R_const": 0.0217,
+      "R_shift": 0.889,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5076,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.061,
+         0.043,
+         0.047,
+         0.069,
+         0.049,
+         0.003,
+         0.076,
+         0.047
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.118,
+        "Delta_res_lo": -0.348
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         0.001,
+         0.002,
+         0.001,
+         0.0,
+         0.0,
+         0.004,
+         0.0,
+         0.001
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         0.999,
+         1.0,
+         1.0,
+         1.0,
+         0.999
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.569,
+         0.258,
+         0.203,
+         0.402,
+         0.213,
+         0.574
+        ],
+        "recovery": [
+         0.984,
+         0.998,
+         0.998,
+         0.981,
+         0.959,
+         0.999
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.982,
+         0.837,
+         0.729,
+         0.982,
+         1.785,
+         1.862
+        ],
+        "recovery": [
+         0.997,
+         0.998,
+         0.993,
+         0.989,
+         0.991,
+         0.994
+        ]
+       },
+       "probe_read_d90": 10,
+       "span": {
+        "D_span_pl": [
+         -0.007,
+         -0.001,
+         -0.0,
+         -0.005,
+         -0.0,
+         -0.001
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 12,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.0032,
+      "D_span_hi": 0.0053,
+      "D_span_lo": 0.001,
+      "Delta_res": 1.9143,
+      "Delta_res_lo": 1.7669,
+      "E_free": 0.969,
+      "E_free_lo": 0.9665,
+      "E_resample": -0.9453,
+      "E_span": 0.9658,
+      "E_span_alone": 0.9658,
+      "E_span_ctx": 0.9587,
+      "I0_mean_part_gain": -0.0424,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.3831,
+      "R_const": 0.0306,
+      "R_shift": 0.9052,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5217,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.092,
+         0.047,
+         0.052,
+         0.05,
+         0.085,
+         0.011,
+         0.02,
+         0.036
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.023,
+        "Delta_res_lo": -0.052
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.0,
+         0.001,
+         0.0,
+         0.001,
+         0.0,
+         0.001,
+         0.001,
+         -0.001
+        ],
+        "recovery": [
+         0.999,
+         1.0,
+         1.0,
+         1.0,
+         0.999,
+         1.0,
+         1.0,
+         0.999
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.285,
+         0.242,
+         0.392,
+         0.419,
+         0.201,
+         0.293
+        ],
+        "recovery": [
+         1.0,
+         0.995,
+         0.995,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.587,
+         1.688,
+         0.859,
+         1.331,
+         0.968,
+         0.885
+        ],
+        "recovery": [
+         0.987,
+         0.998,
+         0.998,
+         0.993,
+         0.999,
+         0.998
+        ]
+       },
+       "probe_read_d90": 10,
+       "span": {
+        "D_span_pl": [
+         -0.001,
+         -0.002,
+         -0.0,
+         -0.002,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.0009,
+      "D_span_hi": 0.0045,
+      "D_span_lo": -0.0028,
+      "Delta_res": 2.0372,
+      "Delta_res_lo": 1.8442,
+      "E_free": 0.9693,
+      "E_free_lo": 0.9653,
+      "E_resample": -1.0679,
+      "E_span": 0.9684,
+      "E_span_alone": 0.9684,
+      "E_span_ctx": 0.9619,
+      "I0_mean_part_gain": -0.0431,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.4072,
+      "R_const": 0.0386,
+      "R_shift": 0.9,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.4436,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.023,
+         0.084,
+         0.041,
+         0.111,
+         0.145,
+         0.045,
+         0.073,
+         0.02
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.065,
+        "Delta_res_lo": -0.22
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         0.0,
+         0.001,
+         0.0,
+         0.0,
+         0.0,
+         -0.001,
+         0.001,
+         0.001
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         0.999,
+         1.0,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.24,
+         0.119,
+         0.162,
+         0.5,
+         0.4,
+         0.196
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         0.995,
+         1.0,
+         0.999,
+         1.0
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.823,
+         1.055,
+         0.707,
+         1.012,
+         1.078,
+         1.106
+        ],
+        "recovery": [
+         0.998,
+         0.997,
+         0.997,
+         0.997,
+         0.997,
+         0.997
+        ]
+       },
+       "probe_read_d90": 11,
+       "span": {
+        "D_span_pl": [
+         -0.0,
+         -0.0,
+         -0.0,
+         -0.001,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 16,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.8174,
+      "D_span_hi": -0.5173,
+      "D_span_lo": -1.1175,
+      "Delta_res": 1.4504,
+      "Delta_res_lo": 0.9768,
+      "E_free": 0.0738,
+      "E_free_lo": -0.2272,
+      "E_resample": -1.3766,
+      "E_span": 0.8912,
+      "E_span_alone": 0.8912,
+      "E_span_ctx": 0.8709,
+      "I0_mean_part_gain": -0.0395,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.5499,
+      "R_const": 0.0315,
+      "R_shift": 0.9128,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5385,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.107,
+         -0.057,
+         -0.282,
+         0.092,
+         0.055,
+         0.795,
+         0.092,
+         0.152
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -7.415,
+        "Delta_res_lo": -28.243
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.012,
+         -0.01,
+         -0.004,
+         -0.002,
+         -0.009,
+         -0.076,
+         -0.008,
+         -0.004
+        ],
+        "recovery": [
+         0.987,
+         0.99,
+         0.996,
+         0.997,
+         0.99,
+         0.923,
+         0.99,
+         0.991
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.399,
+         0.483,
+         0.152,
+         0.449,
+         0.408,
+         0.568
+        ],
+        "recovery": [
+         0.912,
+         0.893,
+         0.756,
+         0.915,
+         0.787,
+         0.713
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.594,
+         2.259,
+         3.077,
+         2.207,
+         1.797,
+         2.876
+        ],
+        "recovery": [
+         0.543,
+         0.413,
+         0.227,
+         0.618,
+         0.934,
+         0.166
+        ]
+       },
+       "probe_read_d90": 13,
+       "span": {
+        "D_span_pl": [
+         -0.076,
+         -0.034,
+         -0.035,
+         -0.213,
+         -0.043,
+         -0.044
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_LOW"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.5563,
+      "D_span_hi": -0.3902,
+      "D_span_lo": -0.7223,
+      "Delta_res": 1.5374,
+      "Delta_res_lo": 1.2901,
+      "E_free": 0.3518,
+      "E_free_lo": 0.1852,
+      "E_resample": -1.1856,
+      "E_span": 0.9081,
+      "E_span_alone": 0.9081,
+      "E_span_ctx": 0.885,
+      "I0_mean_part_gain": -0.0298,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.5569,
+      "R_const": 0.0455,
+      "R_shift": 0.9178,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5226,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.603,
+         -0.032,
+         0.306,
+         0.126,
+         -0.073,
+         0.383,
+         0.239,
+         0.102
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -5.93,
+        "Delta_res_lo": -17.425
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.015,
+         -0.021,
+         -0.004,
+         -0.003,
+         -0.005,
+         -0.01,
+         -0.014,
+         -0.034
+        ],
+        "recovery": [
+         0.984,
+         0.978,
+         0.995,
+         0.997,
+         0.995,
+         0.99,
+         0.983,
+         0.964
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         -0.159,
+         0.453,
+         1.069,
+         0.325,
+         1.09,
+         1.031
+        ],
+        "recovery": [
+         -0.224,
+         0.813,
+         0.909,
+         0.66,
+         0.772,
+         0.674
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.005,
+         4.053,
+         1.643,
+         2.647,
+         1.88,
+         4.098
+        ],
+        "recovery": [
+         0.802,
+         0.65,
+         0.585,
+         0.874,
+         0.479,
+         0.774
+        ]
+       },
+       "probe_read_d90": 13,
+       "span": {
+        "D_span_pl": [
+         -0.043,
+         -0.142,
+         -0.12,
+         -0.213,
+         -0.024,
+         -0.048
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_UNDECIDED"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 16,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.0694,
+      "D_span_hi": -0.044,
+      "D_span_lo": -0.0948,
+      "Delta_res": 1.8762,
+      "Delta_res_lo": 1.6838,
+      "E_free": 0.8776,
+      "E_free_lo": 0.8516,
+      "E_resample": -0.9986,
+      "E_span": 0.947,
+      "E_span_alone": 0.947,
+      "E_span_ctx": 0.9346,
+      "I0_mean_part_gain": -0.0408,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.5328,
+      "R_const": 0.026,
+      "R_shift": 0.9176,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5192,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.034,
+         0.069,
+         0.128,
+         0.117,
+         0.08,
+         0.021,
+         0.209,
+         0.199
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.023,
+        "Delta_res_lo": -0.191
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.003,
+         0.0,
+         0.0,
+         0.001,
+         -0.0,
+         -0.0,
+         -0.001,
+         0.0
+        ],
+        "recovery": [
+         0.997,
+         0.999,
+         1.0,
+         0.998,
+         0.998,
+         0.999,
+         0.999,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.416,
+         0.624,
+         0.55,
+         0.403,
+         0.493,
+         0.552
+        ],
+        "recovery": [
+         0.985,
+         0.944,
+         0.981,
+         0.994,
+         0.991,
+         0.979
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.314,
+         1.853,
+         1.065,
+         1.525,
+         1.85,
+         1.289
+        ],
+        "recovery": [
+         0.978,
+         0.954,
+         0.958,
+         0.998,
+         0.925,
+         0.98
+        ]
+       },
+       "probe_read_d90": 13,
+       "span": {
+        "D_span_pl": [
+         -0.004,
+         -0.004,
+         -0.014,
+         -0.008,
+         -0.01,
+         -0.019
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.0564,
+      "D_span_hi": -0.0368,
+      "D_span_lo": -0.0759,
+      "Delta_res": 1.8783,
+      "Delta_res_lo": 1.6367,
+      "E_free": 0.8944,
+      "E_free_lo": 0.8752,
+      "E_resample": -0.9839,
+      "E_span": 0.9507,
+      "E_span_alone": 0.9507,
+      "E_span_ctx": 0.939,
+      "I0_mean_part_gain": -0.0433,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.5626,
+      "R_const": 0.0259,
+      "R_shift": 0.9094,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5101,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.141,
+         0.097,
+         0.077,
+         0.099,
+         0.054,
+         0.107,
+         0.099,
+         -0.0
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.065,
+        "Delta_res_lo": -0.164
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         0.001,
+         0.002,
+         0.001,
+         -0.002,
+         -0.0,
+         -0.002,
+         0.0,
+         -0.0
+        ],
+        "recovery": [
+         0.999,
+         1.0,
+         1.0,
+         0.997,
+         0.999,
+         0.997,
+         1.0,
+         0.999
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.551,
+         0.495,
+         0.336,
+         0.249,
+         0.588,
+         0.518
+        ],
+        "recovery": [
+         0.996,
+         0.994,
+         0.987,
+         0.983,
+         0.968,
+         0.962
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.534,
+         1.553,
+         1.16,
+         1.215,
+         1.454,
+         1.499
+        ],
+        "recovery": [
+         0.984,
+         0.976,
+         0.986,
+         0.957,
+         0.994,
+         0.948
+        ]
+       },
+       "probe_read_d90": 13,
+       "span": {
+        "D_span_pl": [
+         -0.008,
+         -0.014,
+         -0.003,
+         -0.061,
+         -0.007,
+         -0.013
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 16,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.0075,
+      "D_span_hi": 0.0027,
+      "D_span_lo": -0.0176,
+      "Delta_res": 1.9258,
+      "Delta_res_lo": 1.7741,
+      "E_free": 0.9593,
+      "E_free_lo": 0.9484,
+      "E_resample": -0.9665,
+      "E_span": 0.9667,
+      "E_span_alone": 0.9667,
+      "E_span_ctx": 0.9563,
+      "I0_mean_part_gain": -0.0378,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.5398,
+      "R_const": 0.0321,
+      "R_shift": 0.9043,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5622,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.175,
+         0.338,
+         0.111,
+         0.108,
+         0.14,
+         0.116,
+         0.217,
+         0.054
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.046,
+        "Delta_res_lo": -0.032
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         0.001,
+         0.001,
+         0.0,
+         0.001,
+         -0.0,
+         0.001,
+         0.001,
+         0.001
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.618,
+         0.303,
+         0.522,
+         0.318,
+         0.336,
+         0.289
+        ],
+        "recovery": [
+         0.996,
+         0.998,
+         0.998,
+         1.0,
+         0.998,
+         1.0
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.323,
+         1.627,
+         1.457,
+         1.008,
+         1.429,
+         1.283
+        ],
+        "recovery": [
+         1.0,
+         0.999,
+         0.999,
+         0.996,
+         0.999,
+         0.978
+        ]
+       },
+       "probe_read_d90": 14,
+       "span": {
+        "D_span_pl": [
+         -0.0,
+         -0.002,
+         -0.0,
+         -0.001,
+         -0.0,
+         -0.006
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.0073,
+      "D_span_hi": 0.0041,
+      "D_span_lo": -0.0187,
+      "Delta_res": 1.8462,
+      "Delta_res_lo": 1.6921,
+      "E_free": 0.9566,
+      "E_free_lo": 0.9451,
+      "E_resample": -0.8895,
+      "E_span": 0.964,
+      "E_span_alone": 0.964,
+      "E_span_ctx": 0.9529,
+      "I0_mean_part_gain": -0.0449,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.5643,
+      "R_const": 0.0273,
+      "R_shift": 0.9142,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5386,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.139,
+         0.053,
+         0.026,
+         0.167,
+         0.085,
+         0.252,
+         0.128,
+         0.196
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.011,
+        "Delta_res_lo": -0.16
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         0.001,
+         0.0,
+         0.001,
+         0.0,
+         0.001,
+         0.0,
+         0.001,
+         0.001
+        ],
+        "recovery": [
+         0.999,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.621,
+         0.491,
+         0.335,
+         0.468,
+         0.619,
+         0.297
+        ],
+        "recovery": [
+         0.992,
+         0.993,
+         1.0,
+         1.0,
+         0.999,
+         0.983
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.302,
+         1.641,
+         1.061,
+         1.146,
+         1.23,
+         1.553
+        ],
+        "recovery": [
+         0.999,
+         0.999,
+         0.999,
+         0.999,
+         0.999,
+         0.994
+        ]
+       },
+       "probe_read_d90": 14,
+       "span": {
+        "D_span_pl": [
+         -0.0,
+         -0.001,
+         -0.0,
+         -0.0,
+         -0.001,
+         -0.001
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 24,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.431,
+      "D_span_hi": -0.3663,
+      "D_span_lo": -0.4958,
+      "Delta_res": 1.1847,
+      "Delta_res_lo": 1.0369,
+      "E_free": 0.4708,
+      "E_free_lo": 0.4057,
+      "E_resample": -0.7139,
+      "E_span": 0.9018,
+      "E_span_alone": 0.9018,
+      "E_span_ctx": 0.8828,
+      "I0_mean_part_gain": -0.0242,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.6899,
+      "R_const": 0.0087,
+      "R_shift": 0.935,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5671,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.067,
+         0.187,
+         0.873,
+         0.137,
+         0.722,
+         0.388,
+         0.43,
+         0.166
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -153.795,
+        "Delta_res_lo": -296.269
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.007,
+         -0.022,
+         -0.021,
+         -0.006,
+         -0.022,
+         -0.017,
+         -0.019,
+         -0.015
+        ],
+        "recovery": [
+         0.992,
+         0.977,
+         0.979,
+         0.993,
+         0.977,
+         0.982,
+         0.981,
+         0.984
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.482,
+         0.398,
+         0.9,
+         2.236,
+         0.638,
+         0.506
+        ],
+        "recovery": [
+         0.71,
+         0.737,
+         0.714,
+         0.556,
+         0.734,
+         0.678
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         3.592,
+         1.053,
+         2.249,
+         2.012,
+         1.24,
+         2.347
+        ],
+        "recovery": [
+         0.658,
+         0.546,
+         0.729,
+         0.454,
+         0.532,
+         0.571
+        ]
+       },
+       "probe_read_d90": 17,
+       "span": {
+        "D_span_pl": [
+         -0.241,
+         -0.198,
+         -0.095,
+         -0.124,
+         -0.128,
+         -0.099
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_UNDECIDED"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.448,
+      "D_span_hi": -0.3909,
+      "D_span_lo": -0.505,
+      "Delta_res": 1.1683,
+      "Delta_res_lo": 1.017,
+      "E_free": 0.4619,
+      "E_free_lo": 0.4012,
+      "E_resample": -0.7064,
+      "E_span": 0.9099,
+      "E_span_alone": 0.9099,
+      "E_span_ctx": 0.894,
+      "I0_mean_part_gain": -0.0273,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.6771,
+      "R_const": 0.0095,
+      "R_shift": 0.9259,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5473,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.62,
+         0.464,
+         0.57,
+         0.133,
+         0.312,
+         0.45,
+         0.267,
+         1.01
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -68.249,
+        "Delta_res_lo": -264.662
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.007,
+         -0.243,
+         -0.01,
+         -0.444,
+         -0.016,
+         -0.168,
+         -0.03,
+         -0.02
+        ],
+        "recovery": [
+         0.992,
+         0.755,
+         0.988,
+         0.555,
+         0.984,
+         0.83,
+         0.969,
+         0.979
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.315,
+         0.956,
+         0.473,
+         1.615,
+         0.225,
+         0.233
+        ],
+        "recovery": [
+         0.675,
+         0.734,
+         0.824,
+         0.4,
+         0.908,
+         0.868
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.768,
+         1.96,
+         1.642,
+         1.81,
+         3.526,
+         1.665
+        ],
+        "recovery": [
+         0.645,
+         0.557,
+         0.66,
+         0.56,
+         0.512,
+         0.536
+        ]
+       },
+       "probe_read_d90": 18,
+       "span": {
+        "D_span_pl": [
+         -0.137,
+         -0.077,
+         -0.122,
+         -0.137,
+         -0.194,
+         -0.123
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         0.999,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_UNDECIDED"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 24,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.5062,
+      "D_span_hi": -0.3592,
+      "D_span_lo": -0.6531,
+      "Delta_res": 1.7002,
+      "Delta_res_lo": 1.3697,
+      "E_free": 0.4494,
+      "E_free_lo": 0.3023,
+      "E_resample": -1.2508,
+      "E_span": 0.9556,
+      "E_span_alone": 0.9556,
+      "E_span_ctx": 0.9444,
+      "I0_mean_part_gain": -0.047,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.6694,
+      "R_const": 0.0331,
+      "R_shift": 0.9211,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5231,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.269,
+         0.167,
+         0.062,
+         0.134,
+         0.18,
+         0.013,
+         0.071,
+         0.702
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.795,
+        "Delta_res_lo": -2.595
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.032,
+         -0.03,
+         -0.014,
+         -0.019,
+         -0.024,
+         -0.014,
+         -0.01,
+         -0.003
+        ],
+        "recovery": [
+         0.968,
+         0.97,
+         0.983,
+         0.977,
+         0.973,
+         0.985,
+         0.99,
+         0.996
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.17,
+         0.576,
+         0.51,
+         0.346,
+         0.299,
+         0.349
+        ],
+        "recovery": [
+         0.967,
+         0.923,
+         0.95,
+         0.905,
+         0.9,
+         0.939
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.908,
+         0.997,
+         1.818,
+         1.152,
+         0.572,
+         0.688
+        ],
+        "recovery": [
+         0.77,
+         0.938,
+         0.898,
+         0.873,
+         0.22,
+         0.166
+        ]
+       },
+       "probe_read_d90": 18,
+       "span": {
+        "D_span_pl": [
+         -0.169,
+         -0.104,
+         -0.025,
+         -0.051,
+         -0.048,
+         -0.243
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_UNDECIDED"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.5773,
+      "D_span_hi": -0.412,
+      "D_span_lo": -0.7425,
+      "Delta_res": 1.885,
+      "Delta_res_lo": 1.5453,
+      "E_free": 0.3664,
+      "E_free_lo": 0.2011,
+      "E_resample": -1.5185,
+      "E_span": 0.9437,
+      "E_span_alone": 0.9437,
+      "E_span_ctx": 0.9287,
+      "I0_mean_part_gain": -0.0507,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.6826,
+      "R_const": 0.0141,
+      "R_shift": 0.93,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5002,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.066,
+         0.122,
+         0.284,
+         0.017,
+         -0.02,
+         0.052,
+         0.244,
+         0.21
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 1.583,
+        "Delta_res_lo": -0.583
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         0.0,
+         -0.003,
+         -0.011,
+         -0.002,
+         -0.006,
+         -0.022,
+         -0.003,
+         -0.065
+        ],
+        "recovery": [
+         0.999,
+         0.996,
+         0.989,
+         0.997,
+         0.993,
+         0.977,
+         0.995,
+         0.933
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.171,
+         0.911,
+         0.132,
+         0.366,
+         0.256,
+         -0.539
+        ],
+        "recovery": [
+         0.939,
+         0.805,
+         0.598,
+         0.913,
+         0.829,
+         0.09
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.602,
+         0.508,
+         1.663,
+         1.643,
+         1.496,
+         0.94
+        ],
+        "recovery": [
+         0.93,
+         0.124,
+         0.545,
+         0.709,
+         0.948,
+         0.528
+        ]
+       },
+       "probe_read_d90": 19,
+       "span": {
+        "D_span_pl": [
+         -0.028,
+         -0.034,
+         -0.117,
+         -0.032,
+         -0.452,
+         -0.048
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_UNDECIDED"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 24,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.076,
+      "D_span_hi": -0.0035,
+      "D_span_lo": -0.1485,
+      "Delta_res": 1.8759,
+      "Delta_res_lo": 1.7202,
+      "E_free": 0.8911,
+      "E_free_lo": 0.8177,
+      "E_resample": -0.9849,
+      "E_span": 0.9671,
+      "E_span_alone": 0.9671,
+      "E_span_ctx": 0.9531,
+      "I0_mean_part_gain": -0.038,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.6709,
+      "R_const": 0.0282,
+      "R_shift": 0.9359,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5799,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.165,
+         0.091,
+         0.076,
+         0.039,
+         0.083,
+         0.154,
+         0.037,
+         0.051
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -0.036,
+        "Delta_res_lo": -0.691
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         0.0,
+         0.0,
+         -0.006,
+         -0.0,
+         0.002,
+         0.001,
+         0.001,
+         0.0
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         0.992,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.59,
+         0.508,
+         0.407,
+         0.378,
+         0.887,
+         0.46
+        ],
+        "recovery": [
+         0.999,
+         0.988,
+         0.993,
+         0.992,
+         0.994,
+         0.993
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.438,
+         1.177,
+         1.622,
+         1.112,
+         0.999,
+         0.952
+        ],
+        "recovery": [
+         0.996,
+         0.998,
+         0.994,
+         0.995,
+         0.992,
+         0.998
+        ]
+       },
+       "probe_read_d90": 19,
+       "span": {
+        "D_span_pl": [
+         -0.007,
+         -0.019,
+         -0.001,
+         -0.001,
+         -0.001,
+         -0.003
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.0212,
+      "D_span_hi": -0.0057,
+      "D_span_lo": -0.0367,
+      "Delta_res": 2.0867,
+      "Delta_res_lo": 1.7181,
+      "E_free": 0.9385,
+      "E_free_lo": 0.9235,
+      "E_resample": -1.1482,
+      "E_span": 0.9596,
+      "E_span_alone": 0.9596,
+      "E_span_ctx": 0.9497,
+      "I0_mean_part_gain": -0.048,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.6832,
+      "R_const": 0.0273,
+      "R_shift": 0.9371,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5722,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": true,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.081,
+         0.069,
+         0.085,
+         0.229,
+         0.189,
+         0.227,
+         0.057,
+         0.123
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.128,
+        "Delta_res_lo": -0.24
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.004,
+         0.001,
+         0.0,
+         0.0,
+         0.001,
+         0.0,
+         -0.0,
+         -0.0
+        ],
+        "recovery": [
+         0.995,
+         1.0,
+         0.999,
+         1.0,
+         1.0,
+         1.0,
+         0.999,
+         0.999
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.342,
+         0.511,
+         0.51,
+         0.379,
+         0.48,
+         0.367
+        ],
+        "recovery": [
+         0.973,
+         0.989,
+         0.999,
+         0.999,
+         0.999,
+         0.999
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.32,
+         0.958,
+         1.186,
+         1.358,
+         1.212,
+         1.02
+        ],
+        "recovery": [
+         0.997,
+         0.999,
+         0.851,
+         0.952,
+         0.979,
+         0.997
+        ]
+       },
+       "probe_read_d90": 19,
+       "span": {
+        "D_span_pl": [
+         -0.01,
+         -0.001,
+         -0.001,
+         -0.002,
+         -0.027,
+         -0.001
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_OK/TIE"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 32,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.5726,
+      "D_span_hi": -0.4898,
+      "D_span_lo": -0.6555,
+      "Delta_res": 0.7153,
+      "Delta_res_lo": 0.6068,
+      "E_free": 0.3275,
+      "E_free_lo": 0.244,
+      "E_resample": -0.3878,
+      "E_span": 0.9001,
+      "E_span_alone": 0.9001,
+      "E_span_ctx": 0.8823,
+      "I0_mean_part_gain": -0.0108,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.7451,
+      "R_const": 0.0179,
+      "R_shift": 0.9383,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5579,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.533,
+         0.353,
+         0.311,
+         -0.061,
+         0.888,
+         0.225,
+         0.327,
+         0.021
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -120.729,
+        "Delta_res_lo": -200.138
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.307,
+         -0.034,
+         -0.33,
+         -0.011,
+         -0.032,
+         -0.538,
+         -0.624,
+         -0.005
+        ],
+        "recovery": [
+         0.692,
+         0.965,
+         0.669,
+         0.985,
+         0.967,
+         0.461,
+         0.375,
+         0.994
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.904,
+         0.899,
+         0.615,
+         0.429,
+         0.379,
+         0.477
+        ],
+        "recovery": [
+         0.607,
+         0.637,
+         0.745,
+         0.649,
+         0.75,
+         0.743
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.445,
+         2.468,
+         1.997,
+         4.295,
+         1.477,
+         2.08
+        ],
+        "recovery": [
+         0.652,
+         0.606,
+         0.526,
+         -0.575,
+         0.537,
+         0.482
+        ]
+       },
+       "probe_read_d90": 22,
+       "span": {
+        "D_span_pl": [
+         -0.125,
+         -0.17,
+         -0.182,
+         -0.179,
+         -0.167,
+         -0.116
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_LOW"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.5936,
+      "D_span_hi": -0.5125,
+      "D_span_lo": -0.6747,
+      "Delta_res": 0.8764,
+      "Delta_res_lo": 0.718,
+      "E_free": 0.2981,
+      "E_free_lo": 0.2182,
+      "E_resample": -0.5783,
+      "E_span": 0.8917,
+      "E_span_alone": 0.8917,
+      "E_span_ctx": 0.8697,
+      "I0_mean_part_gain": -0.0176,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.7537,
+      "R_const": 0.0147,
+      "R_shift": 0.9382,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5178,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.398,
+         0.604,
+         0.369,
+         0.324,
+         0.237,
+         0.524,
+         0.348,
+         -0.065
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -132.963,
+        "Delta_res_lo": -249.148
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.02,
+         -0.015,
+         -0.015,
+         -0.039,
+         -0.017,
+         -0.026,
+         -0.018,
+         -0.011
+        ],
+        "recovery": [
+         0.979,
+         0.984,
+         0.983,
+         0.959,
+         0.983,
+         0.973,
+         0.977,
+         0.989
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.078,
+         1.287,
+         0.423,
+         0.61,
+         0.279,
+         0.346
+        ],
+        "recovery": [
+         0.774,
+         0.687,
+         0.752,
+         0.664,
+         0.815,
+         0.527
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.172,
+         1.696,
+         1.554,
+         0.962,
+         1.91,
+         1.441
+        ],
+        "recovery": [
+         0.605,
+         0.572,
+         0.201,
+         0.582,
+         0.178,
+         0.447
+        ]
+       },
+       "probe_read_d90": 22,
+       "span": {
+        "D_span_pl": [
+         -0.309,
+         -0.144,
+         -0.127,
+         -0.077,
+         -0.121,
+         -0.143
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         0.999
+        ]
+       }
+      },
+      "verdict": "CAP_LOW"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 32,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.4423,
+      "D_span_hi": -0.3615,
+      "D_span_lo": -0.523,
+      "Delta_res": 1.2882,
+      "Delta_res_lo": 1.0954,
+      "E_free": 0.5093,
+      "E_free_lo": 0.4293,
+      "E_resample": -0.7789,
+      "E_span": 0.9516,
+      "E_span_alone": 0.9516,
+      "E_span_ctx": 0.9361,
+      "I0_mean_part_gain": -0.0283,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.7435,
+      "R_const": 0.0151,
+      "R_shift": 0.9358,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5875,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.231,
+         -0.076,
+         0.181,
+         0.096,
+         0.163,
+         -0.027,
+         0.658,
+         0.409
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.842,
+        "Delta_res_lo": -93.823
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.032,
+         -0.24,
+         -0.036,
+         -0.015,
+         -0.005,
+         -0.01,
+         -0.019,
+         -0.019
+        ],
+        "recovery": [
+         0.967,
+         0.76,
+         0.962,
+         0.982,
+         0.994,
+         0.989,
+         0.98,
+         0.98
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.361,
+         0.75,
+         0.454,
+         0.326,
+         0.365,
+         0.398
+        ],
+        "recovery": [
+         0.803,
+         0.838,
+         0.888,
+         0.684,
+         0.799,
+         0.916
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.079,
+         1.341,
+         1.267,
+         0.96,
+         1.848,
+         1.283
+        ],
+        "recovery": [
+         0.727,
+         0.748,
+         0.777,
+         0.749,
+         0.82,
+         0.564
+        ]
+       },
+       "probe_read_d90": 24,
+       "span": {
+        "D_span_pl": [
+         -0.113,
+         -0.103,
+         -0.088,
+         -0.045,
+         -0.078,
+         -0.125
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_UNDECIDED"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.4308,
+      "D_span_hi": -0.3796,
+      "D_span_lo": -0.482,
+      "Delta_res": 1.312,
+      "Delta_res_lo": 1.1282,
+      "E_free": 0.513,
+      "E_free_lo": 0.4612,
+      "E_resample": -0.799,
+      "E_span": 0.9438,
+      "E_span_alone": 0.9438,
+      "E_span_ctx": 0.9281,
+      "I0_mean_part_gain": -0.031,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.7633,
+      "R_const": 0.0288,
+      "R_shift": 0.9479,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.5556,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.028,
+         0.024,
+         0.008,
+         0.005,
+         0.107,
+         0.072,
+         0.093,
+         0.097
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": -8.976,
+        "Delta_res_lo": -57.061
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.018,
+         -0.012,
+         -0.005,
+         -0.033,
+         -0.004,
+         -0.015,
+         -0.006,
+         -0.037
+        ],
+        "recovery": [
+         0.981,
+         0.988,
+         0.995,
+         0.966,
+         0.995,
+         0.984,
+         0.992,
+         0.962
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.35,
+         0.388,
+         0.599,
+         0.328,
+         0.484,
+         0.462
+        ],
+        "recovery": [
+         0.857,
+         0.867,
+         0.819,
+         0.919,
+         0.884,
+         0.897
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.064,
+         0.832,
+         0.773,
+         1.321,
+         1.088,
+         0.892
+        ],
+        "recovery": [
+         0.701,
+         0.656,
+         0.815,
+         0.61,
+         0.668,
+         0.664
+        ]
+       },
+       "probe_read_d90": 24,
+       "span": {
+        "D_span_pl": [
+         -0.048,
+         -0.054,
+         -0.063,
+         -0.064,
+         -0.071,
+         -0.057
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_UNDECIDED"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 32,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.4221,
+      "D_span_hi": -0.2983,
+      "D_span_lo": -0.5458,
+      "Delta_res": 1.7483,
+      "Delta_res_lo": 1.5336,
+      "E_free": 0.5434,
+      "E_free_lo": 0.4197,
+      "E_resample": -1.2049,
+      "E_span": 0.9654,
+      "E_span_alone": 0.9654,
+      "E_span_ctx": 0.955,
+      "I0_mean_part_gain": -0.0511,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.7395,
+      "R_const": 0.0128,
+      "R_shift": 0.9344,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.514,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.127,
+         0.186,
+         -0.167,
+         -4.623,
+         0.197,
+         0.18,
+         0.284,
+         0.091
+        ]
+       },
+       "I5_pass": true,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 0.097,
+        "Delta_res_lo": -2.388
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.027,
+         -0.008,
+         -0.011,
+         -0.002,
+         -0.029,
+         -0.0,
+         0.0,
+         -0.0
+        ],
+        "recovery": [
+         0.973,
+         0.991,
+         0.988,
+         0.997,
+         0.97,
+         0.999,
+         0.999,
+         0.999
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.312,
+         0.559,
+         0.501,
+         0.436,
+         0.132,
+         -0.015
+        ],
+        "recovery": [
+         0.917,
+         0.923,
+         0.988,
+         0.935,
+         0.707,
+         0.733
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         1.172,
+         1.418,
+         1.161,
+         0.76,
+         1.721,
+         1.27
+        ],
+        "recovery": [
+         0.902,
+         0.949,
+         0.932,
+         0.149,
+         0.561,
+         0.603
+        ]
+       },
+       "probe_read_d90": 25,
+       "span": {
+        "D_span_pl": [
+         -0.045,
+         -0.037,
+         -0.157,
+         -0.024,
+         -0.027,
+         -0.085
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_UNDECIDED"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.6484,
+      "D_span_hi": -0.3518,
+      "D_span_lo": -0.945,
+      "Delta_res": 1.9064,
+      "Delta_res_lo": 1.4807,
+      "E_free": 0.3131,
+      "E_free_lo": 0.0164,
+      "E_resample": -1.5933,
+      "E_span": 0.9615,
+      "E_span_alone": 0.9615,
+      "E_span_ctx": 0.9505,
+      "I0_mean_part_gain": -0.0476,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.7565,
+      "R_const": 0.0315,
+      "R_shift": 0.9451,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.545,
+      "placebo_pass": true,
+      "planted": {
+       "I2_pass": false,
+       "I3_pass": true,
+       "I5": {
+        "D_span_pl": [
+         0.109,
+         0.167,
+         0.043,
+         0.193,
+         0.269,
+         0.118,
+         0.02,
+         0.105
+        ]
+       },
+       "I5_pass": false,
+       "I6_pass": true,
+       "I7": {
+        "Delta_res": 1.251,
+        "Delta_res_lo": -6.209
+       },
+       "I7_pass": true,
+       "ctx_perm": {
+        "D_span_pl": [
+         -0.0,
+         -0.005,
+         -0.004,
+         -0.01,
+         -0.009,
+         -0.005,
+         0.0,
+         -0.002
+        ],
+        "recovery": [
+         0.999,
+         0.994,
+         0.996,
+         0.989,
+         0.991,
+         0.994,
+         0.999,
+         0.998
+        ]
+       },
+       "free": {
+        "D_span_pl": [
+         0.766,
+         0.185,
+         0.235,
+         0.19,
+         0.301,
+         0.586
+        ],
+        "recovery": [
+         0.906,
+         0.941,
+         0.947,
+         0.989,
+         0.768,
+         0.886
+        ]
+       },
+       "out_of_span": {
+        "D_span_pl": [
+         0.885,
+         1.502,
+         0.921,
+         0.735,
+         0.957,
+         1.208
+        ],
+        "recovery": [
+         0.853,
+         0.715,
+         0.67,
+         0.395,
+         0.972,
+         0.684
+        ]
+       },
+       "probe_read_d90": 25,
+       "span": {
+        "D_span_pl": [
+         -0.025,
+         -0.154,
+         -0.293,
+         -0.045,
+         -0.021,
+         -0.061
+        ],
+        "recovery": [
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "verdict": "CAP_UNDECIDED"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "first_order"
+  },
+  {
+   "d_task": 6,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.0132,
+      "D_span_hi": 0.0177,
+      "D_span_lo": 0.0088,
+      "Delta_res": 1.8093,
+      "Delta_res_lo": 1.5369,
+      "E_free": 0.9311,
+      "E_free_lo": 0.9253,
+      "E_resample": -0.8783,
+      "E_span": 0.9178,
+      "E_span_alone": 0.9183,
+      "E_span_ctx": 0.9205,
+      "I0_mean_part_gain": -0.0293,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0102,
+      "R_const": 0.0586,
+      "R_shift": 0.4157,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2983,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.0088,
+      "D_span_hi": 0.0167,
+      "D_span_lo": 0.0009,
+      "Delta_res": 1.7613,
+      "Delta_res_lo": 1.5751,
+      "E_free": 0.924,
+      "E_free_lo": 0.9128,
+      "E_resample": -0.8373,
+      "E_span": 0.9152,
+      "E_span_alone": 0.9152,
+      "E_span_ctx": 0.9147,
+      "I0_mean_part_gain": -0.0302,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.053,
+      "R_const": 0.0903,
+      "R_shift": 0.4656,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.3165,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 6,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.0135,
+      "D_span_hi": 0.0153,
+      "D_span_lo": 0.0118,
+      "Delta_res": 1.8358,
+      "Delta_res_lo": 1.6516,
+      "E_free": 0.965,
+      "E_free_lo": 0.963,
+      "E_resample": -0.8709,
+      "E_span": 0.9514,
+      "E_span_alone": 0.9514,
+      "E_span_ctx": 0.9512,
+      "I0_mean_part_gain": -0.035,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0105,
+      "R_const": 0.096,
+      "R_shift": 0.5318,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2558,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.0136,
+      "D_span_hi": 0.0153,
+      "D_span_lo": 0.0119,
+      "Delta_res": 1.9248,
+      "Delta_res_lo": 1.7521,
+      "E_free": 0.9636,
+      "E_free_lo": 0.9617,
+      "E_resample": -0.9613,
+      "E_span": 0.95,
+      "E_span_alone": 0.9493,
+      "E_span_ctx": 0.9498,
+      "I0_mean_part_gain": -0.0355,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0103,
+      "R_const": 0.0942,
+      "R_shift": 0.502,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2689,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 6,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.0168,
+      "D_span_hi": 0.0183,
+      "D_span_lo": 0.0152,
+      "Delta_res": 1.9738,
+      "Delta_res_lo": 1.7243,
+      "E_free": 0.9788,
+      "E_free_lo": 0.9776,
+      "E_resample": -0.995,
+      "E_span": 0.962,
+      "E_span_alone": 0.9619,
+      "E_span_ctx": 0.9618,
+      "I0_mean_part_gain": -0.0385,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0095,
+      "R_const": 0.1382,
+      "R_shift": 0.5465,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2678,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.0153,
+      "D_span_hi": 0.0167,
+      "D_span_lo": 0.0139,
+      "Delta_res": 1.9195,
+      "Delta_res_lo": 1.7446,
+      "E_free": 0.9808,
+      "E_free_lo": 0.9799,
+      "E_resample": -0.9387,
+      "E_span": 0.9655,
+      "E_span_alone": 0.9661,
+      "E_span_ctx": 0.9656,
+      "I0_mean_part_gain": -0.0425,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0108,
+      "R_const": 0.0856,
+      "R_shift": 0.5183,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.242,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 8,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.0053,
+      "D_span_hi": 0.0036,
+      "D_span_lo": -0.0142,
+      "Delta_res": 1.971,
+      "Delta_res_lo": 1.7781,
+      "E_free": 0.8941,
+      "E_free_lo": 0.8818,
+      "E_resample": -1.077,
+      "E_span": 0.8994,
+      "E_span_alone": 0.8552,
+      "E_span_ctx": 0.8247,
+      "I0_mean_part_gain": -0.0314,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0075,
+      "R_const": 0.1254,
+      "R_shift": 0.5234,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2616,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": -0.0075,
+      "D_span_hi": 0.0036,
+      "D_span_lo": -0.0186,
+      "Delta_res": 1.6892,
+      "Delta_res_lo": 1.5158,
+      "E_free": 0.8912,
+      "E_free_lo": 0.875,
+      "E_resample": -0.798,
+      "E_span": 0.8987,
+      "E_span_alone": 0.8546,
+      "E_span_ctx": 0.8408,
+      "I0_mean_part_gain": -0.0271,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0082,
+      "R_const": 0.1282,
+      "R_shift": 0.5652,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2547,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 8,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.0079,
+      "D_span_hi": 0.0104,
+      "D_span_lo": 0.0053,
+      "Delta_res": 1.9429,
+      "Delta_res_lo": 1.7518,
+      "E_free": 0.9618,
+      "E_free_lo": 0.9595,
+      "E_resample": -0.9811,
+      "E_span": 0.9539,
+      "E_span_alone": 0.9256,
+      "E_span_ctx": 0.9292,
+      "I0_mean_part_gain": -0.0302,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0072,
+      "R_const": 0.0662,
+      "R_shift": 0.515,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2767,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.0005,
+      "D_span_hi": 0.006,
+      "D_span_lo": -0.0051,
+      "Delta_res": 1.788,
+      "Delta_res_lo": 1.6425,
+      "E_free": 0.9568,
+      "E_free_lo": 0.9505,
+      "E_resample": -0.8312,
+      "E_span": 0.9563,
+      "E_span_alone": 0.9201,
+      "E_span_ctx": 0.9226,
+      "I0_mean_part_gain": -0.03,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0075,
+      "R_const": 0.1084,
+      "R_shift": 0.4978,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2739,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 8,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.0109,
+      "D_span_hi": 0.0127,
+      "D_span_lo": 0.0091,
+      "Delta_res": 1.9764,
+      "Delta_res_lo": 1.8038,
+      "E_free": 0.976,
+      "E_free_lo": 0.9742,
+      "E_resample": -1.0004,
+      "E_span": 0.965,
+      "E_span_alone": 0.9464,
+      "E_span_ctx": 0.9385,
+      "I0_mean_part_gain": -0.0499,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.008,
+      "R_const": 0.1074,
+      "R_shift": 0.5054,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2726,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.0097,
+      "D_span_hi": 0.0125,
+      "D_span_lo": 0.007,
+      "Delta_res": 1.9266,
+      "Delta_res_lo": 1.7388,
+      "E_free": 0.9749,
+      "E_free_lo": 0.9725,
+      "E_resample": -0.9517,
+      "E_span": 0.9652,
+      "E_span_alone": 0.9189,
+      "E_span_ctx": 0.8931,
+      "I0_mean_part_gain": -0.041,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.0076,
+      "R_const": 0.0873,
+      "R_shift": 0.4939,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2674,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/SPAN_VACUOUS"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 12,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.4042,
+      "D_span_hi": 0.489,
+      "D_span_lo": 0.3195,
+      "Delta_res": 1.7708,
+      "Delta_res_lo": 1.5951,
+      "E_free": 0.8116,
+      "E_free_lo": 0.7881,
+      "E_resample": -0.9592,
+      "E_span": 0.4074,
+      "E_span_alone": 0.1887,
+      "E_span_ctx": 0.1784,
+      "I0_mean_part_gain": -0.0338,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.3286,
+      "R_const": 0.0499,
+      "R_shift": 0.476,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2531,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.3905,
+      "D_span_hi": 0.4648,
+      "D_span_lo": 0.3162,
+      "Delta_res": 1.6353,
+      "Delta_res_lo": 1.4731,
+      "E_free": 0.7856,
+      "E_free_lo": 0.7441,
+      "E_resample": -0.8497,
+      "E_span": 0.3951,
+      "E_span_alone": 0.2158,
+      "E_span_ctx": 0.2064,
+      "I0_mean_part_gain": -0.0215,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.3202,
+      "R_const": 0.0677,
+      "R_shift": 0.5206,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.251,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 12,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.3334,
+      "D_span_hi": 0.3858,
+      "D_span_lo": 0.281,
+      "Delta_res": 1.8605,
+      "Delta_res_lo": 1.723,
+      "E_free": 0.929,
+      "E_free_lo": 0.9147,
+      "E_resample": -0.9315,
+      "E_span": 0.5956,
+      "E_span_alone": 0.4484,
+      "E_span_ctx": 0.4606,
+      "I0_mean_part_gain": -0.0403,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.3296,
+      "R_const": 0.0945,
+      "R_shift": 0.5145,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2504,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.28,
+      "D_span_hi": 0.3203,
+      "D_span_lo": 0.2396,
+      "Delta_res": 1.8987,
+      "Delta_res_lo": 1.7386,
+      "E_free": 0.9251,
+      "E_free_lo": 0.9092,
+      "E_resample": -0.9736,
+      "E_span": 0.6451,
+      "E_span_alone": 0.4612,
+      "E_span_ctx": 0.4581,
+      "I0_mean_part_gain": -0.0387,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.3359,
+      "R_const": 0.1056,
+      "R_shift": 0.5348,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.264,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 12,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.2853,
+      "D_span_hi": 0.3349,
+      "D_span_lo": 0.2356,
+      "Delta_res": 2.0348,
+      "Delta_res_lo": 1.8651,
+      "E_free": 0.9654,
+      "E_free_lo": 0.961,
+      "E_resample": -1.0694,
+      "E_span": 0.6801,
+      "E_span_alone": 0.5051,
+      "E_span_ctx": 0.5019,
+      "I0_mean_part_gain": -0.04,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.3347,
+      "R_const": 0.1116,
+      "R_shift": 0.5723,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2376,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.2566,
+      "D_span_hi": 0.2936,
+      "D_span_lo": 0.2196,
+      "Delta_res": 1.9945,
+      "Delta_res_lo": 1.8515,
+      "E_free": 0.9677,
+      "E_free_lo": 0.965,
+      "E_resample": -1.0268,
+      "E_span": 0.7111,
+      "E_span_alone": 0.5869,
+      "E_span_ctx": 0.5807,
+      "I0_mean_part_gain": -0.0428,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.3351,
+      "R_const": 0.084,
+      "R_shift": 0.4907,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2721,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 16,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.3145,
+      "D_span_hi": 0.5417,
+      "D_span_lo": 0.0873,
+      "Delta_res": 1.4793,
+      "Delta_res_lo": 1.2331,
+      "E_free": 0.3481,
+      "E_free_lo": 0.1769,
+      "E_resample": -1.1312,
+      "E_span": 0.0336,
+      "E_span_alone": -0.0207,
+      "E_span_ctx": -0.0134,
+      "I0_mean_part_gain": -0.0372,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.5028,
+      "R_const": 0.1023,
+      "R_shift": 0.512,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2776,
+      "placebo_pass": true,
+      "verdict": "CAP_UNDECIDED"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.3463,
+      "D_span_hi": 0.4966,
+      "D_span_lo": 0.1961,
+      "Delta_res": 1.643,
+      "Delta_res_lo": 1.4366,
+      "E_free": 0.3758,
+      "E_free_lo": 0.2507,
+      "E_resample": -1.2672,
+      "E_span": 0.0294,
+      "E_span_alone": -0.1063,
+      "E_span_ctx": -0.0769,
+      "I0_mean_part_gain": -0.0357,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.4949,
+      "R_const": 0.0561,
+      "R_shift": 0.5017,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.279,
+      "placebo_pass": true,
+      "verdict": "CAP_UNDECIDED"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 16,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.3536,
+      "D_span_hi": 0.4027,
+      "D_span_lo": 0.3045,
+      "Delta_res": 1.7342,
+      "Delta_res_lo": 1.6126,
+      "E_free": 0.8634,
+      "E_free_lo": 0.833,
+      "E_resample": -0.8708,
+      "E_span": 0.5098,
+      "E_span_alone": 0.2347,
+      "E_span_ctx": 0.234,
+      "I0_mean_part_gain": -0.0367,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.4937,
+      "R_const": 0.1218,
+      "R_shift": 0.5231,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2741,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.4746,
+      "D_span_hi": 0.5367,
+      "D_span_lo": 0.4126,
+      "Delta_res": 1.7495,
+      "Delta_res_lo": 1.6129,
+      "E_free": 0.8767,
+      "E_free_lo": 0.858,
+      "E_resample": -0.8728,
+      "E_span": 0.402,
+      "E_span_alone": 0.196,
+      "E_span_ctx": 0.1962,
+      "I0_mean_part_gain": -0.0397,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.499,
+      "R_const": 0.104,
+      "R_shift": 0.4563,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.3026,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 16,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.4228,
+      "D_span_hi": 0.4702,
+      "D_span_lo": 0.3755,
+      "Delta_res": 2.0016,
+      "Delta_res_lo": 1.9239,
+      "E_free": 0.958,
+      "E_free_lo": 0.9539,
+      "E_resample": -1.0436,
+      "E_span": 0.5352,
+      "E_span_alone": 0.2927,
+      "E_span_ctx": 0.2855,
+      "I0_mean_part_gain": -0.0429,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.4752,
+      "R_const": 0.0862,
+      "R_shift": 0.5243,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2624,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.3824,
+      "D_span_hi": 0.4252,
+      "D_span_lo": 0.3395,
+      "Delta_res": 1.9075,
+      "Delta_res_lo": 1.7928,
+      "E_free": 0.9574,
+      "E_free_lo": 0.9523,
+      "E_resample": -0.9501,
+      "E_span": 0.575,
+      "E_span_alone": 0.3105,
+      "E_span_ctx": 0.3207,
+      "I0_mean_part_gain": -0.0422,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.4883,
+      "R_const": 0.0958,
+      "R_shift": 0.5233,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.256,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 24,
+   "families": [
+    {
+     "v2": {
+      "D_span": 1.3288,
+      "D_span_hi": 1.5852,
+      "D_span_lo": 1.0725,
+      "Delta_res": 1.1025,
+      "Delta_res_lo": 1.0075,
+      "E_free": 0.504,
+      "E_free_lo": 0.4563,
+      "E_resample": -0.5986,
+      "E_span": -0.8249,
+      "E_span_alone": -0.806,
+      "E_span_ctx": -0.8115,
+      "I0_mean_part_gain": -0.0206,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.657,
+      "R_const": 0.0853,
+      "R_shift": 0.5251,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.261,
+      "placebo_pass": true,
+      "verdict": "CAP_UNDECIDED"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.8421,
+      "D_span_hi": 0.9657,
+      "D_span_lo": 0.7185,
+      "Delta_res": 1.0875,
+      "Delta_res_lo": 0.9552,
+      "E_free": 0.4254,
+      "E_free_lo": 0.3504,
+      "E_resample": -0.6621,
+      "E_span": -0.4167,
+      "E_span_alone": -0.4086,
+      "E_span_ctx": -0.4167,
+      "I0_mean_part_gain": -0.0227,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.6883,
+      "R_const": 0.0841,
+      "R_shift": 0.4648,
+      "key_set": "ctx",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2851,
+      "placebo_pass": true,
+      "verdict": "CAP_UNDECIDED"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 24,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.2294,
+      "D_span_hi": 0.383,
+      "D_span_lo": 0.0758,
+      "Delta_res": 1.75,
+      "Delta_res_lo": 1.4999,
+      "E_free": 0.4046,
+      "E_free_lo": 0.2338,
+      "E_resample": -1.3454,
+      "E_span": 0.1752,
+      "E_span_alone": -0.1282,
+      "E_span_ctx": -0.1298,
+      "I0_mean_part_gain": -0.0467,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.6657,
+      "R_const": 0.0729,
+      "R_shift": 0.5024,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.255,
+      "placebo_pass": true,
+      "verdict": "CAP_UNDECIDED"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.1766,
+      "D_span_hi": 0.3772,
+      "D_span_lo": -0.0239,
+      "Delta_res": 1.61,
+      "Delta_res_lo": 1.3521,
+      "E_free": 0.2582,
+      "E_free_lo": 0.0964,
+      "E_resample": -1.3517,
+      "E_span": 0.0816,
+      "E_span_alone": -0.0934,
+      "E_span_ctx": -0.078,
+      "I0_mean_part_gain": -0.0675,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.6597,
+      "R_const": 0.0858,
+      "R_shift": 0.5465,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2465,
+      "placebo_pass": true,
+      "verdict": "CAP_LOW"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 24,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.5794,
+      "D_span_hi": 0.644,
+      "D_span_lo": 0.5149,
+      "Delta_res": 1.86,
+      "Delta_res_lo": 1.7354,
+      "E_free": 0.9379,
+      "E_free_lo": 0.9233,
+      "E_resample": -0.9222,
+      "E_span": 0.3584,
+      "E_span_alone": 0.0596,
+      "E_span_ctx": 0.0546,
+      "I0_mean_part_gain": -0.0425,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.663,
+      "R_const": 0.0562,
+      "R_shift": 0.5032,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.274,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.5122,
+      "D_span_hi": 0.5613,
+      "D_span_lo": 0.463,
+      "Delta_res": 1.9149,
+      "Delta_res_lo": 1.7888,
+      "E_free": 0.941,
+      "E_free_lo": 0.9279,
+      "E_resample": -0.9739,
+      "E_span": 0.4288,
+      "E_span_alone": 0.1043,
+      "E_span_ctx": 0.1031,
+      "I0_mean_part_gain": -0.0394,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.6547,
+      "R_const": 0.0953,
+      "R_shift": 0.4998,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.264,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 32,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.985,
+      "D_span_hi": 1.1545,
+      "D_span_lo": 0.8155,
+      "Delta_res": 0.8225,
+      "Delta_res_lo": 0.714,
+      "E_free": 0.2682,
+      "E_free_lo": 0.1834,
+      "E_resample": -0.5543,
+      "E_span": -0.7168,
+      "E_span_alone": -0.7168,
+      "E_span_ctx": -0.7172,
+      "I0_mean_part_gain": -0.0229,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.7471,
+      "R_const": 0.0532,
+      "R_shift": 0.4882,
+      "key_set": "alone",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.3042,
+      "placebo_pass": true,
+      "verdict": "CAP_LOW"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 1.208,
+      "D_span_hi": 1.7644,
+      "D_span_lo": 0.6516,
+      "Delta_res": 0.7859,
+      "Delta_res_lo": 0.7064,
+      "E_free": 0.3207,
+      "E_free_lo": 0.2428,
+      "E_resample": -0.4652,
+      "E_span": -0.8873,
+      "E_span_alone": -1.1492,
+      "E_span_ctx": -0.8873,
+      "I0_mean_part_gain": -0.021,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.751,
+      "R_const": 0.0681,
+      "R_shift": 0.4439,
+      "key_set": "ctx",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.3166,
+      "placebo_pass": true,
+      "verdict": "CAP_LOW"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 16,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 32,
+   "families": [
+    {
+     "v2": {
+      "D_span": 0.6324,
+      "D_span_hi": 0.7364,
+      "D_span_lo": 0.5284,
+      "Delta_res": 1.3075,
+      "Delta_res_lo": 1.1983,
+      "E_free": 0.5969,
+      "E_free_lo": 0.5373,
+      "E_resample": -0.7106,
+      "E_span": -0.0355,
+      "E_span_alone": -0.0328,
+      "E_span_ctx": -0.0355,
+      "I0_mean_part_gain": -0.029,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.7458,
+      "R_const": 0.0857,
+      "R_shift": 0.5093,
+      "key_set": "ctx",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2762,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.6753,
+      "D_span_hi": 0.7675,
+      "D_span_lo": 0.583,
+      "Delta_res": 1.2519,
+      "Delta_res_lo": 1.1164,
+      "E_free": 0.5879,
+      "E_free_lo": 0.5387,
+      "E_resample": -0.6641,
+      "E_span": -0.0874,
+      "E_span_alone": -0.0796,
+      "E_span_ctx": -0.0874,
+      "I0_mean_part_gain": -0.0361,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.7558,
+      "R_const": 0.0965,
+      "R_shift": 0.5346,
+      "key_set": "ctx",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2609,
+      "placebo_pass": true,
+      "verdict": "CAP_OK/GAP"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 24,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  },
+  {
+   "d_task": 32,
+   "families": [
+    {
+     "v2": {
+      "D_span": -0.1858,
+      "D_span_hi": 0.3358,
+      "D_span_lo": -0.7074,
+      "Delta_res": 1.7543,
+      "Delta_res_lo": 1.0133,
+      "E_free": -0.0742,
+      "E_free_lo": -0.5715,
+      "E_resample": -1.8285,
+      "E_span": 0.1116,
+      "E_span_alone": -0.109,
+      "E_span_ctx": -0.1085,
+      "I0_mean_part_gain": -0.0606,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.7607,
+      "R_const": 0.0641,
+      "R_shift": 0.5411,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2625,
+      "placebo_pass": true,
+      "verdict": "CAP_LOW"
+     }
+    },
+    {
+     "v2": {
+      "D_span": 0.295,
+      "D_span_hi": 0.4019,
+      "D_span_lo": 0.1881,
+      "Delta_res": 1.8982,
+      "Delta_res_lo": 1.6615,
+      "E_free": 0.5537,
+      "E_free_lo": 0.4323,
+      "E_resample": -1.3445,
+      "E_span": 0.2588,
+      "E_span_alone": 0.0729,
+      "E_span_ctx": 0.0734,
+      "I0_mean_part_gain": -0.0461,
+      "I0_pass": true,
+      "I1_out_of_span_energy": 0.7482,
+      "R_const": 0.0954,
+      "R_shift": 0.4887,
+      "key_set": "fitted",
+      "label_prior_guard_pass": true,
+      "label_prior_guard_ratio": 0.2713,
+      "placebo_pass": true,
+      "verdict": "CAP_UNDECIDED"
+     }
+    }
+   ],
+   "mean_share": 0.5,
+   "n_fit": 32,
+   "scenario": "central",
+   "seed": 42,
+   "teacher": "value_directed"
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/fla-hub/transformer-1.3B-100B/blob/d6f66f4181fa669e5863327815b44533e3a395e7/tokenizer.json",
+ "fetched_at": "2026-10-10T09:33:42Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 97427,
+ "raw_sha256": "82c3063a4aa2d9d7322e45fb773dc1ad9f4496f480edef053ce0ce8c63c46cf8",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "tokenizer.json · fla-hub/transformer-1.3B-100B at d6f66f4181fa669e5863327815b44533e3a395e7"
+ }
+}

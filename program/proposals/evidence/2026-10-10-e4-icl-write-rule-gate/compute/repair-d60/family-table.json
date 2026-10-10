@@ -1,0 +1,918 @@
+{
+ "families": {
+  "A1": {
+   "check_detail": {
+    "0": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "1": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "2": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "3": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "4": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "5": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "6": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "7": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "8": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "9": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    }
+   },
+   "class": "LA",
+   "digit_answers": true,
+   "eight_shot_prompt_tokens": {
+    "max": 96,
+    "mean": 91.81
+   },
+   "labels_or_latents_passing_floor": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+   ],
+   "mapping": "nonce name to a single digit, fresh binding per episode (8 names, distinct digits); probes are the 8 bound names under three templates",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 8,
+   "usable_inputs": 400,
+   "varies_by_episode": "binding",
+   "zero_shot_prompt_tokens": {
+    "max": 11,
+    "mean": 9.36
+   }
+  },
+  "A2": {
+   "check_detail": {
+    "black": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "blue": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "brown": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "gold": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "green": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "grey": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "orange": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "pink": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "purple": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "red": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "silver": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "violet": {
+     "bad_examples": [
+      "violet",
+      "violet",
+      "violet",
+      "violet",
+      "violet"
+     ],
+     "n_bad": 400,
+     "n_ok": 0
+    },
+    "white": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    },
+    "yellow": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 400
+    }
+   },
+   "class": "LA",
+   "digit_answers": false,
+   "eight_shot_prompt_tokens": {
+    "max": 87,
+    "mean": 82.81
+   },
+   "labels_or_latents_passing_floor": [
+    "red",
+    "blue",
+    "green",
+    "yellow",
+    "black",
+    "white",
+    "brown",
+    "pink",
+    "purple",
+    "orange",
+    "grey",
+    "gold",
+    "silver"
+   ],
+   "mapping": "nonce word to colour word, fresh binding per episode; probes as A1",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 8,
+   "usable_inputs": 400,
+   "varies_by_episode": "binding",
+   "zero_shot_prompt_tokens": {
+    "max": 10,
+    "mean": 8.36
+   }
+  },
+  "A3": {
+   "check_detail": {
+    "!": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 80
+    },
+    "#": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 80
+    },
+    "$": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 80
+    },
+    "%": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 80
+    },
+    "&": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 80
+    },
+    "*": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 80
+    },
+    "+": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 80
+    },
+    "=": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 80
+    },
+    "?": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 80
+    },
+    "@": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 80
+    }
+   },
+   "class": "LA",
+   "digit_answers": false,
+   "eight_shot_prompt_tokens": {
+    "max": 81,
+    "mean": 76.41
+   },
+   "labels_or_latents_passing_floor": [
+    "#",
+    "@",
+    "%",
+    "&",
+    "*",
+    "+",
+    "=",
+    "?",
+    "!",
+    "$"
+   ],
+   "mapping": "animal or tool word to one of two symbols; symbol pair and assignment drawn per episode",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 80,
+   "varies_by_episode": "labels",
+   "zero_shot_prompt_tokens": {
+    "max": 9,
+    "mean": 7.62
+   }
+  },
+  "A4": {
+   "check_detail": {
+    "A": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 109
+    },
+    "B": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 109
+    },
+    "C": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 109
+    },
+    "D": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 109
+    }
+   },
+   "class": "LA",
+   "digit_answers": false,
+   "eight_shot_prompt_tokens": {
+    "max": 81,
+    "mean": 76.41
+   },
+   "labels_or_latents_passing_floor": [
+    "A",
+    "B",
+    "C",
+    "D"
+   ],
+   "mapping": "animal, tool, colour or number word to one of the letters A-D, category-to-letter permuted per episode",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 109,
+   "varies_by_episode": "labels",
+   "zero_shot_prompt_tokens": {
+    "max": 9,
+    "mean": 7.62
+   }
+  },
+  "A5": {
+   "check_detail": {
+    "anchor": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "apple": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "bar": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "candle": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "cloud": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "foo": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "forest": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "garden": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "marble": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "pepper": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "piano": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "river": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "rocket": {
+     "bad_examples": [
+      "rocket",
+      "rocket",
+      "rocket",
+      "rocket",
+      "rocket"
+     ],
+     "n_bad": 91,
+     "n_ok": 0
+    },
+    "silver": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "stone": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "table": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    },
+    "tiger": {
+     "bad_examples": [
+      "tiger",
+      "tiger",
+      "tiger",
+      "tiger",
+      "tiger"
+     ],
+     "n_bad": 91,
+     "n_ok": 0
+    },
+    "window": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 91
+    }
+   },
+   "class": "LA",
+   "digit_answers": false,
+   "eight_shot_prompt_tokens": {
+    "max": 73,
+    "mean": 71.42
+   },
+   "labels_or_latents_passing_floor": [
+    "foo",
+    "bar",
+    "apple",
+    "river",
+    "stone",
+    "cloud",
+    "table",
+    "piano",
+    "candle",
+    "forest",
+    "silver",
+    "window",
+    "garden",
+    "pepper",
+    "marble",
+    "anchor"
+   ],
+   "mapping": "positive or negative adjective to one of two unrelated label words drawn per episode (semantically-unrelated labels)",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 91,
+   "varies_by_episode": "labels",
+   "zero_shot_prompt_tokens": {
+    "max": 8,
+    "mean": 7.05
+   }
+  },
+  "F1": {
+   "check_detail": {
+    "bad_examples": [
+     "Bike",
+     "Boat",
+     "Clock",
+     "Coat",
+     "Deer",
+     "Desk",
+     "Dress",
+     "Duck"
+    ],
+    "n_bad": 31,
+    "n_ok": 77
+   },
+   "class": "FF",
+   "digit_answers": false,
+   "eight_shot_prompt_tokens": {
+    "max": 77,
+    "mean": 73.55
+   },
+   "labels_or_latents_passing_floor": null,
+   "mapping": "lowercase word to capitalised word",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 77,
+   "varies_by_episode": "no",
+   "zero_shot_prompt_tokens": {
+    "max": 8,
+    "mean": 7.05
+   }
+  },
+  "F2": {
+   "check_detail": {
+    "bad_examples": [],
+    "n_bad": 0,
+    "n_ok": 108
+   },
+   "class": "FF",
+   "digit_answers": false,
+   "eight_shot_prompt_tokens": {
+    "max": 74,
+    "mean": 71.45
+   },
+   "labels_or_latents_passing_floor": null,
+   "mapping": "word to its last letter",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 108,
+   "varies_by_episode": "no",
+   "zero_shot_prompt_tokens": {
+    "max": 8,
+    "mean": 7.05
+   }
+  },
+  "F3": {
+   "check_detail": {
+    "bad_examples": [],
+    "n_bad": 0,
+    "n_ok": 90
+   },
+   "class": "FF",
+   "digit_answers": true,
+   "eight_shot_prompt_tokens": {
+    "max": 98,
+    "mean": 98.0
+   },
+   "labels_or_latents_passing_floor": null,
+   "mapping": "two-digit number to its first digit",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 90,
+   "varies_by_episode": "no",
+   "zero_shot_prompt_tokens": {
+    "max": 10,
+    "mean": 10.0
+   }
+  },
+  "F4": {
+   "check_detail": {
+    "bad_examples": [],
+    "n_bad": 0,
+    "n_ok": 108
+   },
+   "class": "FF",
+   "digit_answers": false,
+   "eight_shot_prompt_tokens": {
+    "max": 74,
+    "mean": 71.45
+   },
+   "labels_or_latents_passing_floor": null,
+   "mapping": "word to its first letter",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 108,
+   "varies_by_episode": "no",
+   "zero_shot_prompt_tokens": {
+    "max": 8,
+    "mean": 7.05
+   }
+  },
+  "F5": {
+   "check_detail": {
+    "bad_examples": [
+     "bakers",
+     "beaches",
+     "bells",
+     "bikes",
+     "bowls",
+     "buses",
+     "clocks",
+     "coats"
+    ],
+    "n_bad": 30,
+    "n_ok": 67
+   },
+   "class": "FF",
+   "digit_answers": false,
+   "eight_shot_prompt_tokens": {
+    "max": 79,
+    "mean": 74.27
+   },
+   "labels_or_latents_passing_floor": null,
+   "mapping": "regular singular noun to plural",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 67,
+   "varies_by_episode": "no",
+   "zero_shot_prompt_tokens": {
+    "max": 8,
+    "mean": 7.05
+   }
+  },
+  "L1": {
+   "check_detail": {
+    "1": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 81
+    },
+    "2": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 81
+    }
+   },
+   "class": "LP",
+   "digit_answers": true,
+   "eight_shot_prompt_tokens": {
+    "max": 98,
+    "mean": 98.0
+   },
+   "labels_or_latents_passing_floor": [
+    "1",
+    "2"
+   ],
+   "mapping": "two-digit number to its digit at position p",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 81,
+   "varies_by_episode": "p in {1,2}",
+   "zero_shot_prompt_tokens": {
+    "max": 10,
+    "mean": 10.0
+   }
+  },
+  "L2": {
+   "check_detail": {
+    "animal": {
+     "bad_examples": [
+      "swan",
+      "zebra",
+      "eagle",
+      "fox",
+      "dolphin"
+     ],
+     "n_bad": 217,
+     "n_ok": 183
+    },
+    "colour": {
+     "bad_examples": [
+      "violet",
+      "violet",
+      "violet",
+      "violet",
+      "violet"
+     ],
+     "n_bad": 27,
+     "n_ok": 372
+    },
+    "tool": {
+     "bad_examples": [
+      "rake",
+      "scissors",
+      "shovel",
+      "hose",
+      "rake"
+     ],
+     "n_bad": 158,
+     "n_ok": 242
+    }
+   },
+   "class": "LP",
+   "digit_answers": false,
+   "eight_shot_prompt_tokens": {
+    "max": 113,
+    "mean": 104.7
+   },
+   "labels_or_latents_passing_floor": [
+    "animal",
+    "colour",
+    "tool"
+   ],
+   "mapping": "three words (one animal, one colour, one tool, shuffled) to the word of category c",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 104,
+   "varies_by_episode": "c in {animal, colour, tool}",
+   "zero_shot_prompt_tokens": {
+    "max": 12,
+    "mean": 10.2
+   }
+  },
+  "L3": {
+   "check_detail": {
+    "1": {
+     "bad_examples": [
+      "goat",
+      "baker",
+      "frog",
+      "tiger",
+      "fox"
+     ],
+     "n_bad": 21,
+     "n_ok": 379
+    },
+    "2": {
+     "bad_examples": [
+      "tiger",
+      "frog",
+      "frog",
+      "goat",
+      "goat"
+     ],
+     "n_bad": 21,
+     "n_ok": 379
+    },
+    "3": {
+     "bad_examples": [
+      "tiger",
+      "fox",
+      "tiger",
+      "frog",
+      "tiger"
+     ],
+     "n_bad": 14,
+     "n_ok": 386
+    }
+   },
+   "class": "LP",
+   "digit_answers": false,
+   "eight_shot_prompt_tokens": {
+    "max": 93,
+    "mean": 90.31
+   },
+   "labels_or_latents_passing_floor": [
+    "1",
+    "2",
+    "3"
+   ],
+   "mapping": "list of three words to the word at position p",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 347,
+   "varies_by_episode": "p in {1,2,3}",
+   "zero_shot_prompt_tokens": {
+    "max": 10,
+    "mean": 9.12
+   }
+  },
+  "L4": {
+   "check_detail": {
+    "1": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 108
+    },
+    "2": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 108
+    },
+    "3": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 108
+    }
+   },
+   "class": "LP",
+   "digit_answers": false,
+   "eight_shot_prompt_tokens": {
+    "max": 74,
+    "mean": 71.45
+   },
+   "labels_or_latents_passing_floor": [
+    "1",
+    "2",
+    "3"
+   ],
+   "mapping": "word to its i-th letter",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 108,
+   "varies_by_episode": "i in {1,2,3}",
+   "zero_shot_prompt_tokens": {
+    "max": 8,
+    "mean": 7.05
+   }
+  },
+  "L5": {
+   "check_detail": {
+    "1": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 319
+    },
+    "2": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 319
+    },
+    "3": {
+     "bad_examples": [],
+     "n_bad": 0,
+     "n_ok": 319
+    }
+   },
+   "class": "LP",
+   "digit_answers": true,
+   "eight_shot_prompt_tokens": {
+    "max": 125,
+    "mean": 125.0
+   },
+   "labels_or_latents_passing_floor": [
+    "1",
+    "2",
+    "3"
+   ],
+   "mapping": "three distinct digits (space-separated) to the digit at position p",
+   "meets_floor": true,
+   "per_episode_inputs_needed": 40,
+   "usable_inputs": 319,
+   "varies_by_episode": "p in {1,2,3}",
+   "zero_shot_prompt_tokens": {
+    "max": 13,
+    "mean": 13.0
+   }
+  }
+ },
+ "floor_usable_inputs": 60,
+ "n_demo": 8,
+ "n_fit": 24,
+ "n_score": 8,
+ "payload_sha256": "093005b7290774f42cf89badb42353f3b8672001602adb12c11a9c0bd05c6027",
+ "rule": "enc(prompt + answer) == enc(prompt) + [one id], in a zero-shot prompt and after an 8-shot block",
+ "summary": {
+  "built": [
+   "F1",
+   "F2",
+   "F3",
+   "F4",
+   "F5",
+   "L1",
+   "L2",
+   "L3",
+   "L4",
+   "L5",
+   "A1",
+   "A2",
+   "A3",
+   "A4",
+   "A5"
+  ],
+  "dropped": [],
+  "eight_shot_prompt_tokens_max_over_families": 125,
+  "eight_shot_prompt_tokens_mean_over_families": 85.14,
+  "episode_specific_built": [
+   "L1",
+   "L2",
+   "L3",
+   "L4",
+   "L5",
+   "A1",
+   "A2",
+   "A3",
+   "A4",
+   "A5"
+  ],
+  "families_built": 15,
+  "families_listed": 15,
+  "fixed_function_built": [
+   "F1",
+   "F2",
+   "F3",
+   "F4",
+   "F5"
+  ],
+  "zero_shot_prompt_tokens_max_over_families": 13,
+  "zero_shot_prompt_tokens_mean_over_families": 8.51
+ },
+ "tokenizer_facts": {
+  "digit_tokens": {
+   "0": 28734,
+   "1": 28740,
+   "2": 28750,
+   "3": 28770,
+   "4": 28781,
+   "5": 28782,
+   "6": 28784,
+   "7": 28787,
+   "8": 28783,
+   "9": 28774
+  },
+  "enc('input: 47\\noutput: ')": [
+   2787,
+   28747,
+   28705,
+   28781,
+   28787,
+   13,
+   4050,
+   28747,
+   28705
+  ],
+  "enc('input: 47\\noutput: 4')": [
+   2787,
+   28747,
+   28705,
+   28781,
+   28787,
+   13,
+   4050,
+   28747,
+   28705,
+   28781
+  ],
+  "enc('input: cat\\noutput: Cat')": [
+   2787,
+   28747,
+   5255,
+   13,
+   4050,
+   28747,
+   10758
+  ],
+  "space_digit_tokens_present": [],
+  "space_token_id": 28705
+ },
+ "tokenizer_sha256": "fc4f0bd70b3709312d9d1d9e5ba674794b6bc5abc17429897a540f93882f25fc"
+}

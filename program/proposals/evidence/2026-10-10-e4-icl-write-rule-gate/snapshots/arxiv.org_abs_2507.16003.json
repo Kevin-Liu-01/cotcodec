@@ -1,0 +1,40 @@
+{
+ "url": "https://arxiv.org/abs/2507.16003",
+ "fetched_at": "2026-10-10T09:33:35Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41444,
+ "raw_sha256": "422e831f58016f31cc984a90e8a3369992317be91f0e26c4a048173f6cdcc763",
+ "raw_stored": false,
+ "extract": {
+  "title": "Learning without training: The implicit dynamics of in-context learning",
+  "authors": [
+   "Dherin, Benoit",
+   "Munn, Michael",
+   "Mazzawi, Hanna",
+   "Wunder, Michael",
+   "Gonzalvo, Javier"
+  ],
+  "citation_date": "2025/07/21",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 21 Jul 2025 18:44:35 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 17 Dec 2025 17:34:33 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Mon, 22 Dec 2025 19:30:19 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Tue, 2 Jun 2026 08:52:07 UTC"
+   }
+  ],
+  "abstract": "One of the most striking features of Large Language Models (LLMs) is their ability to learn in-context. Namely at inference time an LLM is able to learn new patterns without any additional weight update when these patterns are presented in the form of examples in the prompt, even if these patterns were not seen during training. The mechanisms through which this can happen are still largely unknown. In this work, we show that the stacking of a self-attention layer with an MLP allows the transformer block to implicitly modify the weights of the MLP layer according to the context. We argue through theoretical analysis and experimentation that this simple mechanism may help explain why LLMs demonstrate capabilities of in-context learning, beyond what is captured during training. Specifically, we show that a standard forward pass with context is mathematically equivalent to a forward pass without context but with the MLP weights updated by a minimal low-rank update representing the context.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

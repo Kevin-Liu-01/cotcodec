@@ -1,0 +1,12 @@
+{
+ "wave": "fresh run after the D60 repair (wave-1 roles: proposal paragraph-b8b5e36a.txt, closest prior paragraph-c840d8c6.txt = arXiv:2608.13385, kept unchanged)",
+ "proposal": "paragraph-3f069de8.txt",
+ "closest_prior": "paragraph-b2df9deb.txt",
+ "closest_prior_id": "arXiv:2602.16284 (Fast KV Compaction via Attention Matching, Zweiger, Fu, Guo, Kim; ICML 2026), with its free comparator arXiv:2506.06266 (Cartridges) and the controlled comparison arXiv:2609.17346; full texts read on 2026-10-10. Chosen as the structural closest prior (a state confined to the context's own keys against a free state, both fitted to the model's own context-conditioned behaviour), the line the wave-1 novelty refuter named.",
+ "additional_packets": {
+  "paragraph-e982ff03.txt": "arXiv:2212.10559 (Dai et al., Why Can GPT Learn In-Context?, ACL Findings 2023); full text read 2026-10-10",
+  "paragraph-c840d8c6.txt": "arXiv:2608.13385 (When Is a Task Vector Enough?, Li, 2026-08-13); the wave-1 measurement prior, packet unchanged"
+ },
+ "instruction": "One critic call per prior packet, each pairing the proposal paragraph with one prior paragraph in randomized order; never give this file to a critic.",
+ "note": "Role mapping for the recorder only. Never give this file to the critic."
+}

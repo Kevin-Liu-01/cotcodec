@@ -1,0 +1,12 @@
+{
+ "url": "https://aclanthology.org/2023.acl-long.783/",
+ "fetched_at": "2026-10-10T09:33:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43368,
+ "raw_sha256": "823be6eab8ff28f1c44dc2a189494f5520396adbca7938bd889c3b4d5b023176",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "Mitigating Label Biases for In-context Learning - ACL Anthology"
+ }
+}

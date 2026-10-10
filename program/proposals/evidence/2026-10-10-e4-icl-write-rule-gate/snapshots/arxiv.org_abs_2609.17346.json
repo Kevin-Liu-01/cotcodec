@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2609.17346",
+ "fetched_at": "2026-10-10T09:33:38Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41785,
+ "raw_sha256": "5c6fb45cc599034d8d38745d49a7347dc7da9e9e22c484dbfae8c4ee91741067",
+ "raw_stored": false,
+ "extract": {
+  "title": "Where Should a Document Live: Context, Representations, or Parameters?",
+  "authors": [
+   "Rakotonirina, Nathanaël Carraz",
+   "Hardalov, Momchil",
+   "Iglesias, Gonzalo",
+   "de Gispert, Adrià"
+  ],
+  "citation_date": "2026/09/15",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 15 Sep 2026 15:47:02 UTC"
+   }
+  ],
+  "abstract": "To answer questions outside of their pre-training data, large language models (LLMs) need access to new information, which can be presented in the context window as documents, encoded into the model's parameters, or injected as latent representations. However, each of these methods comes with different efficiency, cost, and performance trade-offs, with no single winner. We present a controlled comparison of representation-based (KV-cache based) and parametric (fine-tuning-based) adaptation methods on five knowledge-intensive benchmarks. We show that in the oracle setting, Cartridges (KV) are the most accurate injection method at nearly every storage budget, outperforming parametric methods by 10 points. Compaction (KV) matches Cartridges only at low compression rates, lagging behind the parametric methods by 10 points at rates higher than $50\\times$. In the more realistic multi-document retrieval scenario, Cartridges are the only method that matches in-context learning (ICL), leading the parametric methods by 29 points and Compaction by 15 points. Nonetheless, Cartridges are also the only method, besides full fine-tuning and large MLP adapters, that suffers from catastrophic forgetting, i.e., a 6% performance degradation on control benchmarks, with 13% in coding.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
