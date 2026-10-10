@@ -1,0 +1,12 @@
+{
+ "url": "https://aclanthology.org/2025.findings-acl.345/",
+ "fetched_at": "2026-10-10T09:33:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42635,
+ "raw_sha256": "99e498b0f42aa292facef7ba3ca326907b0b76e79047c1bea5e98f45a3a3f4f1",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "Learning Task Representations from In-Context Learning - ACL Anthology"
+ }
+}

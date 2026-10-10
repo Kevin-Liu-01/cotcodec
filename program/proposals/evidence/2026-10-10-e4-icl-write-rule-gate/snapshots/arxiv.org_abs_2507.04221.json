@@ -1,0 +1,35 @@
+{
+ "url": "https://arxiv.org/abs/2507.04221",
+ "fetched_at": "2026-10-10T09:33:32Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40925,
+ "raw_sha256": "ec979ec61f6e2f66524ccf29991fb5a99865dce671fefe34437cce7c8592b0aa",
+ "raw_stored": false,
+ "extract": {
+  "title": "Context Tuning for In-Context Optimization",
+  "authors": [
+   "Lu, Jack",
+   "Teehan, Ryan",
+   "Yang, Zhenbang",
+   "Ren, Mengye"
+  ],
+  "citation_date": "2025/07/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 6 Jul 2025 03:23:53 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 31 Oct 2025 23:27:48 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Fri, 3 Jul 2026 02:34:40 UTC"
+   }
+  ],
+  "abstract": "We introduce Context Tuning, a simple and effective method to significantly enhance few-shot adaptation of large language models (LLMs) without weight updates. In-Context Learning (ICL) forms a memory representation of the demonstrations in a single forward pass but cannot refine it when insufficient. Prompt-based methods offer lightweight adaptation by optimizing a trainable prompt or prefix but initialize it independently of the demonstrations. In contrast, Context Tuning leverages the model's inherent ICL ability to initialize a trainable memory representation from demonstrations, then refines it through gradient-based optimization. Extensive evaluations on benchmarks such as CrossFit, UnifiedQA, MMLU, BIG-Bench Hard, and ARC demonstrate that Context Tuning outperforms both ICL and traditional prompt-based adaptation methods while achieving competitive accuracy with Test-Time Training at significantly higher training efficiency.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -2,8 +2,9 @@
  "doctor": "Safety",
  "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "D60 repair pass by the single owner (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Safety, monitorability, data rights, and project red lines addressed",
- "evidence": "Decision-bearing data generated in the repository (MIT); FineWeb-Edu (ODC-By) used only for the label-free port maps and never committed; fla-hub checkpoints MIT by card tag (first-party); no third-party task data (MUSE, Function Vectors lists, SNI, CoNLL excluded); no deployable system or policy trained; states are small inspectable tensors; host rule respected (no host job; read-only access only by a discovery cell before 11:30 UTC); public-repository hygiene (no credentials, no host addresses beyond the documented local registry name, no private data).",
- "remediation": "none"
+ "evidence": "As wave 1 (repository-generated MIT data; FineWeb-Edu ODC-By for P and Q only; MIT checkpoints by card tag; no deployable system; small inspectable states), plus for this repair: no host access and no GPU; the tokenizer files and the ACL bibliography fetched to the scratch directory under D1 and not committed; the 2.7 GB checkpoint not downloaded; OpenReview's bot challenge not bypassed; public-repository hygiene kept (no credentials, no host addresses beyond the documented local registry name).",
+ "remediation": "none",
+ "supersedes_sha256": "78cff723ff04498b5607877649fdf5cc34d40059a5be4fde4977814056881c96"
 }

@@ -2,14 +2,14 @@
  "doctor": "Novelty",
  "status": "FAIL",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "D60 repair pass by the single owner (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
- "evidence": "Merged discovery verdict NARROWED (frontier, kill-shot and cross-domain cells; nothing OCCUPIED). No direct prior found for the gate's measurement (key-span-constrained versus unconstrained per-episode oracle states with a family-constant floor at a fixed residual interface of a frozen LM, fitted to its own few-shot predictions) under 150 counted queries; closest measurement prior 2608.13385 (full text read); synthesis queries SQ1-SQ6 targeted the redesigned mechanism. The later stages (out of scope) are narrowed by Internalizer 2610.11715 and PorTAL.",
+ "evidence": "Merged verdict NARROWED. This run searched the lines wave 1 missed: the dual-form/ICL-GD line (2212.10559, 2311.07772, 2404.11225, plus 2025.naacl-long.586 in ACL) and KV compaction (2602.16284, 2506.06266, 2609.17346, and ICLR 2027 compaction submissions), prefix-tuning theory (2310.19698), exact implicit-update identities (2507.16003), demonstration-initialised trainable prefixes (2507.04221) and OpenReview-only implicit-ICL submissions (Attention-Patching, ICL-R). No paper compares key-span-confined with unconstrained per-episode oracle states on few-shot ICL with family-constant and label-prior floors and a placebo. The confined-versus-free contrast exists in KV compaction and the class in the dual-form line, so the key-span component's confidence is lowered to medium-low. Blind packets: proposal paragraph-3f069de8 against Attention Matching with Cartridges (paragraph-b2df9deb), the dual form (paragraph-e982ff03) and 2608.13385 (paragraph-c840d8c6, wave 1, passed).",
  "why_fail": [
-  "blind closest-prior discrimination has not run (packets in blind/)",
-  "the novelty refuter of the refute-first triad has not run",
-  "OpenReview, ACL Anthology, patents and Chinese-language venues unsearched; citation graph degraded",
-  "the query budget (150) is exhausted, so the refuter needs a new declared budget"
+  "the blind critic has not run against this run's packets (Attention Matching with Cartridges, the dual form)",
+  "the novelty refuter of this run has not run",
+  "Semantic Scholar citation graph, patents and Chinese-language venues unsearched; OpenReview bodies behind a bot challenge"
  ],
- "remediation": "Run the blind critic on the two packets in randomized order, then the novelty refuter with at least six discover queries under a newly declared budget; search OpenReview and ACL Anthology."
+ "remediation": "One blind critic call per prior packet in randomized order; the novelty refuter with at least six orx discover queries from the reserved budget.",
+ "supersedes_sha256": "ac755a4822e18abb7ed66a9f12383e52be7be8ad1e2a8de381878bf95e1bc55b"
 }
