@@ -982,3 +982,38 @@ and I2 with the probe budget inside 8 GPU-h. It also cites and differentiates
 the uncited priors after searching OpenReview and the ACL Anthology. If the
 fresh run scores below 60, or identification is still the largest defect, E4
 ends at an honest exit. Its reviewer lane job runs only outside an S1a job.
+
+**D61. Q2 S1a: D59 (ii)'s incomplete-data rules, two edge cases ratified
+while blind.** D59's tooling and its verifier reached two cases D59 (ii)
+leaves open. Each reading is fixed now, before any A1 outcome is read. (a) If
+DR0 fires for a session-2 job but that size still holds scored base records
+in both sessions (the job was cut part-way), every output is labelled
+incomplete. The size's estimates are computed as the registered code computes
+them, and no statistic is masked. The not-estimable markings of D59 (ii)
+apply only where a size has one session, because only then does the frozen
+code report a p-value from an all-NaN statistic. (b) If one size has one
+session and the other has two, DR2 is reported as the registered code
+computes it, with a note that its X test and its π bound come from the
+two-session size alone. The single-session size's session test is not
+estimable, and DR5 is not evaluable as registered. Where DR1 drops 4B, the
+registered π_small is π_9B; DR5 is still reported as not evaluable, because
+the session-2 data are incomplete. Three more rules apply. The raw report
+keeps the frozen code's values, and RESULTS reads the guarded report.
+Every output file in an incomplete case carries the incomplete label. The
+replay-mismatch disclosure covers every flip whose raw replay differed from
+the live score, whether or not a checker correction applies to that task.
+
+**D62. Q2 S1a: one more incomplete-data case, fixed while blind (extends D61
+(a)).** A size can hold scored base records in both sessions and still have no
+π in a set: no task there has both harness cells scored in both sessions, for
+example when a session-2 job is cut after a few episodes. Its X and π are then
+all-NaN, and the registered π_small, the mean of π_4B and π_9B, is undefined,
+so D61 (a)'s premise fails for that size. Decided: that size's π is read as a
+one-session size's would be. DR5 is not evaluable as registered, with π_9B
+shown against both M values as a description only, and DR2 carries the note.
+Its session test and DR1 stay as registered. If the frozen `rules.dr5` raises
+on the undefined share (as when DR0 fires at A1-9B-S2 after a few episodes and
+A1-4B-S2 never runs), `report.json` is absent. The guarded report is then the
+registered computation, with that one call returning "not evaluable as
+registered". The D59 tooling's verifier found the case. The tooling's owner
+drafted the reading, and it is recorded here before any A1 outcome is read.
