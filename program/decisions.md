@@ -866,3 +866,23 @@ not count. This sensitivity changes no decision rule. After the freeze, no
 pre-freeze job purpose (A0a, A0b, O1) is submitted. The freeze writes the
 frozen plan's `plan_sha256` into G0 item 10. O2, A1 and every later export
 run from the commit that adds the ledger row.
+
+**D57. Q2 S1a session 1: two disclosures, and session 2's start pushed back to
+12:50 UTC.** O2 (job 1044) and A1 session 1 ran from the freeze commit
+`d5f5798`: 9B (VM 1045, GPU 1047) and 4B (VM 1048, GPU 1050). Each scored 452
+of 452 episodes with no infrastructure loss, and DR0 did not fire. A fresh
+verifier reproduced every per-job check. (i) The 4B GPU job verified the model
+receipt `75ebfc53...` (the directory `docker-research.sbatch` reads), not the
+CPU-lane receipt `efc88487...` that G0 item 2 names. The two differ only in
+`registry_sha256`. Revision, file list, total bytes and artifact root
+(`3b8a0751...`) are equal, and the job checked the files against that root.
+Decided: this is a disclosure, not a deviation. The registered quantity is the
+model's files, which are identical; the receipt digest is a host fill of the
+GPU template. (ii) The S2 9B VM job (1051) was submitted with `--begin` at
+`lane.earliest_start`: the later session-1 GPU end (00:45:18) plus 12 h.
+Section 5.5 also says the S2 jobs start "at least 12 hours after the later S1
+job ends", and VM job 1048's batch ended 3 s after its GPU job. Decided: the
+pending job's begin time is moved to 12:50:00 UTC (`scontrol update`, before
+it started), so both readings hold. Moving it later changes nothing the
+registration fixes. Session 2's 4B job is submitted after S2 9B's records
+exist, as the job order requires.

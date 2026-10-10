@@ -471,7 +471,8 @@
     "q3-dense-headroom-precheck-v2",
     "q2-action-path-v2",
     "q2-action-path-v2-inputs",
-    "q2-action-path-v2-executor"
+    "q2-action-path-v2-executor",
+    "q2-stage1-rescoped-v1"
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
