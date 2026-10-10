@@ -1,0 +1,93 @@
+{
+ "blind_kept": true,
+ "bug_judgements": [
+  {
+   "bug": "B1. A fractional base score crashes the report (analysis.py:454 sends raw scores into estimators._check at estimators.py:47-48, which accepts only 0, 1 or NaN).",
+   "reproduced": true,
+   "affects_registered_output": "Yes, and it blocks every output. One scored base final record with 0<score<1 makes the CLI exit 1 with no report.json, so DR1, DR2, DR5, P1-P5, every estimand and every section 15 count are lost. A fractional score on an extension task alone does not crash; only the base set's fractional_score line does. This is likely, not just possible. Three of the 32 base tasks use continuous metrics in the pinned OSWorld: fba2c100 and 47f7c0ce use compare_images, which returns raw SSIM when no reference_base_result is set, and c59742c0 uses compare_audios. driver.py:651-657 keeps any score in [0,1] unchanged. Repro: s1a-dry-run-check/repro/check.py (B1, ValueError at estimators.py:48).",
+   "handling": "A disclosed deviation, decided and recorded now while the program is still blind, not after a crash. Use a wrapper that imports the frozen modules unchanged, widens estimators._check from {0,1} to [0,1], and calls analysis.main. I verified it: on data with no fractional score its report is byte-identical to the registered report. With 5 fractional base scores, the only keys that differ from the registered report on the same data scored 0 are fractional_score and the fractional_scores counts in cells and attempts. The primary set and every DR/P output stay the same, because every other array is binary. That also gives section 8's 'sensitivity uses the score itself'. The runbook's 'stop and record a deviation' leaves the stage with no outputs and a workaround chosen after the fact."
+  },
+  {
+   "bug": "B2. With no size holding two sessions, the report crashes in rules.dr5 (rules.py:250, None > float via analysis.py:163). signflip_p on an all-NaN statistic returns 1/(n+1).",
+   "reproduced": true,
+   "affects_registered_output": "Yes, still reachable. The finishing agent's claim that it 'cannot happen now' because both S1 jobs passed DR0 is wrong. If A1-9B-S2 yields no scored base episode (a lane refusal, an engine failure at start, or every episode lost to infrastructure), DR0 fires, A1-4B-S2 never runs, and the analysis data are S1-only for both sizes. I reproduced that case (S1 only, and S1 plus a 9B-S2 that is all infrastructure losses): both give the same TypeError (check2.py). On those data x_signflip_p is 0.0001 at 10,000 flips, so DR2 would read 'Present' and P3 'falsified' if the report did not crash first.",
+   "handling": "Pre-specify an operator rule now, to be disclosed if used. If no size has two sessions, the registered CLI cannot produce a report. Then report the data as incomplete (DR0). Report delta and the descriptive and infrastructure counts. Mark D_b, D_w, X, pi, the X test, DR2, DR5, P1, P2 and the session test as not estimable, rather than taking any p-value from an all-NaN statistic. Producing the report needs a guarded wrapper, which is a deviation."
+  },
+  {
+   "bug": "B3. When one size has a single session, the report runs but misleads. session_signflip_p for that size is 1/(n+1) (0.0001 at 10,000 flips) while session_shift is None. pi_small silently equals pi_9B under the label 'mean of pi_4B and pi_9B' and is compared with M_SMALL 0.13. DR1 reads S1 only. Nothing labels the output incomplete.",
+   "reproduced": true,
+   "affects_registered_output": "Conditional. Yes, if DR0 fires at A1-9B-S2 (so A1-4B-S2 never runs) or A1-9B-S2 is only partly usable. The session test, DR5 (and DR2's pi bound) and the pi_small reported to S1b would be wrong-looking. One nuance against the finishing report: the registration ties M=0.18 to pi_9B only when DR1 drops 4B. If 4B is not dropped but pi_4B is undefined, then pi_small as registered (the mean of the two) is undefined, so DR5 cannot be evaluated as registered. Swapping in 0.18 would be just as unregistered as the code's 0.13.",
+   "handling": "An operator step with a reporting rule fixed now. Label every output incomplete, which section 11 already requires when DR0 fires. Report the single-session size's session test as not estimable. Report DR5 as not evaluable as registered: pi_9B may be shown against both M values as a description only. State that DR1 reads S1 only. The runbook says 'do not read' these numbers but gives no replacement rule."
+  },
+  {
+   "bug": "B4. Offline rescoring is serial, cannot resume, and fails over silently. capture spawns 2 fresh processes per scored episode, or 4 when compare_pptx_files applies; it opens --out with 'w' and skips episodes with no capture.json. In merge, a failed worker gives corrected_score None and a missing row gives no key; outcome_array then uses the live score. The report has no coverage field.",
+   "reproduced": true,
+   "affects_registered_output": "The secondary (corrected) outputs only, never a decision rule. A0a: 48 runs in 508 s, about 25 s per episode. 6 of the 32 base tasks are compare_pptx_files, close to A0a's mix. At 452 scored episodes per S1 job (D57) that is about 3.1 h, above s1a-cpu.sbatch's 2 h default, so without an override the job times out and leaves a partial file. Repro: 75 None plus 75 missing rows merged silently and the report has no coverage key.",
+   "handling": "Operator step, no deviation: an explicit --time (the runbook uses 08:00:00, which is enough), the coverage count from step 2, and a disclosure beside checker_corrected of how many verdicts fell back to live scores. Those fallbacks are registered behaviour (records.outcome_array)."
+  },
+  {
+   "bug": "B5. The registered CLI never passes step_logs, so first_divergence never appears in report.json.",
+   "reproduced": true,
+   "affects_registered_output": "Yes, a section 15 and section 9 item 11 descriptive item. No decision rule reads it.",
+   "handling": "Operator step on the host with the registered functions (analysis.divergence_summary over records.first_divergence), with the choices disclosed: base tasks, scored final records, final attempt. I checked runbook step 6's lookup: slot ids are '<job>:<block>:<index>', so each key's steps.jsonl resolves only in its own job's run directory."
+  },
+  {
+   "bug": "B6. The report lacks several section 15 items: output tokens, step-of-termination and step-of-success distributions censored at 15, restarts per episode, losses by task (10.1), the cost card against the central price, the offline-setup exclusions with reasons, failed setup and postconfig replies by type, host snapshots and foreign load, DR0 per job, the secondary set under corrected verdicts, and rescoring coverage.",
+   "reproduced": true,
+   "affects_registered_output": "Section 15 completeness only; no decision. All the inputs exist: the records carry tokens.completion, guest_server_restarts, steps and setup.failures/replies; the lane receipts carry snapshots (loadavg, squeue_foreign); the plan carries offline_excluded with reasons; and PRICE_CENTRAL is 0.009020 at V=20.",
+   "handling": "Operator steps that compute each item with the registered functions and fields, disclosed as assembled outside the CLI. For example, the secondary corrected estimands are analyse_array(outcome_array(finals, secondary_tasks, value='corrected')). Pin the exact commands before the analysis runs: runbook step 8 lists the items but gives no commands, which leaves forking paths."
+  },
+  {
+   "bug": "B7. glmm.py has no command that writes real input (only 'synthetic'), and the registration does not say which set the GLMM is fitted on. glmm.R bootstraps from a main fit that did not converge and keeps non-converged refits in the share CIs.",
+   "reproduced": true,
+   "affects_registered_output": "The secondary model only, with no decision. The R behaviour is confirmed in glmm.R lines 105-142 and in the dry-run floor fit (ok false, pdHess false, LRT null, 134/200 refits not converged, 200 used).",
+   "handling": "An operator step, no deviation. Write the CSVs with the registered glmm.rows_from_records and write_csv. Name the base (primary) fit as the registered reading: glmm.py's docstring says 'the analysis set', and section 11 says the primary set is the default. Report the secondary fit beside it. Report convergence exactly as glmm.R writes it; section 10.1 says only that a fit that does not converge is reported as such, so add a sentence when the CIs come from a non-converged fit."
+  },
+  {
+   "bug": "B8. Without --costs the report has no DR4 and no cost card, and P5 reads {'falsified': false} instead of 'not evaluated'.",
+   "reproduced": true,
+   "affects_registered_output": "Only if --costs is omitted.",
+   "handling": "None beyond passing --costs, which the runbook does."
+  },
+  {
+   "bug": "B9. Run off the host, costs cannot find the receipt's absolute bridge_dir/stopped.json; gpu_elapsed raises when the receipt has no final GPU state.",
+   "reproduced": true,
+   "affects_registered_output": "Only if costs runs off the host and a receipt lacks a final state.",
+   "handling": "None. Run on the host, as runbook step 4 does."
+  },
+  {
+   "bug": "B10. report.json records no provenance: no input digests, no plan_sha256 check, no commit.",
+   "reproduced": true,
+   "affects_registered_output": "The reproducibility record only.",
+   "handling": "Operator step: runbook step 0's checks plus inputs.sha256. Also add costs.json, the code commit and the python, numpy and scipy versions."
+  },
+  {
+   "bug": "B11. truncation_labels reads every final record (base and extension, all statuses), while the delta it labels is base-only.",
+   "reproduced": true,
+   "affects_registered_output": "Only near the 20% line. In my repro with heavy extension truncation the label is ['4B','9B'] over all finals and [] over base only.",
+   "handling": "None. Section 15 names analysis.truncation_labels as the label's implementation, so the frozen code's set is the registered definition. State in the report which set it reads; a base-only share may be shown as a description."
+  }
+ ],
+ "runbook_gaps": [
+  "Bug 1: 'stop and record a deviation' leaves every registered output blocked, and the workaround would be chosen after seeing that a fractional score exists. Record the relaxed-_check wrapper in a decision before the analysis runs. I verified that it is byte-identical when there is no fractional score and changes only fractional_score and the fractional counts when there is.",
+  "Bug 2 is still reachable but the runbook treats it as impossible. If A1-9B-S2 yields no scored base episode and A1-4B-S2 never runs, the data are S1-only, the report crashes and the X p-value is 1/(n+1). There is no rule for this case.",
+  "Bug 3: the runbook says not to read session_signflip_p, the pi_small label and DR5's M, but gives no replacement rule (DR5 not evaluable, session test not estimable, DR1 reads S1 only). Fix the rule now.",
+  "VMS must list only the jobs that ran. If A1-4B-S2 never runs, steps 1-4 fail on a missing run directory. The runbook does not say so.",
+  "GLMM step: the container's 'for ... & done; wait' always returns 0, so the job's exit_status in the receipt cannot show a crashed Rscript. Capture each fit's exit code, as the dry run's exits.txt did. Also check the copied r-packages.sha256 against the registered abb8871d... rather than only copying it.",
+  "GLMM set: the runbook fits both base and secondary but does not say which is the registered reading. Name the base fit (glmm.py says 'the analysis set'; primary is the default) and report the secondary beside it.",
+  "Step 8 lists the missing section 15 items with no commands. These are the secondary-set corrected estimands, output tokens (tokens.completion), step-of-termination and step-of-success distributions censored at 15, restarts per episode, losses by task, failed setup and postconfig replies by type, the central-price comparison, a labelled DR3 block, and observations per episode. Pin exact commands before outcomes are read.",
+  "Rescoring: the coverage check counts rows and errors but does not say how to report checker_corrected when coverage is below 100%, where missing or failed rows silently use the live verdict. It also does not flag that corrected flips on tasks without compare_pptx_files are replay mismatches.",
+  "The Python steps (0, 1, 3-7) run directly on the host outside Slurm. AGENTS.md says 'Slurm owns the workload', and the dry run used a CPU-only Slurm job (1056) for the report. Either wrap them the same way or note the exception (collect-pair.sh is a precedent for DR0).",
+  "inputs.sha256 omits costs.json and the analysis environment (host python3 3.10.12, numpy 1.21.5, scipy 1.8.0), and globs every run's episodes.jsonl instead of only the A1 VMS. The rescoring job ids are not recorded.",
+  "GLMM as registered is otherwise covered correctly: the formula is frozen in glmm.R, image b15584f3 matches G0 item 12, it uses 200 refits and seed 42, runs on CPU with no network through s1a-cpu.sbatch, nests sessions in size via rows_from_records, and includes the LRT and convergence reporting. The anchor is UNAVAILABLE (plan constants.anchor_runs false), so omitting --anchor and --public is correct. The step 0 digests check out on a fresh export: registration f9db7cc3..., plan 6a3f0219.../a5f0aadc..., and code-of-record hashes match section 20."
+ ],
+ "missed": [
+  "The finishing report says bug 2's crash 'cannot happen now'. It can: if A1-9B-S2 produces no usable base data (lane refusal, early engine failure, all infrastructure losses), DR0 fires, A1-4B-S2 never runs, and the S1-only data give the same TypeError and a spurious X p-value of 0.0001. Repro: s1a-dry-run-check/repro/check2.py and check2.out.",
+  "Corrected verdict for tasks without compare_pptx_files: rescore.rescore_episode sets corrected to the offline raw replay score, and merge writes it as corrected_score. A live-versus-offline replay mismatch therefore counts as a 'corrected-verdict flip' and moves the corrected delta, though no checker correction applies (my repro: corrected delta 0.125 vs primary 0.0375 when a third of replays mismatch). A0a matched 20/20, so this matters only if replays diverge; disclose it beside the flips.",
+  "checker_noise (discordance and live-vs-offline mismatches) reads every final record, base and extension, unlike the base primary set. It is descriptive and the code of record governs, but the report should state the set.",
+  "On B3, the finishing report says the registration ties M=0.18 to a pi_9B-only share. It does so only when DR1 drops 4B. With 4B kept but pi_4B undefined, DR5 cannot be evaluated as registered.",
+  "Blindness disclosures missing from the finishing report, all metadata or code with no record content read: (a) the earlier agent ran 'ls -R program/evidence/2026-10-10/q2-stage1-a1 | head -80' in the live repo (file names, including vm-1045/vm-1048 episodes.jsonl) and read ops/collect-pair.sh and ops/job_checks.py there; (b) it listed the host's runs/ directory names; (c) it read D56 and D57 in program/decisions.md (D57 gives only '452 of 452 scored, no infrastructure loss, DR0 did not fire'). Its recursive evidence-score scan ran on the d5f5798 export, which predates A1, and skipped 2026-10-10 paths.",
+  "COMMAND RULE breaches by the earlier agent, not disclosed: two local Bash calls blocked 309 s (01:31:24 UTC, the scenario loop) and 358 s (01:50:39 UTC, an until-loop on a local output file), both over 5 minutes. Its host wait loops were bounded by short ssh timeouts or ran in the background. No GPU, GRES, ~/cotcodec access or repository write appears in any of the 6 dry-run transcripts. The repository is clean at 406a42d, and all host jobs (1054-1057) ended by 02:00:36 UTC.",
+  "This checker ran no host command and no Slurm job. All checks were local on a fresh git archive of d5f5798, identical to the dry-run export: 46 passed and 1 skipped on the registered tests; scripts and outputs are in <scratch>/s1a-dry-run-check/repro/ (check.py, check.out, check2.py, check2.out)."
+ ]
+}
