@@ -1108,3 +1108,27 @@ scenarios anchored to S1a's estimates. It also sizes S2's power gate (about
 with more data is not a new mechanism. Under 8 GPU-h it needs a registration
 and a pre-freeze audit, not a gauntlet. A design that adds a factor goes
 through the gauntlet. The checker-mutation adjudication is still Kevin's.
+
+**D67. With S1a's result in, every remaining line restarts: backfill E3, E5
+and E7, C5's gauntlet, and S2's contract.** D65 paused new backfill until
+S1a's result, and that result is now in (D66). On 2026-10-10 the program
+owner asked to continue everything. Decided: five gauntlet runs start at
+once, each with its own declared budgets, CPU-only work on the Mac, and its
+reviewer lane job on the idle host.
+- E3 (D18, translation-supervised byte boundaries; a 0.5 GPU-h headroom probe
+  with no training).
+- E5 (D20, recurrent-state gates and token fertility; a 3 GPU-h language-free
+  decomposition).
+- E7 (D22, translation-equivariant recurrent writes; a 2.5 GPU-h G1 floor
+  gate).
+- C5 (FP4 training instability; Phase 0 about 2 GPU-h, then about 47 GPU-h).
+  Its score is a package for Kevin's D24 ruling, not an admission.
+- S2 (Arabic in computer-use agents, script against mirrored layout; Phase 0
+  is CPU-only, then about 15 GPU-h). It is gated on the Q2 noise floor, which
+  S1a now gives, and is sized with the design study (D66). Admission above
+  8 GPU-h stays Kevin's under D24.
+Each run refreshes its contract from the dossier's corrected question and
+from `legacy/` where one exists, and writes a proposal and a draft
+registration for its first step only. Each then runs wave 1. Every agent
+prompt carries the command rule (no command may block more than about 4
+minutes). Nothing is submitted to the host but the reviewers' lane jobs.
