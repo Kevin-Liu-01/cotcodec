@@ -1,0 +1,17 @@
+{
+ "doctor": "Compute",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
+ "evidence": "Image digest pinned (build 855, sha256:13a9de83...); seeds [42, 43, 44]; caps 0.17 + 0.75 + 4.0 + 1.5 = 6.42 GPU-h with a reduction ladder (compute/cost-model.json: central 0.10 + 0.91 + 0.20 GPU-h; high 0.40 + 5.16 + 0.98, Step 2 3.83 after the ladder); checkpoint every 10 minutes keyed per fit; launch via scripts/submit_docker_research_job.py (dry run, test-only, submit).",
+ "why_fail": [
+  "no real model loop for this gate (the harness does not exist)",
+  "no benchmark adapter",
+  "no container smoke, Slurm dry run, manifest or provenance verification",
+  "the pinned image cannot instantiate fla's TransformerForCausalLM without flash_attn; the Llama remap and the SDPA shim are unwritten and untested",
+  "no throughput measured for the oracle workload; MFU assumed",
+  "the host is reserved for Q2 S1a until its session 2 ends, so nothing can be attested now"
+ ],
+ "remediation": "Write harness/e4_gate.py and the smoke manifest; after S1a's session 2, run the dry run, test-only and the smoke as an orx slurm-manifest node; record the measured throughput and re-project the caps."
+}

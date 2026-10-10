@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2110.14633",
+ "fetched_at": "2026-10-10T06:13:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42040,
+ "raw_sha256": "31f6d10f242d7d3b58276decb3ba4ef0f62a532e5257ec9bb12a46bf258b5da4",
+ "raw_stored": false,
+ "extract": {
+  "title": "Similarity and Matching of Neural Network Representations",
+  "authors": [
+   "Csiszárik, Adrián",
+   "Kőrösi-Szabó, Péter",
+   "Matszangosz, Ákos K.",
+   "Papp, Gergely",
+   "Varga, Dániel"
+  ],
+  "citation_date": "2021/10/27",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 27 Oct 2021 17:59:46 UTC"
+   }
+  ],
+  "abstract": "We employ a toolset -- dubbed Dr. Frankenstein -- to analyse the similarity of representations in deep neural networks. With this toolset, we aim to match the activations on given layers of two trained neural networks by joining them with a stitching layer. We demonstrate that the inner representations emerging in deep convolutional neural networks with the same architecture but different initializations can be matched with a surprisingly high degree of accuracy even with a single, affine stitching layer. We choose the stitching layer from several possible classes of linear transformations and investigate their performance and properties. The task of matching representations is closely related to notions of similarity. Using this toolset, we also provide a novel viewpoint on the current line of research regarding similarity indices of neural network representations: the perspective of the performance on a task.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

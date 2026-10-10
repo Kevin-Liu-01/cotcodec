@@ -1,0 +1,38 @@
+{
+ "url": "https://arxiv.org/abs/2404.03592",
+ "fetched_at": "2026-10-10T06:13:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42565,
+ "raw_sha256": "491dc5a190392f96744d9fa17dfcc116decbe1271a48cf30080b7329b9469551",
+ "raw_stored": false,
+ "extract": {
+  "title": "ReFT: Representation Finetuning for Language Models",
+  "authors": [
+   "Wu, Zhengxuan",
+   "Arora, Aryaman",
+   "Wang, Zheng",
+   "Geiger, Atticus",
+   "Jurafsky, Dan",
+   "Manning, Christopher D.",
+   "Potts, Christopher"
+  ],
+  "citation_date": "2024/04/04",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 4 Apr 2024 17:00:37 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 8 Apr 2024 03:06:10 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 22 May 2024 17:52:31 UTC"
+   }
+  ],
+  "abstract": "Parameter-efficient finetuning (PEFT) methods seek to adapt large neural models via updates to a small number of weights. However, much prior interpretability work has shown that representations encode rich semantic information, suggesting that editing representations might be a more powerful alternative. We pursue this hypothesis by developing a family of Representation Finetuning (ReFT) methods. ReFT methods operate on a frozen base model and learn task-specific interventions on hidden representations. We define a strong instance of the ReFT family, Low-rank Linear Subspace ReFT (LoReFT), and we identify an ablation of this method that trades some performance for increased efficiency. Both are drop-in replacements for existing PEFTs and learn interventions that are 15x--65x more parameter-efficient than LoRA. We showcase LoReFT on eight commonsense reasoning tasks, four arithmetic reasoning tasks, instruction-tuning, and GLUE. In all these evaluations, our ReFTs deliver the best balance of efficiency and performance, and almost always outperform state-of-the-art PEFTs. We release a generic ReFT training library publicly at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

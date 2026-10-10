@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2608.09521",
+ "fetched_at": "2026-10-10T06:13:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41128,
+ "raw_sha256": "2c384cd1cdc726487cfa290916ba7027873dd2fa1dfff18907d63e50b2946b2e",
+ "raw_stored": false,
+ "extract": {
+  "title": "One Adapter Pair per Model: A Universal Activation Interface for Language Models",
+  "authors": [
+   "Kim, Su-Hyeon",
+   "Mun, Jiwan",
+   "Han, Yo-Sub"
+  ],
+  "citation_date": "2026/08/10",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 10 Aug 2026 12:21:36 UTC"
+   }
+  ],
+  "abstract": "Activation-based tools are usually tied to one model's native hidden space, requiring probes, sparse autoencoders, and natural-language interpreters to be rebuilt or rediscovered for each new language model. We present a Universal Activation Bus, a framework that provides a common activation interface across compatible language models. Using a small set of source models, we learn a shared dense space together with one lightweight linear encoder--decoder adapter pair per model. After source training, the interface is frozen; a new model joins by fitting only its adapter pair on unlabeled matched text. The resulting interface allows activation-based tools to be shared across connected models, including common probes and SAE features as well as access to an NLA originally trained for a different model. Across five models, semantically related texts form consistent neighborhoods in the shared space, and an onboarded model reuses these tools effectively without retraining them. We further show that an intermediate activation from one model can be used by another model's frozen upper layers to produce predictions. These results establish a stable, model-wise activation contract for reusable tools across compatible language models.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

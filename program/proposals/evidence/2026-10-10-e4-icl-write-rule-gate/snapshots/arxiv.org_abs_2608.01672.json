@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2608.01672",
+ "fetched_at": "2026-10-10T06:13:12Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42911,
+ "raw_sha256": "559b4fbdc7d9296c3b21047cda45680e726aaba1868a3928d6c1b25043c4457f",
+ "raw_stored": false,
+ "extract": {
+  "title": "Learning What to Remember: Test-Time Training via Context Distillation",
+  "authors": [
+   "Wang, Zixuan",
+   "Dang, Xingyu",
+   "Zhu, Rui-Jie",
+   "Wen, Zixin",
+   "Fu, Hengyu",
+   "Chai, Wenhao",
+   "Lee, Jason D."
+  ],
+  "citation_date": "2026/08/03",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 3 Aug 2026 04:06:06 UTC"
+   }
+  ],
+  "abstract": "Effective long-context modeling is not merely about retaining more of the past, but about preserving the information that may prove relevant later. Test-time training (TTT) is an appealing approach that performs online parameter updates for long-context modeling, yet existing TTT methods only optimize either reconstruction or online adaptation objectives without considering the future utility of retained information. In this work, we propose \\textbf{T}est-\\textbf{T}ime \\textbf{C}ontext \\textbf{D}istillation (TTCD), a TTT framework that introduces a self-supervised objective for allocating limited memory capacity for future use. Specifically, TTCD uses a long-window teacher to supervise the fast weights of a short-window student, where the hidden-state discrepancy between them offers a dense, self-supervised signal guiding the model to memorize the contextual information crucial for future token predictions. We focus on an in-place variant: In-Place TTCD (IP-TTCD), which uses the existing MLP parameters as the fast weights. Experiments on long-context language modeling tasks show IP-TTCD consistently outperforms DeltaNet, Gated DeltaNet, sliding-window attention, and TTT when pre-trained from scratch. Furthermore, IP-TTCD allows pre-trained transformer models to adapt their parameters during inference through continual pre-training, gaining long-context capabilities with only a lightweight architectural augmentation. Our results position TTCD as a step toward architectural continual learning.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
