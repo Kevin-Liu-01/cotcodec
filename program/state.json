@@ -269,7 +269,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "S1a's four A1 jobs ran from the freeze commit d5f5798 (O2 job 1044; A1-9B-S1 1045/1047, A1-4B-S1 1048/1050, A1-9B-S2 1051/1053, A1-4B-S2 1062/1064); each scored 452/452 episodes with no infrastructure loss, and DR0 does not fire for any. No outcome has been read. Next: an independent verification of the session-2 per-job checks, then the registered analysis under D59, D61 and D62 (ops/s1a-analysis/RUNBOOK.md), every output labelled \"not externally anchored\". The checker-mutation study waits on Kevin's adjudication (34 items) and spot check (25 items).",
+      "next_action": "S1a's registered analysis ran (2026-10-10; RESULTS: program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md; evidence: program/evidence/2026-10-10/q2-stage1-analysis/; every output 'not externally anchored'; data complete). DR0 does not fire; DR1 does not fire (4B 28.9%/26.6%); DR2 Inconclusive (delta -3.1 pp, 90% t [-8.9, 2.7], p 0.37; X sign flip p 0.46; pi_small UB 0.26); DR4 does not fire (0.0025-0.0027 GPU-h/episode vs 0.011274); DR5 INCONCLUSIVE (pi_small 0.055, one-sided 95% [0.000, 0.260] vs M 0.13), so S1b does not go to the gauntlet (D47). P1 falsified (excess UB 0.78 pp < 1 pp); P2-P5 stand. Next: the runbook's independent verification of the analysis (step 12) and of the session-2 per-job checks; then Kevin's choice whether to propose more sessions at 4B and 9B (the registered pointer after INCONCLUSIVE; a new proposal with its own gauntlet). The checker-mutation study waits on Kevin's adjudication (34 items) and spot check (25 items).",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -356,7 +356,7 @@
       "stage1_s1a": {
         "registration": "q2-stage1-rescoped-v1: FROZEN 2026-10-09T22:11:08Z, ledger row 16 (registration sha256 f9db7cc38c4954b3144ac5a1afaf7bf5366449081b06c80bf89888bdf653afd8, row hash bc5e88a0043065f93e3ea494633b6c3cd119973708e250110e7bcf4856507d0f, git_head_at_freeze 70d57e3); freeze commit d5f5798 (the commit that adds the row; O2, A1 and every later export run from it)",
         "branch": "stage0/q2-stage1-rescope",
-        "status": "FROZEN; all four A1 jobs complete (A1-9B-S1, A1-4B-S1, A1-9B-S2, A1-4B-S2), each 452/452 scored, DR0 does not fire for any. No outcome has been read; the registered analysis (D59 runbook) has not started",
+        "status": "FROZEN; all four A1 jobs complete (each 452/452 scored, DR0 does not fire); registered analysis complete on 2026-10-10 under D59 (wrapper deviation only; D61/D62 not triggered): DR2 Inconclusive, DR5 INCONCLUSIVE (S1b not admitted), DR1 and DR4 do not fire, P1 falsified, P2-P5 not falsified; GLMM primary fit did not converge; not externally anchored. Independent verification of the analysis (runbook step 12) pending",
         "g0_results": {
           "fetch_lane_and_receipts": "fetch-model-cpu.sbatch (22685e5e...), job 971 CPU only: Qwen3.5-4B receipt efc88487..., OpenCUA-7B receipt 8109da82... (16.6 GB); remote code read and hashed",
           "episode_driver_and_bridge": "harness/q2_stage1 driver, agents (checked against upstream-recorded messages), engine, bridge, lane, osworld_live; dev smoke job 978 with the scripted fake engine: 3/3 episodes scored end to end; rescoring job 983 matched live 3/3",
@@ -397,7 +397,21 @@
           "gpu_hours_physical": 4.73,
           "disclosures": "4B GPU job verified receipt cotcodec-receipts/qwen3.5-4b.json (75ebfc53...), which differs from G0 item 2's CPU-lane receipt efc88487... only in registry_sha256 (same revision, files and artifact root 3b8a0751...); no deviation from the registration; session 2 used the same receipt files (4B 75ebfc53..., 9B 0a9e052d...); jobs of other work ran only while no S1a job ran (D59 dry-run CPU jobs 1054/1056/1057 and E4 reviewer 1059 while the S2 9B pair was held; E4 reviewer 1061 between the S2 pairs)"
         },
-        "evidence_a1": "program/evidence/2026-10-10/q2-stage1-a1/"
+        "evidence_a1": "program/evidence/2026-10-10/q2-stage1-a1/",
+        "analysis": {
+          "runbook": "ops/s1a-analysis/RUNBOOK.md at 6d85529 (D59, D61, D62); export of d5f5798; host CPython 3.10.12, numpy 1.21.5",
+          "jobs": "CPU only, no GRES: rescoring 1065-1068 (--time=08:00:00, 3h08-3h12 each, exit 0), report 1071, identity 1072 (PASS, mode fractional: 14 fractional base scores), first divergence 1073, GLMM 1074 (image b15584f3..., package lock abb8871d... matched), s15 1075",
+          "labels": "complete (incomplete: null); not externally anchored (ANCHOR-UNAVAILABLE)",
+          "primary": "base 32 tasks, 512 episodes: success 4B 28.91% (H-OSW-fixed) / 26.56% (H-GA), 9B 32.81% / 28.91%; delta -3.12 pp [95% -10.55, 2.73], paired t p 0.3671, 90% t [-8.91, 2.66]; D_b 11.33% [5.86, 17.19]; D_w 12.50%; excess -1.17 pp [-3.52, 1.56], one-sided UB 0.78; X 0.0117, sign flip p 0.4588; pi_4B 0.027, pi_9B 0.083, pi_small 0.055 (one-sided [0.000, 0.260]); session shift 4B +2.34 pp (p 0.563), 9B +5.47 pp (p 0.016)",
+          "rules": "DR0 no; DR-A ANCHOR-UNAVAILABLE; DR1 no; DR2 Inconclusive; DR4 no; DR5 INCONCLUSIVE (M 0.13)",
+          "predictions": "P1 falsified; P2, P3, P4, P5 not falsified",
+          "sensitivities": "checker-corrected: 0 flips (identical); metric-exception missing: 1 episode (identical); postconfig server-error missing (D56): 0 episodes (identical); flagged excluded (30 tasks): delta -2.50, DR2 Inconclusive, DR5 INCONCLUSIVE; secondary (113 tasks): delta -1.11 [-4.31, 1.99], D_b 10.40%, pi_small 0.084 [0.020, 0.162], DR2/DR5 Inconclusive/INCONCLUSIVE (no rule)",
+          "glmm": "primary (registered reading) did not converge (singular convergence, no pdHess; LRT not computed); secondary converged, task:harness LRT chi2 4.00, p 0.045 (boundary 0.023), not a decision input",
+          "infrastructure": "0 losses, 0 restarts, 0 retried/slow/undelivered observations in 1,808 episodes; 0 postconfig server errors; 6 postconfig HTTP 200 non-zero returncode (4B); IRError 2/6/0/11; 1 metric exception; truncation <= 0.44% (no label)",
+          "rescoring": "452/452 rows per job; 16 secondary verdicts fell back to live scores (53ad5833, LiveStateRequired); 0 flips, 0 live/offline mismatches",
+          "evidence": "program/evidence/2026-10-10/q2-stage1-analysis/ (report-guarded.json 6bda751e..., s15.json f09a8031..., provenance.json c365ae0f...)",
+          "results": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md"
+        }
       }
     },
     {
@@ -453,7 +467,8 @@
     "The checker-mutation blind specs (program/evidence/q2-mutation/specs/, public on main since 2026-10-07) quote short passages of OSWorld file-cache documents. The registration lists their release as your sign-off, but they were published with the integration branch before that sign-off. Confirm the release, or ask for removal (a history purge needs a force-push, as with the other purge item)",
     "Q2 action path: q2-action-path-v2 is ACCEPTED on attempt 1 (D53; N* = 32). Still open for you: whether a later registration should observe the shell's side of a grabbed chord directly; the job 851 unprovoked guest-server restart beside the D30 development rate; and the disclosed deviation that A4 and A7 ran before the rung-40 choice was recorded (D51 ratified it after the fact; no verdict changes)",
     "Q3 (D54): K1 v3 ended at an honest exit (gauntlet 45, 51, 55, 56); Q3 rests on the dense pre-check v2 (NEGATIVE_CAPABLE_V3). Yours only if you want K1 reopened: admitting a screen above 8 GPU-h (D24) for more seeds or evidence, plus a new design with a same-language zero-overlap leg. Package: program/preregistrations/q3-k1-localization-screen-v3.md (draft), program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md, program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl",
-    "Host limit (needs the host administrator): fs.inotify.max_user_instances is 128 on fal-h100-01, so the action-path ladder's 40-VM rung could not boot 10 of 80 VMs (dnsmasq 'failed to create inotify: Too many open files'). N* is therefore 32, and the registered program kill criterion (N* below 40: cut the Stage-1 task count before adding GPUs) applies. Ask the administrator to raise the limit if 40 concurrent VMs are wanted; attempt 1's rung-40 rerun is not used (D51); running above 32 VMs after a host change needs a registered deviation or a new registration with its own ladder (D53 ii) (evidence: program/evidence/2026-10-08/q2-action-path-v2-acceptance/)"
+    "Host limit (needs the host administrator): fs.inotify.max_user_instances is 128 on fal-h100-01, so the action-path ladder's 40-VM rung could not boot 10 of 80 VMs (dnsmasq 'failed to create inotify: Too many open files'). N* is therefore 32, and the registered program kill criterion (N* below 40: cut the Stage-1 task count before adding GPUs) applies. Ask the administrator to raise the limit if 40 concurrent VMs are wanted; attempt 1's rung-40 rerun is not used (D51); running above 32 VMs after a host change needs a registered deviation or a new registration with its own ladder (D53 ii) (evidence: program/evidence/2026-10-08/q2-action-path-v2-acceptance/)",
+    "Q2 S1a (q2-stage1-rescoped-v1) ended DR5 INCONCLUSIVE (pi_small 0.055, one-sided 95% [0.000, 0.260] vs M 0.13) and DR2 Inconclusive, so S1b does not start (D47). Yours: whether to commission the registered follow-up after INCONCLUSIVE (more sessions at 4B and 9B, a new proposal with its own gauntlet) or close Q2 Stage 1 at S1a (program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md)"
   ],
   "gpu_hours_spent_this_program": 9.746,
   "frozen_registrations": [
@@ -919,6 +934,13 @@
       "label": "COMPLETE: NEGATIVE_CAPABLE_V3 on qwen3.5-4b-base",
       "outcome": "0.6B lane (job 859) reproduced v1 job 727 exactly and smoke 452, NOT_VIABLE (H1_CX 12.25; H2 FAIL); 4B lane (job 862) NEGATIVE_CAPABLE (H1_CX 42.15, 99% interval 35.76-48.20; H2 POINT_ONLY: H2a 49.6, H2b 8.6 with lower bound -9.3), lexical confound PRESENT (literal xi_rel 0.26-0.27, 0.24 on controlled families), entity control INSUFFICIENT, null calibration CENTRED, floor VIABLE, fertility STRONG (Spearman -0.89); development partition only, 20 clusters; not a K1 result; any K1 v3 needs a new id and the gauntlet (D26)",
       "evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md"
+    },
+    {
+      "registration": "q2-stage1-rescoped-v1",
+      "date": "2026-10-10",
+      "label": "COMPLETE (not externally anchored): DR2 Inconclusive, DR5 INCONCLUSIVE; S1b not admitted",
+      "outcome": "Base 32 tasks, 2 sessions x 2 reruns per size: delta (H-GA minus H-OSW-fixed) -3.1 pp, 90% t [-8.9, 2.7] (p 0.37); X sign flip p 0.46; D_b 11.3% [5.9, 17.2], D_w 12.5%, excess -1.2 pp (UB 0.78: P1 falsified); pi_small 0.055 [0.000, 0.260] vs M 0.13; 4B 28.9%/26.6% (DR1 no); 0.0025-0.0027 GPU-h per episode (DR4 no); 0 infrastructure losses in 1,808 episodes; GLMM primary did not converge; checker correction 0 flips",
+      "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md"
     }
   ]
 }

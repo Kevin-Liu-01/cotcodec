@@ -1,0 +1,158 @@
+{
+ "jobs": {
+  "A1-4B-S1": {
+   "corrected_applies": 72,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 5,
+    "raw_state_error": 5
+   },
+   "live_offline_match": {
+    "None": 5,
+    "True": 447
+   },
+   "receipts": {
+    "receipt-1066.json": {
+     "exit_status": 0,
+     "job_id": "1066"
+    }
+   },
+   "rescored_sha256": "2b1a0b8c1e446736bed138fcda0421ac9beb82822a77d29d88372a7b508edfd1",
+   "rows": 452,
+   "rows_corrected_null": 5,
+   "rows_matched_to_scored_attempts": 452,
+   "rows_raw_null": 5,
+   "rows_unmatched": 0,
+   "rows_with_error": 5,
+   "scored_attempts": 452,
+   "scored_attempts_with_capture": 452,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1048"
+  },
+  "A1-4B-S2": {
+   "corrected_applies": 72,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 4,
+    "raw_state_error": 4
+   },
+   "live_offline_match": {
+    "None": 4,
+    "True": 448
+   },
+   "receipts": {
+    "receipt-1068.json": {
+     "exit_status": 0,
+     "job_id": "1068"
+    }
+   },
+   "rescored_sha256": "f1eb94f6617b2f8bff3bbf10acde8e5a4824f04bd0bc11ac700039814de5ec33",
+   "rows": 452,
+   "rows_corrected_null": 4,
+   "rows_matched_to_scored_attempts": 452,
+   "rows_raw_null": 4,
+   "rows_unmatched": 0,
+   "rows_with_error": 4,
+   "scored_attempts": 452,
+   "scored_attempts_with_capture": 452,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1062"
+  },
+  "A1-9B-S1": {
+   "corrected_applies": 72,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 4,
+    "raw_state_error": 4
+   },
+   "live_offline_match": {
+    "None": 4,
+    "True": 448
+   },
+   "receipts": {
+    "receipt-1065.json": {
+     "exit_status": 0,
+     "job_id": "1065"
+    }
+   },
+   "rescored_sha256": "652c0447010078fdb650b38105329aee78581d794db4c4a8aa180fbc022cf39f",
+   "rows": 452,
+   "rows_corrected_null": 4,
+   "rows_matched_to_scored_attempts": 452,
+   "rows_raw_null": 4,
+   "rows_unmatched": 0,
+   "rows_with_error": 4,
+   "scored_attempts": 452,
+   "scored_attempts_with_capture": 452,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1045"
+  },
+  "A1-9B-S2": {
+   "corrected_applies": 72,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 4,
+    "raw_state_error": 4
+   },
+   "live_offline_match": {
+    "None": 4,
+    "True": 448
+   },
+   "receipts": {
+    "receipt-1067.json": {
+     "exit_status": 0,
+     "job_id": "1067"
+    }
+   },
+   "rescored_sha256": "e6dbfc7965143807751607ef93abcdd00bf4df03d1cc0126c792fbd6cf0a1593",
+   "rows": 452,
+   "rows_corrected_null": 4,
+   "rows_matched_to_scored_attempts": 452,
+   "rows_raw_null": 4,
+   "rows_unmatched": 0,
+   "rows_with_error": 4,
+   "scored_attempts": 452,
+   "scored_attempts_with_capture": 452,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1051"
+  }
+ },
+ "labels": {
+  "external_anchor": "not externally anchored",
+  "incomplete": null,
+  "incomplete_reasons": [],
+  "source": "run_report.completeness on --records and --dr0"
+ },
+ "verdict_sources": {
+  "note": "records.outcome_array(value='corrected') reads the live score where corrected_score is missing or null (registered behaviour); a flip on a task without a checker correction (corrected_applies false) is a live-versus-offline replay mismatch",
+  "primary": {
+   "corrected_from_offline_rescoring": 512,
+   "fell_back_to_live_score": 0,
+   "flips_by_task": {},
+   "flips_total": {},
+   "flips_unknown_kind": 0,
+   "scored_final_records": 512
+  },
+  "secondary": {
+   "blocks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+   ],
+   "corrected_from_offline_rescoring": 1792,
+   "fell_back_to_live_score": 16,
+   "flips_by_task": {},
+   "flips_total": {},
+   "flips_unknown_kind": 0,
+   "scored_final_records": 1808
+  }
+ }
+}

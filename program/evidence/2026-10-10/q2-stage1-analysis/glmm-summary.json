@@ -1,0 +1,117 @@
+{
+ "fits": {
+  "primary": {
+   "R_version": "R version 4.4.2 (2024-10-31)",
+   "TMB_version": "1.9.16",
+   "bootstrap": {
+    "refits_failed": 0,
+    "refits_not_converged": 98,
+    "refits_used": 200
+   },
+   "exit_code": 0,
+   "full": {
+    "df": 12,
+    "logLik": null,
+    "ok": false,
+    "optimizer_convergence": 1,
+    "optimizer_message": "singular convergence (7)",
+    "pdHess": false
+   },
+   "glmmTMB_version": "1.1.10",
+   "json_present": true,
+   "lrt_task_harness": {
+    "both_converged": false,
+    "df": 1,
+    "p_value": null,
+    "p_value_boundary_corrected": null,
+    "statistic": null
+   },
+   "n_boot": 200,
+   "n_episodes": 512,
+   "n_tasks": 32,
+   "notes": [
+    "the full fit did not converge (glmm.R's own status above)",
+    "its bootstrap share intervals come from that non-converged fit and include 98 non-converged refits; glmm.R drops only failed refits",
+    "the task:harness likelihood-ratio test compares fits not both converged"
+   ],
+   "reduced": {
+    "df": 11,
+    "logLik": null,
+    "ok": false,
+    "optimizer_convergence": 0,
+    "optimizer_message": "relative convergence (4)",
+    "pdHess": false
+   },
+   "seed": 42,
+   "sha256": "c753afdf731b71c84945be13bf4a8c4a7794954409ce87ed0eb4711d71107752"
+  },
+  "secondary": {
+   "R_version": "R version 4.4.2 (2024-10-31)",
+   "TMB_version": "1.9.16",
+   "bootstrap": {
+    "refits_failed": 0,
+    "refits_not_converged": 93,
+    "refits_used": 200
+   },
+   "exit_code": 0,
+   "full": {
+    "df": 12,
+    "logLik": -487.401816245017,
+    "ok": true,
+    "optimizer_convergence": 0,
+    "optimizer_message": "relative convergence (4)",
+    "pdHess": true
+   },
+   "glmmTMB_version": "1.1.10",
+   "json_present": true,
+   "lrt_task_harness": {
+    "both_converged": true,
+    "df": 1,
+    "p_value": 0.0454592476141302,
+    "p_value_boundary_corrected": 0.0227296238070651,
+    "statistic": 4.00152009758131
+   },
+   "n_boot": 200,
+   "n_episodes": 1808,
+   "n_tasks": 113,
+   "notes": [
+    "the share intervals include 93 refits that did not converge (glmm.R drops only failed refits)"
+   ],
+   "reduced": {
+    "df": 11,
+    "logLik": -489.402576293808,
+    "ok": true,
+    "optimizer_convergence": 0,
+    "optimizer_message": "relative convergence (4)",
+    "pdHess": true
+   },
+   "seed": 42,
+   "sha256": "69faad13e6a23148bcd0caf6bfd9367ce258e6c1c524adf6aeaaa12453861303"
+  }
+ },
+ "image_id": "sha256:b15584f3954f1c83fc3e5067e29c57c5c55e3b2a50ef28e4e68a394e595aabed",
+ "inputs": {
+  "guard": "6b43dee9fae1ae5ac28457f7a0eb062dc4abfb62c37e09b4f1e298a4efdaa4a2"
+ },
+ "labels": {
+  "external_anchor": "not externally anchored",
+  "incomplete": null,
+  "incomplete_reasons": [],
+  "source": "guard.json (sha256 6b43dee9fae1ae5ac28457f7a0eb062dc4abfb62c37e09b4f1e298a4efdaa4a2)"
+ },
+ "r_packages": {
+  "image_sha256_file": "abb8871de4549732cd396dc60fc1f2aec78bf1fffad788cb841e8bf61668bfc7",
+  "matches_image_file": true,
+  "matches_registered": true,
+  "registered_sha256": "abb8871de4549732cd396dc60fc1f2aec78bf1fffad788cb841e8bf61668bfc7",
+  "sha256": "abb8871de4549732cd396dc60fc1f2aec78bf1fffad788cb841e8bf61668bfc7"
+ },
+ "receipts": {
+  "receipt-1074.json": {
+   "exit_status": 0,
+   "image_id": "sha256:b15584f3954f1c83fc3e5067e29c57c5c55e3b2a50ef28e4e68a394e595aabed",
+   "job_id": "1074"
+  }
+ },
+ "registered_reading": "primary (the base set): section 11's default analysis set and glmm.py's 'the analysis set'; the secondary fit (base plus completed extension blocks) is reported beside it"
+}

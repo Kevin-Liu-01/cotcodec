@@ -1,0 +1,59 @@
+{
+ "differing_paths": [
+  "/attempts/size_harness/4B/H-GA/fractional_scores",
+  "/attempts/size_harness/4B/H-OSW-fixed/fractional_scores",
+  "/attempts/size_harness/9B/H-GA/fractional_scores",
+  "/attempts/size_harness/9B/H-OSW-fixed/fractional_scores",
+  "/attempts/size_harness_session/4B/H-GA/S1/fractional_scores",
+  "/attempts/size_harness_session/4B/H-GA/S2/fractional_scores",
+  "/attempts/size_harness_session/4B/H-OSW-fixed/S1/fractional_scores",
+  "/attempts/size_harness_session/4B/H-OSW-fixed/S2/fractional_scores",
+  "/attempts/size_harness_session/9B/H-GA/S1/fractional_scores",
+  "/attempts/size_harness_session/9B/H-GA/S2/fractional_scores",
+  "/attempts/size_harness_session/9B/H-OSW-fixed/S1/fractional_scores",
+  "/attempts/size_harness_session/9B/H-OSW-fixed/S2/fractional_scores",
+  "/attempts/size_session/4B/S1/fractional_scores",
+  "/attempts/size_session/4B/S2/fractional_scores",
+  "/attempts/size_session/9B/S1/fractional_scores",
+  "/attempts/size_session/9B/S2/fractional_scores",
+  "/cells/4B/H-GA/fractional_scores",
+  "/cells/4B/H-OSW-fixed/fractional_scores",
+  "/cells/9B/H-GA/fractional_scores",
+  "/cells/9B/H-OSW-fixed/fractional_scores",
+  "/cells_by_size_harness_session/4B/H-GA/S1/fractional_scores",
+  "/cells_by_size_harness_session/4B/H-GA/S2/fractional_scores",
+  "/cells_by_size_harness_session/4B/H-OSW-fixed/S1/fractional_scores",
+  "/cells_by_size_harness_session/4B/H-OSW-fixed/S2/fractional_scores",
+  "/cells_by_size_harness_session/9B/H-GA/S1/fractional_scores",
+  "/cells_by_size_harness_session/9B/H-GA/S2/fractional_scores",
+  "/cells_by_size_harness_session/9B/H-OSW-fixed/S1/fractional_scores",
+  "/cells_by_size_harness_session/9B/H-OSW-fixed/S2/fractional_scores",
+  "/cells_by_size_session/4B/S1/fractional_scores",
+  "/cells_by_size_session/4B/S2/fractional_scores",
+  "/cells_by_size_session/9B/S1/fractional_scores",
+  "/cells_by_size_session/9B/S2/fractional_scores",
+  "/fractional_score"
+ ],
+ "inputs": {
+  "guard": "6b43dee9fae1ae5ac28457f7a0eb062dc4abfb62c37e09b4f1e298a4efdaa4a2"
+ },
+ "labels": {
+  "external_anchor": "not externally anchored",
+  "incomplete": null,
+  "incomplete_reasons": [],
+  "source": "guard.json (sha256 6b43dee9fae1ae5ac28457f7a0eb062dc4abfb62c37e09b4f1e298a4efdaa4a2)"
+ },
+ "mode": "fractional: only fractional_score and fractional_scores may differ",
+ "pass": true,
+ "registered": {
+  "exit": 1,
+  "stderr_tail": "/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca/harness/q2_stage1/estimators.py\", line 62, in harness_diff\n    m = cell_means(y)\n  File \"/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca/harness/q2_stage1/estimators.py\", line 57, in cell_means\n    return _nanmean(_check(y), axis=-1)\n  File \"/home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca/harness/q2_stage1/estimators.py\", line 48, in _check\n    raise ValueError(\"outcomes must be 0, 1 or NaN\")\nValueError: outcomes must be 0, 1 or NaN\n"
+ },
+ "registered_scored_zero": {
+  "exit": 0,
+  "sha256": "791d226ca97844e679bd0d61654d30442d847247c10f3c75c8b61cc40bfe607d",
+  "stderr_tail": ""
+ },
+ "wrapper_report": "/home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/report/report.json",
+ "wrapper_report_sha256": "9c4d483aec6dfc9316f1d3a2d1798aaf1c8ed5c57ba5365cecc0015bad3e8d5b"
+}
