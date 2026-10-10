@@ -1,0 +1,15 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "evidence": "Merged discovery verdict NARROWED (frontier, kill-shot and cross-domain cells; nothing OCCUPIED). No direct prior found for the gate's measurement (key-span-constrained versus unconstrained per-episode oracle states with a family-constant floor at a fixed residual interface of a frozen LM, fitted to its own few-shot predictions) under 150 counted queries; closest measurement prior 2608.13385 (full text read); synthesis queries SQ1-SQ6 targeted the redesigned mechanism. The later stages (out of scope) are narrowed by Internalizer 2610.11715 and PorTAL.",
+ "why_fail": [
+  "blind closest-prior discrimination has not run (packets in blind/)",
+  "the novelty refuter of the refute-first triad has not run",
+  "OpenReview, ACL Anthology, patents and Chinese-language venues unsearched; citation graph degraded",
+  "the query budget (150) is exhausted, so the refuter needs a new declared budget"
+ ],
+ "remediation": "Run the blind critic on the two packets in randomized order, then the novelty refuter with at least six discover queries under a newly declared budget; search OpenReview and ACL Anthology."
+}

@@ -1,0 +1,40 @@
+{
+ "url": "https://arxiv.org/abs/2309.05858",
+ "fetched_at": "2026-10-10T06:13:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42692,
+ "raw_sha256": "2cbb9703da559336fd090cb5450ee67759d974e8c099e62a27370e42afa00736",
+ "raw_stored": false,
+ "extract": {
+  "title": "Uncovering mesa-optimization algorithms in Transformers",
+  "authors": [
+   "von Oswald, Johannes",
+   "Schlegel, Maximilian",
+   "Meulemans, Alexander",
+   "Kobayashi, Seijin",
+   "Niklasson, Eyvind",
+   "Zucchet, Nicolas",
+   "Scherrer, Nino",
+   "Miller, Nolan",
+   "Sandler, Mark",
+   "Arcas, Blaise Agüera y",
+   "Vladymyrov, Max",
+   "Pascanu, Razvan",
+   "Sacramento, João"
+  ],
+  "citation_date": "2023/09/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 11 Sep 2023 22:42:50 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 15 Oct 2024 13:43:50 UTC"
+   }
+  ],
+  "abstract": "Some autoregressive models exhibit in-context learning capabilities: being able to learn as an input sequence is processed, without undergoing any parameter changes, and without being explicitly trained to do so. The origins of this phenomenon are still poorly understood. Here we analyze a series of Transformer models trained to perform synthetic sequence prediction tasks, and discover that standard next-token prediction error minimization gives rise to a subsidiary learning algorithm that adjusts the model as new inputs are revealed. We show that this process corresponds to gradient-based optimization of a principled objective function, which leads to strong generalization performance on unseen sequences. Our findings explain in-context learning as a product of autoregressive loss minimization and inform the design of new optimization-based Transformer layers.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
+ "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, source tracing, cross-referencing)",
+ "claim_registry": "Proposal section 'Primary-Source Evidence', claims C01 to C30, each with locator, date, read depth and status",
+ "evidence": "Every cited primary URL snapshotted with HTTP 200 and version history (snapshots/, bundle.json source_snapshots). Synthesis re-read the full texts of 2608.13385, 2610.01054, 2610.00526, 2608.01672, 2306.00297, 2309.05858, 2202.05798 and 2610.11715 (digests in query-log.json) and opened the PorTAL blog to verify its ~98% / ~94% headline. First-party numbers are labelled (2608.13385, 2610.00526, 2610.11715, 2609.08692, PorTAL). Abstract-only claims are labelled (C14 2609.07816, C27 2610.07270; C26 2306.15063 via an alphaXiv report). The dossier's description of Jeong's write rule as Hebbian is corrected (C08).",
+ "verdicts": {
+  "verified_full_text": 23,
+  "abstract_or_report_only": 3,
+  "metadata_only": 1,
+  "first_party_blog": 1,
+  "verified_from_model_card_or_repository_files": 2,
+  "unverifiable_access": 0,
+  "total_claims": 30
+ },
+ "remediation": "If Wilson and Collins 2019 or Nili et al. 2014 is ever cited for a specific rule or number, open the body first."
+}

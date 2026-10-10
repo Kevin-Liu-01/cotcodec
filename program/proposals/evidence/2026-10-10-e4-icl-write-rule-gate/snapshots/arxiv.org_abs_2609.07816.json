@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2609.07816",
+ "fetched_at": "2026-10-10T06:13:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43266,
+ "raw_sha256": "56c3857d189ab1917f85c32c83b71817faddd46819d6506863cf33421f354ba2",
+ "raw_stored": false,
+ "extract": {
+  "title": "Kalman Delta Networks: Uncertainty-aware Associative Memory",
+  "authors": [
+   "Bui, Ngoc",
+   "Huang, Tinglin",
+   "Ying, Rex"
+  ],
+  "citation_date": "2026/09/07",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 7 Sep 2026 17:53:29 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 29 Sep 2026 09:41:52 UTC"
+   }
+  ],
+  "abstract": "Linear attention enables efficient long-context inference by compressing token history into a fixed-size recurrent memory. This compression makes each update a trade-off between incorporating new information and preserving useful associations. Models such as DeltaNet, Gated DeltaNet, and KDA predict write strength from the current token representation, without explicitly tracking uncertainty in the stored memory. Yet this uncertainty matters: a new observation should have greater influence when the existing association is uncertain and less when it is already well supported. We introduce Kalman Delta Networks (KDNs), a family of linear-attention models that explicitly track memory uncertainty to guide each update. By formulating associative memory as a linear-Gaussian state-space model, KDNs propagate both the memory estimate and its uncertainty, using the Kalman gain to balance accumulated evidence against the reliability of new observations. This formulation also recovers standard delta-rule updates by replacing tracked covariance with a token-predicted isotropic surrogate. To support hardware-efficient training and inference, we derive Diagonal KDN and Isotropic KDN, which retain one uncertainty value per key channel and per head, respectively. Their uncertainty updates admit associative scans with logarithmic parallel depth, requiring only $O(d_k)$ and $O(1)$ auxiliary state per head. Across controlled pretraining at 750M and 1.3B parameters, both variants consistently improve perplexity and mean downstream accuracy over the evaluated state-of-the-art linear-attention baselines.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

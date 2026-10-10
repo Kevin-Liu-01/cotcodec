@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2412.11299",
+ "fetched_at": "2026-10-10T06:13:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43903,
+ "raw_sha256": "ade4853ecc8f78e34124dcc0a48578b93168e296f402b89443ac9fcdcb40901b",
+ "raw_stored": false,
+ "extract": {
+  "title": "How not to Stitch Representations to Measure Similarity: Task Loss Matching versus Direct Matching",
+  "authors": [
+   "Balogh, András",
+   "Jelasity, Márk"
+  ],
+  "citation_date": "2024/12/15",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 15 Dec 2024 20:18:49 UTC"
+   }
+  ],
+  "abstract": "Measuring the similarity of the internal representations of deep neural networks is an important and challenging problem. Model stitching has been proposed as a possible approach, where two half-networks are connected by mapping the output of the first half-network to the input of the second one. The representations are considered functionally similar if the resulting stitched network achieves good task-specific performance. The mapping is normally created by training an affine stitching layer on the task at hand while freezing the two half-networks, a method called task loss matching. Here, we argue that task loss matching may be very misleading as a similarity index. For example, it can indicate very high similarity between very distant layers, whose representations are known to have different functional properties. Moreover, it can indicate very distant layers to be more similar than architecturally corresponding layers. Even more surprisingly, when comparing layers within the same network, task loss matching often indicates that some layers are more similar to a layer than itself. We argue that the main reason behind these problems is that task loss matching tends to create out-of-distribution representations to improve task-specific performance. We demonstrate that direct matching (when the mapping minimizes the distance between the stitched representations) does not suffer from these problems. We compare task loss matching, direct matching, and well-known similarity indices such as CCA and CKA. We conclude that direct matching strikes a good balance between the structural and functional requirements for a good similarity index.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

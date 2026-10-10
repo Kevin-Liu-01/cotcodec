@@ -1,0 +1,34 @@
+{
+ "url": "https://arxiv.org/abs/2202.12837",
+ "fetched_at": "2026-10-10T06:13:09Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42478,
+ "raw_sha256": "8d656fc6bd548cee065215b4183b130ef48372a84d2318c129d6c6695ed94cf7",
+ "raw_stored": false,
+ "extract": {
+  "title": "Rethinking the Role of Demonstrations: What Makes In-Context Learning Work?",
+  "authors": [
+   "Min, Sewon",
+   "Lyu, Xinxi",
+   "Holtzman, Ari",
+   "Artetxe, Mikel",
+   "Lewis, Mike",
+   "Hajishirzi, Hannaneh",
+   "Zettlemoyer, Luke"
+  ],
+  "citation_date": "2022/02/25",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 25 Feb 2022 17:25:19 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 20 Oct 2022 14:04:10 UTC"
+   }
+  ],
+  "abstract": "Large language models (LMs) are able to in-context learn -- perform a new task via inference alone by conditioning on a few input-label pairs (demonstrations) and making predictions for new inputs. However, there has been little understanding of how the model learns and which aspects of the demonstrations contribute to end task performance. In this paper, we show that ground truth demonstrations are in fact not required -- randomly replacing labels in the demonstrations barely hurts performance on a range of classification and multi-choce tasks, consistently over 12 different models including GPT-3. Instead, we find that other aspects of the demonstrations are the key drivers of end task performance, including the fact that they provide a few examples of (1) the label space, (2) the distribution of the input text, and (3) the overall format of the sequence. Together, our analysis provides a new way of understanding how and why in-context learning works, while opening up new questions about how much can be learned from large language models through inference alone.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
