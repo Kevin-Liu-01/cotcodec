@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2010.02537",
+ "fetched_at": "2026-10-10T21:49:18Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41783,
+ "raw_sha256": "9e8717ad8834b58a1e40ff092338a0c408e3f8553b0fb2f8681890ea2ceac476",
+ "raw_stored": false,
+ "extract": {
+  "title": "Do Explicit Alignments Robustly Improve Multilingual Encoders?",
+  "authors": [
+   "Wu, Shijie",
+   "Dredze, Mark"
+  ],
+  "citation_date": "2020/10/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 6 Oct 2020 07:43:17 UTC"
+   }
+  ],
+  "abstract": "Multilingual BERT (mBERT), XLM-RoBERTa (XLMR) and other unsupervised multilingual encoders can effectively learn cross-lingual representation. Explicit alignment objectives based on bitexts like Europarl or MultiUN have been shown to further improve these representations. However, word-level alignments are often suboptimal and such bitexts are unavailable for many languages. In this paper, we propose a new contrastive alignment objective that can better utilize such signal, and examine whether these previous alignment methods can be adapted to noisier sources of aligned data: a randomly sampled 1 million pair subset of the OPUS collection. Additionally, rather than report results on a single dataset with a single model run, we report the mean and standard derivation of multiple runs with different seeds, on four datasets and tasks. Our more extensive analysis finds that, while our new objective outperforms previous work, overall these methods do not improve performance with a more robust evaluation framework. Furthermore, the gains from using a better underlying model eclipse any benefits from alignment training. These negative results dictate more care in evaluating these methods and suggest limitations in applying explicit alignment objectives.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

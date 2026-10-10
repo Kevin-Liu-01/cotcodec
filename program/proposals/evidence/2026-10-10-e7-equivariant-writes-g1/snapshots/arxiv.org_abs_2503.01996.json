@@ -1,0 +1,35 @@
+{
+ "url": "https://arxiv.org/abs/2503.01996",
+ "fetched_at": "2026-10-10T21:49:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42100,
+ "raw_sha256": "9d9806c18485aa3922b8e1d300f271ddc3dcf0a8d7cfa21b1eda8577c6fcdf0d",
+ "raw_stored": false,
+ "extract": {
+  "title": "One ruler to measure them all: Benchmarking multilingual long-context language models",
+  "authors": [
+   "Kim, Yekyung",
+   "Russell, Jenna",
+   "Karpinska, Marzena",
+   "Iyyer, Mohit"
+  ],
+  "citation_date": "2025/03/03",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 3 Mar 2025 19:12:48 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 8 Aug 2025 04:05:14 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Tue, 30 Sep 2025 16:07:14 UTC"
+   }
+  ],
+  "abstract": "We present ONERULER, a multilingual benchmark designed to evaluate long-context language models across 26 languages. ONERULER adapts the English-only RULER benchmark (Hsieh et al., 2024) by including seven synthetic tasks that test both retrieval and aggregation, including new variations of the \"needle-in-a-haystack\" task that allow for the possibility of a nonexistent needle. We create ONERULER through a two-step process, first writing English instructions for each task and then collaborating with native speakers to translate them into 25 additional languages. Experiments with both open-weight and closed LLMs reveal a widening performance gap between low- and high-resource languages as context length increases from 8K to 128K tokens. Surprisingly, English is not the top-performing language on long-context tasks (ranked 6th out of 26), with Polish emerging as the top language. Our experiments also show that many LLMs (particularly OpenAI's o3-mini-high) incorrectly predict the absence of an answer, even in high-resource languages. Finally, in cross-lingual scenarios where instructions and context appear in different languages, performance can fluctuate by up to 20% depending on the instruction language. We hope the release of ONERULER will facilitate future research into improving multilingual and cross-lingual long-context training pipelines.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

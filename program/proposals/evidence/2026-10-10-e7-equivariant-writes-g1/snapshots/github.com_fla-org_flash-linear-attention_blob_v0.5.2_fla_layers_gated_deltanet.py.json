@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/fla-org/flash-linear-attention/blob/v0.5.2/fla/layers/gated_deltanet.py",
+ "fetched_at": "2026-10-10T21:50:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 459874,
+ "raw_sha256": "473fa8e70687bec2bd1c6cb53b2ff51d8aceb5d3a6b38cfbd6b21aebc0c55912",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "flash-linear-attention/fla/layers/gated_deltanet.py at v0.5.2 · fla-org/flash-linear-attention · GitHub"
+ }
+}

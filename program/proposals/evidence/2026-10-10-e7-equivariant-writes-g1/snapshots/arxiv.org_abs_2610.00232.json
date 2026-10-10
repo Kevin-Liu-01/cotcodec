@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2610.00232",
+ "fetched_at": "2026-10-10T21:49:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 68448,
+ "raw_sha256": "1e65078baf5ff5acdbc92dbeeaf6cea447b5effbaec9dcb01cd477339e850d3f",
+ "raw_stored": false,
+ "extract": {
+  "title": "Constant-Memory Recall: Learned Associations in a Fixed Matrix State",
+  "authors": [
+   "Larson, Samuel"
+  ],
+  "citation_date": "2026/09/23",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 23 Sep 2026 00:17:36 UTC"
+   }
+  ],
+  "abstract": "Fixed-size recurrent memory limits storage growth during inference, but successful recall depends on the task and training. We study a small DeltaNet variant with fixed token-specific key biases, trained to remember 32 new key-value pairings per sequence. With 32 KiB of recurrent matrix state, it achieves 99.95% mean accuracy across three training seeds when choosing among the sequence's values. Recall remains near perfect when filler extends the pre-query context to 1,798 tokens without adding pairings. Zeroing the first memory block removes this recall. An exploratory 48-pair test remains near chance after one quarter of the primary training budget and does not locate a capacity limit. Parameter-matched vector and Transformer baselines remain near chance, including the Transformer after additional training searches. This unresolved baseline failure prevents a memory-efficiency comparison.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

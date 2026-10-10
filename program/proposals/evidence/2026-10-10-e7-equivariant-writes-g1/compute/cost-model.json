@@ -1,0 +1,150 @@
+{
+ "script": "cost-model.py",
+ "measured_base": {
+  "tokens_per_s": 282501.4,
+  "slurm_job": 359,
+  "mode": "eager, bf16 params, random tokens, full causal attention, seq 2048 x batch 16",
+  "image": "127.0.0.1:5000/cotcodec-research@sha256:02965f3d696d4e516a7cd6d5c03434e9098139738748ae778ed967215db7be6d"
+ },
+ "assumptions": {
+  "train_time_multiplier": {
+   "central": 1.25,
+   "high": 1.5
+  },
+  "eval_forward_rate_over_R0": {
+   "central": 2.0,
+   "high": 1.5
+  },
+  "job_startup_s": {
+   "central": 180,
+   "high": 300
+  },
+  "compile_and_autotune_s": {
+   "central": 180,
+   "high": 300
+  },
+  "checkpoint_saves_s_per_trunk": {
+   "central": 60,
+   "high": 110
+  },
+  "probe_step_cost_vs_A0": {
+   "A1_write_extraction": 3.0,
+   "restricted_attention_aux_pass": 2.0
+  },
+  "cap_factor": 1.2,
+  "cap_rounding": "up to a whole minute"
+ },
+ "tokens_per_step": 32768,
+ "eval_tokens_per_seed": {
+  "primary_reads_200M_branch_and_1B_all_bins_8_candidates_prefix_cached": 38900000,
+  "noise_reads_960M_980M_B3_target_only": 29500000,
+  "emergence_reads_100M_400M_800M_B3_and_B1": 49500000,
+  "diagnostics_at_1B_state_cut_B2_B3_v0_ablation_B3_csls_writes_probes": 42450000
+ },
+ "eval_tokens_per_seed_total": 160350000,
+ "jobs": [
+  {
+   "job": "J1 smoke, step-overhead probe, cached-candidate equivalence, then LR sweep (3 x 50M tokens, seed 42)",
+   "conditional": false,
+   "train_tokens": 159830400,
+   "eval_tokens": 0.0,
+   "probe_step_equivalents": 1200.0,
+   "note": "smoke gates must pass before the sweep starts in the same job",
+   "central_s": 1241.2,
+   "central_gpu_h": 0.345,
+   "high_s": 1657.4,
+   "high_gpu_h": 0.46,
+   "cap_s": 2040,
+   "cap_min": 34,
+   "cap_gpu_h": 0.567
+  },
+  {
+   "job": "J2 fresh-job resume test (100 steps from the J1 step-200 checkpoint)",
+   "conditional": false,
+   "train_tokens": 3276800,
+   "eval_tokens": 0.0,
+   "probe_step_equivalents": 0.0,
+   "note": "",
+   "central_s": 374.5,
+   "central_gpu_h": 0.104,
+   "high_s": 617.4,
+   "high_gpu_h": 0.171,
+   "cap_s": 780,
+   "cap_min": 13,
+   "cap_gpu_h": 0.217
+  },
+  {
+   "job": "J3 conditional LR extension (one value beyond the grid edge, 50M tokens)",
+   "conditional": true,
+   "train_tokens": 50000000,
+   "eval_tokens": 0.0,
+   "probe_step_equivalents": 0.0,
+   "note": "runs only if the selected LR is at a grid edge",
+   "central_s": 581.2,
+   "central_gpu_h": 0.161,
+   "high_s": 865.5,
+   "high_gpu_h": 0.24,
+   "cap_s": 1080,
+   "cap_min": 18,
+   "cap_gpu_h": 0.3
+  },
+  {
+   "job": "T42 trunk to 1B tokens with a 40M-token decay branch at 160M, then all reads (seed 42)",
+   "conditional": false,
+   "train_tokens": 1040000000,
+   "eval_tokens": 160350000,
+   "probe_step_equivalents": 0.0,
+   "note": "seeds 43 and 44 are skipped if seed 42 meets the futility rule; their caps still count",
+   "central_s": 5305.6,
+   "central_gpu_h": 1.474,
+   "high_s": 6610.5,
+   "high_gpu_h": 1.836,
+   "cap_s": 7980,
+   "cap_min": 133,
+   "cap_gpu_h": 2.217
+  },
+  {
+   "job": "T43 trunk to 1B tokens with a 40M-token decay branch at 160M, then all reads (seed 43)",
+   "conditional": false,
+   "train_tokens": 1040000000,
+   "eval_tokens": 160350000,
+   "probe_step_equivalents": 0.0,
+   "note": "seeds 43 and 44 are skipped if seed 42 meets the futility rule; their caps still count",
+   "central_s": 5305.6,
+   "central_gpu_h": 1.474,
+   "high_s": 6610.5,
+   "high_gpu_h": 1.836,
+   "cap_s": 7980,
+   "cap_min": 133,
+   "cap_gpu_h": 2.217
+  },
+  {
+   "job": "T44 trunk to 1B tokens with a 40M-token decay branch at 160M, then all reads (seed 44)",
+   "conditional": false,
+   "train_tokens": 1040000000,
+   "eval_tokens": 160350000,
+   "probe_step_equivalents": 0.0,
+   "note": "seeds 43 and 44 are skipped if seed 42 meets the futility rule; their caps still count",
+   "central_s": 5305.6,
+   "central_gpu_h": 1.474,
+   "high_s": 6610.5,
+   "high_gpu_h": 1.836,
+   "cap_s": 7980,
+   "cap_min": 133,
+   "cap_gpu_h": 2.217
+  }
+ ],
+ "cap_sum_gpu_h_D22": 7.733,
+ "cap_sum_within_8": true,
+ "central_gpu_h_all_seeds_no_extension": 4.871,
+ "high_gpu_h_all_jobs": 6.379,
+ "central_gpu_h_if_futility_stop_after_seed_42": 1.923,
+ "throughput_gate_min_training_tokens_per_s": 179329,
+ "throughput_gate_as_share_of_R0": 0.635,
+ "one_seed_comparison": {
+  "dossier_estimate_gpu_h": 2.5,
+  "this_model_one_seed_central_gpu_h": 1.923,
+  "this_model_one_seed_caps_gpu_h": 3.301
+ },
+ "raw_gpu_h_per_1B_tokens_at_R0": 0.9833
+}

@@ -1,0 +1,9 @@
+{
+ "doctor": "Safety",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Safety, monitorability, data rights, and project red lines addressed",
+ "evidence": "Public, licensed data (FineWeb, FineWeb-2 ODC-By; ParaDocs Apache-2.0 packaging; ParaCrawl Bonus CC0 packaging; SCB-MT and NTREX-128 CC BY-SA 4.0) with source text kept out of the public repository; FLORES+ used only if Kevin accepts its gated terms; TED2020 (D4) and General Translation customer data excluded; 2610.06750's unlicensed code reimplemented, never vendored; no untrusted code executed (D7); no host job while S1a runs; no host address or credential in the repository.",
+ "remediation": "none"
+}

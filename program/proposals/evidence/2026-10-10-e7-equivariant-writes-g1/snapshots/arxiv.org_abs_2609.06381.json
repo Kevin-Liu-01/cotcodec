@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2609.06381",
+ "fetched_at": "2026-10-10T21:49:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42306,
+ "raw_sha256": "b53bed8440206ac99d6b424055bf081e7a6d81cfb07e3beaed7bf1263b63cf2a",
+ "raw_stored": false,
+ "extract": {
+  "title": "Cross-Lingual Representation Alignment by Token-Level Optimal Transport in a Language-Agnostic Space",
+  "authors": [
+   "Yamamoto, Taisei",
+   "Kumon, Ryoma",
+   "Bollegala, Danushka",
+   "Yanaka, Hitomi"
+  ],
+  "citation_date": "2026/09/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 6 Sep 2026 04:39:10 UTC"
+   }
+  ],
+  "abstract": "Cross-lingual alignment (CLA) aims to align the representations of large language models (LLMs) across languages, enabling cross-lingual transfer to improve multilingual capabilities. Previous CLA methods often ignore language-specific information encoded in representations and only consider sentence-level alignment, which may lead to suboptimal performance and input-output language mismatch. We propose CAROT (Cross-Lingual Alignment of Representations in a Language-Agnostic Space via Optimal Transport), which consists of two steps: identifying language-specific representations in LLMs' internal states and aligning language-agnostic representations across languages at the token level by optimal transport, while explicitly preserving language-specific representations. Inference-time steering experiments show that the representations computed by CAROT are effective alignment targets, improving multilingual performance by up to 11.2 points in accuracy while maintaining input-output language consistency. We further use the representations obtained by CAROT as training targets, internalizing the aligned representations. The trained models outperform existing CLA methods in 11 of 18 evaluation settings (3 models $\\times$ 3 tasks $\\times$ ID/OOD languages). Our work provides insights into what constitutes effective alignment targets for CLA in LLMs. Code is available at this https URL",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

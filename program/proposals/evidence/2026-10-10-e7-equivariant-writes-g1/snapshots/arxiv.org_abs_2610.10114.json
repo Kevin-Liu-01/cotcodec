@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2610.10114",
+ "fetched_at": "2026-10-10T21:49:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41831,
+ "raw_sha256": "cd4bbc7f26ea3b23074bb4d259d9500ea7b1f47cda152f09f8aaaede792c7218",
+ "raw_stored": false,
+ "extract": {
+  "title": "Mechanics of Long-Context Hybrid Models Part 1.1: From Hybrid Attention to Hybrid Position",
+  "authors": [
+   "Liu, Xiaoran",
+   "He, Ziwei",
+   "Qiu, Xipeng"
+  ],
+  "citation_date": "2026/10/07",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 7 Oct 2026 14:02:35 UTC"
+   }
+  ],
+  "abstract": "The architectural design of Large Language Models (LLMs) is shifting from traditional full-attention-only models to hybrid models, which combine different attention modules to improve long-context efficiency and performance in length extrapolation and context extension. To explain why hybrid models work and how to design them better, we propose Mechanics of Long-Context Hybrid Models. As Part 1.1 of this series, we begin with hybrids of full attention and either sliding-window attention (SWA) or gated variants of linear attention (LA), represented by GLA and GDN. We first observe a Seesaw Effect in Context Extension: LA hybrids benefit more from long-context continual pretraining, whereas SWA hybrids perform better under length extrapolation. We attribute this behavior to differences in the positional inductive biases induced by these attention mechanisms. We find that SWA hybrids suffer from a Short-Context Learning Trap, Short-Window Weariness, and Long-Window Laziness, and require extended windows to enhance performance in continual long-context pretraining. For LA hybrids, we summarize the Matthew Effect of Hybrid Position Extrapolation and propose Sliding-Window Linear Attention, achieving 16$\\times$ training-free length extrapolation while maintaining 100\\% accuracy on NIAH-SK1 in 64k context length.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

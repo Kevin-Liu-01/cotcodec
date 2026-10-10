@@ -1,0 +1,44 @@
+{
+ "note": "One-line summaries of the four discovery cells' returned verdicts, written by the synthesis owner from the cell reports relayed by the workflow on 2026-10-10. The cells' raw query outputs and paper texts stay in the session scratchpad; query-log.json records each raw file's SHA-256.",
+ "frontier": {
+  "scope": "FRONTIER and NOVELTY scout (independent cell, no edits); G1 floor gate plus the prior landscape the later equivariance arms face; search through 2026-10-10",
+  "verdict": "NARROWED (holds from the dossier; nothing found occupies it). All four dossier closest priors still v1; 2610.01921 now v2; 2610.06750 also ICLR 2027 submission nIDJ2pPPOB (2026-09-18), no multilingual content, code repository unlicensed. Five G1 contract changes: A0 is GatedDeltaNet-H1 with a 512 window (instrument gate, not architecture); beyond 512 is not state-only (SWA relay over about L x W); window size decides whether the recurrent path is trained; lock-in is a per-seed lottery; expect the cross-lingual 15% line to be hard on surface-disjoint keys.",
+  "counts": {
+   "orx_discover": 46,
+   "openreview_searches": 16,
+   "web_searches": 3,
+   "webfetch": 1,
+   "full_text_reads": 35
+  },
+  "coverage_limits": "orx 0.2.2 (outdated); OpenAlex lacks 2610.06750; OpenReview per-note pages challenged, abstracts only; ACL Anthology via web search only; no Semantic Scholar, arXiv API, X, Reddit, HF papers, patents, Chinese sources; 2026.acl-long.1706 unverified."
+ },
+ "kill_shot": {
+  "scope": "kill-shot scout, G1 floor-gate scope only (independent cell)",
+  "verdict": "NARROWED, not OCCUPIED. The G1 gate as written is uninformative on the equivariance question by construction and poorly identified on its own question: a failure is pre-explained (7.5 tokens per parameter; 2604.17633; 2609.35378; recurrent-first layout; no dense arm; lottery), a pass does not show state carriage (3 x 512 relay; 2609.34049), SWA-512 empties the 2610.06750 baseline beyond reach, and a pass unlocks only a single-scale grid that cannot meet the 0.1B-1B bar. Cheapest repair: read beyond n_SWA x W plus conv reach, add eval-time cuts, specify seeds and curriculum distances, restore a reference, match test and training languages. Not a reject: a fatal identification defect for the gate as written.",
+  "counts": {
+   "orx_discover": 23,
+   "full_text_reads": 13,
+   "openreview_searches": 3,
+   "web_searches": 1
+  },
+  "coverage_limits": "orx 0.2.2; OpenReview surfaced only up to ICLR 2026 in its searches; one ACL web search; 2609.30535 and others screened by abstract only; no host access."
+ },
+ "cross_domain": {
+  "scope": "cross-domain scout (independent cell)",
+  "verdict": "G1 is worth its cost only with identification and measurement repairs: gate on a bin beyond n_SWA x W; v=0 fact-write ablation; preamble against sink leakage; continuous readouts (per-digit, log-probability, forced choice among N codes); checkpoint-noise error bars; CSLS bitext retrieval and decay-timescale diagnostics; WSD trunk with a cooldown branch for the 200M read; a small LR sweep; a loss-spike rule; chrono initialization only as a named repair. Later-stage priors: LooC, soft equivariance layer placement, Wu and Dredze null, exposure matching.",
+  "counts": {
+   "orx_discover": 24,
+   "full_text_reads": 19,
+   "curl": 1
+  },
+  "coverage_limits": "no OpenReview or ACL Anthology directly; vision results by analogy; the init-timescale numbers are the cell's own Monte Carlo; SWA-512 throughput unmeasured."
+ },
+ "asset": {
+  "scope": "asset and cost cell (read-only host checks, CPU runs on the Mac)",
+  "verdict": "G1 trains from scratch and needs no pretrained asset, but no G1 code exists; the measured 134M config differs from the legacy 57M A0; the measured image is still on the host (fla 0.5.2, tilelang; no flash-attn, sentencepiece, datasets, datasketch); host data about 0.25B tokens against 1.2B needed; FLORES+ gated; ParaDocs lacks en-zh; the legacy phase-0 doctor passes on main (payload hash equal to the registered one) but tests nothing G1 depends on; one seed about 2.4 GPU-h with reserve, three seeds 5.4 to 7.8 GPU-h.",
+  "counts": {
+   "orx_paper_full": 1
+  },
+  "coverage_limits": "throughput base is an eager microbenchmark; SWA, fp32 master weights and the data pipeline unmeasured; Mac CPU load about 120."
+ }
+}
