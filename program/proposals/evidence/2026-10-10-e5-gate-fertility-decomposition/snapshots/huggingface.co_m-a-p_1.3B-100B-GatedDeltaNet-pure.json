@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/m-a-p/1.3B-100B-GatedDeltaNet-pure",
+ "fetched_at": "2026-10-10T21:51:23Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 100707,
+ "raw_sha256": "f17dad165ce1aa242a8dc4b0963ab59e7126b6ddc044057c82c7911a7496e81b",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "m-a-p/1.3B-100B-GatedDeltaNet-pure · Hugging Face"
+ }
+}

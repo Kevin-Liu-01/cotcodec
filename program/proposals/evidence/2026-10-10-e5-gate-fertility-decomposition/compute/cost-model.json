@@ -1,0 +1,418 @@
+{
+ "assumptions": {
+  "R": 512,
+  "LEAD": 24,
+  "FACT": 18,
+  "QUERY": 12,
+  "CAND": 24,
+  "DECODE": 6,
+  "N_PRIMARY": 1500,
+  "N_SECONDARY": 500,
+  "FS": [
+   1.5,
+   2.0,
+   2.7
+  ],
+  "CONTEXT_LIMIT": 1900,
+  "anchor": "73,045 tok/s/GPU training, 422M GDN hybrid, fla 0.5.2 image 0b3ecef0-architecture (docs/h100-node.md); forward-only inference never measured on this host",
+  "scenarios": {
+   "central": {
+    "gdn": 40000,
+    "rwkv": 20000,
+    "hook": 1.2,
+    "resume": 1.1,
+    "fixed": 0.15
+   },
+   "high": {
+    "gdn": 20000,
+    "rwkv": 8000,
+    "hook": 1.5,
+    "resume": 1.1,
+    "fixed": 0.25
+   }
+  }
+ },
+ "cells": [
+  {
+   "cell": "CAN K1",
+   "k": 1,
+   "f": 1.0,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 596.0,
+   "tokens": 894000.0,
+   "max_context": 572.0
+  },
+  {
+   "cell": "NAT(1.5) K1",
+   "k": 1,
+   "f": 1.5,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 852.0,
+   "tokens": 1278000.0,
+   "max_context": 828.0
+  },
+  {
+   "cell": "CLAMP(1.5) K1",
+   "k": 1,
+   "f": 1.5,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 852.0,
+   "tokens": 1278000.0,
+   "max_context": 828.0
+  },
+  {
+   "cell": "NAT(2.0) K1",
+   "k": 1,
+   "f": 2.0,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 1108.0,
+   "tokens": 1662000.0,
+   "max_context": 1084.0
+  },
+  {
+   "cell": "CLAMP(2.0) K1",
+   "k": 1,
+   "f": 2.0,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 1108.0,
+   "tokens": 1662000.0,
+   "max_context": 1084.0
+  },
+  {
+   "cell": "NAT(2.7) K1",
+   "k": 1,
+   "f": 2.7,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 1466.4,
+   "tokens": 2199600.0,
+   "max_context": 1442.4
+  },
+  {
+   "cell": "CLAMP(2.7) K1",
+   "k": 1,
+   "f": 2.7,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 1466.4,
+   "tokens": 2199600.0,
+   "max_context": 1442.4
+  },
+  {
+   "cell": "BND K1",
+   "k": 1,
+   "f": 1.0,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 596.0,
+   "tokens": 894000.0,
+   "max_context": 572.0
+  },
+  {
+   "cell": "ZERO K1",
+   "k": 1,
+   "f": 0.0,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 84.0,
+   "tokens": 126000.0,
+   "max_context": 60.0
+  },
+  {
+   "cell": "CAN K4",
+   "k": 4,
+   "f": 1.0,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 650.0,
+   "tokens": 975000.0,
+   "max_context": 626.0
+  },
+  {
+   "cell": "NAT(1.5) K4",
+   "k": 4,
+   "f": 1.5,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 906.0,
+   "tokens": 1359000.0,
+   "max_context": 882.0
+  },
+  {
+   "cell": "CLAMP(1.5) K4",
+   "k": 4,
+   "f": 1.5,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 906.0,
+   "tokens": 1359000.0,
+   "max_context": 882.0
+  },
+  {
+   "cell": "NAT(2.0) K4",
+   "k": 4,
+   "f": 2.0,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 1162.0,
+   "tokens": 1743000.0,
+   "max_context": 1138.0
+  },
+  {
+   "cell": "CLAMP(2.0) K4",
+   "k": 4,
+   "f": 2.0,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 1162.0,
+   "tokens": 1743000.0,
+   "max_context": 1138.0
+  },
+  {
+   "cell": "NAT(2.7) K4",
+   "k": 4,
+   "f": 2.7,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 1520.4,
+   "tokens": 2280600.0,
+   "max_context": 1496.4
+  },
+  {
+   "cell": "CLAMP(2.7) K4",
+   "k": 4,
+   "f": 2.7,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 1520.4,
+   "tokens": 2280600.0,
+   "max_context": 1496.4
+  },
+  {
+   "cell": "BND K4",
+   "k": 4,
+   "f": 1.0,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 650.0,
+   "tokens": 975000.0,
+   "max_context": 626.0
+  },
+  {
+   "cell": "ZERO K4",
+   "k": 4,
+   "f": 0.0,
+   "n": 1500,
+   "tier": "primary",
+   "tokens_per_episode": 138.0,
+   "tokens": 207000.0,
+   "max_context": 114.0
+  },
+  {
+   "cell": "CAN K16",
+   "k": 16,
+   "f": 1.0,
+   "n": 500,
+   "tier": "ladder-3 K16",
+   "tokens_per_episode": 866.0,
+   "tokens": 433000.0,
+   "max_context": 842.0
+  },
+  {
+   "cell": "NAT(2.7) K16",
+   "k": 16,
+   "f": 2.7,
+   "n": 500,
+   "tier": "ladder-3 K16",
+   "tokens_per_episode": 1736.4,
+   "tokens": 868200.0,
+   "max_context": 1712.4
+  },
+  {
+   "cell": "CLAMP(2.7) K16",
+   "k": 16,
+   "f": 2.7,
+   "n": 500,
+   "tier": "ladder-3 K16",
+   "tokens_per_episode": 1736.4,
+   "tokens": 868200.0,
+   "max_context": 1712.4
+  },
+  {
+   "cell": "ZERO K16",
+   "k": 16,
+   "f": 0.0,
+   "n": 500,
+   "tier": "ladder-3 K16",
+   "tokens_per_episode": 354.0,
+   "tokens": 177000.0,
+   "max_context": 330.0
+  },
+  {
+   "cell": "FILL(1.5) K4",
+   "k": 4,
+   "f": 1.5,
+   "n": 500,
+   "tier": "ladder-2 FILL",
+   "tokens_per_episode": 906.0,
+   "tokens": 453000.0,
+   "max_context": 882.0
+  },
+  {
+   "cell": "FILL(2.0) K4",
+   "k": 4,
+   "f": 2.0,
+   "n": 500,
+   "tier": "ladder-2 FILL",
+   "tokens_per_episode": 1162.0,
+   "tokens": 581000.0,
+   "max_context": 1138.0
+  },
+  {
+   "cell": "FILL(2.7) K4",
+   "k": 4,
+   "f": 2.7,
+   "n": 500,
+   "tier": "ladder-2 FILL",
+   "tokens_per_episode": 1520.4,
+   "tokens": 760200.0,
+   "max_context": 1496.4
+  },
+  {
+   "cell": "SIL(1) K4",
+   "k": 4,
+   "f": 1.0,
+   "n": 500,
+   "tier": "ladder-5 SIL",
+   "tokens_per_episode": 650.0,
+   "tokens": 325000.0,
+   "max_context": 626.0
+  },
+  {
+   "cell": "SIL(2.7) K4",
+   "k": 4,
+   "f": 2.7,
+   "n": 500,
+   "tier": "ladder-5 SIL",
+   "tokens_per_episode": 1520.4,
+   "tokens": 760200.0,
+   "max_context": 1496.4
+  },
+  {
+   "cell": "SIL-CLAMP(2.7) K4",
+   "k": 4,
+   "f": 2.7,
+   "n": 500,
+   "tier": "ladder-5 SIL",
+   "tokens_per_episode": 1520.4,
+   "tokens": 760200.0,
+   "max_context": 1496.4
+  },
+  {
+   "cell": "R2(1) K4",
+   "k": 4,
+   "f": 1.0,
+   "n": 500,
+   "tier": "ladder-6 R2",
+   "tokens_per_episode": 650.0,
+   "tokens": 325000.0,
+   "max_context": 626.0
+  },
+  {
+   "cell": "R2(2.7) K4",
+   "k": 4,
+   "f": 2.7,
+   "n": 500,
+   "tier": "ladder-6 R2",
+   "tokens_per_episode": 1520.4,
+   "tokens": 760200.0,
+   "max_context": 1496.4
+  },
+  {
+   "cell": "FACT(2.0) K4",
+   "k": 4,
+   "f": 1.0,
+   "n": 500,
+   "tier": "ladder-4 FACT",
+   "extra_fact": 72,
+   "tokens_per_episode": 722.0,
+   "tokens": 361000.0,
+   "max_context": 698.0
+  },
+  {
+   "cell": "BOTH(2.0) K4",
+   "k": 4,
+   "f": 2.0,
+   "n": 500,
+   "tier": "ladder-4 FACT",
+   "extra_fact": 72,
+   "tokens_per_episode": 1234.0,
+   "tokens": 617000.0,
+   "max_context": 1210.0
+  },
+  {
+   "cell": "identity and r=2 cross-check (5 passes x 200 episodes, K4, f=1)",
+   "k": 4,
+   "f": 5.0,
+   "n": 200,
+   "tier": "gate",
+   "extra_fact": 552,
+   "tokens_per_episode": 3250.0,
+   "tokens": 650000.0
+  },
+  {
+   "cell": "BPB full-logit subset (CAN, NAT x3, BND; 200 episodes)",
+   "k": 4,
+   "f": 8.2,
+   "n": 200,
+   "tier": "ladder-1 BPB",
+   "extra_fact": 552,
+   "tokens_per_episode": 4888.4,
+   "tokens": 977679.9999999999
+  }
+ ],
+ "tokens_per_subject": 34792280.0,
+ "tokens_primary_and_gates": 25765400.0,
+ "cells_over_context_limit": [],
+ "estimate": {
+  "central": {
+   "gdn_job_h": 0.469,
+   "rwkv_job_h": 0.788,
+   "sum_h": 1.257,
+   "gdn_primary_only_h": 0.386,
+   "rwkv_primary_only_h": 0.622
+  },
+  "high": {
+   "gdn_job_h": 1.047,
+   "rwkv_job_h": 2.243,
+   "sum_h": 3.291,
+   "gdn_primary_only_h": 0.84,
+   "rwkv_primary_only_h": 1.726
+  }
+ },
+ "registered_caps_gpu_h": {
+  "smoke": 0.25,
+  "gdn_main": 1.25,
+  "rwkv_main": 2.5,
+  "sum": 4.0
+ },
+ "d22_rule": "sum of registered caps of every job (smoke 0.25 + GDN 1.25 + RWKV 2.5 = 4.0) must be at most 8.0 GPU-h",
+ "primary_only_throughput_floor_tok_s": {
+  "gdn": 11809,
+  "rwkv": 5249
+ },
+ "ladder": [
+  "ladder-1 BPB subset",
+  "ladder-2 FILL (keep FILL(2.7))",
+  "ladder-3 K16",
+  "ladder-4 FACT and BOTH",
+  "ladder-5 SIL arms",
+  "ladder-6 R2 arms",
+  "never cut: primary cells (CAN, NAT and CLAMP at f in {1.5, 2.0, 2.7}, BND, ZERO at K in {1, 4}) and the gates"
+ ]
+}

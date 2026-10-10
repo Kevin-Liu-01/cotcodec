@@ -1,0 +1,38 @@
+{
+ "url": "https://arxiv.org/abs/2509.19633",
+ "fetched_at": "2026-10-10T21:26:38Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44272,
+ "raw_sha256": "5e326718a5804d08093d3414223715e2d6288eb8daee5a97205c03ca8bdf22fa",
+ "raw_stored": false,
+ "extract": {
+  "title": "Mamba Modulation: On the Length Generalization of Mamba",
+  "authors": [
+   "Lu, Peng",
+   "Huang, Jerry",
+   "Zeng, Qiuhao",
+   "Wang, Xinyu",
+   "Chen, Boxing",
+   "Langlais, Philippe",
+   "Cui, Yufei"
+  ],
+  "citation_date": "2025/09/23",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 23 Sep 2025 22:46:19 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 24 Oct 2025 10:19:29 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Sun, 14 Dec 2025 03:37:29 UTC"
+   }
+  ],
+  "abstract": "The quadratic complexity of the attention mechanism in Transformer models has motivated the development of alternative architectures with sub-quadratic scaling, such as state-space models. Among these, Mamba has emerged as a leading architecture, achieving state-of-the-art results across a range of language modeling tasks. However, Mamba's performance significantly deteriorates when applied to contexts longer than those seen during pre-training, revealing a sharp sensitivity to context length extension. Through detailed analysis, we attribute this limitation to the out-of-distribution behaviour of its state-space dynamics, particularly within the parameterization of the state transition matrix $\\mathbf{A}$. Unlike recent works which attribute this sensitivity to the vanished accumulation of discretization time steps, $\\exp(-\\sum_{t=1}^N\\Delta_t)$, we establish a connection between state convergence behavior as the input length approaches infinity and the spectrum of the transition matrix $\\mathbf{A}$, offering a well-founded explanation of its role in length extension. Next, to overcome this challenge, we propose an approach that applies spectrum scaling to pre-trained Mamba models to enable robust long-context generalization by selectively modulating the spectrum of $\\mathbf{A}$ matrices in each layer. We show that this can significantly improve performance in settings where simply modulating $\\Delta_t$ fails, validating our insights and providing avenues for better length generalization of state-space models with structured transition matrices.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

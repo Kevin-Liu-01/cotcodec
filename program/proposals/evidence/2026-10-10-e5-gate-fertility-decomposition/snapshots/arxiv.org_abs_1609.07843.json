@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/1609.07843",
+ "fetched_at": "2026-10-10T21:26:36Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41113,
+ "raw_sha256": "df982cfe3b145d9e2fcbca0da286ebaafa803c2aa1c1d1f4c70af410c7755cc9",
+ "raw_stored": false,
+ "extract": {
+  "title": "Pointer Sentinel Mixture Models",
+  "authors": [
+   "Merity, Stephen",
+   "Xiong, Caiming",
+   "Bradbury, James",
+   "Socher, Richard"
+  ],
+  "citation_date": "2016/09/26",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 26 Sep 2016 04:06:13 UTC"
+   }
+  ],
+  "abstract": "Recent neural network sequence models with softmax classifiers have achieved their best language modeling performance only with very large hidden states and large vocabularies. Even then they struggle to predict rare or unseen words even if the context makes the prediction unambiguous. We introduce the pointer sentinel mixture architecture for neural sequence models which has the ability to either reproduce a word from the recent context or produce a word from a standard softmax classifier. Our pointer sentinel-LSTM model achieves state of the art language modeling performance on the Penn Treebank (70.9 perplexity) while using far fewer parameters than a standard softmax LSTM. In order to evaluate how well language models can exploit longer contexts and deal with more realistic vocabularies and larger corpora we also introduce the freely available WikiText corpus.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

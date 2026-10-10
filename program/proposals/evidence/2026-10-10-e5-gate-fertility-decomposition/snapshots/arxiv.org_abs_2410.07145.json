@@ -1,0 +1,41 @@
+{
+ "url": "https://arxiv.org/abs/2410.07145",
+ "fetched_at": "2026-10-10T21:26:37Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43374,
+ "raw_sha256": "0d9086eb8b14ca9f13d262c1217e9a0b4c63bea45c3632a2696f87b4ae34ae8a",
+ "raw_stored": false,
+ "extract": {
+  "title": "Stuffed Mamba: Oversized States Lead to the Inability to Forget",
+  "authors": [
+   "Chen, Yingfa",
+   "Zhang, Xinrong",
+   "Hu, Shengding",
+   "Han, Xu",
+   "Liu, Zhiyuan",
+   "Sun, Maosong"
+  ],
+  "citation_date": "2024/10/09",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 9 Oct 2024 17:54:28 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 26 May 2025 09:14:09 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Fri, 26 Sep 2025 06:31:28 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Tue, 13 Jan 2026 07:01:24 UTC"
+   }
+  ],
+  "abstract": "Recent advancements in recurrent architectures, such as Mamba and RWKV, have showcased strong language capabilities. Unlike transformer-based models, these architectures encode all contextual information into a fixed-size state, leading to great inference efficiency. However, this approach can cause information interference, where different token data conflicts, resulting in performance degradation and incoherent outputs beyond a certain context length. To prevent this, most RNNs incorporate mechanisms designed to \"forget\" earlier tokens. In this paper, we reveal that Mamba-based models struggle to effectively forget earlier tokens even with built-in forgetting mechanisms. We demonstrate that this issue stems from training on contexts that are too short for the state size, enabling the model to perform well without needing to learn how to forget. Then, we show that the minimum training length required for the model to learn forgetting scales linearly with the state size, and the maximum context length for accurate retrieval of a 5-digit passkey scales exponentially with the state size, indicating that the model retains some information beyond the point where forgetting begins. These findings highlight a critical limitation in current RNN architectures and provide valuable insights for improving long-context modeling. Our work suggests that future RNN designs must account for the interplay between state size, training length, and forgetting mechanisms to achieve robust performance in long-context tasks.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

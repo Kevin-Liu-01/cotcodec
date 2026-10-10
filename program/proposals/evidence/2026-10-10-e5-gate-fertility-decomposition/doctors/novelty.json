@@ -1,0 +1,15 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "evidence": "No direct prior art found through 2026-10-10 under the recorded coverage (120 counted orx queries including each closest prior's title phrase, the mechanism in plain words and published-after bounds; 40 distinct papers opened; 0 direct priors). Merged verdict NARROWED: Lee et al. (2609.33093), Boesch and Wee (2609.16183), MambaExtend, DeciMamba (2406.14528), Mamba Modulation (2509.19633), SpectralShift (2609.14320) and the re-segmentation literature each occupy one component.",
+ "why_fail": [
+  "the blind closest-prior critic has not run (packets in blind/)",
+  "the novelty refuter has not run",
+  "no counted query targeted activation patching of decay or gate parameters as such; synthesis had no queries left above the triad's reserve of 30",
+  "no full OpenReview sweep of ICLR 2027 submissions; no citation-graph traversal beyond OpenAlex"
+ ],
+ "remediation": "Run the blind critic on blind/ and the novelty refuter, including the query 'activation patching decay gate recurrent language model mediation'."
+}
