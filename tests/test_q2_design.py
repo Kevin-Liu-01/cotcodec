@@ -206,3 +206,12 @@ def test_profile_bounds_interpolate() -> None:
     assert 0.0 < lo < 0.5 < 1.5 < hi < 2.0
     edge = [{"value": v, "lr": 3 * v} for v in (0.0, 0.5, 1.0, 2.0)]
     assert profile_bounds(edge, 0.0)["one_sided_95"] == [None, pytest.approx(2.705543 / 3)]
+
+
+def test_differences_ignore_metadata_and_new_fields() -> None:
+    from harness.q2_design.study import differences
+
+    a = {"x": [1, 2, {"y": 3}], "provenance": {"git": "a"}, "seconds": 1.0}
+    b = {"x": [1, 2, {"y": 3, "new": 0}], "provenance": {"git": "b"}, "seconds": 9.0, "z": 1}
+    assert differences(a, b) == []
+    assert differences(a, {**b, "x": [1, 2, {"y": 4}]}) == ["/x/2/y"]
