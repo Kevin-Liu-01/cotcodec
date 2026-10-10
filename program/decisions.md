@@ -903,3 +903,56 @@ while an S1a job runs. The open-weight reviewer's lane job runs before 11:30
 UTC on 2026-10-10 or after S1a's session 2 has ended. The gate's GPU work
 waits for a scored, reviewed package and a freeze, and anything above 8 GPU-h
 needs D24.
+
+**D59. Q2 S1a: how the analysis handles defects found in the frozen analysis
+code, decided while blind.** A dry run of the frozen code (`d5f5798`) on
+synthetic records, with no real A1 outcome read, reproduced eleven defects,
+and an independent checker confirmed each one. Every rule below is fixed now,
+before any A1 outcome is read, so none is chosen after seeing the data.
+
+(i) A single base episode with a score strictly between 0 and 1 crashes the
+whole report. The fractional-score sensitivity passes raw scores to an
+estimator check that accepts only 0, 1 and NaN. Three base tasks use
+continuous metrics, so this is likely. Decided, as a disclosed deviation: the
+report runs through a wrapper that imports the frozen modules unchanged and
+widens that check to [0, 1] and NaN. With no fractional score its report is
+byte-identical to the registered code's. With fractional scores only the
+fractional sensitivity and its counts change. This implements the registered
+sensitivity; it changes no estimand, rule or decision.
+
+(ii) Incomplete data. If DR0 fires for a session-2 job, or a size ends with
+one session, every output is labelled incomplete (section 11). That size's
+session test is reported as not estimable, DR1 is read on session 1 only, and
+DR5 is not evaluable as registered: π_9B may be shown against both M values as
+a description only. If no size has two sessions, the guarded wrapper reports
+δ and the descriptive and infrastructure counts. D_b, D_w, X, π, the X test,
+DR2, DR5, P1 and P2 are then not estimable. No p-value is ever read from an
+all-NaN statistic.
+
+(iii) Operator steps, which are not deviations; each is disclosed with its
+command.
+- Offline rescoring runs as one CPU job per A1 job with an explicit `--time`
+  of 8 hours. Its coverage (scored episodes, rows, errors) and the number of
+  verdicts that fell back to live scores are reported beside the corrected
+  outputs. For tasks without a checker correction, a live-versus-offline
+  replay mismatch is disclosed beside the corrected-verdict flips.
+- First divergence uses the registered functions on base tasks, scored final
+  records and the final attempt.
+- The section 15 items the CLI lacks are assembled with the registered
+  functions and fields: output tokens, the step distributions censored at 15,
+  restarts per episode, losses by task, the cost card against the central
+  price, the offline-setup exclusions, setup and postconfig failures by type,
+  host snapshots and foreign load, DR0 per job, and the secondary set under
+  corrected verdicts.
+- The GLMM input is written with `glmm.rows_from_records` and `write_csv`. The
+  base (primary) fit is the registered reading, and the secondary fit is
+  reported beside it. Convergence is reported exactly as `glmm.R` writes it,
+  each fit's exit code is captured, and the R package digest is checked.
+- The report carries its provenance: input digests, the frozen plan digest
+  check, the commit and the interpreter and library versions.
+- The truncation label uses the set the code reads, all final records, which
+  is the registered definition. A base-only share is shown as a description.
+- The set read by the checker-noise counts is stated.
+
+The wrapper and the operator scripts are written, tested on synthetic records
+and independently verified before session 2 ends.
