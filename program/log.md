@@ -3283,3 +3283,25 @@ they say so.)
   bc5e88a0..., previous hash fde44535 (row 15), check-chain PASS, verify PASS;
   the row committed alone as the freeze commit d5f5798.
 - Next: O2 and the four A1 jobs (section 5.5), each from an export of d5f5798.
+
+## 2026-10-10 — Q2 S1a: O2 and A1 session 1 ran; session 2 9B queued
+
+- One operator, from the freeze commit d5f5798 (read-only host export for A1; a clean
+  clone detached at the commit for O2). `preregister.py verify` and `check-chain` passed
+  (row 16, 16 rows) before O2 and again before each pair.
+- O2 (job 1044, 47 s): overlay `sha256:10327c70...` from source archive `4a59e87c...`
+  (`selected_ref: HEAD`, pre-validated on CPU with the pinned extractor so the retry could
+  not be spent on job 1032's receipt error); provenance PASS; no retry.
+- A1-9B-S1 (VM 1045, GPU 1047) and A1-4B-S1 (VM 1048, GPU 1050; its manifest names the 9B
+  job's records and receipt by SHA-256): each dispatched 452 slots, base and all 11
+  extension blocks, with no infrastructure loss, re-queue, cap truncation or USR1. DR0 does
+  not fire for either. The lane's provenance, engine-argv and Slurm-limit checks passed.
+  Physical GPU-h 1.2203 and 1.1469 (O2 0.0131); program total 7.2891. The queue was empty
+  before each submission and no foreign job appeared.
+- Session 2 9B (VM 1051, GPU 1053) is submitted and PENDING: `--begin=2026-10-10T12:45:18`
+  (job 1050's EndTime plus 12 h) and `--dependency=after:1051`. Session 2 4B is not
+  submitted; its manifest needs session 2 9B's records.
+- No outcome was read or summarized; the analysis waits for all four jobs. The 4B GPU job
+  verified the receipt file the GPU lane reads (`75ebfc53...`), which differs from G0 item
+  2's CPU-lane receipt only in its registry digest (disclosed). Evidence:
+  `program/evidence/2026-10-10/q2-stage1-a1/`.

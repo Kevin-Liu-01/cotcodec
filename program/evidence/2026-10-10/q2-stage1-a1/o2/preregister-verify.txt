@@ -1,0 +1,32 @@
+== /home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca (2026-10-09T22:17:51Z)
+$ python3.12 -E -s -B scripts/preregister.py verify q2-stage1-rescoped-v1
+{
+  "experiment_id": "q2-stage1-rescoped-v1",
+  "frozen_at": "2026-10-09T22:11:08.694156+00:00",
+  "git_head_at_freeze": "70d57e3b7b1f89e2216776498aa8118ad76576cd",
+  "hash": "bc5e88a0043065f93e3ea494633b6c3cd119973708e250110e7bcf4856507d0f",
+  "path": "program/preregistrations/q2-stage1-rescoped-v1.md",
+  "previous_hash": "fde44535aa821b22029099bd8109a5ed98f991a119034495b35453dafb357342",
+  "sha256": "f9db7cc38c4954b3144ac5a1afaf7bf5366449081b06c80bf89888bdf653afd8"
+}
+exit=0
+$ python3.12 -E -s -B scripts/preregister.py check-chain
+{"rows": 16, "status": "PASS"}
+exit=0
+sha256 registration: f9db7cc38c4954b3144ac5a1afaf7bf5366449081b06c80bf89888bdf653afd8
+== /home/kevin/cotcodec-runs/stage0/q2-stage1/o2/checkout-d5f57988ab94 (2026-10-09T22:17:51Z)
+$ python3.12 -E -s -B scripts/preregister.py verify q2-stage1-rescoped-v1
+{
+  "experiment_id": "q2-stage1-rescoped-v1",
+  "frozen_at": "2026-10-09T22:11:08.694156+00:00",
+  "git_head_at_freeze": "70d57e3b7b1f89e2216776498aa8118ad76576cd",
+  "hash": "bc5e88a0043065f93e3ea494633b6c3cd119973708e250110e7bcf4856507d0f",
+  "path": "program/preregistrations/q2-stage1-rescoped-v1.md",
+  "previous_hash": "fde44535aa821b22029099bd8109a5ed98f991a119034495b35453dafb357342",
+  "sha256": "f9db7cc38c4954b3144ac5a1afaf7bf5366449081b06c80bf89888bdf653afd8"
+}
+exit=0
+$ python3.12 -E -s -B scripts/preregister.py check-chain
+{"rows": 16, "status": "PASS"}
+exit=0
+sha256 registration: f9db7cc38c4954b3144ac5a1afaf7bf5366449081b06c80bf89888bdf653afd8

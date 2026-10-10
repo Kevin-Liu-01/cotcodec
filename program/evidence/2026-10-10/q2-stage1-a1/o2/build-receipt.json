@@ -1,0 +1,46 @@
+{
+  "artifacts": {
+    "image-id.txt": "9f6df9d0cfdd86e8308337284e8980dca43214052df4e15613a3416a8c1429a7",
+    "image-inspect.json": "3ea5d809ed5ce7a83e418af20bc807f0669ec18a82b75faeae33420542fdb806",
+    "plan-job-a-v2.json": "bb9fe0aab1433839be6d04233423b9f38ec411a4822acfe98b8ae66fd5ca13d1",
+    "plan-job-a.json": "9710aca9be2acdfc9ab4a1a36f10066e752f32e189793726a3852f8e1b9a8ccb",
+    "provenance-verification.json": "1685d41e8026183dd605358e3c9c0c2cc6049c887a74e750db7db84c04475e76",
+    "source-validation.json": "2613ed7b62e82fcc937dbd4646aa988cc1e4b1b964eb09058ce7a0c15a529a29",
+    "vllm-args-doctor-v2.json": "a7bb029c834d4def78ce3874305a0a0f0e6def0573319f085874f281c2c2a6b3",
+    "vllm-args-doctor.json": "ff5ea7e5f2c7de1594b1d6ce5abb6db3e3cccabbbe10883ab1ec581b7861b0e1",
+    "vllm-overlay-fixups.json": "28583790cbb1b3b4408e8b4afd212468abc45203bc8e7cb719ef02e3bcfa191e"
+  },
+  "base_image": "docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f",
+  "base_image_id": "sha256:423783aac4fefebfe6b67d6fc2810b88a1d4dc08ed8bba587c80b0d8973e0b8b",
+  "builder_sha256": "aa43283e757695384e0548d060a18b98f07a3af06f583efdb2d709f677e1a96d",
+  "built_at": "2026-10-09T22:19:28Z",
+  "extractor_sha256": "9b4d21a83beac8913dc06a946cf43ea31d77326e65d04957fad66d7b97d8c3cb",
+  "git_sha": "d5f57988ab94e0c098feddb744b78b73b5ad88ca",
+  "git_tree": "c299515ccc74e294a25843ebeebed33d4557d629",
+  "kind": "vllm-overlay-build",
+  "overlay_fixups": {
+    "actions": [
+      {
+        "action": "uninstalled",
+        "package": "torchcodec",
+        "reason": "OSError: Could not load this library: /usr/local/lib/python3.12/dist-packages/torchcodec/libtorchcodec_image.so",
+        "version": "0.17.0"
+      }
+    ],
+    "required_imports": [
+      "vllm.engine.arg_utils",
+      "vllm.entrypoints.launchers.cli_args",
+      "vllm.multimodal",
+      "transformers"
+    ],
+    "schema_version": 1
+  },
+  "overlay_image_id": "sha256:10327c706dcf2a9bd06e2449908e37d4fa4e46e7030a85e66f30626a1bafecde",
+  "overlay_tag": "cotcodec-vllm:4a59e87c-cu129-overlay",
+  "schema_version": 1,
+  "slurm_job_id": "1044",
+  "source_sha256": "4a59e87c8a04b3005606248f77b1b81b82e1bde127c72206f4113cc1b07349d8",
+  "variant": "cu129",
+  "vllm_commit": "db9527a46873454610df6dbedf79a36d6bf1a7f6",
+  "vllm_version": "0.31.0"
+}

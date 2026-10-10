@@ -1,0 +1,50 @@
+# GPU job of one S1a (size, session) pair: the engine and the D13 bridge
+# (q2-stage1-rescoped-v1 sections 3.1 item 4, 5.5, 6.1, 14). Template only: the FILL_*
+# values are invalid on purpose so the submitter rejects this file. One engine per job, the
+# card's argv (plan.engine_argv, chosen by --size), bound to 127.0.0.1:8000 inside the
+# container's --network none; harness.q2_stage1.bridge serve forwards the socket
+# /outputs/bridge/engine.sock (host: <run_root>/<this job's id>/bridge) to it and stops on
+# the VM job's vm.done, or on the lane's USR1 (writing usr1.json and the checkpoint marker).
+#
+# Pairing (section 5.5): submit the VM job first (harness.q2_stage1.lane submit, engine kind
+# "bridge", bridge_dir "<run_root>/{gpu_job_id}/bridge", gpu_job_id_file in the pair's
+# directory), then this job with start_after_job_id = the VM job's id, then write this job's
+# id into gpu_job_id_file. The VM job's limit is this job's cap plus 10 minutes.
+# Hex digests are quoted: YAML would read an all-digit or 1e5-shaped one as a number.
+runtime: docker-single-node-discovery-v1
+name: q2s1a-a1-4b-s1
+image_id: sha256:10327c706dcf2a9bd06e2449908e37d4fa4e46e7030a85e66f30626a1bafecde  # O1's (pre-freeze) or O2's (post-freeze) cu129 overlay
+git_sha: "d5f57988ab94e0c098feddb744b78b73b5ad88ca"
+source_sha256: "4a59e87c8a04b3005606248f77b1b81b82e1bde127c72206f4113cc1b07349d8"
+run_root: /home/kevin/cotcodec-runs/stage0/q2-stage1/gpu
+container_profile: vllm
+start_after_job_id: 1048
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 32  # the card's lane (section 5.5)
+  memory_gb: 160
+  minutes: 110  # plan.CAP_MINUTES, or the A1 cap of the remainder rule
+budget:
+  max_gpu_hours: 1.8334
+# The engine seed (42) reaches vLLM through plan.CARD_ENGINE_FLAGS (--seed 42) in the
+# bridge's argv; the submitter's deterministic contract takes no seed list.
+randomness_contract: deterministic
+seeds: []
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-4b  # qwen3.5-9b, qwen3.5-4b or opencua-7b
+  revision: "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+  receipt_sha256: "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082"
+  artifact_root_sha256: "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e"
+command:
+  - python
+  - -m
+  - harness.q2_stage1.bridge
+  - serve
+  - --size
+  - 4B  # 9B, 4B or anchor
+  - --bridge-dir
+  - /outputs/bridge
+  - --health-timeout-s
+  - "900"
