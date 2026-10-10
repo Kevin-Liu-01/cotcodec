@@ -3370,3 +3370,16 @@ they say so.)
   - Normalise the STOP_TR guard by the GOLD-versus-SHUF KL.
   - Write delta rows and blind packets for the dual-form and KV-compaction
     priors.
+
+## 2026-10-10 — Q2 S1a analysis tooling under D59, D61 and D62 (blind)
+
+- A blind dry run of the frozen analysis on synthetic records found eleven
+  defects in the code of record. Worst: one fractional base score crashes the
+  report. D59 fixes the handling (a wrapper, incomplete-data rules, operator
+  steps); D61 and D62 settle three edge cases. Every rule was decided before
+  any A1 outcome was read.
+- `ops/s1a-analysis/` (wrapper, guard, operator scripts, RUNBOOK.md) and 71
+  tests on synthetic records, merged to main (0b55ebd). Three fresh verifiers
+  found three blocking items in turn, each fixed; the last was a runbook wait
+  before the merge of rescoring output. Evidence:
+  `program/evidence/2026-10-10/q2-stage1-d59-tooling/`.

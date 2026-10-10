@@ -165,6 +165,11 @@ grep -h '"exit_status"' $A/rescore-*/receipt-*.json
 wc -l $A/rescore-*/rescored.jsonl
 ```
 
+**Go on to step 4 only after `none-running` and one `receipt-*.json` in every
+`rescore-<vm>/`.** `rescore capture` writes `rescored.jsonl` row by row for the whole job, so
+a file exists long before the job ends, and `merge` does not check that the job has ended.
+A job that hit its limit or wrote no rows still leaves a receipt.
+
 `rescore capture` is serial and cannot resume. A job that hit its limit leaves a partial
 file, and that file is kept and reported through the coverage step (D59 (iii)). If a job
 failed before writing any row, for example on a mount error, do the following and record
@@ -183,7 +188,7 @@ reports this.
 
 ```bash
 . /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
-for VM in $VMS; do test ! -e $A/merged-$VM.jsonl || { echo "exists: $A/merged-$VM.jsonl" >&2; break; }; (cd $X && python3 -E -s -B -m harness.q2_stage1.rescore merge --episodes $R/runs/$VM/episodes.jsonl --rescored $A/rescore-$VM/rescored.jsonl --out $A/merged-$VM.jsonl); done
+for VM in $VMS; do ls $A/rescore-$VM/receipt-*.json >/dev/null 2>&1 || { echo "rescoring of $VM has not ended (no receipt)" >&2; break; }; test ! -e $A/merged-$VM.jsonl || { echo "exists: $A/merged-$VM.jsonl" >&2; break; }; (cd $X && python3 -E -s -B -m harness.q2_stage1.rescore merge --episodes $R/runs/$VM/episodes.jsonl --rescored $A/rescore-$VM/rescored.jsonl --out $A/merged-$VM.jsonl); done
 for VM in $VMS; do cat $A/merged-$VM.jsonl; done > $A/a1.jsonl
 python3 -E -s -B $OPS/rescore_jobs.py coverage --export $X --analysis-dir $A "${RUNS[@]}" --records $A/a1.jsonl --plan $PLAN "${DR0S[@]}" --out $A/rescore-coverage.json
 ```
@@ -368,12 +373,16 @@ tail -2 $A/logs/s1a-s15-$J.out
 
 ## 11. Final provenance (seconds)
 
+Run this only after the Slurm jobs of steps 7, 8 and 10 have ended with `exit_status` 0
+(`squeue` shows none of them, and their receipts exist), so that no input is recorded as
+missing because it has not been written yet.
+
 ```bash
 . /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
 IN=(); for f in $PLAN $A/provenance-pre.json $A/dr0-*.json $A/rescore-jobs*.json $A/rescore-*/rescored.jsonl $A/rescore-*/receipt-*.json \
   $A/merged-*.jsonl $A/a1.jsonl $A/rescore-coverage.json $A/costs.json $A/report/*.json $A/identity/identity.json \
   $A/first-divergence.json $A/glmm-inputs/* $A/glmm-job.json $A/glmm-out/glmm-*.json $A/glmm-out/*.exit $A/glmm-out/r-packages.json \
-  $A/glmm-summary.json $A/s15.json; do IN+=(--input $f); done
+  $A/glmm-summary.json $A/s15.json $A/glmm-out/receipt-*.json $A/dr0-exits.txt $A/env.sh; do IN+=(--input $f); done
 for VM in $VMS; do for f in manifest.json episodes.jsonl lane-receipt.json; do IN+=(--input $R/runs/$VM/$f); done; done
 python3 -E -s -B $OPS/provenance.py --export $X --plan $PLAN --ops-commit $OPSC --guard $A/report/guard.json "${IN[@]}" --out $A/provenance.json; echo "exit=$?"
 ```
