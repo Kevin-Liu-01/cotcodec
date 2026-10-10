@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2608.13385",
+ "fetched_at": "2026-10-10T06:13:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42040,
+ "raw_sha256": "ab985551e10e2ba736fabc69c90e5d861d5000621dec33e9286cdc64c225cb17",
+ "raw_stored": false,
+ "extract": {
+  "title": "When Is a Task Vector Enough? An Empirical Theory of Implicit Multimodal ICL",
+  "authors": [
+   "Li, Jiaqian"
+  ],
+  "citation_date": "2026/08/13",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 13 Aug 2026 15:46:50 UTC"
+   }
+  ],
+  "abstract": "Implicit multimodal in-context learning compresses demonstrations into internal interventions, ranging from static task vectors to query-conditioned transformations and attention routing. Despite their common goal, these methods differ substantially in how the intervention depends on the query and where it modifies the model, leaving unclear which additional complexity is necessary for a given task. We propose the Selection--Realization Hypothesis. It views demonstrations as inducing a compact family of internal changes from which the query selects, while the model's computation constrains how the selected change can be implemented. We evaluate this account using controlled multimodal tasks in which query dependence varies without changing the underlying task primitives or prompt format. By contrasting correct demonstrations with matched counterfactuals, we measure the structure of explicit M-ICL and test whether it predicts intervention behavior. We find that the success of a static task vector is closely tied to how much of the demonstration-induced change is shared across queries. Additional intervention complexity becomes useful when explicit M-ICL contains query-specific or distributed structure that a local additive shift cannot recover. These relationships extend to natural VQA benchmarks and support cost-aware method selection without access to test performance. Our results provide a unified empirical theory of when demonstrations can be compressed into a task vector and when a more expressive intervention is warranted.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

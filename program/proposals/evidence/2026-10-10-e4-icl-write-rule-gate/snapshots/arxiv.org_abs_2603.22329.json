@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2603.22329",
+ "fetched_at": "2026-10-10T06:13:12Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42053,
+ "raw_sha256": "9356b5b7aaae3767d004bbba02169607bd8450346304708d6e1466687643ac5d",
+ "raw_stored": false,
+ "extract": {
+  "title": "Trained Persistent Memory for Frozen Decoder-Only LLMs",
+  "authors": [
+   "Jeong, Hong"
+  ],
+  "citation_date": "2026/03/20",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 20 Mar 2026 19:11:02 UTC"
+   }
+  ],
+  "abstract": "Decoder-only language models are stateless: hidden representations are discarded after every forward pass and nothing persists across sessions. Jeong (2026a) showed that trained memory adapters give a frozen encoder-decoder backbone persistent latent-space memory, building on the lateral-memory framework of Jeong (2026b,c). Here we ask whether the same principle transfers to the decoder-only setting, where no cross-attention pathway exists and memory must enter through self-attention alone. We adapt six methods -- prefix, parallel cross-attention, KV extension, Hebbian memory, context-gated branch, and slot-based sparse write -- to a frozen GPT-2, training only a small adapter $\\theta_{mem}$. The write rule is shared; only the read injection changes from decoder cross-attention to self-attention KV prefix or parallel branch. On LoCoMo we find a striking inductive-bias dichotomy: at $1\\times$ capacity, three methods with strong architectural priors -- cross-attention (M.2), Hebbian (M.4), and slot write (M.6) -- achieve retained-memory scores of $7-18\\%$ and knowledge gains $\\Delta K$ of $7-10$, while the other three fail ($< 0.4\\%$). At $10\\times$ capacity all six converge, showing the gap is architectural, not fundamental. Together with the encoder-decoder results of Jeong (2026a) and the brain-inspired modules of Jeong (2026b,c), these findings establish persistent latent-space memory as a general paradigm spanning major transformer families.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

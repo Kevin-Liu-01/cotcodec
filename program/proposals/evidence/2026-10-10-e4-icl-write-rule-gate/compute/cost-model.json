@@ -1,0 +1,67 @@
+{
+ "central": {
+  "assumptions": {
+   "fixed_h": 0.05,
+   "launch": 1.0,
+   "mfu": 0.25,
+   "probe": 12,
+   "prompt": 200,
+   "steps": 200,
+   "zs": 20
+  },
+  "episode_variants": 2970,
+  "per_family_episode_variants": {
+   "B_fit_episodes_joint (14 development episodes, T doubled)": 28,
+   "eval_episodes_x3_variants (span_B, span_I, free64)": 96,
+   "family_constant (4 fitting probes from each of 48 episodes = 12 episode-equivalents)": 12,
+   "learning_rate_selection (3 rates x 3 classes x 2 development episodes)": 18,
+   "planted_preconditioner_check I5 (B fit on 4 planted episodes x 2, scored on 2 x 2)": 12,
+   "planted_recovery (2 types x 2 episodes x 3 restarts x 2 classes)": 24,
+   "restart_sensitivity (4 episodes x 2 restarts x 3 variants)": 24,
+   "shuffled_target_secondary (free64 + constant, 16 episodes)": 32,
+   "site_1.0_ablation (8 episodes)": 8,
+   "width256_reference (16 episodes)": 16
+  },
+  "step1_gpu_h": 0.1,
+  "step2_main_after_reduction_ladder_gpu_h": 0.684,
+  "step2_main_gpu_h": 0.906,
+  "step2_oracle_p_conditional_gpu_h": 0.197
+ },
+ "d22_reading": "caps, not expected use, count; the sum of caps is below the 8 GPU-h threshold, so D24 is not triggered; the gauntlet's own 0.3 GPU-h (reviewer inference) is separate",
+ "high": {
+  "assumptions": {
+   "fixed_h": 0.1,
+   "launch": 1.5,
+   "mfu": 0.125,
+   "probe": 24,
+   "prompt": 400,
+   "steps": 200,
+   "zs": 40
+  },
+  "episode_variants": 2970,
+  "per_family_episode_variants": {
+   "B_fit_episodes_joint (14 development episodes, T doubled)": 28,
+   "eval_episodes_x3_variants (span_B, span_I, free64)": 96,
+   "family_constant (4 fitting probes from each of 48 episodes = 12 episode-equivalents)": 12,
+   "learning_rate_selection (3 rates x 3 classes x 2 development episodes)": 18,
+   "planted_preconditioner_check I5 (B fit on 4 planted episodes x 2, scored on 2 x 2)": 12,
+   "planted_recovery (2 types x 2 episodes x 3 restarts x 2 classes)": 24,
+   "restart_sensitivity (4 episodes x 2 restarts x 3 variants)": 24,
+   "shuffled_target_secondary (free64 + constant, 16 episodes)": 32,
+   "site_1.0_ablation (8 episodes)": 8,
+   "width256_reference (16 episodes)": 16
+  },
+  "step1_gpu_h": 0.403,
+  "step2_main_after_reduction_ladder_gpu_h": 3.832,
+  "step2_main_gpu_h": 5.163,
+  "step2_oracle_p_conditional_gpu_h": 0.981
+ },
+ "integer_ceiling_for_doctor": 7,
+ "registered_caps_gpu_h": {
+  "S0_smoke": 0.17,
+  "S1_eligibility": 0.75,
+  "S2_oracle_main": 4.0,
+  "S2_oracle_p_conditional": 1.5
+ },
+ "sum_of_caps_gpu_h": 6.42
+}

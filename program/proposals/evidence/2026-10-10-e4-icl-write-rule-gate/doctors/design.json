@@ -1,0 +1,16 @@
+{
+ "doctor": "Design",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
+ "protocol": "K-Dense experimental-design and statistical-power (vendored); design fixed before data; thresholds justified by simulation",
+ "evidence": "Specified in the draft registration: 14 repository-generated families in three classes; GOLD, SHUF and ZS conditions; oracle classes nested S0, S_const, S_spanI/S_spanB, S_free, plus placebo states and a width-256 reference; an affine read; instrument gates I1-I5 (non-vacuity, planted recovery in the probe-read subspace, span discrimination, code paths, planted preconditioned writer); decision order with eleven verdicts (INFRA_FAIL, STOP_TEACHER, INSTRUMENT_FAIL, STOP_TR, three capacity stops, INCONCLUSIVE_CAPACITY, STOP_SPAN, OPEN, INCONCLUSIVE_SPAN); leakage controls (disjoint fitting and scoring probes, development seed 42 never in a decision statistic, label-free P). S1 (compute/oracle-class-semantics.json, linear surrogate): KILL A replicated (rank-8 port: D_span 0.0000 for all seven teachers); at a full-rank port D_span(B) is -0.29 to -0.16 for first-order and RLS writers, 0.001 for lookup, 0.57-0.65 for retrieval and 0.78-1.21 for value-directed writers; a fixed-preconditioner writer reads as a gap (0.68-0.82) because B was not recovered, which motivated I5. S2 (compute/decision-sim.json): false OPEN under a true tie at most 0.012, false STOP_SPAN under a true 0.10 shortfall at most 0.004, P(OPEN) 0.52-0.68 at 0.10 and at least 0.99 at 0.20.",
+ "why_fail": [
+  "every noise SD in S2 is assumed; none is measured",
+  "the tie decision is underpowered at paired episode SD 0.20 (P(STOP_SPAN | tie) 0.06-0.17), so INCONCLUSIVE_SPAN is a likely outcome unless the variance rule's extension fits the cap",
+  "the oracle optimiser, the planted recovery, the B fit and the non-vacuity check have never run on a real model's residuals; in the surrogate the B fit failed to recover a fixed preconditioner and E_free was only 0.29-0.40 at 16 fitting probes (identification limit)",
+  "the S1 surrogate is linear with squared loss; KL through a 24-layer network may behave differently"
+ ],
+ "remediation": "Build the Step-0 harness and run it as a cpu-doctor orx node on a random-init Llama-shaped model with planted states; measure the paired SD on development episodes during the smoke."
+}

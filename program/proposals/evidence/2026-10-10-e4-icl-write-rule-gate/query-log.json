@@ -1,0 +1,4083 @@
+{
+ "schema": "cotcodec gauntlet query log v1",
+ "gauntlet": "e4-icl-write-rule-gate (D58), wave 1",
+ "source_cutoff": "2026-10-09",
+ "declared_query_budget": 150,
+ "convention": "A counted query is one orx discover call that reached its backend. Paper reads, version checks, citation lookups and auxiliary HTTP requests are recorded and not counted (K1 v2 and v3 convention).",
+ "source": "Cell rows are copied from the discovery cells' structured results (workflow wf_9f15e9e8-487 journal, 'result' lines); synthesis rows from the synthesis owner's raw orx outputs (scratch sq1-sq6, sha256 recorded).",
+ "cells": {
+  "frontier": {
+   "rows": [
+    {
+     "id": "FR-01",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Task Operators in-context learning affine transformation head [--limit 10]",
+     "returned_ids": [
+      "2610.01054",
+      "2609.29060",
+      "2610.06679",
+      "2610.07559",
+      "2609.28117",
+      "2609.38832",
+      "2609.35429",
+      "2610.07572",
+      "2609.17714",
+      "2606.20538"
+     ]
+    },
+    {
+     "id": "FR-02",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Capturing In-Context Learning Dynamics with Task Operators [--limit 15]",
+     "returned_ids": [
+      "2610.01054",
+      "2609.19138",
+      "2610.07559",
+      "2609.35429",
+      "2608.11203",
+      "2610.08475",
+      "2609.31434",
+      "2609.29060",
+      "2609.35333",
+      "2610.03463",
+      "2609.17714",
+      "2606.20538"
+     ]
+    },
+    {
+     "id": "FR-03",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Task Operator attention output projection in-context learning [--published-after 2026-09-15 --limit 20]",
+     "returned_ids": [
+      "2610.01054",
+      "2609.38718",
+      "2610.11784",
+      "2609.29060",
+      "2609.19138",
+      "2610.10761",
+      "2610.07559",
+      "2609.32341",
+      "2610.07572",
+      "2610.01712",
+      "2609.31381",
+      "2609.38832"
+     ]
+    },
+    {
+     "id": "FR-04",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "replace in-context demonstrations with an explicit operator or weight update extracted from the forward pass, applied to the attention output projection [--published-after 2026-08-01 --limit 20]",
+     "returned_ids": [
+      "2610.03039",
+      "2609.34174",
+      "2609.33620",
+      "2610.00820",
+      "2610.01054",
+      "2609.15975",
+      "2610.08398",
+      "2609.20974",
+      "2609.36434",
+      "2610.10655",
+      "2609.37731",
+      "2609.36738"
+     ]
+    },
+    {
+     "id": "FR-05",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Test-Time Training via Context Distillation [--limit 15]",
+     "returned_ids": [
+      "2608.01672",
+      "2609.37041",
+      "2610.05303",
+      "2608.27448",
+      "2609.34174",
+      "2610.12002",
+      "2512.23675",
+      "2610.05484",
+      "2608.11191",
+      "2608.13391",
+      "2609.05295",
+      "2608.12307"
+     ]
+    },
+    {
+     "id": "FR-06",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Learning What to Remember context distillation fast weights [--limit 15]",
+     "returned_ids": [
+      "2608.01672",
+      "2609.37930",
+      "2609.38025",
+      "2610.07250",
+      "2610.12133",
+      "2609.20612",
+      "2608.01314",
+      "2609.36364",
+      "2609.39920",
+      "2609.35333",
+      "2609.31430",
+      "2610.07842"
+     ]
+    },
+    {
+     "id": "FR-07",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "distill a long context into fast weights at test time with a gradient-form update rule so the model no longer needs the context [--published-after 2026-07-01 --limit 20]",
+     "returned_ids": [
+      "2610.06833",
+      "2610.03039",
+      "2608.26070",
+      "2609.20734",
+      "2609.34174",
+      "2609.34650",
+      "2609.35750",
+      "2610.08553",
+      "2609.39740",
+      "2609.39657",
+      "2609.39329",
+      "2610.00820"
+     ]
+    },
+    {
+     "id": "FR-08",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Do pretrained Transformers Learn In-Context by Gradient Descent [--limit 15]",
+     "returned_ids": [
+      "2604.10848",
+      "2605.26713",
+      "2212.07677",
+      "2605.06609",
+      "2610.09760",
+      "2609.08981",
+      "2510.10425",
+      "2603.13875",
+      "2606.00605",
+      "2607.23153",
+      "2606.23607",
+      "2606.22874"
+     ]
+    },
+    {
+     "id": "FR-09",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "in-context learning gradient descent pretrained language models [--published-after 2026-04-01 --limit 20]",
+     "returned_ids": [
+      "2609.37725",
+      "2609.15344",
+      "2607.23153",
+      "2607.15275",
+      "2609.19138",
+      "2609.35475",
+      "2610.06292",
+      "2609.16805",
+      "2609.30220",
+      "2609.27603",
+      "2609.37659",
+      "2609.17167"
+     ]
+    },
+    {
+     "id": "FR-10",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "test whether in-context learning in a real pretrained large language model is equivalent to gradient descent on the demonstrations [--published-after 2025-06-01 --limit 20]",
+     "returned_ids": [
+      "2610.12325",
+      "2610.11592",
+      "2609.00064",
+      "2607.23153",
+      "2606.20508",
+      "2606.28926",
+      "2604.23267",
+      "2602.04212",
+      "2602.17171",
+      "2602.01687",
+      "2602.11863",
+      "2510.08372"
+     ]
+    },
+    {
+     "id": "FR-11",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Trained Persistent Memory for Frozen Decoder-Only LLMs [--limit 15]",
+     "returned_ids": [
+      "2603.22329",
+      "2603.16413",
+      "2609.40335",
+      "2608.29537",
+      "2609.01117",
+      "2607.27919",
+      "2609.17251",
+      "2608.17050",
+      "2610.01921",
+      "2609.38501",
+      "2609.38275",
+      "2610.05124"
+     ]
+    },
+    {
+     "id": "FR-12",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "universal write rule memory frozen backbone [--limit 15]",
+     "returned_ids": [
+      "2609.32453",
+      "2610.09193",
+      "2608.17050",
+      "2610.07834",
+      "2609.23601",
+      "2608.29537",
+      "2605.12357",
+      "2609.04490",
+      "2610.05484",
+      "2610.01118",
+      "2608.19743",
+      "2606.26560"
+     ]
+    },
+    {
+     "id": "FR-13",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "One Adapter Pair per Model universal activation interface [--limit 15]",
+     "returned_ids": [
+      "2608.09521",
+      "2605.25903",
+      "2608.31096",
+      "2610.00149",
+      "2608.08829",
+      "2610.03546",
+      "2606.09936",
+      "2609.19292",
+      "2609.15758",
+      "2610.00991",
+      "2609.20340",
+      "2610.08255"
+     ]
+    },
+    {
+     "id": "FR-14",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "label-free linear adapters map hidden states of different language models into a shared activation space so interventions transfer across models [--published-after 2026-05-01 --limit 20]",
+     "returned_ids": [
+      "2609.29233",
+      "2610.09058",
+      "2608.03893",
+      "2609.32610",
+      "2610.00929",
+      "2609.38718",
+      "2609.39702",
+      "2609.39369",
+      "2609.11063",
+      "2608.27115",
+      "2609.30405",
+      "2609.04344"
+     ]
+    },
+    {
+     "id": "FR-15",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "function vectors task vectors Mamba RetNet GLA recurrent in-context learning [--limit 20]",
+     "returned_ids": [
+      "2609.35664",
+      "2610.07572",
+      "2608.09888",
+      "2609.39405",
+      "2609.32102",
+      "2608.27882",
+      "2608.02032",
+      "2609.09054",
+      "2609.32619",
+      "2610.00526",
+      "2610.01054",
+      "2609.35333"
+     ]
+    },
+    {
+     "id": "FR-16",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "transfer an in-context learning update or task vector extracted from a transformer to a linear recurrent model such as Mamba, GLA, RetNet or DeltaNet [--published-after 2025-06-01 --limit 20]",
+     "returned_ids": [
+      "2609.36012",
+      "2610.01054",
+      "2610.00929",
+      "2610.05564",
+      "2610.10761",
+      "2609.39369",
+      "2609.32332",
+      "2608.02347",
+      "2605.26797",
+      "2604.21100",
+      "2605.28444",
+      "2606.05079"
+     ]
+    },
+    {
+     "id": "FR-17",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "cross-architecture transfer transformer to state space model distillation in-context [--published-after 2026-01-01 --limit 20]",
+     "returned_ids": [
+      "2608.26771",
+      "2610.01649",
+      "2609.35333",
+      "2609.23561",
+      "2609.17888",
+      "2608.28209",
+      "2604.14191",
+      "2609.00891",
+      "2607.10762",
+      "2610.05707",
+      "2606.06021",
+      "2606.32020"
+     ]
+    },
+    {
+     "id": "FR-18",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "meta-learn the update rule of fast weights by distilling a softmax attention teacher, then reuse the learned rule in a different model [--published-after 2025-06-01 --limit 20]",
+     "returned_ids": [
+      "2610.11989",
+      "2609.34009",
+      "2608.29099",
+      "2608.28647",
+      "2606.18132",
+      "2604.15451",
+      "2605.17839",
+      "2603.21426",
+      "2603.25699",
+      "2603.26088",
+      "2603.02430",
+      "2602.01775"
+     ]
+    },
+    {
+     "id": "FR-19",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "learned write rule fast weights distilled from attention [--limit 20]",
+     "returned_ids": [
+      "2606.26560",
+      "2609.37731",
+      "2608.27763",
+      "2605.22791",
+      "2610.04749",
+      "2609.34866",
+      "2608.22066",
+      "2608.01851",
+      "2610.10859",
+      "2609.20888",
+      "2609.18842",
+      "2609.10392"
+     ]
+    },
+    {
+     "id": "FR-20",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "in-context learning distillation fast weights write rule [--published-after 2025-01-01 --limit 20]",
+     "returned_ids": [
+      "2608.01672",
+      "2601.20802",
+      "2606.22578",
+      "2511.14617",
+      "2609.39740",
+      "2609.36642",
+      "2609.35259",
+      "2610.02700",
+      "2606.22600",
+      "2605.12484",
+      "2608.19750",
+      "2609.24882"
+     ]
+    },
+    {
+     "id": "FR-21",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "Capturing In-Context Learning Dynamics with Task Operators [--limit 10]",
+     "returned_ids": [
+      "2610.01054",
+      "2605.20389",
+      "10.1038/s43588-021-00112-0",
+      "2409.12293",
+      "2402.15734",
+      "2607.11875",
+      "2603.04464",
+      "10.1073/pnas.2310142120",
+      "2608.18282",
+      "1905.04819"
+     ]
+    },
+    {
+     "id": "FR-22",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "implicit weight update in-context learning low-rank MLP patch [--published-after 2025-07-01 --limit 20]",
+     "returned_ids": [
+      "2610.11730",
+      "2610.06647",
+      "2610.02283",
+      "2607.hyperlora-implicit-neural-fields",
+      "2507.16003",
+      "2608.31036",
+      "2609.02006",
+      "2609.39329",
+      "2609.12896",
+      "2610.11296",
+      "2609.29913",
+      "2609.34599"
+     ]
+    },
+    {
+     "id": "FR-23",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "hypernetwork converts in-context demonstrations into a weight update that transfers across different base language models [--published-after 2026-01-01 --limit 20]",
+     "returned_ids": [
+      "2610.03039",
+      "2610.01934",
+      "2610.00820",
+      "2609.18842",
+      "2609.07017",
+      "2609.29233",
+      "2610.11715",
+      "2610.01054",
+      "2610.00929",
+      "2610.00420",
+      "2610.02092",
+      "2609.39369"
+     ]
+    },
+    {
+     "id": "FR-24",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "meta-learned update rule test-time training inner loop learned optimizer sequence model [--published-after 2026-03-01 --limit 20]",
+     "returned_ids": [
+      "2609.09477",
+      "2610.11989",
+      "2609.30945",
+      "2610.01630",
+      "2609.39751",
+      "2610.11570",
+      "2610.08553",
+      "2610.06269",
+      "2609.35738",
+      "2610.00992",
+      "2610.05076",
+      "2610.05484"
+     ]
+    },
+    {
+     "id": "FR-25",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "is the in-context update of a pretrained transformer key-directed like a delta rule or gradient step, measured by fitting update rules to its behavior [--published-after 2025-06-01 --limit 20]",
+     "returned_ids": [
+      "2610.12325",
+      "2610.10422",
+      "2609.37824",
+      "2609.32102",
+      "2609.10287",
+      "2608.04183",
+      "2607.24471",
+      "2607.09204",
+      "2606.16897",
+      "2606.10929",
+      "2601.00417",
+      "2605.16234"
+     ]
+    },
+    {
+     "id": "FR-26",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "linearizing attention distillation GLA RetNet HGRN2 GSA pretrained transformer [--published-after 2025-06-01 --limit 20]",
+     "returned_ids": [
+      "2609.35664",
+      "2605.02772",
+      "2610.11214",
+      "2609.31947",
+      "2609.33093",
+      "2609.39661",
+      "2608.16585",
+      "2610.08527",
+      "2609.36259",
+      "2606.30562",
+      "2608.28444",
+      "2606.16429"
+     ]
+    },
+    {
+     "id": "FR-27",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "transfer of in-context learning across architectures linear attention state space model [--published-after 2025-06-01 --limit 20]",
+     "returned_ids": [
+      "2609.32341",
+      "2609.36337",
+      "10.18653/v1/2026.findings-acl.39",
+      "2608.14528",
+      "10.1016/j.neunet.2026.109568",
+      "10.1109/iccv51701.2025.00817",
+      "2606.30336",
+      "2609.17888",
+      "10.3390/rs17152577",
+      "2610.01172",
+      "2604.21957",
+      "2605.07333"
+     ]
+    },
+    {
+     "id": "FR-28",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Universal Test-Time Training [--limit 10]",
+     "returned_ids": [
+      "2610.05484",
+      "2610.12002",
+      "2604.06169",
+      "2610.00722",
+      "2609.34174",
+      "2610.06829",
+      "2609.32564",
+      "2608.21308",
+      "2609.08162",
+      "2605.22817"
+     ]
+    },
+    {
+     "id": "FR-29",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "portable context-to-parameter hypernetwork model-agnostic trunk [--limit 15]",
+     "returned_ids": [
+      "2610.11715",
+      "2610.03039",
+      "2602.06358",
+      "2608.21227",
+      "2610.00820",
+      "2610.01331",
+      "2609.31154",
+      "2608.11475",
+      "2609.30570",
+      "2609.18842",
+      "2606.06492",
+      "2606.26772"
+     ]
+    },
+    {
+     "id": "FR-30",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "a shared model-agnostic network with thin per-model input and output layers that converts context into an update, trained on small models and ported to other base models [--published-after 2026-03-01 --limit 20]",
+     "returned_ids": [
+      "2610.00820",
+      "2610.11715",
+      "2610.00929",
+      "2610.06243",
+      "2610.10349",
+      "2610.00420",
+      "2609.36657",
+      "2609.13916",
+      "2610.00426",
+      "2609.24979",
+      "2609.24782",
+      "2609.39369"
+     ]
+    },
+    {
+     "id": "FR-31",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Doc-to-LoRA Text-to-LoRA context distillation hypernetwork [--published-after 2026-03-01 --limit 20]",
+     "returned_ids": [
+      "2606.12400",
+      "2609.24979",
+      "2609.31154",
+      "2607.27594",
+      "2610.11715",
+      "2607.17467",
+      "2609.35189",
+      "2609.02734",
+      "2610.03039",
+      "2606.06154",
+      "2608.03275",
+      "2606.16769"
+     ]
+    },
+    {
+     "id": "FR-32",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "distill softmax attention in-context learning into test-time training layer fast weight [--published-after 2026-01-01 --limit 20]",
+     "returned_ids": [
+      "2609.13141",
+      "2610.05484",
+      "2610.07074",
+      "2608.27763",
+      "2608.01672",
+      "2609.36337",
+      "2609.35109",
+      "2608.07110",
+      "2609.39034",
+      "2608.21308",
+      "2609.15810",
+      "2605.02772"
+     ]
+    },
+    {
+     "id": "FR-33",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "amortize in-context learning into a learned network that writes an input-conditioned update to a frozen language model, compared with task vectors and function vectors [--published-after 2026-06-01 --limit 20]",
+     "returned_ids": [
+      "2610.10533",
+      "2609.32771",
+      "2609.33620",
+      "2610.00526",
+      "2610.00820",
+      "2609.30784",
+      "2609.20974",
+      "2610.01054",
+      "2609.37731",
+      "2609.28250",
+      "2610.01712",
+      "2610.07572"
+     ]
+    },
+    {
+     "id": "FR-34",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "One Adapter Pair per Model [--published-after 2026-08-11 --limit 15]",
+     "returned_ids": [
+      "2608.31096",
+      "2610.00991",
+      "2609.15758",
+      "2609.16875",
+      "2609.32879",
+      "2610.08255",
+      "2610.10343",
+      "2610.07036",
+      "2608.29749",
+      "2610.03546",
+      "2610.03370",
+      "2609.04526"
+     ]
+    },
+    {
+     "id": "FR-35",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "universal activation interface adapter pair language models [--published-after 2026-06-01 --limit 15]",
+     "returned_ids": [
+      "2608.09521",
+      "2607.00687",
+      "2609.22988",
+      "2607.00510",
+      "10.64898/2026.07.08.737248",
+      "2609.04344",
+      "2606.06519",
+      "2608.23646",
+      "2608.00215",
+      "10.55092/aiplus20260003",
+      "2606.21395",
+      "2607.07916"
+     ]
+    },
+    {
+     "id": "FR-36",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "PorTAL portable task adaptation latent base models LoRA [--limit 15]",
+     "returned_ids": [
+      "2610.11715",
+      "2607.21978",
+      "2608.21909",
+      "2610.08882",
+      "2609.36986",
+      "2610.10550",
+      "2608.27070",
+      "2609.30922",
+      "2607.23837",
+      "2609.01433",
+      "2609.12327",
+      "2610.01702"
+     ]
+    },
+    {
+     "id": "FR-37",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "SADA context-to-parameter mapping hidden-state collapse [--limit 10]",
+     "returned_ids": [
+      "2610.11715",
+      "2607.14463",
+      "2609.33298",
+      "2608.02830",
+      "2608.00311",
+      "2609.13319",
+      "2609.05126",
+      "2609.36612",
+      "2609.17376",
+      "2610.00357"
+     ]
+    },
+    {
+     "id": "FR-38",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "learn a task adaptation once as a base-agnostic latent and port it to unseen base models by refitting a thin per-base alignment [--published-after 2026-01-01 --limit 15]",
+     "returned_ids": [
+      "2610.00820",
+      "2610.08312",
+      "2609.32499",
+      "2610.10349",
+      "2610.00929",
+      "2610.07036",
+      "2609.24612",
+      "2609.32332",
+      "2609.33182",
+      "2609.34478",
+      "2608.27070",
+      "2608.16345"
+     ]
+    },
+    {
+     "id": "FR-39",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Platonic Task Arithmetic universal task descriptors [--limit 10]",
+     "returned_ids": [
+      "2610.00929",
+      "2609.38895",
+      "2608.25644",
+      "2610.07990",
+      "2610.01794",
+      "2608.16696",
+      "2609.20340",
+      "2609.30550",
+      "2608.23720",
+      "2608.15509"
+     ]
+    },
+    {
+     "id": "FR-40",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "SADA state-aligned distillation adapters in-context learning fine-tuning [--limit 10]",
+     "returned_ids": [
+      "2609.17981",
+      "2610.09665",
+      "2610.07842",
+      "2609.34672",
+      "2609.38379",
+      "2610.11132",
+      "2610.05200",
+      "2608.16333",
+      "2609.37367",
+      "2608.15360"
+     ]
+    },
+    {
+     "id": "FR-41",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "task vectors function vectors state space models Mamba in-context learning mechanism [--published-after 2025-06-01 --limit 20]",
+     "returned_ids": [
+      "2610.07572",
+      "2609.39405",
+      "2609.32341",
+      "2608.27882",
+      "2609.16540",
+      "2610.00746",
+      "2609.09054",
+      "2610.10323",
+      "2608.29613",
+      "2609.24049",
+      "2610.00526",
+      "2609.35634"
+     ]
+    },
+    {
+     "id": "FR-42",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "few-shot in-context learning ability of 1.3B linear recurrent language models GLA RetNet HGRN2 compared with transformers trained on the same corpus [--limit 20]",
+     "returned_ids": [
+      "2609.03213",
+      "2604.14442",
+      "2602.17171",
+      "2406.06484",
+      "2601.12598",
+      "2404.07904",
+      "2507.15779",
+      "2504.14366",
+      "2509.23501",
+      "2412.15978",
+      "2507.09440",
+      "2502.14010"
+     ]
+    },
+    {
+     "id": "FR-43",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "fla-hub 1.3B 100B GLA RetNet HGRN2 GSA transformer in-context [--limit 20]",
+     "returned_ids": [
+      "2609.35664",
+      "2609.36259",
+      "2610.08527",
+      "2609.33093",
+      "2608.12149",
+      "2404.07904",
+      "2610.05842",
+      "2406.06484",
+      "2609.36314",
+      "2409.07146",
+      "2610.10114",
+      "2608.16844"
+     ]
+    },
+    {
+     "id": "FR-44",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "extract the fast-weight update rule implicit in a pretrained softmax transformer and compare it with delta rule and gradient descent rules [--published-after 2025-09-01 --limit 20]",
+     "returned_ids": [
+      "2609.37379",
+      "2608.27763",
+      "2609.15975",
+      "2610.11740",
+      "2608.07110",
+      "2609.33591",
+      "2609.22146",
+      "2608.15323",
+      "2606.17816",
+      "2605.02105",
+      "2607.19771",
+      "2606.13276"
+     ]
+    },
+    {
+     "id": "FR-45",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "label-dependent in-context learning shuffled labels task learning small models scale [--published-after 2025-06-01 --limit 20]",
+     "returned_ids": [
+      "2610.10335",
+      "2609.19138",
+      "2610.05918",
+      "2609.31821",
+      "2610.01054",
+      "2610.10332",
+      "2610.11152",
+      "2610.08314",
+      "2610.07705",
+      "2607.18819",
+      "2609.05955",
+      "2608.24033"
+     ]
+    },
+    {
+     "id": "FR-46",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "test-time training context distillation fast weights [--published-after 2026-06-01 --limit 20]",
+     "returned_ids": [
+      "2608.01672",
+      "2610.05303",
+      "2606.21803",
+      "W7211978771",
+      "2606.22578",
+      "2606.06906",
+      "2607.03441",
+      "2609.35333",
+      "2609.32201",
+      "2609.15177",
+      "10.1007/978-3-032-39385-2_33",
+      "2609.13770"
+     ]
+    },
+    {
+     "id": "FR-47",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "in-context learning gradient descent pretrained language model empirical [--published-after 2025-06-01 --limit 20]",
+     "returned_ids": [
+      "2603.13875",
+      "2607.23153",
+      "2607.04081",
+      "2512.05084",
+      "2605.26356",
+      "2604.23267",
+      "W7158422607",
+      "10.1051/itmconf/20268403003",
+      "10.1051/itmconf/20268403003/pdf",
+      "2509.06806",
+      "10.18653/v1/2026.acl-long.1932",
+      "2510.01163"
+     ]
+    },
+    {
+     "id": "FR-48",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Task Operator TO Xiong in-context [--published-after 2026-10-02 --limit 20]",
+     "returned_ids": [
+      "2610.07559",
+      "2610.11784",
+      "2610.07572",
+      "2610.04378",
+      "2610.10335",
+      "2610.07842",
+      "2610.06679",
+      "2610.10528",
+      "2610.06651",
+      "2610.06843",
+      "2610.09092",
+      "2610.12126"
+     ]
+    },
+    {
+     "id": "FR-49",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "TTCD test-time context distillation [--published-after 2026-08-04 --limit 20]",
+     "returned_ids": [
+      "2609.37041",
+      "2608.27448",
+      "2610.05303",
+      "2608.13391",
+      "2609.33414",
+      "2608.11191",
+      "2608.11829",
+      "2609.35333",
+      "2609.40253",
+      "2608.19181",
+      "2610.02427",
+      "2609.39920"
+     ]
+    },
+    {
+     "id": "FR-50",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Universal Activation Bus [--published-after 2026-08-11 --limit 15]",
+     "returned_ids": [
+      "2610.01264",
+      "2610.01062",
+      "2609.15054",
+      "2609.39868",
+      "2609.32350",
+      "2608.21664",
+      "2609.02641",
+      "2608.17733",
+      "2609.04520",
+      "2609.29998",
+      "2609.18447",
+      "2609.28881"
+     ]
+    },
+    {
+     "id": "FR-51",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "write rule port across architectures recurrent transformer distilled [--published-after 2026-06-01 --limit 20]",
+     "returned_ids": [
+      "2609.recurrent-looped-transformer",
+      "2610.07591",
+      "2609.04490",
+      "2606.26560",
+      "2609.32453",
+      "2609.38169",
+      "2609.recurrence-looped-transformer-evaluation",
+      "2608.15062",
+      "2610.12448",
+      "2610.01172",
+      "2609.11516",
+      "2609.17251"
+     ]
+    },
+    {
+     "id": "FR-52",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "a learned memory write rule trained on one language model and frozen, then attached to a different architecture through linear maps [--published-after 2026-03-01 --limit 20]",
+     "returned_ids": [
+      "2609.28399",
+      "2610.02126",
+      "2609.15126",
+      "2609.33620",
+      "2610.08553",
+      "2609.33093",
+      "2610.08718",
+      "2610.07311",
+      "2609.34933",
+      "2609.40063",
+      "2609.30797",
+      "2609.38261"
+     ]
+    },
+    {
+     "id": "FR-53",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "in-context learning recurrent models transfer from transformer teacher distillation GLA Mamba few-shot [--published-after 2026-01-01 --limit 20]",
+     "returned_ids": [
+      "2609.35333",
+      "2608.13391",
+      "2609.18686",
+      "2610.10623",
+      "2608.12099",
+      "2609.24352",
+      "2610.10460",
+      "2609.39390",
+      "2609.39920",
+      "2610.02597",
+      "2609.32102",
+      "2608.09228"
+     ]
+    },
+    {
+     "id": "FR-54",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Learning without training implicit dynamics in-context learning low-rank weight update MLP [--published-after 2025-12-01 --limit 20]",
+     "returned_ids": [
+      "2610.06647",
+      "2610.11730",
+      "2608.31036",
+      "2609.34599",
+      "2610.02283",
+      "2610.01054",
+      "2609.12278",
+      "2610.10379",
+      "2609.26679",
+      "2608.27763",
+      "2609.02006",
+      "2609.12896"
+     ]
+    },
+    {
+     "id": "FR-55",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "behaviourally distill a frozen transformer's in-context learning into an explicit fast weight memory and test whether the learned update is gradient-like [--published-after 2025-06-01 --limit 20]",
+     "returned_ids": [
+      "2605.26099",
+      "2610.09760",
+      "2608.01672",
+      "2609.10287",
+      "2605.30260",
+      "2607.15819",
+      "2603.13875",
+      "2605.26356",
+      "2604.10848",
+      "2507.16003",
+      "2605.05755",
+      "2605.05176"
+     ]
+    },
+    {
+     "id": "FR-56",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "in-context learning fast weight programmer pretrained language model emulate [--published-after 2025-06-01 --limit 20]",
+     "returned_ids": [
+      "2608.29093",
+      "2608.27763",
+      "2609.15344",
+      "2607.15275",
+      "2606.26493",
+      "2610.09560",
+      "2609.27682",
+      "2607.27945",
+      "2606.27821",
+      "2608.24115",
+      "2608.17616",
+      "2606.24933"
+     ]
+    },
+    {
+     "id": "FR-57",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Can Gradient Descent Simulate Prompting [--limit 10]",
+     "returned_ids": [
+      "2506.20989",
+      "2609.17167",
+      "2609.09466",
+      "2607.22906",
+      "2605.08850",
+      "2603.04948",
+      "2604.15554",
+      "2604.12235",
+      "2509.14969",
+      "2510.11440"
+     ]
+    },
+    {
+     "id": "FR-58",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "a gradient step on a language model's weights trained to emulate the effect of conditioning on a prompt [--published-after 2025-09-01 --limit 20]",
+     "returned_ids": [
+      "2608.22994",
+      "2609.34915",
+      "2610.03702",
+      "2610.06940",
+      "2609.07117",
+      "2609.08981",
+      "2609.25721",
+      "2609.22943",
+      "2609.01217",
+      "2606.00995",
+      "2608.05088",
+      "2605.21654"
+     ]
+    },
+    {
+     "id": "FR-59",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "cross-architecture transfer in-context learning rule recurrent neural network transformer [--published-after 2026-01-01 --limit 20]",
+     "returned_ids": [
+      "2604.02474",
+      "2610.01172",
+      "10.1016/j.ecoinf.2026.104056",
+      "10.5772/intechopen.1016179",
+      "10.48047/jocaaa.2026.35.03.13",
+      "2605.05488",
+      "10.1371/journal.pone.0340997",
+      "10.71097/ijtas.v17.i7.1359",
+      "W7213491499",
+      "10.21203/rs.3.rs-10688441/v1",
+      "10.32604/cmc.2026.082979",
+      "10.23977/cpcs.2026.100102"
+     ]
+    },
+    {
+     "id": "FR-60",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "SADA bridging in-context learning and fine-tuning via state-aligned distillation adapters [--limit 10]",
+     "returned_ids": [
+      "10.18653/v1/2026.acl-long.1046",
+      "10.48448/kzrt-yb33",
+      "2606.21446",
+      "10.1109/icws72778.2026.00066",
+      "2501.18592",
+      "W7171339703",
+      "10.1109/icassp48485.2024.10446722",
+      "10.18653/v1/2026.acl-long.2189",
+      "W7165502189"
+     ]
+    },
+    {
+     "id": "FR-61",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "static task vector single synthetic demonstration high-rank mapping bijection fails [--published-after 2025-10-01 --limit 15]",
+     "returned_ids": [
+      "2608.01452",
+      "2610.00526",
+      "2607.23050",
+      "2608.13385",
+      "2608.05392",
+      "2609.32469",
+      "2609.24517",
+      "2610.03518",
+      "2609.05192",
+      "2609.21112",
+      "2609.38476",
+      "2610.01702"
+     ]
+    },
+    {
+     "id": "FR-62",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2610.01054",
+     "returned_ids": [
+      "2610.01054"
+     ]
+    },
+    {
+     "id": "FR-63",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2608.01672",
+     "returned_ids": [
+      "2608.01672"
+     ]
+    },
+    {
+     "id": "FR-64",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2608.09521",
+     "returned_ids": [
+      "2608.09521"
+     ]
+    },
+    {
+     "id": "FR-65",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2603.22329",
+     "returned_ids": [
+      "2603.22329"
+     ]
+    },
+    {
+     "id": "FR-66",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2310.08540",
+     "returned_ids": [
+      "2310.08540"
+     ]
+    },
+    {
+     "id": "FR-67",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2305.09731",
+     "returned_ids": [
+      "2305.09731"
+     ]
+    },
+    {
+     "id": "FR-68",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2610.11715",
+     "returned_ids": [
+      "2610.11715"
+     ]
+    },
+    {
+     "id": "FR-69",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2610.00526",
+     "returned_ids": [
+      "2610.00526"
+     ]
+    },
+    {
+     "id": "FR-70",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2610.00929",
+     "returned_ids": [
+      "2610.00929"
+     ]
+    },
+    {
+     "id": "FR-71",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2609.25053",
+     "returned_ids": [
+      "2609.25053"
+     ]
+    },
+    {
+     "id": "FR-72",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2610.09058",
+     "returned_ids": [
+      "2610.09058"
+     ]
+    },
+    {
+     "id": "FR-73",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2610.06679",
+     "returned_ids": [
+      "2610.06679"
+     ]
+    },
+    {
+     "id": "FR-74",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2609.38261",
+     "returned_ids": [
+      "2609.38261"
+     ]
+    },
+    {
+     "id": "FR-75",
+     "kind": "auxiliary",
+     "counted": false,
+     "tool": "curl export.arxiv.org/abs (submission history)",
+     "query": "version check of 24 priors incl. 2610.01054 2608.01672 2608.09521 2603.22329 2310.08540 2305.09731 2610.11715 2610.00929 2507.16003 2605.04651 2605.26099 2406.02847 2506.20989 2602.15902 2411.05877 2212.02475 2608.07110 2410.17599 2603.16413 2610.00526 2609.25053 2610.09058 2610.06679 2608.16347",
+     "returned_ids": [
+      "2610.01054v1",
+      "2608.01672v1",
+      "2608.09521v1",
+      "2603.22329v1",
+      "2310.08540v5",
+      "2305.09731v1",
+      "2610.11715v1",
+      "2610.00929v2",
+      "2507.16003v4",
+      "2605.04651v2",
+      "2605.26099v3",
+      "2406.02847v2"
+     ]
+    },
+    {
+     "id": "FR-76",
+     "kind": "auxiliary",
+     "counted": false,
+     "tool": "gh api repos/*/commits",
+     "query": "gzxiong/task_operator; dangxingyu/ttcd; suhyeon0123/Universal_Activation_Bus",
+     "returned_ids": [
+      "task_operator last 2026-05-08",
+      "ttcd last 2026-08-05",
+      "Universal_Activation_Bus last 2026-08-13"
+     ]
+    },
+    {
+     "id": "FR-77",
+     "kind": "auxiliary",
+     "counted": false,
+     "tool": "OpenAlex API works/doi",
+     "query": "cited_by_count for 2610.01054 2608.01672 2608.09521 2603.22329 2310.08540; SADA 10.18653/v1/2026.acl-long.1046 abstract",
+     "returned_ids": [
+      "W7215779088",
+      "W7172419210",
+      "W7202179404",
+      "W7140306223",
+      "W4387636023",
+      "10.18653/v1/2026.acl-long.1046"
+     ]
+    }
+   ],
+   "verdict": "NARROWED. The dossier class stands, and the novelty is narrower than the dossier states. Every dossier prior was re-checked. Task Operators (2610.01054), TTCD (2608.01672), One Adapter Pair (2608.09521) and Jeong (2603.22329) each have only v1; Shen (2310.08540) is still at v5 of 2024-06-03; Pan (2305.09731) has only v1. None of their repos changed after publication, and no follow-up work extending any of them was found.\n\nThe main new prior is Internalizer (2610.11715, 2026-10-08). It publishes and scales the factorization E4's port relies on: a shared, model-agnostic core with thin per-base m",
+   "coverage_limits": "Sources:\n- alphaXiv full-text BM25 and title/abstract embedding search, plus OpenAlex search, all through orx 0.2.2. That build is outdated against 0.2.18 and warned on every call; results may differ from a current build.\n- arXiv submission histories via export.arxiv.org abstract pages.\n- The OpenAlex API for one ACL record and for citation counts.\n- `gh api` for repo commit dates.\n\nNot searched:\n- Semantic Scholar and the arXiv API. Neither is reachable from the Mac, and the host relay was not used because of the S1a host reservation.\n- OpenReview, including ICLR 2027 submissions whose bodies may be public.\n- ACL Anthology full text beyond the SADA abstract.\n- X, Reddit, Hacker News, Chinese-language venues and patents.\n- Labs blogs other than PorTAL, which was seen only as Internalizer's citation and was not opened.\n\nDegraded checks:\n- The citation graph is degraded. OpenAlex reports cited_by_count = 0 for every prior, including Shen 2023, so forward citations were approximated with dated full-text keyword searches.\n- The alphaXiv index lags. The newest item seen is dated 2026-10-08, so preprints from 2026-10-09 and 2026-10-10 may be missing.\n\nReading depth:\n- Full texts were read only in targeted sections located by grep (method, setup, limitations, related work), not end to end.\n- Dherin 2507.16003 v4 was checked by abstract only.\n\nUnverified:\n- Whether Internalizer's roster bases Qwen3.5-2B and Granite-4.1-3B are hybrid recurrent architectures. If they are, Internalizer'"
+  },
+  "killshot": {
+   "rows": [
+    {
+     "id": "KI-01",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Capturing In-Context Learning Dynamics with Task Operators",
+     "returned_ids": [
+      "2610.01054",
+      "2609.19138",
+      "2610.07559",
+      "2609.35429",
+      "2608.11203",
+      "2610.08475",
+      "2609.31434",
+      "2609.29060",
+      "2609.35333",
+      "2610.03463",
+      "2609.17714",
+      "2606.20538",
+      "2609.00047",
+      "2607.15819",
+      "2607.26345"
+     ]
+    },
+    {
+     "id": "KI-02",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Test-Time Training via Context Distillation",
+     "returned_ids": [
+      "2608.01672",
+      "2609.37041",
+      "2610.05303",
+      "2608.27448",
+      "2609.34174",
+      "2610.12002",
+      "2512.23675",
+      "2610.05484",
+      "2608.11191",
+      "2608.13391",
+      "2609.05295",
+      "2608.12307",
+      "2607.09415",
+      "2609.35109",
+      "2608.21308"
+     ]
+    },
+    {
+     "id": "KI-03",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "One Adapter Pair per Model universal activation interface",
+     "returned_ids": [
+      "2608.09521",
+      "2605.25903",
+      "2608.31096",
+      "2610.00149",
+      "2608.08829",
+      "2610.03546",
+      "2606.09936",
+      "2609.19292",
+      "2609.15758",
+      "2610.00991",
+      "2609.20340",
+      "2610.08255",
+      "2609.03966",
+      "2609.33496",
+      "2609.10723"
+     ]
+    },
+    {
+     "id": "KI-04",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Trained Persistent Memory for Frozen Decoder-Only LLMs",
+     "returned_ids": [
+      "2603.22329",
+      "2603.16413",
+      "2609.40335",
+      "2608.29537",
+      "2609.01117",
+      "2607.27919",
+      "2609.17251",
+      "2608.17050",
+      "2610.01921",
+      "2609.38501",
+      "2609.38275",
+      "2610.05124",
+      "2610.07834",
+      "2610.03869",
+      "2609.36373"
+     ]
+    },
+    {
+     "id": "KI-05",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "distilled write rule transferred across operator families linear attention recurrent",
+     "returned_ids": [
+      "2606.26560",
+      "2609.36529",
+      "2610.02816",
+      "2609.38166",
+      "2608.15533",
+      "2605.22791",
+      "2609.39034",
+      "2610.11214",
+      "2609.38169",
+      "2609.04490",
+      "2609.12814",
+      "2609.33093",
+      "2609.35745",
+      "2607.02303",
+      "2609.32453"
+     ]
+    },
+    {
+     "id": "KI-06",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "Distill a frozen transformer's in-context learning into an explicit learned fast-weight write rule at a low-rank interface, compare it with a gradient-descent-form rule of equal capacity, then attach the same frozen rule to recurrent models such as GLA, RetNet and Mamba through label-free linear maps",
+     "returned_ids": [
+      "2608.27763",
+      "2610.09058",
+      "2609.40063",
+      "2609.32332",
+      "2605.23872",
+      "2607.18130",
+      "2608.06969",
+      "2607.11465",
+      "2605.26797",
+      "2606.16429",
+      "2601.00417",
+      "2604.14191",
+      "2605.26356",
+      "2605.04651",
+      "2507.16003"
+     ]
+    },
+    {
+     "id": "KI-07",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "transformers learn to implement preconditioned gradient descent for in-context learning",
+     "returned_ids": [
+      "2605.26713",
+      "2604.10848",
+      "2610.09760",
+      "2605.08475",
+      "2306.00297",
+      "2605.05755",
+      "2605.06609",
+      "2609.08981",
+      "2212.07677",
+      "2608.09743",
+      "2606.16694",
+      "2607.15819",
+      "2606.00605",
+      "2607.23153",
+      "2510.10425"
+     ]
+    },
+    {
+     "id": "KI-08",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "task recognition task learning in-context learning scale shuffled labels small models",
+     "returned_ids": [
+      "2610.01054",
+      "2610.07572",
+      "2609.28776",
+      "2610.10332",
+      "2610.10335",
+      "2609.25836",
+      "2609.17714",
+      "2608.22273",
+      "2608.08636",
+      "2607.18819",
+      "2606.20538",
+      "2607.27766",
+      "2606.11853",
+      "2604.24637",
+      "2605.28854"
+     ]
+    },
+    {
+     "id": "KI-09",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "transfer in-context learning ability from a transformer teacher to a recurrent or state space student model",
+     "returned_ids": [
+      "2610.04260",
+      "2602.12275",
+      "2604.14191",
+      "2603.25699",
+      "2512.11255",
+      "2601.05913",
+      "2509.14526",
+      "2509.25002",
+      "2506.16975",
+      "2510.19266",
+      "2510.10425",
+      "2509.25253",
+      "2504.14366",
+      "2410.16215",
+      "1904.05068"
+     ]
+    },
+    {
+     "id": "KI-10",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "distilling in-context learning into fast weights update rule",
+     "returned_ids": [
+      "2209.15189",
+      "2211.15661",
+      "W7165065630",
+      "10.18653/v1/2026.findings-acl.1631",
+      "10.1145/3578938",
+      "10.18653/v1/2023.acl-long.764",
+      "2401.02938",
+      "2210.14215",
+      "2306.03887",
+      "10.1007/s40747-024-01350-1",
+      "2605.12484",
+      "2605.04651",
+      "2305.11038",
+      "10.18653/v1/2023.findings-emnlp.547",
+      "10.3389/fdata.2022.787421"
+     ]
+    },
+    {
+     "id": "KI-11",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "implicit dynamics of in-context learning generalisation all layers low-rank weight update",
+     "returned_ids": [
+      "2609.35207",
+      "2610.11730",
+      "2610.01054",
+      "2609.36337",
+      "2610.02283",
+      "2609.12896",
+      "2609.12278",
+      "2609.29913",
+      "2607.28989",
+      "2610.08049",
+      "2606.05315",
+      "2608.27749",
+      "2507.16003",
+      "2605.08423",
+      "2512.11255"
+     ]
+    },
+    {
+     "id": "KI-12",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "A single learned memory update rule shared across transformer, linear attention and state space backbones, transferred to a new backbone without retraining the rule",
+     "returned_ids": [
+      "2609.33325",
+      "2609.33093",
+      "2610.05484",
+      "2609.23466",
+      "2609.01550",
+      "2606.31397",
+      "2607.22157",
+      "2606.30067",
+      "2604.05248",
+      "2602.06043",
+      "2605.05097",
+      "2603.21096",
+      "2601.11667",
+      "2506.00653",
+      "2512.11243"
+     ]
+    },
+    {
+     "id": "KI-13",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "uncovering mesa-optimization algorithms in transformers recursive least squares",
+     "returned_ids": [
+      "2610.01859",
+      "2309.05858",
+      "2607.27251",
+      "2606.18564",
+      "2607.22194",
+      "2604.13656",
+      "2607.10145",
+      "2605.25034",
+      "2405.16845",
+      "2503.12295",
+      "2507.11095",
+      "2507.09440",
+      "2603.05870",
+      "2601.15686",
+      "2512.05918"
+     ]
+    },
+    {
+     "id": "KI-14",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "label-dependent in-context learning emerges with scale flipped labels semantic priors",
+     "returned_ids": [
+      "2608.16707",
+      "2609.17413",
+      "2608.30216",
+      "2608.03234",
+      "2608.21977",
+      "2608.22313",
+      "2606.12925",
+      "2606.25508",
+      "2604.13326",
+      "2608.06394",
+      "2605.28239",
+      "2605.27913",
+      "2511.21038",
+      "2606.14965",
+      "2604.03657"
+     ]
+    },
+    {
+     "id": "KI-15",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "how low-rank is the change in hidden activations that in-context demonstrations induce; dimensionality of the in-context learning update",
+     "returned_ids": [
+      "2610.01054",
+      "2609.40063",
+      "2608.25677",
+      "2609.17594",
+      "2609.01374",
+      "2608.28150",
+      "2608.13385",
+      "2609.18989",
+      "2606.04325",
+      "2605.18830",
+      "2605.28896",
+      "2605.16591",
+      "2507.16003",
+      "2603.12760",
+      "2603.09684"
+     ]
+    },
+    {
+     "id": "KI-16",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "in-context learning task recognition versus task learning model scale",
+     "returned_ids": [
+      "2509.24164",
+      "1707.08114",
+      "10.1109/cvpr.2019.01151",
+      "10.1109/cvpr.2018.00907",
+      "10.1007/s10994-007-5040-8",
+      "10.1109/iccv.2017.226",
+      "10.2139/ssrn.1031158",
+      "10.1523/jneurosci.14-05-03208.1994",
+      "10.1088/1741-2552/ab0ab5",
+      "10.1523/jneurosci.3619-13.2014",
+      "2303.03846",
+      "10.3389/fphar.2018.00074",
+      "2405.18202",
+      "10.1016/j.iheduc.2020.100729",
+      "10.1109/cvpr.2016.278"
+     ]
+    },
+    {
+     "id": "KI-17",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Hedgehog Porcupine expressive linear attentions softmax mimicry",
+     "returned_ids": [
+      "2402.04347",
+      "2609.39034",
+      "2608.22368",
+      "2609.35745",
+      "2608.28444",
+      "2610.11798",
+      "2608.06628",
+      "2609.35349",
+      "2606.27748",
+      "2609.13979",
+      "2607.07706",
+      "2609.09721",
+      "2609.30980",
+      "2609.27246",
+      "2510.26692"
+     ]
+    },
+    {
+     "id": "KI-18",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "a meta-learned learning rule or optimizer that generalizes to unseen neural network architectures without re-training the rule",
+     "returned_ids": [
+      "2602.19142",
+      "2509.23052",
+      "2510.08968",
+      "2506.12041",
+      "2211.09760",
+      "2401.14953",
+      "2406.00153",
+      "2501.12670",
+      "2408.09310",
+      "2402.02355",
+      "2212.04458",
+      "2506.23045",
+      "2209.11208",
+      "1703.04813",
+      "2009.11243"
+     ]
+    },
+    {
+     "id": "KI-19",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "do pretrained transformers learn in-context by gradient descent open hypothesis",
+     "returned_ids": [
+      "2604.10848",
+      "2605.26713",
+      "2212.07677",
+      "2605.06609",
+      "2610.09760",
+      "2609.08981",
+      "2510.10425",
+      "2603.13875",
+      "2606.00605",
+      "2607.23153",
+      "2310.08540",
+      "2606.23607",
+      "2508.08222",
+      "2606.16694",
+      "2602.02385"
+     ]
+    },
+    {
+     "id": "KI-20",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "in-context learning few-shot GLA RetNet HGRN2 1.3B SlimPajama 100B tokens",
+     "returned_ids": [
+      "2609.35664",
+      "2609.24352",
+      "2610.05842",
+      "2610.07079",
+      "2605.24410",
+      "2406.06484",
+      "2607.29353",
+      "2404.07904",
+      "2312.06635",
+      "2605.16591",
+      "2512.17351",
+      "2603.29450",
+      "2507.06457",
+      "2511.00819",
+      "2605.25799"
+     ]
+    },
+    {
+     "id": "KI-21",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "transferring an in-context learning update rule between transformer and recurrent language models",
+     "returned_ids": [
+      "1910.10683",
+      "10.1186/s40537-023-00842-0",
+      "10.1016/j.artmed.2024.102900",
+      "10.1016/j.jbi.2021.103982",
+      "2410.08711",
+      "2212.04458",
+      "10.3390/ai4030035",
+      "10.1002/nme.7357",
+      "10.13025/17598",
+      "2609.34253",
+      "10.1007/s11704-026-60308-3",
+      "10.1007/s10462-024-10895-z",
+      "2504.12916",
+      "10.1109/access.2019.2952360",
+      "2401.12973"
+     ]
+    },
+    {
+     "id": "KI-22",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "plug-in memory module trained once on one frozen language model and transferred to other frozen language models of different architecture",
+     "returned_ids": [
+      "2609.38261",
+      "2608.17616",
+      "2607.25614",
+      "2608.17050",
+      "2605.15156",
+      "2608.09521",
+      "2607.22157",
+      "2606.24040",
+      "2604.05248",
+      "2508.09874",
+      "2603.22329",
+      "2602.16189",
+      "2601.15324",
+      "2412.09764",
+      "2203.08913"
+     ]
+    },
+    {
+     "id": "KI-23",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "function vectors in large language models Pythia scale in-context learning accuracy",
+     "returned_ids": [
+      "2609.37725",
+      "2609.27603",
+      "2610.05240",
+      "2608.29613",
+      "2610.07572",
+      "2609.24238",
+      "2609.17376",
+      "2609.39920",
+      "2609.24057",
+      "2605.26895",
+      "2609.36265",
+      "2608.05630",
+      "2606.05079",
+      "2604.23267",
+      "2605.28854"
+     ]
+    },
+    {
+     "id": "KI-24",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "in-context learning creates task vectors",
+     "returned_ids": [
+      "2610.07572",
+      "2610.01054",
+      "2610.00526",
+      "2609.19138",
+      "2609.39405",
+      "2610.07559",
+      "2609.29060",
+      "2609.09054",
+      "2605.20730",
+      "2310.15916",
+      "2609.17714",
+      "2609.00047",
+      "2609.14631",
+      "2609.25836",
+      "2606.18627"
+     ]
+    },
+    {
+     "id": "KI-25",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Understanding task vectors in in-context learning emergence functionality and limitations",
+     "returned_ids": [
+      "2610.07572",
+      "2610.01054",
+      "2609.14011",
+      "2506.09048",
+      "2610.00526",
+      "2609.29060",
+      "2501.09240",
+      "2605.20730",
+      "2605.28705",
+      "2606.05975",
+      "2606.18627",
+      "2606.02551",
+      "2606.20538",
+      "2605.07123",
+      "2607.07881"
+     ]
+    },
+    {
+     "id": "KI-26",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "transfer learned fast weight update rule from transformer to state space model",
+     "returned_ids": [
+      "2608.27763",
+      "2609.35261",
+      "2610.01172",
+      "2608.25088",
+      "2610.11668",
+      "2609.25442",
+      "2610.04014",
+      "2610.11214",
+      "2610.00876",
+      "2609.39748",
+      "2609.20893",
+      "2610.04540",
+      "2606.31092",
+      "2609.19204",
+      "2609.34185"
+     ]
+    },
+    {
+     "id": "KI-27",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding (--published-after 2026-06-01)",
+     "query": "distill the in-context learning of a transformer into an explicit write rule and reuse it in a linear recurrent model",
+     "returned_ids": [
+      "2609.31947",
+      "2610.lstm-looped-transformers-shared-kv-caches",
+      "2608.27763",
+      "2609.05295",
+      "2608.17896",
+      "2609.07816",
+      "2609.33093",
+      "2610.00820",
+      "2607.15178",
+      "2609.27373",
+      "2609.27233",
+      "2609.36108",
+      "2610.01054",
+      "2609.35333",
+      "2610.10761"
+     ]
+    },
+    {
+     "id": "KI-28",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "cross-architecture transfer in-context learning transformer to Mamba linear attention",
+     "returned_ids": [
+      "2404.02684",
+      "2604.14191",
+      "2504.20922",
+      "10.3390/rs17152715",
+      "10.1080/01431161.2025.2594891",
+      "2406.01159",
+      "2510.19266",
+      "2401.09417",
+      "10.1145/3745034.3745038",
+      "2610.01172",
+      "10.3233/faia251152",
+      "2608.27882",
+      "2406.08234",
+      "2409.19937",
+      "2603.12342"
+     ]
+    },
+    {
+     "id": "KI-29",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Transformers to SSMs distilling quadratic knowledge to subquadratic models MOHAWK",
+     "returned_ids": [
+      "2408.10189",
+      "2606.12364",
+      "2609.08692",
+      "2609.13134",
+      "2609.16537",
+      "2605.20670",
+      "2609.24440",
+      "2606.21562",
+      "2610.10854",
+      "2604.14191",
+      "2607.23817",
+      "2608.19523",
+      "2405.21060",
+      "2608.10723",
+      "2605.08301"
+     ]
+    },
+    {
+     "id": "KI-30",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "external fast-weight memory module distilled from in-context learning ported to another model",
+     "returned_ids": [
+      "2608.27763",
+      "2609.36720",
+      "2610.02687",
+      "2609.10392",
+      "2609.39740",
+      "2608.17616",
+      "2610.11444",
+      "2609.37198",
+      "2605.15155",
+      "2607.17247",
+      "2609.35333",
+      "2609.27334",
+      "2601.00671",
+      "2607.13591",
+      "2608.22533"
+     ]
+    },
+    {
+     "id": "KI-31",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2610.01054 (Task Operators, closest prior)",
+     "returned_ids": [
+      "2610.01054"
+     ]
+    },
+    {
+     "id": "KI-32",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2608.01672 (TTCD, closest prior)",
+     "returned_ids": [
+      "2608.01672"
+     ]
+    },
+    {
+     "id": "KI-33",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2608.09521 (One Adapter Pair, closest prior)",
+     "returned_ids": [
+      "2608.09521"
+     ]
+    },
+    {
+     "id": "KI-34",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2603.22329 (Jeong, closest framing prior)",
+     "returned_ids": [
+      "2603.22329"
+     ]
+    },
+    {
+     "id": "KI-35",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2305.09731 (Pan et al., teacher-strength risk)",
+     "returned_ids": [
+      "2305.09731"
+     ]
+    },
+    {
+     "id": "KI-36",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2511.21038 (Semantic Anchors)",
+     "returned_ids": [
+      "2511.21038"
+     ]
+    },
+    {
+     "id": "KI-37",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2306.00297 (Ahn et al., preconditioned GD)",
+     "returned_ids": [
+      "2306.00297"
+     ]
+    },
+    {
+     "id": "KI-38",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2309.05858 (mesa-layer / RLS)",
+     "returned_ids": [
+      "2309.05858"
+     ]
+    },
+    {
+     "id": "KI-39",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2610.07572 (STAVE)",
+     "returned_ids": [
+      "2610.07572"
+     ]
+    },
+    {
+     "id": "KI-40",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2610.00526 (Rules Amortize, Pairings Don't; new closest mechanism prior)",
+     "returned_ids": [
+      "2610.00526"
+     ]
+    },
+    {
+     "id": "KI-41",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2310.15213 (Function Vectors)",
+     "returned_ids": [
+      "2310.15213"
+     ]
+    },
+    {
+     "id": "KI-42",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2310.15916 (Task Vectors)",
+     "returned_ids": [
+      "2310.15916"
+     ]
+    },
+    {
+     "id": "KI-43",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper (report)",
+     "query": "2306.15063 (Raventos et al., dMMSE regime)",
+     "returned_ids": [
+      "2306.15063"
+     ]
+    },
+    {
+     "id": "KI-44",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper (report)",
+     "query": "2506.09048 (Dong et al., task-vector rank limit)",
+     "returned_ids": [
+      "2506.09048"
+     ]
+    }
+   ],
+   "verdict": "Novelty: NARROWED, not OCCUPIED. No direct prior art found through 2026-10-09 for a distilled write rule ported across operator families, under the 30 orx queries listed. The question as specified is still killed: the gradient-form half is INVALID and the first experiment is UNINFORMATIVE by construction.\n\nStrongest kill argument (two horns):\n(1) As specified, the pilot reuses D16's rank-8 factorised P and Q. All keys and all probe reads lie in one fixed 8-d subspace, and 8 demonstrations span it. So the Step-2 \"free vs key-span\" oracle comparison ties exactly. My checks give a gap of 0.0 at t",
+   "coverage_limits": "- **Teacher strength not measured.** The fla-hub transformer-1.3B-100B eligibility was never run: the host is reserved for S1a, my GPU allowance was zero (the 0.3 GPU-h is for reviewer inference), and checkpoint downloads would need permission. The teacher-strength verdict rests on proxies: GPT-3 babbage and OPT in 2305.09731, 1-12B models in 2511.21038, Pythia-2.8B in 2310.15916.\n- **Retrieval scope.** Only alphaXiv (keyword and embedding) and OpenAlex were searched, with orx 0.2.2, which warns that it is outdated (latest 0.2.18). Not searched: Semantic Scholar, OpenReview bodies, ACL Anthology, patents, Chinese-language venues, live X or Reddit. Only one query used a --published-after bound (2026-06-01, embedding). Screening counts: 30 discover queries, about 450 ids identified, about 60 abstracts screened, 13 papers fetched (11 full text, 2 as alphaXiv reports).\n- **KILL A rests on one reading of the interface.** It assumes P_b^k and Q_b^k are rank-8 factorised, as written in branch proposal L300 and D16's YAML (\"task-blind rank-8 base projections\"). If the refreshed contract uses full-rank P, horn 1 no longer applies and horn 2 does.\n- **The algebraic tie is exact only for linearly independent 8-shot keys.** At prefixes of fewer than 8 shots, or with numerically degenerate keys, a gap can appear. That gap would measure key conditioning or prefix effects, not the teacher.\n- **Replication depth.** The null-clamp replication was run at seed 42 only, because the Mac's load av"
+  },
+  "cross-domain": {
+   "rows": [
+    {
+     "id": "CR-01",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "model stitching compare neural representations (first run, pre-wrapper; same ids as next row)",
+     "returned_ids": [
+      "2609.37167",
+      "2106.07682",
+      "2609.07336",
+      "2608.08986",
+      "2609.37627",
+      "2606.21136",
+      "2603.12433",
+      "2609.00341",
+      "2605.09984",
+      "2603.10568"
+     ]
+    },
+    {
+     "id": "CR-02",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "model stitching compare neural representations",
+     "returned_ids": [
+      "2609.37167",
+      "2106.07682",
+      "2609.07336",
+      "2608.08986",
+      "2609.37627",
+      "2606.21136",
+      "2603.12433",
+      "2609.00341",
+      "2605.09984",
+      "2603.10568"
+     ]
+    },
+    {
+     "id": "CR-03",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "affine stitching maps between residual streams of different language model architectures transfer steering vectors and features across models",
+     "returned_ids": [
+      "2610.09058",
+      "2609.38718",
+      "2609.39369",
+      "2610.04683",
+      "2609.11063",
+      "2608.27115",
+      "2609.29766",
+      "2608.22007",
+      "2606.31963",
+      "2608.05164"
+     ]
+    },
+    {
+     "id": "CR-04",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "transferring features across language models model stitching",
+     "returned_ids": [
+      "2506.06609",
+      "2609.04344",
+      "2609.30167",
+      "2609.38357",
+      "2608.09521",
+      "2608.27115",
+      "2608.15539",
+      "2608.08986",
+      "2609.07336",
+      "2603.12433"
+     ]
+    },
+    {
+     "id": "CR-05",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "transformer interpretability transfer to RNNs Mamba RWKV steering",
+     "returned_ids": [
+      "2404.05971",
+      "2607.00902",
+      "2609.32102",
+      "2605.25969",
+      "2609.29087",
+      "2305.13048",
+      "2609.04721",
+      "2608.06638",
+      "2607.14943",
+      "2605.25225"
+     ]
+    },
+    {
+     "id": "CR-06",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "grounding representation similarity statistical testing CKA functional",
+     "returned_ids": [
+      "2608.12683",
+      "2606.16897",
+      "2609.38998",
+      "2606.16379",
+      "2609.16562",
+      "2607.23951",
+      "2609.34046",
+      "2609.36288",
+      "2609.06392",
+      "2605.30117"
+     ]
+    },
+    {
+     "id": "CR-07",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "similarity and matching of neural network representations direct matching stitching",
+     "returned_ids": [
+      "2609.32833",
+      "2610.05397",
+      "2609.31544",
+      "2608.10043",
+      "2607.11159",
+      "2607.22522",
+      "2110.14633",
+      "2606.30131",
+      "2412.11299",
+      "2605.06588"
+     ]
+    },
+    {
+     "id": "CR-08",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "centered kernel alignment reliability similarity measure deep learning",
+     "returned_ids": [
+      "10.48550/arxiv.2210.16156",
+      "10.48550/arxiv.2405.01012",
+      "10.1155/2016/9523849",
+      "10.11575/prism/39385",
+      "10.1016/j.imu.2020.100297",
+      "10.1016/j.inffus.2021.05.008",
+      "10.1109/tpami.2020.3020738",
+      "10.1007/s10278-017-9983-4",
+      "10.3390/cancers15143608",
+      "10.1016/j.inffus.2024.102648"
+     ]
+    },
+    {
+     "id": "CR-09",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "stitching layer succeeds even between functionally different representations so stitching accuracy is not evidence of representational similarity",
+     "returned_ids": [
+      "2609.38998",
+      "2610.03827",
+      "2609.37836",
+      "2608.11267",
+      "2609.18985",
+      "2606.00926",
+      "2607.11967",
+      "2610.00006",
+      "2606.06267",
+      "2606.14755"
+     ]
+    },
+    {
+     "id": "CR-10",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "learned optimizers that scale and generalize unseen architectures",
+     "returned_ids": [
+      "2609.01811",
+      "2608.05799",
+      "2609.34742",
+      "2610.09604",
+      "1703.04813",
+      "2607.04033",
+      "2605.15760",
+      "2609.19392",
+      "2608.28557",
+      "2608.05266"
+     ]
+    },
+    {
+     "id": "CR-11",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "meta learning backpropagation and improving it variable shared meta learning",
+     "returned_ids": [
+      "2610.07979",
+      "2606.18132",
+      "2012.14905",
+      "2604.13263",
+      "2604.26938",
+      "2602.19837",
+      "2603.19888",
+      "2603.08418",
+      "2602.08782",
+      "2603.07740"
+     ]
+    },
+    {
+     "id": "CR-12",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "meta-learning bidirectional update rules",
+     "returned_ids": [
+      "2609.29150",
+      "2604.24178",
+      "2104.04657",
+      "2607.21855",
+      "2608.14646",
+      "2607.23925",
+      "2607.00860",
+      "2602.07755",
+      "2605.19080",
+      "2512.09366"
+     ]
+    },
+    {
+     "id": "CR-13",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "meta-learned local learning rule shared across all synapses generalizes to new network architectures and datasets compared with gradient descent",
+     "returned_ids": [
+      "2610.08479",
+      "2607.07743",
+      "2604.26297",
+      "2601.21367",
+      "2512.09366",
+      "2509.23052",
+      "2508.16216",
+      "2501.09976",
+      "2508.15989",
+      "2506.14984"
+     ]
+    },
+    {
+     "id": "CR-14",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "identifying learning rules from neural network observables",
+     "returned_ids": [
+      "2610.09768",
+      "2607.21188",
+      "2609.14402",
+      "2609.31192",
+      "2609.16231",
+      "2608.04545",
+      "2609.18655",
+      "2607.21855",
+      "2606.15983",
+      "2010.11765"
+     ]
+    },
+    {
+     "id": "CR-15",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "distinguishing learning rules with brain machine interfaces gradient",
+     "returned_ids": [
+      "2609.27441",
+      "2609.36736",
+      "2607.29150",
+      "2609.05786",
+      "2607.24031",
+      "2609.10012",
+      "2609.08971",
+      "2607.24023",
+      "2607.24820",
+      "2604.00349"
+     ]
+    },
+    {
+     "id": "CR-16",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "inferring learning rules from animal decision-making",
+     "returned_ids": [
+      "2610.00990",
+      "2610.autonomous-decision-making-smart-aquaculture",
+      "2610.11696",
+      "2605.12682",
+      "2608.05585",
+      "2608.02100",
+      "2606.30578",
+      "2509.04661",
+      "2606.16337",
+      "2605.07604"
+     ]
+    },
+    {
+     "id": "CR-17",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "ten simple rules computational modeling behavioral data parameter recovery model recovery",
+     "returned_ids": [
+      "10.1016/j.jmp.2016.12.001",
+      "10.1007/s42113-022-00139-0",
+      "10.1007/s42113-025-00261-9",
+      "10.3386/w15920",
+      "10.1039/d3dd00036b",
+      "10.1371/journal.pcbi.1013410",
+      "10.3758/s13423-016-1199-y",
+      "10.4108/dtip.8591",
+      "10.1037/rev0000285",
+      "10.3390/powders5010008"
+     ]
+    },
+    {
+     "id": "CR-18",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "does knowledge distillation really work fidelity student teacher agreement",
+     "returned_ids": [
+      "2608.31046",
+      "2609.21619",
+      "2609.39120",
+      "2609.36246",
+      "2608.09836",
+      "2608.10709",
+      "2609.35319",
+      "2610.02516",
+      "2609.38898",
+      "2609.35058"
+     ]
+    },
+    {
+     "id": "CR-19",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "error consistency trial-by-trial behaviour CNNs humans beyond accuracy",
+     "returned_ids": [
+      "2608.12290",
+      "2006.16736",
+      "2608.20997",
+      "2609.21859",
+      "2609.12404",
+      "2609.23211",
+      "2604.06734",
+      "2609.13860",
+      "2608.24658",
+      "2609.01202"
+     ]
+    },
+    {
+     "id": "CR-20",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "Ten simple rules for the computational modeling of behavioral data",
+     "returned_ids": [
+      "10.7554/elife.49547",
+      "10.31234/osf.io/46mbn",
+      "10.3410/f.736983748.793593386",
+      "10.1016/j.neuroimage.2009.11.015",
+      "10.1016/j.neuroimage.2019.02.057",
+      "10.1371/journal.pcbi.1005399",
+      "10.1371/journal.pcbi.1013362",
+      "10.1136/ebmental-2018-300014",
+      "10.1371/journal.pcbi.1008210",
+      "10.1016/j.pneurobio.2022.102269"
+     ]
+    },
+    {
+     "id": "CR-21",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "agreement between a distilled student and its teacher must be compared against chance agreement expected from accuracy and against run-to-run churn of identically trained models",
+     "returned_ids": [
+      "2609.32230",
+      "2609.27678",
+      "2609.37470",
+      "2610.04370",
+      "2609.31141",
+      "2609.09788",
+      "2610.00095",
+      "2608.15046",
+      "2607.23731",
+      "2608.02705"
+     ]
+    },
+    {
+     "id": "CR-22",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Does Knowledge Distillation Really Work (--published-before 2022-01-01)",
+     "returned_ids": [
+      "2106.05945",
+      "1904.05068",
+      "2006.05525",
+      "2105.13093",
+      "2012.09816",
+      "1903.04197",
+      "2002.09168",
+      "1606.07947",
+      "2007.01476",
+      "1907.09682"
+     ]
+    },
+    {
+     "id": "CR-23",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "reproducibility of neural network predictions churn prediction differences identical training",
+     "returned_ids": [
+      "2609.12470",
+      "2610.00118",
+      "2606.00169",
+      "2605.13826",
+      "2609.09766",
+      "2606.07582",
+      "2609.22914",
+      "2606.06776",
+      "2607.10260",
+      "2608.22856"
+     ]
+    },
+    {
+     "id": "CR-24",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "intrinsic dimensionality explains the effectiveness of language model fine-tuning",
+     "returned_ids": [
+      "2012.13255",
+      "2608.02154",
+      "2607.20301",
+      "2606.21974",
+      "2607.10172",
+      "2607.28658",
+      "2602.09276",
+      "2606.20553",
+      "2605.26574",
+      "2605.18309"
+     ]
+    },
+    {
+     "id": "CR-25",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "ReFT representation finetuning low-rank linear subspace intervention",
+     "returned_ids": [
+      "2404.03592",
+      "2608.31036",
+      "2603.11201",
+      "2609.34264",
+      "2607.01987",
+      "2607.28959",
+      "2610.05800",
+      "2609.32834",
+      "2606.14388",
+      "2608.26960"
+     ]
+    },
+    {
+     "id": "CR-26",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "LoLCATs low-rank linear conversion attention transfer",
+     "returned_ids": [
+      "2609.06712",
+      "2608.28444",
+      "2410.10254",
+      "2608.11519",
+      "2609.39034",
+      "2610.06927",
+      "2610.11214",
+      "2607.09694",
+      "2608.06628",
+      "2610.08578"
+     ]
+    },
+    {
+     "id": "CR-27",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "Hedgehog Porcupine expressive linear attentions softmax mimicry",
+     "returned_ids": [
+      "2402.04347",
+      "2609.39034",
+      "2608.22368",
+      "2609.35745",
+      "2608.28444",
+      "2610.11798",
+      "2608.06628",
+      "2609.35349",
+      "2606.27748",
+      "2609.13979"
+     ]
+    },
+    {
+     "id": "CR-28",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "transformers to SSMs distilling quadratic knowledge subquadratic MOHAWK",
+     "returned_ids": [
+      "2408.10189",
+      "2609.08692",
+      "2609.13134",
+      "2606.12364",
+      "2609.16537",
+      "2605.20670",
+      "2606.21562",
+      "2607.23817",
+      "2609.24440",
+      "2604.14191"
+     ]
+    },
+    {
+     "id": "CR-29",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "linearized or distilled recurrent language models lose few-shot in-context learning and recall relative to the softmax attention teacher (--published-after 2024-01-01)",
+     "returned_ids": [
+      "2609.31947",
+      "2609.33093",
+      "2610.11247",
+      "2609.34253",
+      "2608.23296",
+      "2609.32902",
+      "2609.16183",
+      "2607.07706",
+      "2609.10287",
+      "2608.20794"
+     ]
+    },
+    {
+     "id": "CR-30",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "dual form of neural networks revisited spotlights of attention training patterns",
+     "returned_ids": [
+      "2609.20446",
+      "2202.05798",
+      "2610.11740",
+      "2606.25010",
+      "2607.18730",
+      "2607.27854",
+      "2607.20321",
+      "2606.21427",
+      "2606.20244",
+      "2605.12879"
+     ]
+    },
+    {
+     "id": "CR-31",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "metalearned neural memory local update rule",
+     "returned_ids": [
+      "2609.32453",
+      "2609.36976",
+      "2608.19491",
+      "2610.08553",
+      "2608.07974",
+      "2609.03915",
+      "2610.08624",
+      "2610.05700",
+      "2609.18407",
+      "2608.25781"
+     ]
+    },
+    {
+     "id": "CR-32",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "fast weight memory written by recursive least squares or preconditioned update whose write direction is the inverse key covariance times the key rather than the key itself",
+     "returned_ids": [
+      "2608.27763",
+      "2610.05700",
+      "2607.nvfp4-rl",
+      "2608.19491",
+      "2608.20693",
+      "2608.13668",
+      "2607.20792",
+      "2607.12204",
+      "2601.00671",
+      "2605.11196"
+     ]
+    },
+    {
+     "id": "CR-33",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "affine projection algorithm recursive least squares fast weights linear attention write direction",
+     "returned_ids": [
+      "2610.01859",
+      "2610.03812",
+      "2610.02530",
+      "2607.11239",
+      "2605.22791",
+      "2606.26560",
+      "2608.25524",
+      "2604.13656",
+      "2605.11196",
+      "2607.00252"
+     ]
+    },
+    {
+     "id": "CR-34",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "Metalearned Neural Memory",
+     "returned_ids": [
+      "10.48550/arxiv.1907.09720",
+      "10.48550/arxiv.2311.14601",
+      "10.48550/arxiv.2007.08159",
+      "10.48550/arxiv.2112.08181",
+      "10.48550/arxiv.2305.14567",
+      "10.48550/arxiv.2211.09440",
+      "10.1101/2020.07.01.180372",
+      "10.48550/arxiv.2011.07831",
+      "10.1609/aaai.v35i9.16994",
+      "10.48550/arxiv.2110.13976"
+     ]
+    },
+    {
+     "id": "CR-35",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "noise ceiling representational similarity analysis toolbox",
+     "returned_ids": [
+      "10.1371/journal.pcbi.1003553",
+      "10.1101/2025.05.22.655542",
+      "10.1093/scan/nsz099",
+      "10.1101/2022.04.05.487135",
+      "10.1523/jneurosci.2956-20.2021",
+      "10.1101/2020.03.23.003046",
+      "10.1016/j.neuroimage.2022.119294",
+      "10.1080/23273798.2023.2232903",
+      "10.48550/arxiv.2511.00395",
+      "10.1101/2021.09.27.462005"
+     ]
+    },
+    {
+     "id": "CR-36",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "sparse autoencoder downstream KL divergence loss recovered zero ablation mean ablation baseline",
+     "returned_ids": [
+      "2608.23959",
+      "2610.02173",
+      "2609.33791",
+      "2609.16745",
+      "2606.09607",
+      "2605.07865",
+      "2609.16229",
+      "2606.14990",
+      "2607.20596",
+      "2604.14433"
+     ]
+    },
+    {
+     "id": "CR-37",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "when do prompting and prefix-tuning work theory of capabilities and limitations",
+     "returned_ids": [
+      "2610.04967",
+      "2310.19698",
+      "2609.28870",
+      "2610.06503",
+      "2609.09553",
+      "2608.18686",
+      "2609.29775",
+      "2609.05799",
+      "2609.17353",
+      "2607.13158"
+     ]
+    },
+    {
+     "id": "CR-38",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "directly optimize a per-example low-rank activation intervention to reproduce a frozen model's few-shot predictions as an oracle upper bound on how much behaviour a fixed-size interface can carry",
+     "returned_ids": [
+      "2610.00820",
+      "2609.40063",
+      "2610.06621",
+      "2610.04283",
+      "2610.01037",
+      "2610.04507",
+      "2610.06950",
+      "2610.03945",
+      "2608.30741",
+      "2609.01374"
+     ]
+    },
+    {
+     "id": "CR-39",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "designing and interpreting probes with control tasks selectivity",
+     "returned_ids": [
+      "1909.03368",
+      "2610.01880",
+      "2609.16436",
+      "2608.05122",
+      "2610.08228",
+      "2610.06195",
+      "2609.19856",
+      "2606.03990",
+      "2605.11448",
+      "2608.10440"
+     ]
+    },
+    {
+     "id": "CR-40",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "representational alignment between transformer and state space or linear recurrent language models trained on the same data, layerwise mutual nearest neighbours and CKA (--published-after 2024-01-01)",
+     "returned_ids": [
+      "2610.09058",
+      "2608.27115",
+      "2609.11063",
+      "2609.32102",
+      "2609.08692",
+      "2608.28840",
+      "2606.19542",
+      "2605.25541",
+      "2608.05164",
+      "2603.18908"
+     ]
+    },
+    {
+     "id": "CR-41",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "distill hand-designed optimizer into learned update rule imitation",
+     "returned_ids": [
+      "2610.08975",
+      "2609.28660",
+      "2610.01630",
+      "2608.19491",
+      "2609.22762",
+      "2610.09040",
+      "2609.33336",
+      "2607.21855",
+      "2609.07017",
+      "2609.28675"
+     ]
+    },
+    {
+     "id": "CR-42",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "meta-learned update rule distilled to imitate a teacher learning algorithm, then tested whether the learned rule is gradient descent or second-order",
+     "returned_ids": [
+      "2610.11989",
+      "2610.11247",
+      "2610.05974",
+      "2609.31141",
+      "2608.08294",
+      "2603.28416",
+      "2603.25699",
+      "2510.08968",
+      "2508.09283",
+      "2505.10822"
+     ]
+    },
+    {
+     "id": "CR-43",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "learned learning rule generalization across neural network architectures meta-learning plasticity",
+     "returned_ids": [
+      "10.1109/tpami.2021.3079209",
+      "10.1016/j.neunet.2019.01.012",
+      "10.48550/arxiv.2308.12063",
+      "10.1002/nme.7357",
+      "10.1088/2634-4386/ac8828",
+      "10.1007/s10462-021-10004-4",
+      "10.48550/arxiv.2109.03554",
+      "10.1038/s41467-023-37562-1",
+      "10.1609/aaai.v34i04.5942",
+      "10.48550/arxiv.2104.01677"
+     ]
+    },
+    {
+     "id": "CR-44",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "1503.05671",
+     "returned_ids": [
+      "1503.05671"
+     ]
+    },
+    {
+     "id": "CR-45",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "1703.04813",
+     "returned_ids": [
+      "1703.04813"
+     ]
+    },
+    {
+     "id": "CR-46",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "1907.09720",
+     "returned_ids": [
+      "1907.09720"
+     ]
+    },
+    {
+     "id": "CR-47",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "1909.03368",
+     "returned_ids": [
+      "1909.03368"
+     ]
+    },
+    {
+     "id": "CR-48",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2006.16736",
+     "returned_ids": [
+      "2006.16736"
+     ]
+    },
+    {
+     "id": "CR-49",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2010.11765",
+     "returned_ids": [
+      "2010.11765"
+     ]
+    },
+    {
+     "id": "CR-50",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2012.13255",
+     "returned_ids": [
+      "2012.13255"
+     ]
+    },
+    {
+     "id": "CR-51",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2012.14905",
+     "returned_ids": [
+      "2012.14905"
+     ]
+    },
+    {
+     "id": "CR-52",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2104.04657",
+     "returned_ids": [
+      "2104.04657"
+     ]
+    },
+    {
+     "id": "CR-53",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2106.05945",
+     "returned_ids": [
+      "2106.05945"
+     ]
+    },
+    {
+     "id": "CR-54",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2106.07682",
+     "returned_ids": [
+      "2106.07682"
+     ]
+    },
+    {
+     "id": "CR-55",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2108.01661",
+     "returned_ids": [
+      "2108.01661"
+     ]
+    },
+    {
+     "id": "CR-56",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2110.14633",
+     "returned_ids": [
+      "2110.14633"
+     ]
+    },
+    {
+     "id": "CR-57",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2202.05798",
+     "returned_ids": [
+      "2202.05798"
+     ]
+    },
+    {
+     "id": "CR-58",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2210.16156",
+     "returned_ids": [
+      "2210.16156"
+     ]
+    },
+    {
+     "id": "CR-59",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2309.05858",
+     "returned_ids": [
+      "2309.05858"
+     ]
+    },
+    {
+     "id": "CR-60",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2404.03592",
+     "returned_ids": [
+      "2404.03592"
+     ]
+    },
+    {
+     "id": "CR-61",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2404.05971",
+     "returned_ids": [
+      "2404.05971"
+     ]
+    },
+    {
+     "id": "CR-62",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2410.10254",
+     "returned_ids": [
+      "2410.10254"
+     ]
+    },
+    {
+     "id": "CR-63",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2412.11299",
+     "returned_ids": [
+      "2412.11299"
+     ]
+    },
+    {
+     "id": "CR-64",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2506.06609",
+     "returned_ids": [
+      "2506.06609"
+     ]
+    },
+    {
+     "id": "CR-65",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2509.04661",
+     "returned_ids": [
+      "2509.04661"
+     ]
+    },
+    {
+     "id": "CR-66",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2603.12433",
+     "returned_ids": [
+      "2603.12433"
+     ]
+    },
+    {
+     "id": "CR-67",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2604.14191",
+     "returned_ids": [
+      "2604.14191"
+     ]
+    },
+    {
+     "id": "CR-68",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2604.14433",
+     "returned_ids": [
+      "2604.14433"
+     ]
+    },
+    {
+     "id": "CR-69",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2607.07743",
+     "returned_ids": [
+      "2607.07743"
+     ]
+    },
+    {
+     "id": "CR-70",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2608.05164",
+     "returned_ids": [
+      "2608.05164"
+     ]
+    },
+    {
+     "id": "CR-71",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2609.08692",
+     "returned_ids": [
+      "2609.08692"
+     ]
+    },
+    {
+     "id": "CR-72",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2609.16183",
+     "returned_ids": [
+      "2609.16183"
+     ]
+    },
+    {
+     "id": "CR-73",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2609.38998",
+     "returned_ids": [
+      "2609.38998"
+     ]
+    },
+    {
+     "id": "CR-74",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2610.09058",
+     "returned_ids": [
+      "2610.09058"
+     ]
+    },
+    {
+     "id": "CR-75",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper (report)",
+     "query": "2608.05164",
+     "returned_ids": [
+      "2608.05164"
+     ]
+    },
+    {
+     "id": "CR-76",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper (OpenAlex metadata)",
+     "query": "10.7554/elife.49547",
+     "returned_ids": [
+      "10.7554/elife.49547"
+     ]
+    },
+    {
+     "id": "CR-77",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper (OpenAlex metadata)",
+     "query": "10.1371/journal.pcbi.1003553",
+     "returned_ids": [
+      "10.1371/journal.pcbi.1003553"
+     ]
+    }
+   ],
+   "verdict": "The gate's logic holds (eligibility, then the oracle ceiling, then the rule contrast), but as written both outcomes of Step 2 and the attribution in Step 3 can be explained away. Ranked changes from outside ICL research:\n\n1. **Step 2 cannot be read as a capacity result yet.** It needs three controls:\n   - **Optimiser adequacy** (Stanton 2106.05945): a planted rank-8 state recovered from random init through the real read path, with several restarts (see also 2609.16183).\n   - **Selectivity** (Bansal 2106.07682; Hewitt and Liang 1909.03368): fit the oracle on probe set A, score it on probe set B",
+   "coverage_limits": "- **Tools and sources.** Retrieval used only orx 0.2.2 (alphaXiv keyword and embedding search, OpenAlex). The CLI reports that 0.2.18 is the latest version, so 0.2.2 may differ from the current API. Semantic Scholar and the arXiv API were not used (not reachable from the Mac; no host relay, because of the host rule). Not searched: OpenReview, ACL Anthology, patents, Chinese-language venues, live X or Reddit.\n- **Search quality.** alphaXiv BM25 is noisy for generic terms: 'stitching' returned imaging and motion papers, and the queries on churn, brain-machine interfaces and MNM returned off-topic results. Bhojanapalli et al.'s churn paper and Portes et al.'s BMI learning-rule paper were not retrieved, so neither is cited.\n- **Abstract-level sources.** Wilson & Collins 2019 (eLife) and Nili et al. 2014 (PLoS) were read only as OpenAlex abstracts. Their bodies were not opened, so the specific recovery rules and the noise-ceiling procedure are unverified here.\n- **Unread or deferred priors.** Petrov et al. 2310.19698 (theory of prefix-tuning limits) and the decoupled erase/write recurrences (2605.22791, 2606.26560, 2608.13668) surfaced but were not opened. The latter bear on whether 'write direction not equal to key' already exists as an architecture choice; that sits in the frontier scout's domain. Hedgehog 2402.04347, MOHAWK 2408.10189 and Mamba-in-the-Llama were retrieved but not opened. Hendel et al. task vectors and other in-domain ICL work were left to the frontier scout.\n- "
+  },
+  "asset-cost": {
+   "rows": [
+    {
+     "id": "AC-01",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "function vectors in-context learning dataset antonym country-capital",
+     "exit": "0",
+     "returned_ids": [
+      "2608.ai-production-function-code-context",
+      "2608.30107",
+      "2610.07572",
+      "2608.15702",
+      "2606.05079",
+      "2609.28972",
+      "2609.32238",
+      "2610.03251",
+      "2605.16591",
+      "2606.23861",
+      "2606.16867",
+      "2609.19764",
+      "2606.21880",
+      "2605.29971",
+      "2608.24417"
+     ],
+     "raw_sha256": "02730c336656d5831f4de788c55a96a8fe403324bb76a72de9a6a7e5117b489a"
+    },
+    {
+     "id": "AC-02",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "Function vectors in large language models",
+     "exit": "0",
+     "returned_ids": [
+      "2608.29459",
+      "2609.05743",
+      "2608.29613",
+      "2605.13329",
+      "2606.05079",
+      "2602.22600",
+      "2604.08524",
+      "2604.02608",
+      "2602.22424",
+      "2602.06801",
+      "2604.19678",
+      "2603.21398",
+      "2602.01687",
+      "2510.08734",
+      "2603.00029"
+     ],
+     "raw_sha256": "ee3e0c351723ae278c48f1e41a184fcbdcb3735be05de0651cfa5153898c5edc"
+    },
+    {
+     "id": "AC-03",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "Function Vectors in Large Language Models",
+     "exit": "0",
+     "returned_ids": [
+      "10.48550/arxiv.2310.15213",
+      "10.1007/s11704-026-60308-3",
+      "10.1016/j.tics.2024.01.011",
+      "10.1145/3639372",
+      "10.48550/arxiv.2402.06196",
+      "10.1038/s41586-023-06792-0",
+      "10.48550/arxiv.2307.06435",
+      "10.1038/s42254-023-00581-4",
+      "10.48550/arxiv.2303.17564",
+      "10.1038/s42256-024-00832-8",
+      "10.1145/3604237.3626869",
+      "10.48550/arxiv.2608.29613",
+      "10.1007/s11704-024-40231-1",
+      "10.48550/arxiv.2301.10226",
+      "10.1016/j.inffus.2024.102888"
+     ],
+     "raw_sha256": "bc846704efaa7934699356f18bda3998f1db3c67638f97b6622ec3cf58491e8d"
+    },
+    {
+     "id": "AC-04",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "\"function vectors\" ICL tasks antonym english-french capitalize",
+     "exit": "0",
+     "returned_ids": [
+      "2610.07572",
+      "2606.05079",
+      "2609.39001",
+      "2602.22424",
+      "2610.04725",
+      "2604.02608",
+      "2608.16577",
+      "2609.10765",
+      "2605.16591",
+      "2310.15213",
+      "2605.13511",
+      "2608.13385",
+      "2609.05111",
+      "2609.17435",
+      "2603.12906"
+     ],
+     "raw_sha256": "d3cc5bfb42dfd4dbeaa211a04d35d70c37c6a0651d6c8a379a8c49c7b91809ff"
+    },
+    {
+     "id": "AC-05",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "What in-context learning learns in-context: disentangling task recognition and task learning",
+     "exit": "0",
+     "returned_ids": [
+      "2610.01054",
+      "2609.03213",
+      "2605.28854",
+      "2509.10414",
+      "2604.25858",
+      "2604.01601",
+      "2510.08372",
+      "2506.16975",
+      "2509.04466",
+      "2505.16694",
+      "2511.09700",
+      "2501.09240",
+      "2509.26551",
+      "2310.15916",
+      "2509.24164"
+     ],
+     "raw_sha256": "92efa19f74cb23af023b794891152df17aee459178d8a59c45ba22ae0e468b74"
+    },
+    {
+     "id": "AC-06",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "Rethinking the Role of Demonstrations: What Makes In-Context Learning Work",
+     "exit": "0",
+     "returned_ids": [
+      "10.18653/v1/2022.emnlp-main.759",
+      "10.48550/arxiv.2202.12837",
+      "10.1109/cvprw63382.2024.00161",
+      "10.48550/arxiv.2605.26350",
+      "10.48550/arxiv.2404.15736",
+      "10.18653/v1/2023.findings-acl.527",
+      "10.18653/v1/2024.acl-long.492",
+      "10.48550/arxiv.2305.14128",
+      "10.18653/v1/2024.findings-emnlp.438",
+      "10.48550/arxiv.2308.08780",
+      "10.48550/arxiv.2401.12087",
+      "10.18653/v1/2024.emnlp-main.779",
+      "10.48550/arxiv.2310.09881",
+      "10.18653/v1/2022.naacl-main.191",
+      "10.48550/arxiv.2410.07523"
+     ],
+     "raw_sha256": "32135e76ed8d0dd4b09419d223e26ba3a9270aa514360cb7d608155372ee8d3e"
+    },
+    {
+     "id": "AC-07",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "Repeat After Me: Transformers are Better than State Space Models at Copying",
+     "exit": "0",
+     "returned_ids": [
+      "10.48550/arxiv.2402.01032",
+      "10.48550/arxiv.2505.15105",
+      "10.48550/arxiv.2605.08301",
+      "10.48550/arxiv.2405.19036",
+      "10.18653/v1/2024.emnlp-main.793",
+      "10.18653/v1/2026.eacl-long.355",
+      "10.48550/arxiv.2409.05395",
+      "10.48550/arxiv.2402.10644",
+      "10.48550/arxiv.2410.11135",
+      "10.48550/arxiv.2404.16112",
+      "10.18653/v1/2024.acl-long.518",
+      "10.18653/v1/2024.emnlp-main.1043",
+      "10.48550/arxiv.2510.06640",
+      "10.48550/arxiv.2401.06104",
+      "10.48550/arxiv.2606.20936"
+     ],
+     "raw_sha256": "1ecb10f1cbf13bdcdc1a1c9204a913332a17be7f46b90c808dc8900f807a850f"
+    },
+    {
+     "id": "AC-08",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover openalex",
+     "query": "Calibrate Before Use: Improving Few-Shot Performance of Language Models",
+     "exit": "0",
+     "returned_ids": [
+      "10.48550/arxiv.2102.09690",
+      "10.18653/v1/2021.mrl-1.1",
+      "10.48550/arxiv.2212.02216",
+      "10.48550/arxiv.2112.10668",
+      "10.18653/v1/2022.emnlp-main.616",
+      "10.18653/v1/2021.emnlp-main.734",
+      "10.18653/v1/2022.findings-acl.222",
+      "10.48550/arxiv.2209.01975",
+      "10.48550/arxiv.2303.13217",
+      "10.48550/arxiv.2205.10747",
+      "10.18653/v1/2022.acl-long.365",
+      "10.18653/v1/2022.acl-tutorials.6",
+      "10.18653/v1/2022.acl-long.254",
+      "10.18653/v1/2022.naacl-main.402",
+      "10.1145/3618260.3649777"
+     ],
+     "raw_sha256": "e939d5f2d7915d5db554af15c875de750a4d2abf93164d7b0b9b85f748055ab2"
+    },
+    {
+     "id": "AC-09",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover keyword",
+     "query": "shuffled labels in-context learning small language models label sensitivity scale 1B",
+     "exit": "0",
+     "returned_ids": [
+      "2610.10335",
+      "2607.27506",
+      "2610.09063",
+      "2610.08314",
+      "2609.12915",
+      "2609.27603",
+      "2610.05918",
+      "2607.18819",
+      "2609.11252",
+      "2610.02142",
+      "2609.00064",
+      "2609.16858",
+      "2607.26326",
+      "2608.19857",
+      "2606.23243"
+     ],
+     "raw_sha256": "fc0dac22d812ee9386492f208899957019d1209143c0d5001af00f516288cd61"
+    },
+    {
+     "id": "AC-10",
+     "kind": "discover",
+     "counted": true,
+     "tool": "orx discover embedding",
+     "query": "synthetic function induction tasks for in-context learning evaluation of language models with random labels",
+     "exit": "0",
+     "returned_ids": [
+      "2609.39447",
+      "2604.23267",
+      "2603.17172",
+      "2603.20969",
+      "2602.11863",
+      "2512.12175",
+      "2412.01003",
+      "2202.12837",
+      "2509.22947",
+      "2509.23501",
+      "2411.19581",
+      "2404.10859",
+      "2508.10235",
+      "2506.05188",
+      "2407.07011"
+     ],
+     "raw_sha256": "f91a64665a7ad04816ee3618a093a69529fc81f15f9d2bddc70e4ab8ff5e1d9f"
+    },
+    {
+     "id": "AC-P-2305.09731",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2305.09731",
+     "returned_ids": [
+      "2305.09731"
+     ],
+     "text_sha256": "c30fa30bb97fe0b5ebfc6d8bfc2e5ec88db90c0c91a4e9fd9c960285a43d6266"
+    },
+    {
+     "id": "AC-P-2310.15213",
+     "kind": "paper",
+     "counted": false,
+     "tool": "orx paper --full",
+     "query": "2310.15213",
+     "returned_ids": [
+      "2310.15213"
+     ],
+     "text_sha256": "376bf3da7ca4116a87520e7d25c2ab475e5d020799596326887d3d61ff40dc88"
+    }
+   ],
+   "note": "The asset cell's structured result lists q1-q10 in prose; ids and raw-output digests come from its scratch files e4-asset/orx/q*.ids.json and q*.raw."
+  }
+ },
+ "synthesis": {
+  "rows": [
+   {
+    "id": "SQ1",
+    "kind": "discover",
+    "counted": true,
+    "tool": "orx discover keyword --limit 15",
+    "query": "optimized activation intervention reproduces in-context learning predictions upper bound",
+    "run_by": "previous synthesis owner (agent a00034fb, stalled before committing)",
+    "returned_ids": [
+     "2610.06679",
+     "2609.36337",
+     "2610.04967",
+     "2609.34453",
+     "2609.30405",
+     "2610.01054",
+     "2609.03544",
+     "2608.03067",
+     "2607.25270",
+     "2608.25315",
+     "2609.03026",
+     "2609.33736",
+     "2608.15707",
+     "2608.23666",
+     "2609.00753"
+    ],
+    "raw_sha256": "b42aee99c3a3508f8ec66ac253a6f928f1448960242b6f0fa294d7a3b190e178"
+   },
+   {
+    "id": "SQ2",
+    "kind": "discover",
+    "counted": true,
+    "tool": "orx discover embedding --limit 15 --published-after 2025-06-01",
+    "query": "fit a separate low-rank residual-stream intervention for each set of demonstrations so that a frozen language model without the demonstrations reproduces its few-shot predictions, and compare it with one constant intervention per task and with interventions restricted to the span of the demonstrations' own representations",
+    "run_by": "previous synthesis owner",
+    "returned_ids": [
+     "2610.12325",
+     "2610.00820",
+     "2610.07270",
+     "2609.40063",
+     "2610.06621",
+     "2610.09493",
+     "2609.39263",
+     "2609.39913",
+     "2609.34063",
+     "2609.15028",
+     "2609.01081",
+     "2608.26576",
+     "2608.15323",
+     "2608.14252",
+     "2608.13385"
+    ],
+    "raw_sha256": "8966c3d1a284eb82d6c7ea6bdfb453df50a393aab035435aa69a1a6f227815c6"
+   },
+   {
+    "id": "SQ3",
+    "kind": "discover",
+    "counted": true,
+    "tool": "orx discover keyword --limit 15",
+    "query": "span of demonstration representations in-context learning low-rank update subspace task vector",
+    "run_by": "previous synthesis owner",
+    "returned_ids": [
+     "2610.00526",
+     "2609.24352",
+     "2610.02283",
+     "2608.26960",
+     "2609.34605",
+     "2610.01054",
+     "2610.07559",
+     "2609.29913",
+     "2609.34599",
+     "2610.07036",
+     "2610.00431",
+     "2610.01702",
+     "2610.05800",
+     "2610.04226",
+     "2606.19164"
+    ],
+    "raw_sha256": "1fb3916667a23dce81e6afa60f9ebbf60d5cc873bb65a44c9ad4ab1e81224a14"
+   },
+   {
+    "id": "SQ4",
+    "kind": "discover",
+    "counted": true,
+    "tool": "orx discover openalex --limit 15",
+    "query": "in-context learning task recognition versus task learning low-rank activation steering capacity",
+    "run_by": "previous synthesis owner",
+    "returned_ids": [
+     "10.18653/v1/2026.findings-acl.1527",
+     "10.48550/arxiv.1806.05421",
+     "10.48550/arxiv.2606.07500",
+     "W868415831",
+     "10.48550/arxiv.2507.00754",
+     "10.1371/journal.pcbi.1013012",
+     "10.26190/unsworks/32463",
+     "W7140346203",
+     "10.48550/arxiv.2609.33424",
+     "10.1111/exsy.70182",
+     "10.32657/10356/72748",
+     "W3152024973",
+     "10.1109/comst.2020.2970550",
+     "10.1007/s10462-022-10246-w",
+     "10.1002/rev3.3310"
+    ],
+    "raw_sha256": "83ac001517afa493d1aa8e4d6e053aadbd7f77512348462ea2b8484a6f311756"
+   },
+   {
+    "id": "SQ5",
+    "kind": "discover",
+    "counted": true,
+    "tool": "orx discover keyword --limit 15",
+    "query": "key span oracle in-context learning gradient descent fast weight state",
+    "run_by": "this synthesis owner",
+    "returned_ids": [
+     "2608.27763",
+     "2601.00671",
+     "2610.07167",
+     "2606.19878",
+     "2609.16805",
+     "2607.23153",
+     "2607.09950",
+     "2603.13875",
+     "2607.18865",
+     "2605.26356",
+     "2605.06609",
+     "2604.17275",
+     "2605.08850",
+     "2212.07677",
+     "2604.10848"
+    ],
+    "raw_sha256": "62e37ae668b5e8f686e5f992dce906a5cd402c2c8b9498a6c762ecb24282cbc8"
+   },
+   {
+    "id": "SQ6",
+    "kind": "discover",
+    "counted": true,
+    "tool": "orx discover embedding --limit 15 --published-after 2026-06-01",
+    "query": "For each set of demonstrations, directly optimize a small low-rank state injected into a frozen language model's residual stream so that it reproduces the model's own few-shot predictions on held-out queries, and compare one constant state per task, states whose write directions are restricted to the span of the demonstrations' own representations, and unconstrained states, to tell whether in-context learning is task recognition, gradient-like, or neither",
+    "run_by": "this synthesis owner",
+    "returned_ids": [
+     "2609.24352",
+     "2610.12325",
+     "2610.00820",
+     "2609.39494",
+     "2610.01054",
+     "2609.32469",
+     "2610.07842",
+     "2610.09122",
+     "2610.07553",
+     "2609.40063",
+     "2610.07572",
+     "2609.30218",
+     "2609.36265",
+     "2606.07082",
+     "2610.06950"
+    ],
+    "raw_sha256": "e8fd55d3e5a1c689fb14482d3af96e849ee8bc1f45b07e43c0531aaf7c8fe499"
+   }
+  ],
+  "reads": [
+   {
+    "kind": "paper",
+    "counted": false,
+    "tool": "orx paper --full",
+    "query": "2608.13385",
+    "run_by": "this synthesis owner",
+    "text_sha256": "b1e305d32d689938ddfedf7209d0d95760f93c883b4b5fc54841bf4ce9fde104",
+    "text_bytes": 44571
+   },
+   {
+    "kind": "paper",
+    "counted": false,
+    "tool": "orx paper --full",
+    "query": "2610.01054",
+    "run_by": "this synthesis owner",
+    "text_sha256": "28289e4cef2ad72414a1bd30abd622923a475a5f84043538f81433fb7efdead2",
+    "text_bytes": 88666
+   },
+   {
+    "kind": "paper",
+    "counted": false,
+    "tool": "orx paper --full",
+    "query": "2610.00526",
+    "run_by": "this synthesis owner",
+    "text_sha256": "25ddffdcefb83295f20eaf36cc3c1ce43d4e5821066d82a924f622931bfbb39a",
+    "text_bytes": 17491
+   },
+   {
+    "kind": "paper",
+    "counted": false,
+    "tool": "orx paper --full",
+    "query": "2608.01672",
+    "run_by": "this synthesis owner",
+    "text_sha256": "55f4cb1afae224e9484e597dd977555dfb791bafe498b78692c93e7beb0c29f3",
+    "text_bytes": 72972
+   },
+   {
+    "kind": "paper",
+    "counted": false,
+    "tool": "orx paper --full",
+    "query": "2306.00297",
+    "run_by": "this synthesis owner",
+    "text_sha256": "c68ce40642c5786fe84a1f8cd70f3ace44e02c611effb400071787e958af6c4c",
+    "text_bytes": 111893
+   },
+   {
+    "kind": "paper",
+    "counted": false,
+    "tool": "orx paper --full",
+    "query": "2309.05858",
+    "run_by": "this synthesis owner",
+    "text_sha256": "4a4e4684efa12b6922286755893fd94cc1d87debc7c132c6717c9cc59416e262",
+    "text_bytes": 189606
+   },
+   {
+    "kind": "paper",
+    "counted": false,
+    "tool": "orx paper --full",
+    "query": "2202.05798",
+    "run_by": "this synthesis owner",
+    "text_sha256": "f8ed79cf568a132b38206a9f2edfecb24c9174f8f827e33489b8ee3d0c3a9229",
+    "text_bytes": 65800
+   },
+   {
+    "kind": "paper",
+    "counted": false,
+    "tool": "orx paper --full",
+    "query": "2610.11715",
+    "run_by": "this synthesis owner",
+    "text_sha256": "6f6d541c0bb13edae365daa793df3cc133142ddddd828a13cbdbaccf783b77a7",
+    "text_bytes": 56028
+   },
+   {
+    "kind": "paper",
+    "counted": false,
+    "tool": "orx paper --full",
+    "query": "2608.13385",
+    "run_by": "previous synthesis owner",
+    "text_sha256": "b1e305d32d689938ddfedf7209d0d95760f93c883b4b5fc54841bf4ce9fde104"
+   },
+   {
+    "kind": "paper",
+    "counted": false,
+    "tool": "orx paper --full",
+    "query": "2609.40063",
+    "run_by": "previous synthesis owner",
+    "text_sha256": "090ad170054b6cafba88f46b2e10e6faff9457a2ce7e619d816b44b8dd00bcaa"
+   },
+   {
+    "kind": "auxiliary",
+    "counted": false,
+    "tool": "curl",
+    "query": "https://labs.ramp.com/research/portal-portable-task-adaptation/",
+    "run_by": "this synthesis owner",
+    "body_sha256": "8d1d07233ef87285e4b91be6efc81df09d9d59783ee76db12c546302a211e99d",
+    "note": "opened to verify the ~98% / ~94% headline (first-party)"
+   }
+  ],
+  "screening": {
+   "identified_ids": 90,
+   "unique_ids": 84,
+   "titles_screened": 84,
+   "abstracts_read": 9,
+   "full_texts_read": 9,
+   "included_as_direct_prior": 0,
+   "abstracts_read_ids": [
+    "2608.13385",
+    "2609.40063",
+    "2610.04967",
+    "2610.00820",
+    "2610.07270",
+    "2609.24352",
+    "2609.36265",
+    "2610.06950",
+    "2610.07572"
+   ],
+   "notes": "No result runs a key-span versus unconstrained oracle comparison; 2608.13385 is the closest measurement prior (full text read); 2609.40063 (LARC) is a gradient-form fast state learning from feedback in a frozen 1B model, not an oracle."
+  }
+ },
+ "counts": {
+  "frontier": {
+   "counted_discover": 61,
+   "paper_reads": 13,
+   "auxiliary": 3
+  },
+  "killshot": {
+   "counted_discover": 30,
+   "paper_reads": 14,
+   "auxiliary": 0
+  },
+  "cross-domain": {
+   "counted_discover": 43,
+   "paper_reads": 34,
+   "auxiliary": 0
+  },
+  "asset-cost": {
+   "counted_discover": 10,
+   "paper_reads": 2,
+   "auxiliary": "HF API and config reads (not counted)"
+  },
+  "synthesis": {
+   "counted_discover": 6,
+   "paper_reads": 10,
+   "auxiliary": 1
+  }
+ },
+ "queries_against_budget": 150,
+ "paper_reads_total": 73,
+ "budget_note": "150 counted discover queries against the declared 150 (frontier 61, kill-shot 30, cross-domain 43, asset 10, synthesis 6). The budget is exhausted; the blind critic, refuters and reviewers need a new declared query budget or must use no discover queries."
+}
