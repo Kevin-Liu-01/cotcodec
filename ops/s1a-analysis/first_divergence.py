@@ -4,7 +4,8 @@ script, not code of record.
 Usage (host, where the step logs stay under section 16)::
 
     python3 -E -s -B first_divergence.py --export X --plan plan-a0a.json \
-        --records a1.jsonl --run-dir RUNS/1045 [--run-dir ...] --out first-divergence.json
+        --records a1.jsonl --run-dir RUNS/1045 [--run-dir ...] --guard A/report/guard.json \
+        --out first-divergence.json
 
 The registered CLI never passes step logs to ``analysis.report`` (bug B5), so this step does,
 with the choices D59 fixes: base tasks only, scored final records only (``records.final_records``:
@@ -12,7 +13,9 @@ the last attempt of each slot), and that final attempt's step log. A slot id is
 ``<job>:<block>:<index>``, so each record's ``steps.jsonl`` is looked up in its own job's run
 directory (``<run>/episodes/<slot with ':' as '_'>.a<attempt>/steps.jsonl``). Pairs are
 classified by ``records.first_divergence`` through ``analysis.divergence_summary`` (within and
-between sessions), pooled and per size. The output holds counts only, never a step log.
+between sessions), pooled and per size. The output holds counts only, never a step log, and
+carries the labels of ``run_report.py``'s ``guard.json`` (incomplete, "not externally
+anchored").
 """
 
 from __future__ import annotations
@@ -88,30 +91,41 @@ def summarise(
     }
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--export", type=Path, required=True)
     parser.add_argument("--plan", type=Path, required=True)
     parser.add_argument("--records", type=Path, required=True)
     parser.add_argument("--run-dir", type=Path, action="append", required=True)
+    parser.add_argument(
+        "--guard", type=Path, required=True,
+        help="run_report.py's guard.json: the labels this output carries",
+    )  # fmt: skip
     parser.add_argument("--out", type=Path, required=True)
-    args = parser.parse_args(argv)
+    return parser.parse_args(argv)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = parse_args(argv)
     O.use_export(args.export)
     if args.out.exists():
         raise O.OpsError(f"{args.out} exists; operator outputs are never overwritten")
     R = O.frozen("records")
+    labels = O.labels_from_guard(args.guard)
     plan = O.read_json(args.plan)
     finals = R.final_records(R.read_jsonl(args.records))
     runs = O.run_dirs_by_job(args.run_dir)
-    out = summarise(finals, plan["base"], runs)
+    out = {"labels": labels, **summarise(finals, plan["base"], runs)}
     out["inputs"] = {
         "records": O.sha256_file(args.records),
         "plan": O.sha256_file(args.plan),
+        "guard": O.sha256_file(args.guard),
         "run_dirs": {job: str(path) for job, path in sorted(runs.items())},
     }
     O.write_new(args.out, O.dumps(out))
     print(json.dumps({"step_logs_read": out["step_logs_read"],
-                      "step_logs_missing": out["step_logs_missing"]}))  # fmt: skip
+                      "step_logs_missing": out["step_logs_missing"],
+                      "label": labels.get("incomplete")}))  # fmt: skip
     return 0
 
 

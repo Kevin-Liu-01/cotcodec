@@ -5,22 +5,25 @@ operator script, not code of record.
 ``--time=08:00:00`` (``rescore capture`` is serial, about 25 s per scored episode, so about 3 h
 per 452-episode job, above the sbatch's 2 h default: bug B4), the run directory mounted
 read-only at ``/ro/run`` and the output in ``<analysis>/rescore-<vm job>/rescored.jsonl``.
-``sbatch`` returns at once; poll with ``squeue``. ``--dry-run`` prints the commands only::
+``sbatch`` returns at once; poll with ``squeue``. ``--dry-run`` prints the commands only and
+writes nothing (``--out`` is then optional; when given it must not exist yet)::
 
     python3 -E -s -B rescore_jobs.py submit --export X --analysis-dir A \
-        --inputs INPUTS --run-dir RUNS/1045 [--run-dir ...] --out A/rescore-jobs.json
+        --inputs INPUTS --run-dir RUNS/1045 [--run-dir ...] --out A/rescore-jobs.json [--dry-run]
 
 ``coverage`` (host): per job, counts only, with no verdict read: the scored attempts, the
 scored attempts with a capture, the rows, the rows matched to a scored attempt, the rows with
-a ``*_error`` field, the receipt's exit status. With ``--records`` (the merged a1.jsonl) and
-``--plan`` (analysis time: this part reads verdicts), it adds the scored final records of
-the primary and secondary sets whose verdict fell back to the live score (``corrected_score``
-missing or null: ``records.outcome_array`` then reads the live score) and the
-corrected-verdict flips split into checker corrections (``corrected_applies``) and
+a ``*_error`` field, the receipt's exit status. With ``--records`` (the merged a1.jsonl),
+``--plan`` and every job's ``--dr0`` (analysis time: this part reads verdicts), it adds the
+labels of the analysis outputs (incomplete, "not externally anchored"), the scored final
+records of the primary and secondary sets whose verdict fell back to the live score
+(``corrected_score`` missing or null: ``records.outcome_array`` then reads the live score)
+and the corrected-verdict flips split into checker corrections (``corrected_applies``) and
 live-versus-offline replay mismatches (no correction applies)::
 
-    python3 -E -s -B rescore_jobs.py coverage --export X --analysis-dir A \
-        --run-dir RUNS/1045 [...] [--records A/a1.jsonl --plan PLAN] --out A/rescore-coverage.json
+    python3 -E -s -B rescore_jobs.py coverage --export X --analysis-dir A --run-dir RUNS/1045 \
+        [...] [--records A/a1.jsonl --plan PLAN --dr0 A/dr0-1045.json ...] \
+        --out A/rescore-coverage.json
 """
 
 from __future__ import annotations
@@ -39,6 +42,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import s1a_ops as O  # noqa: E402
 
 TIME_LIMIT = "08:00:00"
+RAW_REPLAY_ALSO_DIFFERS = "checker_correction_raw_replay_also_differs"
 SBATCH = "infra/slurm/host-single-node/s1a-cpu.sbatch"
 # G0 item 6's command in the metric image (as the dry run's job 1057 ran it on A0a).
 OSWORLD = "/inputs/OSWorld"
@@ -90,7 +94,7 @@ def sbatch_command(export: Path, analysis_dir: Path, inputs: Path, run_dir: Path
 
 def submit(args: argparse.Namespace) -> int:
     O.use_export(args.export)
-    if args.out.exists():
+    if args.out is not None and args.out.exists():
         raise O.OpsError(f"{args.out} exists; operator outputs are never overwritten")
     runs = O.run_dirs_by_job(args.run_dir)
     out: dict[str, Any] = {"time_limit": TIME_LIMIT, "argv": capture_argv(), "jobs": {}}
@@ -113,6 +117,8 @@ def submit(args: argparse.Namespace) -> int:
         out["jobs"][job] = entry
     if not args.dry_run:
         O.write_new(args.out, O.dumps(out))
+    else:
+        print(f"dry run: nothing submitted, {args.out or 'no --out'} not written", file=sys.stderr)
     return 0
 
 
@@ -174,7 +180,9 @@ def verdict_sources(
 ) -> dict[str, Any]:
     """For the scored final records of ``tasks``: how many corrected verdicts come from the
     offline rescoring and how many fell back to the live score, and the corrected-verdict
-    flips split into checker corrections and replay mismatches (by task)."""
+    flips split into checker corrections and replay mismatches (by task). A checker-correction
+    flip whose raw replay already differed from the live score is also counted under
+    ``checker_correction_raw_replay_also_differs`` (a subset of ``checker_correction``)."""
     task_set = set(tasks)
     fallback = offline = 0
     flips: dict[str, dict[str, int]] = {}
@@ -199,6 +207,9 @@ def verdict_sources(
             kind = "replay_mismatch"
         per = flips.setdefault(t, {})
         per[kind] = per.get(kind, 0) + 1
+        if kind == "checker_correction" and row.get("live_offline_match") is False:
+            # a subset of checker_correction: the raw replay already differed from live
+            per[RAW_REPLAY_ALSO_DIFFERS] = per.get(RAW_REPLAY_ALSO_DIFFERS, 0) + 1
     totals: Counter = Counter()
     for per in flips.values():
         totals.update(per)
@@ -227,14 +238,28 @@ def coverage(args: argparse.Namespace) -> int:
         if rows_path.is_file():
             all_rows += O.read_jsonl(rows_path)
     if args.records:
-        if not args.plan:
-            raise O.OpsError("--records needs --plan")
+        if not args.plan or not args.dr0:
+            raise O.OpsError("--records needs --plan and every job's --dr0")
+        out["labels"] = coverage_labels(args.records, args.plan, args.dr0)
         out["verdict_sources"] = sets_verdict_sources(args.records, args.plan, all_rows)
+    else:
+        out["labels"] = {"not_determined": "coverage ran without --records, --plan and --dr0"}
     O.write_new(args.out, O.dumps(out))
     print(json.dumps({job: {k: v for k, v in c.items() if k in ("scored_attempts", "rows",
                      "rows_with_error", "scored_attempts_without_row")}
                      for job, c in out["jobs"].items()}))  # fmt: skip
     return 0
+
+
+def coverage_labels(records: Path, plan_path: Path, dr0_paths: Sequence[Path]) -> dict:
+    """The labels of the analysis outputs (D59 (ii)), from the same completeness test the
+    report's guard applies (``run_report.completeness``); this step runs before the report."""
+    import run_report as RR  # numpy; only the coverage step needs it
+
+    R = O.frozen("records")
+    plan = O.read_json(plan_path)
+    comp = RR.completeness(R.read_jsonl(records), plan, [O.read_json(p) for p in dr0_paths])
+    return {**RR.labels(comp, plan), "source": "run_report.completeness on --records and --dr0"}
 
 
 def sets_verdict_sources(records: Path, plan_path: Path, rows: Sequence[Mapping]) -> dict:
@@ -258,7 +283,7 @@ def sets_verdict_sources(records: Path, plan_path: Path, rows: Sequence[Mapping]
     }
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
     sub_submit = sub.add_parser("submit", help="one s1a-cpu.sbatch rescoring job per A1 job")
@@ -267,17 +292,35 @@ def main(argv: Sequence[str] | None = None) -> int:
         cmd.add_argument("--export", type=Path, required=True)
         cmd.add_argument("--analysis-dir", type=Path, required=True)
         cmd.add_argument("--run-dir", type=Path, action="append", required=True)
-        cmd.add_argument("--out", type=Path, required=True)
+    sub_submit.add_argument(
+        "--out", type=Path, help="the record of the submission (required unless --dry-run)"
+    )
+    sub_cover.add_argument("--out", type=Path, required=True)
     sub_submit.add_argument(
         "--inputs",
         type=Path,
         required=True,
         help="the checker-mutation study's inputs (OSWorld, file cache)",
     )
-    sub_submit.add_argument("--dry-run", action="store_true")
+    sub_submit.add_argument(
+        "--dry-run", action="store_true", help="print the sbatch commands; submit and write nothing"
+    )
     sub_cover.add_argument("--records", type=Path, help="merged A1 records (a1.jsonl)")
     sub_cover.add_argument("--plan", type=Path)
+    sub_cover.add_argument(
+        "--dr0", type=Path, action="append", default=[],
+        help="each job's 'rules dr0' output (with --records: the incomplete label)",
+    )  # fmt: skip
     args = parser.parse_args(argv)
+    if args.command == "submit" and args.out is None and not args.dry_run:
+        parser.error("submit: --out is required unless --dry-run is given")
+    if args.command == "coverage" and args.records is not None and (not args.plan or not args.dr0):
+        parser.error("coverage: --records needs --plan and every job's --dr0")
+    return args
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = parse_args(argv)
     return submit(args) if args.command == "submit" else coverage(args)
 
 

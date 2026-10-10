@@ -94,6 +94,17 @@ def read_jsonl(path: str | Path) -> list[dict[str, Any]]:
     ]
 
 
+def labels_from_guard(path: str | Path) -> dict[str, Any]:
+    """The labels every analysis output carries (D59 (ii): incomplete; section 15: "not
+    externally anchored"), read from ``run_report.py``'s ``guard.json`` so that an output
+    written after the report carries the same labels as the report."""
+    guard = read_json(path)
+    labels = guard.get("labels")
+    if not isinstance(labels, dict) or "incomplete" not in labels:
+        raise OpsError(f"{path} carries no labels block (it is not run_report.py's guard.json)")
+    return {**labels, "source": f"guard.json (sha256 {sha256_file(path)})"}
+
+
 def a1_job_of(run_dir: Path) -> str:
     """The A1 job a lane run directory holds, from its manifest (as ``rules.run_dir_dr0``)."""
     manifest = read_json(run_dir / "manifest.json")

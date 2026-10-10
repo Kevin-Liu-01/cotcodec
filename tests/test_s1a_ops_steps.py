@@ -59,6 +59,24 @@ def run_dirs(scenario) -> list[str]:
     return out
 
 
+def dr0s(scenario) -> list[str]:
+    out = []
+    for path in scenario["dr0"]:
+        out += ["--dr0", str(path)]
+    return out
+
+
+def write_guard(path: Path, incomplete: bool = False) -> Path:
+    """A guard.json labels block as run_report.py writes it."""
+    labels = {
+        "incomplete": RR.INCOMPLETE if incomplete else None,
+        "incomplete_reasons": ["no records from A1-4B-S2"] if incomplete else [],
+        "external_anchor": A.NOT_ANCHORED,
+    }
+    path.write_text(json.dumps({"labels": labels}))
+    return path
+
+
 # --------------------------------------------------------------------------- first divergence
 
 
@@ -91,11 +109,16 @@ def test_first_divergence_reads_each_final_attempt_in_its_own_job(sc, tmp_path):
         "--records",
         str(sc["records"]),
         *run_dirs(sc),
+        "--guard",
+        str(write_guard(tmp_path / "guard.json", incomplete=True)),
         "--out",
         str(out_path),
     ]
     assert FD.main(argv) == 0
     out = json.loads(out_path.read_text())
+    assert out["labels"]["incomplete"] == RR.INCOMPLETE
+    assert out["labels"]["external_anchor"] == A.NOT_ANCHORED
+    assert out["labels"]["source"].startswith("guard.json (sha256 ")
     assert out["first_divergence"] == A.divergence_summary(logs)
     assert out["step_logs_read"] == len(logs)
     assert set(out["first_divergence_by_size"]) == {"4B", "9B"}
@@ -151,6 +174,11 @@ def test_rescore_submit_dry_run_uses_eight_hours_and_the_metric_image(sc, tmp_pa
         assert env["Q2M_RUN_DIR"] == f"/runs/A/rescore-{vm}"
         assert cmd[-1].endswith("infra/slurm/host-single-node/s1a-cpu.sbatch")
     assert not (tmp_path / "jobs.json").exists()
+    # the runbook's first line of step 3 with --out left out: the same preview, nothing written
+    assert RJ.main([a for a in argv if a not in ("--out", str(tmp_path / "jobs.json"))]) == 0
+    again = capsys.readouterr()
+    assert [shlex.split(x) for x in again.out.splitlines() if x.strip()] == lines
+    assert "nothing submitted" in again.err
 
 
 def test_rescore_coverage_counts_rows_errors_and_fallbacks(sc, tmp_path):
@@ -175,11 +203,14 @@ def test_rescore_coverage_counts_rows_errors_and_fallbacks(sc, tmp_path):
         str(sc["records"]),
         "--plan",
         str(sc["plan"]),
+        *dr0s(sc),
         "--out",
         str(out_path),
     ]
     assert RJ.main(argv) == 0
     out = json.loads(out_path.read_text())
+    assert out["labels"]["incomplete"] is None and out["labels"]["incomplete_reasons"] == []
+    assert out["labels"]["external_anchor"] == A.NOT_ANCHORED
     cov = out["jobs"][job]
     assert cov["rows"] == cov["scored_attempts"] - 1
     assert cov["scored_attempts_without_row"] == 1
@@ -191,6 +222,19 @@ def test_rescore_coverage_counts_rows_errors_and_fallbacks(sc, tmp_path):
         vs["scored_final_records"]
         == vs["corrected_from_offline_rescoring"] + vs["fell_back_to_live_score"]
     )
+
+
+def test_rescore_coverage_labels_incomplete_data(late, tmp_path):
+    out_path = tmp_path / "cov.json"
+    argv = [
+        "coverage", "--export", str(ROOT), "--analysis-dir", str(late["analysis"]),
+        *run_dirs(late), "--records", str(late["records"]), "--plan", str(late["plan"]),
+        *dr0s(late), "--out", str(out_path),
+    ]  # fmt: skip
+    assert RJ.main(argv) == 0
+    labels = json.loads(out_path.read_text())["labels"]
+    assert labels["incomplete"] == RR.INCOMPLETE
+    assert "no records from A1-4B-S2" in labels["incomplete_reasons"]
 
 
 def test_verdict_sources_split_checker_corrections_from_replay_mismatches():
@@ -228,16 +272,33 @@ def test_verdict_sources_split_checker_corrections_from_replay_mismatches():
             "slot": "e",
             "attempt": 1,
         },
+        ("4B", "S1", "t6", "H-GA", 1): {
+            "status": "scored",
+            "score": 0.0,
+            "corrected_score": 1.0,
+            "slot": "f",
+            "attempt": 1,
+        },
     }
     rows = RJ.rows_by_attempt(
         [
-            {"slot": "a", "attempt": 1, "corrected_applies": True},
+            {"slot": "a", "attempt": 1, "corrected_applies": True, "live_offline_match": True},
             {"slot": "b", "attempt": 1, "corrected_applies": False},
+            {"slot": "f", "attempt": 1, "corrected_applies": True, "live_offline_match": False},
         ]
     )
-    out = RJ.verdict_sources(finals, ["t1", "t2", "t3", "t4", "t5"], rows)
-    assert out["fell_back_to_live_score"] == 2 and out["corrected_from_offline_rescoring"] == 2
-    assert out["flips_by_task"] == {"t1": {"checker_correction": 1}, "t2": {"replay_mismatch": 1}}
+    out = RJ.verdict_sources(finals, ["t1", "t2", "t3", "t4", "t5", "t6"], rows)
+    assert out["fell_back_to_live_score"] == 2 and out["corrected_from_offline_rescoring"] == 3
+    assert out["flips_by_task"] == {
+        "t1": {"checker_correction": 1},
+        "t2": {"replay_mismatch": 1},
+        "t6": {"checker_correction": 1, RJ.RAW_REPLAY_ALSO_DIFFERS: 1},
+    }
+    assert out["flips_total"] == {
+        "checker_correction": 2,
+        RJ.RAW_REPLAY_ALSO_DIFFERS: 1,
+        "replay_mismatch": 1,
+    }
 
 
 # --------------------------------------------------------------------------- section 15
@@ -360,7 +421,7 @@ def test_assemble_section_15(sc, tmp_path):
     assert sec["flips_per_task"] == A.corrected_flips(finals, SY.TASKS)
     # rescoring: flips split; impress tasks are the corrected family in the synthetic data
     for task, kinds in out["rescoring"]["secondary"]["flips_by_task"].items():
-        assert set(kinds) <= {"checker_correction", "replay_mismatch"}
+        assert set(kinds) <= {"checker_correction", "replay_mismatch", RJ.RAW_REPLAY_ALSO_DIFFERS}
         if "checker_correction" in kinds:
             assert SY.DOMAINS[task] == "libreoffice_impress"
     assert "every final record" in out["checker_noise_set"]["set"]
@@ -490,8 +551,18 @@ def test_glmm_collect_checks_the_package_digest_and_reports_convergence(tmp_path
     assert out["fits"]["primary"]["full"] == good["full"]
     assert "3 refits" in out["fits"]["primary"]["notes"][0]
     assert any("non-converged fit" in n for n in out["fits"]["secondary"]["notes"])
+    guard = write_guard(tmp_path / "guard.json")
+    argv = ["collect", "--out-dir", str(out_dir), "--guard", str(guard)]
+    assert GI.main([*argv, "--out", str(tmp_path / "summary.json")]) == 0
+    summary = json.loads((tmp_path / "summary.json").read_text())
+    assert summary["labels"]["incomplete"] is None
+    assert summary["labels"]["external_anchor"] == A.NOT_ANCHORED
     (out_dir / "r-packages.json").write_text("{}")
     assert GI.collect_summary(out_dir)["r_packages"]["matches_registered"] is False
+    # a package lock that differs from the registered one stops the analysis (exit 3)
+    assert GI.main([*argv, "--out", str(tmp_path / "summary-bad.json")]) == 3
+    bad = json.loads((tmp_path / "summary-bad.json").read_text())
+    assert bad["r_packages"]["matches_registered"] is False
 
 
 # --------------------------------------------------------------------------- provenance
@@ -517,6 +588,22 @@ def test_provenance_on_the_frozen_tree_and_plan(sc, tmp_path):
     assert out["inputs"][str(sc["records"])]["sha256"] == O.sha256_file(sc["records"])
     assert {"python", "numpy", "scipy"} <= set(out["environment"])
     assert "run_report.py" in out["ops_files"]
+
+
+def test_provenance_records_a_missing_input_and_the_labels(sc, tmp_path):
+    out_path = tmp_path / "prov.json"
+    pattern = tmp_path / "glmm-out" / "glmm-*.json"  # an unmatched glob reaches it literally
+    argv = [
+        "--export", str(ROOT), "--plan", str(REAL_PLAN), "--input", str(sc["records"]),
+        "--input", str(pattern), "--guard", str(write_guard(tmp_path / "guard.json", True)),
+        "--out", str(out_path),
+    ]  # fmt: skip
+    assert PV.main(argv) == 0
+    out = json.loads(out_path.read_text())
+    assert out["inputs_missing"] == [str(pattern)]
+    assert out["inputs"][str(pattern)] == {"missing": True}
+    assert out["inputs"][str(sc["records"])]["sha256"] == O.sha256_file(sc["records"])
+    assert out["labels"]["incomplete"] == RR.INCOMPLETE
 
 
 def test_provenance_refuses_another_plan(sc, tmp_path):

@@ -144,7 +144,7 @@ def check(
     return result
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--export", type=Path, required=True)
     parser.add_argument("--records", type=Path, required=True)
@@ -152,7 +152,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--costs", type=Path)
     parser.add_argument("--wrapper-report", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
-    args = parser.parse_args(argv)
+    return parser.parse_args(argv)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = parse_args(argv)
     export = O.use_export(args.export)
     if (args.out_dir / "identity.json").exists():
         raise O.OpsError(f"{args.out_dir}/identity.json exists")

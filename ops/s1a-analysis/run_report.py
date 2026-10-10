@@ -17,7 +17,10 @@ Writes three files into DIR (each written once, never overwritten):
   0. When the frozen report raises (no size holds two sessions: bug B2), no ``report.json``
   is written and the error is recorded.
 * ``guard.json``: the completeness of the data (DR0 per job, the jobs present, the sessions
-  per size) and every reading the guard changed (D59 (ii)).
+  per size), every reading the guard changed (D59 (ii)), the ``labels`` every analysis output
+  carries (later steps copy them from here), the operator's ``interpretation`` of D59 (ii)
+  and a ``read`` note: on incomplete data ``report.json`` still holds the values the guard
+  changed and must not be read directly.
 * ``report-guarded.json``: the report the operator reads. With complete data it is
   ``report.json`` plus a ``guard`` block. With incomplete data every output is labelled
   ``incomplete``, a single-session size's session test is not estimable, DR1 is read on the
@@ -78,6 +81,58 @@ NEEDS_TWO_SESSIONS = (
     "P2",
     "P3 (reads DR2)",
 )
+# The pooled estimates of ``analysis.statistics`` and the per-size arrays they average.
+POOLED = (
+    "delta",
+    "D_b",
+    "D_w",
+    "excess",
+    "D_b_same_block",
+    "D_b_cross_block",
+    "X",
+    "X_bernoulli",
+    "pi_mean_4B_9B",
+)
+READ_NOTE = (
+    "read report-guarded.json. report.json is the registered computation (D59 (i)) and is kept "
+    "for the identity check; on incomplete data it still holds every value the guard changed "
+    "(for example a single-session size's session p-value of 1/(n+1), or DR5 read against "
+    "M = 0.13), so it must not be read directly"
+)
+# The operator's reading of D59 (ii), fixed with this script before any A1 outcome is read and
+# disclosed with the outputs (guard.json "interpretation").
+INTERPRETATION = {
+    "incomplete": (
+        "every output is labelled incomplete when DR0 fired for any A1 job (its rules dr0 "
+        "output, or recomputed from the records), when a registered A1 job has no records, or "
+        "when a size lacks two sessions of scored base records (D59 (ii), section 11)"
+    ),
+    "that_size": (
+        "D59 (ii)'s 'that size' is a size left without two sessions of scored base records. "
+        "A size whose session-2 job fired DR0 but which still holds scored base records in "
+        "both sessions (a job cut or failed after its first block) is labelled incomplete and "
+        "the DR0 masks nothing else: its session test (and DR1, for 4B) are read as the "
+        "registered code computes them on the data collected, and DR5 is masked only when a "
+        "size lacks two sessions. Section 11 reports 'data already collected' as incomplete, "
+        "and the dry-run checker's B3 handling, from which D59 (ii) was written, names the "
+        "single-session size"
+    ),
+    "one_size_with_one_session": (
+        "that size's session test (and its harness-by-session and common-share entries) is "
+        "not estimable; DR1 is read on the sessions it holds (session 1); DR5 is not evaluable "
+        "as registered, and pi_9B is shown against both M as a description only; DR2 is kept "
+        "as the registered code computes it, with a note: its X test and its pi_small bound "
+        "then come from the size with two sessions (pi_9B is the registered pi_small only when "
+        "DR1 drops 4B); P1 and P2 read the size with two sessions; each pooled estimate lists "
+        "the sizes it averages (pooled_from_sizes)"
+    ),
+    "no_size_with_two_sessions": (
+        "the delta-only report: delta with its intervals and paired t tests, the descriptive, "
+        "infrastructure and cost counts, DR1 on the sessions present and DR4; D_b, D_w, X, pi, "
+        "the X test, the session test, DR2, DR5, P1, P2 and P3 are not estimable"
+    ),
+    "all_nan": "no p-value is read from a statistic with no finite entry",
+}
 
 
 def not_estimable(reason: str) -> dict[str, str]:
@@ -247,11 +302,78 @@ def completeness(
     }
 
 
+def anchor_label(plan: Mapping[str, Any]) -> str | None:
+    """ "not externally anchored" while the anchor is unavailable (``analysis.report``'s rule:
+    no anchor runs or no anchor tasks in the plan)."""
+    A = O.frozen("analysis")
+    runs = bool((plan.get("constants") or {}).get("anchor_runs")) and bool(plan.get("anchor_tasks"))
+    return None if runs else A.NOT_ANCHORED
+
+
+def labels(comp: Mapping[str, Any], plan: Mapping[str, Any]) -> dict[str, Any]:
+    """The labels every analysis output carries (D59 (ii), section 15)."""
+    return {
+        "incomplete": INCOMPLETE if comp["incomplete"] else None,
+        "incomplete_reasons": list(comp["reasons"]),
+        "external_anchor": anchor_label(plan),
+    }
+
+
 # --------------------------------------------------------------------------- guard
 
 
 def _finite_count(values: np.ndarray) -> int:
     return int(np.isfinite(np.asarray(values, dtype=float)).sum())
+
+
+def pooled_sizes(y: np.ndarray) -> dict[str, list[str]]:
+    """For each pooled estimate of ``analysis.statistics``, the sizes whose per-size value is
+    finite, so the ones the pooled value averages (``np.nanmean`` over sizes)."""
+    E, R = O.frozen("estimators"), O.frozen("records")
+    with _quiet():
+        db, dw = E.d_between(y), E.d_within(y)
+        x = E.x_by_size(y)
+        per_size = {
+            "delta": E.delta_by_size(y),
+            "D_b": db,
+            "D_w": dw,
+            "excess": db - dw,
+            "D_b_same_block": E.d_between_same_block(y),
+            "D_b_cross_block": E.d_between_cross_block(y),
+            "X": x,
+            "X_bernoulli": E.x_bernoulli_by_size(y),
+            "pi_mean_4B_9B": E.pi_share(x, db),
+        }
+    return {
+        name: [
+            z
+            for zi, z in enumerate(R.SIZES)
+            if bool(np.isfinite(np.asarray(per_size[name], dtype=float)[..., zi]))
+        ]
+        for name in POOLED
+    }
+
+
+def pooled_note(
+    pooled: Mapping[str, Sequence[str]], comp: Mapping[str, Any], two: Sequence[str]
+) -> str:
+    single = list(comp["sizes_without_two_sessions"])
+    held = "; ".join(
+        f"{z} holds {', '.join(comp['sizes'][z]['sessions']) or 'no session'}" for z in single
+    )
+    mixed = [name for name, sizes in pooled.items() if set(sizes) & set(single)]
+    alone = [name for name, sizes in pooled.items() if list(sizes) == list(two)]
+    parts = [f"read on incomplete data ({held})"]
+    if mixed:
+        parts.append(
+            f"{', '.join(mixed)} average {', '.join(single)}'s data from the sessions it holds "
+            f"with {', '.join(two) or 'no other size'}"
+        )
+    if alone:
+        parts.append(f"{', '.join(alone)} come from {', '.join(two)} alone")
+    if "D_w" in mixed:
+        parts.append("pooled D_w is descriptive: no rule reads it alone (P1 reads the excess)")
+    return "; ".join(parts)
 
 
 def mask_block(block: Mapping[str, Any], y: np.ndarray, comp: Mapping[str, Any]) -> tuple:
@@ -305,21 +427,37 @@ def mask_block(block: Mapping[str, Any], y: np.ndarray, comp: Mapping[str, Any])
                     for z, v in zip(R.SIZES, values, strict=True)
                 ]
     delta_p = tests["delta_paired_t"]["p"]
+    drop_4b = block.get("DR1_drop_4B") is True
+    registered_pi_small_defined = "9B" in two if drop_4b else not single
+    if drop_4b:
+        pi_rule = "DR1 drops 4B, so the registered pi_small is pi_9B" + (
+            "" if "9B" in two else ", which needs 9B's two sessions and is undefined here"
+        )
+    else:
+        pi_rule = (
+            "the registered pi_small, the mean of pi_4B and pi_9B, is undefined; the value "
+            f"shown is the mean over {', '.join(two) or 'no size'}"
+        )
     if x_missing or isinstance(delta_p, dict):
         out["DR2"] = not_estimable("DR2 reads the delta paired t and the X sign-flip test")
         notes.append("DR2: not estimable")
     elif single:
         out["DR2"]["incomplete_note"] = (
-            f"read on incomplete data: the X test and the pi_small bound here come from "
-            f"{', '.join(two)} alone (the registered two-size pi_small is undefined unless DR1 "
-            f"drops 4B); the Near-equivalent branch reads that bound"
+            f"read on incomplete data as the registered code computes it: the X test reads "
+            f"{', '.join(two)} alone (two sessions), and the Near-equivalent branch reads the "
+            f"pi_small bound ({pi_rule})"
         )
     if single:
         out["pi_small_rule_note"] = (
-            f"{', '.join(single)} lacks two sessions, so pi_small (the registered mean of pi_4B "
-            f"and pi_9B) is undefined; the value shown is the mean over {', '.join(two) or 'none'}"
+            f"{', '.join(single)} lacks two sessions: {pi_rule}. DR5 is not evaluable as "
+            "registered either way (D59 (ii))"
         )
-        out["pooled_over_sizes"] = two
+        out["registered_pi_small_defined"] = registered_pi_small_defined
+        pooled = pooled_sizes(y)
+        out["pooled_from_sizes"] = {
+            "sizes": pooled,
+            "note": pooled_note(pooled, comp, two),
+        }
         out["DR5"] = {
             "outcome": DR5_NOT_EVALUABLE,
             "reason": f"{', '.join(single)} does not hold two sessions (D59 (ii))",
@@ -378,6 +516,25 @@ def mask_predictions(
         out["P5"] = not_estimable("P5 reads DR4, which needs --costs (bug B8)")
         notes.append("P5: not evaluated (no costs)")
     return out, notes
+
+
+def kept_as_registered(comp: Mapping[str, Any]) -> list[str]:
+    """The readings of interpretation 'that_size': a size whose later-session job fired DR0
+    but which still holds scored base records in both sessions keeps its readings."""
+    first = O.frozen("records").SESSIONS[0]
+    out = []
+    for job in comp["dr0_fired"]:
+        _, size, session = job.split("-")
+        if session != first and size in comp["sizes_with_two_sessions"]:
+            kept = [f"{size}'s session test"] + (["DR1"] if size == "4B" else [])
+            if not comp["sizes_without_two_sessions"]:
+                kept.append("DR5")
+            out.append(
+                f"{job} fired DR0, but {size} holds scored base records in both sessions: "
+                f"{', '.join(kept)} kept as the registered code computes them on the data "
+                "collected (interpretation 'that_size')"
+            )
+    return out
 
 
 def guard_registered(
@@ -586,7 +743,7 @@ def fractional_base_scores(records: Sequence[Mapping[str, Any]], base: Sequence[
 # --------------------------------------------------------------------------- command line
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--export", type=Path, required=True, help="export of the freeze commit")
     parser.add_argument("--records", type=Path, required=True, help="merged A1 records (a1.jsonl)")
@@ -597,7 +754,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="a job's 'rules dr0' output (one per A1 job that ran)",
     )  # fmt: skip
     parser.add_argument("--out-dir", type=Path, required=True)
-    args = parser.parse_args(argv)
+    return parser.parse_args(argv)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = parse_args(argv)
     O.use_export(args.export)
     R = O.frozen("records")
     out_dir = args.out_dir
@@ -645,6 +806,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         "fractional_base_scores": fractional_base_scores(records, plan["base"]),
         "completeness": comp,
         "label": INCOMPLETE if comp["incomplete"] else None,
+        "labels": labels(comp, plan),
+        "read": READ_NOTE,
+        "interpretation": INTERPRETATION,
     }
     if not comp["sizes_with_two_sessions"]:
         guarded = delta_only_report(records, plan, costs, comp)
@@ -663,13 +827,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         O.write_new(out_dir / "guard.json", O.dumps(guard))
         raise O.OpsError(f"the registered report failed with complete-enough data: {error}")
     if comp["incomplete"]:
-        readings.insert(0, f"every output labelled {INCOMPLETE}: {'; '.join(comp['reasons'])}")
+        readings[0:0] = [
+            f"every output labelled {INCOMPLETE}: {'; '.join(comp['reasons'])}",
+            *kept_as_registered(comp),
+        ]
     guard["readings"] = readings
     guard["guarded_report"] = {"path": "report-guarded.json", "kind": kind}
     guarded["guard"] = {
         "label": guard["label"],
+        "labels": guard["labels"],
         "completeness": comp,
         "readings": readings,
+        "interpretation": INTERPRETATION,
         "registered_report_sha256": guard["registered_report"]["sha256"],
     }
     guarded_path = O.write_new(out_dir / "report-guarded.json", O.dumps(guarded))

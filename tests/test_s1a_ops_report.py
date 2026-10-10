@@ -128,6 +128,11 @@ def test_complete_data_guarded_report_is_the_report_plus_a_guard(scenarios, tmp_
     out = wrapper(scenarios[name], tmp_path / "w")
     report = json.loads(out["report"].read_text())
     assert out["guard"]["label"] is None and out["guard"]["readings"] == []
+    assert out["guard"]["labels"] == {
+        "incomplete": None,
+        "incomplete_reasons": [],
+        "external_anchor": A.NOT_ANCHORED,
+    }
     assert "label" not in out["guarded"]
     assert strip_guard(out["guarded"]) == report
     assert out["guarded"]["guard"]["completeness"]["incomplete"] is False
@@ -262,7 +267,21 @@ def test_single_session_size(scenarios, tmp_path):
         assert isinstance(block["tests"]["session_signflip_p"][1], float)
         assert block["DR5"]["outcome"] == RR.DR5_NOT_EVALUABLE
         assert block["DR1_read_on_sessions"] == ["S1"]
-        assert block["pooled_over_sizes"] == ["9B"]
+        # each pooled estimate states the sizes it averages: D_w and delta take 4B's session 1
+        pooled = block["pooled_from_sizes"]["sizes"]
+        assert pooled["D_w"] == ["4B", "9B"] and pooled["delta"] == ["4B", "9B"]
+        for est in ("D_b", "excess", "X", "pi_mean_4B_9B", "D_b_same_block", "D_b_cross_block"):
+            assert pooled[est] == ["9B"], est
+        assert "pooled D_w is descriptive" in block["pooled_from_sizes"]["note"]
+        assert "4B holds S1" in block["pooled_from_sizes"]["note"]
+    prim = g["primary"]
+    assert prim["DR1_drop_4B"] is False and prim["registered_pi_small_defined"] is False
+    assert prim["pi_small_rule_note"].startswith("4B lacks two sessions: the registered pi_small")
+    assert "is undefined; the value shown is the mean over 9B" in prim["pi_small_rule_note"]
+    assert "the X test reads 9B alone" in prim["DR2"]["incomplete_note"]
+    # the pooled values are the registered ones, unchanged
+    rep_est, g_est = report["primary"]["estimates"], prim["estimates"]
+    assert g_est["D_w"] == rep_est["D_w"] and g_est["D_b"] == rep_est["D_b_9B"] == rep_est["D_b"]
     desc = g["primary"]["DR5"]["description_only"]
     assert set(desc["against_M"]) == {"M_SMALL", "M_9B"}
     assert {v["M"] for v in desc["against_M"].values()} == {0.13, 0.18}
@@ -271,6 +290,30 @@ def test_single_session_size(scenarios, tmp_path):
     assert g["predictions"]["P1"]["incomplete_note"] == "pooled over 9B only"
     assert g["predictions"]["P4"]["incomplete_note"] == "DR1 read on S1 only"
     assert out["guard"]["readings"][0].startswith("every output labelled incomplete")
+    guard = out["guard"]
+    assert guard["labels"]["incomplete"] == RR.INCOMPLETE
+    assert guard["labels"]["external_anchor"] == A.NOT_ANCHORED
+    assert "must not be read directly" in guard["read"]
+    assert set(guard["interpretation"]) >= {"that_size", "one_size_with_one_session"}
+    assert g["guard"]["labels"] == guard["labels"]
+
+
+def test_single_session_size_where_dr1_drops_4b(scenarios, tmp_path):
+    """4B holds session 1 only and is at the floor there: DR1 (read on S1) drops 4B, so the
+    registered pi_small is pi_9B; DR5 is still not evaluable as registered (D59 (ii))."""
+    out = wrapper(scenarios["dr0latefloor"], tmp_path / "w")
+    report = json.loads(out["report"].read_text())
+    assert report["primary"]["DR1_drop_4B"] is True
+    assert report["primary"]["pi_small_rule"] == "pi_9B (DR1 drops 4B)"
+    prim = out["guarded"]["primary"]
+    assert prim["registered_pi_small_defined"] is True
+    note = prim["pi_small_rule_note"]
+    assert "DR1 drops 4B, so the registered pi_small is pi_9B" in note and "undefined" not in note
+    assert "DR5 is not evaluable as registered" in note
+    assert "registered pi_small is pi_9B" in prim["DR2"]["incomplete_note"]
+    assert prim["DR5"]["outcome"] == RR.DR5_NOT_EVALUABLE
+    assert prim["DR1_read_on_sessions"] == ["S1"]
+    assert out["guarded"]["predictions"]["P4"]["incomplete_note"] == "DR1 read on S1 only"
 
 
 def test_dr0_on_the_last_job_labels_incomplete_but_keeps_two_sessions(scenarios, tmp_path):
@@ -289,6 +332,11 @@ def test_dr0_on_the_last_job_labels_incomplete_but_keeps_two_sessions(scenarios,
         g["primary"]["DR5"] == report["primary"]["DR5"]
     )  # evaluable: both sizes hold two sessions
     assert strip_guard(g) == report
+    readings = out["guard"]["readings"]
+    assert readings[0] == "every output labelled incomplete: DR0 fired for A1-4B-S2"
+    assert readings[1].startswith("A1-4B-S2 fired DR0, but 4B holds scored base records in both")
+    assert "4B's session test, DR1, DR5 kept as the registered code" in readings[1]
+    assert "interpretation 'that_size'" in readings[1] and len(readings) == 2
 
 
 def test_without_costs_p5_is_not_evaluated(scenarios, tmp_path):

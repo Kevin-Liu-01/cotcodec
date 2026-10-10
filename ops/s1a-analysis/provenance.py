@@ -4,7 +4,7 @@ record.
 Usage (host, first and last step of the runbook)::
 
     python3 -E -s -B provenance.py --export X --plan PLAN [--input FILE ...] \
-        [--ops-commit SHA] --out A/provenance.json
+        [--ops-commit SHA] [--guard A/report/guard.json] --out A/provenance.json
 
 Checks, each recorded with its values (exit 3 if any fails, after writing the file):
 
@@ -17,7 +17,9 @@ Checks, each recorded with its values (exit 3 if any fails, after writing the fi
 * the code of record: every file of the registration's section 20 tables, hashed in the
   export, against the table (this identifies the tree as the freeze commit's ``d5f5798``);
 * the interpreter and library versions, the operator scripts' digests (and ``--ops-commit``);
-* the SHA-256 of every ``--input`` (records, merged files, costs, receipts, outputs).
+* the SHA-256 of every ``--input`` (records, merged files, costs, receipts, outputs); an input
+  that does not exist is listed under ``inputs_missing`` (it fails no check);
+* with ``--guard``, the labels of the analysis outputs (incomplete, "not externally anchored").
 """
 
 from __future__ import annotations
@@ -94,9 +96,28 @@ def frozen_plan(export: Path, plan_path: Path) -> dict[str, Any]:
     return out
 
 
+def input_digests(inputs: Sequence[Path]) -> tuple[dict[str, Any], list[str]]:
+    """SHA-256 and size of each input; an input that does not exist (for example a glob that
+    matched nothing) is recorded as missing instead of failing the whole record."""
+    digests: dict[str, Any] = {}
+    missing: list[str] = []
+    for path in inputs:
+        if path.is_file():
+            digests[str(path)] = {"sha256": O.sha256_file(path), "bytes": path.stat().st_size}
+        else:
+            digests[str(path)] = {"missing": True}
+            missing.append(str(path))
+    return digests, missing
+
+
 def provenance(
-    export: Path, plan_path: Path, inputs: Sequence[Path], ops_commit: str | None
+    export: Path,
+    plan_path: Path,
+    inputs: Sequence[Path],
+    ops_commit: str | None,
+    guard: Path | None = None,
 ) -> dict[str, Any]:
+    digests, missing = input_digests(inputs)
     out: dict[str, Any] = {
         "schema": O.SCHEMA + "-provenance",
         "freeze_commit": O.FREEZE_COMMIT,
@@ -108,30 +129,41 @@ def provenance(
         "environment": O.versions(),
         "ops_commit": ops_commit,
         "ops_files": O.ops_files(),
-        "inputs": {
-            str(path): {"sha256": O.sha256_file(path), "bytes": path.stat().st_size}
-            for path in inputs
-        },
+        "inputs": digests,
+        "inputs_missing": missing,
     }
+    if guard is not None:
+        out["labels"] = O.labels_from_guard(guard)
     out["pass"] = all(out[k]["pass"] for k in ("registration", "frozen_plan", "code_of_record"))
     return out
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--export", type=Path, required=True)
     parser.add_argument("--plan", type=Path, required=True)
     parser.add_argument("--input", type=Path, action="append", default=[])
     parser.add_argument("--ops-commit", help="the commit the operator scripts were exported from")
+    parser.add_argument("--guard", type=Path, help="run_report.py's guard.json (its labels)")
     parser.add_argument("--out", type=Path, required=True)
-    args = parser.parse_args(argv)
+    return parser.parse_args(argv)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = parse_args(argv)
     export = O.use_export(args.export)
     if args.out.exists():
         raise O.OpsError(f"{args.out} exists; operator outputs are never overwritten")
-    out = provenance(export, args.plan, args.input, args.ops_commit)
+    out = provenance(export, args.plan, args.input, args.ops_commit, args.guard)
     O.write_new(args.out, O.dumps(out))
     print(
-        json.dumps({k: out[k]["pass"] for k in ("registration", "frozen_plan", "code_of_record")})
+        json.dumps(
+            {
+                **{k: out[k]["pass"] for k in ("registration", "frozen_plan", "code_of_record")},
+                "inputs": len(out["inputs"]),
+                "inputs_missing": out["inputs_missing"],
+            }
+        )
     )
     return 0 if out["pass"] else 3
 
