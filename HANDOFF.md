@@ -22,8 +22,8 @@
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 16 rows). Decisions taken
-on Kevin's behalf are D1-D60 in `program/decisions.md`. GPU-hours are in
-`program/state.json` (`gpu_hours_ledger`, physical hours): 7.34 in total.
+on Kevin's behalf are D1-D64 in `program/decisions.md`. GPU-hours are in
+`program/state.json` (`gpu_hours_ledger`, physical hours): 7.40 in total (S1a session 2 not yet added).
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -55,10 +55,12 @@ audit certifies "not grossly wrong", not 1% correctness
   9B pair (1051/1053) is held by Slurm until 12:50 UTC 2026-10-10; 4B follows
   once 9B's records exist; then the registered analysis (a blind dry run on
   synthetic records checks the frozen analysis code meanwhile).
-- **Backfill E4** (D19, distilled in-context write rule; D58, D60): gauntlet
-  wave 1 scored 49 (honest exit: triad 3/3 refuted, query budget overrun;
-  identification is the largest defect). D60 allows one fresh repair run;
-  below 60, or identification still the largest defect, ends E4.
+- **Backfill E4** (D19; D58, D60, D63): ended at an honest exit after two
+  gauntlet waves (49, 60); identification (the span verdict never tests
+  key dependence) survived both.
+- **Backfill C3** (answer selection x re-attempts; D64): contract and gauntlet
+  wave 1 on its Stage-0 gate (under 8 GPU-h). C5 waits for a D24 ruling (its
+  Phase 1 is about 47 GPU-h).
 - **S1a analysis** (D59): a blind dry run found 11 defects in the frozen
   analysis code (a fractional base score crashes the report; incomplete data
   crash or mislead; serial rescoring; missing section 15 items). D59 fixes
@@ -76,7 +78,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D60, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D64, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 

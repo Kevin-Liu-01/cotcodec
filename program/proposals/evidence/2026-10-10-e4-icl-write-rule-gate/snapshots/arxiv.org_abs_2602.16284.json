@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2602.16284",
+ "fetched_at": "2026-10-10T09:33:36Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41533,
+ "raw_sha256": "16c342415511cc332b6c86ae385e3cedc8dacd637593185a7c31deeb71dcc85a",
+ "raw_stored": false,
+ "extract": {
+  "title": "Fast KV Compaction via Attention Matching",
+  "authors": [
+   "Zweiger, Adam",
+   "Fu, Xinghong",
+   "Guo, Han",
+   "Kim, Yoon"
+  ],
+  "citation_date": "2026/02/18",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 18 Feb 2026 09:06:53 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 26 May 2026 20:24:41 UTC"
+   }
+  ],
+  "abstract": "Scaling language models to long contexts is often bottlenecked by the size of the key-value (KV) cache. In deployed settings, long contexts are typically managed through compaction in token space via summarization. However, summarization can be highly lossy, substantially harming downstream performance. Recent work on Cartridges has shown that it is possible to train highly compact KV caches in latent space that closely match full-context performance, but at the cost of slow and expensive end-to-end optimization. This work describes an approach for fast context compaction in latent space through Attention Matching, which constructs compact keys and values to reproduce attention outputs and preserve attention mass at a per-KV-head level. We show that this formulation naturally decomposes into simple subproblems, some of which admit efficient closed-form solutions. Within this framework, we develop a family of methods that significantly push the Pareto frontier of compaction time versus quality, achieving up to 50x compaction in seconds on some datasets with little quality loss.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

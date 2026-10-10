@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2310.19698",
+ "fetched_at": "2026-10-10T09:33:17Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42276,
+ "raw_sha256": "4d157c3e06157f7eb251b4a1ce7d16ce5d5cb104b225849e4aed4038bc4a2bd2",
+ "raw_stored": false,
+ "extract": {
+  "title": "When Do Prompting and Prefix-Tuning Work? A Theory of Capabilities and Limitations",
+  "authors": [
+   "Petrov, Aleksandar",
+   "Torr, Philip H. S.",
+   "Bibi, Adel"
+  ],
+  "citation_date": "2023/10/30",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 30 Oct 2023 16:19:34 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 9 Apr 2024 10:30:14 UTC"
+   }
+  ],
+  "abstract": "Context-based fine-tuning methods, including prompting, in-context learning, soft prompting (also known as prompt tuning), and prefix-tuning, have gained popularity due to their ability to often match the performance of full fine-tuning with a fraction of the parameters. Despite their empirical successes, there is little theoretical understanding of how these techniques influence the internal computation of the model and their expressiveness limitations. We show that despite the continuous embedding space being more expressive than the discrete token space, soft-prompting and prefix-tuning are potentially less expressive than full fine-tuning, even with the same number of learnable parameters. Concretely, context-based fine-tuning cannot change the relative attention pattern over the content and can only bias the outputs of an attention layer in a fixed direction. This suggests that while techniques like prompting, in-context learning, soft prompting, and prefix-tuning can effectively elicit skills present in the pretrained model, they may not be able to learn novel tasks that require new attention patterns.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

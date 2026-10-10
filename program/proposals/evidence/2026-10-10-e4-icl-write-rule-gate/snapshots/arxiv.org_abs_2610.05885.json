@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2610.05885",
+ "fetched_at": "2026-10-10T09:33:40Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41480,
+ "raw_sha256": "57dece4a22eca19e2ca6a3b24f95ad4890bd3efd77f0a643edc9a91b9e69fa3d",
+ "raw_stored": false,
+ "extract": {
+  "title": "The Optimization Landscape of Learning Compacted Context Models",
+  "authors": [
+   "Villeneuve, Thomas",
+   "Sandomirsky, Alex",
+   "O'Neill, Charles",
+   "Kirkby, Max",
+   "Psenka, Michael"
+  ],
+  "citation_date": "2026/10/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 5 Oct 2026 07:00:44 UTC"
+   }
+  ],
+  "abstract": "Many works approach continual learning through the lens of infinite context windows. As an agent puts more observation into context (concretely the KV cache), compacting said context is akin to direct memory manipulation, without affecting the base model's weights. Many works pose KV compaction as an optimization problem: learn a smaller set of KV vectors that matches the behavior of the full KV cache. While this preserves base model behavior, optimizing through a frozen base model results in a highly nontrivial optimization problem with a brittle and flat loss landscape. In this paper, we characterize what makes these optimization problems difficult and demonstrate that a heavily simplified Perceiver-based architecture not only matches performance of a full Perceiver transformer in continuous context compaction, but outperforms baselines on compaction utility. Results are presented on MCQ tasks across Finance, Legal, Gutenberg, and Code.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
