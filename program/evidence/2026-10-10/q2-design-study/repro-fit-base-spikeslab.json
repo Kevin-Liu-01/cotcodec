@@ -1,0 +1,24 @@
+{
+ "committed": "program/evidence/2026-10-10/q2-design-study/fit-base-spikeslab.json",
+ "differences": [],
+ "identical": true,
+ "mode": null,
+ "rerun": "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2-design/repro-fit-spikeslab.json",
+ "rerun_provenance": {
+  "argv": [
+   "/Users/kevinliu/repos/cotcodec-wt-q2-design/harness/q2_design/study.py",
+   "fit",
+   "--set",
+   "base",
+   "--harness",
+   "spike-slab",
+   "--out",
+   "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2-design/repro-fit-spikeslab.json"
+  ],
+  "git_head": "b94ffe5d1a2ebedd0595922407baf43e8937e71d",
+  "harness_dirty": true,
+  "numpy": "2.5.2",
+  "python": "3.13.14",
+  "scipy": "1.18.0"
+ }
+}
