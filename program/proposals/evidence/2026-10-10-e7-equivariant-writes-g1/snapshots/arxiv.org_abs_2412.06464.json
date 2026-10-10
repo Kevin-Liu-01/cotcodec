@@ -1,0 +1,34 @@
+{
+ "url": "https://arxiv.org/abs/2412.06464",
+ "fetched_at": "2026-10-10T21:49:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41238,
+ "raw_sha256": "d0a92ce36f5e29dabab54be7beda8e5305c921257a90625a68db7c212a7bda5e",
+ "raw_stored": false,
+ "extract": {
+  "title": "Gated Delta Networks: Improving Mamba2 with Delta Rule",
+  "authors": [
+   "Yang, Songlin",
+   "Kautz, Jan",
+   "Hatamizadeh, Ali"
+  ],
+  "citation_date": "2024/12/09",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 9 Dec 2024 13:09:04 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 5 Mar 2025 08:47:27 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Thu, 6 Mar 2025 06:57:34 UTC"
+   }
+  ],
+  "abstract": "Linear Transformers have gained attention as efficient alternatives to standard Transformers, but their performance in retrieval and long-context tasks has been limited. To address these limitations, recent work has explored two distinct mechanisms: gating for adaptive memory control and the delta update rule for precise memory modifications. We observe that these mechanisms are complementary: gating enables rapid memory erasure while the delta rule facilitates targeted updates. Building on this insight, we introduce the gated delta rule and develop a parallel training algorithm optimized for modern hardware. Our proposed architecture, Gated DeltaNet, consistently surpasses existing models like Mamba2 and DeltaNet across multiple benchmarks, including language modeling, common-sense reasoning, in-context retrieval, length extrapolation, and long-context understanding. We further enhance performance by developing hybrid architectures that combine Gated DeltaNet layers with sliding window attention or Mamba2 layers, achieving both improved training efficiency and superior task performance.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

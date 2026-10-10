@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2508.13144",
+ "fetched_at": "2026-10-10T21:49:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43803,
+ "raw_sha256": "f79e274f8817759ec03309a30f4703dd010ef8c58be378a211d34492beaa229f",
+ "raw_stored": false,
+ "extract": {
+  "title": "Signal and Noise: A Framework for Reducing Uncertainty in Language Model Evaluation",
+  "authors": [
+   "Heineman, David",
+   "Hofmann, Valentin",
+   "Magnusson, Ian",
+   "Gu, Yuling",
+   "Smith, Noah A.",
+   "Hajishirzi, Hannaneh",
+   "Lo, Kyle",
+   "Dodge, Jesse"
+  ],
+  "citation_date": "2025/08/18",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 18 Aug 2025 17:56:04 UTC"
+   }
+  ],
+  "abstract": "Developing large language models is expensive and involves making decisions with small experiments, typically by evaluating on large, multi-task evaluation suites. In this work, we analyze specific properties which make a benchmark more reliable for such decisions, and interventions to design higher-quality evaluation benchmarks. We introduce two key metrics that show differences in current benchmarks: signal, a benchmark's ability to separate better models from worse models, and noise, a benchmark's sensitivity to random variability between training steps. We demonstrate that benchmarks with a better signal-to-noise ratio are more reliable when making decisions at small scale, and those with less noise have lower scaling law prediction error. These results suggest that improving signal or noise will lead to more useful benchmarks, so we introduce three interventions designed to directly affect signal or noise. For example, we propose that switching to a metric that has better signal and noise (e.g., perplexity rather than accuracy) leads to better reliability and improved scaling law error. We also find that filtering noisy subtasks, to improve an aggregate signal-to-noise ratio, leads to more reliable multi-task evaluations. We also find that averaging the output of a model's intermediate checkpoints to reduce noise leads to consistent improvements. We conclude by recommending that those creating new benchmarks, or selecting which existing benchmarks to use, aim for high signal and low noise. We use 30 benchmarks for these experiments, and 375 open-weight language models from 60M to 32B parameters, resulting in a new, publicly available dataset of 900K evaluation benchmark results, totaling 200M instances.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

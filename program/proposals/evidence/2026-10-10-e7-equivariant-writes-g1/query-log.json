@@ -1,0 +1,2964 @@
+{
+ "schema": "e7-g1 query log v1",
+ "source_cutoff": "2026-10-10",
+ "counting_rule": "orx discover queries count against the declared 150 (as in the C3 and E4 gauntlets); OpenReview, web, GitHub, Hugging Face and curl calls and paper reads are logged and not counted",
+ "queries_against_budget": 97,
+ "queries_by_cell": {
+  "frontier": 46,
+  "kill-shot": 23,
+  "cross-domain": 24,
+  "synthesis": 4
+ },
+ "remaining_queries": 53,
+ "refuter_reserve": 30,
+ "uncounted_calls": 63,
+ "entries": [
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "recurrent state cross-lingual alignment loss [--published-after 2026-06-01]",
+   "returned_ids": [
+    "2610.01921",
+    "2609.06381",
+    "2608.23149",
+    "2608.27115",
+    "2609.15184",
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2608.23390",
+    "2610.07524",
+    "2609.19398",
+    "2609.19291",
+    "2609.23231",
+    "2607.02920",
+    "2606.26466",
+    "2610.02875",
+    "2608.11146"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q01.raw",
+   "raw_sha256": "3a3f20d206b55263adf418041ea7fb53a152f219b3416a7cbd1aa3a4adfaf916"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Gated DeltaNet sliding window attention hybrid [--published-after 2026-05-01]",
+   "returned_ids": [
+    "2605.22791",
+    "2608.28444",
+    "2609.20744",
+    "2609.14320",
+    "2610.08527",
+    "2610.10114",
+    "2608.20961",
+    "2609.04098",
+    "2609.26368",
+    "2605.16640",
+    "2610.02816",
+    "2608.30310",
+    "2609.36529",
+    "2608.12149",
+    "2608.11805"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q02.raw",
+   "raw_sha256": "6255b8093273be2fd32baa23f1bdd5a4cd28a6bf4fc5342d03af27ac69232ff4"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "equivariance loss recurrent state",
+   "returned_ids": [
+    "2608.15062",
+    "2609.33436",
+    "2609.38169",
+    "2609.38166",
+    "2608.02870",
+    "2608.12435",
+    "2609.22816",
+    "2608.27513",
+    "2609.39237",
+    "2608.31045",
+    "2609.39185",
+    "2609.23366",
+    "2609.04490",
+    "2609.03042",
+    "2608.28018"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q03.raw",
+   "raw_sha256": "9dc5a9d841a8c2ae199fe4a28e54e1cd0c01f9a2b2e1eb8754b4d1887bf329ce"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "translation-equivariant representations language model",
+   "returned_ids": [
+    "2609.35225",
+    "2609.01356",
+    "2608.03920",
+    "2607.09126",
+    "2606.19784",
+    "2606.28626",
+    "2602.15029",
+    "2607.10002",
+    "2604.19678",
+    "2604.06094",
+    "2604.08703",
+    "2602.04613",
+    "2508.15103",
+    "2512.07273",
+    "2512.08040"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q04.raw",
+   "raw_sha256": "e7da45e3b5fd1c6272eb544a6a7e21cfe8e4191eed623aff652c279a774da4c7"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Balancing Memory Pathways memory utilization hybrid language models",
+   "returned_ids": [
+    "2610.06750",
+    "2607.25380",
+    "2605.12357",
+    "2609.08682",
+    "2610.08630",
+    "2608.30508",
+    "2610.09657",
+    "2609.28256",
+    "2610.02521",
+    "2608.22869",
+    "2607.29433",
+    "2608.08961",
+    "2607.29032",
+    "2609.32344",
+    "2608.28048"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q05.raw",
+   "raw_sha256": "80702c92dd4f6d46280baea697777e83e38a21a5abdc0a04e267f3b50709f911"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "What Attention Recalls and Recurrence Controls in Hybrid Language Models",
+   "returned_ids": [
+    "2609.04434",
+    "2609.36636",
+    "2609.20751",
+    "2609.35378",
+    "2608.12149",
+    "2610.07940",
+    "2608.01651",
+    "2610.10114",
+    "2610.08527",
+    "2609.39661",
+    "2605.26099",
+    "2609.32942",
+    "2609.32114",
+    "2610.11743",
+    "2609.20744"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q06.raw",
+   "raw_sha256": "68da7417fe826b82c08f7b837d3e4bc19fc5d7542b0e5951409a4dd7345b3185"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "How Linear Attention Remembers",
+   "returned_ids": [
+    "2609.33093",
+    "2608.30376",
+    "2609.39034",
+    "2608.28444",
+    "2608.00097",
+    "2609.05336",
+    "2609.38109",
+    "2609.36529",
+    "2610.11214",
+    "2610.11251",
+    "2606.10650",
+    "2609.00420",
+    "2610.02816",
+    "2610.08578",
+    "2609.24202"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q07.raw",
+   "raw_sha256": "3986ab3b47e60e7497e799239b4c0b3cbbd351fe223f6c32d6e160b253514d3f"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Multilinguality in Hybrid Attention LLMs",
+   "returned_ids": [
+    "2609.35378",
+    "2608.28383",
+    "2610.10114",
+    "2609.26368",
+    "2608.17088",
+    "2608.30310",
+    "2609.20751",
+    "2610.08527",
+    "2608.12149",
+    "2609.32114",
+    "2608.27875",
+    "2609.33477",
+    "2606.01800",
+    "2604.07394",
+    "2609.00329"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q08.raw",
+   "raw_sha256": "f55e6a63c673aaface6fb04f238d4933d9828a5a817055f4f160c9a8adc65622"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "cross-lingual recall linear attention recurrent state [--published-after 2026-01-01]",
+   "returned_ids": [
+    "2609.36529",
+    "2609.12814",
+    "2609.33093",
+    "2609.39034",
+    "2609.38166",
+    "2607.02303",
+    "2609.35378",
+    "2606.06586",
+    "2609.23231",
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2608.15533",
+    "2610.05739",
+    "2609.20734",
+    "2608.02032",
+    "2609.27470"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q09.raw",
+   "raw_sha256": "8a6c58103969a335b7810f1beafe69bd8f6a4c0d5485ba850f6518c9ab0a5b54"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "an auxiliary loss that makes the recurrent state write of a linear attention layer for a sentence match the write for its translation, to improve cross-lingual recall in hybrid models with sliding window attention",
+   "returned_ids": [
+    "2610.06750",
+    "2608.02870",
+    "2610.08527",
+    "2609.35378",
+    "2609.17251",
+    "2610.01921",
+    "2609.15545",
+    "2607.02303",
+    "2605.26797",
+    "2604.05821",
+    "2509.24552",
+    "2510.07019",
+    "2509.25223",
+    "2512.13921",
+    "2507.17741"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q10.raw",
+   "raw_sha256": "e5887851d23088c8f15d079e38cbb8470c51f73e4ba62d146f44464e0bc2bb66"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "auxiliary training objective forcing hybrid language models to use the recurrent memory pathway instead of attention [--published-after 2026-01-01]",
+   "returned_ids": [
+    "2609.28399",
+    "2610.06750",
+    "2609.20974",
+    "2609.35378",
+    "2610.11287",
+    "2608.02870",
+    "2609.34933",
+    "2609.33436",
+    "2609.04434",
+    "2609.15545",
+    "2610.00232",
+    "2609.10287",
+    "2608.23818",
+    "2606.06479",
+    "2606.15378"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q11.raw",
+   "raw_sha256": "f6ad82bef40c139c7c743009a8e27e484abd7bb1cc77ac01c5761418ac60391d"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "cross-lingual factual recall beyond the attention window in small hybrid linear attention models trained from scratch with parallel text",
+   "returned_ids": [
+    "2609.35378",
+    "2608.27115",
+    "2608.28860",
+    "2606.24579",
+    "2606.06586",
+    "2605.31136",
+    "2603.29026",
+    "2505.14824",
+    "2510.07213",
+    "2510.10280",
+    "2508.11017",
+    "2504.10906",
+    "2507.12838",
+    "2505.22945",
+    "2508.03475"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q12.raw",
+   "raw_sha256": "d29d6aa7fbf2145adcad5eab9f91307820ff07a3179d140684333d9ecc913aff"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "translation equivariant recurrent state",
+   "returned_ids": [
+    "10.48550/arxiv.2006.10503",
+    "10.1101/2023.07.13.548946",
+    "10.1109/iccv.2019.00165",
+    "10.48550/arxiv.1812.09902",
+    "10.48550/arxiv.2203.17003",
+    "10.48550/arxiv.2406.13060",
+    "10.48550/arxiv.2104.11244",
+    "10.48550/arxiv.2006.03627",
+    "10.1038/s41534-023-00710-y",
+    "10.48550/arxiv.2002.03830",
+    "W7164251952",
+    "10.48550/arxiv.2012.02771",
+    "10.48550/arxiv.0705.2687",
+    "10.2140/agt.2017.17.1323",
+    "10.48550/arxiv.2308.10436"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q13.raw",
+   "raw_sha256": "429bcb5db87d4d9d98775932eb4c3c3d513052c0b2301c42dcb1a0f9ba856b83"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "cross-lingual alignment state space model Mamba multilingual",
+   "returned_ids": [
+    "10.63317/29b354pejyrt",
+    "10.1038/s41598-025-87574-8",
+    "10.18653/v1/2025.loresmt-1.11",
+    "10.48550/arxiv.2502.01673",
+    "10.48550/arxiv.2411.11072",
+    "10.3390/electronics15010212",
+    "10.48550/arxiv.2510.04738",
+    "10.3390/bdcc9110285",
+    "10.48550/arxiv.2501.02832",
+    "10.48550/arxiv.2604.00292",
+    "10.48550/arxiv.2609.35378",
+    "10.1016/j.patcog.2026.114858",
+    "10.48550/arxiv.2506.03473",
+    "10.3390/electronics15071395",
+    "10.1049/ipr2.70011"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q14.raw",
+   "raw_sha256": "77614dc6a3f29c3296b688d8f9115a10ea071de45a1b1df5001e2c7770734b3e"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "Gated DeltaNet hybrid sliding window attention",
+   "returned_ids": [
+    "10.48550/arxiv.2605.22791",
+    "10.5281/zenodo.21339493",
+    "10.48550/arxiv.2412.06464",
+    "10.48550/arxiv.2608.28444",
+    "10.21203/rs.3.rs-11160904/v1",
+    "10.48550/arxiv.2509.24552",
+    "10.48550/arxiv.2606.15378",
+    "10.18653/v1/2026.acl-long.176",
+    "10.48550/arxiv.2506.15545",
+    "10.48550/arxiv.2604.03444",
+    "10.48550/arxiv.2507.06457",
+    "10.48550/arxiv.2602.13215",
+    "10.48550/arxiv.2609.35378",
+    "10.18653/v1/2025.naacl-long.147",
+    "10.48550/arxiv.2502.01578"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q15.raw",
+   "raw_sha256": "954e640ba5c05ac5afa00243ee39a9657d3d9d2dc273ab642fc5f8bb8198cedd"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Gated DeltaNet multilingual",
+   "returned_ids": [
+    "2605.22791",
+    "2608.20961",
+    "2609.14320",
+    "2607.16831",
+    "2609.04098",
+    "2609.20744",
+    "2605.16640",
+    "2604.21100",
+    "2610.02816",
+    "2605.27992",
+    "2609.36529",
+    "2607.07953",
+    "2608.16104",
+    "2609.33436",
+    "2608.30320"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q16.raw",
+   "raw_sha256": "c427267f99a48f0ebfcc794632f397abc3d5c5f2fb5e851a8ef10a60137f6758"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "parallel data bitext pretraining small language model cross-lingual transfer [--published-after 2026-01-01]",
+   "returned_ids": [
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2609.19291",
+    "2609.32331",
+    "2609.30535",
+    "2608.25904",
+    "2609.14969",
+    "2610.01921",
+    "2610.07524",
+    "2608.27115",
+    "2609.39640",
+    "2609.30063",
+    "2607.29355",
+    "2609.15184",
+    "2609.05976",
+    "2609.23231"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q17.raw",
+   "raw_sha256": "0cdec56f424361a9a6e9548fd2a057966c0f969916c282c703af4de8aa54f0a4"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "multi-query associative recall cross-lingual",
+   "returned_ids": [
+    "2610.02875",
+    "2608.12820",
+    "2609.23231",
+    "2610.00606",
+    "2606.06586",
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2606.24579",
+    "2609.20875",
+    "2609.16183",
+    "2609.19291",
+    "2606.15345",
+    "2608.21714",
+    "2605.06997",
+    "2604.25716",
+    "2606.01252"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q18.raw",
+   "raw_sha256": "236ccc544aabb5f8d28e833e24b8802771035ed0de639647fe3db35834b2e56b"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "language-agnostic subspace alignment preserving language-specific output language consistency [--published-after 2026-01-01]",
+   "returned_ids": [
+    "2609.06381",
+    "2608.21487",
+    "2609.30210",
+    "2609.00576",
+    "2610.07607",
+    "2608.28205",
+    "2609.35579",
+    "2608.11345",
+    "2609.39266",
+    "2608.08447",
+    "2609.39365",
+    "2610.05306",
+    "2608.30258",
+    "2610.01828",
+    "2610.12144"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q19.raw",
+   "raw_sha256": "2d68f5e6d792f9b83e60a103627b861535a22028894234603a6e25d90cbe77c0"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "contrastive alignment objective during pretraining parallel sentences decoder-only [--published-after 2026-01-01]",
+   "returned_ids": [
+    "2610.01921",
+    "2609.12855",
+    "2608.13482",
+    "2610.04867",
+    "2609.18488",
+    "2607.24439",
+    "2610.11159",
+    "2609.01151",
+    "2608.20005",
+    "2609.31985",
+    "2609.30433",
+    "2606.24570",
+    "2610.04159",
+    "2610.07402",
+    "2609.35877"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q20.raw",
+   "raw_sha256": "e77003c17568ce79d399ae530d6ce25c5321ec46ce4b89880983575f160c3c1a"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "sliding window attention sinks linear attention hybrid small scale recall [--published-after 2026-06-01]",
+   "returned_ids": [
+    "2608.28444",
+    "2610.10114",
+    "2610.08527",
+    "2609.26368",
+    "2609.08574",
+    "2608.27875",
+    "2609.20734",
+    "2606.27791",
+    "2609.20974",
+    "2609.39034",
+    "2609.33093",
+    "2610.07940",
+    "2606.15378",
+    "2608.28383",
+    "2609.31947"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q21.raw",
+   "raw_sha256": "200b36b1cfca9ef86be45b9a84f052391d80bb77094470a0ac5a9b81d5b06284"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Mamba RWKV cross-lingual transfer multilingual recurrent [--published-after 2025-06-01]",
+   "returned_ids": [
+    "2609.05976",
+    "2610.06216",
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2609.32331",
+    "2610.01921",
+    "2609.23231",
+    "2606.21954",
+    "2609.19650",
+    "2609.19291",
+    "2608.22363",
+    "2609.39640",
+    "2607.04814",
+    "2608.26357",
+    "2606.24579",
+    "2609.04409"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q22.raw",
+   "raw_sha256": "a50c2f23c1f0d44cfbb3547670bddc32671078e79739b18dfa8dd331d8a1265a"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "cross-lingual consistency regularization translation pairs hidden states pretraining",
+   "returned_ids": [
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2609.19291",
+    "2608.28860",
+    "2610.01921",
+    "2608.27848",
+    "2608.26357",
+    "2607.11215",
+    "2609.07687",
+    "2606.06586",
+    "2608.12820",
+    "2607.29355",
+    "2606.24579",
+    "2608.11146",
+    "2608.09264",
+    "2604.17633"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q23.raw",
+   "raw_sha256": "d9601580a6e5639c0b64c7e161cf9d2e7119258232c5b823c9da26341f3ec1b6"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "training a small language model from scratch on monolingual plus parallel text to study cross-lingual knowledge transfer [--published-after 2026-01-01]",
+   "returned_ids": [
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2608.13545",
+    "2610.06161",
+    "2608.27115",
+    "2609.30535",
+    "2609.19291",
+    "2609.22633",
+    "2609.11505",
+    "2609.01341",
+    "2608.25089",
+    "2608.26576",
+    "2608.13277",
+    "2608.03505",
+    "2608.07727",
+    "2606.01800"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q24.raw",
+   "raw_sha256": "6d6b853467127b7cc2995e41a090973908c77f3f0bd990a39a83c9644775b7d1"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "linear attention recurrent state stores meaning or surface form, translation invariance of state",
+   "returned_ids": [
+    "2609.36529",
+    "2609.39661",
+    "2609.33093",
+    "2609.12814",
+    "2609.33436",
+    "2609.04434",
+    "2609.32942",
+    "2609.32102",
+    "2608.15022",
+    "2607.27539",
+    "2607.global-workspace",
+    "2605.17811",
+    "2605.09877",
+    "2606.29904",
+    "2606.08644"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q25.raw",
+   "raw_sha256": "5a3d121508f0199c9d0e764b7d657e3d36bbd28c5971b915da092f91f8a49686"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Short window attention enables long-term memorization",
+   "returned_ids": [
+    "2509.24552",
+    "2608.28444",
+    "2609.06986",
+    "2610.10114",
+    "2609.06671",
+    "2608.29579",
+    "2606.09862",
+    "2607.25233",
+    "2601.01885",
+    "2606.16178",
+    "2606.27791",
+    "2605.22142",
+    "2604.08181",
+    "2605.31075",
+    "2604.10103"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q26.raw",
+   "raw_sha256": "eeb9c281f27d98dbe9431210777f993c3cc3e53f251bc7919476067ef9b7e358"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "QED recall interference linear attention",
+   "returned_ids": [
+    "2609.33093",
+    "2609.39034",
+    "2609.20734",
+    "2607.17419",
+    "2609.36529",
+    "2608.30376",
+    "2608.13668",
+    "2607.25357",
+    "2609.16183",
+    "2610.11214",
+    "2608.28444",
+    "2609.35664",
+    "2608.17288",
+    "2607.02303",
+    "2610.05739"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q27.raw",
+   "raw_sha256": "ba398027852bb0d0089502f13ca7ab028c4954f01efe33df3c51a39d86face2e"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "auxiliary loss on recurrent state supervision linear attention [--published-after 2026-01-01]",
+   "returned_ids": [
+    "2609.38166",
+    "2609.36529",
+    "2609.39034",
+    "2609.12814",
+    "2610.04098",
+    "2607.02303",
+    "2608.15533",
+    "2608.13546",
+    "2609.27470",
+    "2609.31947",
+    "2609.33093",
+    "2609.17251",
+    "2608.30386",
+    "2610.06750",
+    "2610.11214"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q28.raw",
+   "raw_sha256": "571d353e3d3d522a647f609930ad0fe06b782860ffb1fa291fb61b629dd8bfb8"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "cross-lingual needle in a haystack long context multilingual retrieval [--published-after 2026-01-01]",
+   "returned_ids": [
+    "2609.23231",
+    "2609.38958",
+    "2610.00973",
+    "2610.02875",
+    "2610.08463",
+    "2608.21714",
+    "2608.12820",
+    "2610.06216",
+    "2609.05976",
+    "2608.27580",
+    "2608.22363",
+    "2606.24467",
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2610.01921",
+    "2608.17616"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q29.raw",
+   "raw_sha256": "26e2cef1cadb79850850e340538aa1f4cb22c58a400759d0ad81a29175b8f0ca"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "KV cache eviction multilingual languages degradation [--published-after 2026-01-01]",
+   "returned_ids": [
+    "2608.28293",
+    "2609.03430",
+    "2609.27981",
+    "2610.07643",
+    "2610.06286",
+    "2610.06996",
+    "2610.03007",
+    "2609.08131",
+    "2608.01247",
+    "2608.23296",
+    "2609.23314",
+    "2609.27470",
+    "2610.06479",
+    "2609.19969",
+    "2609.06663"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q30.raw",
+   "raw_sha256": "a63a77a86f38b2d4a46c5f49f7324d73809bb65ab454d5c665b7092a3a71ed73"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "language-invariant semantic memory in recurrent neural language models; recurrent state shared across translations [--published-after 2025-06-01]",
+   "returned_ids": [
+    "2610.07907",
+    "2610.lstm-looped-transformers-shared-kv-caches",
+    "2610.07168",
+    "2609.33436",
+    "2609.36451",
+    "2609.04434",
+    "2608.02032",
+    "2608.27115",
+    "2609.32102",
+    "2608.30376",
+    "2609.25053",
+    "2609.00515",
+    "2606.06479",
+    "2605.26797",
+    "2604.17633"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q31.raw",
+   "raw_sha256": "c9a3ac4b693310e780099ff3133cbc0f54b330cde7448ea7d1e4259e1deb94c9"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "contrastive loss delta rule write key value translation",
+   "returned_ids": [
+    "2606.26560",
+    "2606.08804",
+    "2609.20972",
+    "2609.38169",
+    "2609.07816",
+    "2609.32453",
+    "2605.22791",
+    "2608.19491",
+    "2609.31169",
+    "2605.14037",
+    "2609.31378",
+    "2607.04092",
+    "2608.22354",
+    "2605.13473",
+    "2608.28776"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q32.raw",
+   "raw_sha256": "caa11f4a0aa3d55dfa6da6c5794813e9bfd264f6f8dc66cc3a935f0c3b710a15"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "cross-lingual alignment auxiliary loss pretraining parallel data [--published-after 2025-06-01]",
+   "returned_ids": [
+    "10.48550/arxiv.2609.19291",
+    "10.1145/3764112",
+    "10.48550/arxiv.2606.26466",
+    "10.48550/arxiv.2610.01921",
+    "W7220197768",
+    "10.48550/arxiv.2511.09232",
+    "10.48550/arxiv.2602.21543",
+    "10.48550/arxiv.2510.06128",
+    "10.5821/dissertation-2117-473533",
+    "10.1371/journal.pone.0342342",
+    "10.3390/app16083741",
+    "W7119557247",
+    "10.48550/arxiv.2601.04036",
+    "10.48550/arxiv.2606.08673",
+    "W7213374707"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q33.raw",
+   "raw_sha256": "ccac292da67094713502d1a063f5d1911ad19212b4a131a8beb0c641c3e5b582"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "hybrid linear attention multilingual [--published-after 2026-01-01]",
+   "returned_ids": [
+    "10.48550/arxiv.2609.35378",
+    "10.1007/s40031-026-01343-3",
+    "10.53364/24138614_2026_42_3_11",
+    "W7216646189",
+    "10.1007/s44163-026-02425-3",
+    "10.48550/arxiv.2608.01651",
+    "10.48550/arxiv.2608.12149",
+    "10.21203/rs.3.rs-8959575/v1",
+    "10.34148/teknika.v15i2.1506",
+    "10.47852/bonviewjcce62029040",
+    "10.36227/techrxiv.177032877.70562626/v1",
+    "10.21203/rs.3.rs-10835834/v1",
+    "10.70062/jeci.v2i1.276",
+    "10.1109/icaibd69640.2026.11637224",
+    "W7220333527"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q34.raw",
+   "raw_sha256": "bde24cebed6b79f5f6ebe65a92d34be6e7b9c899647b1cf2987db5fac36891c1"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "small language model architecture comparison scaling ladder hybrid baseline 2026 MQAR state-size matched [--published-after 2026-06-01]",
+   "returned_ids": [
+    "2609.01343",
+    "2607.28611",
+    "2610.02142",
+    "2610.04403",
+    "2609.24769",
+    "2609.39172",
+    "2609.25053",
+    "2609.40316",
+    "2609.16183",
+    "2608.22613",
+    "2609.35748",
+    "2610.01172",
+    "2609.32269",
+    "2610.09287",
+    "2609.15708"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q35.raw",
+   "raw_sha256": "a3dabb5ca9860468d15ad64a246219c6820e5ce6766bf4da3881dd67f33d2237"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Why Pretraining Fails to Share Cross-Lingual Knowledge",
+   "returned_ids": [
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2609.19291",
+    "2606.24579",
+    "2608.26357",
+    "2606.06586",
+    "2608.27481",
+    "2608.09095",
+    "2607.18693",
+    "2603.18863",
+    "2605.10714",
+    "2607.21612",
+    "2604.20549",
+    "2604.25182",
+    "2605.26683",
+    "2603.17102"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q36.raw",
+   "raw_sha256": "bd47e306e4f1afd5db06c68b2625b2359aba3dc0254a7d3520d58ed8584b83fb"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "CHARTA routed writes addressable memory recurrent language model",
+   "returned_ids": [
+    "2608.12435",
+    "2607.25380",
+    "2608.07408",
+    "2609.24417",
+    "2609.17251",
+    "2609.28256",
+    "2609.33093",
+    "2608.02870",
+    "2609.23601",
+    "2609.22854",
+    "2610.08553",
+    "2609.33436",
+    "2609.35200",
+    "2608.11701",
+    "2610.07907"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q37.raw",
+   "raw_sha256": "2b79b3ce3b990a75d5f56ab84f1c6cb25cced8226a4a67fd46031bacee700b3b"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "R-Notes sliding-window LLMs remember beyond attention window",
+   "returned_ids": [
+    "2608.28444",
+    "2609.34049",
+    "2610.08745",
+    "2610.00544",
+    "2608.26070",
+    "2609.29682",
+    "2606.27791",
+    "2606.09862",
+    "2608.02870",
+    "2608.10081",
+    "2610.02201",
+    "2606.11634",
+    "2607.25233",
+    "2610.01604",
+    "2608.23087"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q38.raw",
+   "raw_sha256": "3157bb346f92bd1fc3cd558e151bce04982d76deb9b90d5e4e2abab59e328e67"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "MAPP performance-gap probing cross-lingual representation alignment",
+   "returned_ids": [
+    "2610.01921",
+    "2609.06381",
+    "2608.23149",
+    "2610.02875",
+    "2609.37883",
+    "2608.27115",
+    "2609.15184",
+    "2608.18131",
+    "2608.26357",
+    "2609.19398",
+    "2608.09095",
+    "2608.03446",
+    "2606.26466",
+    "2607.02920",
+    "2604.05821"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q39.raw",
+   "raw_sha256": "71c43b72b9c80eb0f86dd03e794ac22e59ba13c40f595e981f22c6486f6f0864"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Samba hybrid state space sliding window attention",
+   "returned_ids": [
+    "2608.28444",
+    "2610.08527",
+    "2610.10114",
+    "2609.26368",
+    "2608.02870",
+    "2609.34049",
+    "2610.08745",
+    "2606.27791",
+    "2608.27875",
+    "2610.07940",
+    "2606.09862",
+    "2609.35378",
+    "2606.15378",
+    "2406.07522",
+    "2609.29682"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q40.raw",
+   "raw_sha256": "897504a51bfae5fa2fc2ab3c131feedc5e54b7e97eab43b5bf84a2bbf27b83b7"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Mamba-3 [--published-after 2026-01-01]",
+   "returned_ids": [
+    "2609.28273",
+    "2603.15569",
+    "2610.09456",
+    "2609.18009",
+    "2609.04747",
+    "2609.32102",
+    "2610.00746",
+    "2606.15007",
+    "2609.24337",
+    "2608.29626",
+    "2609.35634",
+    "2609.07681",
+    "2609.29087",
+    "2609.27437",
+    "2604.12374"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q41.raw",
+   "raw_sha256": "6c20ae6035efe7c56ae7ff93c4239be8dcc5c56bcf321ea292bd7c7d76959fd5"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "learnable attention sinks sliding window pretraining from scratch [--published-after 2026-01-01]",
+   "returned_ids": [
+    "2608.28444",
+    "2608.02870",
+    "2609.34049",
+    "2610.10114",
+    "2609.20974",
+    "2608.26070",
+    "2606.27791",
+    "2609.26368",
+    "2606.11634",
+    "2610.08745",
+    "2609.08574",
+    "2609.33591",
+    "2610.06963",
+    "2606.09862",
+    "2609.29682"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q42.raw",
+   "raw_sha256": "3ac6c7edaf534a2f620d5c8bf9091986a0a0eab06d686addcfaefbb0b908b414"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "340M 1.3B linear attention hybrid from scratch recall benchmark 2026 [--published-after 2026-07-01]",
+   "returned_ids": [
+    "2608.12149",
+    "2610.05842",
+    "2609.33093",
+    "2607.21553",
+    "2608.28444",
+    "2609.39034",
+    "2609.36529",
+    "2609.20734",
+    "2607.02303",
+    "2610.08527",
+    "2607.17419",
+    "2610.11214",
+    "2610.10114",
+    "2609.35664",
+    "2609.31947"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q43.raw",
+   "raw_sha256": "7cd2e6b434b82d909e4d8a0ad9452deecbb969be7106828a36d1313dbba5cc2d"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "does training with bitext or code-switched data make small language models perform cross-lingual in-context retrieval [--published-after 2025-06-01]",
+   "returned_ids": [
+    "2610.06161",
+    "2610.01139",
+    "2609.30535",
+    "2610.12144",
+    "2609.37121",
+    "2609.01341",
+    "2608.26576",
+    "2607.16117",
+    "2605.29414",
+    "2606.18033",
+    "2606.17820",
+    "2603.29552",
+    "2604.07067",
+    "2603.29026",
+    "2603.12906"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q44.raw",
+   "raw_sha256": "b685f8a9f68daca6240c27bfc1183dc8868486b2a816793320e14a4151a2b2d5"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "translation pairs same prefix hidden state difference contrastive [--published-after 2025-06-01]",
+   "returned_ids": [
+    "2609.05799",
+    "2610.08527",
+    "2607.13158",
+    "2607.21556",
+    "2608.20732",
+    "2609.29775",
+    "2608.25523",
+    "2608.26070",
+    "2609.31378",
+    "2608.28776",
+    "2608.09766",
+    "2608.21928",
+    "2608.13317",
+    "2608.24300",
+    "2608.04330"
+   ],
+   "counted": true,
+   "raw_output": "e7-frontier/q45.raw",
+   "raw_sha256": "4be7b1f08b84d9429722f5006fa264584795e1510e22535ebd41ee5fa4b35c8c"
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "Balancing Memory Pathways hybrid language models auxiliary loss recurrent",
+   "returned_ids": [],
+   "counted": true,
+   "raw_output": "e7-frontier/q46.raw",
+   "raw_sha256": "a54a70057d024e43cf2d9fbe8bb03bc6826141e5e4365470378a5fd20705657d"
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "Gated DeltaNet sliding window",
+   "returned_ids": [
+    "xNfvKKom80",
+    "q4OWIoJHTI",
+    "DmpZZAl5FS",
+    "7fTS2tdloK",
+    "V09uO70ouz"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "Gated DeltaNet multilingual",
+   "returned_ids": [
+    "xNfvKKom80",
+    "q4OWIoJHTI",
+    "jYHHPWZOhr",
+    "DmpZZAl5FS",
+    "2RuXSrvuem",
+    "UC6YiTOeKb",
+    "9LUInzhKZc",
+    "q4RabT4YYh",
+    "up0Xp7sa3S",
+    "fpzI9annjm"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "cross-lingual recurrent state",
+   "returned_ids": [
+    "wOCO2Ie6gj"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "cross-lingual alignment linear attention",
+   "returned_ids": [
+    "67SF8nq4EN",
+    "wOCO2Ie6gj",
+    "Nol0BTGPR3"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "cross-lingual knowledge transfer pretraining small",
+   "returned_ids": [
+    "A4XoBLOXvg",
+    "QV2MyZwasT"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "cross-lingual recall hybrid",
+   "returned_ids": [
+    "oG4kH2QHsN"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "equivariance loss language model translation",
+   "returned_ids": [
+    "cANYgbA6bb",
+    "irvKu10t1K",
+    "q6hla7ymBp",
+    "BC3jb6452Y"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "hybrid linear attention cross-lingual",
+   "returned_ids": [
+    "xT5agIyCVG"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "language-agnostic state space",
+   "returned_ids": [
+    "HY9c8l9kbS"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "multilingual linear attention",
+   "returned_ids": [
+    "dJCS3RC5fP",
+    "J8CZ0KH6k3",
+    "7v4LREwPhX",
+    "RH7Ft0pVDP",
+    "BfIYz9e9Rg"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "multilingual recurrent state",
+   "returned_ids": [
+    "utN1p2r5r2",
+    "GiIIzJYfni",
+    "8zKTyPRdHc",
+    "7tNeBpmmO7",
+    "uo5OpAXPn0",
+    "WaV17GnVpt",
+    "oHl3l7AF16"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "parallel data pretraining cross-lingual alignment loss",
+   "returned_ids": [
+    "b5y9sVqyZx",
+    "899gXLVCmV",
+    "67SF8nq4EN",
+    "A4XoBLOXvg",
+    "ZtrYWFZwtZ"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "recurrent memory pathway auxiliary loss",
+   "returned_ids": [
+    "nIDJ2pPPOB",
+    "ESavKEyHYP",
+    "gQ4pNGm710",
+    "2PTsFCayN8",
+    "QvfwNCiyPg",
+    "LlW5xyt4qO",
+    "d4PXPZ0zuC"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "sliding window attention linear recurrent hybrid recall",
+   "returned_ids": [
+    "V09uO70ouz",
+    "7fTS2tdloK",
+    "i4ij7UpZKM",
+    "nyJy6R348F",
+    "iyHrF9jVNT",
+    "OyJTMauXIQ",
+    "HdZogiR5K1"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "translation equivariant",
+   "returned_ids": [],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search (2026+ ids)",
+   "query": "translation invariant representation recurrent",
+   "returned_ids": [
+    "NfhVTi2G4a",
+    "GbCrfJsEWK"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "WebSearch",
+   "query": "openreview 2026 cross-lingual alignment recurrent state linear attention hybrid",
+   "returned_ids": [
+    "arxiv 2507.06457",
+    "arxiv 2404.06228",
+    "arxiv 2603.18863"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "WebSearch",
+   "query": "aclanthology 2026 multilingual state space model Mamba cross-lingual transfer recurrent",
+   "returned_ids": [
+    "arxiv 2510.18684",
+    "2024.wmt-1.111"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "WebSearch",
+   "query": "site:aclanthology.org 2026 cross-lingual alignment recurrent hybrid linear attention multilingual pretraining parallel data",
+   "returned_ids": [
+    "2026.acl-long.1706",
+    "arxiv 2603.29026"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx paper --full (read before delta rows)",
+   "query": "closest priors and frontier papers",
+   "returned_ids": [
+    "2610.06750",
+    "2609.04434",
+    "2609.33093",
+    "2609.35378",
+    "2610.01921",
+    "2609.32942",
+    "2610.10114",
+    "2608.28444",
+    "2509.24552",
+    "2609.06381",
+    "2609.19291",
+    "2609.30535",
+    "2609.16183",
+    "2609.32102",
+    "2606.15378",
+    "2610.08527",
+    "2608.26576",
+    "2603.29026",
+    "2604.17633",
+    "2609.15545",
+    "2608.13668",
+    "2608.12435",
+    "2605.22791",
+    "2608.30320",
+    "2610.04098",
+    "2605.26683",
+    "2603.18863",
+    "2610.01172",
+    "2609.25053",
+    "2606.06586",
+    "2412.06464",
+    "2609.34049",
+    "2609.20734",
+    "2608.02870",
+    "2609.07681"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "curl export.arxiv.org/abs/<id>[v2|v3] (version check)",
+   "query": "version history of dossier and legacy priors",
+   "returned_ids": [
+    "2610.06750:v1",
+    "2609.04434:v1",
+    "2609.33093:v1",
+    "2609.35378:v1",
+    "2610.01921:v2(2026-10-02)",
+    "2608.28444:v2(2026-10-04)",
+    "2605.22791:v1",
+    "2605.12770:v4",
+    "2608.27115:v1",
+    "2608.13668:v1",
+    "2608.12435:v1",
+    "2608.30310:v1",
+    "2604.03444:v4",
+    "2603.29026:v1",
+    "2609.06381:v1",
+    "2609.19291:v1",
+    "2509.24552:v3",
+    "2609.34049:v1",
+    "2606.15378:v1",
+    "2609.16183:v1",
+    "2412.06464:v3"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "GitHub REST API (repo metadata)",
+   "query": "kirillTerra/split-prefill; amy-hyunji/Balancing-Memory-Pathways",
+   "returned_ids": [
+    "split-prefill@22de30d1 MIT pushed 2026-08-31",
+    "Balancing-Memory-Pathways@c28023e5 no license pushed 2026-10-06"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "frontier",
+   "tool": "WebFetch",
+   "query": "https://aclanthology.org/people/jiandong-shao/unverified/",
+   "returned_ids": [
+    "2026.acl-long.1706"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "cross-lingual alignment recurrent state Gated DeltaNet",
+   "returned_ids": [
+    "2605.22791",
+    "2608.20961",
+    "2609.04098",
+    "2609.33436",
+    "2610.01921",
+    "2609.14320",
+    "2608.15062",
+    "2609.36529",
+    "2609.38166",
+    "2607.16831",
+    "2609.25053",
+    "2609.06381",
+    "2607.07953",
+    "2608.18230",
+    "2608.23149"
+   ],
+   "raw_output": "e7kill/q01.txt",
+   "raw_sha256": "08436549c5ac6519ab2a1ba53e572912e09916a635c66a55b1fc268a1fe95342",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "translation contrastive loss linear attention state",
+   "returned_ids": [
+    "2609.31378",
+    "2609.39034",
+    "2609.31169",
+    "2609.34902",
+    "2609.28117",
+    "2610.01403",
+    "2606.10650",
+    "2608.30386",
+    "2608.00235",
+    "2608.28776",
+    "2606.01482",
+    "2607.09405",
+    "2604.23323",
+    "2606.23879",
+    "2606.04280"
+   ],
+   "raw_output": "e7kill/q02.txt",
+   "raw_sha256": "910b370f65bbf79ded318409887ea5e24df856f58d4504d09a6e1ea8d80e28d5",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "Balancing Memory Pathways hybrid",
+   "returned_ids": [
+    "2610.06750",
+    "2610.09414",
+    "2610.10071",
+    "2609.08682",
+    "2610.09657",
+    "2607.25380",
+    "2607.29070",
+    "2609.32344",
+    "2608.22613",
+    "2609.18604"
+   ],
+   "raw_output": "e7kill/q03.txt",
+   "raw_sha256": "3bc402eac373c0a55c1cee0d465fe2e9ca8b0347331c9eb1f0091119ce531f15",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "What Attention Recalls and Recurrence Controls",
+   "returned_ids": [
+    "2609.04434",
+    "2609.36636",
+    "2610.11743",
+    "2609.39082",
+    "2609.12531",
+    "2610.00373",
+    "2609.39034",
+    "2609.39892",
+    "2608.18399",
+    "2609.35378"
+   ],
+   "raw_output": "e7kill/q04.txt",
+   "raw_sha256": "684e407c0f80034765098e096f854fca60e69cb0a6fef5a4f24427d31fce5b68",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "How Linear Attention Remembers",
+   "returned_ids": [
+    "2609.33093",
+    "2608.30376",
+    "2609.39034",
+    "2608.28444",
+    "2608.00097",
+    "2609.05336",
+    "2609.38109",
+    "2609.36529",
+    "2610.11214",
+    "2610.11251"
+   ],
+   "raw_output": "e7kill/q05.txt",
+   "raw_sha256": "d1c723aee0945cd00fd37e1d0d9903d52635ed5fd193be3250f7f1bc4d061a52",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "Multilinguality in Hybrid Attention",
+   "returned_ids": [
+    "2609.35378",
+    "2608.17088",
+    "2609.26368",
+    "2609.20751",
+    "2610.10114",
+    "2610.08527",
+    "2609.00329",
+    "2608.27875",
+    "2607.21553",
+    "2609.32114"
+   ],
+   "raw_output": "e7kill/q06.txt",
+   "raw_sha256": "4dfc7773dfb24fa6e3d842064c3e14391f6f3fda6597ccbbc96dc68cb2bcf59b",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover embedding",
+   "query": "Train a hybrid language model with an auxiliary loss that makes the recurrent state update written for a sentence match the update written for its translation, to improve cross-lingual recall when attention cannot reach the fact",
+   "returned_ids": [
+    "2610.06750",
+    "2610.01921",
+    "2609.04434",
+    "2609.15545",
+    "2609.25053",
+    "2606.20936",
+    "2604.05821",
+    "2603.29026",
+    "2603.04678",
+    "2601.04768",
+    "2510.10280",
+    "2410.14815",
+    "2408.10536",
+    "2407.00454",
+    "2007.15072"
+   ],
+   "raw_output": "e7kill/q07.txt",
+   "raw_sha256": "8c46153b3f592357477c14281adb7c602d41c6c1e578d0977b9d29a559a59630",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover embedding",
+   "query": "Small hybrid model with sliding window attention and linear recurrent layers trained from scratch evaluated on cross-lingual associative recall beyond the attention window",
+   "returned_ids": [
+    "2609.33093",
+    "2610.08527",
+    "2610.11743",
+    "2609.35378",
+    "2609.04434",
+    "2609.15545",
+    "2610.00232",
+    "2608.30376",
+    "2609.10287",
+    "2607.02303",
+    "2608.02347",
+    "2606.15378",
+    "2606.25156",
+    "2606.20936",
+    "2605.26797"
+   ],
+   "raw_output": "e7kill/q08.txt",
+   "raw_sha256": "0b1f559bb1b56c9c246a7bff481b8779d8f51f190fac4a52241120ec5f322d1b",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover openalex",
+   "query": "cross-lingual associative recall state space model",
+   "returned_ids": [
+    "10.17863/cam.30462",
+    "10.1613/jair.1.11640",
+    "10.18653/v1/2020.acl-main.747",
+    "10.3115/1687878.1687913",
+    "10.48550/arxiv.1809.05053",
+    "10.1613/jair.2863",
+    "10.18653/v1/e17-1028",
+    "10.18653/v1/d19-1451",
+    "10.1609/aaai.v38i6.28376",
+    "10.1109/access.2020.2999568",
+    "10.18653/v1/2021.naacl-main.285",
+    "10.18653/v1/d17-1270",
+    "W1780387844",
+    "10.48550/arxiv.2312.08984",
+    "10.63317/573eyv53mcbd"
+   ],
+   "raw_output": "e7kill/q09.txt",
+   "raw_sha256": "64ff9c67a84cdb043fedfeeb7b6192da56fd7ca2257290890c44bafe884b1da2",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "short window attention enables long-term memorization",
+   "returned_ids": [
+    "2509.24552",
+    "2608.28444",
+    "2609.06986",
+    "2610.10114",
+    "2609.06671",
+    "2608.29579",
+    "2606.09862",
+    "2607.25233",
+    "2601.01885",
+    "2606.16178"
+   ],
+   "raw_output": "e7kill/q10.txt",
+   "raw_sha256": "89443306894c2a3fed101cf2cd2eabfccb2539405f232c0c41577b29eb9670af",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "multilingual associative recall MQAR",
+   "returned_ids": [
+    "2609.16183",
+    "2607.17419",
+    "2609.07681",
+    "2605.06997",
+    "2609.31486",
+    "2605.31163",
+    "2609.35948",
+    "2608.30376",
+    "2609.01914",
+    "2312.04927",
+    "2508.19029",
+    "2605.11196",
+    "2506.11891",
+    "2608.20570",
+    "2605.10795"
+   ],
+   "raw_output": "e7kill/q11.txt",
+   "raw_sha256": "9671bb60988f588282e0ad27734df017b4a8d1077703d132dd13823972e1be2f",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "cross-lingual needle in a haystack",
+   "returned_ids": [
+    "2610.00973",
+    "2610.00348",
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2610.01921",
+    "2609.23231",
+    "2609.19291",
+    "2606.24579",
+    "2607.11215",
+    "2604.20347",
+    "2606.21954",
+    "2607.01161",
+    "2603.29187",
+    "2604.05821",
+    "2606.19346",
+    "2510.09770"
+   ],
+   "raw_output": "e7kill/q12.txt",
+   "raw_sha256": "63e0773c4d5eebaaf4abd9257604a53140e978e5d03f9951dc53a426f80de9dd",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover embedding",
+   "query": "Pretraining small multilingual language models from scratch with parallel bitext data: when does cross-lingual transfer and alignment emerge as a function of model size and training tokens",
+   "returned_ids": [
+    "2608.27115",
+    "2609.30535",
+    "2609.19291",
+    "2604.17633",
+    "2603.29026",
+    "2602.21543",
+    "2601.00364",
+    "2509.18750",
+    "2510.06128",
+    "2508.11017",
+    "2503.03962",
+    "2505.24834",
+    "2406.13229",
+    "2407.16222",
+    "2311.09205"
+   ],
+   "raw_output": "e7kill/q13.txt",
+   "raw_sha256": "4452cb0f7eb06c54aecd6470432624944ac2aa3ff380d0aa92caf29d78648645",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "sliding window size hybrid linear attention recurrent memory underused training window",
+   "returned_ids": [
+    "2608.28444",
+    "2608.02870",
+    "2609.34049",
+    "2610.08745",
+    "2610.10114",
+    "2610.08527",
+    "2609.38166",
+    "2609.recurrent-looped-transformer",
+    "2609.36529",
+    "2606.27791",
+    "2606.09862",
+    "2608.26070",
+    "2610.02816",
+    "2607.02303",
+    "2610.00544"
+   ],
+   "raw_output": "e7kill/q14.txt",
+   "raw_sha256": "2ca6434d3224fc058086cd3c251775dd8bf96ccca995795707a4a55f7e5c4e60",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover embedding --published-after 2026-09-01",
+   "query": "Auxiliary semantic alignment objective on the recurrent state of linear attention or state space models across translations",
+   "returned_ids": [
+    "2610.lstm-looped-transformers-shared-kv-caches",
+    "2609.07816",
+    "2609.33093",
+    "2609.12531",
+    "2609.12814",
+    "2610.06750",
+    "2609.35378",
+    "2610.11743",
+    "2610.09058",
+    "2609.28212",
+    "2609.24821",
+    "2610.09493",
+    "2609.17251",
+    "2610.05700",
+    "2609.09157"
+   ],
+   "raw_output": "e7kill/q15.txt",
+   "raw_sha256": "db60aaf992bb8404c20a5cd2deec34d342df788f5a7ada2fd6253c6328e3ff62",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "Mamba multilingual cross-lingual transfer state space",
+   "returned_ids": [
+    "2609.05976",
+    "2610.06216",
+    "2609.23231",
+    "2609.32331",
+    "2606.21954",
+    "2608.22363",
+    "2607.04814",
+    "2606.24579",
+    "2604.20549",
+    "2605.10714",
+    "2604.23589",
+    "2604.10590",
+    "2604.26619",
+    "2603.16606",
+    "2603.08231"
+   ],
+   "raw_output": "e7kill/q16.txt",
+   "raw_sha256": "1cd6832ae77e6f8b560e6e6961f418f0aa4df726ca230da880dbc18620df6780",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover openalex",
+   "query": "cross-lingual in-context retrieval parallel data pretraining small language models",
+   "returned_ids": [
+    "10.18653/v1/2020.acl-main.536",
+    "10.1145/3637870",
+    "10.1007/s10791-022-09406-x",
+    "10.18653/v1/2023.findings-acl.528",
+    "10.17863/cam.30462",
+    "10.18653/v1/2025.findings-emnlp.612",
+    "10.48550/arxiv.2206.03281",
+    "10.24963/ijcai.2022/612",
+    "10.1613/jair.1.11640",
+    "10.48550/arxiv.2212.09651",
+    "10.18653/v1/2020.emnlp-main.479",
+    "10.18653/v1/2020.acl-main.692",
+    "10.18653/v1/2021.naacl-main.46",
+    "10.18653/v1/2020.emnlp-main.586",
+    "10.18653/v1/2023.findings-acl.128"
+   ],
+   "raw_output": "e7kill/q17.txt",
+   "raw_sha256": "3f0c77f63868f4f0726259410cf33bb516ed4fbe1e7b4c5ec085307c11f3388d",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword --published-after 2026-06-01",
+   "query": "language-agnostic recurrent state contrastive translation pairs",
+   "returned_ids": [
+    "2608.09766",
+    "2609.38426",
+    "2609.21383",
+    "2609.recurrent-looped-transformer",
+    "2607.18618",
+    "2607.11215",
+    "2608.15062",
+    "2610.10918",
+    "2609.28212",
+    "2609.26347",
+    "2610.11371",
+    "2609.31378",
+    "2609.17251",
+    "2608.28776",
+    "2609.06381"
+   ],
+   "raw_output": "e7kill/q18.txt",
+   "raw_sha256": "6d29d4c02ed22e1336ea2490ef6c92d59909eea9a700f6f72a06e3e264b69040",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover embedding",
+   "query": "Contrastive cross-lingual alignment applied to the hidden state of a Mamba or state space model during pretraining with parallel data",
+   "returned_ids": [
+    "2610.01921",
+    "2608.27115",
+    "2608.26576",
+    "2604.14191",
+    "2603.29026",
+    "2602.21543",
+    "2601.10310",
+    "2509.05291",
+    "2508.17948",
+    "2505.14045",
+    "2505.19606",
+    "2407.16222",
+    "2406.13229",
+    "2409.17326",
+    "2311.08089"
+   ],
+   "raw_output": "e7kill/q19.txt",
+   "raw_sha256": "261532e6362e54852828714ef183a44fe099e34580d770e63a29533cb3a31ec4",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword --published-after 2026-01-01",
+   "query": "cross-lingual recall linear attention hybrid",
+   "returned_ids": [
+    "2609.35378",
+    "2606.06586",
+    "2609.20734",
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2609.33093",
+    "2609.23231",
+    "2609.26368",
+    "2609.39034",
+    "2610.01921",
+    "2607.21553",
+    "2610.05739",
+    "2606.24579",
+    "2609.19291",
+    "2609.15184",
+    "2608.12820"
+   ],
+   "raw_output": "e7kill/q20.txt",
+   "raw_sha256": "4786b76231b46eeb3016b173891502da71737e7d126cfe08cdd441b7a89db33b",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover openalex",
+   "query": "translation invariant memory state recurrent network contrastive alignment",
+   "returned_ids": [
+    "10.48550/arxiv.1211.3711",
+    "10.48550/arxiv.2109.06474",
+    "10.48550/arxiv.1707.06286",
+    "10.1007/s42521-020-00019-x",
+    "10.48550/arxiv.1803.04831",
+    "10.48550/arxiv.2209.10926",
+    "10.7936/77mv-mt57",
+    "10.48550/arxiv.2606.06479",
+    "10.1109/access.2020.2990572",
+    "10.1145/3550454.3555509",
+    "10.1109/tcsvt.2024.3493966",
+    "10.1007/s11263-022-01703-8",
+    "10.48550/arxiv.1910.06251",
+    "10.1103/843n-yshj",
+    "10.48550/arxiv.1711.11053"
+   ],
+   "raw_output": "e7kill/q21.txt",
+   "raw_sha256": "b05a6ebe3e86e0359500d33b2c8743cd7c895633ec11a427adc03ff50cf45940",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "sliding window attention receptive field grows with layers multi-hop beyond window",
+   "returned_ids": [
+    "2608.28444",
+    "2609.34049",
+    "2609.26368",
+    "2610.08745",
+    "2606.09862",
+    "2610.00544",
+    "2608.02870",
+    "2606.27791",
+    "2610.02201",
+    "2607.25233",
+    "2609.29682",
+    "2608.10081",
+    "2608.23087",
+    "2509.24552",
+    "2607.18990"
+   ],
+   "raw_output": "e7kill/q22.txt",
+   "raw_sha256": "e589ac05e6c635194257ac88a7f40d158b09ec12f86b183e3bea38990c33c31b",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover embedding",
+   "query": "In-context cross-lingual key-value retrieval where facts are stated in one language and queried in another, evaluated in small language models trained from scratch",
+   "returned_ids": [
+    "2609.01341",
+    "2601.12555",
+    "2511.14774",
+    "2505.14824",
+    "2508.11017",
+    "2502.21228",
+    "2504.10906",
+    "2507.12838",
+    "2505.22945",
+    "2505.13141",
+    "2503.09011",
+    "2508.03475",
+    "2505.22118",
+    "2406.15625",
+    "2410.14387"
+   ],
+   "raw_output": "e7kill/q23.txt",
+   "raw_sha256": "ba7725411b64bf54643cb33da8576f29bb6e769b477d699380f7328ff0f67730",
+   "counted": true
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2504.10906",
+   "counted": false,
+   "raw_output": "e7kill/p_2504.10906.txt",
+   "raw_sha256": "200686c0e2b53106232f3203239771c47eb8eea956278842a1152a4aa837e06e"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2509.24552",
+   "counted": false,
+   "raw_output": "e7kill/p_2509.24552.txt",
+   "raw_sha256": "2a95a18934ff1f7e9e96f1ee7985c642542b763a774c18e803f73e8fc16e8a16"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2603.29026",
+   "counted": false,
+   "raw_output": "e7kill/p_2603.29026.txt",
+   "raw_sha256": "8dc56ec7bf23cdb3f6c2d12a1029c56d4924373a20042a2150e076204b6044c0"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2604.17633",
+   "counted": false,
+   "raw_output": "e7kill/p_2604.17633.txt",
+   "raw_sha256": "374bacbaaaf6dbe8b99b2bb79b55fadb52bb241c70ac0ab2c03e80d98e42e5e7"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2608.28444",
+   "counted": false,
+   "raw_output": "e7kill/p_2608.28444.txt",
+   "raw_sha256": "19868369ac79a96016f626409f02e4f360304a4bf94b3873b87307736f9a9250"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2609.04434",
+   "counted": false,
+   "raw_output": "e7kill/p_2609.04434.txt",
+   "raw_sha256": "a9f0900942bef1b64d2d4c4fca9e176bdaf96bf146f00a91ad77fddb3cb762c4"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2609.16183",
+   "counted": false,
+   "raw_output": "e7kill/p_2609.16183.txt",
+   "raw_sha256": "46463d0816a989afcdf5f14d9a57767ab58b2f1c75097f829fb5056125e5976b"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2609.19291",
+   "counted": false,
+   "raw_output": "e7kill/p_2609.19291.txt",
+   "raw_sha256": "92ff365fa88eb54f652b2c25e97316ceafc76fa268074da24584617bcd8c0337"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2609.33093",
+   "counted": false,
+   "raw_output": "e7kill/p_2609.33093.txt",
+   "raw_sha256": "77d90ff65f216f0b3aecca7b72e3ff3f0cf70de80e97c0544e11310d1b64bd6c"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2609.34049",
+   "counted": false,
+   "raw_output": "e7kill/p_2609.34049.txt",
+   "raw_sha256": "ede693d34842a44a72d95610250444816bb00cb4c190d8393f18d0de46dc24ae"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2609.35378",
+   "counted": false,
+   "raw_output": "e7kill/p_2609.35378.txt",
+   "raw_sha256": "83960980043845be09e6dcec1182b52d7cbf589d651bd8b009189ffefdf1a9ec"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2610.01921",
+   "counted": false,
+   "raw_output": "e7kill/p_2610.01921.txt",
+   "raw_sha256": "2c11bb54a515c60fc9f01b0e1607102b5d49f8e25c4e115615493120d50332fc"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx paper --full",
+   "query": "2610.06750",
+   "counted": false,
+   "raw_output": "e7kill/p_2610.06750.txt",
+   "raw_sha256": "783856b697350341531803dfb66c75cff635ecf55f12dac93a538350bbd3880f"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "OpenReview api2 notes/search",
+   "query": "cross-lingual recurrent state alignment; multilingual linear attention recurrent state hybrid; translation equivariant state writes",
+   "counted": false,
+   "note": "three searches; outputs not saved to files; returned ids recorded in the cell report"
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "WebSearch (ACL Anthology)",
+   "query": "site:aclanthology.org cross-lingual alignment state space model Mamba recurrent hidden state translation",
+   "counted": false
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "translation equivariant recurrent state write",
+   "returned_ids": [
+    "2609.04490",
+    "2609.33051",
+    "2608.15533",
+    "2607.18618",
+    "2609.38166",
+    "2609.33436",
+    "2609.38169",
+    "2608.12435",
+    "2603.02193",
+    "2609.32805"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q01.out",
+   "raw_sha256": "f47a615f0930c0c6d18450f76295a94b3f96160f4101027b222ca01ed4c7940e"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "soft equivariance regularization loss learned equivariance",
+   "returned_ids": [
+    "2607.25988",
+    "2603.26657",
+    "2603.06693",
+    "2608.31045",
+    "2609.08381",
+    "2609.03042",
+    "2607.26850",
+    "2608.28018",
+    "2606.26273",
+    "2609.16897"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q02.out",
+   "raw_sha256": "ed75b27a46a192f0d37b4c8fc0be6d38077e25ce77fbfa0462ead1bd0d536cc9"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "What Should Not Be Contrastive in Contrastive Learning",
+   "returned_ids": [
+    "2608.01560",
+    "2607.17673",
+    "2606.04280",
+    "2605.16456",
+    "2008.05659",
+    "2603.26969",
+    "2002.05709",
+    "2206.07568",
+    "2503.14963",
+    "2409.07402"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q03.out",
+   "raw_sha256": "17f2d79ad986a130303303b3a6722bb74c9a3910a87dc590bcf9a147cfa610f5"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "The Lie Derivative for Measuring Learned Equivariance",
+   "returned_ids": [
+    "2210.02984",
+    "2609.08381",
+    "2608.28018",
+    "2610.05196",
+    "2608.31045",
+    "2606.20547",
+    "2607.26850",
+    "2609.03042",
+    "2607.07360",
+    "2607.25988"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q04.out",
+   "raw_sha256": "eacb19cfd41612c485a4b8746823581410dd6fb4a43889c9baac0a6648c0b82a"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "Similarity of Neural Network Representations Revisited",
+   "returned_ids": [
+    "1905.00414",
+    "2610.00848",
+    "2609.38998",
+    "2603.28764",
+    "2604.00208",
+    "2608.01039",
+    "2607.22522",
+    "2601.17093",
+    "2606.30384",
+    "2605.05238"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q05.out",
+   "raw_sha256": "d6e1d8afe4aa7b11cf126bc850f95983cc66c119146e1993e1ec0ab72d6e7eaa"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "cross-lingual CKA representation similarity multilingual language models",
+   "returned_ids": [
+    "2608.27115",
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2609.06381",
+    "2610.01921",
+    "2609.04409",
+    "2609.23231",
+    "2609.19291",
+    "2609.19650",
+    "2608.22363",
+    "2608.26357"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q06.out",
+   "raw_sha256": "3d9e8f079515c9db300ff9382503472f160dfc22be788de031dd0cf3cde41ba1"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "In-context Learning and Induction Heads phase change",
+   "returned_ids": [
+    "2610.09124",
+    "2607.02800",
+    "2604.01094",
+    "2607.15893",
+    "2209.11895",
+    "2610.02713",
+    "2604.06356",
+    "2505.16694",
+    "2609.34650",
+    "2605.27243"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q07.out",
+   "raw_sha256": "e2d9b2990693af8c0f71e4ca05e9dfdf7096bfb2e34b1a1218dc7a29851e9ba4"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "Are Emergent Abilities of Large Language Models a Mirage",
+   "returned_ids": [
+    "2609.21554",
+    "2304.15004",
+    "2609.21755",
+    "2206.07682",
+    "2606.13870",
+    "2607.09053",
+    "2608.18767",
+    "2603.21687",
+    "2503.05788",
+    "2606.00435"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q08.out",
+   "raw_sha256": "bc704d4013e6e4c679a9b63bb2276f92e354bbfbb67fe0929ca801416673207c"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "Scaling Laws and Compute-Optimal Training Beyond Fixed Training Durations",
+   "returned_ids": [
+    "2610.06387",
+    "2610.05649",
+    "2609.40316",
+    "2609.01343",
+    "2608.17286",
+    "2606.05610",
+    "2607.25271",
+    "2607.22043",
+    "2609.08690",
+    "2609.07868"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q09.out",
+   "raw_sha256": "b788b16c00b9d96da34fd57ee6c45ec4f9bfc8c87bd97f40995aa5e5c7797756"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "Can recurrent neural networks warp time chrono initialization",
+   "returned_ids": [
+    "2609.24685",
+    "2610.03378",
+    "2606.14975",
+    "2608.09690",
+    "2602.03527",
+    "2604.02474",
+    "2605.10650",
+    "1804.11188",
+    "2605.22069",
+    "2605.27290"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q10.out",
+   "raw_sha256": "5bb0025c7d8bafbbc00d846fe5b058eb8e47008b48a8570140603677e5421365"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "Analyzing the Mono- and Cross-Lingual Pretraining Dynamics of Multilingual Language Models",
+   "returned_ids": [
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2609.19291",
+    "2608.25904",
+    "2608.22363",
+    "2609.23231",
+    "2608.27115",
+    "2609.04409",
+    "2609.05976",
+    "2607.11215",
+    "2608.03532"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q11.out",
+   "raw_sha256": "75e0442e8aa382a7c4de64ac1c5651244cbd93f3801d94773505b61afccdde47"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "emergence of cross-lingual alignment during pretraining checkpoints",
+   "returned_ids": [
+    "2608.pretraining-fails-cross-lingual-knowledge",
+    "2609.19291",
+    "2610.01921",
+    "2609.15184",
+    "2608.27115",
+    "2609.30535",
+    "2608.13482",
+    "2609.06381",
+    "2608.23149",
+    "2608.26357"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q12.out",
+   "raw_sha256": "75bf6ab3a1dad7a4b55693ebd0a9bfa6b18099f1b9714e58d04b65b555110574"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "DataDecide predict best pretraining data small-scale experiments",
+   "returned_ids": [
+    "2504.11393",
+    "2608.11859",
+    "2610.05126",
+    "2609.30063",
+    "2609.37255",
+    "2609.22064",
+    "2610.11585",
+    "2610.09611",
+    "2609.34287",
+    "2606.11387"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q13.out",
+   "raw_sha256": "6be32e8099df1aa9eb427f926c808bad326f7e43df962964e37d616b2756536f"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "Signal and Noise framework reducing uncertainty language model evaluation",
+   "returned_ids": [
+    "2608.08188",
+    "2610.06988",
+    "2508.13144",
+    "2609.19524",
+    "2609.15740",
+    "2610.09569",
+    "2609.15359",
+    "2607.19424",
+    "2606.29698",
+    "2606.31304"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q14.out",
+   "raw_sha256": "9f4e589d9aaec51fc8ce79619ffc73d3a7b895e50f5852c3fd05384f17880298"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover embedding",
+   "query": "Train a small hybrid language model that mixes a gated delta-rule recurrent layer with sliding-window attention and test whether it can recall a fact stored more than the attention window earlier when the query is a translation of the stored key; what training budget is needed before this recall rises above floor",
+   "returned_ids": [
+    "2609.34933",
+    "2609.30634",
+    "2609.08574",
+    "2609.15545",
+    "2609.04434",
+    "2609.32942",
+    "2609.33759",
+    "2610.00232",
+    "2609.32312",
+    "2609.25053"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q15.out",
+   "raw_sha256": "2f4821f72717965e9d1f4277871f1825f1c18a00b0d69a318ffdb6a8107c8a52"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover embedding",
+   "query": "sliding window attention plus linear recurrent state hybrid recall beyond the attention window small language model",
+   "returned_ids": [
+    "2610.10114",
+    "2609.34049",
+    "2610.08527",
+    "2609.04434",
+    "2607.02303",
+    "2606.15378",
+    "2606.25156",
+    "2606.09862",
+    "2606.02332",
+    "2605.26797"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q16.out",
+   "raw_sha256": "af3333dbc5eec25918311da66efa66cb413143736a51c4a7249be17d3c4dbfff"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "Do Explicit Alignments Robustly Improve Multilingual Encoders",
+   "returned_ids": [
+    "10.18653/v1/2020.emnlp-main.362",
+    "10.48550/arxiv.2010.02537",
+    "10.18653/v1/2021.naacl-main.284",
+    "10.48550/arxiv.2010.07972",
+    "10.1007/s10791-022-09406-x",
+    "10.48550/arxiv.2207.05737",
+    "10.48550/arxiv.2610.01139",
+    "10.18653/v1/2021.naacl-main.20",
+    "10.1609/aaai.v35i14.17524",
+    "10.18653/v1/2020.emnlp-main.210"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q17.out",
+   "raw_sha256": "4b55dfcd207005f10c505bcbc21f850de5a86eaa13b3cd6f97ccbaed4f8a9155"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "language-neutral language-sensitive subspace geometry multilingual representations",
+   "returned_ids": [
+    "10.18653/v1/2022.emnlp-main.9",
+    "10.48550/arxiv.2205.10964",
+    "10.18653/v1/2022.emnlp-main.379",
+    "10.48550/arxiv.2401.05792",
+    "10.18653/v1/2020.emnlp-main.363",
+    "10.48550/arxiv.2609.00155",
+    "10.48550/arxiv.2608.26576",
+    "10.48550/arxiv.2607.04525",
+    "10.48550/arxiv.2608.04904",
+    "10.48550/arxiv.2609.16967"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q18.out",
+   "raw_sha256": "d84e8c07b323dd836e127caa3cace60e41df2810273f6523b6530ef9a3a54ce1"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "Samba hybrid state space sliding window attention passkey retrieval",
+   "returned_ids": [
+    "2610.08527",
+    "2608.28444",
+    "2609.26368",
+    "2610.10114",
+    "2609.34049",
+    "2608.02870",
+    "2406.07522",
+    "2610.07940",
+    "2609.31947",
+    "2606.15378"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q19.out",
+   "raw_sha256": "56c49d6fde629a03201a39320a80d2b84098412da7c37cad7cd9a6cfaf00d013"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "Zoology measuring and improving recall in efficient language models",
+   "returned_ids": [
+    "2312.04927",
+    "2609.20734",
+    "2607.12831",
+    "2610.02772",
+    "2610.00894",
+    "2609.38005",
+    "2609.38972",
+    "2609.07282",
+    "2608.20970",
+    "2609.13486"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q20.out",
+   "raw_sha256": "04678e011c0635b273f64e664df76dbeddb79ffd7eb8214094d73d86324da551"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "Identifying Elements Essential for BERT Multilinguality",
+   "returned_ids": [
+    "2608.17088",
+    "2609.35378",
+    "2609.00329",
+    "2608.04586",
+    "2609.29338",
+    "2005.00396",
+    "2606.01800",
+    "2604.21637",
+    "2601.10310",
+    "2605.18462"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q21.out",
+   "raw_sha256": "9f7a9f9254648f7074c50b78bcc97fdfceb8e2d1816e36de35c86a59ea3c09a3"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "PolyPythias stability and outliers across fifty language model pre-training runs",
+   "returned_ids": [
+    "2503.09543",
+    "2609.39767",
+    "2610.00767",
+    "2608.13277",
+    "2608.13515",
+    "2608.19168",
+    "2609.21738",
+    "2609.38878",
+    "2608.17530",
+    "2608.26563"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q22.out",
+   "raw_sha256": "dd640965c5d49c33256e3707de5e4dd556040fff983cb29221fa4cbf64ee2afb"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "Understanding Emergent Abilities of Language Models from the Loss Perspective",
+   "returned_ids": [
+    "2403.15796",
+    "2608.05126",
+    "2206.07682",
+    "2607.01006",
+    "2605.09187",
+    "2508.04401",
+    "2604.24037",
+    "2503.05788",
+    "2304.15004",
+    "2606.26196"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q23.out",
+   "raw_sha256": "2e46492119dc6a5a296fd5f834cb4861c67f5113cd05ddf3f76ab5fe03de978d"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "Exploring the Relationship between Alignment and Cross-lingual Transfer in Multilingual Transformers",
+   "returned_ids": [
+    "2610.01921",
+    "2609.06381",
+    "2609.05976",
+    "2610.06216",
+    "2608.27115",
+    "2609.23231",
+    "2609.19650",
+    "2608.23149",
+    "2608.22363",
+    "2607.04814"
+   ],
+   "counted": true,
+   "raw_output": "e7xd/q24.out",
+   "raw_sha256": "47815f6489d80612261072403f72f4e2f956fa6f4cdded13314d3592fbd1db41"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2310.06825",
+   "returned_ids": [
+    "2310.06825"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2310.06825.txt",
+   "raw_sha256": "b200f56d72290f9a8d26cac0d08f54ff68f733c78b771ee0d335c031afc8e7ad"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2609.34049",
+   "returned_ids": [
+    "2609.34049"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2609.34049.txt",
+   "raw_sha256": "ede693d34842a44a72d95610250444816bb00cb4c190d8393f18d0de46dc24ae"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "1804.11188",
+   "returned_ids": [
+    "1804.11188"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_1804.11188.txt",
+   "raw_sha256": "253ba606d138c89634ba6bdbd4c7729a9d03302644fbca70d2fe22e2139ee389"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2304.15004",
+   "returned_ids": [
+    "2304.15004"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2304.15004.txt",
+   "raw_sha256": "f663a13ec1c3dd649b2f53b4c16c555d77a7d990b63f8ff63817929e5cede7b0"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2504.11393",
+   "returned_ids": [
+    "2504.11393"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2504.11393.txt",
+   "raw_sha256": "946144e5774121c8dcdfe59d0c490451d9cab7a025612292c1fcc8c71812a52b"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2405.18392",
+   "returned_ids": [
+    "2405.18392"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2405.18392.txt",
+   "raw_sha256": "da9f720c537af6140bc6893f4c6d1ceff3bdb6fd94156efebd47af4c2926a1d9"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2209.11895",
+   "returned_ids": [
+    "2209.11895"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2209.11895.txt",
+   "raw_sha256": "1565be612f5ecdb614402652612c84754ccb4e8dc13ab895e680790f595f16cd"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2210.02984",
+   "returned_ids": [
+    "2210.02984"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2210.02984.txt",
+   "raw_sha256": "2d6b4ed9e450ded962afaa22e25936256868b52aa801fa06c65de86dbd240bc5"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2008.05659",
+   "returned_ids": [
+    "2008.05659"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2008.05659.txt",
+   "raw_sha256": "593cba62dc44cca810812ebb221c755d74fa0bc8aeec0b5052f4faa4eea5f0fa"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2609.30535",
+   "returned_ids": [
+    "2609.30535"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2609.30535.txt",
+   "raw_sha256": "9ae4285f2b9faffe22584d5a04371c570b6106c504d9091061ef4d29591df241"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2205.11758",
+   "returned_ids": [
+    "2205.11758"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2205.11758.txt",
+   "raw_sha256": "e7211e3077a0db78aa7b5c9f015b20e4a99425b417c4f9a53254bc48ee72f2fb"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2010.02537",
+   "returned_ids": [
+    "2010.02537"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2010.02537.txt",
+   "raw_sha256": "f58e974934f20a388d772ae04e7ee85ff46182437b44b3ac4c3a603dfb2552e9"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2508.13144",
+   "returned_ids": [
+    "2508.13144"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2508.13144.txt",
+   "raw_sha256": "222136c71a5c32763e1b071a9d7bcb30a2001b877e08970b90ab7c1bbc87ebd7"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2503.09543",
+   "returned_ids": [
+    "2503.09543"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2503.09543.txt",
+   "raw_sha256": "bed5c76a2205a65754c68f6bd8f8f82a3a109aa6b6c1beb2d1011b10ae1c9f36"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2205.10964",
+   "returned_ids": [
+    "2205.10964"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2205.10964.txt",
+   "raw_sha256": "326f92d29703e89fcd9482b8724b604a77140d34eb0f9f0d42d2cc0a4b441eed"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2406.07522",
+   "returned_ids": [
+    "2406.07522"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2406.07522.txt",
+   "raw_sha256": "dbe75e6987d19c12dd45cf0e7959808256064122021a8aff54168a4f8406856f"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2608.11859",
+   "returned_ids": [
+    "2608.11859"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2608.11859.txt",
+   "raw_sha256": "bf6709823d59838b40fcbf87a22776c03063a4b63b5f12817949ffbc6d7c2545"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2603.06693",
+   "returned_ids": [
+    "2603.06693"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2603.06693.txt",
+   "raw_sha256": "7f5a4b2446d410f78bbbe7ed2b920e8402e0bcf56d577b2f3b51ffe3b4824f07"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx paper --full",
+   "query": "2608.26576",
+   "returned_ids": [
+    "2608.26576"
+   ],
+   "counted": false,
+   "raw_output": "e7xd/p_2608.26576.txt",
+   "raw_sha256": "b1631e25758a0aede1719010356033035aa909b9660a0b33eae58b6df2bae9e5"
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "curl (GitHub raw, source read)",
+   "query": "https://raw.githubusercontent.com/fla-org/flash-linear-attention/v0.5.2/fla/layers/gated_deltanet.py",
+   "returned_ids": [
+    "fla v0.5.2 gated_deltanet.py lines 151-168"
+   ],
+   "counted": false
+  },
+  {
+   "cell": "asset",
+   "tool": "orx paper --full",
+   "query": "2610.06750",
+   "counted": false,
+   "raw_output": "e7-asset/2610.06750.txt",
+   "raw_sha256": "66789d78b1e2795604231f5d85498e63ae85aacb59514812575c5d6fffec5650"
+  },
+  {
+   "cell": "synthesis",
+   "tool": "orx discover keyword --published-after 2026-01-01",
+   "query": "receptive field stacked sliding window attention layers hybrid recurrent state recall evaluation distance",
+   "returned_ids": [
+    "2608.28444",
+    "2608.02870",
+    "2610.08527",
+    "2609.26368",
+    "2610.10114",
+    "2609.recurrent-looped-transformer",
+    "2609.38166",
+    "2606.15378",
+    "2609.34049",
+    "2609.35378",
+    "2610.07940",
+    "2609.36529",
+    "2609.20734",
+    "2606.27791",
+    "2607.25357"
+   ],
+   "raw_output": "e7-synth/s01.raw",
+   "raw_sha256": "d6954969cf72fd701af749b072d84157a856ec5d8511118241cc56e1e2b5d876",
+   "counted": true
+  },
+  {
+   "cell": "synthesis",
+   "tool": "orx discover embedding",
+   "query": "placing a fact farther back than the combined reach of all sliding-window attention layers so that only the recurrent state can carry it, to test state-carried recall in a hybrid model",
+   "returned_ids": [
+    "2609.33093",
+    "2610.08718",
+    "2609.34049",
+    "2610.06750",
+    "2610.00366",
+    "2609.33436",
+    "2609.08574",
+    "2609.30634",
+    "2609.32942",
+    "2609.04434",
+    "2608.30376",
+    "2609.15545",
+    "2610.00232",
+    "2608.15022",
+    "2609.06872"
+   ],
+   "raw_output": "e7-synth/s02.raw",
+   "raw_sha256": "03080d3e918d116b8c5b58c3f4d37e06cfcab24bc1e8c5d0d11af2110871a635",
+   "counted": true
+  },
+  {
+   "cell": "synthesis",
+   "tool": "orx discover keyword --published-after 2026-01-01",
+   "query": "associative recall binding versus copying a distractor value chance level in-context values",
+   "returned_ids": [
+    "2609.30634",
+    "2609.16183",
+    "2610.00232",
+    "2607.19345",
+    "2609.22101",
+    "2605.06997",
+    "2609.34547",
+    "2609.38866",
+    "2609.12686",
+    "2608.03297",
+    "2609.11216",
+    "2609.07681",
+    "2608.30376",
+    "2607.11614",
+    "2609.24238"
+   ],
+   "raw_output": "e7-synth/s03.raw",
+   "raw_sha256": "65a5ca33f3240f0fbe9dc29e3ecbece6b57503cab68e00dff9b6dfb3c1ffebdc",
+   "counted": true
+  },
+  {
+   "cell": "synthesis",
+   "tool": "orx discover keyword --published-after 2026-09-15",
+   "query": "translation pair recurrent state write cross-lingual Gated DeltaNet sliding window",
+   "returned_ids": [
+    "2609.36529",
+    "2609.38166",
+    "2609.33436",
+    "2610.02816",
+    "2609.20744",
+    "2610.08745",
+    "2610.08553",
+    "2610.08527",
+    "2609.34049",
+    "2609.19291",
+    "2609.27470",
+    "2609.35378",
+    "2609.21139",
+    "2610.02201",
+    "2610.01921"
+   ],
+   "raw_output": "e7-synth/s04.raw",
+   "raw_sha256": "39bf6d115db09f0d311d1e17e45e842c66a6477c7da4b5206d204bfa81f0dfd3",
+   "counted": true
+  },
+  {
+   "cell": "synthesis",
+   "tool": "orx paper (abstract)",
+   "query": "2609.30634",
+   "counted": false,
+   "raw_output": "e7-synth/p_2609.30634.txt",
+   "raw_sha256": "bb2ea504de3e1dba834b7055159abc3761680f2a996e1179be66d83b7f1676f8"
+  },
+  {
+   "cell": "synthesis",
+   "tool": "orx paper (abstract)",
+   "query": "2610.00232",
+   "counted": false,
+   "raw_output": "e7-synth/p_2610.00232.txt",
+   "raw_sha256": "baa2c266fd1e0e05bef5f9a6d9a924d4fbc3cc8713aa59edb503c159ba5c9cad"
+  },
+  {
+   "cell": "synthesis",
+   "tool": "Hugging Face dataset API and raw README",
+   "query": "openlanguagedata/flores_plus; jhu-clsp/paradocs; airesearch/scb_mt_enth_2020; HuggingFaceFW/fineweb; HuggingFaceFW/fineweb-2",
+   "counted": false,
+   "note": "licence, gating and revision reads (auxiliary)"
+  },
+  {
+   "cell": "synthesis",
+   "tool": "GitHub raw and REST API",
+   "query": "MicrosoftTranslator/NTREX README.md, LICENSE.md, LANGUAGES.tsv, commits/main",
+   "counted": false,
+   "note": "licence (CC BY-SA 4.0), language codes deu/zho-CN/tha, head 468c6b69 (auxiliary)"
+  }
+ ]
+}

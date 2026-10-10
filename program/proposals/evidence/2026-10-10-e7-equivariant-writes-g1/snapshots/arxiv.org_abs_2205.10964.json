@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2205.10964",
+ "fetched_at": "2026-10-10T21:49:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41428,
+ "raw_sha256": "b0fa0ea0847cd7e200fa139a3006cafc088c8e25fa3e2d89d67663972371db82",
+ "raw_stored": false,
+ "extract": {
+  "title": "The Geometry of Multilingual Language Model Representations",
+  "authors": [
+   "Chang, Tyler A.",
+   "Tu, Zhuowen",
+   "Bergen, Benjamin K."
+  ],
+  "citation_date": "2022/05/22",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 22 May 2022 23:58:24 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 21 Oct 2022 23:10:27 UTC"
+   }
+  ],
+  "abstract": "We assess how multilingual language models maintain a shared multilingual representation space while still encoding language-sensitive information in each language. Using XLM-R as a case study, we show that languages occupy similar linear subspaces after mean-centering, evaluated based on causal effects on language modeling performance and direct comparisons between subspaces for 88 languages. The subspace means differ along language-sensitive axes that are relatively stable throughout middle layers, and these axes encode information such as token vocabularies. Shifting representations by language means is sufficient to induce token predictions in different languages. However, we also identify stable language-neutral axes that encode information such as token positions and part-of-speech. We visualize representations projected onto language-sensitive and language-neutral axes, identifying language family and part-of-speech clusters, along with spirals, toruses, and curves representing token position information. These results demonstrate that multilingual language models encode information along orthogonal language-sensitive and language-neutral axes, allowing the models to extract a variety of features for downstream tasks and cross-lingual transfer learning.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

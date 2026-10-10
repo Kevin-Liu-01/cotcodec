@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2608.02870",
+ "fetched_at": "2026-10-10T21:49:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41111,
+ "raw_sha256": "9e4fbffaa9994bc20c0f94c88a5905b22b8322ea101e8791c88f7b6810490da5",
+ "raw_stored": false,
+ "extract": {
+  "title": "Maglev: Sliding Recurrent Memory",
+  "authors": [
+   "Liu, Bo",
+   "Liu, Qiang"
+  ],
+  "citation_date": "2026/08/03",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 3 Aug 2026 20:40:49 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 5 Aug 2026 16:58:35 UTC"
+   }
+  ],
+  "abstract": "We introduce \\ours{}, a recurrent Transformer architecture with fixed-size memory that generalizes sliding-window attention while remaining parallelizable during training. \\ours{} consists of two coupled models: a prefiller $Q$, which leverages full attention\\footnote{In practice, we use interleaved full and sliding-window attention for $Q$, as this yields stronger performance. The essential requirement is that $Q$ be more expressive than $P$, with access to the full history.} to produce memory targets $m'_t$, and a decoder $P$, which uses only sliding-window attention and recurrent K/V injection to produce decoder memories $m_t$ for next-token prediction. We train \\ours{} with a memory consistency loss that aligns $m_t$ with $m'_t$, allowing inference to use $P$ alone. Empirically, \\ours{} improves validation loss and downstream pretraining benchmarks over sliding-window and latent recurrent transformer baselines. Moreover, sharing parameters between $P$ and $Q$ reduces parameter memory while preserving most of the gains.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

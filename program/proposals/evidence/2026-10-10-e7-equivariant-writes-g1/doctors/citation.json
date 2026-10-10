@@ -1,0 +1,10 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
+ "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, source tracing, cross-referencing; UNVERIFIABLE_ACCESS for unreachable full texts)",
+ "evidence": "Claim registry C01 to C43 in the proposal's Primary-Source Evidence section, each with URL, date, locator and read status; quantitative spans of C01, C03, C04, C05, C06, C07, C08, C09, C10, C13, C15, C16, C18 re-checked by synthesis in the cells' saved full texts (grep of the quoted numbers); every cited URL snapshotted (snapshots/) with HTTP status, body SHA-256 and, for arXiv, the version history; OpenReview items C02, C22, C23 marked abstract-only (UNVERIFIABLE_ACCESS for the PDFs); C13 labelled first-party and preliminary; seven corrections to the frozen dossier recorded in the proposal.",
+ "remediation": "Read the ICLR 2027 PDFs (2610.06750's OpenReview version, CHARTA, MAPP) when accessible; open 2026.acl-long.1706 in full before citing it"
+}

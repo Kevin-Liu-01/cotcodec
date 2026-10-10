@@ -1,0 +1,10 @@
+{
+ "doctor": "Compute",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
+ "evidence": "Image lineage 127.0.0.1:5000/cotcodec-research@sha256:02965f3d696d4e516a7cd6d5c03434e9098139738748ae778ed967215db7be6d (the measured 134M throughput, Slurm 359); seeds [42, 43, 44]; caps by S2 summing to 7.733 GPU-h under D22 (J1 34 min, J2 13, J3 18, T42/T43/T44 133 each); central 4.87 GPU-h; futility path 1.92; throughput gate 179,329 tokens/s; 15-minute atomic checkpoints, SIGUSR1 and a fresh-job resume test (J2); launch through scripts/submit_docker_research_job.py (dry run, test-only, submit).",
+ "why_fail": "No real model loop, benchmark adapter, Slurm manifest, container smoke, Slurm dry run or provenance check exists for this gate; SWA-512 throughput on real data is unmeasured; the 1.04B-token pool is not on the host (about 0.25B of K1 slices); no executable pilot.",
+ "remediation": "Fetch the data under D1 once no S1a job runs; write the harness and the J1 manifest; build the image from the harness commit; dry run and test-only; then J1"
+}

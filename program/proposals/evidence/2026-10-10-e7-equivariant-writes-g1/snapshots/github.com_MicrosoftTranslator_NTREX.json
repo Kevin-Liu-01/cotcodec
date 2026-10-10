@@ -1,0 +1,12 @@
+{
+ "url": "https://github.com/MicrosoftTranslator/NTREX",
+ "fetched_at": "2026-10-10T21:49:22Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 272884,
+ "raw_sha256": "a7bf21a6d35f41f5c65fa03101e4b622b5efc3b0a4ce9107fcf430e898a00b96",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - MicrosoftTranslator/NTREX: NTREX -- News Test References for MT Evaluation · GitHub"
+ }
+}

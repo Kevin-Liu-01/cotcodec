@@ -1,0 +1,2330 @@
+{
+ "script": "gate-sim.py",
+ "replicates_per_scenario": 1000,
+ "seeds": [
+  42,
+  43,
+  44
+ ],
+ "lines": {
+  "I1": 0.8,
+  "MONO": 0.6,
+  "CROSS": 0.15,
+  "BIND": 0.0
+ },
+ "futility_mono_ub": 0.3,
+ "pass_rule": "a line passes when at least two of three seeds are ABOVE and none is BELOW; PASS needs I1, MONO, CROSS and BIND to pass",
+ "assumptions": {
+  "eligible_key_sentences": 900,
+  "b3_mono_cells": [
+   500,
+   500,
+   500,
+   500
+  ],
+  "b3_cross_cells": [
+   300,
+   300,
+   500,
+   500,
+   500,
+   500
+  ],
+  "b1_mono_cells": [
+   250,
+   250,
+   250,
+   250
+  ],
+  "cell_offsets_logit": {
+   "mono": [
+    0.3,
+    0.0,
+    -0.1,
+    -0.2
+   ],
+   "cross": [
+    0.2,
+    0.0,
+    0.1,
+    -0.1,
+    -0.2,
+    0.0
+   ],
+   "p1": [
+    0.2,
+    0.0,
+    -0.1,
+    -0.1
+   ]
+  },
+  "sentence_effect_sd_logit": 1.0,
+  "distractor_share_of_non_target_answers": 0.5,
+  "seed_variation": "Gaussian on the probability scale (sd listed per scenario), or a two-point lock-in mixture",
+  "interval_in_simulation": "CR1 cluster-robust normal 90% (registered analysis: sentence-cluster bootstrap, B = 2,000)",
+  "common_random_numbers": "every scenario restarts the generators seeded 42, 43, 44"
+ },
+ "mono_oc": {
+  "sd=0.0": {
+   "0.3": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.954,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.046
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 1.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.45": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 1.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 1.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.5": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 1.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 1.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.55": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 1.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 1.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.58": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.457,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.001,
+     "INCONCLUSIVE": 0.542,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.457,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.001,
+     "INCONCLUSIVE": 0.542,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.6": {
+    "with_futility": {
+     "PASS": 0.02,
+     "FAIL_MONO": 0.019,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.961,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.02,
+     "FAIL_MONO": 0.019,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.961,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.62": {
+    "with_futility": {
+     "PASS": 0.517,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.483,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.517,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.483,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.65": {
+    "with_futility": {
+     "PASS": 0.997,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.003,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.997,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.003,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.7": {
+    "with_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.8": {
+    "with_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   }
+  },
+  "sd=0.03": {
+   "0.3": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.702,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.298
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 1.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.45": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 1.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 1.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.5": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.999,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.001,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.999,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.001,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.55": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.888,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.038,
+     "INCONCLUSIVE": 0.074,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.888,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.038,
+     "INCONCLUSIVE": 0.074,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.58": {
+    "with_futility": {
+     "PASS": 0.015,
+     "FAIL_MONO": 0.414,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.22,
+     "INCONCLUSIVE": 0.351,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.015,
+     "FAIL_MONO": 0.414,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.22,
+     "INCONCLUSIVE": 0.351,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.6": {
+    "with_futility": {
+     "PASS": 0.131,
+     "FAIL_MONO": 0.135,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.281,
+     "INCONCLUSIVE": 0.453,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.131,
+     "FAIL_MONO": 0.135,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.281,
+     "INCONCLUSIVE": 0.453,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.62": {
+    "with_futility": {
+     "PASS": 0.442,
+     "FAIL_MONO": 0.022,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.199,
+     "INCONCLUSIVE": 0.337,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.442,
+     "FAIL_MONO": 0.022,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.199,
+     "INCONCLUSIVE": 0.337,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.65": {
+    "with_futility": {
+     "PASS": 0.886,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.037,
+     "INCONCLUSIVE": 0.077,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.886,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.037,
+     "INCONCLUSIVE": 0.077,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.7": {
+    "with_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.8": {
+    "with_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   }
+  },
+  "sd=0.06": {
+   "0.3": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.607,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.008,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.385
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.987,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.013,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.45": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.974,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.02,
+     "INCONCLUSIVE": 0.001,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.005
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.979,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.02,
+     "INCONCLUSIVE": 0.001,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.5": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.901,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.086,
+     "INCONCLUSIVE": 0.012,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.001
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.902,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.086,
+     "INCONCLUSIVE": 0.012,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.55": {
+    "with_futility": {
+     "PASS": 0.008,
+     "FAIL_MONO": 0.576,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.325,
+     "INCONCLUSIVE": 0.091,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.008,
+     "FAIL_MONO": 0.576,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.325,
+     "INCONCLUSIVE": 0.091,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.58": {
+    "with_futility": {
+     "PASS": 0.066,
+     "FAIL_MONO": 0.301,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.487,
+     "INCONCLUSIVE": 0.146,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.066,
+     "FAIL_MONO": 0.301,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.487,
+     "INCONCLUSIVE": 0.146,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.6": {
+    "with_futility": {
+     "PASS": 0.161,
+     "FAIL_MONO": 0.167,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.508,
+     "INCONCLUSIVE": 0.164,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.161,
+     "FAIL_MONO": 0.167,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.508,
+     "INCONCLUSIVE": 0.164,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.62": {
+    "with_futility": {
+     "PASS": 0.311,
+     "FAIL_MONO": 0.072,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.476,
+     "INCONCLUSIVE": 0.141,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.311,
+     "FAIL_MONO": 0.072,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.476,
+     "INCONCLUSIVE": 0.141,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.65": {
+    "with_futility": {
+     "PASS": 0.592,
+     "FAIL_MONO": 0.016,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.302,
+     "INCONCLUSIVE": 0.09,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.592,
+     "FAIL_MONO": 0.016,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.302,
+     "INCONCLUSIVE": 0.09,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.7": {
+    "with_futility": {
+     "PASS": 0.91,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.078,
+     "INCONCLUSIVE": 0.012,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.91,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.078,
+     "INCONCLUSIVE": 0.012,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.8": {
+    "with_futility": {
+     "PASS": 0.983,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.014,
+     "INCONCLUSIVE": 0.003,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.983,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.014,
+     "INCONCLUSIVE": 0.003,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   }
+  },
+  "sd=0.1": {
+   "0.3": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.487,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.086,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.002,
+     "FUTILITY_STOP": 0.425
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.84,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.156,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.45": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.68,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.256,
+     "INCONCLUSIVE": 0.001,
+     "INSTRUMENT_INVALID": 0.003,
+     "FUTILITY_STOP": 0.06
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.727,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.268,
+     "INCONCLUSIVE": 0.001,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.5": {
+    "with_futility": {
+     "PASS": 0.003,
+     "FAIL_MONO": 0.54,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.418,
+     "INCONCLUSIVE": 0.017,
+     "INSTRUMENT_INVALID": 0.003,
+     "FUTILITY_STOP": 0.019
+    },
+    "without_futility": {
+     "PASS": 0.003,
+     "FAIL_MONO": 0.55,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.426,
+     "INCONCLUSIVE": 0.017,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.55": {
+    "with_futility": {
+     "PASS": 0.024,
+     "FAIL_MONO": 0.318,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.604,
+     "INCONCLUSIVE": 0.044,
+     "INSTRUMENT_INVALID": 0.003,
+     "FUTILITY_STOP": 0.007
+    },
+    "without_futility": {
+     "PASS": 0.024,
+     "FAIL_MONO": 0.32,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.608,
+     "INCONCLUSIVE": 0.044,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.58": {
+    "with_futility": {
+     "PASS": 0.072,
+     "FAIL_MONO": 0.201,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.652,
+     "INCONCLUSIVE": 0.068,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.003
+    },
+    "without_futility": {
+     "PASS": 0.072,
+     "FAIL_MONO": 0.201,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.654,
+     "INCONCLUSIVE": 0.069,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.6": {
+    "with_futility": {
+     "PASS": 0.122,
+     "FAIL_MONO": 0.134,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.669,
+     "INCONCLUSIVE": 0.069,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.002
+    },
+    "without_futility": {
+     "PASS": 0.122,
+     "FAIL_MONO": 0.134,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.671,
+     "INCONCLUSIVE": 0.069,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.62": {
+    "with_futility": {
+     "PASS": 0.179,
+     "FAIL_MONO": 0.081,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.661,
+     "INCONCLUSIVE": 0.074,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.001
+    },
+    "without_futility": {
+     "PASS": 0.179,
+     "FAIL_MONO": 0.081,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.662,
+     "INCONCLUSIVE": 0.074,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.65": {
+    "with_futility": {
+     "PASS": 0.291,
+     "FAIL_MONO": 0.031,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.583,
+     "INCONCLUSIVE": 0.09,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.001
+    },
+    "without_futility": {
+     "PASS": 0.291,
+     "FAIL_MONO": 0.031,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.584,
+     "INCONCLUSIVE": 0.09,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.7": {
+    "with_futility": {
+     "PASS": 0.509,
+     "FAIL_MONO": 0.006,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.399,
+     "INCONCLUSIVE": 0.082,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.509,
+     "FAIL_MONO": 0.006,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.399,
+     "INCONCLUSIVE": 0.082,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.8": {
+    "with_futility": {
+     "PASS": 0.714,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.182,
+     "INCONCLUSIVE": 0.1,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.714,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.182,
+     "INCONCLUSIVE": 0.1,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   }
+  }
+ },
+ "cross_oc": {
+  "sd=0.0": {
+   "0.05": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 1.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 1.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.1": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 1.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 1.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.125": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.983,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.017,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.983,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.017,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.14": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.31,
+     "LOTTERY": 0.002,
+     "INCONCLUSIVE": 0.688,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.31,
+     "LOTTERY": 0.002,
+     "INCONCLUSIVE": 0.688,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.15": {
+    "with_futility": {
+     "PASS": 0.015,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.014,
+     "LOTTERY": 0.002,
+     "INCONCLUSIVE": 0.969,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.015,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.014,
+     "LOTTERY": 0.002,
+     "INCONCLUSIVE": 0.969,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.16": {
+    "with_futility": {
+     "PASS": 0.294,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.002,
+     "INCONCLUSIVE": 0.704,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.294,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.002,
+     "INCONCLUSIVE": 0.704,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.18": {
+    "with_futility": {
+     "PASS": 0.996,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.004,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.996,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.004,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.2": {
+    "with_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.25": {
+    "with_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 1.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.0,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   }
+  },
+  "sd=0.03": {
+   "0.05": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.999,
+     "LOTTERY": 0.001,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.999,
+     "LOTTERY": 0.001,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.1": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.919,
+     "LOTTERY": 0.05,
+     "INCONCLUSIVE": 0.031,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.919,
+     "LOTTERY": 0.05,
+     "INCONCLUSIVE": 0.031,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.125": {
+    "with_futility": {
+     "PASS": 0.017,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.597,
+     "LOTTERY": 0.252,
+     "INCONCLUSIVE": 0.134,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.017,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.597,
+     "LOTTERY": 0.252,
+     "INCONCLUSIVE": 0.134,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.14": {
+    "with_futility": {
+     "PASS": 0.058,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.318,
+     "LOTTERY": 0.386,
+     "INCONCLUSIVE": 0.238,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.058,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.318,
+     "LOTTERY": 0.386,
+     "INCONCLUSIVE": 0.238,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.15": {
+    "with_futility": {
+     "PASS": 0.155,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.157,
+     "LOTTERY": 0.427,
+     "INCONCLUSIVE": 0.261,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.155,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.157,
+     "LOTTERY": 0.427,
+     "INCONCLUSIVE": 0.261,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.16": {
+    "with_futility": {
+     "PASS": 0.28,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.065,
+     "LOTTERY": 0.394,
+     "INCONCLUSIVE": 0.261,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.28,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.065,
+     "LOTTERY": 0.394,
+     "INCONCLUSIVE": 0.261,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.18": {
+    "with_futility": {
+     "PASS": 0.662,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.006,
+     "LOTTERY": 0.213,
+     "INCONCLUSIVE": 0.119,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.662,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.006,
+     "LOTTERY": 0.213,
+     "INCONCLUSIVE": 0.119,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.2": {
+    "with_futility": {
+     "PASS": 0.902,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.08,
+     "INCONCLUSIVE": 0.018,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.902,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.08,
+     "INCONCLUSIVE": 0.018,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.25": {
+    "with_futility": {
+     "PASS": 0.999,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.001,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.999,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.001,
+     "INCONCLUSIVE": 0.0,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   }
+  },
+  "sd=0.06": {
+   "0.05": {
+    "with_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.915,
+     "LOTTERY": 0.076,
+     "INCONCLUSIVE": 0.009,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.0,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.915,
+     "LOTTERY": 0.076,
+     "INCONCLUSIVE": 0.009,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.1": {
+    "with_futility": {
+     "PASS": 0.02,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.594,
+     "LOTTERY": 0.35,
+     "INCONCLUSIVE": 0.036,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.02,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.594,
+     "LOTTERY": 0.35,
+     "INCONCLUSIVE": 0.036,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.125": {
+    "with_futility": {
+     "PASS": 0.05,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.357,
+     "LOTTERY": 0.52,
+     "INCONCLUSIVE": 0.073,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.05,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.357,
+     "LOTTERY": 0.52,
+     "INCONCLUSIVE": 0.073,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.14": {
+    "with_futility": {
+     "PASS": 0.096,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.241,
+     "LOTTERY": 0.591,
+     "INCONCLUSIVE": 0.072,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.096,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.241,
+     "LOTTERY": 0.591,
+     "INCONCLUSIVE": 0.072,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.15": {
+    "with_futility": {
+     "PASS": 0.15,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.172,
+     "LOTTERY": 0.591,
+     "INCONCLUSIVE": 0.087,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.15,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.172,
+     "LOTTERY": 0.591,
+     "INCONCLUSIVE": 0.087,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.16": {
+    "with_futility": {
+     "PASS": 0.215,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.11,
+     "LOTTERY": 0.577,
+     "INCONCLUSIVE": 0.098,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.215,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.11,
+     "LOTTERY": 0.577,
+     "INCONCLUSIVE": 0.098,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.18": {
+    "with_futility": {
+     "PASS": 0.396,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.043,
+     "LOTTERY": 0.499,
+     "INCONCLUSIVE": 0.062,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.396,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.043,
+     "LOTTERY": 0.499,
+     "INCONCLUSIVE": 0.062,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.2": {
+    "with_futility": {
+     "PASS": 0.57,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.011,
+     "LOTTERY": 0.371,
+     "INCONCLUSIVE": 0.048,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.57,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.011,
+     "LOTTERY": 0.371,
+     "INCONCLUSIVE": 0.048,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.25": {
+    "with_futility": {
+     "PASS": 0.887,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.107,
+     "INCONCLUSIVE": 0.006,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.887,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.0,
+     "LOTTERY": 0.107,
+     "INCONCLUSIVE": 0.006,
+     "INSTRUMENT_INVALID": 0.0,
+     "FUTILITY_STOP": 0.0
+    }
+   }
+  },
+  "sd=0.1": {
+   "0.05": {
+    "with_futility": {
+     "PASS": 0.007,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.642,
+     "LOTTERY": 0.331,
+     "INCONCLUSIVE": 0.016,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.007,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.642,
+     "LOTTERY": 0.331,
+     "INCONCLUSIVE": 0.016,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.1": {
+    "with_futility": {
+     "PASS": 0.03,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.384,
+     "LOTTERY": 0.555,
+     "INCONCLUSIVE": 0.027,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.03,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.384,
+     "LOTTERY": 0.555,
+     "INCONCLUSIVE": 0.027,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.125": {
+    "with_futility": {
+     "PASS": 0.061,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.264,
+     "LOTTERY": 0.628,
+     "INCONCLUSIVE": 0.043,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.061,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.264,
+     "LOTTERY": 0.628,
+     "INCONCLUSIVE": 0.043,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.14": {
+    "with_futility": {
+     "PASS": 0.094,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.208,
+     "LOTTERY": 0.661,
+     "INCONCLUSIVE": 0.033,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.094,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.208,
+     "LOTTERY": 0.661,
+     "INCONCLUSIVE": 0.033,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.15": {
+    "with_futility": {
+     "PASS": 0.12,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.167,
+     "LOTTERY": 0.664,
+     "INCONCLUSIVE": 0.045,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.12,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.167,
+     "LOTTERY": 0.664,
+     "INCONCLUSIVE": 0.045,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.16": {
+    "with_futility": {
+     "PASS": 0.163,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.127,
+     "LOTTERY": 0.651,
+     "INCONCLUSIVE": 0.055,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.163,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.127,
+     "LOTTERY": 0.651,
+     "INCONCLUSIVE": 0.055,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.18": {
+    "with_futility": {
+     "PASS": 0.234,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.077,
+     "LOTTERY": 0.627,
+     "INCONCLUSIVE": 0.058,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.234,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.077,
+     "LOTTERY": 0.627,
+     "INCONCLUSIVE": 0.058,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.2": {
+    "with_futility": {
+     "PASS": 0.334,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.042,
+     "LOTTERY": 0.552,
+     "INCONCLUSIVE": 0.068,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.334,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.042,
+     "LOTTERY": 0.552,
+     "INCONCLUSIVE": 0.068,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   },
+   "0.25": {
+    "with_futility": {
+     "PASS": 0.567,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.003,
+     "LOTTERY": 0.341,
+     "INCONCLUSIVE": 0.085,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    },
+    "without_futility": {
+     "PASS": 0.567,
+     "FAIL_MONO": 0.0,
+     "FAIL_CROSS": 0.003,
+     "LOTTERY": 0.341,
+     "INCONCLUSIVE": 0.085,
+     "INSTRUMENT_INVALID": 0.004,
+     "FUTILITY_STOP": 0.0
+    }
+   }
+  }
+ },
+ "i1_oc": {
+  "0.6": {
+   "with_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 1.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 1.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.7": {
+   "with_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.999,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.999,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.75": {
+   "with_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.105,
+    "INSTRUMENT_INVALID": 0.895,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.105,
+    "INSTRUMENT_INVALID": 0.895,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.78": {
+   "with_futility": {
+    "PASS": 0.014,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.549,
+    "INSTRUMENT_INVALID": 0.437,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.014,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.549,
+    "INSTRUMENT_INVALID": 0.437,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.8": {
+   "with_futility": {
+    "PASS": 0.119,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.728,
+    "INSTRUMENT_INVALID": 0.153,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.119,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.728,
+    "INSTRUMENT_INVALID": 0.153,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.82": {
+   "with_futility": {
+    "PASS": 0.418,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.554,
+    "INSTRUMENT_INVALID": 0.028,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.418,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.554,
+    "INSTRUMENT_INVALID": 0.028,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.85": {
+   "with_futility": {
+    "PASS": 0.888,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.11,
+    "INSTRUMENT_INVALID": 0.002,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.888,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.11,
+    "INSTRUMENT_INVALID": 0.002,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.9": {
+   "with_futility": {
+    "PASS": 0.999,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.999,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  }
+ },
+ "pass_power": {
+  "all_lines_plus_5pts_sd0.03": {
+   "with_futility": {
+    "PASS": 0.717,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.11,
+    "INCONCLUSIVE": 0.171,
+    "INSTRUMENT_INVALID": 0.002,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.717,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.11,
+    "INCONCLUSIVE": 0.171,
+    "INSTRUMENT_INVALID": 0.002,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "all_lines_plus_10pts_sd0.03": {
+   "with_futility": {
+    "PASS": 0.998,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.001,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.998,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.001,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "all_lines_plus_5pts_sd0.06": {
+   "with_futility": {
+    "PASS": 0.199,
+    "FAIL_MONO": 0.008,
+    "FAIL_CROSS": 0.008,
+    "LOTTERY": 0.545,
+    "INCONCLUSIVE": 0.205,
+    "INSTRUMENT_INVALID": 0.035,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.199,
+    "FAIL_MONO": 0.008,
+    "FAIL_CROSS": 0.008,
+    "LOTTERY": 0.545,
+    "INCONCLUSIVE": 0.205,
+    "INSTRUMENT_INVALID": 0.035,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "all_lines_at_line_sd0.03": {
+   "with_futility": {
+    "PASS": 0.005,
+    "FAIL_MONO": 0.066,
+    "FAIL_CROSS": 0.017,
+    "LOTTERY": 0.501,
+    "INCONCLUSIVE": 0.258,
+    "INSTRUMENT_INVALID": 0.153,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.005,
+    "FAIL_MONO": 0.066,
+    "FAIL_CROSS": 0.017,
+    "LOTTERY": 0.501,
+    "INCONCLUSIVE": 0.258,
+    "INSTRUMENT_INVALID": 0.153,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "cross_minus_3pts_mono_plus_10_sd0.03": {
+   "with_futility": {
+    "PASS": 0.01,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.679,
+    "LOTTERY": 0.204,
+    "INCONCLUSIVE": 0.107,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.01,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.679,
+    "LOTTERY": 0.204,
+    "INCONCLUSIVE": 0.107,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  }
+ },
+ "lockin_both_lines": {
+  "0.1": {
+   "with_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.102,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.898
+   },
+   "without_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.717,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.283,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.3": {
+   "with_futility": {
+    "PASS": 0.031,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.282,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.687
+   },
+   "without_futility": {
+    "PASS": 0.031,
+    "FAIL_MONO": 0.335,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.634,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.5": {
+   "with_futility": {
+    "PASS": 0.139,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.379,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.482
+   },
+   "without_futility": {
+    "PASS": 0.139,
+    "FAIL_MONO": 0.12,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.741,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.7": {
+   "with_futility": {
+    "PASS": 0.368,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.372,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.26
+   },
+   "without_futility": {
+    "PASS": 0.368,
+    "FAIL_MONO": 0.019,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.613,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.9": {
+   "with_futility": {
+    "PASS": 0.728,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.188,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.084
+   },
+   "without_futility": {
+    "PASS": 0.728,
+    "FAIL_MONO": 0.001,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.271,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "1.0": {
+   "with_futility": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  }
+ },
+ "lockin_cross_only": {
+  "0.1": {
+   "with_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.717,
+    "LOTTERY": 0.283,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.717,
+    "LOTTERY": 0.283,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.3": {
+   "with_futility": {
+    "PASS": 0.031,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.335,
+    "LOTTERY": 0.634,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.031,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.335,
+    "LOTTERY": 0.634,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.5": {
+   "with_futility": {
+    "PASS": 0.139,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.12,
+    "LOTTERY": 0.741,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.139,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.12,
+    "LOTTERY": 0.741,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.7": {
+   "with_futility": {
+    "PASS": 0.368,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.019,
+    "LOTTERY": 0.613,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.368,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.019,
+    "LOTTERY": 0.613,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.9": {
+   "with_futility": {
+    "PASS": 0.728,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.001,
+    "LOTTERY": 0.271,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.728,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.001,
+    "LOTTERY": 0.271,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "1.0": {
+   "with_futility": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  }
+ },
+ "binding_free_null": {
+  "copy_prob=0.5": {
+   "with_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "copy_prob=0.8": {
+   "with_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "copy_prob=1.0": {
+   "with_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.999,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.999,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  }
+ },
+ "n_half_sensitivity_cross_sd0.03": {
+  "0.1": {
+   "with_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.896,
+    "LOTTERY": 0.047,
+    "INCONCLUSIVE": 0.057,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.896,
+    "LOTTERY": 0.047,
+    "INCONCLUSIVE": 0.057,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.125": {
+   "with_futility": {
+    "PASS": 0.007,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.561,
+    "LOTTERY": 0.185,
+    "INCONCLUSIVE": 0.247,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.007,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.561,
+    "LOTTERY": 0.185,
+    "INCONCLUSIVE": 0.247,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.15": {
+   "with_futility": {
+    "PASS": 0.129,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.152,
+    "LOTTERY": 0.337,
+    "INCONCLUSIVE": 0.382,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.129,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.152,
+    "LOTTERY": 0.337,
+    "INCONCLUSIVE": 0.382,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.18": {
+   "with_futility": {
+    "PASS": 0.616,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.005,
+    "LOTTERY": 0.164,
+    "INCONCLUSIVE": 0.215,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.616,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.005,
+    "LOTTERY": 0.164,
+    "INCONCLUSIVE": 0.215,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.2": {
+   "with_futility": {
+    "PASS": 0.889,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.001,
+    "LOTTERY": 0.04,
+    "INCONCLUSIVE": 0.07,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.889,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.001,
+    "LOTTERY": 0.04,
+    "INCONCLUSIVE": 0.07,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  },
+  "0.25": {
+   "with_futility": {
+    "PASS": 0.999,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.001,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   },
+   "without_futility": {
+    "PASS": 0.999,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "LOTTERY": 0.001,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "FUTILITY_STOP": 0.0
+   }
+  }
+ },
+ "binding_free_null_note": "Cross answers come from copying one of the 8 in-context codes uniformly (no key binding); the target is hit with probability c/8 <= 0.125, below the 0.15 cross line.",
+ "futility_single_seed_stop_prob": {
+  "0.1": 1.0,
+  "0.2": 1.0,
+  "0.25": 0.997,
+  "0.28": 0.5295,
+  "0.3": 0.044,
+  "0.35": 0.0,
+  "0.4": 0.0,
+  "0.6": 0.0
+ },
+ "halfwidths": {
+  "CROSS_at_0.15": {
+   "mean_90_halfwidth": 0.0133,
+   "p95": 0.0141
+  },
+  "MONO_at_0.60": {
+   "mean_90_halfwidth": 0.0203,
+   "p95": 0.0209
+  }
+ },
+ "coverage": {
+  "draws": 300,
+  "bootstrap_B": 2000,
+  "true_rate": 0.15,
+  "coverage_cr1_normal_90": 0.94,
+  "coverage_poisson_bootstrap_90": 0.933,
+  "classification_agreement_at_the_line": 0.993,
+  "note": "Coverage is against the population rate; the realized-sentence estimand differs by sentence sampling, which both intervals include."
+ },
+ "runtime_seconds": 304.5
+}

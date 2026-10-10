@@ -1,0 +1,37 @@
+{
+ "url": "https://arxiv.org/abs/2405.18392",
+ "fetched_at": "2026-10-10T21:49:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42594,
+ "raw_sha256": "fd3990f11f00d747c57032fe45f3ea2fffaacea13ad834c67f31ac23a5ce1daf",
+ "raw_stored": false,
+ "extract": {
+  "title": "Scaling Laws and Compute-Optimal Training Beyond Fixed Training Durations",
+  "authors": [
+   "Hägele, Alexander",
+   "Bakouch, Elie",
+   "Kosson, Atli",
+   "Allal, Loubna Ben",
+   "Von Werra, Leandro",
+   "Jaggi, Martin"
+  ],
+  "citation_date": "2024/05/28",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 28 May 2024 17:33:54 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 29 May 2024 16:56:26 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Thu, 17 Oct 2024 12:01:15 UTC"
+   }
+  ],
+  "abstract": "Scale has become a main ingredient in obtaining strong machine learning models. As a result, understanding a model's scaling properties is key to effectively designing both the right training setup as well as future generations of architectures. In this work, we argue that scale and training research has been needlessly complex due to reliance on the cosine schedule, which prevents training across different lengths for the same model size. We investigate the training behavior of a direct alternative -- constant learning rate and cooldowns -- and find that it scales predictably and reliably similar to cosine. Additionally, we show that stochastic weight averaging yields improved performance along the training trajectory, without additional training costs, across different scales. Importantly, with these findings we demonstrate that scaling experiments can be performed with significantly reduced compute and GPU hours by utilizing fewer but reusable training runs. Our code is available at \\url{this https URL}.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
