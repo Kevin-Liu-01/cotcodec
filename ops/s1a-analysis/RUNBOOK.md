@@ -2,15 +2,15 @@
 
 Operator steps for the S1a analysis on the host. These scripts are operator tooling, not
 code of record. They import the frozen modules from the read-only export of the freeze
-commit `d5f5798` and never change them. D59 fixed every rule they apply before any A1
-outcome was read. This runbook supersedes the dry run's runbook and closes the checker's
-gaps. Each step is listed with its exact command. Section 15 items and where they come from
-are at the end.
+commit `d5f5798` and never change them. D59, with D61 and its addendum for the edge cases
+D59 leaves open, fixed every rule they apply before any A1 outcome was read. This runbook
+supersedes the dry run's runbook and closes the checker's gaps. Each step is listed with its
+exact command. Section 15 items and where they come from are at the end.
 
 | Script | D59 | What it does |
 |---|---|---|
 | `provenance.py` | (iii) | Checks the registration SHA-256 (via `lane.frozen_registration`), the frozen plan digest and the section 20 code of record. Also records the environment, the operator script digests and the input digests. |
-| `run_report.py` | (i), (ii) | Runs `analysis.main` with the widened outcome check (`report.json`), then the incomplete-data guard (`guard.json`, `report-guarded.json`). |
+| `run_report.py` | (i), (ii), D61 | Runs `analysis.main` with the widened outcome check (`report.json`), then the incomplete-data guard (`guard.json`, `report-guarded.json`). |
 | `check_identity.py` | (i) | Runs the registered CLI on the same inputs. The wrapper's report must match it byte for byte. With fractional scores, it may differ only in `fractional_score` and `fractional_scores`. |
 | `rescore_jobs.py` | (iii) | `submit`: one rescoring job per A1 job, `--time=08:00:00`. `coverage`: coverage, live-score fallbacks and replay mismatches. |
 | `first_divergence.py` | (iii) | Base tasks, scored final records, final attempt. Each step log is found in its own job's run directory. |
@@ -47,11 +47,21 @@ are at the end.
   non-zero `exit_status` with no rows written. Any other operator script that exits non-zero
   has written nothing; fix the input it names and run it again.
 - **Labels.** `guard.json` `labels` (step 6) is the label of every file of this analysis:
-  incomplete or not (D59 (ii)), and "not externally anchored" (ANCHOR-UNAVAILABLE).
-  `report-guarded.json`, `rescore-coverage.json`, `first-divergence.json`,
-  `glmm-summary.json`, `s15.json` and `provenance.json` carry it. The registered CLIs'
-  outputs (`dr0-*.json`, `merged-*.jsonl`, `a1.jsonl`, `costs.json`, `report.json`) and
-  `identity.json` cannot carry it and fall under it.
+  incomplete or not (D59 (ii), D61), and "not externally anchored" (ANCHOR-UNAVAILABLE).
+  `report-guarded.json`, `rescore-coverage.json`, `identity.json`, `first-divergence.json`,
+  `glmm-inputs/inputs.json`, `glmm-job.json`, `glmm-summary.json`, `s15.json` and
+  `provenance.json` carry it. The registered CLIs' outputs (`dr0-*.json`, `merged-*.jsonl`,
+  `a1.jsonl`, `costs.json`, `report.json`, `rescored.jsonl`, the GLMM fits) cannot carry it.
+  Two operator records are written before the completeness test exists: `provenance-pre.json`
+  (step 1, a check of the frozen inputs before any record is read) and `rescore-jobs.json`
+  (step 3, the rescoring jobs' submission). Neither holds an estimate or a count of records.
+  These files fall under `guard.json`'s label, and `provenance.json`, which carries it,
+  binds each of them by digest (step 11). The evidence README states this (step 12).
+- **Order.** Steps 7 to 11 start only after step 6's job has ended with `exit_status=0`.
+  Steps 7, 8, 9 and 11 read `guard.json` and refuse, writing nothing, while it is missing
+  (the report job still running) or names no guarded report (the report step failed: a stop
+  condition). Step 10 reads `report-guarded.json`, which step 6 writes only when it
+  succeeds.
 
 ## 0. Ship the operator scripts and set the variables
 
@@ -149,6 +159,7 @@ Each job is one `s1a-cpu.sbatch` run in the metric image `2006c1a9...` with
 `rescore-jobs.json`. Poll with short commands:
 
 ```bash
+. /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
 squeue -h -o '%i %j %T %M' | grep s1a-rescore || echo none-running
 grep -h '"exit_status"' $A/rescore-*/receipt-*.json
 wc -l $A/rescore-*/rescored.jsonl
@@ -208,14 +219,23 @@ Receipts name absolute host bridge directories (bug B9), so run this on the host
 ```bash
 . /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
 J=$(step report run_report.py --export $X --records $A/a1.jsonl --plan $PLAN --costs $A/costs.json "${DR0S[@]}" --out-dir $A/report); echo $J
-squeue -h -j $J || true; tail -2 $A/logs/s1a-report-$J.out      # exit_status=0
 ```
+
+Wait for the job to end before step 7. Poll (each line returns at once):
+
+```bash
+. /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
+squeue -h -o '%i %j %T %M' | grep s1a-report || echo none-running
+tail -2 $A/logs/s1a-report-*.out                                 # exit_status=0
+```
+
+Go on only after `none-running` and `exit_status=0`. A non-zero exit is a stop condition.
 
 The step writes three files:
 
 - `$A/report/report.json`: `analysis.main` with `estimators._check` widened to [0, 1]
-  (D59 (i)). It is absent when the frozen report raises because no size holds two sessions
-  (bug B2).
+  (D59 (i)). It is absent when the frozen report raises (bug B2): no size holds two
+  sessions, or a DR5 share has no finite bound.
 - `$A/report/guard.json`: the inputs' digests, the registered argv, the registered error if
   any, `fractional_base_scores`, completeness (DR0 per job from the files and recomputed
   from the records, the jobs present and absent, the sessions per size), every reading
@@ -229,7 +249,17 @@ The step writes three files:
   - DR1 is read on the sessions present;
   - DR5 is "not evaluable as registered", and π_9B is shown against both M = 0.13 and
     M = 0.18 as a description only;
+  - a size that holds both sessions but has no task with both harness cells scored in both
+    (a session-2 job cut after a few episodes) has no π: it is read for π as a one-session
+    size, so DR5 is "not evaluable as registered" there too (D61 (a) addendum);
   - no p-value is shown from an all-NaN statistic.
+
+  If a size holds two sessions but the registered report raises because a DR5 share has no
+  finite bound (`rules.dr5` compares None: for example DR0 at A1-9B-S2 after a few
+  episodes, so A1-4B-S2 never runs), `report.json` is absent. `report-guarded.json` is then
+  `analysis.report` recomputed with those `rules.dr5` calls returning "not evaluable as
+  registered", every other value as the registered code computes it, with the readings
+  above. `guard.json` `tolerant_report` counts the calls (D61 (a) addendum).
 
   If no size holds two sessions, the file is the delta-only report: δ and the descriptive
   and infrastructure counts. D_b, D_w, X, π, the X test, DR2, DR5, P1, P2, the session test
@@ -241,24 +271,26 @@ size's session p-value of 1/(n+1), or DR5 read against M = 0.13. It is kept for 
 identity check (step 7). `guard.json` says so in `read`.
 
 **The guard's readings of D59 (ii)** are fixed in `run_report.py` before any A1 outcome is
-read and are written to `guard.json` `interpretation`:
+read, ratified in D61 and its addendum, and written to `guard.json` `interpretation`:
 
 | Case | Reading |
 |---|---|
 | DR0 fired for any A1 job, a registered job has no records, or a size lacks two sessions of scored base records | Every output is labelled `incomplete` |
-| A size's session-2 job fired DR0, but the size still holds scored base records in both sessions (cut or failed after its first block) | Labelled `incomplete`; the DR0 masks nothing else: that size's session test (and DR1, for 4B) are read as registered on the data collected, and a `guard.json` reading says so. D59's "that size" is read as the size left with one session: section 11 reports the data already collected as incomplete, and the dry-run checker's B3 handling, from which D59 (ii) was written, names the single-session size |
-| One size holds one session, the other two | That size's session test (and its harness-by-session and common-share entries) is `not_estimable`; DR1 is read on the sessions it holds; DR5 is "not evaluable as registered", with π_9B against both M as a description; DR2 is kept as the registered code computes it, with an `incomplete_note` (its X test and π_small bound then come from the size with two sessions; π_9B is the registered π_small only when DR1 drops 4B); P1 and P2 read the size with two sessions; `pooled_from_sizes` lists the sizes each pooled estimate averages (pooled D_w, δ and the Bernoulli X average the single-session size's session with the other size's two) |
+| A size's session-2 job fired DR0, but the size still holds scored base records in both sessions (cut or failed after its first block) | D61 (a). Labelled `incomplete`; the DR0 masks nothing else: that size's session test (and DR1, for 4B) are read as registered on the data collected, and a `guard.json` reading says so. D59's "that size" is read as the size left with one session: section 11 reports the data already collected as incomplete, and the dry-run checker's B3 handling, from which D59 (ii) was written, names the single-session size |
+| A size holds both sessions, but in a set no task has both harness cells scored in both (its X and π are all-NaN) | D61 (a) addendum. For π it is read as a one-session size in that set: DR5 is "not evaluable as registered" (π_9B against both M as a description), DR2 carries an `incomplete_note`, `pi_undefined_sizes`, `registered_pi_small_defined` and `pooled_from_sizes` are written, and the DR0 reading says DR5 is not kept. Its session test and DR1 stay as registered |
+| A size holds two sessions, but the registered report raises on a DR5 share with no finite bound | D61 (a) addendum. `report.json` is absent; `report-guarded.json` is the registered computation with those `rules.dr5` calls returning "not evaluable as registered", then the readings above |
+| One size holds one session, the other two | D61 (b). That size's session test (and its harness-by-session and common-share entries) is `not_estimable`; DR1 is read on the sessions it holds; DR5 is "not evaluable as registered", with π_9B against both M as a description; DR2 is kept as the registered code computes it, with an `incomplete_note` (its X test and π_small bound then come from the size with two sessions; π_9B is the registered π_small only when DR1 drops 4B); P1 and P2 read the size with two sessions; `pooled_from_sizes` lists the sizes each pooled estimate averages (pooled D_w, δ and the Bernoulli X average the single-session size's session with the other size's two) |
 | No size holds two sessions | The delta-only report above |
 | Any statistic with no finite entry | No p-value is read from it |
 
-The second and third rows answer questions D59 leaves open. Record them in a program
-decision before this step runs.
+Rows two to five answer questions D59 leaves open. D61 (a) and (b) ratify rows two and
+five, and D61's addendum rows three and four, all fixed before any A1 outcome was read.
 
 ## 7. Identity check (Slurm CPU, about one more report)
 
 ```bash
 . /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
-J=$(step identity check_identity.py --export $X --records $A/a1.jsonl --plan $PLAN --costs $A/costs.json --wrapper-report $A/report/report.json --out-dir $A/identity); echo $J
+J=$(step identity check_identity.py --export $X --records $A/a1.jsonl --plan $PLAN --costs $A/costs.json --wrapper-report $A/report/report.json --guard $A/report/guard.json --out-dir $A/identity); echo $J
 tail -2 $A/logs/s1a-identity-$J.out                              # exit_status=0
 ```
 
@@ -268,9 +300,11 @@ tail -2 $A/logs/s1a-identity-$J.out                              # exit_status=0
 - `fractional`: the registered CLI failed on a fractional base score (bug B1). It was run
   again on the records scored 0, and the reports differ only in `fractional_score` and
   `fractional_scores`.
-- Both failed (bug B2).
+- Both failed (bug B2): no size holds two sessions, or a DR5 share has no finite bound (step
+  6's tolerant recomputation).
 
-Exit 3 stops the analysis.
+`identity.json` carries `guard.json`'s labels. The check refuses, writing nothing, until step
+6 has written a complete `guard.json`. Exit 3 stops the analysis.
 
 ## 8. First divergence (Slurm CPU, reads step logs on the host)
 
@@ -285,15 +319,32 @@ each step, and the number of step logs read and missing. The set is stated in th
 
 ## 9. GLMM (writer seconds; fits about 20 min in Slurm)
 
+Write the inputs and submit the fits (`sbatch` returns at once):
+
 ```bash
 . /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
-python3 -E -s -B $OPS/glmm_inputs.py write --export $X --plan $PLAN --records $A/a1.jsonl --out-dir $A/glmm-inputs
-python3 -E -s -B $OPS/glmm_inputs.py submit --export $X --inputs-dir $A/glmm-inputs --out-dir $A/glmm-out --out $A/glmm-job.json --dry-run
-python3 -E -s -B $OPS/glmm_inputs.py submit --export $X --inputs-dir $A/glmm-inputs --out-dir $A/glmm-out --out $A/glmm-job.json
+python3 -E -s -B $OPS/glmm_inputs.py write --export $X --plan $PLAN --records $A/a1.jsonl --guard $A/report/guard.json --out-dir $A/glmm-inputs
+python3 -E -s -B $OPS/glmm_inputs.py submit --export $X --inputs-dir $A/glmm-inputs --out-dir $A/glmm-out --guard $A/report/guard.json --out $A/glmm-job.json --dry-run
+python3 -E -s -B $OPS/glmm_inputs.py submit --export $X --inputs-dir $A/glmm-inputs --out-dir $A/glmm-out --guard $A/report/guard.json --out $A/glmm-job.json
+```
+
+Poll until the job has ended (about 20 minutes; each line returns at once):
+
+```bash
+. /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
 squeue -h -o '%i %j %T %M' | grep s1a-glmm || echo none-running
-cat $A/glmm-out/primary.exit $A/glmm-out/secondary.exit
+ls $A/glmm-out/receipt-*.json && cat $A/glmm-out/primary.exit $A/glmm-out/secondary.exit
+```
+
+Only after `none-running` and a receipt in `glmm-out/`, collect:
+
+```bash
+. /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
 python3 -E -s -B $OPS/glmm_inputs.py collect --out-dir $A/glmm-out --guard $A/report/guard.json --out $A/glmm-summary.json; echo "exit=$?"
 ```
+
+`collect` refuses, writing nothing, while `glmm-out/` holds no `receipt-*.json`:
+`s1a-cpu.sbatch` writes the receipt when the job ends, after both `.exit` files.
 
 The job runs the registered image `b15584f3...` with `glmm.R` (200 refits, seed 42). It
 fits `primary.csv` (base: the registered reading) and `secondary.csv` (base plus the
@@ -319,9 +370,9 @@ tail -2 $A/logs/s1a-s15-$J.out
 
 ```bash
 . /home/kevin/cotcodec-runs/stage0/q2-stage1/analysis/s1a-v1/env.sh
-IN=(); for f in $PLAN $A/dr0-*.json $A/rescore-jobs.json $A/rescore-*/rescored.jsonl $A/rescore-*/receipt-*.json \
+IN=(); for f in $PLAN $A/provenance-pre.json $A/dr0-*.json $A/rescore-jobs*.json $A/rescore-*/rescored.jsonl $A/rescore-*/receipt-*.json \
   $A/merged-*.jsonl $A/a1.jsonl $A/rescore-coverage.json $A/costs.json $A/report/*.json $A/identity/identity.json \
-  $A/first-divergence.json $A/glmm-inputs/* $A/glmm-out/glmm-*.json $A/glmm-out/*.exit $A/glmm-out/r-packages.json \
+  $A/first-divergence.json $A/glmm-inputs/* $A/glmm-job.json $A/glmm-out/glmm-*.json $A/glmm-out/*.exit $A/glmm-out/r-packages.json \
   $A/glmm-summary.json $A/s15.json; do IN+=(--input $f); done
 for VM in $VMS; do for f in manifest.json episodes.jsonl lane-receipt.json; do IN+=(--input $R/runs/$VM/$f); done; done
 python3 -E -s -B $OPS/provenance.py --export $X --plan $PLAN --ops-commit $OPSC --guard $A/report/guard.json "${IN[@]}" --out $A/provenance.json; echo "exit=$?"
@@ -337,22 +388,32 @@ Copy only metadata, counts, digests, receipts and reports into
 `program/evidence/<date>/q2-stage1-analysis/`:
 
 - `env.sh`, `provenance-pre.json`, `provenance.json`;
+- a `README.md` that states the labels (`guard.json` `labels`) and that `provenance-pre.json`,
+  `rescore-jobs*.json` and the registered CLIs' outputs fall under them (see Rules);
 - `dr0-*.json`, `dr0-exits.txt`;
-- `rescore-jobs.json`, `rescore-*/receipt-*.json`, `rescore-*/rescored.jsonl`,
+- `rescore-jobs*.json`, `rescore-*/receipt-*.json`, `rescore-*/rescored.jsonl`,
   `rescore-coverage.json`;
 - `merged-*.jsonl`, `a1.jsonl` (the committed record fields plus the corrected and offline
   scores);
 - `costs.json`;
 - `report/`, `identity/identity.json`, `first-divergence.json`;
-- `glmm-inputs/`, `glmm-out/{glmm-*.json,*.exit,r-packages.json,receipt-*.json}`,
+- `glmm-inputs/`, `glmm-job.json`, `glmm-out/{glmm-*.json,*.exit,r-packages.json,receipt-*.json}`,
   `glmm-summary.json`;
 - `s15.json`;
 - `logs/`.
 
 Never copy step logs, captures, replies or stdout tails. An independent verifier then
-re-runs steps 4 to 10 from the copied inputs and compares the SHA-256 of `report.json`,
-`report-guarded.json`, `costs.json`, the merged files and `s15.json` with
-`provenance.json`.
+re-runs, from the copied files and each job's committed `episodes.jsonl`, the steps that
+read only them: the merges and `a1.jsonl` (step 4), the report (6), the identity check (7)
+and the GLMM writer (9). The verifier compares the SHA-256 of the merged files, `a1.jsonl`,
+`report.json`, `report-guarded.json`, `guard.json`, `identity.json` and
+`glmm-inputs/*.csv` with `provenance.json`. Some steps read files that stay on the host
+(section 16): coverage (step 4) and first divergence (step 8) read captures and step logs,
+costs (step 5) and the assembler (step 10) read lane run directories and receipts, and the
+GLMM fits (step 9) need the registered container. For those steps the verifier checks the
+copied outputs (`rescore-coverage.json`, `first-divergence.json`, `costs.json`, `s15.json`,
+`glmm-out/glmm-*.json`) against `provenance.json`'s digests, or re-runs them read-only on
+the host.
 
 ## Disclosures that go with the outputs
 
@@ -361,7 +422,8 @@ re-runs steps 4 to 10 from the copied inputs and compares the SHA-256 of `report
   byte-identical, or only the fractional outputs changed.
 - **Operator rules (D59 (ii)), when the data are incomplete.** These are the guard's
   readings in `guard.json` and `report-guarded.json`, and its reading of the cases D59
-  leaves open (`guard.json` `interpretation`; the table in step 6).
+  leaves open, ratified in D61 and its addendum (`guard.json` `interpretation`; the table
+  in step 6).
 - **Operator steps (D59 (iii)), each with its command above:**
   - offline rescoring `--time=08:00:00`, with coverage and live-score fallbacks;
   - replay mismatches shown beside the flips;
