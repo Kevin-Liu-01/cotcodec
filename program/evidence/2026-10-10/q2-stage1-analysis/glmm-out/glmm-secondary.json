@@ -1,0 +1,76 @@
+{
+  "schema": "q2-stage1a-glmm-v1",
+  "formula_full": "y ~ size * harness + (1 | task) + (1 | task:size) + (1 | task:harness) + (1 | task:size:harness) + (1 | session) + (1 | harness:session) + (1 | task:session) + (1 | task:harness:session)",
+  "formula_reduced": "y ~ size * harness + (1 | task) + (1 | task:size) + (1 | task:size:harness) + (1 | session) + (1 | harness:session) + (1 | task:session) + (1 | task:harness:session)",
+  "n_episodes": 1808,
+  "n_tasks": 113,
+  "seed": 42,
+  "n_boot": 200,
+  "glmmTMB_version": "1.1.10",
+  "TMB_version": "1.9.16",
+  "R_version": "R version 4.4.2 (2024-10-31)",
+  "full": {
+    "ok": true,
+    "optimizer_convergence": 0,
+    "optimizer_message": "relative convergence (4)",
+    "pdHess": true,
+    "logLik": -487.401816245017,
+    "df": 12
+  },
+  "reduced": {
+    "ok": true,
+    "optimizer_convergence": 0,
+    "optimizer_message": "relative convergence (4)",
+    "pdHess": true,
+    "logLik": -489.402576293808,
+    "df": 11
+  },
+  "fixed_effects": {
+    "(Intercept)": -8.62124638325946,
+    "size9B": 0.712324507336412,
+    "harnessH-OSW-fixed": 0.348942087437635,
+    "size9B:harnessH-OSW-fixed": -0.258771479846921
+  },
+  "variance_components": {
+    "task": 98.0781205793523,
+    "task:size": 3.44062687808671,
+    "task:harness": 1.32017619638533,
+    "task:size:harness": 0.305655898646244,
+    "session": 5.2776529410307e-15,
+    "harness:session": 9.26049440016512e-10,
+    "task:session": 1.32895947529689e-14,
+    "task:harness:session": 0.0737957606433094
+  },
+  "latent_shares": {
+    "task": 0.920850043193879,
+    "task:size": 0.0323038552389142,
+    "task:harness": 0.0123950612051277,
+    "task:size:harness": 0.0028697863071625,
+    "session": 4.95515912213916e-17,
+    "harness:session": 8.69462691374611e-12,
+    "task:session": 1.24775269244677e-16,
+    "task:harness:session": 0.00069286431035285
+  },
+  "bootstrap": {
+    "refits_failed": 0,
+    "refits_not_converged": 93,
+    "refits_used": 200,
+    "shares_ci95": {
+      "task": [0.88866295869023, 0.978072145362384],
+      "task:size": [0.00457121766658985, 0.0618541733384144],
+      "task:harness": [1.97608171498778e-19, 0.0260754959002725],
+      "task:size:harness": [1.69387581059089e-60, 0.0190859703119251],
+      "session": [3.10036595553339e-131, 0.000635556109064859],
+      "harness:session": [2.69513648163354e-92, 0.000635551008403219],
+      "task:session": [6.9675643343393e-76, 0.00764419023185384],
+      "task:harness:session": [5.73324700274532e-64, 0.00819682588553182]
+    }
+  },
+  "lrt_task_harness": {
+    "statistic": 4.00152009758131,
+    "df": 1,
+    "p_value": 0.0454592476141302,
+    "p_value_boundary_corrected": 0.0227296238070651,
+    "both_converged": true
+  }
+}

@@ -1,0 +1,31 @@
+{
+ "engine": {
+  "bridge_dir": "/home/kevin/cotcodec-runs/stage0/q2-stage1/gpu/{gpu_job_id}/bridge",
+  "gpu_job_id_file": "/home/kevin/cotcodec-runs/stage0/q2-stage1/pairs/a1-9b-s2/gpu_job_id"
+ },
+ "file_cache": {
+  "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/file_cache_1e112283/files"
+ },
+ "osworld": {
+  "commit": "b138d348256078fa634fc3b73567a7337c793e6b",
+  "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/OSWorld"
+ },
+ "run_root": "/home/kevin/cotcodec-runs/stage0/q2-stage1/runs",
+ "vm": {
+  "cpu_cores": 4,
+  "disk_size": "32G",
+  "guest_ip": "20.20.20.21",
+  "hmp_port": 7100,
+  "image": "happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+  "image_id": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+  "memory_gb": 6,
+  "network": "none-netns",
+  "qcow2": {
+   "host_path": "/home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2",
+   "sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+   "size_bytes": 24460197888
+  },
+  "ram_size": "4G",
+  "server_port": 5000
+ }
+}

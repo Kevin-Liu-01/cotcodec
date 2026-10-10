@@ -1,0 +1,16 @@
+2026-10-10T00:46:11Z preregister verify and check-chain PASS in /home/kevin/cotcodec-runs/stage0/q2-stage1/src/d5f57988ab94e0c098feddb744b78b73b5ad88ca
+2026-10-10T00:46:11Z lane validate: {"ok": true, "manifest_sha256": "fe02f1cd10db7f288a016865176fd5e1c79a3daa1ebfe542b255b017255f9528", "slots": 452}
+2026-10-10T00:46:11Z squeue-before-a1-9b-s2-VM: []
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+2026-10-10T00:46:12Z a1-9b-s2 VM job submitted: 1051
+2026-10-10T00:46:12Z GPU half --test-only exit 0: sbatch: Job 1052 to start at 2026-10-10T02:46:12 using 32 processors on nodes fal-h100-01 in partition research exit=0 
+2026-10-10T00:46:12Z squeue-before-a1-9b-s2-GPU (foreign): []
+2026-10-10T00:46:12Z a1-9b-s2 GPU job submitted: 1053 (after:1051)
+2026-10-10T00:46:12Z watchers started for 1051 and 1053 (timeout 64800 s)

@@ -1,0 +1,102 @@
+{
+ "A1-4B-S1": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 226,
+    "gpu_h_per_episode": 0.002537,
+    "gpu_h_share": 0.499851,
+    "vm_h_per_episode": 0.048308
+   },
+   "H-OSW-fixed": {
+    "episodes": 226,
+    "gpu_h_per_episode": 0.002538,
+    "gpu_h_share": 0.500149,
+    "vm_h_per_episode": 0.048336
+   }
+  },
+  "episodes": 452,
+  "gpu_elapsed_s": 4129.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 1.146944,
+  "gpu_h_per_episode": 0.002537,
+  "job": "A1-4B-S1",
+  "size": "4B",
+  "vm_h_per_episode": 0.048322
+ },
+ "A1-4B-S2": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 226,
+    "gpu_h_per_episode": 0.002509,
+    "gpu_h_share": 0.502515,
+    "vm_h_per_episode": 0.048056
+   },
+   "H-OSW-fixed": {
+    "episodes": 226,
+    "gpu_h_per_episode": 0.002484,
+    "gpu_h_share": 0.497485,
+    "vm_h_per_episode": 0.047575
+   }
+  },
+  "episodes": 452,
+  "gpu_elapsed_s": 4063.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 1.128611,
+  "gpu_h_per_episode": 0.002497,
+  "job": "A1-4B-S2",
+  "size": "4B",
+  "vm_h_per_episode": 0.047816
+ },
+ "A1-9B-S1": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 226,
+    "gpu_h_per_episode": 0.002645,
+    "gpu_h_share": 0.48993,
+    "vm_h_per_episode": 0.05062
+   },
+   "H-OSW-fixed": {
+    "episodes": 226,
+    "gpu_h_per_episode": 0.002754,
+    "gpu_h_share": 0.51007,
+    "vm_h_per_episode": 0.052701
+   }
+  },
+  "episodes": 452,
+  "gpu_elapsed_s": 4393.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 1.220278,
+  "gpu_h_per_episode": 0.0027,
+  "job": "A1-9B-S1",
+  "size": "9B",
+  "vm_h_per_episode": 0.05166
+ },
+ "A1-9B-S2": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 226,
+    "gpu_h_per_episode": 0.002673,
+    "gpu_h_share": 0.494658,
+    "vm_h_per_episode": 0.050806
+   },
+   "H-OSW-fixed": {
+    "episodes": 226,
+    "gpu_h_per_episode": 0.00273,
+    "gpu_h_share": 0.505342,
+    "vm_h_per_episode": 0.051903
+   }
+  },
+  "episodes": 452,
+  "gpu_elapsed_s": 4396.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 1.221111,
+  "gpu_h_per_episode": 0.002702,
+  "job": "A1-9B-S2",
+  "size": "9B",
+  "vm_h_per_episode": 0.051355
+ }
+}
