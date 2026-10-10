@@ -608,6 +608,48 @@ def cmd_summary(args: argparse.Namespace) -> int:
     return 0
 
 
+# --------------------------------------------------------------------------- compare
+
+IGNORED = ("provenance", "seconds", "argv")
+
+
+def differences(a: Any, b: Any, path: str = "") -> list[str]:
+    """Paths where ``b`` differs from ``a``; keys only ``b`` has (fields added by later code)
+    and run metadata (provenance, timings) are ignored."""
+    if isinstance(a, dict) and isinstance(b, dict):
+        out = []
+        for k, v in a.items():
+            if k in IGNORED:
+                continue
+            if k not in b:
+                out.append(f"{path}/{k} (missing)")
+            else:
+                out += differences(v, b[k], f"{path}/{k}")
+        return out
+    if isinstance(a, list) and isinstance(b, list):
+        if len(a) != len(b):
+            return [f"{path} (length)"]
+        return [d for i, (x, y) in enumerate(zip(a, b, strict=True))
+                for d in differences(x, y, f"{path}/{i}")]  # fmt: skip
+    return [] if a == b else [path]
+
+
+def cmd_compare(args: argparse.Namespace) -> int:
+    """Reproduction check: a committed output against a re-run from a committed tree."""
+    a = json.loads(Path(args.a).read_text(encoding="utf-8"))
+    b = json.loads(Path(args.b).read_text(encoding="utf-8"))
+    if args.mode:
+        a = {"modes": {args.mode: a["modes"][args.mode]}}
+        b = {"modes": {args.mode: b["modes"][args.mode]}}
+    diffs = differences(a, b)
+    rerun = json.loads(Path(args.b).read_text(encoding="utf-8")).get("provenance", {})
+    out = {"committed": args.a, "rerun": args.b, "mode": args.mode, "identical": not diffs,
+           "differences": diffs[:50], "rerun_provenance": rerun}  # fmt: skip
+    _write(Path(args.out), out)
+    log({"identical": not diffs, "n_differences": len(diffs)})
+    return 0
+
+
 # --------------------------------------------------------------------------- cost
 
 
@@ -665,6 +707,11 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--out", required=True)
     p = sub.add_parser("cost")
     p.add_argument("--out", required=True)
+    p = sub.add_parser("compare")
+    p.add_argument("--a", required=True, help="the committed output")
+    p.add_argument("--b", required=True, help="the re-run")
+    p.add_argument("--mode", help="compare one validation mode only")
+    p.add_argument("--out", required=True)
     p = sub.add_parser("summary")
     p.add_argument("--dir", required=True)
     p.add_argument("--out", required=True)
@@ -678,6 +725,7 @@ def main(argv: list[str] | None = None) -> int:
         "design": cmd_design,
         "cost": cmd_cost,
         "summary": cmd_summary,
+        "compare": cmd_compare,
     }
     return commands[args.cmd](args)
 
