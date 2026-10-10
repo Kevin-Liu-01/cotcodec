@@ -3518,3 +3518,34 @@ they say so.)
   `program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md`. Waiting on Kevin:
   whether to commission the registered follow-up after INCONCLUSIVE (more
   sessions at 4B and 9B, as a new proposal with its own gauntlet).
+
+## 2026-10-10 — Q2 S1a results: review fixes (no estimand, rule or decision changes)
+
+- Two review lenses (a recompute and a claims check) read `RESULTS.md` at
+  `23fd973`. The recompute reproduced every output it could re-run off the host
+  (not the GLMM fits) and raised four informational items, one a rounding slip.
+  The claims check raised four minor and three informational items. All are
+  fixed in `RESULTS.md` and the analysis README; none is rejected.
+- Added: the D57 disclosures (both 4B GPU jobs' receipt `75ebfc53...`; S2 9B
+  begin moved to 12:50:00), the D63 disclosure (reviewer job 1061 in the
+  session-2 gap) and D64 for job 1070 during the CPU analysis. Licence scope:
+  this host, image and lane (D53), and section 19's harness x session effect
+  inside δ. P1's falsification is decided by 4B; 9B's session test rejects
+  (p 0.016) for these two sessions.
+- GLMM reworded: the registered (primary-set) fit did not converge, so no
+  registered GLMM evidence; the secondary-set LRT (p 0.045, boundary 0.023) is
+  secondary, non-confirmatory evidence of harness-specific task variance, not
+  a decision input. The section 10.1 attribution of "no interaction claim" is
+  dropped.
+- DR3: C_z (−0.0078 each size) and V_z added; ρ undefined by the frozen code
+  (V_z ≤ 0), 0.667 for 4B if section 9 item 8's formula is read literally.
+  Corrected-verdict sources split as 511 + 1 (merge rule) on the base and
+  1,791 + 1 + 16 live on the secondary set. 9B/H-OSW-fixed mean steps 11.80.
+  The CPU-only basis of the analysis jobs restated (receipt fields are
+  constants written after the guards).
+- New descriptive file `q2-stage1-analysis/post-review/post-review.json`
+  (`post_review.py`, committed files only): setup, evaluation and engine queue
+  times (section 2 item 5; the engine queued no request), the exact sign-flip
+  p-values (X 0.4531, session 4B 0.5625, 9B 0.0156; registered Monte Carlo
+  0.4588, 0.5631, 0.0163) and the DR3 inputs.
+- The runbook's step-12 verification still has no committed record. GPU: none.

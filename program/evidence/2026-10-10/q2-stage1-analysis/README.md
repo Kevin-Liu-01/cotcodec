@@ -22,8 +22,15 @@ of record, unchanged). The operator scripts are `ops/s1a-analysis/` at
 `6d85529b1f84e1c9bd6a01b693c0eab76d0054c6`, shipped by `git archive` to
 `~/cotcodec-runs/stage0/q2-stage1/ops/<commit>/`; their digests are in `provenance.json`
 `ops_files`. Interpreter: the host's system CPython 3.10.12, numpy 1.21.5, scipy 1.8.0,
-`python3 -E -s -B`. Every Slurm job was CPU-only, with no GRES. Each container receipt shows
-`gpus_requested` 0, no `/dev/nvidia*` and network `none`.
+`python3 -E -s -B`. Every Slurm job was CPU-only. That rests on three facts. No batch header
+requests a GRES (the frozen `s1a-cpu.sbatch`, SHA-256 `3880d337...`, for the rescoring and GLMM
+containers; the ops `cpu-step.sbatch` for the Python steps), and no recorded `sbatch` command adds
+one (`rescore-jobs.json`, `glmm-job.json`, `env.sh` `step`). Both scripts refuse to start if
+Slurm assigned a GPU (`SLURM_*GPUS*` or `CUDA_VISIBLE_DEVICES` set to anything but 0).
+`s1a-cpu.sbatch` runs its container with `--network=none` and refuses to run it if a preflight
+container sees any `/dev/nvidia*` node. The container receipts' `gpus_requested: 0`,
+`network: "none"` and `container_dev_nvidia: []` are constants that `s1a-cpu.sbatch` writes once
+those guards have passed, so they are not independent evidence on their own.
 
 | Step | What | Command or job | Outcome |
 |---|---|---|---|
@@ -53,6 +60,35 @@ Mac, from this directory's `rescore-*/rescored.jsonl` and each job's committed
 `report-guarded.json` byte for byte (numpy 2.5.2). `guard.json` differs there only in the
 absolute paths it records.
 
+## Added after review (2026-10-10)
+
+`post-review/post_review.py` (standard library only; not code of record and not a runbook step)
+reads only committed files: `a1.jsonl`, the four A1 GPU jobs' bridge samples
+(`../q2-stage1-a1/<job>/gpu-<id>/bridge/gpu.jsonl`) and `report/guard.json`. It wrote
+`post-review/post-review.json` once, with the labels of `guard.json`. It holds three
+descriptions that change no estimand, rule or decision:
+
+- section 2 item 5's setup, evaluation and queue times (per size: median and nearest-rank 90th
+  percentile of the records' `timings` fields and slot occupancy; per job: the engine's
+  queue-time histogram sum and count, the most waiting requests in a sample and the prefix-cache
+  hit share);
+- the exact randomization p-values of the registered sign-flip tests on the primary set (X 0.4531,
+  session 4B 0.5625, 9B 0.0156), beside the registered Monte Carlo values (0.4588, 0.5631,
+  0.0163);
+- DR3's C_z and V_z, with ρ as the frozen code computes it (undefined for both sizes) and as
+  section 9 item 8's formula reads literally (4B 0.667, 9B undefined).
+
+Run from the repository root: `python3 -B
+program/evidence/2026-10-10/q2-stage1-analysis/post-review/post_review.py` (it refuses to
+overwrite its output).
+
+One label note. `rescore-coverage.json` `verdict_sources` counts every record with a non-null
+`corrected_score` as `corrected_from_offline_rescoring` (512 primary, 1,792 secondary). One of
+them, the base metric-exception episode (`fba2c100`, A1-4B-S1), has no offline score
+(`offline_raw_score` null) and gets 0 from the registered merge rule. Read from the records, the
+split is 511 rescored plus 1 by the merge rule on the base, and 1,791 plus 1 plus 16 live-score
+fallbacks on the secondary set.
+
 ## Files
 
 - `env.sh`, `provenance-pre.json`, `provenance.json` (the digest of every input, the
@@ -70,6 +106,7 @@ absolute paths it records.
   `glmm-summary.json`
 - `s15.json`
 - `logs/` (the four `cpu-step.sbatch` outputs)
+- `post-review/` (`post_review.py`, `post-review.json`): added after review, above
 
 Step logs, screenshots, captures, model replies and setup or postconfig stdout tails stay on
 the host (section 16). This directory holds no host address and no credential. The only
@@ -92,12 +129,18 @@ dotted-quad string is a package version in `r-packages.json`.
 | `glmm-out/glmm-primary.json` | `c753afdf731b71c84945be13bf4a8c4a7794954409ce87ed0eb4711d71107752` |
 | `glmm-out/glmm-secondary.json` | `69faad13e6a23148bcd0caf6bfd9367ce258e6c1c524adf6aeaaa12453861303` |
 | `provenance.json` | `c365ae0f4e6972c632566848bc6bcda574b51645f0aa6940d9bcd5a0cc441b72` |
+| `post-review/post-review.json` | `ea6bc2faa6321222b6ad7ad81ad78b19f13c0d945d18aa0a48fbcb99e38a22b9` |
+| `post-review/post_review.py` | `11c5654b215abee2ad8da640d2cfee0a819ce4745902675b7d681e1c202569ed` |
 
 The other files' digests are in `provenance.json` `inputs`. All 40 inputs from the host's
-analysis directory were checked against the copies here, and every one matches.
+analysis directory were checked against the copies here, and every one matches. The
+`post-review/` files were written after `provenance.json` and are not in it.
 
 ## Still open
 
-The runbook's independent verifier still has to run (step 12). It would re-run steps 4, 6, 7
-and 9's writer from these files and check the outputs that read host-only files against
-`provenance.json`.
+The runbook's independent verification (step 12) has no committed record yet. It would re-run
+steps 4, 6, 7 and 9's writer from these files and check the outputs that read host-only files
+against `provenance.json`. A review after the first results commit reported doing this off the
+host, plus an independent re-implementation of the estimands from the raw records, with every
+output reproduced. It did not re-fit the GLMM (no R on the Mac; a host re-fit would be a new
+Slurm job), and its working files are not committed here.

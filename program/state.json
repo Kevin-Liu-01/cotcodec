@@ -406,7 +406,7 @@
           "rules": "DR0 no; DR-A ANCHOR-UNAVAILABLE; DR1 no; DR2 Inconclusive; DR4 no; DR5 INCONCLUSIVE (M 0.13)",
           "predictions": "P1 falsified; P2, P3, P4, P5 not falsified",
           "sensitivities": "checker-corrected: 0 flips (identical); metric-exception missing: 1 episode (identical); postconfig server-error missing (D56): 0 episodes (identical); flagged excluded (30 tasks): delta -2.50, DR2 Inconclusive, DR5 INCONCLUSIVE; secondary (113 tasks): delta -1.11 [-4.31, 1.99], D_b 10.40%, pi_small 0.084 [0.020, 0.162], DR2/DR5 Inconclusive/INCONCLUSIVE (no rule)",
-          "glmm": "primary (registered reading) did not converge (singular convergence, no pdHess; LRT not computed); secondary converged, task:harness LRT chi2 4.00, p 0.045 (boundary 0.023), not a decision input",
+          "glmm": "primary (registered reading) did not converge (singular convergence, no pdHess; LRT not computed), so no registered GLMM evidence; secondary-set fit converged, task:harness LRT chi2 4.00, p 0.045 (boundary 0.023): secondary, non-confirmatory evidence of harness-specific task variance, not a decision input",
           "infrastructure": "0 losses, 0 restarts, 0 retried/slow/undelivered observations in 1,808 episodes; 0 postconfig server errors; 6 postconfig HTTP 200 non-zero returncode (4B); IRError 2/6/0/11; 1 metric exception; truncation <= 0.44% (no label)",
           "rescoring": "452/452 rows per job; 16 secondary verdicts fell back to live scores (53ad5833, LiveStateRequired); 0 flips, 0 live/offline mismatches",
           "evidence": "program/evidence/2026-10-10/q2-stage1-analysis/ (report-guarded.json 6bda751e..., s15.json f09a8031..., provenance.json c365ae0f...)",
