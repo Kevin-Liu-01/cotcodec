@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2508.15260",
+ "fetched_at": "2026-10-10T15:31:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40886,
+ "raw_sha256": "da01b415f1a6c5a77e8610c1c026d37fd47305f866779cd91e30494d2f75da1d",
+ "raw_stored": false,
+ "extract": {
+  "title": "Deep Think with Confidence",
+  "authors": [
+   "Fu, Yichao",
+   "Wang, Xuewei",
+   "Tian, Yuandong",
+   "Zhao, Jiawei"
+  ],
+  "citation_date": "2025/08/21",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 21 Aug 2025 05:48:38 UTC"
+   }
+  ],
+  "abstract": "Large Language Models (LLMs) have shown great potential in reasoning tasks through test-time scaling methods like self-consistency with majority voting. However, this approach often leads to diminishing returns in accuracy and high computational overhead. To address these challenges, we introduce Deep Think with Confidence (DeepConf), a simple yet powerful method that enhances both reasoning efficiency and performance at test time. DeepConf leverages model-internal confidence signals to dynamically filter out low-quality reasoning traces during or after generation. It requires no additional model training or hyperparameter tuning and can be seamlessly integrated into existing serving frameworks. We evaluate DeepConf across a variety of reasoning tasks and the latest open-source models, including Qwen 3 and GPT-OSS series. Notably, on challenging benchmarks such as AIME 2025, DeepConf@512 achieves up to 99.9% accuracy and reduces generated tokens by up to 84.7% compared to full parallel thinking.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

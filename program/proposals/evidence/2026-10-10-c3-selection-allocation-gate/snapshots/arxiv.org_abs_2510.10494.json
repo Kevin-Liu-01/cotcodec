@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2510.10494",
+ "fetched_at": "2026-10-10T15:31:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42449,
+ "raw_sha256": "011db47acf1249cd6d9cd968f7654dc4d682a6137d067f732adff72c2577d52c",
+ "raw_stored": false,
+ "extract": {
+  "title": "Tracing the Traces: Latent Temporal Signals for Efficient and Accurate Reasoning",
+  "authors": [
+   "Vilas, Martina G.",
+   "Yousefi, Safoora",
+   "Nushi, Besmira",
+   "Horvitz, Eric",
+   "Balachandran, Vidhisha"
+  ],
+  "citation_date": "2025/10/12",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 12 Oct 2025 08:03:56 UTC"
+   }
+  ],
+  "abstract": "Reasoning models improve their problem-solving ability through inference-time scaling, allocating more compute via longer token budgets. Identifying which reasoning traces are likely to succeed remains a key opportunity: reliably predicting productive paths can substantially reduce wasted computation and improve overall efficiency. We introduce Latent-Trajectory signals that characterize the temporal evolution of a model's internal representations during the generation of intermediate reasoning tokens. By measuring the overall change in latent representations between the start and end of reasoning, the change accumulated across intermediate steps, and the extent to which these changes advance toward the final state, we show that these signals predict solution accuracy more reliably than both cross-layer metrics and output-based confidence measures. When used to guide answer selection across multiple sampled generations, Latent-Trajectory signals make test-time scaling more effective and efficient than majority voting, reducing token usage by up to 70% while preserving and even improving accuracy by 2.6% on average. Moreover, these predictive signals often emerge early in the reasoning trace, enabling early selection and allocation of compute to the most promising candidates. Our findings contribute not only practical strategies for inference-time efficiency, but also a deeper interpretability perspective on how reasoning processes are represented and differentiated in latent space.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

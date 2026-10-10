@@ -455,7 +455,7 @@
     "Q3 (D54): K1 v3 ended at an honest exit (gauntlet 45, 51, 55, 56); Q3 rests on the dense pre-check v2 (NEGATIVE_CAPABLE_V3). Yours only if you want K1 reopened: admitting a screen above 8 GPU-h (D24) for more seeds or evidence, plus a new design with a same-language zero-overlap leg. Package: program/preregistrations/q3-k1-localization-screen-v3.md (draft), program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md, program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl",
     "Host limit (needs the host administrator): fs.inotify.max_user_instances is 128 on fal-h100-01, so the action-path ladder's 40-VM rung could not boot 10 of 80 VMs (dnsmasq 'failed to create inotify: Too many open files'). N* is therefore 32, and the registered program kill criterion (N* below 40: cut the Stage-1 task count before adding GPUs) applies. Ask the administrator to raise the limit if 40 concurrent VMs are wanted; attempt 1's rung-40 rerun is not used (D51); running above 32 VMs after a host change needs a registered deviation or a new registration with its own ladder (D53 ii) (evidence: program/evidence/2026-10-08/q2-action-path-v2-acceptance/)"
   ],
-  "gpu_hours_spent_this_program": 7.3963,
+  "gpu_hours_spent_this_program": 7.4516,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -847,6 +847,15 @@
       ],
       "outcome": "review PARSED on attempt 1, replicates token-identical; the model returned total 59 although its ten scores sum to 64 (re-checked total 64, no cap binding); wave score 60 (lower of 60 and 64; 59 if the produced total is kept), best 60; honest exit under D60 (identification still the largest defect), wave cap and triad 3/3 refuted, so E4 ends; reviewer inference only, not E4 gate work; submitted after S1a session-2 9B jobs 1051 and 1053 completed (queue empty, re-checked in the submit command) and ran 14:05:59-14:09:11 UTC 2026-10-10; S1a's operator waited for it and submitted its 4B session-2 jobs at 14:09:27",
       "basis": "physical (scontrol RunTime 00:03:12 = 192 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, GPUs at 0 MiB after the job)"
+    },
+    {
+      "experiment": "C3 Stage-0 gate gauntlet wave 1 (c3-selection-allocation-gate-v1 draft, D64) open-weight review (D24)",
+      "gpu_hours": 0.0553,
+      "jobs": [
+        "1070 qwen3.6-35b-a3b review"
+      ],
+      "outcome": "review PARSED on attempt 1, total 54 (ten scores sum to 54, no cap binding), replicates token-identical; wave score 54 (lower of 56 and 54), best 54; honest exit (query budget 146 of 150 cannot fund a compliant wave 2; triad 3/3 refuted); reviewer inference only, not C3 gate work; submitted 15:57:23 UTC 2026-10-10 when only S1a CPU rescore jobs 1065-1068 were running (no s1a-a1-* or q2s1a-* job running or pending), ran 15:57:23-16:00:42 UTC",
+      "basis": "physical (scontrol RunTime 00:03:19 = 199 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, GPUs at 0 MiB after the job)"
     }
   ],
   "results": [

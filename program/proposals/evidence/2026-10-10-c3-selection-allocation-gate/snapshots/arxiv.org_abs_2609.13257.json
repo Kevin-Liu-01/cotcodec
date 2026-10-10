@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2609.13257",
+ "fetched_at": "2026-10-10T15:31:09Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42895,
+ "raw_sha256": "24312b70a898967e748c831e95958b832a95ada2aa207a93abaaab4e2a53011b",
+ "raw_stored": false,
+ "extract": {
+  "title": "Sampling headroom is not selection gain: a compute-value audit of test-time scaling for video world models",
+  "authors": [
+   "Jiang, Yuhua",
+   "Lu, Junjie",
+   "Gao, Feifei"
+  ],
+  "citation_date": "2026/09/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 6 Sep 2026 06:11:15 UTC"
+   }
+  ],
+  "abstract": "Test-time scaling (TTS) can improve generation only when additional compute produces better candidates and the system can reliably identify them. This distinction is especially important for video world models, where a wider sample pool may contain stronger rollouts without improving the output that is ultimately selected. We introduce the Compute-Value Audit (CVA), a sequential framework that asks whether extra sampling creates opportunity, observable signals provide a reliable state, that state supports a beneficial action, and the resulting gain exceeds the full entry fee of generation and verification. On 192 Physics-IQ scenes, expanding the pool from 4 to 16 candidates increases oracle quality by +9.23 IQ (95% CI [+7.44, +11.14]), but Flow, Cycle, and VideoReward fail to recover this headroom reliably. Across three generators, none of twelve adaptive-depth policies outperforms uniform compute; they recover only 42-69% of the measured entry fee. A matched-60-NFE Predict-and-Perturb intervention on VideoPhy2 is likewise negative across three fresh-seed replicas. These negative results are not universal: anchor-explorer passes all four stages in a sparse PRM800K setting, MMLU-Pro exposes the gap between predictive state and useful action, and a privileged paired future establishes a positive video upper bound. Together, these results show that sampling headroom has deployment value only when it can be converted into a reliable decision whose benefit survives the complete compute charge. Code is available at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

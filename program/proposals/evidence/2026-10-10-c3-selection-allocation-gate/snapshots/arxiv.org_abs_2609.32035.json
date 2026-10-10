@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2609.32035",
+ "fetched_at": "2026-10-10T15:31:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42123,
+ "raw_sha256": "265af451fcc37a6027eaef1345760ceea7f7e3bd78948e5a4b23d4874533d380",
+ "raw_stored": false,
+ "extract": {
+  "title": "Reasoning Concentrates Errors, and Self-Consistency Never Notices",
+  "authors": [
+   "Althoubi, Asaad"
+  ],
+  "citation_date": "2026/09/25",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 25 Sep 2026 22:03:14 UTC"
+   }
+  ],
+  "abstract": "Self-consistency assumes that independent samples disagree when a model is unsure, so agreement is evidence of correctness. Holding weights fixed and toggling only a reasoning mode, over five benchmarks and 74,944 samples, we show that reasoning concentrates a model's errors: the probability that two independently drawn wrong answers coincide rises in all ten dataset-scale comparisons (p = 0.00098), and in nine of nine after restricting both arms to the problems each gets wrong. Where the answer space is unbounded, reasoning cuts the distinct answers produced to 0.43-0.65 of the non-reasoning count; where it is bounded, both arms hold an identical option set and reasoning concentrates mass on it instead, which no positional prior can explain at fixed weights. The aggregate cost is smaller than the mechanism predicts, because reasoning also shrinks the set of problems where answer diversity can decide anything, in ten of ten cells and by 2.7x; normalized for available headroom, both arms convert a quarter of it in domain. Confidence weighting does not recover what is left. Across 280 method-dataset-model combinations on eight models and five benchmarks, not one beats plain majority voting after correction; weighted voting agrees with it on 98.5% of problem-method pairs and is right 56.3% of the time on the rest; and a signal's direction can invert within fixed weights, with answer log-probability predicting correctness when reasoning is off and error when it is on. A learned six-signal combination gains nothing out of domain. Confidence signals should be evaluated on decisions, not on discrimination.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

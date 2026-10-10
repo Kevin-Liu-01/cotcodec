@@ -1,0 +1,15 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "evidence": "127 counted orx discover queries across four cells (keyword with exact terms and every closest prior's title phrase, embedding with the mechanism in plain words, OpenAlex), 12 OpenReview searches, 10 web searches, 2 OpenAlex venue-filtered searches; every closest prior read in full by a cell and the five gate priors re-read by synthesis. Merged verdict NARROWED (frontier, kill-shot and cross-domain cells; none OCCUPIED). No direct prior found for the gate's combination; the selector arm and the shared-signal recipe are published (C02 to C10).",
+ "why_fail": [
+  "the blind closest-prior critic and the novelty refuter have not run",
+  "the cells spent 127 of the declared 150 queries, leaving 23 for a triad whose reserve is at least 30; synthesis made no counted query",
+  "OpenReview full texts unreadable (bot-check); ACL Anthology only through web search; no citation-graph traversal beyond OpenAlex",
+  "the gate's novelty delta is small by the owner's own reading: CASE is the stronger contribution and the gate is a transfer test with controls, so blind discrimination may judge the prior strictly dominant (cap 74)"
+ ],
+ "remediation": "Run the blind critic on blind/ and the novelty refuter; read SANE and the other ICLR 2027 submissions when accessible."
+}

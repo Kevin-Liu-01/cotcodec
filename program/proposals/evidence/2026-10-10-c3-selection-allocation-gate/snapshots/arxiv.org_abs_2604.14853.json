@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2604.14853",
+ "fetched_at": "2026-10-10T15:31:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43475,
+ "raw_sha256": "2cc7d74004cc061c1dc04b658411df7c7033b842aaa342172b2fec67634dc51a",
+ "raw_stored": false,
+ "extract": {
+  "title": "Adaptive Test-Time Compute Allocation for Reasoning LLMs via Constrained Policy Optimization",
+  "authors": [
+   "Zhai, Zhiyuan",
+   "Li, Bingcong",
+   "Xiao, Bingnan",
+   "Li, Ming",
+   "Wang, Xin"
+  ],
+  "citation_date": "2026/04/16",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 16 Apr 2026 10:39:22 UTC"
+   }
+  ],
+  "abstract": "Test-time compute scaling, the practice of spending extra computation during inference via repeated sampling, search, or extended reasoning, has become a powerful lever for improving large language model performance. Yet deploying these techniques under finite inference budgets requires a decision that current systems largely ignore: which inputs deserve more compute, and which can be answered cheaply? We formalize this as a constrained optimization problem (maximize expected accuracy subject to an average compute budget) and solve it with a two-stage Solve-then-Learn pipeline. In the solve stage, Lagrangian relaxation decomposes the global constraint into per-instance sub-problems, each admitting a closed-form oracle action that optimally prices accuracy against cost. We prove that the induced cost is monotone in the dual variable, enabling exact budget targeting via binary search. In the learn stage, a lightweight classifier is trained to predict oracle actions from cheap input features, amortizing the allocation rule for real-time deployment. We establish that the task-level regret of the learned policy is bounded by its imitation error times the worst-case per-instance gap, yielding a clean reduction from constrained inference to supervised classification. Experiments on MATH and GSM8K with three LLMs (DeepSeek-V3, GPT-4o-mini, Qwen2.5-7B) show that our method consistently outperforms uniform and heuristic allocation baselines, achieving up to 12.8% relative accuracy improvement on MATH under matched budget constraints, while closely tracking the Lagrangian oracle upper bound with over 91% imitation accuracy.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -3447,3 +3447,77 @@ they say so.)
   also need d90, noise SDs and planted recovery measured on real residuals
   (the 2.7 GB teacher download), and the 2605.16591, 2508.17032 and 2305.12766
   delta rows.
+
+## 2026-10-10 — C3 Stage-0 gate gauntlet wave 1 (D64): score 54, honest exit (branch `gauntlet/c3-selection`, not merged)
+
+- Wave 1 ran in workflow `wf_c299aa22-d28` with declared cumulative budgets:
+  queries 150 (at least 30 reserved for the triad), wall_minutes 600, tokens
+  8,000,000, dollars 150, waves 3, gpu_hours 0.3. Four discovery cells fed one
+  synthesis owner, who wrote proposal `366b3537...`, DRAFT registration
+  `c3-selection-allocation-gate-v1` (`2de3359e...`; not frozen, not admitted)
+  and the evidence bundle (evidence root `7b8612b9...`) at `4d29497`. Audit
+  row 1 is appended to
+  `program/gauntlet/2026-10-10-c3-selection-allocation-gate.jsonl`, row hash
+  `e7b2dc726dd3037a8e953f5dcc52efa4621cfd3241c117a72b56e5ac1a57fa8e`.
+- Reviews: 56 (claude-opus-5-5) and 54 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1070). Each total equals the sum of its ten scores, and no cap binds (74,
+  79 and 89 all apply). Score 54, best 54. Neither review is signed (D24).
+- Blind discrimination is recorded as FAIL. The critic judged the gate and
+  CASE (2608.17124) the same mechanism, with CASE the stronger contribution,
+  and called the gate "a stricter, narrower pilot" of it. The critic also named
+  three CASE weaknesses that the gate fixes, so the prior is stronger but not
+  strictly dominant. Reviewer 1 read this as a weak pass by the letter, and
+  reviewer 2 read it as failed. The score does not change, because 74 does not
+  bind. The packets match the bundle files exactly. Only CASE was judged.
+- Refute-first triad: 3 of 3 refuted.
+  - Novelty: a recombination plus one model-and-workload cell. PAIR
+    2609.36461 already reports pre-answer linear probes in thinking mode at
+    within-question AUC 0.79 and 0.87. The cells retrieved it three times
+    and never read it.
+  - Identification: the registered answer position moves with the answer's
+    leading character under Qwen3's BPE, so a gate can learn a tokenizer
+    artefact. F's estimand is also mismatched.
+  - Feasibility: see the largest defect below.
+- Largest defect: feasibility and decisiveness. This is reviewer 1's choice.
+  Reviewer 2 named the identification artefact, and the recorder ranks it
+  second because it is cheap to repair and does not matter while D, F and H
+  are never read.
+  - Measured Qwen3-8B thinking data (2609.32035, Tables 8, 9 and 13) cannot
+    meet the 8.0 GPU-h cap rule (N >= 560), the S line (kappa6 >= 0.10) and
+    I6 (at least 80 mixed held-out questions) at the same time.
+  - MATH-500-level workloads are admissible, but there kappa6 <= 0.063 and
+    at most about 45 mixed held-out questions are possible.
+  - AMC- and AIME-level workloads are INFEASIBLE.
+  - So the gate's likely verdicts are INFEASIBLE or INCONCLUSIVE_N with
+    STOP_SPREAD. Both are predictable with no GPU, and neither reads D, F
+    or H.
+- Honest exit applies for two reasons.
+  - Query budget: 146 of 150 are used. The cells used 129; the bundle says 127
+    because two asset-cell calls whose output was discarded were missed. The
+    refuters used 17. The 4 queries left cannot fund a rule-compliant wave
+    2, whose triad alone needs at least 18.
+  - Triad stop: 0 of 3 refuters failed to refute.
+- Exits that do not apply: tokens 4.05M of 8M, $71.08 of $150, 103.5 of 600
+  minutes, wave 1 of 3. A second wave at this cost would land near the token
+  and dollar caps. The doctor re-run at record time is byte-identical to the
+  bundle copy (FAIL, as expected).
+- GPU: reviewer 2's job 1070 used 0.0553 GPU-h (scontrol RunTime 00:03:19 on
+  1 H100, COMPLETED 0:0, 15:57:23-16:00:42 UTC, no leftover container). It
+  was submitted while only S1a's CPU rescore jobs 1065-1068 were running, so
+  the host rule held. It is added to the ledger as "C3 Stage-0 gate gauntlet
+  wave 1 ... open-weight review (D24)". The program total is 7.4516 on this
+  branch. The gate itself used no GPU.
+- Waiting on Kevin: whether C3 continues.
+  - To stop: nothing further is needed.
+  - To continue, a fresh run with new budgets would need a new versioned
+    registration with:
+    - a decision-bearing zero-GPU feasibility pre-check from measured Qwen3-8B
+      anchors;
+    - D, F and H separated from S, with N and I6 re-derived from fitted-gate
+      simulations;
+    - a format-invariant answer position;
+    - F redefined as the paired increment, and a floor with answer-string,
+      logit-gap and self-certainty features;
+    - delta rows for PAIR, 2610.00296 and Xpbbetf285.
+  - Alternatively, an admission above 8 GPU-h under D24 (about 13 to 26
+    GPU-h of caps for an AMC- or AIME-level workload).

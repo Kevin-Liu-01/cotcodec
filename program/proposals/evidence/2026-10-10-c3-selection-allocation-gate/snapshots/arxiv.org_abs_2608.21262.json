@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2608.21262",
+ "fetched_at": "2026-10-10T15:31:09Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42156,
+ "raw_sha256": "0d3da3ad8391a4c3da5e935f6e48546a93a862698d4b9d22b7c567ad9571caad",
+ "raw_stored": false,
+ "extract": {
+  "title": "The Exceedance Design Effect: Effective Sample Size for Thresholds under Clustering",
+  "authors": [
+   "Noonan, Adam"
+  ],
+  "citation_date": "2026/08/21",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 21 Aug 2026 16:19:50 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 1 Oct 2026 13:22:23 UTC"
+   }
+  ],
+  "abstract": "Suppose we want a cutoff that 90% of a population falls below. We estimate it from a sample, and another sample would give a different cutoff and a different fraction below it. We ask how much that fraction varies when observations come in independent groups, such as pupils in classrooms or sentences in news articles. We prove that grouping multiplies its large-sample variance by $1+(m-1)\\rho_I(p)$, where $m$ is the group size, $p$ is the target fraction, and $\\rho_I(p)$ measures whether two members of a group fall on the same side of the cutoff. That correlation can differ from the correlation between the scores themselves, and it changes with the target. We give a direct proof, a counterexample to using score correlation, and an extension to unequal group sizes. A dataset therefore does not have one effective sample size. How much information it contains depends on the question you ask. In our document experiment, the same 1,000 rows carried about 217 independent observations' worth of information at the median. At the 95th percentile, they carried about 621. Nothing about the dataset changed. We asked it a different question. The number of rows is a property of the dataset. The effective sample size belongs to the analysis.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
