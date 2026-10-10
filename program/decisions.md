@@ -886,3 +886,20 @@ pending job's begin time is moved to 12:50:00 UTC (`scontrol update`, before
 it started), so both readings hold. Moving it later changes nothing the
 registration fixes. Session 2's 4B job is submitted after S2 9B's records
 exist, as the job order requires.
+
+**D58. Backfill E4 (D19, a distilled in-context write rule) restarts with a
+contract refresh and a first gauntlet wave, while S1a runs.** Q1 is closed
+(D46) and Q3's K1 ended at an honest exit (D54). The backfill queue's next item
+whose prerequisites are CPU-only is E4: C1 is folded into S1a's cost card. The
+dossier corrected E4's question, narrowed its novelty (Task Operators
+2610.01054, TTCD 2608.01672, One Adapter Pair 2608.09521, Jeong 2603.22329),
+and gated it on a source-only eligibility check and an oracle interface
+ceiling (about 2 GPU-h). Decided: refresh the contract from `legacy/` (the
+direction, the YAML and the Phase-0 CPU doctor on
+`orx/d19-icl-rule-distillation-port-phase-0-cpu-docto`), re-check every prior
+against the dossier, write a proposal and a draft registration for the gate
+only, and run gauntlet wave 1 with declared budgets. Nothing runs on the host
+while an S1a job runs. The open-weight reviewer's lane job runs before 11:30
+UTC on 2026-10-10 or after S1a's session 2 has ended. The gate's GPU work
+waits for a scored, reviewed package and a freeze, and anything above 8 GPU-h
+needs D24.
