@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2609.30535",
+ "fetched_at": "2026-10-10T21:49:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41631,
+ "raw_sha256": "a380d224ec124bef0ae40535d371ad33caafa64e12d909cfb67db3c5dac3632e",
+ "raw_stored": false,
+ "extract": {
+  "title": "Feeding BabyLMs Macaroni: Code-Switching Curricula Cause Cross-Lingual Convergence",
+  "authors": [
+   "Rooryck, Dries",
+   "Cai, Alex",
+   "Belinkov, Yonatan",
+   "Alvarez-Melis, David",
+   "Brantley, Kianté"
+  ],
+  "citation_date": "2026/09/24",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 24 Sep 2026 20:41:46 UTC"
+   }
+  ],
+  "abstract": "Children in multilingual communities often code-switch, using multiple languages in a single utterance. Can we induce cross-lingual alignment in language models by training on code-switched text? We pretrain small decoder-only transformers on two 100M-word multilingual corpora: a base corpus formed by mixing the English, Dutch, and Chinese BabyBabelLM datasets, and a corpus generated from it by inserting word- and sentence-level code-switching using an LLM. We find that training on code-switched data aligns the representations of parallel text, particularly across different scripts, and that this alignment persists through training on monolingual documents. Under a learning curriculum that progresses from word-level code-switching, to sentence-level code-switching, to monolingual documents, models trained on code-switched data outperform baselines trained without it on the BabyLM evaluation suite. Our work characterizes code-switching curriculum learning as an effective data augmentation method for multilingual pretraining. We release our code, data, and models at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

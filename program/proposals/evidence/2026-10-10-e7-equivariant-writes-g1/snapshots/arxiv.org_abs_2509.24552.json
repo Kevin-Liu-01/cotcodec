@@ -1,0 +1,40 @@
+{
+ "url": "https://arxiv.org/abs/2509.24552",
+ "fetched_at": "2026-10-10T21:49:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44302,
+ "raw_sha256": "9b188cc1ab67df50bcb71d4e871b31bb8931d4d9b5e5510c4007b3cd1ea801a5",
+ "raw_stored": false,
+ "extract": {
+  "title": "Short window attention enables long-term memorization",
+  "authors": [
+   "Cabannes, Loïc",
+   "Beck, Maximilian",
+   "Szilvasy, Gergely",
+   "Douze, Matthijs",
+   "Lomeli, Maria",
+   "Copet, Jade",
+   "Mazaré, Pierre-Emmanuel",
+   "Synnaeve, Gabriel",
+   "Jégou, Hervé"
+  ],
+  "citation_date": "2025/09/29",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 29 Sep 2025 10:04:12 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 9 Dec 2025 08:50:43 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Mon, 4 May 2026 14:21:45 UTC"
+   }
+  ],
+  "abstract": "Recent works show that hybrid architectures combining local sliding window attention layers and global attention layers outperform either of these architectures taken separately. However, the impact of the window length and the interplay between local layers and global layers remain under-studied. In this work, we first analyze the interaction between short and long term memory by considering SWAX: a hybrid architecture consisting of sliding-window attention and xLSTM linear RNN layers. A counter-intuitive finding is that larger sliding windows hurts the long-context performance. In fact, short window attention encourages the model to better train the long-term memory of the xLSTM as it cannot rely on the local softmax attention mechanism for long context-retrieval. We also validate our findings on local-global architectures alternating short window and full attention layers: the short layers should be small in order not to hinder the usefulness of the long layers. However, employing too small sliding windows is detrimental even for short-context tasks, which could be solved with information from moderately larger sliding windows otherwise. Therefore, we train hybrid architectures by stochastically changing the sliding window size, forcing the model to leverage both the short term window and the long-term memory. Training with stochastic window sizes significantly outperforms regular window attention both on short and long-context problems.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

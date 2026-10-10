@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2610.06750",
+ "fetched_at": "2026-10-10T21:49:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44479,
+ "raw_sha256": "e33a4c1c28176f23f113087b860bca33975bb034f2136700afff77ea930516e2",
+ "raw_stored": false,
+ "extract": {
+  "title": "Balancing Memory Pathways: Analyzing and Improving Memory Utilization in Hybrid LMs",
+  "authors": [
+   "Lee, Hyunji",
+   "Singh, Joykirat",
+   "Khan, Zaid",
+   "Chen, Justin Chih-Yao",
+   "Stengel-Eskin, Elias",
+   "Sordoni, Alessandro",
+   "Cohan, Arman",
+   "Bansal, Mohit"
+  ],
+  "citation_date": "2026/10/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 5 Oct 2026 17:27:30 UTC"
+   }
+  ],
+  "abstract": "Recurrent-attention hybrid language models (LMs), which interleave attention and recurrent layers, are increasingly used to combine the efficiency of the recurrent layers with the strong performance of attention layers. Prior work suggests that attention and recurrent layers offer complementary pathways to use past information: attention supports precise memory recall from earlier tokens, while recurrent layers support consolidation of disparate information over long contexts. However, we observe that simply having access to both pathways does not mean that hybrid LMs are effectively using them. We find that they rely substantially more on attention than on the recurrent state. Standard supervised fine-tuning improves overall performance but does not improve how the two memory pathways are coordinated: the model becomes more reliant on information propagated by attention layers, while its use of information propagated by recurrent layers remains limited. To encourage better coordination between the two memory pathways, we add an auxiliary loss that limits attention's access to earlier context while the recurrent state propagates through the full sequence. This objective encourages the model to retain and use information through the recurrent pathway alongside attention. It improves overall performance, with particularly strong gains on tasks involving longer contexts or requiring information aggregation, consistent with the strengths of recurrent layers observed in analysis. Crucially, this imbalance and the benefit of our auxiliary loss generalize: they apply to multiple recurrent-attention LMs in question-answering and agentic tasks, as well as to attention-based LMs that combine different forms of memory. Together, our findings show that simply providing multiple memory pathways does not ensure their effective use, and that targeted supervision is needed to better coordinate them.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

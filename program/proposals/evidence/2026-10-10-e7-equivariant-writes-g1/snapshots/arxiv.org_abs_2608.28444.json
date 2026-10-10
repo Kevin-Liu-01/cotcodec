@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2608.28444",
+ "fetched_at": "2026-10-10T21:49:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42316,
+ "raw_sha256": "131e4ea802b4d1a1e2b935d03c8983248aa0207077e33fef03faecb1d7ed6cea",
+ "raw_stored": false,
+ "extract": {
+  "title": "Sliding-window beats linear attention",
+  "authors": [
+   "Jolicoeur-Martineau, Alexia",
+   "Sukthanker, Rhea Sanjay",
+   "Cameron, Pashmina",
+   "Gervais, Emy"
+  ],
+  "citation_date": "2026/08/28",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 28 Aug 2026 15:31:34 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 4 Oct 2026 14:05:24 UTC"
+   }
+  ],
+  "abstract": "Due to the nature of quadratic attention, Large Language Models (LLMs) consume a lot of memory and energy: every new token costs more than the previous one, and its keys and values must be stored in memory indefinitely, which is unsustainable. Two main lines of work address this: compressing the KV cache, e.g., by evicting or quantizing keys and values, and retrofitting LLMs to use Linear Attention, which replaces the KV cache with a fixed-size state. Retrofitting has attracted a lot of attention, given its promise to solve the quadratic scaling problem with state-of-the-art performance at low cost. However, it has not been properly compared to the simplest form of KV-cache eviction: Sliding Window Attention (SWA) with attention sinks. In this work, we show that SWA with sinks performs as well or better than most retrofitted Linear Attention models across multiple LLMs and downstream tasks, with the largest gains on long-context and generative tasks. On long-context reasoning tasks (Needle-in-a-Haystack and BABILong), SWA achieves massively higher performance (2 to 10 times higher than linear attention). SWA requires no additional training, is extremely fast, and requires little memory, making it an extremely cheap and reliable solution. When the training budget is limited, switching to SWA is a much more effective way to reduce inference memory cost than retrofitting linear attention. Linear attention models have shown promise, but they require training from scratch or extensive retrofitting to reap their architectural benefits and come close to SWA.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

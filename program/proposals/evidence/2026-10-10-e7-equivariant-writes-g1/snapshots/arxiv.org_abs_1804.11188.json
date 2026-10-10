@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/1804.11188",
+ "fetched_at": "2026-10-10T21:49:18Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41139,
+ "raw_sha256": "bef565b9e6d59a35b19235d49ee33e0544d79f7cd733c60b3e6d567e8457924e",
+ "raw_stored": false,
+ "extract": {
+  "title": "Can recurrent neural networks warp time?",
+  "authors": [
+   "Tallec, Corentin",
+   "Ollivier, Yann"
+  ],
+  "citation_date": "2018/03/23",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 23 Mar 2018 09:17:35 UTC"
+   }
+  ],
+  "abstract": "Successful recurrent models such as long short-term memories (LSTMs) and gated recurrent units (GRUs) use ad hoc gating mechanisms. Empirically these models have been found to improve the learning of medium to long term temporal dependencies and to help with vanishing gradient issues. We prove that learnable gates in a recurrent model formally provide quasi- invariance to general time transformations in the input data. We recover part of the LSTM architecture from a simple axiomatic approach. This result leads to a new way of initializing gate biases in LSTMs and GRUs. Ex- perimentally, this new chrono initialization is shown to greatly improve learning of long term dependencies, with minimal implementation effort.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

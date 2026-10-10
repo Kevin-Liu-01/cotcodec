@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2609.19291",
+ "fetched_at": "2026-10-10T21:49:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41686,
+ "raw_sha256": "3986a08e2f2f6804ab6f969bb1d7e77ce0edf5c7eb6d217f62ac3df893b6ff10",
+ "raw_stored": false,
+ "extract": {
+  "title": "Why Pretraining Fails to Share Cross-Lingual Knowledge",
+  "authors": [
+   "Gaber, Adam",
+   "Dolev, Uriel",
+   "Fittschen, Elisabeth",
+   "Cheng, Bobby",
+   "Marton, Yuval",
+   "Choshen, Leshem"
+  ],
+  "citation_date": "2026/09/16",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 16 Sep 2026 18:02:29 UTC"
+   }
+  ],
+  "abstract": "Large Language Models (LLMs) have made remarkable progress in the processing and modeling of many languages. Yet, unlike human multilinguals, they exhibit surprisingly limited cross-lingual knowledge transfer. While this limitation is well documented, its origins during multilingual training remain unclear. We pretrain 360M- and 7B-parameter LLMs and show that poor cross-lingual knowledge generalization emerges during pretraining and persists under standard interventions. To isolate its cause, we employ a controlled bilingual pretraining setting using two copies of the same language, sharing identical text and token segmentation, but mapped to disjoint token spaces. We find that disjoint tokens alone are enough to induce knowledge compartmentalization, even between identical copies of the same language, establishing disjoint token spaces as a fundamental barrier to cross-lingual knowledge generalization. Guided by this understanding, we suggest mapping languages into a shared token space by simple word-wise translation and find it substantially improves cross-lingual knowledge generalization, recovering up to 12.6\\% of native-language learning efficiency --- 14$\\times$ the baseline.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "url": "https://arxiv.org/abs/2504.11393",
+ "fetched_at": "2026-10-10T21:49:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44272,
+ "raw_sha256": "0b1f0a1e0af7959e3bacba5a899c7ef227066ad46b7d0d5989a0c5f49c4a3c43",
+ "raw_stored": false,
+ "extract": {
+  "title": "DataDecide: How to Predict Best Pretraining Data with Small Experiments",
+  "authors": [
+   "Magnusson, Ian",
+   "Tai, Nguyen",
+   "Bogin, Ben",
+   "Heineman, David",
+   "Hwang, Jena D.",
+   "Soldaini, Luca",
+   "Bhagia, Akshita",
+   "Liu, Jiacheng",
+   "Groeneveld, Dirk",
+   "Tafjord, Oyvind",
+   "Smith, Noah A.",
+   "Koh, Pang Wei",
+   "Dodge, Jesse"
+  ],
+  "citation_date": "2025/04/15",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 15 Apr 2025 17:02:15 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 13 Jul 2025 20:17:49 UTC"
+   }
+  ],
+  "abstract": "Because large language models are expensive to pretrain on different datasets, using smaller-scale experiments to decide on data is crucial for reducing costs. Which benchmarks and methods of making decisions from observed performance at small scale most accurately predict the datasets that yield the best large models? To empower open exploration of this question, we release models, data, and evaluations in DataDecide -- the most extensive open suite of models over differences in data and scale. We conduct controlled pretraining experiments across 25 corpora with differing sources, deduplication, and filtering up to 100B tokens, model sizes up to 1B parameters, and 3 random seeds. We find that the ranking of models at a single, small size (e.g., 150M parameters) is a strong baseline for predicting best models at our larger target scale (1B) (~80% of com parisons correct). No scaling law methods among 8 baselines exceed the compute-decision frontier of single-scale predictions, but DataDecide can measure improvement in future scaling laws. We also identify that using continuous likelihood metrics as proxies in small experiments makes benchmarks including MMLU, ARC, HellaSwag, MBPP, and HumanEval >80% predictable at the target 1B scale with just 0.01% of the compute.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

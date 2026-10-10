@@ -3783,3 +3783,72 @@ they say so.)
     Relay now.
   - Design decision 1 (a standalone 2.0 GPU-h Stage 1a) should not be
     accepted on the current design.
+## 2026-10-10 — E7 G1 floor gate gauntlet wave 1 (D67): score 51, no honest exit (branch `gauntlet/e7-d22`, not merged)
+
+- Wave 1 ran in workflow `wf_39e89052-5e0` with declared cumulative budgets:
+  queries 150 (at least 30 reserved for the triad), wall_minutes 600, tokens
+  8,000,000, dollars 150, waves 3, gpu_hours 0.3. Four discovery cells fed one
+  synthesis owner, who wrote proposal `7f1179c3...`, DRAFT registration
+  `e7-equivariant-writes-g1-v1` (`cce49578...`; not frozen, not admitted)
+  and the evidence bundle (evidence root `886240b3...`) at `623abb6`. Audit
+  row 1 is appended to
+  `program/gauntlet/2026-10-10-e7-equivariant-writes-g1.jsonl`, row hash
+  `34901a11f8d9009d52e525d54bf440b6a2ba4419b24dd78ac4e1596dff430388`.
+- Reviews: 51 (claude-opus-5-5) and 51 re-checked (qwen3.6-35b-a3b,
+  self-hosted, Slurm 1077). Reviewer 2 returned 46, but its ten scores sum to
+  51 and no cap binds: an arithmetic error, as in E4's job 1061. As in E4
+  row 2, the re-checked totals are used. Score 51, best 51 (46 if the
+  produced total were kept; nothing depends on it). Neither review is signed
+  (D24).
+- Blind discrimination: a weak pass by the letter. The critic judged the
+  gate and 2610.06750 (Balancing Memory Pathways) not the same mechanism, and
+  the prior the stronger contribution, while crediting the gate's controls
+  and cross-lingual angle, so not strictly dominant. The packets match the
+  bundle files exactly. Only 2610.06750 was judged.
+- Refute-first triad: 3 of 3 refuted.
+  - Novelty: a recombination, not a direct prior. 2609.33093, SWAX
+    (2509.24552) and Griffin (2402.19427) already measure state-carried recall
+    and its window dependence, and the translated key is the cross-lingual
+    needle protocol of MLNeedle and OneRuler. Griffin was never cited or
+    retrieved, and MLNeedle and OneRuler were not re-read.
+  - Identification: see the largest defect. CROSS and BIND also reward
+    surface cues, and the FAIL_CROSS sub-label confounds pathway with
+    distance.
+  - Feasibility: the caps fit (7.733 GPU-h), but the step is not decisive
+    for the same CUT reason. The measured NTREX test pool (median 676) is
+    smaller than S1 assumes (900).
+- Largest defect (both reviewers): the CUT check rests on a false premise and
+  is evaluated first. The registration says the state cut "removes every
+  path from the facts to the query" (L365-367), but the registered cut resets
+  the GDN states once after the facts block and leaves SWA untouched
+  (L420-422). SWA relays the facts into post-cut GDN writes, so a model that
+  really carries facts in its state can be labelled INSTRUMENT_INVALID. Two
+  refuters and reviewer 1 showed the leak by complex step on S3's model; the
+  recorder re-ran reviewer 1's script and reproduced it exactly (single cut
+  0.94-1.01 of uncut; state zeroed across the gap exactly 0). The fact-write
+  ablation (v = 0) leaks the same way. Next in line: the CROSS/BIND
+  surface-cue confound (a length-plus-punctuation oracle picks the target
+  among 8 NTREX keys 52-66% of the time).
+- No honest exit applies. Queries 113 of 150 (the cells and synthesis used
+  98, one more than the bundle's 97 because the frontier's first call was a
+  byte-identical duplicate; the novelty refuter used 15, three of them
+  OpenAlex 429s; the identification and feasibility refuters used none,
+  below the six-per-refuter rule). Tokens 3,762,329 of 8M, $64.07 of $150,
+  151.0 of 600 minutes, wave 1 of 3. The triad stop blocks freezing v1. The
+  doctor re-run at record time is byte-identical to the bundle copy (FAIL,
+  as expected).
+- GPU: reviewer 2's job 1077 used 0.0583 GPU-h (scontrol RunTime 00:03:30 on
+  1 H100, COMPLETED 0:0, 22:30:55-22:34:25 UTC, no leftover container). The
+  queue was empty before submission, so the host rule held. It is added to
+  the ledger as "E7 G1 floor gate gauntlet wave 1 ... open-weight review
+  (D24)". The program total is 9.8596 on this branch. The gate itself
+  used no GPU.
+- Waiting on Kevin: whether E7 continues to wave 2.
+  - The repair is CPU-only: a v2 draft with a path-complete cut (state zeroed
+    from the facts to the answer, verified on the real module graph) or CUT
+    demoted to a descriptive read; ABLATION with beta = 0, gated separately
+    for MONO and CROSS; surface-matched distractors and controls for CROSS;
+    a B1 attention-only read; S1 re-run on the measured pool; delta rows for
+    Griffin, 2609.33093 and SWAX.
+  - Stopping is also reasonable: even a repaired gate is a weak lever on
+    E7's main question (owner's prior P(PASS) about 0.1).

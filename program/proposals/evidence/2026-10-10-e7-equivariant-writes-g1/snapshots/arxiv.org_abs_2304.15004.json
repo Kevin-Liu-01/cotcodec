@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2304.15004",
+ "fetched_at": "2026-10-10T21:49:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42800,
+ "raw_sha256": "362f263f66244f5480541c58361f0332a6f6a5b92ada6a02ee5495d0a2595d07",
+ "raw_stored": false,
+ "extract": {
+  "title": "Are Emergent Abilities of Large Language Models a Mirage?",
+  "authors": [
+   "Schaeffer, Rylan",
+   "Miranda, Brando",
+   "Koyejo, Sanmi"
+  ],
+  "citation_date": "2023/04/28",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 28 Apr 2023 17:52:11 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 22 May 2023 15:56:25 UTC"
+   }
+  ],
+  "abstract": "Recent work claims that large language models display emergent abilities, abilities not present in smaller-scale models that are present in larger-scale models. What makes emergent abilities intriguing is two-fold: their sharpness, transitioning seemingly instantaneously from not present to present, and their unpredictability, appearing at seemingly unforeseeable model scales. Here, we present an alternative explanation for emergent abilities: that for a particular task and model family, when analyzing fixed model outputs, emergent abilities appear due to the researcher's choice of metric rather than due to fundamental changes in model behavior with scale. Specifically, nonlinear or discontinuous metrics produce apparent emergent abilities, whereas linear or continuous metrics produce smooth, continuous predictable changes in model performance. We present our alternative explanation in a simple mathematical model, then test it in three complementary ways: we (1) make, test and confirm three predictions on the effect of metric choice using the InstructGPT/GPT-3 family on tasks with claimed emergent abilities; (2) make, test and confirm two predictions about metric choices in a meta-analysis of emergent abilities on BIG-Bench; and (3) show to choose metrics to produce never-before-seen seemingly emergent abilities in multiple vision tasks across diverse deep networks. Via all three analyses, we provide evidence that alleged emergent abilities evaporate with different metrics or with better statistics, and may not be a fundamental property of scaling AI models.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

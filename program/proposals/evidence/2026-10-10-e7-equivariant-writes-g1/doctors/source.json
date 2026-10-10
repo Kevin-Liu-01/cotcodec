@@ -1,0 +1,18 @@
+{
+ "doctor": "Source",
+ "status": "PASS",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
+ "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac; arxiv.org and export.arxiv.org abstract pages, the GitHub API and raw files, the Hugging Face dataset API and the OpenReview api2 search endpoint answered; 97 counted orx discover queries (frontier 46, kill-shot 23, cross-domain 24, synthesis 4) with returned ids and raw-output SHA-256; 63 uncounted log entries (19 OpenReview searches, 4 web searches, 1 author page, GitHub and Hugging Face reads, curl version checks, 36 paper-read entries); cutoff 2026-10-10.",
+ "degraded_coverage": [
+  "orx build 0.2.2 reports itself outdated (latest 0.2.18)",
+  "alphaXiv full texts can lag arXiv versions; versions resolved through export.arxiv.org v2/v3 pages",
+  "OpenAlex had not indexed 2610.06750",
+  "OpenReview per-note pages return a browser challenge; abstracts from search payloads only",
+  "ACL Anthology through web search and one author page only",
+  "Semantic Scholar and the arXiv API unreachable from the Mac; host relay not used",
+  "no patents, X, Reddit, Hugging Face papers or Chinese-language sources"
+ ],
+ "remediation": "Semantic Scholar forward citations for 2610.06750, 2609.04434 and 2509.24552 through the host relay when no S1a job runs"
+}

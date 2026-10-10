@@ -1,0 +1,11 @@
+{
+ "doctor": "Design",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
+ "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data, three-way decisions, operating characteristics by simulation; K-Dense statistical-analysis for clustered intervals",
+ "evidence": "Lines I1 (0.80), MONO (0.60), CROSS (0.15) and BIND (> 0) per seed with 90% sentence-cluster bootstrap intervals; majority rule over seeds 42, 43, 44; verdicts INSTRUMENT_INVALID, PASS, LOTTERY, FAIL_MONO, FAIL_CROSS (sub-labelled), INCONCLUSIVE; CUT and ABLATION identification checks; futility rule; state-necessary bin justified by the receptive-field arithmetic and checked by S3 (complex-step derivative nonzero at 1,560 and exactly zero at 1,561 with the state cut, three seeds); S1 operating characteristics over 1,000 replicates per scenario (P(PASS) 0.717 with every line 5 points above at seed SD 0.03, 0.005 at the lines; binding-free null never passes; coverage 0.933 bootstrap at nominal 0.90); leakage controls (reserved codes, digit-free keys and filler, surface filter, dedup, sealed manifests with a read ledger).",
+ "why_fail": "Every S1 distribution is assumed; the CUT and ABLATION checks are not simulated; S3 is a NumPy stand-in, not the fla module graph; no harness, builder or analysis code exists; the window (512) and scale are fixed by the dossier, so a failure does not generalize (stated).",
+ "remediation": "Write the harness; run a kind: cpu-doctor orx node with the reach test on the real module graph (pure-torch reference path), analysis recovery on synthetic predictions, and the prompt builder's leakage controls"
+}

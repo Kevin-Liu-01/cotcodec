@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2609.33093",
+ "fetched_at": "2026-10-10T21:49:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42909,
+ "raw_sha256": "63e5b1c7c4d752747a5bac17a2d2046ef0ffc3fd12025b1ed2c601c71de62085",
+ "raw_stored": false,
+ "extract": {
+  "title": "How Linear Attention Remembers",
+  "authors": [
+   "Lee, Kichang",
+   "Park, JaeYeon",
+   "Kim, Songkuk",
+   "Ko, JeongGil"
+  ],
+  "citation_date": "2026/09/27",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 27 Sep 2026 02:02:21 UTC"
+   }
+  ],
+  "abstract": "Linear attention replaces the growing key--value (KV) cache of standard attention with a fixed-size recurrent state, substantially reducing memory growth with context length. This efficiency, however, changes how past information is stored: many tokens must share and repeatedly update the same memory. We study how this recurrent state functions as a memory system. Using an analytical decomposition together with controlled causal interventions in pretrained GLA and GDN models, we trace how recalled information is written, retained, and later accessed. We find that fact-specific information enters recurrent memory through concentrated, content-dependent writes and is later accessed through concentrated query-time read pathways. Multiple facts can remain selectively accessible within the same state, yet their internal representations exhibit cross-fact causal coupling rather than independent KV-like storage. As memory load increases, both recall and targeted editability degrade, whereas elapsed context alone has a substantially smaller effect within the tested regime. Causal interventions on subsequent writes further show that interference is shaped by their overlap with existing memory. Finally, in hybrid architectures that combine recurrent layers with full attention, the runtime memory directly supporting recall shifts predominantly to the full-attention KV state. Together, these results reveal how fixed-size recurrent memory supports selective recall despite shared storage, while exposing the interference and capacity limits that distinguish it from token-addressable KV memory.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

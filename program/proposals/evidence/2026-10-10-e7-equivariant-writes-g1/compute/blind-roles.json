@@ -1,0 +1,7 @@
+{
+ "proposal": "paragraph-803016fc.txt",
+ "closest_prior": "paragraph-36695b43.txt",
+ "closest_prior_id": "arXiv:2610.06750 (Balancing Memory Pathways: Analyzing and Improving Memory Utilization in Hybrid LMs, Lee et al., v1 2026-10-05; ICLR 2027 submission OpenReview nIDJ2pPPOB, created 2026-09-18); full text read by the frontier, kill-shot and asset cells and re-read by synthesis on 2026-10-10 (Secs. 3, 4.1, 5.1, 5.2)",
+ "runner_up_prior_id": "arXiv:2509.24552 (Short window attention enables long-term memorization, SWAX, v3 2026-05-04): from-scratch SWA plus xLSTM, window size controls whether the recurrent memory learns long-range recall; no packet written",
+ "note": "Role mapping for the recorder only. Never give this file to the critic."
+}
