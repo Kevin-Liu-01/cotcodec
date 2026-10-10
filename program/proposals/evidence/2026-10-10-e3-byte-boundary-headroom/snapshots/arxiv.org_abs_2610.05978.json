@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2610.05978",
+ "fetched_at": "2026-10-10T21:58:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41165,
+ "raw_sha256": "efd0366a524ed89731c3b9c1e9d42b614c3319a58182043ea3f7539437adda50",
+ "raw_stored": false,
+ "extract": {
+  "title": "Byte Language Models: Scaling, Emergent Abstractions, and Information Allocation",
+  "authors": [
+   "Wang, Jie",
+   "Luo, Shiwei",
+   "Zhang, Qi",
+   "Wu, Yuanbin"
+  ],
+  "citation_date": "2026/10/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 5 Oct 2026 08:29:08 UTC"
+   }
+  ],
+  "abstract": "Tokenizer-free language models remove the inductive bias of fixed tokenizers by modeling text directly as bytes, but the resulting longer sequences substantially increase computation and eliminate explicit text abstractions. We ask whether this additional computation can be useful, and whether standard Transformers can learn the abstractions that tokenization provides. We study these questions on Transformers without specialized tokenization-related architectures. With token-superposition training and hash embeddings, byte Transformers consistently outperform subword Transformers as model size scales. We further find that byte Transformers build local text abstractions as external tokenizers: a set of segmentation-like positions are used to collect local context representations, and restricting up to $25\\%$ of intermediate layers to these local representations preserves downstream performance. Finally, these learned structures induce highly non-uniform generation difficulty, with uncertainty concentrated near local structure boundaries; exploiting them for speculative decoding yields $3.4\\times$ more accepted tokens than in subword Transformers.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

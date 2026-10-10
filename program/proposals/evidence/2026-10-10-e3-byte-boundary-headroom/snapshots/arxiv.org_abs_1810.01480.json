@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/1810.01480",
+ "fetched_at": "2026-10-10T21:58:04Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41685,
+ "raw_sha256": "750fa4bf9f3d160b5dc96ec60b3ab5933ecc248c1483baf2908b204dc415f12e",
+ "raw_stored": false,
+ "extract": {
+  "title": "Learning to Segment Inputs for NMT Favors Character-Level Processing",
+  "authors": [
+   "Kreutzer, Julia",
+   "Sokolov, Artem"
+  ],
+  "citation_date": "2018/10/02",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 2 Oct 2018 19:52:38 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 24 Oct 2018 10:21:05 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Mon, 5 Nov 2018 09:14:21 UTC"
+   }
+  ],
+  "abstract": "Most modern neural machine translation (NMT) systems rely on presegmented inputs. Segmentation granularity importantly determines the input and output sequence lengths, hence the modeling depth, and source and target vocabularies, which in turn determine model size, computational costs of softmax normalization, and handling of out-of-vocabulary words. However, the current practice is to use static, heuristic-based segmentations that are fixed before NMT training. This begs the question whether the chosen segmentation is optimal for the translation task. To overcome suboptimal segmentation choices, we present an algorithm for dynamic segmentation based on the Adaptative Computation Time algorithm (Graves 2016), that is trainable end-to-end and driven by the NMT objective. In an evaluation on four translation tasks we found that, given the freedom to navigate between different segmentation levels, the model prefers to operate on (almost) character level, providing support for purely character-level NMT models from a novel angle.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "url": "https://aclanthology.org/P13-1167/",
+ "fetched_at": "2026-10-10T21:58:04Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 33417,
+ "raw_sha256": "5301bd5bb478a6f1367e6f6c7d13cfb7f807c765e1f15c168b36627d556d4e00",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "Evaluating Text Segmentation using Boundary Edit Distance - ACL Anthology"
+ }
+}

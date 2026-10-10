@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2507.07824",
+ "fetched_at": "2026-10-10T21:58:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40378,
+ "raw_sha256": "e8e223e97a75e110438730f033286b3a0a7644763b1a311d724962631a74011d",
+ "raw_stored": false,
+ "extract": {
+  "title": "Conditional Unigram Tokenization with Parallel Data",
+  "authors": [
+   "Vico, Gianluca",
+   "Libovický, Jindřinch"
+  ],
+  "citation_date": "2025/07/10",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 10 Jul 2025 14:53:59 UTC"
+   }
+  ],
+  "abstract": "We introduce conditional unigram tokenization, a novel approach that extends unigram tokenization by conditioning target token probabilities on source-language tokens from parallel data. Given a fixed source tokenizer, our method learns a target tokenizer that maximizes cross-lingual semantic alignment. We evaluate our tokenizer on four language pairs across different families and resource levels, examining intrinsic properties and downstream performance on machine translation and language modeling. While our conditional tokenizer maintains comparable statistical properties to standard unigram tokenizers, results are mixed: we observe no improvements in machine translation quality, but find consistent perplexity reductions in language modeling. We hypothesize that quadratic scaling of conditional probability estimation with respect to the vocabulary size creates a data efficiency bottleneck. Our findings suggest that alternative parameterizations may be necessary for practical cross-lingual tokenization.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

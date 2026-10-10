@@ -1,0 +1,17 @@
+{
+ "doctor": "Design",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-10",
+ "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
+ "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data, three-way decisions, operating characteristics by simulation; K-Dense statistical-analysis for clustered intervals",
+ "evidence": "Primary instrument PBD with a circular-shift floor and a budget-matched self ceiling; instrument gates I1 to I6 on dev; a three-way decision rule with an aligner-agreement gate and line M; two aligners must agree; 90% cluster-bootstrap intervals (B = 2,000, seed 42). S1 (compute/instrument_sim.py; 31 process runs, seeds 42/43/44) shows: the dossier's UOT instrument fails alignment sensitivity (aligned over permuted 0.86 to 1.02), rate robustness (normalized S undefined in 10 of 24 ZH-like cells, -3.00 to 9.64 on PL-like) and convention invariance (loss ratio up to 3.97); PBD passes all three (Bernoulli absolute S at most 0.019; permuted PBD at most 0.027; convention round trip identity 1.0); the registered rule never declares HEADROOM at true S of 0.90 or more and its only wrong-side calls are NO_HEADROOM at true S 0.887 to 0.897.",
+ "why_fail": [
+  "every number is synthetic; the real inter-aligner agreement, attenuation and rates are unknown until dev is read",
+  "the synthetic generator's monolingual word structure aligns closely with units (word reference S 0.99 to 1.00), so line M's behaviour on real data is untested",
+  "the decision pair's two sides come from two different models; same-model variants are descriptive only",
+  "the registered NO_HEADROOM line tolerates true S down to about 0.887 (0.013 under the dossier's 0.90)",
+  "the scorer, canonicalization and cut builder are not yet in harness/ with unit tests, so the design cannot be checked against production code"
+ ],
+ "remediation": "Restore the scorer with unit tests and S1's gates as an orx cpu-doctor node; pre-freeze audit."
+}

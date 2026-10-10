@@ -1,0 +1,12 @@
+{
+ "url": "https://huggingface.co/cartesia-ai/hnet_2stage_XL_chinese",
+ "fetched_at": "2026-10-10T21:58:22Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 87425,
+ "raw_sha256": "5992b271658e4e22702731e165ef3cf33fd0560498ec73f932c553b5395a7650",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "cartesia-ai/hnet_2stage_XL_chinese · Hugging Face"
+ }
+}

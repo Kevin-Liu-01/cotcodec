@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2502.06468",
+ "fetched_at": "2026-10-10T21:58:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41371,
+ "raw_sha256": "bf50ac8c82393648cd14df46e27028d1033a5789a5e97b405a93f77b9592ee0d",
+ "raw_stored": false,
+ "extract": {
+  "title": "Beyond Literal Token Overlap: Token Alignability for Multilinguality",
+  "authors": [
+   "Hämmerl, Katharina",
+   "Limisiewicz, Tomasz",
+   "Libovický, Jindřich",
+   "Fraser, Alexander"
+  ],
+  "citation_date": "2025/02/10",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 10 Feb 2025 13:50:12 UTC"
+   }
+  ],
+  "abstract": "Previous work has considered token overlap, or even similarity of token distributions, as predictors for multilinguality and cross-lingual knowledge transfer in language models. However, these very literal metrics assign large distances to language pairs with different scripts, which can nevertheless show good cross-linguality. This limits the explanatory strength of token overlap for knowledge transfer between language pairs that use distinct scripts or follow different orthographic conventions. In this paper, we propose subword token alignability as a new way to understand the impact and quality of multilingual tokenisation. In particular, this metric predicts multilinguality much better when scripts are disparate and the overlap of literal tokens is low. We analyse this metric in the context of both encoder and decoder models, look at data size as a potential distractor, and discuss how this insight may be applied to multilingual tokenisation in future work. We recommend our subword token alignability metric for identifying optimal language pairs for cross-lingual transfer, as well as to guide the construction of better multilingual tokenisers in the future. We publish our code and reproducibility details.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

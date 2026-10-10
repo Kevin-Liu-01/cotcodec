@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2306.04116",
+ "fetched_at": "2026-10-10T21:58:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40521,
+ "raw_sha256": "26a4658471c59086ac46d978e1ad59292d3a7a94e541ba9e621081d83a14dda8",
+ "raw_stored": false,
+ "extract": {
+  "title": "Unbalanced Optimal Transport for Unbalanced Word Alignment",
+  "authors": [
+   "Arase, Yuki",
+   "Bao, Han",
+   "Yokoi, Sho"
+  ],
+  "citation_date": "2023/06/07",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 7 Jun 2023 03:03:41 UTC"
+   }
+  ],
+  "abstract": "Monolingual word alignment is crucial to model semantic interactions between sentences. In particular, null alignment, a phenomenon in which words have no corresponding counterparts, is pervasive and critical in handling semantically divergent sentences. Identification of null alignment is useful on its own to reason about the semantic similarity of sentences by indicating there exists information inequality. To achieve unbalanced word alignment that values both alignment and null alignment, this study shows that the family of optimal transport (OT), i.e., balanced, partial, and unbalanced OT, are natural and powerful approaches even without tailor-made techniques. Our extensive experiments covering unsupervised and supervised settings indicate that our generic OT-based alignment methods are competitive against the state-of-the-arts specially designed for word alignment, remarkably on challenging datasets with high null alignment frequencies.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

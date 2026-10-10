@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2608.27658",
+ "fetched_at": "2026-10-10T21:58:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41386,
+ "raw_sha256": "78c92fd1526c7aadacfff19634b4882f138398625bbde9eb3a1d2d4353a6acc5",
+ "raw_stored": false,
+ "extract": {
+  "title": "When Tokenizers Fail: Byte-Level Chunking for Zero-Shot Transfer to Low-Resource Languages",
+  "authors": [
+   "Kumar, Sanjeev",
+   "Yamaguchi, Atsuki",
+   "Aletras, Nikolaos"
+  ],
+  "citation_date": "2026/08/27",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 27 Aug 2026 19:45:54 UTC"
+   }
+  ],
+  "abstract": "Subword tokenization hinders low-resource language processing by imposing frequency patterns from dominant languages onto script-sharing variants. Byte-level models bypass this issue by processing raw UTF-8 characters, yet they create a granularity mismatch for word-level tasks in non-Latin scripts. Hierarchical byte-level architectures address this mismatch by grouping bytes into word-aligned chunks. However, these architectures require massive training data and suffer from representational misalignment when paired with frozen subword-based language models. In this paper, we propose an adapted hierarchical network framework that bridges this modality gap without extensive training. Our method initializes byte embeddings directly from the subword representations of a frozen base model. We apply a chunk alignment loss to project dynamically grouped byte chunks toward precomputed subword targets, and interleave lightweight part-of-speech (POS) supervision to guide boundary detection. Experiments across six languages demonstrate that our tokenizer-free approach improves performance for word-level morphological tasks, yielding up to a 13.3% improvement on POS tagging.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

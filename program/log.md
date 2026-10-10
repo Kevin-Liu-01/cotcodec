@@ -3925,3 +3925,82 @@ they say so.)
   - whether to register a sigma-and-anchor probe under 8 GPU-h after J1;
   - the FineWeb-Edu and tokenizer downloads (possibly already covered by D1);
   - Phase 1 admission (D24), whatever the score.
+## 2026-10-10 — E3 Stage-0 headroom probe gauntlet wave 1 (D67): score 52, honest exit (branch `gauntlet/e3-d18`, not merged)
+
+- Wave 1 ran in workflow `wf_5b779bc0-dee` (one of the five D67 gauntlets)
+  with declared cumulative budgets: queries 150 (at least 30 reserved for the
+  triad), wall_minutes 600, tokens 8,000,000, dollars 150, waves 3, gpu_hours
+  0.3. Four discovery cells fed one synthesis owner, who wrote proposal
+  `782cbf31...`, DRAFT registration `e3-byte-boundary-headroom-v1`
+  (`30f1fe76...`; not frozen, not admitted) and the evidence bundle (evidence
+  root `60e5e933...`) at `9d79644`. Audit row 1 is appended to
+  `program/gauntlet/2026-10-10-e3-byte-boundary-headroom.jsonl`, row hash
+  `13d97526e18462751b8234676a118bed333d313458b93615cb50f62e60762d59`.
+- Reviews: 52 (claude-opus-5-5) and 57 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1085). Each total equals the sum of its ten scores, and no cap binds (74,
+  79 and 89 all apply). Score 52, best 52. Neither review is signed (D24).
+- Blind discrimination is recorded as a weak PASS by the rule's letter. The
+  critic told the probe and token alignability (2502.06468) apart and judged
+  the prior the stronger contribution as a finding, but the probe the better
+  methodology, so the prior is not strictly dominant. Reviewer 2 read it as
+  "strictly dominant", which the critic did not say. The score does not
+  change, because 74 does not bind. The packets match the bundle files
+  exactly. Only token alignability was judged (no SOMBRERO packet).
+- Refute-first triad: 3 of 3 refuted.
+  - Novelty: a recombination of published parts (token alignability's
+    question, boundary Dice, SOMBRERO's circular-shift null, kappa_M-form
+    normalization, SMT phrase-consistency cuts); kappa_M and the SMT
+    bilingual-segmentation lineage are missing from the ledger.
+  - Identification: see the largest defect below.
+  - Feasibility: at published EN-ZH aligner error (AER about 0.18-0.27) the
+    rule never returns NO_HEADROOM under correlated errors, and the registered
+    compute fails on the pinned stack (fp32 against hnet's bf16 flash-attention
+    asserts; mamba_ssm@a6a1dae cannot import under transformers 5.15.0).
+- Largest defect: the decision statistic does not read translation-specific
+  placement at the registered operating point. Both reviewers name it.
+  - At EN-ZH stage 1, with Chinese calibrated to the English count, the
+    Chinese side covers about 0.85-1.0 of its canonical gaps (one chunk per
+    character; H-Net paper Chinese 2-stage BPIC 5.81).
+  - The floor shifts only side b, so it collapses onto the system, and S is
+    driven by Chinese density and the English word-end miss rate. With perfect
+    Chinese placement, a 3% English miss gives S about 0.8 (a HEADROOM call)
+    at density about 0.9 but 0.947 at density 0.54, against a 0.03 gap between
+    the decision lines.
+  - Every threshold was tuned on simulations in another regime (budget near
+    the cut count; independent aligner errors at AER 0.03-0.13), and no
+    registered gate catches the collapse.
+- Honest exit applies for two reasons.
+  - Query budget: 137 of 150 are used. The cells used 122; the bundle says
+    118 because four asset-cell calls whose output the wrapper truncated were
+    rerun and only the reruns were counted. The refuters used 15 (novelty 8,
+    identification 0, feasibility 7; six calls overall were OpenAlex 429s).
+    The 13 left cannot fund a rule-compliant wave 2, whose triad alone needs
+    at least 18.
+  - Triad stop: 0 of 3 refuters failed to refute.
+- Exits that do not apply: tokens 3.84M of 8M, $66.43 of $150, 163.2 of 600
+  minutes, wave 1 of 3. The doctor re-run at record time is byte-identical to
+  the bundle copy (FAIL, as expected).
+- GPU: reviewer 2's job 1085 used 0.055 GPU-h (scontrol RunTime 00:03:18 on
+  1 H100, COMPLETED 0:0, 23:14:17-23:17:35 UTC, no leftover container). It
+  was submitted while only the C5 gauntlet's reviewer-2 job 1083 was running
+  on another GPU, so the host rule held. It is added to the ledger as "E3
+  Stage-0 headroom probe gauntlet wave 1 ... open-weight review (D24)". The
+  program total is 9.8563 on this branch. The probe itself used no GPU.
+- Waiting on Kevin: whether E3 continues.
+  - To stop: nothing further is needed.
+  - To continue, a fresh run with new budgets would need a new versioned
+    registration with:
+    - the decision at a common budget no larger than the consistent-cut count
+      (or a density and ceiling-minus-floor validity gate), a symmetric
+      floor, and calibration on canonical boundaries;
+    - thresholds re-derived from simulations at that budget with AER-matched,
+      correlated aligner errors, or aligner error measured on XL-WA en-zh gold
+      (R5);
+    - a cut-count-preserving alignment control in place of I1, and line M at
+      the treatment's budget;
+    - bf16 (or fp32 encoder-only extraction) and a working overlay proven by a
+      container smoke;
+    - a reason why headroom in monolingual checkpoints may stop Stage 1;
+    - delta rows for kappa_M and the SMT segmentation lineage, and a SOMBRERO
+      blind packet.
+  - Sign-offs R1-R5 (registration sec. 16) also remain open.

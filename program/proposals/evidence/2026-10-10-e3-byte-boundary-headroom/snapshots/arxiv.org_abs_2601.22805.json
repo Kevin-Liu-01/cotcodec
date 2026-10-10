@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2601.22805",
+ "fetched_at": "2026-10-10T21:58:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42435,
+ "raw_sha256": "6e898bc96bbe74e0cd8aa9a78a74079d0e2b8df5e2290a908f14b6da0a64c694",
+ "raw_stored": false,
+ "extract": {
+  "title": "SOMBRERO: Measuring and Steering Boundary Placement in End-to-End Hierarchical Sequence Models",
+  "authors": [
+   "Neitemeier, Pit",
+   "Serra, Alessio",
+   "Li, Jiaze",
+   "Wirges, Sascha",
+   "Balles, Lukas",
+   "Metzen, Jan Hendrik"
+  ],
+  "citation_date": "2026/01/30",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 30 Jan 2026 10:34:07 UTC"
+   }
+  ],
+  "abstract": "Hierarchical sequence models replace fixed tokenization with learned segmentations that compress long byte sequences for efficient autoregressive modeling. While recent end-to-end methods can learn meaningful boundaries from the language-modeling objective alone, it remains difficult to quantitatively assess and systematically steer where compute is spent. We introduce a router-agnostic metric of boundary quality, boundary enrichment B, which measures how strongly chunk starts concentrate on positions with high next-byte surprisal. Guided by this metric, we propose Sombrero, which steers boundary placement toward predictive difficulty via a confidence-alignment boundary loss and stabilizes boundary learning by applying confidence-weighted smoothing at the input level rather than on realized chunks. On 1B scale, across UTF-8 corpora covering English and German text as well as code and mathematical content, Sombrero improves the accuracy-efficiency trade-off and yields boundaries that more consistently align compute with hard-to-predict positions.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

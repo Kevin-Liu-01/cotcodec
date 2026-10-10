@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2109.05257",
+ "fetched_at": "2026-10-10T21:58:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42993,
+ "raw_sha256": "4cdccde46fc1c6159b512749527379dc2d260db33fbd448edc6ef1a3ce4e33eb",
+ "raw_stored": false,
+ "extract": {
+  "title": "Towards a Rigorous Evaluation of Time-series Anomaly Detection",
+  "authors": [
+   "Kim, Siwon",
+   "Choi, Kukjin",
+   "Choi, Hyun-Soo",
+   "Lee, Byunghan",
+   "Yoon, Sungroh"
+  ],
+  "citation_date": "2021/09/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 11 Sep 2021 11:14:04 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 4 Jan 2022 08:21:34 UTC"
+   }
+  ],
+  "abstract": "In recent years, proposed studies on time-series anomaly detection (TAD) report high F1 scores on benchmark TAD datasets, giving the impression of clear improvements in TAD. However, most studies apply a peculiar evaluation protocol called point adjustment (PA) before scoring. In this paper, we theoretically and experimentally reveal that the PA protocol has a great possibility of overestimating the detection performance; that is, even a random anomaly score can easily turn into a state-of-the-art TAD method. Therefore, the comparison of TAD methods after applying the PA protocol can lead to misguided rankings. Furthermore, we question the potential of existing TAD methods by showing that an untrained model obtains comparable detection performance to the existing methods even when PA is forbidden. Based on our findings, we propose a new baseline and an evaluation protocol. We expect that our study will help a rigorous evaluation of TAD and lead to further improvement in future researches.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
