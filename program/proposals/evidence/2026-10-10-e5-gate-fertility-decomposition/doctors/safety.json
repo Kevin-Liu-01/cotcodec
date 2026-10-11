@@ -2,9 +2,9 @@
  "doctor": "Safety",
  "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "pass by the single repair owner under D68 (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Safety, monitorability, data rights, and project red lines addressed",
- "evidence": "Subject R apache-2.0 (card and 2503.14456); subject G has no licence and its use is gated on Kevin's ruling (registration decision 1), with nothing redistributed under either option and an apache-2.0 fallback registered; WikiText-103 (CC BY-SA 3.0, GFDL) passages kept off the public repository; the RWKV tokenizer is vendored with ast.literal_eval instead of eval; no untrusted code executes; nothing trained or deployed; host rule respected (one read-only squeue by synthesis, empty; no job).",
+ "evidence": "Subject R apache-2.0 (card and 2503.14456; registry still records trust_remote_code: true and a vendoring blocker, cleared by prerequisite 2 before any run); subject G has no licence and its use is gated on Kevin's ruling (decision 1) with an apache-2.0 fallback and nothing redistributed; WikiText-103 (CC BY-SA 3.0, GFDL) passages kept off the public repository; the RWKV tokenizer vendored with ast.literal_eval; no untrusted code executes; nothing trained or deployed; no host access by the repair.",
  "condition": "Subject G is not fetched or run before decision 1 is made.",
  "remediation": "Decision 1 before any fetch."
 }

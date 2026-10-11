@@ -2,15 +2,15 @@
  "doctor": "Design",
  "status": "FAIL",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "pass by the single repair owner under D68 (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
  "protocol": "K-Dense experimental-design and statistical-power (design before data; power by simulation for every threshold); statistical-analysis (paired, clustered intervals)",
- "evidence": "Per-token decay clamp (mediator held at its canonical value) with identity, two-way r = 2, FILL, BND, ZERO, SIL and FACT/BOTH controls; falsifiers P1 to P5; primary estimand and decision rules as code (compute/estimator.py); S1 identification in six worlds, S2 operating characteristics for every threshold, S3 cost, S4 splitting rules measured on both real tokenizers; leakage and shortcut risks stated.",
+ "evidence": "2 x 2 factorial (CAN, DEC, CLAMP, NAT) at a held-out-selected load with a ceiling gate; TNIE, PNIE, INT and PNDE with the exact identity; guessing-corrected line; article clustering; decision rules and operating-point rule as code (compute/repair-d68/estimator_v2.py); S1v2 (two-layer toy with state-dependent writes, presence channel, registered path), S2v2 (whole decision path through the registered estimator, discordance to about 0.45, every operating-point branch, v1's dilution reproduced), S3v2 (cost per branch).",
  "why_fail": [
-  "discordance between clamp and native arms is assumed (0.05 to 0.30), not measured",
-  "no harness exists; the clamp has never run on either checkpoint",
+  "discordance, accuracy profile and R_F are assumed or simulated, not measured on either checkpoint",
+  "no harness exists; neither the clamp nor the transplant has run on a checkpoint",
   "the boundary-only arm re-bounds only 8 to 12% of tokens",
-  "the episode builder, passages and key lists do not exist; S4 used CC0 abstracts as a stand-in"
+  "the episode builder, passages and key lists do not exist"
  ],
- "remediation": "Build the harness and the new CPU doctor (orx cpu-doctor node); measure discordance and R_F in the smoke before the main jobs."
+ "remediation": "Build the harness and the new CPU doctor (orx cpu-doctor node); measure the operating point, R_F and discordance in the smoke before the main jobs."
 }

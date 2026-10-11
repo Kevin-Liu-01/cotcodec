@@ -54,3 +54,48 @@ Not present, by design or because it does not exist yet:
 
 The deterministic doctor therefore reports FAIL. That is the expected and
 honest state.
+
+## Fresh run under D68: the repair (2026-10-10)
+
+Wave 1 scored 54 (all three refuters refuted; honest exit on the query
+budget). D68 ordered one CPU repair by a single owner and a fresh gauntlet run
+with new budgets (queries 80 with at least 30 reserved for the triad, wall
+600 minutes, tokens 8,000,000, dollars 150, one wave, 0.3 GPU-h for reviewer
+inference). The draft registration is now
+`program/preregistrations/e5-gate-fertility-decomposition-v2.md` (v1 is kept
+unedited). Wave 1's files above are kept as they were; this run adds:
+
+| Path | Contents |
+|---|---|
+| `compute/repair-d68/estimator_v2.py` | The v2 registered estimator: held-out operating-point rule (K ladder 4, 8, 16 with a ceiling of 90; f ladder 2.7, 2.0 with a native floor of 30), the 2 x 2 factorial contrasts (TNIE, PNIE, INT, PNDE), the guessing-corrected scale, the cluster-robust normal interval, the reading rules and the overall rule |
+| `compute/repair-d68/power-sim-v2.py`, `merge-power-v2.py`, `power-sim-v2.json` | S2v2: the whole v2 decision path through the registered estimator (six parts merged) |
+| `compute/repair-d68/mech-sim-v2.py`, `merge-mech-v2.py`, `mech-sim-v2.json` | S1v2: identification in a two-layer toy with state-dependent writes, through the registered path (one process per world, merged) |
+| `compute/repair-d68/int-sign-probe.py`, `.json` | Direct probe of where the decay-by-write interaction changes sign and whether that region is admissible |
+| `compute/repair-d68/superseded-floor40/` | The S2v2 and S1v2 outputs under the native floor of 40 that the repair tried first and dropped, kept unedited |
+| `compute/repair-d68/cost-model-v2.py`, `.json` | S3v2: tokens, GPU-hours, caps and ladder per (K_p, f_p) branch |
+| `compute/repair-d68/build-query-log-run2.py`, `query-log-run2.json` | This run's 12 counted orx queries, 2 failed OpenAlex calls, 8 full-text reads and 6 citation-graph lookups |
+| `compute/repair-d68/build-doctors-v2.py`, `doctors/*.json` | The six doctor records rewritten for this run |
+| `compute/repair-d68/build-bundle-v2.py`, `bundle.json` | The bundle rebuilt for this run |
+| `compute/repair-d68/blind-roles-run2.json`, `blind/paragraph-bab395c3.txt`, `paragraph-e2ac6471.txt`, `paragraph-3f647ca8.txt` | Fresh anonymized packets: the proposal and the two closest priors (role map for the recorder only) |
+
+Reproduce from the worktree root (seeded; the development Mac was saturated
+by other work while these ran, so wall times inside the outputs are not
+representative):
+
+```bash
+C=program/proposals/evidence/2026-10-10-e5-gate-fertility-decomposition/compute/repair-d68
+OUT=$(mktemp -d)
+for p in misc grid0 grid1 tau prof0 prof1; do .venv/bin/python $C/power-sim-v2.py $OUT/power-$p.json $p; done
+python3 $C/merge-power-v2.py $OUT $C/power-sim-v2.json
+for w in W1_per_token_clock W2_self_normalised_interference W3_clock_and_interference W4_null W5_legacy_duplicates W6_partial W7_decay_inert W8_line W9_erase_dominated; do .venv/bin/python $C/mech-sim-v2.py $OUT/mech-${w:0:2}.json $w; done
+python3 $C/merge-mech-v2.py $OUT $C/mech-sim-v2.json
+.venv/bin/python $C/int-sign-probe.py $C/int-sign-probe.json
+.venv/bin/python $C/cost-model-v2.py $C/cost-model-v2.json
+python3 program/proposals/evidence/2026-10-10-e5-gate-fertility-decomposition/compute/snapshot-sources.py program/proposals/2026-10-10-e5-gate-fertility-decomposition.md program/proposals/evidence/2026-10-10-e5-gate-fertility-decomposition/snapshots
+python3 $C/build-doctors-v2.py && python3 $C/build-bundle-v2.py
+uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-e5-gate-fertility-decomposition.md
+```
+
+The doctor still reports FAIL: no executable pilot, no compute attestation,
+no reviews for this run yet and no trusted signing store (D24). That is the
+expected and honest state.

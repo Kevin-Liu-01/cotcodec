@@ -2,15 +2,15 @@
  "doctor": "Compute",
  "status": "FAIL",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "pass by the single repair owner under D68 (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
- "evidence": "Image 127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9 (build 855, fla 0.5.2); seeds [42, 43, 44]; caps smoke 0.25 + G 1.25 + R 2.5 = 4.0 GPU-h (D22); S3 central 1.26, high 3.29 GPU-h; checkpoint every 5 minutes keyed by (episode, cell) with a kill-and-resume test in the smoke; launch via scripts/submit_docker_research_job.py (dry run, test-only, submit).",
+ "evidence": "Image 127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9 (build 855, fla 0.5.2); seeds [42, 43, 44]; caps smoke 0.75 + G 1.75 + R 3.75 = 6.25 GPU-h (D22); S3v2 per branch, worst primary-only high 1.48 (G) and 3.34 (R) GPU-h; checkpoint every 5 minutes keyed by (episode, cell) with a kill-and-resume test; launch via scripts/submit_docker_research_job.py (dry run, test-only, submit).",
  "why_fail": [
   "no real model loop for this step (the harness does not exist)",
-  "no benchmark adapter (episode builder, passages and splitting rules not written as harness code)",
+  "no benchmark adapter (episode builder not written as harness code)",
   "no container smoke, Slurm dry run, manifest or provenance verification",
   "subject G not on the host, not in the registry, and without a licence (fetch waits for Kevin's ruling and the host rule)",
-  "neither checkpoint has been loaded in the image on this host; inference throughput never measured here"
+  "inference throughput never measured on this host"
  ],
- "remediation": "Kevin's ruling on subject G; registry entry and CPU fetch; harness; smoke manifest; dry run and test-only; run the smoke as an orx slurm-manifest node."
+ "remediation": "Kevin's ruling on subject G; registry entry and CPU fetch; harness; smoke manifest; dry run and test-only; the smoke as an orx slurm-manifest node."
 }
