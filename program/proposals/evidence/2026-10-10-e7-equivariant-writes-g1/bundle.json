@@ -1,14 +1,36 @@
 {
  "schema_version": 1,
  "proposal": "program/proposals/2026-10-10-e7-equivariant-writes-g1.md",
- "proposal_sha256": "7f1179c3ed6c4a65e16fa75f8cfdc40da7a8048d53ecc82f2d5a5eeba8bbddd3",
+ "proposal_sha256": "67d0a4febcffc80f1d63a83ca8843367a1ac248ebf60858d362ec2f04df3fd43",
  "draft_registration": {
-  "path": "program/preregistrations/e7-equivariant-writes-g1-v1.md",
-  "sha256": "cce49578f331bbc6d4a1c36b63796d15b0547b1fa43081c9f15365242253f264",
-  "experiment_id": "e7-equivariant-writes-g1-v1",
-  "status": "DRAFT, not frozen, no ledger row"
+  "path": "program/preregistrations/e7-equivariant-writes-g1-v2.md",
+  "sha256": "b8830fa6f8af6e4bf4fe50e367b2eba86ecc9fef697b4459126c50f8cb030829",
+  "experiment_id": "e7-equivariant-writes-g1-v2",
+  "status": "DRAFT, not frozen, no ledger row; supersedes v1",
+  "superseded_v1": {
+   "path": "program/preregistrations/e7-equivariant-writes-g1-v1.md",
+   "sha256": "cce49578f331bbc6d4a1c36b63796d15b0547b1fa43081c9f15365242253f264"
+  }
  },
  "source_snapshots": [
+  {
+   "url": "https://aclanthology.org/2024.wmt-1.111/",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:54:11Z",
+   "raw_sha256": "b2aa28231ad1fdbda5b4efc3c53c4829461ee43c1df0440487361021f0109b0a",
+   "raw_bytes": 41428,
+   "artifact": "snapshots/aclanthology.org_2024.wmt-1.111.json",
+   "sha256": "cfdb3fa8cc4f790c54f47aa898f8c458f737186ed247f7d4f76d63635307aca1"
+  },
+  {
+   "url": "https://aclanthology.org/2025.naacl-long.267/",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:54:11Z",
+   "raw_sha256": "03de854210f27ceb465273ef0949ec686f46765cbfb6b88f76236f951d39d0dc",
+   "raw_bytes": 45121,
+   "artifact": "snapshots/aclanthology.org_2025.naacl-long.267.json",
+   "sha256": "37190f4a8c9d60d8974694a25b015ecedd6fca868cc4a9f54b1779e157255b3f"
+  },
   {
    "url": "https://arxiv.org/abs/1804.11188",
    "http_status": 200,
@@ -64,6 +86,15 @@
    "sha256": "6023d32de05a8634b1a66adfbec94be9abfc78780a610489cca1d24579bdc7f6"
   },
   {
+   "url": "https://arxiv.org/abs/2402.19427",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:54:11Z",
+   "raw_sha256": "0a04aeb4f86c5c40d4aadc3c3499048184adfce694a8de27dd1edca9c0d1c401",
+   "raw_bytes": 43591,
+   "artifact": "snapshots/arxiv.org_abs_2402.19427.json",
+   "sha256": "44fffe7961361edb3438d9194925c62966ae4c8a78fc9bc95eda521785e509bc"
+  },
+  {
    "url": "https://arxiv.org/abs/2405.18392",
    "http_status": 200,
    "fetched_at": "2026-10-10T21:49:19Z",
@@ -80,6 +111,15 @@
    "raw_bytes": 43271,
    "artifact": "snapshots/arxiv.org_abs_2406.07522.json",
    "sha256": "319ec9133cc318d86902994d37d94af2e3c303d7ff586ccb181a19b80bbaeaae"
+  },
+  {
+   "url": "https://arxiv.org/abs/2407.16222",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:54:11Z",
+   "raw_sha256": "729b0af97a94377f4b36c8997750cd1cdf684209e7e0bb7198b051f4994b12b0",
+   "raw_bytes": 41993,
+   "artifact": "snapshots/arxiv.org_abs_2407.16222.json",
+   "sha256": "f2569eaa06c18f0b69e3b1698f4d4730b0c65fc5a78144481669f9d3ba5b7fb2"
   },
   {
    "url": "https://arxiv.org/abs/2408.10151",
@@ -424,6 +464,16 @@
    "sha256": "3b3dc0a343a9dbf6d9870da4ec81811ee9e615404d5b9791cbd33e5da4861439"
   },
   {
+   "url": "https://openreview.net/forum?id=5MKfXl078n",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:54:12Z",
+   "raw_sha256": "375750003b491984db2615abbd7484e5be84a896b380cc85c754cd1838da386f",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_5MKfXl078n.json",
+   "sha256": "3c8ca9067a1f1be9ee664f474ae6dee71aee23c220d03eae9ec411e77d2e8779",
+   "content_note": "HTTP 200 page may be a browser challenge; it verifies nothing about content; the abstract comes from the OpenReview search API (query logs)"
+  },
+  {
    "url": "https://openreview.net/forum?id=Nol0BTGPR3",
    "http_status": 200,
    "fetched_at": "2026-10-10T21:49:28Z",
@@ -431,7 +481,7 @@
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_Nol0BTGPR3.json",
    "sha256": "f770e9cc2c4d638d1f68a379ff8cc02261f00edf141f8c9316effb85427d32c3",
-   "content_note": "HTTP 200 page may be a browser challenge; it verifies nothing about content; the abstract comes from the OpenReview search API (cells' query logs)"
+   "content_note": "HTTP 200 page may be a browser challenge; it verifies nothing about content; the abstract comes from the OpenReview search API (query logs)"
   },
   {
    "url": "https://openreview.net/forum?id=QvfwNCiyPg",
@@ -441,7 +491,27 @@
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_QvfwNCiyPg.json",
    "sha256": "1bb23ce78cab0376d57e17c69d3676615158d90fe2da76638942f8e686ef2642",
-   "content_note": "HTTP 200 page may be a browser challenge; it verifies nothing about content; the abstract comes from the OpenReview search API (cells' query logs)"
+   "content_note": "HTTP 200 page may be a browser challenge; it verifies nothing about content; the abstract comes from the OpenReview search API (query logs)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=UUldzWxIL4",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:54:12Z",
+   "raw_sha256": "5aa12a378187d46a0d332764421638c408f3c32d18287befac42846fbe836198",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_UUldzWxIL4.json",
+   "sha256": "aa39c5b4919bc3750e690b675cbe58999e916ef74d6662b826626d1eb4f27eb8",
+   "content_note": "HTTP 200 page may be a browser challenge; it verifies nothing about content; the abstract comes from the OpenReview search API (query logs)"
+  },
+  {
+   "url": "https://openreview.net/forum?id=btgVfhudI1",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:54:12Z",
+   "raw_sha256": "216619a27fdde1a3bfb577436dd99ca5369be5a2d88f34c32af6008e089384fd",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_btgVfhudI1.json",
+   "sha256": "bcad1778067d0b93a56f1c69184bdb5dabcb8aad2b1a970f4409aeb870ed3c62",
+   "content_note": "HTTP 200 page may be a browser challenge; it verifies nothing about content; the abstract comes from the OpenReview search API (query logs)"
   },
   {
    "url": "https://openreview.net/forum?id=nIDJ2pPPOB",
@@ -451,25 +521,31 @@
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_nIDJ2pPPOB.json",
    "sha256": "ca9ba9e10fe4012ab3325393a741523ad671206dc700f738958c717d2919dd9b",
-   "content_note": "HTTP 200 page may be a browser challenge; it verifies nothing about content; the abstract comes from the OpenReview search API (cells' query logs)"
+   "content_note": "HTTP 200 page may be a browser challenge; it verifies nothing about content; the abstract comes from the OpenReview search API (query logs)"
   }
  ],
  "query_log": {
-  "artifact": "query-log.json",
-  "sha256": "72cef119288b52db1e5147b4ae40784b57e4c9d3e940cc34d722a4f90254c3e6",
-  "queries_against_budget": 97,
-  "note": "97 counted orx discover queries ({'frontier': 46, 'kill-shot': 23, 'cross-domain': 24, 'synthesis': 4}) against the declared 150; 53 remain, the refuters' reserve of 30 is intact; 63 uncounted calls (OpenReview, web, GitHub, Hugging Face, curl, paper reads)"
+  "artifact": "query-log-run2.json",
+  "sha256": "f7f089484e22fc79ab5d4a130859e58bb26af6a15f08abe919dc35afc00cc5aa",
+  "queries_against_budget": 37,
+  "declared_budget": 80,
+  "reserved_for_refuters": 30,
+  "wave1_query_log": {
+   "artifact": "query-log.json",
+   "sha256": "72cef119288b52db1e5147b4ae40784b57e4c9d3e940cc34d722a4f90254c3e6"
+  },
+  "note": "This run's counted queries so far (the repair's 37); 43 remain for the triad (at least 30 reserved). Wave 1's 97 cell queries are in query-log.json and the novelty refuter's 15 in the wave-1 record."
  },
  "reviews": [],
- "reviews_status": "NOT_RUN: the blind critic, the refute-first triad and both reviewers run after synthesis. No trusted Ed25519 store exists (D24), so no review can be signed.",
+ "reviews_status": "NOT_RUN for this run: the blind critic, the refute-first triad and both reviewers run after the repair. Wave 1's reviews are in program/gauntlet/2026-10-10-e7-equivariant-writes-g1.jsonl. No trusted Ed25519 store exists (D24).",
  "compute": {
-  "scope": "e7-equivariant-writes-g1-v1 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: S1 (decision-rule operating characteristics), S2 (cost model and caps), S3 (state-free reach of the A0 layer graph on a NumPy stand-in), each script with its output, and the asset cell's rerun of the legacy phase-0 object doctor.",
+  "scope": "e7-equivariant-writes-g1-v2 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: the D68 repair's S3v2 (which intervention removes which path, complex step against exact symbolic reachability), P1 (the measured NTREX-128 pool and the surface controls), S1v2 (the decision rule under the registered estimator) and S2v2 (caps with arithmetic), and wave 1's S1, S2 and S3 (kept unedited).",
   "image_digest": "127.0.0.1:5000/cotcodec-research@sha256:02965f3d696d4e516a7cd6d5c03434e9098139738748ae778ed967215db7be6d",
   "image_scope": "the image behind the measured 134M throughput (cotcodec-research:0b3ecef0-architecture, Slurm 359; torch 2.11.0+cu128, fla 0.5.2, triton 3.6.0, tilelang 0.1.13); the G1 image is built from the harness commit and pinned before J1",
   "real_model_loop": false,
-  "real_model_loop_scope": "none: the A0 model, the training loop and the data builders are not written",
+  "real_model_loop_scope": "none: the A0 model, the interventions, the training loop and the data builders are not written",
   "benchmark_adapter": null,
-  "benchmark_adapter_scope": "none: the TP-MQAR-v2-G1 builder, the evaluator and the analysis are not written",
+  "benchmark_adapter_scope": "none: the TP-MQAR-v2-G1 builder v2, the evaluator and the analysis are not written (P1 is CPU evidence, not the adapter)",
   "manifest": null,
   "manifest_scope": "no Slurm manifest exists for J1, J2, J3, T42, T43 or T44",
   "container_smoke": {
@@ -477,37 +553,96 @@
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "c46308719602e21394993167cd496993eeee867374727cb9d26486fd80b66590"
+   "sha256": "f4eb44ecaa39b6c18169467e155fb2b3594c3fe1eca24334ac4788a5dee2fb98"
   },
   "slurm_test": {
    "label": "slurm_test",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "c46308719602e21394993167cd496993eeee867374727cb9d26486fd80b66590"
+   "sha256": "f4eb44ecaa39b6c18169467e155fb2b3594c3fe1eca24334ac4788a5dee2fb98"
   },
   "provenance_verification": {
    "label": "provenance_verification",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "c46308719602e21394993167cd496993eeee867374727cb9d26486fd80b66590"
+   "sha256": "f4eb44ecaa39b6c18169467e155fb2b3594c3fe1eca24334ac4788a5dee2fb98"
   },
   "registered_caps_gpu_h": {
-   "J1": 0.567,
+   "J1": 0.6,
    "J2": 0.217,
    "J3": 0.3,
    "T42": 2.217,
    "T43": 2.217,
    "T44": 2.217
   },
-  "cap_sum_gpu_h_D22": 7.733,
-  "central_gpu_h": 4.871,
-  "central_gpu_h_futility_path": 1.923,
-  "throughput_gate_tokens_per_s": 179329,
+  "cap_sum_gpu_h_D22": 7.767,
+  "cap_sum_with_one_J2_resubmission": 7.984,
+  "central_gpu_h": 4.901,
+  "central_gpu_h_futility_path": 1.949,
+  "throughput_gate_tokens_per_s": 179940,
   "supplementary_cpu_evidence": [
    {
-    "label": "S1 decision-rule operating characteristics (assumed distributions; 1,000 replicates per scenario over seeds 42/43/44)",
+    "label": "S3v2 intervention table on a NumPy reference of the module graph: all_checks_ok=True, rows 504, boundaries {'span_cut|facts_block': {'max_reachable_distance_symbolic': 1560}, 'span_cut|queried_fact': {'max_reachable_distance_symbolic': 1557}, 'span_cut_convdrop|facts_block': {'max_reachable_distance_symbolic': 1551}, 'span_cut_convdrop|queried_fact': {'max_reachable_distance_symbolic': 1551}}",
+    "script": {
+     "artifact": "compute/repair-d68/reach-cut-v2.py",
+     "sha256": "018685f70b163e6ea8ddd74610fe91d532a02d981e23872462f6f9002bc09d61"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/reach-cut-v2.json",
+     "sha256": "8918574b396386edf975165b65a509a9281819cc574b0d76d2b407e47a54740c"
+    }
+   },
+   {
+    "label": "P1 NTREX-128 pool and surface controls (test half 699 key sentences; pooled cross-script clogit oracle {'v1': {'real_len': 0.4307, 'real_len+p': 0.5872, 'real_central': 0.1159, 'real_clogit': 0.6618}, 'v2a': {'real_len': 0.2038, 'real_len+p': 0.2486, 'real_central': 0.1267, 'real_clogit': 0.2933, 'decoy_len': 0.1989, 'decoy_len+p': 0.249, 'decoy_central': 0.1245, 'decoy_clogit': 0.2864}, 'v2': {'real_len': 0.1673, 'real_len+p': 0.1765, 'real_central': 0.123, 'real_clogit': 0.1905, 'decoy_len': 0.1682, 'decoy_len+p': 0.1678, 'decoy_central': 0.1172, 'decoy_clogit': 0.1983}})",
+    "script": {
+     "artifact": "compute/repair-d68/instrument-pool-v2.py",
+     "sha256": "c0a445d0e6e94576b35ac2467303cbd3e89b72b551f82e9cb26043ab211fd624"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/instrument-pool-v2.json",
+     "sha256": "091499c7be46534aeaa3eb4cd5192688a076fd88f5cbae5b2c61919498a35ac9"
+    }
+   },
+   {
+    "label": "S1v2 decision rule under the registered estimator (1000 replicates per scenario; prior-weighted decisive {'sd=0.03': 0.8917, 'sd=0.06': 0.9118})",
+    "script": {
+     "artifact": "compute/repair-d68/gate-sim-v2.py",
+     "sha256": "45190e1669ec5a4087e99e02400c803eaca994638307942e8d15a9b33b800a54"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/gate-sim-v2.json",
+     "sha256": "d21d0d5f1054e9eb457f6c32c9837dc39123b6f18927317e0f6ec1437798c96d"
+    }
+   },
+   {
+    "label": "S2v2 caps and arithmetic (sum 7.767 GPU-h)",
+    "script": {
+     "artifact": "compute/repair-d68/cost-model-v2.py",
+     "sha256": "7e611ff7e1275a53a01160363ab140769f7235c5d13eaea1ea7991d5f58d3f01"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/cost-model-v2.json",
+     "sha256": "28deaf3031f9bca815d759a882a34effb2ed4248d571f19a60b6cbbf0e3c7b7e"
+    }
+   },
+   {
+    "label": "run-2 query log builder",
+    "script": {
+     "artifact": "compute/repair-d68/build-query-log-run2.py",
+     "sha256": "d9dac20f54a2ba64148c950bd2b1d36069e664b4d4d52723afcd65a76b29c34e"
+    }
+   },
+   {
+    "label": "snapshot script for the run's new source URLs",
+    "script": {
+     "artifact": "compute/repair-d68/snapshot-new-sources.py",
+     "sha256": "d1d3e0474c81d5b5d4b15f285561ca9afce465b2d706365d6df1211bfaffd017"
+    }
+   },
+   {
+    "label": "wave-1 S1 decision-rule simulation (kept unedited)",
     "script": {
      "artifact": "compute/gate-sim.py",
      "sha256": "c35a1b5c79d33985e789e71818403d640ab744855a190b814f478eb2a0b3c12b"
@@ -518,7 +653,7 @@
     }
    },
    {
-    "label": "S2 GPU-hour estimate and registered caps (base: measured 282,501.4 tokens/s, Slurm 359; everything else assumed)",
+    "label": "wave-1 S2 cost model (kept unedited)",
     "script": {
      "artifact": "compute/cost-model.py",
      "sha256": "fca936d8928d3a7f2e88da17aa91d211f4ea672dff64832f9cbfbe334d690541"
@@ -529,7 +664,7 @@
     }
    },
    {
-    "label": "S3 state-free reach of the A0 layer graph by complex-step derivative (NumPy stand-in, seeds 42/43/44): all_checks_ok=True, bound 1560",
+    "label": "wave-1 S3 reach doctor (kept unedited)",
     "script": {
      "artifact": "compute/reach-doctor.py",
      "sha256": "4c27fbe1d75149eb62a8358579073ddfc8f4a024cf96b392a1986ef209ca5f0b"
@@ -540,21 +675,21 @@
     }
    },
    {
-    "label": "legacy phase-0 object doctor rerun on main by the asset cell (PHASE0_OBJECT_DOCTOR_PASS, 11/11; synthetic objects only)",
+    "label": "legacy phase-0 object doctor rerun on main by the wave-1 asset cell (synthetic objects only)",
     "output": {
      "artifact": "compute/legacy-phase0-doctor-main.json",
      "sha256": "a2b3d01bc4bbe6e7eb1f9f59e42416cad3610380f81c00c84e8b49f98f1158ec"
     }
    },
    {
-    "label": "query-log builder (parses the cells' raw orx outputs from the session scratchpad)",
+    "label": "wave-1 query-log builder and snapshot script",
     "script": {
      "artifact": "compute/build-query-log.py",
      "sha256": "c3f88186f4c30de7c7140341c9224a8ae72c49701e2383194f414f93c156d0f5"
     }
    },
    {
-    "label": "snapshot script for source_snapshots",
+    "label": "snapshot script for source_snapshots (wave 1)",
     "script": {
      "artifact": "compute/snapshot-sources.py",
      "sha256": "729d1e5e75507415184b1ca3dfd4ec313c1f329a935a9d698b6026e8f1a4203c"
@@ -564,8 +699,7 @@
   "repository_evidence_used": {
    "throughput_receipt": "legacy/research/evidence/infrastructure/fla-throughput-h100-2026-09-01.json (runs[1], Slurm 359)",
    "throughput_doctor": "scripts/fla_throughput_doctor.py (layout i % 4 == 3, MLP 768-4096-768)",
-   "legacy_contract": "legacy/experiments/architectures/translation-equivariant-state-writes.yaml (v5)",
-   "k1_source_receipts": "program/evidence/2026-10-07/q3-k1-bundle-sources.json"
+   "legacy_contract": "legacy/experiments/architectures/translation-equivariant-state-writes.yaml (v5; the 4-gram clause restored from it)"
   }
  },
  "doctors": [
@@ -573,55 +707,70 @@
    "name": "Source",
    "status": "PASS",
    "artifact": "doctors/source.json",
-   "sha256": "43066d9fbbbbe55e10a0eba168c588a6e7d7c7add1a23ace1dc7dc20ae8ed522"
+   "sha256": "f74b3f888f932fb141beafb782aa89c549ddf9c06d911000352491894cb612df"
   },
   {
    "name": "Citation",
    "status": "PASS",
    "artifact": "doctors/citation.json",
-   "sha256": "63ecdb4bda336abdb52caa58e4461dad30129aa79b3b2873c8a50fdd11800d1f"
+   "sha256": "f20f5f8c43ba6d9316aa224b60c557352b6f7a4abec59f16f90d4f9f4bddabfd"
   },
   {
    "name": "Novelty",
    "status": "FAIL",
    "artifact": "doctors/novelty.json",
-   "sha256": "47e881ee1d623a85271a1a2d3e6a76177060f0e47c3888c63c30c522b6d8b8e5"
+   "sha256": "6b934d2d6020a2e4f34d1ce806b240ae0ff7fb50ad0e57fd2e773a73f9edde41"
   },
   {
    "name": "Design",
    "status": "FAIL",
    "artifact": "doctors/design.json",
-   "sha256": "6b1897dbdedc9ce077cc5d0d3ad866ccd59a304f8037a306de628cb42802598b"
+   "sha256": "ff4c6817624a3ada17ed0e6a4cc21da11448b57c3c5e7941a248f3aab755ff42"
   },
   {
    "name": "Compute",
    "status": "FAIL",
    "artifact": "doctors/compute.json",
-   "sha256": "ac6063febdd8fcb6789fc76dfb34e9f28ae1699515d07145c5b447ef33bfc50a"
+   "sha256": "c65c98588f45e3c6530c67ffe86f57e0e72b63a2be8b73a606376dd7b55da8b9"
   },
   {
    "name": "Safety",
    "status": "PASS",
    "artifact": "doctors/safety.json",
-   "sha256": "9a3ae8f95f24fef73dd40e59e68baf38c5997e476c723d0e0904e9d8a4e18e68"
+   "sha256": "0a2de20b539e68672b529b66e1b07dd06c23c824ad37d295945d084000579b79"
   }
  ],
  "audit_log": null,
- "audit_log_status": "This gauntlet's wave-1 row is appended to program/gauntlet/2026-10-10-e7-equivariant-writes-g1.jsonl with scripts/research_gauntlet_record.py after its reviewers score.",
- "evidence_root_sha256": "886240b31aec74e05d219e627b8f32db0257c03a4ec49b67e06aec906d30430c",
+ "audit_log_status": "Wave 1's row is row 1 of program/gauntlet/2026-10-10-e7-equivariant-writes-g1.jsonl (hash 34901a11f8d9009d..., file sha256 a67a987bccd9d2ad...); this run's row is appended after its reviewers score.",
+ "evidence_root_sha256": "0d975c1100924cd40e8fe401ecc5532ef7feb31271426b73f4d380d03c0774b1",
  "blind_discrimination_packet": {
   "proposal": {
-   "artifact": "blind/paragraph-803016fc.txt",
-   "sha256": "803016fcacf3afa7a9bdd4a2ae0a2b7b23b5b5c1cdc115ee7f6e0f22c0c51059",
-   "text_sha256": "9d9120c384bafb44844da806f5616bde5c7a9f66919f45e61869820110a89bb1"
+   "artifact": "blind/paragraph-468efcb2.txt",
+   "sha256": "b278d950435ba8d9e050cf7acd953c94782fe5815368430c0d679d9c972f67e7",
+   "text_sha256": "468efcb28ec0fe426e08cf4d8232eb9a03079a68716ca33cb748b48fbf51390d"
   },
   "closest_prior": {
-   "artifact": "blind/paragraph-36695b43.txt",
-   "sha256": "36695b4398bd89ae6a6ab112d011cf8d2fc46ff7813ac1bcef84761725770d7b",
-   "text_sha256": "3fa13e1e0bb573093bfeb8e2a10236b8afe250b2a93797fda66c9a8382d994bf"
+   "artifact": "blind/paragraph-940ca7dd.txt",
+   "sha256": "d5f3d99e3cccc23d038c83f7450a77e6937533b4792b59282222edd4599080f9",
+   "text_sha256": "940ca7ddbd25dcd119e503c514044e206c66dcb828f8bc3b820049ada8a4d465"
   },
-  "closest_prior_id": "arXiv:2610.06750 (Balancing Memory Pathways: Analyzing and Improving Memory Utilization in Hybrid LMs, Lee et al., v1 2026-10-05; ICLR 2027 submission OpenReview nIDJ2pPPOB, created 2026-09-18); full text read by the frontier, kill-shot and asset cells and re-read by synthesis on 2026-10-10 (Secs. 3, 4.1, 5.1, 5.2)",
-  "note": "File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text."
+  "closest_prior_id": "arXiv:2610.06750 (Balancing Memory Pathways: Analyzing and Improving Memory Utilization in Hybrid LMs, v1 2026-10-05; ICLR 2027 submission OpenReview nIDJ2pPPOB); Sec. 4.1 re-read with orx paper --full by the D68 repair owner on 2026-10-10 (the recurrent-only and attention-only conditions, 8.2k examples, average context 84k tokens); Secs. 5.1-5.2 for the auxiliary loss and its results",
+  "additional_prior_packets": [
+   {
+    "packet": {
+     "artifact": "blind/paragraph-8dc55292.txt",
+     "sha256": "627f3ef3364c4f0f60da70e8f999c1962e9f75824244774684780ff97bb5c69e",
+     "text_sha256": "8dc552924dee85b2fe1f95c83be14559f63b5516ff89dd3bd2434e2258ffb7af"
+    },
+    "prior": "arXiv:2509.24552 (Short window attention enables long-term memorization, SWAX; ICLR 2026 poster, OpenReview btgVfhudI1); Sec. 3 (receptive field O(lw)), Sec. 4.1 (1.4B and 7B, 150B tokens, 16K sequences), Sec. 4.3 and Figs. 5-6 (window grid 128-2,048, training-time against test-time window) re-read with orx paper --full on 2026-10-10"
+   }
+  ],
+  "wave1_packets": {
+   "proposal": "paragraph-803016fc.txt",
+   "closest_prior": "paragraph-36695b43.txt",
+   "role_map": "compute/blind-roles.json"
+  },
+  "note": "File names carry no role and each file holds only its paragraph. One critic call per prior packet, each with the proposal paragraph, in randomized order, read by path, without the role map or any other text."
  },
  "cell_verdicts": {
   "artifact": "cells/cell-verdicts.json",
@@ -629,33 +778,27 @@
  },
  "budget_ledger": {
   "declared": {
-   "queries": 150,
+   "queries": 80,
    "wall_minutes": 600,
    "tokens": 8000000,
    "dollars": 150,
-   "waves": 3,
+   "waves": 1,
    "gpu_hours": 0.3
   },
-  "used_by_discovery_cells": {
-   "queries": 93,
-   "paper_reads": 68,
+  "used_by_repair": {
+   "queries": 37,
+   "paper_reads": 7,
    "gpu_hours": 0.0,
-   "host": "read-only ssh by the asset cell (squeue, images, data listing); no host job"
+   "host": "none (no ssh, no host job)",
+   "cpu": "S3v2 (about 13 min, 12 workers), P1 (about 6 min), S1v2 (multi-worker, see its runtime_seconds), S2v2 on the development Mac",
+   "wall_minutes_and_tokens": "metered by the recorder from transcripts"
   },
-  "used_by_synthesis": {
-   "queries": 4,
-   "paper_reads": "2 abstracts; full-text re-checks by grep of the cells' saved texts",
-   "gpu_hours": 0.0,
-   "host": "one read-only squeue at 21:25 UTC (queue empty); no host job",
-   "cpu": "S1 (about 305 s, 6 workers), S2, S3 (about 120 s) on the development Mac",
-   "tokens_and_dollars": "not metered by the synthesis agent; the recorder meters from transcripts"
-  },
-  "remaining_queries": 53,
+  "remaining_queries": 43,
   "refuter_reserve_shortfall": 0
  },
  "direction_doctor_run": {
   "artifact": "doctors/research-direction-doctor-output.json",
-  "sha256": "fb6fa885140e039c82e2bbd53cedf991373e421b73f222b517dbbed9f60733f9",
+  "sha256": "8e3fdb15df860f44e7521e3d926befbe86fa9ecd60c39e27fb9cdaaf3d4342c9",
   "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-e7-equivariant-writes-g1.md",
   "note": "Outside evidence_root by design: the doctor output depends on this bundle."
  }
