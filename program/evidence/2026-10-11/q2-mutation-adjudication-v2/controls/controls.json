@@ -1,0 +1,71 @@
+{
+ "controls": {
+  "control_1_audit_summarize_without_adjudications": {
+   "all_byte_identical": true,
+   "files": [
+    {
+     "byte_identical": true,
+     "committed_sha256": "d05a3aa0ec34bfb1fe65ebd31783726d71c466502a4ada5f868bce04090b5c8d",
+     "produced_sha256": "d05a3aa0ec34bfb1fe65ebd31783726d71c466502a4ada5f868bce04090b5c8d",
+     "reproduces": "program/evidence/2026-10-08/q2-mutation-confirm/audit/audit-summary/audit-summary.json"
+    },
+    {
+     "byte_identical": true,
+     "committed_sha256": "98b3bf5305ddd61a6fb9920f8d1c1a2a43c18803b2a161461a370feeb14bef24",
+     "produced_sha256": "98b3bf5305ddd61a6fb9920f8d1c1a2a43c18803b2a161461a370feeb14bef24",
+     "reproduces": "program/evidence/2026-10-08/q2-mutation-confirm/audit/audit-summary/decisions.jsonl"
+    },
+    {
+     "byte_identical": true,
+     "committed_sha256": "2f4c7d795e449bb38a0fc1af459297d676f7e0b7a3d816487e73b9bc38f00db5",
+     "produced_sha256": "2f4c7d795e449bb38a0fc1af459297d676f7e0b7a3d816487e73b9bc38f00db5",
+     "reproduces": "program/evidence/2026-10-08/q2-mutation-confirm/audit/audit-summary/adjudication-pool.jsonl"
+    },
+    {
+     "byte_identical": true,
+     "committed_sha256": "675969b1fcff142ff1ea27765066163c67c482a0a546b45d76136e28e4cae9a2",
+     "produced_sha256": "675969b1fcff142ff1ea27765066163c67c482a0a546b45d76136e28e4cae9a2",
+     "reproduces": "program/evidence/2026-10-08/q2-mutation-confirm/audit/audit-summary/summarize-stdout.json"
+    }
+   ]
+  },
+  "control_2_analysis_pre_adjudication_with_k2_report": {
+   "all_byte_identical": true,
+   "files": [
+    {
+     "byte_identical": true,
+     "committed_sha256": "ee66aa3985507d373181f4f10cb910addf5fbdd92f40c15ca4d3fbcdb1a822d6",
+     "produced_sha256": "ee66aa3985507d373181f4f10cb910addf5fbdd92f40c15ca4d3fbcdb1a822d6",
+     "reproduces": "program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/analysis-with-k2/analysis.json"
+    },
+    {
+     "byte_identical": true,
+     "committed_sha256": "12a21ae719da4f72c4a5409fd693d76c2ea3813f999b1bba626fa730c40c6674",
+     "produced_sha256": "12a21ae719da4f72c4a5409fd693d76c2ea3813f999b1bba626fa730c40c6674",
+     "reproduces": "program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/analysis-with-k2/analysis-stdout.json"
+    }
+   ]
+  },
+  "control_3_analysis_pre_adjudication_without_k2_report": {
+   "all_byte_identical": true,
+   "files": [
+    {
+     "byte_identical": true,
+     "committed_sha256": "a7c2190279511742634670dc35893dcf619d25df234927fce87044c784a5fbdf",
+     "produced_sha256": "a7c2190279511742634670dc35893dcf619d25df234927fce87044c784a5fbdf",
+     "reproduces": "program/evidence/2026-10-08/q2-mutation-confirm/results/analysis.json"
+    },
+    {
+     "byte_identical": true,
+     "committed_sha256": "31bd901330b2d4c8047173dea762835003929cfb4bdfc7e862ac06754c5dfcef",
+     "produced_sha256": "31bd901330b2d4c8047173dea762835003929cfb4bdfc7e862ac06754c5dfcef",
+     "reproduces": "program/evidence/2026-10-08/q2-mutation-confirm/results/analysis-stdout.json"
+    }
+   ]
+  }
+ },
+ "frozen_source": "git archive of 65bc2e2bf7bbe4027e6751ff22840ecdf8e40fa1 (3,744 files; campaign check_pins passes; code tree 58bee019...)",
+ "interpreter": "Python 3.13.14, -E -s -B, COTCODEC_GIT_SHA=65bc2e2b...",
+ "label": "adjudicated by an isolated model on the owner's instruction (D80); not human-validated",
+ "schema": "q2m-d81-controls-v1"
+}
