@@ -207,7 +207,9 @@ and reserve golds**, the same 92 as P1 (`integration/prefreeze-counts-v2/counts.
 
 **S1a end states**: every scored S1a episode whose capture holds an office file the checker
 read, one item per distinct captured state (`state_sha256`). From S1a's committed records
-(`program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl`), the A1 runs hold 1,084 such
+(`program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl`; counted before the freeze by
+`program/evidence/2026-10-11/r04-nuisance/counts/s1a_counts.py`, which applies the item
+builder's rules and lists the 180 sampled fail states), the A1 runs hold 1,084 such
 episodes on 69 tasks and 970 distinct states:
 
 | Population | Rule | States | Tasks | Items |
