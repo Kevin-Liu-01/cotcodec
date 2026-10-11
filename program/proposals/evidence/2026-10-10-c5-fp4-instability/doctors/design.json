@@ -1,16 +1,17 @@
 {
  "doctor": "Design",
- "status": "FAIL",
+ "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "D68 repair pass by the single owner (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
- "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data, DOE estimability for the multi-factor design, decision rules with operating characteristics by simulation; K-Dense statistical-analysis for the blocked analysis, contrasts, multiplicity and assumption checks",
- "evidence": "Full-rank cell set (D1: rank 8 of 8 against the dossier's 8 of 10); positive-control gate G1; emulation-path control; per-configuration LR sweeps with parabolic refinement and fresh seeds; RCBD with seed blocks; registered contrasts with SEs in sigma units; verdict precedence with an omnibus 3-df interaction gate; P2 to P7 with falsifiers; S1 operating characteristics (2,000 replicates per setting over sigma, seed correlation, LR curvature and four truths), revised once before registration; N1 and N2 computations; Phase 0 gates PG1 to PG7 with thresholds and the SR test's power.",
- "why_fail": [
-  "every distribution in S1 is assumed; sigma at 35M and 1.2B tokens is unmeasured (anchored only on 2505.19115 Table 4 at 125M and 30B tokens)",
-  "at sigma 0.008 most verdicts are INDETERMINATE or G1 stops; interactions below about 2.9 sigma are undetectable at three seeds",
-  "N2 uses synthetic distributions; the calibrated prediction needs J3's tensors",
-  "the harness and the analysis code do not exist, so no rule has been executed on real data"
+ "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data, DOE estimability, decision rules with operating characteristics by simulation of the registered estimator; K-Dense statistical-analysis for the blocked analysis, contrasts, multiplicity and assumption checks",
+ "evidence": "Identified registered test P2 on I_prec32 (S1 against S5: same block size and exponent range, scale mantissa 0 against 7 bits); N3 shows it vanishes exactly with exact scales and is unchanged with UE4M3's range removed, while I_blk keeps 0.32 to 0.67 dB and per-row I_fmt moves up to 1.5 dB with the range (numerics-v2.json); rank 10 of 10 for the 10-cell set (doe-v2.json); gate runs on their own seeds in Phase 0 (J4), no reuse, with S1v2 replaying v1's reuse on the same data to show the bias there and not here; J4 measures sigma and the anchor at Phase 1's budget and sets n by a power rule; P2 decided on 95% intervals because S1v2 shows 90% intervals under-cover (0.84 to 0.86, false confirmation up to 0.09) when LR tuning error is present; range rule and attribution endpoint; equal LR protocol for both grids; S1v2 over nine truths, three effect sizes, three sigmas, two seed correlations and two LR curvatures (power-sim-v2.json): at sigma 0.004 the gate decides correctly 0.73 to 0.99, P2 given GO is CONFIRMED 0.93 to 0.94 under the credited mechanism and falsely CONFIRMED at most 0.05 under crest-only, range-only and additive truths; falsifiers P0 to P7 with numeric rules.",
+ "residual_risks": [
+  "every distribution in S1v2 is assumed; sigma is first measured by J4",
+  "G1 has residual df 2; at a common LR the probe's gap includes LR-optimum differences, so under a tuned-LR null with LR spread P(GO) is up to about 0.2 (cost, not a false claim: Phase 1's tests stay calibrated)",
+  "the secondary verdict family uses 90% intervals and F-tests that do not see LR tuning error; its realised false rates are reported in S1v2, not corrected",
+  "the calibrated magnitude prediction assumes loss is linear in operand noise power; it is reported, not decision-bearing",
+  "the harness and analysis code do not exist; no rule has run on real data"
  ],
- "remediation": "Phase 0 J3 and Stage 1a measure sigma; build the analysis and run it as a cpu-doctor orx node on S1's synthetic data"
+ "remediation": "Build the analysis script and reproduce S1v2's decisions on its synthetic replicates as a cpu-doctor orx node before any GPU job"
 }

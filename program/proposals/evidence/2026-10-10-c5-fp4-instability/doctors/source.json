@@ -2,15 +2,15 @@
  "doctor": "Source",
  "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "D68 repair pass by the single owner (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
- "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac; arXiv abstract pages, the Hugging Face model and dataset APIs, Zenodo, the PyTorch documentation and the ACL Anthology PDF reachable; the arXiv API (frontier cell) and Semantic Scholar Graph API (synthesis: one paper record and forward citations of seven works) reached through the read-only host relay; the OpenReview api2 search answered 10 searches; 114 counted orx discover invocations with returned ids and raw-output SHA-256 (11 rejected by the backend: 10 OpenAlex HTTP 429 or 400, 1 decode error), uncounted searches and reads logged in query-log.json; source cutoff 2026-10-10; every cited primary URL snapshotted (snapshots/).",
+ "evidence": "Wave 1's coverage (114 counted orx discover invocations, query-log.json) plus run 2's: 16 counted retrieval queries (orx keyword 10, embedding 2, OpenAlex 2 both rejected with HTTP 429, OpenReview api2 notes/search 2), each with raw-output SHA-256 and returned ids in query-log-run2.json; three full-text reads not counted (2510.25602 and 2302.08007 by orx paper --full; the ARITH 2025 study from its open NSF PAR copy, 2,352,338 B, sha256 d1d5b8e3...); source cutoff 2026-10-10; new primary URLs snapshotted (snapshots/).",
  "degraded_coverage": [
-  "OpenAlex rate-limited on the shared IP (10 rejected calls); OpenAlex citation-graph expansion not completed (Semantic Scholar used instead)",
-  "OpenReview full texts and per-note pages are behind a browser challenge; every OpenReview item is abstract-only (UNVERIFIABLE_ACCESS for full text); OpenReview snapshots are HTTP 200 challenge pages that verify nothing about content",
-  "ARITH 2025 (DOI 10.1109/ARITH64983.2025.00011) closed access: Semantic Scholar openAccessPdf CLOSED, no repository copy",
-  "ACL Anthology not searched (one PDF fetched); patents, X, Reddit, Hacker News, Chinese-language venues, vendor blogs and GitHub issues not searched",
+  "OpenAlex rate-limited on the shared IP in both waves (run 2: 2 of 2 calls rejected); the citation graph of 2510.25602 not expanded",
+  "OpenReview items abstract-only (per-note pages behind a browser challenge in wave 1; not retried); the ICML 2026 camera-ready of 2510.25602 not read (its abstract differs from arXiv v1 on MXINT4)",
+  "not searched: patents, X, Reddit, Hacker News, Chinese-language venues, vendor blogs",
   "orx 0.2.2 reports itself outdated (latest 0.2.18)"
  ],
- "remediation": "Retry OpenAlex citation expansion after its budget resets; search patents and Chinese-language venues; read ARITH 2025 with IEEE access"
+ "wave1_corrected": "Wave 1 recorded ARITH 2025 as closed access; an open copy exists on NSF PAR and was read in full in run 2",
+ "remediation": "Retry OpenAlex citation expansion of 2510.25602 when the rate limit clears; search patents and Chinese-language venues"
 }
