@@ -4802,3 +4802,76 @@ they say so.)
     and `program/log.md` conflict.
   - If R01 is ever reopened, reviewer 1's list applies, as a new draft v3.
     P0 and Stage B admission stays Kevin's (D24, D70).
+## 2026-10-11 — R03's K2 VM-fidelity executor built and tested on the dev split; addendum `q2-evaluator-mutation-v1-k2` drafted (DRAFT, not frozen; branch `stage0/q2-mutation-k2`, not merged)
+
+- D73 (ii): the checker-mutation study's K2 gate had no executor (dossier O3),
+  so its headline carries "offline harness, VM fidelity unverified". New code
+  in `harness/q2_mutation_k2/` (no file under `harness/q2_mutation/`,
+  `infra/q2-mutation/`, `harness/q2/` or `harness/q2_stage1/` changed; the
+  parent's code tree `58bee019...`, action-path v2's 86 pinned files and S1a's
+  section 20 files are byte-identical): an executor that runs the frozen plan
+  of `vm_injection.py` in a fresh certified VM through S1a's OSWorld session
+  code (setup, warm-up, the 60 s and 20 s settles, the pinned `evaluate()`
+  with `DONE`), the K2 lane (S1a's lane with K2 slots,
+  `infra/slurm/host-single-node/q2m-k2-vm.sbatch`), the run and pair rules
+  for the parent's four explanations, a fitness gate (at most 8 of 80 pairs
+  excluded) and the report that writes the parent analysis's `--k2-report`
+  only for the registered job.
+- Addendum `program/preregistrations/q2-evaluator-mutation-v1-k2.md` (DRAFT,
+  own experiment id): the comparison (in-VM verdict against the offline
+  lock-exact verdict for the same `candidate_sha256`), the items (the frozen
+  80-job K2 sample; K2-C, the 41 candidate events, descriptive only), two
+  independent runs per pair, the outcomes VERIFIED / FAMILIES_DROPPED (the
+  parent's consequence verbatim) / INCOMPLETE (label kept; one repair under a
+  new id), and the adjudication interplay (K2 reads no audit or adjudication
+  file; its outputs are unblinding and carry the warning; neither waits for
+  the other). Pre-freeze audit pending; the freeze is the owner's step.
+- Dev-split jobs (CPU-only, no GRES, each submitted on an empty queue): 1113
+  (void: SIGTERM left LibreOffice's recovery list, so reopened candidates sat
+  behind a Document Recovery dialog; one run contaminated by a manual probe;
+  fixed by a Ctrl+Q quit before any signal), 1122 (6 pairs, 12 of 12 runs
+  scored, all agree) and 1130, the dress rehearsal at the registered shape
+  (80 dev sample pairs and 11 dev candidate events, two runs each, V = 8):
+  182 of 182 runs scored, 0 excluded, 80 of 80 pairs and 11 of 11 candidate
+  events agree with the offline verdicts in both runs, 45.5 minutes.
+  Exploratory; nothing here is a confirm result. No GPU used.
+- Waiting on: the pre-freeze audit, then the owner's freeze, then the `k2` job
+  (about 1 hour on the CPU lane). Kevin's adjudication (34 items) and spot
+  check (25 items) are independent of K2 and stay his.
+
+## 2026-10-11 — K2 addendum `q2-evaluator-mutation-v1-k2`: first pre-freeze audit's items fixed (DRAFT, not frozen; branch `stage0/q2-mutation-k2`, not merged)
+
+- Audit verdict: not ready to freeze, two blocking items. (1) The text named
+  the executor commit as the ledger row's `git_head_at_freeze`, but the lane
+  accepts purpose `k2` only from a tree holding the row, and that commit's
+  tree has none (reproduced by the auditor on a scratch copy of the ledger).
+  Sections 7, 12 and 14 and the `k2-confirm-v1` base manifest note now adopt
+  S1a's convention: the job runs from an export of the freeze commit (the
+  commit that adds only the row), never its parent. The lane records the
+  export's row in the receipt, and the `k2` report checks in a git checkout
+  that the executor commit's only parent is `git_head_at_freeze` and that the
+  trees differ only by the ledger. Section 14 asks for the branch to be merged
+  to `main` before the freeze. (2) Section 8's per-set quantities (agreement
+  by save path, run statistics, checker observations) were not produced by
+  `report.py`; they are now, with tests.
+- Cheaper items: a second `k2` job is refused by `lane submit` and `lane run`;
+  the `k2` report reads one run directory and takes the K2-C digest from the
+  frozen registration; `lane render` checks the job list against the sample
+  summary (the pinned `9c2426b7...` for `k2`); the executor's upload is bounded
+  at 180 s; scores are coerced with `float()` as offline; text fixes (section
+  9.4's adjudication route, section 6's repair, section 11's table, section 7's
+  `.git_sha`, the executor docstring); the confirm-only shapes and the dev jobs'
+  host overlap are recorded in section 11. The dev reports of jobs 1122 and
+  1130 were regenerated (pair rows unchanged except a new `save_path`).
+- Checks: 88 K2 tests pass; ruff clean; code table refreshed. On a scratch
+  git copy frozen into a copy of the ledger (the real ledger still has 16
+  rows), the host's fresh render of the `k2` manifest (242 slots, job list
+  `9c2426b7...` checked at render) validates on the freeze commit's tree
+  (40 CPUs, 64 GB, 360 minutes) and is refused on its parent's; the report
+  CLI with synthetic agreeing records accepts the freeze commit and refuses
+  its parent. Dev job 1163 (CPU-only, no GRES, submitted on an empty queue,
+  executor `2307253`): 12 of 12 runs scored and job 1122's six readings
+  reproduced. No GPU used.
+- Waiting on: a re-check of the fixes if the owner wants one, the merge to
+  `main` (`program/log.md` conflicts only by both sides appending), then the
+  owner's freeze and the `k2` job.

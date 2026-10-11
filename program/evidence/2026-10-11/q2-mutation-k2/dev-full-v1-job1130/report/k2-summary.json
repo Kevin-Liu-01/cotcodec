@@ -1,0 +1,320 @@
+{
+ "families_not_covered_by_k2": [],
+ "gate": {
+  "excluded": 0,
+  "excluded_by_cause": {},
+  "max_excluded": 8,
+  "pairs": 80,
+  "passes": true
+ },
+ "inputs": {
+  "k2c": "94460c361c41a23b14d991439b60f841d9bcf6d81c2e3ab5f0d25e31ff80313e",
+  "notes_summary": "5a30faab069500654da317cf40071c5b44e969594c390e1ed990377dae0f5efe",
+  "sample": "94d7bb2233bf78f780902f1c50aeaffbe4f36f933acebdf1b1d109a49a6960a6",
+  "verdicts": "d612e6db9df32aaa72bc038a58f2722ef3ab85b38c7a9b90fd598f0dabe778de"
+ },
+ "k2": {
+  "agree": 80,
+  "by_family": {
+   "compare_docx_files": {
+    "agree": 9,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 9
+   },
+   "compare_docx_files_and_ignore_new_lines": {
+    "agree": 6,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 6
+   },
+   "compare_docx_tables": {
+    "agree": 7,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 7
+   },
+   "compare_pptx_files": {
+    "agree": 19,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 19
+   },
+   "compare_pptx_files_robust": {
+    "agree": 5,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 5
+   },
+   "compare_table": {
+    "agree": 32,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 32
+   },
+   "compare_text_file": {
+    "agree": 2,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 2
+   }
+  },
+  "by_offline_verdict": {
+   "fail": {
+    "agree": 27,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 27
+   },
+   "pass": {
+    "agree": 53,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 53
+   }
+  },
+  "by_save_path": {
+   "agent_save": {
+    "agree": 11,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 11
+   },
+   "no_save": {
+    "agree": 2,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 2
+   },
+   "postconfig_save": {
+    "agree": 67,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 67
+   }
+  },
+  "differ": 0,
+  "excluded": 0,
+  "explanations": {},
+  "pairs": 80,
+  "runs": {
+   "attempts": 160,
+   "infrastructure_types": {},
+   "late_writes": 0,
+   "metric_errors": 0,
+   "observations": {
+    "calls": 398,
+    "max_s": 0.051,
+    "retried": 0,
+    "runs": 160,
+    "slow": 0,
+    "undelivered": 0,
+    "unusual": 0
+   },
+   "postconfig_failures": 0,
+   "run_s": {
+    "max": 122.463,
+    "median": 115.632,
+    "min": 110.517,
+    "n": 160,
+    "p95": 120.432
+   },
+   "save_latency_s": {
+    "max": 0.052,
+    "median": -0.353,
+    "min": -0.582,
+    "n": 134,
+    "over_0.5s": 0,
+    "p95": 0.023
+   },
+   "save_paths": {
+    "agent_save": 22,
+    "no_save": 4,
+    "postconfig_save": 134
+   },
+   "statuses": {
+    "scored": 160
+   },
+   "unsaved_at_read_runs": 0
+  },
+  "single_run_pairs": 0
+ },
+ "k2c": {
+  "agree": 11,
+  "by_family": {
+   "compare_docx_files_and_ignore_new_lines": {
+    "agree": 3,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 3
+   },
+   "compare_pptx_files": {
+    "agree": 6,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 6
+   },
+   "compare_pptx_files_robust": {
+    "agree": 2,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 2
+   }
+  },
+  "by_offline_verdict": {
+   "fail": {
+    "agree": 8,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 8
+   },
+   "pass": {
+    "agree": 3,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 3
+   }
+  },
+  "by_save_path": {
+   "postconfig_save": {
+    "agree": 11,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 11
+   }
+  },
+  "differ": 0,
+  "excluded": 0,
+  "explanations": {},
+  "pairs": 11,
+  "runs": {
+   "attempts": 22,
+   "infrastructure_types": {},
+   "late_writes": 0,
+   "metric_errors": 0,
+   "observations": {
+    "calls": 76,
+    "max_s": 0.047,
+    "retried": 0,
+    "runs": 22,
+    "slow": 0,
+    "undelivered": 0,
+    "unusual": 0
+   },
+   "postconfig_failures": 0,
+   "run_s": {
+    "max": 117.447,
+    "median": 115.06,
+    "min": 112.683,
+    "n": 22,
+    "p95": 116.722
+   },
+   "save_latency_s": {
+    "max": -0.378,
+    "median": -0.463,
+    "min": -0.581,
+    "n": 22,
+    "over_0.5s": 0,
+    "p95": -0.378
+   },
+   "save_paths": {
+    "postconfig_save": 22
+   },
+   "statuses": {
+    "scored": 22
+   },
+   "unsaved_at_read_runs": 0
+  },
+  "single_run_pairs": 0
+ },
+ "outcome": {
+  "families_dropped": [],
+  "label": "development (never an analysis input)",
+  "outcome": "VERIFIED",
+  "write_analysis_report": false
+ },
+ "purpose": "development",
+ "receipts": [
+  {
+   "error": null,
+   "host_overlap": {
+    "foreign_jobs": {
+     "1132": {
+      "cpus": "32",
+      "name": "cotcodec-s2v3-pilot-cpu"
+     }
+    },
+    "snapshots": 6,
+    "with_foreign_jobs": [
+     "end"
+    ]
+   },
+   "job_id": "1130",
+   "name": "k2-dev-full-v1",
+   "records": 182,
+   "statuses": {
+    "scored": 182
+   },
+   "stopped": false
+  }
+ ],
+ "runs": {
+  "attempts": 182,
+  "infrastructure_types": {},
+  "late_writes": 0,
+  "metric_errors": 0,
+  "observations": {
+   "calls": 474,
+   "max_s": 0.051,
+   "retried": 0,
+   "runs": 182,
+   "slow": 0,
+   "undelivered": 0,
+   "unusual": 0
+  },
+  "postconfig_failures": 0,
+  "run_s": {
+   "max": 122.463,
+   "median": 115.512,
+   "min": 110.517,
+   "n": 182,
+   "p95": 120.12
+  },
+  "save_latency_s": {
+   "max": 0.052,
+   "median": -0.385,
+   "min": -0.582,
+   "n": 156,
+   "over_0.5s": 0,
+   "p95": 0.021
+  },
+  "save_paths": {
+   "agent_save": 22,
+   "no_save": 4,
+   "postconfig_save": 156
+  },
+  "statuses": {
+   "scored": 182
+  },
+  "unsaved_at_read_runs": 0
+ },
+ "schema": "q2m-k2-summary-v1"
+}
