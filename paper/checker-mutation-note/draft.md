@@ -5,22 +5,29 @@ Research note, draft of 2026-10-11. CoTCodec research program, question Q2
 (`program/evidence/2026-10-11/question-renewal/dossier.md`, section 3). Program owner: Kevin Liu.
 
 Repository: <https://github.com/Kevin-Liu-01/cotcodec> (public). Every evidence path below
-resolves on `main` at `746d60d2`, the base of this draft's branch `stage0/r03-note`. The note's
-script, figures and number table (`paper/checker-mutation-note/scripts/`, `figures/`, `data/`)
-are added on that branch. The note expands section 6 of the Q2 report draft
-(`paper/q2-report/draft.md`), which predates K2 (D79) and the adjudication (D82); where the two
-differ, the numbers here are the later ones.
+resolves on `main` at `746d60d2`, the base of this draft's branch `stage0/r03-note`, except
+what that branch adds: the note's script, figures and number table
+(`paper/checker-mutation-note/scripts/`, `figures/`, `data/`) and the record of the prior-art
+check K8 (`program/evidence/2026-10-11/q2-mutation-k8-prior-art/`). The note expands section 6
+of the Q2 report draft (`paper/q2-report/draft.md`), which predates K2 (D79) and the
+adjudication (D82); where the two differ, the numbers here are the later ones.
 
 > **Status: DRAFT. Not published, not for circulation.**
 >
 > - Publishing this note is an outward action reserved to the program owner (D2, D80).
 > - It reports candidate defects in OSWorld checkers that have not been disclosed to the OSWorld
 >   maintainers (xlang-ai). Whether and how to disclose them is the owner's decision (D2, D80),
->   and it comes before any publication. Any disclosure text uses D72 (iii)'s counts.
+>   and it comes before any publication. Any disclosure text uses D72 (iii)'s failure counts
+>   (36 of 40 evaluable z-order mutants fail: `compare_pptx_files` 35 of 39 plus
+>   `compare_pptx_files_tolerant` 1 of 1) and gives any confirmed count as 30 by both raters,
+>   or as 33 after D82's model adjudication, with the D80 label.
 > - Every result is **descriptive** (D35). Nothing here is confirmatory.
-> - Every audit-dependent number is **adjudicated by an isolated model on the owner's
->   instruction (D80); not human-validated**. The human spot check that D9 planned is still
->   pending.
+> - Every audit-dependent number rests on two model raters. The 34 items they split on or both
+>   read against the label (the adjudication pool) and the 25-item spot check were answered by
+>   an isolated model: **adjudicated by an isolated model on the owner's instruction (D80); not
+>   human-validated**. The human spot check that D9 planned is still pending.
+> - The registered prior-art check K8 ran on 2026-10-11, after the first draft rather than
+>   before drafting as registered, and did not fire (section 6).
 > - The offline harness's verdicts were **checked inside real VMs by K2** (D79) on a registered
 >   sample of 80 scoring jobs.
 > - The note quotes no OSWorld task document. Task ids are OSWorld's public task identifiers.
@@ -36,23 +43,25 @@ scored it with OSWorld's unmodified evaluator. Two model raters audited every ca
 checker and the label disagreed, and an isolated model adjudicated the items they split on or
 both read against the label.
 
-- **One comparator fails equivalent edits.** Swapping the stacking order of two slide shapes
-  that cannot paint the same pixel changes nothing a viewer sees. 36 of 40 evaluable mutants of
-  this kind fail their checker (90.0%; task-equal share 91.7%, 81.3-100%): `compare_pptx_files`
-  35 of 39 and `compare_pptx_files_tolerant` 1 of 1. After adjudication 33 are confirmed and 3
-  have their label contradicted, all 3 on one task whose gold the adjudicator also rejected.
-  Every other should-pass operator gave 0 failures (for example 0 of 85 selection changes and
-  0 of 39 literal-for-formula alternatives in spreadsheets).
-- **The false negatives sit in one comparator family.** The adjudicated confirmed share is
-  11.6% (6.4-17.3%) pooled over all 60 evaluable tasks, 37.1% (28.3-44.6%) within
-  `compare_pptx_files`, and 85.4% (68.8-97.9%) within the z-order operator.
+- **The pptx comparators fail equivalent edits.** Swapping the stacking order of two slide
+  shapes that cannot paint the same pixel changes nothing a viewer sees. 36 of 40 evaluable
+  mutants of this kind fail their checker (90.0%; task-equal share 91.7%, 81.3-100%):
+  `compare_pptx_files` 35 of 39 and `compare_pptx_files_tolerant` 1 of 1. After model
+  adjudication (D80) 33 are confirmed and 3 have their label contradicted, all 3 on one task
+  whose gold the adjudicator also rejected. Every other should-pass operator gave 0 failures
+  (for example 0 of 85 selection changes and 0 of 39 literal-for-formula alternatives in
+  spreadsheets).
+- **The false negatives sit in `compare_pptx_files` and its tolerant variant.** The
+  model-adjudicated (D80) confirmed share is 11.6% (6.4-17.3%) pooled over all 60 evaluable
+  tasks, 37.1% (28.3-44.6%) within `compare_pptx_files`, and 85.4% (68.8-97.9%) within the
+  z-order operator.
 - **Few audited false positives.** 5 of 96 evaluable should-fail mutants pass their checker
   (task-equal 5.9%, 0.8-12.3%). 2 are confirmed violations (2.1%, 0-5.4%); for the other 3 the
   audit says the edit does not violate the task. Probe-touched cells, kept out by registration,
   hold 28 more false-positive events that nobody audited.
-- **The gold is not a fixed point of a GUI save.** 4 of 92 golds that pass raw fail after a
-  GUI-faithful LibreOffice save (exact 95% 1.20-10.76%); 3 of those flips are audit-confirmed
-  checker errors (3.26%, 0.68-9.23%).
+- **The gold is not a fixed point of a GUI save.** 4 of the 92 save-exposed golds pass raw but
+  fail after a GUI-faithful LibreOffice save (4.35%; exact 95% 1.20-10.76%); 3 of those flips
+  are audit-confirmed checker errors (3.26%, 0.68-9.23%).
 - **The result holds inside the VM.** On the registered K2 sample, 78 of 78 compared pairs give
   the offline verdict in both runs, and all 41 candidate events reproduce.
 - **No on-policy consequence is shown.** A corrected comparator changed 0 of 1,808 verdicts of
@@ -174,7 +183,9 @@ end-state file with a structure listing, a structural difference against the sav
 file, and 100-dpi page renders by the VM's own LibreOffice [MUT-REG section 9]. A packet never
 shows the gold, the checker, its verdict, the operator or the label. The listings come from
 the operators' own snapshot model, not from the libraries the checkers use, so the raters do
-not share the checkers' blind spots.
+not read files through the checkers' parsers. They do share the operators' view: a collateral
+change that the snapshot model does not record is missing both from the packet and from the
+operators' purity checks, and the page renders are the raters' only independent channel.
 
 Two model raters answered accept, reject or unsure for every item (D9, D23):
 
@@ -198,8 +209,9 @@ decisions (D80), and the pool and the spot check were answered by fresh, isolate
 adjudicators, one per item, blind to both raters, under the raters' own isolation template.
 This is a disclosed deviation from D9: the spot check was meant to be human, and it is not
 human here. A first run was void, because its agents were not started with the registered
-template and all of them used a forbidden tool; none of its answers is used (D81). The record
-is the second run [ADJ]:
+template and all of them used a forbidden tool; none of its answers is used (D81). The
+orchestrating session saw run 1's numbers, and the run-2 collector saw them in a commit
+message; D81 and the record disclose both. The record is the second run [ADJ]:
 
 - `claude-opus-5-5`, the same model as the Claude rater; 52 transcripts, 52 passing the
   registered isolation audit and 0 void. The agents used 711 Read calls and 52 structured
@@ -246,7 +258,7 @@ and **label contradicted** when it decides the opposite.
 
 ## 3. Results
 
-### 3.1 `compare_pptx_files` fails equivalent shape reorders
+### 3.1 The pptx comparators fail equivalent shape reorders
 
 In a PowerPoint file, the order of shapes in a slide's shape tree is their stacking order.
 `compare_pptx_files` zips the two decks' top-level shapes in that document order and compares
@@ -263,14 +275,19 @@ is 91.7%, because the estimand weights the 16 tasks equally (S11). The 4 evaluab
 checker passes are all on `compare_pptx_files`. Of the 59 z-order mutants planned, 13 sit on
 targets whose null mutant fails, 3 have ambiguous labels and 3 were not admitted [DER].
 
-After adjudication (D82), **33 are confirmed and 3 are label contradicted**. The 3 are all of
+After model adjudication (D80, D82), **33 are confirmed and 3 are label contradicted**. The 3 are all of
 task `5c1a6c3d`'s candidates; the adjudicator also rejected that task's saved gold, so it is a
 gold-defect task (section 3.3), and the 3 are reported as gold defects. The 3 newly confirmed
-candidates are on tasks `57667013`, `70bca0cc` and `eb303e01`.
+candidates are on tasks `57667013`, `70bca0cc` and `eb303e01`. All 6 were rater splits: the
+3 newly confirmed had Claude accept and Qwen reject, the 3 contradicted had Claude reject and
+Qwen accept, and the adjudicator, the same model as the Claude rater, sided with the Claude
+rater on all 6 [ADJ, "Answers"]. The adjudicated z-order reading therefore leans on that model
+(section 4).
 
 Table 2. False-negative candidates and confirmed shares, task-equal, in the population [ADJ-AN
 `checker_candidates.false_negative`; ADJ, "What changed"]. Before adjudication an unresolved
-candidate counts as not confirmed.
+candidate counts as not confirmed. The "after" column is adjudicated by an isolated model on
+the owner's instruction (D80); not human-validated.
 
 | Scope | Evaluable mutants (tasks) | Checker fails | Candidate share | Confirmed share before | Confirmed share after (D82) |
 |---|---:|---:|---|---|---|
@@ -283,7 +300,8 @@ z-order swap and no alternative solution (0 of 93) fails its checker. Per operat
 `xlsx.eq.view_selection` 0 of 85 (29 tasks), `pptx.eq.subvisible_nudge` 0 of 46,
 `xlsx.alt.literal_for_formula` 0 of 39, `xlsx.eq.view_zoom` 0 of 37, `docx.eq.view_zoom` 0 of
 36, `xlsx.alt.absolute_refs` 0 of 34, and smaller cells [ADJ-AN]. Per family, `compare_table`
-has 0 of 218 should-pass mutants on 30 tasks. Figure 1 shows every operator.
+has 0 of 218 should-pass mutants on 30 tasks. Figure 1 shows every operator with an evaluable
+mutant in the population (25 of the catalog's 64).
 
 ![Figure 1](figures/fig1-operator-shares.svg)
 
@@ -291,13 +309,16 @@ Figure 1. Per-operator candidate share (filled circle) and adjudicated confirmed
 diamond) with 95% task-cluster bootstrap intervals, in the population. Left: should-pass
 operators, where a candidate is a failed verdict. Right: should-fail operators, where a
 candidate is a pass. Labels give candidates over evaluable mutants and the number of tasks
-("t"). Generated by `scripts/figures.py` from the adjudicated analysis.
+("t"). Generated by `scripts/figures.py` from the adjudicated analysis. Confirmed shares are
+adjudicated by an isolated model on the owner's instruction (D80); not human-validated.
 
 ![Figure 2](figures/fig2-zorder-stages.svg)
 
 Figure 2. The z-order mutants through each stage: planning and evaluability [DER], the offline
 checker, the two model raters [MUT `summary.json`], the adjudication [ADJ-AN], the in-VM rerun
 (K2-C) [K2] and the corrected comparator `zinv` [ZINV-VAL]. Generated by `scripts/figures.py`.
+The adjudication stage is adjudicated by an isolated model on the owner's instruction (D80);
+not human-validated.
 
 ### 3.2 False-positive candidates
 
@@ -305,7 +326,9 @@ checker, the two model raters [MUT `summary.json`], the adjudication [ADJ-AN], t
 share 5.9%, 0.8-12.3%). All 5 carry a violation label; no extra change passes outside
 probe-touched cells (0 of 5).
 
-Table 3. False-positive candidates [ADJ-AN `checker_candidates.false_positive.events`].
+Table 3. False-positive candidates [ADJ-AN `checker_candidates.false_positive.events`]. The
+adjudicator column and the readings are adjudicated by an isolated model on the owner's
+instruction (D80); not human-validated.
 
 | Task | Operator | Checker family | Raters | Adjudicator (D82) | Reading |
 |---|---|---|---|---|---|
@@ -354,10 +377,10 @@ Claude-family reading [ADJ, "What the result licenses"].
 
 MUT-P1, a pre-specified replication, asks whether a gold that passes raw still passes after the
 GUI-faithful save. The population is the 92 golds that place an office file the save rewrites
-(confirm 67, reserve 25) [ADJ-AN `P1`]:
+(confirm 67, reserve 25) [ADJ-AN `P1`]; 87 of them pass raw (63 confirm, 24 reserve) [DER]:
 
-- 4 flip raw (4.35%; exact 95% 1.20-10.76%): `30e3e107`, `9ec204e4` and `b8adbc24` (confirm)
-  and `3a7c8185` (reserve).
+- 4 pass raw and fail after the save (4.35% of the 92; exact 95% 1.20-10.76%): `30e3e107`,
+  `9ec204e4` and `b8adbc24` (confirm) and `3a7c8185` (reserve).
 - 3 flips are audit-confirmed checker errors (3.26%; 0.68-9.23%): both raters accept the saved
   gold of `3a7c8185`, `9ec204e4` and `b8adbc24` as still correct.
 - Both raters reject the saved gold of `30e3e107`: the save changed its content, so that flip
@@ -421,15 +444,19 @@ analysis changed.
 `compare_pptx_files_zinv` realigns the agent deck's shapes to the reference order only where
 the swapped shapes are apart by the operator's own rule, then runs the original comparator with
 the task's options, so a visible stacking change still fails [ZINV]. It was validated on CPU on
-the stored confirm campaign: 291 items, every evaluable mutant, gold and do-nothing state of
-the 16 tasks whose every metric is `compare_pptx_files` [S1A-REG section 8; ZINV-VAL]:
+the stored confirm campaign: 291 items on the 21 tasks whose every metric is
+`compare_pptx_files`, namely every evaluable mutant (249, on 16 tasks), 21 golds and 21
+do-nothing states [S1A-REG section 3.1, item 8; ZINV-VAL; DER]:
 
 - It passes all 29 then-confirmed z-order false negatives, and all 6 then-unresolved ones.
+  After model adjudication (D80) 3 of those 6 are confirmed and 3 are label contradicted, all
+  on gold-defect task `5c1a6c3d` (section 3.1), so `zinv` also passes 3 mutants of a gold the
+  adjudicator rejected.
 - The 256 other items keep the original verdict, including every should-fail mutant (113 that
   the original rejects stay rejected, 3 that it passes stay passed) [DER].
 - The first two versions failed the gate (0 of 29, then 26 of 29), and each fix came from the
   confirmed mutants that failed. The 29 are therefore a development set as much as a gate
-  [S1A-REG section 8].
+  [S1A-REG section 3.1, item 8].
 - `compare_pptx_files_tolerant` is not corrected.
 
 So `zinv` is validated only on the split it was built for. R03 part (b), whether it accepts at
@@ -441,14 +468,20 @@ will probably be descriptive (O4).
 
 S1a ran Qwen3.5-4B and Qwen3.5-9B on two certified harnesses (screenshot only, 15 steps) over
 113 tasks and scored 1,808 episodes with no infrastructure loss [S1A]. Offline rescoring of
-every final state with `zinv` in place of `compare_pptx_files` (72 episodes per job, 288 in
-all) changed **0 of 1,808 verdicts**, and 0 of the 512 primary ones [S1A-RESC]. For these two
-policies at 15 steps, the reorder defect moved no outcome. A stronger agent that rebuilds or
-reorders slide shapes could meet it; S1a does not measure that.
+the final states with `zinv` in place of `compare_pptx_files` (72 episodes per job, 288 in
+all) changed **0 of 1,808 verdicts**, and 0 of the 512 primary ones [S1A-RESC]. Not every
+final state replays offline: 16 secondary verdicts, all of the live-state task `53ad5833`,
+kept their live scores, and one metric-exception episode scored 0 by the registered merge
+rule; their checkers are `compare_config` and `compare_images`, so no `compare_pptx_files`
+episode is among them [S1A; S1A-RESC; MUT `controls/`]. For these two policies at 15 steps,
+the reorder defect moved no outcome. A stronger agent that rebuilds or reorders slide shapes
+could meet it; S1a does not measure that.
 
 ## 4. How reliable the audit is
 
-Table 5. Agreement [MUT `summary.json`; ADJ `summary.json` `agreement`, `spot_check`].
+Table 5. Agreement [MUT `summary.json`; ADJ `summary.json` `agreement`, `spot_check`]. The
+adjudicator rows are adjudicated by an isolated model on the owner's instruction (D80); not
+human-validated.
 
 | Comparison | Items | Agree | κ |
 |---|---:|---:|---:|
@@ -457,17 +490,18 @@ Table 5. Agreement [MUT `summary.json`; ADJ `summary.json` `agreement`, `spot_ch
 | Adjudicator vs Qwen rater, the 52 adjudicated items | 52 | 35 | 0.34 |
 | Adjudicator vs Claude rater, the 28 pool splits | 28 | 17 | 0.24 |
 | Adjudicator vs Qwen rater, the 28 pool splits | 28 | 11 | 0.00 |
-| Fable vs adjudicator, the 52 items | 52 | 51 | 0.96 |
+| Fable vs adjudicator, the 52 items, one attachment type excepted (below) | 52 | 51 | 0.96 |
 
 - **The raters.** κ is 0.343 on the 138 real items, below the registered 0.6, and adjudication
   cannot change it. Sham accuracy is 0.90 for Claude (36 of 40) and 0.975 for Qwen (39 of 40).
   24 of the 138 real items were unresolved before adjudication. On the 36 z-order candidates
   the raters agreed on 30.
-- **The adjudicator leans to Claude.** On the 28 splits it sided with Claude 17 times and with
-  Qwen 11 times, including all 6 equivalence splits. In the spot check it matched the Claude
-  rater on all 25 items and the raters' consensus on all 23 concordant ones, and it got all 5
-  shams right. A model spot check that agrees with one rater on every item cannot validate that
-  rater; D9's human spot check stays open as the only independent validation (D82).
+- **The adjudicator leans to Claude.** On the 28 splits it sided with Claude 17 times,
+  including all 6 equivalence splits, and with Qwen 11 times. In the spot check it matched the
+  Claude rater on all 25 items and the raters' consensus on all 23 concordant ones, and it got
+  all 5 shams right. A model spot check that agrees with one rater on every item cannot
+  validate that rater; D9's human spot check stays open as the only independent validation
+  (D82).
 - **Fable, the independence sensitivity.** `claude-fable-5-1` agreed with the record on 51 of 52
   items and 27 of 28 splits. Its one unsure, `0fd24b93`, is an equivalence split, which leaves
   32 confirmed false negatives and confirmed shares of 11.2% (6.2-17.0%) pooled, 35.8%
@@ -512,12 +546,22 @@ These bound every result above, and they are stated as plainly as the results.
   OSWorld revision may give other verdicts.
 - **A narrow population.** The population is 444 synthetic mutants on 60 confirm tasks, mostly
   LibreOffice spreadsheets, documents and decks. Not covered: 43 confirm tasks without a
-  complete gold, the reserve split (apart from MUT-P1's golds), live-state and web tasks, and
-  every non-office checker (GIMP, VLC, Thunderbird, VS Code, OS settings). Probe-touched cells
-  were excluded and their 28 false-positive events are unaudited.
+  complete gold, 10 whose complete gold has no file an operator handles, 7 target tasks whose
+  saved null mutant fails its own checker, the reserve split (apart from MUT-P1's golds),
+  live-state and web tasks, and every non-office checker (GIMP, VLC, Thunderbird, VS Code, OS
+  settings). Probe-touched cells were excluded and their 28 false-positive events are
+  unaudited.
+- **Ambiguous mutants are out.** 186 of the 1,232 admitted mutants end with an ambiguous
+  label, 3 of them z-order swaps. They are counted, kept out of the population and never
+  audited, so what the checkers do on them is not described here.
+- **Packets share the operators' view of a file.** The packets' listings and differences come
+  from the snapshot model the operators also use for their purity checks. A collateral change
+  that model does not record is invisible to both, and only the page renders could show it to
+  a rater.
 - **The catalog shapes the finding.** Operators find only the kinds of edit they make. That
-  the z-order swap dominates says that this catalog found one comparator defect; it does not
-  say other checkers are sound against edits the catalog lacks.
+  the z-order swap dominates says that this catalog found one kind of defect, shape-order
+  sensitivity in the pptx comparators; it does not say other checkers are sound against edits
+  the catalog lacks.
 - **The correction is validated only on its build split.** `zinv` was developed and validated
   on the confirm campaign's own z-order mutants. The held-out reserve-split check (R03 part (b))
   is pending.
@@ -540,8 +584,13 @@ claim rests on the program's own searches: the renewal sweep's 272 cell queries 
 dossier owner's 22 queries (among them queries 10, 15 and 19, which target checker mutation and
 checker audits on desktop and GUI benchmarks in alphaXiv, OpenReview and the ACL Anthology)
 found no prior that mutation-tests desktop file-state checkers [DOSSIER, "Method" and
-section 3]. The alphaXiv results reached 2026-10-09, so later posts are not covered, and an
-absence in these searches is not a claim that none exists.
+section 3]. The registered prior-art check K8 [MUT-REG section 10] then ran on 2026-10-11,
+after this note's first draft rather than before drafting as registered: 12 `orx` queries
+(134 distinct hits) and the Semantic Scholar citers of AgentRewardBench (110) and ABC (114),
+216 distinct, found no mutation audit of desktop computer-use-agent checkers, so K8 does not
+fire and the note keeps its scope [K8]. The dossier's alphaXiv results reached 2026-10-09 and
+K8's newest hit is dated 2026-10-08, so later posts are not covered, and an absence in these
+searches is not a claim that none exists.
 
 **Audits of verdicts.** How Benchmarks Mis-Score Computer-Use Agents (arXiv 2607.28367,
 2026-07-30) hand-audits 150 FAIL-scored trajectories from five benchmarks; of 57 OSWorld items,
@@ -550,25 +599,35 @@ open [CLAIMS c066]. Our false negatives are on the same side, found by construct
 by reading agent failures, with a false-positive side and a GUI-save fixed point added. Auditing
 Web Agent Evaluation on WebArena-Lite (arXiv 2610.01491, title resolved 2026-10-11) finds by
 human review 5.45-8.49 pp of success the evaluator missed, on the web [DOSSIER, query 2]. A Trust
-Layer for Agent Evaluation (arXiv 2610.07274, title resolved 2026-10-11) checks earned passes,
-honesty and rerun stability on 108 Agents' Last Exam tasks and finds 22.6% of recorded passes
-clear all four checks [DOSSIER, query 1].
+Layer for Agent Evaluation (arXiv 2610.07274, 2026-10-05) checks earned passes, honesty and
+rerun stability on 108 Agents' Last Exam tasks and finds 22.6% of recorded passes clear all
+four checks [DOSSIER, query 1].
 
-**Benchmark and checker audits elsewhere.** Measuring the Checker (arXiv 2609.22220,
+**Benchmark and checker audits elsewhere.** BenchJack (Do Androids Dream of Breaking the
+Game?, arXiv 2605.12673, 2026-05-12), found by K8, drives coding agents to search 10 agent
+benchmarks, desktop computing among them, for reward-hacking exploits; per its abstract, its
+iterative pipeline fully patched WebArena and OSWorld within three iterations [K8]. It audits
+exploitable false accepts of the evaluation pipeline; it does not test checker verdicts on
+equivalent or violating end states. Measuring the Checker (arXiv 2609.22220,
 2026-09-02) applies mutation analysis to kernel correctness oracles; the official KernelBench
 check misses 16.9% of its witnessed faults [CLAIMS c069]. Do Agent Benchmarks Do What They
-Say? (arXiv 2609.37315) and Who Guards the Benchmarks? (BenchGuard, arXiv 2604.24955, COLM 2026)
-audit tool-using agent environments, not desktop state checkers [CLAIMS c121, c122; SLATE
-section 1]. OpenComputer (ICLR 2027 submission, OpenReview `CgLTapI6Mr`) builds verifiable
-software worlds with their own state verifiers rather than auditing OSWorld's [CLAIMS c085].
-SSCBench (arXiv 2610.11514) studies the evidential validity of fault-injection tests for
-tool-using agents [DOSSIER, "Method"]. The equivalence operators play the role that
+Say? (arXiv 2609.37315, 2026-09-29) checks the tools of four tool-using agent benchmarks
+against their advertised contracts, and Who Guards the Benchmarks? (BenchGuard, arXiv
+2604.24955, 2026-04-27, COLM 2026) audits the artifacts of scientific agent benchmarks; neither
+touches a desktop state checker. The program verified these two titles [CLAIMS c121, c122;
+SLATE section 1], and K8 read their abstracts [K8]. OpenComputer (ICLR 2027 submission,
+OpenReview `CgLTapI6Mr`) builds verifiable software worlds with app-specific state verifiers
+rather than auditing OSWorld's, per its abstract as the program's verifier read it [CLAIMS
+c085]. SSCBench (arXiv 2610.11514) studies the evidential validity of fault-injection tests
+for tool-using agents [DOSSIER, "Method"]. The equivalence operators play the role that
 metamorphic relations play in testing without a full oracle; Barr et al. survey that oracle
 problem (IEEE TSE 41(5), 2015) [CLAIMS c182].
 
-**What is left to this note.** Desktop document checkers; false rejects of equivalent edits as
-the dominant error; gold files that are not a fixed point of the pipeline's own save; a VM
-fidelity check of the offline harness; and a zero on-policy consequence for two small policies.
+**What is left to this note.** Mutation tests of desktop document checkers; false rejects of
+equivalent shape reorders by the pptx comparators, the most frequent candidate error under this
+catalog outside probe-touched cells; gold files that are not a fixed point of the pipeline's
+own save; a VM fidelity check of the offline harness; and a zero on-policy consequence for two
+small policies.
 
 ## 7. Reproducing this note
 
@@ -582,9 +641,11 @@ uv run --locked python paper/checker-mutation-note/scripts/check_claims.py
 ```
 
 Both run from the repository root on CPU, without network. `figures.py` writes the two figures
-and `data/derived.json`, which holds the few counts no committed file states directly (the
-z-order operator's statuses and per-family verdicts, read from `outcomes.jsonl`, and the zinv
-rows per reading). The registered analyses themselves are reproduced by the commands in [MUT],
+and `data/derived.json`, which holds the few counts no committed file states directly: the
+z-order operator's statuses and per-family verdicts, read from `outcomes.jsonl`; the zinv rows
+per reading and their tasks; MUT-P1's raw-passing golds, from the controls summaries; the
+confirm tasks without a target, from the pre-freeze target counts; and the operators in
+Figure 1. The registered analyses themselves are reproduced by the commands in [MUT],
 [K2] and [ADJ].
 
 Not in the repository: the mutant documents, packets, rater transcripts and answer reasons,
@@ -595,7 +656,7 @@ receipts.
 
 AI agents (Claude models) ran the campaign, the audit, the adjudication and the analyses under
 the program's frozen registrations and decisions, and an AI agent wrote this draft as its single
-author from committed evidence only. Decisions D80-D82 delegated the adjudication to an isolated
+author from committed evidence only; the same agent ran the K8 searches. Decisions D80-D82 delegated the adjudication to an isolated
 model. No human has reviewed this note, adjudicated an item or validated a label. Kevin Liu owns
 the program and every outward action, including any disclosure and publication.
 
@@ -606,7 +667,8 @@ Program evidence (paths from the repository root):
 - [MUT-REG] `program/preregistrations/q2-evaluator-mutation-v1.md` (frozen, ledger row 11).
 - [K2-REG] `program/preregistrations/q2-evaluator-mutation-v1-k2.md` (frozen, ledger row 17).
 - [MUT] `program/evidence/2026-10-08/q2-mutation-confirm/README.md`, `results/README.md`,
-  `results/summary.json`, `results/released/confirm-mutants-v1/`.
+  `results/summary.json`, `results/released/confirm-mutants-v1/` and
+  `results/released/controls/` (the controls summaries).
 - [MUT-AUD] `program/evidence/2026-10-08/q2-mutation-confirm/audit/README.md`.
 - [K2] `program/evidence/2026-10-11/q2-mutation-k2/README.md` and
   `k2-confirm-v1-job1186/` (README, `report/k2-summary.json`).
@@ -618,15 +680,17 @@ Program evidence (paths from the repository root):
   `program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md`; [S1A-RESC]
   `program/evidence/2026-10-10/q2-stage1-analysis/rescore-coverage.json`.
 - [DER] `paper/checker-mutation-note/data/derived.json` (written by `scripts/figures.py`).
+- [K8] `program/evidence/2026-10-11/q2-mutation-k8-prior-art/README.md` and `k8-record.json`
+  (added on this draft's branch).
 - [DOSSIER] `program/evidence/2026-10-11/question-renewal/dossier.md`; [SLATE] `slate.md`;
   [CLAIMS] `claim-registry.json` and `verification.json` in the same directory.
 - Decisions D2, D9, D23, D25, D27, D34, D35, D38, D72, D79, D80, D81 and D82:
   `program/decisions.md`.
 
-External sources (dates are first-version dates where the program's verifier recorded them,
-otherwise the date the title was resolved):
+External sources (arXiv dates are first-version dates, as the program's verifier or K8's arXiv
+API read recorded them; where neither recorded one, the date the title was resolved):
 
-- OSWorld: <https://arxiv.org/abs/2404.07972> (2024-04-11); repository
+- OSWorld: <https://arxiv.org/abs/2404.07972> (2024-04-11, K8); repository
   <https://github.com/xlang-ai/OSWorld>, pinned at `b138d348`.
 - Finding Blind Spots in AppWorld and WorkArena Task Verifiers:
   <https://arxiv.org/abs/2610.09142> (2026-10-06).
@@ -635,11 +699,11 @@ otherwise the date the title was resolved):
 - Measuring the Checker: <https://arxiv.org/abs/2609.22220> (2026-09-02).
 - Auditing Web Agent Evaluation on WebArena-Lite: <https://arxiv.org/abs/2610.01491> (resolved
   2026-10-11).
-- A Trust Layer for Agent Evaluation: <https://arxiv.org/abs/2610.07274> (resolved 2026-10-11).
-- Do Agent Benchmarks Do What They Say?: <https://arxiv.org/abs/2609.37315> (resolved
-  2026-10-11).
-- Who Guards the Benchmarks? (BenchGuard): <https://arxiv.org/abs/2604.24955> (resolved
-  2026-10-11).
+- A Trust Layer for Agent Evaluation: <https://arxiv.org/abs/2610.07274> (2026-10-05).
+- Do Agent Benchmarks Do What They Say?: <https://arxiv.org/abs/2609.37315> (2026-09-29).
+- Who Guards the Benchmarks? (BenchGuard): <https://arxiv.org/abs/2604.24955> (2026-04-27).
+- Do Androids Dream of Breaking the Game? Systematically Auditing AI Agent Benchmarks with
+  BenchJack: <https://arxiv.org/abs/2605.12673> (2026-05-12, K8).
 - SSCBench: <https://arxiv.org/abs/2610.11514> (resolved 2026-10-11).
 - OpenComputer: <https://openreview.net/forum?id=CgLTapI6Mr> (resolved 2026-10-11).
 - Barr, Harman, McMinn, Shahbaz and Yoo, The Oracle Problem in Software Testing: A Survey,

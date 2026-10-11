@@ -29,7 +29,9 @@
   "DOSSIER": "program/evidence/2026-10-11/question-renewal/dossier.md",
   "CLAIMREG": "program/evidence/2026-10-11/question-renewal/claim-registry.json",
   "VERIF": "program/evidence/2026-10-11/question-renewal/verification.json",
-  "PROV": "program/evidence/q2-mutation/integration/blind-spec-provenance.json"
+  "PROV": "program/evidence/q2-mutation/integration/blind-spec-provenance.json",
+  "K8_README": "program/evidence/2026-10-11/q2-mutation-k8-prior-art/README.md",
+  "K8_REC": "program/evidence/2026-10-11/q2-mutation-k8-prior-art/k8-record.json"
  },
  "claims": [
   {
@@ -48,6 +50,86 @@
    ]
   },
   {
+   "id": "status-d72-counts",
+   "text": "(36 of 40 evaluable z-order mutants fail: `compare_pptx_files` 35 of 39 plus\n>   `compare_pptx_files_tolerant` 1 of 1)",
+   "evidence": [
+    {
+     "file": "DEC",
+     "match": "36 of 40 evaluable z-order",
+     "expect": "36 of 40"
+    },
+    {
+     "file": "DEC",
+     "match": "`compare_pptx_files` 35 of 39",
+     "expect": "35 of 39"
+    },
+    {
+     "file": "DEC",
+     "match": "`compare_pptx_files_tolerant` 1 of 1",
+     "expect": "1 of 1"
+    }
+   ],
+   "note": "D72 (iii)"
+  },
+  {
+   "id": "status-confirmed-counts",
+   "text": "gives any confirmed count as 30 by both raters,\n>   or as 33 after D82's model adjudication",
+   "evidence": [
+    {
+     "file": "DEC",
+     "match": "That is 30 confirmed in all",
+     "expect": "30"
+    },
+    {
+     "file": "DEC",
+     "match": "become 33",
+     "expect": "33"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "counts",
+      "by_audit_reading",
+      "confirmed"
+     ],
+     "fmt": "int",
+     "expect": "33"
+    }
+   ]
+  },
+  {
+   "id": "status-pool-spot",
+   "text": "The 34 items they split on or both",
+   "evidence": [
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "adjudication",
+      "pool"
+     ],
+     "fmt": "int",
+     "expect": "34"
+    }
+   ]
+  },
+  {
+   "id": "status-spot",
+   "text": "the 25-item spot check were answered by",
+   "evidence": [
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "adjudication",
+      "spot_check"
+     ],
+     "fmt": "int",
+     "expect": "25"
+    }
+   ]
+  },
+  {
    "id": "operators-64-summary",
    "text": "confirm split with 64 operators",
    "evidence": [
@@ -60,7 +142,7 @@
   },
   {
    "id": "zorder-36-of-40-summary",
-   "text": "36 of 40 evaluable mutants of",
+   "text": "36 of 40 evaluable",
    "evidence": [
     {
      "file": "ADJ_AN",
@@ -160,7 +242,7 @@
   },
   {
    "id": "zorder-adjudicated-summary",
-   "text": "After adjudication 33 are confirmed and 3",
+   "text": "adjudication (D80) 33 are confirmed and 3 have their label contradicted",
    "evidence": [
     {
      "file": "ADJ_AN",
@@ -190,7 +272,7 @@
   },
   {
    "id": "zorder-gold-defect-summary",
-   "text": "all 3 on one task whose gold",
+   "text": "all 3 on one task",
    "evidence": [
     {
      "file": "ADJ_SUM",
@@ -207,7 +289,7 @@
   },
   {
    "id": "view-selection-summary",
-   "text": "operator gave 0 failures (for example 0 of 85 selection changes",
+   "text": "operator gave 0 failures\n  (for example 0 of 85 selection changes",
    "evidence": [
     {
      "file": "ADJ_AN",
@@ -271,7 +353,7 @@
   },
   {
    "id": "fn-confirmed-pooled-summary",
-   "text": "11.6% (6.4-17.3%) pooled over all 60 evaluable tasks",
+   "text": "11.6% (6.4-17.3%) pooled over all 60 evaluable",
    "evidence": [
     {
      "file": "ADJ_AN",
@@ -370,7 +452,7 @@
   },
   {
    "id": "fn-confirmed-zorder-summary",
-   "text": "85.4% (68.8-97.9%) within the z-order operator",
+   "text": "85.4% (68.8-97.9%) within the",
    "evidence": [
     {
      "file": "ADJ_AN",
@@ -570,7 +652,7 @@
   },
   {
    "id": "p1-raw-summary",
-   "text": "4 of 92 golds that pass raw",
+   "text": "4 of the 92 save-exposed golds pass raw",
    "evidence": [
     {
      "file": "ADJ_AN",
@@ -592,11 +674,12 @@
      "fmt": "int",
      "expect": "92"
     }
-   ]
+   ],
+   "note": "MUT-P1's population is every save-exposed gold (registration section 4); 87 of the 92 pass raw (claim p1-87)"
   },
   {
    "id": "p1-raw-ci-summary",
-   "text": "(exact 95% 1.20-10.76%); 3 of those flips",
+   "text": "(4.35%; exact 95% 1.20-10.76%); 3 of those flips",
    "evidence": [
     {
      "file": "MUT_REG",
@@ -632,6 +715,16 @@
      ],
      "fmt": "int",
      "expect": "3"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "raw_flips",
+      "share"
+     ],
+     "fmt": "pct2",
+     "expect": "4.35"
     }
    ]
   },
@@ -1856,6 +1949,38 @@
    ]
   },
   {
+   "id": "zorder-splits-claude",
+   "text": "All 6 were rater splits: the\n3 newly confirmed had Claude accept and Qwen reject, the 3 contradicted had Claude reject and\nQwen accept, and the adjudicator, the same model as the Claude rater, sided with the Claude\nrater on all 6",
+   "evidence": [
+    {
+     "file": "ADJ_README",
+     "match": "| split | `fn_equiv` | accept / reject | 3 | 3 accept |",
+     "expect": "3"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "| split | `fn_equiv` | reject / accept | 3 | 3 reject |",
+     "expect": "3"
+    },
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "adjudication",
+      "by_group",
+      "fn_equiv"
+     ],
+     "fmt": "int",
+     "expect": "6"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "It sides with Claude on all 6 equivalence splits",
+     "expect": "6"
+    }
+   ],
+   "note": "raters listed Claude / Qwen in the ADJ pool table"
+  },
+  {
    "id": "t2-zorder",
    "text": "| z-order operator | 40 (16) | 36 | 91.7% (81.3-100%) | 77.1% (61.5-90.6%) | 85.4% (68.8-97.9%) |",
    "evidence": [
@@ -2581,6 +2706,26 @@
    ]
   },
   {
+   "id": "fig1-operators",
+   "text": "mutant in the population (25 of the catalog's 64).",
+   "evidence": [
+    {
+     "file": "DER",
+     "key": [
+      "figure1_operators",
+      "total"
+     ],
+     "fmt": "int",
+     "expect": "25"
+    },
+    {
+     "file": "MUT_REG",
+     "match": "\"operators\": 64",
+     "expect": "64"
+    }
+   ]
+  },
+  {
    "id": "fig1-95",
    "text": "with 95% task-cluster bootstrap intervals",
    "evidence": [
@@ -3221,8 +3366,43 @@
    ]
   },
   {
+   "id": "p1-87",
+   "text": "87 of them pass raw (63 confirm, 24 reserve)",
+   "evidence": [
+    {
+     "file": "DER",
+     "key": [
+      "p1_save_exposed_golds",
+      "raw_pass"
+     ],
+     "fmt": "int",
+     "expect": "87"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "p1_save_exposed_golds",
+      "confirm",
+      "raw_pass"
+     ],
+     "fmt": "int",
+     "expect": "63"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "p1_save_exposed_golds",
+      "reserve",
+      "raw_pass"
+     ],
+     "fmt": "int",
+     "expect": "24"
+    }
+   ]
+  },
+  {
    "id": "p1-raw",
-   "text": "- 4 flip raw (4.35%; exact 95% 1.20-10.76%):",
+   "text": "- 4 pass raw and fail after the save (4.35% of the 92; exact 95% 1.20-10.76%):",
    "evidence": [
     {
      "file": "ADJ_AN",
@@ -3268,6 +3448,16 @@
      ],
      "fmt": "pct2",
      "expect": "10.76"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "raw_flips",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "92"
     }
    ]
   },
@@ -4229,7 +4419,7 @@
   },
   {
    "id": "zinv-291",
-   "text": "the stored confirm campaign: 291 items, every evaluable mutant, gold and do-nothing state of",
+   "text": "the stored confirm campaign: 291 items on the 21 tasks whose every metric is",
    "evidence": [
     {
      "file": "S1A_REG",
@@ -4244,19 +4434,65 @@
      ],
      "fmt": "int",
      "expect": "291"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zinv_tasks",
+      "all_rows"
+     ],
+     "fmt": "int",
+     "expect": "21"
     }
    ]
   },
   {
-   "id": "zinv-16-tasks",
-   "text": "the 16 tasks whose every metric is",
+   "id": "zinv-items",
+   "text": "namely every evaluable mutant (249, on 16 tasks), 21 golds and 21",
    "evidence": [
     {
+     "file": "ZINV_V3",
+     "key": [
+      "gate",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "249"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zinv_tasks",
+      "with_mutant_rows"
+     ],
+     "fmt": "int",
+     "expect": "16"
+    },
+    {
+     "file": "ZINV_V3",
+     "key": [
+      "gate",
+      "golds"
+     ],
+     "fmt": "int",
+     "expect": "21"
+    },
+    {
+     "file": "ZINV_V3",
+     "key": [
+      "gate",
+      "initial_states"
+     ],
+     "fmt": "int",
+     "expect": "21"
+    },
+    {
      "file": "S1A_REG",
-     "match": "the 16 tasks whose every metric is",
-     "expect": "16 tasks"
+     "match": "(214 mutants, 21 golds, 21\n   do-nothing states)",
+     "expect": "21"
     }
-   ]
+   ],
+   "note": "the 291 items come from 21 tasks; only the 249 mutants come from 16 (5 tasks have a gold and a do-nothing state but no evaluable mutant). S1A-REG's 'the 16 tasks whose every metric is' contradicts its own 21 golds"
   },
   {
    "id": "zinv-pass",
@@ -4288,6 +4524,48 @@
      ],
      "fmt": "int",
      "expect": "6"
+    }
+   ]
+  },
+  {
+   "id": "zinv-adjudicated",
+   "text": "After model adjudication (D80) 3 of those 6 are confirmed and 3 are label contradicted, all",
+   "evidence": [
+    {
+     "file": "ADJ_README",
+     "match": "The 3 newly confirmed",
+     "expect": "3"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zinv_zorder_rows",
+      "unresolved|raw=0.0|zinv=1.0"
+     ],
+     "fmt": "int",
+     "expect": "6"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "false_negative",
+      "on_gold_defect_tasks"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "zinv-gold-3",
+   "text": "so `zinv` also passes 3 mutants of a gold the",
+   "evidence": [
+    {
+     "file": "ADJ_README",
+     "match": "The 3 rejected are all of `5c1a6c3d`'s candidates",
+     "expect": "3"
     }
    ]
   },
@@ -4524,6 +4802,38 @@
    ]
   },
   {
+   "id": "s1a-fallback",
+   "text": "16 secondary verdicts, all of the live-state task",
+   "evidence": [
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "verdict_sources",
+      "secondary",
+      "fell_back_to_live_score"
+     ],
+     "fmt": "int",
+     "expect": "16"
+    },
+    {
+     "file": "S1A_RES",
+     "match": "16 fell",
+     "expect": "16"
+    }
+   ]
+  },
+  {
+   "id": "s1a-merge-0",
+   "text": "one metric-exception episode scored 0 by the registered merge",
+   "evidence": [
+    {
+     "file": "S1A_RES",
+     "match": "The metric-exception episode gets 0 by the registered merge rule",
+     "expect": "0"
+    }
+   ]
+  },
+  {
    "id": "s1a-steps-2",
    "text": "policies at 15 steps",
    "evidence": [
@@ -4721,7 +5031,7 @@
   },
   {
    "id": "t5-fable",
-   "text": "| Fable vs adjudicator, the 52 items | 52 | 51 | 0.96 |",
+   "text": "| Fable vs adjudicator, the 52 items, one attachment type excepted (below) | 52 | 51 | 0.96 |",
    "evidence": [
     {
      "file": "ADJ_SUM",
@@ -4752,6 +5062,10 @@
      ],
      "fmt": "round2",
      "expect": "0.96"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "(b)'s answers are used here with `batching_reminder_sent` excepted."
     }
    ]
   },
@@ -4880,7 +5194,7 @@
   },
   {
    "id": "splits-sided",
-   "text": "On the 28 splits it sided with Claude 17 times and with",
+   "text": "On the 28 splits it sided with Claude 17 times,\n  including all 6 equivalence splits,",
    "evidence": [
     {
      "file": "ADJ_SUM",
@@ -4901,22 +5215,6 @@
      ],
      "fmt": "int",
      "expect": "17"
-    }
-   ]
-  },
-  {
-   "id": "splits-qwen",
-   "text": "Qwen 11 times, including all 6 equivalence splits.",
-   "evidence": [
-    {
-     "file": "ADJ_SUM",
-     "key": [
-      "agreement",
-      "a_vs_open_weight_rater_28_pool_splits",
-      "agree"
-     ],
-     "fmt": "int",
-     "expect": "11"
     },
     {
      "file": "MUT_SUM",
@@ -4930,13 +5228,39 @@
     },
     {
      "file": "ADJ_README",
-     "match": "It sides with Claude on all 6 equivalence splits"
+     "match": "It sides with Claude on all 6 equivalence splits",
+     "expect": "6"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "| split | `fn_equiv` | accept / reject | 3 | 3 accept |"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "| split | `fn_equiv` | reject / accept | 3 | 3 reject |"
+    }
+   ],
+   "note": "the 6 equivalence splits went to the Claude rater: accept/reject -> 3 accept, reject/accept -> 3 reject"
+  },
+  {
+   "id": "splits-qwen",
+   "text": "and with Qwen 11 times.",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_open_weight_rater_28_pool_splits",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "11"
     }
    ]
   },
   {
    "id": "spot-detail",
-   "text": "rater on all 25 items and the raters' consensus on all 23 concordant ones, and it got all 5",
+   "text": "Claude rater on all 25 items and the raters' consensus on all 23 concordant ones, and it got\n  all 5",
    "evidence": [
     {
      "file": "ADJ_SUM",
@@ -5488,8 +5812,60 @@
    ]
   },
   {
+   "id": "lim-10-7",
+   "text": "10 whose complete gold has no file an operator handles, 7 target tasks whose",
+   "evidence": [
+    {
+     "file": "DER",
+     "key": [
+      "confirm_tasks",
+      "complete_gold_but_no_target"
+     ],
+     "fmt": "int",
+     "expect": "10"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "target_tasks_outside_population",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "7"
+    }
+   ]
+  },
+  {
+   "id": "lim-ambiguous",
+   "text": "186 of the 1,232 admitted mutants end with an ambiguous\n  label, 3 of them z-order swaps",
+   "evidence": [
+    {
+     "file": "MUT_RES",
+     "match": "never rates; 186",
+     "expect": "186"
+    },
+    {
+     "file": "BUILD",
+     "key": [
+      "admitted"
+     ],
+     "fmt": "comma",
+     "expect": "1,232"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zorder_status_counts",
+      "ambiguous"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
    "id": "lim-probe-28",
-   "text": "their 28 false-positive events are unaudited",
+   "text": "their 28 false-positive events are",
    "evidence": [
     {
      "file": "MUT_RES",
@@ -5554,6 +5930,68 @@
      "file": "DOSSIER",
      "match": "Dossier owner's retrieval (22 queries",
      "expect": "22"
+    }
+   ]
+  },
+  {
+   "id": "k8-searches",
+   "text": "12 `orx` queries\n(134 distinct hits) and the Semantic Scholar citers of AgentRewardBench (110) and ABC (114),\n216 distinct",
+   "evidence": [
+    {
+     "file": "K8_REC",
+     "key": [
+      "queries"
+     ],
+     "fmt": "len",
+     "expect": "12"
+    },
+    {
+     "file": "K8_REC",
+     "key": [
+      "orx_unique_hits"
+     ],
+     "fmt": "int",
+     "expect": "134"
+    },
+    {
+     "file": "K8_REC",
+     "key": [
+      "citers",
+      "AgentRewardBench (arXiv 2504.08942)",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "110"
+    },
+    {
+     "file": "K8_REC",
+     "key": [
+      "citers",
+      "ABC (arXiv 2507.02825)",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "114"
+    },
+    {
+     "file": "K8_REC",
+     "key": [
+      "citers",
+      "union_distinct"
+     ],
+     "fmt": "int",
+     "expect": "216"
+    }
+   ]
+  },
+  {
+   "id": "benchjack-10",
+   "text": "drives coding agents to search 10 agent",
+   "evidence": [
+    {
+     "file": "K8_README",
+     "match": "search 10 agent benchmarks",
+     "expect": "10"
     }
    ]
   },
@@ -5676,6 +6114,8 @@
   "queries 10, 15 and 19",
   "COLM 2026",
   "ICLR 2027",
-  "SLATE\nsection 1"
+  "SLATE\nsection 1",
+  "item 8",
+  "run 1"
  ]
 }

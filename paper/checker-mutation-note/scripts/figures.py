@@ -8,7 +8,9 @@ Run from the repository root. Reads only committed files:
 - the confirm campaign's released `outcomes.jsonl`: the z-order operator's statuses and verdicts;
 - the confirm results summary: the model raters' decisions on the z-order candidates;
 - the K2 job 1186 report summary: in-VM reproduction of the candidate events;
-- the G0 `zinv` validation (v3): the corrected comparator on the stored candidates.
+- the G0 `zinv` validation (v3): the corrected comparator on the stored candidates;
+- the confirm and reserve controls summaries: raw and saved gold verdicts (MUT-P1's golds);
+- the pre-freeze target counts: confirm tasks with and without a mutation target.
 
 Writes `figures/fig1-operator-shares.svg`, `figures/fig2-zorder-stages.svg` and
 `data/derived.json` (counts the note quotes that no committed file states directly). SVG output
@@ -35,6 +37,8 @@ OUTCOMES = EV / "2026-10-08/q2-mutation-confirm/results/released/confirm-mutants
 CONFIRM_SUMMARY = EV / "2026-10-08/q2-mutation-confirm/results/summary.json"
 K2 = EV / "2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/report/k2-summary.json"
 ZINV = EV / "2026-10-08/q2-stage1-g0/zinv/zinv-validation-v3.json"
+CONTROLS = EV / "2026-10-08/q2-mutation-confirm/results/released/controls"
+TARGET_COUNTS = EV / "q2-mutation/integration/target-counts-v1.json"
 NOTE = Path("paper/checker-mutation-note")
 ZORDER = "pptx.eq.zorder_nonoverlap"
 
@@ -42,6 +46,8 @@ INK = "#222222"
 CAND = "#1f4e79"
 CONF = "#b5651d"
 GREY = "#9a9a9a"
+# D80 (ii): every output that uses the adjudication carries this label.
+ADJ_LABEL = "adjudicated by an isolated model on the owner's instruction (D80); not human-validated"
 
 
 def load(path: Path) -> dict:
@@ -52,8 +58,38 @@ def outcomes() -> list[dict]:
     return [json.loads(line) for line in OUTCOMES.read_text().splitlines() if line.strip()]
 
 
-def derived() -> dict:
-    """Counts from `outcomes.jsonl` and the zinv rows that the note quotes."""
+def p1_golds() -> dict:
+    """Raw and saved verdicts of MUT-P1's save-exposed golds, per split.
+
+    A gold is save-exposed when it has a saved verdict and is neither listed as not exposed
+    nor excluded as unemulated; the count must equal the summary's `gold_fixed_point_n`.
+    """
+    out: dict[str, dict] = {}
+    for split in ("confirm", "reserve"):
+        summary = load(CONTROLS / f"{split}-controls-v1.summary.json")
+        agg = summary["aggregate"]
+        lock = agg["lock"]
+        skip = set(lock["gold_fixed_point_not_exposed"]) | set(agg["excluded_unemulated"])
+        pairs = Counter()
+        for task, row in summary["tasks"].items():
+            saved = row.get("gold_saved_lock")
+            if task in skip or not isinstance(saved, dict) or not saved.get("verdict"):
+                continue
+            pairs[f"raw={row['gold_raw_lock']['verdict']}|saved={saved['verdict']}"] += 1
+        n = sum(pairs.values())
+        assert n == lock["gold_fixed_point_n"], (split, n)
+        out[split] = {
+            "n": n,
+            "raw_pass": pairs["raw=pass|saved=pass"] + pairs["raw=pass|saved=fail"],
+            "by_raw_and_saved": dict(sorted(pairs.items())),
+        }
+    out["n"] = out["confirm"]["n"] + out["reserve"]["n"]
+    out["raw_pass"] = out["confirm"]["raw_pass"] + out["reserve"]["raw_pass"]
+    return out
+
+
+def derived(adj: dict) -> dict:
+    """Counts from `outcomes.jsonl`, the zinv rows and the controls that the note quotes."""
     rows = outcomes()
     z_all = [r for r in rows if r["operator"] == ZORDER]
     in_pop = [
@@ -70,16 +106,40 @@ def derived() -> dict:
         for r in rows
         if r["lock_status"] == "evaluable" and not r["probe_touched"] and not r["probe_informed"]
     ]
+    target_tasks = {r["task_id"] for r in rows}
+    population_tasks = {r["task_id"] for r in population}
+    outside = sorted(target_tasks - population_tasks)
+    outside_statuses = Counter(r["lock_status"] for r in rows if r["task_id"] in outside)
+    confirm_targets = load(TARGET_COUNTS)["splits"]["confirm"]
     zinv = load(ZINV)
     zrows = [r for r in zinv["rows"] if r["operator"] == ZORDER]
     zinv_readings = Counter(f"{r['reading']}|raw={r['raw']}|zinv={r['zinv']}" for r in zrows)
     should_fail = [r for r in zinv["rows"] if (r["label"] or "").startswith("should_fail")]
     zinv_should_fail = Counter(f"raw={r['raw']}|zinv={r['zinv']}" for r in should_fail)
+    cc = adj["checker_candidates"]
+    fn_ops = set(cc["false_negative"]["candidate_share"]["by_operator"])
+    fp_ops = set(cc["false_positive"]["candidate_share"]["by_operator"])
+    assert not fn_ops & fp_ops
     return {
         "schema": "checker-mutation-note-derived-v1",
         "inputs": {
             "outcomes": str(OUTCOMES),
             "zinv": str(ZINV),
+            "controls": str(CONTROLS),
+            "target_counts": str(TARGET_COUNTS),
+            "adjudicated_analysis": str(ADJ),
+        },
+        "confirm_tasks": {
+            "tasks": confirm_targets["tasks"],
+            "with_target": confirm_targets["tasks_with_target"],
+            "no_complete_gold": confirm_targets["skipped"]["no complete gold"],
+            "complete_gold_but_no_target": confirm_targets["tasks"]
+            - confirm_targets["tasks_with_target"]
+            - confirm_targets["skipped"]["no complete gold"],
+        },
+        "target_tasks_outside_population": {
+            "tasks": len(outside),
+            "lock_statuses": dict(sorted(outside_statuses.items())),
         },
         "population_outside_probe_cells": {
             "mutants": len(population),
@@ -96,6 +156,16 @@ def derived() -> dict:
         },
         "zinv_zorder_rows": dict(sorted(zinv_readings.items())),
         "zinv_should_fail_rows": dict(sorted(zinv_should_fail.items())),
+        "zinv_tasks": {
+            "all_rows": len({r["task_id"] for r in zinv["rows"]}),
+            "with_mutant_rows": len({r["task_id"] for r in zinv["rows"] if r["kind"] == "mutant"}),
+        },
+        "p1_save_exposed_golds": p1_golds(),
+        "figure1_operators": {
+            "should_pass": len(fn_ops),
+            "should_fail": len(fp_ops),
+            "total": len(fn_ops) + len(fp_ops),
+        },
     }
 
 
@@ -147,16 +217,24 @@ def figure1(adj: dict) -> None:
             mfc="white",
             lw=1.4,
             ms=4.2,
-            label="confirmed share (adjudicated, D82)",
+            label="confirmed share (model-adjudicated, D82)",
         ),
     ]
-    fig.legend(handles=handles, loc="lower center", ncol=2, frameon=False, fontsize=8)
+    fig.legend(
+        handles=handles,
+        loc="lower center",
+        bbox_to_anchor=(0.5, 0.03),
+        ncol=2,
+        frameon=False,
+        fontsize=8,
+    )
+    fig.text(0.5, 0.008, f"Confirmed shares: {ADJ_LABEL}.", ha="center", fontsize=7, color=INK)
     fig.suptitle(
         "Candidate checker errors per operator, evaluable mutants outside probe-touched cells "
         "(95% task-cluster bootstrap)",
         fontsize=9,
     )
-    fig.tight_layout(rect=(0, 0.07, 0.94, 0.95))
+    fig.tight_layout(rect=(0, 0.1, 0.94, 0.95))
     fig.savefig(NOTE / "figures/fig1-operator-shares.svg", metadata={"Date": None})
     plt.close(fig)
 
@@ -195,7 +273,7 @@ def figure2(adj: dict, der: dict) -> None:
             [("both accept", both_accept, CAND), ("split", split, GREY)],
         ),
         (
-            f"candidates ({fails}), adjudicated (D82)",
+            f"candidates ({fails}), model-adjudicated (D82)",
             [
                 ("confirmed", reading["confirmed"], CONF),
                 ("label contradicted, gold-defect task", reading["label_contradicted"], GREY),
@@ -244,7 +322,8 @@ def figure2(adj: dict, der: dict) -> None:
     )
     for side in ("top", "right", "left"):
         ax.spines[side].set_visible(False)
-    fig.tight_layout()
+    fig.text(0.01, 0.01, f"Model-adjudicated stage: {ADJ_LABEL}.", fontsize=7, color=INK)
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
     fig.savefig(NOTE / "figures/fig2-zorder-stages.svg", metadata={"Date": None})
     plt.close(fig)
 
@@ -253,7 +332,7 @@ def main() -> None:
     (NOTE / "figures").mkdir(parents=True, exist_ok=True)
     (NOTE / "data").mkdir(parents=True, exist_ok=True)
     adj = load(ADJ)
-    der = derived()
+    der = derived(adj)
     (NOTE / "data/derived.json").write_text(json.dumps(der, indent=1, sort_keys=False) + "\n")
     figure1(adj)
     figure2(adj, der)

@@ -2,7 +2,24 @@
  "schema": "checker-mutation-note-derived-v1",
  "inputs": {
   "outcomes": "program/evidence/2026-10-08/q2-mutation-confirm/results/released/confirm-mutants-v1/outcomes.jsonl",
-  "zinv": "program/evidence/2026-10-08/q2-stage1-g0/zinv/zinv-validation-v3.json"
+  "zinv": "program/evidence/2026-10-08/q2-stage1-g0/zinv/zinv-validation-v3.json",
+  "controls": "program/evidence/2026-10-08/q2-mutation-confirm/results/released/controls",
+  "target_counts": "program/evidence/q2-mutation/integration/target-counts-v1.json",
+  "adjudicated_analysis": "program/evidence/2026-10-11/q2-mutation-adjudication-v2/analysis/analysis.json"
+ },
+ "confirm_tasks": {
+  "tasks": 120,
+  "with_target": 67,
+  "no_complete_gold": 43,
+  "complete_gold_but_no_target": 10
+ },
+ "target_tasks_outside_population": {
+  "tasks": 7,
+  "lock_statuses": {
+   "normalized": 11,
+   "not_admitted": 10,
+   "null_not_pass": 135
+  }
  },
  "population_outside_probe_cells": {
   "mutants": 444,
@@ -36,5 +53,36 @@
  "zinv_should_fail_rows": {
   "raw=0.0|zinv=0.0": 113,
   "raw=1.0|zinv=1.0": 3
+ },
+ "zinv_tasks": {
+  "all_rows": 21,
+  "with_mutant_rows": 16
+ },
+ "p1_save_exposed_golds": {
+  "confirm": {
+   "n": 67,
+   "raw_pass": 63,
+   "by_raw_and_saved": {
+    "raw=fail|saved=fail": 4,
+    "raw=pass|saved=fail": 3,
+    "raw=pass|saved=pass": 60
+   }
+  },
+  "reserve": {
+   "n": 25,
+   "raw_pass": 24,
+   "by_raw_and_saved": {
+    "raw=fail|saved=fail": 1,
+    "raw=pass|saved=fail": 1,
+    "raw=pass|saved=pass": 23
+   }
+  },
+  "n": 92,
+  "raw_pass": 87
+ },
+ "figure1_operators": {
+  "should_pass": 12,
+  "should_fail": 13,
+  "total": 25
  }
 }
