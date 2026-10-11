@@ -1,0 +1,2735 @@
+{
+ "schema": "question-renewal-verification-v1",
+ "date": "2026-10-11",
+ "role": "fresh citation and claim verifier, independent of the slate owner and the discovery cells; edits limited to recording verdicts",
+ "boundary": "Citation and claim verification only. Checks that each registry claim matches its primary source or the repository; it does not judge novelty, significance or design, and it is not a gauntlet score.",
+ "inputs": {
+  "branch": "stage0/question-renewal",
+  "base_commit": "f033b135e86ff858b7bde324e1bc71b52290f3d5",
+  "slate.md_sha256": "13ff7be4ad43ae949db145fe30b069028db3d604f3e2d0ea35e7ee3eebc62e5f",
+  "claim-registry.json_sha256": "46f21cc0706751350664c38c3e0062779438c07c376928232d590fca3563bc79",
+  "queries.md_sha256": "1c06f44c94b62b011f44da60c149ec5819fa13590607afdf4d20e717fa38a814",
+  "repository_paths_cited_at": "360058d; git diff 360058d..f033b13 touches none of them"
+ },
+ "verdict_legend": {
+  "VERIFIED": "the primary source or repository record says what the claim says (qualifiers in 'note')",
+  "CORRECTED": "the claim is wrong or mis-scoped; 'fix' gives the corrected statement",
+  "UNVERIFIABLE": "no retained source or derivation to check against; keep it labelled provisional or as an estimate",
+  "REMOVED": "unsupported and should come out of the slate (none)"
+ },
+ "method": [
+  "arXiv: abs page (title, version history, comments, journal ref) and the PDF converted with pdftotext -layout for all 101 cited ids; figures searched in the text.",
+  "OpenReview: api2 notes/search with source=forum for all 10 cited forum ids; abstracts read from search results. Per-note fetch returns ChallengeRequiredError (403) and was not bypassed.",
+  "DOIs: Crossref works API; doi.org redirect checked for one.",
+  "Web: xlang.ai/blog/osworld-verified fetched.",
+  "Hugging Face: API metadata only (licence tags, file lists, LFS oids); no dataset download. Cell-3 scratch parquets were used only after their SHA-256 matched the HF LFS oids.",
+  "Repository: every cited file read at the cited lines; a1.jsonl, report-guarded.json, s15.json and evaluator-diff.json recounted with the Python standard library.",
+  "No host job, no GPU, no recursive search of the session scratchpad."
+ ],
+ "summary": {
+  "claims_checked": 202,
+  "verdicts": {
+   "VERIFIED": 192,
+   "CORRECTED": 4,
+   "UNVERIFIABLE": 6
+  },
+  "cell_reported_now_verified_at_primary": [
+   "c089",
+   "c090",
+   "c091",
+   "c092",
+   "c093",
+   "c094",
+   "c096",
+   "c097",
+   "c098",
+   "c099",
+   "c100",
+   "c101",
+   "c102",
+   "c103",
+   "c104",
+   "c105",
+   "c106",
+   "c107",
+   "c108",
+   "c109",
+   "c110",
+   "c111",
+   "c112",
+   "c180",
+   "c181",
+   "c182",
+   "c183",
+   "c185",
+   "c189",
+   "c190"
+  ],
+  "corrected": [
+   "c047",
+   "c088",
+   "c095",
+   "c197"
+  ],
+  "unverifiable": [
+   "c188",
+   "c191",
+   "c199",
+   "c200",
+   "c201",
+   "c202"
+  ],
+  "removed": [],
+  "slate_text_findings": 14,
+  "headline": "192 of 202 claims verified at the primary source or in the repository, 4 corrected, 6 unverifiable (cell scans and estimates without a retained source), none removed. Two of the slate owner's own corrections are wrong (the CAVEAT id resolves; the A7 step p50 is in the record). This verifier does not re-judge novelty; of the findings, only S6 (how R03 cites 2610.09142) and S1 (one more judge-side prior for R02) touch a novelty paragraph, and the rest change figures, scopes or wording."
+ },
+ "claims": [
+  {
+   "id": "c001",
+   "candidates": [
+    "R01",
+    "R02",
+    "R07",
+    "R08",
+    "R09",
+    "R15"
+   ],
+   "claim": "S1a ran 1,808 episodes (4 jobs x 452) with 0 infrastructure losses, 0 restarts and 0 undelivered observations",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md 'What ran' table (4 jobs x 452 of 452, 0 losses) and 'Infrastructure' (0 restarts; none undelivered); a1.jsonl has 1,808 rows."
+  },
+  {
+   "id": "c002",
+   "candidates": [
+    "R01",
+    "R07",
+    "R08",
+    "R09",
+    "R15"
+   ],
+   "claim": "Realized cost 0.0025-0.0027 GPU-h per episode at V = 20 (0.002497-0.002702 per job; 22-24% of the card high price 0.011274)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md cost card: 0.002497-0.002702 GPU-h per job, ratio 0.22-0.24 of the high price 0.011274."
+  },
+  {
+   "id": "c003",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "D_w pooled on the 32 base tasks 12.5% (95% 6.64-19.14); 4B 16.41%; 9B 8.59% (3.91-14.06)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md primary estimands: D_w pooled 12.50 [6.64, 19.14]; D_w,4B 16.41; D_w,9B 8.59 [3.91, 14.06]."
+  },
+  {
+   "id": "c004",
+   "candidates": [
+    "R01",
+    "R09"
+   ],
+   "claim": "Secondary set (113 tasks): D_w 4B 11.06% (95% 7.52-15.04), 9B 9.29% (5.97-13.05); D_b 4B 11.50%, 9B 9.29%",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-analysis/report/report-guarded.json",
+   "registry_status": "VERIFIED-RECOMPUTED",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13); recomputed",
+   "evidence": "report-guarded.json secondary_base_plus_completed_extension.estimates: D_w_4B 0.110619 [0.075221, 0.150442], D_w_9B 0.09292 [0.059735, 0.130531], D_b_4B 0.115044, D_b_9B 0.09292."
+  },
+  {
+   "id": "c005",
+   "candidates": [
+    "R06",
+    "R09"
+   ],
+   "claim": "D_b pooled on base 11.33% (95% 5.86-17.19); 4B 14.06%, 9B 8.59%",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md primary estimands: D_b pooled 11.33 [5.86, 17.19]; 4B 14.06; 9B 8.59."
+  },
+  {
+   "id": "c006",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "P1 falsified: session excess D_b - D_w = -1.17 pp, one-sided 95% upper bound 0.78 pp",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md predictions table P1: -1.17 pp, one-sided upper bound 0.78 pp, falsified."
+  },
+  {
+   "id": "c007",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "9B session shift S2 - S1 = +5.47 pp, sign-flip p = 0.0163 (exact 2/128 = 0.0156)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md session shift 9B +5.47 pp; sign-flip p 0.0163; exact 2/128 = 0.0156."
+  },
+  {
+   "id": "c008",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "Every discordant 9B base cell is a 3-to-1 split (11 cells)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md 'Note on the 9B excess': 11 discordant 9B cells, every one a 3-to-1 split."
+  },
+  {
+   "id": "c009",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "First divergence: 512 of 512 between-session base pairs at step 1 as environment; 255 of 256 within-session at step 1 as environment, 1 (9B) at step 2 as serving",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md offline rescoring, first divergence: 512 of 512 between-session at step 1 (environment); within-session 255 at step 1 (environment) and 1 (9B) at step 2 (serving)."
+  },
+  {
+   "id": "c010",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "Prompt date pinned (plan.PROMPT_DATE, Thursday, October 08, 2026); the guest clock is not pinned",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/harness/q2_stage1/design_diffs.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "harness/q2_stage1/design_diffs.md line 35: plan.PROMPT_DATE (Thursday, October 08, 2026); guest clock not pinned. a1.jsonl date_line is that string in all 1,808 rows."
+  },
+  {
+   "id": "c011",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "Prefix-cache hit share 0.855-0.858 in the A1 jobs; serving on vLLM v0.31.0",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md queue paragraph (prefix-cache hit share 0.855-0.858) and 'What the result licenses' (vLLM v0.31.0)."
+  },
+  {
+   "id": "c012",
+   "candidates": [
+    "R02",
+    "R04"
+   ],
+   "claim": "544 episodes with checker score 1 on 57 distinct tasks; 35 fractional scores; 1,264 non-pass episodes",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+   "registry_status": "VERIFIED-RECOMPUTED",
+   "verdict": "VERIFIED",
+   "level": "recomputed from a1.jsonl",
+   "evidence": "score == 1 in 544 rows on 57 distinct tasks; 0 < score < 1 in 35 rows; score != 1 in 1,264 rows."
+  },
+  {
+   "id": "c013",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "280 discordant rerun pairs, none with identical checker-input hashes",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md checker-input-hash discordance: 280 discordant pairs, none with identical checker-input hashes."
+  },
+  {
+   "id": "c014",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "Live vs offline raw replay mismatches: 0 on every replayed record; 1,791 secondary verdicts from rescoring, 16 fell back to live (task 53ad5833, LiveStateRequired), 1 metric exception scored 0",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13); recomputed",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md corrected verdicts and flips paragraphs; a1.jsonl live_offline_match is true in 1,791 rows and null in 17 (16 rows of 53ad5833 with corrected_score null, 1 metric-exception row of fba2c100); no false."
+  },
+  {
+   "id": "c015",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "compare_pptx_files_zinv applied to 72 episodes per job changed 0 verdicts (base and secondary)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md 'Flips: 0': the corrected comparator applied to 72 episodes per job changed no verdict."
+  },
+  {
+   "id": "c016",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "Uncertified exposure: 18 of 32 base tasks have an exposed episode; delta exposed -4.86 pp, unexposed -0.89 pp; 33 certified keysyms",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md uncertified exposure item and report-guarded.json delta_by_exposure_stratum (exposed -0.048611, unexposed -0.008929); 33 certified keysyms.",
+   "note": "The strata are task lists (uncertified_exposure.exposed has 18 tasks, unexposed 14), not episodes. See slate finding S3 for R07's wording."
+  },
+  {
+   "id": "c017",
+   "candidates": [
+    "R07",
+    "R08"
+   ],
+   "claim": "Secondary delta -1.11 pp, 90% t interval [-3.81, 1.60]; pi_small 0.084, one-sided 95% [0.020, 0.162]",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md sensitivities row 'Registered secondary, raw': delta -1.11, 90% t [-3.81, 1.60]; pi_small 0.084 [0.020, 0.162]."
+  },
+  {
+   "id": "c018",
+   "candidates": [
+    "R15"
+   ],
+   "claim": "Qwen3.5-9B solved 52 of 113 pool tasks at least once in 8 episodes; 32 neither always nor never (4B: 50 and 33)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+   "registry_status": "VERIFIED-RECOMPUTED",
+   "verdict": "VERIFIED",
+   "level": "recomputed from a1.jsonl",
+   "evidence": "8 episodes per task per size; 9B: 52 tasks with score 1 at least once, 32 neither always nor never; 4B: 50 and 33 (raw scores)."
+  },
+  {
+   "id": "c019",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "S1a checker inputs include registrymodifications.xcu (LibreOffice user settings)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+   "registry_status": "VERIFIED-RECOMPUTED",
+   "verdict": "VERIFIED",
+   "level": "recomputed from a1.jsonl",
+   "evidence": "48 records list /home/user/.config/libreoffice/4/user/registrymodifications.xcu in checker_input_sha256."
+  },
+  {
+   "id": "c020",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "Rerun noise is 20-33% of outcome variance and task-by-harness variance 3-4% on the probability scale",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/decisions.md D69: rerun noise 20-33% of outcome variance, task-by-harness 3-4%, probability scale."
+  },
+  {
+   "id": "c021",
+   "candidates": [
+    "R15",
+    "R04"
+   ],
+   "claim": "A 5 pp locale gate needs about 100-115 distinct tasks at S1a-like heterogeneity; LibreOffice 64 tasks give power 0.60-0.62, all 113 give 0.79-0.83",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/decisions.md D69: about 100-115 distinct tasks for a 5 pp gate; LibreOffice 64 give power 0.60-0.62; all 113 give 0.79-0.83."
+  },
+  {
+   "id": "c022",
+   "candidates": [
+    "R08"
+   ],
+   "claim": "Design J2 (9B, K113, S2 R2) costs 198 cap-minutes, P(DR2 decisive) 0.50-0.70; J (S4 R2) 390 cap-minutes, 0.97-0.99",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-next-step-design-study/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-next-step-design-study/README.md section 4.1: J2 198 cap-min, DR2 decisive 0.50-0.70; J 390 cap-min, 0.97-0.99."
+  },
+  {
+   "id": "c023",
+   "candidates": [
+    "all"
+   ],
+   "claim": "No gauntlet package can score above 79 without an executable pilot or above 89 without signed reviews",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/decisions.md D68 (caps of 79 without an executable pilot and 89 for unsigned reviews) and D24 (signed reviews and trust store)."
+  },
+  {
+   "id": "c024",
+   "candidates": [
+    "all"
+   ],
+   "claim": "Ten gauntlet runs ended at honest exits with decisiveness or identification as the recurring largest defect (K1 v2/v3, C3, E3, E4, E5, E7, C5, S2, Q1 Stage 0)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/gauntlet/ holds exactly ten run files (K1 v2, Q1 Stage 0, K1 v3, C3, C5, E3, E4, E5, E7, S2); every recorded largest defect names identification and/or decisiveness (C5 wave 1: identification framed by uncredited theory); exits recorded in D26, D41, D54, D63, D65, D70.",
+   "note": "Every record, not only 'nearly all', names identification or decisiveness; the slate's 'nearly all' is conservative."
+  },
+  {
+   "id": "c025",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "Holo3 maintainer pair: exact McNemar 25 vs 9, p = 0.009",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-06/holo3/results-v1-posthoc.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-06/holo3/results-v1-posthoc.md line 56: McNemar on the common 359 tasks, 25 vs 9, p 0.0090."
+  },
+  {
+   "id": "c026",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "Holo3 run1 vs run2 |z| = 2.74 on 359 tasks, above all 21 reference pairs (largest 1.86)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-06/holo3/results-v1-posthoc.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "results-v1-posthoc.md line 117: |z| 2.74 on 359 tasks, above all 21 reference pairs (largest 1.86)."
+  },
+  {
+   "id": "c027",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "OpenCUA pooled between-turn / residual mean-square ratio 0.663 on (12, 4282) df, upper-tail p 0.79",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-06/holo3/results-v1-posthoc.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "results-v1-posthoc.md line 114: pooled ratio 0.663 on (12, 4282) df, upper-tail p 0.79."
+  },
+  {
+   "id": "c028",
+   "candidates": [
+    "R01",
+    "R06"
+   ],
+   "claim": "Holo3 v2: no registered mechanism explains the shift; 16 clean tasks with time-dependent checkers carry 4 of 14 net flips (stratified p = 0.156)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-07/holo3-v2/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-07/holo3-v2/RESULTS.md line 22 (16 clean time-dependent tasks carry 4 of 14 net flips, stratified p 0.156) and line 32 (no registered mechanism explains the shift)."
+  },
+  {
+   "id": "c029",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "OpenCUA-7B 15-step archive member is 7,920,092,071 bytes (MIT dataset card)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-06/holo3/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-06/holo3/README.md line 21: opencua_7b 15-step zip 7,920,092,071 B, MIT (dataset card). The HF dataset's licence tag is mit (Hugging Face API, revision 5473c39e)."
+  },
+  {
+   "id": "c030",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "Pooled false-negative candidate share 12.4% (7.2-18.3%) of 348 should-pass mutants on 60 tasks",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md checker candidates: pooled 12.4% (7.2-18.3%) of 348 evaluable should-pass mutants on 60 tasks."
+  },
+  {
+   "id": "c031",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "compare_pptx_files false-negative candidate share 40.2% (32.9-46.3%, 85 mutants, 16 tasks)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md: compare_pptx_files 40.2% (32.9-46.3%, 85 mutants, 16 tasks)."
+  },
+  {
+   "id": "c032",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "z-order operator: 36 false-negative candidates in 40 mutants, 91.7% (81.3-100%); 35 under compare_pptx_files, 1 under compare_pptx_files_tolerant",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md: pptx.eq.zorder_nonoverlap 91.7% (81.3-100%, 36 of 40 mutants, 16 tasks); 35 compare_pptx_files, 1 compare_pptx_files_tolerant.",
+   "note": "91.7% is the task-equal bootstrap share; the raw ratio 36/40 is 90.0%. The slate's correction bullet pairs '36 in 40' with 91.7% (finding S11)."
+  },
+  {
+   "id": "c033",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "Alternative-solution mutants: 0 of 93 rejected by the checker (16 tasks)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md: should_pass_alt_solution 0 of 93 (16 tasks)."
+  },
+  {
+   "id": "c034",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "False-positive candidate share 5.9% (0.8-12.3%); audit-confirmed 2.1% (0-5.4%)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md: false-positive candidate share 5.9% (0.8-12.3%); audit-confirmed 2.1% (0-5.4%)."
+  },
+  {
+   "id": "c035",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "Model-rater Cohen kappa 0.343 on 138 real items; sham accuracy Claude 0.90, Qwen 0.975",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md audit statistics: kappa 0.343 on 138 real items; sham accuracy Claude 36/40 = 0.90, Qwen 39/40 = 0.975."
+  },
+  {
+   "id": "c036",
+   "candidates": [
+    "R03",
+    "R04"
+   ],
+   "claim": "P1 gold fixed point: raw flips 4/92 (exact 95% 1.20-10.76%); audit-confirmed 3/92 = 3.26% (0.68-9.23%); headless scoping round trip 7/63 and 1/26",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md P1: 4/92 (1.20-10.76%); audit-confirmed 3/92 = 3.26% (0.68-9.23%); headless round trip 7/63 and 1/26."
+  },
+  {
+   "id": "c037",
+   "candidates": [
+    "R03"
+   ],
+   "claim": "Adjudication pool 34 items; human spot check 25 items; 52 distinct",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md pending section: pool 34, spot check 25, 7 overlap, 52 distinct."
+  },
+  {
+   "id": "c038",
+   "candidates": [
+    "R03"
+   ],
+   "claim": "K2 sample: 80 jobs, 20 per domain, 41 tasks, drawn before any verdict; no K2 executor; label \"offline harness, VM fidelity unverified\"",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/README.md lines 115-116 (80 jobs, 20 per domain, 41 tasks, drawn before any verdict; no K2 executor) and program/evidence/2026-10-08/q2-mutation-confirm/results/README.md K2 line (label 'offline harness, VM fidelity unverified')."
+  },
+  {
+   "id": "c039",
+   "candidates": [
+    "R03"
+   ],
+   "claim": "zinv gate (G0 item 8): v1 kept 0/29, v2 26/29; v3 is the validated comparator",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-stage1-g0/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-stage1-g0/README.md lines 15 and 26: v1 0/29, v2 26/29, v3 (1b18ba3) the validated comparator."
+  },
+  {
+   "id": "c040",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "The VM LibreOffice is Ubuntu libreoffice-core 1:7.3.7-0ubuntu0.22.04.4, \"LibreOffice 7.3.7.2\"",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/preregistrations/q2-evaluator-mutation-v1.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/preregistrations/q2-evaluator-mutation-v1.md line 184: libreoffice-core 1:7.3.7-0ubuntu0.22.04.4, LibreOffice 7.3.7.2."
+  },
+  {
+   "id": "c041",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "Kit gold-rate upper bound 10.8% (from P1 raw 4/92 exact interval upper 10.76%)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md P1 exact interval upper 10.76%, rounded to 10.8%."
+  },
+  {
+   "id": "c042",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "S1 dependency flips: none (no venv disagreement)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md S1: no dependency flips (no venv disagreement)."
+  },
+  {
+   "id": "c043",
+   "candidates": [
+    "R07",
+    "R09"
+   ],
+   "claim": "A4: 64,028 of 64,028 trials passed; per-class family-wise 95% bounds about 5.0e-4 (left click 4.99e-4)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md A4: 64,028 of 64,028 trials passed; per-class family-wise bounds 4.97e-4 to 5.00e-4 (left click 4.99e-4)."
+  },
+  {
+   "id": "c044",
+   "candidates": [
+    "R08"
+   ],
+   "claim": "A7: 0 restarts in 39,036 /accessibility calls; exact upper 95% bound 7.67e-5 per call; session 193 answered every call with HTTP 500",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md A7: 0 restarts in 39,036 /accessibility calls, 2.996/39,036 = 7.67e-5; session 193: every /accessibility attempt answered HTTP 500 (screenshots delivered)."
+  },
+  {
+   "id": "c045",
+   "candidates": [
+    "R01",
+    "R03"
+   ],
+   "claim": "A5: 20 of 20 pristine reset checks; certified at N* = 32 concurrent VMs (D53)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md A5 row (20 of 20 pristine) and program/decisions.md D53 (verdict at no more than 32 concurrent VMs, N* = 32)."
+  },
+  {
+   "id": "c046",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "C1: H-OSW-up and H-GA-buggy failed each of their 9 known-defect cells in 5 of 5 repetitions",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md lines 964-965: H-OSW-up and H-GA-buggy failed each of their 9 known-defect cells in 5 of 5 repetitions."
+  },
+  {
+   "id": "c047",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "A4 step p50 2.124 s (the cell-reported A7 step p50 2.63 s was not found and is not used)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "CORRECTED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md line 175, A7 'Timing': step p50/p95 2.628/3.437 s over 38,520 steps. A4's (line 147) is 2.124/3.313 s.",
+   "fix": "The cell's 'A7 step p50 2.63 s' is in the acceptance record (A7 section, 2.628 s). Replace the slate's correction bullet with: A7 step p50 2.628 s (p95 3.437 s, 38,520 steps); A4 step p50 2.124 s. The figure may be used, labelled as the accessibility-setting step time."
+  },
+  {
+   "id": "c048",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "G0 excluded 110 of 116 anchor tasks; 74 excluded with unchanged config, 36 with changed config, 6 kept",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-stage1-g0/anchor/evaluator-diff.json",
+   "registry_status": "VERIFIED-RECOMPUTED",
+   "verdict": "VERIFIED",
+   "level": "recomputed from program/evidence/2026-10-08/q2-stage1-g0/anchor/evaluator-diff.json",
+   "evidence": "per_task: 116 tasks, 110 excluded, 6 kept; of the excluded, 74 config_equal and 36 not (config_differs lists 36)."
+  },
+  {
+   "id": "c049",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "Function differences: getters.get_vm_file on 103 tasks, getters.get_cloud_file on 84, compare_table 33, compare_pptx_files 18",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-stage1-g0/anchor/evaluator-diff.json",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13); recomputed",
+   "evidence": "program/evidence/2026-10-08/q2-stage1-g0/anchor/evaluator-diff.json function_difference_counts: get_vm_file 103, get_cloud_file 84, compare_table 33, compare_pptx_files 18 (counts over all 116 tasks).",
+   "note": "Among the 74 re-admittable tasks the counts are get_vm_file 71, get_cloud_file 57, compare_table 17, compare_pptx_files 16. R05's text places the 103/84 figures in the 74-task sentence (finding S4)."
+  },
+  {
+   "id": "c050",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "Public revision 00804f8 inferred from the run window; pinned revision b138d34",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-stage1-g0/anchor/evaluator-diff.json",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q2-stage1-g0/anchor/evaluator-diff.json: public_revision 00804f8..., basis 'not recorded in the archive; inferred from the run window'; pinned_revision b138d34...."
+  },
+  {
+   "id": "c051",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "Anchor floor 58 tasks (G0 item 9.6: at most 6 of 116 keep config and checker)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md DR-A row: at most 6 of 116 keep config and checker, 58 needed."
+  },
+  {
+   "id": "c052",
+   "candidates": [
+    "R10",
+    "R11"
+   ],
+   "claim": "Under TF32-admissible rule /2, 239 of 272 1%-level faults are ambiguous; strict fp32 rejects 276 of 278",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q1-audit-metric-study/README.md summary (lines 53-55) and rule /2 table line 377 (TF32 1% faults 2/239/31) and line 376 (strict 0/2/276)."
+  },
+  {
+   "id": "c053",
+   "candidates": [
+    "R10",
+    "R11"
+   ],
+   "claim": "Valid TF32 Winograd F(4x4,3x3) reaches about 45x the yardstick (max-abs; up to 50 against the RNE yardstick on L2/87); a 1% fault scores a median about 15x",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q1-audit-metric-study/README.md lines 53-55 and 404-406 (45x against the extended yardstick, 50x against RNE, median 1% fault 15x); line 304 (up to 50 on L2/87 A2/ties)."
+  },
+  {
+   "id": "c054",
+   "candidates": [
+    "R10"
+   ],
+   "claim": "Mutant-family emulations under TF32: 26 accept / 122 ambiguous / 218 reject (366); 1,087 gross decoys rejected",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q1-audit-metric-study/README.md line 377: mutant-family emulations 26/122/218 (366); gross decoys 0/0/1087."
+  },
+  {
+   "id": "c055",
+   "candidates": [
+    "R10"
+   ],
+   "claim": "139 registered CPU draws and 83 alternative-algorithm draws (75 admissible) on 12 tier-1 S1-cal problems",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q1-audit-metric-study/README.md line 50 and line 264: 139 CPU draws; 83 alternative-algorithm draws (75 admissible) on the 12 tier-1 problems."
+  },
+  {
+   "id": "c056",
+   "candidates": [
+    "R10"
+   ],
+   "claim": "CPU TF32 emulation reproduces stored device TF32 error: median ratio 0.996, 64 of 71 draws within 1.5x",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q1-audit-metric-study/README.md line 36 and line 192: median 0.996, 64 of 71 within 1.5x."
+  },
+  {
+   "id": "c057",
+   "candidates": [
+    "R11"
+   ],
+   "claim": "Strict fp32 rejects 55 correct kernel-draws (95 rows) on cuDNN-TF32 problems",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q1-audit-metric-study/README.md line 33 and line 170: 55 correct kernel-draws (95 rows)."
+  },
+  {
+   "id": "c058",
+   "candidates": [
+    "R11"
+   ],
+   "claim": "Rule /2 device pilot: 0.57 GPU-h measured-cost estimate, 1.14 with a 2x margin, time box 1.2 GPU-h",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q1-audit-metric-study/README.md section 6, lines 442-447: 0.57 GPU-h, 1.14 with a 2x margin, time box 1.2 GPU-h."
+  },
+  {
+   "id": "c059",
+   "candidates": [
+    "R10",
+    "R11"
+   ],
+   "claim": "Zeros-pass: no admissible draw rejects zeros on L2/46, L2/52 or L2/60; on L2/100 determinacy is a per-process cuDNN choice",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q1-audit-metric-study/README.md lines 26-31: no admissible draw rejects zeros on L2/46, L2/52, L2/60; on L2/100 determinacy is a per-process cuDNN choice."
+  },
+  {
+   "id": "c060",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "Q3 dense pre-check v2 (Qwen3.5-4B-Base): NEGATIVE_CAPABLE_V3; Delta_T 2.23 (0.44-3.87); lexical confound PRESENT; entity control INSUFFICIENT",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md combined read (NEGATIVE_CAPABLE_V3) and lane table: Delta_T 2.23 (0.44 to 3.87, 99% cluster bootstrap), PRESENT / INSUFFICIENT."
+  },
+  {
+   "id": "c061",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "Spearman needle fertility vs cross-script headroom -0.89 over 7 languages",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md line 78: Spearman -0.89 (4B lane), 7 languages."
+  },
+  {
+   "id": "c062",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "Dense harness reproduction: 3,128 numeric leaves, largest gap exactly 0.0; 4B lane 555 s = 0.1542 GPU-h",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md line 37 (3,128 numeric leaves, largest gap exactly 0.0) and line 154 (555 s = 0.1542 GPU-h)."
+  },
+  {
+   "id": "c063",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "K1 v3: question content overlap 0.38-0.68 on MN vs 0.00-0.04 on CX; no same-language zero-overlap leg",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/decisions.md D54: question content overlap 0.38-0.68 on MN against 0.00-0.04 on CX; no same-language zero-overlap leg."
+  },
+  {
+   "id": "c064",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "D54: P(GO or NEGATIVE) 0.10-0.25, 0.05-0.17, 0.03-0.11 at seed SD 1, 2, 3",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/decisions.md D54: 0.10-0.25, 0.05-0.17 and 0.03-0.11 at seed SD 1, 2 and 3."
+  },
+  {
+   "id": "c065",
+   "candidates": [
+    "finding"
+   ],
+   "claim": "Q2 question file and PROGRAM.md say checker-mutation testing for computer use has no prior found",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/questions/q2-calibrated-cua-instrument.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "repository at 360058d (paths unchanged at f033b13)",
+   "evidence": "program/questions/q2-calibrated-cua-instrument.md line 27 and program/PROGRAM.md line 77 both state that checker-mutation testing for computer use has no prior found."
+  },
+  {
+   "id": "c066",
+   "candidates": [
+    "R02",
+    "R03",
+    "R04",
+    "R05",
+    "R15"
+   ],
+   "claim": "2607.28367: 150 FAIL trajectories audited; 57 OSWorld items, 8 evaluator false negatives (14.0%), 2 broken, 17.5% wrong; PASS audit \"remains open\"; one OSWorld task unsatisfiable on the released VM image",
+   "source": "https://arxiv.org/abs/2607.28367",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2607.28367 (v1 2026-07-30): abstract and Table 2 (OSWorld n 57, EFN 8, broken 2, wrong 17.5%); 150 failure-scored trajectories from five benchmarks; 14.0% missed alternative solutions; one OSWorld task unsatisfiable on the released VM image; the limitations paragraph says the complementary PASS-verdict audit remains open."
+  },
+  {
+   "id": "c067",
+   "candidates": [
+    "R01",
+    "R05",
+    "R09"
+   ],
+   "claim": "2604.17849: temperature-0 decoding with batch-invariant inference; Qwen b-c = -20, OpenCUA +20; cosmetic perturbation sets include wallpaper, cursor size, dock, icon theme, timezone",
+   "source": "https://arxiv.org/abs/2604.17849",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2604.17849 (v1 2026-04-20): deterministic arm is temperature 0 with batch-invariant inference; Qwen b - c = -20, OpenCUA b - c = 20; perturbation table lists wallpaper, cursor size, dock position, icon theme and timezone. The text never mentions a clock."
+  },
+  {
+   "id": "c068",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "2604.17849 ARR version: \"The Reliability Gap: Why Capable Computer-Use Agents Still Fail Twice\"",
+   "source": "https://openreview.net/forum?id=ezVIHPgaiG",
+   "registry_status": "VERIFIED-ABSTRACT",
+   "verdict": "VERIFIED",
+   "level": "OpenReview api2 notes/search (source=forum), abstract read; per-note fetch and PDF are behind a bot challenge, not bypassed",
+   "evidence": "ezVIHPgaiG is 'The Reliability Gap: Why Capable Computer-Use Agents Still Fail Twice' (ACL ARR 2026 May Submission). Its abstract decomposes the gap into the same three factors as 2604.17849, on OSWorld, and reports deterministic decoding regressing one model by 20 tasks.",
+   "note": "Same-work identification rests on matching abstracts; ARR is anonymous, so authorship was not compared."
+  },
+  {
+   "id": "c069",
+   "candidates": [
+    "R02",
+    "R03",
+    "R10",
+    "R11",
+    "R13"
+   ],
+   "claim": "2609.22220: official KernelBench check misses 16.9% of witnessed faults; 78.6% of precision faults escape; same-sign inputs used in targeted suites (Fig. 2b); zero occurrences of \"TF32\"; realism probe on 60 LLM-written kernels",
+   "source": "https://arxiv.org/abs/2609.22220",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.22220 (v1 2026-09-02): misses 16.9% of witnessed faults; 78.6% of precision faults escape (Table 2, n 271); targeted suites use same-sign magnitudes because of the Fig. 2b validity ceiling; 'TF32' occurs 0 times; realism probe on 60 problems."
+  },
+  {
+   "id": "c070",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "2609.22220 realism probe found 3 of 60 LLM-written kernels incorrect",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-06/question-dossier.md",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.22220 realism probe paragraph: 60 random problems, three incorrect (a compile error, a misaligned-address crash, a value error in a fused GEMM-GroupNorm)."
+  },
+  {
+   "id": "c071",
+   "candidates": [
+    "R11"
+   ],
+   "claim": "2609.21058: KernelBench allclose is satisfied by a tensor of zeros on 4 of 60 level-1 problems; scale-invariant checks proposed",
+   "source": "https://arxiv.org/abs/2609.21058",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.21058 (v1 2026-09-17): abstract says zeros satisfy KernelBench's allclose on 4 of 60 level-1 problems; its proposed checks start with a scale-invariant relative Frobenius error.",
+   "note": "Table 2 qualifies it: 4 of 60 at the bf16 tolerance (1e-2), 2 of 60 at the fp32 tolerance (1e-4) of the KernelBench version that paper used. R11 uses the 1e-2 protocol, so the figure fits; add the qualifier (finding S8)."
+  },
+  {
+   "id": "c072",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "2609.04748: enabling the prefix cache changes the agent trajectory on 36.2% of episodes at 16-bit and 75.0% at 4-bit",
+   "source": "https://arxiv.org/abs/2609.04748",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.04748 abstract: enabling the cache changed the trajectory on 36.2% of episodes at 16-bit and 75.0% at four-bit."
+  },
+  {
+   "id": "c073",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "2609.36931: date changes move scores by up to 6% (MCQA) and 14% (math reasoning)",
+   "source": "https://arxiv.org/abs/2609.36931",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.36931 abstract: deltas up to 6% on MCQA and 14% on math reasoning (7% on code generation)."
+  },
+  {
+   "id": "c074",
+   "candidates": [
+    "R01",
+    "R02"
+   ],
+   "claim": "2610.11678 (TRACE): identical reruns flip 15-36% of task outcomes",
+   "source": "https://arxiv.org/abs/2610.11678",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2610.11678 abstract: identical reruns flip 15-36% of task outcomes (section 4: 14.7-16.3% for three agents, 35.6% for Laguna), on tau2-bench."
+  },
+  {
+   "id": "c075",
+   "candidates": [
+    "R11",
+    "R13",
+    "R10"
+   ],
+   "claim": "2607.16241: torch.allclose with tau = 1e-3 for FP32 and 1e-2 for BF16; GPT-5.5 1.43x to 0.88x; TF32 baseline mainly affects compute-bound problems (21.2%); H200 GPUs",
+   "source": "https://arxiv.org/abs/2607.16241",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2607.16241 main text (fp32 tolerance 1e-3) and Appendix B evaluation pipeline (allclose, tau 1e-3 FP32, 1e-2 BF16); GPT-5.5 1.43x to 0.88x; 21.2% of the 250 problems affected only by the TF32 baseline correction; single H200."
+  },
+  {
+   "id": "c076",
+   "candidates": [
+    "R03",
+    "R02",
+    "finding"
+   ],
+   "claim": "2610.09142: OSWorld-Verified-class desktop environments \"remain untested\"; future work includes estimating a false-accept rate, mapping it to a policy silent-wrong-action rate, and an OSWorld-Verified rank-consequence audit",
+   "source": "https://arxiv.org/abs/2610.09142",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2610.09142 (v1 2026-10-06): section 7 Future Work lists estimating a false-accept rate and mapping it to a policy's silent-wrong-action rate, and extending the audit to OSWorld-Verified-class checkers with a before-and-after rank table; section 8 Limitations says other checker families, such as OSWorld-Verified-class desktop environments, 'remain untested'.",
+   "note": "The 'remain untested' sentence is in the paper's Limitations and describes its own two-suite scope, not the field. Slate R03's 'and 2610.09142 says so' overreads it (finding S6)."
+  },
+  {
+   "id": "c077",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "2609.40284 App. I Table 20: Qwen3.5 harness middle-click gives no action, Ctrl released before clicking, only the first tool call executed",
+   "source": "https://arxiv.org/abs/2609.40284",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.40284 Appendix I.3 Table 20: Qwen3.5 harness rows middle-click to no action, Ctrl-click with Ctrl released before clicking, move-then-scroll/drag executing only the first tool call."
+  },
+  {
+   "id": "c078",
+   "candidates": [
+    "R01",
+    "R09"
+   ],
+   "claim": "2608.22331: temperature-0 ever-flip fractions 0.7%, 2.0%, 2.7%; perturbation paired SDs 11-58x larger than rerun SDs",
+   "source": "https://arxiv.org/abs/2608.22331",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2608.22331 abstract: temperature-0 ever-flip fractions 0.7%, 2.0%, 2.7%; median perturbation paired SDs 11x to 58x the rerun paired SDs; the two Groq sizes rank in opposite orders."
+  },
+  {
+   "id": "c079",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "2609.17394: exact paired McNemar separates none of the 29 adjacent Verified top-thirty pairs",
+   "source": "https://arxiv.org/abs/2609.17394",
+   "registry_status": "VERIFIED-FULLTEXT",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.17394 abstract and table: exact paired McNemar separates none of the 29 adjacent pairs on Verified."
+  },
+  {
+   "id": "c080",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "cELldjX2oq (The Evaluator Also Varies): first-divergence audit; 100 tau2-bench tasks, five greedy vLLM replicates; transcript divergence on all, reward variation on 20; first discrepancy in the simulated user on 83",
+   "source": "https://openreview.net/forum?id=cELldjX2oq",
+   "registry_status": "VERIFIED-ABSTRACT",
+   "verdict": "VERIFIED",
+   "level": "OpenReview api2 notes/search (source=forum), abstract read; per-note fetch and PDF are behind a bot challenge, not bypassed",
+   "evidence": "cELldjX2oq (ICLR 2027 submission): 100 airline and retail tasks on tau2-bench, five greedy vLLM replicates, transcript divergence on all, reward variation on 20, first discrepancy in the simulated user on 83; ALFWorld experiment."
+  },
+  {
+   "id": "c081",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "3vXI4xEByc (Is This Agent Evaluable?): swapping tasks moves a score 6.2 times more than rerunning",
+   "source": "https://openreview.net/forum?id=3vXI4xEByc",
+   "registry_status": "VERIFIED-ABSTRACT",
+   "verdict": "VERIFIED",
+   "level": "OpenReview api2 notes/search (source=forum), abstract read; per-note fetch and PDF are behind a bot challenge, not bypassed",
+   "evidence": "3vXI4xEByc (ICLR 2027 submission): swapping the tasks moves a score 6.2 times more than rerunning them."
+  },
+  {
+   "id": "c082",
+   "candidates": [
+    "R02",
+    "R12"
+   ],
+   "claim": "yTa4gvQUGG (KernelAudit): analysis of 505 generated kernels that passed functional checks; five-level verifier",
+   "source": "https://openreview.net/forum?id=yTa4gvQUGG",
+   "registry_status": "VERIFIED-ABSTRACT",
+   "verdict": "VERIFIED",
+   "level": "OpenReview api2 notes/search (source=forum), abstract read; per-note fetch and PDF are behind a bot challenge, not bypassed",
+   "evidence": "yTa4gvQUGG (ICLR 2027 submission): verifier built from an analysis of 505 generated kernels that passed functional checks; audits at five levels."
+  },
+  {
+   "id": "c083",
+   "candidates": [
+    "notcarried"
+   ],
+   "claim": "0ad4aBnjoQ: Scalable Weak-to-Strong Verifier Hardening for Agent Environments; applied to Terminal Bench, KernelBench and SETA",
+   "source": "https://openreview.net/forum?id=0ad4aBnjoQ",
+   "registry_status": "VERIFIED-ABSTRACT",
+   "verdict": "VERIFIED",
+   "level": "OpenReview api2 notes/search (source=forum), abstract read; per-note fetch and PDF are behind a bot challenge, not bypassed",
+   "evidence": "0ad4aBnjoQ (ICLR 2027 submission): hacker-fixer loop applied to Terminal Bench, KernelBench and SETA."
+  },
+  {
+   "id": "c084",
+   "candidates": [
+    "R01",
+    "notcarried"
+   ],
+   "claim": "rGmv0X20Oj: FlexBI: Regaining Execution Flexibility for Batch-Invariant LLM Inference (ICLR 2027 submission)",
+   "source": "https://openreview.net/forum?id=rGmv0X20Oj",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "OpenReview api2 notes/search (source=forum), abstract read; per-note fetch and PDF are behind a bot challenge, not bypassed",
+   "evidence": "rGmv0X20Oj resolves to 'FlexBI: Regaining Execution Flexibility for Batch-Invariant LLM Inference', ICLR 2027 Conference Submission."
+  },
+  {
+   "id": "c085",
+   "candidates": [
+    "R03",
+    "notcarried"
+   ],
+   "claim": "CgLTapI6Mr: OpenComputer: Verifiable Software Worlds for Computer-Use Agents (ICLR 2027 submission)",
+   "source": "https://openreview.net/forum?id=CgLTapI6Mr",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "OpenReview api2 notes/search (source=forum), abstract read; per-note fetch and PDF are behind a bot challenge, not bypassed",
+   "evidence": "CgLTapI6Mr resolves to 'OpenComputer: Verifiable Software Worlds for Computer-Use Agents', ICLR 2027 Conference Submission; abstract: builds app-specific state verifiers, 33 applications, 1,000 tasks."
+  },
+  {
+   "id": "c086",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "1ivlJ9lC5d: Faster and Better? Benchmark Bugs and Design Limitations Distort the Evaluation of VLA Acceleration (ICLR 2027 submission)",
+   "source": "https://openreview.net/forum?id=1ivlJ9lC5d",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "OpenReview api2 notes/search (source=forum), abstract read; per-note fetch and PDF are behind a bot challenge, not bypassed",
+   "evidence": "1ivlJ9lC5d resolves to 'Faster and Better? Benchmark Bugs and Design Limitations Distort the Evaluation of Vision-Language-Action Acceleration', ICLR 2027 submission; abstract: bug fixes can reverse method rankings."
+  },
+  {
+   "id": "c087",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "sOXznQZgnM: CROSS: Analyzing the Trade-offs in Long-Context Cross-lingual Retrieval (ICLR 2025 workshop)",
+   "source": "https://openreview.net/forum?id=sOXznQZgnM",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "OpenReview api2 notes/search (source=forum), abstract read; per-note fetch and PDF are behind a bot challenge, not bypassed",
+   "evidence": "sOXznQZgnM resolves to 'CROSS: Analyzing the Trade-offs in Long-Context Cross-lingual Retrieval', venue ICLR 2025 FM-Wild Workshop."
+  },
+  {
+   "id": "c088",
+   "candidates": [
+    "finding"
+   ],
+   "claim": "gfgvdsOX6v (given by cell 5 for CAVEAT) did not resolve in api2 search; the search returned kTuIMbhP1E, a different CAVEAT paper; not cited",
+   "source": "https://openreview.net/forum?id=gfgvdsOX6v",
+   "registry_status": "UNVERIFIED",
+   "verdict": "CORRECTED",
+   "level": "OpenReview api2 notes/search (source=forum), abstract read; per-note fetch and PDF are behind a bot challenge, not bypassed",
+   "evidence": "api2 search for 'Two-View Auditing with a Deterministic Veto' returns gfgvdsOX6v: 'CAVEAT: Two-View Auditing with a Deterministic Veto Lowers GUI-Agent Verifier False Positives Below Recorded LLM Judges' (ICLR 2027 Conference Submission). Cell 5's own api2 result file (scratchpad cell5/or_o05.json) holds the same note. The slate owner's term 'CAVEAT computer use' returned only kTuIMbhP1E, a different paper (an incentive-misaligned marketplace benchmark, also on arXiv as 2609.27273).",
+   "fix": "The id resolves. Replace the slate's correction bullet with: gfgvdsOX6v is an ICLR 2027 submission on a selective GUI-agent trajectory verifier (two reasoning-free views plus a deterministic veto; lower false positives than recorded LLM judges). It is a relevant judge-side prior for R02 (beside CUAAudit, 2604.06240 and AgentRewardBench) and for the not-carried 'LLM judge vs state checker' row; cite it there."
+  },
+  {
+   "id": "c089",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "2504.08942 AgentRewardBench: rule-based evaluators reach 55.9% recall (cell 1)",
+   "source": "https://arxiv.org/abs/2504.08942",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2504.08942 Table (Official, rule-based) and text: rule-based evaluation reaches 55.9% recall.",
+   "note": "Upgraded from CELL-REPORTED: figure read in the full text."
+  },
+  {
+   "id": "c090",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "2609.34262 Unearned Passes: 3,810 passing trajectories from 29 cohorts audited for process exploits (cell 2)",
+   "source": "https://arxiv.org/abs/2609.34262",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.34262 abstract: 3,810 passing trajectories from 29 model-benchmark cohorts; full title 'Maintaining Benchmarks Against Increasingly Capable Agents: Detection and Remediation of Unearned Passes'.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c091",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "2608.20362 Multilingual verifier bias: Qwen3-8B exact-match false negatives JP 0.642 vs EN 0.122 (cell 4)",
+   "source": "https://arxiv.org/abs/2608.20362",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2608.20362 abstract: for Qwen3-8B the exact-match false-negative rate is 0.642 on JP against 0.122 on EN (0.073 on CN).",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c092",
+   "candidates": [
+    "R04",
+    "R15"
+   ],
+   "claim": "2506.04135 macOSWorld: en tasks on an ar UI 33.3% to 22.8%; task-UI mismatch costs 1-10 pp; proper nouns and file names kept verbatim (cell 4)",
+   "source": "https://arxiv.org/abs/2506.04135",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2506.04135 (NeurIPS 2025, per the PDF footer): Table 6, OpenAI CUA with English tasks: en UI 33.3%, ar UI 22.8%; mismatched cells sit 1.1-10.5 pp below en/en (3.5-7.0 pp below each language's matched cell); the benchmark-construction text says the GPT-4o translations retain proper nouns and file names.",
+   "note": "Upgraded from CELL-REPORTED. One agent (OpenAI CUA) only; the '1-10 pp' range is 1.1-10.5 pp."
+  },
+  {
+   "id": "c093",
+   "candidates": [
+    "R06",
+    "R09"
+   ],
+   "claim": "2609.33812 Identical Runs, Different Results: 584 replicated runs; run-to-run SD exceeds pairing differences (cell 1)",
+   "source": "https://arxiv.org/abs/2609.33812",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.33812 abstract: 584 runs; identical runs of one pairing varied more than the pairings differed from one another.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c094",
+   "candidates": [
+    "R06",
+    "notcarried"
+   ],
+   "claim": "2610.00651 Agent Evaluation Reliability: Bayesian variance decomposition on 22 HAL/Harbor benchmarks; repeated cells rare (2026-10-06 dossier)",
+   "source": "https://arxiv.org/abs/2610.00651",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2610.00651 abstract and section 3: Bayesian variance decomposition on 22 benchmarks from HAL and the Harbor Index; repeated observations of the same cell are rare.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c095",
+   "candidates": [
+    "R07",
+    "notcarried"
+   ],
+   "claim": "2610.04433 What Does a Harness Buy?: harness swap and rerun each flip 13% of SWE-bench Verified tasks (2026-10-06 dossier)",
+   "source": "https://arxiv.org/abs/2610.04433",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "CORRECTED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2610.04433 abstract and Fig. (hard45): on a 45-task hard subset with five models, a harness swap and a rerun each flip 13% of tasks (median); on the 447-task pool two harnesses are equivalent within five points.",
+   "fix": "State the scope: '13% of tasks (median) on a 45-task hard subset of SWE-bench Verified', not 13% of SWE-bench Verified tasks (registry c095 and slate R07)."
+  },
+  {
+   "id": "c096",
+   "candidates": [
+    "R07",
+    "notcarried"
+   ],
+   "claim": "2609.07925 FrogNano: Qwen3.5-4B 8.3% under R2E-Gym vs 37.2% under Leaf (2026-10-06 dossier)",
+   "source": "https://arxiv.org/abs/2609.07925",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.07925 section 3: moving Qwen3.5-4B from R2E-Gym to Leaf raises SWE-bench Verified solve rate from 8.3% to 37.2%.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c097",
+   "candidates": [
+    "R08"
+   ],
+   "claim": "2404.07972 OSWorld: accessibility-tree effects vary and reverse across models; about 6,000 tokens hold 90% of trees (cell 2)",
+   "source": "https://arxiv.org/abs/2404.07972",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2404.07972 results discussion: a11y tree and SoM effectiveness varies by model; Fig. 6 discussion: a context of 6000 tokens holds about 90% of trees.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c098",
+   "candidates": [
+    "R08"
+   ],
+   "claim": "2608.06171 Routing Is Least Learnable: rerunning a mode changes 12-14% of outcomes; band measured in 2 of 8 cells (2026-10-06 dossier, cell 2)",
+   "source": "https://arxiv.org/abs/2608.06171",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2608.06171: rerunning one condition changes 12-14% of outcomes (12.1-14.3% on cls B0); limitations list: the rerun band is measured in two cells.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c099",
+   "candidates": [
+    "R09"
+   ],
+   "claim": "2610.01618 Agents Are Systems, Not Models: 54% of outcome variance from run-to-run repetition (cells 2, 5)",
+   "source": "https://arxiv.org/abs/2610.01618",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2610.01618 abstract: about 54% of outcome variance comes from repeating the same configuration.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c100",
+   "candidates": [
+    "R10",
+    "R12"
+   ],
+   "claim": "2608.12700 Contract-Grade Verifier: 2,638 accepted drkernel-corpus kernels on B200; 39.5% broken in a way no tolerance can excuse; PRC-02 13.8% (2026-10-06 dossier; cell 3)",
+   "source": "https://arxiv.org/abs/2608.12700",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2608.12700: 2,638 accepted drkernel-coldstart-8k kernels (revision cba0ef0) on a B200; tolerance-free floor 39.5% (1,043); PRC-02 13.8% in Fig. 1.",
+   "note": "Upgraded from CELL-REPORTED. The paper also strips the matmul class as 'the worst case for the TF32 tolerance argument' in its robustness paragraph, as R11 says."
+  },
+  {
+   "id": "c101",
+   "candidates": [
+    "R12"
+   ],
+   "claim": "2609.19611 Dirigo: 600 bugs among 6,988 \"correct\" AI CUDA Engineer L2 kernels; floats modelled as reals (cell 3)",
+   "source": "https://arxiv.org/abs/2609.19611",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.19611: 600 (8.6%) buggy among 6,988 AI CUDA Engineer level-2 kernels marked correct; floating-point values are modelled as reals.",
+   "note": "Upgraded from CELL-REPORTED. 6,988 also equals the correct level-2 rows in the Sakana parquet read for c189."
+  },
+  {
+   "id": "c102",
+   "candidates": [
+    "R11"
+   ],
+   "claim": "2607.16228 Operator-aware tolerance calibration: recall 73.2% to 82.4%, 20 control false positives of 1,882 (cell 3)",
+   "source": "https://arxiv.org/abs/2607.16228",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2607.16228 abstract and table: recall 73.2% (1,805/2,467) to 82.4% (2,034/2,467); control false positives 0 to 20 of 1,882.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c103",
+   "candidates": [
+    "R10"
+   ],
+   "claim": "2607.16241 KernelBench-Verified documents identity hacks exploiting all-positive inputs (cell 1)",
+   "source": "https://arxiv.org/abs/2607.16241",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2607.16241 results text and Appendix H.1: negation draw catches identity shortcuts that exploit all-positive inputs (ReLU identity, 374x).",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c104",
+   "candidates": [
+    "R10"
+   ],
+   "claim": "2609.00363 INT8 faults violating accumulator exactness preconditions are detected without exception (cell 3)",
+   "source": "https://arxiv.org/abs/2609.00363",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.00363 section IV: both precondition violations (F6, F7) are caught in every cell.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c105",
+   "candidates": [
+    "R12",
+    "notcarried"
+   ],
+   "claim": "2607.11022 Leaky vs hardened test-suite GRPO on MBPP: hardened non-inferior, gap 0.20 pt, upper bound 0.75 within a 1.5 pt margin (cell 5)",
+   "source": "https://arxiv.org/abs/2607.11022",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2607.11022 abstract: non-inferior under a preregistered 1.5-pt margin, gap 0.20 pt, one-sided 95% upper bound 0.75 pt (MBPP, leaky vs MBPP+ hardened).",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c106",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "2503.01996 OneRULER: Korean instructions on English contexts drop from 91% to 71% at 64K (cell 4)",
+   "source": "https://arxiv.org/abs/2503.01996",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2503.01996 cross-lingual section: with English contexts, Korean instructions drop NIAH accuracy from 91% to 71% at 64K.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c107",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "2608.27481 XHotpotQA: different-script evidence costs 12.0-23.7 F1 (cell 4)",
+   "source": "https://arxiv.org/abs/2608.27481",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2608.27481 abstract: different-script evidence is associated with deficits of 11.98-23.70 Unicode-aware answer F1 points (observational).",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c108",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "2502.05167 NoLiMa: English only; attention struggles without literal matches (cell 4)",
+   "source": "https://arxiv.org/abs/2502.05167",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2502.05167 abstract: declines attributed to attention without literal matches; the benchmark has no non-English component (no language other than English is used or discussed).",
+   "note": "Upgraded from CELL-REPORTED; 'English only' is read from the absence of any multilingual set."
+  },
+  {
+   "id": "c109",
+   "candidates": [
+    "R15"
+   ],
+   "claim": "2608.08775 OmnilingualGAIA2: cross-lingual gap 8.8-18.4 pass@3 (cell 4)",
+   "source": "https://arxiv.org/abs/2608.08775",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2608.08775 abstract and Table 1: cross-lingual gap 8.8-18.4 pass@3 points; morphological cue loss named as a failure mechanism.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c110",
+   "candidates": [
+    "R15"
+   ],
+   "claim": "2609.23490 BabelArena: PRESERVE rules for execution-critical values; four tool or planning families, no GUI (cell 4)",
+   "source": "https://arxiv.org/abs/2609.23490",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.23490 method section: PRESERVE reasons for execution-critical values; four source families (interactive services, constrained planning, knowledge-grounded tool use, heterogeneous autonomous tasks); no GUI family.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c111",
+   "candidates": [
+    "notcarried"
+   ],
+   "claim": "2609.18123 AutoTuneBench: 5% cross-run CV cap, cross-machine transfer, KernelBench L1 median 1.0001x (cell 1)",
+   "source": "https://arxiv.org/abs/2609.18123",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.18123 abstract: 5% cross-run CV, absolute times do not transfer across machines (1.174x vs 1.0049x), KernelBench Level-1 median speedup 1.0001x.",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c112",
+   "candidates": [
+    "R13"
+   ],
+   "claim": "2609.22220 An fp16 store escapes the official check at 92% (cell 3)",
+   "source": "https://arxiv.org/abs/2609.22220",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page and PDF (pdftotext), fetched 2026-10-11",
+   "evidence": "2609.22220 fault table and its discussion: storing through an fp16 temporary escapes 92% of the time (169/183).",
+   "note": "Upgraded from CELL-REPORTED."
+  },
+  {
+   "id": "c113",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.38981 exists with title \"Vosti: Specifying, Implementing, and Verifying Deterministic LLM Inference\"",
+   "source": "https://arxiv.org/abs/2609.38981",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.38981 resolves; title 'Vosti: Specifying, Implementing, and Verifying Deterministic LLM Inference'; v1 Wed, 30 Sep 2026."
+  },
+  {
+   "id": "c114",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.33044 exists with title \"Pinned and Still Unstable: Within-Judge Verdict Variance and the Noise Floor of LLM-as-Judge Leaderboards\"",
+   "source": "https://arxiv.org/abs/2609.33044",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.33044 resolves; title 'Pinned and Still Unstable: Within-Judge Verdict Variance and the Noise Floor of LLM-as-Judge Leaderboards'; v1 Sun, 27 Sep 2026.",
+   "note": "Tagged 'cited' in the registry, but slate.md does not cite this id (finding S12)."
+  },
+  {
+   "id": "c115",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2408.04667 exists with title \"Non-Determinism of \"Deterministic\" LLM Settings\"",
+   "source": "https://arxiv.org/abs/2408.04667",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2408.04667 resolves; title 'Non-Determinism of \"Deterministic\" LLM Settings'; v1 Tue, 6 Aug 2024."
+  },
+  {
+   "id": "c116",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2602.07150 exists with title \"On Randomness in Agentic Evals\"",
+   "source": "https://arxiv.org/abs/2602.07150",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2602.07150 resolves; title 'On Randomness in Agentic Evals'; v1 Fri, 6 Feb 2026."
+  },
+  {
+   "id": "c117",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.26621 exists with title \"Greedy Decoding Is Not Precision-Invariant (TMLR 2026)\"",
+   "source": "https://arxiv.org/abs/2609.26621",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.26621 resolves; title 'Greedy Decoding Is Not Precision-Invariant: Cross-Precision Output Divergence in LLM Inference'; v1 Tue, 22 Sep 2026. Journal ref: Transactions on Machine Learning Research, 2026. Comments: Accepted by Transactions on Machine Learning Research (TMLR), 2026."
+  },
+  {
+   "id": "c118",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.07274 exists with title \"A Trust Layer for Agent Evaluation\"",
+   "source": "https://arxiv.org/abs/2610.07274",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2610.07274 resolves; title 'A Trust Layer for Agent Evaluation'; v1 Mon, 5 Oct 2026.",
+   "note": "Tagged 'cited' in the registry, but slate.md does not cite this id (finding S12)."
+  },
+  {
+   "id": "c119",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2604.06240 exists with title \"The Art of Building Verifiers for Computer Use Agents\"",
+   "source": "https://arxiv.org/abs/2604.06240",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2604.06240 resolves; title 'The Art of Building Verifiers for Computer Use Agents'; v1 Sun, 5 Apr 2026."
+  },
+  {
+   "id": "c120",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2603.10577 exists with title \"CUAAudit: Meta-Evaluation of Vision-Language Models as Auditors of Autonomous Computer-Use Agents\"",
+   "source": "https://arxiv.org/abs/2603.10577",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2603.10577 resolves; title 'CUAAudit: Meta-Evaluation of Vision-Language Models as Auditors of Autonomous Computer-Use Agents'; v1 Wed, 11 Mar 2026. Comments: This work has been accepted to appear at the HEAL @ CHI 2026 Worshop on Human-centered Evaluation and Auditing of Language Models."
+  },
+  {
+   "id": "c121",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.37315 exists with title \"Do Agent Benchmarks Do What They Say? An Executable-Contract Audit of Tool-Using Agent Environments\"",
+   "source": "https://arxiv.org/abs/2609.37315",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.37315 resolves; title 'Do Agent Benchmarks Do What They Say? An Executable-Contract Audit of Tool-Using Agent Environments'; v1 Tue, 29 Sep 2026."
+  },
+  {
+   "id": "c122",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2604.24955 exists with title \"Who Guards the Benchmarks? Automated Auditing of LLM Agent Benchmarks (COLM 2026)\"",
+   "source": "https://arxiv.org/abs/2604.24955",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2604.24955 resolves; title 'Who Guards the Benchmarks? Automated Auditing of LLM Agent Benchmarks'; v1 Mon, 27 Apr 2026. Comments: Camera-ready version for COLM 2026. 24 pages."
+  },
+  {
+   "id": "c123",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.37322 exists with title \"Mubric: Mutation Testing-Guided Rubric Generation for LLM Evaluation\"",
+   "source": "https://arxiv.org/abs/2609.37322",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.37322 resolves; title 'Mubric: Mutation Testing-Guided Rubric Generation for LLM Evaluation'; v1 Tue, 29 Sep 2026.",
+   "note": "Tagged 'cited' in the registry, but slate.md does not cite this id (finding S12)."
+  },
+  {
+   "id": "c124",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.29537 exists with title \"OSWorld 2.0: Benchmarking Computer Use Agents on Long-Horizon Real-World Tasks\"",
+   "source": "https://arxiv.org/abs/2606.29537",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2606.29537 resolves; title 'OSWorld 2.0: Benchmarking Computer Use Agents on Long-Horizon Real-World Tasks'; v1 Sun, 28 Jun 2026. Content spot-check: multi-layer construction-time quality assurance (section 2.1.4)."
+  },
+  {
+   "id": "c125",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.02926 exists with title \"Output Language Confusion under Multilingual Prompt Contamination\"",
+   "source": "https://arxiv.org/abs/2610.02926",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2610.02926 resolves; title 'Output Language Confusion under Multilingual Prompt Contamination'; v1 Fri, 2 Oct 2026. Comments: Accepted at NeurIPS 2026 Workshop LP4FM.",
+   "note": "Tagged 'cited' in the registry, but slate.md does not cite this id (finding S12)."
+  },
+  {
+   "id": "c126",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.08159 exists with title \"Making COMET Comparable Across Scripts\"",
+   "source": "https://arxiv.org/abs/2610.08159",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2610.08159 resolves; title 'Making COMET Comparable Across Scripts: Diagnosis and Correction of Tokeniser-Induced Script Bias in Indic MT Evaluation'; v1 Tue, 6 Oct 2026. Comments: 18 pages, 2 figures. Camera-ready version, accepted at WMT 2026. Code and data: this https URL.",
+   "note": "Tagged 'cited' in the registry, but slate.md does not cite this id (finding S12)."
+  },
+  {
+   "id": "c127",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.34198 exists with title \"Frozen Judges, Moving Agents: Version-Dependent LLM-Judge Error\"",
+   "source": "https://arxiv.org/abs/2609.34198",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.34198 resolves; title 'Frozen Judges, Moving Agents: Version-Dependent LLM-Judge Error and the Limits of Judge-Assisted Agent Evaluation'; v1 Mon, 28 Sep 2026."
+  },
+  {
+   "id": "c128",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.11323 exists with title \"Deployment Decision Reliability: A Generalizability-Theory Framework\"",
+   "source": "https://arxiv.org/abs/2608.11323",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2608.11323 resolves; title 'Deployment Decision Reliability: A Generalizability-Theory Framework for Sizing Long-Horizon Agent Evaluations'; v1 Tue, 11 Aug 2026."
+  },
+  {
+   "id": "c129",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.07785 exists with title \"What Does an LLM-Agent Leaderboard Rank Actually Compare?\"",
+   "source": "https://arxiv.org/abs/2609.07785",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.07785 resolves; title 'What Does an LLM-Agent Leaderboard Rank Actually Compare?'; v1 Mon, 7 Sep 2026. Journal ref: The 13th International Conference on Data Science and Advanced Analytics (IEEE DSAA'2026). Comments: Accepted at the 13th International Conference on Data Science and Advanced Analytics (IEEE DSAA'2026)."
+  },
+  {
+   "id": "c130",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2508.13144 exists with title \"Signal and Noise: A Framework for Reducing Uncertainty in Language Model Evaluation\"",
+   "source": "https://arxiv.org/abs/2508.13144",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2508.13144 resolves; title 'Signal and Noise: A Framework for Reducing Uncertainty in Language Model Evaluation'; v1 Mon, 18 Aug 2025."
+  },
+  {
+   "id": "c131",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2411.00640 exists with title \"Adding Error Bars to Evals\"",
+   "source": "https://arxiv.org/abs/2411.00640",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2411.00640 resolves; title 'Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations'; v1 Fri, 1 Nov 2024."
+  },
+  {
+   "id": "c132",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.05533 exists with title \"What Does a Harness Repair? A Preregistered Study of Visibility, Baseline Adequacy and Evaluation Defects\"",
+   "source": "https://arxiv.org/abs/2610.05533",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2610.05533 resolves; title 'What Does a Harness Repair? A Preregistered Study of Visibility, Baseline Adequacy and Evaluation Defects'; v1 Sun, 4 Oct 2026. Content spot-check: preregistered harness-change study on three text benchmarks."
+  },
+  {
+   "id": "c133",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.00917 exists with title \"Finding the Right Fit: Model-Harness Interactions across Agent Tasks\"",
+   "source": "https://arxiv.org/abs/2610.00917",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2610.00917 resolves; title 'Finding the Right Fit: Model-Harness Interactions across Agent Tasks'; v1 Thu, 1 Oct 2026."
+  },
+  {
+   "id": "c134",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2607.04334 exists with title \"Do GUI Agents Believe Their Eyes? Diagnosing State-Belief Reliance on Pixels versus Structure\"",
+   "source": "https://arxiv.org/abs/2607.04334",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2607.04334 resolves; title 'Do GUI Agents Believe Their Eyes? Diagnosing State-Belief Reliance on Pixels versus Structure'; v1 Sun, 5 Jul 2026. Content spot-check: probes where a state belief comes from (pixels vs structure), not task success."
+  },
+  {
+   "id": "c135",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2607.22798 exists with title \"StateAct: Program State, before Pixels\"",
+   "source": "https://arxiv.org/abs/2607.22798",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2607.22798 resolves; title 'StateAct: Program State, before Pixels, for Long-Horizon Computer-Use Agents'; v1 Fri, 24 Jul 2026."
+  },
+  {
+   "id": "c136",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2605.00551 exists with title \"A11y-Compressor\"",
+   "source": "https://arxiv.org/abs/2605.00551",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2605.00551 resolves; title 'A11y-Compressor: A Framework for Enhancing the Efficiency of GUI Agent Observations through Visual Context Reconstruction and Redundancy Reduction'; v1 Fri, 1 May 2026. Comments: 18 pages, 5 figures, 5 tables. Accepted to ACL SRW 2026. Project page: this https URL."
+  },
+  {
+   "id": "c137",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.29472 exists with title \"Agent-Computer Observation Interfaces Enable Dynamic Computer Use\"",
+   "source": "https://arxiv.org/abs/2606.29472",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2606.29472 resolves; title 'Agent-Computer Observation Interfaces Enable Dynamic Computer Use'; v1 Sun, 28 Jun 2026."
+  },
+  {
+   "id": "c138",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.32459 exists with title \"Beyond the Model: Demystifying Harness Effects in Software Engineering Agents\"",
+   "source": "https://arxiv.org/abs/2609.32459",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.32459 resolves; title 'Beyond the Model: Demystifying Harness Effects in Software Engineering Agents'; v1 Sat, 26 Sep 2026."
+  },
+  {
+   "id": "c139",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.20128 exists with title \"The Correctness Illusion in LLM-Generated GPU Kernels\"",
+   "source": "https://arxiv.org/abs/2606.20128",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2606.20128 resolves; title 'The Correctness Illusion in LLM-Generated GPU Kernels'; v1 Thu, 18 Jun 2026. Content spot-check: op-schema-aware seeded fuzzing against an fp64 CPU reference."
+  },
+  {
+   "id": "c140",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.05683 exists with title \"RESOLVE: Language-Agnostic Validation of GPU Kernels Through Testing, Reduction, and Proof\"",
+   "source": "https://arxiv.org/abs/2610.05683",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2610.05683 resolves; title 'RESOLVE: Language-Agnostic Validation of GPU Kernels Through Testing, Reduction, and Proof'; v1 Mon, 5 Oct 2026. Content spot-check: validates via computation on real numbers, avoiding tolerances, as R10 says."
+  },
+  {
+   "id": "c141",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2411.00442 exists with title \"Revealing Floating-Point Accumulation Orders in Software/Hardware Implementations (FPRev)\"",
+   "source": "https://arxiv.org/abs/2411.00442",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2411.00442 resolves; title 'Revealing Floating-Point Accumulation Orders in Software/Hardware Implementations'; v1 Fri, 1 Nov 2024. Comments: Camera-ready for USENIX ATC 2025. Acronym FPRev used in the paper."
+  },
+  {
+   "id": "c142",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2512.07004 exists with title \"Accurate Models of NVIDIA Tensor Cores\"",
+   "source": "https://arxiv.org/abs/2512.07004",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2512.07004 resolves; title 'Accurate Models of NVIDIA Tensor Cores'; v1 Sun, 7 Dec 2025."
+  },
+  {
+   "id": "c143",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2603.20421 exists with title \"Hawkeye: Reproducing GPU-Level Non-Determinism\"",
+   "source": "https://arxiv.org/abs/2603.20421",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2603.20421 resolves; title 'Hawkeye: Reproducing GPU-Level Non-Determinism'; v1 Fri, 20 Mar 2026. Comments: Accepted to MLSys 2026."
+  },
+  {
+   "id": "c144",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.00381 exists with title \"Bounded, Indeterminate, or a Bug: A Condition-Aware Oracle for Differential Testing of SQL Aggregates\"",
+   "source": "https://arxiv.org/abs/2609.00381",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.00381 resolves; title 'Bounded, Indeterminate, or a Bug: A Condition-Aware Oracle for Differential Testing of SQL Aggregates'; v1 Sat, 18 Jul 2026."
+  },
+  {
+   "id": "c145",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2602.05885 exists with title \"Dr. Kernel: Reinforcement Learning Done Right for Triton Kernel Generations\"",
+   "source": "https://arxiv.org/abs/2602.05885",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2602.05885 resolves; title 'Dr. Kernel: Reinforcement Learning Done Right for Triton Kernel Generations'; v1 Thu, 5 Feb 2026. KernelGYM is the paper's released environment."
+  },
+  {
+   "id": "c146",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.33074 exists with title \"KernelZero: Co-Evolving Proposer and Coder\"",
+   "source": "https://arxiv.org/abs/2609.33074",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.33074 resolves; title 'KernelZero: Co-Evolving Proposer and Coder for Continuously Improved GPU Kernel Generation'; v1 Sun, 27 Sep 2026."
+  },
+  {
+   "id": "c147",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2507.05687 exists with title \"AutoTriton: Automatic Triton Programming with Reinforcement Learning in LLMs\"",
+   "source": "https://arxiv.org/abs/2507.05687",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2507.05687 resolves; title 'AutoTriton: Automatic Triton Programming with Reinforcement Learning in LLMs'; v1 Tue, 8 Jul 2025."
+  },
+  {
+   "id": "c148",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2510.17891 exists with title \"TritonRL: Training LLMs to Think and Code Triton Without Cheating\"",
+   "source": "https://arxiv.org/abs/2510.17891",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2510.17891 resolves; title 'TritonRL: Training LLMs to Think and Code Triton Without Cheating'; v1 Sat, 18 Oct 2025."
+  },
+  {
+   "id": "c149",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.35677 exists with title \"Verifier Errors in RLVR: Reward Hacking, Limits of Feedback, and Selective Control\"",
+   "source": "https://arxiv.org/abs/2609.35677",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.35677 resolves; title 'Verifier Errors in RLVR: Reward Hacking, Limits of Feedback, and Selective Control'; v1 Mon, 28 Sep 2026."
+  },
+  {
+   "id": "c150",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2604.22032 exists with title \"Kernel Contracts: A Specification Language for ML Kernel Correctness\"",
+   "source": "https://arxiv.org/abs/2604.22032",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2604.22032 resolves; title 'Kernel Contracts: A Specification Language for ML Kernel Correctness Across Heterogeneous Silicon'; v1 Thu, 23 Apr 2026. Content spot-check: twelve contract classes incl. precision; Ascend silent precision coercion is a case study."
+  },
+  {
+   "id": "c151",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.08722 exists with title \"Gaming Without an Attacker: Benchmark Fingerprinting in LLM-Driven Search Under Selection Pressure\"",
+   "source": "https://arxiv.org/abs/2608.08722",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2608.08722 resolves; title 'Gaming Without an Attacker: Benchmark Fingerprinting in LLM-Driven Search Under Selection Pressure'; v1 Sun, 9 Aug 2026. Comments: Published as a conference paper at AI Measurement Science Workshop @ COLM 2026. Content spot-check: optimized Metal kernels fingerprint the evaluation configuration under selection."
+  },
+  {
+   "id": "c152",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2408.10151 exists with title \"Multilingual Needle in a Haystack\"",
+   "source": "https://arxiv.org/abs/2408.10151",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2408.10151 resolves; title 'Multilingual Needle in a Haystack: Investigating Long-Context Behavior of Multilingual Large Language Models'; v1 Mon, 19 Aug 2024. Content spot-check: no lexical-overlap control found (0 hits for overlap/literal-match terms)."
+  },
+  {
+   "id": "c153",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2409.18006 exists with title \"Evaluating Multilingual Long-Context Models for Retrieval and Reasoning (mLongRR)\"",
+   "source": "https://arxiv.org/abs/2409.18006",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2409.18006 resolves; title 'Evaluating Multilingual Long-Context Models for Retrieval and Reasoning'; v1 Thu, 26 Sep 2024. Comments: To appear at MRL 2024. Content spot-check: no lexical-overlap control found (0 hits for overlap/literal-match terms)."
+  },
+  {
+   "id": "c154",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.06506 exists with title \"Measuring the Cross-Lingual Comprehension Gap\"",
+   "source": "https://arxiv.org/abs/2608.06506",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2608.06506 resolves; title 'Measuring the Cross-Lingual Comprehension Gap: How the language of the evidence shapes what language models understand'; v1 Thu, 6 Aug 2026. Comments: 55 pages, 17 figures. Submitted to Computational Linguistics (MIT Press / ACL). Supplementary Material: 55 pages, 4 figures."
+  },
+  {
+   "id": "c155",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.26175 exists with title \"Lost in Compression: A Controlled Cross-Lingual Audit of Extractive Prompt Compressors\"",
+   "source": "https://arxiv.org/abs/2608.26175",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2608.26175 resolves; title 'Lost in Compression: A Controlled Cross-Lingual Audit of Extractive Prompt Compressors'; v1 Mon, 27 Jul 2026."
+  },
+  {
+   "id": "c156",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2603.08869 exists with title \"One Language, Two Scripts: Probing Script-Invariance in LLM Concept Representations\"",
+   "source": "https://arxiv.org/abs/2603.08869",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2603.08869 resolves; title 'One Language, Two Scripts: Probing Script-Invariance in LLM Concept Representations'; v1 Mon, 9 Mar 2026. Comments: Accepted at the UCRL Workshop at ICLR 2026. Content spot-check: SAE features across Serbian scripts (Gemma family), not retrieval, as R14 says."
+  },
+  {
+   "id": "c157",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2607.01002 exists with title \"Logit-Contribution Scoring Identifies Non-Literal Retrieval Heads\"",
+   "source": "https://arxiv.org/abs/2607.01002",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2607.01002 resolves; title 'Logit-Contribution Scoring Identifies Non-Literal Retrieval Heads'; v1 Wed, 1 Jul 2026."
+  },
+  {
+   "id": "c158",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2602.22453 exists with title \"Identifying Crucial Attention Heads for Multilingual Language Models: Retrieval and Retrieval-Transition Heads\"",
+   "source": "https://arxiv.org/abs/2602.22453",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2602.22453 resolves; title 'Identifying Crucial Attention Heads for Multilingual Language Models: Retrieval and Retrieval-Transition Heads'; v1 Wed, 25 Feb 2026. Comments: Accepted to EMNLP 2026 Findings."
+  },
+  {
+   "id": "c159",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2308.01223 exists with title \"Do Multilingual Language Models Think Better in English?\"",
+   "source": "https://arxiv.org/abs/2308.01223",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2308.01223 resolves; title 'Do Multilingual Language Models Think Better in English?'; v1 Wed, 2 Aug 2023."
+  },
+  {
+   "id": "c160",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.27306 exists with title \"Multilingual Reasoning Cascades Need More Context\"",
+   "source": "https://arxiv.org/abs/2606.27306",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2606.27306 resolves; title 'Multilingual Reasoning Cascades Need More Context'; v1 Thu, 25 Jun 2026."
+  },
+  {
+   "id": "c161",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.03136 exists with title \"Investigating the Role of Reasoning-Language Alignment in Monolingual Retrieval-Augmented Generation\"",
+   "source": "https://arxiv.org/abs/2610.03136",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2610.03136 resolves; title 'Investigating the Role of Reasoning-Language Alignment in Monolingual Retrieval-Augmented Generation'; v1 Fri, 2 Oct 2026. Comments: Accepted to the Workshop on Open Reasoning Across Cultures & Languages at EMNLP 2026."
+  },
+  {
+   "id": "c162",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.25832 exists with title \"Skill Issue: Are Skills Language-Invariant in LLMs?\"",
+   "source": "https://arxiv.org/abs/2608.25832",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2608.25832 resolves; title 'Skill Issue: Are Skills Language-Invariant in LLMs?'; v1 Wed, 26 Aug 2026."
+  },
+  {
+   "id": "c163",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.24460 exists with title \"The African Language Tax\"",
+   "source": "https://arxiv.org/abs/2606.24460",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2606.24460 resolves; title 'The African Language Tax: Quantifying the Cost, Latency, and Context Penalty of Tokenizing African Languages in Frontier LLMs'; v1 Tue, 23 Jun 2026."
+  },
+  {
+   "id": "c164",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.39001 exists with title \"The Invisible Language Tax\"",
+   "source": "https://arxiv.org/abs/2609.39001",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.39001 resolves; title 'The Invisible Language Tax: Token Premiums of French and Regional Languages in 2026 LLM Tokenizers, and a French-Optimized Prototype'; v1 Wed, 30 Sep 2026."
+  },
+  {
+   "id": "c165",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.21384 exists with title \"Beyond Two Bytes per Letter: Tokenization Overhead in Cyrillic AI Systems\"",
+   "source": "https://arxiv.org/abs/2608.21384",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2608.21384 resolves; title 'Beyond Two Bytes per Letter: Tokenization Overhead in Cyrillic AI Systems'; v1 Fri, 17 Jul 2026."
+  },
+  {
+   "id": "c166",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.06203 exists with title \"Dense Contexts Are Hard Contexts (lexical density limits effective context)\"",
+   "source": "https://arxiv.org/abs/2606.06203",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2606.06203 resolves; title 'Dense Contexts Are Hard Contexts: Lexical Density Limits Effective Context in LLMs'; v1 Thu, 4 Jun 2026."
+  },
+  {
+   "id": "c167",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.33093 exists with title \"How Linear Attention Remembers\"",
+   "source": "https://arxiv.org/abs/2609.33093",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.33093 resolves; title 'How Linear Attention Remembers'; v1 Sun, 27 Sep 2026."
+  },
+  {
+   "id": "c168",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.21794 exists with title \"Lexical Coupling in GUI Element Grounding\"",
+   "source": "https://arxiv.org/abs/2608.21794",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2608.21794 resolves; title 'Lexical Coupling in GUI Element Grounding: Sentence Embeddings Track Labels across Mobile and Web'; v1 Sat, 22 Aug 2026."
+  },
+  {
+   "id": "c169",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.11110 exists with title \"Actions Speak Louder than Words: Measuring Cross-Lingual Policy Retention in Tool-Using Agents\"",
+   "source": "https://arxiv.org/abs/2608.11110",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2608.11110 resolves; title 'Actions Speak Louder than Words: Measuring Cross-Lingual Policy Retention in Tool-Using Agents'; v1 Tue, 11 Aug 2026. Comments: Accepted in COLM 26."
+  },
+  {
+   "id": "c170",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2604.07666 exists with title \"An Imperfect Verifier is Good Enough: Learning with Noisy Rewards\"",
+   "source": "https://arxiv.org/abs/2604.07666",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2604.07666 resolves; title 'An Imperfect Verifier is Good Enough: Learning with Noisy Rewards'; v1 Thu, 9 Apr 2026."
+  },
+  {
+   "id": "c171",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2601.04411 exists with title \"RLVεR: Reinforcement Learning with Verifiable Noisy Rewards\"",
+   "source": "https://arxiv.org/abs/2601.04411",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2601.04411 resolves; title 'Rate or Fate? RLV$^\\varepsilon$R: Reinforcement Learning with Verifiable Noisy Rewards'; v1 Wed, 7 Jan 2026.",
+   "note": "Full arXiv title begins 'Rate or Fate?'; the cited short title is acceptable."
+  },
+  {
+   "id": "c172",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.11231 exists with title \"Harness Compilation: Which Decisions Should a Small Vision-Language Model Keep?\"",
+   "source": "https://arxiv.org/abs/2610.11231",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2610.11231 resolves; title 'Harness Compilation: Which Decisions Should a Small Vision-Language Model Keep?'; v1 Thu, 8 Oct 2026."
+  },
+  {
+   "id": "c173",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.11050 exists with title \"AgentHorizon: Evaluating Agentic Judges for Long-Horizon Computer-Use Tasks\"",
+   "source": "https://arxiv.org/abs/2610.11050",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2610.11050 resolves; title 'AgentHorizon: Evaluating Agentic Judges for Long-Horizon Computer-Use Tasks'; v1 Thu, 8 Oct 2026."
+  },
+  {
+   "id": "c174",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.24890 exists with title \"OSWorld-Pro: Process-Based Evaluation for Computer Use Agents\"",
+   "source": "https://arxiv.org/abs/2609.24890",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.24890 resolves; title 'OSWorld-Pro: Process-based Evaluation for Computer Use Agents'; v1 Mon, 21 Sep 2026."
+  },
+  {
+   "id": "c175",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.15034 exists with title \"OSGuard: A Benchmark for Safety in Computer-Use Agents\"",
+   "source": "https://arxiv.org/abs/2606.15034",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2606.15034 resolves; title 'OSGuard: A Benchmark for Safety in Computer-Use Agents'; v1 Sat, 13 Jun 2026."
+  },
+  {
+   "id": "c176",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.36201 exists with title \"SCOUT: Synergizing Reasoning and Tool-Use for Computer-Use Safety\"",
+   "source": "https://arxiv.org/abs/2609.36201",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.36201 resolves; title 'SCOUT: Synergizing Reasoning and Tool-Use for Computer-Use Safety'; v1 Mon, 28 Sep 2026."
+  },
+  {
+   "id": "c177",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.35889 exists with title \"SINGED: Correct Outputs Do Not Certify Safe Execution in LLM Agents\"",
+   "source": "https://arxiv.org/abs/2609.35889",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2609.35889 resolves; title 'SINGED: Correct Outputs Do Not Certify Safe Execution in LLM Agents'; v1 Sun, 27 Sep 2026."
+  },
+  {
+   "id": "c178",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.11754 exists with title \"What Output-Only Review Cannot Verify: Study Contracts for Research Agents\"",
+   "source": "https://arxiv.org/abs/2610.11754",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2610.11754 resolves; title 'What Output-Only Review Cannot Verify: Study Contracts for Research Agents'; v1 Thu, 8 Oct 2026."
+  },
+  {
+   "id": "c179",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.04975 exists with title \"SciCode-Verified: How Benchmark Defects Underestimated the Scientific-Coding Ability of Language Models\"",
+   "source": "https://arxiv.org/abs/2608.04975",
+   "registry_status": "TITLE-VERIFIED",
+   "verdict": "VERIFIED",
+   "level": "arXiv abs page (title, versions, comments), fetched 2026-10-11",
+   "evidence": "arXiv 2608.04975 resolves; title 'SciCode-Verified: How Benchmark Defects Underestimated the Scientific-Coding Ability of Language Models'; v1 Wed, 5 Aug 2026."
+  },
+  {
+   "id": "c180",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "Just et al., Are mutants a valid substitute for real faults in software testing? (FSE 2014)",
+   "source": "https://doi.org/10.1145/2635868.2635929",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "Crossref works API and doi.org",
+   "evidence": "10.1145/2635868.2635929: 'Are mutants a valid substitute for real faults in software testing?', Just, Jalali, Inozemtseva, Ernst, Holmes, Fraser; FSE 2014 proceedings (2014-11-11); doi.org redirects to dl.acm.org."
+  },
+  {
+   "id": "c181",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "Chen et al., Metamorphic Testing: A Review of Challenges and Opportunities (ACM CSUR 2018)",
+   "source": "https://doi.org/10.1145/3143561",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "Crossref works API and doi.org",
+   "evidence": "10.1145/3143561: 'Metamorphic Testing: A Review of Challenges and Opportunities', Chen, Kuo, Liu, Poon, Towey, Tse, Zhou; ACM Computing Surveys 51(1), online 2018-01-04."
+  },
+  {
+   "id": "c182",
+   "candidates": [
+    "R03"
+   ],
+   "claim": "Barr et al., The Oracle Problem in Software Testing: A Survey (TSE)",
+   "source": "https://doi.org/10.1109/tse.2014.2372785",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "Crossref works API and doi.org",
+   "evidence": "10.1109/tse.2014.2372785: 'The Oracle Problem in Software Testing: A Survey', Barr, Harman, McMinn, Shahbaz, Yoo; IEEE TSE 41(5), 2015."
+  },
+  {
+   "id": "c183",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "Introducing OSWorld-Verified (xlang.ai blog, 2025): evaluator fixes",
+   "source": "https://xlang.ai/blog/osworld-verified",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "xlang.ai blog page, fetched 2026-10-11",
+   "evidence": "'Introducing OSWorld-Verified', XLANG Lab, dated Jul 28, 2025: 300+ feedback items verified and fixed, including evaluation robustness.",
+   "note": "Upgraded from CELL-REPORTED (now opened)."
+  },
+  {
+   "id": "c184",
+   "candidates": [
+    "R05",
+    "R06"
+   ],
+   "claim": "Public OSWorld-Verified trajectory archive (MIT dataset card), per-agent zip archives",
+   "source": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_verified_trajs",
+   "registry_status": "VERIFIED-REPO",
+   "verdict": "VERIFIED",
+   "level": "Hugging Face API metadata (no data download), 2026-10-11",
+   "evidence": "datasets/xlangai/ubuntu_osworld_verified_trajs at 5473c39e: licence tag mit (cardData license mit); 104 files, per-agent zip archives."
+  },
+  {
+   "id": "c185",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "A Qwen3.5 eval archive of 25.3 GB is listed; contents unverified",
+   "source": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_verified_trajs",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "Hugging Face API metadata (no data download), 2026-10-11",
+   "evidence": "same listing: qwen35_osworld_eval_traj.zip, 25,319,704,669 B (25.3 GB); contents not read."
+  },
+  {
+   "id": "c186",
+   "candidates": [
+    "R10",
+    "R12"
+   ],
+   "claim": "drkernel-coldstart-8k parquet (SHA-256 prefix 4ed72a9f85c069aa): 8,920 rows, 8,462 with final_speedup > 0",
+   "source": "https://huggingface.co/datasets/hkust-nlp/drkernel-coldstart-8k",
+   "registry_status": "VERIFIED-RECOMPUTED",
+   "verdict": "VERIFIED",
+   "level": "recomputed; parquet SHA-256 4ed72a9f85c069aaec2daf65229c35d1b888762a455e115fe23f8eae2541097b equals the HF LFS oid of drkernel-coldstart-8k.parquet at cba0ef06",
+   "evidence": "pyarrow: 8,920 rows; final_speedup > 0 in 8,462; num_rounds 5 in every accepted row."
+  },
+  {
+   "id": "c187",
+   "candidates": [
+    "R10",
+    "R12"
+   ],
+   "claim": "Of 8,462 accepted best-round kernels, 390 call tl.dot (comments stripped) and 389 pass no explicit non-TF32 precision",
+   "source": "https://huggingface.co/datasets/hkust-nlp/drkernel-coldstart-8k",
+   "registry_status": "VERIFIED-RECOMPUTED",
+   "verdict": "VERIFIED",
+   "level": "recomputed from the same parquet",
+   "evidence": "best_round is 1-indexed; code fences at assistant turn best_round, docstrings and # comments stripped: 390 kernels call tl.dot, 389 pass no input_precision in {ieee, tf32x3, bf16x3, bf16x6, bf16} and no allow_tf32=False (391 and 390 without stripping).",
+   "note": "'Default precision' is what was counted; whether the operands are fp32 (so the default is TF32) was not checked. R10's 'use its TF32 default' should say 'pass no explicit non-TF32 precision' (finding S9)."
+  },
+  {
+   "id": "c188",
+   "candidates": [
+    "R12",
+    "R13"
+   ],
+   "claim": "Downcast patterns in 321 of 8,462 accepted kernels (3.8%), 177 beside dtype-conditional branches, 144 unconditional-looking (1.7%) with median recorded speedup 1.49 vs 2.06",
+   "source": "https://huggingface.co/datasets/hkust-nlp/drkernel-coldstart-8k",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "UNVERIFIABLE",
+   "level": "cell-3 regex not retained; independent scan of the same parquet",
+   "evidence": "The cell's extraction rule is not in the scratchpad. An independent scan (casts to float16/bfloat16, .half(), dtype=float16/bfloat16, autocast; comments stripped) finds 413 of 8,462 (4.9%, matching the cell's unstripped first pass) and a different conditional/unconditional split; the comparison group's median recorded speedup is 2.06 in both. The 321/177/144 split and the 1.49 median depend on the regex.",
+   "note": "Keep labelled provisional, as the slate does; do not use the 1.7% figure in a decision."
+  },
+  {
+   "id": "c189",
+   "candidates": [
+    "R13"
+   ],
+   "claim": "Explicit half/bf16 in 0.1-0.3% of Sakana correct L1/L2 kernels; Max_Diff recorded at 1e-3 resolution",
+   "source": "https://huggingface.co/datasets/SakanaAI/AI-CUDA-Engineer-Archive",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "recomputed; Sakana level_1/level_2 parquets match the HF LFS oids (a74e3998..., 17be1e24...)",
+   "evidence": "Correct kernels with CUDA half/bf16 type or cast tokens (comments stripped): level 1 7 of 7,222 (0.10%), level 2 20 of 6,988 (0.29%). Max_Diff is a multiple of 1e-3 in every correct row of both levels.",
+   "note": "A broader regex that also counts bare 'half' pointers and casts gives 0.73% on level 2; the 0.1-0.3% range holds for type and cast tokens."
+  },
+  {
+   "id": "c190",
+   "candidates": [
+    "R12"
+   ],
+   "claim": "drkernel-coldstart-8k licence MIT; AutoTriton model licence Apache-2.0",
+   "source": "https://huggingface.co/datasets/hkust-nlp/drkernel-coldstart-8k",
+   "registry_status": "CELL-REPORTED",
+   "verdict": "VERIFIED",
+   "level": "Hugging Face API metadata (no data download), 2026-10-11",
+   "evidence": "hkust-nlp/drkernel-coldstart-8k licence tag mit; ai9stars/AutoTriton licence tag apache-2.0. Model card text not read, as the slate says."
+  },
+  {
+   "id": "c191",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "Qwen3-VL tokenizer proxy: Serbian Latin 1.99x and Cyrillic 2.50x English fertility on one paragraph; 2 shared token ids, both punctuation; Latin/Cyrillic ratio about 1.26x",
+   "source": null,
+   "registry_status": "CELL-REPORTED",
+   "verdict": "UNVERIFIABLE",
+   "level": "no source",
+   "evidence": "Cell 4's one self-written paragraph and the Qwen3-VL tokenizer run are not retained; the Qwen3.5 tokenizer was not available. Labelled provisional in the slate; R14's Phase 0 overlap audit and Stage D gate recompute it on the real tokenizer."
+  },
+  {
+   "id": "c192",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "Stage C: 678 episodes x 0.0025 = about 1.7 GPU-h physical, x 1.26 = about 2.1 cap-GPU-h; Stage B 0.3-0.5 plus a 0.2 probe; registered cap 4",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "ESTIMATE",
+   "verdict": "VERIFIED",
+   "level": "arithmetic",
+   "evidence": "678 = 113 x 2 arms x 3; 678 x 0.0025 = 1.695; x 1.26 (1.2 x 1.05) = 2.14. B + C central about 2.4-2.6."
+  },
+  {
+   "id": "c193",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "Stage 1: 452 episodes per pair x 0.0027 = about 1.2 GPU-h; 2.4 for both pairs; cap 4",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "ESTIMATE",
+   "verdict": "VERIFIED",
+   "level": "arithmetic",
+   "evidence": "452 = 113 x 2 x 2; 452 x 0.0027 = 1.22; two pairs 2.44."
+  },
+  {
+   "id": "c194",
+   "candidates": [
+    "R08"
+   ],
+   "claim": "904 episodes x 0.0027 x 1.05-1.10 = about 2.6-2.7 GPU-h physical; x 1.26 = about 3.3 cap-GPU-h, consistent with J2 at 198 cap-minutes",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-next-step-design-study/README.md",
+   "registry_status": "ESTIMATE",
+   "verdict": "VERIFIED",
+   "level": "arithmetic",
+   "evidence": "904 = 113 x 2 x 2 x 2 (J2 structure); 904 x 0.0027 = 2.44; x 1.05-1.10 = 2.56-2.69; x 1.26 = 3.23-3.38; J2's 198 cap-minutes = 3.3 GPU-h.",
+   "note": "The 1.05-1.10 accessibility-arm cost factor has no cited source; R08's 1.5x cut rule covers the risk."
+  },
+  {
+   "id": "c195",
+   "candidates": [
+    "R15"
+   ],
+   "claim": "1,248 episodes x 0.0027 x 1.2 = about 4.0-4.1 GPU-h",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "ESTIMATE",
+   "verdict": "VERIFIED",
+   "level": "arithmetic",
+   "evidence": "1,248 = 3 x 52 x 8; 1,248 x 0.0027 x 1.2 = 4.04."
+  },
+  {
+   "id": "c196",
+   "candidates": [
+    "R09"
+   ],
+   "claim": "1,356 episodes: 27B-FP8 and 35B-A3B-FP8 at R = 3 (678), 4B and 9B at R = 2 (452), 9B-FP8 at R = 2 (226); about 5-6.5 cap-GPU-h with 27B unmeasured",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "ESTIMATE",
+   "verdict": "VERIFIED",
+   "level": "arithmetic",
+   "evidence": "678 + 452 + 226 = 1,356 episodes as composed. With 4B/9B/9B-FP8 at S1a's price (about 1.8 GPU-h), 27B at the 0.006 gate (2.0) and 35B-A3B at about 0.003 (1.0), the total is about 4.8 physical, about 6.1 cap: consistent with 5-6.5.",
+   "note": "27B and 35B-A3B prices are unmeasured; the probe sets them."
+  },
+  {
+   "id": "c197",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "Anchor run about 300 episodes, 0.8-1.1 GPU-h (OpenCUA-7B price unmeasured)",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "registry_status": "ESTIMATE",
+   "verdict": "CORRECTED",
+   "level": "arithmetic",
+   "evidence": "At most 6 kept + 74 re-admitted = 80 revision-invariant tasks (c048), so R = 3 gives at most 240 episodes, not about 300; 240 x 0.0027 = 0.65 GPU-h physical, about 0.82 cap-GPU-h at S1a's price.",
+   "fix": "R05: 'R = 3 on the at most 80 revision-invariant tasks, at most 240 episodes, about 0.65-0.8 GPU-h (OpenCUA-7B price unmeasured)'. The slate's 'about 20 GPU-h with R11's pilot and R05's anchor' becomes about 19."
+  },
+  {
+   "id": "c198",
+   "candidates": [
+    "R12"
+   ],
+   "claim": "Archive leg about 2 CPU-min per kernel x 2,000 = about 70 CPU-h; Stage 2 generation about 1.5 GPU-h (range 1-3)",
+   "source": "https://huggingface.co/datasets/hkust-nlp/drkernel-coldstart-8k",
+   "registry_status": "ESTIMATE",
+   "verdict": "VERIFIED",
+   "level": "arithmetic",
+   "evidence": "2 CPU-min x 2,000 = 66.7 CPU-h, about 70. Stage 2 generation 1.5 GPU-h is a cell estimate."
+  },
+  {
+   "id": "c199",
+   "candidates": [
+    "R13"
+   ],
+   "claim": "About 120 problems x 6 variants, about 2.5 GPU-h, cap 4",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "registry_status": "ESTIMATE",
+   "verdict": "UNVERIFIABLE",
+   "level": "estimate without a derivation",
+   "evidence": "No inputs beyond 'about 120 problems x 6 variants'. For scale, Q1's measured pilot prices about 280 timed items at 0.57 GPU-h, so 720 timed variants at about 2.5 GPU-h is plausible but not derived."
+  },
+  {
+   "id": "c200",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "Stage A about 1 GPU-h; Stage B 4-5 plus 0.5 attention readout; (C) about 3; (D) pilot 1, main 4; scaled from the serving probe 8K throughput, not measured at 16K-48K",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md",
+   "registry_status": "ESTIMATE",
+   "verdict": "UNVERIFIABLE",
+   "level": "estimate without a derivation",
+   "evidence": "Scaled by cell 4 from the serving probe's 8K throughput; the slate says 16K-48K is unmeasured. Stage A's measurement is designed to replace it."
+  },
+  {
+   "id": "c201",
+   "candidates": [
+    "R10",
+    "R11"
+   ],
+   "claim": "CPU pilots: R10 about 2-3 CPU-days; R11 about 3-5 CPU-days; device checks 0.3-0.5 GPU-h",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "registry_status": "ESTIMATE",
+   "verdict": "UNVERIFIABLE",
+   "level": "estimate without a derivation",
+   "evidence": "CPU-day figures have no stated inputs; the 0.3-0.5 GPU-h device check is below Q1's measured 0.57 GPU-h pilot, which covers a larger item set."
+  },
+  {
+   "id": "c202",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "Arm A about 10-20 CPU-h on the host CPU lane",
+   "source": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "registry_status": "ESTIMATE",
+   "verdict": "UNVERIFIABLE",
+   "level": "estimate without a derivation",
+   "evidence": "No per-save CPU cost is stated (92 golds x 3 save paths x 3-4 builds = 828-1,104 save-and-score runs). P1's S4 records saves under 1.2 s, but VM boot and scoring per run are not given."
+  }
+ ],
+ "slate_text_findings": [
+  {
+   "id": "S1",
+   "where": "slate.md, 'Corrections made while merging', bullet on CAVEAT",
+   "verdict": "CORRECTED",
+   "finding": "The bullet is wrong: gfgvdsOX6v resolves in the api2 search (see c088). Replace it, and cite the paper as a judge-side GUI-agent verifier prior in R02 and in the not-carried 'LLM judge vs state checker' row."
+  },
+  {
+   "id": "S2",
+   "where": "slate.md, 'Corrections made while merging', bullet on 'A7 step p50 2.63 s'",
+   "verdict": "CORRECTED",
+   "finding": "The bullet is wrong: the acceptance README's A7 section gives step p50 2.628 s (p95 3.437 s, 38,520 steps). The cell was right (see c047)."
+  },
+  {
+   "id": "S3",
+   "where": "slate.md R07, 'Why it matters'",
+   "verdict": "CORRECTED",
+   "finding": "'S1a's exposed episodes ... showed delta -4.86 pp against -0.89 pp unexposed': the strata are tasks (18 base tasks with at least one exposed episode, 14 without; report-guarded.json uncertified_exposure and delta_by_exposure_stratum). Write 'tasks with an exposed episode showed ...'."
+  },
+  {
+   "id": "S4",
+   "where": "slate.md R05, corrected question",
+   "verdict": "CORRECTED",
+   "finding": "'(get_vm_file on 103 tasks, get_cloud_file on 84)' sits in the sentence about the 74 re-admittable tasks, but those counts are over all 116 anchor tasks. Among the 74: get_vm_file 71, get_cloud_file 57, compare_table 17, compare_pptx_files 16."
+  },
+  {
+   "id": "S5",
+   "where": "slate.md R05, first experiment; summary sum",
+   "verdict": "CORRECTED",
+   "finding": "The anchor run's 'about 300 episodes' cannot be reached: at most 80 revision-invariant tasks x R = 3 = 240 (see c197). The summary's 'about 20 GPU-h' becomes about 19."
+  },
+  {
+   "id": "S6",
+   "where": "slate.md R03 novelty; 'Findings for Kevin' item 1",
+   "verdict": "CORRECTED",
+   "finding": "'Desktop file-state checkers are untested in every prior found, and 2610.09142 says so': 2610.09142's 'remain untested' sentence is in its Limitations and describes its own two-suite scope. Suggested wording: '2610.09142 names OSWorld-Verified-class desktop checkers as outside its scope (Limitations) and lists an OSWorld rank-consequence audit as future work.' The absence claim rests on the cells' searches, not on that paper."
+  },
+  {
+   "id": "S7",
+   "where": "slate.md R07 closest priors",
+   "verdict": "CORRECTED",
+   "finding": "2610.04433: the 13% flip rate (swap and rerun alike) is the median on a 45-task hard subset of SWE-bench Verified with five models (see c095)."
+  },
+  {
+   "id": "S8",
+   "where": "slate.md R11 (naive version, closest priors)",
+   "verdict": "VERIFIED with qualifier",
+   "finding": "2609.21058's 4 of 60 is at the 1e-2 (bf16) tolerance; at that harness's fp32 tolerance (1e-4) it is 2 of 60. R11's protocol is allclose at 1e-2, so the figure applies; add the qualifier."
+  },
+  {
+   "id": "S9",
+   "where": "slate.md R10 'Why it matters'",
+   "verdict": "CORRECTED",
+   "finding": "'389 of 390 accepted drkernel kernels that call tl.dot use its TF32 default': what was counted is that they pass no explicit non-TF32 precision; TF32 applies only when operands are fp32, which was not checked (see c187)."
+  },
+  {
+   "id": "S10",
+   "where": "slate.md R11 naive version",
+   "verdict": "VERIFIED with qualifier",
+   "finding": "KBV's contribution list says TF32 is enabled 'in the PyTorch reference' for the performance baseline, and describes the change as substituting baseline timing; it does not state the correctness reference's precision separately. The slate's reading is defensible; cite that sentence and keep the plan to read the released harness."
+  },
+  {
+   "id": "S11",
+   "where": "slate.md, 'Corrections made while merging', first bullet",
+   "verdict": "CORRECTED",
+   "finding": "'36 false-negative candidates in 40 mutants (91.7%)': 91.7% is the task-equal share; 36/40 is 90.0%. Write '36 of 40 mutants (task-equal share 91.7%)'."
+  },
+  {
+   "id": "S12",
+   "where": "claim-registry.json c114, c118, c123, c125, c126",
+   "verdict": "note",
+   "finding": "These five ids (2609.33044, 2610.07274, 2609.37322, 2610.02926, 2610.08159) are tagged 'cited' but do not appear in slate.md. Titles verify; retag them as cell-cited or drop them from the registry."
+  },
+  {
+   "id": "S13",
+   "where": "slate.md 'Coverage limits'",
+   "verdict": "note",
+   "finding": "'all 102 arXiv ids resolve': slate.md and the registry together cite 101 distinct arXiv ids, and all 101 resolve to the cited titles at arxiv.org (this check). The verification list in queries.md also contains 2610.09089 and 2509.14279, which nothing cites."
+  },
+  {
+   "id": "S14",
+   "where": "slate.md R08 first experiment",
+   "verdict": "note",
+   "finding": "The accessibility arm's 1.05-1.10 per-episode cost factor has no cited source (OSWorld puts about 6,000 tokens at the 90th percentile of tree length). The 1.5x cut rule and the smoke bound the risk; label the factor an assumption."
+  }
+ ],
+ "slate_only_sources": [
+  {
+   "source": "https://huggingface.co/datasets/SakanaAI/AI-CUDA-Engineer-Archive",
+   "slate_claim": "CC-BY-4.0 (R12 corpora)",
+   "verdict": "VERIFIED",
+   "evidence": "Hugging Face API: licence tag cc-by-4.0 (cardData license cc-by-4.0), revision 4edbe8d6."
+  },
+  {
+   "source": "program/decisions.md D1, D2, D3, D5, D7, D9, D14, D24, D28, D29, D35, D46, D47, D53, D54, D66, D68, D69, D70, D71",
+   "slate_claim": "process gates and standing constraints as cited",
+   "verdict": "VERIFIED",
+   "evidence": "Each cited decision exists with the subject the slate gives it (read at 360058d): D2 reserves outward actions and the R570 risk, D7 defines untrusted model-generated code, D24 and D68 set the 100/89/79 caps, D46 stops Q1 GPU spend, D69 closes S1b and sizes S2."
+  }
+ ],
+ "verification_queries": [
+  "curl https://arxiv.org/abs/<id> and https://arxiv.org/pdf/<id> for the 101 ids in ids.txt (1 s spacing)",
+  "OpenReview api2 notes/search term='The Evaluator Also Varies'",
+  "OpenReview api2 notes/search term='The Reliability Gap Capable Computer-Use Agents Still Fail Twice'",
+  "OpenReview api2 notes/search term='FlexBI batch-invariant'",
+  "OpenReview api2 notes/search term='Is This Agent Evaluable'",
+  "OpenReview api2 notes/search term='OpenComputer Verifiable Software Worlds'",
+  "OpenReview api2 notes/search term='Faster and Better Benchmark Bugs VLA Acceleration'",
+  "OpenReview api2 notes/search term='KernelAudit'",
+  "OpenReview api2 notes/search term='CROSS Long-Context Cross-lingual Retrieval'",
+  "OpenReview api2 notes/search term='Scalable Weak-to-Strong Verifier Hardening for Agent Environments'",
+  "OpenReview api2 notes/search term='CAVEAT computer use' (gfgvdsOX6v not returned)",
+  "OpenReview api2 notes/search term='CAVEAT Two-View Auditing Deterministic Veto GUI-Agent Verifier' (gfgvdsOX6v returned)",
+  "OpenReview api2 notes/search term='Two-View Auditing with a Deterministic Veto' (gfgvdsOX6v returned)",
+  "OpenReview api2 notes?id=cELldjX2oq (403 ChallengeRequiredError; not bypassed)",
+  "Crossref api.crossref.org/works/10.1145/2635868.2635929, /10.1145/3143561, /10.1109/tse.2014.2372785",
+  "Hugging Face api/datasets/xlangai/ubuntu_osworld_verified_trajs?blobs=true, api/datasets/hkust-nlp/drkernel-coldstart-8k?blobs=true, api/datasets/SakanaAI/AI-CUDA-Engineer-Archive?blobs=true, api/models?search=AutoTriton",
+  "https://xlang.ai/blog/osworld-verified"
+ ]
+}
