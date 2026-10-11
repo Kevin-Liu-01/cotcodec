@@ -183,11 +183,11 @@ NOT_EVALUABLE).
 | L4 | tr_TR | dotted and dotless i in case mapping |
 
 A locale cell sets `LANG` and `LC_ALL` of the LibreOffice and pyautogui processes to
-`LOCALE.UTF-8` (`de_DE.UTF-8` and so on), with glibc locale data compiled at start-up by `localedef` from the
-image's own `/usr/share/i18n` sources into a `LOCPATH` under the container's `$TMPDIR`
-(offline; the image is not changed), and sets the profile's `ooSetupSystemLocale` to the
-locale and `ooLocale` (the interface language) to en-US. The keyboard layout stays the X
-server's default (us).
+`LOCALE.UTF-8` (`de_DE.UTF-8` and so on), with glibc locale data compiled at start-up by
+`localedef` from the image's own `/usr/share/i18n` sources into a `LOCPATH` under the
+container's `$TMPDIR` (offline; the image is not changed), and sets the profile's
+`ooSetupSystemLocale` to the locale and `ooLocale` (the interface language) to en-US. The
+keyboard layout stays the X server's default (us).
 
 ### 4.4 Adaptations, and what they leave equal
 
@@ -201,17 +201,17 @@ recorded in every save row.
    byte-deterministic (the audit's reproduction saved every dev item with other SHA-256s
    than dev-smoke-v3 and got the same verdicts, section 15), so saved files are compared
    through their verdicts, never their bytes.
-2. Builds from the 7.6 series on title their windows "`FILE — LibreOffice APP`" (an em
-   dash, for example "a.xlsx — LibreOffice Calc"; TDF 7.3.7.2 still uses the hyphen), while
-   OSWorld's postconfig activates "`FILE - LibreOffice APP`" with `wmctrl -Fa`. The save stage tries the registered
-   title first and, only if that fails, the same title with the em dash. The VM's build
-   never shows the em-dash title, so the control behaves as registered. In the dev smoke
-   every item under 7.6.7.2 and 24.8.7.2 needed it (section 15). Each item's adapted
-   activations are recorded and reported per cell: they are what a re-hosted VM with that
-   build would fail as written (postconfig replay under other builds was untested,
-   dossier O6). Without the fallback the registered save treats the failure as a save
-   failure, and every build from 7.6 on would be dropped for retention, so the build arm
-   could not be read at all.
+2. Builds from the 7.6 series on title their windows "`FILE — LibreOffice APP`" (an em dash,
+   for example "a.xlsx — LibreOffice Calc"; TDF 7.3.7.2 still uses the hyphen), while
+   OSWorld's postconfig activates "`FILE - LibreOffice APP`" with `wmctrl -Fa`. The save
+   stage tries the registered title first and, only if that fails, the same title with the
+   em dash. The VM's build never shows the em-dash title, so the control behaves as
+   registered. In the dev smoke every item under 7.6.7.2 and 24.8.7.2 needed it (section
+   15). Each item's adapted activations are recorded and reported per cell: they are what a
+   re-hosted VM with that build would fail as written (postconfig replay under other builds
+   was untested, dossier O6). Without the fallback the registered save treats the failure as
+   a save failure, and every build from 7.6 on would be dropped for retention, so the build
+   arm could not be read at all.
 
 Everything else is the registered save: the same profile template, display size, window
 manager, VCL plugin (gtk3), pyautogui, timeouts and collection of changed files.
@@ -289,11 +289,11 @@ reading is the task, with states nested in it.
 
 One run holds every registered item, cell and confirmation round. The host tool,
 `infra/r04-nuisance/run/r04_host.py`, renders every job through the unchanged lane and
-submits a plan's next job only when `squeue` is empty and every earlier step has finished. Each step (job) writes to
-its own directory under the run directory (`~/cotcodec-runs/stage0/r04-nuisance/runs/NAME/`
-on the host; `items/`, `main/saves/GROUP/`, `main/scores/GROUP/`, `rounds/`,
-`round-1/...`, `round-2/...`), and the plan (`plan.json`) records each step's state, job
-id, command and time limit.
+submits a plan's next job only when `squeue` is empty and every earlier step has finished.
+Each step (job) writes to its own directory under the run directory
+(`~/cotcodec-runs/stage0/r04-nuisance/runs/NAME/` on the host; `items/`,
+`main/saves/GROUP/`, `main/scores/GROUP/`, `rounds/`, `round-1/...`, `round-2/...`), and the
+plan (`plan.json`) records each step's state, job id, command and time limit.
 
 1. **items** (metric image): `python -m harness.r04_nuisance.items --split confirm reserve`.
    It refuses a split set other than dev alone unless this file is frozen (`guard.py`: the
@@ -321,8 +321,8 @@ id, command and time limit.
    own last action). `raw` scores the items unsaved (golds) or as captured (S1a). Each
    checker version is scored twice in fresh processes; a timeout is retried twice. Every
    row records the save stage's outcome (`save_status`), also when the scorer fails.
-4. **analysis** (anywhere, standard library): `python -m harness.r04_nuisance.analysis
-   --run RUN`, which reads every input from the run (section 9) and writes the
+4. **analysis** (anywhere, standard library): `harness.r04_nuisance.analysis` with
+   `--run RUN`, which reads every input from the run (section 9) and writes the
    discordances still pending.
 5. **confirmation rounds** (section 7): `r04_host.py confirm` adds both rounds at once from
    that pending list: each re-runs steps 2-3 for the control and every cell with a pending
@@ -416,9 +416,10 @@ section 12 says; the cap is in section 14.
   infrastructure error) on at least 90% of its gold items and of its S1a items. Retention
   reads the save stage's outcome only (`save_status`): an item whose save succeeded but
   whose scoring failed counts as saved, is not a valid pair, and is listed as a scoring
-  failure. A build is retained if its `ctrl_s` cell is; a dropped build takes all its
-  cells with it. A locale is retained if its data compiled and its cell is retained. A dropped level reads
-  NOT_EVALUABLE and is reported with its failure reasons; it is not rerun under this id.
+  failure. A build is retained if its `ctrl_s` cell is; a dropped build takes all its cells
+  with it. A locale is retained if its data compiled and its cell is retained. A dropped
+  level reads NOT_EVALUABLE and is reported with its failure reasons; it is not rerun under
+  this id.
 - **Arm stop.** The build arm reads NOT_EVALUABLE if fewer than two of B1-B5 are retained.
   A locale whose data cannot be compiled offline is dropped, not the study.
 
@@ -449,21 +450,22 @@ reproducibly; MINOR lists one or two. INVARIANT for an arm closes the line as an
 the checker note; DRIFT names the level and the flipped items for the checker note and for
 S2 v3's Phase 0.
 
-Registered computation: `harness/r04_nuisance/analysis.py` (`analyze`), run as
-`analysis --run RUN` (section 6), which reads every input from the run's plan and
-directories: the items, the score directory of every main score job that finished (each
-with its lane receipt, exit status 0, and its job id recorded), both rounds' score
-directories once the rounds exist, the reason for every cell the plan left unscored, the
-splits, and the frozen control summaries of those splits (checked by SHA-256 against
-section 3). It fails closed: every registered cell and the unsaved items are scored or
-named with the plan's reason (a reason may not name a scored cell); the rounds are exactly
-two or none (none either before the rounds, when every discordance is still pending and the
-output says `"complete": false`, or when the main run left nothing pending); the rounds must have re-run exactly the discordances the main
-run left pending; a cell scored twice, an unfinished step and a split set other than dev
-alone or confirm and reserve are refused; and an input that names an audit or adjudication
-file is refused (section 2.1). The explicit form (`--items`, `--scores`, `--round` twice,
-`--splits`, `--reference`, `--cell-errors`) applies the same checks and is for re-analysing
-the dev smoke's evidence. No choice is left to make after a result is read.
+Registered computation: `harness/r04_nuisance/analysis.py` (`analyze`), run with `--run RUN`
+(section 6), which reads every input from the run's plan and directories: the items, the
+score directory of every main score job that finished (each with its lane receipt, exit
+status 0, and its job id recorded), both rounds' score directories once the rounds exist,
+the reason for every cell the plan left unscored, the splits, and the frozen control
+summaries of those splits (checked by SHA-256 against section 3). It fails closed: every
+registered cell and the unsaved items are scored or named with the plan's reason (a reason
+may not name a scored cell); the rounds are exactly two or none (none either before the
+rounds, when every discordance is still pending and the output says `"complete": false`, or
+when the main run left nothing pending); the rounds must have re-run exactly the
+discordances the main run left pending; a cell scored twice, an unfinished step and a split
+set other than dev alone or confirm and reserve are refused; and an input that names an
+audit or adjudication file is refused (section 2.1). The explicit form (`--items`,
+`--scores`, `--round` twice, `--splits`, `--reference`, `--cell-errors`) applies the same
+checks and is for re-analysing the dev smoke's evidence. No choice is left to make after a
+result is read.
 
 ## 10. Operating characteristics
 
@@ -471,13 +473,13 @@ Exact, from `harness/r04_nuisance/power.py`
 (`program/evidence/2026-10-11/r04-nuisance/power.json`): golds independent with a true
 per-gold discordance rate `r_gold`; S1a tasks with the registered state counts, each task
 susceptible with probability `r_task` and each of its states then discordant with
-probability `q`; spurious harness discordances at rate `p0` per run, which count only if both
-confirmation rounds reproduce them (`p0^3`).
+probability `q`; spurious harness discordances at rate `p0` per run, which count only if
+both confirmation rounds reproduce them (`p0^3`).
 
 Bounds at the registered sizes: 0 of 92 golds gives an exact one-sided 95% upper bound of
 3.20% (1 of 92: 5.05%; 2: 6.69%); 0 of 32 S1a tasks gives 8.94%. DRIFT has power 0.8 at a
-true gold rate of 4.6% and 0.9 at 5.7%; on S1a alone it has power 0.8 at a task rate of 14.1%
-(`q` 0.5), 12.9% (`q` 1) or 24.5% (`q` 0.1).
+true gold rate of 4.6% and 0.9 at 5.7%; on S1a alone it has power 0.8 at a task rate of
+14.1% (`q` 0.5), 12.9% (`q` 1) or 24.5% (`q` 0.1).
 
 Cell readings, `q` 0.5, no harness noise (P(INVARIANT) / P(MINOR) / P(DRIFT)):
 
@@ -556,10 +558,10 @@ file cache), S1a's captures, every saved file, every derived capture and the sav
 working trees stay under `~/cotcodec-runs/stage0/r04-nuisance/` (derived captures are
 deleted after scoring). The repository receives only the item manifest (task ids, VM paths,
 container paths and digests), score rows (scores, verdicts, digests, save events: timing,
-dialogs, whether bytes changed; no event log, no stdout tail, no document text), the analysis
-JSON, receipts and Slurm records. `score.save_summary` drops the save stage's event log; a
-test pins that. No host address is recorded. Nothing is released that the checker-mutation
-study would not release.
+dialogs, whether bytes changed; no event log, no stdout tail, no document text), the
+analysis JSON, receipts and Slurm records. `score.save_summary` drops the save stage's event
+log; a test pins that. No host address is recorded. Nothing is released that the
+checker-mutation study would not release.
 
 ## 14. Caps
 
@@ -603,31 +605,47 @@ profile.
   under de_DE (7 of 8 lines, checked structurally on the host). That is the path the
   judges predicted (a conversion, not an OOXML re-save).
 - **dev-smoke-v2** (save stage of 17 cells; jobs 1114-1121): every cell saved every item
-  except `store_as` under TDF 7.6 and 24.8, where Ubuntu's 7.3 UNO client failed ("Binary URP
-  bridge disposed during call"); fixed by using each build's own Python (section 4.2). The
-  title fallback was needed on every item under 7.6.7.2 and 24.8.7.2 and on none under TDF
-  7.3.7.2. All four locales compiled offline. Stopped before scoring; superseded by v3.
+  except `store_as` under TDF 7.6 and 24.8, where Ubuntu's 7.3 UNO client failed ("Binary
+  URP bridge disposed during call"); fixed by using each build's own Python (section 4.2).
+  The title fallback was needed on every item under 7.6.7.2 and 24.8.7.2 and on none under
+  TDF 7.3.7.2. All four locales compiled offline. Stopped before scoring; superseded by v3.
 - **dev-smoke-v3** (all 23 cells at the fixed code, scored, both confirmation rounds; jobs
   1125-1151): V1 and V2 held (the replicate, in its own container, changed no verdict);
   every item was saved in every cell; no save timed out or showed a dialog. Route arm
   INVARIANT; build arm MINOR (B1-B3 INVARIANT; B4 and B5 each flip two Impress golds,
   `4ed5abd0` on `compare_pptx_files_robust` and `e4ef0baf` on `compare_pptx_files`, pass to
-  fail in all three routes, the corrected comparator too); locale arm MINOR (de_DE, ar_EG and
-  tr_TR flip `6e99a1ad` through the CSV export; ja_JP INVARIANT). Both rounds reproduced
+  fail in all three routes, the corrected comparator too); locale arm MINOR (de_DE, ar_EG
+  and tr_TR flip `6e99a1ad` through the CSV export; ja_JP INVARIANT). Both rounds reproduced
   every discordance (15 of 15 per checker, 0 unstable). No S1a A0a state changed verdict in
   any cell. On 17 golds no cell reached DRIFT; the dev rates (2 of 17 for B4 and B5) suggest
   the build arm may reach DRIFT on the registered 92, which the design can detect (section
   10).
-- **dev-smoke-v4-control** (jobs 1152-1155, at the latest code of record): the item builder
-  verified the mounted inputs against the checker-mutation study's pins and rebuilt v3's
-  manifest byte for byte; the control's 34 verdicts equal v3's and the replicate's equal the
-  control's. A confirm-split plan was refused by the freeze guard before any job existed.
+- **dev-smoke-v4-control** (jobs 1152-1155, at the code of record before audit 1): the item
+  builder verified the mounted inputs against the checker-mutation study's pins and rebuilt
+  v3's manifest byte for byte; the control's 34 verdicts equal v3's and the replicate's
+  equal the control's. A confirm-split plan was refused by the freeze guard before any job
+  existed.
 
-- **Pre-freeze audit 1's reproduction** (jobs 1156-1158 and 1160, plan
-  `audit-r04-repro-1`, from the staged export `16c1233`, whose code tree equals `4b2acf2`'s):
-  the 17 dev golds gave v3's raw, control, de_DE and B4 verdicts under both checkers
-  (`6e99a1ad` under de_DE; `4ed5abd0` and `e4ef0baf` under B4, `zinv` too; the dev P1 flip
-  `af23762e`), while every saved office file had another SHA-256 than in v3 (section 4.4).
+- **dev-smoke-v5** (jobs 1164-1185, at the code that fixes pre-freeze audit 1: commit
+  `e56fb45`, code tree `1ffe2d19cd4ff8c6b70c6a37b7f99a9399fba40ac76e16b56856e24a6e709855`):
+  the procedure of section 6 end to end on the dev split (one plan with all 23 cells and a
+  2 lane-hour cap, the six score jobs, `analysis --run` for the pending list, `confirm`,
+  both rounds, `analysis --run`). Every job finished on its first attempt. The item builder
+  matched P1's counted dev golds and wrote v3's manifest again; all 816 (item, cell)
+  verdicts of the main run equal v3's under both checkers, while no saved office file has
+  v3's SHA-256; control retention, V1 and V2 pass; both rounds confirm all 15
+  discordances (0 unstable), and the readings are v3's. 22 jobs, 75.5 lane-minutes, 20.1
+  allocated CPU-h. The main run's jobs took 0.4-10.8 minutes against projections of
+  0.3-11.5 (each score job 5-8% under its projection), the round score jobs 7 minutes
+  against 2 projected (the scorer runs a job's cells one after another, so a round with
+  fewer items than workers leaves workers idle; the 60-minute floor covers it). If no code
+  of record changes before the freeze, this is the dev smoke at the frozen code tree
+  (section 17, item 3).
+- **Pre-freeze audit 1's reproduction** (jobs 1156-1158 and 1160, plan `audit-r04-repro-1`,
+  from the staged export `16c1233`, whose code tree equals `4b2acf2`'s): the 17 dev golds
+  gave v3's raw, control, de_DE and B4 verdicts under both checkers (`6e99a1ad` under de_DE;
+  `4ed5abd0` and `e4ef0baf` under B4, `zinv` too; the dev P1 flip `af23762e`), while every
+  saved office file had another SHA-256 than in v3 (section 4.4).
 - **Outside the lane:** one bare `docker run` of the B3 image printed the build's records
   under `/opt/r04` (dpkg listings, `soffice --version`, the bundled Python files, the
   tarball identity); no document was read and no job queued. Every other R04 host job went
@@ -638,10 +656,11 @@ two fixes the smokes led to (the window-title fallback and the build's own UNO c
 harness repairs that let the registered save run under the builds; both are recorded per
 item, and neither touches a rule.
 
-Cost of all R04 host jobs so far (37 CPU-only jobs, about 84 minutes of lane time): 25.5
-allocated CPU-h, 0 GPU-h; the audit's reproduction added 4 jobs, about 7 minutes and 1.9
-CPU-h. Measured in v3, per (item, cell): 4.6 worker-seconds to save and
-32.5 worker-seconds to score (both checkers, two fresh-process scorings each).
+Cost of all R04 host jobs so far: the drafting owner's first 37 CPU-only jobs (about 84
+minutes of lane time, 25.5 allocated CPU-h), the audit's reproduction (4 jobs, about 7
+minutes, 1.9 CPU-h) and dev-smoke-v5 (22 jobs, 75.5 minutes, 20.1 CPU-h): 63 jobs, about 167
+minutes, 47.5 allocated CPU-h, 0 GPU-h. Measured in v3, per (item, cell): 4.6 worker-seconds
+to save and 32.5 worker-seconds to score (both checkers, two fresh-process scorings each).
 
 ## 16. Corrections to the slate's version
 
@@ -685,18 +704,17 @@ is expected in a conversion or a date or text path (J1, J3).
 ## 17. Freeze checklist and sign-offs
 
 Before a freeze: (1) a pre-freeze audit by a fresh reviewer, its findings fixed or recorded
-(audit 1: section 16); (2) the code-tree digest (`python -c "from pathlib import Path; from
-harness.r04_nuisance.guard import code_tree_sha256; print(code_tree_sha256(Path('.')))"` on
-the frozen commit) filled in the pins block's `code_tree_sha256`, and the commit in section
-3's code-of-record row; (3) the dev smoke rerun at the frozen commit if any code of record
-changed after it; (4) the status line rewritten to the frozen wording (`**Status: frozen`),
-which `tests/test_r04_nuisance.py` then checks against the ledger row and the code tree;
-(5) the program owner's freeze (`scripts/preregister.py freeze`), which is Kevin's step and
-not the drafting agent's. Kevin's items: whether R04 runs at all, or as S2 v3's Phase 0
-precondition (the dossier's disposition; D74's S2 v3 repair run is in progress); review of
-the two adaptations of section 4.4 (under the slate's own precondition, postconfig replay
-on at least 90% of golds, B2-B5 would have been dropped without the title fallback); the CPU
-cap.
+(audit 1: section 16); (2) the code-tree digest of the frozen commit
+(`guard.code_tree_sha256` of the checkout's root) filled in the pins block's
+`code_tree_sha256`, and the commit in section 3's code-of-record row; (3) the dev smoke
+rerun at the frozen commit if any code of record changed after it; (4) the status line
+rewritten to the frozen wording (`**Status: frozen`), which `tests/test_r04_nuisance.py`
+then checks against the ledger row and the code tree; (5) the program owner's freeze
+(`scripts/preregister.py freeze`), which is Kevin's step and not the drafting agent's.
+Kevin's items: whether R04 runs at all, or as S2 v3's Phase 0 precondition (the dossier's
+disposition; D74's S2 v3 repair run is in progress); review of the two adaptations of
+section 4.4 (under the slate's own precondition, postconfig replay on at least 90% of golds,
+B2-B5 would have been dropped without the title fallback); the CPU cap.
 
 The derived images B1-B5 exist only on the host, by tag and by the IDs pinned in section 3.
 A rebuild from the same Dockerfile would not reproduce those IDs (image IDs include build

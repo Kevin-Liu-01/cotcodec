@@ -29,6 +29,7 @@ pre-freeze audit 1; it read no document and queued no job.
 | `dev-smoke-v2/` | second smoke: the save stage of 17 of the 23 cells (B0, its replicate, B1-B3), stopped before B4, B5 and scoring when the `store_as` client defect showed; items and save summary |
 | `dev-smoke-v3/` | the smoke of record: all 23 cells at the fixed code, scored and analysed, with both confirmation rounds |
 | `dev-smoke-v4-control/` | the control and replicate at the latest code (input check, freeze guard) |
+| `dev-smoke-v5/` | the whole registered procedure on the dev split at the code that fixes pre-freeze audit 1 (`e56fb45`): a mirror of the host run directory without documents (plan, items, per-job receipts, score rows, save summaries, the rounds' pending list), `analysis-main.json` and `analysis.json` from `analysis --run` |
 | `counts/` | pre-freeze count of the registered S1a items from S1a's committed records |
 
 No document is here: no gold, capture or saved file, no event log, no stdout tail. Items
@@ -148,6 +149,36 @@ unsaved scores equal v3's. A plan for the confirm split was refused by the host 
 any directory or job existed ("runs only after r04-checker-nuisance-invariance-v1 is
 frozen").
 
+## dev-smoke-v5 (jobs 1164-1185; code `e56fb45`, code tree `1ffe2d19...`)
+
+The procedure of the registration's section 6 at the code that fixes pre-freeze audit 1,
+on the dev split: `r04_host.py plan --split dev --golds --s1a 1037` with all 23 cells, 8
+workers and a 2 lane-hour cap; `next` until complete (items, seven save jobs, the six score
+jobs); `analysis --run` with `--pending-out`; `r04_host.py confirm` (both rounds at once);
+`next` until complete; `analysis --run` again. Every job finished on its first attempt; no
+step was dropped or stopped.
+
+- The item builder checked the 17 dev golds against P1's counted dev golds of the frozen dev
+  control run and wrote v3's manifest again (`8c6227b8...`).
+- All 816 (item, cell) verdicts of the main run, both checkers, equal dev-smoke-v3's; no
+  saved office file has v3's SHA-256 (the saves are not byte-deterministic).
+- `analysis-main.json`: control retention, V1 and V2 pass; route INVARIANT; the same 15
+  discordances as v3 pending (3 items under 9 cells), so `"complete": false`;
+  `pending.json` is its pending list, which `confirm` copied to `rounds/pending.json`.
+- `analysis.json` (both rounds): every discordance confirmed (15 of 15, 0 unstable, no
+  `harness_noise` flag), `"complete": true`; route INVARIANT, build MINOR (B4 and B5:
+  `4ed5abd0`, `e4ef0baf`), locale MINOR (de_DE, ar_EG, tr_TR: `6e99a1ad`), as in v3, under
+  both checkers; the control reproduces the dev P1 flip `af23762e`.
+- Job times against the projections of section 6 (8 workers): save jobs 0.4-2.4 minutes
+  (projected 0.3-2.3), main score jobs 4.3-10.8 minutes (projected 4.6-11.5); the round
+  score jobs took 7.0-7.1 minutes against 2.0 projected, because the scorer runs a job's
+  cells one after another and a round with fewer items than workers leaves workers idle
+  (the 60-minute floor covers it). 22 jobs, 75.5 lane-minutes (59.4 for the main run),
+  20.1 allocated CPU-h.
+
+Reproduce from this directory: `python -m harness.r04_nuisance.analysis --run
+program/evidence/2026-10-11/r04-nuisance/dev-smoke-v5 --src . --out OUT.json`.
+
 ## Pre-freeze audit 1: independent reproduction (jobs 1156-1158, 1160; exploratory)
 
 The auditor reran the dev smoke's control, de_DE and B4 cells from the staged export
@@ -174,6 +205,7 @@ registration's section 11 identify one session's files, and "byte for byte" in i
 | dev-smoke-v4-control | 4 | 5.0 min | 2.0 |
 | **Total (drafting owner)** | 37 | about 84 min | 25.5 |
 | pre-freeze audit 1 reproduction | 4 | about 7 min | 1.9 |
+| dev-smoke-v5 (with both rounds) | 22 | 75.5 min | 20.1 |
 
 GPU: 0. Measured per (item, cell) in v3: save 4.6 worker-seconds, scoring 32.5
 worker-seconds (both checkers, two fresh-process scorings each). Projection for the
