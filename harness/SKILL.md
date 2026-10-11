@@ -64,6 +64,10 @@ attestation helpers. It starts small after the 2026-10-06 restart.
   rater protocol, the operator catalog (`q2_mutation/operators/`) and the
   campaign driver that joins specs, operators and scorer
   (`q2_mutation/campaign.py`). Runbook: `q2_mutation/README.md`.
+- `q2_mutation_k2/` is the checker-mutation study's K2 VM-fidelity executor
+  (addendum `q2-evaluator-mutation-v1-k2`, draft): candidate injection into
+  the certified VM through the frozen plan, the K2 lane (S1a's lane with K2
+  slots), the classification rules and the K2 report.
 - `q1/` is Q1's Stage 0 gate stack: shared `schema.py`, gates (a)-(c), the
   independent audit, runner/worker/journal, analysis, the mutator (`q1/mutate/`)
   and the substrate builders (`q1/substrates/`). `q1/README.md` maps it;
