@@ -1,0 +1,406 @@
+{
+ "script": "instrument_sim_v2.py --part linem",
+ "linem": [
+  {
+   "seed": 42,
+   "pairs": 800,
+   "rows": [
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8928,
+     "S_A": 0.6222,
+     "S_B": 0.6252
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8805,
+     "S_A": 0.6135,
+     "S_B": 0.6196
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7445,
+     "S_A": 0.524,
+     "S_B": 0.5248
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8354,
+     "S_A": 0.585,
+     "S_B": 0.5869
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.837,
+     "S_A": 0.5814,
+     "S_B": 0.5879
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7247,
+     "S_A": 0.51,
+     "S_B": 0.5141
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7977,
+     "S_A": 0.5627,
+     "S_B": 0.5605
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7983,
+     "S_A": 0.5584,
+     "S_B": 0.563
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6997,
+     "S_A": 0.4876,
+     "S_B": 0.4879
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7439,
+     "S_A": 0.5233,
+     "S_B": 0.5231
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7505,
+     "S_A": 0.5257,
+     "S_B": 0.5248
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6828,
+     "S_A": 0.4868,
+     "S_B": 0.4829
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7233,
+     "S_A": 0.5095,
+     "S_B": 0.5109
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7148,
+     "S_A": 0.5032,
+     "S_B": 0.4977
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6753,
+     "S_A": 0.4723,
+     "S_B": 0.4779
+    }
+   ],
+   "_source": "linem-42.json"
+  },
+  {
+   "seed": 43,
+   "pairs": 800,
+   "rows": [
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.889,
+     "S_A": 0.6233,
+     "S_B": 0.6328
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8846,
+     "S_A": 0.6168,
+     "S_B": 0.6288
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.744,
+     "S_A": 0.5213,
+     "S_B": 0.5259
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8421,
+     "S_A": 0.5864,
+     "S_B": 0.6004
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8387,
+     "S_A": 0.5889,
+     "S_B": 0.5982
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7303,
+     "S_A": 0.5137,
+     "S_B": 0.5242
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8035,
+     "S_A": 0.5617,
+     "S_B": 0.5704
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8019,
+     "S_A": 0.5668,
+     "S_B": 0.5725
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7155,
+     "S_A": 0.5032,
+     "S_B": 0.5095
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7688,
+     "S_A": 0.5359,
+     "S_B": 0.5484
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7652,
+     "S_A": 0.5391,
+     "S_B": 0.5411
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6925,
+     "S_A": 0.4895,
+     "S_B": 0.4969
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7347,
+     "S_A": 0.5166,
+     "S_B": 0.5219
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7297,
+     "S_A": 0.5174,
+     "S_B": 0.5212
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6856,
+     "S_A": 0.4845,
+     "S_B": 0.4905
+    }
+   ],
+   "_source": "linem-43.json"
+  },
+  {
+   "seed": 44,
+   "pairs": 800,
+   "rows": [
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8876,
+     "S_A": 0.6223,
+     "S_B": 0.6195
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8783,
+     "S_A": 0.6117,
+     "S_B": 0.6143
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7417,
+     "S_A": 0.5198,
+     "S_B": 0.5214
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8328,
+     "S_A": 0.5829,
+     "S_B": 0.5841
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8336,
+     "S_A": 0.5842,
+     "S_B": 0.5846
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7248,
+     "S_A": 0.5092,
+     "S_B": 0.5116
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8064,
+     "S_A": 0.5686,
+     "S_B": 0.5678
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7961,
+     "S_A": 0.5631,
+     "S_B": 0.5572
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7099,
+     "S_A": 0.5023,
+     "S_B": 0.5019
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7572,
+     "S_A": 0.5311,
+     "S_B": 0.5323
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7516,
+     "S_A": 0.5287,
+     "S_B": 0.5251
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6896,
+     "S_A": 0.486,
+     "S_B": 0.4862
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7377,
+     "S_A": 0.5183,
+     "S_B": 0.5157
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7268,
+     "S_A": 0.5114,
+     "S_B": 0.5084
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6751,
+     "S_A": 0.4756,
+     "S_B": 0.4693
+    }
+   ],
+   "_source": "linem-44.json"
+  }
+ ],
+ "inputs": [
+  {
+   "file": "linem-42.json",
+   "sha256": "0ed3fa9d3bc543cbfd9a21fedb71b1e58d53c4a5a51e2a343ed35d2608efde94",
+   "argv": [
+    "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/e3-repair-run2/out/linem-42.json",
+    "--part",
+    "linem",
+    "--seeds",
+    "42",
+    "--pool",
+    "800"
+   ],
+   "elapsed_seconds": 113.9,
+   "estimator_constants": {
+    "RHO": 0.5,
+    "FLOOR_DRAWS": 64,
+    "NH_POINT": 0.9,
+    "NH_LOWER": 0.88,
+    "H_UPPER": 0.85
+   }
+  },
+  {
+   "file": "linem-43.json",
+   "sha256": "0aeb420eec4e9e2860200561bcb6f681415f9579970ff8e87e936c80b5481230",
+   "argv": [
+    "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/e3-repair-run2/out/linem-43.json",
+    "--part",
+    "linem",
+    "--seeds",
+    "43",
+    "--pool",
+    "800"
+   ],
+   "elapsed_seconds": 117.6,
+   "estimator_constants": {
+    "RHO": 0.5,
+    "FLOOR_DRAWS": 64,
+    "NH_POINT": 0.9,
+    "NH_LOWER": 0.88,
+    "H_UPPER": 0.85
+   }
+  },
+  {
+   "file": "linem-44.json",
+   "sha256": "f21cc3d61f7048f80359a0a443b343a0628de9bff89eb72374e45c452b80811c",
+   "argv": [
+    "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/e3-repair-run2/out/linem-44.json",
+    "--part",
+    "linem",
+    "--seeds",
+    "44",
+    "--pool",
+    "800"
+   ],
+   "elapsed_seconds": 116.9,
+   "estimator_constants": {
+    "RHO": 0.5,
+    "FLOOR_DRAWS": 64,
+    "NH_POINT": 0.9,
+    "NH_LOWER": 0.88,
+    "H_UPPER": 0.85
+   }
+  }
+ ]
+}

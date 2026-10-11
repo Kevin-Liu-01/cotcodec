@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/ubisoft/ubisoft-laforge-binaryalign",
+ "fetched_at": "2026-10-11T00:58:30Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 289151,
+ "raw_sha256": "8767ffd90fc999f347df047d588c1c8123e56fc0be17f477ad672780e38513e4",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - ubisoft/ubisoft-laforge-binaryalign: BinaryAlign: Word Alignment as Binary Sequence Labeling · GitHub"
+ },
+ "snapshot_run": "run 2 (D68 repair)"
+}

@@ -1,0 +1,252 @@
+{
+ "script": "explore_targets.py",
+ "note": "design exploration, recorded and not decision-bearing: it compared ways of building the target from two aligners (seed 42, 300 pairs per condition) and led to the consensus target",
+ "runs": [
+  {
+   "seed": 42,
+   "aer_A_B": [
+    0.085,
+    0.05
+   ],
+   "c": 0.0,
+   "pairs": 300,
+   "targets": {
+    "A": {
+     "alpha": 0.6929,
+     "floor_share": 0.271,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.8617,
+     "mean_k": 9.26
+    },
+    "consensus_links": {
+     "alpha": 0.9411,
+     "floor_share": 0.3542,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.794,
+     "mean_k": 9.997
+    },
+    "union_pairs": {
+     "alpha": 0.9346,
+     "floor_share": 0.3465,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.8364,
+     "mean_k": 9.977
+    },
+    "soft_consensus_links": {
+     "alpha": 0.7882,
+     "floor_share": 0.3066,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.8307,
+     "mean_k": 9.737
+    }
+   },
+   "_source": "ex-0.085-0.05-0.0.json",
+   "_sha256": "f4d8eb31fcc8c91c7e876f390723dec73fe8c2ea1d581f67a4452a2547ff0316"
+  },
+  {
+   "seed": 42,
+   "aer_A_B": [
+    0.085,
+    0.05
+   ],
+   "c": 0.5,
+   "pairs": 300,
+   "targets": {
+    "A": {
+     "alpha": 0.7178,
+     "floor_share": 0.2754,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.8684,
+     "mean_k": 9.34
+    },
+    "consensus_links": {
+     "alpha": 0.9021,
+     "floor_share": 0.3403,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.8162,
+     "mean_k": 9.91
+    },
+    "union_pairs": {
+     "alpha": 0.9032,
+     "floor_share": 0.3384,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.8476,
+     "mean_k": 9.89
+    },
+    "soft_consensus_links": {
+     "alpha": 0.7857,
+     "floor_share": 0.3023,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.8534,
+     "mean_k": 9.677
+    }
+   },
+   "_source": "ex-0.085-0.05-0.5.json",
+   "_sha256": "91da2da9d451f341486417137ca7bba7f59663e46c8b8ceff60ca055d95626df"
+  },
+  {
+   "seed": 42,
+   "aer_A_B": [
+    0.085,
+    0.05
+   ],
+   "c": 1.0,
+   "pairs": 300,
+   "targets": {
+    "A": {
+     "alpha": 0.6862,
+     "floor_share": 0.2665,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.8758,
+     "mean_k": 9.21
+    },
+    "consensus_links": {
+     "alpha": 0.7789,
+     "floor_share": 0.2926,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.8753,
+     "mean_k": 9.547
+    },
+    "union_pairs": {
+     "alpha": 0.7859,
+     "floor_share": 0.299,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.8809,
+     "mean_k": 9.57
+    },
+    "soft_consensus_links": {
+     "alpha": 0.7427,
+     "floor_share": 0.2838,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.8873,
+     "mean_k": 9.423
+    }
+   },
+   "_source": "ex-0.085-0.05-1.0.json",
+   "_sha256": "899fe4fcafe9a963d38d90f9aedf0c64c0e6c378ebf53f2ccefb3c4ab070a1da"
+  },
+  {
+   "seed": 42,
+   "aer_A_B": [
+    0.15,
+    0.15
+   ],
+   "c": 0.0,
+   "pairs": 300,
+   "targets": {
+    "A": {
+     "alpha": 0.5333,
+     "floor_share": 0.2321,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.771,
+     "mean_k": 8.287
+    },
+    "consensus_links": {
+     "alpha": 0.8362,
+     "floor_share": 0.3891,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.5788,
+     "mean_k": 9.96
+    },
+    "union_pairs": {
+     "alpha": 0.7513,
+     "floor_share": 0.3362,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.7,
+     "mean_k": 9.833
+    },
+    "soft_consensus_links": {
+     "alpha": 0.5928,
+     "floor_share": 0.2894,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.641,
+     "mean_k": 9.17
+    }
+   },
+   "_source": "ex-0.15-0.15-0.0.json",
+   "_sha256": "d86310abc2d729e8ae1fdaaad2c94cbb5511ffac67d1c3dc8cc3a563f21770b0"
+  },
+  {
+   "seed": 42,
+   "aer_A_B": [
+    0.15,
+    0.15
+   ],
+   "c": 0.5,
+   "pairs": 300,
+   "targets": {
+    "A": {
+     "alpha": 0.5553,
+     "floor_share": 0.2387,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.7681,
+     "mean_k": 8.537
+    },
+    "consensus_links": {
+     "alpha": 0.7365,
+     "floor_share": 0.3457,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.6279,
+     "mean_k": 9.743
+    },
+    "union_pairs": {
+     "alpha": 0.7124,
+     "floor_share": 0.3186,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.7089,
+     "mean_k": 9.593
+    },
+    "soft_consensus_links": {
+     "alpha": 0.5865,
+     "floor_share": 0.2753,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.6815,
+     "mean_k": 9.0
+    }
+   },
+   "_source": "ex-0.15-0.15-0.5.json",
+   "_sha256": "0b87d4d3b2bf1d5b84937fd6b8c090ede531097eca1499a970c8483f4ebbef8f"
+  },
+  {
+   "seed": 42,
+   "aer_A_B": [
+    0.15,
+    0.15
+   ],
+   "c": 1.0,
+   "pairs": 300,
+   "targets": {
+    "A": {
+     "alpha": 0.5209,
+     "floor_share": 0.2329,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.775,
+     "mean_k": 8.227
+    },
+    "consensus_links": {
+     "alpha": 0.5189,
+     "floor_share": 0.2294,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.775,
+     "mean_k": 8.227
+    },
+    "union_pairs": {
+     "alpha": 0.5286,
+     "floor_share": 0.2341,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.775,
+     "mean_k": 8.227
+    },
+    "soft_consensus_links": {
+     "alpha": 0.5221,
+     "floor_share": 0.2318,
+     "S_truth_oracle_under_truth": 1.0,
+     "precision_of_allowed_pairs": 0.775,
+     "mean_k": 8.227
+    }
+   },
+   "_source": "ex-0.15-0.15-1.0.json",
+   "_sha256": "99918a867cd75c56999388dda54b3b4f8232837a9f28c2e608dbaa58b21b3121"
+  }
+ ]
+}

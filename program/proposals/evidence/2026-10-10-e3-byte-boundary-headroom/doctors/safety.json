@@ -2,8 +2,8 @@
  "doctor": "Safety",
  "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "repair pass by the single owner (Claude agent) under D68, 2026-10-10; not an independent review",
  "pass_condition": "Safety, monitorability, data rights, and project red lines addressed",
- "evidence": "FLORES+ CC-BY-SA-4.0 with a click-through gate (no crawler-reachable re-hosting, no training use): Kevin accepts; aggregates and hashes only in the public repository, no sentence text or per-sentence files; Belebele not used to bypass the gate; Q3 overlap disclosed as reserved sign-off R1; H-Net weights with undeclared licence recorded as not publication-eligible (R4); pickles loaded with weights_only=True in a network-off container, failing closed; upstream H-Net and Mamba code as a trusted input is reserved sign-off R3 (D7, D29); no model-generated code on GPUs; nothing trained or deployed; host rule respected (one read-only squeue, empty queue; no host job).",
- "remediation": "none beyond the reserved sign-offs R1 to R4"
+ "evidence": "FLORES+ CC-BY-SA-4.0 click-through (Kevin, R2); XL-WA en-zh CC BY-NC-SA 4.0 on request (outward action, R5, optional); aggregates and hashes only in the public repository; Belebele not used to bypass the gate; Q3 overlap reserved (R1); H-Net weights not publication-eligible (R4); BinaryAlign CC BY-NC-ND 4.0, research inference only, no redistribution (R6); OmniAlign's model-card custom code and all upstream library code are trusted inputs only after R3 (D7, D29); pickles loaded with weights_only=True, network off, failing closed; no model-generated code on GPUs; nothing trained or deployed; no host contact by this repair (no ssh).",
+ "remediation": "none beyond reserved sign-offs R1 to R6"
 }

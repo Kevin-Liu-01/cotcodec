@@ -27,3 +27,20 @@ target of the bundle's `container_smoke`, `slurm_test` and
 
 The deterministic research-direction doctor therefore reports FAIL, which is
 the expected and honest state.
+
+## Update for `e3-byte-boundary-headroom-v2` (D68 repair, 2026-10-10)
+
+Nothing above has changed state. The repair added only CPU design evidence on
+the development Mac (`compute/repair-run2/`) and made no host contact (no ssh, no
+host job). Specifically still absent:
+
+- **Overlay image:** the v2 stack (torch 2.7.1+cu128, flash-attn 2.8.0.post2
+  wheel for torch 2.7, mamba_ssm a6a1dae and causal_conv1d e940ead from source,
+  transformers 4.57.1, hnet 3673fe12, the aligners and spaCy) is specified and
+  checked statically against the pinned files; it has not been built.
+- **Real model loop and adapter:** the encoder-only extraction driver, the aligner
+  drivers (OmniAlign, BinaryAlign), the spaCy segmentation and parse step and the
+  harness port of `e3_estimator_v2.py` are not written.
+- **Gold data:** XL-WA en-zh has not been requested (R5, an outward action).
+- **Container smoke, Slurm dry run, provenance verification, executable pilot:**
+  none. S1v2 and S2v2 are CPU design evidence, not a pilot.
