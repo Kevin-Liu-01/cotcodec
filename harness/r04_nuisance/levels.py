@@ -43,9 +43,11 @@ class Build:
     version: str
     series: str  # what the profile's ooSetupLastVersion is set to for this build
     soffice: str
-    # The UNO client of route store_as: the VM's own Python with Ubuntu's python3-uno for
-    # every build, so the client is constant and only the instance it drives (over a URP
-    # pipe) changes with the build.
+    # The UNO client of route store_as: the build's own Python and pyuno (the VM's Python
+    # with Ubuntu's python3-uno for B0, the bundled program/python of a TDF build). The dev
+    # smoke found a cross-version client unusable: Ubuntu 7.3's pyuno against TDF 7.6
+    # (Writer and Impress documents) and 24.8 (every document) ends in "Binary URP bridge
+    # disposed during call".
     uno_python: str
     tarball: str | None = None
     tarball_sha256: str | None = None
@@ -71,7 +73,7 @@ def _tdf(bid: str, version: str, sha256: str, size: int) -> Build:
         version=version,
         series=series,
         soffice=f"/opt/libreoffice{series}/program/soffice",
-        uno_python="/usr/bin/python3",
+        uno_python=f"/opt/libreoffice{series}/program/python",
         tarball=f"LibreOffice_{version}_Linux_x86-64_deb.tar.gz",
         tarball_sha256=sha256,
         tarball_bytes=size,

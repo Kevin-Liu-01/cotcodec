@@ -1,7 +1,7 @@
 """Save As in the document's own format through the running GUI instance (UNO client).
 
-Run by the save stage with the VM's own Python and Ubuntu's python3-uno for every build
-(the client is constant; the instance it drives over a URP pipe is the build under test). It
+Run by the save stage with the build's own Python and pyuno (the VM's Python with Ubuntu's
+python3-uno for the VM's build; the bundled ``program/python`` of a TDF build). It
 connects to the instance's UNO pipe, finds the open document whose file is ``--path``,
 reads the filter the document was loaded with (``getArgs()`` ``FilterName``) and calls
 ``storeAsURL`` on the document's own URL with that filter and ``Overwrite``: what File >

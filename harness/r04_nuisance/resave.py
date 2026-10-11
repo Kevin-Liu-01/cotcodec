@@ -84,6 +84,7 @@ def build_identity(build: levels.Build) -> dict[str, Any]:
     ident: dict[str, Any] = {"build": build.id, "label": build.label, "version_line": line}
     if f"LibreOffice {build.version}" not in line:
         raise CellError(f"{build.id}: soffice reports {line!r}, not {build.version}")
+    ident["uno_python"] = build.uno_python if Path(build.uno_python).exists() else None
     if build.source == "lo-vm":
         ident["package"] = R.lo_version(build.soffice).split("; ", 1)[-1]
         if ident["package"] != "libreoffice-core 1:7.3.7-0ubuntu0.22.04.4":
@@ -150,6 +151,7 @@ class NuisanceSession(R.LoSession):
         self.profile_set: list[str] = []
         self.convert_count = 0
         self.activations_adapted: list[str] = []
+        self.uno_python = build.uno_python
 
     def reset(self) -> None:
         super().reset()
@@ -222,7 +224,7 @@ class NuisanceSession(R.LoSession):
         windows_before = set(R.list_windows(self.env))
         client = subprocess.run(
             [
-                self.build.uno_python,
+                self.uno_python,
                 str(STORE_AS_SCRIPT),
                 "--pipe",
                 self.pipe,
@@ -425,6 +427,8 @@ def run_cells(args: argparse.Namespace) -> dict[str, Any]:
                     loc = levels.LOCALE_BY_ID[cell.locale]
                     cell_info["locale_data"] = compile_locale(loc.posix, work / "locales")
                     locpath = cell_info["locale_data"]["locpath"]
+                if cell.route == "store_as" and not cell_info["build_identity"]["uno_python"]:
+                    raise CellError(f"{build.id}: no UNO client Python at {build.uno_python}")
             except CellError as exc:
                 cell_info["cell_error"] = str(exc)
                 locpath = None

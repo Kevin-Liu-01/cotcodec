@@ -86,7 +86,7 @@ def test_tdf_builds_are_pinned():
         assert len(b.tarball_sha256 or "") == 64 and (b.tarball_bytes or 0) > 1e8
         assert b.tarball_url and b.tarball_url.startswith(levels.TDF_ARCHIVE + "/" + b.version)
         assert b.soffice == f"/opt/libreoffice{b.series}/program/soffice"
-        assert b.uno_python == "/usr/bin/python3"
+        assert b.uno_python == f"/opt/libreoffice{b.series}/program/python"
     assert sum(b.tarball_bytes or 0 for b in tdf) < 1.1e9
     json.dumps(levels.describe())
 

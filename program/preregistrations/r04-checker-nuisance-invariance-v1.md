@@ -127,8 +127,12 @@ same upstream release. B2-B5 span the releases from 7.6 to the stable branch of
 | `store_as` | the same, except that every save event the registered stage makes with Ctrl+S is a Save As in the document's own format through the document model: the instance is started with a UNO pipe and `uno_store_as.py` calls `storeAsURL` on the document's own URL with the filter it was loaded with and `Overwrite` | replayed |
 | `headless_convert` | no GUI instance: each office file is converted to its own format (`soffice --headless --convert-to <ext>:<filter>`, OOXML or ODF filter of its type) into a scratch directory and copied back; then the task's own postconfig conversions run, headless | conversions only (keys and window steps have no GUI to act on) |
 
-The UNO client of `store_as` is always the VM's own Python with Ubuntu's python3-uno, so the
-client is constant and only the instance it drives over the URP pipe varies with the build.
+The UNO client of `store_as` is the build's own Python and pyuno: the VM's Python with
+Ubuntu's python3-uno for B0, the bundled `program/python` of each TDF build. (The first
+dev smoke used Ubuntu's client for every build; against TDF 7.6 it failed on Writer and
+Impress documents and against 24.8 on every document, "Binary URP bridge disposed during
+call", section 15.) A build without a bundled Python gets no `store_as` cell (a cell error,
+NOT_EVALUABLE).
 
 ### 4.3 Locales
 
