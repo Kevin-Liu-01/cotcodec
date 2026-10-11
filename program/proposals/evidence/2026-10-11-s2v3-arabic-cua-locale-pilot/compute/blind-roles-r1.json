@@ -1,0 +1,6 @@
+{
+ "proposal": "paragraph-84279667.txt",
+ "closest_prior": "paragraph-3c2e6dfd.txt",
+ "closest_prior_id": "2506.04135 (macOSWorld, NeurIPS 2025, v4)",
+ "note": "repair run after wave 1 (D74); recorder only, not given to the critic. File names are the first 8 hex of the SHA-256 of the stripped paragraph. The wave-1 paragraphs (blind-roles.json) are kept unedited."
+}

@@ -1,0 +1,15 @@
+{
+  "job_id": "1142",
+  "mode": "run",
+  "image_id": "sha256:500f3b027173a2d772b7d6ea00ea667dbe1bc956df51e3c2c4455d9c08a2714b",
+  "argv_json_hex_sha256": "1eb54c0ea4875cfc9bf7514067747f444931c35fff30fbc3567fcffba7df7671",
+  "argv_json_hex": "5b22707974686f6e33222c222f7372632f706f7765722d76342e7079222c222f7372632f61312e6a736f6e6c222c222f7372632f706f6f6c2d76332e6a736f6e222c222f6f75742f706f7765722d76342e6a736f6e222c222d2d61646d6974746564222c222f7372632f61646d69747465642e6a736f6e222c222d2d6e726570222c2232303030225d",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/s2v3-phase0-pilot/src-power:/src:ro /home/kevin/cotcodec-runs/stage0/s2v3-phase0-pilot/run-r1-power:/out:rw",
+  "network": "none",
+  "gpus_requested": 0,
+  "container_dev_nvidia": [],
+  "batch_sha256": "9afab097db1ab3f9008b3ddc940f45320435b8678685af0fd8fe76d87e14b979",
+  "exit_status": 0,
+  "started_at": "2026-10-11T11:22:14Z",
+  "finished_at": "2026-10-11T11:23:08Z"
+}

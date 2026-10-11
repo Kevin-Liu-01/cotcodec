@@ -1,0 +1,10 @@
+{
+ "doctor": "Compute",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "S2 v3 repair run after wave 1 (D74), single owner (Claude agent), 2026-10-11 UTC; not an independent review",
+ "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
+ "evidence": "Phase 0 in the CPU lane: Slurm 1116, 1120, 1123, 1124, 1129 (cancelled), 1131, 1132, 1139, 1140 (failed), 1141, 1142, all CPU-only with no GRES and receipts; images cotcodec-q2-lo-vm@sha256:f5b4c40e..., the metric image sha256:2006c1a9..., the research image sha256:500f3b02... (no GPU); an orx cpu-doctor node runs the oracle over the committed capture manifest. Phase 1: engine base digest and S1a's loop as before; cap 6.83 GPU-h (power-v4 costs); seeds [42, 43, 44]; per-episode checkpoints as S1a.",
+ "why_fail": "No derived Arabic image (downloads wait on Kevin), no VM-lane Phase 0, no delta certification (K1), no Phase 1 manifest, no dry run or test-only of Phase 1, no S2 model loop.",
+ "remediation": "Kevin's go-ahead for the downloads; the image-surgery script and the per-slot overlay lane change reviewed; P0.6 in the VM lane; the Phase 1 manifest's dry run and test-only."
+}

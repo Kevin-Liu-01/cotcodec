@@ -1,0 +1,325 @@
+{
+ "tasks": 106,
+ "tolerances": {
+  "dy_vcl": 23,
+  "dy_vcl_by_dev_task": [
+   23,
+   27,
+   23,
+   25,
+   23,
+   23,
+   25,
+   25,
+   23,
+   23,
+   25,
+   25,
+   27,
+   25,
+   23,
+   25,
+   23
+  ],
+  "aa_elements": 2065,
+  "aa_worst_element_mismatch": 0.0,
+  "translation_elements": 1011,
+  "translation_p95_mismatch": 0.0,
+  "tol2": 0.02,
+  "reflection_dx_elements": 1809,
+  "tol3": 20,
+  "aa_full_diff_pixels": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "tol6": 50,
+  "aa_doc_diff_pixels": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "tol5": 50
+ },
+ "by_app": {
+  "calc": {
+   "tasks": 46,
+   "E-ER": {
+    "elements": 5524,
+    "share_at_expected": 0.824,
+    "share_located": 0.9584,
+    "share_unmoved": 0.0,
+    "clipped": 46,
+    "not_located": 184,
+    "text_runs": 1243,
+    "text_runs_identical": 1011,
+    "median_task_mean_displacement_px": 954.2
+   },
+   "A-AR": {
+    "elements": 5524,
+    "share_at_expected": 0.8315,
+    "share_located": 0.9832,
+    "share_unmoved": 0.0,
+    "clipped": 1,
+    "not_located": 92,
+    "text_runs": 1289,
+    "text_runs_identical": 930,
+    "median_task_mean_displacement_px": 956.9
+   },
+   "E-PL": {
+    "elements": 5524,
+    "share_at_expected": 0.4423,
+    "share_located": 0.9993,
+    "share_unmoved": 0.4423,
+    "clipped": 0,
+    "not_located": 4,
+    "text_runs": 1243,
+    "text_runs_identical": 1243,
+    "median_task_mean_displacement_px": 272.8
+   },
+   "o5": {
+    "A:pass": 46,
+    "AR:pass": 46,
+    "E2:pass": 46,
+    "ER:pass": 46,
+    "PD:fail_changed": 6,
+    "PL:fail_changed": 1,
+    "PL:pass": 45
+   },
+   "admitted_proxy": 42,
+   "leak_tasks": {
+    "A": 4,
+    "AR": 4,
+    "Q": 4
+   },
+   "arabic_chrome_share_median": 0.9231,
+   "o8_elements_outside_spec_per_task": {
+    "median": 21.0,
+    "min": 21,
+    "max": 23
+   }
+  },
+  "impress": {
+   "tasks": 40,
+   "E-ER": {
+    "elements": 5211,
+    "share_at_expected": 0.8444,
+    "share_located": 0.9309,
+    "share_unmoved": 0.0077,
+    "clipped": 0,
+    "not_located": 360,
+    "text_runs": 1600,
+    "text_runs_identical": 1346,
+    "median_task_mean_displacement_px": 1140.2
+   },
+   "A-AR": {
+    "elements": 5291,
+    "share_at_expected": 0.8503,
+    "share_located": 0.9395,
+    "share_unmoved": 0.0076,
+    "clipped": 2,
+    "not_located": 318,
+    "text_runs": 1640,
+    "text_runs_identical": 1373,
+    "median_task_mean_displacement_px": 1139.3
+   },
+   "E-PL": {
+    "elements": 5211,
+    "share_at_expected": 0.5394,
+    "share_located": 1.0,
+    "share_unmoved": 0.5394,
+    "clipped": 0,
+    "not_located": 0,
+    "text_runs": 1600,
+    "text_runs_identical": 1556,
+    "median_task_mean_displacement_px": 168.0
+   },
+   "o5": {
+    "A:fail_changed": 14,
+    "A:pass": 26,
+    "AR:fail_changed": 14,
+    "AR:pass": 26,
+    "E2:pass": 40,
+    "ER:fail_changed": 1,
+    "ER:pass": 39,
+    "PD:fail_changed": 5,
+    "PD:pass": 2,
+    "PL:pass": 40
+   },
+   "admitted_proxy": 8,
+   "leak_tasks": {
+    "A": 28,
+    "AR": 28,
+    "Q": 32
+   },
+   "arabic_chrome_share_median": 0.9412,
+   "o8_elements_outside_spec_per_task": {
+    "median": 20.0,
+    "min": 19,
+    "max": 22
+   }
+  },
+  "writer": {
+   "tasks": 20,
+   "E-ER": {
+    "elements": 2160,
+    "share_at_expected": 0.8449,
+    "share_located": 0.9444,
+    "share_unmoved": 0.0,
+    "clipped": 0,
+    "not_located": 120,
+    "text_runs": 540,
+    "text_runs_identical": 355,
+    "median_task_mean_displacement_px": 991.8
+   },
+   "A-AR": {
+    "elements": 2160,
+    "share_at_expected": 0.863,
+    "share_located": 0.9815,
+    "share_unmoved": 0.0,
+    "clipped": 0,
+    "not_located": 40,
+    "text_runs": 580,
+    "text_runs_identical": 389,
+    "median_task_mean_displacement_px": 1008.3
+   },
+   "E-PL": {
+    "elements": 2160,
+    "share_at_expected": 0.3991,
+    "share_located": 1.0,
+    "share_unmoved": 0.3991,
+    "clipped": 0,
+    "not_located": 0,
+    "text_runs": 540,
+    "text_runs_identical": 512,
+    "median_task_mean_displacement_px": 277.6
+   },
+   "o5": {
+    "A:pass": 20,
+    "AR:pass": 20,
+    "E2:pass": 20,
+    "ER:pass": 20,
+    "PD:fail_changed": 4,
+    "PL:pass": 20
+   },
+   "admitted_proxy": 3,
+   "leak_tasks": {
+    "A": 2,
+    "AR": 2,
+    "Q": 17
+   },
+   "arabic_chrome_share_median": 0.9891,
+   "o8_elements_outside_spec_per_task": {
+    "median": 17.0,
+    "min": 15,
+    "max": 18
+   }
+  },
+  "all": {
+   "tasks": 106,
+   "E-ER": {
+    "elements": 12895,
+    "share_at_expected": 0.8358,
+    "share_located": 0.9449,
+    "share_unmoved": 0.0031,
+    "clipped": 46,
+    "not_located": 664,
+    "text_runs": 3383,
+    "text_runs_identical": 2712,
+    "median_task_mean_displacement_px": 990.5
+   },
+   "A-AR": {
+    "elements": 12975,
+    "share_at_expected": 0.8444,
+    "share_located": 0.9651,
+    "share_unmoved": 0.0031,
+    "clipped": 3,
+    "not_located": 450,
+    "text_runs": 3509,
+    "text_runs_identical": 2692,
+    "median_task_mean_displacement_px": 1005.8
+   },
+   "E-PL": {
+    "elements": 12895,
+    "share_at_expected": 0.4743,
+    "share_located": 0.9997,
+    "share_unmoved": 0.4743,
+    "clipped": 0,
+    "not_located": 4,
+    "text_runs": 3383,
+    "text_runs_identical": 3311,
+    "median_task_mean_displacement_px": 271.1
+   },
+   "o5": {
+    "A:fail_changed": 14,
+    "A:pass": 92,
+    "AR:fail_changed": 14,
+    "AR:pass": 92,
+    "E2:pass": 106,
+    "ER:fail_changed": 1,
+    "ER:pass": 105,
+    "PD:fail_changed": 15,
+    "PD:pass": 2,
+    "PL:fail_changed": 1,
+    "PL:pass": 105
+   },
+   "admitted_proxy": 53,
+   "leak_tasks": {
+    "A": 34,
+    "AR": 34,
+    "Q": 53
+   },
+   "arabic_chrome_share_median": 0.9333,
+   "o8_elements_outside_spec_per_task": {
+    "median": 21.0,
+    "min": 15,
+    "max": 23
+   }
+  }
+ }
+}

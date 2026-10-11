@@ -1,0 +1,15 @@
+{
+  "job_id": "1124",
+  "mode": "run",
+  "image_id": "sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361",
+  "argv_json_hex_sha256": "30f956cdc6bd6396c800e4e81dbf90b4f6259b72d753168b0f2c14d23c8b14f3",
+  "argv_json_hex": "5b22707974686f6e33222c222f7372632f636170747572652e7079222c222f7372632f706f6f6c2d76332e6a736f6e222c222f6f7574222c222d2d776f726b657273222c223133222c222d2d6f6e6c792d7461736b73222c223132333832633632225d",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/s2v3-phase0-pilot/src-r1:/src:ro /home/kevin/cotcodec-runs/stage0/s2v3-phase0-pilot/run-r1-smoke2:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro",
+  "network": "none",
+  "gpus_requested": 0,
+  "container_dev_nvidia": [],
+  "batch_sha256": "9afab097db1ab3f9008b3ddc940f45320435b8678685af0fd8fe76d87e14b979",
+  "exit_status": 0,
+  "started_at": "2026-10-11T09:58:17Z",
+  "finished_at": "2026-10-11T09:58:50Z"
+}

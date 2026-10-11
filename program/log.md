@@ -4613,3 +4613,99 @@ they say so.)
   - The realized-cost cap rule, blink-off outside D53's scope, and P0 and
     Stage B admission (Kevin's, D24 and D70).
   - Merging this branch with main (state.json and log.md).
+
+## 2026-10-11 — S2 v3 gauntlet wave 2 (fresh run under D74): score 65, honest exit on D74's stop line; S2 v3 ends (branch `gauntlet/s2v3-locale`, not merged)
+
+- The run (gauntlet wave 2, wave 1 of the fresh run) ran in workflow
+  `wf_d2bce6a2-2bf` with newly declared cumulative budgets: queries 80 (at
+  least 30 reserved for the triad), wall_minutes 600, tokens 8,000,000,
+  dollars 150, waves 1, gpu_hours 0.3. A single owner repaired wave 1's
+  largest defect on CPU only (commits `c8669d2`, `f7df23c`, `da45543`,
+  `aba30a7`, `6d4621d`, `5fc5e46`): proposal `e5f53151...`, new DRAFT
+  registration `s2-arabic-cua-locale-v3.1` (`f2a8478f...`; not frozen, not
+  admitted; v3 unedited), bundle `7ba7fcae...` (evidence root `2a758e90...`).
+  Row hash
+  `0d557a759bc80a467062cfdb703a076b276e8489f0f765e256d0f1b686dc7616`.
+- Repair, all CPU-only Slurm jobs with no GRES (1116, 1120, 1123, 1124, 1129
+  cancelled, 1131, 1132, 1139, 1140 failed, 1141, 1142; 0 GPU-h):
+  - A generated pseudo-Arabic catalog built from the strings LibreOffice
+    7.3.7.2 already ships (no download) renders the text factor at all 106
+    task states in every cell, ar-LTR included (1,022 renders, 0 errors).
+  - Instrument fixes: both language keys are needed (ooLocale alone leaves
+    registry labels English); the ooSetupSystemLocale pin and LANGUAGE=ar are
+    dropped; the selector sits in the system layer; the placebo shuffles
+    toolbar items.
+  - The registered oracle runs with planted controls as orx cpu-doctor node
+    `c7bcde07` (run `9e78b49f`, ORX_RESULT exit=0); host replicate 1132 gives
+    identical verdicts.
+  - K0 under the rules committed before the sweep: FAIL (53 admitted; I1
+    synthetic plants 101/106 for O3, 95/106 for O2, against a 100% bar).
+    Under a checker-invariance rule chosen afterwards, 105 of 106 are
+    admitted, and no cell changed any of 1,110 checker verdicts. K1 did not
+    run.
+  - A fifth Phase 1 cell (PL, toolbar items in a seeded order) carries the
+    new MIRROR_SPECIFIC reading. The sharp-null variance is fixed (0.048 at
+    the null). Phase 1 cap 6.83 GPU-h at K = 106 under the unadopted
+    realized-price rule.
+- Blind discrimination: PASS. The critic called the mechanism the same as
+  macOSWorld's (2506.04135) but judged the proposal (B) the stronger
+  contribution, with a specific delta. The packets match the bundle files,
+  and the prompt names nothing. Only macOSWorld was judged.
+- Refute-first triad: 3 of 3 refuted (36 counted queries: 10, 18 and 8).
+  - Novelty: already-published fails (conceded); trivial recombination
+    stands, as the proposal's own ledger calls the residual a measurement
+    built from prior-art parts.
+  - Identification: P3's total effect is identified, but MIRROR_SPECIFIC is
+    a displacement-dose contrast at the measured placebo dose (0.34-0.44
+    under dose-scaled direction-free harm; the recorder re-ran the refuter's
+    simulation with identical output), the moderators are application
+    indicators (R^2 0.848 for O8), and K0's passing count comes from a
+    post-hoc estimator.
+  - Feasibility: see the largest defect.
+- Reviews: 65 (claude-opus-5-5) and 72 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1162). Each total equals the sum of its ten scores. No cap binds (reviewer 1
+  applied 89 only; reviewer 2 applied 79 and 89). Score 65, best 65;
+  trajectory 60 -> 65. Neither review is signed (D24).
+- Largest defect (both reviewers and the feasibility refuter): Phase 0 still
+  cannot decide its own gates with the assets that exist, the narrowed
+  residue of wave 1's largest defect.
+  - The only K0 verdict under rules fixed before data is FAIL. The 105-task
+    pass has no passing-side control on 22 admitted tasks (recorder recount:
+    12 none/fail, 5 fail/fail, 5 none/none) and admits the C1 tasks
+    0f84bef9 and f178a4a9 without P0.10.
+  - v3.1 leaves I1's bar 'fixed before Phase 0 proper', so K0 as registered
+    has a free parameter.
+  - K1 (P0.6, about 44 VM-h) and Phase 0 on the shipped catalogs wait on
+    Kevin's three downloads, unwritten image-surgery and lane code (one
+    pinned qcow2 digest; driver.py mounts one /System.qcow2) and a P0.6
+    deviation.
+- Stop line (D74: D60's rule at 65). Score prong: does not fire (65 is not
+  below 65). Defect prong: fires. The wave-1 largest defect is still the
+  largest under the category reading D63 applied to D60's rule; reviewer 1
+  calls it the narrowed residue and left the ruling to the recorder and
+  Kevin. The run's wave cap is reached and the triad stopped the candidate.
+  Honest exit: S2 v3 ends; v3.1 is not frozen and not admitted.
+- Usage (this run): 45 of 80 queries (repair 9, refuters 36); 4,231,312 of 8M
+  tokens; $92.75 of $150 (list-price equivalent); 236.4 of 600 minutes; GPU
+  0.0558 of 0.3. Gauntlet totals over both rows: 172 queries, 8.82M tokens,
+  $183.86, 395.8 minutes, 0.1111 GPU-h. No direct prior, no safety failure.
+- Doctor checks: the re-run at record time is byte-identical to the bundle
+  copy (FAIL: Compute FAIL, unsigned reviews, cap 89; gpu_hours 0.3 parsed as
+  0). On the appended file the doctor's audit validator finds the chain
+  intact and flags row 1's older candidate hash and 127 queries, this row's
+  token counter restarting below row 1's, two rows against waves=1 and no
+  success state.
+- GPU: reviewer 2's job 1162 used 0.0558 GPU-h (scontrol RunTime 00:03:21 on
+  1 H100, COMPLETED 0:0, 12:58:07-13:01:28 UTC). The queue was empty before
+  submission and at both in-command re-checks. The recorder's read-only check
+  at 13:14:24 UTC found the queue empty, all GPUs at 0 MiB and no leftover
+  container. It is added to the ledger as "S2 v3 gauntlet wave 2 ...
+  open-weight review (D24)", and the program total on this branch is 10.4768
+  (main also carries R01's job 1143, 0.0581, so the merged total is 10.5349).
+- Waiting on Kevin: the package (the program's highest-scoring so far) can
+  advance only by his admission ruling (D24, D70) or the trust store, the
+  three language-pack downloads, the cap rule, review of the image and lane
+  code, and a P0.6 deviation. Reopening S2 v3 as a v3.2 (reviewer 1's list:
+  an I1 bar and one K0 rule, passing-side controls, C1 held until P0.10, a
+  renamed or dose-matched placebo contrast, application fixed effects, the
+  freeze path) would be a new owner decision.

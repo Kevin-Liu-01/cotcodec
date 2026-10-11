@@ -1,0 +1,29 @@
+[     0.0s] 1 tasks; building catalogs
+[     6.5s] catalog: {"started": "2026-10-11T09:58:17Z", "ui_files": 1082, "ui_parse_errors": 0, "ui_pairs": 13226, "libraries": 127, "context_candidates": 9931, "code_pairs": 155390, "mo_entries": 168616, "mo_sha256": "ee2d5621ebe3fa353278b23d528fcde36c505803e3a841374f81895ba2158f66", "registry_files": 15, "localized_values": 5583, "registry_ar_values": 5580, "registry_qtz_values": 5580, "registry_ar.xcd_sha256": "fa27557616ef88fe3638ffa9e8f13e1c4ada4e311adbdf0b8f7083163d914b65", "registry_qtz.xcd_sha256": "ef17ddd46fdca6daf5a7f168816f9cc795a54905509d9bee7352684a1fe07b6a", "matched_length_all": true, "sample_share_letters_arabic": 0.9767, "seconds": 6.5}
+[    10.9s] w0 ready a11y=True
+[    11.4s] w1 ready a11y=True
+[    11.9s] w2 ready a11y=True
+[    12.4s] w3 ready a11y=True
+[    12.9s] w4 ready a11y=True
+[    13.4s] w5 ready a11y=True
+[    13.9s] w6 ready a11y=True
+[    14.4s] w7 ready a11y=True
+[    14.9s] w8 ready a11y=True
+[    15.4s] w9 ready a11y=True
+[    15.9s] w10 ready a11y=True
+[    16.4s] w11 ready a11y=True
+[    16.9s] w12 ready a11y=True
+[    26.2s] w0 12382c62 S   1.5s stable=True title=ok
+[    26.6s] w1 12382c62 E   1.5s stable=True title=ok
+[    27.2s] w2 12382c62 E2  1.5s stable=True title=ok
+[    28.1s] w12 12382c62 PD  1.3s stable=True title=ok
+[    28.2s] w4 12382c62 ER  1.5s stable=True title=ok
+[    29.8s] w7 12382c62 Q   1.6s stable=True title=ok
+[    30.2s] w8 12382c62 PL  1.6s stable=True title=ok
+[    30.3s] w3 12382c62 A   3.8s stable=True title=ok
+[    30.5s] w9 12382c62 ER2 1.3s stable=True title=ok
+[    31.2s] w5 12382c62 AR  3.8s stable=True title=ok
+[    31.3s] w10 12382c62 PCL 1.5s stable=True title=ok
+[    31.7s] w11 12382c62 PCR 1.5s stable=True title=ok
+[    32.1s] w6 12382c62 AD  4.1s stable=True title=ok
+[    32.1s] done: 13 renders

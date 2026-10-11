@@ -1,0 +1,21 @@
+{
+ "schema": "s2v3-goldsave-v1",
+ "jobs": 185,
+ "cells": [
+  "S",
+  "E",
+  "A",
+  "ER",
+  "AR",
+  "PL"
+ ],
+ "renders": 1110,
+ "score_jobs": 1110,
+ "wall_seconds": 558.0,
+ "job": "1139",
+ "code_sha256": {
+  "goldsave.py": "ed4f7f8f4a496bcabdc182c77918d7decce74a84d72f23cf72a7ff4668b5b2dc",
+  "capture.py": "6781c860f0ef0e8ff5a21e7f045f36ea47da19f575519be217bca52ca2614f7c",
+  "catalog.py": "9b95de047690570766e458fccce16ba90a8d0123b13cf3dc99d1f9e37fce57bf"
+ }
+}

@@ -1,0 +1,50 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "S2 v3 repair run after wave 1 (D74), single owner (Claude agent), 2026-10-11 UTC; not an independent review",
+ "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
+ "protocol": "ARS claim_verification_protocol: claim registry, source tracing, cross-referencing; pilot claims tied to job records",
+ "evidence": "Claims C01-C39 as in wave 1 (two upgraded from abstract to full-text reads this run: C11 RotDroid 2608.25425 and C19 2609.33012); C40-C52 are this run's pilot claims, each tied to a Slurm job's receipt and record (1116-1142) or to the orx node's receipt.",
+ "claims": {
+  "full_text": [
+   "C01",
+   "C02",
+   "C04",
+   "C05",
+   "C06",
+   "C07",
+   "C08",
+   "C09",
+   "C10",
+   "C11",
+   "C14",
+   "C18",
+   "C19"
+  ],
+  "abstract_or_metadata": [
+   "C12",
+   "C15",
+   "C16",
+   "C17",
+   "C20",
+   "C21"
+  ],
+  "pilot_r1": [
+   "C40",
+   "C41",
+   "C42",
+   "C43",
+   "C44",
+   "C45",
+   "C46",
+   "C47",
+   "C48",
+   "C49",
+   "C50",
+   "C51",
+   "C52"
+  ]
+ },
+ "remediation": "Read ITDroid in full if a delta row comes to rest on it."
+}

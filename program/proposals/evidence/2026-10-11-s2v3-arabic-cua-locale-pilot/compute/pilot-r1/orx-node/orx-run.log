@@ -1,0 +1,41 @@
+Using CPython 3.13.14
+Creating virtual environment at: .venv
+Installed 50 packages in 663ms
+ORX_NODE {"args": ["--captures", "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/s2v3-r1/full", "--manifest", "program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pilot-r1/capture-1131/manifest.json", "--capture-record", "program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pilot-r1/capture-1131/capture-record.json", "--pool", "program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pool/pool-v3.json", "--gold-verdicts", "program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pilot-r1/goldscore-1141/verdicts.jsonl", "--records-out", "data/results/orx/s2v3-phase0-oracle-records.json", "--workers", "16"], "direction": "s2-arabic-cua-locale-v3.1-phase0", "doctor": "scripts/run_s2v3_phase0_doctor.py", "kind": "cpu-doctor"}
+ORX_ARGV /Users/kevinliu/.local/share/openresearch/local-runs/9e78b49f-5af0-4e3f-b13f-bce4bf3d9979/repo/.venv/bin/python /Users/kevinliu/.local/share/openresearch/local-runs/9e78b49f-5af0-4e3f-b13f-bce4bf3d9979/repo/scripts/run_s2v3_phase0_doctor.py --captures /private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/s2v3-r1/full --manifest program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pilot-r1/capture-1131/manifest.json --capture-record program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pilot-r1/capture-1131/capture-record.json --pool program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pool/pool-v3.json --gold-verdicts program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pilot-r1/goldscore-1141/verdicts.jsonl --records-out data/results/orx/s2v3-phase0-oracle-records.json --workers 16 --output /Users/kevinliu/.local/share/openresearch/local-runs/9e78b49f-5af0-4e3f-b13f-bce4bf3d9979/repo/data/results/orx/s2-arabic-cua-locale-v3.1-phase0-orx-local.json
+[   68.2s] manifest checked
+[  379.8s] calibration done; 106 tasks
+[  852.9s] 10 tasks
+[ 1055.4s] 20 tasks
+[ 1123.6s] 30 tasks
+[ 1318.8s] 40 tasks
+[ 1437.5s] 50 tasks
+[ 1571.2s] 60 tasks
+[ 1664.9s] 70 tasks
+[ 1718.5s] 80 tasks
+[ 1820.4s] 90 tasks
+[ 1881.8s] 100 tasks
+{
+ "status": "PHASE0_K0_FAIL",
+ "k0": "FAIL",
+ "admitted": 53,
+ "admitted_checker_invariance": 105,
+ "cases": {
+  "c01_manifest": "PASS",
+  "c02_gate_semantics": "PASS",
+  "c03_calibration": "PASS",
+  "c04_positive_controls": "FAIL",
+  "c05_o6_invisibility": "PASS",
+  "c06_o1_text_structure": "PASS",
+  "c07_o4_order": "PASS",
+  "c08_p7_one_layout_treatment": "PASS",
+  "c09_aa_determinism": "PASS",
+  "c10_k0_admission": "FAIL",
+  "c11_coupled_string_plant": "PASS",
+  "c12_catalogs": "PASS",
+  "c13_checker_invariance_admission": "PASS"
+ }
+}
+ORX_RECEIPT_SUMMARY {"cases": {"passed": 11, "total": 13}, "doctor": "s2v3-phase0-render-oracle", "elapsed_seconds": 1896.9, "evidence_grade": "CPU_LANE_CONTAINER_CAPTURE: the certified VM's LibreOffice 7.3.7.2 userland in a container (Xvfb, openbox) with generated pseudo-Arabic and tagged catalogs; not the derived image, not the VM lane, not the shipped Arabic catalogs. K1 (the D53 delta certification) is not decided here.", "status": "PHASE0_K0_FAIL"}
+ORX_RECEIPT_PATH /Users/kevinliu/.local/share/openresearch/local-runs/9e78b49f-5af0-4e3f-b13f-bce4bf3d9979/repo/data/results/orx/s2-arabic-cua-locale-v3.1-phase0-orx-local.json
+ORX_RESULT kind=cpu-doctor direction=s2-arabic-cua-locale-v3.1-phase0 exit=0

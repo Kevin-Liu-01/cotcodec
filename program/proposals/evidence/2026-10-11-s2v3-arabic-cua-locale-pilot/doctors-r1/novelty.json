@@ -1,0 +1,11 @@
+{
+ "doctor": "Novelty",
+ "status": "PASS",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "S2 v3 repair run after wave 1 (D74), single owner (Claude agent), 2026-10-11 UTC; not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "protocol": "K-Dense literature-review (PRISMA counts); the orx rule (six or more discover queries; full reads of closest priors)",
+ "evidence": "Wave 1: frontier NO_DIRECT_PRIOR_FOUND, kill-shot STILL_OPEN, blind discrimination PASS against macOSWorld (proposal judged the stronger contribution, same_mechanism false); the novelty refuter's 'already published' prong failed and its recombination prong held (a judgement on the bar). This run: code search (GitHub) and Chinese-language queries added, nothing on topic; the novelty claim is restated as a measurement on a narrower object than macOSWorld's open split, with the placebo comparison as part of the design.",
+ "caveat": "The delta is a measurement, not a method; this run's blind critic and novelty refuter re-judge it.",
+ "remediation": "none before the triad"
+}

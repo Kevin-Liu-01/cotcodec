@@ -1,0 +1,27 @@
+# Committed node contract read by scripts/orx_run.py — the single fixed run
+# command of the OpenResearch experiment tree. Vary THIS FILE on a node's
+# branch; never the run command. Two kinds are admissible:
+#   kind: cpu-doctor     -> doctor: scripts/run_<name>_doctor.py, optional args (no --output)
+#   kind: slurm-manifest -> manifest: experiments/<...>.yaml submitted only via
+#                           scripts/submit_docker_research_job.py (dry-run, test-only, submit)
+# S2 v3.1 Phase 0 (D74 repair): the render oracle over the CPU-lane capture of Slurm 1131. The
+# captures (screenshots, accessibility dumps, saved documents) stay out of the repository; the
+# doctor reads them from the scratchpad copy and checks every file against the committed manifest.
+kind: cpu-doctor
+direction: s2-arabic-cua-locale-v3.1-phase0
+doctor: scripts/run_s2v3_phase0_doctor.py
+args:
+  - --captures
+  - /private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/s2v3-r1/full
+  - --manifest
+  - program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pilot-r1/capture-1131/manifest.json
+  - --capture-record
+  - program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pilot-r1/capture-1131/capture-record.json
+  - --pool
+  - program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pool/pool-v3.json
+  - --gold-verdicts
+  - program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pilot-r1/goldscore-1141/verdicts.jsonl
+  - --records-out
+  - data/results/orx/s2v3-phase0-oracle-records.json
+  - --workers
+  - "16"

@@ -1,0 +1,212 @@
+{
+ "run": "S2 v3 repair after wave 1 (D74)",
+ "counted_queries": 9,
+ "records": [
+  {
+   "id": "R1-q01",
+   "utc": "2026-10-11T10:32:24Z",
+   "tool": "orx discover",
+   "mode": "keyword",
+   "query": "阿拉伯语 界面 从右到左 镜像 GUI 智能体",
+   "extra": null,
+   "counted": true,
+   "raw_sha256": "b13e3dd8235f4eefb077e7565d6618870866a4e3e64a898b08de993cee68065c",
+   "returned_ids": [
+    "2609.03796",
+    "2608.27169",
+    "2608.enterprise-ai-decision-support-systems",
+    "2605.10730",
+    "2607.13533",
+    "2511.22699",
+    "2606.04701",
+    "2608.12781",
+    "2606.27382",
+    "2511.03585"
+   ]
+  },
+  {
+   "id": "R1-q02",
+   "utc": "2026-10-11T10:32:25Z",
+   "tool": "orx discover",
+   "mode": "keyword",
+   "query": "多语言 图形界面 智能体 本地化 鲁棒性 基准",
+   "extra": null,
+   "counted": true,
+   "raw_sha256": "0db1255e1b84552f528d8e8c847d114179de345e782513376f269f80d015ac87",
+   "returned_ids": [
+    "2608.enterprise-ai-decision-support-systems",
+    "2608.ai-enterprise-lightweight-transformation",
+    "2608.cross-border-ecommerce-systems-globalization",
+    "2608.enterprise-information-systems-lifecycle-management",
+    "2609.27618",
+    "2608.data-analysis-enterprise-financial-management",
+    "2608.kali-linux-wireless-network-penetration",
+    "2607.13533",
+    "2607.04543",
+    "2606.27382"
+   ]
+  },
+  {
+   "id": "R1-q03",
+   "utc": "2026-10-11T10:32:25Z",
+   "tool": "orx discover",
+   "mode": "embedding",
+   "query": "pseudo-localization of a desktop office application to measure a screenshot computer-use agent's sensitivity to interface language and right-to-left mirroring, with a direction-free toolbar rearrangement as a placebo",
+   "extra": null,
+   "counted": true,
+   "raw_sha256": "bf3a7f25f8b733fd04aab7cf793b00731f1bdc1ae4424d586e1ec53346eefd0b",
+   "returned_ids": [
+    "2609.17885",
+    "2609.19125",
+    "2609.07748",
+    "2609.00524",
+    "2608.29921",
+    "2607.02975",
+    "2601.17753",
+    "2506.04135",
+    "2511.01336",
+    "2401.17706"
+   ]
+  },
+  {
+   "id": "R1-q04",
+   "utc": "2026-10-11T10:32:25Z",
+   "tool": "orx discover",
+   "mode": "keyword",
+   "query": "placebo layout perturbation GUI agent robustness",
+   "extra": null,
+   "counted": true,
+   "raw_sha256": "f81f96e9f010af0375f91f9dc2007633f5a6eaef8a4faf4fd275726884384c93",
+   "returned_ids": [
+    "2608.09654",
+    "2609.00048",
+    "2610.05861",
+    "2610.01215",
+    "2607.28227",
+    "2609.32679",
+    "2608.09278",
+    "2609.09377",
+    "2609.12394",
+    "2609.36923"
+   ]
+  },
+  {
+   "id": "R1-q05",
+   "utc": "2026-10-11T10:32:39Z",
+   "tool": "orx discover",
+   "mode": "keyword",
+   "query": "right-to-left interface GUI agent benchmark",
+   "extra": "--published-after 2026-09-01",
+   "counted": true,
+   "raw_sha256": "0db78337d36a1f394c35743c053350dcfeb831dd337ac1d9e757328175f2b537",
+   "returned_ids": [
+    "2610.01215",
+    "2609.32679",
+    "2609.03438",
+    "2609.32385",
+    "2609.38008",
+    "2609.27307",
+    "2609.34139",
+    "2610.04116",
+    "2609.25769",
+    "2610.05861"
+   ]
+  },
+  {
+   "id": "R1-q06",
+   "utc": "2026-10-11T10:32:26Z",
+   "tool": "orx discover",
+   "mode": "openalex",
+   "query": "pseudolocalization right-to-left mirroring automated evaluation agent",
+   "extra": null,
+   "counted": true,
+   "raw_sha256": "ff0f49b7d756f637b9cac9e21e893a8e4d0c1b828ff88305f518ad3c687c1566",
+   "returned_ids": [
+    "10.52088/ijesty.v6i2.1836",
+    "W7126356254"
+   ]
+  },
+  {
+   "id": "R1-g01",
+   "utc": "2026-10-11T10:32:52Z",
+   "tool": "gh search repos",
+   "mode": null,
+   "query": "arabic GUI agent benchmark",
+   "extra": null,
+   "counted": true,
+   "raw_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+   "returned_ids": []
+  },
+  {
+   "id": "R1-g02",
+   "utc": "2026-10-11T10:32:57Z",
+   "tool": "gh search repos",
+   "mode": null,
+   "query": "right-to-left OSWorld",
+   "extra": null,
+   "counted": true,
+   "raw_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+   "returned_ids": []
+  },
+  {
+   "id": "R1-g03",
+   "utc": "2026-10-11T10:33:01Z",
+   "tool": "gh search code",
+   "mode": null,
+   "query": "UIMirroring",
+   "extra": null,
+   "counted": true,
+   "raw_sha256": "4a9f1b8b9b009863acaa03e56c42e388fba32a937163e9a3f761fe4895113669",
+   "returned_ids": [
+    "LibreOffice/core:vcl/source/app/settings.cxx",
+    "apache/openoffice:main/vcl/source/app/settings.cxx",
+    "godotengine/godot-demo-projects:gui/ui_mirroring/ui_mirroring.tscn",
+    "OpenXRay/xray-16:src/xrUICore/Static/UIStaticItem.h",
+    "OpenXRay/xray-16:src/xrUICore/Static/UIStaticItem.cpp",
+    "LibreOffice/core:officecfg/registry/schema/org/openoffice/Office/Common.xcs",
+    "cirosantilli/expired-domain-names-by-day-2022:03/04/83",
+    "cirosantilli/expired-domain-names-by-day-2022:03/04/33",
+    "OpenXRay/xray-16:src/xrUICore/XML/UIXmlInitBase.cpp",
+    "apache/openoffice:main/officecfg/registry/schema/org/openoffice/Office/Common.xcs",
+    "alibaba/alios-libreoffice:vcl/source/app/settings.cxx",
+    "OSSII/OxOffice:vcl/source/app/settings.cxx",
+    "AuriRex/GTFO_TheArchive:TheArchive.Essentials/Features/Accessibility/DisableUIMirroring.cs",
+    "Kevin-Liu-01/cotcodec:program/log.md",
+    "macro-inc/libreofficekit:libreoffice-core/vcl/source/app/settings.cxx",
+    "DanceManiac/Advanced-X-Ray-Public:SourcesAXR/xrGame/UIStaticItem.h",
+    "DanceManiac/Advanced-X-Ray-Public:SourcesAXR/xrGameCS/UICustomItem.h",
+    "Kevin-Liu-01/cotcodec:program/preregistrations/s2-arabic-cua-locale-v3.md",
+    "LogiC-LC/thearchive-old-lang:Accessibility/DisableUIMirroring.cs",
+    "bmbodj/ECSE437-Project:main/vcl/source/app/settings.cxx"
+   ]
+  },
+  {
+   "id": "R1-q05-malformed",
+   "utc": "2026-10-11T10:32:39Z",
+   "tool": "orx discover",
+   "mode": "keyword",
+   "query": "right-to-left interface GUI agent benchmark",
+   "extra": "--published-after passed as one argument",
+   "counted": false,
+   "note": "argument parse error before any backend call; rerun as R1-q05"
+  },
+  {
+   "id": "R1-read-2609.33012",
+   "utc": "2026-10-11T10:33:23Z",
+   "tool": "orx paper --full",
+   "query": "2609.33012",
+   "counted": false,
+   "raw_sha256": "218a46afa6737717c2f2eed40a05ed4583609d8fe7032388c885906fe33ff628",
+   "bytes": 44333
+  },
+  {
+   "id": "R1-read-2608.25425",
+   "utc": "2026-10-11T10:33:24Z",
+   "tool": "orx paper --full",
+   "query": "2608.25425",
+   "counted": false,
+   "raw_sha256": "c7aa40ff5ea997bbc9b7041dce8ddca43fca16837db2a0d35a505a7f33789302",
+   "bytes": 63119
+  }
+ ]
+}
