@@ -1,0 +1,142 @@
+{
+ "schema": "r01-caps-v1",
+ "cap_rule": {
+  "lead_min": 3.0,
+  "engine_start_min": 2.0,
+  "dr4_factor": 1.2,
+  "requeue_factor": 1.05,
+  "work_priced_at": "high per-request price"
+ },
+ "price": {
+  "inputs": {
+   "corpus_mean_prompt_tokens": 11875,
+   "corpus_mean_completion_tokens": 376,
+   "corpus_mean_s1a_latency_s": 2.621,
+   "step1_median_ttft_s": 0.1653,
+   "prefill_rate_central_tok_s": 14519,
+   "prefill_rate_high_tok_s": 7260,
+   "tpot_central_s": 0.0046,
+   "tpot_high_s": 0.0055,
+   "episodes_with_8_or_more_steps": 369
+  },
+  "per_request_s": {
+   "batch1_nocache": [
+    2.546,
+    3.703
+   ],
+   "batch1_cache_hit": [
+    1.779,
+    2.167
+   ],
+   "loaded_cache_latency": [
+    2.621,
+    3.276
+   ],
+   "loaded_nocache_latency": [
+    3.439,
+    4.912
+   ]
+  }
+ },
+ "jobs": [
+  {
+   "job": "P0 probe and bitwise self-test",
+   "arms": "40 requests x 3 passes, deterministic reference",
+   "work_min_central": 5.1,
+   "work_min_high": 7.4,
+   "cap_min": 15,
+   "cap_gpu_h": 0.25,
+   "physical_gpu_h_central": 0.118,
+   "physical_gpu_h_high": 0.157,
+   "conditional": false,
+   "arithmetic": "ceil(3.0 + 2.0 + 7.4 x 1.2 x 1.05) = 15"
+  },
+  {
+   "job": "P0' probe rerun with VLLM_BATCH_INVARIANT=1 (if P0 shows any difference)",
+   "arms": "40 requests x 3 passes",
+   "work_min_central": 5.1,
+   "work_min_high": 7.4,
+   "cap_min": 15,
+   "cap_gpu_h": 0.25,
+   "physical_gpu_h_central": 0.118,
+   "physical_gpu_h_high": 0.157,
+   "conditional": true,
+   "arithmetic": "ceil(3.0 + 2.0 + 7.4 x 1.2 x 1.05) = 15"
+  },
+  {
+   "job": "J1 deterministic session",
+   "arms": "B0 (2 passes), B2 clock swap, B4 mask: 4 x 320 requests interleaved",
+   "work_min_central": 54.3,
+   "work_min_high": 79.0,
+   "cap_min": 105,
+   "cap_gpu_h": 1.75,
+   "physical_gpu_h_central": 0.939,
+   "physical_gpu_h_high": 1.35,
+   "conditional": false,
+   "arithmetic": "ceil(3.0 + 2.0 + 79.0 x 1.2 x 1.05) = 105"
+  },
+  {
+   "job": "J1o other-region swap (in J1's session when A1 reads MULTI_REGION)",
+   "arms": "B2o: 320 requests",
+   "work_min_central": 13.6,
+   "work_min_high": 19.7,
+   "cap_min": 30,
+   "cap_gpu_h": 0.5,
+   "physical_gpu_h_central": 0.26,
+   "physical_gpu_h_high": 0.362,
+   "conditional": true,
+   "arithmetic": "ceil(3.0 + 2.0 + 19.7 x 1.2 x 1.05) = 30"
+  },
+  {
+   "job": "J2 batch-1 prefix cache on",
+   "arms": "B5: 320 cold + 320 warm",
+   "work_min_central": 23.1,
+   "work_min_high": 31.3,
+   "cap_min": 45,
+   "cap_gpu_h": 0.75,
+   "physical_gpu_h_central": 0.418,
+   "physical_gpu_h_high": 0.555,
+   "conditional": false,
+   "arithmetic": "ceil(3.0 + 2.0 + 31.3 x 1.2 x 1.05) = 45"
+  },
+  {
+   "job": "J3 S1a configuration",
+   "arms": "B1 (3 passes) and B3 clock swap (1 pass), 20 streams, cache reset per pass",
+   "work_min_central": 15.5,
+   "work_min_high": 16.2,
+   "cap_min": 26,
+   "cap_gpu_h": 0.433,
+   "physical_gpu_h_central": 0.291,
+   "physical_gpu_h_high": 0.303,
+   "conditional": false,
+   "arithmetic": "ceil(3.0 + 2.0 + 16.2 x 1.2 x 1.05) = 26"
+  },
+  {
+   "job": "J4 batched, prefix cache off",
+   "arms": "B6 (2 passes), 20 streams",
+   "work_min_central": 8.2,
+   "work_min_high": 9.0,
+   "cap_min": 17,
+   "cap_gpu_h": 0.283,
+   "physical_gpu_h_central": 0.17,
+   "physical_gpu_h_high": 0.183,
+   "conditional": false,
+   "arithmetic": "ceil(3.0 + 2.0 + 9.0 x 1.2 x 1.05) = 17"
+  }
+ ],
+ "total_cap_min": 253,
+ "total_cap_gpu_h": 4.217,
+ "total_cap_min_without_conditional": 208,
+ "total_cap_gpu_h_without_conditional": 3.467,
+ "physical_gpu_h_central": 2.314,
+ "physical_gpu_h_high": 3.067,
+ "d22_line_gpu_h": 8.0,
+ "cpu_lane": {
+  "slot_occupancy_mean_s": 172.6,
+  "stage_A1_vm_h": 13.8,
+  "stage_C_vm_h": 43.4,
+  "stage_C_blink_conditional_vm_h": 10.8,
+  "wall_h_at_V20": 3.4,
+  "gpu_h": 0.0
+ }
+}

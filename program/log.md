@@ -4521,3 +4521,95 @@ they say so.)
   - The cap rule and Phase 1 admission (Kevin's).
   - R04: D73's dossier folds it into S2 v3's Phase 0, while D73 (iii) drafts
     it separately. Neither the triad nor the reviewers saw D73.
+## 2026-10-11 — R01 gauntlet wave 1 (D73 i): score 58, honest exit on the query budget with the triad stop (branch `gauntlet/r01-noise-sources`, not merged)
+
+- Wave 1 ran in workflow `wf_4e942e9b-9fc` with declared cumulative budgets:
+  queries 150 (at least 30 reserved for the triad), wall_minutes 600, tokens
+  8,000,000, dollars 150, waves 3, gpu_hours 0.3. Four discovery cells fed
+  one synthesis owner. The owner wrote proposal `0eae5ee4...`, DRAFT
+  registration `r01-rerun-noise-sources-v1` (`6bc3adf0...`; not frozen, not
+  admitted) and the evidence bundle (`e7c1a714...`, evidence root
+  `a09c5a34...`) at `2bbc08d` and `a9c30dd`. Scope: R01's first step only.
+  Stage A0 (a records-only census of S1a) ran as an executable CPU pilot.
+  Stage A1, Stage B (a request-level factorial of observation perturbation
+  by serving configuration) and Stage C (open-loop replay) are designed.
+  Registered caps are 4.22 cap-GPU-h. The audit row starts the new file
+  `program/gauntlet/2026-10-11-r01-rerun-noise-sources.jsonl`, row hash
+  `22639b7682469a9241dbfd6542104bfda6b38ec5edcfd349e94b66540f0204fc`.
+- Pilot: A0 is orx cpu-doctor node `ff110047`, run `83ee815a`
+  (`ORX_RESULT exit=0`, 8 of 8 cases). The recorder re-ran it: the census is
+  byte-identical (`5568bc7f...`) and its test passes. Its main numbers: 27
+  natural identical-request replays, with reply text differing in 16 and the
+  IR in 2; 0 of 227 identical-IR pairs verdict-discordant.
+- Reviews: 58 (claude-opus-5-5) and 62 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1143). Each total equals the sum of its ten scores, and no cap binds. Both
+  applied 74 and 89. Reviewer 2 also applied 79, but reviewer 1 did not,
+  because A0 is a recorded orx run. Score 58, best 58. Neither review is
+  signed (D24).
+- Blind discrimination: PASS by the rule's letter, and thin. The critic
+  judged the proposal (A) and cELldjX2oq the same mechanism at the core, with
+  the proposal stronger by an incremental step in measurement design. The
+  packets match the bundle files, and the prompt names nothing. The critic
+  saw only cELldjX2oq's abstract-based paragraph.
+- Refute-first triad: 3 of 3 refuted (27 counted queries, all by the novelty
+  refuter).
+  - Novelty: no direct prior, but the claimed delta (per-source sufficiency
+    under redundancy) is published for training nondeterminism and uncited:
+    Summers and Dinneen 2021, Nagarajan et al. 2018, Zhuang et al. 2021. The
+    residual is a setting delta plus the clock hazard as a number.
+  - Identification: see the largest defect. Also, the clock box is fitted
+    on minute changes but used on hour-apart comparisons; h_cs shares a
+    schedule that h_s does not; the encoder cache is never reset; and
+    prefix caching flips the Mamba cache mode.
+  - Feasibility: J3 is priced at one stream's mean pass. The recorder's
+    recompute puts the chance of overrunning its 26-minute cap at 0.52-0.96.
+    The P0 timing gate as written blocks J3 and J4. P0 needs Stage C frames
+    and four unbuilt tools.
+- Largest defect (reviewer 1, authoritative; reviewer 2 names the same
+  estimand defect beside the feasibility defects): Stage B's primary h_s,
+  h_c and h_cs pool steps 1-8 equally. But S1a's records put the first
+  reply-text divergence at step 1 in 205 of 226 4B within-session pairs
+  (recomputed by the recorder).
+  - The text-level readings are settled in advance by A0.
+  - The step-kick model compounds h_c(IR) per step, contrary to M.
+  - The 2 of 19 against 90 of 885 redundancy evidence is task composition.
+  So the GPU stage could not deliver the D_w attribution that is R01's
+  payoff.
+- Exit. The triad stop applies (0 of 3 failed to refute). Under the program
+  convention (S2 run 2 and S2 v3: orx discover, OpenReview API searches and
+  the arXiv title search), queries are 142 of 150. The 8 left cannot fund a
+  compliant wave-2 triad (at least 18). That is the declared-budget exit, as
+  for E4, C3, E3 and E5.
+  - Under the bundle's own orx-only rule (125 used, 25 left), no exit would
+    apply. The synthesis left this for the recorder, and the recorder
+    applied the program convention.
+  - termination_reason is `honest_exit_query_budget_and_triad_stop`.
+  - Other usage: 4,056,469 of 8M tokens; $71.85 of $150 (list-price
+    equivalent); 186.7 of 600 minutes; GPU 0.0581 of 0.3.
+- Doctor checks: the re-run at record time is byte-identical to the bundle
+  copy (FAIL, as expected; gpu_hours 0.3 is parsed as 0). On a scratch copy
+  the audit validator finds the chain intact. With gpu_hours parsed as 0 it
+  flags 'invalid cumulative gpu_hours' and the missing success state; with
+  0.3, only the success state. Process note: the recorder ran
+  `compute/build_bundle.py` by mistake. It rewrote `bundle.json`
+  byte-identically, so git stayed clean.
+- GPU: reviewer 2's job 1143 used 0.0581 GPU-h (scontrol RunTime 00:03:29 on
+  1 H100, COMPLETED 0:0, 11:29:02-11:32:31 UTC). It was submitted on an
+  empty queue after the operator waited 10:07-11:29 UTC through other
+  workflows' CPU-only jobs. The recorder's read-only check at 11:46:00 UTC
+  found all GPUs at 0 MiB, no compute apps and no leftover container; one
+  other workflow's CPU job (R04) was running. The job is added to the ledger
+  as "R01 gauntlet wave 1 ... open-weight review (D24)". The program total
+  on this branch is 10.4238; main is at 10.4210 after S2 v3, so 10.4791
+  after a merge.
+- Waiting on the orchestrator or Kevin:
+  - Whether R01 gets a fresh repair run with new budgets (the D60 and D68
+    pattern). Without Kevin, a CPU-only repair could: rewrite the
+    step-kick model as a two-stage process validated on S1a's records; make
+    the step-1 hazards primary; build the step-1 corpus from A1 captures so
+    that P0 no longer waits on Stage C; fix the clock box, placebo,
+    replicate and cache resets; price loaded passes at the maximum over 20
+    streams; and read the three adjacent-field papers in full.
+  - The realized-cost cap rule, blink-off outside D53's scope, and P0 and
+    Stage B admission (Kevin's, D24 and D70).
+  - Merging this branch with main (state.json and log.md).

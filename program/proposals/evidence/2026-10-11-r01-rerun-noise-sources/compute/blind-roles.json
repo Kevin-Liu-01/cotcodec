@@ -1,0 +1,9 @@
+{
+ "proposal": "paragraph-981a94ca.txt",
+ "closest_prior": "paragraph-30141ede.txt",
+ "closest_prior_id": "cELldjX2oq",
+ "closest_prior_title": "The Evaluator Also Varies: Localizing Nondeterminism in Interactive Agent Benchmarks (ICLR 2027 submission)",
+ "closest_prior_source": "OpenReview api2 abstract as reported by the frontier cell and verification.json c080 (full text UNVERIFIABLE_ACCESS)",
+ "domain_closest_prior": "2604.17849 (On the Reliability of Computer Use Agents), not used for blind discrimination: its mechanism (deterministic decoding and perturbation bundles, no source attribution) is further from R01's than cELldjX2oq's",
+ "note": "Recorder only. Never give this file to the critic; give the two paragraph files in randomized order."
+}

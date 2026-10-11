@@ -1,0 +1,11 @@
+{
+ "name": "Safety",
+ "status": "PASS",
+ "evidence": [
+  "no training, no downloads, no outward action; offline VMs on the certified lane",
+  "licences: OSWorld Apache-2.0, Qwen3.5-4B Apache-2.0, vLLM Apache-2.0",
+  "screenshots and request bodies stay on the host; repository receives hashes and counts only",
+  "host rule: read-only squeue before submissions; no overlap with other workflows' jobs"
+ ],
+ "remediation": "none"
+}

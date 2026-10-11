@@ -1,0 +1,17 @@
+{
+ "name": "Compute",
+ "status": "FAIL",
+ "evidence": [
+  "executable CPU pilot: Stage A0 as orx cpu-doctor run 83ee815a-426a-4b94-a93f-cc1277972d76 (exit 0), receipt byte-identical to the committed census",
+  "registered caps 4.22 cap-GPU-h with conditional jobs (compute/caps-r01.json)"
+ ],
+ "missing": [
+  "capture and open-loop replay driver modes",
+  "request rebuilder",
+  "Stage B manifests",
+  "container smoke",
+  "Slurm dry run and test-only",
+  "the deterministic doctor's real-model-loop and benchmark-adapter attestations"
+ ],
+ "remediation": "Build the A1 capture and C replay modes and the rebuilder with tests; render manifests; dry run and test-only before a freeze"
+}

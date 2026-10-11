@@ -1,0 +1,747 @@
+{
+ "schema": "r01-power-v1",
+ "seeds": [
+  42,
+  43,
+  44
+ ],
+ "inputs": {
+  "a1_jsonl_sha256": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+  "census_sha256": "5568bc7f9d7c87f64a6f5a91bc845dd514e6b78f17a5d55cf231f099e269e4b7",
+  "s1a_4b_osw_counts_hist": {
+   "0": 67,
+   "1": 10,
+   "2": 7,
+   "3": 7,
+   "4": 22
+  }
+ },
+ "B_det": {
+  "n_pairs": 320,
+  "rule": {
+   "DET_OK": "0 of n replica pairs differ in reply text (exact one-sided 95% upper bound 0.0093)",
+   "DET_UNATTAINABLE": "one-sided 95% Clopper-Pearson lower bound above 1%, i.e. k >= 7",
+   "DET_NEAR": "1 <= k <= 6"
+  },
+  "k_star": 7,
+  "exact_binomial": [
+   {
+    "p": 0.0,
+    "P_DET_OK": 1.0,
+    "P_DET_UNATTAINABLE": 0.0,
+    "P_DET_NEAR": 0.0
+   },
+   {
+    "p": 0.001,
+    "P_DET_OK": 0.726,
+    "P_DET_UNATTAINABLE": 0.0,
+    "P_DET_NEAR": 0.274
+   },
+   {
+    "p": 0.0025,
+    "P_DET_OK": 0.4489,
+    "P_DET_UNATTAINABLE": 0.0,
+    "P_DET_NEAR": 0.5511
+   },
+   {
+    "p": 0.005,
+    "P_DET_OK": 0.2011,
+    "P_DET_UNATTAINABLE": 0.0013,
+    "P_DET_NEAR": 0.7976
+   },
+   {
+    "p": 0.01,
+    "P_DET_OK": 0.0401,
+    "P_DET_UNATTAINABLE": 0.0438,
+    "P_DET_NEAR": 0.9161
+   },
+   {
+    "p": 0.02,
+    "P_DET_OK": 0.0016,
+    "P_DET_UNATTAINABLE": 0.4583,
+    "P_DET_NEAR": 0.5401
+   },
+   {
+    "p": 0.03,
+    "P_DET_OK": 0.0001,
+    "P_DET_UNATTAINABLE": 0.8466,
+    "P_DET_NEAR": 0.1534
+   },
+   {
+    "p": 0.05,
+    "P_DET_OK": 0.0,
+    "P_DET_UNATTAINABLE": 0.9966,
+    "P_DET_NEAR": 0.0034
+   }
+  ],
+  "beta_binomial_by_episode": [
+   {
+    "p": 0.001,
+    "icc": 0.2,
+    "P_DET_OK": 0.8245,
+    "P_DET_UNATTAINABLE": 0.0013
+   },
+   {
+    "p": 0.0025,
+    "icc": 0.2,
+    "P_DET_OK": 0.6208,
+    "P_DET_UNATTAINABLE": 0.0075
+   },
+   {
+    "p": 0.005,
+    "icc": 0.2,
+    "P_DET_OK": 0.3866,
+    "P_DET_UNATTAINABLE": 0.0299
+   },
+   {
+    "p": 0.01,
+    "icc": 0.2,
+    "P_DET_OK": 0.1488,
+    "P_DET_UNATTAINABLE": 0.1221
+   },
+   {
+    "p": 0.02,
+    "icc": 0.2,
+    "P_DET_OK": 0.0217,
+    "P_DET_UNATTAINABLE": 0.4359
+   },
+   {
+    "p": 0.03,
+    "icc": 0.2,
+    "P_DET_OK": 0.0028,
+    "P_DET_UNATTAINABLE": 0.7195
+   },
+   {
+    "p": 0.05,
+    "icc": 0.2,
+    "P_DET_OK": 0.0001,
+    "P_DET_UNATTAINABLE": 0.9611
+   },
+   {
+    "p": 0.001,
+    "icc": 0.5,
+    "P_DET_OK": 0.8966,
+    "P_DET_UNATTAINABLE": 0.0113
+   },
+   {
+    "p": 0.0025,
+    "icc": 0.5,
+    "P_DET_OK": 0.7625,
+    "P_DET_UNATTAINABLE": 0.0338
+   },
+   {
+    "p": 0.005,
+    "icc": 0.5,
+    "P_DET_OK": 0.5793,
+    "P_DET_UNATTAINABLE": 0.0778
+   },
+   {
+    "p": 0.01,
+    "icc": 0.5,
+    "P_DET_OK": 0.3336,
+    "P_DET_UNATTAINABLE": 0.1853
+   },
+   {
+    "p": 0.02,
+    "icc": 0.5,
+    "P_DET_OK": 0.1112,
+    "P_DET_UNATTAINABLE": 0.4306
+   },
+   {
+    "p": 0.03,
+    "icc": 0.5,
+    "P_DET_OK": 0.0362,
+    "P_DET_UNATTAINABLE": 0.6412
+   },
+   {
+    "p": 0.05,
+    "icc": 0.5,
+    "P_DET_OK": 0.0039,
+    "P_DET_UNATTAINABLE": 0.8827
+   }
+  ]
+ },
+ "B_read": {
+  "design": "40 episodes x 8 requests (steps 1-8), episode-cluster percentile bootstrap",
+  "text_level": {
+   "SUFFICIENT": "lower bound of h - floor above 0.20",
+   "INERT": "upper bound below 0.05"
+  },
+  "ir_level": {
+   "SUFFICIENT": "lower bound above 0.02",
+   "INERT": "upper bound below 0.01"
+  },
+  "floor_assumed": 0.0,
+  "rows": [
+   {
+    "level": "text",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.0,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 1.0,
+    "P_PARTIAL": 0.0
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.01,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.995,
+    "P_PARTIAL": 0.005
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.03,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.489,
+    "P_PARTIAL": 0.511
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.05,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.048,
+    "P_PARTIAL": 0.952
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.1,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 1.0
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.2,
+    "P_SUFFICIENT": 0.02,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 0.98
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.3,
+    "P_SUFFICIENT": 0.942,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 0.058
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.4,
+    "P_SUFFICIENT": 1.0,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 0.0
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.6,
+    "P_SUFFICIENT": 1.0,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 0.0
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.0,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 1.0,
+    "P_PARTIAL": 0.0
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.01,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.99,
+    "P_PARTIAL": 0.01
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.03,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.438,
+    "P_PARTIAL": 0.562
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.05,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.061,
+    "P_PARTIAL": 0.939
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.1,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 1.0
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.2,
+    "P_SUFFICIENT": 0.015,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 0.985
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.3,
+    "P_SUFFICIENT": 0.823,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 0.177
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.4,
+    "P_SUFFICIENT": 1.0,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 0.0
+   },
+   {
+    "level": "text",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.6,
+    "P_SUFFICIENT": 1.0,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 0.0
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.0,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 1.0,
+    "P_PARTIAL": 0.0
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.002,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.834,
+    "P_PARTIAL": 0.166
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.005,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.49,
+    "P_PARTIAL": 0.51
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.01,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.171,
+    "P_PARTIAL": 0.829
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.02,
+    "P_SUFFICIENT": 0.01,
+    "P_INERT": 0.014,
+    "P_PARTIAL": 0.976
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.03,
+    "P_SUFFICIENT": 0.14,
+    "P_INERT": 0.001,
+    "P_PARTIAL": 0.859
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.05,
+    "P_SUFFICIENT": 0.753,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 0.247
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 0.5,
+    "true_h": 0.08,
+    "P_SUFFICIENT": 0.993,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 0.007
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.0,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 1.0,
+    "P_PARTIAL": 0.0
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.002,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.839,
+    "P_PARTIAL": 0.161
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.005,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.494,
+    "P_PARTIAL": 0.506
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.01,
+    "P_SUFFICIENT": 0.0,
+    "P_INERT": 0.171,
+    "P_PARTIAL": 0.829
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.02,
+    "P_SUFFICIENT": 0.007,
+    "P_INERT": 0.018,
+    "P_PARTIAL": 0.976
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.03,
+    "P_SUFFICIENT": 0.109,
+    "P_INERT": 0.003,
+    "P_PARTIAL": 0.888
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.05,
+    "P_SUFFICIENT": 0.668,
+    "P_INERT": 0.001,
+    "P_PARTIAL": 0.331
+   },
+   {
+    "level": "ir",
+    "episode_logit_sd": 1.0,
+    "true_h": 0.08,
+    "P_SUFFICIENT": 0.982,
+    "P_INERT": 0.0,
+    "P_PARTIAL": 0.018
+   }
+  ]
+ },
+ "A1_cen": {
+  "n_task_pairs": 113,
+  "statistic": "share of differing cross-boot step-1 pairs with any differing pixel outside the clock box",
+  "rule": {
+   "MULTI_REGION": "Wilson 95% lower bound above 0.20",
+   "CLOCK_ONLY": "Wilson 95% upper bound below 0.20"
+  },
+  "records_prior": "A0.7: 10 of 25 clearly same-minute within-session pairs differ (0.40, Wilson 0.23-0.59)",
+  "rows": [
+   {
+    "true_non_clock_share": 0.05,
+    "P_MULTI_REGION": 0.0,
+    "P_CLOCK_ONLY": 0.9995,
+    "P_UNRESOLVED": 0.0005
+   },
+   {
+    "true_non_clock_share": 0.1,
+    "P_MULTI_REGION": 0.0,
+    "P_CLOCK_ONLY": 0.8427,
+    "P_UNRESOLVED": 0.1573
+   },
+   {
+    "true_non_clock_share": 0.15,
+    "P_MULTI_REGION": 0.0005,
+    "P_CLOCK_ONLY": 0.2653,
+    "P_UNRESOLVED": 0.7342
+   },
+   {
+    "true_non_clock_share": 0.2,
+    "P_MULTI_REGION": 0.0352,
+    "P_CLOCK_ONLY": 0.0237,
+    "P_UNRESOLVED": 0.9411
+   },
+   {
+    "true_non_clock_share": 0.25,
+    "P_MULTI_REGION": 0.3077,
+    "P_CLOCK_ONLY": 0.0007,
+    "P_UNRESOLVED": 0.6916
+   },
+   {
+    "true_non_clock_share": 0.3,
+    "P_MULTI_REGION": 0.7551,
+    "P_CLOCK_ONLY": 0.0,
+    "P_UNRESOLVED": 0.2449
+   },
+   {
+    "true_non_clock_share": 0.4,
+    "P_MULTI_REGION": 0.9981,
+    "P_CLOCK_ONLY": 0.0,
+    "P_UNRESOLVED": 0.0019
+   },
+   {
+    "true_non_clock_share": 0.5,
+    "P_MULTI_REGION": 1.0,
+    "P_CLOCK_ONLY": 0.0,
+    "P_UNRESOLVED": 0.0
+   }
+  ]
+ },
+ "C_env": {
+  "design": "113 tasks x 4 recorded episodes, replay r1 against replay r2 (binarized verdict)",
+  "rule": {
+   "zero_events": "ENV_BOUNDED (exact one-sided task-level 95% upper bound 0.0262 < 0.03)",
+   "ENV_MATERIAL": "task-cluster bootstrap 95% lower bound above 0.02",
+   "ENV_BOUNDED": "upper bound below 0.03",
+   "ENV_UNRESOLVED": "otherwise"
+  },
+  "rows": [
+   {
+    "pattern": "homogeneous",
+    "true_e": 0.0,
+    "P_ENV_MATERIAL": 0.0,
+    "P_ENV_BOUNDED": 1.0,
+    "P_ENV_UNRESOLVED": 0.0
+   },
+   {
+    "pattern": "homogeneous",
+    "true_e": 0.005,
+    "P_ENV_MATERIAL": 0.0,
+    "P_ENV_BOUNDED": 0.998,
+    "P_ENV_UNRESOLVED": 0.002
+   },
+   {
+    "pattern": "homogeneous",
+    "true_e": 0.01,
+    "P_ENV_MATERIAL": 0.0,
+    "P_ENV_BOUNDED": 0.924,
+    "P_ENV_UNRESOLVED": 0.076
+   },
+   {
+    "pattern": "homogeneous",
+    "true_e": 0.02,
+    "P_ENV_MATERIAL": 0.009,
+    "P_ENV_BOUNDED": 0.349,
+    "P_ENV_UNRESOLVED": 0.642
+   },
+   {
+    "pattern": "homogeneous",
+    "true_e": 0.03,
+    "P_ENV_MATERIAL": 0.184,
+    "P_ENV_BOUNDED": 0.042,
+    "P_ENV_UNRESOLVED": 0.773
+   },
+   {
+    "pattern": "homogeneous",
+    "true_e": 0.05,
+    "P_ENV_MATERIAL": 0.897,
+    "P_ENV_BOUNDED": 0.0,
+    "P_ENV_UNRESOLVED": 0.103
+   },
+   {
+    "pattern": "homogeneous",
+    "true_e": 0.08,
+    "P_ENV_MATERIAL": 1.0,
+    "P_ENV_BOUNDED": 0.0,
+    "P_ENV_UNRESOLVED": 0.0
+   },
+   {
+    "pattern": "concentrated_10pct_tasks",
+    "true_e": 0.0,
+    "P_ENV_MATERIAL": 0.0,
+    "P_ENV_BOUNDED": 1.0,
+    "P_ENV_UNRESOLVED": 0.0
+   },
+   {
+    "pattern": "concentrated_10pct_tasks",
+    "true_e": 0.005,
+    "P_ENV_MATERIAL": 0.0,
+    "P_ENV_BOUNDED": 0.99,
+    "P_ENV_UNRESOLVED": 0.01
+   },
+   {
+    "pattern": "concentrated_10pct_tasks",
+    "true_e": 0.01,
+    "P_ENV_MATERIAL": 0.0,
+    "P_ENV_BOUNDED": 0.85,
+    "P_ENV_UNRESOLVED": 0.15
+   },
+   {
+    "pattern": "concentrated_10pct_tasks",
+    "true_e": 0.02,
+    "P_ENV_MATERIAL": 0.009,
+    "P_ENV_BOUNDED": 0.299,
+    "P_ENV_UNRESOLVED": 0.692
+   },
+   {
+    "pattern": "concentrated_10pct_tasks",
+    "true_e": 0.03,
+    "P_ENV_MATERIAL": 0.094,
+    "P_ENV_BOUNDED": 0.069,
+    "P_ENV_UNRESOLVED": 0.837
+   },
+   {
+    "pattern": "concentrated_10pct_tasks",
+    "true_e": 0.05,
+    "P_ENV_MATERIAL": 0.506,
+    "P_ENV_BOUNDED": 0.004,
+    "P_ENV_UNRESOLVED": 0.489
+   },
+   {
+    "pattern": "concentrated_10pct_tasks",
+    "true_e": 0.08,
+    "P_ENV_MATERIAL": 0.846,
+    "P_ENV_BOUNDED": 0.0,
+    "P_ENV_UNRESOLVED": 0.154
+   }
+  ]
+ },
+ "K6": {
+  "propensity_model": {
+   "beta_a": 0.1153,
+   "beta_b": 0.2744,
+   "note": "beta-binomial fitted to S1a 4B H-OSW-fixed per-task counts (4 reruns, 113 tasks)"
+  },
+  "rows": [
+   {
+    "reruns_per_arm": 1,
+    "width90_live_pp": 10.57,
+    "width90_frozen_pp": 10.59,
+    "frozen_over_live": 1.002,
+    "shrink_share": -0.002,
+    "var_task_diff_live": 0.1168,
+    "var_task_diff_frozen": 0.1171
+   },
+   {
+    "reruns_per_arm": 2,
+    "width90_live_pp": 7.49,
+    "width90_frozen_pp": 10.59,
+    "frozen_over_live": 1.414,
+    "shrink_share": -0.414,
+    "var_task_diff_live": 0.0586,
+    "var_task_diff_frozen": 0.1171
+   },
+   {
+    "reruns_per_arm": 4,
+    "width90_live_pp": 5.29,
+    "width90_frozen_pp": 10.59,
+    "frozen_over_live": 2.001,
+    "shrink_share": -1.001,
+    "var_task_diff_live": 0.0293,
+    "var_task_diff_frozen": 0.1171
+   }
+  ],
+  "reading": "A frozen (deterministic) stack gives each (task, arm) one fixed draw. Two arms with different prompts cannot share it, so at one rerun per arm the width does not shrink (K6 fires by construction) and at R > 1 the frozen design is wider: extra reruns add nothing. Registered as prediction P-K6, not as a kill."
+ },
+ "CL": {
+  "design": "slate Stage C: arms A0 (live) and A1 (clock masked), R = 3 each, K = 113, live S1a serving",
+  "readings": {
+   "CLOCK_DOMINANT": "reduction D_w(A0) - D_w(A1) >= D_w(A0)/2 with lower bound > 0",
+   "NOT_CLOCK (slate)": "one-sided 95% upper bound of the reduction below 2 pp",
+   "NOT_CLOCK (restated, half)": "upper bound below D_w(A0)/2"
+  },
+  "rows": [
+   {
+    "truth": "no masking effect (redundancy)",
+    "P_CLOCK_DOMINANT": 0.002,
+    "P_NOT_CLOCK_slate": 0.218,
+    "P_NOT_CLOCK_half": 0.78
+   },
+   {
+    "truth": "true 50% reduction",
+    "P_CLOCK_DOMINANT": 0.523,
+    "P_NOT_CLOCK_slate": 0.001,
+    "P_NOT_CLOCK_half": 0.016
+   },
+   {
+    "truth": "true 100% reduction",
+    "P_CLOCK_DOMINANT": 1.0,
+    "P_NOT_CLOCK_slate": 0.0,
+    "P_NOT_CLOCK_half": 0.0
+   }
+  ],
+  "reading": "Under live serving the records predict no masking effect (A0.5: 2 of 19 identical-start pairs discordant against 90 of 885). Then the slate's design reads PARTIAL most of the time and its NOT_CLOCK fires by chance, while the restated NOT_CLOCK fires reliably but means 'clock not necessary given live serving', not 'no clock effect'. The closed loop is therefore deferred to a Stage D crossed with deterministic serving."
+ },
+ "PRED": {
+  "model": "D_w(arm) = (1 - N_arm) * q + e, N_arm = P(IR sequences never diverge); q = verdict discordance among IR-diverged pairs",
+  "q_within_all_sizes": 0.1114,
+  "e_assumed": 0.0,
+  "rows": [
+   {
+    "arm": "S1a (live clock, live serving)",
+    "P_never_diverge": 0.0863,
+    "D_w_pred": 0.1018,
+    "source": "records A0.4"
+   },
+   {
+    "arm": "clock masked, live serving",
+    "P_never_diverge": 0.1053,
+    "D_w_pred": 0.0997,
+    "source": "records: identical-start pairs never IR-divergent (2 of 19)"
+   },
+   {
+    "arm": "live clock, deterministic serving",
+    "P_never_diverge": null,
+    "D_w_pred": null,
+    "source": "1 - Stage B h_c(IR) per step compounded; not yet measured"
+   },
+   {
+    "arm": "clock masked, deterministic serving",
+    "P_never_diverge": null,
+    "D_w_pred": null,
+    "source": "Stage C masked-observation identity per step compounded; not yet measured"
+   }
+  ],
+  "frozen_regime_grid": [
+   {
+    "per_step_identity": 0.9,
+    "P_never_diverge_12.5_steps": 0.2679,
+    "D_w_pred": 0.0815
+   },
+   {
+    "per_step_identity": 0.95,
+    "P_never_diverge_12.5_steps": 0.5267,
+    "D_w_pred": 0.0527
+   },
+   {
+    "per_step_identity": 0.98,
+    "P_never_diverge_12.5_steps": 0.7768,
+    "D_w_pred": 0.0249
+   },
+   {
+    "per_step_identity": 0.99,
+    "P_never_diverge_12.5_steps": 0.8819,
+    "D_w_pred": 0.0131
+   },
+   {
+    "per_step_identity": 0.995,
+    "P_never_diverge_12.5_steps": 0.9393,
+    "D_w_pred": 0.0068
+   },
+   {
+    "per_step_identity": 1.0,
+    "P_never_diverge_12.5_steps": 1.0,
+    "D_w_pred": 0.0
+   }
+  ]
+ }
+}

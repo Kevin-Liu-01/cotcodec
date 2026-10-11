@@ -1,0 +1,19 @@
+{
+ "name": "Design",
+ "status": "PASS",
+ "self_assessed": true,
+ "protocol": "K-Dense experimental-design and statistical-power (vendored)",
+ "evidence": [
+  "interventions: serving configuration (2x2 batch by cache), observation perturbation (clock swap, mask, other-region swap), blink-off condition",
+  "controls: replica floor B0b, P0/P0' self-test, paired interaction cell, replay-vs-replay and replay-vs-original, prompt-id fidelity check, clock-box positive control",
+  "falsifiers P1-P8, P-K6; the six kill criteria restated with reachable thresholds (registration section 10)",
+  "operating characteristics for every threshold: compute/power-r01.json (seeds 42, 43, 44)",
+  "Stage A0 natural experiment replicated from hash-checked records (program/evidence/2026-10-11/r01-stage-a0/census.json)"
+ ],
+ "limits": [
+  "the identification refuter has not run",
+  "Stage B's loaded passes reproduce S1a-like load, not S1a's exact batch or cache history",
+  "text-level identity may saturate under batching; IR-level readings registered beside it"
+ ],
+ "remediation": "Identification refuter; pre-freeze audit"
+}

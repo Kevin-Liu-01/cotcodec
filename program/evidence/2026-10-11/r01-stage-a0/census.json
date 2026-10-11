@@ -1,0 +1,446 @@
+{
+ "A0_1_step1_input_identity": {
+  "between_session": {
+   "messages_equal": 0,
+   "pairs": 1808,
+   "processed_screenshot_equal": 0,
+   "request_equal": 0
+  },
+  "within_by_size_harness": {
+   "4B/H-GA": {
+    "messages_equal": 5,
+    "pairs": 226,
+    "processed_screenshot_equal": 5,
+    "request_equal": 5
+   },
+   "4B/H-OSW-fixed": {
+    "messages_equal": 5,
+    "pairs": 226,
+    "processed_screenshot_equal": 5,
+    "request_equal": 5
+   },
+   "9B/H-GA": {
+    "messages_equal": 6,
+    "pairs": 226,
+    "processed_screenshot_equal": 6,
+    "request_equal": 6
+   },
+   "9B/H-OSW-fixed": {
+    "messages_equal": 3,
+    "pairs": 226,
+    "processed_screenshot_equal": 3,
+    "request_equal": 3
+   }
+  },
+  "within_session": {
+   "messages_equal": 19,
+   "pairs": 904,
+   "processed_screenshot_equal": 19,
+   "request_equal": 19
+  }
+ },
+ "A0_2_natural_replays": {
+  "by_harness": {
+   "H-GA": {
+    "n": 16,
+    "reply_text_differs": 9
+   },
+   "H-OSW-fixed": {
+    "n": 11,
+    "reply_text_differs": 7
+   }
+  },
+  "by_size": {
+   "4B": {
+    "ir_differs": 0,
+    "n": 14,
+    "reply_text_differs": 9
+   },
+   "9B": {
+    "ir_differs": 2,
+    "n": 13,
+    "reply_text_differs": 7
+   }
+  },
+  "by_step": {
+   "1": 19,
+   "2": 5,
+   "3": 3
+  },
+  "definition": "within-session pairs; step k counted when its request digest (full body, images included) is equal and every earlier step's request and reply were equal",
+  "distinct_pairs": 19,
+  "identical_requests": 27,
+  "implied_per_token_flip_hazard": 0.00326,
+  "ir_differs": {
+   "k": 2,
+   "n": 27,
+   "share": 0.0741,
+   "wilson95": [
+    0.0206,
+    0.2337
+   ]
+  },
+  "mean_completion_tokens": 274.7,
+  "reply_text_differs": {
+   "k": 16,
+   "n": 27,
+   "share": 0.5926,
+   "wilson95": [
+    0.4073,
+    0.7549
+   ]
+  },
+  "step1_ir_differs": {
+   "k": 1,
+   "n": 19,
+   "share": 0.0526,
+   "wilson95": [
+    0.0094,
+    0.2464
+   ]
+  },
+  "step1_reply_text_differs": {
+   "k": 12,
+   "n": 19,
+   "share": 0.6316,
+   "wilson95": [
+    0.4104,
+    0.8085
+   ]
+  }
+ },
+ "A0_3_step1_divergence_by_input": {
+  "different_step1_request": {
+   "ir_differs": {
+    "k": 269,
+    "n": 885,
+    "share": 0.304,
+    "wilson95": [
+     0.2746,
+     0.3351
+    ]
+   },
+   "pairs": 885,
+   "reply_text_differs": {
+    "k": 763,
+    "n": 885,
+    "share": 0.8621,
+    "wilson95": [
+     0.8379,
+     0.8833
+    ]
+   }
+  },
+  "fisher_one_sided_p_ir": 0.010156,
+  "fisher_one_sided_p_reply": 0.011654,
+  "identical_step1_request": {
+   "ir_differs": {
+    "k": 1,
+    "n": 19,
+    "share": 0.0526,
+    "wilson95": [
+     0.0094,
+     0.2464
+    ]
+   },
+   "pairs": 19,
+   "reply_text_differs": {
+    "k": 12,
+    "n": 19,
+    "share": 0.6316,
+    "wilson95": [
+     0.4104,
+     0.8085
+    ]
+   }
+  },
+  "note": "not randomized: identical step-1 inputs arise from near-simultaneous dispatch"
+ },
+ "A0_4_survival_within": {
+  "first_reply_divergence_label": {
+   "observation_at_step1": 885,
+   "observation_later": 3,
+   "serving_identical_input": 16
+  },
+  "note": "'observation_at_step1' pairs cannot be attributed: the screenshot already differs, so whether identical inputs would have given identical replies is not observed for them",
+  "share_identical_through_step_k": {
+   "ir": {
+    "1": 0.7013,
+    "10": 0.0973,
+    "11": 0.0907,
+    "12": 0.0885,
+    "13": 0.0874,
+    "14": 0.0874,
+    "15": 0.0863,
+    "2": 0.4812,
+    "3": 0.3429,
+    "4": 0.2345,
+    "5": 0.167,
+    "6": 0.1416,
+    "7": 0.1228,
+    "8": 0.1106,
+    "9": 0.1029,
+    "never": 78
+   },
+   "rep": {
+    "1": 0.1427,
+    "10": 0.0,
+    "11": 0.0,
+    "12": 0.0,
+    "13": 0.0,
+    "14": 0.0,
+    "15": 0.0,
+    "2": 0.0199,
+    "3": 0.0044,
+    "4": 0.0,
+    "5": 0.0,
+    "6": 0.0,
+    "7": 0.0,
+    "8": 0.0,
+    "9": 0.0,
+    "never": 0
+   },
+   "req": {
+    "1": 0.021,
+    "10": 0.0,
+    "11": 0.0,
+    "12": 0.0,
+    "13": 0.0,
+    "14": 0.0,
+    "15": 0.0,
+    "2": 0.0055,
+    "3": 0.0033,
+    "4": 0.0,
+    "5": 0.0,
+    "6": 0.0,
+    "7": 0.0,
+    "8": 0.0,
+    "9": 0.0,
+    "never": 0
+   }
+  }
+ },
+ "A0_5_outcome_discordance": {
+  "D_b_4B_H_OSW_fixed": {
+   "k": 52,
+   "n": 452,
+   "share": 0.115,
+   "wilson95": [
+    0.0888,
+    0.1478
+   ]
+  },
+  "D_w_4B_H_OSW_fixed": {
+   "k": 27,
+   "n": 226,
+   "share": 0.1195,
+   "wilson95": [
+    0.0834,
+    0.1682
+   ]
+  },
+  "D_w_4B_pooled_harness": {
+   "k": 50,
+   "n": 452,
+   "share": 0.1106,
+   "wilson95": [
+    0.0849,
+    0.1429
+   ]
+  },
+  "within_all": {
+   "k": 92,
+   "n": 904,
+   "share": 0.1018,
+   "wilson95": [
+    0.0837,
+    0.1232
+   ]
+  },
+  "within_different_step1_request": {
+   "k": 90,
+   "n": 885,
+   "share": 0.1017,
+   "wilson95": [
+    0.0835,
+    0.1234
+   ]
+  },
+  "within_identical_step1_never_ir_divergent": 2,
+  "within_identical_step1_request": {
+   "k": 2,
+   "n": 19,
+   "share": 0.1053,
+   "wilson95": [
+    0.0294,
+    0.3139
+   ]
+  }
+ },
+ "A0_6_identical_ir_pairs": {
+  "all": {
+   "checker_input_digest_differs": 162,
+   "distinct_size_task_units": 59,
+   "ended": {
+    "step_cap": 45,
+    "terminate_success": 182
+   },
+   "exact_upper95_per_pair": 0.0131,
+   "exact_upper95_per_size_task_unit": 0.0495,
+   "mean_steps": 7.77,
+   "pairs": 227,
+   "pairs_with_10_or_more_steps": 58,
+   "score_unequal": 0,
+   "set": "within and between",
+   "state_digest_differs": 162,
+   "success_share": 0.7709,
+   "verdict_discordant": 0
+  },
+  "between": {
+   "checker_input_digest_differs": 106,
+   "distinct_size_task_units": 49,
+   "ended": {
+    "step_cap": 31,
+    "terminate_success": 118
+   },
+   "exact_upper95_per_pair": 0.0199,
+   "exact_upper95_per_size_task_unit": 0.0593,
+   "mean_steps": 7.87,
+   "pairs": 149,
+   "pairs_with_10_or_more_steps": 40,
+   "score_unequal": 0,
+   "set": "between-session",
+   "state_digest_differs": 106,
+   "success_share": 0.7651,
+   "verdict_discordant": 0
+  },
+  "note": "selected subset: pairs whose closed-loop trajectories happened to coincide; skewed to short, successful episodes. Saved-file and registry digests differ in most of them (the guest clock reaches saved artifacts), so state digests cannot serve as a determinism checksum without normalization",
+  "within": {
+   "checker_input_digest_differs": 56,
+   "distinct_size_task_units": 42,
+   "ended": {
+    "step_cap": 14,
+    "terminate_success": 64
+   },
+   "exact_upper95_per_pair": 0.0377,
+   "exact_upper95_per_size_task_unit": 0.0688,
+   "mean_steps": 7.58,
+   "pairs": 78,
+   "pairs_with_10_or_more_steps": 18,
+   "score_unequal": 0,
+   "set": "within-session",
+   "state_digest_differs": 56,
+   "success_share": 0.7821,
+   "verdict_discordant": 0
+  }
+ },
+ "A0_7_capture_minute": {
+  "different_minute": {
+   "pairs": 869,
+   "screenshot_equal": 0
+  },
+  "estimate": "t_start + boot_wait_s + setup_s + warmup_s + settle_after_reset_s (host clock)",
+  "note": "same-minute pairs whose screenshots differ show a varying region other than the clock (caret, animation, loading state, or a clock read error of the estimate); hashes cannot locate it, so the pixel census needs fresh captures",
+  "pairs_with_estimate": 904,
+  "same_minute_any": {
+   "pairs": 35,
+   "screenshot_equal": 19
+  },
+  "same_minute_clear": {
+   "margin_s": 5.0,
+   "pairs": 25,
+   "screenshot_differs": {
+    "k": 10,
+    "n": 25,
+    "share": 0.4,
+    "wilson95": [
+     0.234,
+     0.5926
+    ]
+   }
+  },
+  "same_minute_clear_by_domain": {
+   "gimp": {
+    "pairs": 4,
+    "screenshot_differs": 2
+   },
+   "libreoffice_calc": {
+    "pairs": 4,
+    "screenshot_differs": 3
+   },
+   "libreoffice_impress": {
+    "pairs": 3,
+    "screenshot_differs": 1
+   },
+   "libreoffice_writer": {
+    "pairs": 6,
+    "screenshot_differs": 4
+   },
+   "multi_apps": {
+    "pairs": 4,
+    "screenshot_differs": 0
+   },
+   "thunderbird": {
+    "pairs": 3,
+    "screenshot_differs": 0
+   },
+   "vs_code": {
+    "pairs": 1,
+    "screenshot_differs": 0
+   }
+  },
+  "screenshot_equal_pairs_all_same_minute": true
+ },
+ "A0_8_rerun_spacing": {
+  "gap_s_quantiles": {
+   "0.1": 67.6,
+   "0.25": 107.9,
+   "0.5": 170.7,
+   "0.75": 287.5,
+   "0.9": 694.9
+  },
+  "pairs": 904,
+  "under_300s": 682,
+  "under_60s": 81
+ },
+ "cases": {
+  "a1_jsonl_sha256": "PASS",
+  "all_scored": "PASS",
+  "between_pairs_1808": "PASS",
+  "digests_sha256": "PASS",
+  "plan_sha256": "PASS",
+  "records_match_rows": "PASS",
+  "rows_1808": "PASS",
+  "within_pairs_904": "PASS"
+ },
+ "checks": {
+  "a1_jsonl_sha256": true,
+  "all_scored": true,
+  "between_pairs_1808": true,
+  "digests_sha256": true,
+  "plan_sha256": true,
+  "records_match_rows": true,
+  "rows_1808": true,
+  "within_pairs_904": true
+ },
+ "doctor": "r01-stage-a0",
+ "evidence_grade": "records-only census of S1a (descriptive design input; enters no registered decision rule)",
+ "inputs": {
+  "a1_jsonl": "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+  "a1_jsonl_sha256": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+  "digests": "program/evidence/2026-10-11/r01-stage-a0/s1a-step-digests.jsonl.gz",
+  "digests_sha256": "91f848432df45be3fe79f4175f4ab8b4f8103f4a646d2e800f6eca30a92d01df",
+  "episodes": 1808,
+  "plan": "program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json",
+  "plan_sha256": "a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806",
+  "steps": 22274,
+  "tasks": 113
+ },
+ "labels": [
+  "not externally anchored",
+  "S1a's realized sessions on this host",
+  "binarized raw verdicts (y = 1 iff score == 1.0)"
+ ],
+ "schema": "r01-stage-a0-census-v1",
+ "status": "PASS"
+}

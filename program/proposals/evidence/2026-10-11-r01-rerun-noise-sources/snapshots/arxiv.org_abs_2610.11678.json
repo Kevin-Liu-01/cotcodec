@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2610.11678",
+ "fetched_at": "2026-10-11T09:46:51Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42561,
+ "raw_sha256": "97d5b16d3e8980a2ab21821989d479c580772b11183999dccf1ab7f9d471189e",
+ "raw_stored": false,
+ "extract": {
+  "title": "TRACE: Diagnosing Verifier Brittleness in Agentic Evaluation",
+  "authors": [
+   "Gaonkar, Radhika"
+  ],
+  "citation_date": "2026/10/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 8 Oct 2026 10:52:26 UTC"
+   }
+  ],
+  "abstract": "Verifier scores now serve as both benchmark metrics and training rewards for large language model (LLM) agents, and a change in score is routinely read as a change in capability. It may instead reflect a change in the evaluation. We introduce TRACE, a protocol that turns a score change from a verdict into a testable diagnosis: it applies a targeted change to one part of an evaluation, compares paired runs, checks whether the agent's behavior changed, and rescores unchanged trajectories to test whether the scoring rule is responsible. In a controlled suite of 25 synthetic tasks, renaming tools lowers a scripted agent's score by 0.250 even though it performs exactly the same operations; restoring the original names at scoring time closes the entire gap, while the same mutation exposes a genuine behavioral failure in a second agent. On public $\\tau^2$-bench tasks with four LLM agents, an initial 30-task study finds mixed reward changes whose one clear effect does not replicate. In a larger follow-up on 88 new tasks with repeated runs per condition, renaming tools or reformatting tool outputs leaves reward unchanged to within $\\pm$0.10 for seven of eight agent-change pairs, whereas tool names that deliberately mislead lower every agent's reward by 0.20-0.44, showing that the setup can detect real effects. Identical reruns flip 15-36% of task outcomes, so single-run comparisons cannot separate presentation effects from run-to-run variation. Two frontier LLM judges give consistent verdicts when a fixed trajectory is presented differently, yet disagree with each other on 57% of the same records, largely because one grades procedure rather than outcome. TRACE thus separates what a score change says about the agent from what it says about the measurement.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

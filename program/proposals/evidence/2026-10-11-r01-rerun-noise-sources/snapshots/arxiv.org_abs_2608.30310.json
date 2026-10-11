@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2608.30310",
+ "fetched_at": "2026-10-11T09:46:50Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44518,
+ "raw_sha256": "9b21586820f86b647382c5038d36663344fb2827ed699b1dda7e20738fb2f6c1",
+ "raw_stored": false,
+ "extract": {
+  "title": "Tail-Replay: Escaping the Curse of Linear Attention in Prefix Caching for Hybrid LLMs",
+  "authors": [
+   "Liu, Yirui",
+   "Qi, Ruoling",
+   "Wu, Xuaner",
+   "Liu, Penghang",
+   "Chen, Jian"
+  ],
+  "citation_date": "2026/08/31",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 31 Aug 2026 06:27:07 UTC"
+   }
+  ],
+  "abstract": "Hybrid large language models interleave full-attention layers with linear-attention layers to reduce the cost of long-context inference. This structure complicates prefix caching: full-attention key-value caches are token-addressable, whereas linear-attention layers maintain recurrent states that cannot be rolled back to arbitrary prefix boundaries. Existing hybrid prefix caching methods address this mismatch by storing recurrent-state checkpoints. As a result, token-level matches are directly usable only at positions aligned with stored checkpoints, constraining prefix reuse to a discrete set of boundaries. We present Tail-Replay, a prefix caching mechanism that enables unconstrained token-level prefix reuse in hybrid large language models. The key insight is that linear-attention mechanisms such as Gated DeltaNet can be viewed as a structured, lossy compression of the input prefix: gated recurrent updates progressively attenuate the contributions of earlier inputs. Consequently, the recurrent state of a matched prefix can be well approximated by replaying only a short, recent suffix of that prefix. Tail-Replay exploits this property by caching the exact full-attention key-value cache while omitting recurrent-state checkpoints. On a cache hit, it reconstructs the linear-attention states by replaying a short, recent suffix of the matched prefix. As a result, the reuse boundary is determined by the shared tokens rather than by recurrent-state checkpoints. We evaluate Tail-Replay on three Gated DeltaNet-based hybrid models using the LongBench and RULER benchmarks. With only a 5--10\\% replay budget, it retains 92.8--99.9\\% of full-prefill quality on LongBench and RULER. For serving efficiency, we evaluate time-to-first-token speedups across multiple matched-prefix lengths---8K, 16K, and 32K. The speedup grows with prefix length, reaching $9.1$--$14.3\\times$ over full prefill at 32K.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

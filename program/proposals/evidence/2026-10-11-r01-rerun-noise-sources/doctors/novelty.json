@@ -1,0 +1,10 @@
+{
+ "name": "Novelty",
+ "status": "FAIL",
+ "evidence": [
+  "kill-shot verdict NARROWED (frontier, kill-shot and cross-domain cells agree); no direct prior found through 2026-10-11 under the recorded coverage",
+  "closest prior by mechanism, cELldjX2oq, judged from its abstract only (no arXiv copy found)",
+  "blind critic and novelty refuter not yet run"
+ ],
+ "remediation": "Run the blind critic on blind/ (roles in compute/blind-roles.json, recorder only) and the novelty refuter"
+}
