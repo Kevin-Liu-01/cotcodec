@@ -1,0 +1,420 @@
+{
+ "script": "instrument-pool-v2.py",
+ "ntrex_files_sha256": {
+  "ntrex_newstest2019-src.eng.txt": "389e8f5796c66db4f646dfad33e1ec622d74767af5ef112b42a1f2cd814df3cc",
+  "ntrex_newstest2019-ref.deu.txt": "259d7406a07b63e6b5b9c4a22fb76b85e2578a3fa0a4e541a50f4f7348e5c1b2",
+  "ntrex_newstest2019-ref.zho-CN.txt": "8bcd6f0868d33f26c8da12f55a82f66088a7b60a5f7b0b1a99dcec51daa8054a",
+  "ntrex_newstest2019-ref.tha.txt": "45a57c4f9fdbae282eb2c94821535ae3c88b09186a23c5506eb0907ba429d6a5",
+  "ntrex_DOCUMENT_IDS.tsv": "88a8b0ff1eae47e83f60dcde01075b8c87d75ced59ca09e0af1eb539958e05d5"
+ },
+ "sentences": 1997,
+ "documents": 123,
+ "eligible_all": 1360,
+ "test_half_documents": 63,
+ "test_half_eligible": 699,
+ "dev_half_eligible": 661,
+ "test_half_eligible_over_200_salts_context_only": {
+  "min": 484,
+  "median": 676,
+  "max": 945
+ },
+ "proxies": {
+  "length": "non-whitespace characters (registration v2: 32K-tokenizer tokens)",
+  "eligibility_length": "6-40 English words (registration: 8-60 tokens in every language)"
+ },
+ "cells": {
+  "eng->zho": {
+   "length_ratio_query_over_key_dev": 0.393,
+   "v1": {
+    "prompts_test_half": 500,
+    "prompts_dev_half": 500,
+    "oracle_top1_real_query": {
+     "len": 0.352,
+     "len+p": 0.538,
+     "central": 0.134,
+     "clogit": 0.606
+    },
+    "clogit_dev_fit_top1": 0.592
+   },
+   "v2a": {
+    "prompts_test_half": 478,
+    "prompts_dev_half": 463,
+    "oracle_top1_real_query": {
+     "len": 0.1925,
+     "len+p": 0.2448,
+     "central": 0.1485,
+     "clogit": 0.2657
+    },
+    "clogit_dev_fit_top1": 0.2527,
+    "stratum_levels": {
+     "full": 469,
+     "no_comma": 9
+    },
+    "key_length_spread_median": 1.3077,
+    "oracle_top1_decoy_query": {
+     "len": 0.1757,
+     "len+p": 0.2469,
+     "central": 0.1444,
+     "clogit": 0.2594
+    },
+    "decoy_distance_median": 0.0,
+    "eligible_queried_sentences_uncapped": 589
+   },
+   "v2": {
+    "prompts_test_half": 474,
+    "prompts_dev_half": 461,
+    "oracle_top1_real_query": {
+     "len": 0.1709,
+     "len+p": 0.1603,
+     "central": 0.1392,
+     "clogit": 0.1814
+    },
+    "clogit_dev_fit_top1": 0.2169,
+    "stratum_levels": {
+     "block_exact": 471,
+     "block_with_replacement": 3
+    },
+    "key_length_spread_median": 1.089,
+    "oracle_top1_decoy_query": {
+     "len": 0.1709,
+     "len+p": 0.1646,
+     "central": 0.1392,
+     "clogit": 0.173
+    },
+    "decoy_distance_median": 0.0,
+    "eligible_queried_sentences_uncapped": 589
+   }
+  },
+  "zho->eng": {
+   "length_ratio_query_over_key_dev": 2.543,
+   "v1": {
+    "prompts_test_half": 500,
+    "prompts_dev_half": 500,
+    "oracle_top1_real_query": {
+     "len": 0.388,
+     "len+p": 0.536,
+     "central": 0.106,
+     "clogit": 0.588
+    },
+    "clogit_dev_fit_top1": 0.598
+   },
+   "v2a": {
+    "prompts_test_half": 364,
+    "prompts_dev_half": 362,
+    "oracle_top1_real_query": {
+     "len": 0.1758,
+     "len+p": 0.2115,
+     "central": 0.1511,
+     "clogit": 0.2253
+    },
+    "clogit_dev_fit_top1": 0.2376,
+    "stratum_levels": {
+     "full": 359,
+     "no_comma": 5
+    },
+    "key_length_spread_median": 1.2903,
+    "oracle_top1_decoy_query": {
+     "len": 0.1786,
+     "len+p": 0.2005,
+     "central": 0.1209,
+     "clogit": 0.217
+    },
+    "decoy_distance_median": 0.0092,
+    "eligible_queried_sentences_uncapped": 589
+   },
+   "v2": {
+    "prompts_test_half": 366,
+    "prompts_dev_half": 369,
+    "oracle_top1_real_query": {
+     "len": 0.1475,
+     "len+p": 0.1749,
+     "central": 0.0902,
+     "clogit": 0.1503
+    },
+    "clogit_dev_fit_top1": 0.3604,
+    "stratum_levels": {
+     "block_exact": 356,
+     "block_with_replacement": 10
+    },
+    "key_length_spread_median": 1.1053,
+    "oracle_top1_decoy_query": {
+     "len": 0.1503,
+     "len+p": 0.1421,
+     "central": 0.1202,
+     "clogit": 0.1475
+    },
+    "decoy_distance_median": 0.0092,
+    "eligible_queried_sentences_uncapped": 589
+   }
+  },
+  "eng->tha": {
+   "length_ratio_query_over_key_dev": 1.106,
+   "v1": {
+    "prompts_test_half": 353,
+    "prompts_dev_half": 379,
+    "oracle_top1_real_query": {
+     "len": 0.4788,
+     "len+p": 0.5581,
+     "central": 0.1161,
+     "clogit": 0.728
+    },
+    "clogit_dev_fit_top1": 0.6728
+   },
+   "v2a": {
+    "prompts_test_half": 315,
+    "prompts_dev_half": 357,
+    "oracle_top1_real_query": {
+     "len": 0.2032,
+     "len+p": 0.273,
+     "central": 0.1175,
+     "clogit": 0.4
+    },
+    "clogit_dev_fit_top1": 0.3249,
+    "stratum_levels": {
+     "no_comma": 9,
+     "full": 303,
+     "quote_only": 3
+    },
+    "key_length_spread_median": 1.3173,
+    "oracle_top1_decoy_query": {
+     "len": 0.219,
+     "len+p": 0.2921,
+     "central": 0.1175,
+     "clogit": 0.4
+    },
+    "decoy_distance_median": 0.0,
+    "eligible_queried_sentences_uncapped": 348
+   },
+   "v2": {
+    "prompts_test_half": 314,
+    "prompts_dev_half": 354,
+    "oracle_top1_real_query": {
+     "len": 0.2357,
+     "len+p": 0.2134,
+     "central": 0.1433,
+     "clogit": 0.2771
+    },
+    "clogit_dev_fit_top1": 0.3192,
+    "stratum_levels": {
+     "block_exact": 314
+    },
+    "key_length_spread_median": 1.1178,
+    "oracle_top1_decoy_query": {
+     "len": 0.2325,
+     "len+p": 0.207,
+     "central": 0.0987,
+     "clogit": 0.2898
+    },
+    "decoy_distance_median": 0.0,
+    "eligible_queried_sentences_uncapped": 348
+   }
+  },
+  "tha->eng": {
+   "length_ratio_query_over_key_dev": 0.904,
+   "v1": {
+    "prompts_test_half": 353,
+    "prompts_dev_half": 379,
+    "oracle_top1_real_query": {
+     "len": 0.5042,
+     "len+p": 0.7167,
+     "central": 0.1076,
+     "clogit": 0.7252
+    },
+    "clogit_dev_fit_top1": 0.6596
+   },
+   "v2a": {
+    "prompts_test_half": 234,
+    "prompts_dev_half": 252,
+    "oracle_top1_real_query": {
+     "len": 0.2436,
+     "len+p": 0.265,
+     "central": 0.0897,
+     "clogit": 0.2821
+    },
+    "clogit_dev_fit_top1": 0.2976,
+    "stratum_levels": {
+     "full": 234
+    },
+    "key_length_spread_median": 1.3023,
+    "oracle_top1_decoy_query": {
+     "len": 0.2222,
+     "len+p": 0.2564,
+     "central": 0.1154,
+     "clogit": 0.2692
+    },
+    "decoy_distance_median": 0.0073,
+    "eligible_queried_sentences_uncapped": 348
+   },
+   "v2": {
+    "prompts_test_half": 235,
+    "prompts_dev_half": 253,
+    "oracle_top1_real_query": {
+     "len": 0.1149,
+     "len+p": 0.1574,
+     "central": 0.1191,
+     "clogit": 0.1532
+    },
+    "clogit_dev_fit_top1": 0.2372,
+    "stratum_levels": {
+     "block_exact": 195,
+     "block_with_replacement": 40
+    },
+    "key_length_spread_median": 1.033,
+    "oracle_top1_decoy_query": {
+     "len": 0.1191,
+     "len+p": 0.1574,
+     "central": 0.1106,
+     "clogit": 0.183
+    },
+    "decoy_distance_median": 0.008,
+    "eligible_queried_sentences_uncapped": 348
+   }
+  },
+  "eng->deu": {
+   "length_ratio_query_over_key_dev": 1.213,
+   "v1": {
+    "prompts_test_half": 215,
+    "prompts_dev_half": 217,
+    "oracle_top1_real_query": {
+     "len": 0.5349,
+     "len+p": 0.6233,
+     "central": 0.093,
+     "clogit": 0.7256
+    },
+    "clogit_dev_fit_top1": 0.6959
+   },
+   "v2a": {
+    "prompts_test_half": 38,
+    "prompts_dev_half": 36,
+    "oracle_top1_real_query": {
+     "len": 0.2105,
+     "len+p": 0.2895,
+     "central": 0.1842
+    },
+    "clogit_dev_fit_top1": null,
+    "stratum_levels": {
+     "full": 37,
+     "no_comma": 1
+    },
+    "key_length_spread_median": 1.3393,
+    "oracle_top1_decoy_query": {
+     "len": 0.2895,
+     "len+p": 0.2632,
+     "central": 0.0789
+    },
+    "decoy_distance_median": 0.012,
+    "eligible_queried_sentences_uncapped": 97
+   },
+   "v2": {
+    "prompts_test_half": 32,
+    "prompts_dev_half": 38,
+    "oracle_top1_real_query": {
+     "len": 0.2188,
+     "len+p": 0.1875,
+     "central": 0.1562
+    },
+    "clogit_dev_fit_top1": null,
+    "stratum_levels": {
+     "block_exact": 23,
+     "block_with_replacement": 9
+    },
+    "key_length_spread_median": 1.0696,
+    "oracle_top1_decoy_query": {
+     "len": 0.1875,
+     "len+p": 0.1875,
+     "central": 0.0938
+    },
+    "decoy_distance_median": 0.0091,
+    "eligible_queried_sentences_uncapped": 97
+   }
+  },
+  "deu->eng": {
+   "length_ratio_query_over_key_dev": 0.825,
+   "v1": {
+    "prompts_test_half": 214,
+    "prompts_dev_half": 217,
+    "oracle_top1_real_query": {
+     "len": 0.486,
+     "len+p": 0.5654,
+     "central": 0.1402,
+     "clogit": 0.6822
+    },
+    "clogit_dev_fit_top1": 0.6682
+   },
+   "v2a": {
+    "prompts_test_half": 58,
+    "prompts_dev_half": 44,
+    "oracle_top1_real_query": {
+     "len": 0.2069,
+     "len+p": 0.2414,
+     "central": 0.2069
+    },
+    "clogit_dev_fit_top1": null,
+    "stratum_levels": {
+     "full": 54,
+     "no_comma": 4
+    },
+    "key_length_spread_median": 1.4432,
+    "oracle_top1_decoy_query": {
+     "len": 0.2586,
+     "len+p": 0.2759,
+     "central": 0.1552
+    },
+    "decoy_distance_median": 0.0,
+    "eligible_queried_sentences_uncapped": 97
+   },
+   "v2": {
+    "prompts_test_half": 51,
+    "prompts_dev_half": 43,
+    "oracle_top1_real_query": {
+     "len": 0.2353,
+     "len+p": 0.1961,
+     "central": 0.1569
+    },
+    "clogit_dev_fit_top1": null,
+    "stratum_levels": {
+     "block_with_replacement": 19,
+     "block_exact": 32
+    },
+    "key_length_spread_median": 1.1313,
+    "oracle_top1_decoy_query": {
+     "len": 0.1961,
+     "len+p": 0.2157,
+     "central": 0.1373
+    },
+    "decoy_distance_median": 0.011,
+    "eligible_queried_sentences_uncapped": 97
+   }
+  }
+ },
+ "cross_script_pooled_equal_weight": {
+  "v1": {
+   "real_len": 0.4307,
+   "real_len+p": 0.5872,
+   "real_central": 0.1159,
+   "real_clogit": 0.6618
+  },
+  "v2a": {
+   "real_len": 0.2038,
+   "real_len+p": 0.2486,
+   "real_central": 0.1267,
+   "real_clogit": 0.2933,
+   "decoy_len": 0.1989,
+   "decoy_len+p": 0.249,
+   "decoy_central": 0.1245,
+   "decoy_clogit": 0.2864
+  },
+  "v2": {
+   "real_len": 0.1673,
+   "real_len+p": 0.1765,
+   "real_central": 0.123,
+   "real_clogit": 0.1905,
+   "decoy_len": 0.1682,
+   "decoy_len+p": 0.1678,
+   "decoy_central": 0.1172,
+   "decoy_clogit": 0.1983
+  }
+ },
+ "chance": 0.125,
+ "note": "Character-level proxies, not the 32K tokenizer; a model need not use these cues, but the v2 builder must keep them near chance on the sealed manifest (registration v2, builder gate B-SURF)."
+}

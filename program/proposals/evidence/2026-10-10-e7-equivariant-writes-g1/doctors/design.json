@@ -2,10 +2,16 @@
  "doctor": "Design",
  "status": "FAIL",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "D68 repair pass by the single owner (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
- "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data, three-way decisions, operating characteristics by simulation; K-Dense statistical-analysis for clustered intervals",
- "evidence": "Lines I1 (0.80), MONO (0.60), CROSS (0.15) and BIND (> 0) per seed with 90% sentence-cluster bootstrap intervals; majority rule over seeds 42, 43, 44; verdicts INSTRUMENT_INVALID, PASS, LOTTERY, FAIL_MONO, FAIL_CROSS (sub-labelled), INCONCLUSIVE; CUT and ABLATION identification checks; futility rule; state-necessary bin justified by the receptive-field arithmetic and checked by S3 (complex-step derivative nonzero at 1,560 and exactly zero at 1,561 with the state cut, three seeds); S1 operating characteristics over 1,000 replicates per scenario (P(PASS) 0.717 with every line 5 points above at seed SD 0.03, 0.005 at the lines; binding-free null never passes; coverage 0.933 bootstrap at nominal 0.90); leakage controls (reserved codes, digit-free keys and filler, surface filter, dedup, sealed manifests with a read ledger).",
- "why_fail": "Every S1 distribution is assumed; the CUT and ABLATION checks are not simulated; S3 is a NumPy stand-in, not the fla module graph; no harness, builder or analysis code exists; the window (512) and scale are fixed by the dossier, so a failure does not generalize (stated).",
- "remediation": "Write the harness; run a kind: cpu-doctor orx node with the reach test on the real module graph (pure-torch reference path), analysis recovery on synthetic predictions, and the prompt builder's leakage controls"
+ "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data; decisiveness by simulation under the registered estimator; K-Dense statistical-analysis for clustered intervals",
+ "evidence": "Registration v2 specifies four evaluation interventions (SPAN_CUT, RELAY_BLOCK, D1, ISO), two deterministic harness checks (REACH and ISO, logit invariance at 1e-5 on every trained checkpoint) placed first as HARNESS_INVALID, decision lines MONO 0.60, CROSS 0.15 (cross-script cells), BIND > 0 and SEM >= 0.03 (real minus surface-twin decoy binding margin), INSTRUMENT_INVALID only when in-window recall is under 0.50 and MONO fails, distance-matched FAIL_CROSS and FAIL_MONO sub-labels, a builder gate B-SURF, manifest assertions and the futility rule. S3v2: on a NumPy reference of the module graph the complex-step exact-zero pattern equals an exact symbolic reachability on all 504 rows (SPAN_CUT 0 at d_f >= 1,561; ISO 0 everywhere; v1's single cut, v1's v = 0 ablation, a partial-span reset and beta = 0 without alpha = 1 all leave paths). P1 on NTREX-128: 699 test-half key sentences; cross-script cells 474, 366, 314, 235; learned surface oracle 0.66 under v1's design, 0.19 under v2's, decoys 0.20; En-De cells 32 and 51 (dropped). S1v2 under the registered estimator on that design: prior-weighted P(decisive) 0.8917 at seed SD 0.03 and 0.9118 at 0.06; PASS 0.979 in a PASS world, FAIL_CROSS 0.905 in a FAIL_CROSS world, FAIL_MONO 0.996 in a FAIL_MONO world; a surface-only model PASS 0.000 (v1: 1.000).",
+ "why_fail": [
+  "every outcome distribution in S1v2 is assumed; none is measured",
+  "P1's surface statistics use character-level proxies until the 32K tokenizer exists (B-SURF re-measures them on the sealed manifest)",
+  "S3v2 is a reference of the module graph, not the harness; the harness and its cpu-doctor node do not exist",
+  "the window (512) and scale are fixed by the dossier, so a failure does not generalize (stated)"
+ ],
+ "remediation": "Write the harness; run the cpu-doctor node (the intervention table on the harness's own module graph, analysis recovery against S1v2, builder checks with the real tokenizer)",
+ "supersedes_sha256": "6b1897dbdedc9ce077cc5d0d3ad866ccd59a304f8037a306de628cb42802598b"
 }
