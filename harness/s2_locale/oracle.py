@@ -14,11 +14,15 @@ Checks (pairs are LTR -> other cell of the same text level unless stated):
 
 * O1 structure: the (path, role) list of showing accessibles. Text pairs (E-A, ER-AR) must be
   identical (instrument); layout pairs (E-ER, A-AR) differences are O8 structure defects.
-* O2 text runs: each single-run text element's ink is found intact in the other layout level
-  (best mismatch share <= tol2 anywhere in its row band); a failure is a coupling leak candidate.
+* O2 text runs: each single-run text element's whole ink run, located in the other layout level
+  and re-cut there by its own ink box, is the same image as in the left-to-right level (same size
+  within 1 px, at most 2% of pixels differing); a failure is a coupling leak candidate (a run whose
+  characters bidi reordered keeps its width and changes its image).
 * O3 mirror fidelity: the element's ink sits at the reflection of its LTR box inside the window
-  (|dx|, |dy| <= 2 px at mismatch <= tol2). Exceptions come only from the mirror specification
-  frozen on the dev tasks (role classes that this build does not reflect).
+  (|dy| <= 2 px and |dx| <= tol3 at mismatch <= tol2). The mirror specification frozen on the dev
+  tasks is tol3, the 95th percentile of |dx| among dev-task elements found intact within 24 px of
+  their reflection: this build mirrors toolbars and the menubar by reversing their packing, not by
+  an exact geometric reflection, so a fixed 2 px line would mark the build itself as defective.
 * O4 order under text swap: sibling left-to-right order equal in E and A (accessible boxes) and in
   ER and AR (ink-located boxes).
 * O5 content identity: the document region of E, aligned by translation in the other cell, differs
@@ -30,8 +34,10 @@ Checks (pairs are LTR -> other cell of the same text level unless stated):
   narrower than 0.8 of the LTR ink), or missing (no intact match, or absent from the mirrored
   accessibility tree); per task; descriptive, never an exclusion.
 
-Tolerances come from the A/A replicates (E-E2, ER-ER2) on the 17 dev tasks, as registered:
-tol2 = max(0.02, 2 x the worst A/A element mismatch), tol5 and tol6 = max(50 px, 2 x the worst
+Tolerances come from the A/A replicates (E-E2, ER-ER2) on the 17 dev tasks, as registered, with
+one addition for elements that move: tol2 = max(0.02, 2 x the worst identity A/A element mismatch,
+the 95th percentile mismatch of dev-task toolbar elements found intact at a new position in the
+same row of the shuffled-toolbar placebo, capped at 0.10); tol5 and tol6 = max(50 px, 2 x the worst
 A/A pixel count). Positive controls: planted in the application (PCL/PCR coupled string, PD
 document change) and synthetic plants on every task's mirrored screenshot (a shifted widget for
 O3, a reordered text run for O2, an altered document block for O5).
@@ -92,14 +98,102 @@ def frame_box(nodes: list[dict]) -> tuple[int, int, int, int] | None:
     return x, y, w, h
 
 
+def border_ink(img: np.ndarray, box) -> float:
+    """Non-uniformity of a box's one-pixel border: the share of border pixels that differ (by more
+    than INK_DIFF / 2) from the border's own modal colour. A box that frames a whole widget has a
+    uniform border (background, or the widget's own frame line); a box shifted onto other content
+    cuts through it."""
+    x, y, w, h = box
+    H, W = img.shape[:2]
+    x0, y0, x1, y1 = max(0, x), max(0, y), min(W, x + w), min(H, y + h)
+    if x1 - x0 < 4 or y1 - y0 < 4:
+        return 1.0
+    crop = img[y0:y1, x0:x1]
+    sides = [crop[0], crop[-1], crop[:, 0], crop[:, -1]]
+    worst = 0.0
+    for side in sides:
+        px = side.astype(np.int64)
+        packed = (px[:, 0] << 16) | (px[:, 1] << 8) | px[:, 2]
+        vals, counts = np.unique(packed, return_counts=True)
+        v = int(vals[np.argmax(counts)])
+        mode = np.array([(v >> 16) & 255, (v >> 8) & 255, v & 255])
+        worst = max(worst, float((np.abs(px - mode).max(axis=1) > INK_DIFF // 2).mean()))
+    return worst
+
+
+def _judged(n) -> bool:
+    w, h = n["box"][2], n["box"][3]
+    return ((n["role"] in LEAF_ROLES and w <= 640 and h <= 120) or n["role"] in DOC_ROLES
+            or n["role"] in ("tool bar", "status bar")) and w >= 6 and h >= 6
+
+
+def estimate_dy(img: np.ndarray, nodes: list[dict], max_dy: int = 48) -> int:
+    """The VCL widgets' vertical offset: the shift in 0..max_dy px that best frames the judged
+    accessibles (lowest mean border ink, each node scored at min(shift 0, shift d) so the native
+    GTK widgets, correct at 0, do not pull the estimate)."""
+    judged = [n for n in nodes if _judged(n)]
+    if not judged:
+        return 0
+    b0 = np.array([border_ink(img, n["box"]) for n in judged])
+    best, best_d = None, 0
+    for d in range(0, max_dy + 1):
+        bd = np.array([border_ink(img, (n["box"][0], n["box"][1] + d, n["box"][2], n["box"][3])) for n in judged])
+        sc = float(np.minimum(b0, bd).mean())
+        if best is None or sc < best - 1e-9:
+            best, best_d = sc, d
+    return best_d
+
+
+def place_nodes(img: np.ndarray, nodes: list[dict], dy_vcl: int) -> list[dict]:
+    """Screen boxes for accessibles in a left-to-right cell.
+
+    Under the container's window manager, LibreOffice's native GTK widgets (the menubar, welded
+    entries) report screen coordinates while its VCL-drawn widgets (toolbars, status bar, sheet
+    tabs, document) report coordinates ``dy_vcl`` px too high (the window's frame offset, estimated
+    per screenshot by ``estimate_dy``; smoke 1124). Each node takes the offset, 0 or ``dy_vcl``,
+    whose box frames its content more cleanly (less ink on the box border); nodes too thin to judge
+    keep their parent's choice.
+    """
+    out = []
+    choice: dict[tuple, int] = {}
+    menubars = [tuple(n["path"]) for n in nodes if n["role"] == "menu bar"]
+    statusbars = [tuple(n["path"]) for n in nodes if n["role"] == "status bar"]
+    for n in sorted(nodes, key=lambda n: len(n["path"])):
+        x, y, w, h = n["box"]
+        path = tuple(n["path"])
+        if any(path[:len(m)] == m for m in menubars):
+            off = 0  # the native GTK menubar and its menus
+        elif any(path[:len(m)] == m for m in statusbars):
+            off = dy_vcl  # VCL's status bar (a strip whose border ink cannot decide)
+        elif _judged(n):
+            b0 = border_ink(img, (x, y, w, h))
+            b1 = border_ink(img, (x, y + dy_vcl, w, h))
+            parent = choice.get(path[:-1])
+            off = dy_vcl if b1 + 0.02 < b0 else (0 if b0 + 0.02 < b1 else (parent if parent is not None else dy_vcl))
+        else:
+            parent = choice.get(path[:-1])
+            off = parent if parent is not None else dy_vcl
+        choice[tuple(n["path"])] = off
+        m = dict(n)
+        m["box"] = [x, y + off, w, h]
+        m["dy"] = off
+        out.append(m)
+    return out
+
+
 def leaf_elements(nodes: list[dict], screen=(1920, 1080)) -> list[dict]:
     out, seen = [], set()
     for n in nodes:
         x, y, w, h = n["box"]
         if n["role"] not in LEAF_ROLES or w < 4 or h < 4 or w > 640 or h > 120:
             continue
-        if x < 0 or y < 0 or x + w > screen[0] or y + h > screen[1]:
+        # clip to the screen: in the container the window's bottom edge sits a few pixels below
+        # the screen, so the status bar's boxes overhang it by 3-4 px
+        x0, y0, x1, y1 = max(0, x), max(0, y), min(screen[0], x + w), min(screen[1], y + h)
+        if x1 - x0 < 4 or y1 - y0 < 4 or (x1 - x0) * (y1 - y0) < 0.6 * w * h:
             continue
+        x, y, w, h = x0, y0, x1 - x0, y1 - y0
+        n = {**n, "box": [x, y, w, h]}
         key = (x, y, w, h)
         if key in seen:
             continue
@@ -200,12 +294,75 @@ def column_search(img, tpl, ex, rx=6):
     return best
 
 
+def recut_run(img: np.ndarray, x: int, y: int, w: int, h: int, gap: int, margin: int = 8):
+    """The ink run around box (x, y, w, h): the box widened by margin, ink columns joined across
+    gaps up to ``gap`` px, cut by its own ink box. Returns the RGB cut or None."""
+    H, W = img.shape[:2]
+    x0, x1 = max(0, x - margin), min(W, x + w + margin)
+    y0, y1 = max(0, y - 1), min(H, y + h + 1)
+    win = img[y0:y1, x0:x1]
+    if win.size == 0:
+        return None
+    border = np.concatenate([win[0], win[-1], win[:, 0], win[:, -1]])
+    vals, counts = np.unique(border.reshape(-1, 3), axis=0, return_counts=True)
+    bg = vals[np.argmax(counts)]
+    mask = np.abs(win - bg).max(axis=2) > INK_DIFF
+    cols = mask.any(axis=0)
+    if not cols.any():
+        return None
+    c = min(max(x - x0 + w // 2, 0), len(cols) - 1)
+    if not cols[c]:
+        near = np.nonzero(cols)[0]
+        c = int(near[np.argmin(np.abs(near - c))])
+    lo = hi = c
+    while lo > 0 and cols[max(0, lo - 1 - gap):lo].any():
+        lo -= 1
+    while hi < len(cols) - 1 and cols[hi + 1:hi + 2 + gap].any():
+        hi += 1
+    sub = mask[:, lo:hi + 1]
+    ys = np.nonzero(sub.any(axis=1))[0]
+    xs = np.nonzero(sub.any(axis=0))[0]
+    return win[ys.min():ys.max() + 1, lo + xs.min():lo + xs.max() + 1]
+
+
+def run_identity(ltr_img: np.ndarray, ink: dict, oth_img: np.ndarray, fx: int, fy: int, tol2: float = 0.02) -> dict:
+    """O2 for a text run: the run re-cut around its located position in the other cell equals the
+    run re-cut the same way around its box in the left-to-right cell.
+
+    Both cuts use one rule (the box widened by 8 px, ink columns joined across gaps up to the
+    run's own largest gap, cut by the joined ink box), so nested or adjacent accessibles cut the
+    same in both cells; a run whose characters bidi reordered (a trailing colon moved to the
+    front) keeps its width and changes its image, and fails. Template alignment alone matches the
+    unmoved part and misses that.
+    """
+    x, y, w, h = ink["box"]
+    gap = max(3, ink["max_gap"])
+    a = recut_run(ltr_img, x, y, w, h, gap)
+    b = recut_run(oth_img, fx, fy, w, h, gap)
+    if a is None or b is None:
+        return {"identical": False, "reason": "no ink"}
+    if abs(a.shape[1] - b.shape[1]) > 1 or abs(a.shape[0] - b.shape[0]) > 1:
+        return {"identical": False, "reason": "size", "w": [int(a.shape[1]), int(b.shape[1])]}
+    hh, ww = min(a.shape[0], b.shape[0]), min(a.shape[1], b.shape[1])
+    mm = float((np.abs(a[:hh, :ww] - b[:hh, :ww]).max(axis=2) > INK_DIFF).mean())
+    return {"identical": mm <= tol2, "mismatch": round(mm, 4)}
+
+
 # ------------------------------------------------------------------------------------------
 # pairwise element analysis
 
 
-def element_pass(ltr_img, oth_img, ltr_nodes, frame, mode: str, tol2: float, oth_paths=None) -> list[dict]:
-    """mode: 'reflect' (LTR -> mirrored), 'identity' (A/A), 'column' (placebo: vertical moves)."""
+TOL_LOCATE = 0.10
+
+
+def element_pass(ltr_img, oth_img, ltr_nodes, frame, mode: str, tol2: float, oth_paths=None, tol3: int = 2) -> list[dict]:
+    """mode: 'reflect' (LTR -> mirrored), 'identity' (A/A; placebo: in-row moves), 'column' (vertical moves).
+
+    Locating uses a fixed tolerance (TOL_LOCATE = 0.10 of template pixels): the question is where
+    the widget is, and a mirrored toolbar redraws its icons with one-pixel offsets (2-4% of pixels).
+    at_expected: located within tol3 px of the expected position; intact: located anywhere in its
+    row band. O2's pixel identity of text runs uses tol2 (registered) through run_identity.
+    """
     fx, fy, fw, fh = frame
     out = []
     for n in leaf_elements(ltr_nodes):
@@ -222,7 +379,8 @@ def element_pass(ltr_img, oth_img, ltr_nodes, frame, mode: str, tol2: float, oth
         rec = {"path": n["path"], "role": n["role"], "name": n["name"], "ltr_box": list(n["box"]),
                "ink_box": list(ink["box"]), "max_gap": ink["max_gap"], "ink": ink["ink"],
                "local_mismatch": round(lm, 4), "dx": ldx, "dy": ldy}
-        rec["at_expected"] = lm <= tol2 and abs(ldx) <= 2 and abs(ldy) <= 2
+        rec["at_expected"] = lm <= TOL_LOCATE and abs(ldx) <= tol3 and abs(ldy) <= 2
+        rec["near_expected"] = lm <= TOL_LOCATE
         if rec["at_expected"]:
             rec["found_mismatch"], rec["found_x"], rec["found_y"] = rec["local_mismatch"], ex + ldx, ey + ldy
         else:
@@ -233,7 +391,7 @@ def element_pass(ltr_img, oth_img, ltr_nodes, frame, mode: str, tol2: float, oth
             if lm < bm:
                 bm, bx, by = lm, ex + ldx, ey + ldy
             rec["found_mismatch"], rec["found_x"], rec["found_y"] = round(bm, 4), bx, by
-        rec["intact"] = rec["found_mismatch"] <= tol2
+        rec["intact"] = rec["found_mismatch"] <= TOL_LOCATE
         if rec["intact"] and rec["found_x"] is not None:
             rec["disp_x"] = int(rec["found_x"] - ix)
             rec["disp_y"] = int(rec["found_y"] - iy)
@@ -245,10 +403,15 @@ def element_pass(ltr_img, oth_img, ltr_nodes, frame, mode: str, tol2: float, oth
             half = iw // 2
             lm1, _, _ = local_search(oth_img, ink["tpl"][:, :half], ex, ey, rx=6, ry=2)
             lm2, _, _ = local_search(oth_img, ink["tpl"][:, half:], ex + half, ey, rx=6, ry=2)
-            rec["clipped"] = (min(lm1, lm2) <= tol2) and (max(lm1, lm2) > tol2)
+            rec["clipped"] = (min(lm1, lm2) <= TOL_LOCATE) and (max(lm1, lm2) > TOL_LOCATE)
         else:
             rec["clipped"] = False
-        rec["text_run"] = (n["role"] in TEXT_ROLES and bool(LETTER.search(n["name"] or "")) and ink["max_gap"] <= 8)
+        rec["text_run"] = n["role"] in TEXT_ROLES and ink["max_gap"] <= 12
+        if rec["text_run"]:
+            if rec["intact"] and rec["found_x"] is not None:
+                rec["run"] = run_identity(ltr_img, ink, oth_img, rec["found_x"], rec["found_y"], tol2)
+            else:
+                rec["run"] = {"identical": False, "reason": "not located"}
         if oth_paths is not None:
             rec["in_other_tree"] = (tuple(n["path"]), n["role"]) in oth_paths
         out.append(rec)

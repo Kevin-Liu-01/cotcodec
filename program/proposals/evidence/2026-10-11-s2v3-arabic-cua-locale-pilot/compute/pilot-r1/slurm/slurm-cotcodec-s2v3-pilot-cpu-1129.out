@@ -1,0 +1,131 @@
+[     0.0s] 106 tasks; building catalogs
+[     6.8s] catalog: {"started": "2026-10-11T10:01:15Z", "ui_files": 1082, "ui_parse_errors": 0, "ui_pairs": 13226, "libraries": 127, "context_candidates": 9931, "code_pairs": 155390, "mo_entries": 168616, "mo_sha256": "ee2d5621ebe3fa353278b23d528fcde36c505803e3a841374f81895ba2158f66", "registry_files": 15, "localized_values": 5583, "registry_ar_values": 5580, "registry_qtz_values": 5580, "registry_ar.xcd_sha256": "fa27557616ef88fe3638ffa9e8f13e1c4ada4e311adbdf0b8f7083163d914b65", "registry_qtz.xcd_sha256": "ef17ddd46fdca6daf5a7f168816f9cc795a54905509d9bee7352684a1fe07b6a", "matched_length_all": true, "sample_share_letters_arabic": 0.9767, "seconds": 6.7}
+[    11.2s] w0 ready a11y=True
+[    11.7s] w1 ready a11y=True
+[    12.1s] w2 ready a11y=True
+[    12.7s] w3 ready a11y=True
+[    13.2s] w4 ready a11y=True
+[    13.7s] w5 ready a11y=True
+[    14.2s] w6 ready a11y=True
+[    14.7s] w7 ready a11y=True
+[    15.2s] w8 ready a11y=True
+[    15.7s] w9 ready a11y=True
+[    16.2s] w10 ready a11y=True
+[    16.7s] w11 ready a11y=True
+[    17.2s] w12 ready a11y=True
+[    17.7s] w13 ready a11y=True
+[    18.2s] w14 ready a11y=True
+[    18.7s] w15 ready a11y=True
+[    22.9s] w0 357ef137 S   1.5s stable=True title=ok
+[    23.4s] w1 357ef137 E   1.5s stable=True title=ok
+[    24.0s] w2 357ef137 E2  1.5s stable=True title=ok
+[    24.9s] w4 357ef137 ER  1.5s stable=True title=ok
+[    26.4s] w7 357ef137 Q   1.5s stable=True title=ok
+[    26.8s] w8 357ef137 PL  1.5s stable=True title=ok
+[    27.4s] w3 357ef137 A   4.3s stable=True title=ok
+[    27.4s] w9 42e0a640 S   1.5s stable=True title=ok
+[    27.9s] w10 42e0a640 E   1.5s stable=True title=ok
+[    28.4s] w11 42e0a640 E2  1.5s stable=True title=ok
+[    28.4s] w5 357ef137 AR  4.3s stable=True title=ok
+[    29.0s] w6 357ef137 AD  4.3s stable=True title=ok
+[    29.4s] w13 42e0a640 ER  1.5s stable=True title=ok
+[    32.1s] w12 42e0a640 A   4.3s stable=True title=ok
+[    32.9s] w14 42e0a640 AR  4.3s stable=True title=ok
+[    33.5s] w15 42e0a640 AD  4.3s stable=True title=ok
+[    34.1s] w0 42e0a640 Q   1.0s stable=True title=ok
+[    34.7s] w1 42e0a640 PL  1.0s stable=True title=ok
+[    35.3s] w2 51719eea S   1.0s stable=True title=ok
+[    36.3s] w4 51719eea E2  1.0s stable=True title=ok
+[    38.6s] w3 51719eea E   1.0s stable=True title=ok
+[    38.6s] w9 51719eea Q   1.0s stable=True title=ok
+[    39.1s] w10 51719eea PL  1.0s stable=True title=ok
+[    39.5s] w11 1954cced S   1.0s stable=True title=ok
+[    40.1s] w6 51719eea ER  1.0s stable=True title=ok
+[    40.5s] w13 1954cced E2  1.0s stable=True title=ok
+[    40.6s] w7 51719eea AR  3.8s stable=True title=ok
+[    41.1s] w8 51719eea AD  3.8s stable=True title=ok
+[    42.8s] w5 51719eea A   3.8s stable=True title=ok
+[    43.0s] w12 1954cced E   1.0s stable=True title=ok
+[    44.6s] w15 1954cced ER  1.0s stable=True title=ok
+[    45.7s] w4 3aaa4e37 S   1.0s stable=True title=ok
+[    46.4s] w2 1954cced Q   1.0s stable=True title=ok
+[    46.8s] w14 1954cced A   3.6s stable=True title=ok
+[    48.0s] w0 1954cced AR  3.6s stable=True title=ok
+[    48.6s] w1 1954cced AD  3.6s stable=True title=ok
+[    49.0s] w11 3aaa4e37 Q   1.0s stable=True title=ok
+[    49.5s] w6 3aaa4e37 E2  1.0s stable=True title=ok
+[    49.7s] w3 1954cced PL  1.0s stable=True title=ok
+[    50.5s] w8 3aaa4e37 ER  1.0s stable=True title=ok
+[    50.8s] w9 3aaa4e37 AR  3.5s stable=True title=ok
+[    51.4s] w10 3aaa4e37 AD  3.5s stable=True title=ok
+[    51.6s] w13 1273e544 S   1.0s stable=True title=ok
+[    52.1s] w12 3aaa4e37 PL  0.8s stable=True title=ok
+[    52.2s] w5 3aaa4e37 E   1.0s stable=True title=ok
+[    52.9s] w7 3aaa4e37 A   3.6s stable=True title=ok
+[    55.6s] w15 1273e544 E2  1.0s stable=True title=ok
+[    56.7s] w4 1273e544 Q   1.0s stable=True title=ok
+[    57.8s] w14 1273e544 E   1.0s stable=True title=ok
+[    59.6s] w1 1273e544 ER  1.0s stable=True title=ok
+[    60.0s] w2 1273e544 AR  3.3s stable=True title=ok
+[    61.8s] w0 1273e544 A   3.6s stable=True title=ok
+[    63.3s] w5 1273e544 PL  1.0s stable=True title=ok
+[    63.5s] w3 1273e544 AD  3.6s stable=True title=ok
+[    64.4s] w6 12382c62 S   1.0s stable=True title=ok
+[    65.3s] w8 12382c62 E2  1.0s stable=True title=ok
+[    66.4s] w10 12382c62 ER  1.0s stable=True title=ok
+[    66.5s] w13 12382c62 Q   1.0s stable=True title=ok
+[    66.7s] w11 12382c62 AR  3.6s stable=True title=ok
+[    67.7s] w7 12382c62 E   1.0s stable=True title=ok
+[    67.9s] w4 f9584479 E   1.0s stable=True title=ok
+[    68.5s] w9 12382c62 A   3.6s stable=True title=ok
+[    69.8s] w12 12382c62 AD  3.6s stable=True title=ok
+[    70.5s] w15 12382c62 ER2 1.0s stable=True title=ok
+[    71.0s] w2 12382c62 PD  1.0s stable=True title=ok
+[    72.7s] w14 12382c62 PL  1.0s stable=True title=ok
+[    74.4s] w1 12382c62 PCR 1.0s stable=True title=ok
+[    74.5s] w5 f9584479 E2  1.0s stable=True title=ok
+[    74.7s] w3 f9584479 S   1.0s stable=True title=ok
+[    76.7s] w0 12382c62 PCL 1.0s stable=True title=ok
+[    77.5s] w13 535364ea E   1.0s stable=True title=ok
+[    77.6s] w10 f9584479 Q   1.0s stable=True title=ok
+[    77.9s] w11 f9584479 PL  1.0s stable=True title=ok
+[    78.4s] w6 f9584479 A   3.6s stable=True title=ok
+[    78.8s] w7 f9584479 ER  1.0s stable=True title=ok
+[    79.0s] w4 535364ea PL  1.0s stable=True title=ok
+[    79.4s] w8 f9584479 AR  3.6s stable=True title=ok
+[    81.0s] w12 535364ea S   1.0s stable=True title=ok
+[    82.5s] w9 f9584479 AD  3.5s stable=True title=ok
+[    83.9s] w14 535364ea E2  1.0s stable=True title=ok
+[    84.6s] w15 535364ea A   3.6s stable=True title=ok
+[    85.3s] w2 535364ea AD  3.5s stable=True title=ok
+[    85.7s] w5 7e429b8d S   1.0s stable=True title=ok
+[    86.2s] w3 535364ea Q   1.0s stable=True title=ok
+[    88.1s] w0 535364ea ER  1.0s stable=True title=ok
+[    88.5s] w1 535364ea AR  3.5s stable=True title=ok
+[    88.6s] w13 7e429b8d PL  1.0s stable=True title=ok
+[    89.5s] w6 7e429b8d E   1.0s stable=True title=ok
+[    89.9s] w7 7e429b8d E2  1.0s stable=True title=ok
+[    91.6s] w10 7e429b8d AR  3.6s stable=True title=ok
+[    91.8s] w11 7e429b8d AD  3.5s stable=True title=ok
+[    91.9s] w12 7e429b8d Q   1.0s stable=True title=ok
+[    93.6s] w8 7e429b8d A   3.8s stable=True title=ok
+[    93.6s] w9 7e429b8d ER  1.0s stable=True title=ok
+[    99.0s] w14 4f07fbe9 S   1.0s stable=True title=ok
+[    99.8s] w15 4f07fbe9 E   1.0s stable=True title=ok
+[   100.4s] w2 4f07fbe9 ER  1.0s stable=True title=ok
+[   100.9s] w5 4f07fbe9 Q   1.0s stable=True title=ok
+[   101.0s] w7 04d9aeaf S   1.0s stable=True title=ok
+[   101.1s] w4 4f07fbe9 AD  3.5s stable=True title=ok
+[   102.5s] w13 04d9aeaf AD  3.5s stable=True title=ok
+[   103.0s] w11 04d9aeaf ER  1.0s stable=True title=ok
+[   103.2s] w0 4f07fbe9 E2  1.0s stable=True title=ok
+[   104.7s] w8 04d9aeaf E   1.0s stable=True title=ok
+[   104.8s] w6 4f07fbe9 PL  1.0s stable=True title=ok
+[   104.8s] w9 04d9aeaf E2  1.0s stable=True title=ok
+[   105.5s] w10 04d9aeaf A   3.6s stable=True title=ok
+[   105.9s] w12 04d9aeaf AR  3.6s stable=True title=ok
+[   109.0s] w3 4f07fbe9 AR  3.5s stable=True title=ok
+[   110.1s] w14 04d9aeaf Q   1.0s stable=True title=ok
+[   110.8s] w15 04d9aeaf PL  1.0s stable=True title=ok
+[   111.0s] w1 4f07fbe9 A   3.5s stable=True title=ok
+slurmstepd-fal-h100-01: error: *** JOB 1129 ON fal-h100-01 CANCELLED AT 2026-10-11T10:03:07 ***

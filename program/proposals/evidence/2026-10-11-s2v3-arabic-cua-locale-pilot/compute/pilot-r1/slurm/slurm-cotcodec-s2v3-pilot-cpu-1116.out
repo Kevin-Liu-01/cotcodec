@@ -1,0 +1,45 @@
+[     0.0s] 3 tasks; building catalogs
+[     5.5s] catalog: {"started": "2026-10-11T09:44:18Z", "ui_files": 1082, "ui_parse_errors": 0, "ui_pairs": 13226, "libraries": 127, "context_candidates": 9931, "code_pairs": 27524, "mo_entries": 40750, "mo_sha256": "f288192cbcba881a71b44f0f14318132abfe134e03e67a3b1a2ac393e91c5348", "registry_files": 15, "localized_values": 6763, "registry_ar_values": 6760, "registry_qtz_values": 6760, "registry_ar.xcd_sha256": "9d6cc0e926caeed7544839b1402eb5a60ecba4e4e46fd66386026a311bfc9121", "registry_qtz.xcd_sha256": "566f0f575eb0ad9484514ae39e0de2f2cd5c4cf13158d0cd8dd1193f16b459b3", "matched_length_all": true, "sample_share_letters_arabic": 0.9762, "seconds": 5.5}
+[     9.8s] w0 ready a11y=True
+[    10.3s] w1 ready a11y=True
+[    10.8s] w2 ready a11y=True
+[    11.4s] w3 ready a11y=True
+[    11.8s] w4 ready a11y=True
+[    12.4s] w5 ready a11y=True
+[    25.2s] w0 12382c62 S   1.5s stable=True title=ok
+[    25.8s] w1 12382c62 E   1.5s stable=True title=ok
+[    26.2s] w2 12382c62 E2  1.5s stable=True title=ok
+[    27.3s] w4 12382c62 ER  1.5s stable=True title=ok
+[    41.1s] w2 12382c62 PL  1.0s stable=True title=ok
+[    42.2s] w4 12382c62 PC  1.0s stable=True title=ok
+[    46.8s] w3 12382c62 A   2.0s stable=True title=ok
+[    47.8s] w5 12382c62 AR  2.0s stable=True title=ok
+[    52.9s] w2 af23762e E2  1.3s stable=True title=ok
+[    54.0s] w4 af23762e ER  1.3s stable=True title=ok
+[    58.9s] w5 12382c62 PD  1.0s stable=True title=ok
+[    60.2s] w1 12382c62 Q   1.0s stable=True title=ok
+[    60.3s] w0 12382c62 AD  1.5s stable=True title=ok
+[    61.8s] w3 12382c62 ER2 1.0s stable=True title=ok
+[    64.4s] w2 af23762e PL  1.0s stable=True title=ok
+[    65.5s] w4 af23762e PC  1.0s stable=True title=ok
+[    71.8s] w0 af23762e S   1.0s stable=True title=ok
+[    72.0s] w1 af23762e E   1.3s stable=True title=ok
+[    77.9s] w2 0e47de2a E2  1.0s stable=True title=ok
+[    79.0s] w4 0e47de2a ER  1.0s stable=True title=ok
+[    90.9s] w5 af23762e AR  1.8s stable=True title=ok
+[    91.3s] w2 0e47de2a PL  1.0s stable=True title=ok
+[    92.5s] w4 0e47de2a PC  1.0s stable=True title=ok
+[    93.7s] w3 af23762e A   1.8s stable=True title=ok
+[   102.5s] w5 af23762e PD  1.0s stable=True title=ok
+[   103.2s] w1 af23762e Q   1.0s stable=True title=ok
+[   103.7s] w0 af23762e AD  1.8s stable=True title=ok
+[   105.2s] w3 af23762e ER2 1.0s stable=True title=ok
+[   116.6s] w1 0e47de2a E   1.0s stable=True title=ok
+[   117.1s] w0 0e47de2a S   1.0s stable=True title=ok
+[   136.2s] w5 0e47de2a AR  1.5s stable=True title=ok
+[   138.9s] w3 0e47de2a A   1.5s stable=True title=ok
+[   147.2s] w5 0e47de2a PD  1.0s stable=True title=ok
+[   149.7s] w1 0e47de2a Q   1.0s stable=True title=ok
+[   150.8s] w0 0e47de2a AD  1.5s stable=True title=ok
+[   152.4s] w3 0e47de2a ER2 1.0s stable=True title=ok
+[   152.4s] done: 36 renders

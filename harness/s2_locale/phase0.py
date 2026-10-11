@@ -78,30 +78,55 @@ def saved_file(cap: Path, task: str, cell: str, rec: dict) -> list[Path]:
 
 
 def calibrate(cap: Path, recs: dict, dev_tasks: list[str]) -> dict:
-    elem = []
-    full = []
-    doc = []
+    """Tolerances and the VCL coordinate offset, from the 17 dev tasks only (frozen for the rest)."""
+    elem, full, doc, trans, dxs = [], [], [], [], []
+    dys = []
+    for t in dev_tasks:
+        ie, de = shot(cap, t, "E"), a11y(cap, t, "E")
+        if ie is not None and de:
+            dys.append(O.estimate_dy(ie, O.showing_nodes(de)))
+    dy_vcl = int(Counter(dys).most_common(1)[0][0]) if dys else 0
     for t in dev_tasks:
         for a, b in (("E", "E2"), ("ER", "ER2")):
             ia, ib = shot(cap, t, a), shot(cap, t, b)
             if ia is None or ib is None:
                 continue
             full.append(O.pixel_diff(ia, ib)["diff_pixels"])
-            if a == "E":
-                da = a11y(cap, t, a)
-                if da:
-                    nodes = O.showing_nodes(da)
-                    fr = O.frame_box(nodes) or (0, 0, 1920, 1080)
-                    els = O.element_pass(ia, ib, nodes, fr, "identity", 1.0)
-                    elem += [e["local_mismatch"] for e in els]
-                    box = O.doc_region(nodes)
-                    if box:
-                        al = O.align_count(ia, ib, box)
-                        if al.get("ok"):
-                            doc.append(al["diff_pixels"])
-    worst_elem = max(elem) if elem else 0.0
-    return {"aa_elements": len(elem), "aa_worst_element_mismatch": round(worst_elem, 4),
-            "tol2": round(max(0.02, 2 * worst_elem), 4),
+        ie, de = shot(cap, t, "E"), a11y(cap, t, "E")
+        if ie is None or not de:
+            continue
+        nodes = O.place_nodes(ie, O.showing_nodes(de), dy_vcl)
+        fr = O.frame_box(nodes) or (0, 0, 1920, 1080)
+        i2 = shot(cap, t, "E2")
+        if i2 is not None:
+            els = O.element_pass(ie, i2, nodes, fr, "identity", 1.0)
+            elem += [e["local_mismatch"] for e in els]
+            box = O.doc_region(nodes)
+            if box:
+                al = O.align_count(ie, i2, box)
+                if al.get("ok"):
+                    doc.append(al["diff_pixels"])
+        ipl = shot(cap, t, "PL")
+        if ipl is not None:
+            # translation noise: toolbar elements the shuffle moved within their row
+            for e in O.element_pass(ie, ipl, nodes, fr, "identity", 0.25):
+                if e["role"] in ("push button", "toggle button") and not e.get("unmoved") \
+                        and e.get("found_y") is not None and abs(e["found_y"] - e["ink_box"][1]) <= 2 \
+                        and e["found_mismatch"] <= 0.25:
+                    trans.append(e["found_mismatch"])
+        ier = shot(cap, t, "ER")
+        if ier is not None:
+            for e in O.element_pass(ie, ier, nodes, fr, "reflect", 0.25, tol3=24):
+                if e["near_expected"] and e["local_mismatch"] <= 0.25:
+                    dxs.append(abs(e["dx"]))
+    worst = max(elem) if elem else 0.0
+    p95t = float(np.percentile(trans, 95)) if trans else 0.0
+    tol2 = round(min(0.10, max(0.02, 2 * worst, p95t)), 4)
+    tol3 = int(max(2, math.ceil(float(np.percentile(dxs, 95))))) if dxs else 2
+    return {"dy_vcl": dy_vcl, "dy_vcl_by_dev_task": dys,
+            "aa_elements": len(elem), "aa_worst_element_mismatch": round(worst, 4),
+            "translation_elements": len(trans), "translation_p95_mismatch": round(p95t, 4), "tol2": tol2,
+            "reflection_dx_elements": len(dxs), "tol3": tol3,
             "aa_full_diff_pixels": full, "tol6": int(max(50, 2 * max(full))) if full else 50,
             "aa_doc_diff_pixels": doc, "tol5": int(max(50, 2 * max(doc))) if doc else 50}
 
@@ -150,6 +175,10 @@ def analyse_task(cap: Path, task: str, cells: dict[str, dict], tol: dict, pool_t
     imgs = {c: shot(cap, task, c) for c in cells}
     dumps = {c: a11y(cap, task, c) for c in cells}
     nodes = {c: O.showing_nodes(d) if d else [] for c, d in dumps.items()}
+    placed = {}
+    for c in ("E", "A", "PCL"):
+        if imgs.get(c) is not None and nodes.get(c):
+            placed[c] = O.place_nodes(imgs[c], nodes[c], tol["dy_vcl"])
     expected = cells.get("E", {}).get("expected_title")
     # admission -------------------------------------------------------------------------
     adm_cells = [c for c in PHASE1_CELLS + ("PL",) if c in cells]
@@ -236,12 +265,13 @@ def analyse_task(cap: Path, task: str, cells: dict[str, dict], tol: dict, pool_t
     frame = O.frame_box(nodes.get("E") or []) or (0, 0, 1920, 1080)
     res["frame"] = list(frame)
     elems = {}
-    for ltr, oth, mode in (("E", "ER", "reflect"), ("A", "AR", "reflect"), ("E", "PL", "column"),
+    for ltr, oth, mode in (("E", "ER", "reflect"), ("A", "AR", "reflect"), ("E", "PL", "identity"),
                            ("PCL", "PCR", "reflect")):
         if imgs.get(ltr) is None or imgs.get(oth) is None or not nodes.get(ltr):
             continue
         paths = {(tuple(n["path"]), n["role"]) for n in nodes.get(oth, [])}
-        elems[f"{ltr}-{oth}"] = O.element_pass(imgs[ltr], imgs[oth], nodes[ltr], frame, mode, tol["tol2"], paths)
+        elems[f"{ltr}-{oth}"] = O.element_pass(imgs[ltr], imgs[oth], placed[ltr], frame, mode, tol["tol2"], paths,
+                                               tol3=tol["tol3"] if mode == "reflect" else 2)
     res["elements"] = {k: summarize_elements(v) for k, v in elems.items()}
     res["_elements_raw"] = elems
     # O4 order --------------------------------------------------------------------------
@@ -252,7 +282,7 @@ def analyse_task(cap: Path, task: str, cells: dict[str, dict], tol: dict, pool_t
         loc = lambda es: {tuple(e["path"]): e["found_x"] for e in es if e["intact"]}  # noqa: E731
         res["o4_rtl"] = O.order_agreement(O.sibling_order(loc(elems["E-ER"])), O.sibling_order(loc(elems["A-AR"])))
     # O5 ----------------------------------------------------------------------------------
-    box = O.doc_region(nodes.get("E") or [])
+    box = O.doc_region(placed.get("E") or [])
     res["doc_box"] = box
     o5 = {}
     if box is not None and imgs.get("E") is not None:
@@ -266,13 +296,17 @@ def analyse_task(cap: Path, task: str, cells: dict[str, dict], tol: dict, pool_t
         cand = [e for e in elems["E-ER"] if e["at_expected"] and e["ink_box"][2] >= 16]
         if cand:
             el = cand[int(rng.integers(len(cand)))]
-            shifted = plant_shift(imgs["ER"], el)
-            node = next(n for n in nodes["E"] if n["path"] == el["path"] and n["role"] == el["role"])
-            r1 = O.element_pass(imgs["E"], shifted, [node], frame, "reflect", tol["tol2"])
+            shifted = plant_shift(imgs["ER"], el, dx=tol["tol3"] + 8)
+            node = next(n for n in placed["E"] if n["path"] == el["path"] and n["role"] == el["role"])
+            r1 = O.element_pass(imgs["E"], shifted, [node], frame, "reflect", tol["tol2"], tol3=tol["tol3"])
             plants["o3_shift_detected"] = bool(r1) and not r1[0]["at_expected"]
-            reordered = plant_reorder(imgs["ER"], el)
-            r2 = O.element_pass(imgs["E"], reordered, [node], frame, "reflect", tol["tol2"])
-            plants["o2_reorder_detected"] = bool(r2) and not r2[0]["intact"]
+            runs = [e for e in cand if e["text_run"] and e.get("run", {}).get("identical")]
+            if runs:
+                elr = runs[int(rng.integers(len(runs)))]
+                noder = next(n for n in placed["E"] if n["path"] == elr["path"] and n["role"] == elr["role"])
+                reordered = plant_reorder(imgs["ER"], elr)
+                r2 = O.element_pass(imgs["E"], reordered, [noder], frame, "reflect", tol["tol2"], tol3=tol["tol3"])
+                plants["o2_reorder_detected"] = bool(r2) and not r2[0].get("run", {}).get("identical", False)
             plants["element"] = {"role": el["role"], "name": el["name"][:40], "ink_w": el["ink_box"][2]}
         if box is not None and o5.get("ER", {}).get("unflipped", {}).get("ok"):
             u = o5["ER"]["unflipped"]
@@ -303,6 +337,9 @@ def summarize_elements(es: list[dict]) -> dict:
             "missing": sum(1 for e in es if not e["intact"] and not e["clipped"]),
             "not_in_other_tree": sum(1 for e in es if e.get("in_other_tree") is False),
             "text_runs": len(runs), "text_runs_intact": sum(e["intact"] for e in runs),
+            "text_runs_identical": sum(bool(e.get("run", {}).get("identical")) for e in runs),
+            "text_runs_not_identical": [(e["role"], e["name"][:40], e.get("run", {}).get("reason") or e.get("run", {}).get("mismatch"))
+                                        for e in runs if not e.get("run", {}).get("identical")][:12],
             "share_at_expected": round(sum(e["at_expected"] for e in es) / n, 4),
             "mean_displacement_px": round(float(np.mean(disp)), 1) if disp else None,
             "by_role": {k: v for k, v in sorted(by_role.items())}}
@@ -372,3 +409,62 @@ def decide(per_task: list[dict], tol: dict) -> dict:
             "K0": "PASS" if (len(admitted) >= K_MIN and instrument) else "FAIL", "tolerances": tol,
             "admitted_by_split": dict(Counter(r["split"] for r in admitted)),
             "admitted_by_app": dict(Counter(r["app"] for r in admitted))}
+
+
+# ------------------------------------------------------------------------------------------
+# Admission under the registration's own semantics (P0.8b, P0.9), evaluated after the sweep
+
+
+def decide_checker_invariance(per_task: list[dict], verdicts: list[dict], cells=("A", "ER", "AR", "PL")) -> dict:
+    """K0's admission count under registration v3's P0.8b and P0.9 wording: a content leak or a
+    saved-file difference excludes a task only if the task's checker reads it. Operationalized
+    (choice made after the committed proxy rule's result, disclosed): the task's gold and its
+    do-nothing end state, each opened and saved through the task's own postconfig in every cell
+    (goldsave.py), get the same checker verdict in every Phase 1 cell and the placebo as in
+    en-LTR. Tasks with neither a gold nor a do-nothing result file fall back to the proxy's
+    file-identity rule (A4). A1-A3 as before, with A2 comparing titles across cells and with the
+    postconfig target only where the en-LTR window carries that target.
+    """
+    by = {}
+    for v in verdicts:
+        mid = v.get("mutant_id") or ""
+        task, _, rest = mid.partition("__")
+        kind, _, cell = rest.partition("__")
+        by[(task, kind, cell)] = v
+    out = []
+    for r in per_task:
+        t = r["task_id"]
+        reasons = []
+        for x in r["admission_reasons"]:
+            code = x.split(" ")[0]
+            if code in ("A1", "A3"):
+                reasons.append(x)
+        titles = r.get("titles_by_cell") or {}
+        # A2': identical titles across the Phase 1 cells and the placebo
+        if not r.get("titles_identical", True):
+            reasons.append("A2' titles differ across cells")
+        tested = False
+        for kind in ("gold", "initial"):
+            e = by.get((t, kind, "E"))
+            if e is None:
+                continue
+            tested = True
+            for c in cells:
+                v = by.get((t, kind, c))
+                if v is None:
+                    reasons.append(f"A4' no {kind} verdict in {c}")
+                elif (v.get("verdict"), v.get("score")) != (e.get("verdict"), e.get("score")):
+                    reasons.append(f"A4' {kind} verdict {e.get('verdict')}/{e.get('score')} in E, "
+                                   f"{v.get('verdict')}/{v.get('score')} in {c}")
+        if not tested:
+            reasons += [x for x in r["admission_reasons"] if x.startswith("A4")]
+        out.append({"task_id": t, "app": r["app"], "split": r["split"], "admitted": not reasons,
+                    "reasons": reasons, "checker_tested": tested,
+                    "gold_E": (by.get((t, "gold", "E")) or {}).get("verdict"),
+                    "leaks": sorted(r.get("content_leaks", {}))})
+    adm = [x for x in out if x["admitted"]]
+    return {"admitted": len(adm), "K_min": K_MIN, "tasks": out,
+            "admitted_by_app": dict(Counter(x["app"] for x in adm)),
+            "admitted_by_split": dict(Counter(x["split"] for x in adm)),
+            "reasons": dict(Counter(y.split(" ")[0] + " " + y.split(" ")[1] for x in out for y in x["reasons"])),
+            "admitted_task_ids": sorted(x["task_id"] for x in adm)}

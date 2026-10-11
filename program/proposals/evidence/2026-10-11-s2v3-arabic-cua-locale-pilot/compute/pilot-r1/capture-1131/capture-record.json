@@ -1,0 +1,794 @@
+{
+ "schema": "s2v3-phase0-capture-v1",
+ "seed": 42,
+ "pool_sha256": "f730e464366c03f4d6b12769be96d477609689d9f8ef3db2d7e1ddd2d3237ada",
+ "cells": [
+  "S",
+  "E",
+  "E2",
+  "A",
+  "ER",
+  "AR",
+  "AD",
+  "Q",
+  "PL"
+ ],
+ "dev_cells": [
+  "ER2",
+  "PCL",
+  "PCR",
+  "PD"
+ ],
+ "tasks": 106,
+ "items": 1022,
+ "workers": 16,
+ "facts": {
+  "soffice_version": {
+   "rc": 0,
+   "out": "LibreOffice 7.3.7.2 30(Build:2)\n\n",
+   "err": ""
+  },
+  "icon_theme_zips": [
+   "images_breeze.zip",
+   "images_breeze_dark.zip",
+   "images_breeze_dark_svg.zip",
+   "images_breeze_svg.zip",
+   "images_colibre.zip",
+   "images_elementary.zip",
+   "images_elementary_svg.zip",
+   "images_helpimg.zip",
+   "images_yaru.zip",
+   "images_yaru_mate.zip",
+   "images_yaru_mate_svg.zip",
+   "images_yaru_svg.zip"
+  ],
+  "profile_symbolstyle": [],
+  "profile_oolocale": [
+   "en-US"
+  ],
+  "registry_res_files": [
+   "fcfg_langpack_en-US.xcd"
+  ],
+  "registry_files": [
+   "Langpack-en-US.xcd",
+   "calc.xcd",
+   "draw.xcd",
+   "gnome.xcd",
+   "graphicfilter.xcd",
+   "impress.xcd",
+   "lingucomponent.xcd",
+   "main.xcd",
+   "math.xcd",
+   "ogltrans.xcd",
+   "oo-ad-ldap.xcd.sample",
+   "oo-ldap.xcd.sample",
+   "pdfimport.xcd",
+   "pyuno.xcd",
+   "res",
+   "writer.xcd",
+   "xsltfilter.xcd"
+  ],
+  "toolbar_states": {
+   "CalcWindowState": [
+    "private:resource/toolbar/alignmentbar",
+    "private:resource/toolbar/arrowsbar",
+    "private:resource/toolbar/arrowshapes",
+    "private:resource/toolbar/basicshapes",
+    "private:resource/toolbar/calloutshapes",
+    "private:resource/toolbar/classificationbar",
+    "private:resource/toolbar/colorbar",
+    "private:resource/toolbar/datastreams",
+    "private:resource/toolbar/drawbar",
+    "private:resource/toolbar/drawobjectbar",
+    "private:resource/toolbar/extrusionobjectbar",
+    "private:resource/toolbar/findbar",
+    "private:resource/toolbar/flowchartshapes",
+    "private:resource/toolbar/fontworkobjectbar",
+    "private:resource/toolbar/fontworkshapetype",
+    "private:resource/toolbar/formatobjectbar",
+    "private:resource/toolbar/formcontrols",
+    "private:resource/toolbar/formdesign",
+    "private:resource/toolbar/formsfilterbar",
+    "private:resource/toolbar/formsnavigationbar",
+    "private:resource/toolbar/formtextobjectbar",
+    "private:resource/toolbar/fullscreenbar",
+    "private:resource/toolbar/graffilterbar",
+    "private:resource/toolbar/graphicobjectbar",
+    "private:resource/toolbar/insertbar",
+    "private:resource/toolbar/insertcellsbar",
+    "private:resource/toolbar/linesbar",
+    "private:resource/toolbar/mediaobjectbar",
+    "private:resource/toolbar/notebookbarshortcuts",
+    "private:resource/toolbar/previewbar",
+    "private:resource/toolbar/singlemode",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/starshapes",
+    "private:resource/toolbar/symbolshapes",
+    "private:resource/toolbar/textobjectbar",
+    "private:resource/toolbar/toolbar",
+    "private:resource/toolbar/viewerbar"
+   ],
+   "DrawWindowState": [
+    "private:resource/toolbar/3dobjectsbar",
+    "private:resource/toolbar/alignmentbar",
+    "private:resource/toolbar/arrowsbar",
+    "private:resource/toolbar/arrowshapes",
+    "private:resource/toolbar/basicshapes",
+    "private:resource/toolbar/bezierobjectbar",
+    "private:resource/toolbar/calloutshapes",
+    "private:resource/toolbar/choosemodebar",
+    "private:resource/toolbar/colorbar",
+    "private:resource/toolbar/commentsbar",
+    "private:resource/toolbar/connectorsbar",
+    "private:resource/toolbar/distributebar",
+    "private:resource/toolbar/drawingobjectbar",
+    "private:resource/toolbar/ellipsesbar",
+    "private:resource/toolbar/extrusionobjectbar",
+    "private:resource/toolbar/findbar",
+    "private:resource/toolbar/flowchartshapes",
+    "private:resource/toolbar/fontworkobjectbar",
+    "private:resource/toolbar/fontworkshapetype",
+    "private:resource/toolbar/formcontrols",
+    "private:resource/toolbar/formdesign",
+    "private:resource/toolbar/formsfilterbar",
+    "private:resource/toolbar/formsnavigationbar",
+    "private:resource/toolbar/formtextobjectbar",
+    "private:resource/toolbar/fullscreenbar",
+    "private:resource/toolbar/gluepointsobjectbar",
+    "private:resource/toolbar/graffilterbar",
+    "private:resource/toolbar/graphicobjectbar",
+    "private:resource/toolbar/insertbar",
+    "private:resource/toolbar/linesbar",
+    "private:resource/toolbar/masterviewtoolbar",
+    "private:resource/toolbar/mediaobjectbar",
+    "private:resource/toolbar/optimizetablebar",
+    "private:resource/toolbar/optionsbar",
+    "private:resource/toolbar/positionbar",
+    "private:resource/toolbar/rectanglesbar",
+    "private:resource/toolbar/redactedexportbar",
+    "private:resource/toolbar/redactionbar",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/starshapes",
+    "private:resource/toolbar/symbolshapes",
+    "private:resource/toolbar/tableobjectbar",
+    "private:resource/toolbar/textbar",
+    "private:resource/toolbar/textobjectbar",
+    "private:resource/toolbar/toolbar",
+    "private:resource/toolbar/viewerbar",
+    "private:resource/toolbar/zoombar"
+   ],
+   "ImpressWindowState": [
+    "private:resource/toolbar/3dobjectsbar",
+    "private:resource/toolbar/alignmentbar",
+    "private:resource/toolbar/arrowsbar",
+    "private:resource/toolbar/arrowshapes",
+    "private:resource/toolbar/basicshapes",
+    "private:resource/toolbar/bezierobjectbar",
+    "private:resource/toolbar/calloutshapes",
+    "private:resource/toolbar/choosemodebar",
+    "private:resource/toolbar/classificationbar",
+    "private:resource/toolbar/colorbar",
+    "private:resource/toolbar/commentsbar",
+    "private:resource/toolbar/commontaskbar",
+    "private:resource/toolbar/connectorsbar",
+    "private:resource/toolbar/distributebar",
+    "private:resource/toolbar/drawingobjectbar",
+    "private:resource/toolbar/ellipsesbar",
+    "private:resource/toolbar/extrusionobjectbar",
+    "private:resource/toolbar/findbar",
+    "private:resource/toolbar/flowchartshapes",
+    "private:resource/toolbar/fontworkobjectbar",
+    "private:resource/toolbar/fontworkshapetype",
+    "private:resource/toolbar/formcontrols",
+    "private:resource/toolbar/formdesign",
+    "private:resource/toolbar/formsfilterbar",
+    "private:resource/toolbar/formsnavigationbar",
+    "private:resource/toolbar/formtextobjectbar",
+    "private:resource/toolbar/fullscreenbar",
+    "private:resource/toolbar/gluepointsobjectbar",
+    "private:resource/toolbar/graffilterbar",
+    "private:resource/toolbar/graphicobjectbar",
+    "private:resource/toolbar/insertbar",
+    "private:resource/toolbar/linesbar",
+    "private:resource/toolbar/masterviewtoolbar",
+    "private:resource/toolbar/mediaobjectbar",
+    "private:resource/toolbar/notebookbarshortcuts",
+    "private:resource/toolbar/optimizetablebar",
+    "private:resource/toolbar/optionsbar",
+    "private:resource/toolbar/outlinetoolbar",
+    "private:resource/toolbar/positionbar",
+    "private:resource/toolbar/rectanglesbar",
+    "private:resource/toolbar/singlemode",
+    "private:resource/toolbar/slideviewobjectbar",
+    "private:resource/toolbar/slideviewtoolbar",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/starshapes",
+    "private:resource/toolbar/symbolshapes",
+    "private:resource/toolbar/tableobjectbar",
+    "private:resource/toolbar/textbar",
+    "private:resource/toolbar/textobjectbar",
+    "private:resource/toolbar/toolbar",
+    "private:resource/toolbar/viewerbar",
+    "private:resource/toolbar/zoombar"
+   ],
+   "BaseWindowState": [
+    "private:resource/toolbar/formobjectbar",
+    "private:resource/toolbar/queryobjectbar",
+    "private:resource/toolbar/reportobjectbar",
+    "private:resource/toolbar/tableobjectbar",
+    "private:resource/toolbar/toolbar"
+   ],
+   "BasicIDEWindowState": [
+    "private:resource/toolbar/dialogbar",
+    "private:resource/toolbar/findbar",
+    "private:resource/toolbar/formcontrolsbar",
+    "private:resource/toolbar/fullscreenbar",
+    "private:resource/toolbar/insertcontrolsbar",
+    "private:resource/toolbar/macrobar",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/translationbar"
+   ],
+   "ChartWindowState": [
+    "private:resource/toolbar/arrowshapes",
+    "private:resource/toolbar/basicshapes",
+    "private:resource/toolbar/calloutshapes",
+    "private:resource/toolbar/drawbar",
+    "private:resource/toolbar/flowchartshapes",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/starshapes",
+    "private:resource/toolbar/symbolshapes",
+    "private:resource/toolbar/toolbar"
+   ],
+   "DbBrowserWindowState": [
+    "private:resource/toolbar/toolbar"
+   ],
+   "DbQueryWindowState": [
+    "private:resource/toolbar/designobjectbar",
+    "private:resource/toolbar/sqlobjectbar",
+    "private:resource/toolbar/toolbar"
+   ],
+   "DbRelationWindowState": [
+    "private:resource/toolbar/toolbar"
+   ],
+   "DbTableDataWindowState": [
+    "private:resource/toolbar/toolbar"
+   ],
+   "DbTableWindowState": [
+    "private:resource/toolbar/toolbar"
+   ],
+   "StartModuleWindowState": [
+    "private:resource/toolbar/standardbar"
+   ],
+   "MathWindowState": [
+    "private:resource/toolbar/fullscreenbar",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/toolbar"
+   ],
+   "WriterFormWindowState": [
+    "private:resource/toolbar/alignmentbar",
+    "private:resource/toolbar/arrowshapes",
+    "private:resource/toolbar/basicshapes",
+    "private:resource/toolbar/bezierobjectbar",
+    "private:resource/toolbar/calloutshapes",
+    "private:resource/toolbar/colorbar",
+    "private:resource/toolbar/drawbar",
+    "private:resource/toolbar/drawingobjectbar",
+    "private:resource/toolbar/drawtextobjectbar",
+    "private:resource/toolbar/extrusionobjectbar",
+    "private:resource/toolbar/flowchartshapes",
+    "private:resource/toolbar/fontworkobjectbar",
+    "private:resource/toolbar/fontworkshapetype",
+    "private:resource/toolbar/formcontrols",
+    "private:resource/toolbar/formdesign",
+    "private:resource/toolbar/formsfilterbar",
+    "private:resource/toolbar/formsnavigationbar",
+    "private:resource/toolbar/formtextobjectbar",
+    "private:resource/toolbar/frameobjectbar",
+    "private:resource/toolbar/fullscreenbar",
+    "private:resource/toolbar/graffilterbar",
+    "private:resource/toolbar/graphicobjectbar",
+    "private:resource/toolbar/insertbar",
+    "private:resource/toolbar/insertobjectbar",
+    "private:resource/toolbar/mailmerge",
+    "private:resource/toolbar/mediaobjectbar",
+    "private:resource/toolbar/numobjectbar",
+    "private:resource/toolbar/oleobjectbar",
+    "private:resource/toolbar/optimizetablebar",
+    "private:resource/toolbar/previewobjectbar",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/starshapes",
+    "private:resource/toolbar/symbolshapes",
+    "private:resource/toolbar/tableobjectbar",
+    "private:resource/toolbar/textobjectbar",
+    "private:resource/toolbar/toolbar",
+    "private:resource/toolbar/viewerbar"
+   ],
+   "WriterGlobalWindowState": [
+    "private:resource/toolbar/alignmentbar",
+    "private:resource/toolbar/arrowshapes",
+    "private:resource/toolbar/basicshapes",
+    "private:resource/toolbar/bezierobjectbar",
+    "private:resource/toolbar/calloutshapes",
+    "private:resource/toolbar/changes",
+    "private:resource/toolbar/colorbar",
+    "private:resource/toolbar/drawbar",
+    "private:resource/toolbar/drawingobjectbar",
+    "private:resource/toolbar/drawtextobjectbar",
+    "private:resource/toolbar/extrusionobjectbar",
+    "private:resource/toolbar/findbar",
+    "private:resource/toolbar/flowchartshapes",
+    "private:resource/toolbar/fontworkobjectbar",
+    "private:resource/toolbar/fontworkshapetype",
+    "private:resource/toolbar/formcontrols",
+    "private:resource/toolbar/formdesign",
+    "private:resource/toolbar/formsfilterbar",
+    "private:resource/toolbar/formsnavigationbar",
+    "private:resource/toolbar/formtextobjectbar",
+    "private:resource/toolbar/frameobjectbar",
+    "private:resource/toolbar/fullscreenbar",
+    "private:resource/toolbar/graffilterbar",
+    "private:resource/toolbar/graphicobjectbar",
+    "private:resource/toolbar/insertbar",
+    "private:resource/toolbar/mediaobjectbar",
+    "private:resource/toolbar/navigationobjectbar",
+    "private:resource/toolbar/numobjectbar",
+    "private:resource/toolbar/oleobjectbar",
+    "private:resource/toolbar/optimizetablebar",
+    "private:resource/toolbar/previewobjectbar",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/starshapes",
+    "private:resource/toolbar/symbolshapes",
+    "private:resource/toolbar/tableobjectbar",
+    "private:resource/toolbar/textobjectbar",
+    "private:resource/toolbar/textstylebar",
+    "private:resource/toolbar/toolbar",
+    "private:resource/toolbar/viewerbar"
+   ],
+   "WriterReportWindowState": [
+    "private:resource/toolbar/alignmentbar",
+    "private:resource/toolbar/arrowshapes",
+    "private:resource/toolbar/basicshapes",
+    "private:resource/toolbar/bezierobjectbar",
+    "private:resource/toolbar/calloutshapes",
+    "private:resource/toolbar/colorbar",
+    "private:resource/toolbar/drawbar",
+    "private:resource/toolbar/drawingobjectbar",
+    "private:resource/toolbar/drawtextobjectbar",
+    "private:resource/toolbar/extrusionobjectbar",
+    "private:resource/toolbar/flowchartshapes",
+    "private:resource/toolbar/fontworkobjectbar",
+    "private:resource/toolbar/fontworkshapetype",
+    "private:resource/toolbar/formcontrols",
+    "private:resource/toolbar/formdesign",
+    "private:resource/toolbar/formsfilterbar",
+    "private:resource/toolbar/formsnavigationbar",
+    "private:resource/toolbar/formtextobjectbar",
+    "private:resource/toolbar/frameobjectbar",
+    "private:resource/toolbar/fullscreenbar",
+    "private:resource/toolbar/graffilterbar",
+    "private:resource/toolbar/graphicobjectbar",
+    "private:resource/toolbar/insertbar",
+    "private:resource/toolbar/insertobjectbar",
+    "private:resource/toolbar/mailmerge",
+    "private:resource/toolbar/mediaobjectbar",
+    "private:resource/toolbar/numobjectbar",
+    "private:resource/toolbar/oleobjectbar",
+    "private:resource/toolbar/optimizetablebar",
+    "private:resource/toolbar/previewobjectbar",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/starshapes",
+    "private:resource/toolbar/symbolshapes",
+    "private:resource/toolbar/tableobjectbar",
+    "private:resource/toolbar/textobjectbar",
+    "private:resource/toolbar/toolbar",
+    "private:resource/toolbar/viewerbar"
+   ],
+   "WriterWebWindowState": [
+    "private:resource/toolbar/arrowshapes",
+    "private:resource/toolbar/basicshapes",
+    "private:resource/toolbar/bezierobjectbar",
+    "private:resource/toolbar/calloutshapes",
+    "private:resource/toolbar/colorbar",
+    "private:resource/toolbar/drawingobjectbar",
+    "private:resource/toolbar/drawtextobjectbar",
+    "private:resource/toolbar/findbar",
+    "private:resource/toolbar/flowchartshapes",
+    "private:resource/toolbar/fontworkobjectbar",
+    "private:resource/toolbar/fontworkshapetype",
+    "private:resource/toolbar/formcontrols",
+    "private:resource/toolbar/formdesign",
+    "private:resource/toolbar/formsfilterbar",
+    "private:resource/toolbar/formsnavigationbar",
+    "private:resource/toolbar/formtextobjectbar",
+    "private:resource/toolbar/frameobjectbar",
+    "private:resource/toolbar/fullscreenbar",
+    "private:resource/toolbar/graffilterbar",
+    "private:resource/toolbar/graphicobjectbar",
+    "private:resource/toolbar/insertbar",
+    "private:resource/toolbar/mediaobjectbar",
+    "private:resource/toolbar/numobjectbar",
+    "private:resource/toolbar/oleobjectbar",
+    "private:resource/toolbar/previewobjectbar",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/starshapes",
+    "private:resource/toolbar/symbolshapes",
+    "private:resource/toolbar/tableobjectbar",
+    "private:resource/toolbar/textobjectbar",
+    "private:resource/toolbar/toolbar",
+    "private:resource/toolbar/viewerbar"
+   ],
+   "WriterWindowState": [
+    "private:resource/toolbar/alignmentbar",
+    "private:resource/toolbar/arrowsbar",
+    "private:resource/toolbar/arrowshapes",
+    "private:resource/toolbar/basicshapes",
+    "private:resource/toolbar/bezierobjectbar",
+    "private:resource/toolbar/calloutshapes",
+    "private:resource/toolbar/changes",
+    "private:resource/toolbar/classificationbar",
+    "private:resource/toolbar/colorbar",
+    "private:resource/toolbar/drawbar",
+    "private:resource/toolbar/drawingobjectbar",
+    "private:resource/toolbar/drawtextobjectbar",
+    "private:resource/toolbar/extrusionobjectbar",
+    "private:resource/toolbar/findbar",
+    "private:resource/toolbar/flowchartshapes",
+    "private:resource/toolbar/fontworkobjectbar",
+    "private:resource/toolbar/fontworkshapetype",
+    "private:resource/toolbar/formcontrols",
+    "private:resource/toolbar/formdesign",
+    "private:resource/toolbar/formsfilterbar",
+    "private:resource/toolbar/formsnavigationbar",
+    "private:resource/toolbar/formtextobjectbar",
+    "private:resource/toolbar/frameobjectbar",
+    "private:resource/toolbar/fullscreenbar",
+    "private:resource/toolbar/graffilterbar",
+    "private:resource/toolbar/graphicobjectbar",
+    "private:resource/toolbar/insertbar",
+    "private:resource/toolbar/linesbar",
+    "private:resource/toolbar/mailmerge",
+    "private:resource/toolbar/mediaobjectbar",
+    "private:resource/toolbar/navigationobjectbar",
+    "private:resource/toolbar/notebookbarshortcuts",
+    "private:resource/toolbar/numobjectbar",
+    "private:resource/toolbar/oleobjectbar",
+    "private:resource/toolbar/optimizetablebar",
+    "private:resource/toolbar/previewobjectbar",
+    "private:resource/toolbar/singlemode",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/starshapes",
+    "private:resource/toolbar/symbolshapes",
+    "private:resource/toolbar/tableobjectbar",
+    "private:resource/toolbar/textobjectbar",
+    "private:resource/toolbar/textstylebar",
+    "private:resource/toolbar/toolbar",
+    "private:resource/toolbar/viewerbar"
+   ],
+   "XFormsWindowState": [
+    "private:resource/toolbar/alignmentbar",
+    "private:resource/toolbar/arrowshapes",
+    "private:resource/toolbar/basicshapes",
+    "private:resource/toolbar/bezierobjectbar",
+    "private:resource/toolbar/calloutshapes",
+    "private:resource/toolbar/colorbar",
+    "private:resource/toolbar/drawbar",
+    "private:resource/toolbar/drawingobjectbar",
+    "private:resource/toolbar/drawtextobjectbar",
+    "private:resource/toolbar/extrusionobjectbar",
+    "private:resource/toolbar/findbar",
+    "private:resource/toolbar/flowchartshapes",
+    "private:resource/toolbar/fontworkobjectbar",
+    "private:resource/toolbar/fontworkshapetype",
+    "private:resource/toolbar/formcontrols",
+    "private:resource/toolbar/formdesign",
+    "private:resource/toolbar/formsfilterbar",
+    "private:resource/toolbar/formsnavigationbar",
+    "private:resource/toolbar/formtextobjectbar",
+    "private:resource/toolbar/frameobjectbar",
+    "private:resource/toolbar/fullscreenbar",
+    "private:resource/toolbar/graffilterbar",
+    "private:resource/toolbar/graphicobjectbar",
+    "private:resource/toolbar/insertbar",
+    "private:resource/toolbar/insertobjectbar",
+    "private:resource/toolbar/mediaobjectbar",
+    "private:resource/toolbar/numobjectbar",
+    "private:resource/toolbar/oleobjectbar",
+    "private:resource/toolbar/optimizetablebar",
+    "private:resource/toolbar/previewobjectbar",
+    "private:resource/toolbar/standardbar",
+    "private:resource/toolbar/starshapes",
+    "private:resource/toolbar/symbolshapes",
+    "private:resource/toolbar/tableobjectbar",
+    "private:resource/toolbar/textobjectbar",
+    "private:resource/toolbar/toolbar",
+    "private:resource/toolbar/viewerbar"
+   ]
+  },
+  "catalog": {
+   "started": "2026-10-11T10:03:14Z",
+   "ui_files": 1082,
+   "ui_parse_errors": 0,
+   "ui_pairs": 13226,
+   "libraries": 127,
+   "context_candidates": 9931,
+   "code_pairs": 155390,
+   "mo_entries": 168616,
+   "mo_sha256": "ee2d5621ebe3fa353278b23d528fcde36c505803e3a841374f81895ba2158f66",
+   "ui_domains": [
+    "basctl",
+    "chart",
+    "cui",
+    "dkt",
+    "editeng",
+    "flt",
+    "for",
+    "fps",
+    "pcr",
+    "sc",
+    "sd",
+    "sfx",
+    "sm",
+    "svt",
+    "svx",
+    "sw",
+    "uui",
+    "vcl",
+    "wpt",
+    "xsc"
+   ],
+   "registry_files": 15,
+   "localized_values": 5583,
+   "registry_ar_values": 5580,
+   "registry_qtz_values": 5580,
+   "registry_ar.xcd_sha256": "fa27557616ef88fe3638ffa9e8f13e1c4ada4e311adbdf0b8f7083163d914b65",
+   "registry_qtz.xcd_sha256": "ef17ddd46fdca6daf5a7f168816f9cc795a54905509d9bee7352684a1fe07b6a",
+   "matched_length_all": true,
+   "sample_share_letters_arabic": 0.9767,
+   "examples": {
+    "~File": "~فيلع",
+    "Save ~As...": "ساظع ~اس...",
+    "Sheet %1 of %2": "سهععت %1 وف %2",
+    "Default Page Style": "دعفاضلت ثاغع ستطلع",
+    "%PRODUCTNAME Calc": "%PRODUCTNAME كالك",
+    "English (USA)": "عنغليسه (USA)",
+    "Insert PDF": "ينسعرت PDF"
+   },
+   "seconds": 6.6
+  },
+  "fundamentalrc_sha256": "97591078395e6d8a26f40f101108a78dad966d6b01761204107cadb29127a563",
+  "symbol_style_pinned": "yaru"
+ },
+ "worker_info": {
+  "0": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 56
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "1": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 87
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "2": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 116
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "3": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 149
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "4": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 181
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "5": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 212
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "6": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 244
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "7": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 458
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "8": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 693
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "9": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 956
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "10": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 1142
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "11": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 1403
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "12": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 1658
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "13": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 1851
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "14": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 2190
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  },
+  "15": {
+   "a11y": {
+    "ok": true,
+    "dbus_pid": 2516
+   },
+   "setxkbmap_query": {
+    "rc": 0,
+    "out": "rules:      evdev\nmodel:      pc105\nlayout:     us\n",
+    "err": ""
+   },
+   "relinked_symlinks": 12,
+   "toolbar_files": 386,
+   "toolbar_files_shuffled": 369
+  }
+ },
+ "wall_seconds": 924.3,
+ "job": "1131",
+ "code_sha256": {
+  "capture.py": "6781c860f0ef0e8ff5a21e7f045f36ea47da19f575519be217bca52ca2614f7c",
+  "catalog.py": "9b95de047690570766e458fccce16ba90a8d0123b13cf3dc99d1f9e37fce57bf",
+  "reachability.py": "00e106f6003a9f1ef9b9ca4cdbd59fbf1145c5608c6c67e37b57a7a094da0e9b"
+ }
+}

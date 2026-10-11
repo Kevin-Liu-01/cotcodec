@@ -1,0 +1,49 @@
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.8.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+WARNING: The NVIDIA Driver was not detected.  GPU functionality will not be available.
+   Use the NVIDIA Container Toolkit to start this container with GPU support; see
+   https://docs.nvidia.com/datacenter/cloud-native/ .
+
+[   77.8s] manifest and calibration done; 106 tasks
+[   92.5s] 10 tasks
+[   94.1s] 20 tasks
+[   94.1s] 30 tasks
+[  103.9s] 40 tasks
+[  104.4s] 50 tasks
+[  108.0s] 60 tasks
+[  113.3s] 70 tasks
+[  116.2s] 80 tasks
+[  119.7s] 90 tasks
+[  128.5s] 100 tasks
+{
+ "status": "PHASE0_K0_FAIL",
+ "k0": "FAIL",
+ "admitted": 53,
+ "cases": {
+  "c01_manifest": "PASS",
+  "c02_gate_semantics": "PASS",
+  "c03_calibration": "PASS",
+  "c04_positive_controls": "FAIL",
+  "c05_o6_invisibility": "PASS",
+  "c06_o1_text_structure": "PASS",
+  "c07_o4_order": "PASS",
+  "c08_p7_one_layout_treatment": "PASS",
+  "c09_aa_determinism": "PASS",
+  "c10_k0_admission": "FAIL",
+  "c11_coupled_string_plant": "PASS",
+  "c12_catalogs": "PASS"
+ }
+}
