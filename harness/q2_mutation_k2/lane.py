@@ -8,8 +8,9 @@ read-only qcow2 with the action-path v2 runtime's settings (``harness.q2.vm.driv
 starts one GPU-less episode container in that VM's ``--network none`` namespace running
 ``harness.q2_mutation_k2.executor``, waits for its run record, and tears the VM down.
 
-A slot is one run of one pair: ``RUNS_PER_PAIR`` runs per pair, in two blocks (every pair's
-first run, then every pair's second run), so a stop leaves complete first runs. The episode
+A slot is one run of one pair: ``RUNS_PER_PAIR`` runs per pair, in blocks per set (the
+registered sample's first runs, then its second runs, then the K2-C list's), so a stop leaves
+the registered sample's runs done first. The episode
 container mounts the source tree, the OSWorld tree, the pinned file cache and the mutation
 run's candidate files read-only, and its own output directory read-write.
 
@@ -52,7 +53,6 @@ OSWORLD_COMMIT = s1a.OSWORLD_COMMIT
 RUN_ROOT = s1a.RUN_ROOT
 MAX_CONCURRENCY = 32  # D53: certified at no more than 32 concurrent VMs
 RUNS_PER_PAIR = 2
-BLOCKS = ("r1", "r2")
 SETS = ("k2", "k2c")
 ROOTS = {"candidates": "/inputs/candidates", "file_cache": "/inputs/file_cache/files"}
 # The registered run (section 4): fixed for purpose k2, never a manifest's choice.
@@ -64,6 +64,7 @@ REGISTERED_SETTINGS = {
     "requeue": True,
 }
 REGISTERED_CONCURRENCY = 8
+REGISTERED_SLURM = {"cpus": 40, "memory_gb": 64, "minutes": 360}
 REGISTERED_CANDIDATES_RUN = "confirm-mutants-v1"
 # The frozen K2 sample (parent section 10, drawn in job 3 of confirm-mutants-v1) and the K2-C
 # candidate list (section 8), both committed; their SHA-256 are the registration's.
@@ -217,19 +218,33 @@ def slot_id(set_name: str, pair: int, run: int) -> str:
 
 
 def expand_runs(pairs: Sequence[Mapping[str, Any]], runs: int = RUNS_PER_PAIR) -> list[dict]:
-    """Every pair's run 1 (block r1), then every pair's run 2 (block r2)."""
+    """Per set, in the order the sets first appear (the registered sample before the K2-C
+    list): every pair's run 1 (block ``<set>-r1``), then every pair's run 2 (``<set>-r2``).
+    A stop therefore leaves the registered sample's first runs, then its second runs, done
+    before any K2-C run."""
+    sets: list[str] = []
+    for pair in pairs:
+        if pair["set"] not in sets:
+            sets.append(pair["set"])
     out = []
-    for run in range(1, runs + 1):
-        for pair in pairs:
-            out.append(
-                {
-                    **pair,
-                    "run": run,
-                    "block": f"r{run}",
-                    "slot": slot_id(pair["set"], int(pair["pair"]), run),
-                }
-            )
+    for set_name in sets:
+        for run in range(1, runs + 1):
+            for pair in pairs:
+                if pair["set"] != set_name:
+                    continue
+                out.append(
+                    {
+                        **pair,
+                        "run": run,
+                        "block": block_name(set_name, run),
+                        "slot": slot_id(set_name, int(pair["pair"]), run),
+                    }
+                )
     return out
+
+
+def block_name(set_name: str, run: int) -> str:
+    return f"{set_name}-r{run}"
 
 
 def map_files(job: Mapping[str, Any], roots: Mapping[str, str]) -> dict[str, dict[str, str]]:
@@ -357,8 +372,9 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
         seen.add(slot["slot"])
         _require(slot["set"] in SETS, f"{slot['slot']}: set must be one of {SETS}")
         _require(
-            slot["block"] == f"r{slot['run']}" and slot["block"] in BLOCKS,
-            f"{slot['slot']}: block must be r<run>",
+            slot["block"] == block_name(slot["set"], int(slot["run"]))
+            and int(slot["run"]) in range(1, RUNS_PER_PAIR + 1),
+            f"{slot['slot']}: block must be <set>-r<run>",
         )
         _require(
             slot["slot"] == slot_id(slot["set"], int(slot["pair"]), int(slot["run"])),
@@ -407,6 +423,9 @@ def check_registered(m: Mapping[str, Any], source_dir: Path) -> None:
     _require(
         m["vm"]["concurrency"] == REGISTERED_CONCURRENCY,
         f"the k2 job runs at V = {REGISTERED_CONCURRENCY}",
+    )
+    _require(
+        m.get("slurm") == REGISTERED_SLURM, f"the k2 job's Slurm request is {REGISTERED_SLURM}"
     )
     _require(
         m["candidates"]["run"] == REGISTERED_CANDIDATES_RUN,

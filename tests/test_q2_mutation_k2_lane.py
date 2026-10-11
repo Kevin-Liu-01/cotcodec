@@ -84,7 +84,7 @@ def test_a_dev_manifest_validates_and_runs_each_pair_twice_in_two_blocks() -> No
         "k2:001:r2",
         "k2:002:r2",
     ]
-    assert [s["block"] for s in m["slots"]] == ["r1"] * 3 + ["r2"] * 3
+    assert [s["block"] for s in m["slots"]] == ["k2-r1"] * 3 + ["k2-r2"] * 3
 
 
 def mutate(m: dict[str, Any], path: str, value: Any) -> dict[str, Any]:
@@ -111,7 +111,7 @@ def mutate(m: dict[str, Any], path: str, value: Any) -> dict[str, Any]:
         ("engine", {"kind": "fake"}, "no engine"),
         ("candidates.run", "confirm-mutants-v1", "named mutation run"),
         ("runs_per_pair", 3, "runs_per_pair"),
-        ("slots.0.block", "r2", "block must be r<run>"),
+        ("slots.0.block", "k2-r2", "block must be <set>-r<run>"),
         ("slots.0.task_id", "550ce7e7-747b-495f-b122-acdc4d0b8e54", "not a dev task"),
         ("slots.0.files./home/user/X.xlsx.rel", "other/home/user/X.xlsx", "outside its mutant"),
         ("slots.0.files./home/user/X.xlsx.rel", "../x", "unsafe rel"),
@@ -166,7 +166,12 @@ def frozen_tree(tmp_path: Path, *, k2c_sha: str | None = None) -> Path:
 def registered_manifest(src: Path) -> dict[str, Any]:
     pairs = [{**p, "files": pair_files(p)} for p in lane.registered_pairs(src)]
     m = base("k2", "confirm-mutants-v1", v=lane.REGISTERED_CONCURRENCY)
-    return {**m, **lane.REGISTERED_SETTINGS, "slots": lane.expand_runs(pairs)}
+    return {
+        **m,
+        **lane.REGISTERED_SETTINGS,
+        "slurm": dict(lane.REGISTERED_SLURM),
+        "slots": lane.expand_runs(pairs),
+    }
 
 
 def test_after_the_freeze_only_the_registered_k2_job_runs(tmp_path: Path) -> None:
@@ -174,8 +179,9 @@ def test_after_the_freeze_only_the_registered_k2_job_runs(tmp_path: Path) -> Non
     m = registered_manifest(src)
     checked = lane.validate_manifest(m, src)
     assert len(checked["slots"]) == 2 * (80 + 41)
-    assert checked["slots"][0]["slot"] == "k2:000:r1"
-    assert checked["slots"][80]["slot"] == "k2c:000:r1"
+    order = [s["slot"] for s in checked["slots"]]
+    assert order[0] == "k2:000:r1" and order[80] == "k2:000:r2"
+    assert order[160] == "k2c:000:r1" and order[201] == "k2c:000:r2"
     with pytest.raises(lane.LaneError, match="only the registered k2 job"):
         lane.validate_manifest(dev_manifest(), src)
     swapped = json.loads(json.dumps(m))
@@ -189,6 +195,9 @@ def test_after_the_freeze_only_the_registered_k2_job_runs(tmp_path: Path) -> Non
         lane.validate_manifest({**m, "episode_timeout_s": 1200}, src)
     with pytest.raises(lane.LaneError, match="V = 8"):
         lane.validate_manifest(mutate(m, "vm.concurrency", 4), src)
+    with pytest.raises(lane.LaneError, match="Slurm request"):
+        lane.validate_manifest(mutate(m, "slurm.minutes", 30), src)
+    lane.check_slurm(m)
     (src / lane.REGISTRATION).write_text("edited after the freeze\n")
     with pytest.raises(lane.LaneError, match="changed after the freeze"):
         lane.validate_manifest(m, src)
