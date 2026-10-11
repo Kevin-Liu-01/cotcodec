@@ -7,7 +7,8 @@ G-E6; the program's sign-off of section 21).
 
 - Drafted 2026-10-11 on branch `stage0/q2-successor-e` from `main` at `c0971a77`, by the
   single owner of successor E under decision D80 (iii) ("registered, audited before the freeze,
-  frozen and run, for a decisive DR2 reading").
+  frozen and run, for a decisive DR2 reading"). `main` at `746d60d2` (ledger row 18, D81, D82)
+  was merged into the branch before the first pre-freeze audit's items were fixed (section 25).
 - Built on D66 (a successor that only adds data needs a registration and a pre-freeze audit,
   not a gauntlet), D69 (E is the design study's best successor; S1b and the harness-scale
   question are closed) and D80 (iii) (Kevin's delegation: E runs).
@@ -50,6 +51,7 @@ G-E6; the program's sign-off of section 21).
   | `q2-action-path-v2` and its addenda | frozen, ledger rows 13-15; attempt 1 accepted, N* = 32 (D53) | S1a G0 item 1 |
   | The design study | committed (D66, D69); repaired after its attack | `program/evidence/2026-10-10/q2-design-study/`, `program/evidence/2026-10-10/q2-next-step-design-study/` |
   | The D59 tooling | committed (D59, D61, D62) | `ops/s1a-analysis/` |
+  | The checker-mutation adjudication (D81 run 2) | committed (D82); adjudicated by an isolated model on the owner's instruction (D80), not human-validated | `program/evidence/2026-10-11/q2-mutation-adjudication-v2/summary.json` |
 
 - **Code revision.** Every E job runs from a read-only export of **E's freeze commit**, the
   commit that adds this file's ledger row and nothing else (S1a section 1's rule); the overlay
@@ -88,11 +90,11 @@ E is S1a's design with more data. The table is the whole of the difference.
 | VM image, guest disk, VM settings, episode container (the metric image), OSWorld `b138d348`, file cache | S1a section 4 | unchanged |
 | Episode definition, infrastructure losses, agent-caused events, the D53 (iii) observation rule and the postconfig carve-out (D56) | S1a sections 7.1-7.3 | unchanged (`driver.py`, `osworld_live.py` unchanged); counted per E session (section 8) |
 | Episode records | schema `q2-stage1a-episode-v1`, sessions S1 and S2, reruns 1 and 2 | the same schema and fields; session labels E1-E4, rerun 1 (section 5.5) |
-| Outcomes and checker corrections; flagged tasks | S1a section 8 | unchanged |
+| Outcomes and checker corrections; flagged tasks | S1a section 8 | unchanged; one sensitivity added for D82's three gold-defect tasks (section 9) |
 | Estimators (`estimators.py`), inference, rules (`rules.py`: DR0-DR5, P1-P5, M = 0.13 and 0.18) | S1a sections 9-12 | unchanged; read on E's array (sections 10, 11, 13, 14) |
 | Seeds | 42, 43, 44 | 42 for every stream (section 16) |
 | **Tasks** | a 32-task base by seeded draw, plus 81 extension tasks by a cost-based fill rule | **all 113 eligible pool tasks**, no draw, no fill rule (section 5.2) |
-| **Sessions and reruns** | 2 sessions x 2 within-session reruns per size | **4 new sessions (E1-E4) x 1 episode** per size (section 5.3) |
+| **Sessions and reruns** | 2 sessions x 2 within-session reruns per size, 12 h apart | **4 new sessions (E1-E4) x 1 episode** per size, at least 12 h 5 min apart (section 5.3) |
 | **Analysis sets** | primary: the 32-task base; secondary: base plus completed extension blocks | **primary: the 113 tasks**; registered secondary: S1a's 32 base tasks (section 5.6) |
 | **Caps** | the remainder rule over 478 minutes, K from the card's high price (c_proj) | **per-job caps by arithmetic on S1a's realized cost**: realized price x 1.2 x 1.05 (section 7) |
 | **Pre-freeze jobs** | O1, A0a (GPU) | none on a GPU; a CPU-only development smoke and a CPU GLMM run (G-E4, G-E5) |
@@ -111,8 +113,8 @@ E is S1a's design with more data. The table is the whole of the difference.
   (plan, records, lane, entry point, analysis, section 15 items) and
   `tests/test_q2_stage1e_prereg.py` (this file).
 - **G-E4. Development smoke (CPU only, no GPU, pre-freeze).** E's lane and episode entry point
-  have not run on the host. Before the freeze, one CPU-only VM job runs
-  `experiments/manifests/q2-stage1e/dev-smoke-v1.json` through
+  had not run on the host when this file was drafted. Before the freeze, one CPU-only VM job
+  runs `experiments/manifests/q2-stage1e/dev-smoke-v1.json` through
   `python3 -m harness.q2_stage1e.lane submit` from a read-only export of the draft commit: the
   scripted fake engine (S1a's dev-smoke-v1 script: a click, then `terminate(success)`), V = 1,
   the two dev-split tasks of S1a's smoke (job 978) under both harnesses, E's labels. It passes
@@ -121,7 +123,9 @@ E is S1a's design with more data. The table is the whole of the difference.
   rescoring (`rescore.py capture`) of the captured states matches the live score on every
   episode. A scored record with session `E1` shows that E's entry point ran: S1a's driver
   refuses that label at its final check, so it would leave no record. It touches no confirm
-  task and runs no model. Result: TBD
+  task and runs no model. It does not reach the `e` purpose's own checks (prior jobs, the
+  session gap, the engine argv and the Slurm limit), which CPU tests cover (section 22,
+  disclosure 10). Result: TBD
 - **G-E5. The registered GLMM on data of E's shape (CPU only, pre-freeze).** S1a's `glmm.R`
   was accepted on two sessions x two reruns (S1a G0 item 12, job 984). Before the freeze it
   runs, unchanged, in the pinned container (`s1a-cpu.sbatch`, image
@@ -129,8 +133,9 @@ E is S1a's design with more data. The table is the whole of the difference.
   rows of E's shape (`python -m harness.q2_stage1e.analysis glmm-synthetic`, 113 tasks, seed
   42). Its convergence and Hessian are reported. The GLMM is secondary, so its outcome changes
   no registered rule; a fit that fails is disclosed here before the freeze. Result: TBD
-- **G-E6. A fresh, independent pre-freeze audit**, then the freeze (`scripts/preregister.py
-  freeze`). Audit record: TBD
+- **G-E6. A fresh, independent pre-freeze audit** that finds nothing blocking (earlier rounds
+  and their dispositions are in section 25's review log), then the freeze
+  (`scripts/preregister.py freeze`, section 25's steps). Audit record: TBD
 - **G-E7. The overlay OE** is built from E's freeze commit (S1a section 5.5, "Overlay for the
   A1 GPU halves", with `selected_ref: HEAD`); every E GPU half runs on it and its container
   refuses an overlay whose `git_sha` or `source_sha256` differ from its manifest's.
@@ -175,9 +180,15 @@ dispatch otherwise, section 6.3). Both harnesses use greedy decoding at 2,048 ou
 - **Order:** E1 to E4; in every session 9B then 4B, S1a's seeded size order
   (`plan.size_order()`). The registered job order is `E-9B-E1, E-4B-E1, E-9B-E2, E-4B-E2,
   E-9B-E3, E-4B-E3, E-9B-E4, E-4B-E4`.
-- **Gaps:** a job of session E2, E3 or E4 starts **at least 12 hours after the later of the
-  previous session's two jobs ended**, where a job's end is the later of its lane's `t_end` and
-  its GPU job's recorded Slurm EndTime (the reading D57 (ii) settled for S1a).
+- **Gaps:** a job of session E2, E3 or E4 starts **at least 12 hours and 5 minutes after the
+  later of the previous session's two jobs ended**, where a job's end is the later of its
+  lane's `t_end` and its GPU job's recorded Slurm EndTime (`lane.job_end`; if Slurm reported no
+  final state for the GPU job, the latest it could end, its Slurm start plus its time limit,
+  stands in). D57 (ii) did not settle one reading for S1a: it moved S1a's session-2 `--begin`
+  later so that two readings held, the gap from the lane and GPU ends and the gap from the end
+  of the later Slurm job. E's VM batch job ends after its lane, by the lane's wait for the GPU
+  job's final state (at most 180 s) and the container cleanup (seconds), so the 5 minutes make
+  the 12 hours hold under both readings by construction.
 - **Enforcement by the lane** (section 6.3): each E manifest names every earlier E job's lane
   record file and receipt by SHA-256, and the lane refuses the job if one is missing or changed,
   or if any earlier job fired DR0; a job of E2-E4 is submitted with Slurm `--begin` at its
@@ -209,21 +220,22 @@ checks those labels and applies S1a's `records.validate` to every other field. S
   estimand; no rule reads it.
 - **Sensitivities** (S1a sections 7.2, 8, 15): metric exceptions treated as missing; the
   postconfig server-error sensitivity (D56); the flagged tasks excluded; the checker-corrected
-  verdicts (`compare_pptx_files_zinv`); the fractional checker score (section 18).
+  verdicts (`compare_pptx_files_zinv`); the fractional checker score (section 18); and one E
+  adds, the D82 gold-defect tasks excluded, on raw and on corrected verdicts (section 9).
 
 ### 5.7 The plan file
 
 `program/evidence/2026-10-11/q2-stage1-successor-e/plan/plan-e.json`, rendered by
 `python -m harness.q2_stage1e.plan render` from the committed inputs (the split file, S1a's
 frozen plan by its `plan_sha256`, and the design study's cost model by SHA-256). It holds the
-tasks, S1a's base, the flagged tasks, the domains, the sessions, the size and job orders, every
-job's episode order and its digest, the engine argv, sampling, prompt date, cost inputs, caps
-and jobs. It reads no outcome.
+tasks, S1a's base, the flagged tasks, D82's gold-defect tasks, the domains, the sessions, the
+size and job orders, every job's episode order and its digest, the session gap and its margin,
+the engine argv, sampling, prompt date, cost inputs, caps and jobs. It reads no outcome.
 
-E plan SHA-256: `31270b72091a98289d4baea8aec2bc892bcad8061ab8e3f1d9a69442b6cf9b9c`.
+E plan SHA-256: `4e7298a77670a1e77d1b7c4435722364799f70ea0b6cb093739fa876b25e474d`.
 
 (That is the file's `plan_sha256` field; the file's own SHA-256 is
-`e37a3d127d67e81c8b55f052c2fbc05eb62884d1b220a5514e86a17a86b4d322`.) Every E manifest names
+`12bded251c08755a6b713e8f34f3f327b46e788d55904f2b7118b97675294de8`.) Every E manifest names
 the plan file and this digest, and the lane refuses one whose plan is not named on the line
 above.
 
@@ -285,7 +297,8 @@ episodes and no 113-task design fits (design study section 5). E prices each job
 
     cap = ceil(3 + (L + (N x slot / V + drain) x 1.2 x 1.05) / 60) minutes
 
-with L = 113.18587 s (the longest S1a start-up, Slurm start to first dispatch), N = 226
+with L = 113.18587 s (the longest S1a start-up, Slurm start to first dispatch, used without
+inflation: an assumption, section 22, disclosure 6), N = 226
 episodes, V = 20, slot the size's mean S1a slot occupancy over the 113 tasks and drain the
 size's longest S1a drain (the last wave), and 3 minutes of USR1 lead (`plan.job_cap_minutes`):
 
@@ -335,9 +348,9 @@ than S1a's would cut slots with probability about 0.08 (section 22, disclosure 6
 ### 7.4 VM time and calendar
 
 - VM time: 90 VM-h projected (S1a's slots), at most 20 VMs at a time.
-- Calendar: three 12-hour gaps measured from each session's later end, plus four session
-  windows of about 1.3 h each (a 9B job then a 4B job), so **about 41-42 hours at the
-  minimum**. (The design study's 37 h counted one session window.)
+- Calendar: three gaps of 12 hours and 5 minutes measured from each session's later end, plus
+  four session windows of about 1.3 h each (a 9B job then a 4B job), so **about 41-42 hours at
+  the minimum**. (The design study's 37 h counted one session window.)
 
 ## 8. Episodes, infrastructure losses and the D53 (iii) observation rule
 
@@ -365,10 +378,38 @@ S1a sections 7.1-7.3 apply unchanged, through the unchanged driver, `osworld_liv
 
 S1a section 8, unchanged: the primary outcome is y = 1 if the checker score is 1.0, else 0
 (raw verdict); the checker-corrected outcome rescored with `compare_pptx_files_zinv` is
-secondary; S1a's seven flagged tasks stay in the primary analysis and a sensitivity excludes
-them. D80 (ii)'s model adjudication of the checker-mutation pool changes neither the
-correction (validated on the 29 confirmed mutants, S1a G0 item 8) nor the flagged list, so the
-corrected verdicts stay secondary.
+secondary; S1a's seven flagged tasks (`plan.FLAGGED_TASKS`) stay in the primary analysis and a
+sensitivity excludes them.
+
+**What D82 found.** D80 (ii)'s adjudication of the checker-mutation pool and spot check is
+complete (D81 run 2, D82; "adjudicated by an isolated model on the owner's instruction (D80);
+not human-validated"; `program/evidence/2026-10-11/q2-mutation-adjudication-v2/summary.json`).
+Two of its findings bear on E's outcomes:
+
+- **Three gold-defect tasks.** It rejected the saved gold (the gold sham) of `5c1a6c3d`
+  (impress, `compare_pptx_files`), `881deb30` and `8e116af7` (multi_apps, `compare_table`):
+  each task's own saved gold is judged not a correct solution (`before_after.after_a.audit
+  .gold_defect_tasks`). All three are in E's 113-task primary set. None is in S1a's 32 base
+  tasks or in S1a's flagged list, which was fixed before D82 and flagged the same kind of
+  defect on `30e3e107` (the P1 raw flip whose saved gold both raters reject).
+- **The z-order candidates.** The six unresolved z-order false-negative candidates of
+  `compare_pptx_files` became three confirmed and three label-contradicted. The three
+  contradicted ones are all on `5c1a6c3d`. `compare_pptx_files_zinv` passes all six (S1a G0
+  item 8), so on `5c1a6c3d` the corrected outcome scores as passing states the adjudication
+  rejects.
+
+**What E does about it.** No primary set, outcome, decision rule or DR changes:
+
+- E's flagged list stays S1a's seven, and the flagged-task sensitivity is S1a's.
+- **The D82 gold-defect sensitivity**, added beside it: every primary estimand, test and rule
+  reading (sections 10, 11 and 13: DR1, DR2, DR5) is recomputed on the 110 primary tasks
+  without the three gold-defect tasks (the plan's `gold_defect_tasks_d82`), on raw verdicts,
+  and the checker-corrected outcome is recomputed on the same 110 tasks, which removes the
+  three label-contradicted z-order states. It carries D80's label and changes no reading of
+  E's primary set.
+- The corrected verdicts stay secondary: the correction was validated on S1a's 29 confirmed
+  mutants (S1a G0 item 8), and the adjudication that would confirm more of it is model-made and
+  not human-validated (D9's human spot check stays open, D82).
 
 ## 10. Estimands and estimators
 
@@ -421,8 +462,12 @@ S1a section 10.1, unchanged:
   it is conservative: its null size at α = 0.025 is 0.004-0.017, and DR2's false Present is at
   most 0.049 (design study section 3.4). E registers this frozen statistic, the one the power
   statement was computed with, and not the exact per-cell flip.
-- **X (sensitivity):** the label permutation within each (task, session) cell; with R = 1 it
-  permutes the two harness episodes of a cell, assuming they are exchangeable.
+- **X (sensitivity):** the label permutation within each (task, session) cell
+  (`estimators.x_label_permutation_p`, unchanged). With R = 1 it swaps the two harness
+  episodes of each (size, task, session) cell independently, which flips the sign of each d_zts
+  on its own: it is the exact per-cell sign flip of X, valid when a cell's two episodes are
+  exchangeable under no harness effect. It is reported beside the primary test as a
+  sensitivity; no rule reads it.
 - **Session tests:** by pair, descriptive (section 10).
 - **Secondary model:** S1a's crossed logit GLMM, by the unchanged `glmm.R` and the pinned
   container, on E's rows (`analysis glmm-input`: S1a's columns, sessions nested in size as
@@ -608,6 +653,13 @@ D62 (edge cases ratified while blind). E registers those rules up front, in its 
   its tests have no finite statistic. No p-value is read from an all-NaN statistic. P1 is
   always not estimable (section 14). The code is `analysis.analyse_array`, `completeness` and
   `report`; tests cover each case.
+- **Incomplete readings are E's registered readings, under the label.** When DR0 fires but
+  each size still holds at least two sessions with X and π defined (D61 (a)), DR1, DR2, DR5 and
+  P2-P5 as the registered code computes them are E's registered readings for the sessions and
+  tasks that hold data, reported under the `incomplete` label: their tests and intervals stay
+  valid, because they condition on the realized sessions and DR0 reads no outcome. The power
+  statement of section 12 covers complete data only (four sessions per size, every slot
+  final), and no operating characteristic is claimed for an incomplete reading.
 - **D59 (iii), operator steps.** Each is a registered command, with its output kept:
   1. per E job, at its end: `python -m harness.q2_stage1e.analysis dr0 --run-dir RUN --plan
      PLAN` (exit 3 when DR0 fires);
@@ -652,7 +704,8 @@ S1a section 15, for E:
 - the cost card against the card's central and high prices; truncation rates per cell and the
   truncation label (S1a section 15's 20% rule); uncertified action-path exposure and δ by
   exposure stratum; first divergence, checker-input-hash discordance and offline rescoring;
-  fractional checker scores; corrected-verdict flips; the flagged-task sensitivity;
+  fractional checker scores; corrected-verdict flips; the flagged-task sensitivity; the D82
+  gold-defect sensitivity, raw and corrected (section 9);
 - host snapshots and any foreign load; the label "not externally anchored"; the offline-setup
   exclusions;
 - the joint reading with S1a (section 15), as a description;
@@ -674,9 +727,9 @@ The program signs these items in one decision before the freeze:
 1. E adds data to S1a's design without a gauntlet (D66, D80 (iii)): 6.77 GPU-h by caps.
 2. All 113 eligible pool tasks, no draw and no fill rule; the primary set is the 113 tasks and
    S1a's 32 base tasks are the registered secondary set.
-3. Four new sessions per size (E1-E4), at least 12 hours apart measured from the previous
-   session's later end; 9B then 4B in every session; one episode per (size, task, harness,
-   session).
+3. Four new sessions per size (E1-E4), at least 12 hours and 5 minutes apart measured from
+   the previous session's later end (section 5.3); 9B then 4B in every session; one episode per
+   (size, task, harness, session).
 4. Caps by arithmetic at realized price x 1.2 x 1.05 (52 minutes at 9B, 48 at 4B, 406 in all,
    with OE and one retry) in place of S1a's card-priced c_proj; no A0-type job.
 5. With R = 1, D_w, the session excess, the cross-block D_b, ρ and P1 are not estimable and are
@@ -688,12 +741,21 @@ The program signs these items in one decision before the freeze:
 8. The GLMM run unchanged, with the R = 1 identification note (G-E5).
 9. E is its own sample; the joint reading with S1a is descriptive (section 15).
 10. DR5's consequence under D47 and D69 (section 13).
-11. The D59, D61 and D62 rules registered up front (section 18).
+11. The D59, D61 and D62 rules registered up front, and an incomplete reading with X and π
+    defined in both sizes counted as E's registered reading under the `incomplete` label, with
+    no power claimed for it (section 18).
 12. The quiet-host rule and D80's serialization (section 6.4).
 13. E's code: S1a's code of record unchanged, plus `harness/q2_stage1e/`, its lane batch script
     and its manifest renderer (section 23).
+14. D82's three gold-defect tasks (`5c1a6c3d`, `881deb30`, `8e116af7`) stay in the primary set;
+    one sensitivity excludes them, on raw and corrected verdicts; S1a's seven flagged tasks stay
+    the flagged set (section 9).
 
-- Program sign-off of items 1-13 (decision id): TBD
+The sign-off decision is one entry of `program/decisions.md`, on `main`, before the freeze:
+its bold heading names `q2-stage1-successor-e-v1`, and its entry signs "items 1-14" of this
+section. `tests/test_q2_stage1e_prereg.py` refuses any other id in the slot below.
+
+- Program sign-off of items 1-14 (decision id): TBD
 
 ## 22. Disclosures and known limitations
 
@@ -711,7 +773,10 @@ The program signs these items in one decision before the freeze:
    the X test's power; the statement was computed with this test.
 6. **Cap margins.** The caps hold every slot in the cap check under S1a's slots, slots 10% longer
    and 5% loss, but a 4B session about 20% slower than S1a's cuts slots with probability about
-   0.08 (section 7.3), which fires DR0 and stops E with incomplete data.
+   0.08 (section 7.3), which fires DR0 and stops E with incomplete data. Every cap, and the cap
+   check, assumes S1a's longest start-up L = 113 s with no inflation. A slower engine start-up
+   in an E session comes straight out of the margins: at p99, the time to USR1 minus the span
+   is 521 s (9B) and 396 s (4B) under S1a's slots, and 61 s at 9B with slots 20% slower.
 7. **The GLMM's (1|task:harness:session) term is not identified** with one episode per cell
    (section 11).
 8. **Calendar.** About 41-42 hours at the minimum, longer than the design study's 37 h.
@@ -722,7 +787,19 @@ The program signs these items in one decision before the freeze:
    externally anchored.
 10. **New code.** E's lane layer and entry point are new; G-E4 runs them on the host before the
     freeze, and the episode path itself (driver, harness clients, checker path) is S1a's
-    unchanged code, which ran 1,808 episodes in S1a without an infrastructure loss.
+    unchanged code, which ran 1,808 episodes in S1a without an infrastructure loss. G-E4 runs
+    the `development` purpose only, so the `e` purpose's own checks (the prior jobs by digest,
+    the session gap, the engine argv and the Slurm limit) first run on the host in E-9B-E1. CPU
+    tests cover each, and the engine check copies S1a's `check_registered_engine`, which ran in
+    S1a's A0a and A1 jobs.
+11. **Gold-defect tasks after the design.** D82, which came after E's design and power
+    statement, found three primary tasks whose saved gold is judged not a correct solution
+    (section 9). They stay in the primary set, as S1a's flagged tasks did; the D82 gold-defect
+    sensitivity reports every primary reading without them. The finding is model-adjudicated
+    and not human-validated (D80, D82), and the power statement's calibrations were fitted on
+    all 113 tasks.
+12. **Incomplete data.** A reading on incomplete data (section 18) keeps its validity but has
+    no stated power; the power statement covers complete data only.
 
 ## 23. Code of record
 
@@ -738,35 +815,58 @@ E's own files:
 | File | SHA-256 |
 |---|---|
 | `harness/q2_stage1e/__init__.py` | `c4863fef3110baeecf59e6770eaec1d02a0c4be439aa5ace15cda83578ab958f` |
-| `harness/q2_stage1e/plan.py` | `196c4d0227a697aecd6b739dc07c21a54247a40feda8b8aa7eb7f6c5b4c23b93` |
+| `harness/q2_stage1e/plan.py` | `c2c5557efa28e4c87fb41eceb399efd07d7766efabb47635f1439d4d5aa6b597` |
 | `harness/q2_stage1e/records.py` | `5f8b6a1a5dfff32c4b12cdbde2a476f02788731b4e4c4e6ccabba288c89822fa` |
 | `harness/q2_stage1e/driver.py` | `f5e892c2060ba17173892bfb351263de75ff81783e43f396e7b3edc453d0505e` |
-| `harness/q2_stage1e/lane.py` | `f86d4f70d76fcdc7dd10d35b50f2405ccbd8556d07511b3059466930ecb0e1d2` |
-| `harness/q2_stage1e/analysis.py` | `27192a2ca10a2123bec265ba98ef1bb9965cac497d8a48b738f520bc3d69d6b4` |
+| `harness/q2_stage1e/lane.py` | `6173bc473aec46f04b2f0ead0cce4a42ee887252d6d59264a6770f006b8dd884` |
+| `harness/q2_stage1e/analysis.py` | `49d7939f2f0db025135a346750d2cb30acbe70cc7d1cb0e5b096300beff0c6fb` |
 | `harness/q2_stage1e/section15.py` | `e1ab8a3e21b008969e8b33d716a78bc73161f6573aee8cdcb80a264922b857bd` |
-| `scripts/render_q2e_manifest.py` | `4a0ac359291c8582b75a3cf87b7f1e6f8149fe3f6bc207dbf810b0f1e3a84a94` |
+| `scripts/render_q2e_manifest.py` | `dc61f767e2ea63cbd425d4edc693331b3193cbd708f79674b2ce27d2e4595fde` |
 | `infra/slurm/host-single-node/q2e-vm.sbatch` | `2d27bbe50f6ce6aa9df9e4ba9a015ca2d6d489ccc4259f8b8b0a245c94fc6229` |
 | `experiments/manifests/q2-stage1e/dev-smoke-v1.json` | `3d215facf9a66f87a7270f359257adda289cf1b1f80c1de33685ccd40a10f2a9` |
-| `program/evidence/2026-10-11/q2-stage1-successor-e/plan/plan-e.json` | `e37a3d127d67e81c8b55f052c2fbc05eb62884d1b220a5514e86a17a86b4d322` |
+| `program/evidence/2026-10-11/q2-stage1-successor-e/plan/plan-e.json` | `12bded251c08755a6b713e8f34f3f327b46e788d55904f2b7118b97675294de8` |
 
 What each adds over S1a's code:
 
-- `plan.py`: the 113 tasks, sessions, orders, job order, gaps and caps (section 5, 7).
+- `plan.py`: the 113 tasks, D82's gold-defect tasks, sessions, orders, job order, gaps and
+  their margin, and caps (sections 5, 7, 9).
 - `records.py`: E's record labels over S1a's `validate`; the four-session array; DR0 per job
   (S1a's `rules.dr0`); the GLMM rows and the E-shaped synthetic rows.
 - `driver.py`: S1a's driver with E's record check (`driver.validate` set to E's `validate`).
-- `lane.py`: E's manifest rules, the job order and DR0 by digest, the session gap, the engine
-  check and E's entry point, over S1a's `Lane` (subclassed; S1a's dispatch, re-queue, stop,
-  snapshots, receipts, `check_slurm` and `check_host` unchanged).
+- `lane.py`: E's manifest rules, the job order and DR0 by digest, the session gap (`job_end`),
+  the engine check and E's entry point, over S1a's `Lane` (subclassed; S1a's dispatch,
+  re-queue, stop, snapshots, receipts, `check_slurm` and `check_host` unchanged).
 - `analysis.py`, `section15.py`: S1a's estimators and rules on E's array, the D59/D61/D62 rules,
-  costs, DR0, the joint reading and the section 15 items.
+  the D82 gold-defect sensitivity, costs, DR0, the joint reading and the section 15 items.
 - `render_q2e_manifest.py`: E's VM manifests, the development smoke's, and the GPU half from S1a's
   template through S1a's `gpu_manifest`.
 - `q2e-vm.sbatch`: `s1a-vm.sbatch` with the job name, the header comment and the lane module
   changed; its other lines are S1a's (a test checks).
 
-Tests: `tests/test_q2_stage1e.py` and `tests/test_q2_stage1e_prereg.py`; S1a's suite
-(`tests/test_q2_stage1_*.py`) and the design study's (`tests/test_q2_design.py`) pass unchanged.
+**Infrastructure E runs that neither table above pins.** The GPU halves run S1a's
+`submit_docker_research_job.py` (S1a section 20), which submits `docker-research.sbatch`; its
+container runs the provenance, environment and model checks below; OE runs S1a's overlay builder
+and extractor (job 464's, by these digests); and the analysis steps run `cpu-step.sbatch`
+(section 18). Every file but `cpu-step.sbatch` is unchanged since S1a's freeze commit
+(`d5f5798`); `cpu-step.sbatch` was added after it by the D59 tooling. They run from the export
+of E's freeze commit with these digests:
+
+| Infrastructure file | SHA-256 |
+|---|---|
+| `infra/slurm/host-single-node/docker-research.sbatch` | `2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec` |
+| `scripts/verify_compute_provenance.py` | `ca62d62ae5c0e820a08574d5c5b1227c4495a24f3abcf342a1ae3ff1958d54ba` |
+| `scripts/check_compute_env.sh` | `76fc5d64f7e84fd1e93340688b6be845d97f01c4791981c31ac8e70d66ff08ff` |
+| `scripts/fetch_open_model.py` | `d995b59ece3c809edd70d6c60a78628ae5cb1ccc0ce8350cc455084d3787d29f` |
+| `scripts/exec_research_workload.py` | `bb3abd1dd11e8ec9336fc181ac1999b1deea00e08e05d0fff3227111eaa6e4c1` |
+| `scripts/build_vllm_overlay_on_h100.sh` | `aa43283e757695384e0548d060a18b98f07a3af06f583efdb2d709f677e1a96d` |
+| `scripts/extract_discovery_source_archive.py` | `9b4d21a83beac8913dc06a946cf43ea31d77326e65d04957fad66d7b97d8c3cb` |
+| `ops/s1a-analysis/cpu-step.sbatch` | `b826727239a2faf5245b58a6b50bf7e68e068c7357d79833c6c967643663770d` |
+
+Tests: `tests/test_q2_stage1e.py` and `tests/test_q2_stage1e_prereg.py`. The prereg test checks
+every digest of the three tables against the tree, and that every in-repo module E's Python
+files import, transitively (lazy imports included), is in S1a's section 20 or in E's table.
+S1a's suite (`tests/test_q2_stage1_*.py`) and the design study's (`tests/test_q2_design.py`)
+pass unchanged.
 
 ## 24. Sources and evidence
 
@@ -787,15 +887,44 @@ Tests: `tests/test_q2_stage1e.py` and `tests/test_q2_stage1e_prereg.py`; S1a's s
 
 ### Pre-freeze review log
 
-None yet. The pre-freeze audit of G-E6 is recorded here, with every item and its disposition.
+Every pre-freeze audit is recorded here, with every item and its disposition. G-E6's slot
+names the fresh audit that finds nothing blocking.
+
+**Audit 1** (2026-10-11; a fresh, independent auditor on the draft at `272ea298`, before `main`
+was merged; verdict: not ready to freeze, three blocking items). Its own checks included an
+independent recomputation of `cap-sufficiency.json`, `analysis-identity.json` and every
+section 12 number (all reproduced exactly), a freeze rehearsal on a scratch clone with `main`
+merged (accepted as ledger row 19; the rendered E-9B-E1 VM manifest validated with 226 slots;
+the GPU half passed the submitter's `--dry-run`; the lane refused every tampered manifest it
+tried), and read-only host checks (inputs present; every E module compiles under the host's
+Python 3.10.12).
+
+| Item | Finding | Disposition | Sections |
+|---|---|---|---|
+| B1 | Section 9's sentence on the D80 (ii) adjudication predates D81 and D82, which found three gold-defect tasks in E's primary set (`5c1a6c3d`, `881deb30`, `8e116af7`) and three label-contradicted z-order candidates on `5c1a6c3d` that the corrected outcome scores as passing; no sensitivity covered them | Fixed: `main` at `746d60d2` merged; section 9 states what D82 found; the D82 gold-defect sensitivity (raw and corrected, on the 110 other tasks) is registered (plan field `gold_defect_tasks_d82`, `analysis.report`); S1a's flagged list stays the flagged set; a test checks the three tasks against D82's `summary.json`. No primary set, rule or DR changes | 5.6, 9, 19, 21 (item 14), 22 (disclosure 11) |
+| B2 | The freeze steps ignored the current `main` (ledger row 18, R04), so freezing on the branch would fork the hash chain; nothing checked the sign-off decision id (a rehearsal froze with a nonexistent id and every test passed) | Fixed: `main` merged now; step 1 below merges `main` again, after the sign-off decision is on it, and the freeze runs on the merged tree, so E's row follows `main`'s last row (row 19 as of `746d60d2`). The prereg test refuses a sign-off id that is not a decision heading naming `q2-stage1-successor-e-v1` whose entry signs items 1-14, and, once frozen, an E row that does not follow R04's row | 21, 25 |
+| B3 | G-E4, G-E5, G-E6 and the sign-off had not run; E's lane and entry point have never run on the host, which held job 1200 (R04) | Open: they are step 2 below. Job 1200 (R04) was still running at 20:31 UTC on 2026-10-11, and this round had read-only host access; G-E4 waits for a quiet host (D80) | 4.1, 25 |
+| N1 | E only adds data: estimands, thresholds and rules are S1a's; the differences are disclosed and listed for sign-off | No action | 3, 21 |
+| N2 | Independent recomputation reproduced the cap check, the analysis identity and section 12 | No action; both outputs were regenerated after this round's plan change (README of E's evidence) | 7.3, 10 |
+| N3 | The freeze rehearsal passed on a scratch clone with `main` merged | No action; the rehearsal is step 3 below | 25 |
+| N4 | Host inputs present; E's modules compile under Python 3.10.12 | No action | 4.1 |
+| N5 | Section 5.3 said the job-end rule was the reading D57 (ii) settled; D57 (ii) made both readings hold instead, and the VM batch job ends seconds after the lane | Fixed: reworded; the gap is 12 h plus a 5-minute margin (`plan.SESSION_GAP_MARGIN_MIN`, in the plan file), so both readings hold by construction; a GPU job with no final Slurm state counts its Slurm start plus its limit as its end (`lane.job_end`); tests | 5.3, 7.4, 21 (item 3) |
+| N6 | Draft-only statements outside the slots (G-E4's "have not run on the host", this log's "None yet") would survive the freeze unchecked (the D32 class) | Fixed: G-E4's statement is dated to the draft and this log holds audit 1; a test refuses both draft-only phrasings in any state; the freeze edits only the five slots (below) | 4.1, 25 |
+| N7 | Whether an incomplete DR2 or DR5 counts as E's registered decision was unstated, and the power statement covers complete data only | Fixed: section 18 says it does, under the `incomplete` label, with no power claimed | 18, 21 (item 11), 22 (disclosure 12) |
+| N8 | Every cap assumes S1a's longest start-up L = 113 s, uninflated; the 9B margin is 61 s with slots 20% slower | Fixed: disclosed as an assumption, with the p99 margins | 7.1, 22 (disclosure 6) |
+| N9 | `cpu-step.sbatch`, `docker-research.sbatch` and `verify_compute_provenance.py` were unpinned, and the prereg test did not recompute E's import closure | Fixed: section 23's infrastructure table pins them with the GPU container's other checks and OE's builder and extractor; the prereg test checks their digests and E's import closure | 23 |
+| N10 | The owner reported 293 passed and 4 skipped for the S1a and design suites; the same files give 310 passed and 3 skipped | Fixed in the record: this round's counts are stated in `program/log.md` | — |
+| N11 | The development smoke never runs the `e` purpose's checks, so E-9B-E1 is their first host run | Disclosed | 4.1 (G-E4), 22 (disclosure 10) |
+| N12 | The X test is conservative at S = 4; optionally report the exact per-cell flip | Fixed in the text: the registered label-permutation sensitivity is, at R = 1, the exact per-cell sign flip, and section 11 now says so; no code change | 11 |
 
 ### At the freeze
 
-Slots filled only at the freeze or just before it (each holds the guard's placeholder in the
-draft): G-E4's result, G-E5's result, G-E6's audit record, section 21's decision id, and the
-status paragraph. The freeze replaces the whole status paragraph at the top of this file, from
-its first line to the line before the first bullet, with the paragraph below, word for word
-(its line breaks may differ). Nothing else in that paragraph survives.
+The freeze edits only the five slots (each holds the guard's placeholder in the draft):
+G-E4's result, G-E5's result, G-E6's audit record, section 21's decision id, and the status
+paragraph. Audit rounds after audit 1 add their rows to the review log above before the freeze.
+The freeze replaces the whole status paragraph at the top of this file, from its first line to
+the line before the first bullet, with the paragraph below, word for word (its line breaks may
+differ). Nothing else in that paragraph survives.
 
 > **Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the
 > freeze time and `git_head_at_freeze`.** The development smoke (G-E4) and the GLMM shape run
@@ -807,14 +936,20 @@ its first line to the line before the first bullet, with the paragraph below, wo
 
 The steps, in order:
 
-1. G-E4 and G-E5 run (CPU only) from an export of the draft commit; their results fill their
-   slots; the audit of G-E6 runs and its record fills its slot; the program's decision fills
-   section 21's slot.
-2. On a scratch copy of the tree frozen into a copy of the ledger, `scripts/preregister.py
+1. **Merge `main`.** Before any slot is filled for the freeze, `main` is merged into the
+   branch, and again after the program's sign-off decision is committed on `main`, so the
+   tree holds that decision and every ledger row frozen on `main`; E's suite and S1a's suite
+   pass on the merged tree. The freeze runs on that merged tree, so E's row follows `main`'s
+   last row (row 19 as of `746d60d2`), and the freeze commit is merged to `main` before any
+   other registration is frozen there.
+2. G-E4 and G-E5 run (CPU only, on a quiet host) from an export of the draft commit; their
+   results fill their slots; the audit of G-E6 runs and its record fills its slot; the program's
+   decision, merged in step 1, fills section 21's slot.
+3. On a scratch copy of the tree frozen into a copy of the ledger, `scripts/preregister.py
    freeze` is accepted, `check-chain` and `verify` pass, and E's suite and S1a's suite pass;
    only then is the real freeze run.
-3. The filled file is committed; `scripts/preregister.py freeze q2-stage1-successor-e-v1
+4. The filled file is committed; `scripts/preregister.py freeze q2-stage1-successor-e-v1
    program/preregistrations/q2-stage1-successor-e-v1.md` adds the row; `check-chain` and
    `verify` pass; the row is committed alone. That commit is the freeze commit.
-4. After the freeze commit: `program/state.json` and `program/log.md` record the freeze; OE runs
+5. After the freeze commit: `program/state.json` and `program/log.md` record the freeze; OE runs
    from the freeze commit; then E-9B-E1.

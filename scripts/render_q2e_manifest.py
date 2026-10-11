@@ -10,7 +10,8 @@ q2-stage1-successor-e-v1 sections 5-6. Every E job's slots come from
   ``--prior-run-dirs`` names the lane run directory of every earlier E job in the registered
   order (``plan.job_order``: E1 to E4, each 9B then 4B); the manifest carries each one's
   record file and receipt by SHA-256, and the lane refuses the job if one is missing or fired
-  DR0. A job of E2-E4 may not start before the previous session's later job ended plus 12 h;
+  DR0. A job of E2-E4 may not start before the previous session's later job ended plus 12 h
+  and 5 minutes;
 * ``vm --development --tasks T... --name N``: the pre-freeze development smoke (CPU only,
   the scripted fake engine of ``--fake-script``, dev-split tasks under both harnesses, E's
   record labels, session E1);

@@ -16,7 +16,7 @@ This package holds only what E's design adds.
 ## Key files
 
 - `plan.py`: the 113 tasks (S1a's eligible pool, no draw), sessions E1-E4, S1a's size order
-  (9B then 4B), one seeded block per job, the job order, the 12-hour session gaps, and the
+  (9B then 4B), one seeded block per job, the job order, the session gaps (12 h 5 min), and the
   caps by arithmetic on S1a's realized cost (52 min at 9B, 48 at 4B, 406 in all). It renders
   `program/evidence/2026-10-11/q2-stage1-successor-e/plan/plan-e.json`.
 - `records.py`: S1a's record schema with E's labels (session E1-E4, rerun 1); S1a's
@@ -27,8 +27,9 @@ This package holds only what E's design adds.
   `infra/slurm/host-single-node/q2e-vm.sbatch` runs it; `scripts/render_q2e_manifest.py`
   renders E's manifests and the GPU half from S1a's template.
 - `analysis.py`: S1a's estimators and rules on E's array (`analyse_array`, `report`), the
-  D59/D61/D62 rules built in, the costs, DR0, GLMM input and the descriptive joint reading
-  with S1a; `section15.py`: the descriptive items of S1a section 15.
+  D59/D61/D62 rules built in, the D82 gold-defect sensitivity (registration section 9), the
+  costs, DR0, GLMM input and the descriptive joint reading with S1a; `section15.py`: the
+  descriptive items of S1a section 15.
 
 ## Invariants
 

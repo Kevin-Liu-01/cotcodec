@@ -17,9 +17,11 @@ limits (S1a sections 5.5, 7.2, 14). What this module adds:
 * **job order and DR0** (S1a sections 5.5, 11): an ``e`` manifest names the lane record file
   and receipt of every earlier E job in ``plan.job_order`` by SHA-256; the lane refuses a
   missing or changed file, and a job that fired DR0 (``records.job_dr0``);
-* **session gaps**: a job of session E2-E4 starts at least 12 hours after the later job of
-  the session before it ended (the lane's ``t_end`` and the GPU job's recorded EndTime);
-  ``submit`` passes Slurm ``--begin`` at that time and the lane refuses to start earlier;
+* **session gaps**: a job of session E2-E4 starts at least 12 hours and 5 minutes after the
+  later job of the session before it ended (the lane's ``t_end`` and the GPU job's recorded
+  EndTime, or its Slurm start plus its time limit when Slurm reported no final state; the
+  5 minutes cover the VM batch job's own end, D57 (ii)); ``submit`` passes Slurm ``--begin``
+  at that time and the lane refuses to start earlier;
 * **the registered engine**: before dispatching, the GPU job's argv must be S1a's
   ``plan.engine_argv`` for the job's size and its Slurm limit the job's cap;
 * **the episode entry point**: ``harness.q2_stage1e.driver`` (S1a's driver with E's record
@@ -302,15 +304,24 @@ def check_prior_jobs(e: Mapping[str, Any], plan: Mapping[str, Any], job: str) ->
 
 
 def job_end(receipt: Mapping[str, Any]) -> float:
-    """A job's end: the later of the lane's ``t_end`` and the GPU job's recorded EndTime."""
+    """A job's end: the later of the lane's ``t_end`` and the GPU job's recorded EndTime.
+    When Slurm reported no final state for the GPU job (the lane's wait for it ran out), its
+    EndTime is unknown and the latest it could end stands in: its Slurm start plus its time
+    limit (both recorded by the lane's engine check). With neither, the end is unknown."""
     gpu_end = (receipt.get("gpu_job_end") or {}).get("end_epoch")
-    return max(float(receipt["t_end"]), float(gpu_end or 0.0))
+    if not isinstance(gpu_end, int | float):
+        info = receipt.get("gpu_job") or {}
+        start, limit = info.get("start_epoch"), info.get("time_limit_min")
+        known = isinstance(start, int | float) and isinstance(limit, int | float)
+        _require(known, "the GPU job's end is unknown: no EndTime, Slurm start or time limit")
+        gpu_end = float(start) + float(limit) * 60
+    return max(float(receipt["t_end"]), float(gpu_end))
 
 
 def earliest_start(m: Mapping[str, Any]) -> float | None:
-    """A job of E2-E4 starts at least 12 hours after the later job of the previous session
-    ended (``plan.session_not_before``), from the receipts ``check_prior_jobs`` verified by
-    digest; None for development and for E1."""
+    """A job of E2-E4 starts at least 12 hours and 5 minutes after the later job of the
+    previous session ended (``plan.session_not_before``, ``job_end``), from the receipts
+    ``check_prior_jobs`` verified by digest; None for development and for E1."""
     e = m.get("e") or {}
     if m.get("purpose") != "e" or e.get("session") == PE.SESSIONS[0]:
         return None
@@ -346,8 +357,9 @@ class Lane(L1.Lane):
         not_before = earliest_start(self.m)
         if not_before is not None and self.clock() < not_before:
             raise LaneError(f"a job of {(self.m.get('e') or {}).get('session')} starts at least "
-                            f"{PE.SESSION_GAP_H} h after the previous session's later job "
-                            f"ended: not before {not_before:.0f}")  # fmt: skip
+                            f"{PE.SESSION_GAP_H} h {PE.SESSION_GAP_MARGIN_MIN} min after the "
+                            f"previous session's later job ended: not before "
+                            f"{not_before:.0f}")  # fmt: skip
         super().start_engine()
         if self.m["purpose"] == "e":
             assert self.engine_dir is not None

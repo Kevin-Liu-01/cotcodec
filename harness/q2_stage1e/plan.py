@@ -8,7 +8,10 @@ design without changing its estimands or rules (D66, D69, D80 (iii)):
   tasks, with no new draw. The list equals S1a's base plus its extension blocks;
 * **sizes**: Qwen3.5-9B then 4B in every session, S1a's seeded order (``plan.size_order``);
 * **sessions**: four new serving sessions per size, ``E1``-``E4``; a session's jobs start at
-  least 12 hours after the later job of the session before it has ended;
+  least 12 hours and 5 minutes after the later job of the session before it has ended (the
+  5 minutes cover the VM batch job's own end, which follows the lane's end by the wait for
+  the GPU job's end, at most 180 s, and the container cleanup, so the 12 hours hold
+  measured from either end; D57 (ii));
 * **one episode** per (size, task, harness, session): one block ``e1`` per job, rerun 1, in
   a seeded order that interleaves the harnesses; no fill rule (every job's slots are the
   whole task set);
@@ -45,6 +48,7 @@ ORDER_SEED = 42
 N_STAR = 32  # action-path v2 attempt 1 (D53): V = 20, the sizes one after the other
 V = 20
 SESSION_GAP_H = 12
+SESSION_GAP_MARGIN_MIN = 5  # the VM batch job ends after the lane (D57 (ii)): both readings hold
 USR1_LEAD_MIN = P1.USR1_LEAD_MIN  # --signal=B:USR1@180
 DR4_FACTOR = 1.2  # DR4's projection rule: realized cost x 1.2
 REQUEUE_FACTOR = P1.REQUEUE_FACTOR  # 1.05, the re-queues DR0 tolerates
@@ -61,6 +65,17 @@ S1A_PLAN = "program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json"
 S1A_PLAN_SHA256 = "6a3f0219448301d95a80d443ed75892eaac093e42349ef98fb985a5d87467d51"
 PLAN_FILE = "program/evidence/2026-10-11/q2-stage1-successor-e/plan/plan-e.json"
 PLAN_STATUS = "registered"
+# D82 (the checker-mutation adjudication, D81 run 2; adjudicated by an isolated model on the
+# owner's instruction (D80), not human-validated) rejected the saved gold of these three pool
+# tasks (`before_after.after_a.audit.gold_defect_tasks` of
+# program/evidence/2026-10-11/q2-mutation-adjudication-v2/summary.json): the task's own saved
+# gold is judged not a correct solution. E's D82 gold-defect sensitivity excludes them; they
+# stay in the primary set, and S1a's flagged list is unchanged.
+D82_GOLD_DEFECT_TASKS = (
+    "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1",  # impress, compare_pptx_files
+    "881deb30-9549-4583-a841-8270c65f2a17",  # multi_apps, compare_table
+    "8e116af7-7db7-4e35-a68b-b0939c066c78",  # multi_apps, compare_table
+)
 
 
 class PlanError(ValueError):
@@ -142,8 +157,8 @@ def slots(plan: Mapping[str, Any], size: str, session: str) -> list[dict[str, An
 
 def session_not_before(job: str, ends: Mapping[str, float]) -> float | None:
     """The earliest start of ``job``: None in session E1; otherwise the later end of the
-    previous session's two jobs (``ends``: job -> end epoch) plus 12 hours. Within a session
-    the second size waits for the first by the job order (``job_order``)."""
+    previous session's two jobs (``ends``: job -> end epoch) plus 12 hours and 5 minutes.
+    Within a session the second size waits for the first by the job order (``job_order``)."""
     _, session = parse_job(job)
     k = SESSIONS.index(session)
     if k == 0:
@@ -152,7 +167,8 @@ def session_not_before(job: str, ends: Mapping[str, float]) -> float | None:
     missing = [p for p in previous if p not in ends]
     if missing:
         raise PlanError(f"{job} needs the end of {missing}")
-    return max(float(ends[p]) for p in previous) + SESSION_GAP_H * 3600
+    gap_s = SESSION_GAP_H * 3600 + SESSION_GAP_MARGIN_MIN * 60
+    return max(float(ends[p]) for p in previous) + gap_s
 
 
 # --------------------------------------------------------------------------- caps
@@ -218,7 +234,8 @@ def jobs(job_caps: Mapping[str, int], n_tasks: int) -> list[dict[str, Any]]:
         gap = None
         if k:
             previous = [job_name(z, SESSIONS[k - 1]) for z in size_order()]
-            gap = {"after_the_later_end_of": previous, "hours": SESSION_GAP_H}
+            gap = {"after_the_later_end_of": previous, "hours": SESSION_GAP_H,
+                   "plus_minutes": SESSION_GAP_MARGIN_MIN}  # fmt: skip
         out.append({
             "job": job,
             "size": size,
@@ -263,6 +280,8 @@ def render_plan(source_dir: Path) -> dict[str, Any]:
                                     for t in s1a["extension_blocks"][b]]  # fmt: skip
     if sorted(s1a_pool) != pool or len(pool) != 113:
         raise PlanError("E's tasks must be S1a's eligible pool, its base plus extension blocks")
+    if not set(D82_GOLD_DEFECT_TASKS) <= set(pool):
+        raise PlanError("the D82 gold-defect tasks must be pool tasks")
     inputs = cost_inputs(load_cost_model(source_dir))
     job_caps = caps(inputs, len(pool))
     orders = episode_orders(pool)
@@ -276,6 +295,7 @@ def render_plan(source_dir: Path) -> dict[str, Any]:
         "tasks": pool,
         "s1a_base": list(s1a["base"]),
         "flagged_tasks": [t for t in P1.FLAGGED_TASKS if t in pool],
+        "gold_defect_tasks_d82": list(D82_GOLD_DEFECT_TASKS),
         "task_domains": {t: s1a["task_domains"][t] for t in pool},
         "sizes": list(SIZES),
         "size_order": size_order(),
@@ -291,6 +311,7 @@ def render_plan(source_dir: Path) -> dict[str, Any]:
         "n_star": N_STAR,
         "V": V,
         "session_gap_h": SESSION_GAP_H,
+        "session_gap_margin_min": SESSION_GAP_MARGIN_MIN,
         "cost_inputs": inputs,
         "cap_rule": "ceil(3 + (L + (N x slot / V + drain) x 1.2 x 1.05) / 60) minutes per job",
         "caps_minutes": {**{f"E-{z}": job_caps[z] for z in SIZES}, **OVERLAY_CAPS},

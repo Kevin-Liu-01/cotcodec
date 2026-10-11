@@ -71,6 +71,22 @@ def test_tasks_are_s1a_pool_without_a_draw(plan):
     assert not set(plan["tasks"]) & set(P1.OFFLINE_EXCLUDED)
     assert not {t[:8] for t in plan["tasks"]} & set(P1.K1_RAW_GOLD_FAILURES)
     assert plan["flagged_tasks"] == [t for t in P1.FLAGGED_TASKS if t in plan["tasks"]]
+    gold = plan["gold_defect_tasks_d82"]
+    assert gold == list(PE.D82_GOLD_DEFECT_TASKS) and len(set(gold)) == 3
+    assert set(gold) <= set(plan["tasks"])
+    assert not set(gold) & (set(plan["flagged_tasks"]) | set(plan["s1a_base"]))
+    assert [plan["task_domains"][t] for t in gold] == [
+        "libreoffice_impress", "multi_apps", "multi_apps"]  # fmt: skip
+
+
+def test_d82_gold_defect_tasks_are_the_adjudications():
+    """The three tasks are the gold-defect tasks of D82's adjudication record (D81 run 2)."""
+    summary = json.loads((ROOT / "program/evidence/2026-10-11/q2-mutation-adjudication-v2/"
+                          "summary.json").read_text())  # fmt: skip
+    audit = summary["before_after"]["after_a"]["audit"]
+    assert audit["gold_defect_tasks"] == list(PE.D82_GOLD_DEFECT_TASKS)
+    assert all(audit["gold_shams"][f"{t}__sham_gold"] == "reject" for t in PE.D82_GOLD_DEFECT_TASKS)
+    assert summary["label"] == AE.D80_LABEL
 
 
 def test_engine_sampling_and_prompt_are_s1a(plan):
@@ -108,12 +124,13 @@ def test_job_order_and_session_gaps(plan):
     ]  # fmt: skip
     assert PE.session_not_before("E-4B-E1", {}) is None
     ends = {"E-9B-E1": 1000.0, "E-4B-E1": 5000.0}
-    assert PE.session_not_before("E-9B-E2", ends) == 5000.0 + 12 * 3600
+    assert PE.session_not_before("E-9B-E2", ends) == 5000.0 + 12 * 3600 + 5 * 60
     with pytest.raises(PE.PlanError, match="needs the end"):
         PE.session_not_before("E-9B-E3", ends)
     jobs = {j["job"]: j for j in plan["jobs"]}
     assert jobs["E-9B-E2"]["not_before"] == {"after_the_later_end_of": ["E-9B-E1", "E-4B-E1"],
-                                             "hours": 12}  # fmt: skip
+                                             "hours": 12, "plus_minutes": 5}  # fmt: skip
+    assert plan["session_gap_h"] == 12 and plan["session_gap_margin_min"] == 5
     assert jobs["E-4B-E3"]["vm_cpus"] == 90 and jobs["E-4B-E3"]["co_running_cpus"] == 122
     assert jobs["E-4B-E3"]["vm_minutes"] == 58 and jobs["E-9B-E3"]["vm_minutes"] == 62
 
@@ -393,7 +410,12 @@ def run_dir(
         json.dumps({"purpose": "e", "e": {"size": size, "session": session}})
     )
     (out / "episodes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
-    receipt: dict[str, Any] = {"t_end": t_end}
+    # The lane's engine check records the GPU job's Slurm start and limit (here ending, at
+    # its limit, before t_end, so the end is t_end unless a GPU EndTime is given).
+    receipt: dict[str, Any] = {
+        "t_end": t_end,
+        "gpu_job": {"start_epoch": t_end - 3600.0, "time_limit_min": 52},
+    }
     if gpu_end is not None:
         receipt["gpu_job_end"] = {"end_epoch": gpu_end, "state": "COMPLETED"}
     if error:
@@ -408,7 +430,8 @@ def test_job_order_dr0_and_session_gap_are_enforced(frozen_tree, plan, tmp_path,
           run_dir(tmp_path, "E-4B-E1", plan, t_end=5000.0, gpu_end=5100.0)]  # fmt: skip
     m = e_manifest(frozen_tree, "9B", "E2", prior=e1)
     assert LE.validate_manifest(m, frozen_tree)
-    assert LE.earliest_start(m) == 5100.0 + 12 * 3600  # the later end, GPU EndTime included
+    # The later end, GPU EndTime included, plus 12 h and the 5-minute margin.
+    assert LE.earliest_start(m) == 5100.0 + 12 * 3600 + 5 * 60
     with pytest.raises(ValueError, match="needs the run directories"):
         e_manifest(frozen_tree, "9B", "E2", prior=e1[:1])
     # A changed record file is refused by digest.
@@ -426,6 +449,22 @@ def test_job_order_dr0_and_session_gap_are_enforced(frozen_tree, plan, tmp_path,
                                                          error="engine argv")]  # fmt: skip
     with pytest.raises(LE.LaneError, match="DR0 fired for E-4B-E1"):
         LE.validate_manifest(e_manifest(frozen_tree, "9B", "E2", prior=prior), frozen_tree)
+
+
+def test_a_jobs_end_is_the_later_of_the_lane_and_the_gpu_job():
+    """The session gap counts from the later of the lane's t_end and the GPU job's EndTime;
+    with no final GPU state, from the latest the GPU job could end (Slurm start + limit)."""
+    done = {"end_epoch": 1100.0, "state": "COMPLETED"}
+    assert LE.job_end({"t_end": 1000.0, "gpu_job_end": done}) == 1100.0
+    assert LE.job_end({"t_end": 1200.0, "gpu_job_end": done}) == 1200.0
+    gpu = {"start_epoch": 500.0, "time_limit_min": 52}
+    no_state = {"job_id": "77", "error": "no final state", "state": "RUNNING"}
+    assert LE.job_end({"t_end": 1000.0, "gpu_job_end": no_state, "gpu_job": gpu}) == 3620.0
+    assert LE.job_end({"t_end": 9000.0, "gpu_job": gpu}) == 9000.0
+    with pytest.raises(LE.LaneError, match="end is unknown"):
+        LE.job_end({"t_end": 1000.0, "gpu_job_end": no_state})
+    later = PE.session_not_before("E-9B-E2", {"E-9B-E1": 1000.0, "E-4B-E1": 3620.0})
+    assert later == 3620.0 + 12 * 3600 + 300
 
 
 def e_lane(tmp_path: Path, m: dict[str, Any], *, argv_size: str, limit: int, clock: float,
@@ -464,7 +503,7 @@ def test_the_lane_checks_the_engine_and_the_gap_before_dispatching(
     e1 = [run_dir(tmp_path / "prior", "E-9B-E1", plan, t_end=1000.0),
           run_dir(tmp_path / "prior", "E-4B-E1", plan, t_end=5000.0)]  # fmt: skip
     m = e_manifest(frozen_tree, "9B", "E2", prior=e1)
-    gap = 5000.0 + 12 * 3600
+    gap = 5000.0 + 12 * 3600 + 5 * 60
     ok, docker = e_lane(tmp_path / "ok", m, argv_size="9B", limit=52, clock=gap + 1)
     receipt = ok.run()
     assert "error" not in receipt and len(docker.episodes) == 2
@@ -660,6 +699,20 @@ def test_report_end_to_end_and_fractional_scores(plan):
                              "external_anchor": "not externally anchored"}  # fmt: skip
     assert out["predictions"]["P5"]["falsified"] is False and not out["DR4"]["exceeds_high"]
     assert out["fractional_score"] is not None and E._check is not None
+    # The D82 gold-defect sensitivity: the registered analysis on the 110 other tasks, raw and
+    # checker-corrected, beside S1a's flagged-task sensitivity (106 tasks), which is unchanged.
+    gold = out["sensitivity_d82_gold_defect_tasks_excluded"]
+    kept = [t for t in plan["tasks"] if t not in plan["gold_defect_tasks_d82"]]
+    assert gold["tasks_excluded"] == plan["gold_defect_tasks_d82"] and len(kept) == 110
+    assert gold["label"] == AE.D80_LABEL and "changes no primary set" in gold["reading"]
+    finals = RE.final_records(rows)
+    for got, value in ((gold, "binary"), (gold["checker_corrected"], "corrected")):
+        expect = AE.analyse_array(RE.outcome_array(finals, kept, value=value), n_boot=100,
+                                  n_rand=100)  # fmt: skip
+        assert got["tasks"] == 110
+        assert got["estimates"] == expect["estimates"] and got["DR2"] == expect["DR2"]
+        assert got["DR5"] == expect["DR5"] and got["tests"] == expect["tests"]
+    assert out["sensitivity_flagged_tasks_excluded"]["tasks"] == 106
     assert set(out["cells_by_size_session"]) == {f"{z}/{s}" for z in PE.SIZES for s in PE.SESSIONS}
     with pytest.raises(ValueError, match="0, 1 or NaN"):  # the widening was restored
         E.delta(RE.outcome_array(RE.final_records(rows), plan["tasks"], value="score"))

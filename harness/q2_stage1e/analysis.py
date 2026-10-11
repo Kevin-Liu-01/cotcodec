@@ -45,6 +45,11 @@ The D59, D61 and D62 rules, fixed for S1a while blind, are registered here up fr
   kept with a note, or not estimable when its tests have no finite statistic; no p-value is
   read from an all-NaN statistic.
 
+The D82 gold-defect sensitivity (registration section 9) recomputes every primary estimand,
+test and rule reading without the three pool tasks whose saved gold D82's adjudication
+rejected (``plan.D82_GOLD_DEFECT_TASKS``, the plan's ``gold_defect_tasks_d82``), on raw and on
+checker-corrected verdicts. It is a sensitivity: it changes no primary set, rule or DR.
+
 The joint reading with S1a (``joint_reading``) is descriptive: E is its own sample, and
 no E rule, test or prediction reads S1a's sessions.
 """
@@ -81,6 +86,7 @@ R1_REASON = "not estimable with one episode per session (R = 1): it needs a with
 SIZES = PE.SIZES
 SESSIONS = PE.SESSIONS
 SESSION_PAIRS = tuple(itertools.combinations(range(len(SESSIONS)), 2))
+D80_LABEL = "adjudicated by an isolated model on the owner's instruction (D80); not human-validated"
 JOINT_LABEL = (
     "descriptive joint reading of S1a and E: not registered inference; no rule, test or "
     "prediction reads it; S1a's design and E's were both fixed before their own data, but E's "
@@ -498,6 +504,8 @@ def report(
     finals = RE.final_records(recs)
     tasks = list(plan["tasks"])
     flagged = list(plan.get("flagged_tasks", []))
+    gold_defect = list(plan["gold_defect_tasks_d82"])
+    without_gold_defect = [t for t in tasks if t not in gold_defect]
     comp = completeness(recs, plan, dr0)
 
     def run(task_list: Sequence[str], on: Mapping[R1.SlotKey, Any] = finals, **kw: Any) -> dict:
@@ -519,6 +527,13 @@ def report(
             **run(tasks, without_postconfig_errors),
         },
         "sensitivity_flagged_tasks_excluded": run([t for t in tasks if t not in flagged]),
+        "sensitivity_d82_gold_defect_tasks_excluded": {
+            "tasks_excluded": gold_defect,
+            "label": D80_LABEL,
+            "reading": "sensitivity (section 9): it changes no primary set, rule or DR",
+            **run(without_gold_defect),
+            "checker_corrected": run(without_gold_defect, value="corrected"),
+        },
         "secondary_s1a_base": run(plan["s1a_base"]),
         "fractional_score": fractional,
         "cells": counts["final_records"]["size_harness"],

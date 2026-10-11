@@ -7350,6 +7350,11 @@
   "358aa0a7-6677-453f-ae35-e440f004c31e",
   "a434992a-89df-4577-925c-0c58b747f0f4"
  ],
+ "gold_defect_tasks_d82": [
+  "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1",
+  "881deb30-9549-4583-a841-8270c65f2a17",
+  "8e116af7-7db7-4e35-a68b-b0939c066c78"
+ ],
  "job_order": [
   "E-9B-E1",
   "E-4B-E1",
@@ -7403,7 +7408,8 @@
      "E-9B-E1",
      "E-4B-E1"
     ],
-    "hours": 12
+    "hours": 12,
+    "plus_minutes": 5
    },
    "session": "E2",
    "size": "9B",
@@ -7421,7 +7427,8 @@
      "E-9B-E1",
      "E-4B-E1"
     ],
-    "hours": 12
+    "hours": 12,
+    "plus_minutes": 5
    },
    "session": "E2",
    "size": "4B",
@@ -7439,7 +7446,8 @@
      "E-9B-E2",
      "E-4B-E2"
     ],
-    "hours": 12
+    "hours": 12,
+    "plus_minutes": 5
    },
    "session": "E3",
    "size": "9B",
@@ -7457,7 +7465,8 @@
      "E-9B-E2",
      "E-4B-E2"
     ],
-    "hours": 12
+    "hours": 12,
+    "plus_minutes": 5
    },
    "session": "E3",
    "size": "4B",
@@ -7475,7 +7484,8 @@
      "E-9B-E3",
      "E-4B-E3"
     ],
-    "hours": 12
+    "hours": 12,
+    "plus_minutes": 5
    },
    "session": "E4",
    "size": "9B",
@@ -7493,7 +7503,8 @@
      "E-9B-E3",
      "E-4B-E3"
     ],
-    "hours": 12
+    "hours": 12,
+    "plus_minutes": 5
    },
    "session": "E4",
    "size": "4B",
@@ -7517,7 +7528,7 @@
    "(b) diagnostic code --list-extensions --show-versions lacks (?im)^ms-python\\.python@"
   ]
  },
- "plan_sha256": "31270b72091a98289d4baea8aec2bc892bcad8061ab8e3f1d9a69442b6cf9b9c",
+ "plan_sha256": "4e7298a77670a1e77d1b7c4435722364799f70ea0b6cb093739fa876b25e474d",
  "prompt_date": "2026-10-08",
  "rerun": 1,
  "s1a_base": [
@@ -7570,6 +7581,7 @@
   }
  },
  "session_gap_h": 12,
+ "session_gap_margin_min": 5,
  "sessions": [
   "E1",
   "E2",

@@ -4,6 +4,7 @@ half-filled."""
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import re
@@ -20,6 +21,9 @@ ROOT = Path(__file__).resolve().parents[1]
 PREREG = ROOT / LE.REGISTRATION
 S1A = ROOT / "program/preregistrations/q2-stage1-rescoped-v1.md"
 LEDGER = ROOT / LE.LEDGER
+DECISIONS = ROOT / "program/decisions.md"
+D82_SUMMARY = ROOT / "program/evidence/2026-10-11/q2-mutation-adjudication-v2/summary.json"
+R04_ID = "r04-checker-nuisance-invariance-v1"  # main's ledger row 18, frozen after E's draft
 STUDY = ROOT / "program/evidence/2026-10-10/q2-next-step-design-study"
 EVIDENCE = ROOT / "program/evidence/2026-10-11/q2-stage1-successor-e"
 ROW = re.compile(r"^\| `([^`]+)` \| `([0-9a-f]{64}|FILL)` \|$")
@@ -40,6 +44,17 @@ E_FILES = (
     "experiments/manifests/q2-stage1e/dev-smoke-v1.json",
     "program/evidence/2026-10-11/q2-stage1-successor-e/plan/plan-e.json",
 )
+INFRA_FILES = (
+    "infra/slurm/host-single-node/docker-research.sbatch",
+    "scripts/verify_compute_provenance.py",
+    "scripts/check_compute_env.sh",
+    "scripts/fetch_open_model.py",
+    "scripts/exec_research_workload.py",
+    "scripts/build_vllm_overlay_on_h100.sh",
+    "scripts/extract_discovery_source_archive.py",
+    "ops/s1a-analysis/cpu-step.sbatch",
+)
+INFRA_MARK = "**Infrastructure E runs that neither table above pins.**"
 
 
 def _text() -> str:
@@ -75,11 +90,72 @@ def test_s1a_code_of_record_is_unchanged():
     assert not changed, f"S1a code-of-record files changed: {sorted(changed)}"
 
 
+def _code_tables() -> tuple[dict[str, str], dict[str, str]]:
+    """Section 23's two tables: E's own files, and the infrastructure E runs."""
+    own, infra = _section(_text(), "23. Code of record").split(INFRA_MARK, 1)
+    return _rows(own), _rows(infra)
+
+
 def test_e_code_of_record_is_the_tree():
-    rows = _rows(_section(_text(), "23. Code of record"))
-    assert tuple(rows) == E_FILES
-    assert all(v != "FILL" for v in rows.values()), "section 23 has unfilled digests"
-    assert {p: _sha(ROOT / p) for p in rows} == rows
+    rows, infra = _code_tables()
+    assert tuple(rows) == E_FILES and tuple(infra) == INFRA_FILES
+    for table in (rows, infra):
+        assert all(v != "FILL" for v in table.values()), "section 23 has unfilled digests"
+        assert {p: _sha(ROOT / p) for p in table} == table
+
+
+def _module_file(name: str) -> Path | None:
+    path = ROOT.joinpath(*name.split("."))
+    if path.with_suffix(".py").is_file():
+        return path.with_suffix(".py")
+    if (path / "__init__.py").is_file():
+        return path / "__init__.py"
+    return None
+
+
+def _imports(path: Path) -> set[Path]:
+    """In-repo modules a file imports anywhere (lazy imports included), with their packages,
+    and the bare-name imports of ``scripts/`` modules (the renderers put ``scripts/`` on the
+    path)."""
+    out: set[Path] = set()
+    for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+        names: list[str] = []
+        if isinstance(node, ast.Import):
+            names = [a.name for a in node.names]
+        elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+            names = [node.module] + [f"{node.module}.{a.name}" for a in node.names]
+        for name in names:
+            parts = name.split(".")
+            if parts[0] not in ("harness", "scripts"):
+                script = ROOT / "scripts" / f"{parts[0]}.py"
+                if script.is_file():
+                    out.add(script)
+                continue
+            for i in range(1, len(parts) + 1):
+                found = _module_file(".".join(parts[:i]))
+                if found is not None:
+                    out.add(found)
+    return out
+
+
+def test_every_module_e_imports_is_pinned():
+    """Every in-repo module E's Python files import, transitively, is in S1a's section 20 or
+    in E's own table, so no file E runs is left unpinned."""
+    s1a = _rows(_section(S1A.read_text(encoding="utf-8"), "20. Code of record"))
+    own, _ = _code_tables()
+    stack = [ROOT / p for p in own if p.endswith(".py")]
+    seen: set[Path] = set()
+    while stack:
+        path = stack.pop()
+        if path not in seen:
+            seen.add(path)
+            stack += list(_imports(path))
+    needed = {p.relative_to(ROOT).as_posix() for p in seen}
+    missing = sorted(needed - set(s1a) - set(own))
+    assert not missing, f"section 23 lacks {missing}"
+    assert (
+        "harness/q2_stage1/lane.py" in needed and "scripts/render_q2_stage1_manifest.py" in needed
+    )
 
 
 def test_the_registration_names_the_committed_plan():
@@ -196,7 +272,7 @@ def test_open_slots_and_the_frozen_status_wording():
     status = text.split("\n\n", 2)[1]
     assert status.startswith("**Status: DRAFT.") and "no ledger row" in status
     assert text.count("TBD") == 5
-    for slot in ("runs no model. Result: TBD", "before the freeze. Result: TBD",
+    for slot in ("disclosure 10). Result: TBD", "before the freeze. Result: TBD",
                  "Audit record: TBD", "(decision id): TBD"):  # fmt: skip
         assert slot in joined, slot
     frozen = _section(text, "25. Pre-freeze review log and the freeze").split("> ", 1)[1]
@@ -233,3 +309,103 @@ def test_power_statement_ranges_are_the_design_studys():
     assert f"p_δ ≤ 0.025 in only {span('P_pdelta_le_0025', 100, 0)}%" in joined
     assert f"falls below 0.12 in {span('P_pi_ub_below_0.12', 100, 0)}%" in joined
     assert all(f["P_DR1_drop_4B"] == 0.0 for f in fits)
+
+
+# Section 21's sign-off slot: one decision id, filled just before the freeze.
+SIGNOFF_SLOT = re.compile(r"^- Program sign-off of items 1-14 \(decision id\): (.*)$", re.M)
+DECISION_HEADING = re.compile(r"^\*\*(D\d+)\. (.+?)\*\*", re.M | re.S)
+
+
+def _decision_entries(decisions: str) -> dict[str, tuple[str, str]]:
+    """Each decision of ``program/decisions.md`` by id: its bold heading and its whole entry
+    (to the next decision heading), whitespace folded."""
+    heads = list(DECISION_HEADING.finditer(decisions))
+    out = {}
+    for i, head in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(decisions)
+        out[head.group(1)] = (
+            " ".join(head.group(2).split()),
+            " ".join(decisions[head.start() : end].split()),
+        )
+    return out
+
+
+def _check_signoff(text: str, decisions: str) -> str:
+    """The slot holds one decision id whose heading in ``program/decisions.md`` names this
+    registration and whose entry signs items 1-14 of section 21."""
+    slots = SIGNOFF_SLOT.findall(text)
+    assert len(slots) == 1, "section 21 has one sign-off slot"
+    decision_id = slots[0].strip()
+    assert re.fullmatch(r"D\d+", decision_id), f"the slot takes one decision id: {decision_id!r}"
+    entries = _decision_entries(decisions)
+    assert decision_id in entries, f"{decision_id} is not a decision heading in decisions.md"
+    heading, entry = entries[decision_id]
+    assert f"`{LE.EXPERIMENT_ID}`" in heading, f"{decision_id}'s heading does not name E"
+    assert "items 1-14" in entry, f"{decision_id} does not sign items 1-14"
+    return decision_id
+
+
+def test_the_signoff_slot_names_the_decision_that_signs_items_1_14():
+    """Frozen: section 21's id is a decision of ``program/decisions.md`` that names E and
+    signs items 1-14. Draft: a decision of that form passes on a scratch copy filled as the
+    freeze fills it, and an id that is not such a decision is refused."""
+    decisions = DECISIONS.read_text(encoding="utf-8")
+    text = _text()
+    if _frozen():
+        _check_signoff(text, decisions)
+        return
+    slot = "- Program sign-off of items 1-14 (decision id): TBD"
+    assert text.count(slot) == 1
+    signed = decisions + (
+        f"\n**D999. Q2 successor E `{LE.EXPERIMENT_ID}` is signed off for the freeze.**\n"
+        "The program signs items 1-14 of its section 21.\n"
+    )
+    assert _check_signoff(text.replace(slot, slot[:-3] + "D999"), signed) == "D999"
+    for wrong in ("D82", "D80", "D83", "D999, D82", "TBD"):
+        with pytest.raises(AssertionError):
+            _check_signoff(text.replace(slot, slot[:-3] + wrong), decisions)
+    unsigned = decisions + f"\n**D998. `{LE.EXPERIMENT_ID}` noted.** Nothing signed.\n"
+    with pytest.raises(AssertionError, match="does not sign"):
+        _check_signoff(text.replace(slot, slot[:-3] + "D998"), unsigned)
+
+
+def test_the_freeze_runs_on_a_tree_that_holds_mains_ledger():
+    """E freezes on the tree with ``main`` merged, so its row follows main's rows (R04 is row
+    18): a freeze on the unmerged branch would fork the hash chain."""
+    rows = preregister.read_ledger(LEDGER)  # checks the hash chain end to end
+    ids = [r["experiment_id"] for r in rows]
+    assert R04_ID in ids, "main's ledger rows are not on this tree: merge main first"
+    if _frozen():
+        assert ids.count(LE.EXPERIMENT_ID) == 1
+        assert ids.index(R04_ID) < ids.index(LE.EXPERIMENT_ID)
+    else:
+        assert LE.EXPERIMENT_ID not in ids
+
+
+def test_no_draft_only_statement_outside_the_slots():
+    """Statements true only while the file is a draft would survive the freeze unchecked
+    (the D32 class): outside the five slots, none may remain."""
+    joined = " ".join(_text().split())
+    for phrase in ("entry point have not run on the host",
+                   "None yet. The pre-freeze audit of G-E6 is recorded here"):  # fmt: skip
+        assert phrase not in joined, phrase
+    log = _section(_text(), "25. Pre-freeze review log and the freeze")
+    assert "**Audit 1**" in log and "| B1 |" in log and "| N12 |" in log
+
+
+def test_d82_gold_defect_tasks_are_stated_and_are_the_plans():
+    """Section 9 states D82's three gold-defect tasks, as the adjudication record has them,
+    and the plan carries them for the sensitivity; S1a's flagged list is unchanged."""
+    gold = json.loads(D82_SUMMARY.read_text())["before_after"]["after_a"]["audit"][
+        "gold_defect_tasks"
+    ]
+    plan = PE.load_plan(ROOT / PE.PLAN_FILE)
+    assert plan["gold_defect_tasks_d82"] == gold == list(PE.D82_GOLD_DEFECT_TASKS)
+    text = _text()
+    for heading in ("9. Outcomes and checker corrections", "21. Design decisions for sign-off"):
+        section = _section(text, heading)
+        assert all(f"`{task[:8]}`" in section for task in gold), heading
+    joined = " ".join(_section(text, "9. Outcomes and checker corrections").split())
+    assert "changes neither the correction" not in joined
+    assert "**The D82 gold-defect sensitivity**" in joined
+    assert "No primary set, outcome, decision rule or DR changes" in joined
