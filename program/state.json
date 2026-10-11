@@ -1011,6 +1011,13 @@
       ],
       "outcome": "review PARSED on attempt 1, total 72 (ten scores sum to 72, no cap binding), replicates byte-identical; wave score 65 (lower of 65 and 72), best 65, trajectory 60 -> 65; honest exit under D74's stop line (D60's rule at 65: the score prong does not fire at 65, the defect prong does, as the wave-1 largest defect, Phase 0 cannot decide its gates and the decisive run cannot start with the assets that exist, is still the largest, narrowed), the run's wave cap and the triad stop (3/3 refuted), so S2 v3 ends; reviewer inference only, not S2 v3 Phase 0 or Phase 1 work (the repair's host jobs were CPU-only Slurm 1116-1142, no GRES); submitted 12:58:07 UTC 2026-10-11 after read-only squeue at 12:57:21 and two in-command re-checks at 12:58:06 and 12:58:07 showed an empty queue (no other job), ran 12:58:07-13:01:28 UTC (prolog: exclusive)",
       "basis": "physical (scontrol RunTime 00:03:21 = 201 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, all GPUs at 0 MiB and squeue empty after the job)"
+    },
+    {
+      "experiment": "R01 gauntlet wave 2 (fresh run under D75; r01-rerun-noise-sources-v2 draft) open-weight review (D24): NOT RUN",
+      "gpu_hours": 0.0,
+      "jobs": [],
+      "outcome": "review NOT RUN: the lane job was rendered (manifest r01-run2-r2, request c42f9e46...) but never dry-run, tested or submitted, because another workflow's CPU job (1175 r04-main-score-locale) held the host queue at every check 13:45-13:53 UTC and the host rule allows the job only on an empty queue; the harness demanded output first. Wave score 57 (reviewer 1 only; an upper bound on the lower of two totals), best 58, trajectory 58 -> 57; honest exit under D75's stop line (below 60, and the wave-1 largest defect is still the largest, narrowed), the run's wave cap and the triad stop (3/3 refuted); R01 ends under D75. Tokens 2.68M of 8M, $54.77 of $150, 123.7 of 600 minutes, 43 of 80 queries",
+      "basis": "physical: no GPU job ran (no Slurm job submitted for this run); recorder's read-only check at 13:55:56 UTC: only 1175 in the queue, all eight GPUs at 0 MiB, no compute apps"
     }
   ],
   "results": [

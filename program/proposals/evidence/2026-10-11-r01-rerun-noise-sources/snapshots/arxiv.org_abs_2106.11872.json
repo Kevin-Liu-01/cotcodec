@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2106.11872",
+ "fetched_at": "2026-10-11T12:58:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43680,
+ "raw_sha256": "de5030dfdb342b7acd64fbddd4436f1c72889553b8107d074d3b679049e3511f",
+ "raw_stored": false,
+ "extract": {
+  "title": "Randomness In Neural Network Training: Characterizing The Impact of Tooling",
+  "authors": [
+   "Zhuang, Donglin",
+   "Zhang, Xingyao",
+   "Song, Shuaiwen Leon",
+   "Hooker, Sara"
+  ],
+  "citation_date": "2021/06/22",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 22 Jun 2021 15:42:15 UTC"
+   }
+  ],
+  "abstract": "The quest for determinism in machine learning has disproportionately focused on characterizing the impact of noise introduced by algorithmic design choices. In this work, we address a less well understood and studied question: how does our choice of tooling introduce randomness to deep neural network training. We conduct large scale experiments across different types of hardware, accelerators, state of art networks, and open-source datasets, to characterize how tooling choices contribute to the level of non-determinism in a system, the impact of said non-determinism, and the cost of eliminating different sources of noise. Our findings are surprising, and suggest that the impact of non-determinism in nuanced. While top-line metrics such as top-1 accuracy are not noticeably impacted, model performance on certain parts of the data distribution is far more sensitive to the introduction of randomness. Our results suggest that deterministic tooling is critical for AI safety. However, we also find that the cost of ensuring determinism varies dramatically between neural network architectures and hardware types, e.g., with overhead up to $746\\%$, $241\\%$, and $196\\%$ on a spectrum of widely used GPU accelerator architectures, relative to non-deterministic training. The source code used in this paper is available at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ },
+ "fetched_by": "D75 repair run"
+}
