@@ -1,0 +1,299 @@
+{
+ "converged": true,
+ "episodes": 512,
+ "estimates": {
+  "rho_a": 0.918949,
+  "rho_b": 0.995,
+  "sizes": {
+   "4B": {
+    "c": 0.03884,
+    "kappa": -0.657359,
+    "mu": -2.847309,
+    "omega": 0.329842,
+    "sigma_a": 4.709027,
+    "sigma_b": 4.451754,
+    "sigma_e": 0.0,
+    "sigma_f": 0.0
+   },
+   "9B": {
+    "c": -0.213824,
+    "kappa": -0.300916,
+    "mu": -3.972918,
+    "omega": 1.3843,
+    "sigma_a": 7.758962,
+    "sigma_b": 8.0,
+    "sigma_e": 0.0,
+    "sigma_f": 0.0
+   }
+  },
+  "w_b": 0.159631
+ },
+ "harness": "spike-slab",
+ "inputs": {
+  "program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json": "a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806",
+  "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+  "program/evidence/2026-10-10/q2-stage1-analysis/costs.json": "8a03f13c6fdb795032f7245e159cac6f7f2d12aa6e68a72f95384bd2358a08d5",
+  "program/evidence/2026-10-10/q2-stage1-analysis/report/report-guarded.json": "6bda751e55c049b9edbd3613d9004f8ab2285a43b2ca890274991c74de7ee655"
+ },
+ "loglik": -144.462907,
+ "loglik_grid_0125": -144.46287,
+ "method": "Maximum marginal likelihood fit of the model's components to S1a's records (CPU).\n\nThe model is ``model``'s, fitted on S1a's two realized sessions per size. With two sessions\na session variance has one degree of freedom per size, so the fit holds the realized\nsessions as fixed effects (omega_z: the S2 - S1 shift; kappa_z: the S2 - S1 change of the\nharness effect), as every S1a estimand is defined conditional on them, and the variances\nfor new sessions (sigma_g, sigma_k) are moment estimates from those fixed effects\n(``session_variances``), with wide upper bounds.\n\nLikelihood. Per task, the random effects are the task logits (eta0_4B, eta0_9B), the harness\ncontrasts (beta_4B, beta_9B), the task x session effects e_tzs and the task x harness x\nsession effects f_tzhs. f is integrated per cell by Gauss-Hermite into a table of\nG_{y,n}(eta) = E_f[p^y (1 - p)^(n - y)]; e, common to a (size, session)'s two harness\ncells, is a discretised convolution along the eta0 axis (bin probabilities on the grid's\nstep) of the product of the two cells' G values; the task-level effects are summed\non a fixed grid (eta0: -50..50, beta - c: -25..25, step 0.25), with the bivariate normal\npriors discretised by exact bin probabilities (edge bins hold the tails). The four-\ndimensional sum factorises as sum_{ik} L4[i,k] (A L9 B^T)[i,k], where A and B are the\ndiscretised priors over (eta0_4B, eta0_9B) and (beta_4B, beta_9B). Binomial coefficients\nare omitted (constant). Optimiser: L-BFGS-B on transformed parameters with finite\ndifferences; each size's grids are cached on that size's cell-level parameters.",
+ "observed": {
+  "success_by_size_harness": [
+   [
+    0.289062,
+    0.265625
+   ],
+   [
+    0.328125,
+    0.289062
+   ]
+  ],
+  "task_count_histogram": [
+   [
+    16,
+    2,
+    4,
+    2,
+    1,
+    1,
+    0,
+    2,
+    4
+   ],
+   [
+    17,
+    3,
+    2,
+    0,
+    1,
+    0,
+    0,
+    4,
+    5
+   ]
+  ]
+ },
+ "optimizer_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+ "params": {
+  "rho_a": 0.918949,
+  "rho_b": 0.995,
+  "sizes": {
+   "4B": {
+    "c": 0.03884,
+    "kappa": -0.657359,
+    "mu": -2.847309,
+    "omega": 0.329842,
+    "sigma_a": 4.709027,
+    "sigma_b": 4.451754,
+    "sigma_e": 0.0,
+    "sigma_f": 0.0,
+    "sigma_g": 0.648254,
+    "sigma_k": 0.0
+   },
+   "9B": {
+    "c": -0.213824,
+    "kappa": -0.300916,
+    "mu": -3.972918,
+    "omega": 1.3843,
+    "sigma_a": 7.758962,
+    "sigma_b": 8.0,
+    "sigma_e": 0.0,
+    "sigma_f": 0.0,
+    "sigma_g": 0.648254,
+    "sigma_k": 0.0
+   }
+  },
+  "w_b": 0.159631
+ },
+ "population_parametric": {
+  "4B": {
+   "D_b": 0.141501,
+   "X": 0.021402,
+   "delta": 0.002486,
+   "pi": 0.070308,
+   "session_logit_sd": 0.648254,
+   "success": [
+    0.288319,
+    0.290805
+   ]
+  },
+  "9B": {
+   "D_b": 0.092594,
+   "X": 0.031583,
+   "delta": -0.009603,
+   "pi": 0.145696,
+   "session_logit_sd": 0.648254,
+   "success": [
+    0.316831,
+    0.307228
+   ]
+  },
+  "delta_pooled": -0.003559,
+  "pi_small": 0.108002
+ },
+ "population_pool_posterior": {
+  "4B": {
+   "D_b": 0.127692,
+   "X": 0.014171,
+   "delta": -0.001669,
+   "pi": 0.052573,
+   "session_logit_sd": 0.648254,
+   "success": [
+    0.2889,
+    0.287231
+   ]
+  },
+  "9B": {
+   "D_b": 0.089339,
+   "X": 0.034457,
+   "delta": -0.003317,
+   "pi": 0.161667,
+   "session_logit_sd": 0.648254,
+   "success": [
+    0.317665,
+    0.314348
+   ]
+  },
+  "delta_pooled": -0.002493,
+  "pi_small": 0.10712
+ },
+ "prob_scale_components": {
+  "4B": {
+   "components": {
+    "harness": 4e-06,
+    "harness_x_session": 0.0,
+    "rerun": 0.067845,
+    "session": 0.002228,
+    "task": 0.126052,
+    "task_x_harness": 0.005278,
+    "task_x_harness_x_session": 0.0002,
+    "task_x_session": 0.002927
+   },
+   "mean_success": 0.286772,
+   "shares": {
+    "harness": 1.8e-05,
+    "harness_x_session": 1e-06,
+    "rerun": 0.331704,
+    "session": 0.010895,
+    "task": 0.61629,
+    "task_x_harness": 0.025803,
+    "task_x_harness_x_session": 0.000976,
+    "task_x_session": 0.014312
+   },
+   "var_y": 0.204534
+  },
+  "9B": {
+   "components": {
+    "harness": 2.8e-05,
+    "harness_x_session": 0.0,
+    "rerun": 0.042696,
+    "session": 0.000737,
+    "task": 0.158244,
+    "task_x_harness": 0.00735,
+    "task_x_harness_x_session": 0.000155,
+    "task_x_session": 0.001907
+   },
+   "mean_success": 0.302813,
+   "shares": {
+    "harness": 0.000131,
+    "harness_x_session": 0.0,
+    "rerun": 0.202237,
+    "session": 0.003492,
+    "task": 0.749555,
+    "task_x_harness": 0.034817,
+    "task_x_harness_x_session": 0.000734,
+    "task_x_session": 0.009034
+   },
+   "var_y": 0.211117
+  }
+ },
+ "provenance": {
+  "argv": [
+   "/Users/kevinliu/repos/cotcodec-wt-q2-design/harness/q2_design/study.py",
+   "fit",
+   "--set",
+   "base",
+   "--harness",
+   "spike-slab",
+   "--out",
+   "program/evidence/2026-10-10/q2-design-study/fit-base-spikeslab.json"
+  ],
+  "git_head": "34a57a8af0b42192ad96d4e9919d9d5132027d34",
+  "harness_dirty": true,
+  "numpy": "2.5.2",
+  "python": "3.13.14",
+  "scipy": "1.18.0"
+ },
+ "se": {
+  "4B": {
+   "c": 0.296603,
+   "kappa": 0.48848,
+   "mu": 0.75464,
+   "omega": 0.269249,
+   "sigma_a": 1.15276,
+   "sigma_b": 2.614524
+  },
+  "9B": {
+   "c": 0.518598,
+   "kappa": 0.787256,
+   "mu": 1.228827,
+   "omega": 0.521205,
+   "sigma_a": 1.950465
+  }
+ },
+ "se_info": {
+  "4B": {
+   "coords": [
+    "mu",
+    "log_sigma_a",
+    "c",
+    "log_sigma_b",
+    "omega",
+    "kappa"
+   ],
+   "positive_definite": true
+  },
+  "9B": {
+   "coords": [
+    "mu",
+    "log_sigma_a",
+    "c",
+    "omega",
+    "kappa"
+   ],
+   "positive_definite": true
+  }
+ },
+ "seconds": 100.270464,
+ "session_variances": {
+  "method": "moments of the fixed effects, pooled over sizes (2 df), SE-corrected",
+  "sigma_g": 0.648254,
+  "sigma_g_upper95": 3.127898,
+  "sigma_k": 0.0,
+  "sigma_k_upper95": 1.079997
+ },
+ "set": "base",
+ "tasks": 32,
+ "x": [
+  -2.847309,
+  1.549481,
+  0.03884,
+  1.493298,
+  0.329842,
+  -0.657359,
+  0.0,
+  0.0,
+  -3.972918,
+  2.048849,
+  -0.213824,
+  2.079442,
+  1.3843,
+  -0.300916,
+  0.0,
+  0.0,
+  1.582224,
+  2.994481,
+  -1.660973
+ ]
+}

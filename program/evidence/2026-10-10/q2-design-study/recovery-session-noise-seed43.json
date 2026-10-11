@@ -1,0 +1,94 @@
+{
+ "converged": true,
+ "estimate": {
+  "rho_a": 0.879175,
+  "rho_b": 0.995,
+  "sizes": {
+   "4B": {
+    "c": -0.765541,
+    "kappa": -1.265033,
+    "mu": -4.049672,
+    "omega": -0.264678,
+    "sigma_a": 4.989731,
+    "sigma_b": 1.878866,
+    "sigma_e": 1.107844,
+    "sigma_f": 0.104946
+   },
+   "9B": {
+    "c": -2.695283,
+    "kappa": -0.111199,
+    "mu": -7.606928,
+    "omega": 4.110892,
+    "sigma_a": 12.0,
+    "sigma_b": 6.468854,
+    "sigma_e": 2.265398,
+    "sigma_f": 0.0
+   }
+  },
+  "w_b": 1.0
+ },
+ "fit": "program/evidence/2026-10-10/q2-design-study/fit-base.json",
+ "loglik": -121.275181,
+ "observed_success": [
+  [
+   0.257812,
+   0.226562
+  ],
+  [
+   0.320312,
+   0.257812
+  ]
+ ],
+ "provenance": {
+  "argv": [
+   "/Users/kevinliu/repos/cotcodec-wt-q2-design/harness/q2_design/study.py",
+   "recovery",
+   "--fit",
+   "program/evidence/2026-10-10/q2-design-study/fit-base.json",
+   "--truth",
+   "session-noise",
+   "--seed",
+   "43",
+   "--out",
+   "program/evidence/2026-10-10/q2-design-study/recovery-session-noise-seed43.json"
+  ],
+  "git_head": "34a57a8af0b42192ad96d4e9919d9d5132027d34",
+  "harness_dirty": true,
+  "numpy": "2.5.2",
+  "python": "3.13.14",
+  "scipy": "1.18.0"
+ },
+ "seed": 43,
+ "truth": {
+  "rho_a": 0.917416,
+  "rho_b": 0.995,
+  "sizes": {
+   "4B": {
+    "c": -0.240216,
+    "kappa": -0.652826,
+    "mu": -2.862854,
+    "omega": 0.326626,
+    "sigma_a": 4.817518,
+    "sigma_b": 1.456636,
+    "sigma_e": 1.0,
+    "sigma_f": 1.0,
+    "sigma_g": 0.546821,
+    "sigma_k": 0.0
+   },
+   "9B": {
+    "c": -0.796789,
+    "kappa": -0.259733,
+    "mu": -4.02993,
+    "omega": 1.375539,
+    "sigma_a": 7.986537,
+    "sigma_b": 2.311876,
+    "sigma_e": 1.0,
+    "sigma_f": 1.0,
+    "sigma_g": 0.546821,
+    "sigma_k": 0.0
+   }
+  },
+  "w_b": 1.0
+ },
+ "truth_name": "session-noise"
+}

@@ -1,0 +1,417 @@
+{
+ "V": 20,
+ "by_size": {
+  "4B": {
+   "drain_s": 92.870499,
+   "marginal_gpu_h_per_episode_pool_V20": 0.002403,
+   "mean_slot_s_base": 181.387125,
+   "mean_slot_s_pool": 173.047879,
+   "planning_gpu_h_per_episode_pool_V20": 0.003028,
+   "realized_gpu_h_per_episode_jobs": [
+    0.002537,
+    0.002497
+   ],
+   "realized_vm_h_per_episode_jobs": [
+    0.048322,
+    0.047816
+   ]
+  },
+  "9B": {
+   "drain_s": 104.60958,
+   "marginal_gpu_h_per_episode_pool_V20": 0.002575,
+   "mean_slot_s_base": 192.739484,
+   "mean_slot_s_pool": 185.426773,
+   "planning_gpu_h_per_episode_pool_V20": 0.003245,
+   "realized_gpu_h_per_episode_jobs": [
+    0.0027,
+    0.002702
+   ],
+   "realized_vm_h_per_episode_jobs": [
+    0.05166,
+    0.051355
+   ]
+  }
+ },
+ "cpu": {
+  "gpu_job": 32,
+  "host_cpus": 208,
+  "limit": 200,
+  "pair_V20": 122,
+  "pair_V32": 176,
+  "pairs_at_once_V20": 1,
+  "vm_job_V20": 90
+ },
+ "episodes_per_8_gpu_h_physical": {
+  "12_jobs": 2929,
+  "16_jobs": 2835,
+  "4_jobs": 3119,
+  "6_jobs": 3071,
+  "8_jobs": 3024
+ },
+ "inputs": {
+  "program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json": "a5f0aadce1208d9d9ab31ff572ca93e624dbd87e1b50dd194987ff8cc46e1806",
+  "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+  "program/evidence/2026-10-10/q2-stage1-analysis/costs.json": "8a03f13c6fdb795032f7245e159cac6f7f2d12aa6e68a72f95384bd2358a08d5",
+  "program/evidence/2026-10-10/q2-stage1-analysis/report/report-guarded.json": "6bda751e55c049b9edbd3613d9004f8ab2285a43b2ca890274991c74de7ee655"
+ },
+ "jobs": {
+  "A1-4B-S1": {
+   "V": 20,
+   "drain_s": 92.870499,
+   "elapsed_s": 4129.0,
+   "episodes": 452,
+   "gpu_h_per_episode": 0.002537,
+   "mean_slot_s": 173.959385,
+   "size": "4B",
+   "slot_sum_over_V_s": 3931.4821,
+   "startup_s": 104.647401,
+   "vm_h_per_episode": 0.048322
+  },
+  "A1-4B-S2": {
+   "V": 20,
+   "drain_s": 69.469132,
+   "elapsed_s": 4063.0,
+   "episodes": 452,
+   "gpu_h_per_episode": 0.002497,
+   "mean_slot_s": 172.136374,
+   "size": "4B",
+   "slot_sum_over_V_s": 3890.28205,
+   "startup_s": 103.248818,
+   "vm_h_per_episode": 0.047816
+  },
+  "A1-9B-S1": {
+   "V": 20,
+   "drain_s": 77.020632,
+   "elapsed_s": 4393.0,
+   "episodes": 452,
+   "gpu_h_per_episode": 0.0027,
+   "mean_slot_s": 185.977239,
+   "size": "9B",
+   "slot_sum_over_V_s": 4203.0856,
+   "startup_s": 112.893768,
+   "vm_h_per_episode": 0.05166
+  },
+  "A1-9B-S2": {
+   "V": 20,
+   "drain_s": 104.60958,
+   "elapsed_s": 4396.0,
+   "episodes": 452,
+   "gpu_h_per_episode": 0.002702,
+   "mean_slot_s": 184.876308,
+   "size": "9B",
+   "slot_sum_over_V_s": 4178.20455,
+   "startup_s": 113.18587,
+   "vm_h_per_episode": 0.051355
+  }
+ },
+ "marginal_gpu_h_per_episode_pool_mean": 0.002489,
+ "method": "Cost model for successor designs, from S1a's realized cost (costs.json, lane receipts).\n\nEach A1 job held one H100 engine and a pool of V VMs; the engine never queued a request\n(RESULTS.md: queue time below 0.01 ms per request), so a job's GPU time is set by the VM\nslots, not by the GPU. Each job's Slurm elapsed time decomposes, from its lane receipt and\nrecords, as\n\n    elapsed = L (Slurm start to first dispatch: engine start-up and first boot)\n              + sum(slot occupancy) / V\n              + drain (the last wave: VMs idle while the final episodes finish)\n\nand a successor job with N episodes on tasks with mean slot s at the same V is priced as\nL + N s / V + drain. Slots are measured per (size, task) in S1a (both harnesses, all four\njobs), so a design on other pool tasks is priced on those tasks' slots.\n\nAccounting. The program counts registered caps, not usage (D22), against 8 GPU-h (D20,\nD24): S1a's caps summed to at most 478 minutes. A successor's job cap here is\n3 min (USR1 lead) + L + (N s / V + drain) x 1.2 (DR4: projections use realized cost x 1.2)\nx 1.05 (the K-rule's re-queue allowance), rounded up to whole minutes; one overlay build\nfrom the freeze commit and its pre-funded retry (3 + 3 minutes, as O2) are reserved.\n\nCPU constraint (``harness.q2_stage1.plan``): a GPU job takes 32 CPUs, a VM job 4V +\nrunner_cpus(V), and co-running jobs must stay at or below 200 of the host's 208. At V = 20\none (size, session) pair takes 122, so pairs run one after the other (two at once need\n244). V = 20 is the card's measured value and the only one A1 ran; V = 32 fits (176 CPUs)\nand is within the action path's qualified N* = 32, but would need its own step-p95 gate\nunder load, so it is reported as an option only.",
+ "overhead_per_job_gpu_h": 0.058868,
+ "planning_gpu_h_per_episode_pool_mean": 0.003137,
+ "provenance": {
+  "argv": [
+   "/Users/kevinliu/repos/cotcodec-wt-q2-design/harness/q2_design/study.py",
+   "cost",
+   "--out",
+   "program/evidence/2026-10-10/q2-design-study/cost-model.json"
+  ],
+  "git_head": "15c61b7031a4b75501bf1cb0ebba4e8f7b47d07f",
+  "harness_dirty": true,
+  "numpy": "2.5.2",
+  "python": "3.13.14",
+  "scipy": "1.18.0"
+ },
+ "rules": {
+  "cap_per_job_min": "ceil(3 + L/60 + (N * slot / V + drain) * 1.2 * 1.05 / 60)",
+  "cap_total_min": 478,
+  "reserved_min": 6
+ },
+ "s1a_base_design_repriced": {
+  "caps_min": 136,
+  "episodes": 512,
+  "physical_gpu_h": 1.565701,
+  "vm_h": 26.604559
+ },
+ "startup_s_max": 113.18587,
+ "structures_within_478_cap_minutes": [
+  {
+   "K": 113,
+   "K_max_caps_478": 147,
+   "R": 2,
+   "S": 2,
+   "caps_min": 376,
+   "episodes": 1808,
+   "jobs": 4,
+   "physical_gpu_h": 4.7363,
+   "sizes": [
+    "4B",
+    "9B"
+   ],
+   "vm_h": 90.0,
+   "wall_h_sequential": 4.74
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 294,
+   "R": 1,
+   "S": 2,
+   "caps_min": 206,
+   "episodes": 904,
+   "jobs": 4,
+   "physical_gpu_h": 2.4859,
+   "sizes": [
+    "4B",
+    "9B"
+   ],
+   "vm_h": 45.0,
+   "wall_h_sequential": 2.49
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 189,
+   "R": 1,
+   "S": 3,
+   "caps_min": 306,
+   "episodes": 1356,
+   "jobs": 6,
+   "physical_gpu_h": 3.7288,
+   "sizes": [
+    "4B",
+    "9B"
+   ],
+   "vm_h": 67.5,
+   "wall_h_sequential": 3.73
+  },
+  {
+   "K": 94,
+   "K_max_caps_478": 94,
+   "R": 2,
+   "S": 3,
+   "caps_min": 477,
+   "episodes": 2256,
+   "jobs": 6,
+   "physical_gpu_h": 5.9693,
+   "sizes": [
+    "4B",
+    "9B"
+   ],
+   "vm_h": 112.3,
+   "wall_h_sequential": 5.97
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 138,
+   "R": 1,
+   "S": 4,
+   "caps_min": 406,
+   "episodes": 1808,
+   "jobs": 8,
+   "physical_gpu_h": 4.9718,
+   "sizes": [
+    "4B",
+    "9B"
+   ],
+   "vm_h": 90.0,
+   "wall_h_sequential": 4.97
+  },
+  {
+   "K": 69,
+   "K_max_caps_478": 69,
+   "R": 2,
+   "S": 4,
+   "caps_min": 478,
+   "episodes": 2208,
+   "jobs": 8,
+   "physical_gpu_h": 5.9676,
+   "sizes": [
+    "4B",
+    "9B"
+   ],
+   "vm_h": 109.9,
+   "wall_h_sequential": 5.97
+  },
+  {
+   "K": 105,
+   "K_max_caps_478": 105,
+   "R": 1,
+   "S": 5,
+   "caps_min": 471,
+   "episodes": 2100,
+   "jobs": 10,
+   "physical_gpu_h": 5.8164,
+   "sizes": [
+    "4B",
+    "9B"
+   ],
+   "vm_h": 104.6,
+   "wall_h_sequential": 5.82
+  },
+  {
+   "K": 84,
+   "K_max_caps_478": 84,
+   "R": 1,
+   "S": 6,
+   "caps_min": 474,
+   "episodes": 2016,
+   "jobs": 12,
+   "physical_gpu_h": 5.7251,
+   "sizes": [
+    "4B",
+    "9B"
+   ],
+   "vm_h": 100.4,
+   "wall_h_sequential": 5.73
+  },
+  {
+   "K": 58,
+   "K_max_caps_478": 58,
+   "R": 1,
+   "S": 8,
+   "caps_min": 470,
+   "episodes": 1856,
+   "jobs": 16,
+   "physical_gpu_h": 5.5622,
+   "sizes": [
+    "4B",
+    "9B"
+   ],
+   "vm_h": 92.4,
+   "wall_h_sequential": 5.56
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 293,
+   "R": 2,
+   "S": 2,
+   "caps_min": 198,
+   "episodes": 904,
+   "jobs": 2,
+   "physical_gpu_h": 2.4491,
+   "sizes": [
+    "9B"
+   ],
+   "vm_h": 46.6,
+   "wall_h_sequential": 2.45
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 587,
+   "R": 1,
+   "S": 2,
+   "caps_min": 110,
+   "episodes": 452,
+   "jobs": 2,
+   "physical_gpu_h": 1.2851,
+   "sizes": [
+    "9B"
+   ],
+   "vm_h": 23.3,
+   "wall_h_sequential": 1.29
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 384,
+   "R": 1,
+   "S": 3,
+   "caps_min": 162,
+   "episodes": 678,
+   "jobs": 3,
+   "physical_gpu_h": 1.9276,
+   "sizes": [
+    "9B"
+   ],
+   "vm_h": 34.9,
+   "wall_h_sequential": 1.93
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 192,
+   "R": 2,
+   "S": 3,
+   "caps_min": 294,
+   "episodes": 1356,
+   "jobs": 3,
+   "physical_gpu_h": 3.6737,
+   "sizes": [
+    "9B"
+   ],
+   "vm_h": 69.8,
+   "wall_h_sequential": 3.67
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 284,
+   "R": 1,
+   "S": 4,
+   "caps_min": 214,
+   "episodes": 904,
+   "jobs": 4,
+   "physical_gpu_h": 2.5701,
+   "sizes": [
+    "9B"
+   ],
+   "vm_h": 46.6,
+   "wall_h_sequential": 2.57
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 142,
+   "R": 2,
+   "S": 4,
+   "caps_min": 390,
+   "episodes": 1808,
+   "jobs": 4,
+   "physical_gpu_h": 4.8983,
+   "sizes": [
+    "9B"
+   ],
+   "vm_h": 93.1,
+   "wall_h_sequential": 4.9
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 223,
+   "R": 1,
+   "S": 5,
+   "caps_min": 266,
+   "episodes": 1130,
+   "jobs": 5,
+   "physical_gpu_h": 3.2127,
+   "sizes": [
+    "9B"
+   ],
+   "vm_h": 58.2,
+   "wall_h_sequential": 3.21
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 182,
+   "R": 1,
+   "S": 6,
+   "caps_min": 318,
+   "episodes": 1356,
+   "jobs": 6,
+   "physical_gpu_h": 3.8552,
+   "sizes": [
+    "9B"
+   ],
+   "vm_h": 69.8,
+   "wall_h_sequential": 3.86
+  },
+  {
+   "K": 113,
+   "K_max_caps_478": 133,
+   "R": 1,
+   "S": 8,
+   "caps_min": 422,
+   "episodes": 1808,
+   "jobs": 8,
+   "physical_gpu_h": 5.1403,
+   "sizes": [
+    "9B"
+   ],
+   "vm_h": 93.1,
+   "wall_h_sequential": 5.14
+  }
+ ]
+}
