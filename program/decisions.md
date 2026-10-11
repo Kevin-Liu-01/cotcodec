@@ -1406,3 +1406,25 @@ is frozen under program authority and run (CPU only, about 1 h). The parent
 analysis is then rerun with `--k2-report`. Every K2 output carries the
 warning that Kevin answers his blind adjudication before reading it. R04's
 freeze waits for Kevin's three items.
+
+**D78. K2 is frozen under program authority (D77), and R04 is ready for
+Kevin's freeze.** The fresh re-audit of `q2-evaluator-mutation-v1-k2` found
+three blocking items:
+- the status paragraph had no frozen wording;
+- 17 K2 tests failed at a freeze commit;
+- section 8's pooled tables were missing.
+All three were fixed and a fresh verifier confirmed the fixes
+(`stage0/k2-fix2`, `2f22c90f`). Its scratch freeze passed: the placeholder
+guard refused the draft as committed; after the section 14 fill, row 17
+froze with check-chain and verify passing; at the freeze commit the K2 suite
+passed (92) and every ledger-reading test passed (979); the registered
+manifest rendered (242 slots) and validated from the freeze export; and the
+parent export was refused. K2 reserves nothing for Kevin. Decided: K2 is
+frozen now, following its section 14 (fill the status paragraph in one
+commit, freeze, commit the ledger row alone), and run from the freeze
+commit's export (CPU only, about 1 h). Then the report step runs and the
+parent analysis is rerun with `--k2-report`. Every K2 output directory opens
+with the blind-adjudication warning: Kevin answers the 34-item pool and the
+25-item spot check before reading K2's verdicts. R04's re-audit fix was
+verified ready to freeze (`stage0/r04-fix2`, merged). Its freeze is Kevin's,
+together with his three reserved items (D77).
