@@ -294,6 +294,7 @@ class Op:
 class Plan:
     ops: list[Op] = field(default_factory=list)
     skipped_dirs: list[str] = field(default_factory=list)
+    shared_dirs: list[str] = field(default_factory=list)
 
     def written(self) -> list[Op]:
         return [op for op in self.ops if op.kind in ("write", "symlink", "mkdir")]
@@ -341,6 +342,13 @@ def plan_install(members: Sequence[Member], ucf: Sequence[tuple[str, str]],
                     raise BuildError(f"{m.path}: exists in the image and is not a directory")
                 plan.skipped_dirs.append(m.path)
                 continue
+            if created.get(m.path) == "dir":
+                # A directory an earlier package of this install created (the two language
+                # packs share /usr/share/locale-langpack/ar/LC_MESSAGES): dpkg shares it too.
+                plan.shared_dirs.append(m.path)
+                continue
+            if m.path in created:
+                raise BuildError(f"{m.path}: a directory over a {created[m.path]} of this install")
             plan.ops.append(Op("mkdir", m.path, 0o040000 | m.mode, m.uid, m.gid, m.mtime,
                                source=m.package))  # fmt: skip
             created[m.path] = "dir"
@@ -927,6 +935,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     listing = img.ls_dirs(base_listing_dirs(targets))
     plan = plan_install(members, ucf, listing)
     rec["install"] = {"ops": len(plan.ops), "skipped_existing_dirs": plan.skipped_dirs,
+                      "shared_dirs": plan.shared_dirs,
                       "by_kind": {k: sum(op.kind == k for op in plan.ops)
                                   for k in ("mkdir", "write", "symlink")}}  # fmt: skip
     log(f"applying {len(plan.ops)} operations")

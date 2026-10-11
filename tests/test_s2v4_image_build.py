@@ -273,3 +273,14 @@ def test_pinned_archives_are_the_fetched_ones():
 def test_selftest_roundtrip(tmp_path):
     result = B.selftest(tmp_path / "st")
     assert result["ok"], result
+
+
+def test_plan_install_shares_a_directory_two_packages_create():
+    a = [_m("/usr", "dir"), _m("/usr/lib/libreoffice/program", "dir"),
+         _m("/usr/lib/libreoffice/program/a.mo")]
+    b = [_m("/usr/lib/libreoffice/program", "dir"), _m("/usr/lib/libreoffice/program/b.mo")]
+    plan = B.plan_install(a + b, [], LISTING)
+    assert [o.kind for o in plan.ops] == ["mkdir", "write", "write"]
+    assert plan.shared_dirs == ["/usr/lib/libreoffice/program"]
+    with pytest.raises(B.BuildError):  # the same file from two packages is refused
+        B.plan_install(a + [_m("/usr/lib/libreoffice/program/a.mo")], [], LISTING)
