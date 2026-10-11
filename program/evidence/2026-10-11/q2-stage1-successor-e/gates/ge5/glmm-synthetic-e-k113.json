@@ -1,0 +1,76 @@
+{
+  "schema": "q2-stage1a-glmm-v1",
+  "formula_full": "y ~ size * harness + (1 | task) + (1 | task:size) + (1 | task:harness) + (1 | task:size:harness) + (1 | session) + (1 | harness:session) + (1 | task:session) + (1 | task:harness:session)",
+  "formula_reduced": "y ~ size * harness + (1 | task) + (1 | task:size) + (1 | task:size:harness) + (1 | session) + (1 | harness:session) + (1 | task:session) + (1 | task:harness:session)",
+  "n_episodes": 1808,
+  "n_tasks": 113,
+  "seed": 42,
+  "n_boot": 200,
+  "glmmTMB_version": "1.1.10",
+  "TMB_version": "1.9.16",
+  "R_version": "R version 4.4.2 (2024-10-31)",
+  "full": {
+    "ok": true,
+    "optimizer_convergence": 0,
+    "optimizer_message": "relative convergence (4)",
+    "pdHess": true,
+    "logLik": -1041.36997268327,
+    "df": 12
+  },
+  "reduced": {
+    "ok": true,
+    "optimizer_convergence": 0,
+    "optimizer_message": "relative convergence (4)",
+    "pdHess": true,
+    "logLik": -1058.42434037647,
+    "df": 11
+  },
+  "fixed_effects": {
+    "(Intercept)": -1.03247691133846,
+    "size9B": 0.549883760033154,
+    "harnessH-OSW-fixed": -0.0120587018089943,
+    "size9B:harnessH-OSW-fixed": 0.0804475657210457
+  },
+  "variance_components": {
+    "task": 1.33428717240857,
+    "task:size": 0.00581896613175903,
+    "task:harness": 0.973550325305351,
+    "task:size:harness": 5.52485635772974e-08,
+    "session": 4.903765723316e-09,
+    "harness:session": 1.78494607184474e-08,
+    "task:session": 5.25749295821942e-08,
+    "task:harness:session": 2.25675730927677e-08
+  },
+  "latent_shares": {
+    "task": 0.238115691778665,
+    "task:size": 0.00103844747559047,
+    "task:harness": 0.173738917667151,
+    "task:size:harness": 9.85960909167565e-09,
+    "session": 8.75121631739967e-10,
+    "harness:session": 3.18539874679072e-09,
+    "task:session": 9.38247476746735e-09,
+    "task:harness:session": 4.02738884842138e-09
+  },
+  "bootstrap": {
+    "refits_failed": 0,
+    "refits_not_converged": 42,
+    "refits_used": 200,
+    "shares_ci95": {
+      "task": [0.129999571348647, 0.322779404210545],
+      "task:size": [2.58103971209589e-11, 0.0229482869515628],
+      "task:harness": [0.0887740692953665, 0.255743411670401],
+      "task:size:harness": [2.73370796619602e-11, 0.0192308440336016],
+      "session": [9.83685592781826e-19, 0.00392230057252146],
+      "harness:session": [3.22812702356558e-15, 0.00401477036821442],
+      "task:session": [6.26677408842421e-13, 2.78585047722546e-05],
+      "task:harness:session": [5.29886464914743e-13, 1.77587457859877e-08]
+    }
+  },
+  "lrt_task_harness": {
+    "statistic": 34.1087353864186,
+    "df": 1,
+    "p_value": 5.21167793467445e-09,
+    "p_value_boundary_corrected": 2.60583896733723e-09,
+    "both_converged": true
+  }
+}
