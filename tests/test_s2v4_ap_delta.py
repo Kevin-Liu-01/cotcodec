@@ -118,3 +118,46 @@ def test_rung_verdict_reads_the_step_p95_per_image(monkeypatch):
     sessions[3]["trials"][0]["steps_s"] = [1.5] * 20  # within 2 x its own A1
     assert D.rung_verdict(rung, a1)["qualifies"]
     assert not D.rung_verdict([], a1)["qualifies"]
+
+
+def test_run_rung_puts_session_i_on_image_i_mod_n(tmp_path, monkeypatch):
+    """run_rung is driver.main's concurrent branch with a per-worker disk (driver stubbed)."""
+    from harness.q2.vm import driver
+
+    args = _args(tmp_path)
+    m = D.render_dev(args)
+    item = json.loads(json.dumps(m["campaigns"][1]))  # the development rung over E and AR
+    item["cells"] = ["E", "AR"]
+    seen: dict[int, str] = {}
+    plan = [{"setting": "screenshot", "index": i, "trials": [[0, "type_plain"]]} for i in range(6)]
+    monkeypatch.setattr(D.os, "stat", lambda p, follow_symlinks=False: type(
+        "S", (), {"st_size": 24_459_214_848, "st_mode": 0o100444})())
+    monkeypatch.setattr(D.os.path, "isfile", lambda p: True)
+    monkeypatch.setattr(D.os.path, "islink", lambda p: False)
+    digest = {e["host_path"]: e["sha256"] for e in item["qcow2"].values()}
+    monkeypatch.setattr(driver, "sha256_file", lambda p: digest[p])
+    monkeypatch.setattr(driver, "session_plan", lambda q, c: plan)
+    monkeypatch.setattr(driver, "slurm_cpu_ids", lambda j: list(range(16)))
+    monkeypatch.setattr(driver, "numa_nodes", lambda: {0: set(range(16))})
+    monkeypatch.setattr(driver, "snapshot_host", lambda j: {"t": 0, "squeue_foreign": []})
+
+    def run_cycle(q2m, job, cycle, prev, run_dir, src, cpus, session=None):
+        seen[cycle] = q2m["vm"]["qcow2"]["sha256"]
+        return {"cycle": cycle, "token": f"t{cycle}"}
+
+    monkeypatch.setattr(driver, "run_cycle", run_cycle)
+    monkeypatch.setattr(driver, "cycle_verdict", lambda r, t: {"ok": True})
+    monkeypatch.setattr(driver, "summarize", lambda v, r: {
+        "boots_ok": len(r), "cycles": len(r), "no_gpu_all": True, "no_published_ports_all": True,
+        "containers_removed_all": True, "leaked_volumes": []})
+    monkeypatch.setattr(driver, "session_summary", lambda r: {"runner_errors": []})
+    monkeypatch.setattr(D, "docker", lambda *a, **k: type("P", (), {"stdout": ""})())
+    rc = D.run_rung(item, tmp_path / "run", Path(args.source_dir), "77")
+    assert rc == 0
+    pins = L.load_pins(args.source_dir)
+    assert [seen[i] for i in range(6)] == [pins["E"]["sha256"], pins["AR"]["sha256"]] * 3
+    receipt = json.loads((tmp_path / "run" / "receipt.json").read_text())
+    assert receipt["qcow2_unchanged"] and receipt["summary"]["infra_gates_pass"]
+    assert receipt["image_of_session"] == {str(i): ["E", "AR"][i % 2] for i in range(6)}
+    assert (tmp_path / "run" / "preflight.txt").read_text().splitlines()[-1] == (
+        "driver_exit=0 labelled_containers_left=0")
