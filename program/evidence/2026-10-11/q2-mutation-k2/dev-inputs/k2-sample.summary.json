@@ -1,0 +1,14 @@
+{
+ "by_domain": {
+  "libreoffice_calc": 28,
+  "libreoffice_impress": 24,
+  "libreoffice_writer": 11,
+  "multi_apps": 17
+ },
+ "jobs_sha256": "5a5e2f0f7f590b85de6aaa88c47a5b5695bc164f3aa64631edfaaba9764d245e",
+ "pairs": 80,
+ "sample_sha256": "94d7bb2233bf78f780902f1c50aeaffbe4f36f933acebdf1b1d109a49a6960a6",
+ "seed": 42,
+ "status": "drawn",
+ "tasks": 17
+}
