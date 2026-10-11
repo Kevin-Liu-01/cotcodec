@@ -7,9 +7,14 @@ per mutant, and the K2-C lists name which mutants are checker candidate events
 packets before reading anything here, as for the results README's
 `sample.jsonl`, `decisions.jsonl`, `analysis.json` and `summary.json`.
 
-Addendum: `program/preregistrations/q2-evaluator-mutation-v1-k2.md` (DRAFT, not
-frozen; D73 (ii)). Code: `harness/q2_mutation_k2/`. Nothing here is a K2
-result: the registered K2 job runs only after the addendum is frozen.
+Addendum: `program/preregistrations/q2-evaluator-mutation-v1-k2.md`, frozen in
+ledger row 17 (D73 (ii), D77, D78; freeze commit `7d9c881a`, its parent
+`git_head_at_freeze` `0a864682`). Code: `harness/q2_mutation_k2/`. The
+registered K2 job ran once, as Slurm job 1186, from an export of the freeze
+commit: outcome **VERIFIED** (records, report and the parent analysis rerun in
+`k2-confirm-v1-job1186/`, which opens with the same blind warning). Everything
+else here is input or development record (the sections below were written
+while the addendum was a draft and are kept as dated records).
 
 ## Files
 
@@ -19,6 +24,7 @@ result: the registered K2 job runs only after the addendum is frozen.
 | `dev-inputs/k2-sample.jsonl`, `k2-sample.summary.json` | The K2 sample drawn in job 3 of the dev-split run `dev-mutants-v9` (80 jobs, 17 tasks), copied from the host |
 | `dev-inputs/verdicts-lock.jsonl` | `dev-mutants-v9`'s lock-exact verdict rows (digests, metric functions, scores; no document content), copied from the host |
 | `dev-inputs/k2c-candidates-dev.jsonl` | `dev-mutants-v9`'s 11 candidate events (8 FN, 3 FP_R), from the committed dev outcomes |
+| `k2-confirm-v1-job1186/` | The registered `k2` job (Slurm 1186): `run/` (lane records), `report/` (`k2-pairs.jsonl`, `k2-summary.json`, `k2-report.json`), `analysis-with-k2/` (the parent analysis rerun with `--k2-report`), each directory opening with the blind warning; see its README |
 
 Development jobs (dev split only, exploratory, never evidence) are recorded
 below as they run.
@@ -158,3 +164,15 @@ with the receipt's) applies to the registered job only; on the three
 development receipts, the digest computed from `git archive` of the recorded
 commit equals the recorded `source_tree_sha256` (`2307253`, `a06dc69`,
 `1448559`).
+
+## Registered job 1186 (`k2-confirm-v1`, executor `7d9c881a`, the freeze commit)
+
+Run 2026-10-11 15:56-17:01 UTC (65 minutes) on an empty queue, CPU only (40
+CPUs, no GRES), V = 8, the 242 registered slots. Outcome **VERIFIED**: the gate
+passes with 2 of 80 K2 pairs excluded (cause (4), both on task `51f5801c`:
+in all 8 attempts LibreOffice did not quit on Ctrl+Q within 15 s, and after
+the SIGTERM the reopen of the Writer target got no reply within 180 s); the 78
+compared K2 pairs agree with the offline verdicts in both runs; 41 of 41 K2-C events reproduced; no family dropped. The
+parent analysis rerun with `--k2-report` changes only its K2 label, to "VM
+fidelity checked (K2)". Details, commands and digests:
+`k2-confirm-v1-job1186/README.md`.

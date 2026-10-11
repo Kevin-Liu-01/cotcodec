@@ -1,0 +1,13 @@
+ae5f476603aa0687cbca801efc6b9eef24cdc391f413d211f5af489c03d0d334  ./README.md
+facd762d59618c5ca0c924367226e6a04edcbb3874c63d0186b5aae18fa0393e  ./analysis-with-k2/README.md
+12a21ae719da4f72c4a5409fd693d76c2ea3813f999b1bba626fa730c40c6674  ./analysis-with-k2/analysis-stdout.json
+ee66aa3985507d373181f4f10cb910addf5fbdd92f40c15ca4d3fbcdb1a822d6  ./analysis-with-k2/analysis.json
+44ad75a3763b34e8c17f833c7a03c9e2744a9c9b4859f758f67d1de238d8e1f3  ./report/README.md
+9ae8c8b9ad7009a9c4bbb2bc95746171909a401b0ea820836474b22f118a6069  ./report/k2-pairs.jsonl
+39cd10ab9a5a181d28b44ee3919186ded816a41865d89b3ad541b4af6bc5331f  ./report/k2-report.json
+b6e6185f7c5b9666ad403401daaa337c4fd5ed75eef5d02b86a41c368972b614  ./report/k2-summary.json
+3318224980f51888a5415a0492d08bc320987d26a664e282ea80fb84486a9416  ./run/README.md
+e57e4ef15bf1ba35b57c0ec5bf7a5a2d777ab8595d8ee14888d9b1cc4f868060  ./run/k2-runs.jsonl
+40f7cb3640c0b1c0a146c2ae7568d0449d1a99b9f33f9f623e7a63fffde2a5bf  ./run/lane-receipt.json
+45e05cda575457b9a5a4a346d622601ec9d28284fa7145c052c39abb58928d6b  ./run/manifest.json
+122ce0a4c15cb05f8e56c38a4ef8152dbd920fe8af504198c72d1a8d0c1b529c  ./run/preflight.txt

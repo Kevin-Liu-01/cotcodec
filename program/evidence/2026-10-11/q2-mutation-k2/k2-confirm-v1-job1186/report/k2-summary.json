@@ -1,0 +1,359 @@
+{
+ "blind_warning": "Blind warning (D9, D77): this file names checker verdicts per mutant and which mutants are checker candidate events. If you are adjudicating the q2-evaluator-mutation-v1 pool or doing its spot check, answer from the blind packets before reading it.",
+ "families_not_covered_by_k2": [
+  "compare_pptx_files_tolerant"
+ ],
+ "freeze": {
+  "changed": [
+   "program/preregistrations/ledger.jsonl"
+  ],
+  "executor_commit": "7d9c881af581d8004b8014570fa7c825045f01b1",
+  "git_head_at_freeze": "0a864682805edeb90199077461d603707a9effa4",
+  "ledger_row_hash": "7d03d928fc507bc02bb7e82c163e7931a818980c59a9f2a519aa661cc62e2575",
+  "registration_sha256": "564f8c5cf9472518d214e6ed069acc2bd7e90563996b4f338b0e8f8632a22a63",
+  "source_tree_sha256": "1e087a0efa869fa52f301be068d3f44b84b644319b359a548232ba73d2052d1a"
+ },
+ "gate": {
+  "excluded": 2,
+  "excluded_by_cause": {
+   "vm_infrastructure_failure": 2
+  },
+  "max_excluded": 8,
+  "pairs": 80,
+  "passes": true
+ },
+ "inputs": {
+  "k2c": "c7b1869049749c8311e73f3ba09ea98e53e45086d49922c6ccea72ab6bb8a028",
+  "notes_summary": "de597827720bce5aacffa6e51f649510f425bbd89cf558f52da5fe0f881ee823",
+  "sample": "1194168019c4aa87fa3f4aa0ad02f9ed53c207a86ebec264e731545afed6525a",
+  "verdicts": "e9289a954d5aee21156d0b317267b6f818f630b140ac5337e8fae0cc4c66b021"
+ },
+ "k2": {
+  "agree": 78,
+  "by_family": {
+   "check_tabstops": {
+    "agree": 3,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 3
+   },
+   "compare_csv+compare_table": {
+    "agree": 1,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 1
+   },
+   "compare_docx_files": {
+    "agree": 9,
+    "differ": 0,
+    "excluded": 2,
+    "explanations": {
+     "vm_infrastructure_failure": 2
+    },
+    "pairs": 11
+   },
+   "compare_docx_images": {
+    "agree": 6,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 6
+   },
+   "compare_docx_tables": {
+    "agree": 1,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 1
+   },
+   "compare_line_spacing": {
+    "agree": 6,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 6
+   },
+   "compare_pptx_files": {
+    "agree": 23,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 23
+   },
+   "compare_table": {
+    "agree": 27,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 27
+   },
+   "evaluate_strike_through_last_paragraph": {
+    "agree": 2,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 2
+   }
+  },
+  "by_offline_verdict": {
+   "fail": {
+    "agree": 37,
+    "differ": 0,
+    "excluded": 1,
+    "explanations": {
+     "vm_infrastructure_failure": 1
+    },
+    "pairs": 38
+   },
+   "pass": {
+    "agree": 41,
+    "differ": 0,
+    "excluded": 1,
+    "explanations": {
+     "vm_infrastructure_failure": 1
+    },
+    "pairs": 42
+   }
+  },
+  "by_save_path": {
+   "agent_save": {
+    "agree": 5,
+    "differ": 0,
+    "excluded": 2,
+    "explanations": {
+     "vm_infrastructure_failure": 2
+    },
+    "pairs": 7
+   },
+   "agent_save+no_save": {
+    "agree": 1,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 1
+   },
+   "postconfig_save": {
+    "agree": 72,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 72
+   }
+  },
+  "differ": 0,
+  "excluded": 2,
+  "explanations": {
+   "vm_infrastructure_failure": 2
+  },
+  "pairs": 80,
+  "runs": {
+   "attempts": 164,
+   "infrastructure_types": {
+    "executor:agent_save:open": 8
+   },
+   "late_writes": 0,
+   "metric_errors": 0,
+   "observations": {
+    "calls": 452,
+    "max_s": 0.103,
+    "retried": 0,
+    "runs": 156,
+    "slow": 0,
+    "undelivered": 0,
+    "unusual": 0
+   },
+   "postconfig_failures": 0,
+   "run_s": {
+    "max": 288.575,
+    "median": 114.183,
+    "min": 110.57,
+    "n": 164,
+    "p95": 136.398
+   },
+   "save_latency_s": {
+    "max": 0.934,
+    "median": -0.508,
+    "min": -3.068,
+    "n": 144,
+    "over_0.5s": 2,
+    "p95": 0.057
+   },
+   "save_paths": {
+    "agent_save": 20,
+    "no_save": 2,
+    "postconfig_save": 144
+   },
+   "statuses": {
+    "infrastructure": 8,
+    "scored": 156
+   },
+   "unsaved_at_read_runs": 0
+  },
+  "single_run_pairs": 0
+ },
+ "k2c": {
+  "agree": 41,
+  "by_family": {
+   "compare_docx_files": {
+    "agree": 1,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 1
+   },
+   "compare_pptx_files": {
+    "agree": 38,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 38
+   },
+   "compare_pptx_files_tolerant": {
+    "agree": 2,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 2
+   }
+  },
+  "by_offline_verdict": {
+   "fail": {
+    "agree": 36,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 36
+   },
+   "pass": {
+    "agree": 5,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 5
+   }
+  },
+  "by_save_path": {
+   "postconfig_save": {
+    "agree": 41,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 41
+   }
+  },
+  "differ": 0,
+  "excluded": 0,
+  "explanations": {},
+  "pairs": 41,
+  "runs": {
+   "attempts": 82,
+   "infrastructure_types": {},
+   "late_writes": 0,
+   "metric_errors": 0,
+   "observations": {
+    "calls": 240,
+    "max_s": 0.1,
+    "retried": 0,
+    "runs": 82,
+    "slow": 0,
+    "undelivered": 0,
+    "unusual": 0
+   },
+   "postconfig_failures": 0,
+   "run_s": {
+    "max": 134.535,
+    "median": 114.508,
+    "min": 113.461,
+    "n": 82,
+    "p95": 134.336
+   },
+   "save_latency_s": {
+    "max": 0.074,
+    "median": -0.474,
+    "min": -0.586,
+    "n": 82,
+    "over_0.5s": 0,
+    "p95": -0.272
+   },
+   "save_paths": {
+    "postconfig_save": 82
+   },
+   "statuses": {
+    "scored": 82
+   },
+   "unsaved_at_read_runs": 0
+  },
+  "single_run_pairs": 0
+ },
+ "outcome": {
+  "families_dropped": [],
+  "label": "VM fidelity checked (K2)",
+  "outcome": "VERIFIED",
+  "write_analysis_report": true
+ },
+ "purpose": "k2",
+ "receipts": [
+  {
+   "error": null,
+   "host_overlap": {
+    "foreign_jobs": {},
+    "snapshots": 6,
+    "with_foreign_jobs": []
+   },
+   "job_id": "1186",
+   "name": "k2-confirm-v1",
+   "records": 246,
+   "statuses": {
+    "infrastructure": 8,
+    "scored": 238
+   },
+   "stopped": false
+  }
+ ],
+ "runs": {
+  "attempts": 246,
+  "infrastructure_types": {
+   "executor:agent_save:open": 8
+  },
+  "late_writes": 0,
+  "metric_errors": 0,
+  "observations": {
+   "calls": 692,
+   "max_s": 0.103,
+   "retried": 0,
+   "runs": 238,
+   "slow": 0,
+   "undelivered": 0,
+   "unusual": 0
+  },
+  "postconfig_failures": 0,
+  "run_s": {
+   "max": 288.575,
+   "median": 114.386,
+   "min": 110.57,
+   "n": 246,
+   "p95": 134.361
+  },
+  "save_latency_s": {
+   "max": 0.934,
+   "median": -0.476,
+   "min": -3.068,
+   "n": 226,
+   "over_0.5s": 2,
+   "p95": 0.057
+  },
+  "save_paths": {
+   "agent_save": 20,
+   "no_save": 2,
+   "postconfig_save": 226
+  },
+  "statuses": {
+   "infrastructure": 8,
+   "scored": 238
+  },
+  "unsaved_at_read_runs": 0
+ },
+ "schema": "q2m-k2-summary-v1"
+}
