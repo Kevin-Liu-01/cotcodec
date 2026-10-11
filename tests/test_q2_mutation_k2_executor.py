@@ -452,6 +452,44 @@ def test_agent_save_task_saves_before_the_postconfig(tmp_path: Path) -> None:
     assert record["verdict"] == "pass"
 
 
+OUTPUT = {
+    "id": "bb83cab4-0000-0000-0000-000000000000",
+    "config": [
+        {
+            "type": "download",
+            "parameters": {"files": [{"url": "u", "path": "/home/user/Desktop/slides.pptx"}]},
+        },
+        {"type": "open", "parameters": {"path": "/home/user/Desktop/slides.pptx"}},
+    ],
+    "evaluator": {
+        "postconfig": [
+            {
+                "type": "activate_window",
+                "parameters": {"window_name": "script.docx - LibreOffice Writer", "strict": True},
+            },
+            {"type": "execute", "parameters": {"command": CTRL_S}},
+        ],
+        "func": "compare_docx_files",
+        "result": {"type": "vm_file", "path": "/home/user/Desktop/script.docx", "dest": "s.docx"},
+    },
+}
+
+
+def test_an_agent_created_output_is_opened_before_the_postconfig_saves_it(tmp_path: Path) -> None:
+    target = "/home/user/Desktop/script.docx"
+    injector, vm, _, _ = make(tmp_path, OUTPUT, {target: b"GOOD"}, target)
+    record = injector.run()
+    assert record["status"] == "scored", record.get("infrastructure_detail")
+    assert record["plan_ops"].count("open_file") == 1 and "config_step" not in record["plan_ops"]
+    assert record["save_paths"] == {target: "postconfig_save"}
+    assert record["hashes"]["pre_inject"][target] is None  # absent from the initial state
+    assert record["post_postconfig"][target] == sha(b"GOOD|saved")
+    assert record["verdict"] == "pass"
+    # LibreOffice was closed (it held the task's other document) before the upload.
+    ops = [entry[0] for entry in vm.log]
+    assert ops.index("close_app") < ops.index("upload")
+
+
 def test_postconfig_outputs_are_left_to_the_postconfig(tmp_path: Path) -> None:
     files = {"/home/user/C.xlsx": b"GOOD", "/home/user/C-Sheet1.csv": b"gold csv"}
     injector, vm, _, _ = make(tmp_path, DERIVED, files, "/home/user/C.xlsx")
@@ -571,3 +609,24 @@ def test_the_guest_helper_hashes_closes_and_waits(tmp_path: Path) -> None:
     closed = call("close_app", {"name": "k2sleeptest", "term_wait_s": 5})
     assert sleeper.wait(5) is not None
     assert sleeper.pid in closed["term"] and closed["remaining"] == []
+
+
+def test_a_setup_step_that_never_returns_fails_the_run_within_its_bound(tmp_path: Path) -> None:
+    import threading
+
+    injector, vm, _, _ = make(
+        tmp_path, CALC, {"/home/user/A.xlsx": b"GOOD"}, "/home/user/A.xlsx", step_timeout_s=0.2
+    )
+    release = threading.Event()
+    original = vm.run_steps
+
+    def hang(steps: list[dict[str, Any]]) -> dict[str, Any]:
+        if steps and steps[0]["type"] == "open":
+            release.wait(5)  # the guest server's open_file waiting for a window
+        return original(steps)
+
+    vm.run_steps = hang  # type: ignore[method-assign]
+    record = injector.run()
+    release.set()
+    assert record["infrastructure_type"] == "executor:config_step"
+    assert "no reply within 0.2 s" in record["infrastructure_detail"]

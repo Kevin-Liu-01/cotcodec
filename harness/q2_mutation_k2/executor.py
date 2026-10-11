@@ -74,8 +74,10 @@ BOOT_TIMEOUT_S = 300.0
 WINDOW_TIMEOUT_S = 90.0
 WRITE_TIMEOUT_S = 30.0
 LATE_WRITE_WATCH_S = 30.0
+CLOSE_QUIT_WAIT_S = 15.0
 CLOSE_TERM_WAIT_S = 20.0
 CLOSE_KILL_WAIT_S = 5.0
+STEP_TIMEOUT_S = 180.0  # an executor setup step (upload, open, activate, Ctrl+S) at most
 
 
 class InjectionFailure(RuntimeError):
@@ -116,6 +118,7 @@ class K2Config:
     settle_before_eval_s: float = SETTLE_BEFORE_EVAL_S
     boot_timeout_s: float = BOOT_TIMEOUT_S
     window_timeout_s: float = WINDOW_TIMEOUT_S
+    step_timeout_s: float = STEP_TIMEOUT_S
     write_timeout_s: float = WRITE_TIMEOUT_S
     late_write_watch_s: float = LATE_WRITE_WATCH_S
     t_vm_start: float | None = None
@@ -277,7 +280,13 @@ class Injector:
     def step(self, op: str, **data: Any) -> dict[str, Any]:
         row = {"op": op, "t": round(self.clock(), 3), **data}
         self.steps.append(row)
+        self.progress(op, **{k: v for k, v in data.items() if k in ("tag", "path", "reason")})
         return row
+
+    def progress(self, event: str, **data: Any) -> None:
+        """One line per step on stdout (the lane keeps it in the run's container log)."""
+        line = {"k2": event, "slot": self.cfg.slot, "t": round(self.clock(), 3), **data}
+        print(json.dumps(line, sort_keys=True), flush=True)
 
     def guest_hash(self, tag: str, paths: Sequence[str]) -> dict[str, dict[str, Any]]:
         assert self.ops is not None
@@ -345,12 +354,30 @@ class Injector:
             raise InjectionFailure(op, "the setup controller could not reach the guest")
 
     def run_steps(self, op: str, steps: Sequence[Mapping[str, Any]]) -> None:
+        """Executor setup steps through the pinned ``SetupController``, bounded by
+        ``step_timeout_s``: the guest server's ``/setup/open_file`` waits up to 1,800 s for a
+        window, and a step that has not returned by then fails the run (cause (4)); the
+        thread is left behind and the run ends."""
+        import threading
+
         assert self.ops is not None
-        try:
-            result = self.ops.run_steps(list(steps))
-        except Exception as exc:  # noqa: BLE001 - any failure of an executor step is cause (4)
+        box: dict[str, Any] = {}
+
+        def call() -> None:
+            try:
+                box["result"] = self.ops.run_steps(list(steps))  # type: ignore[union-attr]
+            except BaseException as exc:  # noqa: BLE001 - re-raised in the run's thread
+                box["error"] = exc
+
+        worker = threading.Thread(target=call, daemon=True)
+        worker.start()
+        worker.join(self.cfg.step_timeout_s)
+        if worker.is_alive():
+            raise InjectionFailure(op, f"no reply within {self.cfg.step_timeout_s} s")
+        if "error" in box:
+            exc = box["error"]
             raise InjectionFailure(op, f"{type(exc).__name__}: {str(exc)[:300]}") from exc
-        self.steps_ok(op, result)
+        self.steps_ok(op, box["result"])
 
     # ---------------------------------------------------------------- the run
     def candidate(self) -> tuple[dict[str, dict[str, str]], list[str]]:
@@ -382,8 +409,10 @@ class Injector:
         session: Session | None = None
         try:
             self.check_no_gpu()
+            self.progress("boot_wait")
             self._runner.wait_for_boot()
             placed, derived = self.candidate()
+            self.progress("reset_task")
             self.record["derived_not_uploaded"] = derived
             t = self.clock()
             try:
@@ -400,6 +429,7 @@ class Injector:
             if (setup or {}).get("failures"):
                 raise InjectionFailure("reset_task", f"failed in the guest: {setup['failures'][0]}")
             self.ops = self.ops_factory(self.guest, session)
+            self.progress("warm_up")
             self._runner.warm_up()
             t = self.clock()
             self.sleep(self.cfg.settle_after_reset_s)
@@ -535,6 +565,7 @@ class Injector:
             term=len(result.get("term") or []),
             kill=len(result.get("kill") or []),
             remaining=result.get("remaining") or [],
+            quit=result.get("quit"),
             term_wait_s=result.get("term_wait_s"),
         )
         if result.get("remaining"):
@@ -707,6 +738,9 @@ class Injector:
         return out
 
     def finish(self, t0: float) -> dict[str, Any]:
+        self.progress(
+            "end", status=self.record.get("status"), type=self.record.get("infrastructure_type")
+        )
         self.record["steps"] = self.steps
         self.record["t_end"] = self.clock()
         self.timings["run_s"] = round(self.record["t_end"] - t0, 3)
@@ -779,7 +813,12 @@ class LiveOps:
     def close_app(self, name: str) -> dict[str, Any]:
         return self.script(
             "close_app",
-            {"name": name, "term_wait_s": CLOSE_TERM_WAIT_S, "kill_wait_s": CLOSE_KILL_WAIT_S},
+            {
+                "name": name,
+                "quit_wait_s": CLOSE_QUIT_WAIT_S,
+                "term_wait_s": CLOSE_TERM_WAIT_S,
+                "kill_wait_s": CLOSE_KILL_WAIT_S,
+            },
         )
 
     def remove_locks(self, paths: Sequence[str]) -> dict[str, Any]:

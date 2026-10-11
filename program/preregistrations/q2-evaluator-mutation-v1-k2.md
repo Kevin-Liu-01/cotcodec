@@ -114,8 +114,8 @@ freeze; `tests/test_q2_mutation_k2_prereg.py` fails on drift):
 |---|---|
 | `harness/q2_mutation_k2/__init__.py` | `66667a5fcd60b2bfcb72dbe74c94b1443f68dbe75a6ce0cf28816807cccc1ebf` |
 | `harness/q2_mutation_k2/candidates.py` | `cf1dbcb56de21a452015eb45652128384fae2eb7d766a2e951fe5a8daeb6df3b` |
-| `harness/q2_mutation_k2/executor.py` | `3d4bdd044c65a4166be51772a5cea60642cee671f10d829de67477ce8a0f40b7` |
-| `harness/q2_mutation_k2/guest/k2_guest.py` | `9c4397acbf2a8e980e854a485bf63c96a24cf8b3f00f6cd4669add3992757534` |
+| `harness/q2_mutation_k2/executor.py` | `bda81bda66bc7c368adf226b1ec689014c2866e8e726af43d98ecfdd090dde8a` |
+| `harness/q2_mutation_k2/guest/k2_guest.py` | `869ebb3811f44ee990f587077756c3bb774392930e6973a54a2225714608dda8` |
 | `harness/q2_mutation_k2/lane.py` | `472479c5a927cbdeac07f4280db675d836bd6fa90a397efbbda4bed5bf2f183c` |
 | `harness/q2_mutation_k2/report.py` | `84dec7154141984e068bc658314b016223a420199fce45e0de550be76e366d97` |
 | `harness/q2_mutation_k2/rules.py` | `58ea109a1aff6d6b059b6ca841b99a3a8b7ca858fe698c8b5ab33238e6be8c05` |
@@ -147,11 +147,16 @@ container, executing the frozen plan of
 
 ### 3.2 The plan's ops
 
-- `kill_process` (`soffice`, or `gimp` for image targets): SIGTERM to every
-  process whose name or first argument names the application (`oosplash` and
-  `soffice.bin` for LibreOffice), SIGKILL to any still alive after 20 s; the run
-  fails if any survives 5 s more. LibreOffice's `.~lock.NAME#` file next to
-  each target is then removed.
+- `kill_process` (`soffice`, or `gimp` for image targets): for LibreOffice, its
+  own Quit first (one of its windows activated with `wmctrl -a`, then Ctrl+Q
+  through the guest's pyautogui), awaited 15 s; then SIGTERM to every process
+  still alive whose name or first argument names the application (`oosplash`
+  and `soffice.bin` for LibreOffice), and SIGKILL to any still alive after
+  20 s; the run fails if any survives 5 s more. LibreOffice's `.~lock.NAME#`
+  file next to each target is then removed. (Development job 1113 showed that
+  a SIGTERM leaves the open document in LibreOffice's recovery list, so the
+  reopened document came up behind a "Document Recovery" dialog; its Quit
+  leaves no such dialog.)
 - `assert_no_window`: no window title (`wmctrl -l`) contains a target's file
   name.
 - `hash` `pre_inject`, `post_inject`, `pre_postconfig`: SHA-256, size and
@@ -162,7 +167,9 @@ container, executing the frozen plan of
   `/setup/upload` endpoint that the task's own download step uses.
 - `config_step`: the task's own `open` or `launch` step for the target, through
   the pinned `SetupController`, then a wait (at most 90 s) for a window whose
-  title names the file.
+  title names the file. Every executor setup step (upload, open, activate,
+  Ctrl+S) must return within 180 s (the guest server's `/setup/open_file`
+  otherwise waits up to 1,800 s for a window), else the run fails (cause (4)).
 - `agent_save`: if no window names the file, the `open` step and the window
   wait; `activate_window` with the window title `"FILE - LibreOffice APP"`
   (for example `"report.docx - LibreOffice Writer"`), strict; the postconfig's own Ctrl+S command
@@ -446,9 +453,10 @@ records under `program/evidence/2026-10-11/q2-mutation-k2/`.
    **Additions that are descriptive:** K2-C and the reported-only quantities.
 9. **The warm-up and the settles** (sections 3.1 and 3.4) are the certified
    lane's (action-path v2 design decision 31; S1a section 7.1).
-10. **`kill_process`** sends SIGTERM before SIGKILL and removes LibreOffice's
-    stale lock files: an unclean kill can leave recovery or lock state that
-    would put a dialog in front of the reopened document.
+10. **`kill_process`** ("`pkill` the process" in the plan) asks LibreOffice to
+    quit before it signals it, and removes stale lock files: a signalled
+    LibreOffice leaves recovery or lock state that puts a dialog in front of the
+    reopened document (development job 1113, section 11).
 
 ## 13. Reported regardless of outcome
 
