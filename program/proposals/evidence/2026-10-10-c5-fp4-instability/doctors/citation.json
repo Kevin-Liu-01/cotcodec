@@ -2,15 +2,16 @@
  "doctor": "Citation",
  "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "D68 repair pass by the single owner (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
  "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, source tracing, cross-referencing); unreachable sources marked UNVERIFIABLE_ACCESS",
- "claim_registry": "Proposal section 'Primary-Source Evidence', claims C01 to C41, each with locator, date, read depth and status",
- "evidence": "Every cited primary URL snapshotted with its HTTP status and, for arXiv, its version history (snapshots/). Synthesis re-read, in the cells' saved full texts, 2505.19115 (Sec. 3.1, Figs. 1-3 and 7, App. Table 4), 2509.17791 (Principle 2, App. .3, Conclusion), 2603.28765 (Sec. 4.1, Fig. 5a, App. A), 2606.20381 (Sec. 4 recipe and Table 1, Sec. 5.2), 2609.02846 (Eq. 3, Table 2, Secs. 6.1-6.3, Fig. 2, statistical note), 2510.25602 (Theorem 1 crossovers, Table 2, Sec. 5.1), 2604.08826, 2509.25149 (Sec. 5, App. A.3), 2605.09825, 2610.00053, 2601.19026, 2608.11859, 2501.00656, 2309.14322, 2512.07004 and 2504.20634. Synthesis verified the PyTorch 2.14 default for BF16 reduced-precision reduction, the FineWeb-Edu revision, licence, file sizes and LFS oids, and the Mistral-7B-v0.1 tokenizer revision and licence through primary APIs. Corrections recorded: the seed SD quoted from 2505.19115 Table 4 (stated 0.001, printed values give 0.00195); the kill-shot cell's reading of 2510.25602 Table 2 (at B16 the median crest factor 2.16 is below the NV crossover 2.39); the asset cell's INT4 x BF16 representability count (included magnitude 8). First-party and single-trajectory numbers labelled.",
+ "claim_registry": "Proposal section 'Primary-Source Evidence', claims C01 to C44 (C42 to C44 added in run 2; C05 and C34 rewritten after full reads)",
+ "evidence": "Run 2 read in full: 2510.25602 (Eq. 12-14, Theorems 1-2 and interpretations, Fig. 3 crossovers 2.04 and 2.39, Table 2, Secs. 5.1-5.3: 4-bit results are tensor-level and direct-cast inference; training at 8 bits only), the ARITH 2025 study (Insights 1-6, Figs. 4-13; training runs E2M1, E3M0 for gradients, E8M0 scales only; INT4 only in R-MSE; Insight 5 about 6.47x), and 2302.08007 Sec. IV-A (Pearson correlation of QSNR with LM loss, not given numerically). Corrections recorded: C34 is open access (wave 1 said closed); the 'no prior reports the block/scale split' sentence becomes 'with intervals' (2505.19115 Fig. 2 trains the three E2M1 cells single-run); the OpenReview ICML 2026 abstract of 2510.25602 states MXINT4 superior to MXFP4, against arXiv v1's finding, recorded as a version discrepancy at abstract level.",
  "unverifiable": [
   "C32 MXFP4-MARS (OpenReview 18UVn4y0SO): abstract only",
   "C33 Agrusa et al. (OpenReview jlkIyaG32w): abstract only; venue discrepancy",
-  "C34 ARITH 2025: abstract and second-hand citing texts only"
+  "C43 OpenReview 1GIYHWO9S5 (ICML 2026 record of 2510.25602): abstract only; its abstract differs from arXiv v1 on MXINT4",
+  "C44 OpenReview eEicXkAWDk (ICLR 2027 submission): abstract only"
  ],
- "remediation": "Read C32 to C34 in full when accessible"
+ "remediation": "Read C32, C33, C43 and C44 in full when accessible"
 }

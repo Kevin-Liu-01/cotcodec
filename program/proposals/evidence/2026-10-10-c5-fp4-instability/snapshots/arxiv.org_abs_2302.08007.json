@@ -1,0 +1,49 @@
+{
+ "url": "https://arxiv.org/abs/2302.08007",
+ "fetched_at": "2026-10-11T00:29:38Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43852,
+ "raw_sha256": "79e23630d742c51cb7f97a4500b18d98147f33253ce874a79b4a4e7121d45d8a",
+ "raw_stored": false,
+ "extract": {
+  "title": "With Shared Microexponents, A Little Shifting Goes a Long Way",
+  "authors": [
+   "Rouhani, Bita",
+   "Zhao, Ritchie",
+   "Elango, Venmugil",
+   "Shafipour, Rasoul",
+   "Hall, Mathew",
+   "Mesmakhosroshahi, Maral",
+   "More, Ankit",
+   "Melnick, Levi",
+   "Golub, Maximilian",
+   "Varatkar, Girish",
+   "Shao, Lei",
+   "Kolhe, Gaurav",
+   "Melts, Dimitry",
+   "Klar, Jasmine",
+   "L'Heureux, Renee",
+   "Perry, Matt",
+   "Burger, Doug",
+   "Chung, Eric",
+   "Deng, Zhaoxia",
+   "Naghshineh, Sam",
+   "Park, Jongsoo",
+   "Naumov, Maxim"
+  ],
+  "citation_date": "2023/02/16",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 16 Feb 2023 00:37:55 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 13 Apr 2023 02:31:29 UTC"
+   }
+  ],
+  "abstract": "This paper introduces Block Data Representations (BDR), a framework for exploring and evaluating a wide spectrum of narrow-precision formats for deep learning. It enables comparison of popular quantization standards, and through BDR, new formats based on shared microexponents (MX) are identified, which outperform other state-of-the-art quantization approaches, including narrow-precision floating-point and block floating-point. MX utilizes multiple levels of quantization scaling with ultra-fine scaling factors based on shared microexponents in the hardware. The effectiveness of MX is demonstrated on real-world models including large-scale generative pretraining and inferencing, and production-scale recommendation systems.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

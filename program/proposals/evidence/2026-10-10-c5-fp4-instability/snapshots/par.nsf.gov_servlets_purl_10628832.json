@@ -1,0 +1,12 @@
+{
+ "url": "https://par.nsf.gov/servlets/purl/10628832",
+ "fetched_at": "2026-10-11T00:29:41Z",
+ "http_status": 200,
+ "content_type": "application/pdf",
+ "raw_bytes": 2352338,
+ "raw_sha256": "d1d5b8e32b0b5ccac3c0a1aa385caf4c82c8150b733d02ccf0644ef005295ded",
+ "raw_stored": false,
+ "extract": {
+  "html_title": ""
+ }
+}

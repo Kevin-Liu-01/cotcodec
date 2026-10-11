@@ -1,0 +1,4189 @@
+{
+ "script": "numerics_v2.py",
+ "seeds": [
+  42,
+  43,
+  44
+ ],
+ "cells": [
+  "E2M1/S1",
+  "E2M1/S2",
+  "E2M1/S3",
+  "E2M1/S4",
+  "E2M1/S5",
+  "INT4/S1",
+  "INT4/S2",
+  "INT4/S3",
+  "INT4/S4",
+  "INT4/S5"
+ ],
+ "results": {
+  "gaussian": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.737,
+     "E2M1/S2": 18.95,
+     "E2M1/S3": 19.978,
+     "E2M1/S4": 19.554,
+     "E2M1/S5": 19.888,
+     "INT4/S1": 16.927,
+     "INT4/S2": 17.676,
+     "INT4/S3": 20.678,
+     "INT4/S4": 19.719,
+     "INT4/S5": 20.245
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.752,
+     "E2M1/S2": 18.961,
+     "E2M1/S3": 19.987,
+     "E2M1/S4": 19.563,
+     "E2M1/S5": 19.898,
+     "INT4/S1": 16.947,
+     "INT4/S2": 17.691,
+     "INT4/S3": 20.69,
+     "INT4/S4": 19.737,
+     "INT4/S5": 20.261
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.167,
+      "noise_power_over_anchor": 2.324
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.974,
+      "noise_power_over_anchor": 1.756
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.975,
+      "noise_power_over_anchor": 2.205
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.536,
+      "noise_power_over_anchor": 0.775
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.536,
+      "noise_power_over_anchor": 0.326
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.192,
+      "noise_power_over_anchor": 0.119
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.001
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.241,
+      "noise_power": 0.0033238883453354812
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.81,
+      "S2": 1.274,
+      "S3": -0.7,
+      "S4": -0.165,
+      "S5": -0.356
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.167,
+      "noise_power_over_anchor": 2.33
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.974,
+      "noise_power_over_anchor": 1.763
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.979,
+      "noise_power_over_anchor": 2.213
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.534,
+      "noise_power_over_anchor": 0.773
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.53,
+      "noise_power_over_anchor": 0.323
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.189,
+      "noise_power_over_anchor": 0.117
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.005
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.235,
+      "noise_power": 0.003299486592122666
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.804,
+      "S2": 1.27,
+      "S3": -0.704,
+      "S4": -0.174,
+      "S5": -0.363
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     }
+    }
+   },
+   "exact": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.899,
+     "E2M1/S2": 20.524,
+     "E2M1/S3": 20.524,
+     "E2M1/S4": 19.899,
+     "E2M1/S5": 19.899,
+     "INT4/S1": 20.271,
+     "INT4/S2": 21.399,
+     "INT4/S3": 21.399,
+     "INT4/S4": 20.271,
+     "INT4/S5": 20.271
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.909,
+     "E2M1/S2": 20.534,
+     "E2M1/S3": 20.534,
+     "E2M1/S4": 19.909,
+     "E2M1/S5": 19.909,
+     "INT4/S1": 20.288,
+     "INT4/S2": 21.411,
+     "INT4/S3": 21.411,
+     "INT4/S4": 20.288,
+     "INT4/S5": 20.288
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.503,
+      "noise_power_over_anchor": 0.567
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.503,
+      "noise_power_over_anchor": 0.567
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.625,
+      "noise_power": 0.0013711970480726234
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.372,
+      "S2": -0.875,
+      "S3": -0.875,
+      "S4": -0.372,
+      "S5": -0.372
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.625,
+      "noise_power": 0.001368572105939509
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.378,
+      "S2": -0.876,
+      "S3": -0.876,
+      "S4": -0.378,
+      "S5": -0.378
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.737,
+     "E2M1/S2": 18.95,
+     "E2M1/S3": 19.978,
+     "E2M1/S4": 19.554,
+     "E2M1/S5": 19.888,
+     "INT4/S1": 16.927,
+     "INT4/S2": 17.676,
+     "INT4/S3": 20.678,
+     "INT4/S4": 19.719,
+     "INT4/S5": 20.245
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.752,
+     "E2M1/S2": 18.961,
+     "E2M1/S3": 19.987,
+     "E2M1/S4": 19.563,
+     "E2M1/S5": 19.898,
+     "INT4/S1": 16.947,
+     "INT4/S2": 17.691,
+     "INT4/S3": 20.69,
+     "INT4/S4": 19.737,
+     "INT4/S5": 20.261
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.167,
+      "noise_power_over_anchor": 2.324
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.974,
+      "noise_power_over_anchor": 1.756
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.975,
+      "noise_power_over_anchor": 2.205
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.536,
+      "noise_power_over_anchor": 0.775
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.536,
+      "noise_power_over_anchor": 0.326
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.192,
+      "noise_power_over_anchor": 0.119
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.001
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.241,
+      "noise_power": 0.0033238883453354812
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.81,
+      "S2": 1.274,
+      "S3": -0.7,
+      "S4": -0.165,
+      "S5": -0.356
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.167,
+      "noise_power_over_anchor": 2.33
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.974,
+      "noise_power_over_anchor": 1.763
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.979,
+      "noise_power_over_anchor": 2.213
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.534,
+      "noise_power_over_anchor": 0.773
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.53,
+      "noise_power_over_anchor": 0.323
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.189,
+      "noise_power_over_anchor": 0.117
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.005
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.235,
+      "noise_power": 0.003299486592122666
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.804,
+      "S2": 1.27,
+      "S3": -0.704,
+      "S4": -0.174,
+      "S5": -0.363
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "exact+wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.899,
+     "E2M1/S2": 20.524,
+     "E2M1/S3": 20.524,
+     "E2M1/S4": 19.899,
+     "E2M1/S5": 19.899,
+     "INT4/S1": 20.271,
+     "INT4/S2": 21.399,
+     "INT4/S3": 21.399,
+     "INT4/S4": 20.271,
+     "INT4/S5": 20.271
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.909,
+     "E2M1/S2": 20.534,
+     "E2M1/S3": 20.534,
+     "E2M1/S4": 19.909,
+     "E2M1/S5": 19.909,
+     "INT4/S1": 20.288,
+     "INT4/S2": 21.411,
+     "INT4/S3": 21.411,
+     "INT4/S4": 20.288,
+     "INT4/S5": 20.288
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.503,
+      "noise_power_over_anchor": 0.567
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.503,
+      "noise_power_over_anchor": 0.567
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.625,
+      "noise_power": 0.0013711970480726234
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.372,
+      "S2": -0.875,
+      "S3": -0.875,
+      "S4": -0.372,
+      "S5": -0.372
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.625,
+      "noise_power": 0.001368572105939509
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.378,
+      "S2": -0.876,
+      "S3": -0.876,
+      "S4": -0.378,
+      "S5": -0.378
+     }
+    },
+    "ue4m3_diagnostics": {}
+   }
+  },
+  "gaussian+RHT": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.747,
+     "E2M1/S2": 18.956,
+     "E2M1/S3": 19.977,
+     "E2M1/S4": 19.566,
+     "E2M1/S5": 19.901,
+     "INT4/S1": 16.925,
+     "INT4/S2": 17.684,
+     "INT4/S3": 20.677,
+     "INT4/S4": 19.711,
+     "INT4/S5": 20.233
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.761,
+     "E2M1/S2": 18.967,
+     "E2M1/S3": 19.985,
+     "E2M1/S4": 19.575,
+     "E2M1/S5": 19.91,
+     "INT4/S1": 16.946,
+     "INT4/S2": 17.698,
+     "INT4/S3": 20.69,
+     "INT4/S4": 19.73,
+     "INT4/S5": 20.25
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.154,
+      "noise_power_over_anchor": 2.342
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.973,
+      "noise_power_over_anchor": 1.77
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.967,
+      "noise_power_over_anchor": 2.223
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.549,
+      "noise_power_over_anchor": 0.797
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.555,
+      "noise_power_over_anchor": 0.345
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.187,
+      "noise_power_over_anchor": 0.119
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": -0.006
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.23,
+      "noise_power": 0.003291667234892189
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.822,
+      "S2": 1.273,
+      "S3": -0.7,
+      "S4": -0.145,
+      "S5": -0.332
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.155,
+      "noise_power_over_anchor": 2.349
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.974,
+      "noise_power_over_anchor": 1.779
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.97,
+      "noise_power_over_anchor": 2.231
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.546,
+      "noise_power_over_anchor": 0.794
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.549,
+      "noise_power_over_anchor": 0.342
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.185,
+      "noise_power_over_anchor": 0.117
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": -0.004
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.224,
+      "noise_power": 0.0032656350297896233
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.815,
+      "S2": 1.269,
+      "S3": -0.705,
+      "S4": -0.155,
+      "S5": -0.34
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     }
+    }
+   }
+  },
+  "laplace": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 17.585,
+     "E2M1/S2": 18.188,
+     "E2M1/S3": 20.007,
+     "E2M1/S4": 19.248,
+     "E2M1/S5": 19.77,
+     "INT4/S1": 14.895,
+     "INT4/S2": 16.319,
+     "INT4/S3": 19.17,
+     "INT4/S4": 17.78,
+     "INT4/S5": 18.314
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 17.616,
+     "E2M1/S2": 18.209,
+     "E2M1/S3": 20.019,
+     "E2M1/S4": 19.263,
+     "E2M1/S5": 19.783,
+     "INT4/S1": 14.958,
+     "INT4/S2": 16.362,
+     "INT4/S3": 19.199,
+     "INT4/S4": 17.823,
+     "INT4/S5": 18.356
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 1.234,
+      "noise_power_over_anchor": 1.443
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.032,
+      "noise_power_over_anchor": 0.81
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.221,
+      "noise_power_over_anchor": 1.364
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.821,
+      "noise_power_over_anchor": 0.911
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.632,
+      "noise_power_over_anchor": 0.357
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.013,
+      "noise_power_over_anchor": 0.078
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.189
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 2.423,
+      "noise_power": 0.007455690580649599
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.69,
+      "S2": 1.869,
+      "S3": 0.837,
+      "S4": 1.469,
+      "S5": 1.456
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 1.231,
+      "noise_power_over_anchor": 1.431
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.027,
+      "noise_power_over_anchor": 0.807
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.218,
+      "noise_power_over_anchor": 1.353
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.811,
+      "noise_power_over_anchor": 0.898
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.62,
+      "noise_power_over_anchor": 0.352
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.013,
+      "noise_power_over_anchor": 0.078
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.191
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 2.403,
+      "noise_power": 0.0073564820991116955
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.658,
+      "S2": 1.847,
+      "S3": 0.82,
+      "S4": 1.44,
+      "S5": 1.427
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     }
+    }
+   },
+   "exact": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.786,
+     "E2M1/S2": 20.804,
+     "E2M1/S3": 20.804,
+     "E2M1/S4": 19.786,
+     "E2M1/S5": 19.786,
+     "INT4/S1": 18.34,
+     "INT4/S2": 19.902,
+     "INT4/S3": 19.902,
+     "INT4/S4": 18.34,
+     "INT4/S5": 18.34
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.799,
+     "E2M1/S2": 20.814,
+     "E2M1/S3": 20.814,
+     "E2M1/S4": 19.799,
+     "E2M1/S5": 19.799,
+     "INT4/S1": 18.382,
+     "INT4/S2": 19.93,
+     "INT4/S3": 19.93,
+     "INT4/S4": 18.382,
+     "INT4/S5": 18.382
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.544,
+      "noise_power_over_anchor": 1.017
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.544,
+      "noise_power_over_anchor": 1.017
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.018,
+      "noise_power": 0.0021953249580290123
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.446,
+      "S2": 0.902,
+      "S3": 0.902,
+      "S4": 1.446,
+      "S5": 1.446
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.532,
+      "noise_power_over_anchor": 0.993
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.532,
+      "noise_power_over_anchor": 0.993
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.015,
+      "noise_power": 0.0021831610512008486
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.417,
+      "S2": 0.885,
+      "S3": 0.885,
+      "S4": 1.417,
+      "S5": 1.417
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 17.585,
+     "E2M1/S2": 18.188,
+     "E2M1/S3": 20.007,
+     "E2M1/S4": 19.248,
+     "E2M1/S5": 19.77,
+     "INT4/S1": 14.895,
+     "INT4/S2": 16.319,
+     "INT4/S3": 19.17,
+     "INT4/S4": 17.78,
+     "INT4/S5": 18.314
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 17.616,
+     "E2M1/S2": 18.209,
+     "E2M1/S3": 20.019,
+     "E2M1/S4": 19.263,
+     "E2M1/S5": 19.783,
+     "INT4/S1": 14.958,
+     "INT4/S2": 16.362,
+     "INT4/S3": 19.199,
+     "INT4/S4": 17.823,
+     "INT4/S5": 18.356
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 1.234,
+      "noise_power_over_anchor": 1.443
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.032,
+      "noise_power_over_anchor": 0.81
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.221,
+      "noise_power_over_anchor": 1.364
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.821,
+      "noise_power_over_anchor": 0.911
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.632,
+      "noise_power_over_anchor": 0.357
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.013,
+      "noise_power_over_anchor": 0.078
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.189
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 2.423,
+      "noise_power": 0.007455690580649599
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.69,
+      "S2": 1.869,
+      "S3": 0.837,
+      "S4": 1.469,
+      "S5": 1.456
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 1.231,
+      "noise_power_over_anchor": 1.431
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.027,
+      "noise_power_over_anchor": 0.807
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.218,
+      "noise_power_over_anchor": 1.353
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.811,
+      "noise_power_over_anchor": 0.898
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.62,
+      "noise_power_over_anchor": 0.352
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.013,
+      "noise_power_over_anchor": 0.078
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.191
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 2.403,
+      "noise_power": 0.0073564820991116955
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.658,
+      "S2": 1.847,
+      "S3": 0.82,
+      "S4": 1.44,
+      "S5": 1.427
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "exact+wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.786,
+     "E2M1/S2": 20.804,
+     "E2M1/S3": 20.804,
+     "E2M1/S4": 19.786,
+     "E2M1/S5": 19.786,
+     "INT4/S1": 18.34,
+     "INT4/S2": 19.902,
+     "INT4/S3": 19.902,
+     "INT4/S4": 18.34,
+     "INT4/S5": 18.34
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.799,
+     "E2M1/S2": 20.814,
+     "E2M1/S3": 20.814,
+     "E2M1/S4": 19.799,
+     "E2M1/S5": 19.799,
+     "INT4/S1": 18.382,
+     "INT4/S2": 19.93,
+     "INT4/S3": 19.93,
+     "INT4/S4": 18.382,
+     "INT4/S5": 18.382
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.544,
+      "noise_power_over_anchor": 1.017
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.544,
+      "noise_power_over_anchor": 1.017
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.018,
+      "noise_power": 0.0021953249580290123
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.446,
+      "S2": 0.902,
+      "S3": 0.902,
+      "S4": 1.446,
+      "S5": 1.446
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.532,
+      "noise_power_over_anchor": 0.993
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.532,
+      "noise_power_over_anchor": 0.993
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.015,
+      "noise_power": 0.0021831610512008486
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.417,
+      "S2": 0.885,
+      "S3": 0.885,
+      "S4": 1.417,
+      "S5": 1.417
+     }
+    },
+    "ue4m3_diagnostics": {}
+   }
+  },
+  "laplace+RHT": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.691,
+     "E2M1/S2": 18.954,
+     "E2M1/S3": 19.934,
+     "E2M1/S4": 19.544,
+     "E2M1/S5": 19.865,
+     "INT4/S1": 16.895,
+     "INT4/S2": 17.94,
+     "INT4/S3": 20.829,
+     "INT4/S4": 19.937,
+     "INT4/S5": 20.464
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.697,
+     "E2M1/S2": 18.962,
+     "E2M1/S3": 19.944,
+     "E2M1/S4": 19.553,
+     "E2M1/S5": 19.876,
+     "INT4/S1": 16.947,
+     "INT4/S2": 17.973,
+     "INT4/S3": 20.84,
+     "INT4/S4": 19.952,
+     "INT4/S5": 20.478
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.394,
+      "noise_power_over_anchor": 2.452
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.909,
+      "noise_power_over_anchor": 1.556
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.189,
+      "noise_power_over_anchor": 2.343
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.782,
+      "noise_power_over_anchor": 1.063
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.503,
+      "noise_power_over_anchor": 0.277
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.206,
+      "noise_power_over_anchor": 0.109
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.28
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.243,
+      "noise_power": 0.0033652424540791103
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.796,
+      "S2": 1.014,
+      "S3": -0.895,
+      "S4": -0.393,
+      "S5": -0.598
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.353,
+      "noise_power_over_anchor": 2.385
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.885,
+      "noise_power_over_anchor": 1.525
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.15,
+      "noise_power_over_anchor": 2.279
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.762,
+      "noise_power_over_anchor": 1.026
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.497,
+      "noise_power_over_anchor": 0.272
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.203,
+      "noise_power_over_anchor": 0.107
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.265
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.246,
+      "noise_power": 0.0033675403676826157
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.75,
+      "S2": 0.989,
+      "S3": -0.896,
+      "S4": -0.399,
+      "S5": -0.602
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     }
+    }
+   }
+  },
+  "student_t3": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 16.413,
+     "E2M1/S2": 17.528,
+     "E2M1/S3": 20.0,
+     "E2M1/S4": 18.763,
+     "E2M1/S5": 19.473,
+     "INT4/S1": 13.658,
+     "INT4/S2": 15.565,
+     "INT4/S3": 18.203,
+     "INT4/S4": 16.245,
+     "INT4/S5": 16.771
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 16.598,
+     "E2M1/S2": 17.642,
+     "E2M1/S3": 20.006,
+     "E2M1/S4": 18.852,
+     "E2M1/S5": 19.515,
+     "INT4/S1": 13.754,
+     "INT4/S2": 15.594,
+     "INT4/S3": 18.271,
+     "INT4/S4": 16.399,
+     "INT4/S5": 16.927
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.053,
+      "noise_power_over_anchor": 0.817
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.165,
+      "noise_power_over_anchor": 0.387
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.237,
+      "noise_power_over_anchor": 0.762
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.792,
+      "noise_power_over_anchor": 0.79
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.721,
+      "noise_power_over_anchor": 0.414
+     },
+     "I_range32 (S4-S5)": {
+      "dB": -0.184,
+      "noise_power_over_anchor": 0.055
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.072
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 3.587,
+      "noise_power": 0.012841356579345277
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.755,
+      "S2": 1.963,
+      "S3": 1.797,
+      "S4": 2.518,
+      "S5": 2.702
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.255,
+      "noise_power_over_anchor": 0.935
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.313,
+      "noise_power_over_anchor": 0.459
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.391,
+      "noise_power_over_anchor": 0.87
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.795,
+      "noise_power_over_anchor": 0.829
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.717,
+      "noise_power_over_anchor": 0.419
+     },
+     "I_range32 (S4-S5)": {
+      "dB": -0.135,
+      "noise_power_over_anchor": 0.065
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.078
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 3.409,
+      "noise_power": 0.011903789381649155
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.843,
+      "S2": 2.049,
+      "S3": 1.735,
+      "S4": 2.453,
+      "S5": 2.588
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     }
+    }
+   },
+   "exact": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.492,
+     "E2M1/S2": 21.055,
+     "E2M1/S3": 21.055,
+     "E2M1/S4": 19.492,
+     "E2M1/S5": 19.492,
+     "INT4/S1": 16.795,
+     "INT4/S2": 18.935,
+     "INT4/S3": 18.935,
+     "INT4/S4": 16.795,
+     "INT4/S5": 16.795
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.534,
+     "E2M1/S2": 21.002,
+     "E2M1/S3": 21.002,
+     "E2M1/S4": 19.534,
+     "E2M1/S5": 19.534,
+     "INT4/S1": 16.952,
+     "INT4/S2": 19.0,
+     "INT4/S3": 19.0,
+     "INT4/S4": 16.952,
+     "INT4/S5": 16.952
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.577,
+      "noise_power_over_anchor": 1.395
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.577,
+      "noise_power_over_anchor": 1.395
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.563,
+      "noise_power": 0.0033980756009249474
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.697,
+      "S2": 2.119,
+      "S3": 2.119,
+      "S4": 2.697,
+      "S5": 2.697
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.579,
+      "noise_power_over_anchor": 1.374
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.579,
+      "noise_power_over_anchor": 1.374
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.469,
+      "noise_power": 0.003195021598774661
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.582,
+      "S2": 2.003,
+      "S3": 2.003,
+      "S4": 2.582,
+      "S5": 2.582
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 16.413,
+     "E2M1/S2": 17.528,
+     "E2M1/S3": 20.0,
+     "E2M1/S4": 18.763,
+     "E2M1/S5": 19.473,
+     "INT4/S1": 13.658,
+     "INT4/S2": 15.565,
+     "INT4/S3": 18.203,
+     "INT4/S4": 16.245,
+     "INT4/S5": 16.771
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 16.598,
+     "E2M1/S2": 17.642,
+     "E2M1/S3": 20.006,
+     "E2M1/S4": 18.852,
+     "E2M1/S5": 19.515,
+     "INT4/S1": 13.754,
+     "INT4/S2": 15.594,
+     "INT4/S3": 18.271,
+     "INT4/S4": 16.399,
+     "INT4/S5": 16.927
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.053,
+      "noise_power_over_anchor": 0.817
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.165,
+      "noise_power_over_anchor": 0.387
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.237,
+      "noise_power_over_anchor": 0.762
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.792,
+      "noise_power_over_anchor": 0.79
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.721,
+      "noise_power_over_anchor": 0.414
+     },
+     "I_range32 (S4-S5)": {
+      "dB": -0.184,
+      "noise_power_over_anchor": 0.055
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.072
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 3.587,
+      "noise_power": 0.012841356579345277
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.755,
+      "S2": 1.963,
+      "S3": 1.797,
+      "S4": 2.518,
+      "S5": 2.702
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.255,
+      "noise_power_over_anchor": 0.935
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.313,
+      "noise_power_over_anchor": 0.459
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.391,
+      "noise_power_over_anchor": 0.87
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.795,
+      "noise_power_over_anchor": 0.829
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.717,
+      "noise_power_over_anchor": 0.419
+     },
+     "I_range32 (S4-S5)": {
+      "dB": -0.135,
+      "noise_power_over_anchor": 0.065
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.078
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 3.409,
+      "noise_power": 0.011903789381649155
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.843,
+      "S2": 2.049,
+      "S3": 1.735,
+      "S4": 2.453,
+      "S5": 2.588
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "exact+wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.492,
+     "E2M1/S2": 21.055,
+     "E2M1/S3": 21.055,
+     "E2M1/S4": 19.492,
+     "E2M1/S5": 19.492,
+     "INT4/S1": 16.795,
+     "INT4/S2": 18.935,
+     "INT4/S3": 18.935,
+     "INT4/S4": 16.795,
+     "INT4/S5": 16.795
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.534,
+     "E2M1/S2": 21.002,
+     "E2M1/S3": 21.002,
+     "E2M1/S4": 19.534,
+     "E2M1/S5": 19.534,
+     "INT4/S1": 16.952,
+     "INT4/S2": 19.0,
+     "INT4/S3": 19.0,
+     "INT4/S4": 16.952,
+     "INT4/S5": 16.952
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.577,
+      "noise_power_over_anchor": 1.395
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.577,
+      "noise_power_over_anchor": 1.395
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.563,
+      "noise_power": 0.0033980756009249474
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.697,
+      "S2": 2.119,
+      "S3": 2.119,
+      "S4": 2.697,
+      "S5": 2.697
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.579,
+      "noise_power_over_anchor": 1.374
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.579,
+      "noise_power_over_anchor": 1.374
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.469,
+      "noise_power": 0.003195021598774661
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.582,
+      "S2": 2.003,
+      "S3": 2.003,
+      "S4": 2.582,
+      "S5": 2.582
+     }
+    },
+    "ue4m3_diagnostics": {}
+   }
+  },
+  "student_t3+RHT": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.931,
+     "E2M1/S2": 19.122,
+     "E2M1/S3": 19.772,
+     "E2M1/S4": 19.468,
+     "E2M1/S5": 19.74,
+     "INT4/S1": 17.511,
+     "INT4/S2": 18.403,
+     "INT4/S3": 21.335,
+     "INT4/S4": 20.514,
+     "INT4/S5": 21.054
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.894,
+     "E2M1/S2": 19.095,
+     "E2M1/S3": 19.858,
+     "E2M1/S4": 19.534,
+     "E2M1/S5": 19.827,
+     "INT4/S1": 17.414,
+     "INT4/S2": 18.306,
+     "INT4/S3": 21.22,
+     "INT4/S4": 20.393,
+     "INT4/S5": 20.934
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.734,
+      "noise_power_over_anchor": 3.426
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 2.281,
+      "noise_power_over_anchor": 2.391
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.466,
+      "noise_power_over_anchor": 3.27
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.702,
+      "noise_power_over_anchor": 1.218
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.517,
+      "noise_power_over_anchor": 0.34
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.268,
+      "noise_power_over_anchor": 0.156
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.185
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.841,
+      "noise_power": 0.002252520034320308
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.42,
+      "S2": 0.718,
+      "S3": -1.562,
+      "S4": -1.046,
+      "S5": -1.314
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.586,
+      "noise_power_over_anchor": 2.952
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 2.152,
+      "noise_power_over_anchor": 2.04
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.339,
+      "noise_power_over_anchor": 2.818
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.69,
+      "noise_power_over_anchor": 1.084
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.503,
+      "noise_power_over_anchor": 0.305
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.247,
+      "noise_power_over_anchor": 0.133
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.187
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.964,
+      "noise_power": 0.002567341919835391
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.48,
+      "S2": 0.79,
+      "S3": -1.362,
+      "S4": -0.859,
+      "S5": -1.106
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     }
+    }
+   }
+  },
+  "gaussian_channel_outliers": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 15.337,
+     "E2M1/S2": 16.908,
+     "E2M1/S3": 19.709,
+     "E2M1/S4": 18.096,
+     "E2M1/S5": 18.892,
+     "INT4/S1": 12.514,
+     "INT4/S2": 14.863,
+     "INT4/S3": 17.323,
+     "INT4/S4": 14.88,
+     "INT4/S5": 15.391
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 15.553,
+     "E2M1/S2": 17.067,
+     "E2M1/S3": 19.772,
+     "E2M1/S4": 18.229,
+     "E2M1/S5": 18.999,
+     "INT4/S1": 12.686,
+     "INT4/S2": 14.987,
+     "INT4/S3": 17.485,
+     "INT4/S4": 15.092,
+     "INT4/S5": 15.608
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": -0.679,
+      "noise_power_over_anchor": 0.581
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": -0.341,
+      "noise_power_over_anchor": 0.238
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": -0.393,
+      "noise_power_over_anchor": 0.527
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.778,
+      "noise_power_over_anchor": 0.783
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.829,
+      "noise_power_over_anchor": 0.494
+     },
+     "I_range32 (S4-S5)": {
+      "dB": -0.286,
+      "noise_power_over_anchor": 0.054
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": -0.052
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 4.372,
+      "noise_power": 0.01856975904242162
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.823,
+      "S2": 2.045,
+      "S3": 2.386,
+      "S4": 3.215,
+      "S5": 3.502
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": -0.524,
+      "noise_power_over_anchor": 0.644
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": -0.207,
+      "noise_power_over_anchor": 0.275
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": -0.27,
+      "noise_power_over_anchor": 0.584
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.787,
+      "noise_power_over_anchor": 0.807
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.85,
+      "noise_power_over_anchor": 0.498
+     },
+     "I_range32 (S4-S5)": {
+      "dB": -0.253,
+      "noise_power_over_anchor": 0.059
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": -0.063
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 4.219,
+      "noise_power": 0.017302786804950593
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.867,
+      "S2": 2.08,
+      "S3": 2.287,
+      "S4": 3.137,
+      "S5": 3.391
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     }
+    }
+   },
+   "exact": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.914,
+     "E2M1/S2": 20.857,
+     "E2M1/S3": 20.857,
+     "E2M1/S4": 18.914,
+     "E2M1/S5": 18.914,
+     "INT4/S1": 15.415,
+     "INT4/S2": 18.031,
+     "INT4/S3": 18.031,
+     "INT4/S4": 15.415,
+     "INT4/S5": 15.415
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.021,
+     "E2M1/S2": 20.882,
+     "E2M1/S3": 20.882,
+     "E2M1/S4": 19.021,
+     "E2M1/S5": 19.021,
+     "INT4/S1": 15.633,
+     "INT4/S2": 18.197,
+     "INT4/S3": 18.197,
+     "INT4/S4": 15.633,
+     "INT4/S5": 15.633
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.674,
+      "noise_power_over_anchor": 1.809
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.674,
+      "noise_power_over_anchor": 1.809
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.943,
+      "noise_power": 0.004631595310586942
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 3.499,
+      "S2": 2.825,
+      "S3": 2.825,
+      "S4": 3.499,
+      "S5": 3.499
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.703,
+      "noise_power_over_anchor": 1.791
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.703,
+      "noise_power_over_anchor": 1.791
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.861,
+      "noise_power": 0.004366975867159064
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 3.388,
+      "S2": 2.685,
+      "S3": 2.685,
+      "S4": 3.388,
+      "S5": 3.388
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 15.337,
+     "E2M1/S2": 16.908,
+     "E2M1/S3": 19.709,
+     "E2M1/S4": 18.096,
+     "E2M1/S5": 18.892,
+     "INT4/S1": 12.514,
+     "INT4/S2": 14.863,
+     "INT4/S3": 17.323,
+     "INT4/S4": 14.88,
+     "INT4/S5": 15.391
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 15.553,
+     "E2M1/S2": 17.067,
+     "E2M1/S3": 19.772,
+     "E2M1/S4": 18.229,
+     "E2M1/S5": 18.999,
+     "INT4/S1": 12.686,
+     "INT4/S2": 14.987,
+     "INT4/S3": 17.485,
+     "INT4/S4": 15.092,
+     "INT4/S5": 15.608
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": -0.679,
+      "noise_power_over_anchor": 0.581
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": -0.341,
+      "noise_power_over_anchor": 0.238
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": -0.393,
+      "noise_power_over_anchor": 0.527
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.778,
+      "noise_power_over_anchor": 0.783
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.829,
+      "noise_power_over_anchor": 0.494
+     },
+     "I_range32 (S4-S5)": {
+      "dB": -0.286,
+      "noise_power_over_anchor": 0.054
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": -0.052
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 4.372,
+      "noise_power": 0.01856975904242162
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.823,
+      "S2": 2.045,
+      "S3": 2.386,
+      "S4": 3.215,
+      "S5": 3.502
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": -0.524,
+      "noise_power_over_anchor": 0.644
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": -0.207,
+      "noise_power_over_anchor": 0.275
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": -0.27,
+      "noise_power_over_anchor": 0.584
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.787,
+      "noise_power_over_anchor": 0.807
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.85,
+      "noise_power_over_anchor": 0.498
+     },
+     "I_range32 (S4-S5)": {
+      "dB": -0.253,
+      "noise_power_over_anchor": 0.059
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": -0.063
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 4.219,
+      "noise_power": 0.017302786804950593
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 2.867,
+      "S2": 2.08,
+      "S3": 2.287,
+      "S4": 3.137,
+      "S5": 3.391
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "exact+wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.914,
+     "E2M1/S2": 20.857,
+     "E2M1/S3": 20.857,
+     "E2M1/S4": 18.914,
+     "E2M1/S5": 18.914,
+     "INT4/S1": 15.415,
+     "INT4/S2": 18.031,
+     "INT4/S3": 18.031,
+     "INT4/S4": 15.415,
+     "INT4/S5": 15.415
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.021,
+     "E2M1/S2": 20.882,
+     "E2M1/S3": 20.882,
+     "E2M1/S4": 19.021,
+     "E2M1/S5": 19.021,
+     "INT4/S1": 15.633,
+     "INT4/S2": 18.197,
+     "INT4/S3": 18.197,
+     "INT4/S4": 15.633,
+     "INT4/S5": 15.633
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.674,
+      "noise_power_over_anchor": 1.809
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.674,
+      "noise_power_over_anchor": 1.809
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.943,
+      "noise_power": 0.004631595310586942
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 3.499,
+      "S2": 2.825,
+      "S3": 2.825,
+      "S4": 3.499,
+      "S5": 3.499
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.703,
+      "noise_power_over_anchor": 1.791
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.703,
+      "noise_power_over_anchor": 1.791
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.861,
+      "noise_power": 0.004366975867159064
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 3.388,
+      "S2": 2.685,
+      "S3": 2.685,
+      "S4": 3.388,
+      "S5": 3.388
+     }
+    },
+    "ue4m3_diagnostics": {}
+   }
+  },
+  "gaussian_channel_outliers+RHT": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.114,
+     "E2M1/S2": 19.245,
+     "E2M1/S3": 19.761,
+     "E2M1/S4": 19.531,
+     "E2M1/S5": 19.753,
+     "INT4/S1": 18.13,
+     "INT4/S2": 18.844,
+     "INT4/S3": 21.803,
+     "INT4/S4": 21.035,
+     "INT4/S5": 21.57
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.103,
+     "E2M1/S2": 19.241,
+     "E2M1/S3": 19.8,
+     "E2M1/S4": 19.556,
+     "E2M1/S5": 19.792,
+     "INT4/S1": 18.088,
+     "INT4/S2": 18.793,
+     "INT4/S3": 21.735,
+     "INT4/S4": 20.964,
+     "INT4/S5": 21.497
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.8,
+      "noise_power_over_anchor": 3.964
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 2.443,
+      "noise_power_over_anchor": 3.01
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.488,
+      "noise_power_over_anchor": 3.754
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.582,
+      "noise_power_over_anchor": 1.157
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.537,
+      "noise_power_over_anchor": 0.413
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.312,
+      "noise_power_over_anchor": 0.21
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.045
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.648,
+      "noise_power": 0.001698807078708885
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 0.983,
+      "S2": 0.401,
+      "S3": -2.042,
+      "S4": -1.504,
+      "S5": -1.817
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.721,
+      "noise_power_over_anchor": 3.647
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 2.383,
+      "noise_power_over_anchor": 2.776
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.423,
+      "noise_power_over_anchor": 3.46
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.568,
+      "noise_power_over_anchor": 1.067
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.527,
+      "noise_power_over_anchor": 0.383
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.298,
+      "noise_power_over_anchor": 0.187
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.04
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.697,
+      "noise_power": 0.0018220831774882588
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.015,
+      "S2": 0.448,
+      "S3": -1.935,
+      "S4": -1.408,
+      "S5": -1.706
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.0,
+      "clamped_block_fraction": 0.0
+     }
+    }
+   }
+  },
+  "lognormal_rows_1.5": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.632,
+     "E2M1/S2": 18.906,
+     "E2M1/S3": 19.95,
+     "E2M1/S4": 19.466,
+     "E2M1/S5": 19.876,
+     "INT4/S1": 16.843,
+     "INT4/S2": 17.668,
+     "INT4/S3": 20.664,
+     "INT4/S4": 19.735,
+     "INT4/S5": 20.237
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.662,
+     "E2M1/S2": 18.927,
+     "E2M1/S3": 19.97,
+     "E2M1/S4": 19.556,
+     "E2M1/S5": 19.898,
+     "INT4/S1": 16.819,
+     "INT4/S2": 17.784,
+     "INT4/S3": 20.675,
+     "INT4/S4": 19.722,
+     "INT4/S5": 20.261
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.149,
+      "noise_power_over_anchor": 2.174
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.952,
+      "noise_power_over_anchor": 1.61
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.058,
+      "noise_power_over_anchor": 2.135
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.55,
+      "noise_power_over_anchor": 0.763
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.444,
+      "noise_power_over_anchor": 0.238
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.091,
+      "noise_power_over_anchor": 0.039
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.106
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.319,
+      "noise_power": 0.0035881735191237996
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.788,
+      "S2": 1.238,
+      "S3": -0.714,
+      "S4": -0.269,
+      "S5": -0.361
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.206,
+      "noise_power_over_anchor": 2.263
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.848,
+      "noise_power_over_anchor": 1.515
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.008,
+      "noise_power_over_anchor": 2.149
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.7,
+      "noise_power_over_anchor": 0.943
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.539,
+      "noise_power_over_anchor": 0.309
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.197,
+      "noise_power_over_anchor": 0.115
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.16
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.308,
+      "noise_power": 0.003540310648750931
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.843,
+      "S2": 1.143,
+      "S3": -0.705,
+      "S4": -0.166,
+      "S5": -0.363
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.0025,
+      "clamped_block_fraction": 0.0
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.0018,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.0025,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.0018,
+      "clamped_block_fraction": 0.0
+     }
+    }
+   },
+   "exact": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.886,
+     "E2M1/S2": 20.571,
+     "E2M1/S3": 20.571,
+     "E2M1/S4": 19.886,
+     "E2M1/S5": 19.886,
+     "INT4/S1": 20.266,
+     "INT4/S2": 21.311,
+     "INT4/S3": 21.311,
+     "INT4/S4": 20.266,
+     "INT4/S5": 20.266
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.909,
+     "E2M1/S2": 20.534,
+     "E2M1/S3": 20.534,
+     "E2M1/S4": 19.909,
+     "E2M1/S5": 19.909,
+     "INT4/S1": 20.288,
+     "INT4/S2": 21.411,
+     "INT4/S3": 21.411,
+     "INT4/S4": 20.288,
+     "INT4/S5": 20.288
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.36,
+      "noise_power_over_anchor": 0.343
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.36,
+      "noise_power_over_anchor": 0.343
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.685,
+      "noise_power": 0.001498159246177494
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.379,
+      "S2": -0.74,
+      "S3": -0.74,
+      "S4": -0.379,
+      "S5": -0.379
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.625,
+      "noise_power": 0.001368572105939509
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.378,
+      "S2": -0.876,
+      "S3": -0.876,
+      "S4": -0.378,
+      "S5": -0.378
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.632,
+     "E2M1/S2": 18.906,
+     "E2M1/S3": 19.95,
+     "E2M1/S4": 19.466,
+     "E2M1/S5": 19.876,
+     "INT4/S1": 16.843,
+     "INT4/S2": 17.668,
+     "INT4/S3": 20.664,
+     "INT4/S4": 19.735,
+     "INT4/S5": 20.237
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.662,
+     "E2M1/S2": 18.927,
+     "E2M1/S3": 19.973,
+     "E2M1/S4": 19.557,
+     "E2M1/S5": 19.898,
+     "INT4/S1": 16.819,
+     "INT4/S2": 17.784,
+     "INT4/S3": 20.676,
+     "INT4/S4": 19.723,
+     "INT4/S5": 20.261
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.149,
+      "noise_power_over_anchor": 2.174
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.952,
+      "noise_power_over_anchor": 1.61
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.058,
+      "noise_power_over_anchor": 2.135
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.55,
+      "noise_power_over_anchor": 0.763
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.444,
+      "noise_power_over_anchor": 0.238
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.091,
+      "noise_power_over_anchor": 0.039
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.106
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.319,
+      "noise_power": 0.00358817352660464
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.788,
+      "S2": 1.238,
+      "S3": -0.714,
+      "S4": -0.269,
+      "S5": -0.361
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.206,
+      "noise_power_over_anchor": 2.26
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.847,
+      "noise_power_over_anchor": 1.512
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.008,
+      "noise_power_over_anchor": 2.145
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.7,
+      "noise_power_over_anchor": 0.941
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.538,
+      "noise_power_over_anchor": 0.308
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.197,
+      "noise_power_over_anchor": 0.115
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.161
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.311,
+      "noise_power": 0.003545840480059176
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.843,
+      "S2": 1.143,
+      "S3": -0.704,
+      "S4": -0.166,
+      "S5": -0.363
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "exact+wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.886,
+     "E2M1/S2": 20.571,
+     "E2M1/S3": 20.571,
+     "E2M1/S4": 19.886,
+     "E2M1/S5": 19.886,
+     "INT4/S1": 20.266,
+     "INT4/S2": 21.311,
+     "INT4/S3": 21.311,
+     "INT4/S4": 20.266,
+     "INT4/S5": 20.266
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.909,
+     "E2M1/S2": 20.534,
+     "E2M1/S3": 20.534,
+     "E2M1/S4": 19.909,
+     "E2M1/S5": 19.909,
+     "INT4/S1": 20.288,
+     "INT4/S2": 21.411,
+     "INT4/S3": 21.411,
+     "INT4/S4": 20.288,
+     "INT4/S5": 20.288
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.36,
+      "noise_power_over_anchor": 0.343
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.36,
+      "noise_power_over_anchor": 0.343
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.685,
+      "noise_power": 0.001498159246177494
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.379,
+      "S2": -0.74,
+      "S3": -0.74,
+      "S4": -0.379,
+      "S5": -0.379
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.625,
+      "noise_power": 0.001368572105939509
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.378,
+      "S2": -0.876,
+      "S3": -0.876,
+      "S4": -0.378,
+      "S5": -0.378
+     }
+    },
+    "ue4m3_diagnostics": {}
+   }
+  },
+  "lognormal_rows_1.5+RHT": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.709,
+     "E2M1/S2": 18.968,
+     "E2M1/S3": 19.984,
+     "E2M1/S4": 19.573,
+     "E2M1/S5": 19.849,
+     "INT4/S1": 16.749,
+     "INT4/S2": 17.768,
+     "INT4/S3": 20.672,
+     "INT4/S4": 19.753,
+     "INT4/S5": 20.335
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.65,
+     "E2M1/S2": 18.916,
+     "E2M1/S3": 19.971,
+     "E2M1/S4": 19.559,
+     "E2M1/S5": 19.911,
+     "INT4/S1": 16.801,
+     "INT4/S2": 17.768,
+     "INT4/S3": 20.668,
+     "INT4/S4": 19.715,
+     "INT4/S5": 20.252
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.446,
+      "noise_power_over_anchor": 2.562
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.888,
+      "noise_power_over_anchor": 1.608
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.14,
+      "noise_power_over_anchor": 2.372
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.76,
+      "noise_power_over_anchor": 1.063
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.508,
+      "noise_power_over_anchor": 0.299
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.307,
+      "noise_power_over_anchor": 0.19
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.252
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.275,
+      "noise_power": 0.003425383604062174
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.96,
+      "S2": 1.2,
+      "S3": -0.688,
+      "S4": -0.18,
+      "S5": -0.486
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.191,
+      "noise_power_over_anchor": 2.24
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.844,
+      "noise_power_over_anchor": 1.502
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.005,
+      "noise_power_over_anchor": 2.133
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.702,
+      "noise_power_over_anchor": 0.94
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.541,
+      "noise_power_over_anchor": 0.308
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.186,
+      "noise_power_over_anchor": 0.107
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.161
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.321,
+      "noise_power": 0.003578663406847841
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.849,
+      "S2": 1.147,
+      "S3": -0.697,
+      "S4": -0.156,
+      "S5": -0.342
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.0017,
+      "clamped_block_fraction": 0.0
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.0013,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.0017,
+      "clamped_block_fraction": 0.0
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.0013,
+      "clamped_block_fraction": 0.0
+     }
+    }
+   }
+  },
+  "lognormal_rows_2.5": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.438,
+     "E2M1/S2": 18.7,
+     "E2M1/S3": 19.905,
+     "E2M1/S4": 19.45,
+     "E2M1/S5": 19.863,
+     "INT4/S1": 16.446,
+     "INT4/S2": 17.479,
+     "INT4/S3": 20.71,
+     "INT4/S4": 19.79,
+     "INT4/S5": 20.299
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.657,
+     "E2M1/S2": 18.922,
+     "E2M1/S3": 18.989,
+     "E2M1/S4": 18.709,
+     "E2M1/S5": 19.899,
+     "INT4/S1": 16.828,
+     "INT4/S2": 17.793,
+     "INT4/S3": 19.264,
+     "INT4/S4": 18.43,
+     "INT4/S5": 20.261
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.428,
+      "noise_power_over_anchor": 2.269
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 2.026,
+      "noise_power_over_anchor": 1.487
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.332,
+      "noise_power_over_anchor": 2.237
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.77,
+      "noise_power_over_anchor": 0.963
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.465,
+      "noise_power_over_anchor": 0.213
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.096,
+      "noise_power_over_anchor": 0.032
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.306
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.467,
+      "noise_power": 0.004108300595261226
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.992,
+      "S2": 1.221,
+      "S3": -0.805,
+      "S4": -0.34,
+      "S5": -0.437
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.191,
+      "noise_power_over_anchor": 7.92
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.405,
+      "noise_power_over_anchor": 4.563
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.549,
+      "noise_power_over_anchor": 6.213
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.699,
+      "noise_power_over_anchor": 3.312
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.554,
+      "noise_power_over_anchor": 1.662
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.642,
+      "noise_power_over_anchor": 1.706
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.144
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.332,
+      "noise_power": 0.00100404372024516
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.828,
+      "S2": 1.13,
+      "S3": -0.275,
+      "S4": 0.279,
+      "S5": -0.362
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.3314,
+      "clamped_block_fraction": 0.1267
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.3116,
+      "clamped_block_fraction": 0.1177
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.3314,
+      "clamped_block_fraction": 0.1267
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.3116,
+      "clamped_block_fraction": 0.1177
+     }
+    }
+   },
+   "exact": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.874,
+     "E2M1/S2": 20.569,
+     "E2M1/S3": 20.569,
+     "E2M1/S4": 19.874,
+     "E2M1/S5": 19.874,
+     "INT4/S1": 20.332,
+     "INT4/S2": 21.341,
+     "INT4/S3": 21.341,
+     "INT4/S4": 20.332,
+     "INT4/S5": 20.332
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.909,
+     "E2M1/S2": 20.534,
+     "E2M1/S3": 20.534,
+     "E2M1/S4": 19.909,
+     "E2M1/S5": 19.909,
+     "INT4/S1": 20.288,
+     "INT4/S2": 21.411,
+     "INT4/S3": 21.411,
+     "INT4/S4": 20.288,
+     "INT4/S5": 20.288
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.315,
+      "noise_power_over_anchor": 0.262
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.315,
+      "noise_power_over_anchor": 0.262
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.695,
+      "noise_power": 0.0015215825518569061
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.458,
+      "S2": -0.773,
+      "S3": -0.773,
+      "S4": -0.458,
+      "S5": -0.458
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.625,
+      "noise_power": 0.001368572105939509
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.378,
+      "S2": -0.876,
+      "S3": -0.876,
+      "S4": -0.378,
+      "S5": -0.378
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.438,
+     "E2M1/S2": 18.7,
+     "E2M1/S3": 19.905,
+     "E2M1/S4": 19.45,
+     "E2M1/S5": 19.863,
+     "INT4/S1": 16.446,
+     "INT4/S2": 17.479,
+     "INT4/S3": 20.71,
+     "INT4/S4": 19.79,
+     "INT4/S5": 20.299
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.657,
+     "E2M1/S2": 18.922,
+     "E2M1/S3": 19.967,
+     "E2M1/S4": 19.552,
+     "E2M1/S5": 19.899,
+     "INT4/S1": 16.828,
+     "INT4/S2": 17.793,
+     "INT4/S3": 20.674,
+     "INT4/S4": 19.723,
+     "INT4/S5": 20.261
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.428,
+      "noise_power_over_anchor": 2.269
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 2.026,
+      "noise_power_over_anchor": 1.487
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.332,
+      "noise_power_over_anchor": 2.237
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.77,
+      "noise_power_over_anchor": 0.963
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.465,
+      "noise_power_over_anchor": 0.213
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.096,
+      "noise_power_over_anchor": 0.032
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.306
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.467,
+      "noise_power": 0.004108301030868516
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.992,
+      "S2": 1.221,
+      "S3": -0.805,
+      "S4": -0.34,
+      "S5": -0.437
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.191,
+      "noise_power_over_anchor": 2.241
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.837,
+      "noise_power_over_anchor": 1.5
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.999,
+      "noise_power_over_anchor": 2.131
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.699,
+      "noise_power_over_anchor": 0.937
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.537,
+      "noise_power_over_anchor": 0.307
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.192,
+      "noise_power_over_anchor": 0.111
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.162
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.31,
+      "noise_power": 0.0035483943148489974
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.828,
+      "S2": 1.13,
+      "S3": -0.708,
+      "S4": -0.171,
+      "S5": -0.362
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "exact+wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.874,
+     "E2M1/S2": 20.569,
+     "E2M1/S3": 20.569,
+     "E2M1/S4": 19.874,
+     "E2M1/S5": 19.874,
+     "INT4/S1": 20.332,
+     "INT4/S2": 21.341,
+     "INT4/S3": 21.341,
+     "INT4/S4": 20.332,
+     "INT4/S5": 20.332
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.909,
+     "E2M1/S2": 20.534,
+     "E2M1/S3": 20.534,
+     "E2M1/S4": 19.909,
+     "E2M1/S5": 19.909,
+     "INT4/S1": 20.288,
+     "INT4/S2": 21.411,
+     "INT4/S3": 21.411,
+     "INT4/S4": 20.288,
+     "INT4/S5": 20.288
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.315,
+      "noise_power_over_anchor": 0.262
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.315,
+      "noise_power_over_anchor": 0.262
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.695,
+      "noise_power": 0.0015215825518569061
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.458,
+      "S2": -0.773,
+      "S3": -0.773,
+      "S4": -0.458,
+      "S5": -0.458
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.625,
+      "noise_power": 0.001368572105939509
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.378,
+      "S2": -0.876,
+      "S3": -0.876,
+      "S4": -0.378,
+      "S5": -0.378
+     }
+    },
+    "ue4m3_diagnostics": {}
+   }
+  },
+  "lognormal_rows_3.5": {
+   "registered": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.824,
+     "E2M1/S2": 19.081,
+     "E2M1/S3": 19.919,
+     "E2M1/S4": 19.484,
+     "E2M1/S5": 19.866,
+     "INT4/S1": 16.888,
+     "INT4/S2": 17.789,
+     "INT4/S3": 20.797,
+     "INT4/S4": 19.891,
+     "INT4/S5": 20.37
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.658,
+     "E2M1/S2": 18.926,
+     "E2M1/S3": 12.799,
+     "E2M1/S4": 12.674,
+     "E2M1/S5": 19.898,
+     "INT4/S1": 16.826,
+     "INT4/S2": 17.786,
+     "INT4/S3": 12.04,
+     "INT4/S4": 11.585,
+     "INT4/S5": 20.261
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.439,
+      "noise_power_over_anchor": 2.905
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 2.17,
+      "noise_power_over_anchor": 2.103
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.342,
+      "noise_power_over_anchor": 2.863
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.644,
+      "noise_power_over_anchor": 1.054
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.471,
+      "noise_power_over_anchor": 0.294
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.097,
+      "noise_power_over_anchor": 0.042
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.172
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.095,
+      "noise_power": 0.0029227821676028
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.935,
+      "S2": 1.292,
+      "S3": -0.878,
+      "S4": -0.407,
+      "S5": -0.504
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.195,
+      "noise_power_over_anchor": null
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.381,
+      "noise_power_over_anchor": null
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.743,
+      "noise_power_over_anchor": null
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.691,
+      "noise_power_over_anchor": null
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.33,
+      "noise_power_over_anchor": null
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 1.452,
+      "noise_power_over_anchor": null
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.362
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": -5.859,
+      "noise_power": -0.038872221756396555
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.832,
+      "S2": 1.141,
+      "S3": 0.759,
+      "S4": 1.089,
+      "S5": -0.362
+     }
+    },
+    "ue4m3_diagnostics": {
+     "E2M1/S3": {
+      "subnormal_block_fraction": 0.7311,
+      "clamped_block_fraction": 0.5423
+     },
+     "E2M1/S4": {
+      "subnormal_block_fraction": 0.7192,
+      "clamped_block_fraction": 0.5301
+     },
+     "INT4/S3": {
+      "subnormal_block_fraction": 0.7311,
+      "clamped_block_fraction": 0.5423
+     },
+     "INT4/S4": {
+      "subnormal_block_fraction": 0.7192,
+      "clamped_block_fraction": 0.5301
+     }
+    }
+   },
+   "exact": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.878,
+     "E2M1/S2": 20.554,
+     "E2M1/S3": 20.554,
+     "E2M1/S4": 19.878,
+     "E2M1/S5": 19.878,
+     "INT4/S1": 20.393,
+     "INT4/S2": 21.39,
+     "INT4/S3": 21.39,
+     "INT4/S4": 20.393,
+     "INT4/S5": 20.393
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.909,
+     "E2M1/S2": 20.534,
+     "E2M1/S3": 20.534,
+     "E2M1/S4": 19.909,
+     "E2M1/S5": 19.909,
+     "INT4/S1": 20.288,
+     "INT4/S2": 21.411,
+     "INT4/S3": 21.411,
+     "INT4/S4": 20.288,
+     "INT4/S5": 20.288
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.321,
+      "noise_power_over_anchor": 0.264
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.321,
+      "noise_power_over_anchor": 0.264
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.676,
+      "noise_power": 0.0014820588039882784
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.515,
+      "S2": -0.836,
+      "S3": -0.836,
+      "S4": -0.515,
+      "S5": -0.515
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.625,
+      "noise_power": 0.001368572105939509
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.378,
+      "S2": -0.876,
+      "S3": -0.876,
+      "S4": -0.378,
+      "S5": -0.378
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 18.824,
+     "E2M1/S2": 19.081,
+     "E2M1/S3": 19.919,
+     "E2M1/S4": 19.484,
+     "E2M1/S5": 19.866,
+     "INT4/S1": 16.888,
+     "INT4/S2": 17.789,
+     "INT4/S3": 20.797,
+     "INT4/S4": 19.891,
+     "INT4/S5": 20.37
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 18.658,
+     "E2M1/S2": 18.926,
+     "E2M1/S3": 19.973,
+     "E2M1/S4": 19.56,
+     "E2M1/S5": 19.898,
+     "INT4/S1": 16.826,
+     "INT4/S2": 17.786,
+     "INT4/S3": 20.676,
+     "INT4/S4": 19.722,
+     "INT4/S5": 20.261
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.439,
+      "noise_power_over_anchor": 2.905
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 2.17,
+      "noise_power_over_anchor": 2.103
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 2.342,
+      "noise_power_over_anchor": 2.863
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.644,
+      "noise_power_over_anchor": 1.054
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.471,
+      "noise_power_over_anchor": 0.294
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.097,
+      "noise_power_over_anchor": 0.042
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.172
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.095,
+      "noise_power": 0.002922782535026789
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.935,
+      "S2": 1.292,
+      "S3": -0.878,
+      "S4": -0.407,
+      "S5": -0.504
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 2.195,
+      "noise_power_over_anchor": 2.239
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 1.844,
+      "noise_power_over_anchor": 1.503
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 1.994,
+      "noise_power_over_anchor": 2.122
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.691,
+      "noise_power_over_anchor": 0.928
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.541,
+      "noise_power_over_anchor": 0.309
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.2,
+      "noise_power_over_anchor": 0.116
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.15
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 1.315,
+      "noise_power": 0.00355898306557219
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": 1.832,
+      "S2": 1.141,
+      "S3": -0.703,
+      "S4": -0.162,
+      "S5": -0.362
+     }
+    },
+    "ue4m3_diagnostics": {}
+   },
+   "exact+wide": {
+    "qsnr_whole_dB": {
+     "E2M1/S1": 19.878,
+     "E2M1/S2": 20.554,
+     "E2M1/S3": 20.554,
+     "E2M1/S4": 19.878,
+     "E2M1/S5": 19.878,
+     "INT4/S1": 20.393,
+     "INT4/S2": 21.39,
+     "INT4/S3": 21.39,
+     "INT4/S4": 20.393,
+     "INT4/S5": 20.393
+    },
+    "qsnr_per_row_dB": {
+     "E2M1/S1": 19.909,
+     "E2M1/S2": 20.534,
+     "E2M1/S3": 20.534,
+     "E2M1/S4": 19.909,
+     "E2M1/S5": 19.909,
+     "INT4/S1": 20.288,
+     "INT4/S2": 21.411,
+     "INT4/S3": 21.411,
+     "INT4/S4": 20.288,
+     "INT4/S5": 20.288
+    },
+    "contrasts_whole": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.321,
+      "noise_power_over_anchor": 0.264
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.321,
+      "noise_power_over_anchor": 0.264
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.676,
+      "noise_power": 0.0014820588039882784
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.515,
+      "S2": -0.836,
+      "S3": -0.836,
+      "S4": -0.515,
+      "S5": -0.515
+     }
+    },
+    "contrasts_per_row": {
+     "I_prec32 (S1-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt16 (S2-S3)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_fmt32 (S1-S4)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I_blk_E8 (S1-S2)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_blk_UE (S4-S3)": {
+      "dB": 0.498,
+      "noise_power_over_anchor": 0.558
+     },
+     "I_range32 (S4-S5)": {
+      "dB": 0.0,
+      "noise_power_over_anchor": 0.0
+     },
+     "I3 (I_fmt32-I_fmt16)": {
+      "dB": 0.0
+     },
+     "anchor E2M1 S1-S3": {
+      "dB": 0.625,
+      "noise_power": 0.001368572105939509
+     },
+     "grid_effect_dB_by_cfg (E2M1 - INT4 QSNR)": {
+      "S1": -0.378,
+      "S2": -0.876,
+      "S3": -0.876,
+      "S4": -0.378,
+      "S5": -0.378
+     }
+    },
+    "ue4m3_diagnostics": {}
+   }
+  }
+ },
+ "identification_table": {
+  "gaussian": {
+   "I_prec32 (S1-S5)": {
+    "registered_dB": 2.167,
+    "exact_dB": 0.0,
+    "wide_dB": 2.167,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 2.167
+   },
+   "I_fmt16 (S2-S3)": {
+    "registered_dB": 1.974,
+    "exact_dB": 0.0,
+    "wide_dB": 1.974,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 1.974
+   },
+   "I_fmt32 (S1-S4)": {
+    "registered_dB": 1.975,
+    "exact_dB": 0.0,
+    "wide_dB": 1.975,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 1.979
+   },
+   "I_blk_E8 (S1-S2)": {
+    "registered_dB": 0.536,
+    "exact_dB": 0.503,
+    "wide_dB": 0.536,
+    "exact_wide_dB": 0.503,
+    "share_surviving_exact": 0.938,
+    "per_row_registered_dB": 0.534
+   },
+   "I_blk_UE (S4-S3)": {
+    "registered_dB": 0.536,
+    "exact_dB": 0.503,
+    "wide_dB": 0.536,
+    "exact_wide_dB": 0.503,
+    "share_surviving_exact": 0.938,
+    "per_row_registered_dB": 0.53
+   },
+   "I_range32 (S4-S5)": {
+    "registered_dB": 0.192,
+    "exact_dB": 0.0,
+    "wide_dB": 0.192,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.189
+   },
+   "I3 (I_fmt32-I_fmt16)": {
+    "registered_dB": 0.001,
+    "exact_dB": 0.0,
+    "wide_dB": 0.001,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": null,
+    "per_row_registered_dB": 0.005
+   }
+  },
+  "laplace": {
+   "I_prec32 (S1-S5)": {
+    "registered_dB": 1.234,
+    "exact_dB": 0.0,
+    "wide_dB": 1.234,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 1.231
+   },
+   "I_fmt16 (S2-S3)": {
+    "registered_dB": 1.032,
+    "exact_dB": 0.0,
+    "wide_dB": 1.032,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 1.027
+   },
+   "I_fmt32 (S1-S4)": {
+    "registered_dB": 1.221,
+    "exact_dB": 0.0,
+    "wide_dB": 1.221,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 1.218
+   },
+   "I_blk_E8 (S1-S2)": {
+    "registered_dB": 0.821,
+    "exact_dB": 0.544,
+    "wide_dB": 0.821,
+    "exact_wide_dB": 0.544,
+    "share_surviving_exact": 0.663,
+    "per_row_registered_dB": 0.811
+   },
+   "I_blk_UE (S4-S3)": {
+    "registered_dB": 0.632,
+    "exact_dB": 0.544,
+    "wide_dB": 0.632,
+    "exact_wide_dB": 0.544,
+    "share_surviving_exact": 0.861,
+    "per_row_registered_dB": 0.62
+   },
+   "I_range32 (S4-S5)": {
+    "registered_dB": 0.013,
+    "exact_dB": 0.0,
+    "wide_dB": 0.013,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": null,
+    "per_row_registered_dB": 0.013
+   },
+   "I3 (I_fmt32-I_fmt16)": {
+    "registered_dB": 0.189,
+    "exact_dB": 0.0,
+    "wide_dB": 0.189,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.191
+   }
+  },
+  "student_t3": {
+   "I_prec32 (S1-S5)": {
+    "registered_dB": 0.053,
+    "exact_dB": 0.0,
+    "wide_dB": 0.053,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.255
+   },
+   "I_fmt16 (S2-S3)": {
+    "registered_dB": 0.165,
+    "exact_dB": 0.0,
+    "wide_dB": 0.165,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.313
+   },
+   "I_fmt32 (S1-S4)": {
+    "registered_dB": 0.237,
+    "exact_dB": 0.0,
+    "wide_dB": 0.237,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.391
+   },
+   "I_blk_E8 (S1-S2)": {
+    "registered_dB": 0.792,
+    "exact_dB": 0.577,
+    "wide_dB": 0.792,
+    "exact_wide_dB": 0.577,
+    "share_surviving_exact": 0.729,
+    "per_row_registered_dB": 0.795
+   },
+   "I_blk_UE (S4-S3)": {
+    "registered_dB": 0.721,
+    "exact_dB": 0.577,
+    "wide_dB": 0.721,
+    "exact_wide_dB": 0.577,
+    "share_surviving_exact": 0.8,
+    "per_row_registered_dB": 0.717
+   },
+   "I_range32 (S4-S5)": {
+    "registered_dB": -0.184,
+    "exact_dB": 0.0,
+    "wide_dB": -0.184,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": -0.0,
+    "per_row_registered_dB": -0.135
+   },
+   "I3 (I_fmt32-I_fmt16)": {
+    "registered_dB": 0.072,
+    "exact_dB": 0.0,
+    "wide_dB": 0.072,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.078
+   }
+  },
+  "gaussian_channel_outliers": {
+   "I_prec32 (S1-S5)": {
+    "registered_dB": -0.679,
+    "exact_dB": 0.0,
+    "wide_dB": -0.679,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": -0.0,
+    "per_row_registered_dB": -0.524
+   },
+   "I_fmt16 (S2-S3)": {
+    "registered_dB": -0.341,
+    "exact_dB": 0.0,
+    "wide_dB": -0.341,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": -0.0,
+    "per_row_registered_dB": -0.207
+   },
+   "I_fmt32 (S1-S4)": {
+    "registered_dB": -0.393,
+    "exact_dB": 0.0,
+    "wide_dB": -0.393,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": -0.0,
+    "per_row_registered_dB": -0.27
+   },
+   "I_blk_E8 (S1-S2)": {
+    "registered_dB": 0.778,
+    "exact_dB": 0.674,
+    "wide_dB": 0.778,
+    "exact_wide_dB": 0.674,
+    "share_surviving_exact": 0.866,
+    "per_row_registered_dB": 0.787
+   },
+   "I_blk_UE (S4-S3)": {
+    "registered_dB": 0.829,
+    "exact_dB": 0.674,
+    "wide_dB": 0.829,
+    "exact_wide_dB": 0.674,
+    "share_surviving_exact": 0.813,
+    "per_row_registered_dB": 0.85
+   },
+   "I_range32 (S4-S5)": {
+    "registered_dB": -0.286,
+    "exact_dB": 0.0,
+    "wide_dB": -0.286,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": -0.0,
+    "per_row_registered_dB": -0.253
+   },
+   "I3 (I_fmt32-I_fmt16)": {
+    "registered_dB": -0.052,
+    "exact_dB": 0.0,
+    "wide_dB": -0.052,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": -0.0,
+    "per_row_registered_dB": -0.063
+   }
+  },
+  "lognormal_rows_1.5": {
+   "I_prec32 (S1-S5)": {
+    "registered_dB": 2.149,
+    "exact_dB": 0.0,
+    "wide_dB": 2.149,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 2.206
+   },
+   "I_fmt16 (S2-S3)": {
+    "registered_dB": 1.952,
+    "exact_dB": 0.0,
+    "wide_dB": 1.952,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 1.848
+   },
+   "I_fmt32 (S1-S4)": {
+    "registered_dB": 2.058,
+    "exact_dB": 0.0,
+    "wide_dB": 2.058,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 2.008
+   },
+   "I_blk_E8 (S1-S2)": {
+    "registered_dB": 0.55,
+    "exact_dB": 0.36,
+    "wide_dB": 0.55,
+    "exact_wide_dB": 0.36,
+    "share_surviving_exact": 0.655,
+    "per_row_registered_dB": 0.7
+   },
+   "I_blk_UE (S4-S3)": {
+    "registered_dB": 0.444,
+    "exact_dB": 0.36,
+    "wide_dB": 0.444,
+    "exact_wide_dB": 0.36,
+    "share_surviving_exact": 0.811,
+    "per_row_registered_dB": 0.539
+   },
+   "I_range32 (S4-S5)": {
+    "registered_dB": 0.091,
+    "exact_dB": 0.0,
+    "wide_dB": 0.091,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.197
+   },
+   "I3 (I_fmt32-I_fmt16)": {
+    "registered_dB": 0.106,
+    "exact_dB": 0.0,
+    "wide_dB": 0.106,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.16
+   }
+  },
+  "lognormal_rows_2.5": {
+   "I_prec32 (S1-S5)": {
+    "registered_dB": 2.428,
+    "exact_dB": 0.0,
+    "wide_dB": 2.428,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 2.191
+   },
+   "I_fmt16 (S2-S3)": {
+    "registered_dB": 2.026,
+    "exact_dB": 0.0,
+    "wide_dB": 2.026,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 1.405
+   },
+   "I_fmt32 (S1-S4)": {
+    "registered_dB": 2.332,
+    "exact_dB": 0.0,
+    "wide_dB": 2.332,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 1.549
+   },
+   "I_blk_E8 (S1-S2)": {
+    "registered_dB": 0.77,
+    "exact_dB": 0.315,
+    "wide_dB": 0.77,
+    "exact_wide_dB": 0.315,
+    "share_surviving_exact": 0.409,
+    "per_row_registered_dB": 0.699
+   },
+   "I_blk_UE (S4-S3)": {
+    "registered_dB": 0.465,
+    "exact_dB": 0.315,
+    "wide_dB": 0.465,
+    "exact_wide_dB": 0.315,
+    "share_surviving_exact": 0.677,
+    "per_row_registered_dB": 0.554
+   },
+   "I_range32 (S4-S5)": {
+    "registered_dB": 0.096,
+    "exact_dB": 0.0,
+    "wide_dB": 0.096,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.642
+   },
+   "I3 (I_fmt32-I_fmt16)": {
+    "registered_dB": 0.306,
+    "exact_dB": 0.0,
+    "wide_dB": 0.306,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.144
+   }
+  },
+  "lognormal_rows_3.5": {
+   "I_prec32 (S1-S5)": {
+    "registered_dB": 2.439,
+    "exact_dB": 0.0,
+    "wide_dB": 2.439,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 2.195
+   },
+   "I_fmt16 (S2-S3)": {
+    "registered_dB": 2.17,
+    "exact_dB": 0.0,
+    "wide_dB": 2.17,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.381
+   },
+   "I_fmt32 (S1-S4)": {
+    "registered_dB": 2.342,
+    "exact_dB": 0.0,
+    "wide_dB": 2.342,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.743
+   },
+   "I_blk_E8 (S1-S2)": {
+    "registered_dB": 0.644,
+    "exact_dB": 0.321,
+    "wide_dB": 0.644,
+    "exact_wide_dB": 0.321,
+    "share_surviving_exact": 0.498,
+    "per_row_registered_dB": 0.691
+   },
+   "I_blk_UE (S4-S3)": {
+    "registered_dB": 0.471,
+    "exact_dB": 0.321,
+    "wide_dB": 0.471,
+    "exact_wide_dB": 0.321,
+    "share_surviving_exact": 0.682,
+    "per_row_registered_dB": 0.33
+   },
+   "I_range32 (S4-S5)": {
+    "registered_dB": 0.097,
+    "exact_dB": 0.0,
+    "wide_dB": 0.097,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 1.452
+   },
+   "I3 (I_fmt32-I_fmt16)": {
+    "registered_dB": 0.172,
+    "exact_dB": 0.0,
+    "wide_dB": 0.172,
+    "exact_wide_dB": 0.0,
+    "share_surviving_exact": 0.0,
+    "per_row_registered_dB": 0.362
+   }
+  }
+ }
+}
