@@ -470,7 +470,7 @@
     "Host limit (needs the host administrator): fs.inotify.max_user_instances is 128 on fal-h100-01, so the action-path ladder's 40-VM rung could not boot 10 of 80 VMs (dnsmasq 'failed to create inotify: Too many open files'). N* is therefore 32, and the registered program kill criterion (N* below 40: cut the Stage-1 task count before adding GPUs) applies. Ask the administrator to raise the limit if 40 concurrent VMs are wanted; attempt 1's rung-40 rerun is not used (D51); running above 32 VMs after a host change needs a registered deviation or a new registration with its own ladder (D53 ii) (evidence: program/evidence/2026-10-08/q2-action-path-v2-acceptance/)",
     "Q2 S1a (q2-stage1-rescoped-v1) ended DR5 INCONCLUSIVE (pi_small 0.055, one-sided 95% [0.000, 0.260] vs M 0.13) and DR2 Inconclusive, so S1b does not start (D47). Yours: whether to commission the registered follow-up after INCONCLUSIVE (more sessions at 4B and 9B, a new proposal with its own gauntlet) or close Q2 Stage 1 at S1a (program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md)"
   ],
-  "gpu_hours_spent_this_program": 10.0826,
+  "gpu_hours_spent_this_program": 10.1432,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -938,6 +938,15 @@
       ],
       "outcome": "review PARSED on attempt 1, total 57 (ten scores sum to 57, no cap binding), replicates byte-identical; wave score 52 (lower of 52 and 57), best 52; honest exit (query budget 137 of 150 cannot fund a compliant wave 2; triad 3/3 refuted); reviewer inference only, not E3 probe work; submitted 23:14:16 UTC 2026-10-10 when only the C5 gauntlet's reviewer-2 job 1083 was running (no s1a-a1-* or q2s1a-* job running or pending), ran 23:14:17-23:17:35 UTC on its own GPU (prolog: exclusive)",
       "basis": "physical (scontrol RunTime 00:03:18 = 198 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, GPUs at 0 MiB after the job)"
+    },
+    {
+      "experiment": "S2 gauntlet wave 2 (fresh run under D68; s2-arabic-cua-locale-v2 draft) open-weight review (D24)",
+      "gpu_hours": 0.0606,
+      "jobs": [
+        "1095 qwen3.6-35b-a3b review"
+      ],
+      "outcome": "review PARSED on attempt 1, total 59 (ten scores sum to 59, no cap binding), replicates byte-identical; wave score 59 (lower of 61 and 59), best 59; honest exit under D68's stop line (score below 60; also wave cap and triad 3/3 refuted), so S2 ends; reviewer inference only, not S2 Phase 0 or Phase 1 work; submitted 02:14:11 UTC 2026-10-11 after read-only squeue at 02:13:32, the poll at 02:14:05 and the in-command re-check showed an empty queue (no s1a-a1-* or q2s1a-* job, no other job), ran 02:14:12-02:17:50 UTC (prolog: exclusive)",
+      "basis": "physical (scontrol RunTime 00:03:38 = 218 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, all GPUs at 0 MiB after the job)"
     }
   ],
   "results": [
