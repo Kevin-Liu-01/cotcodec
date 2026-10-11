@@ -1,0 +1,2845 @@
+{
+ "campaigns": [
+  {
+   "cell": "E",
+   "check": "C1",
+   "concurrency": 1,
+   "criterion": "C1",
+   "kind": "suite-acceptance",
+   "layer": "H-GA-buggy",
+   "mutant": null,
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C1",
+   "concurrency": 1,
+   "criterion": "C1",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-up",
+   "mutant": null,
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C2",
+   "concurrency": 1,
+   "criterion": "C2",
+   "kind": "suite-acceptance",
+   "layer": "L0-raw",
+   "mutant": null,
+   "seed": 45
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M01-modifier-released-early",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M01-modifier-released-early",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M02-button-swap-left-right",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M04-coordinate-shift-5px",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M06-scroll-ticks-doubled",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M07-text-drop-last-char",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M08-text-nfc-normalize",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M09-text-drop-non-ascii",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M10-less-to-greater",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M13-hscroll-to-vscroll",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M13-hscroll-to-vscroll",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M14-chord-release-order",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M15-duplicate-click",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M16-double-click-interval-600ms",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M17-drag-teleport",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M18-first-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M18-first-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M19-last-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M19-last-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M20-terminate-failure-to-done",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M20-terminate-failure-to-done",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M21-hold-not-released",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M23-caps-lock-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M24-grid-1000-instead-of-999",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M24-grid-1000-instead-of-999",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M25-shell-expansion",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M26-newline-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M27-extra-buttons-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M28-modifier-text-ignored",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "E",
+   "check": "A1",
+   "concurrency": 1,
+   "criterion": "A1",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "E",
+   "check": "A1",
+   "concurrency": 1,
+   "criterion": "A1",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 44
+  },
+  {
+   "cell": "E",
+   "check": "A2",
+   "concurrency": 1,
+   "criterion": "A2",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "E",
+   "check": "A2",
+   "concurrency": 1,
+   "criterion": "A2",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "E",
+   "check": "A5",
+   "concurrency": 1,
+   "criterion": null,
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null,
+   "seed": null
+  },
+  {
+   "cell": "E",
+   "check": "A6",
+   "concurrency": 1,
+   "criterion": null,
+   "kind": "canary-acceptance",
+   "layer": null,
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "A",
+   "check": "C1",
+   "concurrency": 1,
+   "criterion": "C1",
+   "kind": "suite-acceptance",
+   "layer": "H-GA-buggy",
+   "mutant": null,
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C1",
+   "concurrency": 1,
+   "criterion": "C1",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-up",
+   "mutant": null,
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C2",
+   "concurrency": 1,
+   "criterion": "C2",
+   "kind": "suite-acceptance",
+   "layer": "L0-raw",
+   "mutant": null,
+   "seed": 45
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M01-modifier-released-early",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M01-modifier-released-early",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M02-button-swap-left-right",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M04-coordinate-shift-5px",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M06-scroll-ticks-doubled",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M07-text-drop-last-char",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M08-text-nfc-normalize",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M09-text-drop-non-ascii",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M10-less-to-greater",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M13-hscroll-to-vscroll",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M13-hscroll-to-vscroll",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M14-chord-release-order",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M15-duplicate-click",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M16-double-click-interval-600ms",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M17-drag-teleport",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M18-first-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M18-first-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M19-last-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M19-last-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M20-terminate-failure-to-done",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M20-terminate-failure-to-done",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M21-hold-not-released",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M23-caps-lock-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M24-grid-1000-instead-of-999",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M24-grid-1000-instead-of-999",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M25-shell-expansion",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M26-newline-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M27-extra-buttons-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M28-modifier-text-ignored",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "A",
+   "check": "A1",
+   "concurrency": 1,
+   "criterion": "A1",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "A",
+   "check": "A1",
+   "concurrency": 1,
+   "criterion": "A1",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 44
+  },
+  {
+   "cell": "A",
+   "check": "A2",
+   "concurrency": 1,
+   "criterion": "A2",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "A",
+   "check": "A2",
+   "concurrency": 1,
+   "criterion": "A2",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "A",
+   "check": "A5",
+   "concurrency": 1,
+   "criterion": null,
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null,
+   "seed": null
+  },
+  {
+   "cell": "A",
+   "check": "A6",
+   "concurrency": 1,
+   "criterion": null,
+   "kind": "canary-acceptance",
+   "layer": null,
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "ER",
+   "check": "C1",
+   "concurrency": 1,
+   "criterion": "C1",
+   "kind": "suite-acceptance",
+   "layer": "H-GA-buggy",
+   "mutant": null,
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C1",
+   "concurrency": 1,
+   "criterion": "C1",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-up",
+   "mutant": null,
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C2",
+   "concurrency": 1,
+   "criterion": "C2",
+   "kind": "suite-acceptance",
+   "layer": "L0-raw",
+   "mutant": null,
+   "seed": 45
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M01-modifier-released-early",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M01-modifier-released-early",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M02-button-swap-left-right",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M04-coordinate-shift-5px",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M06-scroll-ticks-doubled",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M07-text-drop-last-char",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M08-text-nfc-normalize",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M09-text-drop-non-ascii",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M10-less-to-greater",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M13-hscroll-to-vscroll",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M13-hscroll-to-vscroll",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M14-chord-release-order",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M15-duplicate-click",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M16-double-click-interval-600ms",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M17-drag-teleport",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M18-first-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M18-first-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M19-last-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M19-last-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M20-terminate-failure-to-done",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M20-terminate-failure-to-done",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M21-hold-not-released",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M23-caps-lock-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M24-grid-1000-instead-of-999",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M24-grid-1000-instead-of-999",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M25-shell-expansion",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M26-newline-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M27-extra-buttons-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M28-modifier-text-ignored",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "ER",
+   "check": "A1",
+   "concurrency": 1,
+   "criterion": "A1",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "ER",
+   "check": "A1",
+   "concurrency": 1,
+   "criterion": "A1",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 44
+  },
+  {
+   "cell": "ER",
+   "check": "A2",
+   "concurrency": 1,
+   "criterion": "A2",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "ER",
+   "check": "A2",
+   "concurrency": 1,
+   "criterion": "A2",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "ER",
+   "check": "A5",
+   "concurrency": 1,
+   "criterion": null,
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null,
+   "seed": null
+  },
+  {
+   "cell": "ER",
+   "check": "A6",
+   "concurrency": 1,
+   "criterion": null,
+   "kind": "canary-acceptance",
+   "layer": null,
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "AR",
+   "check": "C1",
+   "concurrency": 1,
+   "criterion": "C1",
+   "kind": "suite-acceptance",
+   "layer": "H-GA-buggy",
+   "mutant": null,
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C1",
+   "concurrency": 1,
+   "criterion": "C1",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-up",
+   "mutant": null,
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C2",
+   "concurrency": 1,
+   "criterion": "C2",
+   "kind": "suite-acceptance",
+   "layer": "L0-raw",
+   "mutant": null,
+   "seed": 45
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M01-modifier-released-early",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M01-modifier-released-early",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M02-button-swap-left-right",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M04-coordinate-shift-5px",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M06-scroll-ticks-doubled",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M07-text-drop-last-char",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M08-text-nfc-normalize",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M09-text-drop-non-ascii",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M10-less-to-greater",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M13-hscroll-to-vscroll",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M13-hscroll-to-vscroll",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M14-chord-release-order",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M15-duplicate-click",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M16-double-click-interval-600ms",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M17-drag-teleport",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M18-first-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M18-first-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M19-last-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M19-last-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M20-terminate-failure-to-done",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M20-terminate-failure-to-done",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M21-hold-not-released",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M23-caps-lock-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M24-grid-1000-instead-of-999",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M24-grid-1000-instead-of-999",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M25-shell-expansion",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M26-newline-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M27-extra-buttons-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M28-modifier-text-ignored",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "AR",
+   "check": "A1",
+   "concurrency": 1,
+   "criterion": "A1",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "AR",
+   "check": "A1",
+   "concurrency": 1,
+   "criterion": "A1",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 44
+  },
+  {
+   "cell": "AR",
+   "check": "A2",
+   "concurrency": 1,
+   "criterion": "A2",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "AR",
+   "check": "A2",
+   "concurrency": 1,
+   "criterion": "A2",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "AR",
+   "check": "A5",
+   "concurrency": 1,
+   "criterion": null,
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null,
+   "seed": null
+  },
+  {
+   "cell": "AR",
+   "check": "A6",
+   "concurrency": 1,
+   "criterion": null,
+   "kind": "canary-acceptance",
+   "layer": null,
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "PL",
+   "check": "C1",
+   "concurrency": 1,
+   "criterion": "C1",
+   "kind": "suite-acceptance",
+   "layer": "H-GA-buggy",
+   "mutant": null,
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C1",
+   "concurrency": 1,
+   "criterion": "C1",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-up",
+   "mutant": null,
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C2",
+   "concurrency": 1,
+   "criterion": "C2",
+   "kind": "suite-acceptance",
+   "layer": "L0-raw",
+   "mutant": null,
+   "seed": 45
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M01-modifier-released-early",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M01-modifier-released-early",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M02-button-swap-left-right",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M03-middle-click-noop",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M04-coordinate-shift-5px",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M05-scroll-sign-flip",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M06-scroll-ticks-doubled",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M07-text-drop-last-char",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M08-text-nfc-normalize",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M09-text-drop-non-ascii",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M10-less-to-greater",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M11-unknown-key-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M12-triple-to-double",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M13-hscroll-to-vscroll",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M13-hscroll-to-vscroll",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M14-chord-release-order",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M15-duplicate-click",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M16-double-click-interval-600ms",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M17-drag-teleport",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M18-first-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M18-first-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M19-last-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M19-last-tool-call-only",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M20-terminate-failure-to-done",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M20-terminate-failure-to-done",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M21-hold-not-released",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M22-keypad-to-main",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M23-caps-lock-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "M24-grid-1000-instead-of-999",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M24-grid-1000-instead-of-999",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M25-shell-expansion",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M26-newline-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "M27-extra-buttons-dropped",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "M28-modifier-text-ignored",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "C3",
+   "concurrency": 1,
+   "criterion": "C3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": "none",
+   "seed": 42
+  },
+  {
+   "cell": "PL",
+   "check": "A1",
+   "concurrency": 1,
+   "criterion": "A1",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "PL",
+   "check": "A1",
+   "concurrency": 1,
+   "criterion": "A1",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 44
+  },
+  {
+   "cell": "PL",
+   "check": "A2",
+   "concurrency": 1,
+   "criterion": "A2",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "PL",
+   "check": "A2",
+   "concurrency": 1,
+   "criterion": "A2",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "PL",
+   "check": "A5",
+   "concurrency": 1,
+   "criterion": null,
+   "kind": "boot-reset-validation",
+   "layer": null,
+   "mutant": null,
+   "seed": null
+  },
+  {
+   "cell": "PL",
+   "check": "A6",
+   "concurrency": 1,
+   "criterion": null,
+   "kind": "canary-acceptance",
+   "layer": null,
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "AR",
+   "check": "A3",
+   "concurrency": 1,
+   "criterion": "A3",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "AR",
+   "check": "A3",
+   "concurrency": 1,
+   "criterion": "A3",
+   "kind": "suite-acceptance",
+   "layer": "H-OSW-fixed",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "AR",
+   "check": "A3",
+   "concurrency": 1,
+   "criterion": "A3",
+   "kind": "suite-acceptance",
+   "layer": "H-GA",
+   "mutant": null,
+   "seed": 43
+  },
+  {
+   "cell": "E+A+ER+AR+PL",
+   "check": "rung",
+   "concurrency": 20,
+   "criterion": "ladder",
+   "kind": "suite-acceptance",
+   "layer": "L0-fixed",
+   "mutant": null,
+   "seed": 43
+  }
+ ],
+ "schema": "s2v4-k1-plan-v1"
+}

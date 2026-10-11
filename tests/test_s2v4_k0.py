@@ -114,8 +114,47 @@ def test_admission_inputs_from_the_dev_smoke_records():
     e = tasks[0]["cells"]["E"]
     assert e["observed"] and e["titles"] and e["donothing"] == "fail"
     assert all(e["rewritten"].values())
-    # smoke 1197 ran no gold slots: every task lacks a passing-side control there
-    assert [r["status"] for r in I.admission(records, pool)] == ["runnable"] * 3
+    # smoke 1197 ran no gold slots: every task lacks a passing-side control there; every other
+    # pool task has no record and is listed, unobserved, so excluded
+    rows = {r["task_id"]: r for r in I.admission(records, pool)}
+    assert len(rows) == 106
+    smoke_ids = {t["task_id"] for t in tasks}
+    assert [rows[t]["status"] for t in sorted(smoke_ids)] == ["runnable"] * 3
+    others = [r for t, r in rows.items() if t not in smoke_ids]
+    assert all(r["status"] == "excluded" and r["reasons"][0].startswith("unobserved:")
+               for r in others)
+
+
+def test_p010_from_the_reader_records():
+    from harness.s2_locale import k0_inputs as I
+
+    tid = "2cd43775-7085-45d8-89fa-9e35c0a915cf"
+    key = "/org.openoffice.Office.Common/Save/Document|AutoSaveTimeIntervall"
+
+    def rec(cell, value):
+        return {"task_id": tid, "cell": cell, "kind": "capture", "attempt": 1,
+                "slot": f"2cd43775:{cell}:r1", "status": "probed", "verdict": "fail",
+                "p010": {"values": {key: value}}}
+
+    same = [rec(c, []) for c in K.ADMISSION_CELLS]
+    assert I.tasks_from_records(same, {})[0]["p010_pass"] is True
+    differs = [rec(c, ["3"] if c == "AR" else []) for c in K.ADMISSION_CELLS]
+    assert I.tasks_from_records(differs, {})[0]["p010_pass"] is False
+    assert I.tasks_from_records(same[:-1], {})[0]["p010_pass"] is None  # PL has no reading
+    assert "p010_pass" not in I.tasks_from_records(
+        [{**r, "task_id": "x-1", "slot": r["slot"].replace("2cd43775", "x-1")} for r in same],
+        {})[0]
+
+
+def test_resumed_job_records_count_once():
+    from harness.s2_locale import k0_inputs as I
+
+    base = {"task_id": "t-1", "cell": "E", "kind": "capture", "slot": "t-1:E:r1", "attempt": 1}
+    first = [{**base, "status": "cap_truncated", "_run": 0}]
+    second = [{**base, "status": "probed", "verdict": "pass", "_run": 1}]
+    assert I.counted(first + second)["t-1:E:r1"][-1]["verdict"] == "pass"
+    done = [{**base, "status": "probed", "verdict": "fail", "_run": 0}]
+    assert I.counted(done + second)["t-1:E:r1"][-1]["verdict"] == "fail"  # the first job stands
 
 
 def test_admission_inputs_setup_failure_and_gold():

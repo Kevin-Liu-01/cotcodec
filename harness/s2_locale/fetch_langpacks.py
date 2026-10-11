@@ -14,8 +14,12 @@ Chain of trust, every link checked here (standard library plus the host's ``gpgv
 
 1. ``dists/<suite>/InRelease`` of the snapshot is verified with ``gpgv`` against the Ubuntu
    archive keyring (``/usr/share/keyrings/ubuntu-archive-keyring.gpg``, package
-   ``ubuntu-keyring``); the signed text is the one ``gpgv --output`` writes, never a parse of the
-   clearsigned file;
+   ``ubuntu-keyring``); the signature must be good and valid (GOODSIG and VALIDSIG, no BADSIG,
+   ERRSIG, NO_PUBKEY, EXPSIG, EXPKEYSIG or REVKEYSIG status) and made by the pinned signer
+   (``EXPECTED_SIGNER``, the Ubuntu Archive Automatic Signing Key (2018), as the VALIDSIG
+   fingerprint and its primary key): any other key in the host keyring is refused; the signed
+   text is the one ``gpgv --output`` writes, never a parse of the clearsigned file, and its
+   ``Suite`` and ``Codename`` must be the requested suite and its release (``check_release``);
 2. the ``Packages.xz`` index named in that signed text is fetched and must match its SHA-256 and
    size there;
 3. each requested package's stanza (exact name and version) gives the pool path, size and
@@ -31,6 +35,8 @@ installed or executed; the archives are only read later by ``image_build.py``.
 Usage (on the login host, network on; never inside a lane job):
   python3 -m harness.s2_locale.fetch_langpacks --out DIR [--snapshot 20240110T000000Z]
       [--suite jammy-updates] [--launchpad]
+Re-check a fetched directory offline with the same links (no network; writes verify.json):
+  python3 -m harness.s2_locale.fetch_langpacks --verify DIR
 """
 
 from __future__ import annotations
@@ -59,6 +65,10 @@ DEFAULT_SUITE = "jammy-updates"
 COMPONENT = "main"
 ARCH = "amd64"
 KEYRING = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
+# The signer of the archive's InRelease files in the snapshot (Ubuntu Archive Automatic Signing
+# Key (2018)); a signature by any other key, even one in the keyring, is refused.
+EXPECTED_SIGNER = "F6ECB3762474EDA9D21B7022871920D1991BC93C"
+BAD_STATUS = re.compile(r"^\[GNUPG:\] (BADSIG|ERRSIG|NO_PUBKEY|EXPSIG|EXPKEYSIG|REVKEYSIG)\b")
 # The guest's LibreOffice and the Arabic packs current beside it (P0.2). libreoffice-l10n-ar is
 # the official Arabic language pack of the guest's exact build; the two Ubuntu language packs
 # carry GTK's and the base system's Arabic message catalogs (GTK's own dialog strings).
@@ -141,6 +151,24 @@ def find_stanza(stanzas: Iterable[Mapping[str, str]], name: str, version: str) -
     return hits[0]
 
 
+def parse_gpgv_status(stdout: str, returncode: int, signed_written: bool,
+                      expected: str = EXPECTED_SIGNER) -> dict[str, Any]:  # fmt: skip
+    """The verdict on ``gpgv --status-fd 1`` output: good, valid, by ``expected`` (the VALIDSIG
+    fingerprint and, when listed, its primary key's), no bad status line, and the signed text
+    written."""
+    status = [ln for ln in stdout.splitlines() if ln.startswith("[GNUPG:]")]
+    valid = [ln.split() for ln in status if ln.startswith("[GNUPG:] VALIDSIG ")]
+    fingerprints = [f[2] for f in valid]
+    primaries = [f[11] if len(f) > 11 else f[2] for f in valid]
+    good = any(ln.startswith("[GNUPG:] GOODSIG ") for ln in status)
+    bad = [ln for ln in status if BAD_STATUS.match(ln)]
+    signer_ok = bool(valid) and set(fingerprints) == {expected} and set(primaries) == {expected}
+    ok = returncode == 0 and good and signer_ok and not bad and signed_written
+    return {"ok": ok, "returncode": returncode, "status": status, "good": good,
+            "validsig_fingerprints": fingerprints, "primary_fingerprints": primaries,
+            "expected_signer": expected, "signer_ok": signer_ok, "bad_status": bad}  # fmt: skip
+
+
 def gpgv_verify(inrelease: Path, keyring: str, signed_out: Path) -> dict[str, Any]:
     """gpgv over the clearsigned InRelease; the signed text goes to ``signed_out``."""
     if signed_out.exists():
@@ -150,18 +178,30 @@ def gpgv_verify(inrelease: Path, keyring: str, signed_out: Path) -> dict[str, An
          str(inrelease)],
         capture_output=True, text=True, timeout=60, check=False,
     )  # fmt: skip
-    status = [ln for ln in proc.stdout.splitlines() if ln.startswith("[GNUPG:]")]
-    validsig = [ln.split()[2] for ln in status if ln.startswith("[GNUPG:] VALIDSIG ")]
-    good = any(ln.startswith("[GNUPG:] GOODSIG ") for ln in status)
-    bad = [ln for ln in status if re.match(r"\[GNUPG:\] (BADSIG|ERRSIG|EXPKEYSIG|REVKEYSIG)", ln)]
-    ok = proc.returncode == 0 and good and bool(validsig) and not bad and signed_out.is_file()
-    return {
-        "ok": ok,
-        "returncode": proc.returncode,
-        "status": status,
-        "validsig_fingerprints": validsig,
-        "stderr": proc.stderr.strip().splitlines()[-6:],
-    }
+    out = parse_gpgv_status(proc.stdout, proc.returncode, signed_out.is_file())
+    out["stderr"] = proc.stderr.strip().splitlines()[-6:]
+    return out
+
+
+def release_fields(text: str) -> dict[str, str]:
+    """The top-level ``Field: value`` lines of a signed Release text (hash sections skipped)."""
+    out = {}
+    for line in text.splitlines():
+        if line and not line.startswith(" ") and ":" in line:
+            key, _, value = line.partition(":")
+            out.setdefault(key.strip(), value.strip())
+    return out
+
+
+def check_release(signed_text: str, suite: str) -> dict[str, Any]:
+    """The signed index is for the requested suite: ``Suite`` is ``suite`` and ``Codename`` its
+    release (``jammy`` for ``jammy-updates``)."""
+    fields = release_fields(signed_text)
+    want = {"Suite": suite, "Codename": suite.split("-", 1)[0]}
+    got = {k: fields.get(k) for k in want}
+    if got != want:
+        raise FetchError(f"the signed InRelease is for {got}, not {want}")
+    return got
 
 
 def launchpad_check(name: str, version: str, filename: str) -> dict[str, Any]:
@@ -246,6 +286,7 @@ def fetch(
     if not sig["ok"]:
         raise FetchError(f"InRelease signature did not verify: {sig['status'][-3:]}")
     signed_text = signed.read_text(encoding="utf-8")
+    record["release"] = check_release(signed_text, suite)
     record["files"].append({"kind": "InRelease signed text (gpgv --output)",
                             "filename": signed.name, "size": signed.stat().st_size,
                             "sha256": sha256_bytes(signed.read_bytes()),
@@ -306,14 +347,62 @@ def fetch(
     return record
 
 
+def verify_dir(directory: Path, suite: str = DEFAULT_SUITE, keyring: str = KEYRING,
+               packages: Sequence[tuple[str, str]] = PACKAGES,
+               verify=gpgv_verify) -> dict[str, Any]:  # fmt: skip
+    """The chain of trust re-checked offline on a fetched directory (no download): the stored
+    InRelease through ``gpgv`` and the pinned signer, the signed suite, ``Packages.xz`` against
+    the signed hash, each stored ``.deb`` against its signed stanza."""
+    meta = directory / "meta" / suite
+    with tempfile.TemporaryDirectory() as tmp:
+        signed = Path(tmp) / "signed.txt"
+        sig = verify(meta / "InRelease", keyring, signed)
+        if not sig["ok"]:
+            raise FetchError(f"InRelease signature did not verify: {sig['status'][-3:]}")
+        signed_text = signed.read_text(encoding="utf-8")
+    out: dict[str, Any] = {"schema": SCHEMA + "-verify", "signature": sig,
+                           "release": check_release(signed_text, suite),
+                           "signed_text_sha256": sha256_bytes(signed_text.encode())}  # fmt: skip
+    stored = (meta / "InRelease.signed.txt")
+    out["stored_signed_text_matches"] = (stored.is_file()
+                                         and stored.read_text(encoding="utf-8") == signed_text)
+    index_rel = f"{COMPONENT}/binary-{ARCH}/Packages.xz"
+    want_sha, want_size = parse_release_hashes(signed_text)[index_rel]
+    data = (meta / "Packages.xz").read_bytes()
+    if (sha256_bytes(data), len(data)) != (want_sha, want_size):
+        raise FetchError(f"{index_rel} differs from the signed hash")
+    stanzas = parse_stanzas(lzma.decompress(data).decode("utf-8", errors="replace"))
+    out["packages"] = []
+    for name, version in packages:
+        stanza = find_stanza(stanzas, name, version)
+        deb = (directory / "debs" / Path(stanza["Filename"]).name).read_bytes()
+        if sha256_bytes(deb) != stanza["SHA256"] or len(deb) != int(stanza["Size"]):
+            raise FetchError(f"{stanza['Filename']}: differs from the signed index")
+        out["packages"].append({"package": name, "version": version,
+                                "sha256": stanza["SHA256"], "size": int(stanza["Size"])})
+    out["ok"] = True
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--verify", type=Path, default=None,
+                        help="re-check a fetched directory offline (no download)")
+    parser.add_argument("--out", type=Path, default=None)
     parser.add_argument("--snapshot", default=DEFAULT_SNAPSHOT)
     parser.add_argument("--suite", default=DEFAULT_SUITE)
     parser.add_argument("--keyring", default=KEYRING)
     parser.add_argument("--launchpad", action="store_true")
     args = parser.parse_args(argv)
+    if args.verify is not None:
+        try:
+            result = verify_dir(args.verify, args.suite, args.keyring)
+        except FetchError as exc:
+            result = {"schema": SCHEMA + "-verify", "ok": False, "error": str(exc)}
+        print(json.dumps(result, indent=1, sort_keys=True))
+        return 0 if result.get("ok") else 2
+    if args.out is None:
+        parser.error("--out is required (or --verify DIR)")
     args.out.mkdir(parents=True, exist_ok=True)
     try:
         record = fetch(args.out, args.snapshot, args.suite, keyring=args.keyring,

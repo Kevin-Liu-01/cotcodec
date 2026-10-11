@@ -75,6 +75,9 @@ def build(file_cache: Path, osworld: Path, tasks: Sequence[str], out: Path,
         items = downloads(load_task(osworld, task_id))
         first = next((rel for rel, _ in items if Path(rel).suffix.lower() in SUPPORTED), None)
         for rel, _ in items:
+            if rel in files:
+                # another dev task downloads the same file: a later copy could undo a plant
+                raise ValueError(f"{task_id}: {rel} is shared with another dev task")
             src, dst = file_cache / rel, out / rel
             if not src.is_file() or src.is_symlink():
                 raise FileNotFoundError(f"{task_id}: {rel} is not in the pinned file cache")

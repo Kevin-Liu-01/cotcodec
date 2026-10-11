@@ -130,8 +130,11 @@ def _census(src: Path, monkeypatch, m: dict) -> list:
 def _registered(src: Path, row: dict, m: dict) -> dict:
     m = dict(m, purpose="phase0", episode_timeout_s=L.EPISODE_TIMEOUT_S,
              freeze={"commit": "b" * 40, "ledger_row_hash": row["hash"],
-                     "git_head_at_freeze": row["git_head_at_freeze"]})
+                     "git_head_at_freeze": row["git_head_at_freeze"]},
+             osworld=dict(m["osworld"], host_dir=L.OSWORLD_HOST),
+             file_cache={"host_dir": L.FILE_CACHE_HOST})
     m["vm"] = dict(m["vm"], concurrency=L.V_REGISTERED)
+    m["images"] = dict(m["images"], S=dict(m["images"]["S"], host_path=L.S_HOST_PATH))
     return m
 
 
@@ -581,3 +584,50 @@ def test_gold_wrapper_config_and_record():
                              "postconfig_replies": [{"status": 200, "returncode": 1}]},
                        SEL["E"], None)
     assert rc["status"] == "probed" and rc["k2"]["postconfig_replies"]
+
+
+def test_committed_census_is_the_registered_render():
+    import hashlib
+
+    from harness.s2_locale.golds import POOL, pool_tasks
+
+    path = ROOT / L.CENSUS
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == L.CENSUS_SHA256
+    census = json.loads(path.read_text())
+    golds_path = ROOT / L.GOLDS
+    golds = [json.loads(x) for x in golds_path.read_text().splitlines() if x.strip()]
+    tasks = pool_tasks(json.loads((ROOT / POOL).read_text()))
+    assert len(tasks) == 106 and len(golds) == 88
+    assert census["golds_sha256"] == hashlib.sha256(golds_path.read_bytes()).hexdigest()
+    assert census["slots"] == L.census_slots(tasks, golds)
+    kinds = [s.get("kind", "capture") for s in census["slots"]]
+    assert kinds.count("capture") == 882 and kinds.count("gold") == 440
+    receipts = L.file_cache_receipts(ROOT)
+    for s in census["slots"]:
+        if s.get("kind") == "gold":
+            L.check_gold(s["slot"], s["gold"], receipts)
+
+
+def test_committed_pd_variant_is_pinned():
+    from harness.s2_locale import pd_cache
+
+    data = json.loads((ROOT / L.PD_CACHE_MANIFEST).read_text())
+    assert data["files_sha256"] == pd_cache.files_digest(data["files"]) == L.PD_CACHE_FILES_SHA256
+    planted = {p["task_id"][:8] for p in data["plants"] if p.get("planted")}
+    from harness.s2_locale import k0_v4
+
+    assert set(k0_v4.PD_VISIBLE_DEV) <= planted  # every named PD control has a plant
+
+
+def test_registered_base_matches_the_pins_and_the_budget():
+    m = L.registered_base(ROOT)
+    pins = L.load_pins(ROOT)
+    assert set(m["images"]) == {*L.CAPTURE_CELLS, "PD"}
+    for cell, entry in m["images"].items():
+        assert entry["sha256"] == pins[cell]["sha256"]
+    assert m["images"]["PD"] == m["images"]["ER"]
+    census = json.loads((ROOT / L.CENSUS).read_text())
+    full = L.render_census(m, census["slots"])
+    got = L.check_slurm(full)
+    assert got["cpus"] == 81 and got["memory_gb"] == 126
+    assert got["minutes"] == got["hash_minutes"] + got["slot_minutes"] + 10

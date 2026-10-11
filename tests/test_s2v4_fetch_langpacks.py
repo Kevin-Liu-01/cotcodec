@@ -27,14 +27,16 @@ def _archive(tamper: str | None = None):
     index = "".join(_stanza(n, v, DEB, f) for n, v, f in pkgs)
     index += _stanza("libreoffice-core", "1:7.3.7-0ubuntu0.22.04.4", b"core", "pool/x/core.deb")
     xz = lzma.compress(index.encode())
+    suite = "jammy-security" if tamper == "suite" else "jammy-updates"
     signed = (
-        "Origin: Ubuntu\nDate: Wed, 10 Jan 2024 00:00:00 UTC\nSHA256:\n"
+        f"Origin: Ubuntu\nSuite: {suite}\nCodename: jammy\n"
+        "Date: Wed, 10 Jan 2024 00:00:00 UTC\nSHA256:\n"
         f" {hashlib.sha256(xz).hexdigest()} {len(xz)} main/binary-amd64/Packages.xz\n"
         f" {'0' * 64} 12 main/binary-amd64/Packages\n"
     )
     files = {
         "dists/jammy-updates/InRelease": b"-----BEGIN PGP SIGNED MESSAGE-----\n" + signed.encode(),
-        "dists/jammy-updates/main/binary-amd64/Packages.xz": xz,
+        "dists/jammy-updates/main/binary-amd64/Packages.xz": xz + (b"x" if tamper == "xz" else b""),
         pkgs[0][2]: DEB if tamper != "deb" else DEB + b"x",
     }
 
@@ -91,3 +93,58 @@ def test_registered_packages_are_the_guest_build():
     assert names["libreoffice-l10n-ar"] == F.GUEST_LIBREOFFICE[1]
     assert set(names) == {"libreoffice-l10n-ar", "language-pack-ar-base",
                           "language-pack-gnome-ar-base"}  # fmt: skip
+
+
+def test_fetch_refuses_another_suite_and_a_tampered_index(tmp_path):
+    get, verify, pkgs = _archive("suite")
+    with pytest.raises(F.FetchError, match="Suite"):
+        F.fetch(tmp_path / "a", packages=[p[:2] for p in pkgs], get=get, verify=verify)
+    get, verify, pkgs = _archive("xz")
+    with pytest.raises(F.FetchError, match="Packages.xz"):
+        F.fetch(tmp_path / "b", packages=[p[:2] for p in pkgs], get=get, verify=verify)
+
+
+# The status gpgv printed for the real fetch (provenance.json), and variants of it.
+GOOD = """[GNUPG:] NEWSIG
+[GNUPG:] KEY_CONSIDERED F6ECB3762474EDA9D21B7022871920D1991BC93C 0
+[GNUPG:] GOODSIG 871920D1991BC93C Ubuntu Archive Automatic Signing Key (2018) <ftpmaster@ubuntu.com>
+[GNUPG:] VALIDSIG F6ECB3762474EDA9D21B7022871920D1991BC93C 2024-01-09 1704843944 0 4 0 1 10 01 \
+F6ECB3762474EDA9D21B7022871920D1991BC93C
+""".replace("\\\n", "")
+
+
+def test_gpgv_status_parsing():
+    ok = F.parse_gpgv_status(GOOD, 0, True)
+    assert ok["ok"] and ok["signer_ok"] and ok["validsig_fingerprints"] == [F.EXPECTED_SIGNER]
+    assert not F.parse_gpgv_status(GOOD, 1, True)["ok"]  # gpgv's own exit status
+    assert not F.parse_gpgv_status(GOOD, 0, False)["ok"]  # no signed text written
+    for line in ("[GNUPG:] BADSIG 871920D1991BC93C Ubuntu", "[GNUPG:] ERRSIG 871920D1991BC93C 1 10",
+                 "[GNUPG:] NO_PUBKEY 871920D1991BC93C", "[GNUPG:] EXPKEYSIG 871920D1991BC93C x",
+                 "[GNUPG:] REVKEYSIG 871920D1991BC93C x"):
+        bad = F.parse_gpgv_status(GOOD + line + "\n", 0, True)
+        assert not bad["ok"] and bad["bad_status"] == [line]
+    other = GOOD.replace("F6ECB3762474EDA9D21B7022871920D1991BC93C", "A" * 40)
+    assert not F.parse_gpgv_status(other, 0, True)["signer_ok"]  # another key in the keyring
+    subkey = GOOD.replace("10 01 F6ECB3762474EDA9D21B7022871920D1991BC93C", "10 01 " + "B" * 40)
+    assert not F.parse_gpgv_status(subkey, 0, True)["ok"]  # a primary key other than the pin
+    assert not F.parse_gpgv_status("[GNUPG:] NEWSIG\n", 0, True)["ok"]
+
+
+def test_release_suite_check():
+    text = "Origin: Ubuntu\nSuite: jammy-updates\nCodename: jammy\nSHA256:\n x 1 y\n"
+    assert F.check_release(text, "jammy-updates") == {"Suite": "jammy-updates",
+                                                      "Codename": "jammy"}
+    with pytest.raises(F.FetchError):
+        F.check_release(text.replace("Codename: jammy", "Codename: noble"), "jammy-updates")
+
+
+def test_verify_dir_rechecks_a_fetched_directory(tmp_path):
+    get, verify, pkgs = _archive()
+    F.fetch(tmp_path, packages=[p[:2] for p in pkgs], get=get, verify=verify)
+    out = F.verify_dir(tmp_path, packages=[p[:2] for p in pkgs], verify=verify)
+    assert out["ok"] and out["release"]["Suite"] == "jammy-updates"
+    assert out["stored_signed_text_matches"] and out["packages"][0]["size"] == len(DEB)
+    deb = tmp_path / "debs" / Path(pkgs[0][2]).name
+    deb.write_bytes(DEB + b"y")
+    with pytest.raises(F.FetchError, match="signed index"):
+        F.verify_dir(tmp_path, packages=[p[:2] for p in pkgs], verify=verify)

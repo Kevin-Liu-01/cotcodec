@@ -3,17 +3,24 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from pathlib import Path
 
+from harness.s2_locale import ap_delta as D
 from harness.s2_locale import k0_v4 as K
+from harness.s2_locale import pins_table
+from harness.s2_locale import vm_lane as L
 
 ROOT = Path(__file__).resolve().parents[1]
 REG = ROOT / "program/preregistrations/s2-arabic-cua-locale-v4.md"
+EXPERIMENT_ID = "s2-arabic-cua-locale-v4"
 # The SHA-256 of the K0 section's text as committed before any Phase 0 result existed. A change
 # here before the freeze must be a visible, recorded decision; after any Phase 0 result has been
 # read it voids the commitment (registration, section "K0").
 K0_SECTION_SHA256 = "ed38b953c7934169fcede7b45ec5dc1b568afd5855c6008830aada68cf131a03"
+FROZEN = ("**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the "
+          "freeze time and `git_head_at_freeze`.**")  # fmt: skip
 
 
 def _k0_text() -> str:
@@ -43,6 +50,73 @@ def test_k0_code_constants_match_the_text():
 def test_freezable_and_names_itself():
     text = REG.read_text(encoding="utf-8")
     assert not re.search(r"\bTBD\b|<[A-Za-z_ -]+>", text), "freeze refuses placeholders"
+    assert "@@" not in text, "an unfilled marker"
     assert ("preregister.py freeze s2-arabic-cua-locale-v4 "
             "program/preregistrations/s2-arabic-cua-locale-v4.md") in text
-    assert text.startswith("# S2 v4:") and "Status: DRAFT" in text
+    assert text.startswith("# S2 v4:")
+
+
+def _status_line(text: str) -> str:
+    return next(line for line in text.splitlines() if line.startswith("**Status: "))
+
+
+def _row() -> dict | None:
+    return L.ledger_row(ROOT)
+
+
+def test_status_wording_follows_the_ledger():
+    """The D32 defect class: before the freeze the status line is DRAFT, or (the status-fill
+    commit) the frozen wording; once this id has a ledger row, only the frozen wording, and the
+    file is the one the row froze."""
+    text = REG.read_text(encoding="utf-8")
+    status = _status_line(text)
+    row = _row()
+    if row is not None:
+        assert status.startswith("**Status: frozen in") and "DRAFT" not in status
+        assert row["path"] == L.REGISTRATION
+        assert row["sha256"] == hashlib.sha256(REG.read_bytes()).hexdigest()
+    else:
+        assert status.startswith(("**Status: DRAFT", "**Status: frozen in"))
+    # the freeze procedure states the frozen wording verbatim
+    assert " ".join(FROZEN.split()) in " ".join(text.split())
+
+
+def test_registration_freezes_against_a_scratch_ledger(tmp_path):
+    """The freeze command accepts this file; the real ledger is not touched."""
+    from scripts import preregister
+
+    ledger = tmp_path / "ledger.jsonl"
+    real = (ROOT / L.LEDGER).read_bytes()
+    row = preregister.freeze(REG, EXPERIMENT_ID, ledger=ledger)
+    assert row["path"] == L.REGISTRATION
+    assert row["sha256"] == hashlib.sha256(REG.read_bytes()).hexdigest()
+    assert (ROOT / L.LEDGER).read_bytes() == real
+
+
+def test_code_and_inputs_of_record_table_is_the_tree():
+    text = REG.read_text(encoding="utf-8")
+    assert pins_table.read(text) == pins_table.digests(ROOT)
+
+
+def test_registration_states_the_pinned_digests():
+    flat = " ".join(REG.read_text(encoding="utf-8").split())
+    assert L.CENSUS_SHA256 in flat and L.PD_CACHE_FILES_SHA256 in flat
+    assert D.K1_PLAN_SHA256 in flat
+    golds = hashlib.sha256((ROOT / L.GOLDS).read_bytes()).hexdigest()
+    assert golds in flat
+    pins = json.loads((ROOT / L.IMAGES).read_text())
+    assert pins["build"]["derived_base"]["sha256"] in flat
+    for cell, entry in pins["cells"].items():
+        assert f"| {cell} | `{entry['sha256']}` |" in flat, cell
+    assert pins["build"]["dir"].rsplit("/", 2)[-2] in flat or pins["build"]["dir"] in flat
+
+
+def test_registration_states_the_one_infrastructure_rule_everywhere():
+    text = REG.read_text(encoding="utf-8")
+    p07 = text.split("### P0.7", 1)[1].split("### P0.8", 1)[0]
+    phase1 = text.split("## Phase 1 (", 1)[1].split("## Estimands", 1)[0]
+    infra = text.split("## Infrastructure failures and exclusions", 1)[1].split("## Data rights")[0]
+    for section in (p07, phase1, infra):
+        flat = " ".join(section.split())
+        assert "status of 500 or above" in flat and "infrastructure loss" in flat
+        assert "returncode" in flat

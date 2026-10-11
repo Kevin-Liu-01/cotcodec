@@ -66,10 +66,11 @@ REGISTERED_PURPOSES = ("phase0",)
 # of 20 with the cells interleaved at random (PCG64 seed 42). Rendered before the freeze and
 # pinned here; a registered job runs exactly these slots.
 CENSUS = "experiments/manifests/s2v4/phase0-census.json"
-CENSUS_SHA256 = "0" * 64  # set when the census is rendered (before the freeze)
+CENSUS_SHA256 = "02bfc97bf8c14f48f2bfd57c26a34b5fac0b57d9aa18981b474a286d38589cf0"
 GOLDS = "experiments/manifests/s2v4/golds-v4.jsonl"
 PD_CACHE_MANIFEST = "program/evidence/2026-10-11/s2v4-image/pd-cache/pd-cache-manifest.json"
-PD_CACHE_FILES_SHA256 = "0" * 64  # set when the variant is built (before the freeze)
+# The variant built on the host (pd-cache-v1; its manifest is the evidence file above).
+PD_CACHE_FILES_SHA256 = "d51d66fa3d3a890c6a18ad231b926e3932881209ca91e467e8532319c549b46e"
 CAPTURE_CELLS = ("S", "E", "A", "ER", "AR", "PL", "AD")
 GOLD_CELLS = ("E", "A", "ER", "AR", "PL")
 REPLICATES = {"E": 2}  # E2 for every task; ER2 and PD for the dev tasks (DEV_EXTRA)
@@ -88,6 +89,13 @@ VM_PINS = dict(s1a.VM_PINS)  # action-path v2 section 2.1
 OSWORLD_COMMIT = s1a.OSWORLD_COMMIT
 RUN_ROOT = s1a.RUN_ROOT
 MAX_CONCURRENCY = 32  # D53: certified at no more than 32 concurrent VMs
+# The registered job's host inputs (the action-path disk, the pinned OSWorld tree and file
+# cache, the PD variant) and run root; the census job must name exactly these.
+S_HOST_PATH = f"{RUN_ROOT}stage0/q2-action-path/vm/Ubuntu.qcow2"
+OSWORLD_HOST = f"{RUN_ROOT}stage0/q2-evaluator-mutation/inputs/OSWorld"
+FILE_CACHE_HOST = f"{RUN_ROOT}stage0/q2-evaluator-mutation/inputs/file_cache_1e112283/files"
+PD_CACHE_HOST = f"{RUN_ROOT}stage0/s2v4/pd-cache-v1/files"
+PHASE0_RUN_ROOT = f"{RUN_ROOT}stage0/s2v4/phase0-runs"
 STOCK = {"cell": "S", "sha256": s1a.QCOW2_SHA256, "size_bytes": s1a.QCOW2_BYTES}
 SLOT_FIELDS = ("slot", "task_id", "cell", "rep", "block")
 KINDS = ("capture", "gold")  # vm_probe.py, vm_gold.py
@@ -365,6 +373,12 @@ def check_registered(m: Mapping[str, Any], source_dir: Path) -> None:
              f"phase0's episode timeout is {EPISODE_TIMEOUT_S} s")  # fmt: skip
     _require(set(m["images"]) == {*CAPTURE_CELLS, *IMAGE_OF},
              "phase0 mounts every cell image, S and PD included")  # fmt: skip
+    _require(m["images"]["S"]["host_path"] == S_HOST_PATH
+             and m["osworld"]["host_dir"] == OSWORLD_HOST
+             and m["file_cache"]["host_dir"] == FILE_CACHE_HOST
+             and ("PD" not in m["images"]
+                  or (m.get("file_cache_pd") or {}).get("host_dir") == PD_CACHE_HOST),
+             "phase0 reads the registered host inputs")  # fmt: skip
 
 
 def image_bytes(m: Mapping[str, Any]) -> int:
@@ -709,6 +723,40 @@ def census_slots(tasks: Sequence[Mapping[str, Any]], golds: Sequence[Mapping[str
     return out
 
 
+def registered_base(source_dir: Path, purpose: str = "phase0", name: str = "s2v4-phase0",
+                    run_root: str = PHASE0_RUN_ROOT,
+                    n_slots: int = 1322) -> dict[str, Any]:  # fmt: skip
+    """The census job's manifest without its slots: every pinned image (``images.json``), S, PD
+    on the ER image, the registered host inputs, V = 20 and the Slurm request ``check_slurm``
+    requires (the image check and the slots)."""
+    data = json.loads((source_dir / IMAGES).read_text(encoding="utf-8"))
+    images = {"S": {"host_path": S_HOST_PATH, "sha256": STOCK["sha256"],
+                    "size_bytes": STOCK["size_bytes"]}}  # fmt: skip
+    for cell, entry in sorted((data.get("cells") or {}).items()):
+        images[cell] = {"host_path": entry["file"], "sha256": entry["sha256"],
+                        "size_bytes": entry["size_bytes"]}  # fmt: skip
+    for cell, image in IMAGE_OF.items():
+        images[cell] = dict(images[image])
+    m: dict[str, Any] = {
+        "schema": SCHEMA, "experiment_id": EXPERIMENT_ID, "purpose": purpose, "name": name,
+        "mode": MODE, "engine": {"kind": "none"},
+        "vm": {**VM_PINS, "guest_ip": "20.20.20.21", "hmp_port": 7100,
+               "concurrency": V_REGISTERED},
+        "images": images, "episode_image_id": EPISODE_IMAGE_ID,
+        "episode_python": "/opt/venv-lock/bin/python",
+        "osworld": {"commit": OSWORLD_COMMIT, "host_dir": OSWORLD_HOST},
+        "file_cache": {"host_dir": FILE_CACHE_HOST},
+        "file_cache_pd": {"host_dir": PD_CACHE_HOST, "files_sha256": PD_CACHE_FILES_SHA256},
+        "run_root": run_root, "episode_timeout_s": EPISODE_TIMEOUT_S,
+        "settle_after_reset_s": 60, "settle_before_eval_s": 20, "evaluate": True,
+    }  # fmt: skip
+    hash_min = math.ceil(image_bytes(m) / 1e9 / HASH_GB_PER_MIN)
+    slot_min = math.ceil(SLOT_MARGIN * n_slots * SLOT_MINUTES / V_REGISTERED)
+    m["slurm"] = {"cpus": V_REGISTERED * VM_PINS["cpu_cores"] + 1,
+                  "memory_gb": 6 * V_REGISTERED + 6, "minutes": hash_min + slot_min + 10}
+    return m
+
+
 def render_census(base: Mapping[str, Any], slots: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     m = json.loads(json.dumps(base))
     m["slots"] = json.loads(json.dumps(list(slots)))
@@ -740,7 +788,11 @@ def main(argv: list[str] | None = None) -> int:
     rend.add_argument("--gold-cells", default="E,A,ER,AR,PL")
     rend.add_argument("--out", type=Path, required=True)
     cen = sub.add_parser("render-census", help="the census slots (or the dev part) as a manifest")
-    cen.add_argument("--base", type=Path, required=True)
+    cen.add_argument("--base", type=Path, default=None,
+                     help="a base manifest (default: registered_base from images.json)")
+    cen.add_argument("--purpose", default="phase0", choices=PURPOSES)
+    cen.add_argument("--name", default="s2v4-phase0")
+    cen.add_argument("--run-root", default=PHASE0_RUN_ROOT)
     cen.add_argument("--pool", type=Path, required=True)
     cen.add_argument("--golds", type=Path, required=True)
     cen.add_argument("--dev-only", action="store_true", help="development: the dev tasks only")
@@ -767,7 +819,8 @@ def main(argv: list[str] | None = None) -> int:
                       "golds_sha256": hashlib.sha256(args.golds.read_bytes()).hexdigest(),
                       "tasks": len(tasks), "slots": slots}  # fmt: skip
             args.census_out.write_text(json.dumps(census, indent=0, sort_keys=True) + "\n")
-        base = json.loads(args.base.read_text())
+        base = (json.loads(args.base.read_text()) if args.base else registered_base(
+            args.source_dir, args.purpose, args.name, args.run_root, len(slots)))
         if args.freeze_commit:
             row = frozen_registration(args.source_dir)
             check_freeze_commit(args.repo, args.freeze_commit, row)
