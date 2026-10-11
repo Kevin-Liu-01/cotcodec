@@ -1,0 +1,13 @@
+{
+ "url": "https://aclanthology.org/2025.naacl-long.267/",
+ "fetched_at": "2026-10-11T00:54:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 45121,
+ "raw_sha256": "03de854210f27ceb465273ef0949ec686f46765cbfb6b88f76236f951d39d0dc",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "Multilingual Needle in a Haystack: Investigating Long-Context Behavior of Multilingual Large Language Models - ACL Anthology"
+ },
+ "snapshot_run": "D68 repair"
+}

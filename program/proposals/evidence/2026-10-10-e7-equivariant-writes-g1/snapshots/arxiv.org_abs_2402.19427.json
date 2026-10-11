@@ -1,0 +1,41 @@
+{
+ "url": "https://arxiv.org/abs/2402.19427",
+ "fetched_at": "2026-10-11T00:54:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43591,
+ "raw_sha256": "0a04aeb4f86c5c40d4aadc3c3499048184adfce694a8de27dd1edca9c0d1c401",
+ "raw_stored": false,
+ "extract": {
+  "title": "Griffin: Mixing Gated Linear Recurrences with Local Attention for Efficient Language Models",
+  "authors": [
+   "De, Soham",
+   "Smith, Samuel L.",
+   "Fernando, Anushan",
+   "Botev, Aleksandar",
+   "Cristian-Muraru, George",
+   "Gu, Albert",
+   "Haroun, Ruba",
+   "Berrada, Leonard",
+   "Chen, Yutian",
+   "Srinivasan, Srivatsan",
+   "Desjardins, Guillaume",
+   "Doucet, Arnaud",
+   "Budden, David",
+   "Teh, Yee Whye",
+   "Pascanu, Razvan",
+   "De Freitas, Nando",
+   "Gulcehre, Caglar"
+  ],
+  "citation_date": "2024/02/29",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 29 Feb 2024 18:24:46 UTC"
+   }
+  ],
+  "abstract": "Recurrent neural networks (RNNs) have fast inference and scale efficiently on long sequences, but they are difficult to train and hard to scale. We propose Hawk, an RNN with gated linear recurrences, and Griffin, a hybrid model that mixes gated linear recurrences with local attention. Hawk exceeds the reported performance of Mamba on downstream tasks, while Griffin matches the performance of Llama-2 despite being trained on over 6 times fewer tokens. We also show that Griffin can extrapolate on sequences significantly longer than those seen during training. Our models match the hardware efficiency of Transformers during training, and during inference they have lower latency and significantly higher throughput. We scale Griffin up to 14B parameters, and explain how to shard our models for efficient distributed training.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ },
+ "snapshot_run": "D68 repair"
+}

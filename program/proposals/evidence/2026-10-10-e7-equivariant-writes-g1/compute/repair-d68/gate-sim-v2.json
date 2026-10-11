@@ -1,0 +1,3430 @@
+{
+ "script": "gate-sim-v2.py",
+ "replicates_per_scenario": 1000,
+ "seeds": [
+  42,
+  43,
+  44
+ ],
+ "estimator": "registered: equal-weight mean of cell means; 90% percentile bootstrap over key sentences (multinomial resampling of sentence ids, every prompt of a drawn sentence moves with it in every cell), B = 2,000, bootstrap seed 42 (fixed resampling matrix)",
+ "lines": {
+  "I1": 0.8,
+  "MONO": 0.6,
+  "CROSS": 0.15,
+  "BIND": 0.0,
+  "SEM": 0.03,
+  "DEC": 0.0
+ },
+ "futility_mono_ub": 0.3,
+ "design_from_P1": {
+  "key_sentences_test_half": 699,
+  "mono_cells": [
+   500,
+   500,
+   500,
+   500
+  ],
+  "b1_cells": [
+   250,
+   250,
+   250,
+   250
+  ],
+  "cross_script_cells": {
+   "eng->zho": 474,
+   "zho->eng": 366,
+   "eng->tha": 314,
+   "tha->eng": 235
+  },
+  "cross_script_cells_v1_comparison": {
+   "eng->zho": 500,
+   "zho->eng": 500,
+   "eng->tha": 353,
+   "tha->eng": 353
+  },
+  "surface_oracle_clogit_real_v2": {
+   "eng->zho": 0.1814,
+   "zho->eng": 0.1503,
+   "eng->tha": 0.2771,
+   "tha->eng": 0.1532
+  },
+  "surface_oracle_clogit_decoy_v2": {
+   "eng->zho": 0.173,
+   "zho->eng": 0.1475,
+   "eng->tha": 0.2898,
+   "tha->eng": 0.183
+  },
+  "surface_oracle_clogit_real_v1": {
+   "eng->zho": 0.606,
+   "zho->eng": 0.588,
+   "eng->tha": 0.728,
+   "tha->eng": 0.7252
+  }
+ },
+ "scenarios": {
+  "binding_free_copy=0.5": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.0,
+    "cross_spec": [
+     "copy",
+     0.5
+    ],
+    "v1_compare": true
+   }
+  },
+  "binding_free_copy=0.8": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.0,
+    "cross_spec": [
+     "copy",
+     0.8
+    ],
+    "v1_compare": true
+   }
+  },
+  "binding_free_copy=1.0": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.937,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.063,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.937
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.937,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.063,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.985,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.015,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.0,
+    "cross_spec": [
+     "copy",
+     1.0
+    ],
+    "v1_compare": true
+   }
+  },
+  "cross_oc|sd=0.03|0.05": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.05
+    ],
+    "sd": 0.03
+   }
+  },
+  "cross_oc|sd=0.03|0.1": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.905,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.048,
+    "INCONCLUSIVE": 0.047,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.953
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.905,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.048,
+    "INCONCLUSIVE": 0.047,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.1
+    ],
+    "sd": 0.03
+   }
+  },
+  "cross_oc|sd=0.03|0.125": {
+   "v2": {
+    "PASS": 0.009,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.557,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.199,
+    "INCONCLUSIVE": 0.235,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.765
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.009,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.557,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.199,
+    "INCONCLUSIVE": 0.235,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.125
+    ],
+    "sd": 0.03
+   }
+  },
+  "cross_oc|sd=0.03|0.14": {
+   "v2": {
+    "PASS": 0.055,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.283,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.311,
+    "INCONCLUSIVE": 0.351,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.649
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.055,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.283,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.311,
+    "INCONCLUSIVE": 0.351,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.14
+    ],
+    "sd": 0.03
+   }
+  },
+  "cross_oc|sd=0.03|0.15": {
+   "v2": {
+    "PASS": 0.15,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.132,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.351,
+    "INCONCLUSIVE": 0.367,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.633
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.15,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.132,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.351,
+    "INCONCLUSIVE": 0.367,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.15
+    ],
+    "sd": 0.03
+   }
+  },
+  "cross_oc|sd=0.03|0.16": {
+   "v2": {
+    "PASS": 0.272,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.052,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.316,
+    "INCONCLUSIVE": 0.36,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.64
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.272,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.052,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.316,
+    "INCONCLUSIVE": 0.36,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.16
+    ],
+    "sd": 0.03
+   }
+  },
+  "cross_oc|sd=0.03|0.18": {
+   "v2": {
+    "PASS": 0.657,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.005,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.146,
+    "INCONCLUSIVE": 0.192,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.808
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.657,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.005,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.146,
+    "INCONCLUSIVE": 0.192,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.18
+    ],
+    "sd": 0.03
+   }
+  },
+  "cross_oc|sd=0.03|0.2": {
+   "v2": {
+    "PASS": 0.906,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.047,
+    "INCONCLUSIVE": 0.047,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.953
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.906,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.047,
+    "INCONCLUSIVE": 0.047,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.2
+    ],
+    "sd": 0.03
+   }
+  },
+  "cross_oc|sd=0.03|0.25": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.25
+    ],
+    "sd": 0.03
+   }
+  },
+  "cross_oc|sd=0.06|0.05": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.92,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.074,
+    "INCONCLUSIVE": 0.006,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.994
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.92,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.074,
+    "INCONCLUSIVE": 0.006,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.05
+    ],
+    "sd": 0.06
+   }
+  },
+  "cross_oc|sd=0.06|0.1": {
+   "v2": {
+    "PASS": 0.01,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.594,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.323,
+    "INCONCLUSIVE": 0.073,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.927
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.01,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.594,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.323,
+    "INCONCLUSIVE": 0.073,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.1
+    ],
+    "sd": 0.06
+   }
+  },
+  "cross_oc|sd=0.06|0.125": {
+   "v2": {
+    "PASS": 0.052,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.354,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.489,
+    "INCONCLUSIVE": 0.105,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.895
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.052,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.354,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.489,
+    "INCONCLUSIVE": 0.105,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.125
+    ],
+    "sd": 0.06
+   }
+  },
+  "cross_oc|sd=0.06|0.14": {
+   "v2": {
+    "PASS": 0.105,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.221,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.555,
+    "INCONCLUSIVE": 0.119,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.881
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.105,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.221,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.555,
+    "INCONCLUSIVE": 0.119,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.14
+    ],
+    "sd": 0.06
+   }
+  },
+  "cross_oc|sd=0.06|0.15": {
+   "v2": {
+    "PASS": 0.161,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.148,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.567,
+    "INCONCLUSIVE": 0.124,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.876
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.161,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.148,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.567,
+    "INCONCLUSIVE": 0.124,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.15
+    ],
+    "sd": 0.06
+   }
+  },
+  "cross_oc|sd=0.06|0.16": {
+   "v2": {
+    "PASS": 0.236,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.093,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.536,
+    "INCONCLUSIVE": 0.135,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.865
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.236,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.093,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.536,
+    "INCONCLUSIVE": 0.135,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.16
+    ],
+    "sd": 0.06
+   }
+  },
+  "cross_oc|sd=0.06|0.18": {
+   "v2": {
+    "PASS": 0.416,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.037,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.444,
+    "INCONCLUSIVE": 0.103,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.897
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.416,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.037,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.444,
+    "INCONCLUSIVE": 0.103,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.18
+    ],
+    "sd": 0.06
+   }
+  },
+  "cross_oc|sd=0.06|0.2": {
+   "v2": {
+    "PASS": 0.617,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.009,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.296,
+    "INCONCLUSIVE": 0.078,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.922
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.617,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.009,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.296,
+    "INCONCLUSIVE": 0.078,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.2
+    ],
+    "sd": 0.06
+   }
+  },
+  "cross_oc|sd=0.06|0.25": {
+   "v2": {
+    "PASS": 0.92,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.066,
+    "INCONCLUSIVE": 0.014,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.986
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.92,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.066,
+    "INCONCLUSIVE": 0.014,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.25
+    ],
+    "sd": 0.06
+   }
+  },
+  "cross_oc|sd=0.0|0.05": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.05
+    ],
+    "sd": 0.0
+   }
+  },
+  "cross_oc|sd=0.0|0.1": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 1.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.1
+    ],
+    "sd": 0.0
+   }
+  },
+  "cross_oc|sd=0.0|0.125": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.866,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.134,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.866
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.866,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.134,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.125
+    ],
+    "sd": 0.0
+   }
+  },
+  "cross_oc|sd=0.0|0.14": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.188,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.004,
+    "INCONCLUSIVE": 0.808,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.192
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.188,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.004,
+    "INCONCLUSIVE": 0.808,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.14
+    ],
+    "sd": 0.0
+   }
+  },
+  "cross_oc|sd=0.0|0.15": {
+   "v2": {
+    "PASS": 0.011,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.014,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.003,
+    "INCONCLUSIVE": 0.972,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.028
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.011,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.014,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.003,
+    "INCONCLUSIVE": 0.972,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.15
+    ],
+    "sd": 0.0
+   }
+  },
+  "cross_oc|sd=0.0|0.16": {
+   "v2": {
+    "PASS": 0.156,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.001,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.003,
+    "INCONCLUSIVE": 0.84,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.16
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.156,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.001,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.003,
+    "INCONCLUSIVE": 0.84,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.16
+    ],
+    "sd": 0.0
+   }
+  },
+  "cross_oc|sd=0.0|0.18": {
+   "v2": {
+    "PASS": 0.909,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.091,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.909
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.909,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.091,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.18
+    ],
+    "sd": 0.0
+   }
+  },
+  "cross_oc|sd=0.0|0.2": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.2
+    ],
+    "sd": 0.0
+   }
+  },
+  "cross_oc|sd=0.0|0.25": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     0.25
+    ],
+    "sd": 0.0
+   }
+  },
+  "in_window_anomaly_mono_passes|I1=0.70": {
+   "v2": {
+    "PASS": 0.999,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.001,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.999,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.001,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.999
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.7,
+     0.8,
+     0.25
+    ],
+    "sd": 0.03,
+    "v1_compare": true
+   }
+  },
+  "instrument_invalid_world|I1=0.40_MONO=0.10": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.018,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.982,
+    "DECISIVE": 0.018
+   },
+   "futility_stop_share": 1.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.018,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.982
+   },
+   "v1": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 1.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.4,
+     0.1,
+     0.06
+    ],
+    "sd": 0.03,
+    "v1_compare": true
+   }
+  },
+  "lockin_both|pi=0.1": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.888,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.112,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.888,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.888,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.112,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "lockin",
+    "pi": 0.1,
+    "locked": [
+     0.95,
+     0.85,
+     0.25
+    ],
+    "unlocked": [
+     0.95,
+     0.15,
+     0.06
+    ]
+   }
+  },
+  "lockin_both|pi=0.3": {
+   "v2": {
+    "PASS": 0.023,
+    "FAIL_MONO": 0.716,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.261,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.716,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.023,
+    "FAIL_MONO": 0.716,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.261,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "lockin",
+    "pi": 0.3,
+    "locked": [
+     0.95,
+     0.85,
+     0.25
+    ],
+    "unlocked": [
+     0.95,
+     0.15,
+     0.06
+    ]
+   }
+  },
+  "lockin_both|pi=0.5": {
+   "v2": {
+    "PASS": 0.119,
+    "FAIL_MONO": 0.524,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.357,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.524,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.119,
+    "FAIL_MONO": 0.524,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.357,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "lockin",
+    "pi": 0.5,
+    "locked": [
+     0.95,
+     0.85,
+     0.25
+    ],
+    "unlocked": [
+     0.95,
+     0.15,
+     0.06
+    ]
+   }
+  },
+  "lockin_both|pi=0.7": {
+   "v2": {
+    "PASS": 0.353,
+    "FAIL_MONO": 0.312,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.335,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.312,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.353,
+    "FAIL_MONO": 0.312,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.335,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "lockin",
+    "pi": 0.7,
+    "locked": [
+     0.95,
+     0.85,
+     0.25
+    ],
+    "unlocked": [
+     0.95,
+     0.15,
+     0.06
+    ]
+   }
+  },
+  "lockin_both|pi=0.9": {
+   "v2": {
+    "PASS": 0.742,
+    "FAIL_MONO": 0.089,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.169,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.089,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.742,
+    "FAIL_MONO": 0.089,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.169,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "lockin",
+    "pi": 0.9,
+    "locked": [
+     0.95,
+     0.85,
+     0.25
+    ],
+    "unlocked": [
+     0.95,
+     0.15,
+     0.06
+    ]
+   }
+  },
+  "lockin_both|pi=1.0": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "lockin",
+    "pi": 1.0,
+    "locked": [
+     0.95,
+     0.85,
+     0.25
+    ],
+    "unlocked": [
+     0.95,
+     0.15,
+     0.06
+    ]
+   }
+  },
+  "mixed_semantic_lambda=0.05|sd=0.03": {
+   "v2": {
+    "PASS": 0.08,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.92,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.835,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.165,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "mixed",
+     0.05
+    ]
+   }
+  },
+  "mixed_semantic_lambda=0.1|sd=0.03": {
+   "v2": {
+    "PASS": 0.998,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.002,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "mixed",
+     0.1
+    ]
+   }
+  },
+  "mixed_semantic_lambda=0.2|sd=0.03": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "mixed",
+     0.2
+    ]
+   }
+  },
+  "mono_oc|sd=0.03|0.3": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 1.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.286,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 1.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.3,
+     0.3
+    ],
+    "sd": 0.03
+   }
+  },
+  "mono_oc|sd=0.03|0.45": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 1.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 1.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.45,
+     0.3
+    ],
+    "sd": 0.03
+   }
+  },
+  "mono_oc|sd=0.03|0.55": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.869,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.042,
+    "INCONCLUSIVE": 0.089,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.911
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.869,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.042,
+    "INCONCLUSIVE": 0.089,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.55,
+     0.3
+    ],
+    "sd": 0.03
+   }
+  },
+  "mono_oc|sd=0.03|0.58": {
+   "v2": {
+    "PASS": 0.014,
+    "FAIL_MONO": 0.412,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.219,
+    "INCONCLUSIVE": 0.355,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.645
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.014,
+    "FAIL_MONO": 0.412,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.219,
+    "INCONCLUSIVE": 0.355,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.58,
+     0.3
+    ],
+    "sd": 0.03
+   }
+  },
+  "mono_oc|sd=0.03|0.6": {
+   "v2": {
+    "PASS": 0.13,
+    "FAIL_MONO": 0.137,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.264,
+    "INCONCLUSIVE": 0.469,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.531
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.13,
+    "FAIL_MONO": 0.137,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.264,
+    "INCONCLUSIVE": 0.469,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.6,
+     0.3
+    ],
+    "sd": 0.03
+   }
+  },
+  "mono_oc|sd=0.03|0.62": {
+   "v2": {
+    "PASS": 0.415,
+    "FAIL_MONO": 0.024,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.195,
+    "INCONCLUSIVE": 0.366,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.634
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.415,
+    "FAIL_MONO": 0.024,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.195,
+    "INCONCLUSIVE": 0.366,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.62,
+     0.3
+    ],
+    "sd": 0.03
+   }
+  },
+  "mono_oc|sd=0.03|0.65": {
+   "v2": {
+    "PASS": 0.867,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.043,
+    "INCONCLUSIVE": 0.09,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.91
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.867,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.043,
+    "INCONCLUSIVE": 0.09,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.65,
+     0.3
+    ],
+    "sd": 0.03
+   }
+  },
+  "mono_oc|sd=0.03|0.7": {
+   "v2": {
+    "PASS": 0.999,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.999
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.999,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.7,
+     0.3
+    ],
+    "sd": 0.03
+   }
+  },
+  "mono_oc|sd=0.03|0.8": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.3
+    ],
+    "sd": 0.03
+   }
+  },
+  "mono_oc|sd=0.06|0.3": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.994,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.006,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.376,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.994,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.006,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.3,
+     0.3
+    ],
+    "sd": 0.06
+   }
+  },
+  "mono_oc|sd=0.06|0.45": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.982,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.017,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.999
+   },
+   "futility_stop_share": 0.001,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.982,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.017,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.45,
+     0.3
+    ],
+    "sd": 0.06
+   }
+  },
+  "mono_oc|sd=0.06|0.55": {
+   "v2": {
+    "PASS": 0.01,
+    "FAIL_MONO": 0.582,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.314,
+    "INCONCLUSIVE": 0.094,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.906
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.01,
+    "FAIL_MONO": 0.582,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.314,
+    "INCONCLUSIVE": 0.094,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.55,
+     0.3
+    ],
+    "sd": 0.06
+   }
+  },
+  "mono_oc|sd=0.06|0.58": {
+   "v2": {
+    "PASS": 0.075,
+    "FAIL_MONO": 0.307,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.461,
+    "INCONCLUSIVE": 0.157,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.843
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.075,
+    "FAIL_MONO": 0.307,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.461,
+    "INCONCLUSIVE": 0.157,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.58,
+     0.3
+    ],
+    "sd": 0.06
+   }
+  },
+  "mono_oc|sd=0.06|0.6": {
+   "v2": {
+    "PASS": 0.176,
+    "FAIL_MONO": 0.167,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.488,
+    "INCONCLUSIVE": 0.169,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.831
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.176,
+    "FAIL_MONO": 0.167,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.488,
+    "INCONCLUSIVE": 0.169,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.6,
+     0.3
+    ],
+    "sd": 0.06
+   }
+  },
+  "mono_oc|sd=0.06|0.62": {
+   "v2": {
+    "PASS": 0.329,
+    "FAIL_MONO": 0.078,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.452,
+    "INCONCLUSIVE": 0.141,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.859
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.329,
+    "FAIL_MONO": 0.078,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.452,
+    "INCONCLUSIVE": 0.141,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.62,
+     0.3
+    ],
+    "sd": 0.06
+   }
+  },
+  "mono_oc|sd=0.06|0.65": {
+   "v2": {
+    "PASS": 0.583,
+    "FAIL_MONO": 0.016,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.317,
+    "INCONCLUSIVE": 0.084,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.916
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.583,
+    "FAIL_MONO": 0.016,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.317,
+    "INCONCLUSIVE": 0.084,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.65,
+     0.3
+    ],
+    "sd": 0.06
+   }
+  },
+  "mono_oc|sd=0.06|0.7": {
+   "v2": {
+    "PASS": 0.891,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.091,
+    "INCONCLUSIVE": 0.018,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.982
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.891,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.091,
+    "INCONCLUSIVE": 0.018,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.7,
+     0.3
+    ],
+    "sd": 0.06
+   }
+  },
+  "mono_oc|sd=0.06|0.8": {
+   "v2": {
+    "PASS": 0.986,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.013,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.999
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.986,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.013,
+    "INCONCLUSIVE": 0.001,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.3
+    ],
+    "sd": 0.06
+   }
+  },
+  "mono_oc|sd=0.0|0.3": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 1.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.059,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 1.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.3,
+     0.3
+    ],
+    "sd": 0.0
+   }
+  },
+  "mono_oc|sd=0.0|0.45": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 1.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 1.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.45,
+     0.3
+    ],
+    "sd": 0.0
+   }
+  },
+  "mono_oc|sd=0.0|0.55": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.998,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.002,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.998
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.998,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.002,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.55,
+     0.3
+    ],
+    "sd": 0.0
+   }
+  },
+  "mono_oc|sd=0.0|0.58": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.477,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.523,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.477
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.477,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.523,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.58,
+     0.3
+    ],
+    "sd": 0.0
+   }
+  },
+  "mono_oc|sd=0.0|0.6": {
+   "v2": {
+    "PASS": 0.023,
+    "FAIL_MONO": 0.027,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.001,
+    "INCONCLUSIVE": 0.949,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.051
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.023,
+    "FAIL_MONO": 0.027,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.001,
+    "INCONCLUSIVE": 0.949,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.6,
+     0.3
+    ],
+    "sd": 0.0
+   }
+  },
+  "mono_oc|sd=0.0|0.62": {
+   "v2": {
+    "PASS": 0.459,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.541,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.459
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.459,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.541,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.62,
+     0.3
+    ],
+    "sd": 0.0
+   }
+  },
+  "mono_oc|sd=0.0|0.65": {
+   "v2": {
+    "PASS": 0.995,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.005,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.995
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.995,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.005,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.65,
+     0.3
+    ],
+    "sd": 0.0
+   }
+  },
+  "mono_oc|sd=0.0|0.7": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.7,
+     0.3
+    ],
+    "sd": 0.0
+   }
+  },
+  "mono_oc|sd=0.0|0.8": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.3
+    ],
+    "sd": 0.0
+   }
+  },
+  "mono_unresolved_with_I1_low|I1=0.70_MONO=0.58": {
+   "v2": {
+    "PASS": 0.012,
+    "FAIL_MONO": 0.401,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.225,
+    "INCONCLUSIVE": 0.362,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.638
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.012,
+    "FAIL_MONO": 0.401,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.225,
+    "INCONCLUSIVE": 0.362,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.001,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.999
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.7,
+     0.58,
+     0.2
+    ],
+    "sd": 0.03,
+    "v1_compare": true
+   }
+  },
+  "surface_only_decoy_reproduces_phi=0.0|sd=0.03": {
+   "v2": {
+    "PASS": 0.949,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.003,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.048,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.952
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "surface_phi",
+     0.0
+    ]
+   }
+  },
+  "surface_only_decoy_reproduces_phi=0.4|sd=0.03": {
+   "v2": {
+    "PASS": 0.142,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.83,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.028,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.972
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.932,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.068,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "surface_phi",
+     0.4
+    ]
+   }
+  },
+  "surface_only_decoy_reproduces_phi=0.5|sd=0.03": {
+   "v2": {
+    "PASS": 0.052,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.945,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.003,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.997
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.809,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.191,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "surface_phi",
+     0.5
+    ]
+   }
+  },
+  "surface_only_decoy_reproduces_phi=0.6|sd=0.03": {
+   "v2": {
+    "PASS": 0.012,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.988,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.6,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.4,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "surface_phi",
+     0.6
+    ]
+   }
+  },
+  "surface_only_decoy_reproduces_phi=0.7|sd=0.03": {
+   "v2": {
+    "PASS": 0.002,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.998,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.335,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.665,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "surface_phi",
+     0.7
+    ]
+   }
+  },
+  "surface_only_decoy_reproduces_phi=0.8|sd=0.03": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.147,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.853,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "surface_phi",
+     0.8
+    ]
+   }
+  },
+  "surface_only_decoy_reproduces_phi=1.0|sd=0.03": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.011,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.989,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "surface_phi",
+     1.0
+    ]
+   }
+  },
+  "surface_only_v2_and_v1|sd=0.0": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.0,
+    "cross_spec": [
+     "surface"
+    ],
+    "v1_compare": true
+   }
+  },
+  "surface_only_v2_and_v1|sd=0.03": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.85,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "surface"
+    ],
+    "v1_compare": true
+   }
+  },
+  "v1_cut_leak=0.02|pass_level_model": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.371,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.629
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.25
+    ],
+    "sd": 0.03,
+    "v1_compare": true,
+    "cut_leak": 0.02
+   }
+  },
+  "v1_cut_leak=0.05|pass_level_model": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 1.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.25
+    ],
+    "sd": 0.03,
+    "v1_compare": true,
+    "cut_leak": 0.05
+   }
+  },
+  "v1_cut_leak=0.0|pass_level_model": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.996,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.004
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.25
+    ],
+    "sd": 0.03,
+    "v1_compare": true,
+    "cut_leak": 0.0
+   }
+  },
+  "v1_cut_leak=0.1|pass_level_model": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 1.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.25
+    ],
+    "sd": 0.03,
+    "v1_compare": true,
+    "cut_leak": 0.1
+   }
+  },
+  "v1_cut_leak=0.25|pass_level_model": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 1.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.25
+    ],
+    "sd": 0.03,
+    "v1_compare": true,
+    "cut_leak": 0.25
+   }
+  },
+  "v1_cut_leak=1.0|pass_level_model": {
+   "v2": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 1.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 1.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.25
+    ],
+    "sd": 0.03,
+    "v1_compare": true,
+    "cut_leak": 1.0
+   }
+  },
+  "weak_in_window_mono_fails|I1=0.60_MONO=0.20": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 1.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.996,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 1.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "v1": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 1.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.6,
+     0.2,
+     0.08
+    ],
+    "sd": 0.03,
+    "v1_compare": true
+   }
+  },
+  "world|W1_fail_mono|sd=0.03": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.996,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.004,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.821,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.996,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.004,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.9,
+     0.25,
+     0.08
+    ],
+    "sd": 0.03
+   }
+  },
+  "world|W1_fail_mono|sd=0.06": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.937,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.063,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.672,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.937,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.063,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.9,
+     0.25,
+     0.08
+    ],
+    "sd": 0.06
+   }
+  },
+  "world|W2_fail_cross|sd=0.03": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.905,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.048,
+    "INCONCLUSIVE": 0.047,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.953
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.905,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.048,
+    "INCONCLUSIVE": 0.047,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.1
+    ],
+    "sd": 0.03
+   }
+  },
+  "world|W2_fail_cross|sd=0.06": {
+   "v2": {
+    "PASS": 0.01,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.593,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.324,
+    "INCONCLUSIVE": 0.073,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.927
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.01,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.593,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.324,
+    "INCONCLUSIVE": 0.073,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.1
+    ],
+    "sd": 0.06
+   }
+  },
+  "world|W3_pass|sd=0.03": {
+   "v2": {
+    "PASS": 0.979,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.013,
+    "INCONCLUSIVE": 0.008,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.992
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.979,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.013,
+    "INCONCLUSIVE": 0.008,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.22
+    ],
+    "sd": 0.03
+   }
+  },
+  "world|W3_pass|sd=0.06": {
+   "v2": {
+    "PASS": 0.783,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.181,
+    "INCONCLUSIVE": 0.036,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.964
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.783,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.181,
+    "INCONCLUSIVE": 0.036,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     0.22
+    ],
+    "sd": 0.06
+   }
+  },
+  "world|W4_near_line|sd=0.03": {
+   "v2": {
+    "PASS": 0.122,
+    "FAIL_MONO": 0.014,
+    "FAIL_CROSS": 0.017,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.454,
+    "INCONCLUSIVE": 0.393,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.607
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.122,
+    "FAIL_MONO": 0.014,
+    "FAIL_CROSS": 0.017,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.454,
+    "INCONCLUSIVE": 0.393,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.62,
+     0.16
+    ],
+    "sd": 0.03
+   }
+  },
+  "world|W4_near_line|sd=0.06": {
+   "v2": {
+    "PASS": 0.081,
+    "FAIL_MONO": 0.038,
+    "FAIL_CROSS": 0.032,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.73,
+    "INCONCLUSIVE": 0.119,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 0.881
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.081,
+    "FAIL_MONO": 0.038,
+    "FAIL_CROSS": 0.032,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.73,
+    "INCONCLUSIVE": 0.119,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.62,
+     0.16
+    ],
+    "sd": 0.06
+   }
+  },
+  "world|W5_lottery|sd=0.03": {
+   "v2": {
+    "PASS": 0.119,
+    "FAIL_MONO": 0.524,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.357,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.524,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.119,
+    "FAIL_MONO": 0.524,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.357,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "lockin",
+    "pi": 0.5,
+    "locked": [
+     0.95,
+     0.85,
+     0.25
+    ],
+    "unlocked": [
+     0.95,
+     0.15,
+     0.06
+    ]
+   }
+  },
+  "world|W5_lottery|sd=0.06": {
+   "v2": {
+    "PASS": 0.119,
+    "FAIL_MONO": 0.524,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.357,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.524,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.119,
+    "FAIL_MONO": 0.524,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.357,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "lockin",
+    "pi": 0.5,
+    "locked": [
+     0.95,
+     0.85,
+     0.25
+    ],
+    "unlocked": [
+     0.95,
+     0.15,
+     0.06
+    ]
+   }
+  },
+  "world|W6_surface|sd=0.03": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.001,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.999,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     null
+    ],
+    "sd": 0.03,
+    "cross_spec": [
+     "surface"
+    ]
+   }
+  },
+  "world|W6_surface|sd=0.06": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 1.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0,
+    "DECISIVE": 1.0
+   },
+   "futility_stop_share": 0.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.001,
+    "FAIL_MONO": 0.0,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.999,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.0
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.95,
+     0.8,
+     null
+    ],
+    "sd": 0.06,
+    "cross_spec": [
+     "surface"
+    ]
+   }
+  },
+  "world|W7_instrument_invalid|sd=0.03": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.012,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.988,
+    "DECISIVE": 0.012
+   },
+   "futility_stop_share": 1.0,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.012,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.988
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.4,
+     0.1,
+     0.06
+    ],
+    "sd": 0.03
+   }
+  },
+  "world|W7_instrument_invalid|sd=0.06": {
+   "v2": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.129,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.871,
+    "DECISIVE": 0.129
+   },
+   "futility_stop_share": 0.998,
+   "v2_if_SEM_threshold_were_0": {
+    "PASS": 0.0,
+    "FAIL_MONO": 0.129,
+    "FAIL_CROSS": 0.0,
+    "FAIL_CROSS_SURFACE": 0.0,
+    "LOTTERY": 0.0,
+    "INCONCLUSIVE": 0.0,
+    "INSTRUMENT_INVALID": 0.871
+   },
+   "spec": {
+    "kind": "gaussian",
+    "mu": [
+     0.4,
+     0.1,
+     0.06
+    ],
+    "sd": 0.06
+   }
+  }
+ },
+ "mean_90_halfwidth_per_seed": {
+  "MONO@0.60": 0.0209,
+  "CROSS@0.15": 0.0173,
+  "BIND@CROSS0.15": 0.0188,
+  "SEM@CROSS0.15": 0.0229
+ },
+ "coverage_registered_bootstrap_superpopulation": {
+  "MONO@0.60": 0.917,
+  "CROSS@0.15": 0.88
+ },
+ "futility_single_seed_stop_prob": {
+  "0.1": 1.0,
+  "0.2": 1.0,
+  "0.25": 0.995,
+  "0.28": 0.5483,
+  "0.3": 0.0467,
+  "0.35": 0.0,
+  "0.4": 0.0
+ },
+ "prior_weighted_decisive": {
+  "weights": {
+   "W1_fail_mono": 0.2,
+   "W2_fail_cross": 0.4,
+   "W3_pass": 0.1,
+   "W4_near_line": 0.1,
+   "W5_lottery": 0.15,
+   "W7_instrument_invalid": 0.05
+  },
+  "by_seed_sd": {
+   "sd=0.03": 0.8917,
+   "sd=0.06": 0.9118
+  },
+  "definition": "decisive = PASS, FAIL_MONO (with futility), FAIL_CROSS (any sub-label, including surface) or LOTTERY; INSTRUMENT_INVALID and INCONCLUSIVE are not decisive"
+ },
+ "runtime_seconds": 1100.0
+}

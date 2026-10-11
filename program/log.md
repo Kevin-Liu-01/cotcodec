@@ -4343,3 +4343,82 @@ they say so.)
   structure (or about 100 tasks), step-0 re-queue, a placebo layout cell, a
   complete wrap set and a task-specific P6. Any 100 still needs the trust
   store (D24).
+## 2026-10-11 — E7 G1 floor gate gauntlet fresh run 2 (D68): score 51, honest exit; E7 ends (branch `gauntlet/e7-d22`, not merged)
+
+- The fresh run ran in workflow `wf_75d16c52-9a6` with newly declared
+  cumulative budgets: queries 80 (at least 30 reserved for the triad),
+  wall_minutes 600, tokens 8,000,000, dollars 150, waves 1, gpu_hours 0.3. One
+  repair owner wrote proposal `67d0a4fe...`, DRAFT registration
+  `e7-equivariant-writes-g1-v2` (`b8830fa6...`; not frozen, not admitted; v1
+  `cce49578...` unedited) and the bundle update (evidence root `0d975c11...`)
+  at `86258d4` and `728aeef`. Audit row 2 (gauntlet wave 2, wave 1 of the
+  fresh run) is appended to
+  `program/gauntlet/2026-10-10-e7-equivariant-writes-g1.jsonl`, row hash
+  `779bbc0b98ff72b300879a212ab8ea0da6b6cf219f96c6a023b182610f46e160`.
+- The repair fixed wave 1's largest defect. CUT is replaced by REACH under a
+  path-complete SPAN_CUT (exactly zero at d_f >= 1,561; S3v2's complex step
+  equals the symbolic count on 504 rows) and ISO. Only deterministic harness
+  checks now come before PASS. It also added cross-script cells with
+  surface-twin decoys and a SEM line, re-ran S1v2 on the measured design, and
+  reframed the gate as a no-novelty precondition.
+- Reviews: 59 (claude-opus-5-5) and 51 re-checked (qwen3.6-35b-a3b,
+  self-hosted, Slurm 1093). Reviewer 2 returned 47, but its ten scores sum to
+  51 and no cap binds: the same arithmetic error as row 1's job 1077. As in
+  row 1 and E4 row 2, the re-checked totals are used. Score 51, best 51 (47
+  if the produced total were kept). Trajectory 51 -> 51. Neither review is
+  signed (D24).
+- Blind discrimination: a weak pass by the letter. The critic judged the gate
+  and 2610.06750 not the same mechanism and the prior the stronger
+  contribution, while calling the gate the more rigorous, narrower design.
+  The packets match the bundle files exactly. The SWAX packet was prepared
+  but not judged (one critic call per run).
+- Refute-first triad: 3 of 3 refuted (26 counted queries: 12, 7 and 7).
+  - Novelty: a recombination the proposal concedes, about 0.55; no direct
+    prior. Coverage residuals: no Semantic Scholar or citation-graph pass,
+    2610.00232 in a ledger row from its abstract, 2609.32102 unscreened.
+  - Identification: see the largest defect. RELAY_BLOCK also keeps the
+    convolution, so the "state-only" reads X1_state and I1_state include an
+    attention route; and the single-seed futility stop returns FAIL_MONO in
+    0.524 of runs in the registration's own lottery world.
+  - Feasibility: the caps fit (7.767 GPU-h, host idle), but X1_attn is read
+    under SPAN_CUT at B1, which also zeroes the state while the query is
+    encoded, so the FAIL_CROSS sub-label is biased towards "representational".
+    Without LOTTERY, P(decisive) is 0.77 (SD 0.03) and 0.62 (SD 0.06), not
+    0.89 and 0.91.
+- Largest defect (both reviewers): PASS's semantic claim is not identified.
+  SEM's surface-twin decoy and the sliding block match punctuation counts,
+  length and named-entity count, not punctuation positions. NFKC maps the
+  Chinese full-width ，：；（）？！ to ASCII, and the filter only excludes
+  shared tokens of four characters or more, so key and translation share
+  these marks at preserved positions. On the bundle's own builder, a
+  position-only rule picks the target 0.187 of the time with the real query
+  and 0.131 with the decoy (SEM about 0.063, twice the line), and the
+  registered S1v2 then reads PASS 0.767 for a surface-only model (the
+  registration claims 0.000). The refuter's position-plus-length rule reads
+  0.977. The recorder re-ran reviewer 1's three scripts unchanged: every value
+  is equal. This is wave 1's second-ranked defect (the surface-cue confound)
+  in narrower form.
+- Honest exit: D68's stop line applies on its score prong (51 < 60; 47 as
+  produced; reviewer 1's 59 alone is also below 60). Under the specific
+  reading of the defect prong it does not fire (the CUT premise is repaired);
+  under D60's category reading it does (identification is again the largest
+  defect). The run's wave cap and the triad stop also apply. E7 ends here;
+  v2 is not frozen or admitted. Queries 63 of 80, tokens 3,308,377 of 8M,
+  $70.26 of $150, 153.7 of 600 minutes, GPU 0.0547 of 0.3. Gauntlet totals:
+  176 queries, 304.7 minutes, 7.07M tokens, $134.33, 0.113 GPU-h over two
+  rows. The doctor re-run at record time is byte-identical to the bundle copy
+  (FAIL, as expected; it parses gpu_hours 0.3 as 0, left as declared).
+- GPU: reviewer 2's job 1093 used 0.0547 GPU-h (scontrol RunTime 00:03:17 on
+  1 H100, COMPLETED 0:0, 01:55:24-01:58:41 UTC, no leftover container). The
+  queue was empty before submission and at the in-command re-check, so the
+  host rule held; the recorder's read-only check at 02:09:46 UTC found the
+  queue empty and all GPUs at 0 MiB. It is added to the ledger as "E7 G1
+  floor gate gauntlet fresh run 2 under D68 ... open-weight review (D24)".
+  The program total is 10.1373 on this branch. The gate used no GPU.
+- Waiting on Kevin: nothing to stop. Reopening E7 would be a new owner
+  decision with new budgets and a v3 registration id: decoys matched on
+  punctuation order and position (or shared punctuation dropped) with a
+  position-aware B-SURF oracle, a state-only RELAY_BLOCK, a single-boundary
+  attention-only read at B1 with positive controls, a non-decisive futility
+  stop, and a Semantic Scholar pass. Wave 1's value-of-information doubt
+  (owner's prior P(PASS) about 0.1) stands.
