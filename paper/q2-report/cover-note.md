@@ -8,7 +8,8 @@ it, or keep it out of any circulated copy, before the report is shared.
 ## Pending sign-offs, keyed to `program/state.json`
 
 Indices are 0-based positions in `pending_decisions_for_kevin` at commit `360058d`. Each index
-points at the same item at `08033ba7`, against which revision 3 updated the checker-study rows.
+points at the same item at `08033ba7`, against which revision 3 updated the checker-study rows
+and the successor-E row.
 
 | Item | Index | What it affects in the report |
 |---|---:|---|
@@ -20,7 +21,7 @@ points at the same item at `08033ba7`, against which revision 3 updated the chec
 | Review of decisions D1-D82 (and D83) taken on the owner's behalf | 12 | D53 and D57 (action path accepted; S1a session-1 disclosures), D56 (S1a sign-off), D59-D62 (analysis-code defects), D66, D69, D79-D82 (K2 and the model adjudication, section 6) |
 | Action path: shell-side observation of grabbed chords; the job 851 guest-server restart; the A4/A7 governance deviation | 14 | sections 2.6-2.7 and 11 |
 | Host inotify limit (host administrator) | 16 | V* = 32 and the concurrency scope |
-| Successor E | 17 | sections 5 and 11 |
+| Successor E: decided under the owner's delegation (D80 (iii): registered, audited before its freeze, frozen and run); being registered, its registration in pre-freeze gates on its own branch; results pending. The item at index 17 still reads as the owner's choice and is stale against D80 | 17 | sections 5, 6.6 and 11 |
 | A valid Anthropic API key (the Claude rater ran through the agent harness, D25) | 9 | section 6's rater path |
 
 Also open, not the owner's:
