@@ -1302,3 +1302,25 @@ that leave his choices open:
   STILL_OPEN), is drafted as a registered CPU study with a pre-freeze audit.
   It runs only after a freeze.
 Host jobs are CPU-only, and every agent prompt carries the command rule.
+
+**D74. S2 v3 scored 60 at wave 1, the program's best package so far; one
+repair run completes its Phase 0 pilot.** S2 v3 (D71 ii) scored 60, the lower
+of the two reviews (Claude 61, open-weight 60). The census of the 106
+eligible OSWorld LibreOffice tasks fixes v2's K = 26 non-falsifiability:
+simulated SMALL is 0.92-0.97 under null effects, a 15% relative harm is
+detected with probability 0.85-0.96, and Phase 1 caps are 6.10 GPU-h. All
+three refuters refuted. The largest defect is that the CPU pilot (jobs
+1097-1100) tested only the layout switch:
+- no Arabic catalog was rendered, and the ar-LTR cell ran only on blank
+  documents;
+- the oracle's O2, O3 and O6 checks and its planted controls are not
+  implemented;
+- AT-SPI extents fail for a median 53% of matched accessibles.
+So the pilot decides neither K0 (at least 62 tasks admitted) nor K1 (the
+D53 delta certification). Decided: one repair run, by a single owner, CPU
+only, under D60's stop line raised to 65 for this package, since it starts
+at 60. It renders the text factor with a generated pseudo-Arabic catalog
+(no download), runs every cell at real task states, implements the oracle
+with pixel-located boxes and planted controls, and decides K0 and K1 on what
+can run. Fetching the applications' real Arabic language packs for Phase 1
+is a download Kevin approves. Phase 1 admission stays his (D24).
