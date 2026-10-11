@@ -755,9 +755,10 @@ is rerun on the realized admitted task list (CPU, reported; no rule depends on i
 
 ## Seeds
 
-Simulation: 42, 43, 44. Phase 0 slot order and Phase 1 episode order, slot assignment and the sharp-null
-test: PCG64 seed 42. vLLM request seed 42 (inert under greedy decoding; reruns are not assumed identical).
-The P0.6 suite: attempt 1's seeds (42, 43, 44, 45).
+Simulation: 42, 43, 44. Phase 0 slot order (the committed census) and Phase 1 episode order, slot
+assignment and the sharp-null test: PCG64 seed 42. The oracle's descriptor plants: per task, PCG64 seeded
+by (42, the task id's first 32 bits). vLLM request seed 42 (inert under greedy decoding; reruns are not
+assumed identical). The P0.6 suite: attempt 1's seeds (42, 43, 44, 45).
 
 ## Compute caps (D22 counting)
 
