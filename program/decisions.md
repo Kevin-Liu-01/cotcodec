@@ -1378,3 +1378,31 @@ program has. It advances only through Kevin, who would decide all of these:
 - (e) the Phase 1 cap rule and admission (D24).
 Its finding that the Arabic interface writes localized defaults into saved
 files in 34 tasks, with no checker verdict changed, is recorded either way.
+
+**D77. R01 ends at an honest exit; the K2 addendum and the R04 study are
+built and fixed, and each now gets a fresh re-audit.** R01's repair run
+(D75) scored 57. Only reviewer 1 scored: the open-weight reviewer produced no
+output, and that is recorded as no review, not as a 0. Both prongs of the
+stop line fire. S1a's own step-1 records force the joint REDUNDANT reading
+with probability 1 in every S1a-consistent scenario, so the mechanism can be
+falsified only by a failure of the replay apparatus (VAL_FAIL). The reviewed
+package still held unfilled simulation placeholders and was committed
+unfinished, which is disclosed. R01's records-only finding stands as a
+descriptive result: 16 of 27 byte-identical requests gave different replies
+under greedy decoding, and 0 of 227 identical-action pairs disagreed on the
+outcome. Its CPU-tested replay drivers stay on main.
+K2 (`q2-evaluator-mutation-v1-k2`, D73 ii):
+- its dev rehearsal (job 1130) scored 182 of 182 runs and agreed with the
+  offline verdicts on 80 of 80 pairs and 11 of 11 candidate events, in both
+  runs;
+- its audit's two blocking items (the freeze-commit export, and report
+  quantities) are fixed on the branch;
+- it reserves nothing for Kevin.
+R04 (`r04-checker-nuisance-invariance-v1`, D73 iii, 0 GPU-h): its audit's
+four blocking items are fixed; its draft reserves three items for Kevin
+(standalone or as S2 v3's Phase 0, two section 4.4 adaptations, the CPU cap).
+Decided: fresh, independent re-audits of both. If K2's re-audit is clean, K2
+is frozen under program authority and run (CPU only, about 1 h). The parent
+analysis is then rerun with `--k2-report`. Every K2 output carries the
+warning that Kevin answers his blind adjudication before reading it. R04's
+freeze waits for Kevin's three items.
