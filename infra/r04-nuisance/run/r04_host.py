@@ -249,15 +249,19 @@ def save_steps(
     minutes: int,
 ) -> list[dict[str, Any]]:
     steps = []
+    # One save job per build; the replicate cell gets a job (a container) of its own.
     by_build: dict[str, list[str]] = {}
     for cid in cells:
-        by_build.setdefault(levels.get_cell(cid).build, []).append(cid)
+        cell = levels.get_cell(cid)
+        key = cell.build if cell.replicate == 1 else f"{cell.build}.r{cell.replicate}"
+        by_build.setdefault(key, []).append(cid)
     extra = [f"{run / 'items'}:/ro/items", *s1a_ro]
     only_arg = "-"
     if only:
         extra.append(f"{Path(only).parent}:/ro/only")
         only_arg = f"/ro/only/{Path(only).name}"
-    for build in sorted(by_build):
+    for key in sorted(by_build):
+        build = key.split(".")[0]
         if build not in images:
             raise SystemExit(f"no image for build {build}; run check-image first")
         argv = [
@@ -267,11 +271,11 @@ def save_steps(
             "/out",
             str(workers),
             only_arg,
-            *by_build[build],
+            *by_build[key],
         ]
         steps.append(
             lane_run(
-                f"{out_name}-save-{build}",
+                f"{out_name}-save-{key}",
                 images[build],
                 argv,
                 src,
