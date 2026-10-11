@@ -1165,3 +1165,32 @@ without the protected trust store (D24), because the caps of 79 for a
 missing executable pilot and 89 for unsigned reviews bind. So whatever these
 scores, running any of these first steps needs his admission ruling, or the
 trust store.
+
+**D69. Q2: S1b and the harness-scale question close on the design study;
+successor E stays available to Kevin.** The design study (D66) calibrated the
+registration's own model on S1a's records. Its validation was fixed before
+any run; the normal model failed one criterion, and spike-and-slab and pool
+calibrations passed. An adversarial check followed, and three blocking
+problems were confirmed and repaired, the main one a 4B-9B harness coupling
+the data do not support. All 11 successor designs were then re-run under four
+passing calibrations. The study then compared the designs.
+- No design within 8 GPU-h can admit S1b. The share DR5 reads is 0.067-0.098
+  at S1a's estimates, below M = 0.13, and P(GO) is at most 0.03 for every
+  design.
+- The best successor, E (all 113 tasks, both sizes, 4 sessions, 1 rerun; 6.77
+  cap-GPU-h), would make DR2 decisive with probability 0.83-0.87 and give
+  NO-GO with probability 0.23-0.54. Either outcome leaves S1b out.
+Decided: S1b and Q2's harness-scale question close. No successor GPU is spent
+on them. S1a stands as Q2's answer for harness versus rerun noise, for these
+two sizes and harnesses on this stack. On the probability scale, rerun noise
+is 20-33% of outcome variance and task-by-harness variance 3-4%. δ is
+−1.1 pp on all 113 tasks (90% interval [−3.8, +1.6]) and −3.1 pp on the 32
+base tasks. Rerun disagreement is about 11%, and there is no between-session
+excess. Option E remains available to Kevin as a registration with a
+pre-freeze audit, no gauntlet. It would turn DR2 into a likely decisive
+reading, Present at 9B (a task-specific harness effect), or Near-equivalent;
+it would not change the program's next step. For S2, the study finds that a
+5 pp locale gate needs about 100-115 distinct tasks at S1a-like heterogeneity:
+Relay's 18 suffice only if the effect is nearly homogeneous; LibreOffice's 64
+give power 0.60-0.62, all 113 give 0.79-0.83. S2's repair run (D68) uses these
+figures.
