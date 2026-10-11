@@ -1,11 +1,15 @@
 {
  "schema_version": 1,
  "proposal": "program/proposals/2026-10-10-c5-fp4-instability.md",
- "proposal_sha256": "3195b9a2415e70f77f1911db98059e98caefaf772afe8a4feefdf492213f7ed0",
+ "proposal_sha256": "2b9d768a93af3891e88024ddf4ca172511bcbd5d53a75eb403bbbe150cb9a378",
  "draft_registration": {
-  "path": "program/preregistrations/c5-fp4-instability-v1.md",
-  "sha256": "6d1a786a09a8c1e750c900422758138f4f805067e5b55531278642987438f6ff",
-  "status": "DRAFT, not frozen, no ledger row"
+  "path": "program/preregistrations/c5-fp4-instability-v2.md",
+  "sha256": "4db20a5444741d924a140cb21b97b360eff0f6361c47184ec8bd8caf2cfeaab1",
+  "status": "DRAFT, not frozen, no ledger row; supersedes v1",
+  "superseded_v1": {
+   "path": "program/preregistrations/c5-fp4-instability-v1.md",
+   "sha256": "6d1a786a09a8c1e750c900422758138f4f805067e5b55531278642987438f6ff"
+  }
  },
  "source_snapshots": [
   {
@@ -34,6 +38,15 @@
    "raw_bytes": 41871,
    "artifact": "snapshots/arxiv.org_abs_2103.04514.json",
    "sha256": "fc97abd93aa2c792e54b66d7c65ffd6a7b272450d36db0254203ce2e56a7cb52"
+  },
+  {
+   "url": "https://arxiv.org/abs/2302.08007",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:29:38Z",
+   "raw_sha256": "79e23630d742c51cb7f97a4500b18d98147f33253ce874a79b4a4e7121d45d8a",
+   "raw_bytes": 43852,
+   "artifact": "snapshots/arxiv.org_abs_2302.08007.json",
+   "sha256": "eabc94812401777e50d31d88d83d6e32f2d19ed0779eaa17424072bdb0272ab8"
   },
   {
    "url": "https://arxiv.org/abs/2309.14322",
@@ -384,8 +397,16 @@
    "raw_sha256": "286e1789887f1f3eee540b4f5d7d5e641dbb44993cd764a79a4be374e3e08b32",
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_18UVn4y0SO.json",
-   "sha256": "75da7c00c5e7370c523f0c138ea2cd9ccd81e72b5f16cecf19faca29870b1c7c",
-   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+   "sha256": "75da7c00c5e7370c523f0c138ea2cd9ccd81e72b5f16cecf19faca29870b1c7c"
+  },
+  {
+   "url": "https://openreview.net/forum?id=1GIYHWO9S5",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:29:39Z",
+   "raw_sha256": "962dfe891eb632b393d483b96f560b38480715033e02749b187bcc0599bc0971",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_1GIYHWO9S5.json",
+   "sha256": "524225690f61fbefcc0b366d80bc2e395751bd25ef30d1c6cddb4f84d4d68938"
   },
   {
    "url": "https://openreview.net/forum?id=IuigXFBGHI",
@@ -394,8 +415,7 @@
    "raw_sha256": "e57f40a96f827bd994f5583753fccd0a767ed14ae9dd244ed08306677bc4c2f8",
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_IuigXFBGHI.json",
-   "sha256": "edc2b8437129bdacb47fd9fcb667a942bbf0cd0b29173f66bdb13fd33a8c1488",
-   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+   "sha256": "edc2b8437129bdacb47fd9fcb667a942bbf0cd0b29173f66bdb13fd33a8c1488"
   },
   {
    "url": "https://openreview.net/forum?id=OEXOAMvsc6",
@@ -404,8 +424,7 @@
    "raw_sha256": "5a8acd428aa7888d22c3d799a2869942779bb27c9949123e29e18fd3170397e4",
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_OEXOAMvsc6.json",
-   "sha256": "0a545ee3fa18bec87c58b796bb7c43b06e7a85c77381c31dd2d1712e9f261633",
-   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+   "sha256": "0a545ee3fa18bec87c58b796bb7c43b06e7a85c77381c31dd2d1712e9f261633"
   },
   {
    "url": "https://openreview.net/forum?id=bub7HTzeSv",
@@ -414,8 +433,16 @@
    "raw_sha256": "7badacc4a54091c4b60b3f2ee482031e9bc98471d4c83ff23dd52becd08f4800",
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_bub7HTzeSv.json",
-   "sha256": "d4a4c1c898f1c980c6e60f766298b1d8d7ad69923e9e236fed94843e0916d889",
-   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+   "sha256": "d4a4c1c898f1c980c6e60f766298b1d8d7ad69923e9e236fed94843e0916d889"
+  },
+  {
+   "url": "https://openreview.net/forum?id=eEicXkAWDk",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:29:38Z",
+   "raw_sha256": "7ca0c85ba1e9d6bc3deb33918673c76186aaefb72ec6c7b4cd7de6d05c39f3b6",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_eEicXkAWDk.json",
+   "sha256": "eaf87e6794a5ec07ac327dd622fd67ec38622e7354b260609f3bd2de3777e6c1"
   },
   {
    "url": "https://openreview.net/forum?id=jlkIyaG32w",
@@ -424,8 +451,7 @@
    "raw_sha256": "e20306553fdd6ad1a6bf2d4f66b63e609d3ecf6659f7635f58ad5470d486c1e2",
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_jlkIyaG32w.json",
-   "sha256": "ec2abdbe225bf0994ca8a854f1eae3c01b8accd4f988bb7d4b8f3766bce64f27",
-   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+   "sha256": "ec2abdbe225bf0994ca8a854f1eae3c01b8accd4f988bb7d4b8f3766bce64f27"
   },
   {
    "url": "https://openreview.net/forum?id=kuzye4EPLR",
@@ -434,62 +460,133 @@
    "raw_sha256": "23d0dede3567c303826b820ffe0a4744fb3b14b03b59f44593f046c88757687f",
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_kuzye4EPLR.json",
-   "sha256": "aaf52309b0dcc0b59794d9deea4c3227e07bd13ad368f2d80730fc6f92821f5a",
-   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; the abstract comes from the OpenReview search API (query-log.json, frontier cell)"
+   "sha256": "aaf52309b0dcc0b59794d9deea4c3227e07bd13ad368f2d80730fc6f92821f5a"
+  },
+  {
+   "url": "https://par.nsf.gov/servlets/purl/10628832",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:29:41Z",
+   "raw_sha256": "d1d5b8e32b0b5ccac3c0a1aa385caf4c82c8150b733d02ccf0644ef005295ded",
+   "raw_bytes": 2352338,
+   "artifact": "snapshots/par.nsf.gov_servlets_purl_10628832.json",
+   "sha256": "f742021f427fe57675ef6726633541586e42a7b9eec87cf9f7af6f0439a39c9b"
   }
  ],
  "query_log": {
-  "artifact": "query-log.json",
-  "sha256": "1b02ea97eac2f6a08a105d4379a7ab25d388dd3bd5d30af662d5810dbecfea59",
-  "queries_against_budget": 114,
-  "note": "114 counted orx discover invocations (frontier 38, kill-shot 26, cross-domain 35, asset 8, synthesis 7), of which 11 were rejected by the backend; 36 remain of the declared 150, above the triad's reserve of 30; paper reads and non-orx searches recorded, not counted."
+  "artifact": "query-log-run2.json",
+  "sha256": "72f91a0fa61e0fb3889dc8383f819032c8b56da3e8dad272d0de0deacc07ac6a",
+  "queries_against_budget": 16,
+  "declared_budget": 80,
+  "reserved_for_refuters": 30,
+  "wave1_query_log": {
+   "artifact": "query-log.json",
+   "sha256": "1b02ea97eac2f6a08a105d4379a7ab25d388dd3bd5d30af662d5810dbecfea59"
+  },
+  "note": "This run's counted queries so far (the repair's 16, 2 of them OpenAlex 429 rejections, counted); wave 1's 114 are in query-log.json and the wave-1 record."
  },
  "reviews": [],
- "reviews_status": "NOT_RUN: the blind critic, the refute-first triad and both reviewers run after synthesis. No trusted Ed25519 store exists (D24), so no review can be signed.",
+ "reviews_status": "NOT_RUN for this run: the blind critic, the refute-first triad and both reviewers run after the repair. Wave 1's reviews are in program/gauntlet/2026-10-10-c5-fp4-instability.jsonl. No trusted Ed25519 store exists (D24).",
  "compute": {
-  "scope": "c5-fp4-instability-v1 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: N1 exact numerics, N2 tensor-level prediction, D1 design estimability, S1 decision-rule simulation, S2 cost model, each script with its output.",
+  "scope": "c5-fp4-instability-v2 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: wave 1's N1, N2, D1, S1 and S2 (kept unedited; all five reproduce byte for byte on 2026-10-10) and the D68 repair's N2v2 and N3 (tensor-level prediction for the v2 cells and the identification table), D1v2 (estimability and contrast SEs), S1v2 (the registered v2 decision path end to end) and S2v2 (caps with every factor applied), each script with its output.",
   "image_digest": "127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9",
   "image_scope": "architecture image (build 855; torch 2.11.0+cu128, Triton 3.6.0, ml_dtypes present); holds no C5 code; a rebuild at the freeze commit is required",
   "real_model_loop": false,
-  "real_model_loop_scope": "none: no LM pretraining loop, model, loader, checkpointing or evaluation exists for this study",
+  "real_model_loop_scope": "none: no LM pretraining loop, quantizer kernels, data loader, checkpointing or evaluation for this study exist; the D68 repair ran on the Mac CPU only",
   "benchmark_adapter": null,
-  "benchmark_adapter_scope": "none: FineWeb-Edu files and the tokenizer are not on the host; no tokenized shards",
+  "benchmark_adapter_scope": "none: FineWeb-Edu files and tokenized shards are not on the host",
   "manifest": null,
-  "manifest_scope": "no Slurm manifest exists for J0 to J3 or for any Phase 1 job",
+  "manifest_scope": "no Slurm manifest exists for J0 to J4",
   "container_smoke": {
    "label": "container_smoke",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "8406a3f160efed80c6199bc7e09ee69ae8b784d04b932c2c9e48bf8caa2d3bc1"
+   "sha256": "4c2fbb8c3fedb2e7d763c7e031b191c02b547f4a98ab6a36c3387159fb5f6a69"
   },
   "slurm_test": {
    "label": "slurm_test",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "8406a3f160efed80c6199bc7e09ee69ae8b784d04b932c2c9e48bf8caa2d3bc1"
+   "sha256": "4c2fbb8c3fedb2e7d763c7e031b191c02b547f4a98ab6a36c3387159fb5f6a69"
   },
   "provenance_verification": {
    "label": "provenance_verification",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "8406a3f160efed80c6199bc7e09ee69ae8b784d04b932c2c9e48bf8caa2d3bc1"
+   "sha256": "4c2fbb8c3fedb2e7d763c7e031b191c02b547f4a98ab6a36c3387159fb5f6a69"
   },
   "registered_caps_gpu_h": {
-   "phase0": {
-    "J0": 0.1,
-    "J1": 2.2,
-    "J2": 0.45,
-    "J3": 0.3,
-    "sum": 3.05
-   },
-   "phase1": "formula fixed in the registration; S2 cap values 29.4 (low, 2 per GPU) to 326.0 (high); admission under D24"
+   "J0": 0.25,
+   "J1": 1.85,
+   "J2": 0.4,
+   "J3": 0.3,
+   "fixed_sum": 2.8,
+   "J4": "formula, at most 5.20; central 4.82; runs only if Part A stays at or below 8.0",
+   "part_b": "formula after Phase 0; central single-process 70.1 / 79.2 / 88.3 / 97.4 at n = 3 / 4 / 5 / 6"
   },
   "supplementary_cpu_evidence": [
    {
-    "label": "N1 exact numerics: grids, scale codebooks, decoded-operand representability, folded tensor scale, metamorphic identity, storage, 2505.19115 Table 4 SD, tie handling",
+    "label": "N2v2 and N3: tensor-level prediction for the v2 cells and the identification table (registered quantizer; exact-scale and wide-UE4M3 toggles; whole-tensor and per-row QSNR; UE4M3 subnormal and clamp shares; seeds 42-44)",
+    "script": {
+     "artifact": "compute/repair-d68/numerics_v2.py",
+     "sha256": "c298abfc50d33a3b5b695ed9cd1cc0bcb28227b3073c41d718f8e773e44531db"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/numerics-v2.json",
+     "sha256": "fdd434964da0fe89dc5f4be181a4677fc006b70744d15fdecf8a8a8904b7c5e5"
+    }
+   },
+   {
+    "label": "D1v2: estimability of the 10-cell set and contrast SEs and MDEs at n = 3 to 6",
+    "script": {
+     "artifact": "compute/repair-d68/doe_v2.py",
+     "sha256": "2277f41d0fe89a5b5065d2e1b66bc484f28631b503a92f896e07924bb52f4fc0"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/doe-v2.json",
+     "sha256": "1d94e17e581932fad9a9183b40fd1f2b5c5652efcd9a8529a1073d79673dfebe"
+    }
+   },
+   {
+    "label": "S1v2: the registered v2 decision path end to end (J4 probe, G1, seed-count rule, sweeps, RCBD, P2 on 95% intervals, range flag, secondary verdicts, v1 reuse replay; 4,000 replicates per setting; exact Spearman critical value for 10 cells)",
+    "script": {
+     "artifact": "compute/repair-d68/power_sim_v2.py",
+     "sha256": "adfd47916195c61189369ebb6ac1d98fc3b22f9edaa83860c87198ecbfca8f25"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/power-sim-v2.json",
+     "sha256": "581af51b39f2c5968fda8b3d30d1c9b645c8d3023d623c49696510bf48d5cc6f"
+    }
+   },
+   {
+    "label": "S2v2: Phase 0 caps derived from workloads, J4 formula and fit, Part B caps with the 0.9 factor, wave 1's caps recomputed",
+    "script": {
+     "artifact": "compute/repair-d68/cost_model_v2.py",
+     "sha256": "20a86a704cdc51bbc38cedcd53c7581d583adab485ff359b7b9c28171dd36930"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/cost-model-v2.json",
+     "sha256": "855c547a42e9833c114de24ce56e084eb4308d3b473497f3513cb6bf1147fc1f"
+    }
+   },
+   {
+    "label": "run-2 query log builder",
+    "script": {
+     "artifact": "compute/repair-d68/build-query-log-run2.py",
+     "sha256": "a091514096b2765034eb0e252838af60f88b0b9315d8332b6dd58e3bd81d79ba"
+    }
+   },
+   {
+    "label": "snapshotter for the URLs the repair added (imports wave 1's snapshot code)",
+    "script": {
+     "artifact": "compute/repair-d68/snapshot-new-sources.py",
+     "sha256": "52effe50a5294c8d3a8a7247bd2102edc42a4000e491e2e819bac34cf1783ee2"
+    }
+   },
+   {
+    "label": "wave-1 N1 exact numerics (kept unedited; reproduces)",
     "script": {
      "artifact": "compute/numerics.py",
      "sha256": "c4373c5b186b2a673c8f78f46ce224928f7388d94141f2abbdc1058bc7e80f44"
@@ -500,7 +597,7 @@
     }
    },
    {
-    "label": "N2 tensor-level prediction of the grid effect per scale configuration (numpy reference quantizer, five synthetic distributions, with and without RHT; seeds 42-44)",
+    "label": "wave-1 N2 tensor-level prediction (kept unedited; reproduces)",
     "script": {
      "artifact": "compute/crest_prediction.py",
      "sha256": "fd19888c1ff04f2494afec0fe6b93ae5cefe50eab075c2b09d591374ea55e5bd"
@@ -511,7 +608,7 @@
     }
    },
    {
-    "label": "D1 estimability of the dossier, registered and extended cell sets; contrast SEs and MDEs in sigma units",
+    "label": "wave-1 D1 estimability (kept unedited; reproduces)",
     "script": {
      "artifact": "compute/doe.py",
      "sha256": "47fa5267a398d67abca3e4a93e584657178d401414b0ea76e2924bb71104c42c"
@@ -522,7 +619,7 @@
     }
    },
    {
-    "label": "S1 operating characteristics of G1 and the Stage 1b verdicts with LR tuning (2,000 replicates per setting; seeds 42-44); SR test power; exact Spearman critical values for n = 8",
+    "label": "wave-1 S1 decision-rule simulation (kept unedited; reproduces; superseded by S1v2)",
     "script": {
      "artifact": "compute/power_sim.py",
      "sha256": "5b501fb2161aef40ec14a93acc05968f33051d7f395aff1b2824562cf504bf4d"
@@ -533,7 +630,7 @@
     }
    },
    {
-    "label": "S2 Phase 0 caps and Phase 1 projections (assumed throughput; caps by the registered formula)",
+    "label": "wave-1 S2 cost model (kept unedited; reproduces; its Phase 1 table omits the 0.9 factor, corrected in S2v2)",
     "script": {
      "artifact": "compute/cost_model.py",
      "sha256": "84e0b485f5cb387f4844ae61c0e7ad19ee92bbb2d36368e0ac6450795024717f"
@@ -544,112 +641,109 @@
     }
    },
    {
-    "label": "query-log builder (parses the cells' and synthesis's raw orx outputs from the session scratchpad)",
-    "script": {
-     "artifact": "compute/build-query-log.py",
-     "sha256": "11c33d58d84d379ae65d5db712efe0143419d7e1d39aef6d9677ff8bf328de99"
-    }
-   },
-   {
     "label": "snapshot script for source_snapshots",
     "script": {
      "artifact": "compute/snapshot-sources.py",
      "sha256": "729d1e5e75507415184b1ca3dfd4ec313c1f329a935a9d698b6026e8f1a4203c"
     }
    }
-  ],
-  "repository_evidence_used": {
-   "fla_throughput_anchor": "legacy/research/evidence/infrastructure/fla-throughput-h100-2026-09-01.json",
-   "fla_throughput_doctor": "scripts/fla_throughput_doctor.py (tests pass on main per the asset cell)"
-  },
-  "host_state": "read-only ssh at 2026-10-10T21:21:22Z: squeue empty, all eight GPUs at 0 MiB; no host job submitted by synthesis"
+  ]
  },
  "doctors": [
   {
    "name": "Source",
    "status": "PASS",
    "artifact": "doctors/source.json",
-   "sha256": "598a4a795e9ec33e45dd4442b886cde6f1b392c3a91603fa6df611897be6d6e6"
+   "sha256": "e4e97614f2c6bada2f1f5804f73cbb765947df5e03e786931ad507ee04bbaf16"
   },
   {
    "name": "Citation",
    "status": "PASS",
    "artifact": "doctors/citation.json",
-   "sha256": "8196aa5d03e81b2638c40f4c557668eb116d4cdd7078e5d390cd8cc42ffd4bf9"
+   "sha256": "c432ea99d7ed3b47f47cb3a691d7875fda2adcf1de869369c63e7d8c8dfb5ef1"
   },
   {
    "name": "Novelty",
    "status": "FAIL",
    "artifact": "doctors/novelty.json",
-   "sha256": "c82d3bfc12c0bbee0d44396e9c4ced4fca1d866f62bfe1735755670109af988a"
+   "sha256": "aa10722a51dd363d71de209afb88d635e0c194fa8ad09ac544b3e0e580f7de58"
   },
   {
    "name": "Design",
-   "status": "FAIL",
+   "status": "PASS",
    "artifact": "doctors/design.json",
-   "sha256": "bb6afd7445fb5c38e862b3a1ab2b752e91f927c601baa9fe63408b3d08f935f8"
+   "sha256": "ee37b9658cdac63d5def450e3357d5ae4cc1fdcfa9a3737e2de0c5285b30402f"
   },
   {
    "name": "Compute",
    "status": "FAIL",
    "artifact": "doctors/compute.json",
-   "sha256": "c07bb241a065a8cb0a23419562d8a42f63d7c930515b72faa389d90272948a6b"
+   "sha256": "9fa85ff21bf7186e1c98f6195ac198d3b530bf778eb2d958c3e2da8dd78efe64"
   },
   {
    "name": "Safety",
    "status": "PASS",
    "artifact": "doctors/safety.json",
-   "sha256": "49efee6e818911adf924783fddeedc642e93ae587c9ee3e6bdf687f412b7c0f5"
+   "sha256": "1b7306f3d97fc702b41f40d54895a44fd3b4055f717be34a6f486e9cfef69661"
   }
  ],
  "audit_log": null,
- "audit_log_status": "This gauntlet's wave-1 row is appended to program/gauntlet/2026-10-10-c5-fp4-instability.jsonl with scripts/research_gauntlet_record.py after its reviewers score.",
- "evidence_root_sha256": "5c254eda19921806b3d1bdcb480f570e99322c6a1810281f24bfe7462f3a3d4f",
+ "audit_log_status": "Wave 1's row is the first row of program/gauntlet/2026-10-10-c5-fp4-instability.jsonl (file sha256 5bb535572000bd05e5b4dae73838feaaf37c440e46e01dbb32350cafebf0f841); this run's row is appended after its reviewers score.",
+ "evidence_root_sha256": "0beffc4e21f9aeb18a47c53a2d924cf7e5253ffd1e3c9feed1e83302a69816d2",
  "blind_discrimination_packet": {
   "proposal": {
-   "artifact": "blind/paragraph-43655420.txt",
-   "sha256": "e6a93b13b44addae6f17eb1d4fdd7bd20a7ecfa0487ae49c6ef0d5e46752d18c",
-   "text_sha256": "5e56b4ce968aa6cad2262941d9b29315c732fb4fa6bcf4f98d63382a615883ff"
+   "artifact": "blind/paragraph-65332d00.txt",
+   "sha256": "eb85f79eb9e2eae5603f6453e8148eb333df5cc9bc96427a7f8d276f2bdad9f7",
+   "text_sha256": "65332d00c78abd53ff6dc56c93ecfbd9c6354e1b7d297c7adab8b9f56eb4dac7"
   },
   "closest_prior": {
-   "artifact": "blind/paragraph-201f330b.txt",
-   "sha256": "e1a41f6be5748a0a0c437224c971b03e62e1247efc4d3197918dcdbb10ee3ff7",
-   "text_sha256": "051add454ba003ed0153090de22dcc94dc83a8a48f9e1c8252cac7caadb81243"
+   "artifact": "blind/paragraph-ad76d839.txt",
+   "sha256": "b514cec157422a7acf61db27ccc4f9808c38e6cf1db3848c92987a43de4c905f",
+   "text_sha256": "ad76d83992847aaafa2524fec8268d12e21c13740c2185bffc48fffad3a00ad2"
   },
-  "closest_prior_id": "arXiv:2505.19115 (FP4 All the Way: Fully Quantized Training of LLMs, Chmiel, Fishman, Banner and Soudry, v1 2025-05-25, v2 2025-08-10, NeurIPS 2025 spotlight per OpenReview kuzye4EPLR); full text read by the frontier and kill-shot cells and re-read by synthesis on 2026-10-10 (Abstract, Sec. 3.1, Figs. 1-3 and 7, Sec. 4, App. Table 4)",
-  "note": "File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text."
+  "closest_prior_id": "Mechanism prior: arXiv:2510.25602 (INT v.s. FP: A Comprehensive Study of Fine-Grained Low-bit Quantization Formats, Chen et al., v1 2025-10-29; ICML 2026 per OpenReview 1GIYHWO9S5): Theorems 1-2 (UE8M0 overhead rho in [1, 2), up to 6.02 dB for INT; FP QSNR set by mantissa width), crossovers 2.04 and 2.39, Table 2, Secs. 5.1-5.3; combined with the ARITH 2025 study (Yang et al., DOI 10.1109/ARITH64983.2025.00011, open copy NSF PAR 10628832): Insight 5 and Fig. 9 (INT4 gains about 6.47 times E2M1's R-MSE reduction from B32 to B16 under E8M0), Insight 3 and Fig. 7, Fig. 6 (R-MSE against training-loss gap). Both read in full by the D68 repair owner on 2026-10-10. The combination is deliberate: wave 1's novelty refuter asked for the critic to be given 2510.25602 Theorems 1-2 plus ARITH Fig. 9 as the prior.",
+  "additional_prior_packets": [
+   {
+    "packet": {
+     "artifact": "blind/paragraph-201f330b.txt",
+     "sha256": "e1a41f6be5748a0a0c437224c971b03e62e1247efc4d3197918dcdbb10ee3ff7",
+     "text_sha256": "051add454ba003ed0153090de22dcc94dc83a8a48f9e1c8252cac7caadb81243"
+    },
+    "prior": "Design prior arXiv:2505.19115 (FP4 All the Way, Chmiel, Fishman, Banner and Soudry; NeurIPS 2025 spotlight), wave 1's packet, unchanged; pair it with the new proposal paragraph paragraph-65332d00.txt"
+   }
+  ],
+  "wave1_packets": {
+   "proposal": "blind/paragraph-43655420.txt (superseded)",
+   "closest_prior": "blind/paragraph-201f330b.txt",
+   "role_map": "compute/blind-roles.json"
+  },
+  "role_map_run2": {
+   "artifact": "compute/repair-d68/blind-roles-run2.json",
+   "sha256": "1b62da18d51f97d845eb02956abee8cdbf0fc3af7f4ca9f269a6e2f0f42df592"
+  },
+  "note": "File names carry no role and each file holds only its paragraph. One critic call per prior packet, each with the proposal paragraph, in randomized order, read by path, without the role map or any other text."
  },
  "budget_ledger": {
   "declared": {
-   "queries": 150,
+   "queries": 80,
    "wall_minutes": 600,
    "tokens": 8000000,
    "dollars": 150,
-   "waves": 3,
+   "waves": 1,
    "gpu_hours": 0.3
   },
-  "used_by_discovery_cells": {
-   "queries": 107,
-   "queries_rejected_by_backend": 10,
-   "full_text_reads": 58,
+  "used_by_repair": {
+   "queries": 16,
+   "paper_reads": 3,
    "gpu_hours": 0.0,
-   "host": "read-only ssh by the frontier cell (arXiv API relay) and one docker import check by the asset cell (no GPU, no Slurm job)"
+   "host": "none (no ssh, no host job)",
+   "wall_minutes_and_tokens": "metered by the recorder from transcripts"
   },
-  "used_by_synthesis": {
-   "queries": 7,
-   "queries_rejected_by_backend": 1,
-   "full_text_rereads": 16,
-   "gpu_hours": 0.0,
-   "host": "read-only ssh: one squeue/nvidia-smi read and two Semantic Scholar relay calls; no host job",
-   "cpu": "N1 (about 100 s), N2 (about 60 s), D1, S1 (about 5 s), S2 on the development Mac",
-   "tokens_and_dollars": "not metered by the synthesis agent; the recorder meters from transcripts"
-  },
-  "remaining_queries": 36,
-  "refuter_reserve_shortfall": 0
+  "remaining_queries": 64
  },
  "direction_doctor_run": {
   "artifact": "doctors/research-direction-doctor-output.json",
-  "sha256": "aaeb213b8e5802570d41528d72853aa35dbeeb7f1c5be82adf9aacde368e8dad",
+  "sha256": "266fe72f88eb094225f1c106cf4a287e32a4ee752539a6bab43f5a09e5aeebdc",
   "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-c5-fp4-instability.md",
   "note": "Outside evidence_root by design: the doctor output depends on this bundle."
  }

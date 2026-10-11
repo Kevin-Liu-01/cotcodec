@@ -2,15 +2,15 @@
  "doctor": "Compute",
  "status": "FAIL",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "D68 repair pass by the single owner (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
- "evidence": "Architecture image 127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9 (torch 2.11.0+cu128, Triton 3.6.0; rebuild at the freeze commit needed); seeds [42, 43, 44] (45, 46 conditional; sweep seed 1000); Phase 0 caps J0 0.10, J1 2.20, J2 0.45, J3 0.30 = 3.05 GPU-h (1.2 x high case, D22); Phase 1 cap formula fixed before Phase 0 (S2: central 45.0 GPU-h with two runs per GPU, 68.1 without; cap values 29.4 to 326.0); checkpoints every 1,000 steps with all Philox states and a bit-identical fresh-job resume test; launch via scripts/submit_docker_research_job.py (dry run, test-only, submit).",
+ "evidence": "Architecture image 127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9 (torch 2.11.0+cu128, Triton 3.6.0; rebuild at the freeze commit needed); seeds [42, 43, 44] plus up to 47 by the J4 rule, probe seeds 2001-2003, sweep seed 1000; Part A fixed caps J0 0.25, J1 1.85, J2 0.40, J3 0.30 = 2.80 GPU-h, each derived from its own high-case workload, and J4 by formula only if Part A stays at or below 8.0 GPU-h (central 4.82, total 7.62); Part B cap formula with every factor applied (central single-process 70.1 to 97.4 GPU-h for n = 3 to 6; wave 1's central single-process cap was 125.3, not the 113.2 it printed); checkpoints every 1,000 steps with all Philox states and a bit-identical fresh-job resume test in the same deterministic mode as Phase 1; launch via scripts/submit_docker_research_job.py (dry run, test-only, submit).",
  "why_fail": [
-  "no real model loop: the repository has no LM pretraining loop, model, data loader, checkpointing or evaluation for this study",
-  "no fake-quant kernels in project code; the numpy reference quantizer in compute/crest_prediction.py is untested against independent references",
-  "no data on the host: FineWeb-Edu files and the tokenizer are not downloaded (needs Kevin's OK)",
+  "no real model loop, data loader, checkpointing or evaluation for this study in the repository",
+  "no quantizer kernels in project code; the numpy reference quantizers (compute/crest_prediction.py, compute/repair-d68/numerics_v2.py) are untested against gfloat and ml_dtypes",
+  "no data on the host (authorized under D1, not yet fetched)",
   "no manifest, container smoke, Slurm dry run or provenance verification",
-  "throughput, fake-quant slowdown and packing gain unmeasured; Phase 1 cost spans 18 to 272 GPU-h"
+  "throughput, F_total, F_quant and packing gain unmeasured; whether J4 fits under 8 GPU-h depends on them"
  ],
- "remediation": "Write the harness and quantizers; obtain Kevin's OK for the download; rebuild the image; dry run and test-only J0 to J3 after no S1a job runs"
+ "remediation": "Write the harness and quantizers; fetch the data under D1 as a CPU job; rebuild the image; dry run and test-only J0 to J4 while the host is quiet"
 }

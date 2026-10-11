@@ -39,3 +39,14 @@ gauntlet's synthesis.
 
 The deterministic research-direction doctor therefore reports FAIL, which is
 the expected and honest state.
+
+## Run 2 (D68 repair, 2026-10-10): still none
+
+Added by the single owner of the D68 repair run. Nothing above has changed for
+`c5-fp4-instability-v2`: no harness, quantizer kernels, data on the host,
+manifest (now J0 to J4), container smoke, Slurm dry run, provenance check or
+orx node exists. The repair's computations (`compute/repair-d68/`: N2v2 and
+N3, D1v2, S1v2, S2v2) are CPU design evidence on the development Mac, not a
+pilot. The data download is a public licensed research download authorized
+under D1 (wave 1 wrote that it needed Kevin's OK; the feasibility refuter
+pointed to D1); it is still not fetched. Run 2 made no host contact.
