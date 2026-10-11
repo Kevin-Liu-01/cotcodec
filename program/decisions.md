@@ -1583,3 +1583,66 @@ by an isolated model on the owner's instruction (D80); not human-validated.**
 - Evidence: `program/evidence/2026-10-11/q2-mutation-adjudication-v2/`. The
   checker-mutation note (R03) can now be finished as a descriptive,
   model-adjudicated result.
+
+**D83. The R03 checker-mutation note is drafted and verified; it is not
+published.** The draft is `paper/checker-mutation-note/draft.md`, about 5,700
+words. It is descriptive, with model-adjudicated labels (D82):
+- 36 of 40 evaluable equivalent z-order edits fail their checker
+  (`compare_pptx_files` 35 of 39 plus the tolerant variant 1 of 1). After
+  D82, 33 are confirmed and 3 are label-contradicted on a gold-defect task.
+- Confirmed false-negative shares are 11.6% pooled, 37.1% within
+  `compare_pptx_files` and 85.4% within the z-order operator.
+- 4 of the 92 save-exposed golds pass raw but fail after a GUI-faithful save,
+  3 of them confirmed.
+- Two false positives are confirmed.
+- K2 agreed on 78 of 78 compared pairs.
+- The corrected comparator flips 0 of 1,808 S1a verdicts.
+Every number maps to a committed source (`data/claims.json`; `check_claims.py`
+reports 0 errors). Two fresh verifiers, one checking numbers and one reading
+as a hostile reviewer, found 4 blocking wording errors and 16 minor items, all
+fixed. The registered prior-art criterion K8 had not run before drafting. It
+ran after the first draft and before any publication, and that timing is
+disclosed. **K8 does not fire**: no mutation audit of desktop CUA checkers
+was found. The closest new prior is BenchJack (2605.12673), which audits
+reward-hacking exploits and builds no gold-state mutants; the note cites it.
+Still open:
+- R03 part (b), the zinv reserve split, is being scouted.
+- Section 6 of the Q2 report still predates K2 and D82 and needs a sync pass.
+- Publishing the note and the xlang-ai disclosure are outward actions that
+  stay with Kevin (D80).
+
+**D84. S2 v4: images built, not ready to freeze; scope of the language-pack
+download.**
+- The download's scope. D76 (a) asked Kevin to approve "downloading the
+  applications' real Arabic language packs". D80 (iv) recorded the approval as
+  the LibreOffice packs, and those are what the guest's office applications
+  need. The S2 v4 owner also fetched Ubuntu's `language-pack-ar-base` and
+  `language-pack-gnome-ar-base` (22.04+20230801) from the signed Ubuntu
+  archive snapshot, with every file's URL, size and SHA-256 recorded and the
+  archive signature verified. Both are public research downloads under D1,
+  which covers them on its own terms. Their use is read under D80 (iv)
+  together with D76 (a), which names the applications' packs generally. This
+  reading is the orchestrator's, recorded here and to be disclosed in the
+  registration. The packages' unmet Depends and Recommends are also to be
+  disclosed there, since no maintainer script ran and no `ar` locale was
+  generated.
+- Status. The derived images are built (Slurm 1199) and pass the
+  block-classification and e2fsck checks, and two development smokes passed
+  (1197, 1201). K0 was committed before any image or render existed (section
+  `ed38b953...`, unchanged since). A fresh code review and a fresh pre-freeze
+  audit both found the package not ready to freeze:
+  - five Phase 0 components are missing, and the lane refuses every job once
+    the id is frozen;
+  - Phase 1 has no executor;
+  - the K1 rung at V = 20 is under-specified;
+  - the held-fixed keyboard and locale facts contradict v4's own VM records;
+  - the infrastructure rule is ambiguous;
+  - the freeze wording is still draft text;
+  - the images are not bit-reproducible;
+  - the download scope above was undisclosed.
+  One repair round follows. It builds the components, makes the build
+  reproducible and re-pins the images, adds a Phase 1 executor addendum frozen
+  as its own ledger row before Phase 1, and fixes the text. A fresh review and
+  a fresh audit come after it. The K0 section stays byte-identical. Phase 0
+  (about 124 VM-h with K1) and Phase 1 run only after a clean audit, one
+  VM-lane campaign at a time.
