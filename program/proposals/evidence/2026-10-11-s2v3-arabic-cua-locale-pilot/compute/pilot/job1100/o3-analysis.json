@@ -1,0 +1,11394 @@
+{
+ "schema": "s2v3-o3-v1",
+ "tolerance_px": 2,
+ "summary": {
+  "tasks_with_both_dumps": 106,
+  "tasks_matched": 105,
+  "matched_elements_median": 227,
+  "reflected_share_median": 0.475,
+  "reflected_share_p10": 0.43612334801762115,
+  "reflected_share_min": 0.43231441048034935,
+  "reflected_share_asymmetric_median": 0.4473684210526316,
+  "unmoved_share_median": 0.5286343612334802,
+  "by_app_reflected_median": {
+   "libreoffice_calc": 0.43612334801762115,
+   "libreoffice_impress": 0.5180722891566265,
+   "libreoffice_writer": 0.475
+  },
+  "not_reflected_by_role_top": {
+   "push button": 4335,
+   "panel": 2074,
+   "separator": 1190,
+   "label": 1135,
+   "menu": 1115,
+   "filler": 815,
+   "toggle button": 565,
+   "list item": 480,
+   "split pane": 235,
+   "scroll bar": 200,
+   "tool bar": 165,
+   "scroll pane": 106
+  },
+  "matched_by_role_top": {
+   "push button": 5065,
+   "panel": 4564,
+   "filler": 3261,
+   "menu": 2230,
+   "toggle button": 1781,
+   "label": 1335,
+   "tool bar": 1290,
+   "separator": 1190,
+   "scroll pane": 716,
+   "list item": 480,
+   "text": 405,
+   "viewport": 400
+  }
+ },
+ "tasks": [
+  {
+   "task_id": "01b269ae-2111-4a07-81fd-3fcd711993b0",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "0326d92d-d218-48a8-9ca1-981cd6d064c7",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "035f41ba-6653-43ab-aa63-c86d449d62e5",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "04578141-1d42-4146-b9cf-6fab4ce5fd74",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 251,
+   "l2_nodes": 251,
+   "matched": 251,
+   "reflected": 130,
+   "reflected_share": 0.5179282868525896,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4541832669322709,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "04d9aeaf-7bed-4024-bedb-e10e6f00eb7f",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "05dd4c1d-c489-4c85-8389-a7836c4f0567",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 130,
+   "reflected_share": 0.52,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5020746887966805,
+   "unmoved_share": 0.452,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "0810415c-bde4-4443-9047-d5f70165a697",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "08aced46-45a2-48d7-993b-ed3fb5b32302",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "0a211154-fda0-48d0-9274-eaac4ce5486d",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 130,
+   "reflected_share": 0.52,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5020746887966805,
+   "unmoved_share": 0.452,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "0a2e43bf-b26c-4631-a966-af9dfa12c9e5",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "0b17a146-2934-46c7-8727-73ff6b6483e8",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "0bf05a7d-b28b-44d2-955a-50b41e24012a",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "0cecd4f3-74de-457b-ba94-29ad6b5dafb6",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 236,
+   "l2_nodes": 236,
+   "matched": 229,
+   "reflected": 99,
+   "reflected_share": 0.43231441048034935,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4063926940639269,
+   "unmoved_share": 0.5240174672489083,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "0e47de2a-32e0-456c-a366-8c607ef7a9d2",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "0e763496-b6bb-4508-a427-fad0b6c3e195",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "0f84bef9-9790-432e-92b7-eece357603fb",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 129,
+   "reflected_share": 0.516,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.4979253112033195,
+   "unmoved_share": 0.456,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "1273e544-688f-496b-8d89-3e0f40aa0606",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "1334ca3e-f9e3-4db8-9ca7-b4c653be7d17",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "1954cced-e748-45c4-9c26-9855b97fbc5e",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "1d17d234-e39d-4ed7-b46f-4417922a4e7c",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "1de60575-bb6e-4c3d-9e6a-2fa699f9f197",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "1e8df695-bd1b-45b3-b557-e7d599cf7597",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "21ab7b40-77c2-4ae6-8321-e00d3a086c73",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "21df9241-f8d7-4509-b7f1-37e501a823f7",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "26a8440e-c166-4c50-aef4-bfb77314b46b",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "2b94c692-6abb-48ae-ab0b-b3e8a19cb340",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "2cd43775-7085-45d8-89fa-9e35c0a915cf",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "30e3e107-1cfb-46ee-a755-2cd080d7ba6a",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "3161d64e-3120-47b4-aaad-6a764a92493b",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 251,
+   "l2_nodes": 251,
+   "matched": 251,
+   "reflected": 130,
+   "reflected_share": 0.5179282868525896,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4541832669322709,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "347ef137-7eeb-4c80-a3bb-0951f26a8aff",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "357ef137-7eeb-4c80-a3bb-0951f26a8aff",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "358aa0a7-6677-453f-ae35-e440f004c31e",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 129,
+   "reflected_share": 0.516,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.4979253112033195,
+   "unmoved_share": 0.456,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "37608790-6147-45d0-9f20-1137bb35703d",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "39be0d19-634d-4475-8768-09c130f5425d",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "3a7c8185-25c1-4941-bd7b-96e823c9f21f",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 235,
+   "l2_nodes": 235,
+   "matched": 228,
+   "reflected": 99,
+   "reflected_share": 0.4342105263157895,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.40825688073394495,
+   "unmoved_share": 0.5263157894736842,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "3aaa4e37-dc91-482e-99af-132a612d40f3",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "3b27600c-3668-4abd-8f84-7bcdebbccbdb",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 129,
+   "reflected_share": 0.516,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.4979253112033195,
+   "unmoved_share": 0.456,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "3ef2b351-8a84-4ff2-8724-d86eae9b842e",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "4172ea6e-6b77-4edb-a9cc-c0014bd1603b",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "4188d3a4-077d-46b7-9c86-23e1a036f6c1",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "42e0a640-4f19-4b28-973d-729602b5a4a7",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "455d3c66-7dc6-4537-a39a-36d3e9119df7",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "4bcb1253-a636-4df4-8cb0-a35c04dfef31",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "4de54231-e4b5-49e3-b2ba-61a0bec721c0",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "4e6fcf72-daf3-439f-a232-c434ce416af6",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 130,
+   "reflected_share": 0.52,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5020746887966805,
+   "unmoved_share": 0.452,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "4f07fbe9-70de-4927-a4d5-bb28bc12c52c",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "51719eea-10bc-4246-a428-ac7c433dd4b3",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 235,
+   "l2_nodes": 235,
+   "matched": 228,
+   "reflected": 99,
+   "reflected_share": 0.4342105263157895,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.40825688073394495,
+   "unmoved_share": 0.5263157894736842,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "51b11269-2ca8-4b2a-9163-f21758420e78",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "535364ea-05bd-46ea-9937-9f55c68507e8",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "57667013-ea97-417c-9dce-2713091e6e2a",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 130,
+   "reflected_share": 0.52,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5020746887966805,
+   "unmoved_share": 0.452,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "5cfb9197-e72b-454b-900e-c06b0c802b40",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 130,
+   "reflected_share": 0.52,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5020746887966805,
+   "unmoved_share": 0.452,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "5d901039-a89c-4bfb-967b-bf66f4df075e",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "6054afcb-5bab-4702-90a0-b259b5d3217c",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "6ada715d-3aae-4a32-a6a7-429b2e43fb93",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "6f81754e-285d-4ce0-b59e-af7edb02d108",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "70bca0cc-c117-427e-b0be-4df7299ebeb6",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "72b810ef-4156-4d09-8f08-a0cf57e7cefe",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "73c99fb9-f828-43ce-b87a-01dc07faa224",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "7a4e4bc8-922c-4c84-865c-25ba34136be1",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "7ae48c60-f143-4119-b659-15b8f485eb9a",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "7dbc52a6-11e0-4c9a-a2cb-1e36cfda80d8",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "7e429b8d-a3f0-4ed0-9b58-08957d00b127",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "7efeb4b1-3d19-4762-b163-63328d66303b",
+   "app": "libreoffice_calc",
+   "no_window": true
+  },
+  {
+   "task_id": "841b50aa-df53-47bd-a73a-22d3a9f73160",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "88fe4b2d-3040-4c70-9a70-546a47764b48",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "8979838c-54a5-4454-a2b8-3d135a1a5c8f",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "8b1ce5f2-59d2-4dcc-b0b0-666a714b9a14",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "936321ce-5236-426a-9a20-e0e3c5dc536f",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "986fc832-6af2-417c-8845-9272b3a1528b",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "9cf05d24-6bd9-4dae-8967-f67d88f5d38a",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "9ec204e4-f0a3-42f8-8458-b772a6797cab",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 129,
+   "reflected_share": 0.516,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.4979253112033195,
+   "unmoved_share": 0.456,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "a01fbce3-2793-461f-ab86-43680ccbae25",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "a097acff-6266-4291-9fbd-137af7ecd439",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 129,
+   "reflected_share": 0.516,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.4979253112033195,
+   "unmoved_share": 0.456,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "a434992a-89df-4577-925c-0c58b747f0f4",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "a53f80cd-4a90-4490-8310-097b011433f6",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 130,
+   "reflected_share": 0.52,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5020746887966805,
+   "unmoved_share": 0.452,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "aa3a8974-2e85-438b-b29e-a64df44deb4b",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "abed40dc-063f-4598-8ba5-9fe749c0615d",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "ac9bb6cb-1888-43ab-81e4-a98a547918cd",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 129,
+   "reflected_share": 0.516,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.4979253112033195,
+   "unmoved_share": 0.456,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "adf5e2c3-64c7-4644-b7b6-d2f0167927e7",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "af23762e-2bfd-4a1d-aada-20fa8de9ce07",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 129,
+   "reflected_share": 0.516,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.4979253112033195,
+   "unmoved_share": 0.456,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "af2d657a-e6b3-4c6a-9f67-9e3ed015974c",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "b21acd93-60fd-4127-8a43-2f5178f4a830",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "b8adbc24-cef2-4b15-99d5-ecbe7ff445eb",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "bf4e9888-f10f-47af-8dba-76413038b73c",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "c59742c0-4323-4b9d-8a02-723c251deaa0",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 129,
+   "reflected_share": 0.516,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.4979253112033195,
+   "unmoved_share": 0.456,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "c82632a4-56b6-4db4-9dd1-3820ee3388e4",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "ce88f674-ab7a-43da-9201-468d38539e4a",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 251,
+   "l2_nodes": 251,
+   "matched": 251,
+   "reflected": 131,
+   "reflected_share": 0.5219123505976095,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5041322314049587,
+   "unmoved_share": 0.450199203187251,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "d681960f-7bc3-4286-9913-a8812ba3261a",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "e246f6d8-78d7-44ac-b668-fcf47946cb50",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "e4ef0baf-4b52-4590-a47e-d4d464cca2d7",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 130,
+   "reflected_share": 0.52,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5020746887966805,
+   "unmoved_share": 0.452,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "e528b65e-1107-4b8c-8988-490e4fece599",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "eb03d19a-b88d-4de4-8a64-ca0ac66f426b",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "ecb0df7a-4e8d-4a03-b162-053391d3afaf",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  },
+  {
+   "task_id": "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "edb61b14-a854-4bf5-a075-c8075c11293a",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 250,
+   "l2_nodes": 250,
+   "matched": 250,
+   "reflected": 130,
+   "reflected_share": 0.52,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5020746887966805,
+   "unmoved_share": 0.452,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "f178a4a9-d090-4b56-bc4c-4b72a61a035d",
+   "app": "libreoffice_writer",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 202,
+   "l2_nodes": 202,
+   "matched": 200,
+   "reflected": 95,
+   "reflected_share": 0.475,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.4473684210526316,
+   "unmoved_share": 0.57,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 2,
+   "l2_only": 2
+  },
+  {
+   "task_id": "f23acfd2-c485-4b7c-a1e7-d4303ddfe864",
+   "app": "libreoffice_impress",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 249,
+   "l2_nodes": 249,
+   "matched": 249,
+   "reflected": 129,
+   "reflected_share": 0.5180722891566265,
+   "symmetric_matched": 9,
+   "reflected_share_asymmetric": 0.5,
+   "unmoved_share": 0.4538152610441767,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 0,
+   "l2_only": 0
+  },
+  {
+   "task_id": "f9584479-3d0d-4c79-affa-9ad7afdd8850",
+   "app": "libreoffice_calc",
+   "window": [
+    0,
+    38,
+    1920,
+    1061
+   ],
+   "window_same_in_rtl": true,
+   "l1_nodes": 234,
+   "l2_nodes": 234,
+   "matched": 227,
+   "reflected": 99,
+   "reflected_share": 0.43612334801762115,
+   "symmetric_matched": 10,
+   "reflected_share_asymmetric": 0.41013824884792627,
+   "unmoved_share": 0.5286343612334802,
+   "not_reflected_examples": [
+    {
+     "role": "menu",
+     "name": "File",
+     "ltr": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "rtl": [
+      0,
+      19,
+      35,
+      19
+     ],
+     "expected_x": 1885
+    },
+    {
+     "role": "menu",
+     "name": "Edit",
+     "ltr": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "rtl": [
+      35,
+      19,
+      37,
+      19
+     ],
+     "expected_x": 1848
+    },
+    {
+     "role": "menu",
+     "name": "View",
+     "ltr": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "rtl": [
+      72,
+      19,
+      44,
+      19
+     ],
+     "expected_x": 1804
+    },
+    {
+     "role": "menu",
+     "name": "Insert",
+     "ltr": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "rtl": [
+      116,
+      19,
+      49,
+      19
+     ],
+     "expected_x": 1755
+    },
+    {
+     "role": "menu",
+     "name": "Format",
+     "ltr": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "rtl": [
+      165,
+      19,
+      58,
+      19
+     ],
+     "expected_x": 1697
+    }
+   ],
+   "l1_only": 7,
+   "l2_only": 7
+  }
+ ]
+}

@@ -1,0 +1,272 @@
+[
+  {
+    "source": "alphaxiv",
+    "id": "2608.30094",
+    "title": "A Hybrid State-Space Approach for Census-Tract Population Estimation",
+    "abstract": "Sequence models---the architecture family behind large language models and, increasingly, state-of-the-art image recognition---have redefined how machines learn from high-dimensional data. Yet population estimation from satellite imagery, a task that underpins infrastructure planning, public health, and disaster response, has scarcely benefited: leading systems still bind population to a uniform raster, disaggregating census counts onto grid cells through weighting surfaces built from ancillary data (e.g., in WorldPop and LandScan), which can introduce systematic spatial bias, and predicting population per grid cell with convolutional neural networks. In this approach, the administrative-unit structure in which the census was actually collected is discarded. We close this gap with MambaPop, which renders each administrative unit as a single polygon-masked satellite image and treats tract-level population estimation as a sequence-modeling problem over its image patches, pairing each tract image directly with its population label and eliminating the disaggregation step entirely. Built on the hybrid state-space--attention MambaVision backbone, MambaPop is, to our knowledge, the first method to learn population directly from an administrative unit's own image as well as the first to apply a state-space based (Mamba) hybrid architecture to the population estimation task. Across all $\\sim$84{,}000 contiguous-US census tracts of the 2020 census, MambaPop attains a mean absolute error (MAE) of $1{,}141$ persons per tract, matching the strongest convolutional baseline (YOLOv11, MAE $1{,}122$).",
+    "publicationDate": "2026-08-30T23:43:06.000Z",
+    "votes": 0,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...\nRutgers University\nNew Brunswick, NJ, USA\nFigure 1: Predicted population percentage error, defined as \n| \nˆ\n𝑦 − 𝑦\n| /\n𝑦 \nwhere \nˆ\n𝑦 \nis the model prediction and 𝑦 is the ground-truth\ntract popul..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "A Hybrid State-Space Approach for Census-Tract Population\nEstimation\nJackson R. Ye\nry135@rutgers.edu\nRutgers University\nNew Brunswick, NJ, USA\nAlexandre V. Morozov\nmorozov@physics.rutgers.edu\nRutgers ..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2608.00511",
+    "title": "A Total Statistical Error Framework for Comparing Census Data Collection Methods",
+    "abstract": "Population censuses increasingly rely on imputation to assign usual-residence addresses for non-responding dwellings, yet no formal statistical framework has existed for comparing competing imputation methods on their combined coverage and address-accuracy performance. We develop such a framework within a Total Statistical Error (TSE) paradigm that is not restricted to survey-based data collection and applies equally to register-based and administrative data sources. The central quantity is a unit-level binary correctness indicator, equal to one if and only if a person is both enumerated and assigned to the correct usual-residence address; its complement is the unit TSE, and aggregating over the population yields a correctness rate that serves as the basis for head-to-head method comparison. We distinguish two assessment paradigms: Paradigm I, in which a post-enumeration survey (PES) provides reference values for a probability sample, and Paradigm II, in which a complete benchmark makes the correctness rate directly computable. We illustrate the framework using 2021 Australian census microdata, comparing k-nearest-neighbour and random forest imputation under a not-missing-at-random (NMAR) mechanism. A key finding is that dependent nonresponse between the census and a simulated PES causes naive Paradigm I subgroup estimates to be severely biased when subgroup deletion rates are small. Augmenting the PES response propensity model with the census nonresponse indicator reduces this bias by approximately 90%; simulation experiments show that the nonresponse indicator alone drives the correction, with the additionally included imputed set A values contributing negligible further reduction. This is the preferred strategy whenever dependent nonresponse between the census and PES is a concern.",
+    "publicationDate": "2026-08-01T08:13:57.000Z",
+    "votes": 0,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...rvey (PES) provides reference values for\na probability sample, and Paradigm II, in which a complete benchmark makes the correctness\nrate directly computable. We illustrate the framework using 2021 Aus..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "... Data Science Division, Australian Bureau of Statistics\nJune 2026\nAbstract\nPopulation censuses increasingly rely on imputation to assign usual-residence addresses for\nnon-responding dwellings, yet no ..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.19879",
+    "title": "VākQA: A Benchmark and Evaluation Study for Telugu Spoken Factoid Question Answering",
+    "abstract": "Question answering has advanced rapidly with large language models, but predominantly for high-resource languages, in both text and spoken settings. Spoken question answering (SQA) benchmark for Telugu remains unexplored, and the reliability of automatic evaluation in this setting remains unquantified. We introduce VākQA, a Telugu SQA benchmark of 2,001 factoid question-answer pairs across six domains, with 2.53 hours of speech audio, bilingual transcriptions, and human-verified reference answers. We first validate evaluation methods against human judgements: Gemini-as-a-judge best approximates human ratings but is non-uniformly strict, while open-weight judges systematically penalize correct Telugu answers that differ in surface form from the reference. Using this validated setup, we benchmark proprietary and open-weight models across input modality, language, and domain. We observe that Telugu phrasing retains cultural specificity that is lost in translation, speech input introduces phonetic confusions that alter question meaning, and cascaded ASR-MT errors compound progressively. VākQA is publicly released.",
+    "publicationDate": "2026-09-17T08:29:11.000Z",
+    "votes": 1,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "V¯akQA: A Benchmark and Evaluation Study for\nTelugu Spoken Factoid Question Answering\nBhavana Akkiraju\n∗\n, Ravi Sastry Kolluru\n∗\n, Charan Devarakonda\n∗ \nSrihari Bandarupalli\n∗\n,\nSantosh Kesiraju\n†\n, A..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...chmark and Evaluation Study for\nTelugu Spoken Factoid Question Answering\nBhavana Akkiraju\n∗\n, Ravi Sastry Kolluru\n∗\n, Charan Devarakonda\n∗ \nSrihari Bandarupalli\n∗\n,\nSantosh Kesiraju\n†\n, Anil Kumar Vup..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.20758",
+    "title": "Prediction-Powered Smoothing and Validation for Disaggregated AI Evaluation",
+    "abstract": "Evaluating an AI system requires disaggregated assessment, as performance varies across domains such as benchmark task types or conversation types in deployed agents. Exhaustive testing is expensive, so evaluation rests on a sample of labeled units. We treat the evaluation set as a finite population and seek accurate point and interval estimates of each domain mean. Direct estimators, including prediction-powered inference (PPI), use only a domain's own labels and are imprecise where labels are few. Small area estimation addresses this problem, and we build on it to develop an integrated workflow for estimation and validation. For estimation, we propose prediction-powered smoothing (PP-S), a Bayesian model fit to each domain's prediction-powered estimate, with an extension that borrows strength across a reporting taxonomy (PP-TS). For validation, we derive a new, approximately unbiased design-based cross-validation score for choosing among direct and smoothed estimators. We study a curated benchmark with verifiable grading and deployed agent traffic graded by humans, each with every outcome observed. In both, the proposed estimators improve on the direct estimators in point and interval estimation, with near-nominal coverage. At the same sampling budget, our score selects as well as an independent validation sample does and estimates the selected estimator's error far more accurately.",
+    "publicationDate": "2026-09-17T17:42:29.000Z",
+    "votes": 1,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...ting an AI system requires disaggregated assessment, as performance varies across do-\nmains such as benchmark task types or conversation types in deployed agents. Exhaustive testing is\nexpensive, so e..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...nia, Santa Cruz, CA, USA\nSeptember 18, 2026\nAbstract\nEvaluating an AI system requires disaggregated assessment, as performance varies across do-\nmains such as benchmark task types or conversation type..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.29140",
+    "title": "Sharp Limits for Honest Uncertainty in Hard-Budget Repeated Evaluation",
+    "abstract": "Repeated evaluation can estimate a benchmark score accurately while still requiring replication to certify narrow uncertainty. We characterize that requirement on a fixed grid of $M$ tasks with $L$ binary paths per task under the hard budget $(M+t)K$, where each path costs at most $K$ responses or episodes. For fixed $L \\ge 3$ and $0 &lt; \\alpha \\le 1/12$, the optimal expected width on the worst pure cohort is $\\Theta_{\\alpha,L}([M(t+1)]^{-1/2})$ when every task is observed and $\\Theta_{\\alpha,L}([M(t+\\sqrt{M})]^{-1/2})$ when omission is allowed. The lower bounds cover adaptive hard-budget policies, and fixed random-subset designs attain both rates through disagreement certificates. A joint mean/disagreement interval turns the task-covering law into practical finite-budget inference. In an equal-budget LiveCodeBench replay with 16 models, 880 tasks, and five outputs per task, the task-covering design reduces median point-estimation MSE by 87.0\\% relative to pooled uniform sampling, while the Joint certificate produces narrower confidence intervals in 15/16 panels and reduces median interval width by 30.6\\%. Finite-regime analyses identify task coverage as the effective choice at the evaluated scale and characterize how cohort size and within-task agreement determine the useful operating region. Together, the sharp laws and fixed-budget evidence make replication and task coverage explicit design variables for information-efficient repeated evaluation.",
+    "publicationDate": "2026-09-24T07:15:07.000Z",
+    "votes": 0,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...dependent \n2\nNorthwestern University \n3\nPinterest, Inc.\nABSTRACT\nRepeated evaluation can estimate a benchmark score accurately while still requir-\ning replication to certify narrow uncertainty. We cha..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...g replication to certify narrow uncertainty. We characterize that requirement\non a fixed grid of M tasks with L binary paths per task under the hard budget\n(M + t)K, where each path costs at most K re..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.28988",
+    "title": "Personalized Korean Lipreading as Visual Speech Recognition: Transfer, Census and Adaptation on OLKAVS",
+    "abstract": "We present a personalized Korean visual speech recognition (VSR) system and quantify, on the nine-camera OLKAVS corpus, the gap between the population-level benchmark score and an individual user's error. A video-only Conformer initialized from English-trained weights attains 9.95 - 12.19% character error rate (CER) under the corpus protocol against the published 26.64, and 19.00 - 21.52 on unseen wording. Per speaker, CER spans 1.0 to 52.2%, with seen wording lowering CER by 7.0 - 9.0 points and professional delivery and spontaneous speech raising it by 8.5 - 10.5 and 12.7 points. A low-rank adapter with 4.6% of the parameters, trained on 4 to 29 minutes of the user's frontal video, lowers the CER of twelve high-error speakers by 2.13 to 3.58 points, transfers to every camera without loss, and keeps 85% of the full fine-tuning gain at 12% of its cost to other speakers. Cameras above the mouth plane add about six CER points as a constant offset that training on all views keeps small.",
+    "publicationDate": "2026-09-24T04:01:10.000Z",
+    "votes": 0,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...n (VSR)\nsystem and quantify, on the nine-camera OLKAVS corpus, the gap\nbetween the population-level benchmark score and an individual\nuser’s error. A video-only Conformer initialized from English-\ntra..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "PERSONALIZED KOREAN LIPREADING AS VISUAL SPEECH RECOGNITION:\nTRANSFER, CENSUS AND ADAPTATION ON OLKAVS\nSe Un Park\n∗\n, Hakjun Kim, Taehoon Roh, Junyoung Park\n∗\nUX Factory, Inc.\nABSTRACT\nWe present a pe..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2610.03121",
+    "title": "Split-Cubic Curves from D(n)-Triples: A Bounded Finite-Field Census",
+    "abstract": "We record a finite-field census of the split-cubic elliptic curves $E_{a,b,c}^{(n)}:y^2=(ax+n)(bx+n)(cx+n)$ attached to positive integral $D(n)$-triples. For $n\\in\\{-3,3,5,8,12,20\\}$ there are $164$ such triples with $1\\le a&lt;b&lt;c\\le100$, allowing zero squares. Their reductions at the ten primes $\\operatorname{NextPrime}(10^k)$, $3\\le k\\le12$, give $1640$ records, of which $45$ have cofactor four relative to the largest prime divisor of the group order. We collect the standard split-cubic and quadratic-twist identities in the explicit normalization $\\lambda=b(c-a)/(c(b-a))$ and $\\delta=cn(b-a)$, and use them to audit the point counts. The archive records group orders, factorizations, cofactors, embedding degrees and transfer-field bit lengths. A worked example compares the main curve with its nonsquare twist. The census is deterministic and descriptive; it provides neither an asymptotic density estimate nor cryptographic parameter recommendations.",
+    "publicationDate": "2026-10-02T10:42:59.000Z",
+    "votes": 1,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...curve with its nonsquare twist.\nThe census is deterministic and descriptive; it provides neither an asymptotic density estimate nor\ncryptographic parameter recommendations.\n1. Introduction\nFor nonzero..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "SPLIT-CUBIC CURVES FROM D(N )-TRIPLES: A BOUNDED FINITE-FIELD\nCENSUS\nSOMPONG CHUYSURICHAY, SAWIAN JAIDEE, CHATCHAWAN PANRAKSA,\nAND TEERAPOL SUKHONWIMOLMAL\nAbstract. We record a finite-field census of ..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.35113",
+    "title": "SymbolicArena: A Unified Infrastructure for Benchmark Distillation and Dynamic Evaluation in Symbolic Regression",
+    "abstract": "Symbolic regression (SR) seeks concise and interpretable mathematical expressions from data for scientific equation discovery. Existing SR benchmarks face a tradeoff between evaluation cost and benchmark validity. Repeated evaluation of large task pools is expensive, and compact benchmarks lack systematic evidence of preserved task diversity and algorithm discriminability. SymbolicArena provides a unified infrastructure for benchmark distillation and dynamic evaluation. The framework standardizes 664 heterogeneous tasks with executable ground truth expressions and distills the Full Task Set into Core50, a validated benchmark of 50 tasks. The distillation process preserves task coverage and algorithm discrimination under explicit balance constraints. SymbolicArena applies a unified execution protocol to heterogeneous SR algorithms and produces comparable outputs and search trajectories. Multi Axis Evaluation characterizes numerical quality, symbolic quality, and search behavior. Core50 reduces evaluation workload by 92.5% and maintains agreement with Full Task Set evaluations. Experiments show that SymbolicArena achieves 72.6% to 86.7% lower approximation error than alternative selectors, further supporting its fidelity to the Full Task Set. Evaluation reveals a substantial gap between numerical fitting and symbolic recovery across current SR methods, suggesting that reliable equation recovery remains an open challenge.",
+    "publicationDate": "2026-09-28T13:15:29.000Z",
+    "votes": 0,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "SYMBOLICARENA: A UNIFIED INFRASTRUCTURE FOR\nBENCHMARK DISTILLATION AND DYNAMIC EVALUA-\nTION IN SYMBOLIC REGRESSION\nZiwen Zhang\n1,2† \nXiju Wu\n2,3† \nYuheng Jing\n1,2∗ \nRunxiang Wang\n1,2 \nBoxiao Wang\n1,2\n..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "SYMBOLICARENA: A UNIFIED INFRASTRUCTURE FOR\nBENCHMARK DISTILLATION AND DYNAMIC EVALUA-\nTION IN SYMBOLIC REGRESSION\nZiwen Zhang\n1,2† \nXiju Wu\n2,3† \nYuheng Jing\n1,2∗ \nRunxiang Wang\n1,2 \nBoxiao Wang\n1,2\n..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.23501",
+    "title": "On the Detectability and Measurement of Galactic Bars as a Function of Redshift",
+    "abstract": "The cosmic evolution of galactic bars offers key insights into the dynamical history of disk galaxies. However, studies of high-redshift bars are severely hampered by observational effects such as resolution degradation and surface brightness dimming. To quantify these biases and establish a robust methodology of bar detection and measurement for high-redshift galaxies, we develop an automated pipeline integrating isophotal ellipse fitting and Fourier decomposition. We benchmark its performance using a comprehensive set of mock observations generated by artificially redshifting high-quality images of local barred galaxies to match the background and resolution of HST ($z \\approx 0.5-3$) and JWST ($z \\approx 1-6$) observations. We find that applying standard bar detection criteria derived from local galaxies to high-redshift data results in a severe underestimation of the bar fraction, missing $&gt;50%$ of bars at $z&gt;0.5$ in HST imaging and a similar fraction at $z&gt;2$ in JWST imaging. Using adaptive, redshift-dependent criteria optimized via mock data achieves recovery rates above $60%$ out to $z \\approx 3$ for HST and $z \\approx 6$ for JWST. The ellipse fitting method significantly outperforms Fourier decomposition in measurement reliability. While ellipse fitting systematically underestimates bar length by $\\sim 4%$--$36%$ due to surface brightness dimming, this bias is consistent and correctable ($\\sigma \\approx 0.88$--$2.22$); in contrast, the Fourier method is prone to catastrophic failures ($\\sigma \\approx 2.40$--$6.14$) in the regime of low signal-to-noise ratio. We propose a standardized workflow that prioritizes mock-derived adaptive criteria and ellipse fitting, providing quantitative correction factors and empirical relations that enable future studies to recover intrinsic bar statistics from raw observations.",
+    "publicationDate": "2026-09-20T09:35:20.000Z",
+    "votes": 1,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...e develop an automated pipeline\nintegrating isophotal ellipse fitting and Fourier decomposition. We benchmark its performance using a\ncomprehensive set of mock observations generated by artificially r..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "Draft version September 22, 2026\nTypeset using L\nA\nTEX twocolumn style in AASTeX7.0.2\nOn the Detectability and Measurement of Galactic Bars as a Function of Redshift\nYi-Xiao Lyu,\n1, 2 \nLuis C. Ho,\n1, ..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2606.28925",
+    "title": "Multi-Agent Routing as Set-Valued Prediction: A WildChat Benchmark and Cost-Aware Evaluation",
+    "abstract": "Tool and agent routing from natural-language prompts is naturally a set-valued prediction problem: a single query may require multiple agents, while over-selection increases execution cost. The benchmark introduced here is derived from WildChat and contains 3,000 prompts over a fixed 12-agent catalog, with AI-assisted heuristic labels under a fixed schema and controlled rebalancing for multi-label evaluation. The evaluation protocol combines set-level metrics (Precision, Recall, F1, Jaccard, and Exact Match), latency, an execution-oriented capability-coverage simulation, and a constrained weighted-routing setting based on ordinal agent-cost tiers. Compared methods include nearest-neighbor matching, linear multilabel classification, dependency-aware baselines, a fine-tuned encoder, deterministic weighted post-scoring via Weighted Agent Routing (WAR), and a zero-shot LLM baseline. Results show that supervised routers substantially outperform nearest-neighbor and zero-shot LLM routing. The fine-tuned encoder achieves the strongest unconstrained set accuracy, while the linear multilabel model provides the strongest practical baseline. In the constrained setting, the weighted routing layer improves utility when applied on top of strong supervised scorers, with the largest gain observed for Encoder+WAR. Overall, the benchmark and evaluation protocol support reproducible study of accuracy-cost trade-offs in fixed-catalog multi-agent routing.",
+    "publicationDate": "2026-06-27T13:59:46.000Z",
+    "votes": 1,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "Multi-Agent Routing as Set-Valued Prediction: A WildChat\nBenchmark and Cost-Aware Evaluation\nAnanto Nayan Bala\nAhsanullah University of Science and Technology\nDhaka, Bangladesh\nnayan.ananto@gmail.com\n..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "Multi-Agent Routing as Set-Valued Prediction: A WildChat\nBenchmark and Cost-Aware Evaluation\nAnanto Nayan Bala\nAhsanullah University of Science and Technology\nDhaka, Bangladesh\nnayan.ananto@gmail.com\n..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.01042",
+    "title": "Behavioral calibration of mobile-phone GPS data for population-representative analyses",
+    "abstract": "Mobile phone mobility data have transformed the study of human behavior, but demographic and behavioral biases can compromise their representativeness and distort population-level inference. Existing calibration approaches primarily address demographic and geographic representativeness, leaving behavioral discrepancies largely uncorrected. Here we introduce the Behavioral Population (BePop) framework, which jointly calibrates mobility data to representative demographic and behavioral distributions using census data and time-use surveys. BePop embeds mobility sequences into behavioral profiles and estimates person-level weights that align both population composition and daily activity patterns. Across three U.S. metropolitan areas, the framework consistently improves agreement between GPS-derived mobility and representative behavioral distributions, including time allocation, activity transitions, and mobility motifs. Calibration also substantially alters downstream mobility indicators, demonstrating that behavioral biases can propagate into commonly used mobility measures. Our results establish behavioral representativeness as a critical complement to demographic calibration and provide a general framework for population-representative mobility inference.",
+    "publicationDate": "2026-09-01T10:40:26.000Z",
+    "votes": 1,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...dazione Bruno Kessler (FBK), Trento, Italy\n2\nDepartment of Computational and Data Sciences, George Mason University,\nFairfax, VA, US\n*\nllucchini@fbk.eu\n+\nThese authors contributed equally to this work..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "Behavioral calibration of mobile-phone GPS data for\npopulation-representative analyses\nNicolò A. Girardini\n1,+\n, Unchitta Kan\n2,+\n, Eduardo López\n2\n, Bruno Lepri\n1\n, Lorenzo\nLucchini\n1,†,*\n, and Simon..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2608.24475",
+    "title": "Narrow Population Inference Enhanced by Analytical Likelihood Models",
+    "abstract": "The growing catalog of gravitational-wave events has revealed substantial diversity in the properties of compact-binary mergers. However, commonly used population-inference methods based on discrete posterior samples can struggle to constrain narrow population features, resulting in biased or unstable estimates of population hyperparameters. We first demonstrate this limitation using a toy population model by comparing parameter recovery with a continuous likelihood model against discrete approximations constructed from $10^3$, $10^4$, and $10^5$ samples. We then perform the same comparison using synthetic eccentric and multisource populations introduced in previous studies. Although the continuous and discrete approaches yield broadly consistent results, the continuous approximation more accurately recovers the parameters of narrow simulated populations. In particular, while both methods produce similar mass distributions, appreciable differences arise for narrowly distributed parameters such as spin and eccentricity. Our results indicate that the continuous approach provides more reliable inference for spin and eccentricity, whose narrow population distributions can be inadequately represented by finite sample sets. Continuous likelihood models therefore offer a valuable tool for improving population inference and extracting more robust information about the formation and evolution of compact-binary systems.",
+    "publicationDate": "2026-07-29T05:15:35.000Z",
+    "votes": 0,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "Narrow Population Inference Enhanced by Analytical Likelihood Models\nM. Qazalbash \n,\n1 \nS. Mehra,\n1 \nM. Zeeshan ,\n1, ∗ \nV. Delfavero ,\n2 \nand R. O’Shaughnessy \n1\n1\nCenter for Computational Relativity ..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...for spin and eccentricity, whose narrow population\ndistributions can be inadequately represented by finite sample sets. Continuous likelihood mod-\nels therefore offer a valuable tool for improving pop..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2608.15769",
+    "title": "The Dual-Population Benchmark Model",
+    "abstract": "Motivated by Fisher's and Hill's \\cite{Fisher,Hill} ideas of ranking and pivotal quantities, we introduce a planar Poisson process (PPP) model in which the negative component \\(\\Pi_-\\), acted upon by a choice operator {\\rm C}, supplies a set of past benchmarks that divide the future points of the positive component \\(\\Pi_+\\) into ranked categories. The benchmarks act as separators in an ordered paintbox while simultaneously acquiring the dual role of past standards established by the choice operator. The exceptional homogeneity properties of the PPP offer an infinitude of possibilities which absorb many existing combinatorial structures and enrich the toolbox of Bayesian distribution-free inference. A particular benchmark generating mechanism considered here (the exponential race) amounts to the device of splitting into spacings of nonhomogeneous order statistics.\nOn the methodological side, the paper aims to highlight the role of order as important characteristic of an exchangeable structure, complementary to the description in terms of the components size. Moreover, we advocate the viewpoint that the order induced by a latent strength parameter is {\\it intrinsically} inherited from the distant-past temporal sampling order, hence the decoupled orders may coexist within the framework of population duality without disturbing size-biasedness of components and the full exchangeability within the sample. This implies that the indistinguishability of components in the nonlinear CRP, sometimes regarded as nonexchangeability, does not in fact destroy exchangeability and should be reconciled with the arrival ordering within the paradigm of ordered structures.",
+    "publicationDate": "2026-08-16T14:44:49.000Z",
+    "votes": 0,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "The Dual-Population Benchmark Model\nAlexander Gnedin\nSchool of Mathematical Sciences, Queen Mary University of London\na.gnedin@qmul.ac.uk\nAbstract\nMotivated by Fisher’s and Hill’s [46, 47] ideas of ra..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...Mary University of London\na.gnedin@qmul.ac.uk\nAbstract\nMotivated by Fisher’s and Hill’s [46, 47] ideas of ranking and pivotal quantities, we introduce\na planar Poisson process (PPP) model in which the..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2608.10356",
+    "title": "Design-Based Prediction-Powered Inference for Spatial Data",
+    "abstract": "Prediction-powered inference (PPI) combines a wall-to-wall prediction map with a small gold-standard sample to give confidence intervals valid whatever the map's quality. Canonical PPI theory starts from i.i.d.\\ labelling, whereas spatial labels arrive through survey designs or covariate-driven mechanisms, and map errors may be spatially correlated. We recast PPI in a design-based framework: the estimand is a census parameter of a fixed spatial population, with randomness arising from the labelling mechanism. We derive exact design variances under simple and stratified sampling, a threshold for when blocked spatial balance pays, and sandwich inference for estimated propensities when selection depends on the map. Our main result concerns double robustness. With a misspecified propensity, a correct outcome model secures superpopulation identification but, conditional on the realised population, leaves a remainder of order $\\sigma_u/\\sqrt{N_{\\mathrm{eff},v}}$, an effective count of the residual patches the weights see. Under ratio-stable labelling this remainder is free of the label count, so coverage can deteriorate as labels accumulate. For i.i.d.\\ or exchangeable residual fields $N_{\\mathrm{eff},v}$ is of order $N$ and the remainder is negligible beside sampling error when $n/N \\to 0$; spatially coherent dependence instead makes it bind. We reproduce this on a fully enumerated population of $48{,}175$ cells. Estonian LUCAS applications show that power tuning and dependence diagnostics must respect the design: i.i.d.\\ PPI++ tuning worsens precision for the best map, whereas design-matched tuning cuts standard errors by about $10\\%$ and matches or beats PPI++ across seven land-cover estimands. Pooled residual diagnostics can likewise mistake spatially structured between-stratum variation for residual dependence.",
+    "publicationDate": "2026-08-11T01:28:47.000Z",
+    "votes": 0,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "Design-Based Prediction-Powered Inference for Spatial Data\nShinichiro Shirota\n∗\nAugust 12, 2026\nAbstract\nPrediction-powered inference (PPI) combines a wall-to-wall prediction map with a small\ngold-sta..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...d. We recast\nPPI in a design-based framework: the estimand is a census parameter of a fixed spatial\npopulation, with randomness arising from the labelling mechanism. We derive exact design\nvariances u..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.05883",
+    "title": "Fixed-smoothing Uniform Inference for Quantile Regression",
+    "abstract": "This paper develops fixed-smoothing (fixed-b, fixed-K) inference methods for time-series quantile regression that are robust to heteroskedasticity and autocorrelation. Our approach is uniformly valid over quantile levels and accounts for dependence both over time and across quantiles. It enables the construction of uniform confidence bands, Wald, and Sup-t tests for joint hypotheses, and tests of shape restrictions, providing a unified framework for assessing heterogeneity in quantile effects. A key challenge is that, under weak dependence, uniform inference for quantile regression processes is generally non-pivotal because the limiting distributions depend on the long-run covariance structure across quantiles. To address this issue, we develop two complementary approaches. The uniform-in-$\\tau$ method estimates the covariance structure and simulates the non-pivotal limiting distribution. For certain tests involving a finite collection of quantile levels, the stack-Wald method delivers pivotal fixed-smoothing inference. We establish the asymptotic validity of both approaches. Simulation results show that the proposed methods substantially improve size control relative to existing HAC-based procedures while maintaining good power. An application to predictive quantile regressions for stock returns reveals substantial heterogeneity in predictive effects across both quantiles and forecast horizons.",
+    "publicationDate": "2026-09-05T05:11:39.000Z",
+    "votes": 0,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...ixed-b, fixed-K) inference methods for time-series quantile\nregression that are robust to heteroskedasticity and autocorrelation. Our approach is uniformly valid\nover quantile levels and accounts for ..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...riance structure and simulates the non-pivotal limiting distribution. For\ncertain tests involving a finite collection of quantile levels, the stack-Wald method delivers pivotal fixed-\nsmoothing infere..."
+      }
+    ]
+  }
+]

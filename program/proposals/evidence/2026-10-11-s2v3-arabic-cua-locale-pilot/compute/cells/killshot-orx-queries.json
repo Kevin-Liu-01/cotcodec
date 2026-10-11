@@ -1,0 +1,317 @@
+[
+{
+"tool": "orx discover keyword",
+"query": "right-to-left mirrored layout GUI agent Arabic interface",
+"returned_ids": [
+"2610.01215",
+"2610.05861",
+"2608.09654",
+"2609.00048",
+"2607.28227",
+"2609.38008",
+"2609.32679",
+"2609.27307",
+"2609.28565",
+"2608.09278",
+"2607.24571",
+"2607.25904",
+"2610.11942",
+"2609.03438",
+"2609.25769"
+]
+},
+{
+"tool": "orx discover keyword",
+"query": "RTL mirroring computer-use agent benchmark",
+"returned_ids": [
+"2609.16251",
+"2608.22077",
+"2609.39903",
+"2609.25335",
+"2605.15537",
+"2606.09426",
+"2609.18022",
+"2608.02643",
+"2606.01533",
+"2607.13079",
+"2609.36201",
+"2609.21157",
+"2609.32750",
+"2609.36927",
+"2608.26204"
+]
+},
+{
+"tool": "orx discover keyword",
+"query": "macOSWorld multilingual interactive benchmark GUI agents",
+"returned_ids": [
+"2506.04135",
+"2609.32385",
+"2609.39547",
+"2609.23490",
+"2609.01056",
+"2609.12394",
+"2610.01215",
+"2609.27307",
+"2609.10451",
+"2609.38184",
+"2607.25904",
+"2607.04425",
+"2609.03438",
+"2610.00948",
+"2607.28227"
+]
+},
+{
+"tool": "orx discover embedding",
+"query": "We separate two causes of a computer-use agent's performance drop in an Arabic interface: the Arabic text of menus and labels, and the right-to-left mirroring of the window layout. A 2x2 factorial crosses interface language (English vs Arabic) with layout direction (left-to-right vs mirrored) in the same desktop applications, with tasks and checkers held fixed.",
+"returned_ids": [
+"2608.25832",
+"2609.19125",
+"2609.15079",
+"2608.19083",
+"2608.08775",
+"2608.03327",
+"2606.24551",
+"2607.04334",
+"2607.02975",
+"2604.17849",
+"2605.21403",
+"2604.04723",
+"2604.04532",
+"2604.05166",
+"2602.09310"
+]
+},
+{
+"tool": "orx discover embedding",
+"query": "GUI agent robustness to interface language localization and right-to-left layout mirroring in desktop applications",
+"returned_ids": [
+"2609.22000",
+"2610.01215",
+"2610.05861",
+"2609.17653",
+"2610.10988",
+"2609.34139",
+"2610.07972",
+"2610.02320",
+"2610.09469",
+"2610.00948",
+"2609.36939",
+"2609.39547",
+"2609.35671",
+"2609.34769",
+"2609.36923"
+]
+},
+{
+"tool": "orx discover keyword",
+"query": "LibreOffice Arabic interface agent",
+"returned_ids": [
+"2609.31511",
+"2610.11510",
+"2609.01113",
+"2609.17235",
+"2609.22723",
+"2610.02529",
+"2609.35461",
+"2610.06298",
+"2609.35564",
+"2607.11119",
+"2609.11892",
+"2608.21950",
+"2608.22894",
+"2608.21985",
+"2609.00191"
+]
+},
+{
+"tool": "orx discover keyword",
+"query": "pseudo-locale mirrored layout vision-language model screenshot",
+"returned_ids": [
+"2609.00111",
+"2609.35035",
+"2608.06065",
+"2608.26991",
+"2610.05432",
+"2608.12219",
+"2608.21832",
+"2608.08477",
+"2608.09766",
+"2608.09654",
+"2609.00898",
+"2608.21555",
+"2608.01106",
+"2606.21493",
+"2602.05998"
+]
+},
+{
+"tool": "orx discover openalex",
+"query": "right-to-left interface mirroring GUI agent",
+"returned_ids": [
+"10.48550/arxiv.2603.26211",
+"10.52202/085713-4468",
+"10.48550/arxiv.2601.07181",
+"10.18653/v1/2026.acl-long.774",
+"W7128556403",
+"10.36227/techrxiv.176591818.87526814/v1",
+"10.1145/3832148",
+"10.48550/arxiv.2602.11524",
+"10.48550/arxiv.2605.19484",
+"10.48550/arxiv.2605.14747",
+"10.1145/3830398.3830619",
+"10.18653/v1/2025.emnlp-main.1192",
+"10.48550/arxiv.2602.10814",
+"10.48550/arxiv.2602.09012",
+"10.18653/v1/2026.findings-acl.750"
+]
+},
+{
+"tool": "orx discover openalex",
+"query": "bidirectional user interface localization Arabic layout mirroring usability",
+"returned_ids": [
+"10.1155/2016/2872067",
+"10.20943/01201703.113",
+"10.36923/jicc.v26i3.1528",
+"W7216634450",
+"10.52088/ijesty.v6i2.1836",
+"10.1145/3696593.3696613",
+"W2906574295",
+"10.1007/978-3-319-21006-3_27",
+"10.1038/s41598-026-36578-z",
+"10.1016/j.infsof.2026.108258",
+"10.63744/w9dk2dm7m92p",
+"10.13016/m2ppnx-vicy",
+"W2169205683",
+"W7135552806",
+"10.17148/ijarcce.2026.15690"
+]
+},
+{
+"tool": "orx discover keyword",
+"query": "Benchmarking and Enhancing Multilingual Perception and Reasoning in GUI Agents",
+"returned_ids": [
+"2512.00756",
+"2610.04800",
+"2609.05374",
+"2609.27461",
+"2609.27307",
+"2605.27134",
+"2609.10451",
+"2607.28227",
+"2609.34769",
+"2609.07712",
+"2609.12394",
+"2609.13287",
+"2609.19843",
+"2609.03438",
+"2609.16635"
+]
+},
+{
+"tool": "orx discover keyword",
+"query": "RealGUINoise interactive cross-platform benchmark GUI agent robustness",
+"returned_ids": [
+"2609.38184",
+"2610.07588",
+"2609.10451",
+"2607.25904",
+"2607.04425",
+"2609.32385",
+"2607.28227",
+"2610.01215",
+"2609.00048",
+"2609.39547",
+"2608.09278",
+"2609.12394",
+"2602.16855",
+"2610.07972",
+"2609.32679"
+]
+},
+{
+"tool": "orx discover keyword",
+"query": "multilingual OSWorld localized interface language",
+"returned_ids": [
+"2610.03818",
+"2609.39903",
+"2609.24890",
+"2606.29537",
+"2610.01139",
+"2610.04116",
+"2609.10993",
+"2609.33345",
+"2609.00325",
+"2607.22042",
+"2606.05613",
+"2607.23545",
+"2608.04904",
+"2606.21654",
+"2606.15714"
+]
+},
+{
+"tool": "orx discover keyword",
+"query": "Arabic GUI grounding screenshots right-to-left",
+"returned_ids": [
+"2610.05185",
+"2608.09654",
+"2606.29705",
+"2609.32036",
+"2606.18101",
+"2608.03270",
+"2608.21832",
+"2609.18690",
+"2608.11191",
+"2610.00948",
+"2609.27307",
+"2605.15542",
+"2609.13287",
+"2609.15307",
+"2603.17441"
+]
+},
+{
+"tool": "orx discover embedding",
+"query": "Does the user interface display language or the text direction of the screen hurt GUI agents? Controlled localization of desktop or mobile apps into Arabic, Hebrew or Persian with layout mirroring.",
+"returned_ids": [
+"2608.25832",
+"2610.07972",
+"2609.34139",
+"2610.07672",
+"2610.08037",
+"2610.03818",
+"2609.16732",
+"2609.19843",
+"2609.23955",
+"2609.28565",
+"2609.19125",
+"2609.07712",
+"2609.04850",
+"2609.02309",
+"2609.00048"
+]
+},
+{
+"tool": "orx discover keyword",
+"query": "Actions Speak Louder than Words cross-lingual policy retention tool-using agents",
+"returned_ids": [
+"2608.11110",
+"2608.29363",
+"2609.30716",
+"2609.35272",
+"2609.28003",
+"2609.06792",
+"2610.07753",
+"2610.00797",
+"2610.01921",
+"2607.06008",
+"2609.39640",
+"2608.30830",
+"2609.15906",
+"2609.34686",
+"2609.24446"
+]
+}
+]

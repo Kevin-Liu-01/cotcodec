@@ -1,0 +1,62 @@
+[     0.0s] A1 facts
+[     0.7s] prepared private LibreOffice copy in 0.2 s
+[     0.7s] A2 content K0_stock
+[     1.4s]    -> {"ooLocale": "en-US", "SheetPrefix": null, "UIMirroring": null, "new_doc_sheet_names": ["Sheet1"], "new_doc_sheet_names_codepoints": [["0x53", "0x68", "0x65", "0x65", "0x74", "0x31"]], "xlsx_sheet_names": ["Sheet1"], "xlsx_contains_isolates": false}
+[     1.4s] A2 content K1_en_US_mo_tagged
+[     2.0s]    -> {"ooLocale": "en-US", "SheetPrefix": null, "UIMirroring": null, "new_doc_sheet_names": ["⟦Sheet⟧1"], "new_doc_sheet_names_codepoints": [["0x27e6", "0x53", "0x68", "0x65", "0x65", "0x74", "0x27e7", "0x31"]], "xlsx_sheet_names": ["⟦Sheet⟧1"], "xlsx_contains_isolates": false}
+[     2.0s] A2 content K1b_en_mo_tagged
+[     2.7s]    -> {"ooLocale": "en-US", "SheetPrefix": null, "UIMirroring": null, "new_doc_sheet_names": ["⟦Sheet⟧1"], "new_doc_sheet_names_codepoints": [["0x27e6", "0x53", "0x68", "0x65", "0x65", "0x74", "0x27e7", "0x31"]], "xlsx_sheet_names": ["⟦Sheet⟧1"], "xlsx_contains_isolates": false}
+[     2.7s] A2 content K2_en_US_mo_fsi
+[     3.4s]    -> {"ooLocale": "en-US", "SheetPrefix": null, "UIMirroring": null, "new_doc_sheet_names": ["⁨Sheet⁩1"], "new_doc_sheet_names_codepoints": [["0x2068", "0x53", "0x68", "0x65", "0x65", "0x74", "0x2069", "0x31"]], "xlsx_sheet_names": ["⁨Sheet⁩1"], "xlsx_contains_isolates": true}
+[     3.4s] A2 content K3_en_US_mo_fsi_prefix_pin
+[     4.1s]    -> {"ooLocale": "en-US", "SheetPrefix": "Sheet", "UIMirroring": null, "new_doc_sheet_names": ["Sheet1"], "new_doc_sheet_names_codepoints": [["0x53", "0x68", "0x65", "0x65", "0x74", "0x31"]], "xlsx_sheet_names": ["Sheet1"], "xlsx_contains_isolates": false}
+[     4.1s] A2 content K4_pseudo_ar
+[     4.8s]    -> {"ooLocale": "ar", "SheetPrefix": null, "UIMirroring": null, "new_doc_sheet_names": ["ورقة1"], "new_doc_sheet_names_codepoints": [["0x648", "0x631", "0x642", "0x629", "0x31"]], "xlsx_sheet_names": ["ورقة1"], "xlsx_contains_isolates": false}
+[     4.8s] A2 content K5_pseudo_ar_prefix_pin
+[     5.4s]    -> {"ooLocale": "ar", "SheetPrefix": "Sheet", "UIMirroring": null, "new_doc_sheet_names": ["Sheet1"], "new_doc_sheet_names_codepoints": [["0x53", "0x68", "0x65", "0x65", "0x74", "0x31"]], "xlsx_sheet_names": ["Sheet1"], "xlsx_contains_isolates": false}
+[     5.4s] A2 content K6_stock_prefix_pin
+[     6.1s]    -> {"ooLocale": "en-US", "SheetPrefix": "Sheet", "UIMirroring": null, "new_doc_sheet_names": ["Sheet1"], "new_doc_sheet_names_codepoints": [["0x53", "0x68", "0x65", "0x65", "0x74", "0x31"]], "xlsx_sheet_names": ["Sheet1"], "xlsx_contains_isolates": false}
+[     6.1s] A3 layout L0_stock calc
+[    19.5s]    -> windows ['Untitled 1 - LibreOffice Calc'] a11y_nodes 0
+[    19.5s] A3 layout L0_stock impress
+[    32.8s]    -> windows ['Untitled 1 - LibreOffice Impress'] a11y_nodes 0
+[    32.8s] A3 layout L0_stock writer
+[    46.1s]    -> windows ['Untitled 1 - LibreOffice Writer'] a11y_nodes 0
+[    46.1s] A3 layout L1_en_ltr_uimirroring_false calc
+[    59.5s]    -> windows ['Untitled 1 - LibreOffice Calc'] a11y_nodes 0
+[    59.5s] A3 layout L1_en_ltr_uimirroring_false impress
+[    72.9s]    -> windows ['Untitled 1 - LibreOffice Impress'] a11y_nodes 0
+[    72.9s] A3 layout L1_en_ltr_uimirroring_false writer
+[    86.2s]    -> windows ['Untitled 1 - LibreOffice Writer'] a11y_nodes 0
+[    86.2s] A3 layout L2_en_rtl_uimirroring_true calc
+[    99.6s]    -> windows ['Untitled 1 - LibreOffice Calc'] a11y_nodes 0
+[    99.6s] A3 layout L2_en_rtl_uimirroring_true impress
+[   112.9s]    -> windows ['Untitled 1 - LibreOffice Impress'] a11y_nodes 0
+[   112.9s] A3 layout L2_en_rtl_uimirroring_true writer
+[   126.3s]    -> windows ['Untitled 1 - LibreOffice Writer'] a11y_nodes 0
+[   126.3s] A3 layout L3_en_rtl_sal_env calc
+[   139.6s]    -> windows ['Untitled 1 - LibreOffice Calc'] a11y_nodes 0
+[   139.6s] A3 layout L3_en_rtl_sal_env impress
+[   153.0s]    -> windows ['Untitled 1 - LibreOffice Impress'] a11y_nodes 0
+[   153.0s] A3 layout L3_en_rtl_sal_env writer
+[   166.3s]    -> windows ['Untitled 1 - LibreOffice Writer'] a11y_nodes 0
+[   166.3s] A3 layout L4_pseudo_ar_default calc
+[   179.7s]    -> windows ['Untitled 1 - LibreOffice Calc'] a11y_nodes 0
+[   179.7s] A3 layout L4_pseudo_ar_default impress
+[   193.0s]    -> windows ['Untitled 1 - LibreOffice Impress'] a11y_nodes 0
+[   193.0s] A3 layout L4_pseudo_ar_default writer
+[   206.3s]    -> windows ['Untitled 1 - LibreOffice Writer'] a11y_nodes 0
+[   206.3s] A3 layout L5_pseudo_ar_uimirroring_false calc
+[   219.7s]    -> windows ['Untitled 1 - LibreOffice Calc'] a11y_nodes 0
+[   219.7s] A3 layout L5_pseudo_ar_uimirroring_false impress
+[   233.0s]    -> windows ['Untitled 1 - LibreOffice Impress'] a11y_nodes 0
+[   233.0s] A3 layout L5_pseudo_ar_uimirroring_false writer
+[   246.4s]    -> windows ['Untitled 1 - LibreOffice Writer'] a11y_nodes 0
+[   246.4s] A3 layout L6_pseudo_ar_sal_env_plus_false calc
+[   259.7s]    -> windows ['Untitled 1 - LibreOffice Calc'] a11y_nodes 0
+[   259.7s] A3 layout L6_pseudo_ar_sal_env_plus_false impress
+[   273.1s]    -> windows ['Untitled 1 - LibreOffice Impress'] a11y_nodes 0
+[   273.1s] A3 layout L6_pseudo_ar_sal_env_plus_false writer
+[   286.4s]    -> windows ['Untitled 1 - LibreOffice Writer'] a11y_nodes 0
+[   286.4s] A4 analysis
+[   287.1s] done

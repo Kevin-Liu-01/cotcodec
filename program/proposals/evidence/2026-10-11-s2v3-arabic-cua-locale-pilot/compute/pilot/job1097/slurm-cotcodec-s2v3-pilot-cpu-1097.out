@@ -1,0 +1,112 @@
+{
+ "du_src": {
+  "rc": 0,
+  "s": 0.0,
+  "err": "",
+  "out": "302660\t/usr/lib/libreoffice\n",
+  "error": null
+ },
+ "count_src": {
+  "rc": 0,
+  "s": 0.0,
+  "err": "",
+  "out": "3166\n16\n",
+  "error": null
+ },
+ "soffice_script_head": {
+  "rc": 0,
+  "s": 0.0,
+  "err": "",
+  "out": "#!/bin/sh\n#\n# This file is part of the LibreOffice project.\n#\n# This Source Code Form is subject to the terms of the Mozilla Public\n# License, v. 2.0. If a copy of the MPL was not distributed with this\n# file, You can obtain one at http://mozilla.org/MPL/2.0/.\n#\n# This file incorporates work covered by the following license notice:\n#\n#   Licensed to the Apache Software Foundation (ASF) under one or more\n#   contributor license agreements. See the NOTICE file distributed\n#   with this work for additional information regarding copyright\n#   ownership. The ASF licenses this file to you under the Apache\n#   License, Version 2.0 (the \"License\"); you may not use this file\n#   except in compliance with the License. You may obtain a copy of\n#   the License at http://www.apache.org/licenses/LICENSE-2.0 .\n#\n\n# use POSIX locale for well-defined tool output\nLO_SAVE_LC_ALL=\"$LC_ALL\"\nLC_ALL=C\nexport LC_ALL\n\n#\n# STAR_PROFILE_LOCKING_DISABLED=1\n# export STAR_PROFILE_LOCKING_DISABLED\n#\n\n# file locking now enabled by default\nSAL_ENABLE_FILE_LOCKING=1\nexport SAL_ENABLE_FILE_LOCKING\n\n# uncomment line below to disable anti aliasing of fonts\n# SAL_ANTIALIAS_DISABLE=true; export SAL_ANTIALIAS_DISABLE\n\n# uncomment line below if you encounter problems starting soffice on your system\n# SAL_NO_XINITTHREADS=true; export SAL_NO_XINITTHREADS\n\n#@JITC_PROCESSOR_TYPE_EXPORT@\n\n# resolve installation directory\nsd_cwd=$(pwd)\nsd_res=\"$0\"\nwhile [ -h \"$sd_res\" ] ; do\n    sd_dirname=$(dirname \"$sd_res\")\n    cd \"$sd_dirname\" || exit $?\n    sd_basename=$(basename \"$sd_res\")\n    sd_res=$(ls -l \"$sd_basename\" | sed \"s/.*$sd_basename -> //g\")\ndone\nsd_dirname=$(dirname \"$sd_res\")\ncd \"$sd_dirname\" || exit $?\nsd_prog=$(pwd)\ncd \"$sd_cwd\" || exit $?\n\n# linked build needs additional settings\nif [ -e \"${sd_prog}/ooenv\" ] ; then\n    # shellcheck source=../../instsetoo_native/ooenv\n    . \"${sd_prog}/ooenv\"\nfi\n",
+  "error": null
+ },
+ "copy_s": 0.2,
+ "du_copy": {
+  "rc": 0,
+  "s": 0.0,
+  "err": "",
+  "out": "301751\t/tmp/lo\n",
+  "error": null
+ },
+ "sys_convert": {
+  "rc": 0,
+  "s": 0.1,
+  "err": "Warning: failed to launch javaldx - java may not function correctly\n/usr/lib/libreoffice/program/soffice.bin X11 error: Can't open display: \n   Set DISPLAY environment variable, use -display option\n   or check permissions of your X-Server\n   (See \"man X\" resp. \"man xhost\" for details)\n",
+  "out": "",
+  "error": null
+ },
+ "copy_convert_unmodified": {
+  "rc": 0,
+  "s": 0.1,
+  "err": "Warning: failed to launch javaldx - java may not function correctly\n/tmp/lo/program/soffice.bin X11 error: Can't open display: \n   Set DISPLAY environment variable, use -display option\n   or check permissions of your X-Server\n   (See \"man X\" resp. \"man xhost\" for details)\n",
+  "out": "",
+  "error": null
+ },
+ "copy_convert_brand": {
+  "rc": 0,
+  "s": 0.1,
+  "err": "Warning: failed to launch javaldx - java may not function correctly\n/tmp/lo/program/soffice.bin X11 error: Can't open display: \n   Set DISPLAY environment variable, use -display option\n   or check permissions of your X-Server\n   (See \"man X\" resp. \"man xhost\" for details)\n",
+  "out": "",
+  "error": null
+ },
+ "copy_convert_brand_layer": {
+  "rc": 0,
+  "s": 0.1,
+  "err": "Warning: failed to launch javaldx - java may not function correctly\n/tmp/lo/program/soffice.bin X11 error: Can't open display: \n   Set DISPLAY environment variable, use -display option\n   or check permissions of your X-Server\n   (See \"man X\" resp. \"man xhost\" for details)\n",
+  "out": "",
+  "error": null
+ },
+ "outputs": {
+  "rc": null,
+  "s": null,
+  "err": null,
+  "out": null,
+  "error": null
+ },
+ "uno_sys": {
+  "rc": 0,
+  "s": 30.1,
+  "err": "",
+  "out": "{\"ok\": false, \"last\": \"Connector : couldn't connect to pipe \\\"dbg_sys\\\": 10 ./io/source/connector/connector.cxx:93\"}\n",
+  "error": null
+ },
+ "uno_sys_alive": false,
+ "uno_sys_ps": {
+  "rc": 0,
+  "s": 0.0,
+  "err": "",
+  "out": "",
+  "error": null
+ },
+ "uno_sys_pipes": {
+  "rc": 0,
+  "s": 0.0,
+  "err": "",
+  "out": "srwxr-xr-x  1 q2m  q2m     0 Oct 11 15:47 OSL_PIPE_1004_SingleOfficeIPC_407f7984ab4c43eb3a5764ab19fe421\nsrwxr-xr-x  1 q2m  q2m     0 Oct 11 15:47 OSL_PIPE_1004_SingleOfficeIPC_4814e355f1ec973757914cb1465ddc69\nsrwxr-xr-x  1 q2m  q2m     0 Oct 11 15:47 OSL_PIPE_1004_SingleOfficeIPC_53f89ed430e231c85b289a3b2d4687f\nsrwxr-xr-x  1 q2m  q2m     0 Oct 11 15:47 OSL_PIPE_1004_SingleOfficeIPC_5725ddfc98f523ec59b0b99f9d19fe20\nsrwxr-xr-x  1 q2m  q2m     0 Oct 11 15:47 OSL_PIPE_1004_SingleOfficeIPC_89e0d350a814d49a18e0f0a160e7463d\n",
+  "error": null
+ },
+ "uno_sys_log": "Warning: failed to launch javaldx - java may not function correctly\n/usr/lib/libreoffice/program/soffice.bin X11 error: Can't open display: \n   Set DISPLAY environment variable, use -display option\n   or check permissions of your X-Server\n   (See \"man X\" resp. \"man xhost\" for details)\n",
+ "uno_copy": {
+  "rc": 0,
+  "s": 30.1,
+  "err": "",
+  "out": "{\"ok\": false, \"last\": \"Connector : couldn't connect to pipe \\\"dbg_copy\\\": 10 ./io/source/connector/connector.cxx:93\"}\n",
+  "error": null
+ },
+ "uno_copy_alive": false,
+ "uno_copy_ps": {
+  "rc": 0,
+  "s": 0.0,
+  "err": "",
+  "out": "",
+  "error": null
+ },
+ "uno_copy_pipes": {
+  "rc": 0,
+  "s": 0.0,
+  "err": "",
+  "out": "srwxr-xr-x  1 q2m  q2m     0 Oct 11 15:47 OSL_PIPE_1004_SingleOfficeIPC_407f7984ab4c43eb3a5764ab19fe421\nsrwxr-xr-x  1 q2m  q2m     0 Oct 11 15:47 OSL_PIPE_1004_SingleOfficeIPC_4814e355f1ec973757914cb1465ddc69\nsrwxr-xr-x  1 q2m  q2m     0 Oct 11 15:47 OSL_PIPE_1004_SingleOfficeIPC_53f89ed430e231c85b289a3b2d4687f\nsrwxr-xr-x  1 q2m  q2m     0 Oct 11 15:47 OSL_PIPE_1004_SingleOfficeIPC_5725ddfc98f523ec59b0b99f9d19fe20\nsrwxr-xr-x  1 q2m  q2m     0 Oct 11 15:47 OSL_PIPE_1004_SingleOfficeIPC_89e0d350a814d49a18e0f0a160e7463d\nsrwxr-xr-x  1 q2m  q2m     0 Oct 11 15:47 OSL_PIPE_1004_SingleOfficeIPC_cf12b9c8b23b6a1445122f5c46a2ed84\n",
+  "error": null
+ },
+ "uno_copy_log": "Warning: failed to launch javaldx - java may not function correctly\n/tmp/lo/program/soffice.bin X11 error: Can't open display: \n   Set DISPLAY environment variable, use -display option\n   or check permissions of your X-Server\n   (See \"man X\" resp. \"man xhost\" for details)\n"
+}

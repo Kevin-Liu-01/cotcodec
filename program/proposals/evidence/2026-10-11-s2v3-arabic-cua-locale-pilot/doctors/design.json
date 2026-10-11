@@ -1,0 +1,16 @@
+{
+ "doctor": "Design",
+ "status": "PASS",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "S2 v3 wave-1 synthesis by the single owner (Claude agent), 2026-10-11 UTC; not an independent review",
+ "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
+ "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data (a 2x2 blocked by task and session, seeded interleaving, random slot assignment, both harnesses); power by simulation of the registered estimators on measured inputs (beta-binomial propensities fitted and checked on S1a's records); K-Dense statistical-analysis and the ARS reporting standards",
+ "evidence": "Intervention: one system-layer selector (finalized ooLocale and UIMirroring), executed on the installed build in the pilot. Controls: en baseline; O1-O8 with planted positive controls; tagged pseudo-catalog cell; functional A/A; config invariance; offline setup; step-0 and keyboard checks. Falsifiers P1-P7 and kill criteria K0-K8, all reachable: census SMALL at a true null 0.97 (homogeneous) and 0.92 (mixed-sign perturbation) at K = 106, n = 4; PRESENT_HARM at a 15% relative drop 0.85-0.96 across five structures; SMALL when the census truth is beyond a margin at most 0.051 (0.056 at K = 89); census coverage 0.94-0.95. No selection on outcomes; dual margin against dilution.",
+ "why_fail": null,
+ "remediation": "Re-run the simulation with real Phase 0 inputs (Arabic chrome share, RTL-defect counts) before the freeze.",
+ "disclosed_limits": [
+  "the 44 tasks without S1a records are drawn from a task-level fit (no harness heterogeneity)",
+  "the population-frame SMALL is much weaker under reshuffles (0.04-0.50)",
+  "the margins are fixed by judgement anchored on macOSWorld, which reports no interval"
+ ]
+}

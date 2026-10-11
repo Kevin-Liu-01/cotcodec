@@ -1,0 +1,39 @@
+{
+ "url": "https://arxiv.org/abs/2607.28227",
+ "fetched_at": "2026-10-11T08:23:00Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 45169,
+ "raw_sha256": "8276af45bb7a0eca98bfca583946278bf99107365199565ad7fce664b817d744",
+ "raw_stored": false,
+ "extract": {
+  "title": "Qwen-UI-Agent Technical Report: Toward Next-Generation Real-World Centric Foundation GUI Agents",
+  "authors": [
+   "Zhou, Hanzhang",
+   "Tong, Panrong",
+   "Zhang, Xu",
+   "Kong, Quyu",
+   "Cai, Chenglin",
+   "Xia, Tianyu",
+   "Zhang, Gongjie",
+   "Zhang, Jianan",
+   "Li, Long",
+   "Chen, Long",
+   "Wang, Lei",
+   "Dai, Gaole",
+   "Li, Pengxiang",
+   "Chen, Liangyu",
+   "Wang, Yue",
+   "Hoi, Steven"
+  ],
+  "citation_date": "2026/07/30",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 30 Jul 2026 13:58:41 UTC"
+   }
+  ],
+  "abstract": "GUI agents have the potential to become a general purpose executor over existing digital devices. To advance them toward real-world use, we envision agents that operate reliably on real devices, execute workflows across platforms, combine GUI interaction with CLI execution, complete long-horizon tasks, proactively initiate useful services, and autonomously improve their capabilities with minimal human effort. Guided by this vision, we present Qwen-UI-Agent, a real-world centric foundation GUI agent spanning mobile, computer-use, web, and DeepSearch environments. Qwen-UI-Agent combines diverse sandbox environments with a large-scale real-device mobile runtime. Its unified action space interleaves GUI operations with CLI execution and generates batched actions in a single model turn. An AutoResearch-style data flywheel uses agents to construct tasks and environments, diagnose failures, and plan subsequent iterations. Online RL supports training on trajectories exceeding 100 turns, with over 10,000 concurrent environments accelerating rollout. A lightweight harness layer supports proactive service initiation and stateful workflows across mobile and computer. Across a broad suite of evaluations, Qwen-UI-Agent sets state-of-the-art performance on mobile-use benchmarks while delivering competitive performance on computer- and browser-use tasks against frontier models, including Opus 4.8, Gemini 3.1 Pro, and GPT-5.6 Sol. On mobile use, it achieves 82.1% on MobileWorld, 92.2% on MobileWorld-Real, and 97.5% on AndroidDaily. On computer use, it achieves 79.5% on OSWorld-Verified and a 40.0% partial-progress score on OSWorld-v2. On browser use and GUI grounding, it achieves 73.6% on WebArena and 81.5% on ScreenSpot-Pro, respectively.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,9 @@
+{
+ "doctor": "Safety",
+ "status": "PASS",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "S2 v3 wave-1 synthesis by the single owner (Claude agent), 2026-10-11 UTC; not an independent review",
+ "pass_condition": "Safety, monitorability, data rights, and project red lines addressed",
+ "evidence": "Offline VMs and containers on public OSWorld tasks; no host-run model code (D3, D7 not triggered); pilot containers with --network=none, read-only root, no capabilities, the host user's uid, a GPU-device preflight; one CPU job at a time on an empty queue; ~/cotcodec untouched; no outward action taken (downloads deferred to Kevin); licences recorded (OSWorld Apache-2.0, LibreOffice and l10n-ar MPL-2.0, Ubuntu language packs per upstream, fonts already in the image, Qwen3.5-9B Apache-2.0); committed records scanned for host addresses.",
+ "remediation": "none"
+}

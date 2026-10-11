@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2609.33012",
+ "fetched_at": "2026-10-11T08:23:01Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41983,
+ "raw_sha256": "717f100fef61da62ed907f13efba6e69152a7546648f406bfb3d783d745106af",
+ "raw_stored": false,
+ "extract": {
+  "title": "When Pair Count Is Not the Sample Size: What All-Pairs Agent Comparisons Estimate",
+  "authors": [
+   "Huang, Wei-Jung"
+  ],
+  "citation_date": "2026/09/26",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 26 Sep 2026 23:09:29 UTC"
+   }
+  ],
+  "abstract": "When an agent benchmark compares every pair of leaderboard entries, the number of comparisons can look much larger than the independent evidence behind them: A versus B and A versus C both reuse A. Whether this reuse affects inference depends on what the analysis is meant to describe. If the board and its outcomes are fixed, the all-pairs mean is an exact summary of those entries, and any interval must come from another declared source of randomness. If the entries are instead treated as iid draws from a population of future configurations and the pair rule is regular and nondegenerate, the same mean is an order-two U-statistic whose first-order uncertainty depends on the number of configurations, not the number of pairs. We use near ties as the running example, but the distinction extends to other symmetric pair summaries when their regularity conditions hold. We examine both interpretations using a fixed SWE-bench Verified snapshot and an exact binary model with known truth. On SWE-bench, intervals that accounted for shared configurations were more than twice as wide as a pair-iid reference that treated the pairs as independent. In the exact model, pair-iid coverage fell far below the nominal level when edges shared endpoints but remained near nominal for matched independent edges. Results on two other fixed leaderboards show that exact summaries also depend on which pairs are included and how they are weighted. An all-pairs analysis must therefore state what is fixed, what is sampled, and how it handles shared entries and pair aggregation.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

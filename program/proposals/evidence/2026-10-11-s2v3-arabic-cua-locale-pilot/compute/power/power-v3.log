@@ -1,0 +1,147 @@
+census_all_106                     K=106 n= 4 logit     0.0    PH=0.029 SM=0.971 INC=0.004 fS|beyond=None popSMg=0.963 v2SM=0.958 cov=0.946 trueD=0.0 se=1.1643
+census_all_106                     K=106 n= 4 perturb   0.0    PH=0.058 SM=0.924 INC=0.009 fS|beyond=None popSMg=0.843 v2SM=0.802 cov=0.947 trueD=-0.0177 se=1.1573
+census_all_106                     K=106 n= 4 reshuffle 0.1    PH=0.121 SM=0.817 INC=0.007 fS|beyond=0.0238 popSMg=0.497 v2SM=0.551 cov=0.944 trueD=0.0003 se=1.1707
+census_all_106                     K=106 n= 4 reshuffle 0.3    PH=0.218 SM=0.624 INC=0.011 fS|beyond=0.0198 popSMg=0.037 v2SM=0.051 cov=0.948 trueD=0.003 se=1.179
+census_all_106                     K=106 n= 4 logit     -0.1   PH=0.707 SM=0.386 INC=0.019 fS|beyond=None popSMg=0.364 v2SM=0.487 cov=0.947 trueD=-2.8663 se=1.1523
+census_all_106                     K=106 n= 4 logit     -0.15  PH=0.958 SM=0.068 INC=0.005 fS|beyond=0.0271 popSMg=0.060 v2SM=0.136 cov=0.947 trueD=-4.2997 se=1.145
+census_all_106                     K=106 n= 4 logit     -0.2   PH=0.999 SM=0.003 INC=0.000 fS|beyond=0.0032 popSMg=0.002 v2SM=0.017 cov=0.949 trueD=-5.7333 se=1.1363
+census_all_106                     K=106 n= 4 logit     -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.947 trueD=-8.6017 se=1.1147
+census_all_106                     K=106 n= 4 prop      -0.1   PH=0.651 SM=0.330 INC=0.058 fS|beyond=None popSMg=0.330 v2SM=0.414 cov=0.949 trueD=-2.8713 se=1.2377
+census_all_106                     K=106 n= 4 prop      -0.15  PH=0.920 SM=0.051 INC=0.034 fS|beyond=0.0515 popSMg=0.052 v2SM=0.107 cov=0.948 trueD=-4.3073 se=1.2647
+census_all_106                     K=106 n= 4 prop      -0.2   PH=0.990 SM=0.003 INC=0.007 fS|beyond=0.0027 popSMg=0.002 v2SM=0.015 cov=0.947 trueD=-5.7427 se=1.2857
+census_all_106                     K=106 n= 4 prop      -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.942 trueD=-8.614 se=1.3117
+census_all_106                     K=106 n= 4 conc25    -0.1   PH=0.636 SM=0.382 INC=0.036 fS|beyond=0.0136 popSMg=0.292 v2SM=0.354 cov=0.951 trueD=-2.8683 se=1.2047
+census_all_106                     K=106 n= 4 conc25    -0.15  PH=0.877 SM=0.132 INC=0.017 fS|beyond=0.0139 popSMg=0.070 v2SM=0.126 cov=0.948 trueD=-4.3027 se=1.1907
+census_all_106                     K=106 n= 4 conc25    -0.2   PH=0.962 SM=0.042 INC=0.006 fS|beyond=0.0067 popSMg=0.014 v2SM=0.034 cov=0.948 trueD=-5.737 se=1.1527
+census_all_106                     K=106 n= 4 flip      -0.1   PH=0.633 SM=0.434 INC=0.013 fS|beyond=0.0124 popSMg=0.266 v2SM=0.351 cov=0.951 trueD=-2.8563 se=1.1353
+census_all_106                     K=106 n= 4 flip      -0.15  PH=0.849 SM=0.188 INC=0.009 fS|beyond=0.0091 popSMg=0.088 v2SM=0.138 cov=0.951 trueD=-4.2917 se=1.1203
+census_all_106                     K=106 n= 4 flip      -0.2   PH=0.952 SM=0.062 INC=0.004 fS|beyond=0.0051 popSMg=0.022 v2SM=0.041 cov=0.954 trueD=-5.728 se=1.1047
+census_all_106                     K=106 n= 4 flip      -0.3   PH=0.998 SM=0.003 INC=0.001 fS|beyond=0.0007 popSMg=0.001 v2SM=0.002 cov=0.947 trueD=-8.592 se=1.0743
+census_all_106                     K=106 n= 4 perturb   -0.15  PH=0.924 SM=0.109 INC=0.007 fS|beyond=0.0167 popSMg=0.061 v2SM=0.116 cov=0.945 trueD=-4.3127 se=1.1383
+census_all_106                     K=106 n= 4 perturb   -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.942 trueD=-8.6083 se=1.1093
+census_all_106                     K=106 n= 6 logit     0.0    PH=0.026 SM=0.995 INC=0.000 fS|beyond=None popSMg=0.993 v2SM=0.999 cov=0.948 trueD=0.0 se=0.953
+census_all_106                     K=106 n= 6 perturb   0.0    PH=0.071 SM=0.976 INC=0.000 fS|beyond=None popSMg=0.927 v2SM=0.941 cov=0.950 trueD=-0.0077 se=0.9467
+census_all_106                     K=106 n= 6 reshuffle 0.1    PH=0.156 SM=0.895 INC=0.000 fS|beyond=0.0 popSMg=0.585 v2SM=0.685 cov=0.946 trueD=-0.0417 se=0.9563
+census_all_106                     K=106 n= 6 reshuffle 0.3    PH=0.265 SM=0.698 INC=0.000 fS|beyond=0.0089 popSMg=0.047 v2SM=0.087 cov=0.950 trueD=-0.013 se=0.9633
+census_all_106                     K=106 n= 6 logit     -0.1   PH=0.853 SM=0.494 INC=0.000 fS|beyond=None popSMg=0.450 v2SM=0.659 cov=0.951 trueD=-2.8733 se=0.9427
+census_all_106                     K=106 n= 6 logit     -0.15  PH=0.995 SM=0.075 INC=0.000 fS|beyond=0.0221 popSMg=0.064 v2SM=0.184 cov=0.950 trueD=-4.3103 se=0.9363
+census_all_106                     K=106 n= 6 logit     -0.2   PH=1.000 SM=0.002 INC=0.000 fS|beyond=0.0022 popSMg=0.002 v2SM=0.015 cov=0.952 trueD=-5.7473 se=0.9297
+census_all_106                     K=106 n= 6 logit     -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.949 trueD=-8.6227 se=0.9123
+census_all_106                     K=106 n= 6 prop      -0.1   PH=0.807 SM=0.447 INC=0.002 fS|beyond=None popSMg=0.448 v2SM=0.625 cov=0.954 trueD=-2.8787 se=1.0123
+census_all_106                     K=106 n= 6 prop      -0.15  PH=0.980 SM=0.051 INC=0.001 fS|beyond=0.0505 popSMg=0.047 v2SM=0.151 cov=0.952 trueD=-4.3177 se=1.0343
+census_all_106                     K=106 n= 6 prop      -0.2   PH=0.999 SM=0.001 INC=0.000 fS|beyond=0.0012 popSMg=0.001 v2SM=0.016 cov=0.949 trueD=-5.7567 se=1.0517
+census_all_106                     K=106 n= 6 prop      -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.947 trueD=-8.635 se=1.073
+census_all_106                     K=106 n= 6 conc25    -0.1   PH=0.763 SM=0.483 INC=0.000 fS|beyond=0.0 popSMg=0.350 v2SM=0.481 cov=0.951 trueD=-2.879 se=0.985
+census_all_106                     K=106 n= 6 conc25    -0.15  PH=0.941 SM=0.159 INC=0.000 fS|beyond=0.0158 popSMg=0.071 v2SM=0.138 cov=0.948 trueD=-4.3183 se=0.9733
+census_all_106                     K=106 n= 6 conc25    -0.2   PH=0.983 SM=0.051 INC=0.000 fS|beyond=0.0053 popSMg=0.016 v2SM=0.036 cov=0.949 trueD=-5.7577 se=0.9423
+census_all_106                     K=106 n= 6 flip      -0.1   PH=0.731 SM=0.514 INC=0.000 fS|beyond=0.0147 popSMg=0.300 v2SM=0.398 cov=0.946 trueD=-2.895 se=0.9283
+census_all_106                     K=106 n= 6 flip      -0.15  PH=0.911 SM=0.225 INC=0.000 fS|beyond=0.0085 popSMg=0.089 v2SM=0.151 cov=0.953 trueD=-4.2953 se=0.9157
+census_all_106                     K=106 n= 6 flip      -0.2   PH=0.976 SM=0.077 INC=0.000 fS|beyond=0.0037 popSMg=0.020 v2SM=0.048 cov=0.949 trueD=-5.734 se=0.904
+census_all_106                     K=106 n= 6 flip      -0.3   PH=1.000 SM=0.002 INC=0.000 fS|beyond=0.0003 popSMg=0.000 v2SM=0.001 cov=0.952 trueD=-8.6367 se=0.8783
+census_all_106                     K=106 n= 6 perturb   -0.15  PH=0.971 SM=0.133 INC=0.000 fS|beyond=0.0139 popSMg=0.063 v2SM=0.140 cov=0.948 trueD=-4.318 se=0.931
+census_all_106                     K=106 n= 6 perturb   -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.946 trueD=-8.6303 se=0.9077
+census_all_106                     K=106 n= 8 logit     0.0    PH=0.029 SM=1.000 INC=0.000 fS|beyond=None popSMg=1.000 v2SM=1.000 cov=0.946 trueD=0.0 se=0.8247
+census_all_106                     K=106 n= 8 perturb   0.0    PH=0.095 SM=0.993 INC=0.000 fS|beyond=None popSMg=0.954 v2SM=0.974 cov=0.948 trueD=-0.0157 se=0.819
+census_all_106                     K=106 n= 8 reshuffle 0.1    PH=0.183 SM=0.925 INC=0.000 fS|beyond=0.0721 popSMg=0.618 v2SM=0.714 cov=0.949 trueD=-0.013 se=0.8273
+census_all_106                     K=106 n= 8 reshuffle 0.3    PH=0.285 SM=0.737 INC=0.000 fS|beyond=0.0125 popSMg=0.053 v2SM=0.103 cov=0.946 trueD=-0.035 se=0.8337
+census_all_106                     K=106 n= 8 logit     -0.1   PH=0.936 SM=0.581 INC=0.000 fS|beyond=None popSMg=0.517 v2SM=0.746 cov=0.947 trueD=-2.867 se=0.816
+census_all_106                     K=106 n= 8 logit     -0.15  PH=0.999 SM=0.084 INC=0.000 fS|beyond=0.0216 popSMg=0.059 v2SM=0.201 cov=0.946 trueD=-4.3007 se=0.8107
+census_all_106                     K=106 n= 8 logit     -0.2   PH=1.000 SM=0.002 INC=0.000 fS|beyond=0.0012 popSMg=0.001 v2SM=0.012 cov=0.948 trueD=-5.734 se=0.804
+census_all_106                     K=106 n= 8 logit     -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.946 trueD=-8.6007 se=0.789
+census_all_106                     K=106 n= 8 prop      -0.1   PH=0.900 SM=0.528 INC=0.000 fS|beyond=None popSMg=0.525 v2SM=0.711 cov=0.947 trueD=-2.8757 se=0.8763
+census_all_106                     K=106 n= 8 prop      -0.15  PH=0.996 SM=0.050 INC=0.000 fS|beyond=0.0502 popSMg=0.048 v2SM=0.172 cov=0.950 trueD=-4.313 se=0.8953
+census_all_106                     K=106 n= 8 prop      -0.2   PH=1.000 SM=0.001 INC=0.000 fS|beyond=0.0008 popSMg=0.001 v2SM=0.010 cov=0.945 trueD=-5.751 se=0.9103
+census_all_106                     K=106 n= 8 prop      -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.951 trueD=-8.6267 se=0.9283
+census_all_106                     K=106 n= 8 conc25    -0.1   PH=0.848 SM=0.550 INC=0.000 fS|beyond=0.0246 popSMg=0.376 v2SM=0.537 cov=0.946 trueD=-2.8783 se=0.8523
+census_all_106                     K=106 n= 8 conc25    -0.15  PH=0.968 SM=0.180 INC=0.000 fS|beyond=0.0106 popSMg=0.074 v2SM=0.154 cov=0.949 trueD=-4.317 se=0.8423
+census_all_106                     K=106 n= 8 conc25    -0.2   PH=0.991 SM=0.060 INC=0.000 fS|beyond=0.0033 popSMg=0.015 v2SM=0.039 cov=0.947 trueD=-5.7557 se=0.8157
+census_all_106                     K=106 n= 8 flip      -0.1   PH=0.785 SM=0.571 INC=0.000 fS|beyond=0.0141 popSMg=0.315 v2SM=0.419 cov=0.950 trueD=-2.881 se=0.8037
+census_all_106                     K=106 n= 8 flip      -0.15  PH=0.944 SM=0.254 INC=0.000 fS|beyond=0.0059 popSMg=0.094 v2SM=0.158 cov=0.953 trueD=-4.3223 se=0.793
+census_all_106                     K=106 n= 8 flip      -0.2   PH=0.986 SM=0.081 INC=0.000 fS|beyond=0.0026 popSMg=0.023 v2SM=0.048 cov=0.953 trueD=-5.7593 se=0.7827
+census_all_106                     K=106 n= 8 flip      -0.3   PH=1.000 SM=0.004 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.002 cov=0.955 trueD=-8.644 se=0.7597
+census_all_106                     K=106 n= 8 perturb   -0.15  PH=0.988 SM=0.152 INC=0.000 fS|beyond=0.012 popSMg=0.062 v2SM=0.159 cov=0.943 trueD=-4.3107 se=0.8047
+census_all_106                     K=106 n= 8 perturb   -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.949 trueD=-8.604 se=0.7843
+without_dev_89                     K= 89 n= 4 logit     0.0    PH=0.028 SM=0.946 INC=0.017 fS|beyond=None popSMg=0.932 v2SM=0.917 cov=0.947 trueD=0.0 se=1.2557
+without_dev_89                     K= 89 n= 4 perturb   0.0    PH=0.057 SM=0.895 INC=0.020 fS|beyond=None popSMg=0.791 v2SM=0.742 cov=0.950 trueD=-0.0053 se=1.248
+without_dev_89                     K= 89 n= 4 reshuffle 0.1    PH=0.133 SM=0.761 INC=0.026 fS|beyond=0.0 popSMg=0.397 v2SM=0.449 cov=0.951 trueD=-0.0227 se=1.259
+without_dev_89                     K= 89 n= 4 reshuffle 0.3    PH=0.227 SM=0.572 INC=0.028 fS|beyond=0.0147 popSMg=0.016 v2SM=0.022 cov=0.951 trueD=-0.0607 se=1.2707
+without_dev_89                     K= 89 n= 4 logit     -0.1   PH=0.641 SM=0.348 INC=0.056 fS|beyond=None popSMg=0.327 v2SM=0.448 cov=0.947 trueD=-2.8763 se=1.2427
+without_dev_89                     K= 89 n= 4 logit     -0.15  PH=0.928 SM=0.068 INC=0.021 fS|beyond=0.0277 popSMg=0.064 v2SM=0.140 cov=0.944 trueD=-4.315 se=1.2343
+without_dev_89                     K= 89 n= 4 logit     -0.2   PH=0.995 SM=0.006 INC=0.002 fS|beyond=0.0055 popSMg=0.005 v2SM=0.019 cov=0.941 trueD=-5.7527 se=1.2243
+without_dev_89                     K= 89 n= 4 logit     -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.940 trueD=-8.6283 se=1.202
+without_dev_89                     K= 89 n= 4 prop      -0.1   PH=0.577 SM=0.311 INC=0.121 fS|beyond=None popSMg=0.309 v2SM=0.371 cov=0.943 trueD=-2.8793 se=1.338
+without_dev_89                     K= 89 n= 4 prop      -0.15  PH=0.880 SM=0.056 INC=0.066 fS|beyond=0.0557 popSMg=0.056 v2SM=0.099 cov=0.945 trueD=-4.3193 se=1.3683
+without_dev_89                     K= 89 n= 4 prop      -0.2   PH=0.982 SM=0.003 INC=0.016 fS|beyond=0.0027 popSMg=0.003 v2SM=0.014 cov=0.946 trueD=-5.7587 se=1.392
+without_dev_89                     K= 89 n= 4 prop      -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.946 trueD=-8.6383 se=1.4227
+without_dev_89                     K= 89 n= 4 conc25    -0.1   PH=0.588 SM=0.347 INC=0.081 fS|beyond=0.025 popSMg=0.266 v2SM=0.311 cov=0.944 trueD=-2.9007 se=1.3003
+without_dev_89                     K= 89 n= 4 conc25    -0.15  PH=0.846 SM=0.124 INC=0.040 fS|beyond=0.0167 popSMg=0.065 v2SM=0.104 cov=0.947 trueD=-4.351 se=1.2837
+without_dev_89                     K= 89 n= 4 conc25    -0.2   PH=0.944 SM=0.047 INC=0.015 fS|beyond=0.0058 popSMg=0.016 v2SM=0.034 cov=0.944 trueD=-5.8013 se=1.242
+without_dev_89                     K= 89 n= 4 flip      -0.1   PH=0.590 SM=0.417 INC=0.033 fS|beyond=0.0124 popSMg=0.247 v2SM=0.313 cov=0.948 trueD=-2.922 se=1.2223
+without_dev_89                     K= 89 n= 4 flip      -0.15  PH=0.819 SM=0.180 INC=0.024 fS|beyond=0.0116 popSMg=0.082 v2SM=0.122 cov=0.947 trueD=-4.3693 se=1.2063
+without_dev_89                     K= 89 n= 4 flip      -0.2   PH=0.936 SM=0.063 INC=0.010 fS|beyond=0.0044 popSMg=0.022 v2SM=0.041 cov=0.947 trueD=-5.816 se=1.1873
+without_dev_89                     K= 89 n= 4 flip      -0.3   PH=0.996 SM=0.003 INC=0.002 fS|beyond=0.0007 popSMg=0.000 v2SM=0.002 cov=0.951 trueD=-8.748 se=1.1557
+without_dev_89                     K= 89 n= 4 perturb   -0.15  PH=0.897 SM=0.103 INC=0.022 fS|beyond=0.0167 popSMg=0.061 v2SM=0.109 cov=0.946 trueD=-4.324 se=1.226
+without_dev_89                     K= 89 n= 4 perturb   -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.949 trueD=-8.639 se=1.1947
+confirm_only_62                    K= 62 n= 4 logit     0.0    PH=0.028 SM=0.876 INC=0.071 fS|beyond=None popSMg=0.858 v2SM=0.825 cov=0.946 trueD=0.0 se=1.4447
+confirm_only_62                    K= 62 n= 4 perturb   0.0    PH=0.050 SM=0.802 INC=0.096 fS|beyond=None popSMg=0.665 v2SM=0.592 cov=0.950 trueD=0.031 se=1.438
+confirm_only_62                    K= 62 n= 4 reshuffle 0.1    PH=0.130 SM=0.628 INC=0.119 fS|beyond=0.0108 popSMg=0.237 v2SM=0.258 cov=0.946 trueD=-0.0277 se=1.454
+confirm_only_62                    K= 62 n= 4 reshuffle 0.3    PH=0.228 SM=0.445 INC=0.113 fS|beyond=0.0154 popSMg=0.007 v2SM=0.009 cov=0.947 trueD=-0.063 se=1.472
+confirm_only_62                    K= 62 n= 4 logit     -0.1   PH=0.531 SM=0.288 INC=0.184 fS|beyond=None popSMg=0.277 v2SM=0.359 cov=0.950 trueD=-2.8747 se=1.4307
+confirm_only_62                    K= 62 n= 4 logit     -0.15  PH=0.864 SM=0.057 INC=0.080 fS|beyond=0.026 popSMg=0.055 v2SM=0.103 cov=0.949 trueD=-4.3107 se=1.422
+confirm_only_62                    K= 62 n= 4 logit     -0.2   PH=0.981 SM=0.004 INC=0.015 fS|beyond=0.0043 popSMg=0.004 v2SM=0.018 cov=0.951 trueD=-5.7467 se=1.4113
+confirm_only_62                    K= 62 n= 4 logit     -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.951 trueD=-8.6187 se=1.386
+confirm_only_62                    K= 62 n= 4 prop      -0.1   PH=0.466 SM=0.248 INC=0.285 fS|beyond=None popSMg=0.250 v2SM=0.278 cov=0.951 trueD=-2.883 se=1.5533
+confirm_only_62                    K= 62 n= 4 prop      -0.15  PH=0.789 SM=0.051 INC=0.161 fS|beyond=0.0507 popSMg=0.050 v2SM=0.069 cov=0.950 trueD=-4.3247 se=1.5937
+confirm_only_62                    K= 62 n= 4 prop      -0.2   PH=0.947 SM=0.005 INC=0.048 fS|beyond=0.005 popSMg=0.004 v2SM=0.009 cov=0.949 trueD=-5.766 se=1.625
+confirm_only_62                    K= 62 n= 4 prop      -0.3   PH=0.999 SM=0.000 INC=0.001 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.948 trueD=-8.649 se=1.6657
+confirm_only_62                    K= 62 n= 4 conc25    -0.1   PH=0.479 SM=0.309 INC=0.212 fS|beyond=0.0174 popSMg=0.236 v2SM=0.243 cov=0.948 trueD=-2.8667 se=1.5083
+confirm_only_62                    K= 62 n= 4 conc25    -0.15  PH=0.740 SM=0.134 INC=0.127 fS|beyond=0.0156 popSMg=0.075 v2SM=0.095 cov=0.948 trueD=-4.3003 se=1.491
+confirm_only_62                    K= 62 n= 4 conc25    -0.2   PH=0.882 SM=0.063 INC=0.055 fS|beyond=0.0058 popSMg=0.026 v2SM=0.036 cov=0.950 trueD=-5.7337 se=1.4423
+confirm_only_62                    K= 62 n= 4 flip      -0.1   PH=0.494 SM=0.386 INC=0.121 fS|beyond=0.0126 popSMg=0.230 v2SM=0.271 cov=0.948 trueD=-2.9323 se=1.4083
+confirm_only_62                    K= 62 n= 4 flip      -0.15  PH=0.726 SM=0.196 INC=0.079 fS|beyond=0.0098 popSMg=0.090 v2SM=0.118 cov=0.946 trueD=-4.3417 se=1.3887
+confirm_only_62                    K= 62 n= 4 flip      -0.2   PH=0.865 SM=0.089 INC=0.048 fS|beyond=0.0078 popSMg=0.035 v2SM=0.048 cov=0.946 trueD=-5.7507 se=1.3697
+confirm_only_62                    K= 62 n= 4 flip      -0.3   PH=0.978 SM=0.013 INC=0.009 fS|beyond=0.0012 popSMg=0.003 v2SM=0.005 cov=0.952 trueD=-8.569 se=1.332
+confirm_only_62                    K= 62 n= 4 perturb   -0.15  PH=0.810 SM=0.100 INC=0.092 fS|beyond=0.0185 popSMg=0.062 v2SM=0.091 cov=0.949 trueD=-4.2897 se=1.4143
+confirm_only_62                    K= 62 n= 4 perturb   -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.953 trueD=-8.6063 se=1.3787
+confirm_only_62                    K= 62 n= 8 logit     0.0    PH=0.030 SM=0.994 INC=0.000 fS|beyond=None popSMg=0.988 v2SM=0.997 cov=0.945 trueD=0.0 se=1.0233
+confirm_only_62                    K= 62 n= 8 perturb   0.0    PH=0.080 SM=0.957 INC=0.000 fS|beyond=None popSMg=0.861 v2SM=0.896 cov=0.949 trueD=0.0147 se=1.0187
+confirm_only_62                    K= 62 n= 8 reshuffle 0.1    PH=0.183 SM=0.808 INC=0.000 fS|beyond=0.0062 popSMg=0.352 v2SM=0.426 cov=0.951 trueD=0.0193 se=1.031
+confirm_only_62                    K= 62 n= 8 reshuffle 0.3    PH=0.280 SM=0.594 INC=0.001 fS|beyond=0.0069 popSMg=0.011 v2SM=0.017 cov=0.948 trueD=-0.0153 se=1.0443
+confirm_only_62                    K= 62 n= 8 logit     -0.1   PH=0.805 SM=0.468 INC=0.000 fS|beyond=None popSMg=0.404 v2SM=0.605 cov=0.948 trueD=-2.8793 se=1.0137
+confirm_only_62                    K= 62 n= 8 logit     -0.15  PH=0.986 SM=0.078 INC=0.000 fS|beyond=0.031 popSMg=0.058 v2SM=0.154 cov=0.947 trueD=-4.318 se=1.008
+confirm_only_62                    K= 62 n= 8 logit     -0.2   PH=1.000 SM=0.003 INC=0.000 fS|beyond=0.0025 popSMg=0.002 v2SM=0.012 cov=0.947 trueD=-5.7563 se=1.0007
+confirm_only_62                    K= 62 n= 8 logit     -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.948 trueD=-8.632 se=0.9823
+confirm_only_62                    K= 62 n= 8 prop      -0.1   PH=0.745 SM=0.407 INC=0.002 fS|beyond=None popSMg=0.405 v2SM=0.541 cov=0.946 trueD=-2.8853 se=1.1003
+confirm_only_62                    K= 62 n= 8 prop      -0.15  PH=0.964 SM=0.059 INC=0.004 fS|beyond=0.0592 popSMg=0.057 v2SM=0.116 cov=0.946 trueD=-4.3277 se=1.1283
+confirm_only_62                    K= 62 n= 8 prop      -0.2   PH=0.998 SM=0.003 INC=0.000 fS|beyond=0.0027 popSMg=0.003 v2SM=0.011 cov=0.944 trueD=-5.7707 se=1.151
+confirm_only_62                    K= 62 n= 8 prop      -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.942 trueD=-8.656 se=1.1797
+confirm_only_62                    K= 62 n= 8 conc25    -0.1   PH=0.699 SM=0.457 INC=0.001 fS|beyond=0.022 popSMg=0.311 v2SM=0.407 cov=0.952 trueD=-2.8533 se=1.0663
+confirm_only_62                    K= 62 n= 8 conc25    -0.15  PH=0.890 SM=0.197 INC=0.001 fS|beyond=0.0103 popSMg=0.089 v2SM=0.137 cov=0.950 trueD=-4.2803 se=1.0543
+confirm_only_62                    K= 62 n= 8 conc25    -0.2   PH=0.955 SM=0.090 INC=0.000 fS|beyond=0.007 popSMg=0.031 v2SM=0.053 cov=0.950 trueD=-5.7073 se=1.0193
+confirm_only_62                    K= 62 n= 8 flip      -0.1   PH=0.655 SM=0.515 INC=0.000 fS|beyond=0.0098 popSMg=0.288 v2SM=0.350 cov=0.950 trueD=-2.8887 se=0.9977
+confirm_only_62                    K= 62 n= 8 flip      -0.15  PH=0.840 SM=0.271 INC=0.000 fS|beyond=0.0082 popSMg=0.120 v2SM=0.160 cov=0.942 trueD=-4.2823 se=0.984
+confirm_only_62                    K= 62 n= 8 flip      -0.2   PH=0.935 SM=0.125 INC=0.000 fS|beyond=0.0045 popSMg=0.045 v2SM=0.066 cov=0.949 trueD=-5.6997 se=0.9723
+confirm_only_62                    K= 62 n= 8 flip      -0.3   PH=0.992 SM=0.019 INC=0.000 fS|beyond=0.0023 popSMg=0.005 v2SM=0.007 cov=0.947 trueD=-8.5507 se=0.944
+confirm_only_62                    K= 62 n= 8 perturb   -0.15  PH=0.949 SM=0.139 INC=0.000 fS|beyond=0.0126 popSMg=0.069 v2SM=0.127 cov=0.950 trueD=-4.3143 se=1.002
+confirm_only_62                    K= 62 n= 8 perturb   -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.951 trueD=-8.64 se=0.9767
+v2_K26_like_confirm_informative    K= 26 n=16 logit     0.0    PH=0.022 SM=0.904 INC=0.049 fS|beyond=None popSMg=0.001 v2SM=0.002 cov=0.952 trueD=0.0 se=1.5033
+v2_K26_like_confirm_informative    K= 26 n=16 perturb   0.0    PH=0.135 SM=0.665 INC=0.064 fS|beyond=0.0311 popSMg=0.000 v2SM=0.000 cov=0.949 trueD=-0.0173 se=1.4833
+v2_K26_like_confirm_informative    K= 26 n=16 reshuffle 0.1    PH=0.464 SM=0.437 INC=0.056 fS|beyond=0.0051 popSMg=0.000 v2SM=0.000 cov=0.949 trueD=-2.887 se=1.4913
+v2_K26_like_confirm_informative    K= 26 n=16 reshuffle 0.3    PH=0.837 SM=0.125 INC=0.020 fS|beyond=0.0013 popSMg=0.000 v2SM=0.000 cov=0.950 trueD=-8.749 se=1.4687
+v2_K26_like_confirm_informative    K= 26 n=16 logit     -0.1   PH=0.964 SM=0.021 INC=0.016 fS|beyond=0.0169 popSMg=0.000 v2SM=0.000 cov=0.946 trueD=-5.7727 se=1.512
+v2_K26_like_confirm_informative    K= 26 n=16 logit     -0.15  PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.949 trueD=-8.6567 se=1.51
+v2_K26_like_confirm_informative    K= 26 n=16 logit     -0.2   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.948 trueD=-11.5407 se=1.505
+v2_K26_like_confirm_informative    K= 26 n=16 logit     -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.951 trueD=-17.3107 se=1.484
+v2_K26_like_confirm_informative    K= 26 n=16 prop      -0.1   PH=0.937 SM=0.019 INC=0.044 fS|beyond=0.0181 popSMg=0.000 v2SM=0.000 cov=0.947 trueD=-5.7973 se=1.6353
+v2_K26_like_confirm_informative    K= 26 n=16 prop      -0.15  PH=0.999 SM=0.000 INC=0.001 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.945 trueD=-8.696 se=1.6843
+v2_K26_like_confirm_informative    K= 26 n=16 prop      -0.2   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.946 trueD=-11.5943 se=1.7237
+v2_K26_like_confirm_informative    K= 26 n=16 prop      -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.947 trueD=-17.392 se=1.7743
+v2_K26_like_confirm_informative    K= 26 n=16 conc25    -0.1   PH=0.837 SM=0.110 INC=0.053 fS|beyond=0.006 popSMg=0.000 v2SM=0.000 cov=0.950 trueD=-5.781 se=1.5793
+v2_K26_like_confirm_informative    K= 26 n=16 conc25    -0.15  PH=0.939 SM=0.043 INC=0.018 fS|beyond=0.0039 popSMg=0.000 v2SM=0.000 cov=0.948 trueD=-8.6713 se=1.562
+v2_K26_like_confirm_informative    K= 26 n=16 conc25    -0.2   PH=0.973 SM=0.022 INC=0.006 fS|beyond=0.0012 popSMg=0.000 v2SM=0.000 cov=0.949 trueD=-11.562 se=1.5063
+v2_K26_like_confirm_informative    K= 26 n=16 flip      -0.1   PH=0.739 SM=0.230 INC=0.031 fS|beyond=0.0068 popSMg=0.000 v2SM=0.000 cov=0.947 trueD=-5.798 se=1.465
+v2_K26_like_confirm_informative    K= 26 n=16 flip      -0.15  PH=0.887 SM=0.094 INC=0.019 fS|beyond=0.0032 popSMg=0.000 v2SM=0.000 cov=0.949 trueD=-8.7423 se=1.4453
+v2_K26_like_confirm_informative    K= 26 n=16 flip      -0.2   PH=0.956 SM=0.039 INC=0.006 fS|beyond=0.002 popSMg=0.000 v2SM=0.000 cov=0.949 trueD=-11.5793 se=1.426
+v2_K26_like_confirm_informative    K= 26 n=16 flip      -0.3   PH=0.996 SM=0.004 INC=0.001 fS|beyond=0.0002 popSMg=0.000 v2SM=0.000 cov=0.949 trueD=-17.2927 se=1.3863
+v2_K26_like_confirm_informative    K= 26 n=16 perturb   -0.15  PH=0.983 SM=0.013 INC=0.004 fS|beyond=0.0021 popSMg=0.000 v2SM=0.000 cov=0.953 trueD=-8.69 se=1.4917
+v2_K26_like_confirm_informative    K= 26 n=16 perturb   -0.3   PH=1.000 SM=0.000 INC=0.000 fS|beyond=0.0 popSMg=0.000 v2SM=0.000 cov=0.952 trueD=-17.3413 se=1.4697

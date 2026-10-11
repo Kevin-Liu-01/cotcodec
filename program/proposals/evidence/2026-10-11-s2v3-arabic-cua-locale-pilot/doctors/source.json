@@ -1,0 +1,17 @@
+{
+ "doctor": "Source",
+ "status": "PASS",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "S2 v3 wave-1 synthesis by the single owner (Claude agent), 2026-10-11 UTC; not an independent review",
+ "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
+ "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac; Semantic Scholar citer lists and the arXiv export API reached by the frontier scout; OpenReview api2 term search (13 searches, one full scan of 210 ICLR 2027 'multilingual' submissions); ACL Anthology bibliography with abstracts (131,473 entries). query-log.json: 71 orx discover calls (frontier 35, kill-shot 15, cross-domain 18, owner 3), 91 with ACL Anthology and OpenReview searches (the frontier's own tally gives 92), every returned id recorded; cutoff 2026-10-11.",
+ "degraded_coverage": [
+  "no Chinese-language query this wave",
+  "Google Scholar, X, Reddit, Hacker News, GitHub not searched",
+  "EMNLP 2026 proceedings not yet in the Anthology",
+  "anonymous OpenReview access degraded for the kill-shot scout",
+  "orx 0.2.2 reports itself outdated against 0.2.18",
+  "patents: one Google Patents page only"
+ ],
+ "remediation": "A Chinese-language query and a RealGUINoise revision check before any write-up."
+}

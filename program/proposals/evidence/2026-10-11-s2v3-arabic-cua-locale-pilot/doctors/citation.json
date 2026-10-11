@@ -1,0 +1,72 @@
+{
+ "doctor": "Citation",
+ "status": "PASS",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "S2 v3 wave-1 synthesis by the single owner (Claude agent), 2026-10-11 UTC; not an independent review",
+ "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
+ "protocol": "ARS claim_verification_protocol: claim registry, source tracing, cross-referencing; first-party numbers labelled; abstract-level reads marked",
+ "evidence": "39 claims (C01-C39) in the proposal with locators, dates and read status. Full-text reads by the cells for every closest prior (macOSWorld, MPR-GUI, RealGUINoise, VAF, WebPageBench, BreakingWeb, Skill Issue, 2608.11110, PuMVR) and the owner's full read of 2411.00640; LibreOffice source claims at tag libreoffice-7.3.7.2 with file and line; pilot claims tied to Slurm job records and receipts (jobs 1097-1100); primary URLs snapshotted with HTTP status and body hash (snapshots/).",
+ "claims": {
+  "full_text": [
+   "C01",
+   "C02",
+   "C04",
+   "C05",
+   "C06",
+   "C07",
+   "C08",
+   "C09",
+   "C10",
+   "C14",
+   "C18"
+  ],
+  "abstract_or_metadata": [
+   "C11",
+   "C12",
+   "C15",
+   "C16",
+   "C17",
+   "C19",
+   "C20",
+   "C21"
+  ],
+  "source_code": [
+   "C23",
+   "C27",
+   "C28",
+   "C29"
+  ],
+  "standards_and_bug_records": [
+   "C22",
+   "C24",
+   "C25",
+   "C26"
+  ],
+  "patent_summary": [
+   "C13"
+  ],
+  "first_party_numbers": [
+   "C14"
+  ],
+  "pilot": [
+   "C30",
+   "C36",
+   "C37",
+   "C38",
+   "C39"
+  ],
+  "repository": [
+   "C32",
+   "C33",
+   "C34",
+   "C35"
+  ],
+  "metadata_head_only": [
+   "C31"
+  ],
+  "citation_counts": [
+   "C03"
+  ]
+ },
+ "remediation": "Read ITDroid and RotDroid in full before any delta row rests on them; re-check RealGUINoise's version before a write-up."
+}

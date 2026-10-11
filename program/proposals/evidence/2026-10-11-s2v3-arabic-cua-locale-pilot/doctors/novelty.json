@@ -1,0 +1,12 @@
+{
+ "doctor": "Novelty",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "S2 v3 wave-1 synthesis by the single owner (Claude agent), 2026-10-11 UTC; not an independent review",
+ "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
+ "protocol": "K-Dense literature-review (PRISMA counts); orx rule: at least six discover queries per candidate including keyword with exact terms and each closest prior's title phrase, embedding with the mechanism paragraph, openalex; orx paper --full for every closest prior",
+ "evidence": "Frontier verdict NO_DIRECT_PRIOR_FOUND, kill-shot verdict STILL_OPEN, both through 2026-10-10/11 under the coverage in the proposal header; title-phrase queries for macOSWorld, RealGUINoise, MPR-GUI and VAF; citer lists for macOSWorld (34, none relevant), MPR-GUI, RealGUINoise and VAF; a full ICLR 2027 'multilingual' scan; the census frame's method priors (2411.00640, 2609.33012, Cameron and Baldock) recorded as infrastructure.",
+ "why_fail": "This wave's blind critic and novelty refuter have not run; the rule requires them before Novelty can pass.",
+ "queries_remaining_for_triad": 59,
+ "remediation": "Run the blind critic on blind/ (macOSWorld) and the novelty refuter with at least six orx discover queries."
+}
