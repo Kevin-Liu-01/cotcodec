@@ -52,9 +52,10 @@ files here name labels, decisions, sham status and answers.
   path outside its directory. It is also void if any user turn is neither the
   rendered template nor the one allowed relay frame, if any entry or
   attachment type is unregistered, if the packet was never read, if the answer
-  differs from the transcript's, if the item tree does not re-hash to the
-  export, or if the model is anything but `claude-opus-5-5`. An item the audit
-  voids stays unadjudicated.
+  differs from the transcript's, or if the item tree does not re-hash to the
+  export. An item the audit voids stays unadjudicated. The model pin is not a
+  per-item void: a transcript whose harness-recorded model is anything but
+  `claude-opus-5-5` refuses the whole ingest.
 
 ## D80 and D81
 
@@ -80,9 +81,10 @@ files here name labels, decisions, sham status and answers.
   - **(a)** is the record: one workflow session that holds the adjudicator
     agents and nothing else. It starts one agent per distinct item, 52 in
     `item_id` order. Each agent gets exactly the registered template, rendered
-    with the export's `iso_root`. The model is `claude-opus-5-5` and the
-    schema is `{item_id, answer, reason}`. The session is audited with the
-    registered tooling, and an item that audit voids stays unadjudicated.
+    with the export's `iso_root`, as its task turn. The model is
+    `claude-opus-5-5` and the schema is `{item_id, answer, reason}`. The
+    session is audited with the registered tooling, and an item that audit
+    voids stays unadjudicated.
   - **(b)** is the independence sensitivity: the same 52 items and prompts
     with `claude-fable-5-1`. It is reported as agreement with (a) and as an
     alternative analysis, and it never replaces (a).
@@ -109,6 +111,13 @@ script is copied there byte for byte.
   sorted order. The 12 ids of (c) are exactly those of the 52 packets that
   contain `sheets/%2B`. The collector checked this on every exported
   `packet.txt`, and each of the 12 contains one occurrence.
+- Besides the task turn, every agent got the harness's injected context,
+  which section 9 registers and discloses. The `session_context` attachment
+  (the git status and account context) was identical in all 116 agents of
+  (a), (b) and (c). Its git status listed the latest commit title, D81's own:
+  `9890d11b decisions: D81 (first D80 adjudication run void; run 2 rules fixed
+  before answers)`. It names none of the 178 exported item ids, and no label,
+  verdict or answer.
 - Every agent ran once, none was interrupted, and no run was resumed. Every
   returned `item_id` equals its item.
 - The returned answer files are kept outside the repository, because their
@@ -225,7 +234,15 @@ From (a)'s ingested `calls.jsonl`, ids and answers only:
 - The 7 items in both lists have one answer, used for both.
 
 The two JSONL files keep the registered `{item_id, answer}` format, so they
-carry no label field. The label is in this README.
+carry no label field. The label is in this README. The same holds for every
+file whose bytes are fixed elsewhere: the frozen tools' outputs and stdout
+(the collector's and the ingest's files in `isolation/a/` and `isolation/b/`,
+`audit-summary/`, `analysis/` and their sensitivity copies; the frozen
+`audit-summary.json` keeps its own `label` field), the registered-format
+JSONL files and the workflow scripts copied byte for byte. Each directory
+that holds them has a README with the label, and every JSON file the
+collector wrote (`summary.json`, `controls.json`, the `audit_runs` outputs and
+the `rating-run.json` files) has a `label` field with it.
 
 What each pool answer did, out of 34 (`summary.json`
 `pool_effect_by_reason_and_stratum`):
@@ -358,7 +375,11 @@ here. Both read with the D80 label.
   - Equivalence group: 0.167 (36 items, 16 tasks, bound 0.314) becomes
     **0.000** (33 items, 15 tasks, exact upper 0.087, sufficient). The group
     still fires, but only because κ = 0.343 < 0.6, which adjudication never
-    changes. On its bound alone it would not fire.
+    changes. On its bound alone it would not fire. The frozen reason string
+    still reads `K3: should_pass_equiv label error` (under P2 and P5 in
+    `metrics_leaving_headline`, and in K6's `blocked_by`), because the frozen
+    code writes it whenever the group's K3 flag fires, and that flag is κ or
+    the bound. Here the cause is κ, not the label error.
   - Violation group: unchanged at 0.600 (5 items, 4 tasks, insufficient),
     and it fires.
   - κ fires.
@@ -430,8 +451,13 @@ analysis are byte-identical to (a)'s.
 | (b) vs Claude / Qwen, all items | 52 | 40 / 35 | 0.57 / 0.36 |
 | Claude vs Qwen, all items | 52 | 24 | 0.12 |
 
+(b)'s answers are used here with `batching_reminder_sent` excepted. Under the
+strict registered audit all 52 (b) answers are void (see the isolation audit
+above).
+
 **Spot check, adjudicator against the raters' consensus by stratum, 25
-items.** (a) and (b) answered identically on all 25.
+items.** (a) and (b) answered identically on all 25 ((b) with the attachment
+excepted, as above).
 
 | Stratum | Items | Raters concordant | Adjudicator agrees with the consensus | Raters split | Adjudicator = Claude / Qwen | Agrees with label or sham truth |
 |---|---:|---:|---:|---:|---|---:|
@@ -445,8 +471,12 @@ items.** (a) and (b) answered identically on all 25.
 - The adjudicator agrees with the model raters' consensus on every concordant
   spot-check item, and it sides with the Claude rater on both splits.
 - It contradicts the label on 6 items: 3 `alt_gate` rejects and 3
-  `fp_violation` accepts, all of them items where both raters already
-  contradicted the label.
+  `fp_violation` accepts. On 5 of them both raters already contradicted the
+  label (`alt_gate` `e5bce1a7` and `1050d491`, both raters reject;
+  `fp_violation` `1519df64`, `7a23bbe1` and `d1959ff9`, both raters accept).
+  The sixth, `aa3331db` (`alt_gate`, in the spot check and the pool), is a
+  split (Claude reject, Qwen accept), and on it the adjudicator sided with the
+  Claude rater.
 - All 5 shams are correct.
 
 ## Correlated-judge caveat
@@ -461,15 +491,16 @@ Anthropic rater, and D81 accepts this.
   items.
 - Run (b), `claude-fable-5-1`, is a model that is neither rater's, but it
   comes from the same provider. It agrees with (a) on 51 of 52 items and on
-  27 of 28 splits. That measures the stability of the answers across two
-  Anthropic models. It does not measure independence from the Anthropic
-  rater's provider.
+  27 of 28 splits, with `batching_reminder_sent` excepted (under the strict
+  registered audit all 52 (b) answers are void). That measures the stability
+  of the answers across two Anthropic models. It does not measure
+  independence from the Anthropic rater's provider.
 
 So the adjudication is not an independent tie-break. Because the judges are
 correlated, the adjudicated reading may lean toward the Claude rater where
 the raters split. In particular, it rejects 8 split alternative solutions and
-3 split gold shams where Qwen accepted or was unsure. D9's human spot check stays pending
-as the human validation.
+3 split gold shams where Qwen accepted or was unsure. D9's human spot check
+stays pending as the human validation.
 
 ## Image coverage
 

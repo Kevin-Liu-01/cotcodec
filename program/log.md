@@ -4973,7 +4973,8 @@ they say so.)
   0.030. (c) is byte-identical to (a), because all 12 marker items are
   accept with and without the sentence.
 - Agreement and the correlated-judge caveat:
-  - (a) vs (b): 51 of 52 items.
+  - (a) vs (b): 51 of 52 items, (b) with `batching_reminder_sent` excepted
+    (void under the strict audit).
   - (a) vs the Claude rater: 41 of 52. (a) vs Qwen: 35 of 52.
   - On the 28 splits, (a) sides with Claude 17 times and with Qwen 11 times.
   - On the spot check, (a) matches the raters' consensus on 23 of 23 and
@@ -4985,3 +4986,14 @@ they say so.)
 - Records: `program/evidence/2026-10-11/q2-mutation-adjudication-v2/`.
   Transcripts and answer files with reasons stay outside the repository,
   hashed. 0 GPU-h.
+- Verification. Two independent audits (isolation and mapping; recompute
+  and claims) reproduced every answer mapping, frozen output and table byte
+  for byte. They found one wrong README sentence, now corrected: of the 6
+  spot-check items where the adjudicator contradicts the label, 5 are items
+  both raters already contradicted, and the sixth (`aa3331db`, `alt_gate`) is
+  a split on which it sided with the Claude rater. The README also now says
+  that the model pin refuses the whole ingest rather than voiding an item,
+  that the injected git status every agent saw named D81's commit title (no
+  item, label or answer), that the frozen K3 reason string still reads "label
+  error" although the cause is κ, and that (b)'s agreement figures except
+  `batching_reminder_sent`. No answer, number or frozen output changed.
