@@ -1,0 +1,1687 @@
+{
+ "seed": 42,
+ "started_at": "2026-10-11T07:51:32Z",
+ "job": "1098",
+ "facts": {
+  "soffice_version": {
+   "argv": [
+    "/usr/lib/libreoffice/program/soffice",
+    "--version"
+   ],
+   "rc": 0,
+   "out": "LibreOffice 7.3.7.2 30(Build:2)\n\n",
+   "err": ""
+  },
+  "vcl_plugins": [
+   "libvclplug_genlo.so",
+   "libvclplug_gtk3lo.so"
+  ],
+  "resource_dirs": [
+   "common"
+  ],
+  "system_layer_files": [
+   "Langpack-en-US.xcd",
+   "calc.xcd",
+   "draw.xcd",
+   "gnome.xcd",
+   "graphicfilter.xcd",
+   "impress.xcd",
+   "lingucomponent.xcd",
+   "main.xcd",
+   "math.xcd",
+   "ogltrans.xcd",
+   "oo-ad-ldap.xcd.sample",
+   "oo-ldap.xcd.sample",
+   "pdfimport.xcd",
+   "pyuno.xcd",
+   "res",
+   "writer.xcd",
+   "xsltfilter.xcd"
+  ],
+  "fc_match_ar": {
+   "argv": [
+    "fc-match",
+    "-f",
+    "%{family}|%{file}\\n",
+    ":lang=ar"
+   ],
+   "rc": 0,
+   "out": "DejaVu Sans|/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf\n",
+   "err": ""
+  },
+  "fc_list_ar_count": {
+   "argv": [
+    "sh",
+    "-c",
+    "fc-list :lang=ar family | sort -u | wc -l"
+   ],
+   "rc": 0,
+   "out": "20\n",
+   "err": ""
+  },
+  "fc_list_ar": {
+   "argv": [
+    "sh",
+    "-c",
+    "fc-list :lang=ar family | sort -u"
+   ],
+   "rc": 0,
+   "out": "DejaVu Sans\nDejaVu Sans Mono\nFreeMono\nFreeSerif\nKacstArt\nKacstBook\nKacstDecorative\nKacstDigital\nKacstFarsi\nKacstLetter\nKacstNaskh\nKacstOffice\nKacstOne\nKacstPen\nKacstPoster\nKacstQurn\nKacstScreen\nKacstTitle\nKacstTitleL\nmry_KacstQurn\n",
+   "err": ""
+  },
+  "locale_a": {
+   "argv": [
+    "locale",
+    "-a"
+   ],
+   "rc": 0,
+   "out": "C\nC.utf8\nen_AG\nen_AG.utf8\nen_AU.utf8\nen_BW.utf8\nen_CA.utf8\nen_DK.utf8\nen_GB.utf8\nen_HK.utf8\nen_IE.utf8\nen_IL\nen_IL.utf8\nen_IN\nen_IN.utf8\nen_NG\nen_NG.utf8\nen_NZ.utf8\nen_PH.utf8\nen_SG.utf8\nen_US.utf8\nen_ZA.utf8\nen_ZM\nen_ZM.utf8\nen_ZW.utf8\nPOSIX\n",
+   "err": ""
+  },
+  "gtk3_ar_catalog": false,
+  "lo_l10n_ar_installed": false,
+  "dpkg_l10n": {
+   "argv": [
+    "sh",
+    "-c",
+    "dpkg-query -W -f='${Package} ${Version}\\n' 'libreoffice-l10n-*' 'language-pack-*ar*' 2>/dev/null || true"
+   ],
+   "rc": 0,
+   "out": "libreoffice-l10n-4.3 \nlibreoffice-l10n-4.4 \nlibreoffice-l10n-en-us \n",
+   "err": ""
+  }
+ },
+ "prepare": {
+  "copied_seconds": 0.2,
+  "fundamentalrc_sha256_before": "97591078395e6d8a26f40f101108a78dad966d6b01761204107cadb29127a563",
+  "fundamentalrc_after": "[Bootstrap]\nBRAND_BASE_DIR=file:///tmp/lo\nBRAND_INI_DIR=${ORIGIN}\nBRAND_SHARE_RESOURCE_SUBDIR=program/resource\nBRAND_SHARE_SUBDIR=share\nCONFIGURATION_LAYERS=xcsxcu:file:///etc/libreoffice/registry res:file:///etc/libreoffice/registry xcsxcu:file:///tmp/cells/current/layer dconf:* bundledext:${${BRAND_BASE_DIR}/program/lounorc:BUNDLED_EXTENSIONS_USER}/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend/configmgr.ini sharedext:${${BRAND_BASE_DIR}/program/lounorc:SHARED_EXTENSIONS_USER}/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend/configmgr.ini userext:${${BRAND_BASE_DIR}/program/lounorc:UNO_USER_PACKAGES_CACHE}/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend/configmgr.ini user:!${$BRAND_BASE_DIR/program/bootstraprc:UserInstallation}/user/registrymodifications.xcu\nLO_JAVA_DIR=${BRAND_BASE_DIR}/program/classes\nLO_LIB_DIR=${BRAND_BASE_DIR}/program\nBAK_EXTENSIONS=${$ORIGIN/lounorc:TMP_EXTENSIONS}\nBUNDLED_EXTENSIONS=${$ORIGIN/lounorc:BUNDLED_EXTENSIONS}\nBUNDLED_EXTENSIONS_USER=${$ORIGIN/lounorc:BUNDLED_EXTENSIONS_USER}\nSHARED_EXTENSIONS_USER=${$ORIGIN/lounorc:SHARED_EXTENSIONS_USER}\nUNO_SHARED_PACKAGES_CACHE=${$ORIGIN/lounorc:UNO_SHARED_PACKAGES_CACHE}\nTMP_EXTENSIONS=${$ORIGIN/lounorc:TMP_EXTENSIONS}\nUNO_USER_PACKAGES_CACHE=${$ORIGIN/lounorc:UNO_USER_PACKAGES_CACHE}\nURE_BIN_DIR=${BRAND_BASE_DIR}/program\nURE_MORE_JAVA_CLASSPATH_URLS= file:///usr/share/java/hsqldb1.8.0.jar\nURE_OVERRIDE_JAVA_JFW_SHARED_DATA=${BRAND_BASE_DIR}/share/config/javasettings_${_OS}_${_ARCH}.xml\nURE_OVERRIDE_JAVA_JFW_USER_DATA=${${BRAND_BASE_DIR}/program/bootstraprc:UserInstallation}/user/config/javasettings_${_OS}_${_ARCH}.xml\nURE_MORE_JAVA_TYPES=${BRAND_BASE_DIR}/program/classes/libreoffice.jar ${BRAND_BASE_DIR}/program/classes/ScriptFramework.jar ${${$ORIGIN/lounorc:PKG_UserUnoFile}:UNO_JAVA_CLASSPATH} ${${$ORIGIN/lounorc:PKG_SharedUnoFile}:UNO_JAVA_CLASSPATH} ${${$ORIGIN/lounorc:PKG_BundledUnoFile}:UNO_JAVA_CLASSPATH}\nURE_MORE_SERVICES=${${$ORIGIN/lounorc:PKG_UserUnoFile}:UNO_SERVICES} ${${$ORIGIN/lounorc:PKG_SharedUnoFile}:UNO_SERVICES} ${${$ORIGIN/lounorc:PKG_BundledUnoFile}:UNO_SERVICES} <$ORIGIN/services>*\nURE_MORE_TYPES=<$ORIGIN/types>* ${${$ORIGIN/lounorc:PKG_UserUnoFile}:UNO_TYPES} ${${$ORIGIN/lounorc:PKG_SharedUnoFile}:UNO_TYPES} ${${$ORIGIN/lounorc:PKG_BundledUnoFile}:UNO_TYPES}\n"
+ },
+ "content": [
+  {
+   "cell": "K0_stock",
+   "files": {},
+   "env": {},
+   "result": {
+    "ooLocale": "en-US",
+    "SheetPrefix": null,
+    "UIMirroring": null,
+    "new_doc_sheet_names": [
+     "Sheet1"
+    ],
+    "new_doc_sheet_names_codepoints": [
+     [
+      "0x53",
+      "0x68",
+      "0x65",
+      "0x65",
+      "0x74",
+      "0x31"
+     ]
+    ],
+    "xlsx_sheet_names": [
+     "Sheet1"
+    ],
+    "xlsx_contains_isolates": false
+   },
+   "xlsx_sha256": "646f8421ba0e070769b441a793fade711d6267ecf38173864f32d6a6b1fd7e20"
+  },
+  {
+   "cell": "K1_en_US_mo_tagged",
+   "files": {
+    "resource/en_US/LC_MESSAGES/sc.mo": "6250c5dbbdb078ac8211ab0d3f579ed1fa4fb09591a78205e1f1c39ddcc81b2b"
+   },
+   "env": {},
+   "result": {
+    "ooLocale": "en-US",
+    "SheetPrefix": null,
+    "UIMirroring": null,
+    "new_doc_sheet_names": [
+     "⟦Sheet⟧1"
+    ],
+    "new_doc_sheet_names_codepoints": [
+     [
+      "0x27e6",
+      "0x53",
+      "0x68",
+      "0x65",
+      "0x65",
+      "0x74",
+      "0x27e7",
+      "0x31"
+     ]
+    ],
+    "xlsx_sheet_names": [
+     "⟦Sheet⟧1"
+    ],
+    "xlsx_contains_isolates": false
+   },
+   "xlsx_sha256": "7a2ef258d018030a6da596ec293dd5f92a6c27f88ac54d70ca125d37fe3ed736"
+  },
+  {
+   "cell": "K1b_en_mo_tagged",
+   "files": {
+    "resource/en/LC_MESSAGES/sc.mo": "6250c5dbbdb078ac8211ab0d3f579ed1fa4fb09591a78205e1f1c39ddcc81b2b"
+   },
+   "env": {},
+   "result": {
+    "ooLocale": "en-US",
+    "SheetPrefix": null,
+    "UIMirroring": null,
+    "new_doc_sheet_names": [
+     "⟦Sheet⟧1"
+    ],
+    "new_doc_sheet_names_codepoints": [
+     [
+      "0x27e6",
+      "0x53",
+      "0x68",
+      "0x65",
+      "0x65",
+      "0x74",
+      "0x27e7",
+      "0x31"
+     ]
+    ],
+    "xlsx_sheet_names": [
+     "⟦Sheet⟧1"
+    ],
+    "xlsx_contains_isolates": false
+   },
+   "xlsx_sha256": "7a2ef258d018030a6da596ec293dd5f92a6c27f88ac54d70ca125d37fe3ed736"
+  },
+  {
+   "cell": "K2_en_US_mo_fsi",
+   "files": {
+    "resource/en_US/LC_MESSAGES/sc.mo": "0a56891b53b5dc80b9369b782d0625408a880820353519378ba9a88525199f02"
+   },
+   "env": {},
+   "result": {
+    "ooLocale": "en-US",
+    "SheetPrefix": null,
+    "UIMirroring": null,
+    "new_doc_sheet_names": [
+     "⁨Sheet⁩1"
+    ],
+    "new_doc_sheet_names_codepoints": [
+     [
+      "0x2068",
+      "0x53",
+      "0x68",
+      "0x65",
+      "0x65",
+      "0x74",
+      "0x2069",
+      "0x31"
+     ]
+    ],
+    "xlsx_sheet_names": [
+     "⁨Sheet⁩1"
+    ],
+    "xlsx_contains_isolates": true
+   },
+   "xlsx_sha256": "f4049a04dd810ac8ad3e6d27cc828a9ac7d424898aa3537e49d05ec1423fdc23"
+  },
+  {
+   "cell": "K3_en_US_mo_fsi_prefix_pin",
+   "files": {
+    "layer/s2v3-sheetprefix.xcd": "f40037df32cffd1eb4118173b4a1694347c51b9aebd34920279a41cd12adfcca",
+    "resource/en_US/LC_MESSAGES/sc.mo": "0a56891b53b5dc80b9369b782d0625408a880820353519378ba9a88525199f02"
+   },
+   "env": {},
+   "result": {
+    "ooLocale": "en-US",
+    "SheetPrefix": "Sheet",
+    "UIMirroring": null,
+    "new_doc_sheet_names": [
+     "Sheet1"
+    ],
+    "new_doc_sheet_names_codepoints": [
+     [
+      "0x53",
+      "0x68",
+      "0x65",
+      "0x65",
+      "0x74",
+      "0x31"
+     ]
+    ],
+    "xlsx_sheet_names": [
+     "Sheet1"
+    ],
+    "xlsx_contains_isolates": false
+   },
+   "xlsx_sha256": "e7eb328370787a869f012e61811480105bcc44145db0c7d2c7f6e0d94929add8"
+  },
+  {
+   "cell": "K4_pseudo_ar",
+   "files": {
+    "layer/Langpack-ar.xcd": "adf550b0d30245fe177383e75b0f943ca7c4c70ecf7840f80fd6d4e838f37b88",
+    "layer/s2v3-uilocale.xcd": "1d2d08f246b0d92f5b4388bfe889cf826ee1a5ea126ba7cae00be1cf78cb25f5",
+    "resource/ar/LC_MESSAGES/sc.mo": "3865f7e05efb399290a159e74dd17e5865691f1603951ba61b656956c632275f"
+   },
+   "env": {},
+   "result": {
+    "ooLocale": "ar",
+    "SheetPrefix": null,
+    "UIMirroring": null,
+    "new_doc_sheet_names": [
+     "ورقة1"
+    ],
+    "new_doc_sheet_names_codepoints": [
+     [
+      "0x648",
+      "0x631",
+      "0x642",
+      "0x629",
+      "0x31"
+     ]
+    ],
+    "xlsx_sheet_names": [
+     "ورقة1"
+    ],
+    "xlsx_contains_isolates": false
+   },
+   "xlsx_sha256": "7fe4dfe97ee0113bc1bf9dfc9da822ff07f1895001a33697329726bbdf754cf7"
+  },
+  {
+   "cell": "K5_pseudo_ar_prefix_pin",
+   "files": {
+    "layer/Langpack-ar.xcd": "adf550b0d30245fe177383e75b0f943ca7c4c70ecf7840f80fd6d4e838f37b88",
+    "layer/s2v3-uilocale.xcd": "1d2d08f246b0d92f5b4388bfe889cf826ee1a5ea126ba7cae00be1cf78cb25f5",
+    "layer/s2v3-sheetprefix.xcd": "f40037df32cffd1eb4118173b4a1694347c51b9aebd34920279a41cd12adfcca",
+    "resource/ar/LC_MESSAGES/sc.mo": "3865f7e05efb399290a159e74dd17e5865691f1603951ba61b656956c632275f"
+   },
+   "env": {},
+   "result": {
+    "ooLocale": "ar",
+    "SheetPrefix": "Sheet",
+    "UIMirroring": null,
+    "new_doc_sheet_names": [
+     "Sheet1"
+    ],
+    "new_doc_sheet_names_codepoints": [
+     [
+      "0x53",
+      "0x68",
+      "0x65",
+      "0x65",
+      "0x74",
+      "0x31"
+     ]
+    ],
+    "xlsx_sheet_names": [
+     "Sheet1"
+    ],
+    "xlsx_contains_isolates": false
+   },
+   "xlsx_sha256": "e7eb328370787a869f012e61811480105bcc44145db0c7d2c7f6e0d94929add8"
+  },
+  {
+   "cell": "K6_stock_prefix_pin",
+   "files": {
+    "layer/s2v3-sheetprefix.xcd": "f40037df32cffd1eb4118173b4a1694347c51b9aebd34920279a41cd12adfcca"
+   },
+   "env": {},
+   "result": {
+    "ooLocale": "en-US",
+    "SheetPrefix": "Sheet",
+    "UIMirroring": null,
+    "new_doc_sheet_names": [
+     "Sheet1"
+    ],
+    "new_doc_sheet_names_codepoints": [
+     [
+      "0x53",
+      "0x68",
+      "0x65",
+      "0x65",
+      "0x74",
+      "0x31"
+     ]
+    ],
+    "xlsx_sheet_names": [
+     "Sheet1"
+    ],
+    "xlsx_contains_isolates": false
+   },
+   "xlsx_sha256": "802fc978196173858b1552712899b3e86842904b0dc4da61c396a7277b73be85"
+  }
+ ],
+ "layout": [
+  {
+   "cell": "L0_stock",
+   "files": {},
+   "env": {},
+   "app": "calc",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 240
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Calc",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f66666963652043616c63"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':40'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L0_stock-calc.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "ba5bbc697879724ae207fb673e00d5d5182b7d731b902578ced3c7a99c049d44"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L0_stock",
+   "files": {},
+   "env": {},
+   "app": "impress",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 497
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Impress",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520496d7072657373"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':41'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L0_stock-impress.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "8612436218b099f6064c03fba18aead2c9600b1d93244813b572af9f0382ca31"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L0_stock",
+   "files": {},
+   "env": {},
+   "app": "writer",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 754
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Writer",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520577269746572"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':42'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L0_stock-writer.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "aa7f333ec9b036287b7cf21413c760d28d9106e359b1ba3975b2fb5359787890"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L1_en_ltr_uimirroring_false",
+   "files": {
+    "layer/s2v3-mirror.xcd": "96936774405765ce31f490092a4eb471f72f869e51a12f6fb4e102af7867f4c4"
+   },
+   "env": {},
+   "app": "calc",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 1011
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Calc",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f66666963652043616c63"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':43'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L1_en_ltr_uimirroring_false-calc.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "ba5bbc697879724ae207fb673e00d5d5182b7d731b902578ced3c7a99c049d44"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L1_en_ltr_uimirroring_false",
+   "files": {
+    "layer/s2v3-mirror.xcd": "96936774405765ce31f490092a4eb471f72f869e51a12f6fb4e102af7867f4c4"
+   },
+   "env": {},
+   "app": "impress",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 1268
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Impress",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520496d7072657373"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':44'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L1_en_ltr_uimirroring_false-impress.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "8612436218b099f6064c03fba18aead2c9600b1d93244813b572af9f0382ca31"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L1_en_ltr_uimirroring_false",
+   "files": {
+    "layer/s2v3-mirror.xcd": "96936774405765ce31f490092a4eb471f72f869e51a12f6fb4e102af7867f4c4"
+   },
+   "env": {},
+   "app": "writer",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 1525
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Writer",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520577269746572"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':45'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L1_en_ltr_uimirroring_false-writer.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "aa7f333ec9b036287b7cf21413c760d28d9106e359b1ba3975b2fb5359787890"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L2_en_rtl_uimirroring_true",
+   "files": {
+    "layer/s2v3-mirror.xcd": "9dadb714270fbb7ab3876e8e7bc50f8b3cdba34b7bf911dcbeaa1b9768ee139f"
+   },
+   "env": {},
+   "app": "calc",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 1782
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Calc",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f66666963652043616c63"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':46'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L2_en_rtl_uimirroring_true-calc.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "3585effcf45ba831e6273a4329aaf85f3aa90cd5a4b4bc02d448e99130d90805"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L2_en_rtl_uimirroring_true",
+   "files": {
+    "layer/s2v3-mirror.xcd": "9dadb714270fbb7ab3876e8e7bc50f8b3cdba34b7bf911dcbeaa1b9768ee139f"
+   },
+   "env": {},
+   "app": "impress",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 2039
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Impress",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520496d7072657373"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':47'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L2_en_rtl_uimirroring_true-impress.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "4a6e415b9ff6293bd481cc644bed4d6964089713cdb32a96b41df00dc305e673"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L2_en_rtl_uimirroring_true",
+   "files": {
+    "layer/s2v3-mirror.xcd": "9dadb714270fbb7ab3876e8e7bc50f8b3cdba34b7bf911dcbeaa1b9768ee139f"
+   },
+   "env": {},
+   "app": "writer",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 2296
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Writer",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520577269746572"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':48'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L2_en_rtl_uimirroring_true-writer.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "1e7d4c463205f16306415c483c8a82c574416e566e4ea26eff0e0639cb6f210b"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L3_en_rtl_sal_env",
+   "files": {},
+   "env": {
+    "SAL_RTL_ENABLED": "1"
+   },
+   "app": "calc",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 2553
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Calc",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f66666963652043616c63"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':49'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L3_en_rtl_sal_env-calc.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "3585effcf45ba831e6273a4329aaf85f3aa90cd5a4b4bc02d448e99130d90805"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L3_en_rtl_sal_env",
+   "files": {},
+   "env": {
+    "SAL_RTL_ENABLED": "1"
+   },
+   "app": "impress",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 2810
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Impress",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520496d7072657373"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':50'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L3_en_rtl_sal_env-impress.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "4a6e415b9ff6293bd481cc644bed4d6964089713cdb32a96b41df00dc305e673"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L3_en_rtl_sal_env",
+   "files": {},
+   "env": {
+    "SAL_RTL_ENABLED": "1"
+   },
+   "app": "writer",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 3067
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Writer",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520577269746572"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':51'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L3_en_rtl_sal_env-writer.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "1e7d4c463205f16306415c483c8a82c574416e566e4ea26eff0e0639cb6f210b"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L4_pseudo_ar_default",
+   "files": {
+    "layer/Langpack-ar.xcd": "adf550b0d30245fe177383e75b0f943ca7c4c70ecf7840f80fd6d4e838f37b88",
+    "layer/s2v3-uilocale.xcd": "1d2d08f246b0d92f5b4388bfe889cf826ee1a5ea126ba7cae00be1cf78cb25f5",
+    "resource/ar/LC_MESSAGES/sc.mo": "3865f7e05efb399290a159e74dd17e5865691f1603951ba61b656956c632275f"
+   },
+   "env": {},
+   "app": "calc",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 3324
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Calc",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f66666963652043616c63"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':52'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L4_pseudo_ar_default-calc.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "32fb2b675ea0d526a0fcf0e4a29d7f1aa473f38329a694f64db1fd548c6adcd5"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L4_pseudo_ar_default",
+   "files": {
+    "layer/Langpack-ar.xcd": "adf550b0d30245fe177383e75b0f943ca7c4c70ecf7840f80fd6d4e838f37b88",
+    "layer/s2v3-uilocale.xcd": "1d2d08f246b0d92f5b4388bfe889cf826ee1a5ea126ba7cae00be1cf78cb25f5",
+    "resource/ar/LC_MESSAGES/sc.mo": "3865f7e05efb399290a159e74dd17e5865691f1603951ba61b656956c632275f"
+   },
+   "env": {},
+   "app": "impress",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 3580
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Impress",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520496d7072657373"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':53'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L4_pseudo_ar_default-impress.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "ce8696d83cdf46f578488989ec5761de194cb042a59d7366f5342550c381f3df"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L4_pseudo_ar_default",
+   "files": {
+    "layer/Langpack-ar.xcd": "adf550b0d30245fe177383e75b0f943ca7c4c70ecf7840f80fd6d4e838f37b88",
+    "layer/s2v3-uilocale.xcd": "1d2d08f246b0d92f5b4388bfe889cf826ee1a5ea126ba7cae00be1cf78cb25f5",
+    "resource/ar/LC_MESSAGES/sc.mo": "3865f7e05efb399290a159e74dd17e5865691f1603951ba61b656956c632275f"
+   },
+   "env": {},
+   "app": "writer",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 3836
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Writer",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520577269746572"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':54'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L4_pseudo_ar_default-writer.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "ca69e27db460e9e6bc25982ba8647090af5908a935491841fc5a0ec2d84ec3b9"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L5_pseudo_ar_uimirroring_false",
+   "files": {
+    "layer/Langpack-ar.xcd": "adf550b0d30245fe177383e75b0f943ca7c4c70ecf7840f80fd6d4e838f37b88",
+    "layer/s2v3-uilocale.xcd": "1d2d08f246b0d92f5b4388bfe889cf826ee1a5ea126ba7cae00be1cf78cb25f5",
+    "layer/s2v3-mirror.xcd": "96936774405765ce31f490092a4eb471f72f869e51a12f6fb4e102af7867f4c4",
+    "resource/ar/LC_MESSAGES/sc.mo": "3865f7e05efb399290a159e74dd17e5865691f1603951ba61b656956c632275f"
+   },
+   "env": {},
+   "app": "calc",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 4092
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Calc",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f66666963652043616c63"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':55'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L5_pseudo_ar_uimirroring_false-calc.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "43a0ce7b45c7c7bc24e54ea8597ceb4597dac2d9555536c18e0c3381d2377fee"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L5_pseudo_ar_uimirroring_false",
+   "files": {
+    "layer/Langpack-ar.xcd": "adf550b0d30245fe177383e75b0f943ca7c4c70ecf7840f80fd6d4e838f37b88",
+    "layer/s2v3-uilocale.xcd": "1d2d08f246b0d92f5b4388bfe889cf826ee1a5ea126ba7cae00be1cf78cb25f5",
+    "layer/s2v3-mirror.xcd": "96936774405765ce31f490092a4eb471f72f869e51a12f6fb4e102af7867f4c4",
+    "resource/ar/LC_MESSAGES/sc.mo": "3865f7e05efb399290a159e74dd17e5865691f1603951ba61b656956c632275f"
+   },
+   "env": {},
+   "app": "impress",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 4348
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Impress",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520496d7072657373"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':56'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L5_pseudo_ar_uimirroring_false-impress.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "68b35d53e2935f54c271ada5e5ecd8113536e0bca04c344201cd224cda1a21f3"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L5_pseudo_ar_uimirroring_false",
+   "files": {
+    "layer/Langpack-ar.xcd": "adf550b0d30245fe177383e75b0f943ca7c4c70ecf7840f80fd6d4e838f37b88",
+    "layer/s2v3-uilocale.xcd": "1d2d08f246b0d92f5b4388bfe889cf826ee1a5ea126ba7cae00be1cf78cb25f5",
+    "layer/s2v3-mirror.xcd": "96936774405765ce31f490092a4eb471f72f869e51a12f6fb4e102af7867f4c4",
+    "resource/ar/LC_MESSAGES/sc.mo": "3865f7e05efb399290a159e74dd17e5865691f1603951ba61b656956c632275f"
+   },
+   "env": {},
+   "app": "writer",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 4604
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Writer",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520577269746572"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':57'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L5_pseudo_ar_uimirroring_false-writer.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "23ce61a5f6c3863e1972e7538e926bc3e3151dee315410b43fc4571c5c376f46"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L6_pseudo_ar_sal_env_plus_false",
+   "files": {
+    "layer/Langpack-ar.xcd": "adf550b0d30245fe177383e75b0f943ca7c4c70ecf7840f80fd6d4e838f37b88",
+    "layer/s2v3-uilocale.xcd": "1d2d08f246b0d92f5b4388bfe889cf826ee1a5ea126ba7cae00be1cf78cb25f5",
+    "layer/s2v3-mirror.xcd": "96936774405765ce31f490092a4eb471f72f869e51a12f6fb4e102af7867f4c4",
+    "resource/ar/LC_MESSAGES/sc.mo": "3865f7e05efb399290a159e74dd17e5865691f1603951ba61b656956c632275f"
+   },
+   "env": {
+    "SAL_RTL_ENABLED": "1"
+   },
+   "app": "calc",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 4860
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Calc",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f66666963652043616c63"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':58'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L6_pseudo_ar_sal_env_plus_false-calc.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "32fb2b675ea0d526a0fcf0e4a29d7f1aa473f38329a694f64db1fd548c6adcd5"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L6_pseudo_ar_sal_env_plus_false",
+   "files": {
+    "layer/Langpack-ar.xcd": "adf550b0d30245fe177383e75b0f943ca7c4c70ecf7840f80fd6d4e838f37b88",
+    "layer/s2v3-uilocale.xcd": "1d2d08f246b0d92f5b4388bfe889cf826ee1a5ea126ba7cae00be1cf78cb25f5",
+    "layer/s2v3-mirror.xcd": "96936774405765ce31f490092a4eb471f72f869e51a12f6fb4e102af7867f4c4",
+    "resource/ar/LC_MESSAGES/sc.mo": "3865f7e05efb399290a159e74dd17e5865691f1603951ba61b656956c632275f"
+   },
+   "env": {
+    "SAL_RTL_ENABLED": "1"
+   },
+   "app": "impress",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 5116
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Impress",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520496d7072657373"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':59'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L6_pseudo_ar_sal_env_plus_false-impress.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "ce8696d83cdf46f578488989ec5761de194cb042a59d7366f5342550c381f3df"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  },
+  {
+   "cell": "L6_pseudo_ar_sal_env_plus_false",
+   "files": {
+    "layer/Langpack-ar.xcd": "adf550b0d30245fe177383e75b0f943ca7c4c70ecf7840f80fd6d4e838f37b88",
+    "layer/s2v3-uilocale.xcd": "1d2d08f246b0d92f5b4388bfe889cf826ee1a5ea126ba7cae00be1cf78cb25f5",
+    "layer/s2v3-mirror.xcd": "96936774405765ce31f490092a4eb471f72f869e51a12f6fb4e102af7867f4c4",
+    "resource/ar/LC_MESSAGES/sc.mo": "3865f7e05efb399290a159e74dd17e5865691f1603951ba61b656956c632275f"
+   },
+   "env": {
+    "SAL_RTL_ENABLED": "1"
+   },
+   "app": "writer",
+   "a11y_setup": {
+    "ok": true,
+    "dbus_pid": 5372
+   },
+   "window_seconds": 1.0,
+   "windows": [
+    {
+     "id": "0x00800024",
+     "x": 0,
+     "y": 38,
+     "w": 1920,
+     "h": 1061,
+     "title": "Untitled 1 - LibreOffice Writer",
+     "title_utf8_hex": "556e7469746c65642031202d204c696272654f666669636520577269746572"
+    }
+   ],
+   "screenshot": {
+    "argv": [
+     "python3",
+     "-c",
+     "import sys\nfrom Xlib import display as xd, X\nfrom PIL import Image\nd = xd.Display(':60'); r = d.screen().root; g = r.get_geometry()\nraw = r.get_image(0, 0, g.width, g.height, X.ZPixmap, 0xffffffff)\nimg = Image.frombytes('RGB', (g.width, g.height), raw.data, 'raw', 'BGRX')\nimg.save('/out/layout-L6_pseudo_ar_sal_env_plus_false-writer.png')\nprint(g.width, g.height)\n"
+    ],
+    "rc": 0,
+    "out": "1920 1080\n",
+    "err": "",
+    "sha256": "1492cfef1f4512b5ed6c2cb0562710154fdb9a37c6c3df55ed66033558cd9524"
+   },
+   "a11y_nodes": 0,
+   "a11y_apps": [
+    "xdg-desktop-portal-gtk",
+    "soffice"
+   ]
+  }
+ ],
+ "analysis": {
+  "pairs": [
+   {
+    "app": "calc",
+    "ltr_cell": "L1_en_ltr_uimirroring_false",
+    "other_cell": "L2_en_rtl_uimirroring_true",
+    "chrome_ink_corr_same": -0.16175802132286174,
+    "chrome_ink_corr_mirrored": 0.6653737428448968,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Calc"
+     ],
+     [
+      "Untitled 1 - LibreOffice Calc"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "calc",
+    "ltr_cell": "L1_en_ltr_uimirroring_false",
+    "other_cell": "L3_en_rtl_sal_env",
+    "chrome_ink_corr_same": -0.16175802132286174,
+    "chrome_ink_corr_mirrored": 0.6653737428448968,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Calc"
+     ],
+     [
+      "Untitled 1 - LibreOffice Calc"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "calc",
+    "ltr_cell": "L5_pseudo_ar_uimirroring_false",
+    "other_cell": "L4_pseudo_ar_default",
+    "chrome_ink_corr_same": -0.16175802132286174,
+    "chrome_ink_corr_mirrored": 0.6653737428448968,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Calc"
+     ],
+     [
+      "Untitled 1 - LibreOffice Calc"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "calc",
+    "ltr_cell": "L5_pseudo_ar_uimirroring_false",
+    "other_cell": "L6_pseudo_ar_sal_env_plus_false",
+    "chrome_ink_corr_same": -0.16175802132286174,
+    "chrome_ink_corr_mirrored": 0.6653737428448968,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Calc"
+     ],
+     [
+      "Untitled 1 - LibreOffice Calc"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "calc",
+    "ltr_cell": "L0_stock",
+    "other_cell": "L1_en_ltr_uimirroring_false",
+    "chrome_ink_corr_same": 1.0,
+    "chrome_ink_corr_mirrored": -0.4064094126487951,
+    "screens_identical": true,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Calc"
+     ],
+     [
+      "Untitled 1 - LibreOffice Calc"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "impress",
+    "ltr_cell": "L1_en_ltr_uimirroring_false",
+    "other_cell": "L2_en_rtl_uimirroring_true",
+    "chrome_ink_corr_same": -0.45952305227324874,
+    "chrome_ink_corr_mirrored": 0.47156577575351355,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Impress"
+     ],
+     [
+      "Untitled 1 - LibreOffice Impress"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "impress",
+    "ltr_cell": "L1_en_ltr_uimirroring_false",
+    "other_cell": "L3_en_rtl_sal_env",
+    "chrome_ink_corr_same": -0.45952305227324874,
+    "chrome_ink_corr_mirrored": 0.47156577575351355,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Impress"
+     ],
+     [
+      "Untitled 1 - LibreOffice Impress"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "impress",
+    "ltr_cell": "L5_pseudo_ar_uimirroring_false",
+    "other_cell": "L4_pseudo_ar_default",
+    "chrome_ink_corr_same": -0.45952305227324874,
+    "chrome_ink_corr_mirrored": 0.47156577575351355,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Impress"
+     ],
+     [
+      "Untitled 1 - LibreOffice Impress"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "impress",
+    "ltr_cell": "L5_pseudo_ar_uimirroring_false",
+    "other_cell": "L6_pseudo_ar_sal_env_plus_false",
+    "chrome_ink_corr_same": -0.45952305227324874,
+    "chrome_ink_corr_mirrored": 0.47156577575351355,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Impress"
+     ],
+     [
+      "Untitled 1 - LibreOffice Impress"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "impress",
+    "ltr_cell": "L0_stock",
+    "other_cell": "L1_en_ltr_uimirroring_false",
+    "chrome_ink_corr_same": 1.0,
+    "chrome_ink_corr_mirrored": -0.2879740970098682,
+    "screens_identical": true,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Impress"
+     ],
+     [
+      "Untitled 1 - LibreOffice Impress"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "writer",
+    "ltr_cell": "L1_en_ltr_uimirroring_false",
+    "other_cell": "L2_en_rtl_uimirroring_true",
+    "chrome_ink_corr_same": 0.24977567392168534,
+    "chrome_ink_corr_mirrored": 0.4251344220896649,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Writer"
+     ],
+     [
+      "Untitled 1 - LibreOffice Writer"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "writer",
+    "ltr_cell": "L1_en_ltr_uimirroring_false",
+    "other_cell": "L3_en_rtl_sal_env",
+    "chrome_ink_corr_same": 0.24977567392168534,
+    "chrome_ink_corr_mirrored": 0.4251344220896649,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Writer"
+     ],
+     [
+      "Untitled 1 - LibreOffice Writer"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "writer",
+    "ltr_cell": "L5_pseudo_ar_uimirroring_false",
+    "other_cell": "L4_pseudo_ar_default",
+    "chrome_ink_corr_same": 0.24977567392168534,
+    "chrome_ink_corr_mirrored": 0.4251344220896649,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Writer"
+     ],
+     [
+      "Untitled 1 - LibreOffice Writer"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "writer",
+    "ltr_cell": "L5_pseudo_ar_uimirroring_false",
+    "other_cell": "L6_pseudo_ar_sal_env_plus_false",
+    "chrome_ink_corr_same": 0.24977567392168534,
+    "chrome_ink_corr_mirrored": 0.4251344220896649,
+    "screens_identical": false,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Writer"
+     ],
+     [
+      "Untitled 1 - LibreOffice Writer"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   },
+   {
+    "app": "writer",
+    "ltr_cell": "L0_stock",
+    "other_cell": "L1_en_ltr_uimirroring_false",
+    "chrome_ink_corr_same": 1.0,
+    "chrome_ink_corr_mirrored": 0.06035691488491105,
+    "screens_identical": true,
+    "titles": [
+     [
+      "Untitled 1 - LibreOffice Writer"
+     ],
+     [
+      "Untitled 1 - LibreOffice Writer"
+     ]
+    ],
+    "titles_identical": true,
+    "reflection": {
+     "matched": 0,
+     "ltr_only": 0,
+     "rtl_only": 0,
+     "within_tol": 0,
+     "share_within_tol": null,
+     "median_abs_err_px": null,
+     "by_role_matched_ok": {}
+    },
+    "unmoved": {
+     "matched": 0,
+     "same_x_within_tol": 0,
+     "share_same": null
+    }
+   }
+  ]
+ },
+ "finished_at": "2026-10-11T07:56:19Z",
+ "wall_seconds": 287.1
+}

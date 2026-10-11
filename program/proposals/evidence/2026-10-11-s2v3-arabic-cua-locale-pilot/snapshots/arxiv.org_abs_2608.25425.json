@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2608.25425",
+ "fetched_at": "2026-10-11T08:23:01Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41491,
+ "raw_sha256": "810ca7854e24a1b906db8db48f7441453466133d4846f426ab3af6c13c47f8ea",
+ "raw_stored": false,
+ "extract": {
+  "title": "RotDroid: Cross-Orientation State Equivalence Testing for Detecting GUI Rotation Bugs in Android Apps",
+  "authors": [
+   "Qin, Mengdi",
+   "Jiang, Bo"
+  ],
+  "citation_date": "2026/08/26",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 26 Aug 2026 06:30:21 UTC"
+   }
+  ],
+  "abstract": "Screen rotation is a fundamental interaction in Android applications, but it often introduces non-crashing functional failures (NCFs), such as layout inconsistencies and state loss, which are difficult to detect automatically. A key challenge is the lack of effective test oracles for checking cross-orientation state equivalence between portrait and landscape views. We propose RotDroid, a testing framework for detecting GUI rotation bugs via cross-orientation state equivalence. RotDroid generates and mutates State-Preserving action Sequences (SPS) to construct semantically equivalent GUI states across orientations. To support reliable oracle checking, we build RotBench, a dataset of paired portrait-landscape GUI states, and develop RotVL, a vision-language model fine-tuned for equivalence checking. Experiments on both synthetic and real-world datasets show that RotVL outperforms state-of-the-art models, and RotDroid detects more rotation-induced failures than existing techniques under equal budgets. In large-scale studies on open- and closed-source apps, RotDroid reports 94 previously unknown bugs, with 47 confirmed or fixed by developers, demonstrating its practical effectiveness.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

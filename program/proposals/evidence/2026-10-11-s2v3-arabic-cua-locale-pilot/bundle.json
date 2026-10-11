@@ -1,0 +1,593 @@
+{
+ "schema_version": 1,
+ "proposal": "program/proposals/2026-10-11-s2v3-arabic-cua-locale-pilot.md",
+ "proposal_sha256": "d4e1f7652e7f4390f2de0a2fe18b546160bec8a38d74d9f81b7c13d515986da1",
+ "draft_registration": {
+  "path": "program/preregistrations/s2-arabic-cua-locale-v3.md",
+  "sha256": "74f969e1a2aff8374c0983e1a886644502bd951ad54cf3d068f672a3d39c03c4",
+  "experiment_id": "s2-arabic-cua-locale-v3",
+  "status": "DRAFT, not frozen, no ledger row",
+  "predecessor": {
+   "path": "program/preregistrations/s2-arabic-cua-locale-v2.md",
+   "sha256": "a2aaaed93a44a1f04bdd29a472ba3600969dfbad654497d207748e7726282a72",
+   "experiment_id": "s2-arabic-cua-locale-v2",
+   "note": "left unedited (gauntlet rule 3)"
+  }
+ },
+ "source_snapshots": [
+  {
+   "url": "https://aclanthology.org/2026.acl-long.1375/",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:00Z",
+   "raw_sha256": "c029ae3e98eab8080394363cef2ab717b14241f53f81c17461d83cdaf35e426f",
+   "raw_bytes": 49431,
+   "artifact": "snapshots/aclanthology.org_2026.acl-long.1375.json",
+   "sha256": "1df1136a4f3ea47f59a73261edf1c048aabe3b77bf86f9544cf3cad343a39f66"
+  },
+  {
+   "url": "https://arxiv.org/abs/2411.00640",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:00Z",
+   "raw_sha256": "951cac93eacd8adf7e184896a3ca3fb203e337e5d010dc18a915e1f72e2ac3d2",
+   "raw_bytes": 39830,
+   "artifact": "snapshots/arxiv.org_abs_2411.00640.json",
+   "sha256": "e15ff4f9f77387e36e295e9ba9419f4491a490c36c93c0afd99454407cabf3d0"
+  },
+  {
+   "url": "https://arxiv.org/abs/2506.04135",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:00Z",
+   "raw_sha256": "7a9f962b04d2468b012f535f79ebd45b0d0b1a5ef0a5160178a75e6f1f49d4c3",
+   "raw_bytes": 41957,
+   "artifact": "snapshots/arxiv.org_abs_2506.04135.json",
+   "sha256": "0e5fcc29229e997f3d62ebb20111ca0609a7bf366c80b5e523ae774f7b7aeb9d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2512.00756",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:00Z",
+   "raw_sha256": "0b1f490ba928e16beba377bc15aecd833f1a77889cf78f7de521ba36281d1d9d",
+   "raw_bytes": 43444,
+   "artifact": "snapshots/arxiv.org_abs_2512.00756.json",
+   "sha256": "07fec0ef64ac1c8e6f115f76718377870fdc4344412f9ac1459673b5ed8fcdf8"
+  },
+  {
+   "url": "https://arxiv.org/abs/2601.12809",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:00Z",
+   "raw_sha256": "a072e0c7522a5e9c49e04077c48c5a5a37c8421c4d9a62ed0105cb7bf9b31167",
+   "raw_bytes": 42034,
+   "artifact": "snapshots/arxiv.org_abs_2601.12809.json",
+   "sha256": "687e98d58014c90107be3cccd933a0c4b159d90ef64081e148e61dc08d86556d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2601.21961",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:00Z",
+   "raw_sha256": "4510bc860779559cb22aef9d3914c69294ca92e67388e912bac961505e774193",
+   "raw_bytes": 43654,
+   "artifact": "snapshots/arxiv.org_abs_2601.21961.json",
+   "sha256": "c66f3b73511edb1a8ae56c8f861feb6f15a0d502483ccc72cc61d387a1514fc6"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.06560",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:00Z",
+   "raw_sha256": "1f7f47c7343b05ac8b672062ab392d8a57b3ee19c80d48fe227aaf5c009ab9bd",
+   "raw_bytes": 42975,
+   "artifact": "snapshots/arxiv.org_abs_2606.06560.json",
+   "sha256": "395575c1c70a79b54b6fa75292be87639d3d911e4e8585d6971318b4324062bc"
+  },
+  {
+   "url": "https://arxiv.org/abs/2607.04120",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:00Z",
+   "raw_sha256": "e403a7572bddcb7ce1a1118a6157429b9d10a4f2605c3febe9ee4ff27e9beb13",
+   "raw_bytes": 41257,
+   "artifact": "snapshots/arxiv.org_abs_2607.04120.json",
+   "sha256": "5ff554913becc021e4c90f87a60816a7b37bdddb1a6bef0413a18eedefcee4ae"
+  },
+  {
+   "url": "https://arxiv.org/abs/2607.28227",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:00Z",
+   "raw_sha256": "8276af45bb7a0eca98bfca583946278bf99107365199565ad7fce664b817d744",
+   "raw_bytes": 45169,
+   "artifact": "snapshots/arxiv.org_abs_2607.28227.json",
+   "sha256": "5192f997c4612c7201562235bbba12e8cf41da778c4be06eee1d0861ceba6e6e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.08775",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:00Z",
+   "raw_sha256": "2adcfa3247300c12b4cd41dfe477d773afa28fa4f7167898acc4c130bf22c3e4",
+   "raw_bytes": 43717,
+   "artifact": "snapshots/arxiv.org_abs_2608.08775.json",
+   "sha256": "1de480286d362fc0ad8541caea03f73a85d518fe28d21e9caf4e73a808b814c4"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.25425",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:01Z",
+   "raw_sha256": "810ca7854e24a1b906db8db48f7441453466133d4846f426ab3af6c13c47f8ea",
+   "raw_bytes": 41491,
+   "artifact": "snapshots/arxiv.org_abs_2608.25425.json",
+   "sha256": "8bbb90183964ef638f75031fe0fb0972ca7a4e0f028efa8edcee83b0e50354ab"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.32036",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:01Z",
+   "raw_sha256": "47d6910288c8ec6401d609862ca5b4a18ca511f4bebd84f20e9de01fd307b318",
+   "raw_bytes": 41481,
+   "artifact": "snapshots/arxiv.org_abs_2609.32036.json",
+   "sha256": "ef95df198b7dc00ad578585e0c209c3717be421171f4af19d8c9d502ccfd9a31"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.33012",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:01Z",
+   "raw_sha256": "717f100fef61da62ed907f13efba6e69152a7546648f406bfb3d783d745106af",
+   "raw_bytes": 41983,
+   "artifact": "snapshots/arxiv.org_abs_2609.33012.json",
+   "sha256": "ce42c1fcdb86e91045ba9b803468a2be48c830393fe05636eaaae352c599459c"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.38184",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:01Z",
+   "raw_sha256": "b53708cfbd01f35776b6963c934b7a9410d6b95fc990a87389f9ea06a7b275b3",
+   "raw_bytes": 42818,
+   "artifact": "snapshots/arxiv.org_abs_2609.38184.json",
+   "sha256": "7fbb6e03f40ee4ec7c50626756ba93a0390c08f5d1f3eea2188588d7d0a3e09b"
+  },
+  {
+   "url": "https://openreview.net/forum?id=YJxGJP8feU",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T08:23:01Z",
+   "raw_sha256": "1e8373552f90fb615e60d2f607834706ffe0bec9a6843ab347e3fdc948efc28c",
+   "raw_bytes": 4787,
+   "artifact": "snapshots/openreview.net_forum_id_YJxGJP8feU.json",
+   "sha256": "d7ebc7d6564ff823d4996be97e0b0cad8036bee5d97b3ca2b9a4f03e72285029",
+   "content_note": "OpenReview pages may return a browser challenge; the HTTP status verifies nothing about content"
+  }
+ ],
+ "query_log": {
+  "artifact": "query-log.json",
+  "sha256": "5c057d3543caafedd2d63ed6f114e2f72dffe1a1cbb8782806e8e12ed0d91d13",
+  "counted": {
+   "orx_discover_only": 71,
+   "with_acl_and_openreview": 91,
+   "by_cell": {
+    "frontier": {
+     "orx_discover": 35,
+     "run2_convention": 51,
+     "all_records": 61
+    },
+    "killshot": {
+     "orx_discover": 15,
+     "run2_convention": 19,
+     "all_records": 23
+    },
+    "cross-domain": {
+     "orx_discover": 18,
+     "run2_convention": 18,
+     "all_records": 44
+    },
+    "synthesis": {
+     "orx_discover": 3,
+     "run2_convention": 3,
+     "all_records": 4
+    }
+   }
+  },
+  "declared": 150,
+  "reserved_for_refuters": 30,
+  "remaining_under_run2_convention": 59
+ },
+ "reviews": [],
+ "reviews_status": "NOT_RUN: this wave's blind critic, refute-first triad and reviewers run after the synthesis. No trusted Ed25519 store exists (D24).",
+ "compute": {
+  "scope": "s2-arabic-cua-locale-v3 is a DRAFT. A partial executable Phase 0 pilot ran as CPU-only Slurm jobs 1097-1100 in the certified VM's own LibreOffice userland (compute/attestations.md); the derived Arabic image, the VM-lane oracle, the delta certification, Phase 1 and any orx node did not run.",
+  "image_digest": "docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f",
+  "image_scope": "Phase 1 engine base image (vLLM v0.31.0, commit db9527a4; cu129 overlay rebuilt per commit as S1a). The Phase 0 pilot ran in cotcodec-q2-lo-vm@sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361.",
+  "pilot_image_digest": "sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361",
+  "real_model_loop": false,
+  "real_model_loop_scope": "S1a's loop ran 1,808 episodes (D66); no S2 episode has run",
+  "benchmark_adapter": null,
+  "benchmark_adapter_scope": "OSWorld b138d348 as S1a ran it; S2 adds a cell selector and checks, not an adapter (not written)",
+  "manifest": null,
+  "manifest_scope": "no Phase 1 Slurm manifest exists",
+  "container_smoke": {
+   "label": "container_smoke",
+   "status": "PASS",
+   "return_code": 0,
+   "scope": "Phase 0 pilot container only (job 1098); not the Phase 1 engine image",
+   "artifact": "compute/pilot/job1098/run-1098.json",
+   "sha256": "2b461a7c49f0e6d42bc15ae48ff266df289c560638dc94be949d4b687c03616e"
+  },
+  "slurm_test": {
+   "label": "slurm_test",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "scope": "no Phase 1 dry run or test-only; the pilot's CPU jobs were real submissions",
+   "artifact": "compute/attestations.md",
+   "sha256": "b38c76a6b6c96dc46e9af08790724b85829d9bfa8747fe30939f03ef8304d306"
+  },
+  "provenance_verification": {
+   "label": "provenance_verification",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations.md",
+   "sha256": "b38c76a6b6c96dc46e9af08790724b85829d9bfa8747fe30939f03ef8304d306"
+  },
+  "pilot_jobs": {
+   "sbatch": {
+    "path": "infra/slurm/host-single-node/s2v3-pilot-cpu.sbatch",
+    "sha256": "9afab097db1ab3f9008b3ddc940f45320435b8678685af0fd8fe76d87e14b979"
+   },
+   "receipts": [
+    {
+     "artifact": "compute/pilot/job1097/run-1097.json",
+     "sha256": "882243220c32b6137da063f8af454ab1b88b580f628967166eab11a579006dd8"
+    },
+    {
+     "artifact": "compute/pilot/job1098/run-1098.json",
+     "sha256": "2b461a7c49f0e6d42bc15ae48ff266df289c560638dc94be949d4b687c03616e"
+    },
+    {
+     "artifact": "compute/pilot/job1099/run-1099.json",
+     "sha256": "be312e8e7425be4d17a046d2e7a3fb85fa73a8b652fbe57b933526ce1181f9ff"
+    },
+    {
+     "artifact": "compute/pilot/job1100/run-1100.json",
+     "sha256": "51e9390936d2688d43280321a6c0d910e17438be4abda2eab52a478a498e7b69"
+    }
+   ],
+   "records": [
+    {
+     "artifact": "compute/pilot/job1097/debug-record.json",
+     "sha256": "06a838e5eb51c7c54da10fadfd845f763f1cf9171c4cf6d91fcc384bd381ca02"
+    },
+    {
+     "artifact": "compute/pilot/job1098/pilot-record.json",
+     "sha256": "f852a8e58e49d61c3b18a7a0aed2f7ffb78322d7c1e8b47553cf58c1df24c252"
+    },
+    {
+     "artifact": "compute/pilot/job1099/pilot-b-record.json",
+     "sha256": "ba20fd356712662306926230c61e9e82653d74cf932b292110f0360193934911"
+    },
+    {
+     "artifact": "compute/pilot/job1099/pilot-b-analysis.json",
+     "sha256": "d147e8eec676359e0df9f492edcfa3f8f73b0f4e7d91923181df2d028ddbaa25"
+    },
+    {
+     "artifact": "compute/pilot/job1100/pilot-b-record.json",
+     "sha256": "1ac390a6b733a1603d0c56ed87c66204a352a94998a214a1787e881862cfd1b8"
+    },
+    {
+     "artifact": "compute/pilot/job1100/o3-analysis.json",
+     "sha256": "f8c4c67ecc176409f644cc2eae12162307231429c4d0dacde9a7c48ecd008e86"
+    }
+   ],
+   "scripts": [
+    {
+     "artifact": "compute/pilot/s2v3_debug.py",
+     "sha256": "1a9368e11c4507fbd5f0ed160df8128187e9e409b68301c4ee21a5543f96a36e"
+    },
+    {
+     "artifact": "compute/pilot/s2v3_o3_analysis.py",
+     "sha256": "4b0ca509ee612164a4d28d2cd012de5e87e85a0d3692a8122d1bf87c94b7e5ab"
+    },
+    {
+     "artifact": "compute/pilot/s2v3_pilot.job1098.py",
+     "sha256": "8f4bfbd6ad87d5dab53df3abd1494a8ea42a68ea50fddbf2333101d9391f8f29"
+    },
+    {
+     "artifact": "compute/pilot/s2v3_pilot.job1099.py",
+     "sha256": "a69f593825a55ecbb0cef5438ec4234894efa7374eb748566bda0d112588a41f"
+    },
+    {
+     "artifact": "compute/pilot/s2v3_pilot.job1100.py",
+     "sha256": "ffe12039755499855d8964c766b8fcf9c5dfb50de5b96b371eaa20bb958681ed"
+    },
+    {
+     "artifact": "compute/pilot/s2v3_pilot.py",
+     "sha256": "ffe12039755499855d8964c766b8fcf9c5dfb50de5b96b371eaa20bb958681ed"
+    },
+    {
+     "artifact": "compute/pilot/s2v3_pilot_b.job1099.py",
+     "sha256": "5747e659f6d21e003c1d7d4a45fe580e56009e9d643866a6396ba99c09bed39b"
+    },
+    {
+     "artifact": "compute/pilot/s2v3_pilot_b.job1100.py",
+     "sha256": "7ae621fea9a76b60b40e3c9f638da1660b35740bd6bf9b3ba86dea7a4b31a92a"
+    },
+    {
+     "artifact": "compute/pilot/s2v3_pilot_b.py",
+     "sha256": "c03f3817c9fbdc005e7c883781f115f65095b89333782f96756d719f303df430"
+    },
+    {
+     "artifact": "compute/pilot/s2v3_pilot_b_analysis.py",
+     "sha256": "49fde8e186c646d15916e6d4c840e42767d1d89028597118cb23757a5653c1b1"
+    }
+   ],
+   "slurm_logs": [
+    {
+     "artifact": "compute/pilot/job1097/slurm-cotcodec-s2v3-pilot-cpu-1097.out",
+     "sha256": "1c7a4dd0c1f209ec0195103c46d36e003979e7d96592852be1b434fcdbda9074"
+    },
+    {
+     "artifact": "compute/pilot/job1098/slurm-cotcodec-s2v3-pilot-cpu-1098.out",
+     "sha256": "9abdc9ea9feb91f63beb9c8a030da65e1dafb1f25dc0715304dd231be5fef08d"
+    },
+    {
+     "artifact": "compute/pilot/job1099/slurm-cotcodec-s2v3-pilot-cpu-1099.out",
+     "sha256": "4b3ba74b4d2e09add90902fe83a0e3b6c54d5ff68419ed347ea4ad6605871938"
+    },
+    {
+     "artifact": "compute/pilot/job1100/slurm-cotcodec-s2v3-pilot-cpu-1100.out",
+     "sha256": "a1c55ebf4133cbe0a62a9a6d52376167f459ada8a83a22aaf26f36cce895f4c9"
+    }
+   ],
+   "gpu_hours": 0.0
+  },
+  "registered_caps_gpu_h": {
+   "K106_n4": {
+    "episodes": 1696,
+    "physical_gpu_h_high_slot": 4.718,
+    "cap_minutes_incl_overlay": 366,
+    "cap_gpu_h_incl_overlay": 6.1
+   },
+   "K89_n4": {
+    "episodes": 1424,
+    "physical_gpu_h_high_slot": 3.971,
+    "cap_minutes_incl_overlay": 309,
+    "cap_gpu_h_incl_overlay": 5.15
+   },
+   "K62_n4": {
+    "episodes": 992,
+    "physical_gpu_h_high_slot": 2.785,
+    "cap_minutes_incl_overlay": 220,
+    "cap_gpu_h_incl_overlay": 3.667
+   },
+   "registered_total_gpu_h": 6.1,
+   "at_p95_slot_gpu_h": 6.867
+  },
+  "supplementary_cpu_evidence": [
+   {
+    "label": "pool: the enlarged LibreOffice task pool (106 tasks) under rules E1-E5, C1, F1",
+    "script": {
+     "artifact": "compute/pool/pool-v3.py",
+     "sha256": "d860d6d544ad44dd4229731f16be0984f485f02dd79f0b65474e15529ede2d23"
+    },
+    "output": {
+     "artifact": "compute/pool/pool-v3.json",
+     "sha256": "f730e464366c03f4d6b12769be96d477609689d9f8ef3db2d7e1ddd2d3237ada"
+    },
+    "summary": {
+     "reserve": 27,
+     "confirm": 62,
+     "dev": 17
+    }
+   },
+   {
+    "label": "power: operating characteristics of the registered rules, 2,000 replicates x seeds 42-44",
+    "script": {
+     "artifact": "compute/power/power-v3.py",
+     "sha256": "4de56a027aecebb4fbe18d7d2a9c3b8abda160831af095dbf75a21322bbca978"
+    },
+    "output": {
+     "artifact": "compute/power/power-v3.json",
+     "sha256": "63b825c3984e863090c759953fcb516c81d8de4a980a940c543c481e873cb4dc"
+    },
+    "log": {
+     "artifact": "compute/power/power-v3.log",
+     "sha256": "f1667a1178060aee04d40dd1217a80c564d38400017586dc325d3488ed11b875"
+    },
+    "tables": [
+     {
+      "artifact": "compute/power/tables-v3.py",
+      "sha256": "5e637ad0fe4d706798edf15575891e4f9eb9da5f610f990515b2805a713597ec"
+     },
+     {
+      "artifact": "compute/power/tables-v3.md",
+      "sha256": "64f722ec308a8c452eaa752031be67dfa6d34f258e4065e3d0a12727d00ec4be"
+     }
+    ]
+   },
+   {
+    "label": "discovery cells: query logs, kill-shot simulations, cross-domain guard sketch (copied unchanged from the cells' scratch)",
+    "files": [
+     {
+      "artifact": "compute/cells/classify.py",
+      "sha256": "eea361917fe9950590680043b583a0b5d1f712b65143b61c928dc9e340131ff5"
+     },
+     {
+      "artifact": "compute/cells/frontier-all-queries.json",
+      "sha256": "347aa599885c2689c25fdee6a27a374204f9cfd0f1cb6209a3d75e99ebc3f145"
+     },
+     {
+      "artifact": "compute/cells/guards.py",
+      "sha256": "6a42e7174b7cab3c4def2fb85918e79a15b706e6b64facae4bc8163967fe57e8"
+     },
+     {
+      "artifact": "compute/cells/guards_budget.py",
+      "sha256": "6cc7ce7dbe8e2b31f353d1d59ab985878ee23a6c18f70b074ce3d926773c8c5b"
+     },
+     {
+      "artifact": "compute/cells/killshot-orx-queries.json",
+      "sha256": "caa66b66aa45cd765fa940c4b882d13fe59e505d02c31d3e092b4dd10f4bf576"
+     },
+     {
+      "artifact": "compute/cells/ks_power.py",
+      "sha256": "1226572718c5e53d3e7040e61543fbf5bb7de610d9dfb524ad5cab0c7ce8d244"
+     },
+     {
+      "artifact": "compute/cells/ks_rules.py",
+      "sha256": "d85ee7a57250df6ab1e08e2ead3d8399fbd3adcba8217ff796575f95462ca9b9"
+     },
+     {
+      "artifact": "compute/cells/ks_rules_out.json",
+      "sha256": "5cdf2f7bc35cf4f4a1d7712bb7f03f519127ef7dfbaadb62ffae5adfc1348a2e"
+     },
+     {
+      "artifact": "compute/cells/ks_select.py",
+      "sha256": "8b65713b93ad69e7b856d405d41b87a974fa7fb8c0f2d171496e397ca447a6b1"
+     },
+     {
+      "artifact": "compute/cells/ks_select_out.json",
+      "sha256": "fa39db4466b6904609363178fcae8ac8281de6f859845741ce73f900ae364f30"
+     },
+     {
+      "artifact": "compute/cells/ks_unscreened.py",
+      "sha256": "339bc51e7345999d5905556627ce3aa3ece28ebe7b64160679981d644efed390"
+     },
+     {
+      "artifact": "compute/cells/ks_unscreened_out.json",
+      "sha256": "325304187ba9acbe2ffd5bf6194c1362e5b8136f42109b1628f5f9bdfda9c2fa"
+     },
+     {
+      "artifact": "compute/cells/owner-S-q01.json",
+      "sha256": "1ce646465e5040d1b5042e9fe73700b37eb5a806a0634e05de453e7c3f6916fa"
+     },
+     {
+      "artifact": "compute/cells/owner-S-q02.json",
+      "sha256": "744c7a6196e2bc6e06e716192d55e5e0a702a04a51c813bd78789ff5be35f934"
+     },
+     {
+      "artifact": "compute/cells/owner-S-q03.json",
+      "sha256": "093a70b207d1177e3a72cc7efac7cf515ec67e285ad8fb8e38fb57c88e522254"
+     }
+    ]
+   },
+   {
+    "label": "builders",
+    "files": [
+     {
+      "artifact": "compute/build-query-log.py",
+      "sha256": "1e41c3f7fab26927e8cae6050a2dc0723e8088e5ddbb3a62df9875a71dfa7b71"
+     },
+     {
+      "artifact": "compute/build-doctors.py",
+      "sha256": "d4bbd43c1ebcdc51f70fe4427c29c4f05e61d922e6b141a34d4a0bc9310c4bfa"
+     },
+     {
+      "artifact": "compute/build-bundle.py",
+      "sha256": "f547528a397307592dcdec4c2d2c509392e2b2cc2713a71630d5caa192a5d0fb"
+     },
+     {
+      "artifact": "compute/snapshot-sources.py",
+      "sha256": "729d1e5e75507415184b1ca3dfd4ec313c1f329a935a9d698b6026e8f1a4203c"
+     }
+    ]
+   }
+  ],
+  "repository_evidence_used": {
+   "s1a_records": "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+   "s1a_plan": "program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json",
+   "splits": "program/evidence/q2-mutation/splits.json",
+   "osworld_test_all_sha256": "9ebc5187cbd727ef26c24626820076b102fff812863c640a67c467fea9542ab5",
+   "design_study": "program/evidence/2026-10-10/q2-next-step-design-study/README.md",
+   "d53": "program/decisions.md D53"
+  }
+ },
+ "doctors": [
+  {
+   "name": "Source",
+   "status": "PASS",
+   "artifact": "doctors/source.json",
+   "sha256": "12a36a22a2322dbaaa8e087189f4335efba1b85c831f87d6f23eefd69c44e351"
+  },
+  {
+   "name": "Citation",
+   "status": "PASS",
+   "artifact": "doctors/citation.json",
+   "sha256": "89c38c17bc1167155b45b1d4119bdc493788c9b3721c9e9d071c402904fd1697"
+  },
+  {
+   "name": "Novelty",
+   "status": "FAIL",
+   "artifact": "doctors/novelty.json",
+   "sha256": "f75e84c338998176a17ebaf8a34e614673eaa784adb4012d9ccda72e5839955a"
+  },
+  {
+   "name": "Design",
+   "status": "PASS",
+   "artifact": "doctors/design.json",
+   "sha256": "38f7177ec6ea4f0f1c81b45de29780af52ea15696130fa3841b433c129c96ca2"
+  },
+  {
+   "name": "Compute",
+   "status": "FAIL",
+   "artifact": "doctors/compute.json",
+   "sha256": "8aa93d168031f200d6478a591ced909866ed503bd93393a74eecf46e1cf5580c"
+  },
+  {
+   "name": "Safety",
+   "status": "PASS",
+   "artifact": "doctors/safety.json",
+   "sha256": "ae851126693bfc4d7f0dc1a8d86a1cd4e497008dcfc66cd24da399b2173782c1"
+  }
+ ],
+ "audit_log": null,
+ "audit_log_status": "This wave's row is appended to program/gauntlet/ with scripts/research_gauntlet_record.py after its reviewers score.",
+ "evidence_root_sha256": "5820c999821df7ffe3e6221df001f6238880f1aba70c73b6b02f18437b079a75",
+ "blind_discrimination_packet": {
+  "proposal": {
+   "artifact": "blind/paragraph-c71a28cd.txt",
+   "sha256": "01cadd302f2f1764aafec2cb0c02f116c3c8a474a614821a8ad178342631e29a",
+   "text_sha256": "c71a28cd529fc9ea85ee24d18b6ac3eed1b5d73c88331b95b4122bade9a295d6"
+  },
+  "closest_prior": {
+   "artifact": "blind/paragraph-273c3ae5.txt",
+   "sha256": "5fdd128639d5f81567a23f2f9e1b68ecf6291335eb226bc2328505d98b8f7661",
+   "text_sha256": "273c3ae50915c64bdd5a268b96148b5653e9455068f43cce7937ef0b94876aed"
+  },
+  "closest_prior_id": "2506.04135 (macOSWorld, NeurIPS 2025, v4)",
+  "note": "File names carry no role; compute/blind-roles.json is for the recorder only."
+ },
+ "budget_ledger": {
+  "declared": {
+   "queries": 150,
+   "wall_minutes": 600,
+   "tokens": 8000000,
+   "dollars": 150,
+   "waves": 3,
+   "gpu_hours": 0.3
+  },
+  "queries_used_before_triad": {
+   "orx_discover_only": 71,
+   "with_acl_and_openreview": 91,
+   "by_cell": {
+    "frontier": {
+     "orx_discover": 35,
+     "run2_convention": 51,
+     "all_records": 61
+    },
+    "killshot": {
+     "orx_discover": 15,
+     "run2_convention": 19,
+     "all_records": 23
+    },
+    "cross-domain": {
+     "orx_discover": 18,
+     "run2_convention": 18,
+     "all_records": 44
+    },
+    "synthesis": {
+     "orx_discover": 3,
+     "run2_convention": 3,
+     "all_records": 4
+    }
+   }
+  },
+  "gpu_hours_used": 0.0,
+  "host_jobs": "CPU-only Slurm 1096 (cancelled), 1097-1100 (exit 0); no GPU job"
+ },
+ "research_direction_doctor_output": {
+  "artifact": "doctors/research-direction-doctor-output.json",
+  "sha256": "40a14fd31f9e83fbbc4b6fecde51ac3620f6eb684e1669ead6a11f0fb19eac4a",
+  "note": "verbatim stdout of the doctor on this bundle (exit 1); not part of the evidence root"
+ }
+}

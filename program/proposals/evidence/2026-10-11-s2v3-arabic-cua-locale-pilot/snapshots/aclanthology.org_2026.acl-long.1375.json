@@ -1,0 +1,12 @@
+{
+ "url": "https://aclanthology.org/2026.acl-long.1375/",
+ "fetched_at": "2026-10-11T08:23:00Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 49431,
+ "raw_sha256": "c029ae3e98eab8080394363cef2ab717b14241f53f81c17461d83cdaf35e426f",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "MPR-GUI: Benchmarking and Enhancing Multilingual Perception and Reasoning in GUI Agents - ACL Anthology"
+ }
+}

@@ -1,0 +1,10 @@
+{
+ "doctor": "Compute",
+ "status": "FAIL",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "S2 v3 wave-1 synthesis by the single owner (Claude agent), 2026-10-11 UTC; not an independent review",
+ "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
+ "evidence": "Engine base digest (vllm/vllm-openai@sha256:b18abb2d...) and S1a's loop, adapters and lane as the Phase 1 stack; seeds [42, 43, 44]; Phase 1 cap 6.10 GPU-h by the Q2 design study's slot rule (power-v3.json costs); checkpoint and resume per episode as S1a. Executed in this gauntlet: four CPU-only Slurm jobs (1097-1100; 1096 cancelled), no GRES, on an empty queue, in the LO-VM container sha256:f5b4c40e... through the D12 CPU lane pattern, all exit 0 with receipts (compute/pilot/job109*/).",
+ "why_fail": "No derived Arabic image (downloads wait on Kevin; image surgery and lane code unreviewed), no VM-lane oracle, no delta certification, no Phase 1 manifest, no Slurm dry run or test-only of Phase 1, no orx node over experiments/orx/node.yaml, no real model loop run for S2.",
+ "remediation": "Kevin's go-ahead for the three downloads; review of the image-surgery script and the lane version; Phase 0 in the lane; then the Phase 1 manifest's dry run and test-only and an orx slurm-manifest node."
+}

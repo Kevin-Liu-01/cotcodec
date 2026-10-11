@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2606.06560",
+ "fetched_at": "2026-10-11T08:23:00Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42975,
+ "raw_sha256": "1f7f47c7343b05ac8b672062ab392d8a57b3ee19c80d48fe227aaf5c009ab9bd",
+ "raw_stored": false,
+ "extract": {
+  "title": "MacArena: Benchmarking Computer Use Agents on an Online macOS Environment",
+  "authors": [
+   "Muryn, Victor",
+   "Shamrai, Maksym",
+   "Mazepa, Sofiia",
+   "Khodysko, Yehor"
+  ],
+  "citation_date": "2026/06/04",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 4 Jun 2026 14:01:32 UTC"
+   }
+  ],
+  "abstract": "Computer-use agents (CUAs) operate graphical user interfaces (GUIs) through vision and control primitives, and their capabilities have advanced rapidly, driven in part by standardized online evaluation benchmarks such as OSWorld, which serve both as evaluation tools and as training environments for reinforcement learning. However, macOS remains underserved in this landscape: the only existing benchmark, macOSWorld, covers a narrow slice of first-party applications with simpler tasks, and runs on x86 virtual machines incompatible with Apple Silicon. We introduce MacArena, a benchmark of 421 manually verified tasks spanning 50 applications that combines a curated port of OSWorld tasks, content sourced from macOSWorld, and 49 new macOS-native tasks, all running on Apple's native Virtualization framework on Apple Silicon. We argue that macOS presents distinct GUI challenges beyond what Linux-based benchmarks capture, and our evaluation supports this claim: strong model performance on existing benchmarks can reflect familiarity with task distributions rather than genuine cross-platform GUI competence. Notably, model rankings invert between ported and macOS-native tasks, with a leading model trailing by over 26% on the MacArena subset, suggesting that macOS poses a genuinely harder environment for current GUI agents.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

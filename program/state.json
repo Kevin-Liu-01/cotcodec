@@ -471,7 +471,7 @@
     "Q2 after S1a (D66, D69): S1b and the harness-scale question are closed on the design study (no design within 8 GPU-h can admit S1b; P(GO) <= 0.03). Yours only if you want a decisive harness reading: successor E (all 113 tasks, both sizes, 4 sessions, 1 rerun; 6.77 cap-GPU-h; DR2 decisive 0.83-0.87) as a registration with a pre-freeze audit (no gauntlet). Evidence: program/evidence/2026-10-10/q2-next-step-design-study/README.md",
     "Gauntleted packages that ended at honest exits and can advance only by your admission ruling (D24) or the trust store (D70): S2 v2 (Arabic computer-use locale on the certified OSWorld stack; 59; Phase 1 caps 5.98-7.98 GPU-h; cannot falsify at K = 26), C5 v2 (FP4 grid-by-scale crossing; 58, open-weight 71; Phase 1 about 70-97 GPU-h), E5 v2 (51), E7 v2 (51), E3 v2 (49), C3 (54), E4 (60), K1 v3 (56). Each package is its proposal, draft registration and gauntlet record under program/proposals/ and program/gauntlet/"
   ],
-  "gpu_hours_spent_this_program": 10.3657,
+  "gpu_hours_spent_this_program": 10.421,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -984,6 +984,15 @@
       ],
       "outcome": "review PARSED on attempt 1, replicates byte-identical; the model returned total 47 although its ten scores sum to 51 (re-checked total 51, no cap binding); run score 51 (lower of 59 and 51; 47 if the produced total is kept), best 51, trajectory 51 -> 51; honest exit under D68's stop line (below 60), the run's wave cap and the triad stop (3/3 refuted); E7 ends; reviewer inference only, not E7 gate work; submitted 01:55:23 UTC 2026-10-11 after squeue was empty at 01:54:45 and 01:55:16 and at the in-command re-check (no s1a-a1-* or q2s1a-* job, no other job), ran 01:55:24-01:58:41 UTC",
       "basis": "physical (scontrol RunTime 00:03:17 = 197 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, GPUs at 0 MiB after the job)"
+    },
+    {
+      "experiment": "S2 v3 gauntlet wave 1 (D71 (ii); s2-arabic-cua-locale-v3 draft, Phase 0 CPU pilot and Phase 1 design) open-weight review (D24)",
+      "gpu_hours": 0.0553,
+      "jobs": [
+        "1102 qwen3.6-35b-a3b review"
+      ],
+      "outcome": "review PARSED on attempt 1, total 60 (ten scores sum to 60, no cap binding), replicates byte-identical; wave score 60 (lower of 61 and 60), best 60; no honest exit at wave 1 (wave 1 of 3; tokens 4.59M of 8M, $91.11 of $150, 159.4 of 600 minutes, 127 of 150 queries), but the candidate does not proceed as drafted (triad 3/3 refuted); reviewer inference only, not S2 v3 Phase 0 or Phase 1 work (the pilot ran as CPU-only Slurm 1096-1100, no GRES); submitted 09:00:14 UTC 2026-10-11 after read-only squeue at 08:52:47, poll-once at 09:00:06 and the in-command re-check showed an empty queue (no other job), ran 09:00:14-09:03:33 UTC (prolog: exclusive)",
+      "basis": "physical (scontrol RunTime 00:03:19 = 199 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, all GPUs at 0 MiB and squeue empty after the job)"
     }
   ],
   "results": [

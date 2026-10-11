@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2601.12809",
+ "fetched_at": "2026-10-11T08:23:00Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42034,
+ "raw_sha256": "a072e0c7522a5e9c49e04077c48c5a5a37c8421c4d9a62ed0105cb7bf9b31167",
+ "raw_stored": false,
+ "extract": {
+  "title": "Left-Right Symmetry Breaking in CLIP-style Vision-Language Models Trained on Synthetic Spatial-Relation Data",
+  "authors": [
+   "Yamamoto, Takaki",
+   "Noguchi, Chihiro",
+   "Tanizawa, Toshihiro"
+  ],
+  "citation_date": "2026/01/19",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 19 Jan 2026 08:16:11 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 26 May 2026 15:14:58 UTC"
+   }
+  ],
+  "abstract": "Spatial understanding remains a key challenge in vision-language models. Yet it is still unclear whether such understanding is truly acquired, and if so, through what mechanisms. We present a controllable 1D image-text testbed to probe how left-right relational understanding emerges in Transformer-based vision and text encoders trained with a CLIP-style contrastive objective. We train lightweight Transformer-based vision and text encoders end-to-end on paired descriptions of one- and two-object scenes and evaluate generalization to unseen object pairs while systematically varying label and layout diversity. We find that contrastive training learns left-right relations and that label diversity, more than layout diversity, is the primary driver of generalization in this setting. To gain the mechanistic understanding, we perform an attention decomposition and show that interactions between positional and token embeddings induce a horizontal attention gradient that breaks left-right symmetry in the encoders; ablating this contribution substantially reduces left-right discrimination. Our results provide a mechanistic insight of when and how CLIP-style models acquire relational competence.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

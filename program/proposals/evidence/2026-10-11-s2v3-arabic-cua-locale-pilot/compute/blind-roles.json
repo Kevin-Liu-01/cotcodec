@@ -1,0 +1,6 @@
+{
+ "proposal": "paragraph-c71a28cd.txt",
+ "closest_prior": "paragraph-273c3ae5.txt",
+ "closest_prior_id": "2506.04135 (macOSWorld, NeurIPS 2025, v4)",
+ "note": "recorder only; not given to the critic. File names are the first 8 hex of the SHA-256 of the stripped paragraph."
+}

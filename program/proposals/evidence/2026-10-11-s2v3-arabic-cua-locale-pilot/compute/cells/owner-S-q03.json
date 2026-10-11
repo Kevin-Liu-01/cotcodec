@@ -1,0 +1,272 @@
+[
+  {
+    "source": "alphaxiv",
+    "id": "2607.25904",
+    "title": "Interactive Reward Agent: GUI Task Evaluation via Environment-State Verification",
+    "abstract": "Graphical user interface task evaluation aims to determine whether a GUI agent has successfully completed a user instruction. Automated GUI task evaluation has received increasing attention because the evaluation results can serve as reward signals for both test-time scaling and post-training. However, reliable GUI task evaluation remains challenging because the judgments often require access to environment states, such as system configurations, file data, and application settings, beyond the screenshots of execution trajectories. In this paper, we propose an interactive reward agent (IRA) based on a propose-then-verify framework to acquire and verify evidence from the post-execution environment. Given a task instruction and a GUI environment after the GUI agent execution, IRA first proposes the task completion conditions and then verifies them by invoking system tools, application tools, and GUI tools. This design combines evidence from both visible interfaces and the environment state in an interactive process. We further introduce GUI-RewardBench, a benchmark of 321 GUI task trajectories spanning 10 Ubuntu desktop application categories. Experiments show that IRA achieves 86.9% accuracy on GUI-RewardBench, outperforming existing evaluator baselines. We further apply IRA to reinforcement learning of GUI agents, achieving a 34.0% OSWorld success rate, which demonstrates that IRA can provide effective reward signals for training GUI agents.",
+    "publicationDate": "2026-07-28T16:01:38.000Z",
+    "votes": 6,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...ng of GUI agents, achieving a 34.0% OS-\nWorld success rate, which demonstrates that IRA can provide\neffective reward signals for training GUI agents.\nIntroduction\nGraphical user interface (GUI) task e..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...challenging\nbecause the judgments often require access to environment\nstates, such as system configurations, file data, and applica-\ntion settings, beyond the screenshots of execution trajectories.\nIn..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2610.00371",
+    "title": "Deny Without Disabling: Authorization-Paired Evaluation and Control for Multi-Agent Systems",
+    "abstract": "Multi-agent systems derive their capabilities from sharing evidence, delegating tasks, and combining information across agents. The same process creates a safety problem: contributions that are admissible in isolation can jointly enable a prohibited use. Blocking every sensitive action avoids disclosure but defeats the purpose of collaboration. We introduce authorization-paired evaluation, which makes blocking prohibited uses and completing required authorized uses a joint success criterion, and FlowReview, a framework connecting object resolution, permission ranking, and deterministic enforcement. In controlled composition experiments, reviewing combined artifacts reduces the denied-commit rate from 86.0% to zero with no loss of authorized supply. Our findings show that preserving information and lineage alone does not ensure correct permission attribution. Object identity and permission must remain connected to execution through components whose outputs can be verified. Together, these findings establish a system-level requirement for multi-agent safety: govern composed information flows while preserving the authorized capabilities that make collaboration useful.",
+    "publicationDate": "2026-09-30T06:55:18.000Z",
+    "votes": 2,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...prohibited use. Blocking every sensitive\naction avoids disclosure but defeats the purpose of collaboration. We introduce authorization-\npaired evaluation, which makes blocking prohibited uses and comp..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...g\n1 \nYingqiang Ge\n3\nJiang Guo\n3 \nJihun Hamm\n1 \nChandan K. Reddy\n4\n1\nTulane University \n2\nUniversity of British Columbia\n3\nIndependent Researcher \n4\nVirginia Tech\nCode and data: https://github.com/yunb..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2610.01215",
+    "title": "AutoGUIWorld: Image Generators as Visual World Models for GUI Agent",
+    "abstract": "GUI agents require high-quality interaction trajectories to learn how software environments respond to actions, maintain state, and support multi-step workflows. However, the diversity of available trajectories is constrained by the applications, interface states, and workflows accessible in the underlying environments. Expanding this coverage requires deploying increasingly diverse and complex software, with specialized applications imposing additional installation, configuration, and runtime costs. We introduce AutoGUIWorld, a data generation framework that combines the visual priors of image generators with the task knowledge of a planner to synthesize GUI interaction trajectories without deploying or running the corresponding software environments. AutoGUIWorld samples initial GUI scenes from structured specifications of operating-system context, visual appearance, and interface state, and generates tasks conditioned on those scenes. A planner then specifies atomic actions and their intended visual consequences, while an image generator iteratively edits the current screenshot to produce subsequent observations. Action grounding and transition-level quality filtering yield 79,266 spatially annotated step-level training samples across Ubuntu, Windows, macOS, and Chrome. Fine-tuning Qwen3.5-35B-A3B on AutoGUIWorld trajectories improves the mean task score on OSWorld from 33.0% to 40.8% and the task success rate on ScienceBoard from 14.0% to 32.2%. These results show that generated trajectories improve GUI-agent performance on real desktop and scientific tasks.",
+    "publicationDate": "2026-10-01T07:22:53.000Z",
+    "votes": 19,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...iverse and complex software,\nwith specialized applications imposing additional installation, configuration, and runtime costs. We\nintroduce AutoGUIWorld, a data generation framework that combines the ..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...unyuan AI Data Team\nAbstract\nGUI agents require high-quality interaction trajectories to learn how software environments respond\nto actions, maintain state, and support multi-step workflows. However, ..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2607.28227",
+    "title": "Qwen-UI-Agent Technical Report: Toward Next-Generation Real-World Centric Foundation GUI Agents",
+    "abstract": "GUI agents have the potential to become a general purpose executor over existing digital devices. To advance them toward real-world use, we envision agents that operate reliably on real devices, execute workflows across platforms, combine GUI interaction with CLI execution, complete long-horizon tasks, proactively initiate useful services, and autonomously improve their capabilities with minimal human effort. Guided by this vision, we present Qwen-UI-Agent, a real-world centric foundation GUI agent spanning mobile, computer-use, web, and DeepSearch environments. Qwen-UI-Agent combines diverse sandbox environments with a large-scale real-device mobile runtime. Its unified action space interleaves GUI operations with CLI execution and generates batched actions in a single model turn. An AutoResearch-style data flywheel uses agents to construct tasks and environments, diagnose failures, and plan subsequent iterations. Online RL supports training on trajectories exceeding 100 turns, with over 10,000 concurrent environments accelerating rollout. A lightweight harness layer supports proactive service initiation and stateful workflows across mobile and computer.\nAcross a broad suite of evaluations, Qwen-UI-Agent sets state-of-the-art performance on mobile-use benchmarks while delivering competitive performance on computer- and browser-use tasks against frontier models, including Opus 4.8, Gemini 3.1 Pro, and GPT-5.6 Sol. On mobile use, it achieves 82.1% on MobileWorld, 92.2% on MobileWorld-Real, and 97.5% on AndroidDaily. On computer use, it achieves 79.5% on OSWorld-Verified and a 40.0% partial-progress score on OSWorld-v2. On browser use and GUI grounding, it achieves 73.6% on WebArena and 81.5% on ScreenSpot-Pro, respectively.",
+    "publicationDate": "2026-07-30T13:58:41.000Z",
+    "votes": 86,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "2026-07-31\nQwen-UI-Agent Technical Report: Toward Next-Generation\nReal-World Centric Foundation GUI Agents\nMAI-UI Team\n∗\nAlibaba Token Hub \n, Alibaba Group\ntongyi-mai.github.io/Qwen-UI-Agent\nAbstract\n..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...roactive service initiation and stateful workflows across mobile and computer.\nAcross a broad suite of evaluations, Qwen-UI-Agent sets state-of-the-art performance\non mobile-use benchmarks while deliv..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2608.21830",
+    "title": "Beyond Success and Failure: Length-Aware Contrastive Learning for GUI Agents",
+    "abstract": "Graphical User Interface (GUI) agents powered by Multimodal Large Language Models (MLLMs) have shown strong potential for automating tasks across diverse digital environments, where reinforcement learning (RL) has become a dominant training paradigm. However, widely used methods such as Group Relative Policy Optimization (GRPO) suffer from reward-gradient misalignment, leading to inefficient and unstable optimization. Recent work addresses this issue by reformulating RL with verifiable rewards (RLVR) as contrastive or classification-based objectives, which improve stability by eliminating problematic gradient behaviors. Despite this progress, existing contrastive RLVR methods rely primarily on outcome-level supervision and fail to capture fine-grained differences in trajectory quality within the same outcome category. In this paper, we propose Length-Aware Contrastive Learning for GUI Agents (LACL-GUI), a contrastive RLVR framework that incorporates trajectory-level quality signals into policy optimization. LACL-GUI introduces structured preferences within both successful and failed trajectories, encouraging concise successful executions and differentiating failure quality based on divergence from successful trajectories, while preserving optimization stability. Experiments on GUI agent benchmarks show that LACL-GUI provides more effective learning signals and consistently improves agent performance over prior methods, highlighting the value of trajectory-level supervision in contrastive RLVR.",
+    "publicationDate": "2026-08-22T08:01:47.000Z",
+    "votes": 0,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...t learning (RL) has become a dominant\ntraining paradigm. However, widely used methods such as Group Relative Pol-\nicy Optimization (GRPO) suffer from reward–gradient misalignment, leading to\ninefficie..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...erving optimization stability. Experiments on GUI agent benchmarks show that\nLACL-GUI provides more effective learning signals and consistently improves\nagent performance over prior methods, highlight..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.00048",
+    "title": "GUI-CC: Benchmarking Contextual Consistency of GUI World Models as Agent Environments",
+    "abstract": "GUI world models are increasingly evaluated as one-step next-screen predictors, yet their intended use is often as multi-step environments for GUI agents. This mismatch leaves a key requirement under-tested: generated states must remain contextually consistent when they are repeatedly reused for future interaction. We introduce GUI-CC, a benchmark that evaluates contextual consistency of GUI world models as agent environments rather than isolated next-screen predictors. GUI-CC contains two complementary tracks: an offline reference-action track that rolls models along real mobile GUI trajectories, and an online agent-loop track that lets fixed probing agents interact with model-generated UIs. We construct 500 offline trajectory tasks from GUIOdyssey and 200 emulator-verified online tasks across 30 mobile apps. GUI-CC evaluates transition fidelity, transition plausibility, contextual consistency, and task progress. Experiments show that plausible single-step generation does not guarantee reliable environment simulation: current models often produce usable-looking screens while failing to preserve task-relevant context or support executable multi-step rollouts.",
+    "publicationDate": "2026-08-30T05:19:43.000Z",
+    "votes": 8,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...e.\nAs shown in Figure 1, visually plausible rollouts\ncan still drift to the wrong app, delay action effects,\nlose saved state, or regenerate a launcher without\nthe target app, leaving the agent in a p..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...ibility, contextual consistency, and\ntask progress. Experiments show that plausible\nsingle-step generation does not guarantee reli-\nable environment simulation: current models\noften produce usable-loo..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2610.11707",
+    "title": "DeltaReplay: Task-Relative Memory Reuse for Mobile GUI Agents",
+    "abstract": "Memory-augmented mobile GUI agents store successful execution trajectories and reuse them in later tasks, but a stored trajectory rarely matches a new task exactly. The new task may use different parameters, share only some of its steps with a stored trajectory, or have no relevant record in memory. Forcing the agent to use irrelevant memory can mislead it, whereas discarding memory that may still be useful deprives it of guidance from past experience. To address this dilemma, we propose DeltaReplay, a step-level memory reuse framework that decides how to use existing memory without modifying it. We observe that the reusable part of a stored record is determined not by the record itself but by its relation to the new task, mainly through two factors: page-level consistency and action-level generality. We therefore store execution trajectories as paths in a transition graph, whose nodes (pages) and edges (actions between pages) capture these two factors. At reuse time, the action on each edge is split into a task-independent operation and task-specific parameters. DeltaReplay then compares each recorded step with the new task and the current screen, and decides whether to follow it, execute it after replacing its parameters, or leave it to the base agent. On AndroidWorld and SPA-Bench, DeltaReplay improves the task success rate over a base agent with the same backbone by up to 10.3 and 25.0 percentage points, respectively. These results indicate that deciding at each step how to use retrieved memory lets agents benefit even from partially matching trajectories.",
+    "publicationDate": "2026-10-08T11:12:57.000Z",
+    "votes": 1,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "Preprint. Under review.\nDELTAREPLAY: TASK-RELATIVE MEMORY REUSE\nFOR MOBILE GUI AGENTS\nYudong Bai, Yihong Chen, Quanming Yao\n∗\n, Yaqing Wang\nTsinghua University\nABSTRACT\nMemory-augmented mobile GUI age..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...pture these two factors.\nAt reuse time, the action on each edge is split into a task-independent operation\nand task-specific parameters. DeltaReplay then compares each recorded step with\nthe new task ..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2608.05587",
+    "title": "StepReflect: Structured UI Transition Reflection for Mobile GUI Agents",
+    "abstract": "Autonomous mobile GUI agents require accurate action reflection for reliable long-horizon execution. Existing approaches rely on open-ended multimodal reasoning after each action, which is costly and poorly matched to the structured nature of GUI state transitions. We propose StepReflect, which formulates per-step GUI reflection as supervised structured prediction conditioned on explicit transition specifications and paired visual evidence. StepReflect is trained through a staged pipeline combining supervised fine-tuning, teacher-student distillation, and preference- and reward-based refinement. Offline, the resulting 8B model achieves 82.16% transition-level accuracy on AndroidWorld, exceeding zero-shot GPT-5.2 by 11.83 percentage points under the same structured input. Online, across M3A, Agent-SAMA, MAI-UI-8B, and Seed-2.0-Pro, StepReflect achieves higher task success in three of four agent configurations and remains within one successful task of the GPT-5.2 Reflection Agent in the fourth. It also reduces paid API charges relative to GPT-based reflection in all four configurations. These results establish StepReflect as a practical, locally deployable alternative to repeated frontier-model reflection for long-horizon mobile GUI agents.",
+    "publicationDate": "2026-08-06T04:17:27.000Z",
+    "votes": 8,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...one successful task\nof the GPT-5.2 Reflection Agent in the fourth. It also reduces\npaid API charges relative to GPT-based reflection in all four\nconfigurations. These results establish StepReflect as ..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...flection reduces to determin-\ning whether an observed UI transition is consistent with the\nexpected effect of an action under the current task context.\nWe propose StepReflect, a compact learned reflec..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.36939",
+    "title": "SCA: Spatial Credit Assignment for Reinforcement Learning of GUI Agents",
+    "abstract": "GUI agents automate tasks on digital devices by grounding language instructions in visual interfaces. Existing group-relative reinforcement learning improves GUI action prediction by comparing the rewards of multiple responses sampled from the same GUI state. However, binary evaluation treats spatially different failed clicks as identical and provides no relative signal when all sampled clicks fail. To address these limitations, we propose Spatial Credit Assignment (SCA), which uses the screen coordinates of sampled clicks to refine group-relative credit. Specifically, SCA predicts each held-out response's reward from the other responses in groups containing both successes and failures, then uses the prediction residual to adjust credit. When all sampled clicks fail, SCA instead orders them by distance to the annotated target. These spatial references are used only to construct the training update; the deployed policy remains unchanged. We evaluate whether this correction improves the policy update itself by comparing its error and directional alignment with the exact return gradient in a controlled synthetic study. Across GUI grounding and offline action-prediction benchmarks, SCA improves grounding across professional domains and achieves the strongest results among reinforcement-fine-tuned models on most action-prediction metrics, with consistent gains across the reported GUI suites.",
+    "publicationDate": "2026-09-29T07:51:57.000Z",
+    "votes": 3,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...te tasks on digital devices by grounding language instructions in visual interfaces.\nExisting group-relative reinforcement learning improves GUI action prediction by comparing the\nrewards of multiple ..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...5;\nGou et al., 2025). These tasks combine visual grounding, action-type selection, and argument generation\nacross mobile, desktop, and web interfaces, so a useful policy must connect local screen geom..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.03438",
+    "title": "Do GUI Agents Know When Not to Act? Enabling Conflict-Aware Termination for Multimodal GUI Agents",
+    "abstract": "Graphical user interface (GUI) agents are increasingly used to execute natural-language instructions on user interfaces, yet real users may issue infeasible instructions due to benign mistakes. A reliable agent should not only know how to act, but also when not to act. In this work, we introduce CONFLICTGUI, a benchmark covering instruction-internal conflicts and instruction-GUI context conflicts to study conflict-aware termination. Our evaluation reveals severe execution-biased overcompliance: agents that perform well on feasible tasks often continue to execute blindly under conflicting instructions. To mitigate this behavior, we propose CONFLICTGUARD, an inference-time framework that aligns an agent's feasibility awareness with its action generation. CONFLICTGUARD contains two coupled components: a feasibility verification protocol that guides the agent to assess instruction logic and GUI-side evidence before acting, and a conditional action modulation mechanism that steers agents from over-compliant execution into termination-oriented behavior. Experiments across five widely-used agents demonstrate that CONFLICTGUARD improves average conflict task success rate significantly, while preserving normal GUI-task performance. These results validate that a lightweight inference-time intervention can substantially boost GUI Agent's competence to identify inappropriate execution scenarios and refrain from unnecessary actions.",
+    "publicationDate": "2026-09-03T06:48:41.000Z",
+    "votes": 19,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...GUARD, an\ninference-time framework that aligns an agent’s\nfeasibility awareness with its action generation.\nCONFLICTGUARD contains two coupled com-\nponents: a feasibility verification protocol that\ngu..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...,2\n, Chuanbiao Song\n2\n, Jun Lan\n2,‡\n, Huijia Zhu\n2\n,\nWeiqiang Wang\n2\n, Zhuosheng Zhang\n1,‡\n1\nSchool of Computer Science, Shanghai Jiao Tong University, \n2\nAnt Group\n{huangzhaoyuan,jometeorie,cpztsm520..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2610.04800",
+    "title": "MedImageOSWorld: Benchmarking GUI Agents for Medical Image Consoles",
+    "abstract": "Graphical consoles offer a practical interface for medical acquisition assistance, allowing agents to work through the controls and visual feedback used by human operators. Reliable assistance requires linking on-screen anatomy to acquisition decisions that determine what image evidence becomes available next. We introduce MedImageOSWorld, a benchmark for evaluating this capability in simulated CT, MR, and ultrasound consoles. Using screenshots and mouse-and-keyboard actions, agents configure protocols, plan acquisitions, inspect the resulting images, and make corrective adjustments across seven capability levels, from console operation to feedback-driven control. Evaluation combines task-specific workflow checks with hidden anatomical ground truth to assess procedural completion and acquisition outcomes separately. A common evaluation protocol specifies episode conditions and interaction budgets, while recorded trajectories support analysis of how agents observe, act, and respond to acquisition feedback. Across eleven open-weight agents, success rates range from 3.0 to 25.0 on a 0-100 scale while workflow-progress rates reach 21.5-74.5: agents complete much of the console workflow but rarely acquire the intended anatomy. Success collapses between perception and planning, from 79-90% at the lowest three levels for the best agent to at most 12% for millimetre-level planning and 0% for closed-loop control among open-weight agents. Two proprietary agents reach success rates of about 34 and exceed the best open-weight agent mainly in acquisition quality (61 versus 42). MedImageOSWorld provides a controlled setting for studying whether general-purpose GUI agents can translate visual observations into effective medical acquisition decisions.",
+    "publicationDate": "2026-10-03T22:56:09.000Z",
+    "votes": 1,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...led setting for studying whether general-\npurpose GUI agents can translate visual observations into effective medical acqui-\nsition decisions.\n1 INTRODUCTION\nMedical image acquisition depends on opera..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...resulting images,\nand make corrective adjustments across seven capability levels, from console op-\neration to feedback-driven control. Evaluation combines task-specific workflow\nchecks with hidden ana..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2609.27307",
+    "title": "Learn How to Act from Your Own Interactions: On-Policy Self-Distillation for GUI Agents",
+    "abstract": "Graphical User Interface (GUI) agents enable the fulfillment of complex user instructions through multi-turn interactions with software environments, requiring step-wise reasoning and long-horizon memory to guide actions and retain task-relevant information, respectively. Recent on-policy self-distillation (OPSD) methods have achieved strong performance on GUI grounding, a foundational subtask for GUI agents, owing to dense token-level supervision from privilege-conditioned self-teachers. However, extending existing OPSD methods to multi-turn GUI agents is hindered by self-teachers' limited privilege-following ability and insufficient privileged guidance. In this paper, we introduce GUI-SD-v2, the next version of GUI-SD, which extends OPSD from GUI grounding to multi-turn GUI interaction and addresses key limitations through a two-stage training framework. Specifically, GUI-SD-v2 first strengthens privilege following by jointly optimizing rollouts with and without privileged guidance from the same GUI states. Furthermore, it selectively distills step-specific reasoning and memory guidance through a privilege-conditioned self-teacher, supporting action decisions and the retention of task-relevant information for subsequent interactions. Extensive experiments on two representative GUI agent benchmarks, AndroidWorld and MobileWorld, show that GUI-SD-v2 compares favorably with existing OPSD baselines while consistently outperforming the evaluated state-of-the-art methods in both Pass@1 and Pass@3 success rates. Code and training data will be publicly released.",
+    "publicationDate": "2026-09-23T03:38:11.000Z",
+    "votes": 8,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...stance to large-scale software testing. In paral-\nlel, on-policy self-distillation (OPSD) offers an effective paradigm for post-training such agents,\ncombining dense token-level supervision, informati..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...ingle-rollout training. Within the GUI domain, GUI-SD (Zhang et al., 2026b) presents the first\nexploration of OPSD for GUI grounding by conditioning the self-teacher on visually enriched priv-\nileged ..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2610.06898",
+    "title": "DIBench: Benchmarking Decision Integrity of GUI-based Mobile Agents Under Deceptive Injections",
+    "abstract": "As GUI-based mobile agents rapidly progress, rigorous safety evaluation of their autonomous decision-making in realistic app interfaces becomes increasingly critical. Existing benchmarks mainly focus on execution-level anomalies using task success or hijack rates, but fail to capture the in-task goal deviation risk in multi-candidate selection tasks, where the decision may be steered toward an attacker-specified target, even in violation of instruction-implied constraints (e.g., cheapest/highest-rated), without any overt execution anomalies. We present DIBench, a decision integrity benchmark for measuring this risk in mobile agents. DIBench covers 7 commercial and 3 simulated apps with 5 task types. Under a threat model restricted to non-privileged UI content, we construct 8 deceptive injection probe instantiations that can steer critical selections without overt anomalies. The benchmark includes 1,000 clean and 36,672 injected instances, with a unified protocol and integrity metrics for comparison. Experiments spanning 4 agent frameworks and 7 base models show that completion-based evaluation can overestimate agent trustworthiness and miss decision-integrity risks: deceptive injections steer selections and shift early action policies, inflating completion rates and creating a misleading illusion of safety. Common defenses, including detection, image preprocessing, and prompt reminders, yield inconsistent integrity gains. Overall, DIBench provides a unified, reproducible benchmark to quantify the risk of in-task goal deviation in mobile agents and enable comparable evaluations of safety defenses.",
+    "publicationDate": "2026-09-29T03:03:00.000Z",
+    "votes": 1,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "DIBench: Benchmarking Decision Integrity of\nGUI-based Mobile Agents Under Deceptive Injections\nLi Hu Kanghua Mo Yingbin Jin Qingqing Ye\nHaibo Hu\nDepartment of Electrical and Electronic Engineering, Th..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...mes increasingly critical.\nExisting benchmarks mainly focus on execution-level anomalies using task success\nor hijack rates, but fail to capture the in-task goal deviation risk in multi-candidate\nsele..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2608.09278",
+    "title": "Software Engineering for and with GUI Agent",
+    "abstract": "GUI agents have advanced rapidly, producing a growing body of frameworks, benchmarks, and applications. However, this growth has outpaced the maturity of the field. GUI agents remain technically brittle, incompletely engineered, and insufficiently validated for sustained real-world use. They are evolving into closed-loop software systems. Within these systems, model reasoning is coupled with interface perception, execution feedback, recovery, and human oversight. This evolution calls for a software engineering perspective that remains largely absent from existing research. We address this gap by reviewing 336 GUI-agent papers from January 2018 to April 2026. Five research questions examine the research landscape, architectures, evaluation, software lifecycle concerns, and future opportunities. Our findings show that the field has expanded sharply since 2024, while mobile and web settings remain dominant. Architectures increasingly adopt modular perceive-reason-act loops, but recovery, human escalation, safety enforcement, and auditability remain underdeveloped. This architectural imbalance extends to evaluation. Evaluations are becoming more interactive, but they remain centered on task success and are difficult to compare across protocols. More broadly, existing studies provide limited support for testing beyond benchmarks and for maintaining agents after release. Observability, privacy engineering, and systematic human oversight are also underdeveloped. Together, these findings show that capability improvements alone cannot ensure deployment readiness. Future research should connect dependable execution with lifecycle-centered testing and reproducible evaluation. It should also integrate permission and privacy controls with cost-aware, human-centered governance. This integration is necessary to build dependable, maintainable, secure, and deployable GUI-agent systems.",
+    "publicationDate": "2026-08-10T08:33:19.000Z",
+    "votes": 8,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...lso integrate permission and privacy controls with\ncost-aware, human-centered governance. This integration is necessary to build dependable, maintainable,\nsecure, and deployable GUI-agent systems.\nCCS..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "Software Engineering for and with GUI Agent\nSHENGCHENG YU, State Key Laboratory for Novel Software Technology, Nanjing University, China\nand Technical University of Munich, Germany\nYUCHEN LING, State ..."
+      }
+    ]
+  },
+  {
+    "source": "alphaxiv",
+    "id": "2608.17659",
+    "title": "MobileWorldSafety: Benchmarking GUI Agent Safety Against Environmental Injection Attacks in Android Apps",
+    "abstract": "LLM-powered GUI agents that autonomously operate smartphones are rapidly transitioning from research prototypes to early real-world deployment. However, because these agents routinely process untrusted environmental content, they are highly vulnerable to environmental injection attacks, which include indirect prompt injections and adversarial instructions. Such attacks can manipulate the behavior of agents without user awareness through diverse channels encountered in everyday mobile use. Despite these risks, existing benchmarks often fail to capture everyday user scenarios, lacking a systematic evaluation of GUI agents under environmental injection attacks on mobile devices. To address this gap, we introduce MobileWorldSafety, a benchmark of 142 risk tasks built on real Android applications. For each task, we define a programmatically verifiable risk indicator over the final system state and evaluate outcomes with a two-stage pipeline: rule-based verification handles unambiguous cases, while an LLM judge adjudicates ambiguous ones. This distinguishes safety failures from capability failures and enables objective and reproducible assessment. Evaluations on six agents, including both general agents and specialized GUI agents, demonstrate that all agents remain highly vulnerable, with attack success rates ranging from 40.4% to 66.9%. These findings indicate that current agents often fail to maintain safety alignment when adversarial content is presented as ordinary mobile context. MobileWorldSafety provides a foundation for quantifying these vulnerabilities and advancing research on robust mobile GUI agents.",
+    "publicationDate": "2026-08-18T11:33:22.000Z",
+    "votes": 10,
+    "snippets": [
+      {
+        "pageNumber": 1,
+        "snippet": "...e indirect prompt\ninjections and adversarial instructions. Such attacks can manipulate the behavior of\nagents without user awareness through diverse channels encountered in everyday\nmobile use. Despit..."
+      },
+      {
+        "pageNumber": 1,
+        "snippet": "...gents\nand specialized GUI agents, demonstrate that all agents remain highly vulnerable,\nwith attack success rates ranging from 40.4% to 66.9%. These findings indicate\nthat current agents often fail to..."
+      }
+    ]
+  }
+]
