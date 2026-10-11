@@ -1,0 +1,79 @@
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.8.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+WARNING: The NVIDIA Driver was not detected.  GPU functionality will not be available.
+   Use the NVIDIA Container Toolkit to start this container with GPU support; see
+   https://docs.nvidia.com/datacenter/cloud-native/ .
+
+census_all_106     K=106 n=4 npl=2 null                                     PH=0.024 SM=0.975 P3c=0.024 P3f=0.970 sharp=0.048 frag=0.006 MSpop=0.024 MScen=0.015 noEx=0.587 cov=0.950 tD=0.0
+census_all_106     K=106 n=4 npl=2 perturb_null                             PH=0.059 SM=0.929 P3c=0.059 P3f=0.934 sharp=0.103 frag=0.016 MSpop=0.024 MScen=0.029 noEx=0.389 cov=0.950 tD=-0.0023
+census_all_106     K=106 n=4 npl=2 reshuffle_10                             PH=0.129 SM=0.816 P3c=0.129 P3f=0.863 sharp=0.218 frag=0.036 MSpop=0.025 MScen=0.068 noEx=0.079 cov=0.949 tD=-0.0213
+census_all_106     K=106 n=4 npl=2 reshuffle_30                             PH=0.222 SM=0.629 P3c=0.222 P3f=0.768 sharp=0.341 frag=0.095 MSpop=0.023 MScen=0.143 noEx=0.000 cov=0.950 tD=-0.0393
+census_all_106     K=106 n=4 npl=2 generic_uniform_15                       PH=0.961 SM=0.066 P3c=0.961 P3f=0.034 sharp=0.960 frag=0.003 MSpop=0.027 MScen=0.014 noEx=0.640 cov=0.949 tD=-4.3087
+census_all_106     K=106 n=4 npl=2 generic_breaks_15                        PH=0.859 SM=0.181 P3c=0.859 P3f=0.135 sharp=0.840 frag=0.019 MSpop=0.024 MScen=0.076 noEx=0.093 cov=0.950 tD=-4.348
+census_all_106     K=106 n=4 npl=2 mirror_uniform_10                        PH=0.708 SM=0.380 P3c=0.708 P3f=0.274 sharp=0.702 frag=0.015 MSpop=0.287 MScen=0.218 noEx=0.267 cov=0.954 tD=-2.8723
+census_all_106     K=106 n=4 npl=2 mirror_uniform_15                        PH=0.961 SM=0.066 P3c=0.961 P3f=0.034 sharp=0.960 frag=0.003 MSpop=0.555 MScen=0.474 noEx=0.107 cov=0.949 tD=-4.3087
+census_all_106     K=106 n=4 npl=2 mirror_uniform_20                        PH=0.998 SM=0.004 P3c=0.998 P3f=0.002 sharp=0.998 frag=0.000 MSpop=0.795 MScen=0.741 noEx=0.034 cov=0.947 tD=-5.7447
+census_all_106     K=106 n=4 npl=2 mirror_prop_15                           PH=0.920 SM=0.051 P3c=0.920 P3f=0.047 sharp=0.919 frag=0.005 MSpop=0.508 MScen=0.434 noEx=0.091 cov=0.951 tD=-4.3193
+census_all_106     K=106 n=4 npl=2 mirror_quarter_15                        PH=0.881 SM=0.126 P3c=0.881 P3f=0.105 sharp=0.871 frag=0.011 MSpop=0.432 MScen=0.472 noEx=0.083 cov=0.950 tD=-4.3417
+census_all_106     K=106 n=4 npl=2 mirror_breaks_15                         PH=0.860 SM=0.181 P3c=0.860 P3f=0.130 sharp=0.841 frag=0.019 MSpop=0.373 MScen=0.490 noEx=0.091 cov=0.950 tD=-4.348
+census_all_106     K=106 n=4 npl=2 mirror_perturb_15                        PH=0.928 SM=0.101 P3c=0.928 P3f=0.062 sharp=0.921 frag=0.007 MSpop=0.501 MScen=0.491 noEx=0.099 cov=0.955 tD=-4.3037
+census_all_106     K=106 n=4 npl=2 mirror_uniform_15_placebo_reshuffle_10   PH=0.960 SM=0.065 P3c=0.960 P3f=0.034 sharp=0.960 frag=0.003 MSpop=0.377 MScen=0.473 noEx=0.072 cov=0.953 tD=-4.3087
+census_all_106     K=106 n=4 npl=2 mirror_uniform_30_placebo_uniform_15     PH=1.000 SM=0.000 P3c=1.000 P3f=0.000 sharp=1.000 frag=0.000 MSpop=0.588 MScen=0.503 noEx=0.109 cov=0.949 tD=-8.6173
+admitted_phase0    K=105 n=4 npl=2 null                                     PH=0.024 SM=0.962 P3c=0.024 P3f=0.965 sharp=0.049 frag=0.004 MSpop=0.023 MScen=0.012 noEx=0.574 cov=0.951 tD=0.0
+admitted_phase0    K=105 n=4 npl=2 perturb_null                             PH=0.056 SM=0.915 P3c=0.056 P3f=0.933 sharp=0.106 frag=0.013 MSpop=0.023 MScen=0.027 noEx=0.376 cov=0.953 tD=0.02
+admitted_phase0    K=105 n=4 npl=2 reshuffle_10                             PH=0.113 SM=0.808 P3c=0.113 P3f=0.873 sharp=0.204 frag=0.038 MSpop=0.020 MScen=0.062 noEx=0.076 cov=0.953 tD=0.0733
+admitted_phase0    K=105 n=4 npl=2 reshuffle_30                             PH=0.201 SM=0.619 P3c=0.201 P3f=0.784 sharp=0.334 frag=0.091 MSpop=0.027 MScen=0.140 noEx=0.000 cov=0.953 tD=0.1643
+admitted_phase0    K=105 n=4 npl=2 generic_uniform_15                       PH=0.949 SM=0.067 P3c=0.949 P3f=0.041 sharp=0.949 frag=0.004 MSpop=0.026 MScen=0.014 noEx=0.615 cov=0.951 tD=-4.2073
+admitted_phase0    K=105 n=4 npl=2 generic_breaks_15                        PH=0.839 SM=0.192 P3c=0.839 P3f=0.149 sharp=0.818 frag=0.021 MSpop=0.023 MScen=0.076 noEx=0.094 cov=0.950 tD=-4.1567
+admitted_phase0    K=105 n=4 npl=2 mirror_uniform_10                        PH=0.661 SM=0.397 P3c=0.661 P3f=0.309 sharp=0.656 frag=0.015 MSpop=0.261 MScen=0.195 noEx=0.287 cov=0.950 tD=-2.805
+admitted_phase0    K=105 n=4 npl=2 mirror_uniform_15                        PH=0.949 SM=0.067 P3c=0.949 P3f=0.041 sharp=0.949 frag=0.004 MSpop=0.528 MScen=0.444 noEx=0.128 cov=0.951 tD=-4.2073
+admitted_phase0    K=105 n=4 npl=2 mirror_uniform_20                        PH=0.998 SM=0.004 P3c=0.998 P3f=0.002 sharp=0.998 frag=0.000 MSpop=0.771 MScen=0.706 noEx=0.034 cov=0.952 tD=-5.6087
+admitted_phase0    K=105 n=4 npl=2 mirror_prop_15                           PH=0.902 SM=0.053 P3c=0.902 P3f=0.050 sharp=0.901 frag=0.005 MSpop=0.484 MScen=0.411 noEx=0.107 cov=0.951 tD=-4.2187
+admitted_phase0    K=105 n=4 npl=2 mirror_quarter_15                        PH=0.873 SM=0.121 P3c=0.873 P3f=0.102 sharp=0.862 frag=0.013 MSpop=0.404 MScen=0.437 noEx=0.094 cov=0.950 tD=-4.2013
+admitted_phase0    K=105 n=4 npl=2 mirror_breaks_15                         PH=0.833 SM=0.189 P3c=0.833 P3f=0.151 sharp=0.812 frag=0.021 MSpop=0.343 MScen=0.447 noEx=0.093 cov=0.947 tD=-4.1567
+admitted_phase0    K=105 n=4 npl=2 mirror_perturb_15                        PH=0.911 SM=0.115 P3c=0.911 P3f=0.077 sharp=0.903 frag=0.010 MSpop=0.459 MScen=0.442 noEx=0.106 cov=0.948 tD=-4.1887
+admitted_phase0    K=105 n=4 npl=2 mirror_uniform_15_placebo_reshuffle_10   PH=0.951 SM=0.064 P3c=0.951 P3f=0.038 sharp=0.949 frag=0.004 MSpop=0.381 MScen=0.472 noEx=0.071 cov=0.945 tD=-4.2073
+admitted_phase0    K=105 n=4 npl=2 mirror_uniform_30_placebo_uniform_15     PH=1.000 SM=0.000 P3c=1.000 P3f=0.000 sharp=1.000 frag=0.000 MSpop=0.557 MScen=0.478 noEx=0.125 cov=0.946 tD=-8.412
+census_all_106     K=106 n=4 npl=4 null                                     PH=0.025 SM=0.970 P3c=0.025 P3f=0.971 sharp=0.048 frag=0.005 MSpop=0.023 MScen=0.022 noEx=0.822 cov=0.950 tD=0.0
+census_all_106     K=106 n=4 npl=4 perturb_null                             PH=0.058 SM=0.927 P3c=0.058 P3f=0.935 sharp=0.102 frag=0.013 MSpop=0.027 MScen=0.061 noEx=0.564 cov=0.947 tD=-0.016
+census_all_106     K=106 n=4 npl=4 reshuffle_10                             PH=0.128 SM=0.808 P3c=0.128 P3f=0.863 sharp=0.224 frag=0.034 MSpop=0.025 MScen=0.122 noEx=0.149 cov=0.945 tD=0.0027
+census_all_106     K=106 n=4 npl=4 reshuffle_30                             PH=0.222 SM=0.626 P3c=0.222 P3f=0.769 sharp=0.342 frag=0.095 MSpop=0.024 MScen=0.212 noEx=0.000 cov=0.946 tD=0.01
+census_all_106     K=106 n=4 npl=4 generic_uniform_15                       PH=0.957 SM=0.065 P3c=0.957 P3f=0.037 sharp=0.956 frag=0.003 MSpop=0.026 MScen=0.027 noEx=0.848 cov=0.951 tD=-4.313
+census_all_106     K=106 n=4 npl=4 generic_breaks_15                        PH=0.854 SM=0.187 P3c=0.854 P3f=0.137 sharp=0.833 frag=0.022 MSpop=0.026 MScen=0.141 noEx=0.166 cov=0.944 tD=-4.2943
+census_all_106     K=106 n=4 npl=4 mirror_uniform_10                        PH=0.698 SM=0.386 P3c=0.698 P3f=0.279 sharp=0.696 frag=0.011 MSpop=0.388 MScen=0.408 noEx=0.376 cov=0.952 tD=-2.8753
+census_all_106     K=106 n=4 npl=4 mirror_uniform_15                        PH=0.957 SM=0.065 P3c=0.957 P3f=0.037 sharp=0.956 frag=0.003 MSpop=0.721 MScen=0.744 noEx=0.126 cov=0.951 tD=-4.313
+census_all_106     K=106 n=4 npl=4 mirror_uniform_20                        PH=0.998 SM=0.004 P3c=0.998 P3f=0.001 sharp=0.998 frag=0.000 MSpop=0.925 MScen=0.938 noEx=0.026 cov=0.951 tD=-5.7507
+census_all_106     K=106 n=4 npl=4 mirror_prop_15                           PH=0.917 SM=0.053 P3c=0.917 P3f=0.048 sharp=0.914 frag=0.006 MSpop=0.630 MScen=0.664 noEx=0.114 cov=0.954 tD=-4.314
+census_all_106     K=106 n=4 npl=4 mirror_quarter_15                        PH=0.876 SM=0.128 P3c=0.876 P3f=0.103 sharp=0.865 frag=0.012 MSpop=0.531 MScen=0.678 noEx=0.108 cov=0.950 tD=-4.3087
+census_all_106     K=106 n=4 npl=4 mirror_breaks_15                         PH=0.849 SM=0.192 P3c=0.849 P3f=0.141 sharp=0.831 frag=0.019 MSpop=0.452 MScen=0.689 noEx=0.115 cov=0.946 tD=-4.2943
+census_all_106     K=106 n=4 npl=4 mirror_perturb_15                        PH=0.932 SM=0.101 P3c=0.932 P3f=0.060 sharp=0.925 frag=0.008 MSpop=0.632 MScen=0.737 noEx=0.105 cov=0.944 tD=-4.3293
+census_all_106     K=106 n=4 npl=4 mirror_uniform_15_placebo_reshuffle_10   PH=0.961 SM=0.063 P3c=0.961 P3f=0.032 sharp=0.961 frag=0.003 MSpop=0.482 MScen=0.693 noEx=0.083 cov=0.955 tD=-4.313
+census_all_106     K=106 n=4 npl=4 mirror_uniform_30_placebo_uniform_15     PH=1.000 SM=0.000 P3c=1.000 P3f=0.000 sharp=1.000 frag=0.000 MSpop=0.752 MScen=0.778 noEx=0.135 cov=0.953 tD=-8.6257
+confirm_only_62    K= 62 n=4 npl=2 null                                     PH=0.027 SM=0.879 P3c=0.027 P3f=0.904 sharp=0.053 frag=0.006 MSpop=0.021 MScen=0.007 noEx=0.280 cov=0.946 tD=0.0
+confirm_only_62    K= 62 n=4 npl=2 perturb_null                             PH=0.051 SM=0.807 P3c=0.051 P3f=0.855 sharp=0.091 frag=0.015 MSpop=0.022 MScen=0.013 noEx=0.140 cov=0.952 tD=0.0133
+confirm_only_62    K= 62 n=4 npl=2 reshuffle_10                             PH=0.125 SM=0.635 P3c=0.125 P3f=0.751 sharp=0.205 frag=0.039 MSpop=0.025 MScen=0.059 noEx=0.014 cov=0.949 tD=-0.0307
+confirm_only_62    K= 62 n=4 npl=2 reshuffle_30                             PH=0.227 SM=0.444 P3c=0.227 P3f=0.652 sharp=0.335 frag=0.102 MSpop=0.023 MScen=0.132 noEx=0.000 cov=0.951 tD=-0.0723
+confirm_only_62    K= 62 n=4 npl=2 generic_uniform_15                       PH=0.848 SM=0.061 P3c=0.848 P3f=0.060 sharp=0.845 frag=0.014 MSpop=0.022 MScen=0.008 noEx=0.319 cov=0.949 tD=-4.3167
+confirm_only_62    K= 62 n=4 npl=2 generic_breaks_15                        PH=0.718 SM=0.203 P3c=0.718 P3f=0.201 sharp=0.685 frag=0.034 MSpop=0.022 MScen=0.064 noEx=0.013 cov=0.948 tD=-4.305
+confirm_only_62    K= 62 n=4 npl=2 mirror_uniform_10                        PH=0.517 SM=0.300 P3c=0.517 P3f=0.297 sharp=0.511 frag=0.020 MSpop=0.192 MScen=0.101 noEx=0.155 cov=0.945 tD=-2.8783
+confirm_only_62    K= 62 n=4 npl=2 mirror_uniform_15                        PH=0.848 SM=0.061 P3c=0.848 P3f=0.060 sharp=0.845 frag=0.014 MSpop=0.379 MScen=0.245 noEx=0.085 cov=0.949 tD=-4.3167
+confirm_only_62    K= 62 n=4 npl=2 mirror_uniform_20                        PH=0.977 SM=0.006 P3c=0.977 P3f=0.006 sharp=0.978 frag=0.003 MSpop=0.601 MScen=0.462 noEx=0.030 cov=0.948 tD=-5.755
+confirm_only_62    K= 62 n=4 npl=2 mirror_prop_15                           PH=0.768 SM=0.052 P3c=0.768 P3f=0.052 sharp=0.765 frag=0.013 MSpop=0.335 MScen=0.227 noEx=0.051 cov=0.952 tD=-4.327
+confirm_only_62    K= 62 n=4 npl=2 mirror_quarter_15                        PH=0.729 SM=0.144 P3c=0.729 P3f=0.143 sharp=0.709 frag=0.023 MSpop=0.277 MScen=0.269 noEx=0.050 cov=0.948 tD=-4.2923
+confirm_only_62    K= 62 n=4 npl=2 mirror_breaks_15                         PH=0.724 SM=0.199 P3c=0.724 P3f=0.197 sharp=0.689 frag=0.036 MSpop=0.218 MScen=0.299 noEx=0.039 cov=0.948 tD=-4.305
+confirm_only_62    K= 62 n=4 npl=2 mirror_perturb_15                        PH=0.809 SM=0.103 P3c=0.809 P3f=0.102 sharp=0.797 frag=0.017 MSpop=0.336 MScen=0.256 noEx=0.068 cov=0.949 tD=-4.31
+confirm_only_62    K= 62 n=4 npl=2 mirror_uniform_15_placebo_reshuffle_10   PH=0.856 SM=0.067 P3c=0.856 P3f=0.066 sharp=0.854 frag=0.012 MSpop=0.262 MScen=0.304 noEx=0.026 cov=0.942 tD=-4.3167
+confirm_only_62    K= 62 n=4 npl=2 mirror_uniform_30_placebo_uniform_15     PH=1.000 SM=0.000 P3c=1.000 P3f=0.000 sharp=1.000 frag=0.000 MSpop=0.404 MScen=0.264 noEx=0.092 cov=0.951 tD=-8.6317

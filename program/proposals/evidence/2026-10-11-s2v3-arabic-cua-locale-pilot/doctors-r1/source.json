@@ -1,0 +1,15 @@
+{
+ "doctor": "Source",
+ "status": "PASS",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "S2 v3 repair run after wave 1 (D74), single owner (Claude agent), 2026-10-11 UTC; not an independent review",
+ "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
+ "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) and the GitHub search API reachable from the development Mac on 2026-10-11. Wave 1's retrieval (query-log.json, 91 logged records) stands; this run added 9 counted queries with raw-output hashes and returned ids (compute/pilot-r1/queries/repair-queries.json): two Chinese-language orx keyword queries (nothing on topic returned), an embedding query with the repaired mechanism, a placebo-perturbation keyword query, a dated keyword query (after 2026-09-01), an OpenAlex query, and three GitHub searches (two repository searches with no result, a code search for the direction key returning only LibreOffice forks, games and this repository). Two full-text reads (2609.33012, 2608.25425).",
+ "degraded_coverage": [
+  "Google Scholar, X, Reddit, Hacker News not searched",
+  "EMNLP 2026 proceedings not yet in the Anthology",
+  "Chinese-language retrieval through orx returns off-topic results (no CJK-capable venue index)",
+  "orx 0.2.2 reports itself outdated against 0.2.18"
+ ],
+ "remediation": "A RealGUINoise revision check and a citer refresh of macOSWorld before any write-up."
+}
