@@ -185,7 +185,7 @@ def cmd_fit(args: argparse.Namespace) -> int:
     t0 = time.time()
     fixed = parse_fix(args.fix)
     ref = json.loads(Path(args.warm).read_text(encoding="utf-8")) if args.warm else None
-    if ref is not None and (ref["set"] != args.set or ref.get("harness") != args.harness):
+    if ref is not None and (ref["set"] != args.set or ref.get("harness", "normal") != args.harness):
         raise SystemExit("--warm must be a fit of the same set and harness model")
     x0 = None
     if ref is not None:  # warm start: the joint stage only, from the reference estimate

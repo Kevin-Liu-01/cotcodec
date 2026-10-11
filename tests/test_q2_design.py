@@ -215,3 +215,42 @@ def test_differences_ignore_metadata_and_new_fields() -> None:
     b = {"x": [1, 2, {"y": 3, "new": 0}], "provenance": {"git": "b"}, "seconds": 9.0, "z": 1}
     assert differences(a, b) == []
     assert differences(a, {**b, "x": [1, 2, {"y": 4}]}) == ["/x/2/y"]
+
+
+@pytest.mark.parametrize(
+    ("K", "S", "R", "sizes"),
+    [
+        (32, 2, 2, ("4B", "9B")),
+        (40, 3, 1, ("4B", "9B")),
+        (24, 2, 2, ("9B",)),
+        (30, 4, 2, ("4B", "9B")),
+    ],  # fmt: skip
+)
+def test_fast_analysis_equals_registered_wrapper(K: int, S: int, R: int, sizes) -> None:
+    """fast.analyse reproduces analyse.analyse field by field (same flips, same resamples)."""
+    from harness.q2_design import fast as FA
+
+    des = M.Design(K=K, S=S, R=R, sizes=sizes, tasks="srs")
+    y, _ = M.simulate(toy_params(), des, 8, np.random.default_rng([42, K]))
+    a = AN.analyse(y, sizes, n_boot=1000, n_flip=1000, rng=np.random.default_rng([42, 12]))
+    b = FA.analyse(y, sizes, n_boot=1000, n_flip=1000, rng=np.random.default_rng([42, 12]))
+    for k, v in a.items():
+        if k in ("dr2", "dr5"):
+            assert list(v) == list(b[k])
+        else:
+            np.testing.assert_allclose(np.asarray(v, float), b[k], rtol=0, atol=1e-12)
+
+
+def test_fast_analysis_reproduces_s1a_readings(s1a: D.S1aData) -> None:
+    """S1a's committed primary and secondary readings (10,000 resamples and flips)."""
+    from harness.q2_design import fast as FA
+
+    base = FA.analyse(s1a.y_base[None], M.SIZES, rng=np.random.default_rng(42))
+    assert base["p_x"][0] == pytest.approx(0.4588, abs=1e-4)
+    assert [base["pi_small_lb"][0], base["pi_small_ub"][0]] == [0.0, 0.259909]
+    assert (base["dr2"][0], base["dr5"][0]) == ("Inconclusive", "INCONCLUSIVE")
+    pool = FA.analyse(s1a.y_pool[None], M.SIZES, rng=np.random.default_rng(42), diagnostics=True)
+    assert pool["p_x"][0] == pytest.approx(0.1571, abs=1e-4)
+    assert [pool["pi_small_lb"][0], pool["pi_small_ub"][0]] == [0.019608, 0.162165]
+    assert (pool["qpos_4B"][0], pool["qneg_4B"][0]) == (6, 9)
+    assert pool["X_4B"][0] < 0 < pool["X_9B"][0]
