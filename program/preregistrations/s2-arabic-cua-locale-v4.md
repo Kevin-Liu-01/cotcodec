@@ -407,11 +407,15 @@ restart checks), the concurrency Phase 1 uses (the V = 20 rung).
 Before the freeze, the derived images are smoke-tested in the VM lane on dev tasks only (purpose
 `development`, which `vm_lane.py` refuses once this id is frozen): one Calc, one Impress and one Writer
 task (`12382c62`, `2b94c692`, `e528b65e`) in S, E, A, ER, AR, PL and AD, plus a second E boot, through
-`vm_probe.py` with `evaluate` on. It checks that every image boots in the certified runtime, carries its
+`vm_probe.py` with `evaluate` on; the second run adds gold slots (`vm_gold.py`) for the two tasks with a
+gold in the five admission cells. It checks that every image boots in the certified runtime, carries its
 selector, sets the task up, renders the cell as specified (Arabic chrome share near 1 in A, AR and AD and
-0 in the English cells; the menu bar's order right to left in ER, AR and AD), keeps the `us` keyboard
-map, and saves through the task's own postconfig. Its records are under
-`program/evidence/2026-10-11/s2v4-image/smoke/`; it decides nothing registered and changes no rule above.
+0 in the English cells; the menu bar's order right to left in ER, AR and AD), keeps the stock keyboard
+map, saves through the task's own postconfig, and (gold slots) saves and scores the gold. Its records
+are under `program/evidence/2026-10-11/s2v4-image/smoke-*/`; it decides nothing registered and changes
+no rule above. The first run (Slurm 1197, images of build 1195) found that the language pack's
+`ctl_ar.xcd` overrode the CTL pin (section P0.3); the images were rebuilt (build 1199) and the smoke
+repeated on them.
 
 ## Phase 1 (admitted under D80 (iv) if K0 and K1 pass)
 
@@ -425,8 +429,9 @@ map, and saves through the task's own postconfig. Its records are under
 - Step-0 check: each episode's first screenshot, masked as in K0, against the Phase 0 E/A/ER/AR/PL
   render of its (task, cell) from the same lane and image, within tol6; a mismatch makes the episode
   invalid.
-- Keyboard check: `setxkbmap -query` reports `us` and no input method runs at every episode start; a
-  failure is an infrastructure loss.
+- Keyboard check: `setxkbmap -query` reports the stock image's layout (`us,us`, as in every slot of the
+  development smoke, S included) and no input method runs at every episode start; a failure is an
+  infrastructure loss.
 - Image check: the guest's selector SHA-256 equals the cell's at every episode start; a mismatch is an
   infrastructure loss.
 - Re-queue: an infrastructure loss or a step-0 failure is re-queued at the end of its task block, at most
