@@ -166,6 +166,15 @@ def pattern_likelihood(
     return lik
 
 
+def unpack_value(coord: int, value: float) -> float:
+    """One coordinate of the transformed vector on its natural scale."""
+    if coord in (16, 17):
+        return math.tanh(value)
+    if coord == 18:
+        return 1 / (1 + math.exp(-value))
+    return math.exp(value) if SIZE_KEYS[coord % 8].startswith("log_") else float(value)
+
+
 def unpack(x: np.ndarray) -> tuple[list[dict[str, float]], float, float]:
     sizes = []
     for zi in range(2):
