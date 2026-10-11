@@ -267,7 +267,9 @@ def timing(rows: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
     dialogs = 0
     changed = 0
     saves = 0
+    adapted = 0
     for row in rows.values():
+        adapted += bool((row.get("save") or {}).get("activations_adapted"))
         for save in (row.get("save") or {}).get("saves") or []:
             saves += 1
             if save.get("seconds_to_write") is not None:
@@ -275,10 +277,11 @@ def timing(rows: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
             dialogs += bool(save.get("dialogs"))
             changed += bool(save.get("changed"))
     if not seconds:
-        return {"saves": saves}
+        return {"saves": saves, "items_with_adapted_activation": adapted}
     seconds.sort()
     return {
         "saves": saves,
+        "items_with_adapted_activation": adapted,
         "written": len(seconds),
         "median_s": statistics.median(seconds),
         "p90_s": seconds[min(len(seconds) - 1, int(0.9 * len(seconds)))],

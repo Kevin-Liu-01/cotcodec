@@ -91,6 +91,7 @@ def save_summary(row: Mapping[str, Any] | None) -> dict[str, Any] | None:
         "unemulated": (row.get("plan") or {}).get("unemulated", []),
         "lo_build": row.get("lo_build"),
         "profile_set": row.get("profile_set"),
+        "activations_adapted": row.get("activations_adapted", []),
         "env_set": row.get("env_set"),
         "seconds": row.get("seconds"),
     }

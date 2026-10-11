@@ -44,6 +44,53 @@ SCHEMA = "r04-items-v1"
 FAIL_PER_TASK = 3
 FAIL_SEED = "r04:s1a-fail:42"
 POPULATIONS = ("gold", "s1a_pass", "s1a_fail", "s1a_mixed")
+_S1A = "program/evidence/2026-10-10/q2-stage1-a1"
+# S1a's lane runs (the directory name on the host is the VM job id): the committed digest of
+# each run's episode records, and the committed per-file digests of its captures.
+S1A_RUNS = {
+    "1037": ("A0a", "8b2ce375ac444b8fce4a9796b1900d169a9e40da5bbc7e34ea386f03a8f0c724",
+             "program/evidence/2026-10-09/q2-stage1-prefreeze/a0a/vm-1037/raw-sha256sums.txt"),
+    "1045": ("A1-9B-S1", "a05dbf8473b83afef8522402e776460ff702e0fae2730f99c25f3978a51f7fc1",
+             f"{_S1A}/a1-9b-s1/vm-1045/raw-sha256sums.txt"),
+    "1048": ("A1-4B-S1", "733d73fdc49b7582aedb4f09e91a8e07c54c83941496e980f18fb668266b17bd",
+             f"{_S1A}/a1-4b-s1/vm-1048/raw-sha256sums.txt"),
+    "1051": ("A1-9B-S2", "53559050bdcf66ddc4ee28208aa33d60b5e22db52b3aadf0207a3193a5d53f2a",
+             f"{_S1A}/a1-9b-s2/vm-1051/raw-sha256sums.txt"),
+    "1062": ("A1-4B-S2", "1b33883129f012009e2ff3a5c7ef2d2093d00b8f562cca1f8d309b56978de4c2",
+             f"{_S1A}/a1-4b-s2/vm-1062/raw-sha256sums.txt"),
+}  # fmt: skip
+SPLIT_RUNS = {"dev": ("1037",), "confirm": ("1045", "1048", "1051", "1062")}
+
+
+class CaptureMismatch(RuntimeError):
+    """A capture file differs from the digest S1a's evidence committed for it."""
+
+
+def read_sums(path: Path) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            digest, rel = line.split(None, 1)
+            out[rel.strip()] = digest
+    return out
+
+
+def verify_capture(run_dir: Path, capture: Path, sums: Mapping[str, str]) -> int:
+    """Every file of the capture matches its committed digest, and every committed file of
+    the capture exists. Returns the number of files checked."""
+    prefix = "./" + capture.relative_to(run_dir).as_posix() + "/"
+    listed = {rel for rel in sums if rel.startswith(prefix)}
+    seen = set()
+    for path in sorted(capture.rglob("*")):
+        if not path.is_file():
+            continue
+        rel = "./" + path.relative_to(run_dir).as_posix()
+        if sums.get(rel) != hashlib.sha256(path.read_bytes()).hexdigest():
+            raise CaptureMismatch(f"{rel} differs from S1a's committed digest")
+        seen.add(rel)
+    if listed - seen:
+        raise CaptureMismatch(f"{sorted(listed - seen)[:3]} missing from {capture}")
+    return len(seen)
 
 
 def is_office(vm_path: str) -> bool:
@@ -166,11 +213,19 @@ def sample_fail_states(
     return sorted(chosen)
 
 
-def s1a_states(runs: Mapping[str, Path], splits: Mapping[str, Any]) -> list[dict[str, Any]]:
-    """Every distinct office-exposed captured state of the given lane runs (label -> dir)."""
+def s1a_states(
+    runs: Mapping[str, Path],
+    splits: Mapping[str, Any],
+    sums: Mapping[str, Mapping[str, str]] | None = None,
+) -> list[dict[str, Any]]:
+    """Every distinct office-exposed captured state of the given lane runs (label -> dir).
+
+    With ``sums`` (label -> committed per-file digests), every capture an item uses is
+    checked file by file against S1a's evidence before it becomes an item."""
     states: dict[str, dict[str, Any]] = {}
     for label in sorted(runs):
         run_dir = runs[label]
+        run_sums = (sums or {}).get(label)
         records = [
             json.loads(x)
             for x in (run_dir / "episodes.jsonl").read_text().splitlines()
@@ -188,6 +243,8 @@ def s1a_states(runs: Mapping[str, Path], splits: Mapping[str, Any]) -> list[dict
             if not any(is_office(p) for p in vm_files):
                 continue
             digest = str(manifest["state_sha256"])
+            if run_sums is not None:
+                verify_capture(run_dir, capture, run_sums)
             episode = {
                 "run": label,
                 "job": record.get("job"),
@@ -263,6 +320,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--file-cache", type=Path)
     parser.add_argument("--golds", action="store_true")
     parser.add_argument("--s1a-run", action="append", default=[], help="LABEL=RUN_DIR")
+    parser.add_argument("--src", type=Path, default=Path("."), help="repository root")
     parser.add_argument("--out", type=Path, required=True, help="items JSONL")
     args = parser.parse_args(argv)
     splits = json.loads(args.splits.read_text(encoding="utf-8"))
@@ -274,12 +332,25 @@ def main(argv: list[str] | None = None) -> int:
         golds, report["golds"] = gold_items(args.osworld, args.file_cache, splits, args.split)
         items += golds
     if args.s1a_run:
-        runs = dict(item.split("=", 1) for item in args.s1a_run)
-        states = s1a_states({k: Path(v) for k, v in runs.items()}, splits)
+        runs = {k: Path(v) for k, v in (item.split("=", 1) for item in args.s1a_run)}
+        sums = {}
+        for label, run_dir in runs.items():
+            if label not in S1A_RUNS:
+                raise SystemExit(f"S1a run {label} is not registered")
+            if label not in SPLIT_RUNS.get(args.split, ()):
+                raise SystemExit(f"S1a run {label} is not a {args.split} run")
+            job, episodes_sha, sums_path = S1A_RUNS[label]
+            got = hashlib.sha256((run_dir / "episodes.jsonl").read_bytes()).hexdigest()
+            if got != episodes_sha:
+                raise SystemExit(f"S1a run {label} ({job}): episode records differ from evidence")
+            sums[label] = read_sums(args.src / sums_path)
+        states = s1a_states(runs, splits, sums)
         wrong = sorted({s["task_id"] for s in states if s["split"] != args.split})
         if wrong:
             raise SystemExit(f"S1a states outside split {args.split}: {wrong[:5]}")
         s1a, report["s1a"] = s1a_items(states)
+        report["s1a"]["runs"] = {k: S1A_RUNS[k][0] for k in sorted(runs)}
+        report["s1a"]["captures_verified"] = True
         items += s1a
     report["items"] = len(items)
     report["manifest_sha256"] = manifest_digest(items)

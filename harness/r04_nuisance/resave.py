@@ -47,6 +47,10 @@ from harness.q2_mutation import reachability as R
 from harness.r04_nuisance import levels, xcu
 
 STORE_AS_SCRIPT = Path(__file__).with_name("uno_store_as.py")
+# OSWorld's postconfig names windows "<file> - LibreOffice <App>"; newer LibreOffice builds
+# title them "<file> \u2014 LibreOffice <App>" (an em dash).
+TITLE_SEPARATOR = " - LibreOffice "
+ADAPTED_SEPARATOR = " \u2014 LibreOffice "
 # The OOXML and ODF filters of a same-format round trip (LibreOffice's filter names).
 SAME_FORMAT_FILTERS = {
     ".xlsx": "Calc MS Excel 2007 XML",
@@ -145,11 +149,13 @@ class NuisanceSession(R.LoSession):
         self.started = False
         self.profile_set: list[str] = []
         self.convert_count = 0
+        self.activations_adapted: list[str] = []
 
     def reset(self) -> None:
         super().reset()
         self.started = False
         self.convert_count = 0
+        self.activations_adapted = []
         user = self.home / ".config" / "libreoffice" / "4" / "user"
         if self.overrides:
             if not (user / "registrymodifications.xcu").is_file():
@@ -163,6 +169,21 @@ class NuisanceSession(R.LoSession):
         env = self.display.env(self.home)
         env.update(self.extra_env)
         return env
+
+    def activate(self, title: str, strict: bool) -> bool:
+        """The registered activation; if it fails, the same title with the separator newer
+        builds put in window titles ("file — LibreOffice Calc" for "file - LibreOffice
+        Calc"). The VM's build never shows that title, so the control is unchanged; every
+        adapted activation is recorded (a re-hosted VM would fail it as written)."""
+        ok = super().activate(title, strict)
+        if ok or TITLE_SEPARATOR not in title:
+            return ok
+        adapted = title.replace(TITLE_SEPARATOR, ADAPTED_SEPARATOR)
+        ok = super().activate(adapted, strict)
+        self._event("activate_adapted", title=title, adapted=adapted, ok=ok)
+        if ok:
+            self.activations_adapted.append(title)
+        return ok
 
     # The first launch of a store_as job starts the instance with a UNO pipe; the rest is
     # LoSession.open line for line (wait for the document's window).
@@ -440,6 +461,7 @@ def run_cells(args: argparse.Namespace) -> dict[str, Any]:
                     row["cell"] = cid
                     row["lo_build"] = (cell_info.get("build_identity") or {}).get("version_line")
                     row["profile_set"] = list(session.profile_set)
+                    row["activations_adapted"] = list(session.activations_adapted)
                     row["env_set"] = dict(session.extra_env)
                     row["seconds"] = round(time.monotonic() - started, 3)
                     handle.write(json.dumps(row, sort_keys=True) + "\n")
