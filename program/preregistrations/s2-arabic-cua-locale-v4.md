@@ -127,8 +127,11 @@ The derived base image is built offline by `image_build.py` in the `cotcodec-q2-
   system locale is generated; the system locale stays `en_US.UTF-8` in every cell) and the package
   databases (`dpkg -l` in the guest does not list the three packages; `image-manifest.json` lists every
   path written with its SHA-256);
-- checks: `e2fsck -fn` clean before and after; every written path read back with its bytes, mode, owner
-  and link target; every 4 KiB block of the root filesystem that differs from the certified disk is
+- checks: `e2fsck -fn` reports exactly the certified disk's own finding, before and after, and nothing
+  new (the certified root filesystem has one: inode 1214912, a VS Code TypeScript message catalogue,
+  whose checksum does not match; read-only `debugfs` runs therefore skip checksum verification); every
+  written path read back with its bytes, mode, owner and link target; a directory that two of the
+  packages carry is created once (as dpkg shares it); every 4 KiB block of the root filesystem that differs from the certified disk is
   classified as data of a written file, a directory that gained an entry, the inode-table block of a
   written inode, a bitmap or a superblock or group-descriptor copy; an unexplained block fails the
   build; the qcow2 equals its raw source (`qemu-img compare`) and has no backing file.

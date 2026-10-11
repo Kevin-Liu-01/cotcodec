@@ -284,3 +284,20 @@ def test_plan_install_shares_a_directory_two_packages_create():
     assert plan.shared_dirs == ["/usr/lib/libreoffice/program"]
     with pytest.raises(B.BuildError):  # the same file from two packages is refused
         B.plan_install(a + [_m("/usr/lib/libreoffice/program/a.mo")], [], LISTING)
+
+
+def test_pins_from_a_build_record():
+    import hashlib
+
+    cell = {"changed_blocks": {"ok": True}, "qcow2": {"sha256": "c" * 64, "bytes": 7,
+                                                      "path": "s2v4-cell-E.qcow2"},
+            "selector_sha256": hashlib.sha256(B.selector_xcd("E").encode()).hexdigest()}
+    rec = {"ok": True, "cells": {"E": cell}, "executor_commit": "x",
+           "certified": {"sha256": B.CERTIFIED_SHA256},
+           "derived_base": {"sha256": "d" * 64, "bytes": 9, "path": "s2v4-derived-base.qcow2"},
+           "install": {"manifest_sha256": "e" * 64}}
+    pins = B.pins_from_record(rec, "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v3")
+    assert pins["cells"]["E"]["sha256"] == "c" * 64 and pins["schema"] == "s2v4-images-v1"
+    bad = {**rec, "cells": {"A": cell}}  # the E selector recorded under A
+    with pytest.raises(B.BuildError):
+        B.pins_from_record(bad, "/x")

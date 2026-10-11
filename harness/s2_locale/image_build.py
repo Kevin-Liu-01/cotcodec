@@ -1111,6 +1111,30 @@ def selftest(work: Path) -> dict[str, Any]:
     return checks
 
 
+def pins_from_record(record: Mapping[str, Any], build_dir: str) -> dict[str, Any]:
+    """``harness/s2_locale/images.json`` from a successful build record."""
+    if not record.get("ok"):
+        raise BuildError("the build record is not a successful build")
+    cells = {}
+    for cell, r in sorted(record["cells"].items()):
+        if not r["changed_blocks"]["ok"] or r["selector_sha256"] != hashlib.sha256(
+                selector_xcd(cell).encode()).hexdigest():  # fmt: skip
+            raise BuildError(f"cell {cell}: the record does not check out")
+        cells[cell] = {"sha256": r["qcow2"]["sha256"], "size_bytes": r["qcow2"]["bytes"],
+                       "selector_sha256": r["selector_sha256"],
+                       "file": f"{build_dir}/{r['qcow2']['path']}"}  # fmt: skip
+    base = record["derived_base"]
+    return {
+        "schema": "s2v4-images-v1",
+        "build": {"executor_commit": record.get("executor_commit"), "dir": build_dir,
+                  "certified_sha256": record["certified"]["sha256"],
+                  "derived_base": {"sha256": base["sha256"], "size_bytes": base["bytes"],
+                                   "file": f"{build_dir}/{base['path']}"},
+                  "image_manifest_sha256": record["install"]["manifest_sha256"]},
+        "cells": cells,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1125,7 +1149,14 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("cell")
     st = sub.add_parser("selftest")
     st.add_argument("--work", type=Path, required=True)
+    pn = sub.add_parser("pins", help="images.json from a build record")
+    pn.add_argument("record", type=Path)
+    pn.add_argument("--build-dir", required=True)
     args = parser.parse_args(argv)
+    if args.command == "pins":
+        record = json.loads(args.record.read_text())
+        print(json.dumps(pins_from_record(record, args.build_dir), indent=1, sort_keys=True))
+        return 0
     if args.command == "selector":
         sys.stdout.write(selector_xcd(args.cell))
         return 0
