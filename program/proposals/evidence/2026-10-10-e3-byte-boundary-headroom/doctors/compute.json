@@ -2,15 +2,15 @@
  "doctor": "Compute",
  "status": "FAIL",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "repair pass by the single owner (Claude agent) under D68, 2026-10-10; not an independent review",
  "pass_condition": "Image digest, Slurm dry-run, seeds, quota, checkpoint, and cost plan specified",
- "evidence": "Base image 127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9 plus an H-Net overlay to be built; seeds [42, 43, 44]; caps smoke 0.2 plus probe 0.6 GPU-h, sum 0.8 under D22 (S2: central 0.26, high 0.56); per-file atomic outputs with hash-verified resume; launch via scripts/submit_docker_research_job.py (dry run, test-only, submit).",
+ "evidence": "Base image 127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9 (CUDA 12.8.1 cudnn-devel); a separate v2 overlay environment specified and checked statically: torch 2.7.1+cu128, flash-attn 2.8.0.post2 cu12torch2.7 cp312 wheel, mamba_ssm a6a1dae and causal_conv1d e940ead from source, transformers 4.57.1 (still exports the names mamba_ssm imports), hnet 3673fe12; bf16 with fp32 router probabilities; encoder-only extraction; seeds [42, 43, 44]; caps smoke 0.2 plus probe 0.7, sum 0.9 under D22 (S2v2: central 0.26, high 0.63); per-file atomic outputs with hash-verified resume; launch via scripts/submit_docker_research_job.py.",
  "why_fail": [
-  "no overlay image with hnet, mamba-ssm, causal-conv1d and flash-attn exists (uv.lock has none); flash-attn may need a source build against torch 2.11",
-  "the three H-Net checkpoints are not on the host; their licence is undeclared",
+  "no overlay image exists; the stack fix is static, not built",
+  "the checkpoints, aligners and spaCy pipelines are not on the host; H-Net weights declare no licence",
   "no smoke job, Slurm dry run, manifest or provenance verification; no real model loop or benchmark adapter for this probe",
-  "no H-Net or aligner throughput measured on the host; the caps rest on assumed effective throughput",
+  "no throughput measured on the host; caps rest on assumed throughput",
   "FLORES+ access needs Kevin to accept the gate"
  ],
- "remediation": "After freeze approval: build the overlay and fetch the checkpoints as host CPU jobs; write manifests; dry run and test-only; run the smoke as an orx slurm-manifest node."
+ "remediation": "After freeze approval: build the overlay and fetch as host CPU jobs; manifests; dry run and test-only; the smoke as an orx slurm-manifest node"
 }

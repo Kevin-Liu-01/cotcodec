@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/spacy/zh_core_web_sm",
+ "fetched_at": "2026-10-11T00:58:31Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 145342,
+ "raw_sha256": "802230ee2eb3df11410429964b19fe466206d7c39dee5bc8b706b0a87a186bdc",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "spacy/zh_core_web_sm · Hugging Face"
+ },
+ "snapshot_run": "run 2 (D68 repair)"
+}

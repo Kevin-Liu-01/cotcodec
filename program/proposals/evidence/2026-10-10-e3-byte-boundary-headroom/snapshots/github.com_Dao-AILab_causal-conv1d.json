@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/Dao-AILab/causal-conv1d",
+ "fetched_at": "2026-10-11T00:58:27Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 280120,
+ "raw_sha256": "78c4e100fed67d215bb8d7e0fc71844896e18eab2226e1ebe7672ce18e410868",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - Dao-AILab/causal-conv1d: Causal depthwise conv1d in CUDA, with a PyTorch interface · GitHub"
+ },
+ "snapshot_run": "run 2 (D68 repair)"
+}

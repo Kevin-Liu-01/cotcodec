@@ -1,0 +1,11 @@
+{
+ "wave": "fresh run after the D68 repair (wave-1 roles: proposal paragraph-8110cb24.txt, closest prior paragraph-a0d3d6e0.txt = arXiv:2502.06468, kept unchanged in blind/)",
+ "proposal": "paragraph-fc068b40.txt",
+ "closest_prior": "paragraph-389fcff8.txt",
+ "closest_prior_id": "arXiv:2502.06468 (Beyond Literal Token Overlap: Token Alignability for Multilinguality, Hammerl, Limisiewicz, Libovicky and Fraser; NAACL 2025 short); full text re-read with orx paper --full on 2026-10-10 (Secs. 3.2, 4, 5); fresh paragraph for this run",
+ "additional_packets": {
+  "paragraph-5b22801e.txt": "arXiv:2601.22805 (SOMBRERO, Neitemeier et al., v1 2026-01-30): boundary enrichment against a circular-shift null and the confidence-alignment boundary loss; full text re-read 2026-10-10 (Secs. 3.4, 3.5); wave 1 wrote no packet for it"
+ },
+ "instruction": "One critic call per prior packet, each pairing the proposal paragraph with one prior paragraph in randomized order; never give this file to a critic.",
+ "note": "Role mapping for the recorder only. Never give this file to the critic."
+}

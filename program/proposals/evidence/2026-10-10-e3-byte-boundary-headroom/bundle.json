@@ -1,11 +1,15 @@
 {
  "schema_version": 1,
  "proposal": "program/proposals/2026-10-10-e3-byte-boundary-headroom.md",
- "proposal_sha256": "782cbf31bfa67f986cb1ac46aba0728bba1ed00902d70f9ea0fa8736f1d36a41",
+ "proposal_sha256": "cfacf76648cd8fc5422f37fdae56637398e05a7cc9030c4bb1e4ad0b0e90e6d7",
  "draft_registration": {
-  "path": "program/preregistrations/e3-byte-boundary-headroom-v1.md",
-  "sha256": "30f1fe76c4dc6066d0d2f377c62fe6e1915d56f47f6882f77b7d324285c47d5c",
-  "status": "DRAFT, not frozen, no ledger row"
+  "path": "program/preregistrations/e3-byte-boundary-headroom-v2.md",
+  "sha256": "8dc19cb83a43eac6c01584c6b0a833e18f068209e5e44cfc3e89a379eb315c99",
+  "status": "DRAFT, not frozen, no ledger row; supersedes v1",
+  "superseded_v1": {
+   "path": "program/preregistrations/e3-byte-boundary-headroom-v1.md",
+   "sha256": "30f1fe76c4dc6066d0d2f377c62fe6e1915d56f47f6882f77b7d324285c47d5c"
+  }
  },
  "source_snapshots": [
   {
@@ -18,6 +22,15 @@
    "sha256": "3f3f21d49187d054f592b3064d7b1d51c64e90d50a16bea4e4a3954613fcea9e"
   },
   {
+   "url": "https://aclanthology.org/D09-1075/",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:25Z",
+   "raw_sha256": "e5df5eb38b21200ed1a00c2fa723a087809a6d65b098a75d4c51bc8e0c787056",
+   "raw_bytes": 33343,
+   "artifact": "snapshots/aclanthology.org_D09-1075.json",
+   "sha256": "72f3e705321fed3bbd2578e3ccee5938856b653f321c261d09bac2c8c68c1a0e"
+  },
+  {
    "url": "https://aclanthology.org/P13-1167/",
    "http_status": 200,
    "fetched_at": "2026-10-10T21:58:04Z",
@@ -25,6 +38,15 @@
    "raw_bytes": 33417,
    "artifact": "snapshots/aclanthology.org_P13-1167.json",
    "sha256": "5539596c95f58f8deaf40d9b1e2bd92885100aa99c8c1793a4ba2bd8b40cd690"
+  },
+  {
+   "url": "https://aclanthology.org/P14-1128/",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:26Z",
+   "raw_sha256": "6c69e2ed9ff047b0fac0d110ce1389c2db86c0722ac3cace7da1400f79ce3e1c",
+   "raw_bytes": 36148,
+   "artifact": "snapshots/aclanthology.org_P14-1128.json",
+   "sha256": "da391adf8c89d621e73645678e7850f8629d06972a27c6dbcd7e1fc31cd07170"
   },
   {
    "url": "https://arxiv.org/abs/1708.07508",
@@ -97,6 +119,15 @@
    "raw_bytes": 43059,
    "artifact": "snapshots/arxiv.org_abs_2407.08818.json",
    "sha256": "a10d99f4541919bfc119e1585602d0fa7c0a9f40c524bdd61770581b840d2de5"
+  },
+  {
+   "url": "https://arxiv.org/abs/2407.12881",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:26Z",
+   "raw_sha256": "3aaaffaa12720e4d00414a9dd65d478639775d07ac0bed3dd1b9991bfc8f1417",
+   "raw_bytes": 39898,
+   "artifact": "snapshots/arxiv.org_abs_2407.12881.json",
+   "sha256": "84a78cdf934220113ef25bab7150f0513c6029b7437918641feca1517710caa2"
   },
   {
    "url": "https://arxiv.org/abs/2412.09871",
@@ -225,6 +256,15 @@
    "sha256": "d4f723fc663e396e2318f3db9221e92944b9b7f1984dbca8f68de3586551a2ce"
   },
   {
+   "url": "https://arxiv.org/abs/2608.18062",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:26Z",
+   "raw_sha256": "4910ea3da4e593420657fb76f3feb53488a1860f76e6e2c99abf8b594e57d6ff",
+   "raw_bytes": 41921,
+   "artifact": "snapshots/arxiv.org_abs_2608.18062.json",
+   "sha256": "7ccb82e4315ebeb18d38e540107732af4a668e6b3d7d3a4923a209f7bf903074"
+  },
+  {
    "url": "https://arxiv.org/abs/2608.18474",
    "http_status": 200,
    "fetched_at": "2026-10-10T21:58:07Z",
@@ -297,6 +337,24 @@
    "sha256": "49b372c1f4d6465068a061f2e10fc451f991b6ddbca33102aefb03b2ebee82f1"
   },
   {
+   "url": "https://github.com/Dao-AILab/causal-conv1d",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:27Z",
+   "raw_sha256": "78c4e100fed67d215bb8d7e0fc71844896e18eab2226e1ebe7672ce18e410868",
+   "raw_bytes": 280120,
+   "artifact": "snapshots/github.com_Dao-AILab_causal-conv1d.json",
+   "sha256": "de1a0a16cdd13b958c5b3b21625788f33345b9ad207a7f5e804a1c6b579c4fcf"
+  },
+  {
+   "url": "https://github.com/Dao-AILab/flash-attention/releases/tag/v2.8.0.post2",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:28Z",
+   "raw_sha256": "77526e5244a24cd4e6654e1f658106a8f62a86ec7dd6cc06c15559dd43925b2d",
+   "raw_bytes": 195786,
+   "artifact": "snapshots/github.com_Dao-AILab_flash-attention_releases_tag_v2.8.0.post2.json",
+   "sha256": "5654f29c9962ee349478dde19c82b70e9e24b074569163e730fec9c054025f63"
+  },
+  {
    "url": "https://github.com/MilkDargon/OmniAlign",
    "http_status": 200,
    "fetched_at": "2026-10-10T21:58:11Z",
@@ -342,6 +400,15 @@
    "sha256": "bc6e10dc9a9cd67a09df9ba25410b34524d9007bf1ce7b4872d6e15d793c313a"
   },
   {
+   "url": "https://github.com/explosion/spacy-models/releases/tag/zh_core_web_sm-3.8.0",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:28Z",
+   "raw_sha256": "26fccd2abd80572891f9025f8321f8b70031aee63206b8f7afe250162a3b1bdd",
+   "raw_bytes": 196555,
+   "artifact": "snapshots/github.com_explosion_spacy-models_releases_tag_zh_core_web_sm-3.8.0.json",
+   "sha256": "98f31a9b04ded5651c540ca6a698dad6c42e23cb220c7959ab8ad5f8b6aaa13f"
+  },
+  {
    "url": "https://github.com/goombalab/hnet",
    "http_status": 200,
    "fetched_at": "2026-10-10T21:58:20Z",
@@ -349,6 +416,15 @@
    "raw_bytes": 283324,
    "artifact": "snapshots/github.com_goombalab_hnet.json",
    "sha256": "8d1cf7928961539cbb5438c50e5f9b102f95bc4a5e05a340a957d1cfd8eaf724"
+  },
+  {
+   "url": "https://github.com/huggingface/transformers",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:29Z",
+   "raw_sha256": "10892abd1f5c21530e118a933a484f01761c0eadf83c32266f460426d9f8a6f6",
+   "raw_bytes": 454580,
+   "artifact": "snapshots/github.com_huggingface_transformers.json",
+   "sha256": "65d46194f89f013cb1127b9f96e147140a648228a747d877f9ccbe3c61871d9f"
   },
   {
    "url": "https://github.com/neulab/awesome-align",
@@ -360,6 +436,24 @@
    "sha256": "1c4b1895c6e7ee30f701d9d2bcf637d2d2742229c3c3b3086e687027adf62265"
   },
   {
+   "url": "https://github.com/state-spaces/mamba",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:29Z",
+   "raw_sha256": "ac143ed958f18268cb97b5e02522a683813672f36be2f09a6392f584d72808a9",
+   "raw_bytes": 385304,
+   "artifact": "snapshots/github.com_state-spaces_mamba.json",
+   "sha256": "6d0997c58632feb4b17e1f892e8c32ee7ac6cf10bc23908c2bc8d8ac8bb7d66b"
+  },
+  {
+   "url": "https://github.com/ubisoft/ubisoft-laforge-binaryalign",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:30Z",
+   "raw_sha256": "8767ffd90fc999f347df047d588c1c8123e56fc0be17f477ad672780e38513e4",
+   "raw_bytes": 289151,
+   "artifact": "snapshots/github.com_ubisoft_ubisoft-laforge-binaryalign.json",
+   "sha256": "6b7efb31ca68bbfd2719053ca0cf485d60af9ccc45a3283b98632cb695d5dcb9"
+  },
+  {
    "url": "https://huggingface.co/FacebookAI/xlm-roberta-base",
    "http_status": 200,
    "fetched_at": "2026-10-10T21:58:21Z",
@@ -367,6 +461,15 @@
    "raw_bytes": 258014,
    "artifact": "snapshots/huggingface.co_FacebookAI_xlm-roberta-base.json",
    "sha256": "e1c7a2fe234aac964d22b279b6c8f82a9b5ec147606fd3a434417fc889413148"
+  },
+  {
+   "url": "https://huggingface.co/WPS-Qingqiu/OmniAlign",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:30Z",
+   "raw_sha256": "809d23466179cbf0a6d31d02c5313e94f8633e148e7f6623fe884d7b5f9511a5",
+   "raw_bytes": 193713,
+   "artifact": "snapshots/huggingface.co_WPS-Qingqiu_OmniAlign.json",
+   "sha256": "7114d15381a0e9bd6381351dab948f04ecc849dbd074fa9658b868c1d12d22e0"
   },
   {
    "url": "https://huggingface.co/allenai/Bolmo-1B",
@@ -432,6 +535,15 @@
    "sha256": "7306d29cf24dede28981a10baca2f7ccb10ebaff550465b5c54f56d08be9188f"
   },
   {
+   "url": "https://huggingface.co/spacy/zh_core_web_sm",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:58:31Z",
+   "raw_sha256": "802230ee2eb3df11410429964b19fe466206d7c39dee5bc8b706b0a87a186bdc",
+   "raw_bytes": 145342,
+   "artifact": "snapshots/huggingface.co_spacy_zh_core_web_sm.json",
+   "sha256": "f5b8e6ba6b6e0df171a3a3f8450d50427898b66129a5653c9aa7ad329de12f54"
+  },
+  {
    "url": "https://openreview.net/forum?id=67SF8nq4EN",
    "http_status": 200,
    "fetched_at": "2026-10-10T21:58:23Z",
@@ -439,7 +551,7 @@
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_67SF8nq4EN.json",
    "sha256": "aea1db60fe2b2a39345f5c2dc8fcb79bfdc2eab55346c53713f35efc4b9b6c3f",
-   "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
+   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; abstract from the OpenReview search API (wave-1 query-log.json)"
   },
   {
    "url": "https://openreview.net/forum?id=SUsOuZ5Opq",
@@ -449,7 +561,7 @@
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_SUsOuZ5Opq.json",
    "sha256": "2965d3ac04fc7368844c86631d6f454c63e4e2086eb339670d2515f02be44f48",
-   "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
+   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; abstract from the OpenReview search API (wave-1 query-log.json)"
   },
   {
    "url": "https://openreview.net/forum?id=fMymbXoq9T",
@@ -459,7 +571,7 @@
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_fMymbXoq9T.json",
    "sha256": "878eca9bd8d0036504e62dae6aa231d99ab00aa88a2dca2070a6a059d62ece9e",
-   "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
+   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; abstract from the OpenReview search API (wave-1 query-log.json)"
   },
   {
    "url": "https://openreview.net/forum?id=lnWJWNA8YW",
@@ -469,25 +581,31 @@
    "raw_bytes": 4787,
    "artifact": "snapshots/openreview.net_forum_id_lnWJWNA8YW.json",
    "sha256": "edbf958e3328089f87371c2f1944c50b3a9da3e358a77b2e4f2fac03985bef6e",
-   "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
+   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content; abstract from the OpenReview search API (wave-1 query-log.json)"
   }
  ],
  "query_log": {
-  "artifact": "query-log.json",
-  "sha256": "ff59c929b8ed6dd6a52d14894182227ab905a3941431e8da869fc83ce844a06e",
-  "queries_against_budget": 118,
-  "note": "118 counted orx discover calls (frontier 62, kill-shot 24, cross-domain 27, asset 5; synthesis 0; 2 failed with OpenAlex 429) against the declared 150, leaving 32 for the triad's reserve of 30; 19 uncounted OpenReview, web and metadata calls; cell paper reads and synthesis re-reads not counted."
+  "artifact": "query-log-run2.json",
+  "sha256": "b7fc479246869982af6e4c036c958e9c5660e1af9dd9585b629d42b7c5a523ec",
+  "queries_against_budget": 20,
+  "declared_budget": 80,
+  "reserved_for_refuters": 30,
+  "wave1_query_log": {
+   "artifact": "query-log.json",
+   "sha256": "ff59c929b8ed6dd6a52d14894182227ab905a3941431e8da869fc83ce844a06e"
+  },
+  "note": "This run's counted queries so far (the repair's 20); wave 1's are in query-log.json and the wave-1 record."
  },
  "reviews": [],
- "reviews_status": "NOT_RUN: the blind critic, the refute-first triad and both reviewers run after synthesis. No trusted Ed25519 store exists (D24), so no review can be signed.",
+ "reviews_status": "NOT_RUN for this run: the blind critic, the refute-first triad and both reviewers run after the repair. Wave 1's reviews are in program/gauntlet/2026-10-10-e3-byte-boundary-headroom.jsonl. No trusted Ed25519 store exists (D24).",
  "compute": {
-  "scope": "e3-byte-boundary-headroom-v1 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: simulation S1 (instrument gates for the dossier's UOT cost and for projected boundary Dice, decision-rule operating characteristics, calibration decomposition) and cost model S2 (caps and arithmetic), each script with its output.",
+  "scope": "e3-byte-boundary-headroom-v2 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: wave 1's S1 and S2 (kept unedited) and the D68 repair's registered estimator as code, S1v2 (calibration, attenuation maps, design exploration, band constants, gates, identification scenario, line M, operating characteristics) and S2v2 (cost), each script with its output.",
   "image_digest": "127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9",
-  "image_scope": "pinned research architecture base image (torch 2.11.0+cu128, triton 3.6.0, transformers 5.15.0); the probe needs an overlay with hnet at 3673fe12, mamba-ssm, causal-conv1d and flash-attn, built as a host CPU job after freeze approval; no such overlay exists",
+  "image_scope": "pinned research base (CUDA 12.8.1 cudnn-devel; torch 2.11.0+cu128, transformers 5.15.0 in its own venv); the probe needs the v2 overlay environment (torch 2.7.1+cu128, flash-attn 2.8.0.post2 cu12torch2.7 wheel, mamba_ssm a6a1dae and causal_conv1d e940ead from source, transformers 4.57.1, hnet 3673fe12), specified and checked statically; not built",
   "real_model_loop": false,
-  "real_model_loop_scope": "none: the H-Net boundary-extraction driver, the aligner driver and the PBD scorer in harness/ are not written; the H-Net checkpoints are not on the host",
+  "real_model_loop_scope": "none: the encoder-only H-Net extraction driver, the OmniAlign and BinaryAlign drivers and the spaCy step are not written; no checkpoint is on the host",
   "benchmark_adapter": null,
-  "benchmark_adapter_scope": "none: no FLORES+ manifest builder, canonicalizer, cut builder or scorer exists in harness/ (S1 holds simulation code only)",
+  "benchmark_adapter_scope": "none: the estimator exists as compute/repair-run2/e3_estimator_v2.py (decision code used by S1v2), not yet as a harness/ module with unit tests",
   "manifest": null,
   "manifest_scope": "no Slurm manifest exists for the smoke or probe job",
   "container_smoke": {
@@ -495,40 +613,197 @@
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "622cbb3b18be607263d2c6d450e5cfb2052f80811ad049e840e0decae40c25d5"
+   "sha256": "08546d890eb8e2340ca2caa6d50a6e759322be8f09f423f02608737530304fef"
   },
   "slurm_test": {
    "label": "slurm_test",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "622cbb3b18be607263d2c6d450e5cfb2052f80811ad049e840e0decae40c25d5"
+   "sha256": "08546d890eb8e2340ca2caa6d50a6e759322be8f09f423f02608737530304fef"
   },
   "provenance_verification": {
    "label": "provenance_verification",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "622cbb3b18be607263d2c6d450e5cfb2052f80811ad049e840e0decae40c25d5"
+   "sha256": "08546d890eb8e2340ca2caa6d50a6e759322be8f09f423f02608737530304fef"
   },
   "registered_caps_gpu_h": {
    "smoke": 0.2,
-   "probe": 0.6,
-   "sum": 0.8,
+   "probe": 0.7,
+   "sum": 0.9,
    "threshold": 8.0,
-   "estimate_central": 0.264,
-   "estimate_high": 0.558
+   "estimate_central": 0.263,
+   "estimate_high": 0.628
   },
   "supplementary_cpu_evidence": [
    {
-    "label": "S1 instrument and decision-rule simulation (synthetic pairs, seeds 42/43/44; 31 process runs merged)",
+    "label": "E: the registered v2 estimator as code",
+    "script": {
+     "artifact": "compute/repair-run2/e3_estimator_v2.py",
+     "sha256": "eaabedba3bd3bc1fe18e24ff4c995e50947c16d5d5ba1cdc8be4e050d1bd2a70"
+    }
+   },
+   {
+    "label": "S1v2 simulation driver (imports the estimator unchanged)",
+    "script": {
+     "artifact": "compute/repair-run2/instrument_sim_v2.py",
+     "sha256": "fc25f1b8d075543ba59df0efcc451c29f61c1672630821ef229ac218c584978e"
+    },
+    "merge_script": {
+     "artifact": "compute/repair-run2/merge_v2.py",
+     "sha256": "d6910a299e9168a8f26d1171cb1966bb5266efba82bbc08e9ef2d55e2c47cfed"
+    }
+   },
+   {
+    "label": "S1v2 error-model calibration (seed 2042)",
+    "output": {
+     "artifact": "compute/repair-run2/calib.json",
+     "sha256": "d744bac6937bff68a89911fea700c8641fb44e53ffd244648c1b43446e404979"
+    }
+   },
+   {
+    "label": "S1v2 attenuation map, per-aligner targets (seed 42)",
+    "output": {
+     "artifact": "compute/repair-run2/atten-single-aligner.json",
+     "sha256": "70be82b6460684204cf5123bd53c58cf7c431398cded93f9a09c0a8cbd14026d"
+    }
+   },
+   {
+    "label": "S1v2 attenuation map, consensus target (seed 42)",
+    "output": {
+     "artifact": "compute/repair-run2/atten-consensus.json",
+     "sha256": "9469e97d00738b5cff3842ce9975a670370c7ebde088b627947fe6186d40121f"
+    }
+   },
+   {
+    "label": "design exploration of two-aligner targets (not decision-bearing)",
+    "script": {
+     "artifact": "compute/repair-run2/explore_targets.py",
+     "sha256": "69b805acbe0d2337ac77102820edfd379bec83f3530837de3226d1029aff6998"
+    },
+    "output": {
+     "artifact": "compute/repair-run2/explore-targets.json",
+     "sha256": "ebbbc2341a58b7d230fccff21e0334560a47bf7c33224cd2cd860b316389a0d4"
+    }
+   },
+   {
+    "label": "band-path constants",
+    "script": {
+     "artifact": "compute/repair-run2/band_envelope.py",
+     "sha256": "4192083457770c56b503e82ce334970603fc5e11fcccf5daef8e1dd04d312ab2"
+    },
+    "output": {
+     "artifact": "compute/repair-run2/band-registered.json",
+     "sha256": "c644c9378c036b34928800a91738e43f52e23385e207d9cde769798a67de6897"
+    },
+    "provisional_in_run_constants": {
+     "artifact": "compute/repair-run2/band.json",
+     "sha256": "867989383821f3ce76adea8aa97122731ff7dc4c30b3842167e3821e189ebb06"
+    }
+   },
+   {
+    "label": "S1v2 gates and budget diagnostics (seeds 42-44)",
+    "output": {
+     "artifact": "compute/repair-run2/gates-v2.json",
+     "sha256": "072030558719abd21b3d0754ba26a2801fb58268cc03897410eba05a3df6b153"
+    }
+   },
+   {
+    "label": "S1v2 wave-1 density and word-end scenario under v2 (seeds 42-44)",
+    "output": {
+     "artifact": "compute/repair-run2/ident-v2.json",
+     "sha256": "862b3cd1a8b5ed93950bbfab2ca14f269dff952695af774ebfefdc0f257593b1"
+    }
+   },
+   {
+    "label": "S1v2 synthetic line M reference (seeds 42-44)",
+    "output": {
+     "artifact": "compute/repair-run2/linem-v2.json",
+     "sha256": "ed3cae4bb87002fcfe091b0cdcc42714d923e4775020bbe92f8fd7514bb043a6"
+    }
+   },
+   {
+    "label": "superseded diagnostics (before the consensus target)",
+    "outputs": [
+     {
+      "artifact": "compute/repair-run2/superseded/gates-per-aligner-budget.json",
+      "sha256": "04341e4b18fee4874338c6d83d9c1d3b552f3782031cabcd2e9d7fc02979e5b1"
+     },
+     {
+      "artifact": "compute/repair-run2/superseded/ident-per-aligner-budget.json",
+      "sha256": "be429eecd7ef8fc59f04e3dfc6fbb416a27fb24e047693ea4cb9fb03654ffd79"
+     },
+     {
+      "artifact": "compute/repair-run2/superseded/linem-per-aligner-budget.json",
+      "sha256": "1cd293f7d7d42593737cd47eaddd6b10cbcd378081d3c7d479fc2e0cbba77d2b"
+     }
+    ]
+   },
+   {
+    "label": "S1v2 operating characteristics: per-replicate statistics (24 condition-seed runs)",
+    "output": {
+     "artifact": "compute/repair-run2/oc-merged.json",
+     "sha256": "bb1cbc44250c396b5fc16534b565ee3dbfe00b8c7c42cf38216f240ad2d10f1d"
+    }
+   },
+   {
+    "label": "S1v2 verdicts under the registered rule",
+    "script": {
+     "artifact": "compute/repair-run2/oc_decide.py",
+     "sha256": "6fdeaba68afa402da8a656eb067306db53ca4c8a5e974697d2e74d228fc0ecbf"
+    },
+    "output": {
+     "artifact": "compute/repair-run2/oc-decisions.json",
+     "sha256": "154b31a189d1ee2387feb2629ca799f099dcf62c53c1ada1bded128629a90e9e"
+    }
+   },
+   {
+    "label": "S1v2 OC summary tables",
+    "script": {
+     "artifact": "compute/repair-run2/oc_summary.py",
+     "sha256": "df985f3af5a02635c620162a5e81b205597a7c0ec5d0ba335d69006ca8fbf5f0"
+    },
+    "output": {
+     "artifact": "compute/repair-run2/oc-summary.json",
+     "sha256": "bd91d57f9faa148fa33a16187cf9d647268372f128534d6d601d6c52fae5978d"
+    },
+    "markdown": {
+     "artifact": "compute/repair-run2/oc-summary.md",
+     "sha256": "7c67689de367a431f8ed7b4e9c14138bb4ad873ce14ec92af85729d21e22e63e"
+    }
+   },
+   {
+    "label": "S2v2 GPU-hour arithmetic and caps",
+    "script": {
+     "artifact": "compute/repair-run2/cost_model_v2.py",
+     "sha256": "d1b1f9e58bd5371850892df03559f5c32482c0f57ce861923551b74d64935b56"
+    },
+    "output": {
+     "artifact": "compute/repair-run2/cost-model-v2.json",
+     "sha256": "45c3e432df74582905b6794a45b6406b38314ee0ca012c47c7178510b1b3fa27"
+    }
+   },
+   {
+    "label": "run-2 query log builder",
+    "script": {
+     "artifact": "compute/repair-run2/build_query_log_run2.py",
+     "sha256": "e3a0aa83746581ec5d35ed44011fc2764993777b91a322806d7874e42a63851b"
+    }
+   },
+   {
+    "label": "run-2 snapshot script (new URLs only)",
+    "script": {
+     "artifact": "compute/repair-run2/snapshot_new_sources.py",
+     "sha256": "fcec1691af36351e56ee583853ec0a1a100fdb81283b4e0648bf3638f2cc1528"
+    }
+   },
+   {
+    "label": "wave-1 S1 instrument simulation (kept unedited)",
     "script": {
      "artifact": "compute/instrument_sim.py",
      "sha256": "a3943b446847f70609b885f567bb597a9eeb1bbfe340e8f252c62a1283c46ca9"
-    },
-    "merge_script": {
-     "artifact": "compute/merge_sim.py",
-     "sha256": "7309034fa900c2c63073e713fd939b34ef42fcce711e4b1877dbb12160347f65"
     },
     "output": {
      "artifact": "compute/instrument-sim.json",
@@ -536,7 +811,7 @@
     }
    },
    {
-    "label": "S2 GPU-hour estimate and caps (arithmetic; no host throughput measured)",
+    "label": "wave-1 S2 cost model (kept unedited)",
     "script": {
      "artifact": "compute/cost_model.py",
      "sha256": "ac5aee33375c0b31346106026617086c2ca1fa7570e48ec06eadff36a1de7810"
@@ -547,13 +822,6 @@
     }
    },
    {
-    "label": "query-log builder (parses the cells' raw orx outputs from the session scratchpad)",
-    "script": {
-     "artifact": "compute/build_query_log.py",
-     "sha256": "465ef74965a703ca00468801462528707d967e7f8e1f53edbca20eb657e78487"
-    }
-   },
-   {
     "label": "snapshot script for source_snapshots",
     "script": {
      "artifact": "compute/snapshot_sources.py",
@@ -561,9 +829,9 @@
     }
    }
   ],
-  "repository_evidence_used": {
-   "legacy_evaluator": "legacy/harness/translation_boundaries.py (imported by S1's UOT part)",
-   "legacy_doctor_rerun": "legacy/scripts/run_boundary_transport_doctor.py re-run 2026-10-10: REFERENCE_OBJECTIVE_DOCTOR_PASS, payload_sha256 6d8c24be8e5042898ba80ebb9204c3df4645d314a3b58982edab15f17ae5b459"
+  "repro_check": {
+   "artifact": "compute/repair-run2/repro-check.json",
+   "sha256": "249bc1288d68a703c7cb31cfb131b2b21da7dd1b955c0b9d1241a2e3e4f163a3"
   }
  },
  "doctors": [
@@ -571,85 +839,93 @@
    "name": "Source",
    "status": "PASS",
    "artifact": "doctors/source.json",
-   "sha256": "67a4c602775df7d53f79d74d1e32d8e7b0ada7fcff47de92afed8a963c19fcb6"
+   "sha256": "b59148ffc72e06ca3416edb822ab51c50211b6b7e602e48cc1f02fcfc002c119"
   },
   {
    "name": "Citation",
    "status": "PASS",
    "artifact": "doctors/citation.json",
-   "sha256": "89fa2b7b59210a338e773d0e69a73c23da3490e369e424e80f3d8116e5fb7cb0"
+   "sha256": "5f283160b85f01d1990c72b10a9b8fb3bd8e57a2a6942cafe46a51e22e3b5c10"
   },
   {
    "name": "Novelty",
    "status": "FAIL",
    "artifact": "doctors/novelty.json",
-   "sha256": "14b8547f3d23d72fd613ba32608d97aef098c1c4ba43ad2e93a4a9d7554f9d79"
+   "sha256": "3e7f32fd76e8555b8086763751fb3a51e95a79c32ba5c43dd77efbfb60c3f790"
   },
   {
    "name": "Design",
    "status": "FAIL",
    "artifact": "doctors/design.json",
-   "sha256": "47ed49c5b9382c3007bfadd60bf465872c2ee7366bd256d8498ef88f148264c0"
+   "sha256": "90a324538d6d95822da639f29629d0fe07058b3bd6b418e9000fb947b865e932"
   },
   {
    "name": "Compute",
    "status": "FAIL",
    "artifact": "doctors/compute.json",
-   "sha256": "00a6d6bd2665dbad277f6bb68436d98468a8e3c639e249f197ba800b313148b9"
+   "sha256": "62b699e2e9a443b432bbbfbd78fa19e5e45a35d0ad0ac2082bf63b123068de0b"
   },
   {
    "name": "Safety",
    "status": "PASS",
    "artifact": "doctors/safety.json",
-   "sha256": "118be5979585497846e316c7f000f2aebd6209415cd8c72900786dff47a782ea"
+   "sha256": "396f6b8c2415f64088e4ee13a2251f0d255efebdc32a6267c74afb70169f769f"
   }
  ],
  "audit_log": null,
- "audit_log_status": "This gauntlet's wave-1 row is appended to program/gauntlet/2026-10-10-e3-byte-boundary-headroom.jsonl with scripts/research_gauntlet_record.py after its reviewers score.",
- "evidence_root_sha256": "60e5e933302d423df5b04476f3a33cf405f194a58249267acbefd92c6867b992",
+ "audit_log_status": "Wave 1's row is the first row of program/gauntlet/2026-10-10-e3-byte-boundary-headroom.jsonl (hash 13d97526...); this run's row is appended after its reviewers score.",
+ "evidence_root_sha256": "7f4562d65a1aac6ba4aeaa1f068de741acff7836513138789b73c61e0d62f035",
  "blind_discrimination_packet": {
   "proposal": {
-   "artifact": "blind/paragraph-8110cb24.txt",
-   "sha256": "d07684de138cbfe880929faa2c18012fe7ed384657bf9eae2749cd235a7c018a",
-   "text_sha256": "948de60c771337c0f681af09999442960ae2d19c1c99808ef4142a2a56308b1c"
+   "artifact": "blind/paragraph-fc068b40.txt",
+   "sha256": "fa8402f435854db329e565c668a3432aa91261eaac55b7b557159dd987bd3b21",
+   "text_sha256": "b1a18e5271d3543128708b189405aae755159a9a9b2f5410c726948c800a6e64"
   },
   "closest_prior": {
-   "artifact": "blind/paragraph-a0d3d6e0.txt",
-   "sha256": "430d7421d917b96646fbfae1184e3dc2d93daff9919f9a752044776e6ea3f30d",
-   "text_sha256": "d23fb8fceb9e19f74be9f03edf6b40ce8a8fc41679f997ec0f7aa2f8c79807c5"
+   "artifact": "blind/paragraph-389fcff8.txt",
+   "sha256": "582359c39682d28d8570392b8ed1014372ac97da7ab967fefefc96c36791ae51",
+   "text_sha256": "ca5f84dc36531321085de562683b70d473076c4eea8dc2ba338d0df9a2a27c43"
   },
-  "closest_prior_id": "arXiv:2502.06468 (Beyond Literal Token Overlap: Token Alignability for Multilinguality, Hammerl, Limisiewicz, Libovicky and Fraser; NAACL 2025 short, aclanthology 2025.naacl-short.63); full text read by the frontier, kill-shot and cross-domain cells and re-read by synthesis on 2026-10-10 (Secs. 3.2, 4.1, 5, 6)",
-  "note": "File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text."
+  "closest_prior_id": "arXiv:2502.06468 (Beyond Literal Token Overlap: Token Alignability for Multilinguality, Hammerl, Limisiewicz, Libovicky and Fraser; NAACL 2025 short); full text re-read with orx paper --full on 2026-10-10 (Secs. 3.2, 4, 5); fresh paragraph for this run",
+  "additional_prior_packets": [
+   {
+    "packet": {
+     "artifact": "blind/paragraph-5b22801e.txt",
+     "sha256": "756493436a6e13ad021f47c6100a5779508e8a5da6e241bec22bf387daa613c5",
+     "text_sha256": "6b7c68b4812db853f21c9266f8f88ab4e4524c9677378ccfbb90d2cefc6bc688"
+    },
+    "prior": "arXiv:2601.22805 (SOMBRERO, Neitemeier et al., v1 2026-01-30): boundary enrichment against a circular-shift null and the confidence-alignment boundary loss; full text re-read 2026-10-10 (Secs. 3.4, 3.5); wave 1 wrote no packet for it"
+   }
+  ],
+  "wave1_packets": {
+   "proposal": "blind/paragraph-8110cb24.txt",
+   "closest_prior": "blind/paragraph-a0d3d6e0.txt",
+   "role_map": "compute/blind-roles.json"
+  },
+  "note": "File names carry no role and each file holds only its paragraph. One critic call per prior packet, each with the proposal paragraph, in randomized order, read by path, without the role map or any other text."
  },
  "budget_ledger": {
   "declared": {
-   "queries": 150,
+   "queries": 80,
    "wall_minutes": 600,
    "tokens": 8000000,
    "dollars": 150,
-   "waves": 3,
+   "waves": 1,
    "gpu_hours": 0.3
   },
-  "used_by_discovery_cells": {
-   "queries": 118,
-   "uncounted_calls": 19,
+  "used_by_repair": {
+   "queries": 20,
+   "paper_reads": 5,
    "gpu_hours": 0.0,
-   "host": "read-only metadata access by the asset cell; no host job"
+   "host": "none (no ssh, no host job)",
+   "cpu": "S1v2 and S2v2 on the development Mac (about 80 process runs kept, plus superseded runs listed in README)",
+   "wall_minutes_and_tokens": "metered by the recorder from transcripts"
   },
-  "used_by_synthesis": {
-   "queries": 0,
-   "paper_reads": "5 re-reads of cell-fetched texts; Hugging Face, GitHub and raw-file metadata reads (auxiliary)",
-   "gpu_hours": 0.0,
-   "host": "one read-only squeue at 21:22 UTC (empty queue); no host job",
-   "cpu": "S1 (31 process runs, about 89 CPU-minutes) and S2 on the development Mac; one legacy doctor re-run",
-   "tokens_and_dollars": "not metered by the synthesis agent; the recorder meters from transcripts"
-  },
-  "remaining_queries": 32,
-  "refuter_reserve_shortfall": 0
+  "remaining_queries": 60
  },
  "direction_doctor_run": {
   "artifact": "doctors/research-direction-doctor-output.json",
-  "sha256": "55485e1331bf94f14c0e85adc313286a90269a8cba5d058b98d87d124c1c1656",
+  "sha256": "8b75254e2319c02550a236631dbc99940ae92078078ac5e326386301f6bd3b5b",
   "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-e3-byte-boundary-headroom.md",
   "note": "Outside evidence_root by design: the doctor output depends on this bundle."
  }

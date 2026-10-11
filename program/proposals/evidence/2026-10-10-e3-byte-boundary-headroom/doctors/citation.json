@@ -2,19 +2,17 @@
  "doctor": "Citation",
  "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "repair pass by the single owner (Claude agent) under D68, 2026-10-10; not an independent review",
  "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
- "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, source tracing, cross-referencing); unreachable sources marked UNVERIFIABLE_ACCESS",
- "claim_registry": "Proposal section 'Primary-Source Evidence', claims C01 to C52, each with locator, date, read depth and status",
- "evidence": "Every cited primary URL snapshotted with its HTTP status and, for arXiv, its version history. Synthesis re-read in the cells' saved full texts: 2502.06468 (Secs. 3.2, 4.1, 5, 6), 2601.22805 (Secs. 3.4, 3.5), 2507.07955 (Sec. 2.2 Eq. 4, Sec. 3 Fig. 4 bullets, Chinese setup), 2512.15586 (Secs. 3.1.1, 3.2.1, 3.2.2), 2610.01921 (abstract, Sec. 1). Synthesis verified through APIs: H-Net checkpoint files, sizes, LFS hashes and missing licence; goombalab/hnet routing code (dc.py lines 92-104) and generate.py's weights_only=False; Bolmo-1B, Bwen-8B, OLMo-2, Qwen3, LaBSE and XLM-R revisions and licences; CTFAlign, SimAlign, awesome-align, OmniAlign, bolmo-core, XL-WA, MAGNET and jieba repository licences; FLORES+ revision, licence and gate. Synthesis re-ran the legacy boundary doctor (payload SHA-256 6d8c24be..., identical to the 2026-08-10 output) and checked uv.lock for H-Net dependencies (none). First-party numbers labelled (2610.11790, 2512.17083, 2608.03599's Bolmo statement). Six dossier statements corrected.",
+ "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, source tracing, cross-referencing); unreachable sources marked",
+ "claim_registry": "Proposal section 'Primary-Source Evidence', claims C01 to C74 (C01-C52 from wave 1, C53-C74 added by the repair), each with locator, date, read depth and status",
+ "evidence": "New load-bearing claims opened at the primary source this run: OmniAlign Table 4 and Table 3 (zh-en AER 8.5 after supervised fine-tuning on 40.7K Tsinghua pairs; 14.3 without), BinaryAlign Tables 1-2 (zh-en 9.0 zero-shot, 4.8 supervised), BinaryAlign's licence, checkpoints and requirements, OmniAlign's model card and config, hnet's pyproject, routing and model code at 3673fe12, mamba_ssm's generation import at a6a1dae (line 14), transformers' generation exports at v5.15.0 and v4.57.1, flash-attn v2.8.0.post2 wheel tags, the base image Dockerfile, spaCy model licences, SOMBRERO Secs. 3.4-3.5 and token alignability Secs. 3.2, 4, 5. The aligner AERs reviewer 1 took on trust in wave 1 (awesome-align 2101.08231 Table 2) are superseded by the two aligners' own tables. Classical lineage claims (C65-C71) are metadata-level and labelled so. All S1v2 numbers trace to files in compute/repair-run2/.",
  "verdicts": {
-  "full_text_or_synthesis_reread_or_reproduced": 39,
-  "repository_or_api_only": 3,
-  "abstract_report_or_snippet_only": 10,
-  "of_which_unverifiable_access_full_text": 2,
-  "total_claims": 52,
-  "method": "counted from the registry's Depth column: any F or S counts as full text or synthesis; else any R or M as repository or API; else abstract"
+  "total_claims": 74,
+  "added_this_run": 22,
+  "metadata_or_abstract_only_added": 7,
+  "access_failures_recorded": 1
  },
- "known_limits": "C18 and C19 (B-Net, Multi-Level Transformer) from OpenReview search payloads only; C33, C39, C40, C45 abstract-level; C41, C42 landing-page snippets; C08 HTML only.",
- "remediation": "Read the Bolmo Supplementary ('Exactness of the stage 1 objective') to quantify the Bolmo-tokenizer residual; read the ICLR 2027 submissions when accessible."
+ "known_limits": "C65-C71 metadata only; C18, C19 (wave 1) abstract only; TsinghuaAligner unreachable (C74).",
+ "remediation": "Read Cohen 1960 and Rogan and Gladen 1978 in full when accessible"
 }
