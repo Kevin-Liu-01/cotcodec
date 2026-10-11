@@ -20,7 +20,7 @@ Kevin (D70):
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 16 rows). Decisions taken
-on Kevin's behalf are D1-D71 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D73 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
@@ -40,16 +40,23 @@ Q1 Stage 0 is closed on the audit-metric study (D46): under TF32 a tolerance
 audit certifies "not grossly wrong", not 1% correctness
 (`program/evidence/2026-10-08/q1-audit-metric-study/`).
 
-## In progress (D71)
+## In progress (D71-D73)
 
-- A question-renewal sweep replays the 2026-10-06 selection on what the
-  program has measured (branch `stage0/question-renewal`). It ends in a
-  ranked slate for Kevin.
-- An S2 successor (S2 v3) runs its first gauntlet wave, with a larger
-  LibreOffice task pool and an executable CPU-only Phase 0 pilot (branch
-  `gauntlet/s2v3-locale`).
-- A Q2 technical report draft is under way (branch `stage0/q2-report`,
-  `paper/q2-report/draft.md`). Publishing it stays Kevin's.
+- The question-renewal dossier is done
+  (`program/evidence/2026-10-11/question-renewal/dossier.md`). It recommends
+  R01 (rerun-noise sources) as lead, R03 (completing the checker-mutation
+  note) as spine and R02 (on-policy checker audit) as backfill. Adoption is
+  Kevin's.
+- The Q2 technical report draft is merged (`paper/q2-report/`), unpublished.
+  The corrections it found are recorded in D72.
+- Running:
+  - S2 v3's gauntlet with an executable Phase 0 pilot.
+  - R01's gauntlet wave 1.
+  - R03's K2 VM-fidelity executor, as an addendum to the checker-mutation
+    registration.
+  - R04, a nuisance-invariance CPU study registration.
+  Each of the last two gets a pre-freeze audit; nothing is frozen without the
+  program owner's step.
 
 ## Waiting on Kevin
 
@@ -57,7 +64,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D71, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D73, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 
