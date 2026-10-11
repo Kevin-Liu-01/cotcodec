@@ -1,26 +1,27 @@
-# Handoff — 2026-10-10 (evening)
+# Handoff — 2026-10-11
 
-## Resume here (2026-10-10 evening)
+## Resume here (2026-10-11)
 
-- S1a is complete and verified (D66): no harness difference detected, DR5
-  INCONCLUSIVE, so no S1b. The host is idle.
-- Q2 (D69): the design study recommends closing S1b and the harness-scale
-  question; no design within 8 GPU-h can admit S1b. S1a stands as Q2's
-  answer (rerun noise 20-33% of variance, task-by-harness 3-4%). Successor E
-  (6.77 cap-GPU-h; decisive DR2 0.83-0.87) stays available to Kevin.
-- Backfill and gated lines (D67, D68): wave 1 scored E3 52, E5 54, E7 51,
-  C5 54 and S2 49. The repair runs closed C5 (58), E5 (51) and E3 (49) at
-  honest exits; S2 (moved onto the certified OSWorld stack) and E7 are still
-  running. No candidate can score 100 without the trust store (D24). E4 and
-  C3 ended at honest exits (D63, D65).
+Nothing is running, and the host is idle. Every line is closed or waits on
+Kevin (D70):
+- Q1 is closed (D46). Q3 is closed (D54).
+- Q2: S1a is done and verified (D66). S1b and the harness-scale question are
+  closed on the design study (D69). Successor E (6.77 cap-GPU-h) is available
+  if a decisive harness reading is wanted. The checker-mutation study waits on
+  Kevin's adjudication.
+- Backfill E3, E4, E5, E7, C3 and C5, and the gated S2, all ended at honest
+  exits after a repair run (D63, D65, D68, D70). S2 v2 (59) and C5 v2 (58) are
+  the strongest packages. No candidate can score 100 without the trust store
+  (D24), so any first step needs Kevin's admission ruling.
+- See `pending_decisions_for_kevin` in `program/state.json`.
 
 ## State
 
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 16 rows). Decisions taken
-on Kevin's behalf are D1-D69 in `program/decisions.md`. GPU-hours are in
-`program/state.json` (`gpu_hours_ledger`, physical hours): 10.25 in total.
+on Kevin's behalf are D1-D70 in `program/decisions.md`. GPU-hours are in
+`program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -41,15 +42,8 @@ audit certifies "not grossly wrong", not 1% correctness
 
 ## In progress
 
-- **Q2 next step** (D66): S1a is done (above). A CPU design study calibrated on
-  S1a's records compares successor designs within 8 GPU-h (more sessions, more
-  tasks, mixed) for decisive DR2/DR5, and sizes S2's power gate with S1a's
-  noise floor.
-- **Q3**: the dense pre-check v2 result (NEGATIVE_CAPABLE_V3 on Qwen3.5-4B-Base)
-  is Q3's Stage 0 outcome. K1 v3 ended at an honest exit after its third
-  gauntlet wave (D54; 45, 51, 55, 56): its chance of any verdict stayed at
-  0.03-0.25 and GO is not identified against question-side literal priming.
-- **Q1**: Stage 0 closed on the audit-metric study (D46).
+Nothing. The last runs (five repair runs and the Q2 design study) ended on
+2026-10-11; see D69 and D70.
 
 ## Waiting on Kevin
 
@@ -57,7 +51,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D69, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D70, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 
