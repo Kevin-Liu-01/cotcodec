@@ -1348,3 +1348,33 @@ caps per job with arithmetic, builds and tests the P0 bitwise self-test and
 the replay drivers on CPU where possible, and restates the prediction. A score
 below 60, or the same largest defect, ends R01. Its GPU stages stay Kevin's
 (D24, D70).
+
+**D76. S2 v3 reaches 65, the program's best score, and ends at an honest
+exit on the defect test; what remains is Kevin's.** S2 v3's repair run (D74)
+scored 65, the lower of the two reviews (Claude 65, open-weight 72); the
+trajectory is 60, then 65. The repair completed every CPU-reachable part of
+Phase 0:
+- a pseudo-Arabic interface built from the installed LibreOffice's own
+  strings (no download) was rendered in every cell at all 106 task states
+  (job 1131, 0 errors);
+- the registered render oracle ran with planted controls (orx node c7bcde07,
+  replicated as job 1132);
+- 1,110 checker verdicts on saved golds and do-nothing states showed no cell
+  changing any verdict (jobs 1139, 1141);
+- a toolbar-shuffle placebo cell now separates direction-specific effects
+  from any rearrangement.
+Phase 1 caps are 6.83 GPU-h. The score meets D74's line, but the defect test
+fires: the pilot still cannot decide Phase 0. Under the admission rule
+committed before the sweep, K0 admits only 53 tasks (FAIL), and synthetic
+plants were caught on 101/106 (O3) and 95/106 (O2) of tasks, against a 100%
+bar. The 105-task checker-semantics rule was settled after the proxy's
+result, so it cannot be counted. S2 v3 ends here, the strongest package the
+program has. It advances only through Kevin, who would decide all of these:
+- (a) downloading the applications' real Arabic language packs;
+- (b) reviewed image-surgery code and the per-slot overlay lane change;
+- (c) a registered deviation of `q2-action-path-v2` for the P0.6 certification
+  on the derived configuration (about 44 VM-h);
+- (d) a fresh, pre-committed K0 rule, which a new registration would carry;
+- (e) the Phase 1 cap rule and admission (D24).
+Its finding that the Arabic interface writes localized defaults into saved
+files in 34 tasks, with no checker verdict changed, is recorded either way.
