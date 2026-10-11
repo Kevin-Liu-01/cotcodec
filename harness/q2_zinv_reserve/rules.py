@@ -214,9 +214,11 @@ def judge(
     cond_b = not new_accepts
     if invalid_decision:
         outcome = "INCOMPLETE"
+    elif not cond_b:
+        outcome = "FAIL"  # a newly accepted violation is a counterexample at any size
     elif not z:
         outcome = "NOT_TESTABLE"
-    elif cond_a and cond_b:
+    elif cond_a:
         outcome = "PASS" if v else "PASS_A_ONLY"
     else:
         outcome = "FAIL"

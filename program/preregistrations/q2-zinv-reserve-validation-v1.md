@@ -119,7 +119,7 @@ whose files differ, and `tests/test_q2_zinv_reserve.py` fails on drift):
 |---|---|
 | `harness/q2_zinv_reserve/__init__.py` | `ea19139fbe29b88d9e46f7fe337bab7bf6d1f9e21ac1905f455cc29b2a1d95e2` |
 | `harness/q2_zinv_reserve/guard.py` | `a1bf674ed7fe3dc476142b65aabacf5db742b536645a11ae8ec3903e33e9fbf0` |
-| `harness/q2_zinv_reserve/rules.py` | `c69ce05e8f801eecca5772221061d99555711485a2b824c2ea2761057f8a0639` |
+| `harness/q2_zinv_reserve/rules.py` | `1348420f9b1984d76dfec63bfcf6b8895210a08bd0056818e710f7cd473db644` |
 | `harness/q2_zinv_reserve/run.py` | `5c4cec4070a76c4d506d4b175f2cad6625ec22429c45f3dd0301d379080c1c38` |
 | `infra/q2-zinv-reserve/run/zr_host.py` | `a62175f6e7b766f23ba8ae53b818fa0fce03cbbf9e23f2789e9867689c654349` |
 <!-- q2zr-code-table end -->
@@ -244,10 +244,11 @@ Computed by `harness/q2_zinv_reserve/rules.py` (`judge`) over the rescored rows;
   went missing between the digest taken before the two scorings and the one taken after.
 - **Outcome.**
   - INCOMPLETE: any row of Z or V is invalid (after the one rerun of section 5).
-  - NOT_TESTABLE: `n_Z` = 0.
+  - FAIL: B fails (whatever `n_Z`), or `n_Z` is at least 1 and A fails; the failed
+    conditions are named.
+  - NOT_TESTABLE: `n_Z` = 0 and B holds.
   - PASS: A and B hold and `n_V` is at least 1.
   - PASS_A_ONLY: A holds and `n_V` = 0 (B untested).
-  - FAIL: otherwise, with the failed conditions named.
 - **Status (dossier O4).** `descriptive` when `n_Z` < 20 or `t_Z` < 8; otherwise
   `registered_rule`.
 

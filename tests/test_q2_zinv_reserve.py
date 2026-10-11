@@ -132,6 +132,7 @@ def test_validity_failures_on_decision_rows_make_the_run_incomplete():
 
 def test_edge_outcomes_and_reported_quantities():
     assert rules.judge([vrow("v")], n_boot=50)["outcome"] == "NOT_TESTABLE"
+    assert rules.judge([vrow("v", zinv=1.0)], n_boot=50)["outcome"] == "FAIL"
     assert rules.judge(zrows(15, 6), n_boot=50)["outcome"] == "PASS_A_ONLY"
     errored = zrows(15, 6)
     errored[3].update(zinv=None, zinv_error="ValueError: x")
