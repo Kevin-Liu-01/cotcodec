@@ -4,24 +4,23 @@
 
 - S1a is complete and verified (D66): no harness difference detected, DR5
   INCONCLUSIVE, so no S1b. The host is idle.
-- Running: a CPU-only design study on S1a's records. It compares successor
-  designs within 8 GPU-h and sizes S2's power gate, on branch
-  `stage0/q2-design-study`, and its recommendation decides Q2's next step.
-  If the session ends, relaunch it from its saved script (archived privately);
-  it writes nothing outside its branch.
-- Also running (D67, D68): wave 1 scored E3 52, E5 54, E7 51, C5 54 and S2 49
-  (all merged; every triad refuted). Each now gets one repair run with D60's
-  stop line; S2's moves onto Q2's certified OSWorld stack. No candidate can
-  score 100 without the trust store (D24), so running any first step needs
-  Kevin's admission ruling. E4 and C3 ended at honest exits (D63, D65).
+- Q2 (D69): the design study recommends closing S1b and the harness-scale
+  question; no design within 8 GPU-h can admit S1b. S1a stands as Q2's
+  answer (rerun noise 20-33% of variance, task-by-harness 3-4%). Successor E
+  (6.77 cap-GPU-h; decisive DR2 0.83-0.87) stays available to Kevin.
+- Backfill and gated lines (D67, D68): wave 1 scored E3 52, E5 54, E7 51,
+  C5 54 and S2 49. The repair runs closed C5 (58), E5 (51) and E3 (49) at
+  honest exits; S2 (moved onto the certified OSWorld stack) and E7 are still
+  running. No candidate can score 100 without the trust store (D24). E4 and
+  C3 ended at honest exits (D63, D65).
 
 ## State
 
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 16 rows). Decisions taken
-on Kevin's behalf are D1-D68 in `program/decisions.md`. GPU-hours are in
-`program/state.json` (`gpu_hours_ledger`, physical hours): 10.08 in total.
+on Kevin's behalf are D1-D69 in `program/decisions.md`. GPU-hours are in
+`program/state.json` (`gpu_hours_ledger`, physical hours): 10.25 in total.
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -58,7 +57,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D68, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D69, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 
