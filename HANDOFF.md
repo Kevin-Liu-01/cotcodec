@@ -42,8 +42,9 @@ Q1 Stage 0 is closed on the audit-metric study (D46): under TF32 a tolerance
 audit certifies "not grossly wrong", not 1% correctness
 (`program/evidence/2026-10-08/q1-audit-metric-study/`).
 
-## In progress (D71-D73)
+## In progress (D71-D79)
 
+Nothing is running. Since D71:
 - The question-renewal dossier is done
   (`program/evidence/2026-10-11/question-renewal/dossier.md`). It recommends
   R01 (rerun-noise sources) as lead, R03 (completing the checker-mutation
@@ -51,24 +52,19 @@ audit certifies "not grossly wrong", not 1% correctness
   Kevin's.
 - The Q2 technical report draft is merged (`paper/q2-report/`), unpublished.
   The corrections it found are recorded in D72.
-- Finished since D73:
-  - S2 v3 scored 60, then 65, and waits on Kevin's five asks (D76).
-  - R01 scored 58, then 57, and ended at an honest exit. Its records-only
-    finding stands: serving nondeterminism, not the environment, drives
-    S1a's rerun disagreement (D77).
-- K2 (`q2-evaluator-mutation-v1-k2`) is frozen as ledger row 17 (freeze
-  commit `7d9c881a`; D78) and is running from that commit (CPU only, about
-  1 h), followed by the report step, the parent analysis rerun with
-  `--k2-report`, and a fresh verifier. Every output carries the
-  blind-adjudication warning.
+- S2 v3 scored 60, then 65 (the best score), and waits on Kevin's five asks
+  (D76).
+- R01 scored 58, then 57, and ended at an honest exit. Its records-only
+  finding stands: serving nondeterminism, not the environment, drives S1a's
+  rerun disagreement (D77).
+- K2 (`q2-evaluator-mutation-v1-k2`), ledger row 17, ran as job 1186 and was
+  VERIFIED and independently reproduced (D79). 78 of 78 compared pairs agree
+  with the offline verdicts in both in-VM runs, and 41 of 41 candidate events
+  reproduce. The checker-mutation study's label is now "VM fidelity checked
+  (K2)". Its remaining step is Kevin's blind adjudication, then one more
+  analysis rerun with `--k2-report`.
 - R04 is verified ready to freeze; its freeze and three reserved items are
   Kevin's (D78).
-- K2 VM-fidelity addendum: re-audit fixed and verified, frozen (row 17) and
-  run as job 1186: VERIFIED; the parent analysis was rerun with
-  `--k2-report` (D78; branch `ops/q2-mutation-k2`). After Kevin's answers the
-  analysis is rerun once more with `--k2-report`.
-- R04 nuisance-invariance study: verified ready to freeze; its freeze and its
-  three reserved items are Kevin's (D77, D78).
 
 ## Waiting on Kevin
 
@@ -76,8 +72,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D78, the host inotify limit behind N* = 32, and the outward actions (disclosures
-before their sign-off, review of D1-D78, R04's freeze and its three reserved items, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D79, R04's freeze and its three reserved items, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 

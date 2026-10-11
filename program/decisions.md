@@ -1428,3 +1428,26 @@ with the blind-adjudication warning: Kevin answers the 34-item pool and the
 25-item spot check before reading K2's verdicts. R04's re-audit fix was
 verified ready to freeze (`stage0/r04-fix2`, merged). Its freeze is Kevin's,
 together with his three reserved items (D77).
+
+**D79. K2 VERIFIED: the checker-mutation study's results hold inside real
+VMs.** The frozen K2 job (ledger row 17; job 1186, CPU only, 65 min, from the
+freeze commit's export, with no other Slurm job running) scored 238 of 246
+attempts. The fitness gate passes: 2 of 80 pairs were excluded (8 allowed),
+both VM infrastructure failures on task 51f5801c, where a LibreOffice window
+left open by setup did not quit in time. That task shape was not covered by
+any development job. All 78 compared pairs agree with the offline lock-exact
+verdict in both runs (41 pass, 37 fail), so no pair is unexplained and no
+family is dropped. All 41 candidate events, including the `compare_pptx_files`
+z-order false negatives, reproduce in both runs (descriptive).
+`compare_pptx_files_tolerant` has no compared pair and is reported as not
+covered. The parent analysis was rerun with `--k2-report`. It differs from the
+committed analysis only in its label, "offline harness, VM fidelity
+unverified" becoming "VM fidelity checked (K2)". A control run without the
+flag reproduces the committed analysis byte for byte. A fresh verifier
+reproduced the outcome, the report and the rerun. It noted three low-severity
+points: a HANDOFF merge conflict, now resolved; the dev-split K2 directories
+lacking their own blind README (their items are disjoint from Kevin's pool;
+the top README carries the warning); and the dated 2026-10-08 results README
+still reading "K2: no executor", which this decision supersedes. The
+checker-mutation note (R03) now waits only on Kevin's blind adjudication and
+spot check. After it, the analysis is rerun once more with `--k2-report`.
