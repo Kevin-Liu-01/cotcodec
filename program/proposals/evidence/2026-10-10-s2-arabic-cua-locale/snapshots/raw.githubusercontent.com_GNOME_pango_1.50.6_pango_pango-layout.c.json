@@ -1,0 +1,24 @@
+{
+ "url": "https://raw.githubusercontent.com/GNOME/pango/1.50.6/pango/pango-layout.c",
+ "fetched_at": "2026-10-11T00:18:27Z",
+ "http_status": 200,
+ "raw_bytes": 234992,
+ "raw_sha256": "74824721761f9cd6fac07c8ad6a588e384219f2f3f6fdaa068b641176d761211",
+ "raw_stored": false,
+ "licence": "LGPL-2.0",
+ "extract": {
+  "patterns": [
+   "auto_dir\\s*=",
+   "pango_layout_set_auto_dir",
+   "auto-dir"
+  ],
+  "lines": {
+   "224": "layout->auto_dir = TRUE;",
+   "908": "* pango_layout_set_auto_dir:",
+   "933": "pango_layout_set_auto_dir (PangoLayout *layout,",
+   "938": "auto_dir = auto_dir != FALSE;",
+   "942": "layout->auto_dir = auto_dir;"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}

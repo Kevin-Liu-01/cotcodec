@@ -1,0 +1,30 @@
+{
+ "url": "https://raw.githubusercontent.com/GNOME/gtk/3.24.33/gtk/gtkmain.c",
+ "fetched_at": "2026-10-11T00:18:26Z",
+ "http_status": 200,
+ "raw_bytes": 80086,
+ "raw_sha256": "b591026ada215a7d02e2753c2a6995f0b1f4cb96219a9c2c22a34dce5fcaa7dc",
+ "raw_stored": false,
+ "licence": "LGPL-2.1",
+ "extract": {
+  "patterns": [
+   "default:LTR",
+   "default:RTL",
+   "gtk_get_locale_direction"
+  ],
+  "lines": {
+   "748": "gtk_widget_set_default_direction (gtk_get_locale_direction ());",
+   "1240": "* gtk_get_locale_direction:",
+   "1260": "* direction = gtk_get_locale_direction ();",
+   "1269": "gtk_get_locale_direction (void)",
+   "1271": "/* Translate to default:RTL if you want your widgets",
+   "1272": "* to be RTL, otherwise translate to default:LTR.",
+   "1274": "* it isn't default:LTR or default:RTL it will not work",
+   "1276": "gchar            *e   = _(\"default:LTR\");",
+   "1279": "if (g_strcmp0 (e, \"default:RTL\") == 0)",
+   "1281": "else if (g_strcmp0 (e, \"default:LTR\") != 0)",
+   "1282": "g_warning (\"Whoever translated default:LTR did so wrongly. Defaulting to LTR.\");"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}

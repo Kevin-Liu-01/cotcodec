@@ -1,0 +1,25 @@
+{
+ "url": "https://raw.githubusercontent.com/GNOME/gtk/2.24.33/gtk/gtkmain.c",
+ "fetched_at": "2026-10-11T00:18:26Z",
+ "http_status": 200,
+ "raw_bytes": 72431,
+ "raw_sha256": "ead8aa678040800d7866c6e306b24090d6658bc002fc55026e168d0510f8b05f",
+ "raw_stored": false,
+ "licence": "LGPL-2.1",
+ "extract": {
+  "patterns": [
+   "default:LTR",
+   "default:RTL"
+  ],
+  "lines": {
+   "750": "/* Translate to default:RTL if you want your widgets",
+   "751": "* to be RTL, otherwise translate to default:LTR.",
+   "753": "* it isn't default:LTR or default:RTL it will not work",
+   "755": "char *e = _(\"default:LTR\");",
+   "756": "if (strcmp (e, \"default:RTL\")==0)",
+   "758": "else if (strcmp (e, \"default:LTR\"))",
+   "759": "g_warning (\"Whoever translated default:LTR did so wrongly.\\n\");"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}

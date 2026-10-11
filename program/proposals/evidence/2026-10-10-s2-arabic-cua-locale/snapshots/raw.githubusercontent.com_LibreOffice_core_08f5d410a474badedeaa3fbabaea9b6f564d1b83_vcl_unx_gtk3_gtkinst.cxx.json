@@ -1,0 +1,20 @@
+{
+ "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/unx/gtk3/gtkinst.cxx",
+ "fetched_at": "2026-10-11T00:18:24Z",
+ "http_status": 200,
+ "raw_bytes": 880944,
+ "raw_sha256": "a458fb124fda6e45a6ac0c0d0102846420221a38274ddde4e78096d62bf7a717",
+ "raw_stored": false,
+ "licence": "MPL-2.0",
+ "extract": {
+  "patterns": [
+   "gtk_widget_set_default_direction",
+   "GetLayoutRTL"
+  ],
+  "lines": {
+   "2159": "return AllSettings::GetLayoutRTL();",
+   "4887": "AllSettings::GetLayoutRTL() ? GTK_TEXT_DIR_RTL : GTK_TEXT_DIR_LTR,"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}

@@ -1,0 +1,22 @@
+{
+ "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/source/outdev/outdev.cxx",
+ "fetched_at": "2026-10-11T00:18:21Z",
+ "http_status": 200,
+ "raw_bytes": 23945,
+ "raw_sha256": "2e9950a86e043513ac77fc7c38a9872ce76daba61eade8be051d618f19354079",
+ "raw_stored": false,
+ "licence": "MPL-2.0",
+ "extract": {
+  "patterns": [
+   "GetLayoutRTL",
+   "BiDiRtl \\|",
+   "ComplexTextLayoutFlags::Default"
+  ],
+  "lines": {
+   "85": "mnTextLayoutMode                = vcl::text::ComplexTextLayoutFlags::Default;",
+   "87": "if( AllSettings::GetLayoutRTL() ) //#i84553# tip BiDi preference to RTL",
+   "88": "mnTextLayoutMode            = vcl::text::ComplexTextLayoutFlags::BiDiRtl | vcl::text::ComplexTextLayoutFlags::TextOriginLeft;"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}

@@ -1,0 +1,24 @@
+{
+ "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/source/text/ImplLayoutArgs.cxx",
+ "fetched_at": "2026-10-11T00:18:20Z",
+ "http_status": 200,
+ "raw_bytes": 10328,
+ "raw_sha256": "8e71c33ac7cee35945b68f1a62709cd2ef122fd4782ab67877516123b81da3fa",
+ "raw_stored": false,
+ "licence": "MPL-2.0",
+ "extract": {
+  "patterns": [
+   "BiDiRtl",
+   "ubidi_setPara",
+   "nLevel"
+  ],
+  "lines": {
+   "50": "bool bRTL(mnFlags & SalLayoutFlags::BiDiRtl);",
+   "56": "UBiDiLevel nLevel = (mnFlags & SalLayoutFlags::BiDiRtl) ? 1 : 0;",
+   "65": "ubidi_setPara(pParaBidi, reinterpret_cast<const UChar*>(mrStr.getStr()) + mnMinCharPos,",
+   "66": "nLength, nLevel, nullptr, &rcI18n);",
+   "227": "TEST(BiDiRtl);"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}

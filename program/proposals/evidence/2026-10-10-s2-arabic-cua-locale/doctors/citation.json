@@ -1,11 +1,11 @@
 {
  "doctor": "Citation",
  "status": "PASS",
- "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "D68 repair by the single owner (Claude agent), 2026-10-10/11 UTC; not an independent review",
  "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
  "protocol": "ARS claim_verification_protocol: claim registry, source tracing, cross-referencing; paywalled or blocked sources marked UNVERIFIABLE_ACCESS or ABSTRACT_ONLY; first-party numbers labelled",
- "evidence": "39 claims with locators, dates, read status and verdicts; every primary-domain URL in the proposal snapshotted with HTTP status and body hash (snapshots/); the LibreOffice blob URL returned HTTP 503 twice and is cited by its raw.githubusercontent.com URL instead; the two OpenReview pages return an HTTP 200 browser challenge and verify nothing about content",
+ "evidence": "56 claims (C01-C56) with locators, dates, read status and verdicts; C22-C25 are Relay history; every primary-domain URL in the proposal snapshotted with HTTP status and body hash (snapshots/); the 13 source files behind the per-application switches snapshotted with matched line numbers; the two OpenReview pages are HTTP 200 browser challenges and verify nothing about content",
  "claims": [
   {
    "claim_id": "C01",
@@ -194,7 +194,8 @@
    "date": "2026-10-07",
    "locator": "summary tables",
    "read_status": "repository",
-   "verdict": "VERIFIED"
+   "verdict": "VERIFIED",
+   "scope_note": "wave 1's price input; superseded in the repair by S1a's realized cost card and the Q2 design study's slot rule (C42)"
   },
   {
    "claim_id": "C22",
@@ -203,7 +204,8 @@
    "date": "HEAD e6c815e (2026-10-05)",
    "locator": "files and lines as listed",
    "read_status": "repository (synthesis read-only; fonts by the cross-domain cell's fontTools count)",
-   "verdict": "VERIFIED"
+   "verdict": "VERIFIED",
+   "scope_note": "wave-1 history only (Relay); no D68-repair claim rests on it"
   },
   {
    "claim_id": "C23",
@@ -212,7 +214,8 @@
    "date": "2026-10-10",
    "locator": "logs",
    "read_status": "first-party, this program",
-   "verdict": "FIRST_PARTY"
+   "verdict": "FIRST_PARTY",
+   "scope_note": "wave-1 history only (Relay); no D68-repair claim rests on it"
   },
   {
    "claim_id": "C24",
@@ -221,7 +224,8 @@
    "date": "2026-10-10",
    "locator": "probe output in the kill-shot cell report",
    "read_status": "first-party, this program",
-   "verdict": "FIRST_PARTY"
+   "verdict": "FIRST_PARTY",
+   "scope_note": "wave-1 history only (Relay); no D68-repair claim rests on it"
   },
   {
    "claim_id": "C25",
@@ -230,7 +234,8 @@
    "date": "2026-10-05",
    "locator": "Outcomes",
    "read_status": "first-party (Relay)",
-   "verdict": "FIRST_PARTY"
+   "verdict": "FIRST_PARTY",
+   "scope_note": "wave-1 history only (Relay); no D68-repair claim rests on it"
   },
   {
    "claim_id": "C26",
@@ -357,14 +362,168 @@
    "locator": "OpenReview search abstract",
    "read_status": "abstract only; note page behind browser challenge",
    "verdict": "UNVERIFIABLE_ACCESS"
+  },
+  {
+   "claim_id": "C40",
+   "claim": "S1a pool: 79 of 113 tasks in LibreOffice Calc/Impress/Writer, Thunderbird, GIMP; 43 informative for Qwen3.5-9B (>= 1 of 8 episodes; 17 at 8 of 8); 26 strict LibreOffice; mean 9B success on the 43 is 0.70",
+   "source": "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl; program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json",
+   "date": "2026-10-10",
+   "locator": "compute/repair-d68/power-osworld.json task_screen",
+   "read_status": "repository, recomputed by power-osworld.py",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C41",
+   "claim": "Coordinate-click setup steps (550ce7e7, a669ef01; 5 of 6 VLC tasks); checkers reading registrymodifications.xcu (3), prefs.js, xulstore.json, gimprc (2)",
+   "source": "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+   "date": "2026-10-10",
+   "locator": "setup.config_steps; checker_input_sha256",
+   "read_status": "repository",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C42",
+   "claim": "GPU time set by VM slots; cap rule ceil(3 + L/60 + (N s/V + drain) x 1.2 x 1.05 / 60) min; 9B start-up 113.2 s, drain 104.6 s",
+   "source": "stage0/q2-design-study 79096f8 program/evidence/2026-10-10/q2-design-study/cost-model.json; harness/q2_design/cost.py",
+   "date": "2026-10-10",
+   "locator": "cost-model.json method, startup_s_max, by_size.9B.drain_s",
+   "read_status": "repository (branch)",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C43",
+   "claim": "D53 scope: L0-fixed runtime and both harness adapters on this host as configured, <= 32 VMs; not another image, untested catalog instances, or the guest server under task applications",
+   "source": "program/decisions.md D53; program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md",
+   "date": "2026-10-09",
+   "locator": "D53 text; README fourth stage",
+   "read_status": "repository",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C44",
+   "claim": "Mirrored LibreOffice UI: every OutputDevice starts in BiDiRtl text mode; VCL calls ubidi_setPara with explicit paragraph level 1",
+   "source": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/source/outdev/outdev.cxx; https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/source/text/ImplLayoutArgs.cxx",
+   "date": "2026-10-11 (fetch)",
+   "locator": "outdev.cxx 87-88; ImplLayoutArgs.cxx 56, 65-66",
+   "read_status": "source at 08f5d410, snapshot with line numbers",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C45",
+   "claim": "LibreOffice loads gettext catalogs from program/resource for every UI language via boost.locale (no en-US special case); qtz key-id pseudo-locale",
+   "source": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/unotools/source/i18n/resmgr.cxx",
+   "date": "2026-10-11 (fetch)",
+   "locator": "112-145, 198-213",
+   "read_status": "source",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C46",
+   "claim": "LibreOffice GTK3 plugin sets GTK default direction from AllSettings::GetLayoutRTL()",
+   "source": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/unx/gtk3/gtkinst.cxx",
+   "date": "2026-10-11 (fetch)",
+   "locator": "4887",
+   "read_status": "source",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C47",
+   "claim": "GTK default direction = translation of 'default:LTR' in GTK's catalog",
+   "source": "https://raw.githubusercontent.com/GNOME/gtk/3.24.33/gtk/gtkmain.c; https://raw.githubusercontent.com/GNOME/gtk/2.24.33/gtk/gtkmain.c",
+   "date": "2026-10-11 (fetch)",
+   "locator": "3.24.33: 748, 1269-1282; 2.24.33: 750-759",
+   "read_status": "source",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C48",
+   "claim": "Pango layouts default to auto_dir = TRUE",
+   "source": "https://raw.githubusercontent.com/GNOME/pango/1.50.6/pango/pango-layout.c",
+   "date": "2026-10-11 (fetch)",
+   "locator": "224, 908-942",
+   "read_status": "source",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C49",
+   "claim": "Gecko IsAppLocaleRTL: bidi pseudo-locale -> RTL, accented -> LTR, else the app locale; no intl.uidirection",
+   "source": "https://raw.githubusercontent.com/mozilla/gecko-dev/master/intl/locale/LocaleService.cpp",
+   "date": "2026-10-11 (fetch, master)",
+   "locator": "IsAppLocaleRTL (lines 276-290); the pattern intl.uidirection matched no line",
+   "read_status": "source (master, not the Thunderbird build in the image)",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C50",
+   "claim": "FSI takes the direction of the first strong character up to the matching PDI (X5c)",
+   "source": "https://www.unicode.org/reports/tr9/",
+   "date": "2026-10-11 (fetch)",
+   "locator": "X5c; Table 1 (FSI, PDI)",
+   "read_status": "standard",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C51",
+   "claim": "unicode-bidi: plaintext sets each paragraph's base direction from its content",
+   "source": "https://www.w3.org/TR/css-writing-modes-3/",
+   "date": "2026-10-11 (fetch)",
+   "locator": "unicode-bidi property, plaintext value",
+   "read_status": "standard",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C52",
+   "claim": "Finalized nodes in a lower configuration layer cannot be overridden by higher layers; EnglishFunctionName, UIMirroring, CTLFont are schema keys",
+   "source": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/configmgr/source/xcuparser.cxx; https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/officecfg/registry/schema/org/openoffice/Office/Calc.xcs; https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/officecfg/registry/schema/org/openoffice/Office/Common.xcs",
+   "date": "2026-10-11 (fetch)",
+   "locator": "xcuparser.cxx 221-222, 264-266, 311 (finalized); Calc.xcs 1508; Common.xcs 6400, 6458",
+   "read_status": "source",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C53",
+   "claim": "VAF: 8 visual-attribute families (background, text colour, font family, font size, position, card size, clarity, order); no language, script or direction variant",
+   "source": "https://arxiv.org/abs/2601.21961",
+   "date": "2026 (ACL Findings 2026)",
+   "locator": "Table 1; Sec. 4",
+   "read_status": "full text (orx paper --full)",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C54",
+   "claim": "Reliability of computer-use agents under repeated execution; three sources of unreliability",
+   "source": "https://arxiv.org/abs/2604.17849",
+   "date": "2026-04",
+   "locator": "report sections 1-3",
+   "read_status": "alphaXiv report (abstract level)",
+   "verdict": "PARTLY_ABSTRACT"
+  },
+  {
+   "claim_id": "C55",
+   "claim": "Automated GUI mirroring test: x' = W - (x + w) within 1-3 px",
+   "source": "US9529606B1 family (IBM), Google Patents US9891933B2",
+   "date": "priority 2015-06-24",
+   "locator": "claims",
+   "read_status": "metadata via wave 1's novelty refuter (WebFetch); not re-fetched in this run",
+   "verdict": "METADATA_ONLY"
+  },
+  {
+   "claim_id": "C56",
+   "claim": "Render oracle on Chromium fixtures: 7 of 7 variants as expected; A/A tolerance 0.136; smallest coupled leak 0.167",
+   "source": "compute/repair-d68/render-oracle/oracle-validation.json",
+   "date": "2026-10-11",
+   "locator": "variants, aa, tolerance",
+   "read_status": "this program (computed)",
+   "verdict": "VERIFIED"
   }
  ],
  "counts": {
+  "VERIFIED": 41,
   "ABSTRACT_ONLY": 4,
   "FIRST_PARTY": 4,
-  "PARTLY_ABSTRACT": 2,
+  "PARTLY_ABSTRACT": 3,
   "UNVERIFIABLE_ACCESS": 3,
-  "VERIFIED": 26
+  "METADATA_ONLY": 1
  },
- "remediation": "Read PuMVR (2606.17188), GAIA-v2-LILT and the lexical-coupling paper (2608.21794) in full before any delta row rests on them"
+ "remediation": "Read PuMVR (2606.17188) and GAIA-v2-LILT (2604.24929) in full before any delta row rests on them; re-fetch the IBM patent record into snapshots"
 }

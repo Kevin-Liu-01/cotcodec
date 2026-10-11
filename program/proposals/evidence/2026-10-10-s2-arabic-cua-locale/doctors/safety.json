@@ -1,9 +1,9 @@
 {
  "doctor": "Safety",
  "status": "PASS",
- "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "D68 repair by the single owner (Claude agent), 2026-10-10/11 UTC; not an independent review",
  "pass_condition": "Safety, monitorability, data rights, and project red lines addressed",
- "evidence": "Synthetic self-hosted app in a --network none container whose browser may fetch only the app origin; the agent generates no code (D3/D7 not triggered); per-action logging and replayable seeds; licences: Relay MIT (Kevin), Lato OFL, Noto Sans Arabic OFL 1.1, i18next MIT, Tesseract Apache-2.0, Playwright Apache-2.0, Qwen3.5-9B Apache-2.0; proprietary Camber font excluded; Relay .env.local never read and .runtime never copied; outward actions (pushing Relay's branch, engaging a reviewer) reserved to Kevin (D2); host rule respected (one read-only squeue, queue empty at 2026-10-10T21:42:52Z; no host job); scout scripts copied into the bundle with local test tokens redacted.",
+ "evidence": "Offline VMs on public OSWorld tasks (synthetic or public documents); the agent's actions stay inside the VM and no generated code runs on the host (D3, D7 not triggered); per-episode logging of actions, observation hashes, checker inputs and verdicts, thinking traces kept; licences: OSWorld Apache-2.0, LibreOffice and Thunderbird MPL-2.0, GIMP GPL-3.0 (run, not redistributed), GTK LGPL, fonts OFL or recorded, Qwen3.5-9B Apache-2.0; pseudo-locale catalogs stay inside the image, which is not redistributed; no outward actions; host rule respected (the repair made no host contact).",
  "remediation": "none"
 }

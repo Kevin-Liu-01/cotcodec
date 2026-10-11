@@ -1,0 +1,27 @@
+{
+ "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/unotools/source/i18n/resmgr.cxx",
+ "fetched_at": "2026-10-11T00:18:22Z",
+ "http_status": 200,
+ "raw_bytes": 11713,
+ "raw_sha256": "4597e52653f6d195a57f033dad41ab38a83c0afbe5ca14de4d915477514276b3",
+ "raw_stored": false,
+ "licence": "MPL-2.0",
+ "extract": {
+  "patterns": [
+   "add_messages_path",
+   "pgettext\\(",
+   "== \\\"qtz\\\"",
+   "bindtextdomain"
+  ],
+  "lines": {
+   "136": "// add_messages_path is documented to treat path string in the *created* locale's encoding",
+   "144": "gen.add_messages_path(std::string(sPath));",
+   "147": "bindtextdomain(aPrefixName.data(), sPath.getStr());",
+   "204": "if (std::use_facet<boost::locale::info>(loc).language() == \"qtz\")",
+   "212": "const std::string ret = boost::locale::pgettext(sContextAndId.mpContext, sContextAndId.getId(), loc);",
+   "235": "if (std::use_facet<boost::locale::info>(loc).language() == \"qtz\")",
+   "243": "const std::string ret = boost::locale::npgettext(aContextSingularPlural.mpContext, aContextSingularPlural.mpSingular, aContextSingularPlural.mpPlural, n, loc);"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}

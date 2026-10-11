@@ -1,0 +1,10 @@
+{
+ "run": "S2 gauntlet, fresh run under D68 (repair by the single owner)",
+ "proposal": "paragraph-ce477c3d.txt",
+ "closest_prior": "paragraph-6d1a67fc.txt",
+ "closest_prior_id": "arXiv:2506.04135 (macOSWorld: A Multilingual Interactive Benchmark for GUI Agents, Yang, Ci and Shou, NeurIPS 2025; v4 2025-10-18); paragraph rewritten for this run from wave 1's full-text reads (Secs. 3.2-3.4, 4.1-4.2, 5.1-5.3, Tables 3-4, App. D.1, checklist item 7)",
+ "runner_up_prior_id": "arXiv:2609.38184 (RealGUINoise); no packet written",
+ "naming": "file names are the first 8 hex characters of the SHA-256 of each paragraph's text",
+ "wave1_packet": "compute/blind-roles.json (paragraph-434639fe.txt proposal, paragraph-9242d8b5.txt closest prior), left as it was",
+ "note": "Role mapping for the recorder only. Never give this file to the critic."
+}

@@ -1,0 +1,18 @@
+{
+ "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/officecfg/registry/schema/org/openoffice/Office/Calc.xcs",
+ "fetched_at": "2026-10-11T00:18:25Z",
+ "http_status": 200,
+ "raw_bytes": 81259,
+ "raw_sha256": "7f26a797a408706b613311233cac1bd4c279f292fdf6c5d2522aac71f02cd54a",
+ "raw_stored": false,
+ "licence": "MPL-2.0",
+ "extract": {
+  "patterns": [
+   "EnglishFunctionName"
+  ],
+  "lines": {
+   "1508": "<prop oor:name=\"EnglishFunctionName\" oor:type=\"xs:boolean\" oor:nillable=\"false\">"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}
