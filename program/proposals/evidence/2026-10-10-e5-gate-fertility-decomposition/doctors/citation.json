@@ -2,10 +2,10 @@
  "doctor": "Citation",
  "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "pass by the single repair owner under D68 (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
  "protocol": "ARS claim-verification protocol: claim registry, locators, read status and verdict per claim; abstract-only and report-level reads labelled as such",
- "evidence": "Claim registry of 42 claims parsed from the proposal; every arXiv and Hugging Face URL snapshotted with HTTP 200 and arXiv version histories; Lee et al. Secs. 2.2-2.3, 4.1-4.2 and App. A, Boesch and Wee Sec. 4, 2507.06457 Sec. 3 and Limitations, 2506.19004 Sec. 4.1, SpectralShift abstract and App. B.2 and MambaExtend's abstract re-read by synthesis in the cells' full texts; first-party labels on card and release-paper numbers.",
+ "evidence": "Claim registry of 46 claims parsed from the proposal. The four ledger rows wave 1 closed on abstracts (2004.12265, 2404.03646, 2406.14528, 1804.11188) were re-read in full with orx paper --full; 2606.27510 (Prop. 3.1, Theorem 3.2) and the legacy direction-20 span oracle are credited; 2609.33093 Secs. 2.1-2.3, 4.2, 5-6 and App. B and 2609.16183's abstract, Axis 3 and Secs. 5-6 re-read for the delta rows. Every arXiv and Hugging Face URL is snapshotted with HTTP 200.",
  "claim_registry": [
   {
    "claim_id": "C01",
@@ -15,7 +15,7 @@
     "https://arxiv.org/abs/2609.33093"
    ],
    "locator": "Sec. 4.2, Fig. 7(a-b)",
-   "read_status": "full, re-read",
+   "read_status": "full, re-read; re-read (repair)",
    "verdict": "VERIFIED"
   },
   {
@@ -24,7 +24,7 @@
    "source": "same",
    "urls": [],
    "locator": "Fig. 7 legend; Fig. 8; Sec. 4.2",
-   "read_status": "full, re-read",
+   "read_status": "full, re-read; re-read (repair)",
    "verdict": "VERIFIED"
   },
   {
@@ -33,7 +33,7 @@
    "source": "same",
    "urls": [],
    "locator": "Sec. 2.3",
-   "read_status": "full, re-read",
+   "read_status": "full, re-read; re-read (repair)",
    "verdict": "VERIFIED"
   },
   {
@@ -51,7 +51,7 @@
    "source": "same",
    "urls": [],
    "locator": "Sec. 4.2, Fig. 7(c)",
-   "read_status": "full, re-read",
+   "read_status": "full, re-read; re-read (repair)",
    "verdict": "VERIFIED"
   },
   {
@@ -80,7 +80,7 @@
     "https://arxiv.org/abs/2609.16183"
    ],
    "locator": "Sec. 4 \"Axis 3\", Table 1, Sec. 5",
-   "read_status": "full, re-read",
+   "read_status": "full, re-read; re-read (repair)",
    "verdict": "VERIFIED"
   },
   {
@@ -217,14 +217,14 @@
   },
   {
    "claim_id": "C21",
-   "claim": "DeciMamba: Mamba's limited length generalisation traced to the training-length receptive field; a context-extension method",
+   "claim": "DeciMamba: Mamba's limited length generalisation traced to a restricted effective receptive field set by training length; a data-dependent decimation (pooling) method for context extension",
    "source": "[2406.14528](https://arxiv.org/abs/2406.14528)",
    "urls": [
     "https://arxiv.org/abs/2406.14528"
    ],
-   "locator": "Abstract",
-   "read_status": "abstract",
-   "verdict": "VERIFIED_ABSTRACT_ONLY"
+   "locator": "Abstract; Secs. 1, 4",
+   "read_status": "full (repair)",
+   "verdict": "VERIFIED"
   },
   {
    "claim_id": "C22",
@@ -272,36 +272,36 @@
   },
   {
    "claim_id": "C26",
-   "claim": "Learnable gates give quasi-invariance to time transformations",
+   "claim": "Postulating invariance to time warpings leads to gates: a learnable gate equal to the local time-stretch rate makes a recurrent class quasi-invariant to time warping (continuous time, then discretised)",
    "source": "[1804.11188](https://arxiv.org/abs/1804.11188)",
    "urls": [
     "https://arxiv.org/abs/1804.11188"
    ],
-   "locator": "Abstract",
-   "read_status": "abstract",
-   "verdict": "VERIFIED_ABSTRACT_ONLY"
+   "locator": "Sec. 1 (time warping to gating); discrete-time translation",
+   "read_status": "full (repair)",
+   "verdict": "VERIFIED"
   },
   {
    "claim_id": "C27",
-   "claim": "Causal mediation with model components as mediators; natural direct and indirect effects",
+   "claim": "Causal mediation analysis with model components (neurons, attention heads) as mediators; natural direct and indirect effects estimated by intervention",
    "source": "[2004.12265](https://arxiv.org/abs/2004.12265)",
    "urls": [
     "https://arxiv.org/abs/2004.12265"
    ],
-   "locator": "Abstract",
-   "read_status": "abstract (synthesis addition)",
-   "verdict": "VERIFIED_ABSTRACT_ONLY"
+   "locator": "Abstract; Secs. 2-3",
+   "read_status": "full (repair)",
+   "verdict": "VERIFIED"
   },
   {
    "claim_id": "C28",
-   "claim": "Causal tracing and interchange interventions localise factual recall in Mamba",
+   "claim": "Activation patching (causal tracing, interchange interventions) adapted to a selective state-space model localises factual recall",
    "source": "[2404.03646](https://arxiv.org/abs/2404.03646)",
    "urls": [
     "https://arxiv.org/abs/2404.03646"
    ],
-   "locator": "Abstract",
-   "read_status": "abstract (synthesis addition)",
-   "verdict": "VERIFIED_ABSTRACT_ONLY"
+   "locator": "Abstract; Sec. 2",
+   "read_status": "full (repair)",
+   "verdict": "VERIFIED"
   },
   {
    "claim_id": "C29",
@@ -349,26 +349,26 @@
   },
   {
    "claim_id": "C33",
-   "claim": "WikiText-103 corpus",
+   "claim": "WikiText-103 corpus: train 28,475 articles, validation 60, test 60",
    "source": "[1609.07843](https://arxiv.org/abs/1609.07843); [dataset](https://huggingface.co/datasets/Salesforce/wikitext)",
    "urls": [
     "https://arxiv.org/abs/1609.07843",
     "https://huggingface.co/datasets/Salesforce/wikitext"
    ],
-   "locator": "CC BY-SA 3.0 and GFDL (HF tags)",
-   "read_status": "abstract; HF API",
-   "verdict": "VERIFIED_ABSTRACT_ONLY"
+   "locator": "Table 1; CC BY-SA 3.0 and GFDL (HF tags)",
+   "read_status": "full (repair); HF API",
+   "verdict": "VERIFIED"
   },
   {
    "claim_id": "C34",
-   "claim": "fla 0.5.2 computes GDN's gate in-kernel from the a_proj output, A_log and dt_bias; RWKV-7's log-decay is -0.6065 sigmoid(w_lora)",
+   "claim": "fla 0.5.2 computes GDN's gate in-kernel from the a_proj output, A_log and dt_bias; RWKV-7's log-decay is -0.6065 sigmoid(w_lora); GDN's read passes `o_norm`, an RMSNorm over each head's value dimension",
    "source": "[flash-linear-attention](https://github.com/fla-org/flash-linear-attention)",
    "urls": [
     "https://github.com/fla-org/flash-linear-attention"
    ],
    "locator": "layer sources read by the asset cell; re-read by synthesis",
-   "read_status": "code read",
-   "verdict": "VERIFIED"
+   "read_status": "code read; `layers/gated_deltanet.py` at v0.5.2 re-read (repair)",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
   },
   {
    "claim_id": "C35",
@@ -455,19 +455,54 @@
    "locator": "Abstract",
    "read_status": "full",
    "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C43",
+   "claim": "Activation patching by noising estimates NIE = PIE + INT, absorbing the mediator-bypass interaction; denoising estimates the pure indirect effect; INT scales with the distance between clean and patched activations",
+   "source": "[2606.27510](https://arxiv.org/abs/2606.27510) v1 2026-06-25",
+   "urls": [
+    "https://arxiv.org/abs/2606.27510"
+   ],
+   "locator": "Prop. 3.1; Thm. 3.2",
+   "read_status": "full (repair)",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C44",
+   "claim": "Legacy direction 20 registered a span oracle g'_t = g_t / r_s (per aligned sentence) and a forgetting-mass ledger F(s_L) / F(s_en)",
+   "source": "`legacy/directions/20-semantic-clock-gate-parity.md`",
+   "urls": [],
+   "locator": "Mechanism block",
+   "read_status": "repository",
+   "verdict": "VERIFIED"
+  },
+  {
+   "claim_id": "C45",
+   "claim": "Fragmentation, a lossless recoding into smaller units, can strictly increase the optimal finite-context log-loss",
+   "source": "[2605.13485](https://arxiv.org/abs/2605.13485)",
+   "urls": [
+    "https://arxiv.org/abs/2605.13485"
+   ],
+   "locator": "Abstract",
+   "read_status": "abstract (repair screening)",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
+  },
+  {
+   "claim_id": "C46",
+   "claim": "Delta-rule erase and write share one scalar gate in Gated DeltaNet; an erase-then-write rule decouples where to erase from where to write",
+   "source": "[2606.26560](https://arxiv.org/abs/2606.26560)",
+   "urls": [
+    "https://arxiv.org/abs/2606.26560"
+   ],
+   "locator": "Abstract",
+   "read_status": "abstract (repair screening)",
+   "verdict": "VERIFIED_ABSTRACT_ONLY"
   }
  ],
- "dossier_corrections": [
-  "GDN-1.3B training data is documented first-party (FineWeb-Edu, 100B tokens; 2507.06457 Sec. 3); the checkpoint has no licence",
-  "the 'modest decline' over 128 to 1024 filler tokens is measured on the 340M models only, with filler that writes to the state",
-  "a halved decay rate cannot identify the decay share (S1)",
-  "600 episodes per cell gives P(KILL | no decay share) of 0.59 at discordance 0.30 (S2)",
-  "the 16-language fund branch has no valid subject",
-  "the 3 GPU-h estimate: S3 central 1.26, high 3.29; caps 4.0"
+ "corrections": [
+  "wave-1 record: the pure decay cost in S1's worlds is 16-45 points (W6 K = 4 is 16.2), not 17-45",
+  "wave-1 proposal: 'the dossier's kill line is kept in its unit' was wrong; v2 states the line on the guessing-corrected scale (2.25 raw forced-choice points)",
+  "wave-1 proposal: subject R's registry entry records trust_remote_code: true and a vendoring blocker; v2 states it and clears it in prerequisite 2"
  ],
- "cell_corrections": [
-  "cross-domain cell: duplicated pieces without write normalisation are not decay-only in a delta-rule memory (S1 world W5: decay share 0.41 to 0.44)",
-  "asset cell: the 73,045 tok/s anchor was measured in image 0b3ecef0-architecture, not ed5d5a93"
- ],
- "remediation": "Open the psychology sources cited from metadata only before any write-up; read DeciMamba and GDN-2 in full if a delta row ever depends on more than their abstracts."
+ "remediation": "Open the psychology sources cited from metadata only before any write-up."
 }

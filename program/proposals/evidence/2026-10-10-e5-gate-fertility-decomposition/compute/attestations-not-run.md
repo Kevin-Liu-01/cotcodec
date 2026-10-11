@@ -32,3 +32,12 @@ target of the bundle's `container_smoke`, `slurm_test` and
 
 The deterministic research-direction doctor therefore reports FAIL, which is
 the expected and honest state.
+
+## Registration v2 (D68 repair, 2026-10-10)
+
+Unchanged in substance for `e5-gate-fertility-decomposition-v2`: no harness
+(now also the decay-transplant, CLAMP-LAST and DOSE hooks), no episode builder
+(now drawing passages from the WikiText-103 train split), no manifest, no
+container smoke, no Slurm dry run, no provenance check; subject G still not on
+the host and unlicensed; the repair used no host access. The repair's S1v2,
+S2v2 and S3v2 are CPU design evidence, not a pilot, and none is an orx node.

@@ -1,0 +1,477 @@
+{
+ "run": "E5 fresh gauntlet run under D68 (repair by the single owner)",
+ "orx_version": "0.2.2 (reports itself outdated against 0.2.18)",
+ "declared_queries": 80,
+ "reserved_for_refuters": 30,
+ "counted_by_repair_owner": 12,
+ "remaining_after_repair": 68,
+ "counting_rule": "successful orx discover calls count; failed calls (OpenAlex HTTP 429) are logged and not counted; paper reads are not counted",
+ "counted_queries": [
+  {
+   "qid": "r01",
+   "modality": "keyword",
+   "query": "decay gate intervention recurrent state interference interaction delta rule",
+   "extra_args": "",
+   "ran_at": "2026-10-10T23:55:59Z",
+   "return_code": 0,
+   "raw_sha256": "f12f67a708ec8c264c142c4beb14db8c3d1e485ef272f8f24ca6d2034340d76f",
+   "raw_bytes": 35827,
+   "returned_ids": [
+    "2609.38169",
+    "2609.32453",
+    "2608.22354",
+    "2608.27513",
+    "2606.26560",
+    "2609.24797",
+    "2609.21787",
+    "2609.16183",
+    "2609.09157",
+    "2609.07816",
+    "2609.36529",
+    "2609.04490",
+    "2609.36259",
+    "2608.30386",
+    "2608.15062"
+   ],
+   "purpose": "decay intervention x write interaction in delta-rule recurrent state (repair novelty: the factorial's components)"
+  },
+  {
+   "qid": "r02",
+   "modality": "embedding",
+   "query": "In a pretrained gated delta-rule language model, re-tokenize a passage into more tokens and separate the recall cost carried by the extra per-token decay from the cost carried by the extra writes, using a factorial of decay clamped to the canonical value or transplanted from the re-tokenized run, crossed with canonical or re-tokenized writes",
+   "extra_args": "--published-after 2026-01-01",
+   "ran_at": "2026-10-10T23:56:00Z",
+   "return_code": 0,
+   "raw_sha256": "f08e8c99b08712c2ceb29f4d6d5172d197e7fcb18e16a99ad6023231c26177b6",
+   "raw_bytes": 23034,
+   "returned_ids": [
+    "2609.27294",
+    "2609.20751",
+    "2610.05597",
+    "2609.03807",
+    "2610.05700",
+    "2610.05126",
+    "2610.02233",
+    "2610.04295",
+    "2609.30950",
+    "2609.32802",
+    "2609.23592",
+    "2609.25053",
+    "2607.01218",
+    "2609.08698",
+    "2609.00445"
+   ],
+   "purpose": "the v2 mechanism paragraph in plain words (published after 2026-01-01)"
+  },
+  {
+   "qid": "r03",
+   "modality": "keyword",
+   "query": "noising denoising pure indirect effect recurrent state space model",
+   "extra_args": "",
+   "ran_at": "2026-10-10T23:56:01Z",
+   "return_code": 0,
+   "raw_sha256": "f8f76b29b6fb6d9f4e7344761622d6f3b68001ce969204e9ab788caeb2e610e9",
+   "raw_bytes": 32922,
+   "returned_ids": [
+    "2608.25094",
+    "2609.35634",
+    "2610.09092",
+    "2607.19126",
+    "2609.39185",
+    "2608.03059",
+    "2609.11648",
+    "2607.19919",
+    "2609.10072",
+    "2606.24000",
+    "2607.07072",
+    "2604.28161",
+    "2604.21343",
+    "2606.02278",
+    "2603.28572"
+   ],
+   "purpose": "noising/denoising and pure indirect effect in recurrent or state-space models"
+  },
+  {
+   "qid": "r04",
+   "modality": "keyword",
+   "query": "How Linear Attention Remembers",
+   "extra_args": "--published-after 2026-09-27",
+   "ran_at": "2026-10-10T23:56:12Z",
+   "return_code": 0,
+   "raw_sha256": "33b32a0f5f1c8bb3a9621a9873b7ae9f9c9e0996d93463b9cfb32c953929f8af",
+   "raw_bytes": 32724,
+   "returned_ids": [
+    "2609.33093",
+    "2609.39034",
+    "2609.38109",
+    "2609.36529",
+    "2610.11214",
+    "2610.11251",
+    "2610.02816",
+    "2610.08578",
+    "2609.35349",
+    "2610.10761",
+    "2609.35751",
+    "2610.11798",
+    "2610.05842",
+    "2610.05739",
+    "2609.38166"
+   ],
+   "purpose": "closest prior's title phrase, follow-ups after its first version (2026-09-27)"
+  },
+  {
+   "qid": "r05",
+   "modality": "keyword",
+   "query": "Anatomy of Associative Recall in Fixed-State Recurrences",
+   "extra_args": "--published-after 2026-09-14",
+   "ran_at": "2026-10-10T23:56:14Z",
+   "return_code": 0,
+   "raw_sha256": "a3024b7fa68402147b70ab491156bb45f7f2cef94e56152c5305c2a7a4eb2484",
+   "raw_bytes": 30132,
+   "returned_ids": [
+    "2609.16183",
+    "2610.00232",
+    "2609.27268",
+    "2610.00307",
+    "2610.08251",
+    "2609.15651",
+    "2610.09458",
+    "2609.35948",
+    "2609.28256",
+    "2609.31486",
+    "2609.39034",
+    "2609.32453",
+    "2609.33520",
+    "2609.32814",
+    "2609.36259"
+   ],
+   "purpose": "runner-up prior's title phrase, follow-ups after its first version (2026-09-14)"
+  },
+  {
+   "qid": "r06",
+   "modality": "keyword",
+   "query": "tokenization granularity recurrent state decay recall subword fragmentation",
+   "extra_args": "",
+   "ran_at": "2026-10-10T23:56:14Z",
+   "return_code": 0,
+   "raw_sha256": "3de30e727c3e766ff88bc91191f45a4eb27d3814b3744136e3309e936e4879e0",
+   "raw_bytes": 33025,
+   "returned_ids": [
+    "2609.09719",
+    "2609.15991",
+    "2604.27263",
+    "2607.18600",
+    "2609.01386",
+    "2608.22734",
+    "2608.27513",
+    "2609.11516",
+    "2605.13485",
+    "2607.24276",
+    "2608.17325",
+    "2610.00232",
+    "2605.01188",
+    "2608.27658"
+   ],
+   "purpose": "tokenization granularity, recurrent decay, subword fragmentation"
+  },
+  {
+   "qid": "r07",
+   "modality": "embedding",
+   "query": "Does a recurrent language model forget more when the same text is split into more tokens because its forget gate ticks once per token, or because of the extra writes; inference-time decay intervention on frozen Mamba, RWKV or Gated DeltaNet checkpoints",
+   "extra_args": "--published-after 2026-06-01",
+   "ran_at": "2026-10-10T23:56:15Z",
+   "return_code": 0,
+   "raw_sha256": "63589d933a98e079eb7987212f38f6e30b06eb6d237c9516283b2bde21a2ea77",
+   "raw_bytes": 24475,
+   "returned_ids": [
+    "2609.21605",
+    "2609.35108",
+    "2609.33093",
+    "2609.19934",
+    "2610.08718",
+    "2609.12531",
+    "2609.28006",
+    "2609.34933",
+    "2610.05700",
+    "2609.37879",
+    "2609.08574",
+    "2609.34253",
+    "2610.03940",
+    "2609.04434",
+    "2609.30634"
+   ],
+   "purpose": "per-token forget gate vs extra writes under re-tokenization on frozen recurrent checkpoints (after 2026-06-01)"
+  },
+  {
+   "qid": "r09",
+   "modality": "keyword",
+   "query": "token fertility multilingual linear attention RWKV Mamba recall gate",
+   "extra_args": "",
+   "ran_at": "2026-10-10T23:57:08Z",
+   "return_code": 0,
+   "raw_sha256": "28a1aba43d338e6498e6cbd4748cf38103c6fc739fd073e11f658fab5b0be429",
+   "raw_bytes": 35617,
+   "returned_ids": [
+    "2610.11251",
+    "2608.30376",
+    "2609.07681",
+    "2609.39034",
+    "2608.02032",
+    "2608.28444",
+    "2609.28580",
+    "2609.36062",
+    "2609.16183",
+    "2608.29539",
+    "2607.00902",
+    "2609.08574",
+    "2607.25357",
+    "2605.22791",
+    "2607.17419"
+   ],
+   "purpose": "token fertility, multilingual recurrent models, gates"
+  },
+  {
+   "qid": "r10",
+   "modality": "embedding",
+   "query": "Patch only the forget-gate or decay values of a recurrent language model between two runs of the same text under different tokenizations, in both directions, to estimate pure and total indirect effects through the decay pathway and their interaction with the write pathway",
+   "extra_args": "",
+   "ran_at": "2026-10-10T23:57:08Z",
+   "return_code": 0,
+   "raw_sha256": "a1dfafece784d5a474e100e3c9671c765ca44e154cf600951322ef3a0983a9e5",
+   "raw_bytes": 24432,
+   "returned_ids": [
+    "2610.05295",
+    "2610.01165",
+    "2609.04434",
+    "2609.36783",
+    "2609.15545",
+    "2609.11859",
+    "2608.20768",
+    "2609.00753",
+    "2609.09902",
+    "2608.30198",
+    "2608.16868",
+    "2608.24335",
+    "2609.06872",
+    "2609.22224",
+    "2607.20596"
+   ],
+   "purpose": "patching decay values between tokenizations in both directions (pure and total indirect effects)"
+  },
+  {
+   "qid": "r11",
+   "modality": "keyword",
+   "query": "discretization step intervention Mamba factual recall delta patching",
+   "extra_args": "",
+   "ran_at": "2026-10-10T23:57:09Z",
+   "return_code": 0,
+   "raw_sha256": "a67dd622c45f4c7a8fc256cff09146d45eea144be46b45cbf53c10f47e14c2bb",
+   "raw_bytes": 32585,
+   "returned_ids": [
+    "2609.01532",
+    "2609.33183",
+    "2609.07681",
+    "2609.23892",
+    "2608.28860",
+    "2610.12216",
+    "2609.21787",
+    "2609.17537",
+    "2608.20794",
+    "2606.07978",
+    "2609.16183",
+    "2606.06586",
+    "2606.03780",
+    "2605.22170",
+    "2605.27774"
+   ],
+   "purpose": "discretization-step or decay patching in factual recall"
+  },
+  {
+   "qid": "r12",
+   "modality": "keyword",
+   "query": "forgetting mass parity tokenization gate normalization per character recurrent",
+   "extra_args": "",
+   "ran_at": "2026-10-10T23:57:34Z",
+   "return_code": 0,
+   "raw_sha256": "34c0bba99366ad6767b618acd120184907633224576e9e135d082cea1fb15875",
+   "raw_bytes": 36016,
+   "returned_ids": [
+    "2609.12960",
+    "2609.11516",
+    "2610.07591",
+    "2610.04670",
+    "2608.15062",
+    "2610.08718",
+    "2610.03329",
+    "2609.09719",
+    "2609.03583",
+    "2610.09835",
+    "2607.29678",
+    "2609.24233",
+    "2607.14427"
+   ],
+   "purpose": "forgetting-mass parity and gate normalisation per character (legacy D20 idea as a direct prior)"
+  },
+  {
+   "qid": "r13",
+   "modality": "embedding",
+   "query": "Pretrained recurrent model recall degrades with retention distance; decompose whether the cost comes from passive decay or interference from intervening writes using causal interventions on the decay of a frozen checkpoint",
+   "extra_args": "--published-after 2026-03-01",
+   "ran_at": "2026-10-10T23:57:36Z",
+   "return_code": 0,
+   "raw_sha256": "85f41e788969203e16b6162f9b82886c4096ab5638090e50a1520d44fd79cfa5",
+   "raw_bytes": 25527,
+   "returned_ids": [
+    "2609.36322",
+    "2609.33093",
+    "2609.19934",
+    "2610.08718",
+    "2609.34049",
+    "2610.11743",
+    "2609.34933",
+    "2609.34253",
+    "2610.01165",
+    "2610.03940",
+    "2609.04434",
+    "2609.34160",
+    "2609.31401",
+    "2609.15545",
+    "2609.16183"
+   ],
+   "purpose": "decay versus interference by causal intervention on a frozen recurrent checkpoint (after 2026-03-01)"
+  }
+ ],
+ "failed_not_counted": [
+  {
+   "qid": "r08",
+   "modality": "openalex",
+   "query": "four-way decomposition mediation interaction pure indirect effect",
+   "extra_args": "",
+   "ran_at": "2026-10-10T23:57:07Z",
+   "return_code": 1,
+   "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_bytes": 0,
+   "returned_ids": [],
+   "purpose": "OpenAlex: four-way mediation decomposition with interaction (venue context)"
+  },
+  {
+   "qid": "r14",
+   "modality": "openalex",
+   "query": "mediation analysis exposure mediator interaction decomposition VanderWeele",
+   "extra_args": "",
+   "ran_at": "2026-10-10T23:57:57Z",
+   "return_code": 1,
+   "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_bytes": 0,
+   "returned_ids": [],
+   "purpose": "OpenAlex retry: exposure-mediator interaction decomposition"
+  }
+ ],
+ "full_text_reads_not_counted": [
+  {
+   "id": "2609.33093",
+   "command": "orx paper 2609.33093 --full",
+   "purpose": "closest prior; Secs. 2.1-2.3, 4.2, 5, 6 and App. B re-read for the delta rows and the blind paragraph",
+   "raw_sha256": "56b5a18fb496c1d58e2b6cc1177b9179d6022100956aed0a25e3051cf84c3bfa",
+   "raw_bytes": 74551
+  },
+  {
+   "id": "2609.16183",
+   "command": "orx paper 2609.16183 --full",
+   "purpose": "runner-up; abstract, Axis 3 (decay), Secs. 5-6 re-read for the delta rows and the blind paragraph",
+   "raw_sha256": "7945ca1fc795acf563d85b27c1fbc85975554b8fe1eb41ca19c4facd1331cdf0",
+   "raw_bytes": 67651
+  },
+  {
+   "id": "2606.27510",
+   "command": "orx paper 2606.27510 --full",
+   "purpose": "patching NIE = PIE + INT (Prop. 3.1), Theorem 3.2; cited by wave 1's refuters, now credited",
+   "raw_sha256": "78e0a94bee673655efa73d06593265422befe6daa86b871f309a8f7071047a31",
+   "raw_bytes": 65748
+  },
+  {
+   "id": "1804.11188",
+   "command": "orx paper 1804.11188 --full",
+   "purpose": "time-warping invariance and gates (Secs. 1, discrete-time translation); wave-1 row closed on abstract",
+   "raw_sha256": "3b5f4647b176f1e8b94302d2d7124b9c2bd037f85fc58c46ee3e153053f5cdf7",
+   "raw_bytes": 42334
+  },
+  {
+   "id": "2004.12265",
+   "command": "orx paper 2004.12265 --full",
+   "purpose": "causal mediation analysis with model components (natural direct and indirect effects); wave-1 row closed on abstract",
+   "raw_sha256": "645467b3be6ce748effeadb13e0838a79a84595f317ccdb09c6f1ef7ce061a15",
+   "raw_bytes": 121426
+  },
+  {
+   "id": "2404.03646",
+   "command": "orx paper 2404.03646 --full",
+   "purpose": "activation patching in a selective state-space model (Sec. 2); wave-1 row closed on abstract",
+   "raw_sha256": "55a9f1b4fe54b0c717a20191f40c168ed597d493b6eecae651d680bcf7744cc2",
+   "raw_bytes": 63060
+  },
+  {
+   "id": "2406.14528",
+   "command": "orx paper 2406.14528 --full",
+   "purpose": "effective receptive field and decimation (abstract, Secs. 1 and 4); wave-1 row closed on abstract",
+   "raw_sha256": "2f026d853dc7ce416204c83bbcc14765935329e6c7140a54da4e35c81595a124",
+   "raw_bytes": 77686
+  },
+  {
+   "id": "1609.07843",
+   "command": "orx paper 1609.07843 --full",
+   "purpose": "WikiText-103 Table 1: train 28,475 articles, validation 60, test 60 (v2 draws passages from the train split)",
+   "raw_sha256": "4edc27cae7271168d83dfac2db71a0a6c8017e395b71bdf305aa0de4ea3658e1",
+   "raw_bytes": 51850
+  }
+ ],
+ "citation_graph_lookups_not_counted": [
+  {
+   "request": "works/doi:10.48550/arXiv.2609.33093",
+   "result": "OpenAlex W7214795438, cited_by_count 0 (too recent)",
+   "endpoint": "https://api.openalex.org/"
+  },
+  {
+   "request": "works/doi:10.48550/arXiv.2609.16183",
+   "result": "OpenAlex W7213409806, cited_by_count 0",
+   "endpoint": "https://api.openalex.org/"
+  },
+  {
+   "request": "works/doi:10.48550/arXiv.2606.27510",
+   "result": "OpenAlex W7166554991, cited_by_count 0",
+   "endpoint": "https://api.openalex.org/"
+  },
+  {
+   "request": "works/doi:10.48550/arXiv.1804.11188 and works?filter=cites:W2786406400",
+   "result": "17 citing works in OpenAlex, all screened by title: none on tokenization granularity or per-token decay in language models",
+   "endpoint": "https://api.openalex.org/"
+  },
+  {
+   "request": "works/doi:10.48550/arXiv.2111.00396",
+   "result": "OpenAlex W3209374680, cited_by_count 495",
+   "endpoint": "https://api.openalex.org/"
+  },
+  {
+   "request": "works?filter=cites:W3209374680&search=tokenization / fertility / time warping",
+   "result": "94 / 0 / 2 citing works; the first 25 'tokenization' titles and both 'time warping' titles screened: none on decay versus tokenization granularity in recurrent language models",
+   "endpoint": "https://api.openalex.org/"
+  }
+ ],
+ "screening": {
+  "records_returned": 177,
+  "distinct_ids": 146,
+  "screened_at_title_or_abstract": "all returned titles; abstracts of 2610.00232, 2610.05700, 2606.26560, 2605.13485, 2609.24797, 2608.30376, 2609.07681, 2609.06872, 2605.22791, 2609.36322, 2609.34049, 2610.11743",
+  "opened_in_full": [
+   "2609.33093",
+   "2609.16183",
+   "2606.27510",
+   "1804.11188",
+   "2004.12265",
+   "2404.03646",
+   "2406.14528",
+   "1609.07843"
+  ],
+  "direct_priors": 0
+ },
+ "wave1_log": "query-log.json (120 counted by the wave-1 cells; the wave-1 record counts 135 with the refuters')"
+}

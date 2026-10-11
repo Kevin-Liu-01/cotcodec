@@ -1,0 +1,908 @@
+{
+ "assumptions": {
+  "R": 512,
+  "LEAD": 24,
+  "FACT": 18,
+  "QUERY": 12,
+  "CAND": 24,
+  "DECODE": 6,
+  "N_ART": {
+   "2.7": 2000,
+   "2.0": 3000
+  },
+  "EPA": 4,
+  "N_SECONDARY": 1000,
+  "CONTEXT_LIMIT": 1900,
+  "scenarios": {
+   "central": {
+    "gdn": 40000,
+    "rwkv": 20000,
+    "hook": 1.2,
+    "resume": 1.1,
+    "fixed": 0.15
+   },
+   "high": {
+    "gdn": 20000,
+    "rwkv": 8000,
+    "hook": 1.5,
+    "resume": 1.1,
+    "fixed": 0.25
+   }
+  },
+  "anchor": "73,045 tok/s/GPU training, 422M GDN hybrid, fla 0.5.2 (docs/h100-node.md); forward-only inference never measured on this host"
+ },
+ "branches": {
+  "K4_f2.7": {
+   "cells": [
+    {
+     "cell": "CAN",
+     "r": 1.0,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 650.0,
+     "tokens": 5200000.0
+    },
+    {
+     "cell": "DEC",
+     "r": 1.0,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 650.0,
+     "tokens": 5200000.0
+    },
+    {
+     "cell": "CLAMP(2.7)",
+     "r": 2.7,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 1520.4,
+     "tokens": 12163200.0
+    },
+    {
+     "cell": "NAT(2.7)",
+     "r": 2.7,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 1520.4,
+     "tokens": 12163200.0
+    },
+    {
+     "cell": "BPB subset (CAN, NAT(f_p), BND; full logits)",
+     "r": 4.7,
+     "n": 200,
+     "tier": "L1",
+     "tokens_per_episode": 2820.4,
+     "tokens": 564080.0
+    },
+    {
+     "cell": "NAT(2.0) and CLAMP(2.0)",
+     "r": 4.0,
+     "n": 1000,
+     "tier": "L2",
+     "tokens_per_episode": 2324.0,
+     "tokens": 2324000.0
+    },
+    {
+     "cell": "BND and ZERO",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L3",
+     "extra_base": 1,
+     "tokens_per_episode": 788.0,
+     "tokens": 788000.0
+    },
+    {
+     "cell": "R2(1) and R2(2.7)",
+     "r": 3.7,
+     "n": 1000,
+     "tier": "L4",
+     "extra_base": 1,
+     "tokens_per_episode": 2170.4,
+     "tokens": 2170400.0
+    },
+    {
+     "cell": "FILL(2.7)",
+     "r": 2.7,
+     "n": 1000,
+     "tier": "L5",
+     "tokens_per_episode": 1520.4,
+     "tokens": 1520400.0
+    },
+    {
+     "cell": "CLAMP-LAST(2.7)",
+     "r": 2.7,
+     "n": 1000,
+     "tier": "L6",
+     "tokens_per_episode": 1520.4,
+     "tokens": 1520400.0
+    },
+    {
+     "cell": "SIL-NAT(2.7) and SIL-CLAMP(2.7)",
+     "r": 5.4,
+     "n": 1000,
+     "tier": "L7",
+     "extra_base": 1,
+     "tokens_per_episode": 3040.8,
+     "tokens": 3040800.0
+    },
+    {
+     "cell": "DOSE(2.7)",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L8",
+     "tokens_per_episode": 650.0,
+     "tokens": 650000.0
+    }
+   ],
+   "tokens_primary": 34726400.0,
+   "tokens_total": 47304480.0,
+   "max_context_tokens": 1496.4,
+   "over_context_limit": false,
+   "estimate_h": {
+    "central": {
+     "gdn_total": 0.584,
+     "rwkv_total": 1.017,
+     "gdn_primary": 0.468,
+     "rwkv_primary": 0.787
+    },
+    "high": {
+     "gdn_total": 1.334,
+     "rwkv_total": 2.96,
+     "gdn_primary": 1.046,
+     "rwkv_primary": 2.24
+    }
+   },
+   "primary_only_throughput_floor_tok_s": {
+    "gdn": 10611,
+    "rwkv": 4548
+   }
+  },
+  "K4_f2.0": {
+   "cells": [
+    {
+     "cell": "CAN",
+     "r": 1.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 650.0,
+     "tokens": 7800000.0
+    },
+    {
+     "cell": "DEC",
+     "r": 1.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 650.0,
+     "tokens": 7800000.0
+    },
+    {
+     "cell": "CLAMP(2.0)",
+     "r": 2.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 1162.0,
+     "tokens": 13944000.0
+    },
+    {
+     "cell": "NAT(2.0)",
+     "r": 2.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 1162.0,
+     "tokens": 13944000.0
+    },
+    {
+     "cell": "BPB subset (CAN, NAT(f_p), BND; full logits)",
+     "r": 4.0,
+     "n": 200,
+     "tier": "L1",
+     "tokens_per_episode": 2462.0,
+     "tokens": 492400.0
+    },
+    {
+     "cell": "NAT(2.7) and CLAMP(2.7)",
+     "r": 5.4,
+     "n": 1000,
+     "tier": "L2",
+     "tokens_per_episode": 3040.8,
+     "tokens": 3040800.0
+    },
+    {
+     "cell": "BND and ZERO",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L3",
+     "extra_base": 1,
+     "tokens_per_episode": 788.0,
+     "tokens": 788000.0
+    },
+    {
+     "cell": "R2(1) and R2(2.0)",
+     "r": 3.0,
+     "n": 1000,
+     "tier": "L4",
+     "extra_base": 1,
+     "tokens_per_episode": 1812.0,
+     "tokens": 1812000.0
+    },
+    {
+     "cell": "FILL(2.0)",
+     "r": 2.0,
+     "n": 1000,
+     "tier": "L5",
+     "tokens_per_episode": 1162.0,
+     "tokens": 1162000.0
+    },
+    {
+     "cell": "CLAMP-LAST(2.0)",
+     "r": 2.0,
+     "n": 1000,
+     "tier": "L6",
+     "tokens_per_episode": 1162.0,
+     "tokens": 1162000.0
+    },
+    {
+     "cell": "SIL-NAT(2.0) and SIL-CLAMP(2.0)",
+     "r": 4.0,
+     "n": 1000,
+     "tier": "L7",
+     "extra_base": 1,
+     "tokens_per_episode": 2324.0,
+     "tokens": 2324000.0
+    },
+    {
+     "cell": "DOSE(2.0)",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L8",
+     "tokens_per_episode": 650.0,
+     "tokens": 650000.0
+    }
+   ],
+   "tokens_primary": 43488000.0,
+   "tokens_total": 54919200.0,
+   "max_context_tokens": 1138.0,
+   "over_context_limit": false,
+   "estimate_h": {
+    "central": {
+     "gdn_total": 0.653,
+     "rwkv_total": 1.157,
+     "gdn_primary": 0.549,
+     "rwkv_primary": 0.947
+    },
+    "high": {
+     "gdn_total": 1.509,
+     "rwkv_total": 3.396,
+     "gdn_primary": 1.247,
+     "rwkv_primary": 2.742
+    }
+   },
+   "primary_only_throughput_floor_tok_s": {
+    "gdn": 13288,
+    "rwkv": 5695
+   }
+  },
+  "K8_f2.7": {
+   "cells": [
+    {
+     "cell": "CAN",
+     "r": 1.0,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 722.0,
+     "tokens": 5776000.0
+    },
+    {
+     "cell": "DEC",
+     "r": 1.0,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 722.0,
+     "tokens": 5776000.0
+    },
+    {
+     "cell": "CLAMP(2.7)",
+     "r": 2.7,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 1592.4,
+     "tokens": 12739200.0
+    },
+    {
+     "cell": "NAT(2.7)",
+     "r": 2.7,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 1592.4,
+     "tokens": 12739200.0
+    },
+    {
+     "cell": "BPB subset (CAN, NAT(f_p), BND; full logits)",
+     "r": 4.7,
+     "n": 200,
+     "tier": "L1",
+     "tokens_per_episode": 3036.4,
+     "tokens": 607280.0
+    },
+    {
+     "cell": "NAT(2.0) and CLAMP(2.0)",
+     "r": 4.0,
+     "n": 1000,
+     "tier": "L2",
+     "tokens_per_episode": 2468.0,
+     "tokens": 2468000.0
+    },
+    {
+     "cell": "BND and ZERO",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L3",
+     "extra_base": 1,
+     "tokens_per_episode": 932.0,
+     "tokens": 932000.0
+    },
+    {
+     "cell": "R2(1) and R2(2.7)",
+     "r": 3.7,
+     "n": 1000,
+     "tier": "L4",
+     "extra_base": 1,
+     "tokens_per_episode": 2314.4,
+     "tokens": 2314400.0
+    },
+    {
+     "cell": "FILL(2.7)",
+     "r": 2.7,
+     "n": 1000,
+     "tier": "L5",
+     "tokens_per_episode": 1592.4,
+     "tokens": 1592400.0
+    },
+    {
+     "cell": "CLAMP-LAST(2.7)",
+     "r": 2.7,
+     "n": 1000,
+     "tier": "L6",
+     "tokens_per_episode": 1592.4,
+     "tokens": 1592400.0
+    },
+    {
+     "cell": "SIL-NAT(2.7) and SIL-CLAMP(2.7)",
+     "r": 5.4,
+     "n": 1000,
+     "tier": "L7",
+     "extra_base": 1,
+     "tokens_per_episode": 3184.8,
+     "tokens": 3184800.0
+    },
+    {
+     "cell": "DOSE(2.7)",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L8",
+     "tokens_per_episode": 722.0,
+     "tokens": 722000.0
+    }
+   ],
+   "tokens_primary": 37030400.0,
+   "tokens_total": 50443680.0,
+   "max_context_tokens": 1568.4,
+   "over_context_limit": false,
+   "estimate_h": {
+    "central": {
+     "gdn_total": 0.612,
+     "rwkv_total": 1.075,
+     "gdn_primary": 0.489,
+     "rwkv_primary": 0.829
+    },
+    "high": {
+     "gdn_total": 1.406,
+     "rwkv_total": 3.14,
+     "gdn_primary": 1.099,
+     "rwkv_primary": 2.372
+    }
+   },
+   "primary_only_throughput_floor_tok_s": {
+    "gdn": 11315,
+    "rwkv": 4849
+   }
+  },
+  "K8_f2.0": {
+   "cells": [
+    {
+     "cell": "CAN",
+     "r": 1.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 722.0,
+     "tokens": 8664000.0
+    },
+    {
+     "cell": "DEC",
+     "r": 1.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 722.0,
+     "tokens": 8664000.0
+    },
+    {
+     "cell": "CLAMP(2.0)",
+     "r": 2.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 1234.0,
+     "tokens": 14808000.0
+    },
+    {
+     "cell": "NAT(2.0)",
+     "r": 2.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 1234.0,
+     "tokens": 14808000.0
+    },
+    {
+     "cell": "BPB subset (CAN, NAT(f_p), BND; full logits)",
+     "r": 4.0,
+     "n": 200,
+     "tier": "L1",
+     "tokens_per_episode": 2678.0,
+     "tokens": 535600.0
+    },
+    {
+     "cell": "NAT(2.7) and CLAMP(2.7)",
+     "r": 5.4,
+     "n": 1000,
+     "tier": "L2",
+     "tokens_per_episode": 3184.8,
+     "tokens": 3184800.0
+    },
+    {
+     "cell": "BND and ZERO",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L3",
+     "extra_base": 1,
+     "tokens_per_episode": 932.0,
+     "tokens": 932000.0
+    },
+    {
+     "cell": "R2(1) and R2(2.0)",
+     "r": 3.0,
+     "n": 1000,
+     "tier": "L4",
+     "extra_base": 1,
+     "tokens_per_episode": 1956.0,
+     "tokens": 1956000.0
+    },
+    {
+     "cell": "FILL(2.0)",
+     "r": 2.0,
+     "n": 1000,
+     "tier": "L5",
+     "tokens_per_episode": 1234.0,
+     "tokens": 1234000.0
+    },
+    {
+     "cell": "CLAMP-LAST(2.0)",
+     "r": 2.0,
+     "n": 1000,
+     "tier": "L6",
+     "tokens_per_episode": 1234.0,
+     "tokens": 1234000.0
+    },
+    {
+     "cell": "SIL-NAT(2.0) and SIL-CLAMP(2.0)",
+     "r": 4.0,
+     "n": 1000,
+     "tier": "L7",
+     "extra_base": 1,
+     "tokens_per_episode": 2468.0,
+     "tokens": 2468000.0
+    },
+    {
+     "cell": "DOSE(2.0)",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L8",
+     "tokens_per_episode": 722.0,
+     "tokens": 722000.0
+    }
+   ],
+   "tokens_primary": 46944000.0,
+   "tokens_total": 59210400.0,
+   "max_context_tokens": 1210.0,
+   "over_context_limit": false,
+   "estimate_h": {
+    "central": {
+     "gdn_total": 0.693,
+     "rwkv_total": 1.236,
+     "gdn_primary": 0.58,
+     "rwkv_primary": 1.011
+    },
+    "high": {
+     "gdn_total": 1.607,
+     "rwkv_total": 3.642,
+     "gdn_primary": 1.326,
+     "rwkv_primary": 2.94
+    }
+   },
+   "primary_only_throughput_floor_tok_s": {
+    "gdn": 14344,
+    "rwkv": 6147
+   }
+  },
+  "K16_f2.7": {
+   "cells": [
+    {
+     "cell": "CAN",
+     "r": 1.0,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 866.0,
+     "tokens": 6928000.0
+    },
+    {
+     "cell": "DEC",
+     "r": 1.0,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 866.0,
+     "tokens": 6928000.0
+    },
+    {
+     "cell": "CLAMP(2.7)",
+     "r": 2.7,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 1736.4,
+     "tokens": 13891200.0
+    },
+    {
+     "cell": "NAT(2.7)",
+     "r": 2.7,
+     "n": 8000,
+     "tier": "primary",
+     "tokens_per_episode": 1736.4,
+     "tokens": 13891200.0
+    },
+    {
+     "cell": "BPB subset (CAN, NAT(f_p), BND; full logits)",
+     "r": 4.7,
+     "n": 200,
+     "tier": "L1",
+     "tokens_per_episode": 3468.4,
+     "tokens": 693680.0
+    },
+    {
+     "cell": "NAT(2.0) and CLAMP(2.0)",
+     "r": 4.0,
+     "n": 1000,
+     "tier": "L2",
+     "tokens_per_episode": 2756.0,
+     "tokens": 2756000.0
+    },
+    {
+     "cell": "BND and ZERO",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L3",
+     "extra_base": 1,
+     "tokens_per_episode": 1220.0,
+     "tokens": 1220000.0
+    },
+    {
+     "cell": "R2(1) and R2(2.7)",
+     "r": 3.7,
+     "n": 1000,
+     "tier": "L4",
+     "extra_base": 1,
+     "tokens_per_episode": 2602.4,
+     "tokens": 2602400.0
+    },
+    {
+     "cell": "FILL(2.7)",
+     "r": 2.7,
+     "n": 1000,
+     "tier": "L5",
+     "tokens_per_episode": 1736.4,
+     "tokens": 1736400.0
+    },
+    {
+     "cell": "CLAMP-LAST(2.7)",
+     "r": 2.7,
+     "n": 1000,
+     "tier": "L6",
+     "tokens_per_episode": 1736.4,
+     "tokens": 1736400.0
+    },
+    {
+     "cell": "SIL-NAT(2.7) and SIL-CLAMP(2.7)",
+     "r": 5.4,
+     "n": 1000,
+     "tier": "L7",
+     "extra_base": 1,
+     "tokens_per_episode": 3472.8,
+     "tokens": 3472800.0
+    },
+    {
+     "cell": "DOSE(2.7)",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L8",
+     "tokens_per_episode": 866.0,
+     "tokens": 866000.0
+    }
+   ],
+   "tokens_primary": 41638400.0,
+   "tokens_total": 56722080.0,
+   "max_context_tokens": 1712.4,
+   "over_context_limit": false,
+   "estimate_h": {
+    "central": {
+     "gdn_total": 0.67,
+     "rwkv_total": 1.19,
+     "gdn_primary": 0.532,
+     "rwkv_primary": 0.913
+    },
+    "high": {
+     "gdn_total": 1.55,
+     "rwkv_total": 3.5,
+     "gdn_primary": 1.204,
+     "rwkv_primary": 2.636
+    }
+   },
+   "primary_only_throughput_floor_tok_s": {
+    "gdn": 12723,
+    "rwkv": 5453
+   }
+  },
+  "K16_f2.0": {
+   "cells": [
+    {
+     "cell": "CAN",
+     "r": 1.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 866.0,
+     "tokens": 10392000.0
+    },
+    {
+     "cell": "DEC",
+     "r": 1.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 866.0,
+     "tokens": 10392000.0
+    },
+    {
+     "cell": "CLAMP(2.0)",
+     "r": 2.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 1378.0,
+     "tokens": 16536000.0
+    },
+    {
+     "cell": "NAT(2.0)",
+     "r": 2.0,
+     "n": 12000,
+     "tier": "primary",
+     "tokens_per_episode": 1378.0,
+     "tokens": 16536000.0
+    },
+    {
+     "cell": "BPB subset (CAN, NAT(f_p), BND; full logits)",
+     "r": 4.0,
+     "n": 200,
+     "tier": "L1",
+     "tokens_per_episode": 3110.0,
+     "tokens": 622000.0
+    },
+    {
+     "cell": "NAT(2.7) and CLAMP(2.7)",
+     "r": 5.4,
+     "n": 1000,
+     "tier": "L2",
+     "tokens_per_episode": 3472.8,
+     "tokens": 3472800.0
+    },
+    {
+     "cell": "BND and ZERO",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L3",
+     "extra_base": 1,
+     "tokens_per_episode": 1220.0,
+     "tokens": 1220000.0
+    },
+    {
+     "cell": "R2(1) and R2(2.0)",
+     "r": 3.0,
+     "n": 1000,
+     "tier": "L4",
+     "extra_base": 1,
+     "tokens_per_episode": 2244.0,
+     "tokens": 2244000.0
+    },
+    {
+     "cell": "FILL(2.0)",
+     "r": 2.0,
+     "n": 1000,
+     "tier": "L5",
+     "tokens_per_episode": 1378.0,
+     "tokens": 1378000.0
+    },
+    {
+     "cell": "CLAMP-LAST(2.0)",
+     "r": 2.0,
+     "n": 1000,
+     "tier": "L6",
+     "tokens_per_episode": 1378.0,
+     "tokens": 1378000.0
+    },
+    {
+     "cell": "SIL-NAT(2.0) and SIL-CLAMP(2.0)",
+     "r": 4.0,
+     "n": 1000,
+     "tier": "L7",
+     "extra_base": 1,
+     "tokens_per_episode": 2756.0,
+     "tokens": 2756000.0
+    },
+    {
+     "cell": "DOSE(2.0)",
+     "r": 1.0,
+     "n": 1000,
+     "tier": "L8",
+     "tokens_per_episode": 866.0,
+     "tokens": 866000.0
+    }
+   ],
+   "tokens_primary": 53856000.0,
+   "tokens_total": 67792800.0,
+   "max_context_tokens": 1354.0,
+   "over_context_limit": false,
+   "estimate_h": {
+    "central": {
+     "gdn_total": 0.771,
+     "rwkv_total": 1.393,
+     "gdn_primary": 0.644,
+     "rwkv_primary": 1.137
+    },
+    "high": {
+     "gdn_total": 1.804,
+     "rwkv_total": 4.134,
+     "gdn_primary": 1.484,
+     "rwkv_primary": 3.336
+    }
+   },
+   "primary_only_throughput_floor_tok_s": {
+    "gdn": 16456,
+    "rwkv": 7053
+   }
+  }
+ },
+ "registered_caps_gpu_h": {
+  "smoke": 0.75,
+  "gdn_main": 1.75,
+  "rwkv_main": 3.75,
+  "sum": 6.25
+ },
+ "smoke": {
+  "cells": [
+   {
+    "cell": "held-out CAN K4",
+    "n": 200,
+    "tokens_per_episode": 650.0,
+    "tokens": 130000.0
+   },
+   {
+    "cell": "held-out NAT(2.7) K4",
+    "n": 200,
+    "tokens_per_episode": 1520.4,
+    "tokens": 304080.0
+   },
+   {
+    "cell": "held-out NAT(2.0) K4",
+    "n": 200,
+    "tokens_per_episode": 1162.0,
+    "tokens": 232400.0
+   },
+   {
+    "cell": "held-out CAN K8",
+    "n": 200,
+    "tokens_per_episode": 722.0,
+    "tokens": 144400.0
+   },
+   {
+    "cell": "held-out NAT(2.7) K8",
+    "n": 200,
+    "tokens_per_episode": 1592.4,
+    "tokens": 318480.0
+   },
+   {
+    "cell": "held-out NAT(2.0) K8",
+    "n": 200,
+    "tokens_per_episode": 1234.0,
+    "tokens": 246800.0
+   },
+   {
+    "cell": "held-out CAN K16",
+    "n": 200,
+    "tokens_per_episode": 866.0,
+    "tokens": 173200.0
+   },
+   {
+    "cell": "held-out NAT(2.7) K16",
+    "n": 200,
+    "tokens_per_episode": 1736.4,
+    "tokens": 347280.0
+   },
+   {
+    "cell": "held-out NAT(2.0) K16",
+    "n": 200,
+    "tokens_per_episode": 1378.0,
+    "tokens": 275600.0
+   },
+   {
+    "cell": "I1 identity (hooks at c = 1 vs unhooked), K16 f=1 and f=2.7",
+    "n": 200,
+    "tokens_per_episode": 5204.8,
+    "tokens": 1040960.0
+   },
+   {
+    "cell": "I2 r = 2 two ways and c = 2 two ways (G) / I2b reference (R)",
+    "n": 200,
+    "tokens_per_episode": 3464.0,
+    "tokens": 692800.0
+   },
+   {
+    "cell": "I3 padding",
+    "n": 200,
+    "tokens_per_episode": 3472.8,
+    "tokens": 694560.0
+   },
+   {
+    "cell": "I7 loader perplexity",
+    "n": 100,
+    "tokens_per_episode": 1024,
+    "tokens": 102400
+   },
+   {
+    "cell": "kill-and-resume test",
+    "n": 40,
+    "tokens_per_episode": 6945.6,
+    "tokens": 277824.0
+   },
+   {
+    "cell": "throughput (64 episodes x every cell type)",
+    "n": 64,
+    "tokens_per_episode": 20836.800000000003,
+    "tokens": 1333555.2000000002
+   }
+  ],
+  "tokens_per_subject": 6314339.2,
+  "hours_both_subjects": {
+   "central": 0.308,
+   "high": 0.71
+  }
+ },
+ "worst_branch_primary_high_h": {
+  "gdn": 1.484,
+  "rwkv": 3.336
+ },
+ "caps_cover_worst_primary_high": true,
+ "d22_rule": "sum of registered caps of every job must be at most 8.0 GPU-h",
+ "ladder": [
+  "L1 BPB subset",
+  "L2 the other fertility (NAT and CLAMP)",
+  "L3 BND and ZERO",
+  "L4 R2 pair",
+  "L5 FILL(f_p)",
+  "L6 CLAMP-LAST(f_p)",
+  "L7 SIL-NAT and SIL-CLAMP",
+  "L8 DOSE(f_p)",
+  "never cut: CAN, DEC, CLAMP(f_p), NAT(f_p) at K_p and the gates"
+ ]
+}

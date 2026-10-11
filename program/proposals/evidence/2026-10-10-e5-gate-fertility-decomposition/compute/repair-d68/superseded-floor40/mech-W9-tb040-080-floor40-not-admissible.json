@@ -1,0 +1,121 @@
+{
+ "params": {
+  "D": 16,
+  "N_SPAN": 64,
+  "LEAD": 4,
+  "FACT_BETA": 0.95,
+  "FACT_G": 0.001,
+  "NOISE": 0.05,
+  "TB": [
+   0.05,
+   0.2
+  ],
+  "PHI": 2.0,
+  "GAMMA": 0.5,
+  "KAPPA": 0.5,
+  "ZETA": 0.5,
+  "ALPHA2": 1.0,
+  "BASE_G": 0.0109375,
+  "POOL_ARTICLES": 400,
+  "N_HELDOUT": 200,
+  "RESAMPLE_ARTICLES": "N_ARTICLES_BY_F[f_p]",
+  "V1_WORLDS": [
+   "W3_clock_and_interference",
+   "W8_line"
+  ],
+  "RESAMPLE_REPS": 2000,
+  "SEED": 42,
+  "worlds": {
+   "W1_per_token_clock": {
+    "lam": 0.0,
+    "rho": 1.0,
+    "wnorm": true,
+    "gscale": 1.0
+   },
+   "W2_self_normalised_interference": {
+    "lam": 1.0,
+    "rho": 0.0,
+    "wnorm": false,
+    "gscale": 1.0
+   },
+   "W3_clock_and_interference": {
+    "lam": 0.0,
+    "rho": 0.0,
+    "wnorm": false,
+    "gscale": 1.0
+   },
+   "W4_null": {
+    "lam": 1.0,
+    "rho": 1.0,
+    "wnorm": true,
+    "gscale": 1.0
+   },
+   "W5_legacy_duplicates": {
+    "lam": 0.0,
+    "rho": 1.0,
+    "wnorm": false,
+    "gscale": 1.0
+   },
+   "W6_partial": {
+    "lam": 0.5,
+    "rho": 0.5,
+    "wnorm": false,
+    "gscale": 1.0
+   },
+   "W7_decay_inert": {
+    "lam": 0.0,
+    "rho": 0.0,
+    "wnorm": false,
+    "gscale": 0.02
+   },
+   "W8_line": {
+    "lam": 0.0,
+    "rho": 1.0,
+    "wnorm": true,
+    "gscale": null
+   },
+   "W9_erase_dominated": {
+    "lam": 0.0,
+    "rho": 0.0,
+    "wnorm": false,
+    "gscale": 1.0,
+    "tb": [
+     0.4,
+     0.8
+    ]
+   }
+  }
+ },
+ "worlds": {
+  "W9_erase_dominated": {
+   "world": "W9_erase_dominated",
+   "spec": {
+    "lam": 0.0,
+    "rho": 0.0,
+    "wnorm": false,
+    "gscale": 1.0,
+    "tb": [
+     0.4,
+     0.8
+    ]
+   },
+   "heldout": {
+    "CAN": {
+     "4": 34.5,
+     "8": 33.0,
+     "16": 27.0
+    },
+    "NAT": {
+     "4|2.7": 22.0,
+     "4|2.0": 26.5,
+     "8|2.7": 23.5,
+     "8|2.0": 30.0,
+     "16|2.7": 23.5,
+     "16|2.0": 25.0
+    },
+    "selected": null
+   },
+   "reading": "NOT_ADMISSIBLE"
+  }
+ }
+}
