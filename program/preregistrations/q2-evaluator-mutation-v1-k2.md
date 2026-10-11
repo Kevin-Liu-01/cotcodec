@@ -1,12 +1,14 @@
 # q2-evaluator-mutation-v1-k2: K2 VM-fidelity addendum to q2-evaluator-mutation-v1
 
-**Status: DRAFT, not frozen (TBD: at the freeze this whole paragraph is
-replaced by the frozen status paragraph that section 14 states under "At the
-freeze").** The first pre-freeze audit (D73 (ii)) and a fresh re-audit (D77)
-found blocking items, all addressed on the branch (section 14); the freeze, under
-program authority, waits for a clean re-audit (D77). Until this file has its own
-ledger row the K2 lane refuses every confirm-split job and runs only development
-jobs on dev-split items (section 4). Nothing in this file is a result.
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger
+row for the freeze time and `git_head_at_freeze`.** An addendum to
+`q2-evaluator-mutation-v1` (D73 (ii)), frozen under program authority after
+its pre-freeze audits (D77; section 14). The registered `k2` job runs from an
+export of the freeze commit, the commit that adds this file's ledger row
+(sections 7 and 14); the lane admits only that job while this file's SHA-256
+equals the row's, and refuses every development job (section 4). A material
+change after the freeze is a new experiment id (section 6). Nothing in this
+file is a result.
 
 - Experiment id: `q2-evaluator-mutation-v1-k2`, an addendum to
   `q2-evaluator-mutation-v1` (ledger row 11: file SHA-256
