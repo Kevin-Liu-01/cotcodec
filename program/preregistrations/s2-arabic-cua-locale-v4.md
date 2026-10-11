@@ -933,3 +933,60 @@ Added in the repair round (D84):
 99. Phase 1's runner and analysis code as an executor addendum, dry-run on dev tasks, audited and frozen as
     its own ledger row before any Phase 1 episode.
 
+## Changes in the repair round (D84): review log
+
+A fresh code review and a fresh pre-freeze audit of `47c169f9` found the package not ready to freeze
+(D84). Every item, and what this round did. "Fixed" items are in the code and text above; the
+development runs are under `program/evidence/2026-10-11/s2v4-image/`.
+
+Code review, blocking:
+
+| Item | Disposition |
+|---|---|
+| R1. The image build was not bit-reproducible (each `debugfs -w` stamped the wall clock into the superblock), and nothing said so | Fixed. Every write session runs at the certified disk's `s_wtime` (`E2FSPROGS_FAKE_TIME`); one CPU job (Slurm @@BUILDJOB@@) built twice and got identical digests for every image, which are the new pins (`images.json`, section "Images built"); the same job found that its derived base differs from build 1199's only in superblock copies (`reproducibility.json`); build 1195's images were deleted after that, build 1199's are kept, superseded |
+| R2. Two held-fixed facts contradicted v4's records: `ibus-daemon` runs in every slot, S included, and the guest's locale is `en_HK.UTF-8` / `en_HK:en`, not `en_US.UTF-8`; as written, Phase 1's keyboard check would fail every episode | Fixed. The keyboard check is equality with the stock cell S's record (layout, input-method processes, GNOME input sources; P0.5, Phase 1); the locale is the guest's stock values in P0.2, P0.5, the claim scope and `image_build.py`'s docstrings; the evidence README's two sentences are corrected; the probe records input sources, IBus's engine and LibreOffice's locale variables |
+| R3. The download's scope went beyond D80 (iv)'s words and the packages' unmet dependencies were undisclosed | Fixed. P0.2 attributes `libreoffice-l10n-ar` to D80 (iv) and the two Ubuntu packs to D1 under D84's reading of D80 (iv) with D76 (a), lists every unmet Depends and Recommends, restates v3.1's font facts (re-read in the VM by the probe's end facts) and describes the GNOME pack as possibly inert |
+
+Code review, not blocking:
+
+| Item | Disposition |
+|---|---|
+| The fetch's chain of trust is sound | Confirmed; hardened anyway (below) |
+| The image changes only the registered content | Confirmed; the checks are now finer (below) |
+| P0.2 cited the superseded build 1195 | Fixed: P0.2 cites the pinned build |
+| `LAYER_FILES` is hand-typed and unchecked | Fixed: `check_layer_files` at build time (the system layer's `*.xcd` files must be `LAYER_FILES` plus `main`), tested |
+| The block check is coarser than "every block explained" suggests | Fixed: inode-table blocks are compared slot by slot (only touched inodes may change), the superblock fields `dumpe2fs -h` prints are whitelisted (free counts, lifetime writes, checksum, write time), and the raw disks must be identical outside the root partition; superblock and group-descriptor copies and the directories that gained entries are still accepted as classes (disclosed in P0.2) |
+| `verify_plan` did not read back modification times; the script digest does not cover staged contents | Fixed: every written path's mtime is read back; reproducibility is judged on the image and manifest digests (`reproducibility.json`) |
+| Fetch hardening (signer pin, Suite and Codename, gpgv status tests, a tampered `Packages.xz`) | Fixed: all four, unit-tested; the stored files re-checked offline (`fetch/verify.json`) |
+| `ucf_pairs` ignores other postinst actions; commit the maintainer scripts | Fixed: the build copies every control file and maintainer script, committed with the build record (`maintainer-scripts/`) |
+| P0.5 called `ctl_ar.xcd`'s default part of the text treatment | Fixed: it sets only `CTLFont`, which the pin overrides in every derived cell; a constant of the derived base, guarded by I2 |
+| `verify_images` hashes about 171 GB per lane job | Fixed: `vm_lane.check_slurm` budgets the image check (30 GB per minute) in the job's minutes, and `ap_delta` budgets the driver's two image hashes per campaign |
+
+Pre-freeze audit, blocking:
+
+| Item | Disposition |
+|---|---|
+| A1. Phase 0 could not run from the freeze commit: five components missing, the lane refusing every job once frozen | Fixed. (a) `oracle_vm.py` (VM renders and OSWorld's XML; I1-doc, I2, I5, I6, tol6; masks in every comparison) run on the development smokes; (b) the PD variant (`pd_cache.py`, pinned) dev-tested on all 17 dev tasks in the VM, the 15 named ones included, with the off-screen rule fixed in P0.3; (c) the P0.10 reader in `vm_probe`; (d) the census renderer and the `phase0` purpose, admitted only with the ledger row and from the freeze commit's export, with V = 20 sizing and one resume rule; (e) `ap_delta.py` with its K1 plan, batch file and verdict, dev-run on the host. The scratch freeze rehearsal rendered and validated the registered census manifest (1,322 slots), a resumed census, and K1 manifests (C1, C3, the rung) from the freeze export, and refused development manifests |
+| A2. Phase 1 had no executor, was not in the freeze procedure, and its step-0 mask was ambiguous | Fixed. The step-0 mask (top bar and the Phase 0 render's caret mask), the keyboard and image checks and the postconfig rule are defined; the Phase 1 executor addendum (code, dev-only dry run, fresh audit, its own ledger row before any episode) is step 6 of the freeze procedure |
+| A3. K1's V = 20 rung was under-specified, and harness/q2 cannot run it unedited | Fixed. Section 9's full rule at N = 20 (r = 12, 2,400 trials in 40 sessions, runner CPUs 10, boot and step p95, at most two excused trials, snapshots, foreign abort with one rerun), the step reference per image (its own A1), and how `ap_delta` drives the five images; harness/q2 stays byte-identical (its closed-world ledger check); A6 runs all four applications (harness/q2's validator; already the budgeted cost); the keyboard claim is restricted to A6 in A and AR |
+| A4. Held-fixed facts contradicted the records | As R2 |
+| A5. The infrastructure rule contradicted S1a's carve-out and the probe | Fixed. One rule: a postconfig server error (no HTTP status, or 500 or above) is an infrastructure loss, stated in P0.7, Phase 1 and the infrastructure section, implemented in `vm_probe.py` and `vm_gold.py` with tests; Phase 1 reports those losses and a sensitivity enters each as a failure |
+| A6. The freeze would freeze draft wording; P0.2 cited build 1195 | Fixed: the status-fill step (freeze procedure step 3), the test reads the status against the ledger, and P0.2 cites the pinned build |
+| A7. The images were not bit-reproducible | As R1 |
+| A8. The approval scope and dependencies were undisclosed | As R3 |
+
+Pre-freeze audit, not blocking:
+
+| Item | Disposition |
+|---|---|
+| K0 committed before any Phase 0 result; `k0_v4.py` implements it | Confirmed; the K0 section is byte-identical (`ed38b953...`, tested) and `k0_v4.py` is unchanged |
+| Wave 2 defect 4: state the K8 consequence at the p95 slot price | Fixed: Phase 1's cap paragraph states it (7.70 GPU-h needed, 6.83 admitted, K8 at the last complete block) |
+| K1 takes about 40 hours of serial jobs and image hashing | Budgeted: each `ap_delta` job's minutes include the image checks; one job at a time on an empty queue |
+| I6 lets 5% of tasks fail A/A while K3 allows 2% step-0 failures | Fixed without touching K0: A/A-unstable tasks take no step-0 check and are outside K3's base, and every estimand is also reported without them |
+| PD rested on container renders | Fixed: dev-tested in the VM on all named tasks, with a rule for an off-screen plant fixed before the freeze |
+| Pin `k0_inputs.py` and `k0_v4.py`; `k0_inputs` drops tasks with no records | Fixed: both are in section "Code and inputs of record"; `k0_inputs.admission` lists every pool task (unobserved tasks are excluded, not dropped) |
+| "The freeze commit or its successor" is vague | Fixed: D56's words in section "Identity", enforced by the lane and `ap_delta` |
+| The carry-over argument for A4 and A7 was inaccurate; a docstring was stale | Fixed: section "K1" lists every class of change (the Ubuntu and GNOME catalogs, help files and `supported.d/ar`, ext4 metadata) and calls the carry-over an argument; `image_build.py`'s docstring gives the dependency block as the reason the selector is read last |
+| The review's non-blocking items | As above |
+| Program records (decisions, state, handoff) | The orchestrator's; not edited in this round |
+

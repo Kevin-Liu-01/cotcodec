@@ -1,4 +1,4 @@
-"""S2 v4 K1: ap_delta's plan, manifests, harness/q2 admission and rung verdict (no Docker, no VM)."""
+"""S2 v4 K1: ap_delta's plan, manifests, harness/q2 admission and rung verdict (no Docker)."""
 
 from __future__ import annotations
 
@@ -34,19 +34,38 @@ def test_committed_k1_plan_is_the_registered_plan():
     assert rung["concurrency"] == D.RUNG_N == 20 and rung["seed"] == 43
 
 
+def _dev_source(tmp_path: Path) -> Path:
+    """A pre-freeze view of the tree: the harness and the ledger's rows before this id's (so the
+    test holds whether or not the repository's own ledger already freezes S2 v4)."""
+    import shutil
+
+    src = tmp_path / "src"
+    shutil.copytree(ROOT / "harness", src / "harness",
+                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))  # fmt: skip
+    (src / "program/preregistrations").mkdir(parents=True)
+    lines = []
+    for line in (ROOT / L.LEDGER).read_text().splitlines():
+        if line.strip() and json.loads(line).get("experiment_id") == L.EXPERIMENT_ID:
+            break
+        lines.append(line)
+    (src / L.LEDGER).write_text("\n".join(lines) + "\n")
+    return src
+
+
 def _args(tmp_path):
-    return argparse.Namespace(source_dir=ROOT, git_sha="f" * 40,
+    return argparse.Namespace(source_dir=_dev_source(tmp_path), git_sha="f" * 40,
                               host_root=f"{L.RUN_ROOT}stage0/s2v4/apdelta-dev",
                               images_root=f"{L.RUN_ROOT}stage0/s2v4/image-build-v5/a")
 
 
 def test_development_manifest_is_admitted_by_harness_q2(tmp_path):
-    m = D.render_dev(_args(tmp_path))
+    args = _args(tmp_path)
+    m = D.render_dev(args)
     assert m["purpose"] == "development" and len(m["campaigns"]) == 2
     single, rung = m["campaigns"]
     assert single["cells"] == ["E"] and not D.is_rung(single)
     assert rung["cells"] == ["E", "AR"] and D.is_rung(rung)
-    pins = L.load_pins(ROOT)
+    pins = L.load_pins(args.source_dir)
     assert single["manifest"]["vm"]["qcow2"]["sha256"] == pins["E"]["sha256"]
     assert rung["qcow2"]["AR"]["sha256"] == pins["AR"]["sha256"]
     for key, value in D.CERTIFIED_PROVENANCE.items():
@@ -67,10 +86,11 @@ def test_development_manifest_is_admitted_by_harness_q2(tmp_path):
     (lambda m: m["campaigns"][1]["qcow2"].pop("AR"), "qcow2 per cell"),
 ])
 def test_development_manifest_refusals(tmp_path, edit, match):
-    m = D.render_dev(_args(tmp_path))
+    args = _args(tmp_path)
+    m = D.render_dev(args)
     edit(m)
     with pytest.raises(D.DeltaError, match=match):
-        D.validate_manifest(m, ROOT)
+        D.validate_manifest(m, args.source_dir)
 
 
 def test_campaign_minutes_include_both_image_checks():

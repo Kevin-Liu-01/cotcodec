@@ -297,7 +297,10 @@ def check_registered(m: Mapping[str, Any], source_dir: Path) -> None:
             if e["check"] == m["check"] and e["cell"] == cells]
     got = [campaign_key(item["manifest"]) for item in m["campaigns"]]
     _require(bool(want), f"the K1 plan has no {m['check']} campaigns on {cells}")
-    _require(sorted(map(json.dumps, got)) == sorted(map(json.dumps, want)),
+    def canon(rows: list[dict[str, Any]]) -> list[str]:
+        return sorted(json.dumps(r, sort_keys=True) for r in rows)
+
+    _require(canon(got) == canon(want),
              f"{m['check']} on {cells}: the campaigns are not the K1 plan's")  # fmt: skip
     for item in m["campaigns"]:
         q2m = item["manifest"]

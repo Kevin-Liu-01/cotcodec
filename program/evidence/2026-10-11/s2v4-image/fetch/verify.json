@@ -1,0 +1,58 @@
+{
+ "ok": true,
+ "packages": [
+  {
+   "package": "libreoffice-l10n-ar",
+   "sha256": "765339432f140aede4af39c8cb2b2ab87077abccba768a14cb9da387a2b6a9cd",
+   "size": 663804,
+   "version": "1:7.3.7-0ubuntu0.22.04.4"
+  },
+  {
+   "package": "language-pack-ar-base",
+   "sha256": "d6503a116a4a73d7a6fecac635f50efce962b3a05ec1f2312db6c28bab9cf057",
+   "size": 151600,
+   "version": "1:22.04+20230801"
+  },
+  {
+   "package": "language-pack-gnome-ar-base",
+   "sha256": "13e8cd8a3dbd3bd3069b76f5f245c7d9f536c9011b58af099cb4966ac0c45f15",
+   "size": 930704,
+   "version": "1:22.04+20230801"
+  }
+ ],
+ "release": {
+  "Codename": "jammy",
+  "Suite": "jammy-updates"
+ },
+ "schema": "s2v4-langpack-provenance-v1-verify",
+ "signature": {
+  "bad_status": [],
+  "expected_signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+  "good": true,
+  "ok": true,
+  "primary_fingerprints": [
+   "F6ECB3762474EDA9D21B7022871920D1991BC93C"
+  ],
+  "returncode": 0,
+  "signer_ok": true,
+  "status": [
+   "[GNUPG:] PLAINTEXT 74 0 ",
+   "[GNUPG:] NEWSIG",
+   "[GNUPG:] KEY_CONSIDERED F6ECB3762474EDA9D21B7022871920D1991BC93C 0",
+   "[GNUPG:] SIG_ID BBihyGaHcn9uCqbjvTxFlpFX6O0 2024-01-09 1704843944",
+   "[GNUPG:] GOODSIG 871920D1991BC93C Ubuntu Archive Automatic Signing Key (2018) <ftpmaster@ubuntu.com>",
+   "[GNUPG:] VALIDSIG F6ECB3762474EDA9D21B7022871920D1991BC93C 2024-01-09 1704843944 0 4 0 1 10 01 F6ECB3762474EDA9D21B7022871920D1991BC93C",
+   "[GNUPG:] VERIFICATION_COMPLIANCE_MODE 23"
+  ],
+  "stderr": [
+   "gpgv: Signature made Tue Jan  9 23:45:44 2024 UTC",
+   "gpgv:                using RSA key F6ECB3762474EDA9D21B7022871920D1991BC93C",
+   "gpgv: Good signature from \"Ubuntu Archive Automatic Signing Key (2018) <ftpmaster@ubuntu.com>\""
+  ],
+  "validsig_fingerprints": [
+   "F6ECB3762474EDA9D21B7022871920D1991BC93C"
+  ]
+ },
+ "signed_text_sha256": "c52386b72d420bf5ddd9a0fdff6177c75c84627dde57373b6a301cdb5ea4653a",
+ "stored_signed_text_matches": true
+}
