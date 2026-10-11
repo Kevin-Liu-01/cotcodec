@@ -4915,3 +4915,32 @@ they say so.)
 - Waiting on: Kevin's adjudication and spot check; after his answers the
   analysis is rerun once with `--k2-report` and the post-answer audit inputs.
   Adopting R03's kill line stays his (D73).
+
+## 2026-10-11 — Q2 successor E `q2-stage1-successor-e-v1` drafted (D80 iii; DRAFT, not frozen; branch `stage0/q2-successor-e`, not merged)
+
+- Single owner, CPU only, no host job. Registration
+  `program/preregistrations/q2-stage1-successor-e-v1.md`: S1a's design with more data, no
+  change to its estimands or rules. All 113 eligible pool tasks (no draw, no fill rule), 9B then
+  4B in every session, four new sessions per size (E1-E4) at least 12 h apart from the previous
+  session's later end, one episode per (size, task, harness, session); S1a's harnesses, engine,
+  prompts and pinned date, action path (D53), lane, records schema, D53 (iii) observation rule
+  and D56 carve-out; S1a's estimators, DR0-DR5 and P1-P5 (P1, D_w and rho not estimable at
+  R = 1). Primary set the 113 tasks; S1a's 32 base tasks a registered secondary. E is its own
+  sample; the joint reading with S1a is descriptive.
+- Caps by arithmetic at realized price x 1.2 x 1.05 on the design study's cost model: 52 min
+  per 9B job, 48 per 4B job, 3 + 3 for the overlay OE and its retry, 406 in all (6.77 GPU-h).
+  Cap check (`cap-sufficiency.json`): every slot ends before USR1 with probability 1.000 under
+  S1a's slots, 10% longer slots and 5% loss; 0.9215 for a 4B session 20% slower. Calendar about
+  41-42 h minimum (the design study's 37 h counted one session window).
+- Code: no S1a code-of-record file changes (the prereg test checks all 75 digests). New thin
+  layer `harness/q2_stage1e/` (plan, records, entry point, lane over S1a's `Lane`, analysis with
+  the D59/D61/D62 rules built in, section 15 items), `scripts/render_q2e_manifest.py`,
+  `infra/slurm/host-single-node/q2e-vm.sbatch` (S1a's with the lane module changed), the plan
+  file and the development smoke manifest. E's analysis reproduces S1a's committed readings on
+  S1a's records exactly and the design study's analysis on E-shaped data
+  (`analysis-identity.json`). The design study's E numbers are the registered power statement.
+- Tests: `tests/test_q2_stage1e.py`, `tests/test_q2_stage1e_prereg.py`; S1a's and the design
+  study's suites pass unchanged.
+- Open before the freeze: G-E4 (CPU development smoke of E's lane on the host), G-E5 (the GLMM
+  on E's shape in the pinned container), G-E6 (fresh pre-freeze audit) and the program's
+  sign-off decision.
