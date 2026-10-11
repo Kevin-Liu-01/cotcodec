@@ -1,6 +1,6 @@
 ---
 name: harness-q2-mutation-k2-skill
-description: Procedure for the K2 VM-fidelity executor of the checker-mutation study (addendum q2-evaluator-mutation-v1-k2, draft) in harness/q2_mutation_k2/.
+description: Procedure for the K2 VM-fidelity executor of the checker-mutation study (addendum q2-evaluator-mutation-v1-k2, frozen in ledger row 17) in harness/q2_mutation_k2/.
 ---
 
 # cotcodec / harness / q2_mutation_k2
@@ -12,7 +12,8 @@ The checker-mutation study (`q2-evaluator-mutation-v1`, frozen) scored every
 mutant offline and carries the label "offline harness, VM fidelity unverified"
 because its K2 gate had no executor. This package is that executor and its
 addendum's code (`program/preregistrations/q2-evaluator-mutation-v1-k2.md`,
-DRAFT): it injects each sampled candidate into the certified OSWorld VM through
+frozen in ledger row 17; its registered `k2` job ran once, as Slurm job 1186,
+from an export of the freeze commit `7d9c881a`): it injects each sampled candidate into the certified OSWorld VM through
 the frozen plan of `harness/q2_mutation/vm_injection.py`, lets the VM's
 LibreOffice save it as the pipeline does, scores it with the pinned
 `DesktopEnv.evaluate()` and compares the in-VM verdict with the offline one.
@@ -45,8 +46,8 @@ LibreOffice save it as the pipeline does, scores it with the pinned
   spot check or rater output; `report.check_input` refuses such paths and a
   test scans the imports.
 - The addendum's section 2 pins every file here (README and SKILL excepted);
-  refresh with `python scripts/q2_mutation_k2_code_table.py --write` before the
-  freeze. After the freeze a change is a new experiment id.
+  the addendum is frozen, so any change to them is a new experiment id (the
+  registration's section 6 repair rule names `q2-evaluator-mutation-v1-k2-r1`).
 - Mutant documents and captures stay on the host; only records (digests,
   verdicts, timings, stdout-stripped replies) are committed.
 
