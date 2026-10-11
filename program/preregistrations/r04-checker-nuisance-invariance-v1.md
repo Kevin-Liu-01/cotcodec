@@ -408,7 +408,26 @@ study would not release.
 Allowed before the freeze and reported as exploratory; no confirm or reserve item was built,
 saved or scored. The full record is `program/evidence/2026-10-11/r04-nuisance/`.
 
-(Results are filled in below from the smoke runs.)
+Items: the 17 dev golds (the item builder reproduced the dev control run's 17 counted golds
+from configs) and 17 S1a A0a states (8 pass states on 2 tasks, 9 of 12 fail states), every
+capture checked against S1a's committed digests. Images B1-B5 built in about 25 s each
+(jobs 1104-1108); an inspection job (1103) read the LO-VM image's locale sources and
+profile.
+
+- **dev-smoke-v1** (5 cells; jobs 1109-1112): V1 held (17 of 17 control gold verdicts
+  equal the frozen dev control run's, the dev P1 flip `af23762e` included); `store_as` and
+  `headless_convert` at B0 changed no verdict; B3 failed every save on window activation
+  (the em-dash titles), which led to the title fallback of section 4.4; de_DE flipped one
+  gold (`6e99a1ad`, `compare_table`): the task's postconfig CSV export writes decimal commas
+  under de_DE (7 of 8 lines, checked structurally on the host). That is the path the
+  judges predicted (a conversion, not an OOXML re-save).
+- **dev-smoke-v2** (save stage of 17 cells; jobs 1114-1121): every cell saved every item
+  except `store_as` under TDF 7.6 and 24.8, where Ubuntu's 7.3 UNO client failed ("Binary URP
+  bridge disposed during call"); fixed by using each build's own Python (section 4.2). The
+  title fallback was needed on every item under 7.6.7.2 and 24.8.7.2 and on none under TDF
+  7.3.7.2. All four locales compiled offline. Stopped before scoring; superseded by v3.
+- **dev-smoke-v3** (all 23 cells at the fixed code, scored, with confirmation rounds): see
+  below.
 
 ## 16. Corrections to the slate's version
 

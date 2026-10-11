@@ -176,6 +176,7 @@ def population_table(
     valid_ids: Sequence[str],
     status_of: Mapping[str, str],
     population: str,
+    n_boot: int = 10_000,
 ) -> dict[str, Any]:
     pop_items = {i["item_id"]: i for i in items if i["population"] == population}
     valid_pop = [iid for iid in valid_ids if iid in pop_items]
@@ -201,7 +202,7 @@ def population_table(
     if population != "gold" and valid_pop:
         conf_ids = {p["item_id"] for p in confirmed}
         units = [Unit(pop_items[iid]["task_id"], iid in conf_ids) for iid in valid_pop]
-        ci = cluster_bootstrap_ci(units)
+        ci = cluster_bootstrap_ci(units, n_boot=n_boot)
         table["state_level_task_equal"] = {
             "estimate": ci.estimate,
             "low": ci.low,
@@ -328,6 +329,7 @@ def analyze(
     reference: Mapping[str, str] | None = None,
     cell_errors: Mapping[str, str] | None = None,
     splits: Sequence[str] = ("confirm", "reserve"),
+    n_boot: int = 10_000,
 ) -> dict[str, Any]:
     """The registered analysis over one run's items, score rows and confirmation rounds."""
     scoped = [i for i in items if i["split"] in splits]
@@ -357,9 +359,9 @@ def analyze(
         for cell in cells:
             pairs, valid_ids, excluded = discordances(scoped, control, by_cell[cell.id], checker)
             status = {p["item_id"]: confirm_status(p, cell.id, round_idx, checker) for p in pairs}
-            gold = population_table(scoped, pairs, valid_ids, status, "gold")
+            gold = population_table(scoped, pairs, valid_ids, status, "gold", n_boot)
             s1a = {
-                pop: population_table(scoped, pairs, valid_ids, status, pop)
+                pop: population_table(scoped, pairs, valid_ids, status, pop, n_boot)
                 for pop in ("s1a_pass", "s1a_fail", "s1a_mixed")
             }
             retained = ret_ok.get(cell.id, False) and build_ok.get(cell.build, False)

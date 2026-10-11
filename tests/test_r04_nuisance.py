@@ -357,6 +357,10 @@ def _scores(its, cells, flips=None, status=None):
     return out
 
 
+def analyze_fast(*args, **kwargs):
+    return analysis.analyze(*args, n_boot=200, **kwargs)
+
+
 PRIMARY = [c.id for c in levels.registered_cells() if c.role in ("control", "validity", "primary")]
 
 
@@ -366,7 +370,7 @@ def test_analysis_invariant_minor_drift_and_confirmation():
     scores = _scores(its, ["raw", *PRIMARY], flips)
     rounds = [_scores(its, [levels.CONTROL_CELL, "B3.ctrl_s.L0", "B0.ctrl_s.L1"], flips)] * 2
     ref = {f"tg{i}": "pass" for i in range(10)}
-    out = analysis.analyze(its, scores, rounds=rounds, reference=ref)
+    out = analyze_fast(its, scores, rounds=rounds, reference=ref)
     cells = out["pinned"]["cells"]
     assert cells["B3.ctrl_s.L0"]["reading"] == "DRIFT"
     assert cells["B3.ctrl_s.L0"]["gold"]["confirmed"] == 3
@@ -389,7 +393,7 @@ def test_unconfirmed_discordance_is_unstable_not_a_finding():
         _scores(its, [levels.CONTROL_CELL, "B3.ctrl_s.L0"], flips),
         _scores(its, [levels.CONTROL_CELL, "B3.ctrl_s.L0"], {"B3.ctrl_s.L0": {"g:0"}}),
     ]
-    out = analysis.analyze(its, scores, rounds=rounds, reference={})
+    out = analyze_fast(its, scores, rounds=rounds, reference={})
     gold = out["pinned"]["cells"]["B3.ctrl_s.L0"]["gold"]
     assert gold["confirmed"] == 1 and gold["unstable"] == 2
     assert out["pinned"]["cells"]["B3.ctrl_s.L0"]["reading"] == "MINOR"
@@ -398,13 +402,13 @@ def test_unconfirmed_discordance_is_unstable_not_a_finding():
 def test_pending_without_rounds_and_invalid_on_replicate_drift():
     its = _items()
     flips = {"B3.ctrl_s.L0": {"g:0"}}
-    out = analysis.analyze(its, _scores(its, PRIMARY, flips), reference=None)
+    out = analyze_fast(its, _scores(its, PRIMARY, flips), reference=None)
     assert out["pinned"]["cells"]["B3.ctrl_s.L0"]["reading"] == "PENDING"
     assert out["validity"]["V1"]["status"] == "not_checked"
     assert "pending" in out["pinned"]["arms"]["route"]["reading"]
     flips = {levels.REPLICATE_CELL: {"g:4"}}
     rounds = [_scores(its, [levels.CONTROL_CELL, levels.REPLICATE_CELL], flips)] * 2
-    out = analysis.analyze(its, _scores(its, PRIMARY, flips), rounds=rounds, reference={})
+    out = analyze_fast(its, _scores(its, PRIMARY, flips), rounds=rounds, reference={})
     assert out["validity"]["V2"]["status"] == "fail"
     assert out["pinned"]["arms"]["build"]["reading"] == "INVALID"
 
@@ -415,7 +419,7 @@ def test_retention_drops_builds_and_build_arm_needs_two():
     for b in ("B1", "B2", "B3", "B4"):
         status[f"{b}.ctrl_s.L0"] = {it["item_id"]: "save_failed" for it in its[:3]}
     ref = {f"tg{i}": "pass" for i in range(10)}
-    out = analysis.analyze(its, _scores(its, PRIMARY, status=status), reference=ref)
+    out = analyze_fast(its, _scores(its, PRIMARY, status=status), reference=ref)
     cells = out["pinned"]["cells"]
     assert cells["B1.ctrl_s.L0"]["reading"] == "NOT_EVALUABLE"
     assert cells["B5.ctrl_s.L0"]["reading"] == "INVARIANT"
@@ -430,7 +434,7 @@ def test_task_level_s1a_count_and_v1_difference_limit():
     rounds = [_scores(its, [levels.CONTROL_CELL, "B0.headless_convert.L0"], flips)] * 2
     ref = {f"tg{i}": "pass" for i in range(10)}
     ref["tg0"] = ref["tg1"] = "fail"
-    out = analysis.analyze(its, _scores(its, PRIMARY, flips), rounds=rounds, reference=ref)
+    out = analyze_fast(its, _scores(its, PRIMARY, flips), rounds=rounds, reference=ref)
     s1a = out["pinned"]["cells"]["B0.headless_convert.L0"]["s1a"]["s1a_pass"]
     assert s1a["confirmed"] == 4 and s1a["confirmed_tasks"] == ["ts0", "ts1", "ts2"]
     assert out["pinned"]["cells"]["B0.headless_convert.L0"]["reading"] == "DRIFT"
@@ -442,9 +446,9 @@ def test_analysis_scope_is_the_registered_splits():
     its = _items()
     for it in its[:5]:
         it["split"] = "dev"
-    out = analysis.analyze(its, _scores(its, PRIMARY), reference={})
+    out = analyze_fast(its, _scores(its, PRIMARY), reference={})
     assert out["items"] == len(its) - 5
-    dev = analysis.analyze(its, _scores(its, PRIMARY), reference={}, splits=("dev",))
+    dev = analyze_fast(its, _scores(its, PRIMARY), reference={}, splits=("dev",))
     assert dev["items"] == 5
 
 
@@ -606,7 +610,7 @@ def test_capture_verification_against_committed_digests(tmp_path):
 def test_pending_confirmations_lists_items_and_cells():
     its = _items()
     flips = {"B3.ctrl_s.L0": {"g:0"}, levels.REPLICATE_CELL: {"s:1:1"}}
-    out = analysis.analyze(its, _scores(its, PRIMARY, flips), reference=None)
+    out = analyze_fast(its, _scores(its, PRIMARY, flips), reference=None)
     pending = analysis.pending_confirmations(out)
     assert pending == {"items": ["g:0", "s:1:1"], "cells": [levels.REPLICATE_CELL, "B3.ctrl_s.L0"]}
 
@@ -644,3 +648,74 @@ def test_host_tool_renders_cpu_only_lane_jobs(tmp_path):
         assert command.endswith(host.LANE)
     assert score["image"] == levels.METRIC_IMAGE_ID
     assert "--cell raw" in " ".join(score["argv"])
+
+
+def test_headless_route_collects_like_the_registered_stage(tmp_path, monkeypatch):
+    gold = tmp_path / "gold.xlsx"
+    gold.write_bytes(b"gold")
+    other = tmp_path / "notes.txt"
+    other.write_bytes(b"n")
+    session = rs.NuisanceSession(
+        rs.R.Display(197, tmp_path), tmp_path / "s", levels.get_cell("B0.headless_convert.L0"),
+        None, pipe="p",
+    )  # fmt: skip
+    converted: list[tuple[str, ...]] = []
+
+    def fake_round_trip(self, vm_path, timeout=120.0):
+        target = self.host_path(vm_path)
+        before = rs.R.sha256_file(target)
+        target.write_bytes(b"resaved")
+        return rs.R.SaveEvent(vm_path, "headless_convert", before, rs.R.sha256_file(target),
+                              True, 0.9, [])  # fmt: skip
+
+    monkeypatch.setattr(rs.NuisanceSession, "headless_round_trip", fake_round_trip)
+    monkeypatch.setattr(rs.NuisanceSession, "convert", lambda self, argv: converted.append(argv))
+    monkeypatch.setattr(rs.NuisanceSession, "close", lambda self: None)
+    job = {
+        "job_id": "g:t",
+        "task_id": "t",
+        "files": {"/home/user/a.xlsx": str(gold), "/home/user/notes.txt": str(other)},
+    }
+    raw = {"evaluator": {"postconfig": [
+        {"type": "activate_window", "parameters": {"window_name": "a.xlsx - LibreOffice Calc"}},
+        {"type": "execute", "parameters": {"command": [
+            "libreoffice", "--convert-to", "csv:Text - txt - csv (StarCalc):44,34,UTF8",
+            "--outdir", "/home/user", "/home/user/a.xlsx"]}}]}}  # fmt: skip
+    row = rs.run_job_headless(session, job, raw, tmp_path / "out")
+    assert [s["vm_path"] for s in row["saves"]] == ["/home/user/a.xlsx"]
+    assert len(converted) == 1 and converted[0][0] == "libreoffice"
+    assert set(row["outputs"]) == {"/home/user/a.xlsx"}
+    assert (tmp_path / "out" / "g:t" / "home/user/a.xlsx").read_bytes() == b"resaved"
+    assert rs.R.save_failures(job["files"], row) == []
+
+
+def test_store_as_save_event_from_the_uno_client(tmp_path, monkeypatch):
+    session = rs.NuisanceSession(
+        rs.R.Display(196, tmp_path), tmp_path / "s", levels.get_cell("B3.store_as.L0"), None,
+        pipe="r04w0",
+    )  # fmt: skip
+    session.log = []
+    target = session.host_path("/home/user/a.docx")
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"before")
+    calls = []
+
+    class Done:
+        returncode = 0
+        stderr = ""
+        stdout = '{"ok": true, "filter": "MS Word 2007 XML", "error": null}\n'
+
+    def fake_run(argv, **kwargs):
+        calls.append(argv)
+        if argv and argv[0] == session.uno_python:
+            target.write_bytes(b"after, longer")
+            return Done()
+        raise AssertionError(argv)
+
+    monkeypatch.setattr(rs.subprocess, "run", fake_run)
+    monkeypatch.setattr(rs.R, "list_windows", lambda env: [])
+    event = session.save_with_ctrl_s("/home/user/a.docx", "agent_save", timeout=5.0)
+    assert event.written and event.before_sha256 != event.after_sha256
+    assert calls[0][0] == "/opt/libreoffice24.8/program/python"
+    assert calls[0][calls[0].index("--pipe") + 1] == "r04w0"
+    assert any(e["event"] == "store_as" and e["ok"] for e in session.log)
