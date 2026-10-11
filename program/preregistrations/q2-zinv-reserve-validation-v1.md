@@ -333,9 +333,19 @@ rows, summaries). No outward action.
   copy (row 19), `check-chain` and `verify` pass, the guard then admits the reserve split
   only with `Q2ZR_PREREG_FROZEN` set, and refuses it after any edit of this file; the real
   ledger is untouched. Record: `program/evidence/2026-10-11/q2-zinv-reserve/README.md`.
-- Host rehearsal: the draft is staged on the host, `plan --split reserve` is refused (no
-  ledger row), and `plan --split dev` with `next --dry-run` renders the four jobs without
-  submitting. A dev-split run of the four steps (exploratory) waits for an empty queue.
+- Host rehearsal: the draft is staged on the host; `plan --split reserve` is refused (no
+  ledger row); `plan --split dev` with `next --dry-run` renders step 1 without submitting;
+  a scratch-frozen tree in a host temp directory passes the host-side reserve checks (the
+  pinned control files match) without writing anything.
+- Dev rehearsal of step 4 (Slurm 1202, from `bc14599e`, on the parent's stored
+  `dev-mutants-v9` and `dev-controls-v9`; 2 min 36 s, exit 0): both guards passed in the
+  container; 48 rows, all valid; zinv accepted 6 of 6 dev z-order mutants on 2 tasks, newly
+  accepted none of 6 violation mutants and changed no other verdict (PASS, descriptive;
+  exploratory). Before it, inspection of the released confirm verdicts showed that the
+  parent's `scored_sha256` cannot be compared across scorings, and the validity rule was
+  changed to the file digest of section 6 (the earlier plan was never submitted). Steps 1-3
+  were not run on the host before the freeze: they are the parent's frozen jobs, checked
+  against `submit_mutants.sh` by the tests.
 
 ## 12. Limitations
 

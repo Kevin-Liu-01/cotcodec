@@ -57,5 +57,38 @@ ledgers stayed at 18 rows, unmodified:
   `reserve-controls-v1` matched their digests on the host, the images came from the parent's
   pins, step 1 rendered with both frozen-environment variables, and nothing was written; the
   temp directory was removed.
-- `317e89c1` staged likewise; plan `dev-zinv-v1` (`--reuse-parent-run dev-mutants-v9`)
-  rehearses step 4 alone on the parent's stored dev run and `dev-controls-v9`.
+- `317e89c1` staged likewise with plan `dev-zinv-v1` (`--reuse-parent-run dev-mutants-v9`:
+  step 4 alone on the parent's stored dev run and `dev-controls-v9`). It was never
+  submitted: before the queue emptied, a check of the released confirm verdicts showed that
+  the parent's `scored_sha256` hashes the scorer's temporary path (0 of 1,300 lock-exact and
+  scoping pairs equal), so the draft's validity rule, which compared it across scorings,
+  would have voided every row. The rule now compares a path-independent digest of the job's
+  files taken before and after both scorings (`bc14599e`), and `dev-zinv-v1` stays pending,
+  superseded by `dev-zinv-v2` at `bc14599e`.
+
+## Dev rehearsal of step 4 (`dev-zinv-v2/`, Slurm 1202; exploratory, dev split)
+
+`zr_host.py next --name dev-zinv-v2`, submitted when `squeue` was empty, from the staged
+export of `bc14599e`; the step reads the parent's stored dev mutation run `dev-mutants-v9`
+(Slurm 714-716, code `34046e09`) and control run `dev-controls-v9`. One CPU job through the
+unchanged lane: exit status 0, 2 min 36 s (21:01:47 to 21:04:23 UTC), `gpus_requested` 0,
+network none. In the container both guards passed (this addendum's, then the parent's
+`campaign guard`: 447 file-cache files verified, OSWorld tree `4153c686...`, VM baseline
+`f3253818...`), then `run rescore` and `run judge`.
+
+- 48 rows: 39 evaluable mutants of the dev split's tasks checked by `compare_pptx_files`
+  alone (3 tasks), 4 saved golds, 5 saved do-nothing states. Every row valid: the fresh
+  original scoring reproduced the registered verdict on 48 of 48, and every job's files had
+  the same digest before and after both scorings.
+- The rule's reading (dev, exploratory, not evidence): PASS, descriptive. zinv accepted 6 of
+  6 z-order mutants on 2 tasks, all 6 failed by the original; no violation mutant newly
+  accepted (6 on 1 task); no other item changed verdict (42 of 42 equal); no zinv error.
+  The dev z-order mutants were not part of zinv's validation set (job 1000 read the confirm
+  campaign only), but the dev split was read during the operators' development.
+- Files: `zinv-rows.json` (SHA-256 `d8c77b28...`), `judgement.json` (`54f56a73...`),
+  `receipt-1202.json`, `plan.json`. They hold ids, labels, scores and digests only.
+
+Not rehearsed on the host: steps 1-3 (the parent's frozen mutation jobs, which made
+`dev-mutants-v9` and the confirm run) behind this addendum's guard and target filter; their
+commands are checked against `submit_mutants.sh` by the tests and rendered by
+`next --dry-run` (plan `dev-rehearsal-v1`).
