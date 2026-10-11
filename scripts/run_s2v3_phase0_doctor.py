@@ -69,13 +69,22 @@ def sha_file(p: Path) -> str:
     return h.hexdigest()
 
 
-def check_manifest(cap: Path, manifest: dict) -> dict:
+def _hash_one(args):
+    p, digest = args
+    if not p.is_file():
+        return "missing"
+    return "ok" if sha_file(p) == digest else "bad"
+
+
+def check_manifest(cap: Path, manifest: dict, workers: int = 8) -> dict:
     bad, missing = [], []
-    for rel, digest in manifest.items():
-        p = cap / rel
-        if not p.is_file():
+    items = sorted(manifest.items())
+    with ProcessPoolExecutor(max_workers=workers) as ex:
+        results = list(ex.map(_hash_one, [(cap / rel, d) for rel, d in items], chunksize=32))
+    for (rel, _), r in zip(items, results):
+        if r == "missing":
             missing.append(rel)
-        elif sha_file(p) != digest:
+        elif r == "bad":
             bad.append(rel)
     extra = [str(p.relative_to(cap)) for p in cap.rglob("*") if p.is_file()
              and str(p.relative_to(cap)) not in manifest and p.name not in ("manifest.json", "receipt-1131.json")]
@@ -167,7 +176,7 @@ def main() -> int:
     manifest = json.loads(Path(args.manifest).read_text())
     caprec = json.loads(Path(args.capture_record).read_text())
     cases = {}
-    c01 = check_manifest(cap, manifest)
+    c01 = check_manifest(cap, manifest, args.workers)
     here = {n: sha_file(ROOT / "harness" / d / n) for n, d in
             (("capture.py", "s2_locale"), ("catalog.py", "s2_locale"), ("reachability.py", "q2_mutation"))}
     c01["code_sha256_capture_job"] = caprec.get("code_sha256")
@@ -179,10 +188,12 @@ def main() -> int:
     pool = {t["task_id"]: t for t in json.loads(Path(args.pool).read_text())["tasks"]}
     recs = P.load_records(cap)
     dev = sorted(t for t in recs if pool[t]["split"] == "dev")
-    tol = P.calibrate(cap, recs, dev)
+    print(f"[{time.time() - t0:7.1f}s] manifest checked", file=sys.stderr, flush=True)
+    with ProcessPoolExecutor(max_workers=args.workers) as ex0:
+        tol = P.calibrate(cap, recs, dev, executor=ex0)
     cases["c03_calibration"] = {"dev_tasks": len(dev), **tol, "pass": len(dev) == 17}
     tasks = sorted(recs)
-    print(f"[{time.time() - t0:7.1f}s] manifest and calibration done; {len(tasks)} tasks", file=sys.stderr, flush=True)
+    print(f"[{time.time() - t0:7.1f}s] calibration done; {len(tasks)} tasks", file=sys.stderr, flush=True)
     per_task = []
     with ProcessPoolExecutor(max_workers=args.workers, initializer=_init, initargs=(str(cap), tol, pool)) as ex:
         for i, r in enumerate(ex.map(_one, [(t, recs[t]) for t in tasks])):

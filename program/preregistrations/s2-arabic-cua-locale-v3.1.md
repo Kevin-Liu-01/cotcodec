@@ -304,7 +304,7 @@ K0 as decided here:
   flagged on all 17 dev tasks; the in-application document change was caught on all 15 dev tasks
   where it was visible (on 2 Impress tasks the changed run is not on screen: PD's document region
   equals E's, so those plants are not controls). I2-I6 passed: O6 0 differing pixels on 106 of 106,
-  O1 text structure identical on 212 of 212 pairs, O4 943 of 943 parents, P7 106 of 106, A/A 106 of
+  O1 text structure identical on 212 of 212 pairs, O4 943 of 943 parents, P7 106 of 106 (98 at 0 pixels, 8 at 28), A/A 106 of
   106 (0 pixels).
 - Under this registration's P0.8b and P0.9 (checker invariance, A4 above; the operationalization
   through the gold and do-nothing controls was chosen after the proxy's result, the semantics are
@@ -477,7 +477,7 @@ M1 in the non-inferiority sense, and both are fixed here before data.
 | P4 | T < 0 | T is SMALL (census) or PRESENT_BENEFIT (same operating characteristics) |
 | P5 | The D_t slope on positional exposure is negative | its 95% CR2 interval lies above 0 (named only if below) |
 | P6 | The T_t slope on lexical overlap is negative | its 95% CR2 interval lies above 0 (named only if below) |
-| P7 | The layout switch is one treatment whether set by the key or by the language | Phase 0: the ar cell with UIMirroring (AR) and the ar cell whose direction follows the language (AD) differ beyond tol6 pixels at a task's post-setup state. Pilot (capture 1131): identical in 106 of 106 tasks (0 differing pixels) |
+| P7 | The layout switch is one treatment whether set by the key or by the language | Phase 0: the ar cell with UIMirroring (AR) and the ar cell whose direction follows the language (AD) differ beyond tol6 pixels at a task's post-setup state. Pilot (capture 1131): within tol6 in 106 of 106 tasks (98 identical; 8 differ in one 11 x 5 px spot, 28 pixels) |
 | P8 | The mirror cost exceeds the toolbar rearrangement's (E_dir < 0) | E_dir NO_EXCESS (population frame) |
 
 ## Reported regardless of outcome
@@ -667,7 +667,7 @@ otherwise. No personal data; the VMs are offline.
 
 Kevin permits the three downloads and the image surgery and lane change pass review: 0.6. With the
 shipped catalogs, Phase 0 admits at least 62 tasks under checker invariance: 0.85 (the pilot admitted
-105 with a stand-in catalog that translated more registry strings than the shipped one does); the
+105 with a stand-in catalog); the
 oracle's planted-control bar is met after a uniqueness test: 0.7. P0.6 passes on the five overlays:
 0.85. Phase 1 reached overall, including an admission ruling: about 0.3. If it runs: D PRESENT_HARM
 0.35, D SMALL 0.45, MIRROR_SPECIFIC given D PRESENT_HARM 0.4, T PRESENT_HARM 0.45, T SMALL 0.35.

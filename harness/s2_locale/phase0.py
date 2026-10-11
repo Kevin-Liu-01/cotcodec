@@ -77,48 +77,62 @@ def saved_file(cap: Path, task: str, cell: str, rec: dict) -> list[Path]:
 # tolerances from the A/A replicates of the dev tasks
 
 
-def calibrate(cap: Path, recs: dict, dev_tasks: list[str]) -> dict:
-    """Tolerances and the VCL coordinate offset, from the 17 dev tasks only (frozen for the rest)."""
-    elem, full, doc, trans, dxs = [], [], [], [], []
-    dys = []
-    for t in dev_tasks:
-        ie, de = shot(cap, t, "E"), a11y(cap, t, "E")
-        if ie is not None and de:
-            dys.append(O.estimate_dy(ie, O.showing_nodes(de)))
+def _calib_dy(args) -> int | None:
+    cap, t = args
+    ie, de = shot(cap, t, "E"), a11y(cap, t, "E")
+    if ie is None or not de:
+        return None
+    return O.estimate_dy(ie, O.showing_nodes(de))
+
+
+def _calib_task(args) -> dict:
+    cap, t, dy_vcl = args
+    out = {"elem": [], "full": [], "doc": [], "trans": [], "dxs": []}
+    for a, b in (("E", "E2"), ("ER", "ER2")):
+        ia, ib = shot(cap, t, a), shot(cap, t, b)
+        if ia is not None and ib is not None:
+            out["full"].append(O.pixel_diff(ia, ib)["diff_pixels"])
+    ie, de = shot(cap, t, "E"), a11y(cap, t, "E")
+    if ie is None or not de:
+        return out
+    nodes = O.place_nodes(ie, O.showing_nodes(de), dy_vcl)
+    fr = O.frame_box(nodes) or (0, 0, 1920, 1080)
+    i2 = shot(cap, t, "E2")
+    if i2 is not None:
+        out["elem"] = [e["local_mismatch"] for e in O.element_pass(ie, i2, nodes, fr, "identity", 1.0)]
+        box = O.doc_region(nodes)
+        if box:
+            al = O.align_count(ie, i2, box)
+            if al.get("ok"):
+                out["doc"].append(al["diff_pixels"])
+    ipl = shot(cap, t, "PL")
+    if ipl is not None:
+        # translation noise: toolbar elements the shuffle moved within their row
+        for e in O.element_pass(ie, ipl, nodes, fr, "identity", 0.25):
+            if e["role"] in ("push button", "toggle button") and not e.get("unmoved") \
+                    and e.get("found_y") is not None and abs(e["found_y"] - e["ink_box"][1]) <= 2 \
+                    and e["found_mismatch"] <= 0.25:
+                out["trans"].append(e["found_mismatch"])
+    ier = shot(cap, t, "ER")
+    if ier is not None:
+        for e in O.element_pass(ie, ier, nodes, fr, "reflect", 0.25, tol3=24):
+            if e["near_expected"] and e["local_mismatch"] <= 0.25:
+                out["dxs"].append(abs(e["dx"]))
+    return out
+
+
+def calibrate(cap: Path, recs: dict, dev_tasks: list[str], executor=None) -> dict:
+    """Tolerances and the VCL coordinate offset, from the 17 dev tasks only (frozen for the rest).
+    ``executor`` (optional) maps the per-task work in parallel; the result does not depend on it."""
+    mapper = executor.map if executor is not None else map
+    dys = [d for d in mapper(_calib_dy, [(cap, t) for t in dev_tasks]) if d is not None]
     dy_vcl = int(Counter(dys).most_common(1)[0][0]) if dys else 0
-    for t in dev_tasks:
-        for a, b in (("E", "E2"), ("ER", "ER2")):
-            ia, ib = shot(cap, t, a), shot(cap, t, b)
-            if ia is None or ib is None:
-                continue
-            full.append(O.pixel_diff(ia, ib)["diff_pixels"])
-        ie, de = shot(cap, t, "E"), a11y(cap, t, "E")
-        if ie is None or not de:
-            continue
-        nodes = O.place_nodes(ie, O.showing_nodes(de), dy_vcl)
-        fr = O.frame_box(nodes) or (0, 0, 1920, 1080)
-        i2 = shot(cap, t, "E2")
-        if i2 is not None:
-            els = O.element_pass(ie, i2, nodes, fr, "identity", 1.0)
-            elem += [e["local_mismatch"] for e in els]
-            box = O.doc_region(nodes)
-            if box:
-                al = O.align_count(ie, i2, box)
-                if al.get("ok"):
-                    doc.append(al["diff_pixels"])
-        ipl = shot(cap, t, "PL")
-        if ipl is not None:
-            # translation noise: toolbar elements the shuffle moved within their row
-            for e in O.element_pass(ie, ipl, nodes, fr, "identity", 0.25):
-                if e["role"] in ("push button", "toggle button") and not e.get("unmoved") \
-                        and e.get("found_y") is not None and abs(e["found_y"] - e["ink_box"][1]) <= 2 \
-                        and e["found_mismatch"] <= 0.25:
-                    trans.append(e["found_mismatch"])
-        ier = shot(cap, t, "ER")
-        if ier is not None:
-            for e in O.element_pass(ie, ier, nodes, fr, "reflect", 0.25, tol3=24):
-                if e["near_expected"] and e["local_mismatch"] <= 0.25:
-                    dxs.append(abs(e["dx"]))
+    parts = list(mapper(_calib_task, [(cap, t, dy_vcl) for t in dev_tasks]))
+    elem = [x for p in parts for x in p["elem"]]
+    full = [x for p in parts for x in p["full"]]
+    doc = [x for p in parts for x in p["doc"]]
+    trans = [x for p in parts for x in p["trans"]]
+    dxs = [x for p in parts for x in p["dxs"]]
     worst = max(elem) if elem else 0.0
     p95t = float(np.percentile(trans, 95)) if trans else 0.0
     tol2 = round(min(0.10, max(0.02, 2 * worst, p95t)), 4)

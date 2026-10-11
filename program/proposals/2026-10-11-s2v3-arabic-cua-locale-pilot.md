@@ -29,7 +29,7 @@ repair run to complete the pilot on what the CPU lane can run. What changed, and
 | # | Wave-1 defect (who) | Repair | Result | Evidence |
 |---:|---|---|---|---|
 | 1 | The text factor never ran: no Arabic catalog rendered, the "pseudo-Arabic" cell fell back to English, ar-LTR only on blank documents (reviewer 1, feasibility refuter) | A pseudo-Arabic interface generated in the job from the installed build's own English strings (no download): 13,226 exact dialog keys, 155,390 candidate code-string keys, 5,580 registry labels, Arabic letters of matched length with placeholders, mnemonics, digits and acronyms kept; shortcut tables and command URLs never transformed. Every cell, ar-LTR included, at every candidate task's post-setup state | 1,022 renders (106 tasks x 9 cells, 17 dev tasks x 4 more), 0 errors; median 0.93 of named chrome in Arabic script in the ar cells (minimum 0.91); 93% of tagged chrome covered | Slurm 1131; `compute/pilot-r1/capture-1131/` |
-| 2 | The registered oracle not implemented (O2, O3 on pixel boxes, O6, planted controls); O5 not discriminative (reviewer 1, recorder) | `harness/s2_locale/oracle.py`: boxes located from ink (accessibility extents only in LTR cells, VCL's vertical offset estimated on the dev tasks), O2 as whole-run pixel identity, O3 against a mirror specification frozen on the dev tasks (tol3 = 20 px), O5 by full-width alignment with a flipped comparison, O6 against a stock cell, in-application and synthetic planted controls | O6: 0 differing pixels on 106/106; O1 text structure identical 212/212; O4 943/943; P7 106/106; A/A 106/106 at 0 px; O3: 84% of chrome elements within tol3 of their reflection, 94% located in their row; O5: the document is not mirrored for en-RTL on 105/106 (the flipped document differs by at least 7,759 px everywhere), and the Arabic interface changes the slide in 14 of 40 Impress tasks (localized placeholder prompts) | orx node «ORX_EXP» run «ORX_RUN»; Slurm 1132 replicate |
+| 2 | The registered oracle not implemented (O2, O3 on pixel boxes, O6, planted controls); O5 not discriminative (reviewer 1, recorder) | `harness/s2_locale/oracle.py`: boxes located from ink (accessibility extents only in LTR cells, VCL's vertical offset estimated on the dev tasks), O2 as whole-run pixel identity, O3 against a mirror specification frozen on the dev tasks (tol3 = 20 px), O5 by full-width alignment with a flipped comparison, O6 against a stock cell, in-application and synthetic planted controls | O6: 0 differing pixels on 106/106; O1 text structure identical 212/212; O4 943/943; P7 106/106 within tolerance (98 identical; 8 differ in one 11 x 5 px spot, 28 px); A/A 106/106 at 0 px; O3: 84% of chrome elements within tol3 of their reflection, 94% located in their row; O5: the document is not mirrored for en-RTL on 105/106 (the flipped document differs by at least 7,759 px everywhere), and the Arabic interface changes the slide in 14 of 40 Impress tasks (localized placeholder prompts) | orx node «ORX_EXP» run «ORX_RUN»; Slurm 1132 replicate |
 | 3 | Selector tested in an extra layer, not `/etc/libreoffice/registry` (reviewer 1, feasibility refuter) | The selector in a copy of the system layer that both of its layer entries read (only the path differs) | Recorded per render | capture 1131 |
 | 4 | The cells differ in more than one file (`LANGUAGE=ar`, identification refuter) | Dropped; the interface language set by both of its keys (`ooLocale`, `UILocale`): with `ooLocale` alone the registry labels stay English (debug 1123), a defect the wave-1 cell L4 also had | One selector file between Phase 1 cells | debug 1123, capture 1131 |
 | 5 | K0 and K1 undecided | K0 decided twice (below); K1's CPU-lane parts decided, the rest scoped | K0 under the rules committed before the sweep: **FAIL** (53 admitted by a file-identity and content-leak proxy stricter than the registration; synthetic plants caught 101/106 for O3 and 95/106 for O2 against a 100% bar). Under the registration's own checker semantics (a leak excludes only if the checker reads it): **105 of 106 admitted**; no cell changes any checker verdict on any task's gold or do-nothing state (1,110 scored saves) | Slurm 1139, 1141; `compute/pilot-r1/admitted-checker-invariance.json` |
@@ -38,16 +38,16 @@ repair run to complete the pilot on what the CPU lane can run. What changed, and
 | 8 | Admission conditioned on how the treatment renders (O1-O7 in all cells; discretionary remedies; recorder's defect 2) | Intention to treat: only agent-independent failures exclude (setup, window title, save, checker invariance); O2, O3, O5 and O8 are descriptors and moderators; D also reported on all 106 | 1 exclusion | registration v3.1 |
 | 9 | Moderator P0.12a coded every click as a reflection; O8 constant across tasks; no baseline covariate (refuter) | Chrome and document clicks separately (documents shift, they are not reflected); O8 per task (15-23 elements outside the specification); baseline success as a covariate | | registration v3.1 P0.12 |
 | 10 | `compare_pptx_files` order defect not carried (recorder's defect 6) | Sensitivity analysis without its 43 tasks | | registration v3.1 |
-| 11 | Overstatements: "documents stay unmirrored", P7's numbers, job list (reviewer 1, recorder) | Backed or restated: O5 now measures it; P7 now compares the language-default RTL cell with the key RTL cell (identical on 106/106); headers cite the jobs that produced each number; fresh blind paragraphs say what has and has not run | | `blind/paragraph-84279667.txt` |
+| 11 | Overstatements: "documents stay unmirrored", P7's numbers, job list (reviewer 1, recorder) | Backed or restated: O5 now measures it; P7 now compares the language-default RTL cell with the key RTL cell (within tolerance on 106/106: 98 identical, 8 differing in one 28-pixel spot); headers cite the jobs that produced each number; fresh blind paragraphs say what has and has not run | | `blind/paragraph-84279667.txt` |
 | 12 | Novelty a measurement delta; "Why now" framed as macOSWorld's open split; coverage gaps (novelty refuter, reviewers) | Restated as a measurement on a narrower object; 6 new orx queries (two in Chinese, nothing usable), 3 GitHub searches (no agent study), full reads of 2609.33012 and RotDroid | No direct prior found | `compute/pilot-r1/queries/` |
 | 13 | No orx node (79 cap) | A `cpu-doctor` node runs the oracle over the committed manifest | «ORX_SUMMARY» | orx «ORX_EXP» |
 
 Not repaired, and why:
 - The shipped Arabic catalogs, the derived image and the VM lane: the three package downloads wait on
-  Kevin (D74); the stand-in catalog over-translates the registry relative to the shipped one (the
-  shipped catalog leaves the Calc, Impress and Writer window-title names in English, which the
-  generator copies), so leak counts are an upper bound for those strings and a lower bound for
-  strings its code-key heuristic misses.
+  Kevin (D74). The stand-in is not the shipped catalog: it transforms every localized registry value
+  (except the window-title factory names, which the shipped catalog also leaves in English) and misses
+  code strings its key heuristic does not pair, so the leak, coverage and O5 numbers are the
+  stand-in's; Phase 0 proper repeats them with the shipped catalog.
 - K1 (P0.6): C1-C4, A1 at N = 1 and A5 need the five cell overlays in the VM lane (about 25 VM-hours;
   with A2, A3, A6 and the V = 20 rung about 44), plus reviewed image-surgery and lane code and a
   registered deviation of `q2-action-path-v2`.
@@ -205,7 +205,7 @@ Repair-run claims (each tied to a CPU-only Slurm job's receipt and record under 
 | C43 | A finalized window-state `DockingArea` in the system layer does not move the toolbars (three forms) | debug 1123 | pilot |
 | C44 | Capture: 106 tasks x 9 cells and 17 dev tasks x 4 cells, 1,022 renders, 0 errors, all stable, every postconfig save written, `setxkbmap` reports `us` | capture 1131 | pilot |
 | C45 | The generated catalogs: 13,226 `.ui` keys, 155,390 candidate code keys (168,616 entries), 5,580 registry labels, matched length on every string; median 0.93 of named chrome in Arabic script in the ar cells | capture 1131 `catalog-stats.json`; oracle | pilot |
-| C46 | O6, O1 text pairs, O4, P7 and A/A pass on every task (0 differing pixels for O6, P7 and A/A) | orx node; Slurm 1132 | pilot |
+| C46 | O6, O1 text pairs, O4, P7 and A/A pass on every task (0 differing pixels for O6 and A/A on every task; P7 0 on 98 tasks and 28 px in one small spot on 8) | orx node; Slurm 1132 | pilot |
 | C47 | Mirroring: 84% of chrome elements within 20 px of their reflection, 94% located in their row; the document is not mirrored for en-RTL on 105/106 tasks (flipped differs by at least 7,759 px) | oracle | pilot |
 | C48 | In 14 of 40 Impress tasks the Arabic interface changes the slide (empty placeholders show localized prompts, right-to-left) | oracle O5 | pilot |
 | C49 | Localized defaults reach saved files in the ar cells (Impress slide and notes masters, Writer style names, Calc header and footer defaults: 34 tasks; 53 in the tagged cell) | oracle `content_leaks` | pilot |
@@ -302,8 +302,8 @@ P2, the delta certification passes (K1; not yet run); P3, D < 0, read as a total
 with no mechanism attached (falsified by census SMALL or PRESENT_BENEFIT; simulated SMALL at a true
 null 0.97); P4, T < 0 (same); P5 and P6, negative moderator slopes for positional exposure (D; chrome
 and document clicks separately, baseline success as a covariate) and lexical overlap (T), named only
-on a 95% CR2 interval below 0; P7, the language-default RTL cell equals the key RTL cell (pilot: 106
-of 106 identical); P8, the mirror cost exceeds the toolbar rearrangement's (E_dir < 0; falsified by
+on a 95% CR2 interval below 0; P7, the language-default RTL cell equals the key RTL cell (pilot: within
+tolerance on 106 of 106; 98 identical); P8, the mirror cost exceeds the toolbar rearrangement's (E_dir < 0; falsified by
 NO_EXCESS in the population frame).
 
 **Kill criteria:** K0 fewer than 62 admitted tasks or a failed instrument check (infrastructure
