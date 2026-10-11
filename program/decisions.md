@@ -1451,3 +1451,39 @@ the top README carries the warning); and the dated 2026-10-08 results README
 still reading "K2: no executor", which this decision supersedes. The
 checker-mutation note (R03) now waits only on Kevin's blind adjudication and
 spot check. After it, the analysis is rerun once more with `--k2-report`.
+
+**D80. Kevin delegates his pending research decisions; four result-producing
+steps start.** On 2026-10-11, shown the list of items waiting on him, Kevin
+wrote: "do it yourself for whatever gains actual results". Decided under that
+delegation:
+- (i) R04 (`r04-checker-nuisance-invariance-v1`) runs standalone, not as S2
+  v3's Phase 0. Its two section 4.4 adaptations and its CPU cap are accepted
+  as drafted. It is frozen and run (0 GPU-h).
+- (ii) The checker-mutation adjudication (the 34-item pool) and the 25-item
+  spot check, 52 distinct items, are done by fresh, isolated model
+  adjudicators, one per item, blind to both raters' labels, following the
+  frozen rater template's isolation rules. This is a disclosed deviation from
+  D9: the spot check was meant as a human validation of the model raters, and
+  it is not human here. Every affected output carries the label "adjudicated
+  by an isolated model on the owner's instruction (D80); not human-validated".
+  The parent analysis is then rerun with `--adjudications` and `--k2-report`.
+- (iii) Q2 successor E (D69): all 113 tasks, both sizes, 4 new sessions, 1
+  rerun; 6.77 cap-GPU-h. It is registered, audited before the freeze, frozen
+  and run, for a decisive DR2 reading. It needs no gauntlet, because it only
+  adds data to S1a's design (D66).
+- (iv) S2 v3 continues as S2 v4. The official LibreOffice Arabic language
+  packs matching the guest's LibreOffice 7.3.7 are fetched from the
+  distribution archive (the download Kevin approves here). The derived image
+  is built with reviewed image code. A registered deviation of
+  `q2-action-path-v2` covers the P0.6 certification on the derived
+  configuration. The K0 admission rule is committed in v4's registration
+  before any Phase 0 result is read. Phase 1 (6.83 GPU-h) is admitted under
+  D24 if Phase 0 passes as registered.
+Not covered by the delegation, so not done:
+- the outward actions (the Letta and xlang-ai disclosures, publishing the Q2
+  report, the history purge, key rotation), which stay per-action with Kevin;
+- Q1's untrusted model-generated GPU code on the unpatched R570 driver, a
+  host-security risk not accepted on his behalf;
+- C5's Phase 1 (70-97 GPU-h), whose identification defect stands.
+Host jobs are serialized: at most one VM-lane campaign at a time, and S1a-style
+quiet-host rules apply while a registered VM or GPU job runs.
