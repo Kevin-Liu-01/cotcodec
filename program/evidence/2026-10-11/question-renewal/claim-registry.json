@@ -1,0 +1,2298 @@
+{
+ "schema": "question-renewal-claim-registry-v1",
+ "date": "2026-10-11",
+ "slate": "program/evidence/2026-10-11/question-renewal/slate.md",
+ "repo_base": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/",
+ "status_legend": {
+  "VERIFIED-FULLTEXT": "primary source full text searched by the slate owner for the quoted figure",
+  "VERIFIED-ABSTRACT": "abstract read by the slate owner (OpenReview api2 search)",
+  "TITLE-VERIFIED": "the id resolves to the cited title (orx lookup or api2 search); content as cited by the cell",
+  "VERIFIED-REPO": "read in this repository at commit 360058d",
+  "VERIFIED-RECOMPUTED": "recomputed by the slate owner from committed or scratch data",
+  "CELL-REPORTED": "reported by a discovery cell or the 2026-10-06 dossier; title or link checked, figure not re-read",
+  "UNVERIFIED": "could not be verified; not relied on",
+  "ESTIMATE": "arithmetic estimate; inputs cited"
+ },
+ "claims": [
+  {
+   "id": "c001",
+   "candidates": [
+    "R01",
+    "R02",
+    "R07",
+    "R08",
+    "R09",
+    "R15"
+   ],
+   "claim": "S1a ran 1,808 episodes (4 jobs x 452) with 0 infrastructure losses, 0 restarts and 0 undelivered observations",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read RESULTS.md; row count of a1.jsonl recomputed (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c002",
+   "candidates": [
+    "R01",
+    "R07",
+    "R08",
+    "R09",
+    "R15"
+   ],
+   "claim": "Realized cost 0.0025-0.0027 GPU-h per episode at V = 20 (0.002497-0.002702 per job; 22-24% of the card high price 0.011274)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read cost card table"
+  },
+  {
+   "id": "c003",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "D_w pooled on the 32 base tasks 12.5% (95% 6.64-19.14); 4B 16.41%; 9B 8.59% (3.91-14.06)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read primary estimands table"
+  },
+  {
+   "id": "c004",
+   "candidates": [
+    "R01",
+    "R09"
+   ],
+   "claim": "Secondary set (113 tasks): D_w 4B 11.06% (95% 7.52-15.04), 9B 9.29% (5.97-13.05); D_b 4B 11.50%, 9B 9.29%",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-analysis/report/report-guarded.json",
+   "kind": "program",
+   "status": "VERIFIED-RECOMPUTED",
+   "method": "read secondary_base_plus_completed_extension.estimates from report-guarded.json (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c005",
+   "candidates": [
+    "R06",
+    "R09"
+   ],
+   "claim": "D_b pooled on base 11.33% (95% 5.86-17.19); 4B 14.06%, 9B 8.59%",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read primary estimands table"
+  },
+  {
+   "id": "c006",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "P1 falsified: session excess D_b - D_w = -1.17 pp, one-sided 95% upper bound 0.78 pp",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read predictions table"
+  },
+  {
+   "id": "c007",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "9B session shift S2 - S1 = +5.47 pp, sign-flip p = 0.0163 (exact 2/128 = 0.0156)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read primary estimands and tests"
+  },
+  {
+   "id": "c008",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "Every discordant 9B base cell is a 3-to-1 split (11 cells)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read note on the 9B excess"
+  },
+  {
+   "id": "c009",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "First divergence: 512 of 512 between-session base pairs at step 1 as environment; 255 of 256 within-session at step 1 as environment, 1 (9B) at step 2 as serving",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read offline rescoring section"
+  },
+  {
+   "id": "c010",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "Prompt date pinned (plan.PROMPT_DATE, Thursday, October 08, 2026); the guest clock is not pinned",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/harness/q2_stage1/design_diffs.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read design_diffs.md line 35; date_line field seen in a1.jsonl"
+  },
+  {
+   "id": "c011",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "Prefix-cache hit share 0.855-0.858 in the A1 jobs; serving on vLLM v0.31.0",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read setup/queue section and scope paragraph"
+  },
+  {
+   "id": "c012",
+   "candidates": [
+    "R02",
+    "R04"
+   ],
+   "claim": "544 episodes with checker score 1 on 57 distinct tasks; 35 fractional scores; 1,264 non-pass episodes",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+   "kind": "program",
+   "status": "VERIFIED-RECOMPUTED",
+   "method": "counted from a1.jsonl (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c013",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "280 discordant rerun pairs, none with identical checker-input hashes",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read checker-input-hash discordance item"
+  },
+  {
+   "id": "c014",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "Live vs offline raw replay mismatches: 0 on every replayed record; 1,791 secondary verdicts from rescoring, 16 fell back to live (task 53ad5833, LiveStateRequired), 1 metric exception scored 0",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read offline rescoring section; live_offline_match false count 0 in a1.jsonl (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c015",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "compare_pptx_files_zinv applied to 72 episodes per job changed 0 verdicts (base and secondary)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read flips item"
+  },
+  {
+   "id": "c016",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "Uncertified exposure: 18 of 32 base tasks have an exposed episode; delta exposed -4.86 pp, unexposed -0.89 pp; 33 certified keysyms",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read uncertified action-path exposure item"
+  },
+  {
+   "id": "c017",
+   "candidates": [
+    "R07",
+    "R08"
+   ],
+   "claim": "Secondary delta -1.11 pp, 90% t interval [-3.81, 1.60]; pi_small 0.084, one-sided 95% [0.020, 0.162]",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read sensitivities table; report-guarded.json secondary pi_small"
+  },
+  {
+   "id": "c018",
+   "candidates": [
+    "R15"
+   ],
+   "claim": "Qwen3.5-9B solved 52 of 113 pool tasks at least once in 8 episodes; 32 neither always nor never (4B: 50 and 33)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+   "kind": "program",
+   "status": "VERIFIED-RECOMPUTED",
+   "method": "counted from a1.jsonl (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c019",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "S1a checker inputs include registrymodifications.xcu (LibreOffice user settings)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+   "kind": "program",
+   "status": "VERIFIED-RECOMPUTED",
+   "method": "checker_input_sha256 field of a1.jsonl records"
+  },
+  {
+   "id": "c020",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "Rerun noise is 20-33% of outcome variance and task-by-harness variance 3-4% on the probability scale",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read D69"
+  },
+  {
+   "id": "c021",
+   "candidates": [
+    "R15",
+    "R04"
+   ],
+   "claim": "A 5 pp locale gate needs about 100-115 distinct tasks at S1a-like heterogeneity; LibreOffice 64 tasks give power 0.60-0.62, all 113 give 0.79-0.83",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read D69"
+  },
+  {
+   "id": "c022",
+   "candidates": [
+    "R08"
+   ],
+   "claim": "Design J2 (9B, K113, S2 R2) costs 198 cap-minutes, P(DR2 decisive) 0.50-0.70; J (S4 R2) 390 cap-minutes, 0.97-0.99",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-next-step-design-study/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read design comparison table, line 313 onward"
+  },
+  {
+   "id": "c023",
+   "candidates": [
+    "all"
+   ],
+   "claim": "No gauntlet package can score above 79 without an executable pilot or above 89 without signed reviews",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read D68 and D24"
+  },
+  {
+   "id": "c024",
+   "candidates": [
+    "all"
+   ],
+   "claim": "Ten gauntlet runs ended at honest exits with decisiveness or identification as the recurring largest defect (K1 v2/v3, C3, E3, E4, E5, E7, C5, S2, Q1 Stage 0)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read D54, D63, D65, D68, D70; program/gauntlet/ file list"
+  },
+  {
+   "id": "c025",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "Holo3 maintainer pair: exact McNemar 25 vs 9, p = 0.009",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-06/holo3/results-v1-posthoc.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read results-v1-posthoc.md"
+  },
+  {
+   "id": "c026",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "Holo3 run1 vs run2 |z| = 2.74 on 359 tasks, above all 21 reference pairs (largest 1.86)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-06/holo3/results-v1-posthoc.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read results-v1-posthoc.md"
+  },
+  {
+   "id": "c027",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "OpenCUA pooled between-turn / residual mean-square ratio 0.663 on (12, 4282) df, upper-tail p 0.79",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-06/holo3/results-v1-posthoc.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read results-v1-posthoc.md"
+  },
+  {
+   "id": "c028",
+   "candidates": [
+    "R01",
+    "R06"
+   ],
+   "claim": "Holo3 v2: no registered mechanism explains the shift; 16 clean tasks with time-dependent checkers carry 4 of 14 net flips (stratified p = 0.156)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-07/holo3-v2/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read holo3-v2 RESULTS.md"
+  },
+  {
+   "id": "c029",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "OpenCUA-7B 15-step archive member is 7,920,092,071 bytes (MIT dataset card)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-06/holo3/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read holo3 README source table"
+  },
+  {
+   "id": "c030",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "Pooled false-negative candidate share 12.4% (7.2-18.3%) of 348 should-pass mutants on 60 tasks",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read checker candidates section"
+  },
+  {
+   "id": "c031",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "compare_pptx_files false-negative candidate share 40.2% (32.9-46.3%, 85 mutants, 16 tasks)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read checker candidates section"
+  },
+  {
+   "id": "c032",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "z-order operator: 36 false-negative candidates in 40 mutants, 91.7% (81.3-100%); 35 under compare_pptx_files, 1 under compare_pptx_files_tolerant",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read checker candidates section"
+  },
+  {
+   "id": "c033",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "Alternative-solution mutants: 0 of 93 rejected by the checker (16 tasks)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read checker candidates section"
+  },
+  {
+   "id": "c034",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "False-positive candidate share 5.9% (0.8-12.3%); audit-confirmed 2.1% (0-5.4%)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read false positives section"
+  },
+  {
+   "id": "c035",
+   "candidates": [
+    "R02",
+    "R03"
+   ],
+   "claim": "Model-rater Cohen kappa 0.343 on 138 real items; sham accuracy Claude 0.90, Qwen 0.975",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read audit statistics"
+  },
+  {
+   "id": "c036",
+   "candidates": [
+    "R03",
+    "R04"
+   ],
+   "claim": "P1 gold fixed point: raw flips 4/92 (exact 95% 1.20-10.76%); audit-confirmed 3/92 = 3.26% (0.68-9.23%); headless scoping round trip 7/63 and 1/26",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read P1 section"
+  },
+  {
+   "id": "c037",
+   "candidates": [
+    "R03"
+   ],
+   "claim": "Adjudication pool 34 items; human spot check 25 items; 52 distinct",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read pending section"
+  },
+  {
+   "id": "c038",
+   "candidates": [
+    "R03"
+   ],
+   "claim": "K2 sample: 80 jobs, 20 per domain, 41 tasks, drawn before any verdict; no K2 executor; label \"offline harness, VM fidelity unverified\"",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read confirm README lines 115-116 and results K criteria"
+  },
+  {
+   "id": "c039",
+   "candidates": [
+    "R03"
+   ],
+   "claim": "zinv gate (G0 item 8): v1 kept 0/29, v2 26/29; v3 is the validated comparator",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-stage1-g0/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read G0 README"
+  },
+  {
+   "id": "c040",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "The VM LibreOffice is Ubuntu libreoffice-core 1:7.3.7-0ubuntu0.22.04.4, \"LibreOffice 7.3.7.2\"",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/preregistrations/q2-evaluator-mutation-v1.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read registration line 184"
+  },
+  {
+   "id": "c041",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "Kit gold-rate upper bound 10.8% (from P1 raw 4/92 exact interval upper 10.76%)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "derived from P1 interval"
+  },
+  {
+   "id": "c042",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "S1 dependency flips: none (no venv disagreement)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read S1-S7"
+  },
+  {
+   "id": "c043",
+   "candidates": [
+    "R07",
+    "R09"
+   ],
+   "claim": "A4: 64,028 of 64,028 trials passed; per-class family-wise 95% bounds about 5.0e-4 (left click 4.99e-4)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read A4 section"
+  },
+  {
+   "id": "c044",
+   "candidates": [
+    "R08"
+   ],
+   "claim": "A7: 0 restarts in 39,036 /accessibility calls; exact upper 95% bound 7.67e-5 per call; session 193 answered every call with HTTP 500",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read A7 section"
+  },
+  {
+   "id": "c045",
+   "candidates": [
+    "R01",
+    "R03"
+   ],
+   "claim": "A5: 20 of 20 pristine reset checks; certified at N* = 32 concurrent VMs (D53)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read acceptance table and D53"
+  },
+  {
+   "id": "c046",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "C1: H-OSW-up and H-GA-buggy failed each of their 9 known-defect cells in 5 of 5 repetitions",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read first-stage validity controls"
+  },
+  {
+   "id": "c047",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "A4 step p50 2.124 s (the cell-reported A7 step p50 2.63 s was not found and is not used)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "searched acceptance README (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c048",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "G0 excluded 110 of 116 anchor tasks; 74 excluded with unchanged config, 36 with changed config, 6 kept",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-stage1-g0/anchor/evaluator-diff.json",
+   "kind": "program",
+   "status": "VERIFIED-RECOMPUTED",
+   "method": "counted per_task in evaluator-diff.json (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c049",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "Function differences: getters.get_vm_file on 103 tasks, getters.get_cloud_file on 84, compare_table 33, compare_pptx_files 18",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-stage1-g0/anchor/evaluator-diff.json",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read function_difference_counts"
+  },
+  {
+   "id": "c050",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "Public revision 00804f8 inferred from the run window; pinned revision b138d34",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-stage1-g0/anchor/evaluator-diff.json",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read public_revision_basis"
+  },
+  {
+   "id": "c051",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "Anchor floor 58 tasks (G0 item 9.6: at most 6 of 116 keep config and checker)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read DR-A row"
+  },
+  {
+   "id": "c052",
+   "candidates": [
+    "R10",
+    "R11"
+   ],
+   "claim": "Under TF32-admissible rule /2, 239 of 272 1%-level faults are ambiguous; strict fp32 rejects 276 of 278",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read README summary and table line 376-377"
+  },
+  {
+   "id": "c053",
+   "candidates": [
+    "R10",
+    "R11"
+   ],
+   "claim": "Valid TF32 Winograd F(4x4,3x3) reaches about 45x the yardstick (max-abs; up to 50 against the RNE yardstick on L2/87); a 1% fault scores a median about 15x",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read README summary and sections 4, 7"
+  },
+  {
+   "id": "c054",
+   "candidates": [
+    "R10"
+   ],
+   "claim": "Mutant-family emulations under TF32: 26 accept / 122 ambiguous / 218 reject (366); 1,087 gross decoys rejected",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read rule /2 table line 377"
+  },
+  {
+   "id": "c055",
+   "candidates": [
+    "R10"
+   ],
+   "claim": "139 registered CPU draws and 83 alternative-algorithm draws (75 admissible) on 12 tier-1 S1-cal problems",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read sections 2 and 4"
+  },
+  {
+   "id": "c056",
+   "candidates": [
+    "R10"
+   ],
+   "claim": "CPU TF32 emulation reproduces stored device TF32 error: median ratio 0.996, 64 of 71 draws within 1.5x",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read README summary"
+  },
+  {
+   "id": "c057",
+   "candidates": [
+    "R11"
+   ],
+   "claim": "Strict fp32 rejects 55 correct kernel-draws (95 rows) on cuDNN-TF32 problems",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read README summary"
+  },
+  {
+   "id": "c058",
+   "candidates": [
+    "R11"
+   ],
+   "claim": "Rule /2 device pilot: 0.57 GPU-h measured-cost estimate, 1.14 with a 2x margin, time box 1.2 GPU-h",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read section 6"
+  },
+  {
+   "id": "c059",
+   "candidates": [
+    "R10",
+    "R11"
+   ],
+   "claim": "Zeros-pass: no admissible draw rejects zeros on L2/46, L2/52 or L2/60; on L2/100 determinacy is a per-process cuDNN choice",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read README summary"
+  },
+  {
+   "id": "c060",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "Q3 dense pre-check v2 (Qwen3.5-4B-Base): NEGATIVE_CAPABLE_V3; Delta_T 2.23 (0.44-3.87); lexical confound PRESENT; entity control INSUFFICIENT",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read README lines 19-74"
+  },
+  {
+   "id": "c061",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "Spearman needle fertility vs cross-script headroom -0.89 over 7 languages",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read README line 78"
+  },
+  {
+   "id": "c062",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "Dense harness reproduction: 3,128 numeric leaves, largest gap exactly 0.0; 4B lane 555 s = 0.1542 GPU-h",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read README lines 37 and 154"
+  },
+  {
+   "id": "c063",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "K1 v3: question content overlap 0.38-0.68 on MN vs 0.00-0.04 on CX; no same-language zero-overlap leg",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read D54"
+  },
+  {
+   "id": "c064",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "D54: P(GO or NEGATIVE) 0.10-0.25, 0.05-0.17, 0.03-0.11 at seed SD 1, 2, 3",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/decisions.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read D54"
+  },
+  {
+   "id": "c065",
+   "candidates": [
+    "finding"
+   ],
+   "claim": "Q2 question file and PROGRAM.md say checker-mutation testing for computer use has no prior found",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/questions/q2-calibrated-cua-instrument.md",
+   "kind": "program",
+   "status": "VERIFIED-REPO",
+   "method": "read question file line 27 and PROGRAM.md line 77"
+  },
+  {
+   "id": "c066",
+   "candidates": [
+    "R02",
+    "R03",
+    "R04",
+    "R05",
+    "R15"
+   ],
+   "claim": "2607.28367: 150 FAIL trajectories audited; 57 OSWorld items, 8 evaluator false negatives (14.0%), 2 broken, 17.5% wrong; PASS audit \"remains open\"; one OSWorld task unsatisfiable on the released VM image",
+   "url": "https://arxiv.org/abs/2607.28367",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full, targeted search (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c067",
+   "candidates": [
+    "R01",
+    "R05",
+    "R09"
+   ],
+   "claim": "2604.17849: temperature-0 decoding with batch-invariant inference; Qwen b-c = -20, OpenCUA +20; cosmetic perturbation sets include wallpaper, cursor size, dock, icon theme, timezone",
+   "url": "https://arxiv.org/abs/2604.17849",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c068",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "2604.17849 ARR version: \"The Reliability Gap: Why Capable Computer-Use Agents Still Fail Twice\"",
+   "url": "https://openreview.net/forum?id=ezVIHPgaiG",
+   "kind": "prior",
+   "status": "VERIFIED-ABSTRACT",
+   "method": "OpenReview api2 search (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c069",
+   "candidates": [
+    "R02",
+    "R03",
+    "R10",
+    "R11",
+    "R13"
+   ],
+   "claim": "2609.22220: official KernelBench check misses 16.9% of witnessed faults; 78.6% of precision faults escape; same-sign inputs used in targeted suites (Fig. 2b); zero occurrences of \"TF32\"; realism probe on 60 LLM-written kernels",
+   "url": "https://arxiv.org/abs/2609.22220",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full and string count (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c070",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "2609.22220 realism probe found 3 of 60 LLM-written kernels incorrect",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-06/question-dossier.md",
+   "kind": "prior",
+   "status": "VERIFIED-REPO",
+   "method": "from the 2026-10-06 dossier full-text check; the slate owner confirmed the probe of 60 kernels exists"
+  },
+  {
+   "id": "c071",
+   "candidates": [
+    "R11"
+   ],
+   "claim": "2609.21058: KernelBench allclose is satisfied by a tensor of zeros on 4 of 60 level-1 problems; scale-invariant checks proposed",
+   "url": "https://arxiv.org/abs/2609.21058",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c072",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "2609.04748: enabling the prefix cache changes the agent trajectory on 36.2% of episodes at 16-bit and 75.0% at 4-bit",
+   "url": "https://arxiv.org/abs/2609.04748",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c073",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "2609.36931: date changes move scores by up to 6% (MCQA) and 14% (math reasoning)",
+   "url": "https://arxiv.org/abs/2609.36931",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c074",
+   "candidates": [
+    "R01",
+    "R02"
+   ],
+   "claim": "2610.11678 (TRACE): identical reruns flip 15-36% of task outcomes",
+   "url": "https://arxiv.org/abs/2610.11678",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c075",
+   "candidates": [
+    "R11",
+    "R13",
+    "R10"
+   ],
+   "claim": "2607.16241: torch.allclose with tau = 1e-3 for FP32 and 1e-2 for BF16; GPT-5.5 1.43x to 0.88x; TF32 baseline mainly affects compute-bound problems (21.2%); H200 GPUs",
+   "url": "https://arxiv.org/abs/2607.16241",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c076",
+   "candidates": [
+    "R03",
+    "R02",
+    "finding"
+   ],
+   "claim": "2610.09142: OSWorld-Verified-class desktop environments \"remain untested\"; future work includes estimating a false-accept rate, mapping it to a policy silent-wrong-action rate, and an OSWorld-Verified rank-consequence audit",
+   "url": "https://arxiv.org/abs/2610.09142",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c077",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "2609.40284 App. I Table 20: Qwen3.5 harness middle-click gives no action, Ctrl released before clicking, only the first tool call executed",
+   "url": "https://arxiv.org/abs/2609.40284",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c078",
+   "candidates": [
+    "R01",
+    "R09"
+   ],
+   "claim": "2608.22331: temperature-0 ever-flip fractions 0.7%, 2.0%, 2.7%; perturbation paired SDs 11-58x larger than rerun SDs",
+   "url": "https://arxiv.org/abs/2608.22331",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c079",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "2609.17394: exact paired McNemar separates none of the 29 adjacent Verified top-thirty pairs",
+   "url": "https://arxiv.org/abs/2609.17394",
+   "kind": "prior",
+   "status": "VERIFIED-FULLTEXT",
+   "method": "orx paper --full (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c080",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "cELldjX2oq (The Evaluator Also Varies): first-divergence audit; 100 tau2-bench tasks, five greedy vLLM replicates; transcript divergence on all, reward variation on 20; first discrepancy in the simulated user on 83",
+   "url": "https://openreview.net/forum?id=cELldjX2oq",
+   "kind": "prior",
+   "status": "VERIFIED-ABSTRACT",
+   "method": "OpenReview api2 search abstract (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c081",
+   "candidates": [
+    "R06"
+   ],
+   "claim": "3vXI4xEByc (Is This Agent Evaluable?): swapping tasks moves a score 6.2 times more than rerunning",
+   "url": "https://openreview.net/forum?id=3vXI4xEByc",
+   "kind": "prior",
+   "status": "VERIFIED-ABSTRACT",
+   "method": "OpenReview api2 search abstract (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c082",
+   "candidates": [
+    "R02",
+    "R12"
+   ],
+   "claim": "yTa4gvQUGG (KernelAudit): analysis of 505 generated kernels that passed functional checks; five-level verifier",
+   "url": "https://openreview.net/forum?id=yTa4gvQUGG",
+   "kind": "prior",
+   "status": "VERIFIED-ABSTRACT",
+   "method": "OpenReview api2 search abstract (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c083",
+   "candidates": [
+    "notcarried"
+   ],
+   "claim": "0ad4aBnjoQ: Scalable Weak-to-Strong Verifier Hardening for Agent Environments; applied to Terminal Bench, KernelBench and SETA",
+   "url": "https://openreview.net/forum?id=0ad4aBnjoQ",
+   "kind": "prior",
+   "status": "VERIFIED-ABSTRACT",
+   "method": "OpenReview api2 search abstract (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c084",
+   "candidates": [
+    "R01",
+    "notcarried"
+   ],
+   "claim": "rGmv0X20Oj: FlexBI: Regaining Execution Flexibility for Batch-Invariant LLM Inference (ICLR 2027 submission)",
+   "url": "https://openreview.net/forum?id=rGmv0X20Oj",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "OpenReview api2 search (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c085",
+   "candidates": [
+    "R03",
+    "notcarried"
+   ],
+   "claim": "CgLTapI6Mr: OpenComputer: Verifiable Software Worlds for Computer-Use Agents (ICLR 2027 submission)",
+   "url": "https://openreview.net/forum?id=CgLTapI6Mr",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "OpenReview api2 search (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c086",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "1ivlJ9lC5d: Faster and Better? Benchmark Bugs and Design Limitations Distort the Evaluation of VLA Acceleration (ICLR 2027 submission)",
+   "url": "https://openreview.net/forum?id=1ivlJ9lC5d",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "OpenReview api2 search (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c087",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "sOXznQZgnM: CROSS: Analyzing the Trade-offs in Long-Context Cross-lingual Retrieval (ICLR 2025 workshop)",
+   "url": "https://openreview.net/forum?id=sOXznQZgnM",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "OpenReview api2 search (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c088",
+   "candidates": [
+    "finding"
+   ],
+   "claim": "gfgvdsOX6v (given by cell 5 for CAVEAT) did not resolve in api2 search; the search returned kTuIMbhP1E, a different CAVEAT paper; not cited",
+   "url": "https://openreview.net/forum?id=gfgvdsOX6v",
+   "kind": "prior",
+   "status": "UNVERIFIED",
+   "method": "OpenReview api2 search (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c089",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "2504.08942 AgentRewardBench: rule-based evaluators reach 55.9% recall (cell 1)",
+   "url": "https://arxiv.org/abs/2504.08942",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c090",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "2609.34262 Unearned Passes: 3,810 passing trajectories from 29 cohorts audited for process exploits (cell 2)",
+   "url": "https://arxiv.org/abs/2609.34262",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c091",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "2608.20362 Multilingual verifier bias: Qwen3-8B exact-match false negatives JP 0.642 vs EN 0.122 (cell 4)",
+   "url": "https://arxiv.org/abs/2608.20362",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c092",
+   "candidates": [
+    "R04",
+    "R15"
+   ],
+   "claim": "2506.04135 macOSWorld: en tasks on an ar UI 33.3% to 22.8%; task-UI mismatch costs 1-10 pp; proper nouns and file names kept verbatim (cell 4)",
+   "url": "https://arxiv.org/abs/2506.04135",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c093",
+   "candidates": [
+    "R06",
+    "R09"
+   ],
+   "claim": "2609.33812 Identical Runs, Different Results: 584 replicated runs; run-to-run SD exceeds pairing differences (cell 1)",
+   "url": "https://arxiv.org/abs/2609.33812",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c094",
+   "candidates": [
+    "R06",
+    "notcarried"
+   ],
+   "claim": "2610.00651 Agent Evaluation Reliability: Bayesian variance decomposition on 22 HAL/Harbor benchmarks; repeated cells rare (2026-10-06 dossier)",
+   "url": "https://arxiv.org/abs/2610.00651",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c095",
+   "candidates": [
+    "R07",
+    "notcarried"
+   ],
+   "claim": "2610.04433 What Does a Harness Buy?: harness swap and rerun each flip 13% of SWE-bench Verified tasks (2026-10-06 dossier)",
+   "url": "https://arxiv.org/abs/2610.04433",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c096",
+   "candidates": [
+    "R07",
+    "notcarried"
+   ],
+   "claim": "2609.07925 FrogNano: Qwen3.5-4B 8.3% under R2E-Gym vs 37.2% under Leaf (2026-10-06 dossier)",
+   "url": "https://arxiv.org/abs/2609.07925",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c097",
+   "candidates": [
+    "R08"
+   ],
+   "claim": "2404.07972 OSWorld: accessibility-tree effects vary and reverse across models; about 6,000 tokens hold 90% of trees (cell 2)",
+   "url": "https://arxiv.org/abs/2404.07972",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c098",
+   "candidates": [
+    "R08"
+   ],
+   "claim": "2608.06171 Routing Is Least Learnable: rerunning a mode changes 12-14% of outcomes; band measured in 2 of 8 cells (2026-10-06 dossier, cell 2)",
+   "url": "https://arxiv.org/abs/2608.06171",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c099",
+   "candidates": [
+    "R09"
+   ],
+   "claim": "2610.01618 Agents Are Systems, Not Models: 54% of outcome variance from run-to-run repetition (cells 2, 5)",
+   "url": "https://arxiv.org/abs/2610.01618",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c100",
+   "candidates": [
+    "R10",
+    "R12"
+   ],
+   "claim": "2608.12700 Contract-Grade Verifier: 2,638 accepted drkernel-corpus kernels on B200; 39.5% broken in a way no tolerance can excuse; PRC-02 13.8% (2026-10-06 dossier; cell 3)",
+   "url": "https://arxiv.org/abs/2608.12700",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c101",
+   "candidates": [
+    "R12"
+   ],
+   "claim": "2609.19611 Dirigo: 600 bugs among 6,988 \"correct\" AI CUDA Engineer L2 kernels; floats modelled as reals (cell 3)",
+   "url": "https://arxiv.org/abs/2609.19611",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c102",
+   "candidates": [
+    "R11"
+   ],
+   "claim": "2607.16228 Operator-aware tolerance calibration: recall 73.2% to 82.4%, 20 control false positives of 1,882 (cell 3)",
+   "url": "https://arxiv.org/abs/2607.16228",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c103",
+   "candidates": [
+    "R10"
+   ],
+   "claim": "2607.16241 KernelBench-Verified documents identity hacks exploiting all-positive inputs (cell 1)",
+   "url": "https://arxiv.org/abs/2607.16241",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c104",
+   "candidates": [
+    "R10"
+   ],
+   "claim": "2609.00363 INT8 faults violating accumulator exactness preconditions are detected without exception (cell 3)",
+   "url": "https://arxiv.org/abs/2609.00363",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c105",
+   "candidates": [
+    "R12",
+    "notcarried"
+   ],
+   "claim": "2607.11022 Leaky vs hardened test-suite GRPO on MBPP: hardened non-inferior, gap 0.20 pt, upper bound 0.75 within a 1.5 pt margin (cell 5)",
+   "url": "https://arxiv.org/abs/2607.11022",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c106",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "2503.01996 OneRULER: Korean instructions on English contexts drop from 91% to 71% at 64K (cell 4)",
+   "url": "https://arxiv.org/abs/2503.01996",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c107",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "2608.27481 XHotpotQA: different-script evidence costs 12.0-23.7 F1 (cell 4)",
+   "url": "https://arxiv.org/abs/2608.27481",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c108",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "2502.05167 NoLiMa: English only; attention struggles without literal matches (cell 4)",
+   "url": "https://arxiv.org/abs/2502.05167",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c109",
+   "candidates": [
+    "R15"
+   ],
+   "claim": "2608.08775 OmnilingualGAIA2: cross-lingual gap 8.8-18.4 pass@3 (cell 4)",
+   "url": "https://arxiv.org/abs/2608.08775",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c110",
+   "candidates": [
+    "R15"
+   ],
+   "claim": "2609.23490 BabelArena: PRESERVE rules for execution-critical values; four tool or planning families, no GUI (cell 4)",
+   "url": "https://arxiv.org/abs/2609.23490",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c111",
+   "candidates": [
+    "notcarried"
+   ],
+   "claim": "2609.18123 AutoTuneBench: 5% cross-run CV cap, cross-machine transfer, KernelBench L1 median 1.0001x (cell 1)",
+   "url": "https://arxiv.org/abs/2609.18123",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c112",
+   "candidates": [
+    "R13"
+   ],
+   "claim": "2609.22220 An fp16 store escapes the official check at 92% (cell 3)",
+   "url": "https://arxiv.org/abs/2609.22220",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "title verified by orx lookup (slate owner, 2026-10-11); figure as reported by the cell or the 2026-10-06 dossier, not re-read"
+  },
+  {
+   "id": "c113",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.38981 exists with title \"Vosti: Specifying, Implementing, and Verifying Deterministic LLM Inference\"",
+   "url": "https://arxiv.org/abs/2609.38981",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c114",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.33044 exists with title \"Pinned and Still Unstable: Within-Judge Verdict Variance and the Noise Floor of LLM-as-Judge Leaderboards\"",
+   "url": "https://arxiv.org/abs/2609.33044",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c115",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2408.04667 exists with title \"Non-Determinism of \"Deterministic\" LLM Settings\"",
+   "url": "https://arxiv.org/abs/2408.04667",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c116",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2602.07150 exists with title \"On Randomness in Agentic Evals\"",
+   "url": "https://arxiv.org/abs/2602.07150",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c117",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.26621 exists with title \"Greedy Decoding Is Not Precision-Invariant (TMLR 2026)\"",
+   "url": "https://arxiv.org/abs/2609.26621",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c118",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.07274 exists with title \"A Trust Layer for Agent Evaluation\"",
+   "url": "https://arxiv.org/abs/2610.07274",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c119",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2604.06240 exists with title \"The Art of Building Verifiers for Computer Use Agents\"",
+   "url": "https://arxiv.org/abs/2604.06240",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c120",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2603.10577 exists with title \"CUAAudit: Meta-Evaluation of Vision-Language Models as Auditors of Autonomous Computer-Use Agents\"",
+   "url": "https://arxiv.org/abs/2603.10577",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c121",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.37315 exists with title \"Do Agent Benchmarks Do What They Say? An Executable-Contract Audit of Tool-Using Agent Environments\"",
+   "url": "https://arxiv.org/abs/2609.37315",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c122",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2604.24955 exists with title \"Who Guards the Benchmarks? Automated Auditing of LLM Agent Benchmarks (COLM 2026)\"",
+   "url": "https://arxiv.org/abs/2604.24955",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c123",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.37322 exists with title \"Mubric: Mutation Testing-Guided Rubric Generation for LLM Evaluation\"",
+   "url": "https://arxiv.org/abs/2609.37322",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c124",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.29537 exists with title \"OSWorld 2.0: Benchmarking Computer Use Agents on Long-Horizon Real-World Tasks\"",
+   "url": "https://arxiv.org/abs/2606.29537",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c125",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.02926 exists with title \"Output Language Confusion under Multilingual Prompt Contamination\"",
+   "url": "https://arxiv.org/abs/2610.02926",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c126",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.08159 exists with title \"Making COMET Comparable Across Scripts\"",
+   "url": "https://arxiv.org/abs/2610.08159",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c127",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.34198 exists with title \"Frozen Judges, Moving Agents: Version-Dependent LLM-Judge Error\"",
+   "url": "https://arxiv.org/abs/2609.34198",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c128",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.11323 exists with title \"Deployment Decision Reliability: A Generalizability-Theory Framework\"",
+   "url": "https://arxiv.org/abs/2608.11323",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c129",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.07785 exists with title \"What Does an LLM-Agent Leaderboard Rank Actually Compare?\"",
+   "url": "https://arxiv.org/abs/2609.07785",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c130",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2508.13144 exists with title \"Signal and Noise: A Framework for Reducing Uncertainty in Language Model Evaluation\"",
+   "url": "https://arxiv.org/abs/2508.13144",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c131",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2411.00640 exists with title \"Adding Error Bars to Evals\"",
+   "url": "https://arxiv.org/abs/2411.00640",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c132",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.05533 exists with title \"What Does a Harness Repair? A Preregistered Study of Visibility, Baseline Adequacy and Evaluation Defects\"",
+   "url": "https://arxiv.org/abs/2610.05533",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c133",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.00917 exists with title \"Finding the Right Fit: Model-Harness Interactions across Agent Tasks\"",
+   "url": "https://arxiv.org/abs/2610.00917",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c134",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2607.04334 exists with title \"Do GUI Agents Believe Their Eyes? Diagnosing State-Belief Reliance on Pixels versus Structure\"",
+   "url": "https://arxiv.org/abs/2607.04334",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c135",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2607.22798 exists with title \"StateAct: Program State, before Pixels\"",
+   "url": "https://arxiv.org/abs/2607.22798",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c136",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2605.00551 exists with title \"A11y-Compressor\"",
+   "url": "https://arxiv.org/abs/2605.00551",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c137",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.29472 exists with title \"Agent-Computer Observation Interfaces Enable Dynamic Computer Use\"",
+   "url": "https://arxiv.org/abs/2606.29472",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c138",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.32459 exists with title \"Beyond the Model: Demystifying Harness Effects in Software Engineering Agents\"",
+   "url": "https://arxiv.org/abs/2609.32459",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c139",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.20128 exists with title \"The Correctness Illusion in LLM-Generated GPU Kernels\"",
+   "url": "https://arxiv.org/abs/2606.20128",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c140",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.05683 exists with title \"RESOLVE: Language-Agnostic Validation of GPU Kernels Through Testing, Reduction, and Proof\"",
+   "url": "https://arxiv.org/abs/2610.05683",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c141",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2411.00442 exists with title \"Revealing Floating-Point Accumulation Orders in Software/Hardware Implementations (FPRev)\"",
+   "url": "https://arxiv.org/abs/2411.00442",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c142",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2512.07004 exists with title \"Accurate Models of NVIDIA Tensor Cores\"",
+   "url": "https://arxiv.org/abs/2512.07004",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c143",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2603.20421 exists with title \"Hawkeye: Reproducing GPU-Level Non-Determinism\"",
+   "url": "https://arxiv.org/abs/2603.20421",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c144",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.00381 exists with title \"Bounded, Indeterminate, or a Bug: A Condition-Aware Oracle for Differential Testing of SQL Aggregates\"",
+   "url": "https://arxiv.org/abs/2609.00381",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c145",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2602.05885 exists with title \"Dr. Kernel: Reinforcement Learning Done Right for Triton Kernel Generations\"",
+   "url": "https://arxiv.org/abs/2602.05885",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c146",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.33074 exists with title \"KernelZero: Co-Evolving Proposer and Coder\"",
+   "url": "https://arxiv.org/abs/2609.33074",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c147",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2507.05687 exists with title \"AutoTriton: Automatic Triton Programming with Reinforcement Learning in LLMs\"",
+   "url": "https://arxiv.org/abs/2507.05687",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c148",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2510.17891 exists with title \"TritonRL: Training LLMs to Think and Code Triton Without Cheating\"",
+   "url": "https://arxiv.org/abs/2510.17891",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c149",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.35677 exists with title \"Verifier Errors in RLVR: Reward Hacking, Limits of Feedback, and Selective Control\"",
+   "url": "https://arxiv.org/abs/2609.35677",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c150",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2604.22032 exists with title \"Kernel Contracts: A Specification Language for ML Kernel Correctness\"",
+   "url": "https://arxiv.org/abs/2604.22032",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c151",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.08722 exists with title \"Gaming Without an Attacker: Benchmark Fingerprinting in LLM-Driven Search Under Selection Pressure\"",
+   "url": "https://arxiv.org/abs/2608.08722",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c152",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2408.10151 exists with title \"Multilingual Needle in a Haystack\"",
+   "url": "https://arxiv.org/abs/2408.10151",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c153",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2409.18006 exists with title \"Evaluating Multilingual Long-Context Models for Retrieval and Reasoning (mLongRR)\"",
+   "url": "https://arxiv.org/abs/2409.18006",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c154",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.06506 exists with title \"Measuring the Cross-Lingual Comprehension Gap\"",
+   "url": "https://arxiv.org/abs/2608.06506",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c155",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.26175 exists with title \"Lost in Compression: A Controlled Cross-Lingual Audit of Extractive Prompt Compressors\"",
+   "url": "https://arxiv.org/abs/2608.26175",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c156",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2603.08869 exists with title \"One Language, Two Scripts: Probing Script-Invariance in LLM Concept Representations\"",
+   "url": "https://arxiv.org/abs/2603.08869",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c157",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2607.01002 exists with title \"Logit-Contribution Scoring Identifies Non-Literal Retrieval Heads\"",
+   "url": "https://arxiv.org/abs/2607.01002",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c158",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2602.22453 exists with title \"Identifying Crucial Attention Heads for Multilingual Language Models: Retrieval and Retrieval-Transition Heads\"",
+   "url": "https://arxiv.org/abs/2602.22453",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c159",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2308.01223 exists with title \"Do Multilingual Language Models Think Better in English?\"",
+   "url": "https://arxiv.org/abs/2308.01223",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c160",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.27306 exists with title \"Multilingual Reasoning Cascades Need More Context\"",
+   "url": "https://arxiv.org/abs/2606.27306",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c161",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.03136 exists with title \"Investigating the Role of Reasoning-Language Alignment in Monolingual Retrieval-Augmented Generation\"",
+   "url": "https://arxiv.org/abs/2610.03136",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c162",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.25832 exists with title \"Skill Issue: Are Skills Language-Invariant in LLMs?\"",
+   "url": "https://arxiv.org/abs/2608.25832",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c163",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.24460 exists with title \"The African Language Tax\"",
+   "url": "https://arxiv.org/abs/2606.24460",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c164",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.39001 exists with title \"The Invisible Language Tax\"",
+   "url": "https://arxiv.org/abs/2609.39001",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c165",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.21384 exists with title \"Beyond Two Bytes per Letter: Tokenization Overhead in Cyrillic AI Systems\"",
+   "url": "https://arxiv.org/abs/2608.21384",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c166",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.06203 exists with title \"Dense Contexts Are Hard Contexts (lexical density limits effective context)\"",
+   "url": "https://arxiv.org/abs/2606.06203",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c167",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.33093 exists with title \"How Linear Attention Remembers\"",
+   "url": "https://arxiv.org/abs/2609.33093",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c168",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.21794 exists with title \"Lexical Coupling in GUI Element Grounding\"",
+   "url": "https://arxiv.org/abs/2608.21794",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c169",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.11110 exists with title \"Actions Speak Louder than Words: Measuring Cross-Lingual Policy Retention in Tool-Using Agents\"",
+   "url": "https://arxiv.org/abs/2608.11110",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c170",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2604.07666 exists with title \"An Imperfect Verifier is Good Enough: Learning with Noisy Rewards\"",
+   "url": "https://arxiv.org/abs/2604.07666",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c171",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2601.04411 exists with title \"RLVεR: Reinforcement Learning with Verifiable Noisy Rewards\"",
+   "url": "https://arxiv.org/abs/2601.04411",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c172",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.11231 exists with title \"Harness Compilation: Which Decisions Should a Small Vision-Language Model Keep?\"",
+   "url": "https://arxiv.org/abs/2610.11231",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c173",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.11050 exists with title \"AgentHorizon: Evaluating Agentic Judges for Long-Horizon Computer-Use Tasks\"",
+   "url": "https://arxiv.org/abs/2610.11050",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c174",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.24890 exists with title \"OSWorld-Pro: Process-Based Evaluation for Computer Use Agents\"",
+   "url": "https://arxiv.org/abs/2609.24890",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c175",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2606.15034 exists with title \"OSGuard: A Benchmark for Safety in Computer-Use Agents\"",
+   "url": "https://arxiv.org/abs/2606.15034",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c176",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.36201 exists with title \"SCOUT: Synergizing Reasoning and Tool-Use for Computer-Use Safety\"",
+   "url": "https://arxiv.org/abs/2609.36201",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c177",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2609.35889 exists with title \"SINGED: Correct Outputs Do Not Certify Safe Execution in LLM Agents\"",
+   "url": "https://arxiv.org/abs/2609.35889",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c178",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2610.11754 exists with title \"What Output-Only Review Cannot Verify: Study Contracts for Research Agents\"",
+   "url": "https://arxiv.org/abs/2610.11754",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c179",
+   "candidates": [
+    "cited"
+   ],
+   "claim": "2608.04975 exists with title \"SciCode-Verified: How Benchmark Defects Underestimated the Scientific-Coding Ability of Language Models\"",
+   "url": "https://arxiv.org/abs/2608.04975",
+   "kind": "prior",
+   "status": "TITLE-VERIFIED",
+   "method": "orx paper lookup; header matches the cited title (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c180",
+   "candidates": [
+    "R02"
+   ],
+   "claim": "Just et al., Are mutants a valid substitute for real faults in software testing? (FSE 2014)",
+   "url": "https://doi.org/10.1145/2635868.2635929",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "DOI from cells 1 and 5 (OpenAlex query); not opened by the slate owner"
+  },
+  {
+   "id": "c181",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "Chen et al., Metamorphic Testing: A Review of Challenges and Opportunities (ACM CSUR 2018)",
+   "url": "https://doi.org/10.1145/3143561",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "DOI from cell 1 (OpenAlex query); not opened by the slate owner"
+  },
+  {
+   "id": "c182",
+   "candidates": [
+    "R03"
+   ],
+   "claim": "Barr et al., The Oracle Problem in Software Testing: A Survey (TSE)",
+   "url": "https://doi.org/10.1109/tse.2014.2372785",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "DOI from cell 2; not cited in the slate text beyond the merge record"
+  },
+  {
+   "id": "c183",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "Introducing OSWorld-Verified (xlang.ai blog, 2025): evaluator fixes",
+   "url": "https://xlang.ai/blog/osworld-verified",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "URL from cell 1; not opened by the slate owner"
+  },
+  {
+   "id": "c184",
+   "candidates": [
+    "R05",
+    "R06"
+   ],
+   "claim": "Public OSWorld-Verified trajectory archive (MIT dataset card), per-agent zip archives",
+   "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_verified_trajs",
+   "kind": "prior",
+   "status": "VERIFIED-REPO",
+   "method": "licence and sizes recorded in program/evidence/2026-10-06/holo3/README.md"
+  },
+  {
+   "id": "c185",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "A Qwen3.5 eval archive of 25.3 GB is listed; contents unverified",
+   "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_verified_trajs",
+   "kind": "prior",
+   "status": "CELL-REPORTED",
+   "method": "cell 2 metadata listing only"
+  },
+  {
+   "id": "c186",
+   "candidates": [
+    "R10",
+    "R12"
+   ],
+   "claim": "drkernel-coldstart-8k parquet (SHA-256 prefix 4ed72a9f85c069aa): 8,920 rows, 8,462 with final_speedup > 0",
+   "url": "https://huggingface.co/datasets/hkust-nlp/drkernel-coldstart-8k",
+   "kind": "scan",
+   "status": "VERIFIED-RECOMPUTED",
+   "method": "pyarrow read of the cell-3 scratch parquet (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c187",
+   "candidates": [
+    "R10",
+    "R12"
+   ],
+   "claim": "Of 8,462 accepted best-round kernels, 390 call tl.dot (comments stripped) and 389 pass no explicit non-TF32 precision",
+   "url": "https://huggingface.co/datasets/hkust-nlp/drkernel-coldstart-8k",
+   "kind": "scan",
+   "status": "VERIFIED-RECOMPUTED",
+   "method": "regex recount over assistant code blocks at best_round (slate owner, 2026-10-11); extraction rule may differ slightly from cell 3, same counts"
+  },
+  {
+   "id": "c188",
+   "candidates": [
+    "R12",
+    "R13"
+   ],
+   "claim": "Downcast patterns in 321 of 8,462 accepted kernels (3.8%), 177 beside dtype-conditional branches, 144 unconditional-looking (1.7%) with median recorded speedup 1.49 vs 2.06",
+   "url": "https://huggingface.co/datasets/hkust-nlp/drkernel-coldstart-8k",
+   "kind": "scan",
+   "status": "CELL-REPORTED",
+   "method": "cell-3 regex scan; source-level, provisional; the unstripped first pass gave 4.9% with the opposite association"
+  },
+  {
+   "id": "c189",
+   "candidates": [
+    "R13"
+   ],
+   "claim": "Explicit half/bf16 in 0.1-0.3% of Sakana correct L1/L2 kernels; Max_Diff recorded at 1e-3 resolution",
+   "url": "https://huggingface.co/datasets/SakanaAI/AI-CUDA-Engineer-Archive",
+   "kind": "scan",
+   "status": "CELL-REPORTED",
+   "method": "cell-3 regex scan of level_1/level_2 parquets; provisional"
+  },
+  {
+   "id": "c190",
+   "candidates": [
+    "R12"
+   ],
+   "claim": "drkernel-coldstart-8k licence MIT; AutoTriton model licence Apache-2.0",
+   "url": "https://huggingface.co/datasets/hkust-nlp/drkernel-coldstart-8k",
+   "kind": "scan",
+   "status": "CELL-REPORTED",
+   "method": "cell-3 Hugging Face API metadata; verify the model card before any Stage 2 use"
+  },
+  {
+   "id": "c191",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "Qwen3-VL tokenizer proxy: Serbian Latin 1.99x and Cyrillic 2.50x English fertility on one paragraph; 2 shared token ids, both punctuation; Latin/Cyrillic ratio about 1.26x",
+   "url": null,
+   "kind": "scan",
+   "status": "CELL-REPORTED",
+   "method": "no URL: cell-4 local tokenizer check on one self-written paragraph; Qwen3.5 tokenizer not available locally; provisional"
+  },
+  {
+   "id": "c192",
+   "candidates": [
+    "R01"
+   ],
+   "claim": "Stage C: 678 episodes x 0.0025 = about 1.7 GPU-h physical, x 1.26 = about 2.1 cap-GPU-h; Stage B 0.3-0.5 plus a 0.2 probe; registered cap 4",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "derived",
+   "status": "ESTIMATE",
+   "method": "arithmetic on S1a realized price and the design study cap rule"
+  },
+  {
+   "id": "c193",
+   "candidates": [
+    "R07"
+   ],
+   "claim": "Stage 1: 452 episodes per pair x 0.0027 = about 1.2 GPU-h; 2.4 for both pairs; cap 4",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "derived",
+   "status": "ESTIMATE",
+   "method": "arithmetic on S1a realized price"
+  },
+  {
+   "id": "c194",
+   "candidates": [
+    "R08"
+   ],
+   "claim": "904 episodes x 0.0027 x 1.05-1.10 = about 2.6-2.7 GPU-h physical; x 1.26 = about 3.3 cap-GPU-h, consistent with J2 at 198 cap-minutes",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-next-step-design-study/README.md",
+   "kind": "derived",
+   "status": "ESTIMATE",
+   "method": "arithmetic on S1a realized price, design study cap rule"
+  },
+  {
+   "id": "c195",
+   "candidates": [
+    "R15"
+   ],
+   "claim": "1,248 episodes x 0.0027 x 1.2 = about 4.0-4.1 GPU-h",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "derived",
+   "status": "ESTIMATE",
+   "method": "arithmetic on S1a realized price"
+  },
+  {
+   "id": "c196",
+   "candidates": [
+    "R09"
+   ],
+   "claim": "1,356 episodes: 27B-FP8 and 35B-A3B-FP8 at R = 3 (678), 4B and 9B at R = 2 (452), 9B-FP8 at R = 2 (226); about 5-6.5 cap-GPU-h with 27B unmeasured",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "derived",
+   "status": "ESTIMATE",
+   "method": "cell 2 estimate; episode count re-derived (slate owner, 2026-10-11)"
+  },
+  {
+   "id": "c197",
+   "candidates": [
+    "R05"
+   ],
+   "claim": "Anchor run about 300 episodes, 0.8-1.1 GPU-h (OpenCUA-7B price unmeasured)",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "kind": "derived",
+   "status": "ESTIMATE",
+   "method": "cell 2 estimate"
+  },
+  {
+   "id": "c198",
+   "candidates": [
+    "R12"
+   ],
+   "claim": "Archive leg about 2 CPU-min per kernel x 2,000 = about 70 CPU-h; Stage 2 generation about 1.5 GPU-h (range 1-3)",
+   "url": "https://huggingface.co/datasets/hkust-nlp/drkernel-coldstart-8k",
+   "kind": "derived",
+   "status": "ESTIMATE",
+   "method": "cell 3 estimate"
+  },
+  {
+   "id": "c199",
+   "candidates": [
+    "R13"
+   ],
+   "claim": "About 120 problems x 6 variants, about 2.5 GPU-h, cap 4",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "kind": "derived",
+   "status": "ESTIMATE",
+   "method": "cell 3 estimate"
+  },
+  {
+   "id": "c200",
+   "candidates": [
+    "R14"
+   ],
+   "claim": "Stage A about 1 GPU-h; Stage B 4-5 plus 0.5 attention readout; (C) about 3; (D) pilot 1, main 4; scaled from the serving probe 8K throughput, not measured at 16K-48K",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q3-dense-headroom-precheck-v2/README.md",
+   "kind": "derived",
+   "status": "ESTIMATE",
+   "method": "cell 4 estimate"
+  },
+  {
+   "id": "c201",
+   "candidates": [
+    "R10",
+    "R11"
+   ],
+   "claim": "CPU pilots: R10 about 2-3 CPU-days; R11 about 3-5 CPU-days; device checks 0.3-0.5 GPU-h",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q1-audit-metric-study/README.md",
+   "kind": "derived",
+   "status": "ESTIMATE",
+   "method": "cell 3 estimates"
+  },
+  {
+   "id": "c202",
+   "candidates": [
+    "R04"
+   ],
+   "claim": "Arm A about 10-20 CPU-h on the host CPU lane",
+   "url": "https://github.com/Kevin-Liu-01/cotcodec/blob/360058d/program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+   "kind": "derived",
+   "status": "ESTIMATE",
+   "method": "cell 1 estimate"
+  }
+ ]
+}
