@@ -69,7 +69,10 @@ def test_render_and_validate(tmp_path):
     m = L.validate_manifest(_manifest(src), src)
     assert len(m["slots"]) == 6
     assert m["slots"][0]["slot"] == f"{DEV[0][:8]}:S:r1" and m["slots"][0]["block"] == "t000"
-    assert L.check_slurm(m) == {"cpus": 16, "memory_gb": 32, "minutes": 60}
+    got = L.check_slurm(m)
+    assert {k: got[k] for k in ("cpus", "memory_gb", "minutes")} == {"cpus": 16, "memory_gb": 32,
+                                                                    "minutes": 60}
+    assert got["hash_minutes"] == 1 and got["slot_minutes"] == 11  # ceil(1.5 x 6 x 3.5 / 3)
 
 
 @pytest.mark.parametrize("edit, match", [
@@ -82,7 +85,8 @@ def test_render_and_validate(tmp_path):
                                     slot=L.slot_id(CONFIRM[0], "S", 1)), "dev-split"),
     (lambda m: m["slots"][0].update(cell="ER", slot=L.slot_id(DEV[0], "ER", 1)), "no image"),
     (lambda m: m.update(settle_after_reset_s=30), "settles"),
-    (lambda m: m.update(purpose="phase0"), "purpose"),
+    (lambda m: m.update(purpose="phase0"), "only after the freeze"),
+    (lambda m: m.update(purpose="acceptance"), "purpose must be"),
     (lambda m: m.update(engine={"kind": "bridge"}), "engine"),
     (lambda m: m["images"]["S"].update(host_path="/tmp/x.qcow2"), "host_path"),
 ])
@@ -94,12 +98,165 @@ def test_validate_refuses(tmp_path, edit, match):
         L.validate_manifest(m, src)
 
 
+def _freeze(src: Path, head: str = "a" * 40, sha: str = "b" * 40) -> dict:
+    """A scratch freeze of a stand-in registration in ``src``'s own ledger (the chain as
+    ``scripts/preregister.py`` writes it); the export's ``.git_sha`` is the freeze commit."""
+    import hashlib
+
+    reg = src / L.REGISTRATION
+    reg.parent.mkdir(parents=True, exist_ok=True)
+    reg.write_text("# S2 v4 frozen stand-in\n")
+    body = {"experiment_id": L.EXPERIMENT_ID, "frozen_at": "2026-10-12T00:00:00Z",
+            "git_head_at_freeze": head, "path": L.REGISTRATION,
+            "previous_hash": "0" * 64, "sha256": hashlib.sha256(reg.read_bytes()).hexdigest()}
+    body["hash"] = hashlib.sha256(json.dumps({k: v for k, v in body.items()}, sort_keys=True,
+                                             separators=(",", ":")).encode()).hexdigest()
+    (src / L.LEDGER).write_text(json.dumps(body) + "\n")
+    (src / ".git_sha").write_text(sha + "\n")
+    return body
+
+
+def _census(src: Path, monkeypatch, m: dict) -> list:
+    import hashlib
+
+    census = {"schema": "s2v4-census-v1", "slots": m["slots"]}
+    path = src / L.CENSUS
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(census))
+    monkeypatch.setattr(L, "CENSUS_SHA256", hashlib.sha256(path.read_bytes()).hexdigest())
+    return m["slots"]
+
+
+def _registered(src: Path, row: dict, m: dict) -> dict:
+    m = dict(m, purpose="phase0", episode_timeout_s=L.EPISODE_TIMEOUT_S,
+             freeze={"commit": "b" * 40, "ledger_row_hash": row["hash"],
+                     "git_head_at_freeze": row["git_head_at_freeze"]})
+    m["vm"] = dict(m["vm"], concurrency=L.V_REGISTERED)
+    return m
+
+
 def test_frozen_registration_refuses_development(tmp_path):
     src = _source(tmp_path)
-    (src / "program/preregistrations").mkdir(parents=True)
-    (src / L.LEDGER).write_text(json.dumps({"experiment_id": L.EXPERIMENT_ID}) + "\n")
-    with pytest.raises(L.LaneError, match="frozen"):
+    _freeze(src)
+    with pytest.raises(L.LaneError, match="frozen: development no longer runs"):
         L.validate_manifest(_manifest(src), src)
+
+
+def test_broken_ledger_chain_refuses(tmp_path):
+    src = _source(tmp_path)
+    _freeze(src)
+    text = (src / L.LEDGER).read_text().replace("2026-10-12", "2026-10-13")
+    (src / L.LEDGER).write_text(text)
+    with pytest.raises(L.LaneError, match="hash chain"):
+        L.validate_manifest(_manifest(src), src)
+
+
+def test_phase0_admitted_only_from_the_freeze_export(tmp_path, monkeypatch):
+    src = _source(tmp_path)
+    row = _freeze(src)
+    base = _manifest(src)
+    _census(src, monkeypatch, base)
+    monkeypatch.setattr(L, "CAPTURE_CELLS", ("S", "E", "AR"))
+    monkeypatch.setattr(L, "IMAGE_OF", {})
+    m = _registered(src, row, base)
+    assert L.validate_manifest(m, src)["purpose"] == "phase0"
+    for edit, match in (
+        (lambda x: x.update(slots=x["slots"][1:]), "census"),
+        (lambda x: x["vm"].update(concurrency=8), "V = 20"),
+        (lambda x: x.update(evaluate=False), "postconfig"),
+        (lambda x: x["freeze"].update(commit="c" * 40), "freeze commit"),
+        (lambda x: x["freeze"].update(ledger_row_hash="0" * 64), "another ledger row"),
+    ):
+        bad = json.loads(json.dumps(m))
+        edit(bad)
+        with pytest.raises(L.LaneError, match=match):
+            L.validate_manifest(bad, src)
+    (src / ".git_sha").write_text(row["git_head_at_freeze"] + "\n")  # the parent's export
+    with pytest.raises(L.LaneError, match="freeze commit"):
+        L.validate_manifest(m, src)
+    (src / ".git_sha").write_text("b" * 40 + "\n")
+    (src / L.REGISTRATION).write_text("# edited after the freeze\n")
+    with pytest.raises(L.LaneError, match="changed after the freeze"):
+        L.validate_manifest(m, src)
+
+
+def test_phase0_resume_is_a_census_suffix(tmp_path, monkeypatch):
+    src = _source(tmp_path)
+    row = _freeze(src)
+    base = _manifest(src)
+    slots = _census(src, monkeypatch, base)
+    monkeypatch.setattr(L, "CAPTURE_CELLS", ("S", "E", "AR"))
+    monkeypatch.setattr(L, "IMAGE_OF", {})
+    m = _registered(src, row, base)
+    resumed = dict(m, slots=slots[3:], resume_from_block="t001",
+                   resumes={"records_sha256": "d" * 64})
+    assert L.validate_manifest(resumed, src)
+    with pytest.raises(L.LaneError, match="not a block"):
+        L.validate_manifest(dict(resumed, resume_from_block="t000"), src)
+    with pytest.raises(L.LaneError, match="records_sha256"):
+        L.validate_manifest(dict(resumed, resumes={}), src)
+
+
+def test_census_slots_order_and_content():
+    pool = [{"task_id": f"{i:08x}-0000-0000-0000-000000000000",
+             "split": "dev" if i < 3 else "confirm"} for i in range(10)]
+    golds = [{"task_id": pool[0]["task_id"], "job_id": "g", "candidate_sha256": "a" * 64,
+              "files": {"/home/user/a.xlsx": {"rel": "x", "sha256": "a" * 64}}},
+             {"task_id": pool[5]["task_id"], "job_id": "h", "candidate_sha256": "b" * 64,
+              "files": {"/home/user/b.xlsx": {"rel": "y", "sha256": "b" * 64}}}]
+    slots = L.census_slots(pool, golds)
+    assert slots == L.census_slots(list(reversed(pool)), golds)  # sorted before the draw
+    assert len(slots) == 10 * 8 + 3 * 2 + 2 * 5
+    assert len({s["slot"] for s in slots}) == len(slots)
+    blocks = [s["block"] for s in slots]
+    assert blocks[:20] == ["b000"] * 20 and blocks[-1] == f"b{(len(slots) - 1) // 20:03d}"
+    pd = [s for s in slots if s["cell"] == "PD"]
+    assert len(pd) == 3 and all(s["task_id"] in {t["task_id"] for t in pool[:3]} for s in pd)
+    gold = [s for s in slots if s.get("kind") == "gold"]
+    assert sorted({s["cell"] for s in gold}) == sorted(L.GOLD_CELLS) and len(gold) == 10
+    e2 = [s for s in slots if s["cell"] == "E" and s["rep"] == 2]
+    assert len(e2) == 10
+    first = [s["cell"] for s in slots[:20]]
+    assert first != sorted(first)  # interleaved within the block
+
+
+def test_pd_slots_mount_the_variant_and_share_the_er_image(tmp_path, monkeypatch):
+    src = _source(tmp_path)
+    data = json.loads((src / L.IMAGES).read_text())
+    data["cells"]["ER"] = dict(data["cells"]["E"], sha256="c" * 64,
+                               selector_sha256="3" * 64)  # fmt: skip
+    (src / L.IMAGES).write_text(json.dumps(data))
+    pins = L.load_pins(src)
+    assert pins["PD"] == pins["ER"]
+    m = _manifest(src)
+    er = {"host_path": f"{s1a.RUN_ROOT}stage0/s2v4/images/ER.qcow2", "sha256": "c" * 64,
+          "size_bytes": pins["ER"]["size_bytes"]}
+    m["images"].update(ER=er, PD=dict(er))
+    m["slots"].append({"slot": L.slot_id(DEV[0], "PD", 1), "task_id": DEV[0], "cell": "PD",
+                       "rep": 1, "block": "t000"})
+    with pytest.raises(L.LaneError, match="file_cache_pd"):
+        L.validate_manifest(m, src)
+    from harness.s2_locale import pd_cache
+
+    files = {"libreoffice_calc/x/a.xlsx": "e" * 64}
+    man = src / L.PD_CACHE_MANIFEST
+    man.parent.mkdir(parents=True, exist_ok=True)
+    man.write_text(json.dumps({"files": files, "files_sha256": pd_cache.files_digest(files)}))
+    monkeypatch.setattr(L, "PD_CACHE_FILES_SHA256", pd_cache.files_digest(files))
+    m["file_cache_pd"] = {"host_dir": f"{s1a.RUN_ROOT}stage0/s2v4/pd-cache/files",
+                          "files_sha256": pd_cache.files_digest(files)}
+    ok = L.validate_manifest(m, src)
+    bad = json.loads(json.dumps(ok))
+    bad["images"]["PD"]["host_path"] = f"{s1a.RUN_ROOT}stage0/s2v4/images/E.qcow2"
+    with pytest.raises(L.LaneError):
+        L.validate_manifest(bad, src)
+    cfg = s1a.LaneConfig(ok, "7", tmp_path / "run", src)
+    pd_argv = L.episode_argv(cfg, "e", "vm", tmp_path, None, "capture", "PD")
+    er_argv = L.episode_argv(cfg, "e", "vm", tmp_path, None, "capture", "ER")
+    assert f"{s1a.RUN_ROOT}stage0/s2v4/pd-cache/files:/inputs/file_cache/files:ro" in pd_argv
+    assert f"{s1a.RUN_ROOT}x/files:/inputs/file_cache/files:ro" in er_argv
+    assert L.image_bytes(ok) == sum(e["size_bytes"] for c, e in ok["images"].items()
+                                    if c != "PD")  # the shared ER file counts once
 
 
 def test_vm_view_swaps_only_the_disk(tmp_path):
@@ -207,6 +364,12 @@ class FakeGuest:
             paths = json.loads(args[1])["paths"]
             return {"files": [{"path": p, "exists": True, "sha256": str(self.hashes),
                                "mtime_ns": self.hashes} for p in paths]}
+        if args[0] == "registry":
+            cfg = json.loads(args[1])
+            return {"path": cfg["path"], "exists": True, "sha256": "r" * 64, "items": 3,
+                    "values": {f"{a}|{b}": ["3"] for a, b in cfg["keys"]}}
+        if args[0] == "end":
+            return {"fc_match_ar": "DejaVu Sans", "packages": {}}
         assert args[0] == "facts"
         return {"selector_sha256": self.selector, "keyboard_layout": "us", "window_titles": []}
 
@@ -221,6 +384,9 @@ class FakeGuest:
 class FakeSession:
     evaluate_replies: list = []
 
+    def __init__(self, replies=None):
+        self.evaluate_replies = list(replies or [])
+
     def setup(self):
         return {"failures": [], "steps": 2}
 
@@ -231,13 +397,13 @@ class FakeSession:
         pass
 
 
-def _probe(tmp_path, selector_in_guest, expected):
-    cfg = P.ProbeConfig(lane="l", purpose="development", slot="s", task_id=DEV[0], cell="E",
-                        block="t000", attempt=1, image_sha256="e" * 64,
+def _probe(tmp_path, selector_in_guest, expected, replies=None, task_id=None):
+    cfg = P.ProbeConfig(lane="l", purpose="development", slot="s", task_id=task_id or DEV[0],
+                        cell="E", block="t000", attempt=1, image_sha256="e" * 64,
                         selector_sha256=expected, out_dir=str(tmp_path / "out"))
     task = {"id": DEV[0], "evaluator": {"result": {"type": "vm_file", "path": "~/x.xlsx"}}}
     probe = P.Probe(cfg, guest=FakeGuest(selector_in_guest), task=task,
-                    session_factory=lambda c, t: FakeSession(), sleep=lambda s: None,
+                    session_factory=lambda c, t: FakeSession(replies), sleep=lambda s: None,
                     gpu_glob=lambda: [])
     probe._runner.warm_up = lambda: None
     probe._runner.check_restarts = lambda key="server_end": None
@@ -252,6 +418,33 @@ def test_probe_records_a_probed_slot(tmp_path):
     assert rec["result_files"]["/home/user/x.xlsx"]["rewritten"] is True
     assert (tmp_path / "out/screens/post_setup-1.png").is_file()
     assert json.loads((tmp_path / "out/probe.json").read_text())["slot"] == "s"
+
+
+def test_probe_reads_p010_and_end_facts(tmp_path):
+    rec = _probe(tmp_path, SEL["E"], SEL["E"], task_id="2cd43775-7085-45d8-89fa-9e35c0a915cf")
+    key = "/org.openoffice.Office.Common/Save/Document|AutoSaveTimeIntervall"
+    assert rec["p010"]["keys"] == [list(P.P010_KEYS["2cd43775"][0])]
+    assert rec["p010"]["values"] == {key: ["3"]} and rec["p010"]["path"] == P.REGISTRY_XCU
+    assert rec["end_facts"]["fc_match_ar"] == "DejaVu Sans"
+    other = _probe(tmp_path, SEL["E"], SEL["E"])  # a dev task reads all three keys
+    assert len(other["p010"]["values"]) == len(P.P010_ALL) == 3
+
+
+@pytest.mark.parametrize("status", [500, 503, None])
+def test_postconfig_server_error_is_infrastructure(tmp_path, status):
+    reply = {"phase": "evaluate", "step": 1, "type": "execute", "path": "/setup/execute",
+             "status": status}
+    rec = _probe(tmp_path, SEL["E"], SEL["E"], replies=[reply])
+    assert rec["status"] == "infrastructure"
+    assert rec["infrastructure_type"] == "probe:postconfig_server_error"
+    assert rec["postconfig"]["replies"]  # the replies are kept with the loss
+
+
+def test_postconfig_returncode_under_http_200_is_scored(tmp_path):
+    reply = {"phase": "evaluate", "step": 1, "type": "execute", "path": "/setup/execute",
+             "status": 200, "returncode": 1}
+    rec = _probe(tmp_path, SEL["E"], SEL["E"], replies=[reply])
+    assert rec["status"] == "probed" and rec["postconfig"]["failures"]
 
 
 def test_probe_refuses_the_wrong_image(tmp_path):
@@ -379,3 +572,12 @@ def test_gold_wrapper_config_and_record():
     lost = G.gold_record(cfg, {"status": "infrastructure", "infrastructure_type": "vm_boot"},
                          SEL["E"], None)
     assert lost["infrastructure_type"] == "vm_boot"
+    err = G.gold_record(cfg, {"status": "scored", "score": 1.0, "verdict": "pass",
+                              "postconfig_replies": [{"status": 500}, {"status": 200}]},
+                        SEL["E"], None)
+    assert err["status"] == "infrastructure" and err["verdict"] is None
+    assert err["infrastructure_type"] == "probe:postconfig_server_error"
+    rc = G.gold_record(cfg, {"status": "scored", "score": 0.0, "verdict": "fail",
+                             "postconfig_replies": [{"status": 200, "returncode": 1}]},
+                       SEL["E"], None)
+    assert rc["status"] == "probed" and rc["k2"]["postconfig_replies"]

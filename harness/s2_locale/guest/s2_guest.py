@@ -10,13 +10,27 @@ Mode ``facts`` ``{"selector": PATH}``:
   pack's files that LibreOffice reads (the gettext catalog count and the four registry files'
   SHA-256) and a digest over the toolbar definitions (PL's differ), so every record names the
   image it ran on;
-* ``setxkbmap -query`` and whether an input method runs (the keyboard check of P1's episode
-  start);
-* ``wmctrl -l`` window titles and the LibreOffice processes (pid, comm, first argv element);
-* the guest server's ``LANG``/``LANGUAGE``/``LC_*`` environment (the system locale held fixed).
+* ``setxkbmap -query``, the input-method processes running (the stock image runs
+  ``ibus-daemon``), GNOME's configured input sources and IBus's current engine (the keyboard
+  check of Phase 1's episode start compares these with the stock cell S's record);
+* ``wmctrl -l`` window titles and the LibreOffice processes (pid, comm, first argv element, and
+  the locale variables of each process's initial environment, read from ``/proc/<pid>/environ``:
+  whether the GTK catalogs of the GNOME language pack can be selected at all);
+* the guest server's ``LANG``/``LANGUAGE``/``LC_*`` environment (the guest's stock locale,
+  ``en_HK.UTF-8`` / ``en_HK:en``, held fixed in every cell).
 
 Mode ``hash`` ``{"paths": [...]}``: per path, whether it exists, its SHA-256, size and
 ``st_mtime_ns`` (the A3 save check reads these before and after the task's postconfig).
+
+Mode ``registry`` ``{"path": XCU, "keys": [[item path, prop name], ...]}``: P0.10's reader of the
+user profile's ``registrymodifications.xcu``: the file's SHA-256, size and mtime, its item count,
+and per key every ``value`` text of a ``prop`` with that name under an ``item`` with that
+``oor:path`` (the way the three C1 checkers read it).
+
+Mode ``end`` ``{}`` (run once, after the slot's last observation, so nothing it might touch can
+change a measurement): ``fc-match :lang=ar`` and the number of Arabic-capable font families, and
+``dpkg-query``'s status of the language packs' unmet dependencies and recommendations (the
+registration discloses them).
 """
 
 import glob
@@ -26,6 +40,7 @@ import os
 import subprocess
 import sys
 import time
+import xml.etree.ElementTree as ET
 
 REGISTRY = "/etc/libreoffice/registry"
 LANGPACK = {
@@ -37,6 +52,12 @@ LANGPACK = {
 CATALOGS = "/usr/lib/libreoffice/program/resource/ar/LC_MESSAGES/*.mo"
 TOOLBARS = "/usr/lib/libreoffice/share/config/soffice.cfg/modules/*/toolbar/*.xml"
 IM_NAMES = ("ibus-daemon", "fcitx", "fcitx5", "uim-xim", "scim")
+LOCALE_VARS = ("LANG", "LANGUAGE", "LC_ALL", "LC_MESSAGES", "LC_CTYPE")
+OOR = "{http://openoffice.org/2001/registry}"
+# Packages the fetched archives name as Depends or Recommends that the image does not install
+# (no maintainer script and no package database edit; registration P0.2).
+UNMET = ("language-pack-ar", "language-pack-gnome-ar", "fonts-hosny-amiri", "fonts-kacst",
+         "fonts-kacst-one", "fonts-sil-scheherazade", "locales", "ucf", "libreoffice-common")
 
 
 def x_env():
@@ -78,9 +99,42 @@ def processes():
     return out
 
 
-def run(argv):
+def environ_of(pid):
+    """The initial environment of a process (``/proc/<pid>/environ``), or None if unreadable."""
     try:
-        result = subprocess.run(argv, capture_output=True, text=True, env=x_env(), timeout=30)
+        with open(f"/proc/{pid}/environ", "rb") as handle:
+            raw = handle.read()
+    except OSError:
+        return None
+    out = {}
+    for item in raw.split(b"\0"):
+        key, sep, value = item.partition(b"=")
+        if sep:
+            out[key.decode("utf-8", errors="replace")] = value.decode("utf-8", errors="replace")
+    return out
+
+
+def session_env(procs):
+    """X and D-Bus session variables taken from the IBus daemon's own environment, so the
+    read-only ``gsettings``/``ibus`` queries reach the session without starting a bus (None
+    when no session bus address is found: then neither query runs, so nothing can autolaunch
+    a bus)."""
+    env = x_env()
+    env.pop("DBUS_SESSION_BUS_ADDRESS", None)
+    for p in procs:
+        if p["comm"] == "ibus-daemon":
+            found = environ_of(p["pid"]) or {}
+            for key in ("DBUS_SESSION_BUS_ADDRESS", "XDG_RUNTIME_DIR", "HOME", "USER"):
+                if found.get(key):
+                    env[key] = found[key]
+            break
+    return env if env.get("DBUS_SESSION_BUS_ADDRESS") else None
+
+
+def run(argv, env=None, timeout=30):
+    try:
+        result = subprocess.run(argv, capture_output=True, text=True, env=env or x_env(),
+                                timeout=timeout)
         return {"returncode": result.returncode, "stdout": result.stdout[-2000:],
                 "stderr": result.stderr[-300:]}
     except Exception as exc:  # noqa: BLE001 - recorded
@@ -101,6 +155,14 @@ def mode_facts(config):
     for line in windows.get("stdout", "").splitlines():
         parts = line.split(None, 3)
         titles.append(parts[3] if len(parts) == 4 else "")
+    for p in office:
+        env = environ_of(p["pid"])
+        p["locale_env"] = None if env is None else {k: env[k] for k in LOCALE_VARS if k in env}
+    senv = session_env(procs)
+    nobus = {"error": "no session bus address in ibus-daemon's environment"}
+    sources = (run(["gsettings", "get", "org.gnome.desktop.input-sources", "sources"], senv, 10)
+               if senv else nobus)
+    engine = run(["ibus", "engine"], senv, 10) if senv else nobus
     return {
         "selector_sha256": sha256_of(config["selector"]),
         "langpack": {k: sha256_of(v) for k, v in LANGPACK.items()},
@@ -109,6 +171,10 @@ def mode_facts(config):
         "setxkbmap": kb,
         "keyboard_layout": layout,
         "input_methods": sorted({p["comm"] for p in procs if p["comm"] in IM_NAMES}),
+        "input_sources": (sources.get("stdout") or "").strip() or None,
+        "input_sources_rc": sources.get("returncode", sources.get("error")),
+        "ibus_engine": (engine.get("stdout") or "").strip() or None,
+        "ibus_engine_rc": engine.get("returncode", engine.get("error")),
         "window_titles": titles,
         "libreoffice_processes": office,
         "server_locale_env": {k: v for k, v in os.environ.items()
@@ -131,7 +197,50 @@ def mode_hash(config):
     return {"files": [file_state(p) for p in config["paths"]]}
 
 
-MODES = {"facts": mode_facts, "hash": mode_hash}
+def mode_registry(config):
+    """P0.10: the values the C1 checkers read from ``registrymodifications.xcu``."""
+    out = file_state(config["path"])
+    out["values"] = {}
+    if not out["exists"]:
+        return out
+    try:
+        root = ET.parse(config["path"]).getroot()
+    except Exception as exc:  # noqa: BLE001 - recorded: a file the checker cannot parse either
+        out["parse_error"] = repr(exc)[:300]
+        return out
+    items = root.findall(".//item")
+    out["items"] = len(items)
+    for item_path, prop_name in config["keys"]:
+        values = []
+        for item in items:
+            if item.get(OOR + "path") != item_path:
+                continue
+            for prop in item.findall(".//prop"):
+                if prop.get(OOR + "name") == prop_name:
+                    values += [v.text for v in prop.findall(".//value")]
+        out["values"][f"{item_path}|{prop_name}"] = values
+    return out
+
+
+def mode_end(config):
+    match = run(["fc-match", ":lang=ar", "family"])
+    families = run(["fc-list", ":lang=ar", "family"])
+    names = {line.split(",")[0].strip() for line in (families.get("stdout") or "").splitlines()
+             if line.strip()}
+    status = run(["dpkg-query", "-W", "-f=${Package}\t${Status}\t${Version}\n", *UNMET])
+    packages = {}
+    for line in (status.get("stdout") or "").splitlines():
+        parts = line.split("\t")
+        if len(parts) == 3:
+            packages[parts[0]] = {"status": parts[1], "version": parts[2]}
+    for name in UNMET:
+        packages.setdefault(name, {"status": "not known to dpkg", "version": None})
+    return {"fc_match_ar": (match.get("stdout") or "").strip() or None,
+            "arabic_font_families": len(names), "arabic_font_family_names": sorted(names)[:40],
+            "packages": packages}
+
+
+MODES = {"facts": mode_facts, "hash": mode_hash, "registry": mode_registry, "end": mode_end}
 
 
 def main(argv):

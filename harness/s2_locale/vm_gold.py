@@ -9,6 +9,11 @@ the frozen injection plan (LibreOffice's own Quit, the gold uploaded through the
 or postconfig save), the pinned ``DesktopEnv.evaluate()`` and the restart checks. After it, the
 guest's selector is checked against the cell's (the image check), and ``probe.json`` is written
 in the S2 lane's record shape with the K2 run record inside.
+
+Infrastructure (the registration's one rule, as ``vm_probe.py``): a K2 run that is not scored,
+a failed image check, or a scored run with a postconfig server error (a postconfig ``/setup/*``
+reply with no HTTP status or a status of 500 or above) ends the gold slot as
+``infrastructure``, and the lane re-queues it once.
 """
 
 from __future__ import annotations
@@ -22,7 +27,8 @@ SCHEMA = "s2v4-vm-gold-v1"
 EXPERIMENT_ID = "s2-arabic-cua-locale-v4"
 K2_KEEP = ("status", "exclusion", "infrastructure_type", "infrastructure_detail", "score",
            "verdict", "plan_ops", "save_paths", "post_postconfig", "unsaved_at_read",
-           "late_write", "derived_not_uploaded", "timings", "warmup")  # fmt: skip
+           "late_write", "derived_not_uploaded", "timings", "warmup", "postconfig_replies",
+           "postconfig_failures")  # fmt: skip
 
 
 def k2_config(cfg: dict[str, Any]) -> dict[str, Any]:
@@ -52,9 +58,17 @@ def gold_record(cfg: dict[str, Any], k2: dict[str, Any],
         "image_sha256": cfg["image_sha256"], "gold_job_id": cfg["gold"]["job_id"],
         "k2": {k: k2.get(k) for k in K2_KEEP if k in k2}, "selector_in_guest": selector,
     }  # fmt: skip
+    from harness.s2_locale.vm_probe import server_error
+
+    server_errors = [r for r in k2.get("postconfig_replies") or () if server_error(r)]
     if k2.get("status") != "scored":
         rec.update(status="infrastructure", infrastructure_type=k2.get("infrastructure_type"),
                    infrastructure_detail=k2.get("infrastructure_detail"), score=None,
+                   verdict=None)  # fmt: skip
+    elif server_errors:
+        rec.update(status="infrastructure", infrastructure_type="probe:postconfig_server_error",
+                   infrastructure_detail=f"{len(server_errors)} postconfig replies: "
+                   f"{[r.get('status') for r in server_errors]}", score=None,
                    verdict=None)  # fmt: skip
     elif facts_error is not None or selector != cfg["selector_sha256"]:
         rec.update(status="infrastructure", infrastructure_type="probe:image_check",

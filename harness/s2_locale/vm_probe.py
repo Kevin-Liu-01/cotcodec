@@ -19,12 +19,17 @@ VM container mounts the slot's cell image (the certified disk for the stock cell
    map and input methods;
 6. (``evaluate``) S1a's 20 s settle, then the pinned ``DesktopEnv.evaluate()`` with ``DONE``:
    the task's own postconfig (strict window activation, Ctrl+S, ...) and its checker on the
-   do-nothing state; the guest-server restart check; a last screenshot.
+   do-nothing state; the guest-server restart check; P0.10's reader (the values the C1
+   checkers read from the user profile's ``registrymodifications.xcu``, ``P010_KEYS``); a last
+   screenshot and the end facts (fonts, the unmet package dependencies).
 
-Classification: a failed boot, image check, setup step, warm-up or guest transport, an
-undelivered observation or a guest-server restart ends the slot as ``infrastructure``; otherwise
-the slot is ``probed`` with whatever the observation and the checker returned (a metric that
-raises is recorded as ``error``, never an exclusion).
+Classification (registration, "Infrastructure failures and exclusions"): a failed boot, image
+check, setup step, warm-up or guest transport, an undelivered observation, a guest-server
+restart, or a postconfig server error (any ``/setup/*`` reply of the postconfig with no HTTP
+status or a status of 500 or above: the guest server's own failure; a non-zero ``returncode``
+under HTTP 200 is the guest's state and is scored) ends the slot as ``infrastructure``, and the
+lane re-queues it once; otherwise the slot is ``probed`` with whatever the observation and the
+checker returned (a metric that raises is recorded as ``error``, never an exclusion).
 """
 
 from __future__ import annotations
@@ -51,6 +56,28 @@ LATIN = re.compile("[A-Za-z]")
 CP = "https://accessibility.ubuntu.example.org/ns/component"
 ST = "https://accessibility.ubuntu.example.org/ns/state"
 COORD = re.compile(r"\((-?\d+),\s*(-?\d+)\)")
+SERVER_ERROR = 500  # harness.q2_stage1.osworld_live.SERVER_ERROR
+REGISTRY_XCU = "/home/user/.config/libreoffice/4/user/registrymodifications.xcu"
+# P0.10: the (item path, prop name) pairs each C1 checker reads (OSWorld b138d348:
+# slides.check_presenter_console_disable, slides.check_auto_saving_time, docs.find_default_font).
+P010_KEYS: dict[str, tuple[tuple[str, str], ...]] = {
+    "0f84bef9": (("/org.openoffice.Office.Impress/Misc/Start", "EnablePresenterScreen"),),
+    "2cd43775": (("/org.openoffice.Office.Common/Save/Document", "AutoSaveTimeIntervall"),),
+    "f178a4a9": (("/org.openoffice.Office.Writer/DefaultFont", "Standard"),),
+}
+# Every other task reads all three (the reader is exercised on every slot, dev tasks included).
+P010_ALL = tuple(k for keys in P010_KEYS.values() for k in keys)
+
+
+def p010_keys(task_id: str) -> tuple[tuple[str, str], ...]:
+    return P010_KEYS.get(task_id[:8], P010_ALL)
+
+
+def server_error(reply: Mapping[str, Any]) -> bool:
+    """A ``/setup/*`` reply the guest server itself failed: no HTTP status, or 500 or above
+    (the reading of ``harness.q2_stage1.analysis.server_error``)."""
+    status = reply.get("status")
+    return not isinstance(status, int) or isinstance(status, bool) or status >= SERVER_ERROR
 
 
 class ProbeFailure(RuntimeError):
@@ -263,6 +290,15 @@ class Probe:
             raise ProbeFailure(f"hash {tag}", f"{type(exc).__name__}: {exc}") from exc
         return {row["path"]: row for row in out.get("files", [])}
 
+    def guest_mode(self, mode: str, tag: str, config: Mapping[str, Any]) -> dict[str, Any]:
+        try:
+            out = self.guest.run_script(GUEST_SCRIPT.read_text(encoding="utf-8"),
+                                        [mode, json.dumps(config)])  # fmt: skip
+        except Exception as exc:  # noqa: BLE001 - a guest that cannot answer is infrastructure
+            raise ProbeFailure(f"{mode} {tag}", f"{type(exc).__name__}: {exc}") from exc
+        out.pop("_elapsed_s", None)
+        return out
+
     def screenshot(self, tag: str) -> dict[str, Any]:
         from harness.q2.vm import desktop
 
@@ -343,14 +379,27 @@ class Probe:
                 pre = self.hash_files("pre_postconfig", paths)
                 self.progress("evaluate")
                 self.evaluate(session)
+                failed = [r for r in self.record["postconfig"]["replies"] if server_error(r)]
+                if failed:
+                    from harness.q2_stage1.osworld_live import describe_reply
+
+                    raise ProbeFailure("postconfig_server_error",
+                                       "; ".join(describe_reply(r) for r in failed))  # fmt: skip
                 self._runner.check_restarts("server_end")
                 post = self.hash_files("post_evaluate", paths)
                 self.record["result_files"] = {
                     p: {"pre": pre.get(p), "post": post.get(p),
                         "rewritten": rewritten(pre.get(p) or {}, post.get(p) or {})}
                     for p in paths}  # fmt: skip
+                keys = p010_keys(self.cfg.task_id)
+                self.record["p010"] = {
+                    "keys": [list(k) for k in keys],
+                    **self.guest_mode("registry", "post_evaluate",
+                                      {"path": REGISTRY_XCU, "keys": [list(k) for k in keys]}),
+                }  # fmt: skip
                 self.record["post_evaluate"] = {"shot": self.screenshot("post_evaluate"),
                                                 "facts": self.facts("post_evaluate")}  # fmt: skip
+            self.record["end_facts"] = self.guest_mode("end", "end", {})
             self.record.update(status="probed", infrastructure_type=None)
         except ProbeFailure as exc:
             self.record.update(status="infrastructure", infrastructure_type=f"probe:{exc.step}",
