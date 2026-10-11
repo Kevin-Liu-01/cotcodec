@@ -321,15 +321,32 @@ def test_pins_from_a_build_record():
 def test_images_json_is_the_committed_build_records_pin_set():
     import json
 
-    build = ROOT / "program/evidence/2026-10-11/s2v4-image/image-build-1199"
-    rec = json.loads((build / "build-record.json").read_text())
+    build = ROOT / "program/evidence/2026-10-11/s2v4-image/image-build-1207"
+    rec = json.loads((build / "a" / "build-record.json").read_text())
     pins = json.loads((ROOT / "harness/s2_locale/images.json").read_text())
     assert pins == B.pins_from_record(rec, pins["build"]["dir"])
+    assert pins["build"]["dir"].endswith("/image-build-v5/a")
     assert set(pins["cells"]) == set(B.CELLS)
     for r in rec["cells"].values():
         assert r["changed_blocks"]["ok"] and r["changed_blocks"]["counts"]["unexplained"] == 0
         assert r["fsck"]["findings"] == rec["fsck_certified"]["findings"]
-    assert rec["install"]["changed_blocks"]["ok"]
+        assert r["image_checks"]["s_wtime_is_fake_time"]
+        checks = r["image_checks"]
+        assert checks["outside_partition"]["ok"] and checks["superblock"]["ok"]
+    assert rec["install"]["changed_blocks"]["ok"] and rec["layer_files"]["ok"]
+    assert rec["install"]["mtimes_read_back"] == rec["install"]["verified_paths"]
+    # the reproducibility record: two builds in one job, every digest identical, and the pins are
+    # those digests
+    rep = json.loads((build / "reproducibility.json").read_text())
+    assert rep["reproducible"] and not rep["differing"]
+    a, b = rep["builds"]["a"]["digests"], rep["builds"]["b"]["digests"]
+    assert a == b and a["derived_base"] == pins["build"]["derived_base"]["sha256"]
+    pinned = {c: e["sha256"] for c, e in pins["cells"].items()}
+    assert {c: a[f"cell_{c}"] for c in B.CELLS} == pinned
+    assert rep["earlier_build"]["only_superblock_copies_differ"]
+    for package in ("libreoffice-l10n-ar", "language-pack-ar-base", "language-pack-gnome-ar-base"):
+        kept = build / "a" / "maintainer-scripts" / package
+        assert (kept / "postinst").is_file() and (kept / "control").is_file()
 
 
 def test_layer_files_check():

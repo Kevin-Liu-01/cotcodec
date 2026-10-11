@@ -145,8 +145,13 @@ locales-all` and `ucf`, which the guest has, and Recommends `fonts-hosny-amiri`,
 `fonts-sil-scheherazade` and `libreoffice-core (>> 1:7.3.7)`, of which only `fonts-kacst` and
 `libreoffice-core` are installed. Fonts (v3.1's facts, re-read in every v4 slot by the probe's end
 facts): no font is added; `fonts-kacst`, `fonts-kacst-one` and DejaVu already cover Arabic, and
-`fc-match :lang=ar` gives DejaVu Sans. The language packs' postinst would run `locale-gen
---keep-existing ar`; it does not run, so no Arabic system locale exists in any cell, and the guest's
+`fc-match :lang=ar` gives DejaVu Sans. The maintainer scripts (committed with the build record) would
+do three things that are not done: the two language packs' postinst runs
+`/usr/share/locales/install-language-pack ar` (which generates the Arabic locales that
+`/var/lib/locales/supported.d/ar` lists), and `libreoffice-l10n-ar`'s postinst registers its four
+`ucf` copies with `ucfr` and calls `dpkg-maintscript-helper symlink_to_dir` for its doc directory (an
+upgrade helper with nothing to do on a fresh install). So no Arabic system locale exists in any
+cell, and the guest's
 stock locale (`LANG=en_HK.UTF-8`, `LANGUAGE=en_HK:en`, as every slot of the development smokes records
 for the guest server, S included) is held fixed. LibreOffice's interface language is set by the
 selector, not by the locale. Under `LANGUAGE=en_HK:en` GTK's gettext may never select the GNOME pack's
@@ -192,34 +197,47 @@ The derived base image is built offline by `image_build.py` in the `cotcodec-q2-
   read-only.
 
 The image digests, the block classification and the reproducibility record are in the pinned build's
-record (`program/evidence/2026-10-11/s2v4-image/image-build-@@BUILD@@/`) and in
+record (`program/evidence/2026-10-11/s2v4-image/image-build-1207/`) and in
 `harness/s2_locale/images.json`, which `vm_lane.py` and `ap_delta.py` enforce (section "Images built").
 
 ## Images built
 
-Built by Slurm job 1199 (CPU only, 481 s, from the export of commit `4c516761`; the self-test passed
-first); record `program/evidence/2026-10-11/s2v4-image/image-build-1199/build-record.json`, per-path
-manifests `image-manifest.json` and `cell-manifests.json`. Every image is a standalone qcow2 (virtual
-size 53,687,091,200 B, 64 KiB clusters, no backing file) that `qemu-img compare` finds identical to its
-raw source, and `e2fsck -fn` reports on every image exactly the certified disk's one finding (inode
-1214912). Earlier builds: job 1189 and job 1192 stopped at their own checks before writing any image
-(the certified disk's pre-existing `e2fsck` finding; a directory both language packs carry, planned
-twice); job 1195 built images whose selector was read before the pack's `ctl_ar.xcd` (development
-smoke 1197, section P0.3), superseded by 1199 and kept only as a record.
+Built by Slurm job 1207 (CPU only, from the export of commit `c7a2b1d0`; the self-test passed
+first), twice in the same job (`image_build.py build-twice`, 466 s and 464 s): every write session
+ran at `E2FSPROGS_FAKE_TIME` = 1754395037 (2025-08-05T11:57:17Z, the certified root filesystem's own
+last write time), and the two builds gave identical digests for the derived base, every cell image,
+the image manifest and the cell manifests (`reproducible` true). Records:
+`program/evidence/2026-10-11/s2v4-image/image-build-1207/` (`reproducibility.json`; build a's
+`build-record.json`, `image-manifest.json`, `cell-manifests.json`; `maintainer-scripts/`). The pins
+are build a's files (host directory `image-build-v5/a`); build b's identical files are kept beside
+them. Every image is a standalone, read-only qcow2 (virtual size 53,687,091,200 B, 64 KiB clusters,
+no backing file) that `qemu-img compare` finds identical to its raw source; `e2fsck -fn` reports on
+every image exactly the certified disk's one finding (inode 1214912); every image is identical to
+its reference outside the root partition; of the superblock fields only the checksum and the free
+block and inode counts changed against the certified disk; the system layer is `LAYER_FILES` plus
+`main`. Against build 1199's derived base (the earlier pins) one 4 KiB block differs, the primary
+superblock (its checksum and write time; `only_superblock_copies_differ` true): the file contents
+are the same, so development smoke 1201's findings carry over, and smoke @@SMOKEJOB@@ repeated them
+on these images. Earlier builds: jobs 1189 and 1192 stopped at their own checks before writing any
+image (the certified disk's pre-existing `e2fsck` finding; a directory both language packs carry,
+planned twice); job 1195 built images whose selector was read before the pack's `ctl_ar.xcd`
+(deleted after this build); job 1199 built the previous pins without a fixed time (kept,
+superseded).
 
 | Image | SHA-256 | Bytes | Written | Changed 4 KiB blocks (every one explained) |
 |---|---|---:|---|---|
-| derived base | `23821bd4af63f8465aac53bb019f999882b5223c4d55c7750d0aa1a82ed16ae4` | 24,459,214,848 | 404 writes, directories and links (385 files incl. 4 `ucf` copies, 18 directories, 1 symlink) | 2,790 vs the certified disk: 2,675 file data, 14 directory, 83 inode table, 13 bitmap, 5 superblock or descriptor |
-| E | `59e1a72cea23f50e188bea96864d76c72919c243cd45c184c3705cb56e8a5d1a` | 24,459,214,848 | selector (selector `62d176fa8135...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
-| A | `a76f935ed4dabc30b7f38b131988f95f2618ef8f020bb4dca5977f42a2de8ae4` | 24,459,214,848 | selector (selector `081a34eb90c6...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
-| ER | `ca83bd163eafcbd4ebd64b8bb8263c4df396964220046c966dfb8173f3ee81cb` | 24,459,214,848 | selector (selector `d7a7c43f2af3...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
-| AR | `c952ac430b2ea79405d6b5de0977372953cd60d1e6beb790986096bfd6e25619` | 24,459,214,848 | selector (selector `89b110b48f9e...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
-| PL | `5e6694a092cd47fae551bfa11ee0cba9322a026fe5b82b04ff035d4597676bf2` | 24,459,214,848 | selector and 369 toolbar definitions (selector `62d176fa8135...`) | 466 vs the base: 390 file data, 10 directory, 47 inode table, 14 bitmap, 5 superblock or descriptor |
-| AD | `9a532055ad8d8c50fb190d87f42b87b05586c8f7cd97af0187ec3b588be9b210` | 24,459,214,848 | selector (selector `3d2b12f95537...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| derived base | `d186f41ef5cec71ef2f961c6eb0151481012388825654a847bd58da6937def1a` | 24,459,214,848 | 404 writes, directories and links (385 files incl. 4 `ucf` copies, 18 directories, 1 symlink) | 2,790 vs the certified disk: 2,675 file data, 14 directory, 83 inode table, 13 bitmap, 5 superblock or descriptor; 411 inode slots |
+| E | `51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42` | 24,459,214,848 | selector (selector `62d176fa8135...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| A | `1250098963189effe71fd4e949407f8d8b94543fb192de472ae4572f09c10df2` | 24,459,214,848 | selector (selector `081a34eb90c6...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| ER | `262fe7093d5fbdce466eb9bf15229706a5131d76cb8d7e145f7262eb5096b607` | 24,459,214,848 | selector (selector `d7a7c43f2af3...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| AR | `77cd9a2ab6aa37ef6c7d80ff27486b63e2f2e8a417c46d2768c1d8020cc6311f` | 24,459,214,848 | selector (selector `89b110b48f9e...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| PL | `5a4102eefbbaf9e4ad78d499267270c4fdb4671ccff4d6dba777196817aa6ed2` | 24,459,214,848 | selector and 369 toolbar definitions (selector `62d176fa8135...`) | 466 vs the base: 390 file data, 10 directory, 47 inode table, 14 bitmap, 5 superblock or descriptor |
+| AD | `d1429751efca0fbbf959f7b2933feab4bc6d36c08e743bb0b4754ed2d562bef1` | 24,459,214,848 | selector (selector `3d2b12f95537...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
 
 The stock cell S is the certified `Ubuntu.qcow2` (`6bf667a8...`). Images stay read-only on the host
 under the run root; `harness/s2_locale/images.json` pins them, and `tests/test_s2v4_image_build.py`
-checks that it is the pin set the committed build record gives.
+checks that it is the pin set the committed build record gives. The lane's image check (job
+@@SMOKEJOB@@) re-hashed every cell image and S on the host before dispatching.
 
 ### P0.3 Cells and the per-slot image
 
@@ -880,10 +898,10 @@ plan and `ap_delta.py`, the image pins and the batch files.
 | `harness/s2_locale/guest/s2_guest.py` | `757fdb1414ab4aeb0230df8d6799352aa720e5778935722c9afd7bf572d46fff` |
 | `harness/s2_locale/golds.py` | `0d8fad9fde736ee3fcd80492b5c905d7d6a35e690f9cf66559cf42ff87c25f9e` |
 | `harness/s2_locale/pd_cache.py` | `f75c520a6d8fbc7675c12ff1873ec36817eff9efa00ffa4b190fa05e81a10ddd` |
-| `harness/s2_locale/ap_delta.py` | `8e207b9d2096327b0b1a7b9283d10f2054ed7db1260895e222e76e8edd4bbdfd` |
-| `harness/s2_locale/image_build.py` | `e7e8a28f5fcfdaf704a0d27f4e098ad520facba3180093037dd0fb4c9e648525` |
+| `harness/s2_locale/ap_delta.py` | `506204e76c79c12da1793b9b1102e5cdbac3e240e28e69f4a09d8feace5176d3` |
+| `harness/s2_locale/image_build.py` | `a8f937d856af59b645c10000b028611d4743651f09a23c2d8511084a4bccef66` |
 | `harness/s2_locale/fetch_langpacks.py` | `9415e5e82aa92be3d343895e577aebeb67973102681f0a36c6c1536a07b55b24` |
-| `harness/s2_locale/images.json` | `9bb31959f268a649b918f4ec9875e1cde3cf5916f9e164ecd042d2a98b0e2220` |
+| `harness/s2_locale/images.json` | `a95d4df25957c7301a47d6c8d719b9016a6ac4e9ca51f6377d44b8e28794d767` |
 | `infra/slurm/host-single-node/s2v4-vm.sbatch` | `1f831bbbc73b792c9d27809a1ecad41526d0ad79c66ea682457d404200c1a09b` |
 | `infra/slurm/host-single-node/s2v4-apdelta.sbatch` | `0423c0257d32a055d6c812cc3d8a287676d604b41b3742012550178e4d0d89cb` |
 | `infra/slurm/host-single-node/s2v4-cpu.sbatch` | `47c0900815a81a764af1faf1151a9bac5a18263e1cad0e63cc8584bc6fd675e0` |
@@ -947,7 +965,7 @@ Code review, blocking:
 
 | Item | Disposition |
 |---|---|
-| R1. The image build was not bit-reproducible (each `debugfs -w` stamped the wall clock into the superblock), and nothing said so | Fixed. Every write session runs at the certified disk's `s_wtime` (`E2FSPROGS_FAKE_TIME`); one CPU job (Slurm @@BUILDJOB@@) built twice and got identical digests for every image, which are the new pins (`images.json`, section "Images built"); the same job found that its derived base differs from build 1199's only in superblock copies (`reproducibility.json`); build 1195's images were deleted after that, build 1199's are kept, superseded |
+| R1. The image build was not bit-reproducible (each `debugfs -w` stamped the wall clock into the superblock), and nothing said so | Fixed. Every write session runs at the certified disk's `s_wtime` (`E2FSPROGS_FAKE_TIME`); one CPU job (Slurm 1207) built twice and got identical digests for every image, which are the new pins (`images.json`, section "Images built"); the same job found that its derived base differs from build 1199's only in superblock copies (`reproducibility.json`); build 1195's images were deleted after that, build 1199's are kept, superseded |
 | R2. Two held-fixed facts contradicted v4's records: `ibus-daemon` runs in every slot, S included, and the guest's locale is `en_HK.UTF-8` / `en_HK:en`, not `en_US.UTF-8`; as written, Phase 1's keyboard check would fail every episode | Fixed. The keyboard check is equality with the stock cell S's record (layout, input-method processes, GNOME input sources; P0.5, Phase 1); the locale is the guest's stock values in P0.2, P0.5, the claim scope and `image_build.py`'s docstrings; the evidence README's two sentences are corrected; the probe records input sources, IBus's engine and LibreOffice's locale variables |
 | R3. The download's scope went beyond D80 (iv)'s words and the packages' unmet dependencies were undisclosed | Fixed. P0.2 attributes `libreoffice-l10n-ar` to D80 (iv) and the two Ubuntu packs to D1 under D84's reading of D80 (iv) with D76 (a), lists every unmet Depends and Recommends, restates v3.1's font facts (re-read in the VM by the probe's end facts) and describes the GNOME pack as possibly inert |
 

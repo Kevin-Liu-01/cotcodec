@@ -24,7 +24,9 @@ packages fetched by ``fetch_langpacks.py`` puts on disk:
   equal ``UCF_PAIRS``.
 
 Not done, and recorded: the packages' maintainer scripts (the two language packs' postinst
-runs ``locale-gen --keep-existing ar``, so no Arabic system locale is generated; the guest's
+runs ``/usr/share/locales/install-language-pack ar``, which generates the Arabic locales, so no
+Arabic system locale is generated; ``libreoffice-l10n-ar``'s postinst also registers its ``ucf``
+copies with ``ucfr`` and runs a ``dpkg-maintscript-helper`` upgrade helper; the guest's
 locale stays its stock ``LANG=en_HK.UTF-8``, ``LANGUAGE=en_HK:en`` in every cell, as every probe
 record of the guest server's environment shows) and the package databases (``dpkg``'s status and
 ``ucf``'s hash file are not edited, so ``dpkg -l`` in the guest does not list the three packages;

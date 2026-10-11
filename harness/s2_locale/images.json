@@ -2,49 +2,49 @@
  "build": {
   "certified_sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
   "derived_base": {
-   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-derived-base.qcow2",
-   "sha256": "23821bd4af63f8465aac53bb019f999882b5223c4d55c7750d0aa1a82ed16ae4",
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v5/a/s2v4-derived-base.qcow2",
+   "sha256": "d186f41ef5cec71ef2f961c6eb0151481012388825654a847bd58da6937def1a",
    "size_bytes": 24459214848
   },
-  "dir": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4",
-  "executor_commit": "4c51676148dc796bd7a08b2f99c351d05d1ed0cc",
-  "image_manifest_sha256": "9034094f86f172e6c8bc6c82ec2bb2e1e3c4244b711f692fbbd75f352a557545"
+  "dir": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v5/a",
+  "executor_commit": "c7a2b1d00a325f7264316316b3ca62926bd55db3",
+  "image_manifest_sha256": "a02596baf6d42faf0e560917f974d94bee12702e5133bde87081b6bea58b7f65"
  },
  "cells": {
   "A": {
-   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-A.qcow2",
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v5/a/s2v4-cell-A.qcow2",
    "selector_sha256": "081a34eb90c6d8f993ccdff478ca5337784b85c44b9f90977f42c0710f5a50cb",
-   "sha256": "a76f935ed4dabc30b7f38b131988f95f2618ef8f020bb4dca5977f42a2de8ae4",
+   "sha256": "1250098963189effe71fd4e949407f8d8b94543fb192de472ae4572f09c10df2",
    "size_bytes": 24459214848
   },
   "AD": {
-   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-AD.qcow2",
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v5/a/s2v4-cell-AD.qcow2",
    "selector_sha256": "3d2b12f95537ee7df1502829d4631330d1682aeac3bf346531aeec1d933dc62c",
-   "sha256": "9a532055ad8d8c50fb190d87f42b87b05586c8f7cd97af0187ec3b588be9b210",
+   "sha256": "d1429751efca0fbbf959f7b2933feab4bc6d36c08e743bb0b4754ed2d562bef1",
    "size_bytes": 24459214848
   },
   "AR": {
-   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-AR.qcow2",
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v5/a/s2v4-cell-AR.qcow2",
    "selector_sha256": "89b110b48f9e5afeb98eb31d33a73bd24e7b6e85c712a23418f1cdca953736c2",
-   "sha256": "c952ac430b2ea79405d6b5de0977372953cd60d1e6beb790986096bfd6e25619",
+   "sha256": "77cd9a2ab6aa37ef6c7d80ff27486b63e2f2e8a417c46d2768c1d8020cc6311f",
    "size_bytes": 24459214848
   },
   "E": {
-   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-E.qcow2",
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v5/a/s2v4-cell-E.qcow2",
    "selector_sha256": "62d176fa8135d59af44ce79ef0f51e386f3fe8d2040d4089ceef64d0b60a4fa1",
-   "sha256": "59e1a72cea23f50e188bea96864d76c72919c243cd45c184c3705cb56e8a5d1a",
+   "sha256": "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42",
    "size_bytes": 24459214848
   },
   "ER": {
-   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-ER.qcow2",
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v5/a/s2v4-cell-ER.qcow2",
    "selector_sha256": "d7a7c43f2af3f292580371e0db5ca8699ea2dede6d85d6c1b9662d5cd043cebc",
-   "sha256": "ca83bd163eafcbd4ebd64b8bb8263c4df396964220046c966dfb8173f3ee81cb",
+   "sha256": "262fe7093d5fbdce466eb9bf15229706a5131d76cb8d7e145f7262eb5096b607",
    "size_bytes": 24459214848
   },
   "PL": {
-   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-PL.qcow2",
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v5/a/s2v4-cell-PL.qcow2",
    "selector_sha256": "62d176fa8135d59af44ce79ef0f51e386f3fe8d2040d4089ceef64d0b60a4fa1",
-   "sha256": "5e6694a092cd47fae551bfa11ee0cba9322a026fe5b82b04ff035d4597676bf2",
+   "sha256": "5a4102eefbbaf9e4ad78d499267270c4fdb4671ccff4d6dba777196817aa6ed2",
    "size_bytes": 24459214848
   }
  },
