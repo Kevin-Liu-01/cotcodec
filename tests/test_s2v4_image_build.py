@@ -320,7 +320,7 @@ def test_pins_from_a_build_record():
 def test_images_json_is_the_committed_build_records_pin_set():
     import json
 
-    rec = json.loads((ROOT / "program/evidence/2026-10-11/s2v4-image/image-build-1195/build-record.json")
+    rec = json.loads((ROOT / "program/evidence/2026-10-11/s2v4-image/image-build-1199/build-record.json")
                      .read_text())  # fmt: skip
     pins = json.loads((ROOT / "harness/s2_locale/images.json").read_text())
     assert pins == B.pins_from_record(rec, pins["build"]["dir"])

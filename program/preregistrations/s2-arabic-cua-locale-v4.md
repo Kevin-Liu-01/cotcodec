@@ -142,23 +142,25 @@ The image digests and the block classification are in the build record
 
 ## Images built
 
-Built by Slurm job 1195 (CPU only, 455 s, from the export of commit `9c450da0`; the self-test passed
-first); record `program/evidence/2026-10-11/s2v4-image/image-build-1195/build-record.json`, per-path manifests
-`image-manifest.json` and `cell-manifests.json`. Every image is a standalone qcow2 (virtual size
-53,687,091,200 B, 64 KiB clusters, no backing file) that `qemu-img compare` finds identical to its raw
-source, and `e2fsck -fn` reports on every image exactly the certified disk's one finding (inode 1214912).
-Two earlier attempts stopped at their own checks before writing any image (job 1189: the certified
-disk's pre-existing `e2fsck` finding; job 1192: a directory both language packs carry, created twice).
+Built by Slurm job 1199 (CPU only, 481 s, from the export of commit `4c516761`; the self-test passed
+first); record `program/evidence/2026-10-11/s2v4-image/image-build-1199/build-record.json`, per-path
+manifests `image-manifest.json` and `cell-manifests.json`. Every image is a standalone qcow2 (virtual
+size 53,687,091,200 B, 64 KiB clusters, no backing file) that `qemu-img compare` finds identical to its
+raw source, and `e2fsck -fn` reports on every image exactly the certified disk's one finding (inode
+1214912). Earlier builds: job 1189 and job 1192 stopped at their own checks before writing any image
+(the certified disk's pre-existing `e2fsck` finding; a directory both language packs carry, planned
+twice); job 1195 built images whose selector was read before the pack's `ctl_ar.xcd` (development
+smoke 1197, section P0.3), superseded by 1199 and kept only as a record.
 
 | Image | SHA-256 | Bytes | Written | Changed 4 KiB blocks (every one explained) |
 |---|---|---:|---|---|
-| derived base | `894528792a7c59488a6d30680b1ed39b82e68e47c8b5a7bc90585d371d895ff4` | 24,459,214,848 | 404 writes, directories and links (385 files incl. 4 `ucf` copies, 18 directories, 1 symlink) | 2,790 vs the certified disk: 2,675 file data, 14 directory, 83 inode table, 13 bitmap, 5 superblock or descriptor |
-| E | `19792fbcc7b3b9bbc18b45f95cb0b09c7064b5bd8e841f144d381e5c063ea856` | 24,459,214,848 | selector (selector `f486e44f3f8f...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
-| A | `1d2bb7ad14148e40c4298dab04fe3cee5d53f65330da0d8e0fe82e1fcfa6eb3e` | 24,459,214,848 | selector (selector `2500c24400f4...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
-| ER | `f4db3bba67e4a4fd0e941385799c5569c6c49524bb44b7ce6e2a9724685df18c` | 24,459,214,848 | selector (selector `5a53083e0773...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
-| AR | `1cf32571aa5c0fa98fa5c5387af2d56a155566467a36c70048844d54c00517d9` | 24,459,214,848 | selector (selector `d69e21004ecc...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
-| PL | `d7402b1db5ff9072cc4e36fa4900bcba9966b593590fc0c3cd759f340e36a9e0` | 24,459,214,848 | selector and 369 toolbar definitions (selector `f486e44f3f8f...`) | 466 vs the base: 390 file data, 10 directory, 47 inode table, 14 bitmap, 5 superblock or descriptor |
-| AD | `3d5141b647afc42cd4819f3058cd929cfff0391f423035c77fad50afef11fed7` | 24,459,214,848 | selector (selector `235f348b05a4...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| derived base | `23821bd4af63f8465aac53bb019f999882b5223c4d55c7750d0aa1a82ed16ae4` | 24,459,214,848 | 404 writes, directories and links (385 files incl. 4 `ucf` copies, 18 directories, 1 symlink) | 2,790 vs the certified disk: 2,675 file data, 14 directory, 83 inode table, 13 bitmap, 5 superblock or descriptor |
+| E | `59e1a72cea23f50e188bea96864d76c72919c243cd45c184c3705cb56e8a5d1a` | 24,459,214,848 | selector (selector `62d176fa8135...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| A | `a76f935ed4dabc30b7f38b131988f95f2618ef8f020bb4dca5977f42a2de8ae4` | 24,459,214,848 | selector (selector `081a34eb90c6...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| ER | `ca83bd163eafcbd4ebd64b8bb8263c4df396964220046c966dfb8173f3ee81cb` | 24,459,214,848 | selector (selector `d7a7c43f2af3...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| AR | `c952ac430b2ea79405d6b5de0977372953cd60d1e6beb790986096bfd6e25619` | 24,459,214,848 | selector (selector `89b110b48f9e...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| PL | `5e6694a092cd47fae551bfa11ee0cba9322a026fe5b82b04ff035d4597676bf2` | 24,459,214,848 | selector and 369 toolbar definitions (selector `62d176fa8135...`) | 466 vs the base: 390 file data, 10 directory, 47 inode table, 14 bitmap, 5 superblock or descriptor |
+| AD | `9a532055ad8d8c50fb190d87f42b87b05586c8f7cd97af0187ec3b588be9b210` | 24,459,214,848 | selector (selector `3d2b12f95537...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
 
 The stock cell S is the certified `Ubuntu.qcow2` (`6bf667a8...`). Images stay read-only on the host
 under the run root; `harness/s2_locale/images.json` pins them, and `tests/test_s2v4_image_build.py`
