@@ -1,0 +1,23 @@
+{
+ "build": "B3",
+ "image_id": "sha256:728aaa69a5ea8484895f0678f5e0ba45ac92ab6f4485ccc9fb8700abffe87ce9",
+ "tag": "cotcodec-q2-r04-lo-b3:1d29bbbfea03",
+ "build_receipt": {
+  "job_id": "1104",
+  "mode": "build",
+  "tag": "cotcodec-q2-r04-lo-b3:1d29bbbfea03",
+  "image_id": "sha256:728aaa69a5ea8484895f0678f5e0ba45ac92ab6f4485ccc9fb8700abffe87ce9",
+  "dockerfile_sha256": "1d29bbbfea033ea9f3dc4b79ed0d822d2016f182ac3c423dbbded921639956ab",
+  "context_files_sha256": "7255549a5843c52dc7d2aabd49eca9b987925925f291e8483ec5be0d8099409f",
+  "batch_sha256": "f97d3af96418fb4fa806f39456e4117f306cbf04b14e08533d77a95349b37443",
+  "network_during_build": "host",
+  "started_at": "2026-10-11T09:18:16Z",
+  "finished_at": "2026-10-11T09:18:42Z"
+ },
+ "base_image_id": "sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361",
+ "base_layers": 3,
+ "layers": 4,
+ "added_layers": [
+  "sha256:660202e1ade6362970025c71a698de0b3f7359c98a0b9d8d2de6546cbaaadcde"
+ ]
+}

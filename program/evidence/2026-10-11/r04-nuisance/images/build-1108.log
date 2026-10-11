@@ -1,0 +1,87 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.34kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/cotcodec-q2-lo-vm:4d5db07d
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/2] FROM docker.io/library/cotcodec-q2-lo-vm:4d5db07d
+#4 CACHED
+
+#5 [2/2] RUN set -eux;     mkdir -p /opt/r04;     dpkg-query -W -f='${Package}\t${Version}\t${Status}\n' > /opt/r04/dpkg-before.tsv;     cd /tmp;     curl -fsSL --retry 3 -o lo.tar.gz "https://downloadarchive.documentfoundation.org/libreoffice/old/26.2.6.2/deb/x86_64/LibreOffice_26.2.6.2_Linux_x86-64_deb.tar.gz";     test "$(stat -c %s lo.tar.gz)" = "217261547";     echo "ae25483b9c1b56ed156fb2398c85ce97e65048bc0bbcc079934cc1d2e0c11242  lo.tar.gz" | sha256sum -c -;     tar -xzf lo.tar.gz;     for deb in LibreOffice_*_Linux_x86-64_deb/DEBS/*.deb; do       case "$deb" in *debian-menus*) continue ;; esac;       dpkg-deb -x "$deb" /;     done;     rm -rf /tmp/lo.tar.gz /tmp/LibreOffice_*;     dpkg-query -W -f='${Package}\t${Version}\t${Status}\n' > /opt/r04/dpkg-after.tsv;     cmp /opt/r04/dpkg-before.tsv /opt/r04/dpkg-after.tsv;     chmod -R a+rX /opt/libreoffice26.2;     HOME=/tmp/r04-version-home /opt/libreoffice26.2/program/soffice --version > /opt/r04/soffice-version.txt 2>&1;     rm -rf /tmp/r04-version-home;     grep -q "LibreOffice 26.2.6.2" /opt/r04/soffice-version.txt;     (ls -1 /opt/libreoffice26.2/program | grep -i -E "^(python|libpython|pyuno)" || true) > /opt/r04/python.txt;     printf '%s\n' "B5" "26.2.6.2" "ae25483b9c1b56ed156fb2398c85ce97e65048bc0bbcc079934cc1d2e0c11242" "217261547" > /opt/r04/build.txt
+#5 0.063 + mkdir -p /opt/r04
+#5 0.065 + dpkg-query -W -f=${Package}\t${Version}\t${Status}\n
+#5 0.081 + cd /tmp
+#5 0.081 + curl -fsSL --retry 3 -o lo.tar.gz https://downloadarchive.documentfoundation.org/libreoffice/old/26.2.6.2/deb/x86_64/LibreOffice_26.2.6.2_Linux_x86-64_deb.tar.gz
+#5 9.326 + stat -c %s lo.tar.gz
+#5 9.327 + test 217261547 = 217261547
+#5 9.328 + echo ae25483b9c1b56ed156fb2398c85ce97e65048bc0bbcc079934cc1d2e0c11242  lo.tar.gz
+#5 9.328 + sha256sum -c -
+#5 9.970 lo.tar.gz: OK
+#5 9.970 + tar -xzf lo.tar.gz
+#5 11.01 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-base_26.2.6.2-2_amd64.deb /
+#5 11.08 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-calc_26.2.6.2-2_amd64.deb /
+#5 11.53 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-core_26.2.6.2-2_amd64.deb /
+#5 16.41 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-draw_26.2.6.2-2_amd64.deb /
+#5 16.41 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-en-us_26.2.6.2-2_amd64.deb /
+#5 16.42 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-extension-beanshell-script-provider_26.2.6.2-2_amd64.deb /
+#5 16.45 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-extension-javascript-script-provider_26.2.6.2-2_amd64.deb /
+#5 16.53 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-extension-mediawiki-publisher_26.2.6.2-2_amd64.deb /
+#5 16.64 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-extension-nlpsolver_26.2.6.2-2_amd64.deb /
+#5 16.70 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-extension-pdf-import_26.2.6.2-2_amd64.deb /
+#5 16.89 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-extension-report-builder_26.2.6.2-2_amd64.deb /
+#5 17.06 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-firebird_26.2.6.2-2_amd64.deb /
+#5 17.23 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-gnome-integration_26.2.6.2-2_amd64.deb /
+#5 17.29 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-graphicfilter_26.2.6.2-2_amd64.deb /
+#5 17.37 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-images_26.2.6.2-2_amd64.deb /
+#5 20.33 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-impress_26.2.6.2-2_amd64.deb /
+#5 20.35 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-kde-integration_26.2.6.2-2_amd64.deb /
+#5 20.47 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-librelogo_26.2.6.2-2_amd64.deb /
+#5 20.49 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-libreofficekit-data_26.2.6.2-2_amd64.deb /
+#5 20.49 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-math_26.2.6.2-2_amd64.deb /
+#5 20.52 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-ogltrans_26.2.6.2-2_amd64.deb /
+#5 20.53 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-onlineupdate_26.2.6.2-2_amd64.deb /
+#5 20.54 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-ooofonts_26.2.6.2-2_amd64.deb /
+#5 21.31 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-ooolinguistic_26.2.6.2-2_amd64.deb /
+#5 21.32 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-postgresql-sdbc_26.2.6.2-2_amd64.deb /
+#5 21.44 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-python-script-provider_26.2.6.2-2_amd64.deb /
+#5 21.44 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-pyuno_26.2.6.2-2_amd64.deb /
+#5 22.00 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-writer_26.2.6.2-2_amd64.deb /
+#5 22.23 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libobasis26.2-xsltfilter_26.2.6.2-2_amd64.deb /
+#5 22.26 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2-base_26.2.6.2-2_amd64.deb /
+#5 22.26 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2-calc_26.2.6.2-2_amd64.deb /
+#5 22.26 + continue
+#5 22.26 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2-dict-en_26.2.6.2-2_amd64.deb /
+#5 22.50 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2-dict-es_26.2.6.2-2_amd64.deb /
+#5 22.58 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2-dict-fr_26.2.6.2-2_amd64.deb /
+#5 22.66 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2-draw_26.2.6.2-2_amd64.deb /
+#5 22.66 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2-en-us_26.2.6.2-2_amd64.deb /
+#5 22.66 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2-impress_26.2.6.2-2_amd64.deb /
+#5 22.66 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2-math_26.2.6.2-2_amd64.deb /
+#5 22.67 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2-ure_26.2.6.2-2_amd64.deb /
+#5 23.45 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2-writer_26.2.6.2-2_amd64.deb /
+#5 23.46 + dpkg-deb -x LibreOffice_26.2.6.2_Linux_x86-64_deb/DEBS/libreoffice26.2_26.2.6.2-2_amd64.deb /
+#5 23.49 + rm -rf /tmp/lo.tar.gz /tmp/LibreOffice_26.2.6.2_Linux_x86-64_deb
+#5 23.55 + dpkg-query -W -f=${Package}\t${Version}\t${Status}\n
+#5 23.57 + cmp /opt/r04/dpkg-before.tsv /opt/r04/dpkg-after.tsv
+#5 23.57 + chmod -R a+rX /opt/libreoffice26.2
+#5 23.64 + HOME=/tmp/r04-version-home /opt/libreoffice26.2/program/soffice --version
+#5 23.72 + rm -rf /tmp/r04-version-home
+#5 23.72 + grep -q LibreOffice 26.2.6.2 /opt/r04/soffice-version.txt
+#5 23.73 + ls -1 /opt/libreoffice26.2/program
+#5 23.73 + grep -i -E ^(python|libpython|pyuno)
+#5 23.73 + printf %s\n B5 26.2.6.2 ae25483b9c1b56ed156fb2398c85ce97e65048bc0bbcc079934cc1d2e0c11242 217261547
+#5 DONE 24.2s
+
+#6 exporting to image
+#6 exporting layers
+#6 exporting layers 2.0s done
+#6 writing image sha256:6cf86ce55e0c2e8ad3a1bddea512b4c9326b552a78c4ad4ecbc4471afd748402 done
+#6 naming to docker.io/library/cotcodec-q2-r04-lo-b5:2043b4262ffe done
+#6 DONE 2.0s

@@ -1,0 +1,12 @@
+{
+  "job_id": "1105",
+  "mode": "build",
+  "tag": "cotcodec-q2-r04-lo-b1:8b8b405e9c3f",
+  "image_id": "sha256:fd1f1bfed3e60f8e86e6d281a072726a8d042d5143703f3a8724f25bf9167d67",
+  "dockerfile_sha256": "8b8b405e9c3f37fd9f6ffcf552e0745f0b326b24d423d124ffa5afb0e7d5703d",
+  "context_files_sha256": "9c72f5590d4c0dd1b5f683ba0784092e61a52a30eb59bb240ba2f7f7733f3ed5",
+  "batch_sha256": "f97d3af96418fb4fa806f39456e4117f306cbf04b14e08533d77a95349b37443",
+  "network_during_build": "host",
+  "started_at": "2026-10-11T09:19:19Z",
+  "finished_at": "2026-10-11T09:19:43Z"
+}

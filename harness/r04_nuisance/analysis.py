@@ -479,6 +479,22 @@ def reference_from_control_summaries(paths: Sequence[Path]) -> dict[str, str]:
     return ref
 
 
+def pending_confirmations(result: Mapping[str, Any]) -> dict[str, list[str]]:
+    """The items and cells a confirmation round must re-run: every discordance of either
+    checker whose status is pending (the control is always re-run with them)."""
+    item_ids: set[str] = set()
+    cells: set[str] = set()
+    for checker in CHECKERS:
+        for cid, table in result[checker]["cells"].items():
+            pops = [table["gold"], *table["s1a"].values()]
+            for pop in pops:
+                for disc in pop["discordances"]:
+                    if disc["status"] == "pending":
+                        item_ids.add(disc["item_id"])
+                        cells.add(cid)
+    return {"items": sorted(item_ids), "cells": sorted(cells)}
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--items", type=Path, nargs="+", required=True)
@@ -496,6 +512,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--splits", nargs="+", default=["confirm", "reserve"])
     parser.add_argument("--cell-errors", type=Path, default=None)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument(
+        "--pending-out",
+        type=Path,
+        default=None,
+        help="write the items and cells the next confirmation round re-runs",
+    )
     args = parser.parse_args(argv)
     items = [row for path in args.items for row in read_jsonl(path)]
     result = analyze(
@@ -507,6 +529,10 @@ def main(argv: list[str] | None = None) -> int:
         splits=args.splits,
     )
     args.out.write_text(json.dumps(result, indent=1, sort_keys=True), encoding="utf-8")
+    if args.pending_out:
+        args.pending_out.write_text(
+            json.dumps(pending_confirmations(result), indent=1, sort_keys=True), encoding="utf-8"
+        )
     print(
         json.dumps(
             {"validity": result["validity"], "arms": {c: result[c]["arms"] for c in CHECKERS}},

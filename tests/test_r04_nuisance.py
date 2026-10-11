@@ -601,3 +601,46 @@ def test_capture_verification_against_committed_digests(tmp_path):
     assert set(items.SPLIT_RUNS["confirm"]) | set(items.SPLIT_RUNS["dev"]) == set(items.S1A_RUNS)
     for _job, _digest, path in items.S1A_RUNS.values():
         assert (ROOT / path).is_file()
+
+
+def test_pending_confirmations_lists_items_and_cells():
+    its = _items()
+    flips = {"B3.ctrl_s.L0": {"g:0"}, levels.REPLICATE_CELL: {"s:1:1"}}
+    out = analysis.analyze(its, _scores(its, PRIMARY, flips), reference=None)
+    pending = analysis.pending_confirmations(out)
+    assert pending == {"items": ["g:0", "s:1:1"], "cells": [levels.REPLICATE_CELL, "B3.ctrl_s.L0"]}
+
+
+def _host_tool():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "r04_host", ROOT / "infra/r04-nuisance/run/r04_host.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_host_tool_renders_cpu_only_lane_jobs(tmp_path):
+    host = _host_tool()
+    images = {b.id: f"sha256:{i:064x}" for i, b in enumerate(levels.BUILDS)}
+    cells = [c.id for c in levels.registered_cells()]
+    run = host.ROOT / "runs" / "t"
+    steps = host.save_steps(tmp_path, run, "main", cells, images, levels, s1a_ro=[],
+                            workers=8, only=None, minutes=60)  # fmt: skip
+    names = [s["name"] for s in steps]
+    assert names == ["main-save-B0", "main-save-B0.r2", "main-save-B1", "main-save-B2",
+                     "main-save-B3", "main-save-B4", "main-save-B5"]  # fmt: skip
+    b0 = steps[0]
+    assert b0["image"] == images["B0"] and levels.REPLICATE_CELL not in b0["argv"]
+    assert steps[1]["argv"][-1] == levels.REPLICATE_CELL
+    score = host.score_step(tmp_path, run, "main", cells, levels, s1a_ro=[], workers=8,
+                            only=None, raw=True, minutes=60)  # fmt: skip
+    for step in [*steps, score]:
+        command = " ".join(step["command"])
+        assert "--gres" not in command and "--gpus" not in command
+        assert "Q2M_MODE=run" in command
+        assert command.endswith(host.LANE)
+    assert score["image"] == levels.METRIC_IMAGE_ID
+    assert "--cell raw" in " ".join(score["argv"])
