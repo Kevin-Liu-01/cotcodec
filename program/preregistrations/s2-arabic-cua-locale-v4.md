@@ -212,8 +212,8 @@ pinned bytes.
 As v3.1: task instructions, documents and checker inputs (English, left to right); the system shell
 (English, left to right; the GNOME top bar is masked in every pixel comparison); the system locale
 `en_US.UTF-8` (number, date and paper defaults); the document default language; the SheetPrefix,
-CTLFont and English-function-name pins; autocorrect and spelling languages; the X keyboard map `us` and
-no input method; 1920x1080; the agent, decoding, step cap and settles. UI digit shaping, translated
+CTLFont and English-function-name pins; autocorrect and spelling languages; the stock X keyboard map
+(`setxkbmap` layout `us,us`) and no input method; 1920x1080; the agent, decoding, step cap and settles. UI digit shaping, translated
 status-bar fields, localized placeholder prompts and the language pack's own CTL default (overridden
 by the pin) are part of the text treatment.
 
