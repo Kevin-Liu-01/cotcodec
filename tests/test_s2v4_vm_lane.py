@@ -257,3 +257,43 @@ def test_result_paths_and_rewritten():
     assert not P.rewritten(same, same)
     assert P.rewritten(same, {**same, "mtime_ns": 2})
     assert P.rewritten({"exists": False}, same) and not P.rewritten(same, {"exists": False})
+
+
+def test_smoke_summary_masks_the_shell_and_caret(tmp_path):
+    import numpy as np
+    from PIL import Image
+
+    from harness.s2_locale import smoke_summary as S
+
+    def slot(cell, rep, img1, img2, share, order):
+        d = tmp_path / "slots" / f"{DEV[0][:8]}_{cell}_r{rep}.a1"
+        (d / "screens").mkdir(parents=True)
+        Image.fromarray(img1).save(d / "screens/post_setup-1.png")
+        Image.fromarray(img2).save(d / "screens/post_setup-2.png")
+        rec = {"slot": L.slot_id(DEV[0], cell, rep), "task_id": DEV[0], "cell": cell,
+               "attempt": 1, "status": "probed", "verdict": "fail",
+               "post_setup": {"stable": True, "facts": {"keyboard_layout": "us",
+                                                        "window_titles": ["x - LibreOffice Calc"]},
+                              "a11y": {"summary": {"arabic_share": share,
+                                                   "menubar_order": order}}}}
+        (d / "probe.json").write_text(json.dumps(rec))
+
+    base = np.zeros((100, 120, 3), dtype=np.uint8)
+    clock = base.copy()
+    clock[5, 60] = 255  # top bar: masked
+    caret = base.copy()
+    caret[50, 10] = 255  # differs between E's two shots: masked
+    real = base.copy()
+    real[80, 80:83] = 200  # a real difference in A
+    slot("S", 1, base, base, 0.0, "ltr")
+    slot("E", 1, clock, caret, 0.0, "ltr")
+    slot("E", 2, base, base, 0.0, "ltr")
+    slot("A", 1, real, real, 0.9, "ltr")
+    slot("AR", 1, real, real, 0.9, "rtl")
+    out = S.summarize(tmp_path)
+    d = out["pixel_diffs"][DEV[0][:8]]
+    assert d["E_vs_S"]["diff_pixels"] == 0 and d["E_vs_E2"]["diff_pixels"] == 0
+    assert d["A_vs_E"]["diff_pixels"] == 3
+    rows = {r["cell"]: r for r in out["slots"]}
+    assert rows["A"]["arabic_as_expected"] and rows["AR"]["order_as_expected"]
+    assert rows["E"]["arabic_as_expected"] and not rows["E"]["image_check_failed"]
