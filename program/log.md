@@ -4256,3 +4256,90 @@ they say so.)
   final rule with non-oracle references, per-system attenuation, XL-WA EN-ZH
   in hand, a BinaryAlign inference path, and delta rows plus blind packets
   for Yarmohammadi 2013 and SOMBRERO.
+## 2026-10-10 — S2 gauntlet wave 2 (fresh run under D68): score 59, honest exit, S2 ends (branch `gauntlet/s2-locale`, not merged)
+
+- The one repair run D68 allowed ran in workflow `wf_cd7039f6-9e8` with newly
+  declared cumulative budgets: queries 80 (at least 30 reserved for the
+  triad), wall_minutes 600, tokens 8,000,000, dollars 150, waves 1, gpu_hours
+  0.3. A single owner repaired wave 1's defects on the Mac CPU and wrote
+  proposal `c13c8464...`, DRAFT registration `s2-arabic-cua-locale-v2`
+  (`a2aaaed9...`; v1 `866f994d...` unedited; not frozen, not admitted) and the
+  bundle (evidence root `d92056da...`) at `2a362a6`. S2 moved off Relay onto
+  Q2's certified OSWorld stack: Qwen3.5-9B, both harnesses, S1a's lane and
+  cost card, and 26-43 S1a tasks the agent solved at least once in English
+  (LibreOffice; Thunderbird and GIMP conditional). Every catalog string is
+  wrapped in FSI...PDI in all four cells, a factorial render oracle (O1-O6)
+  certifies the cells, and the Phase 1 caps are 5.98-7.98 GPU-h. Audit row 2
+  (gauntlet wave 2, wave 1 of the fresh run) is appended to
+  `program/gauntlet/2026-10-10-s2-arabic-cua-locale.jsonl`, row hash
+  `89ebed59c3b079f7b73a67e1c1c74515e03db20498b6400067e905dd29fad128`.
+- Reviews: 61 (claude-opus-5-5) and 59 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1095). Each total equals the sum of its ten scores, and no cap binds
+  (reviewer 1 applied 74, 79 and 89; reviewer 2 applied 79 and 89). Score
+  59, best 59. Trajectory 49 -> 59. Reviewer 2 rose 49 -> 59 (evaluation
+  +2, safety +2, six dimensions +1); reviewer 1 rose 58 -> 61 (feasibility
+  +2 and review quality +2, but mechanism 6 -> 4). Neither review is signed
+  (D24).
+- Blind discrimination: PASS. The critic judged the proposal and macOSWorld
+  (2506.04135) different mechanisms and the proposal the stronger
+  contribution, citing the verified 2x2 that splits the drop into text and
+  direction effects. The packets match the bundle files exactly. Only
+  macOSWorld was judged.
+- Refute-first triad: 3 of 3 refuted (queries: novelty 12, identification 7,
+  feasibility 7; the repair used 22; 48 of 80 in all).
+  - Novelty: the recombination prong only. No paper crosses interface text
+    with layout direction for any agent, but every component is prior art
+    by the proposal's own ledger, the decomposition move is published
+    (macOSWorld App. D.1, PuMVR), and application-level localization does not
+    decompose macOSWorld's full-system drop.
+  - Identification: the null is reachable only through a degraded English
+    cell; selection on English success pushes D towards PRESENT_HARM for any
+    decorrelating perturbation, with no placebo cell; P6's screen-half share
+    is about 1 for every task; the isolation misses LibreOffice's
+    configuration-registry labels, and the gettext sheet prefix renames
+    Sheet2, which task 42e0a640's checker reads.
+  - Feasibility: see the largest defect below.
+- Largest defect (both reviewers; recorder re-ran reviewer 1's check
+  byte-identical): at K = 26, the task count Phase 0 is most likely to admit
+  and also K_min, Phase 1 can confirm that mirroring hurts but cannot
+  falsify it.
+  - P3 and P4's only falsifier, an unqualified SMALL, is impossible at K =
+    26-31 by the registration's own text. At K = 26 it needs the en cell
+    below 0.459 against S1a's 0.625.
+  - The 0.89-0.97 headline power is a uniform logit shift. Under the
+    task-specific perturbation the proposal calls plausible (simulated by
+    the repair only at D = 0), PRESENT at -5 pp is 0.45 at K = 26 and 0.70 at
+    K = 43, and INCONCLUSIVE is 0.67-0.70 under the matching null.
+  - No slack at K_min: step-0-invalid episodes are not re-queued (one task
+    drops with probability 0.68 at a 1% mismatch rate), and no outcome is
+    registered below 26.
+  - Wave 1's specific defect (Relay's 18 tasks; P(PRESENT | -5 pp) about
+    0.015) is repaired. This is the same category, decisiveness of the
+    first GPU step, in a narrower form.
+- Honest exit: D68's stop line on its score prong (59 < 60), so S2 ends. The
+  defect prong also fires under the category reading D63 applied to E4; the
+  wave cap and the triad stop apply too. Counters: queries 48 of 80, tokens
+  3.72M of 8M, $74.91 of $150 (list-price equivalent), 168.6 of 600
+  minutes, GPU 0.0606 of 0.3. The doctor re-run at record time is
+  byte-identical to the bundle copy (FAIL, as expected; only Design changed,
+  FAIL to PASS).
+- The design study's S2 section (`926c63e`) and D69 landed after this
+  repair was committed. They put a 5 pp gate at about 100-115 distinct tasks
+  at S1a-like heterogeneity (0.60-0.62 on 64 LibreOffice pool tasks), which
+  corroborates the largest defect. D69's sentence that the repair "uses
+  these figures" does not describe this repair, which sized Phase 1 with
+  its own simulation. Reviewer 2 saw both records; reviewer 1 did not.
+- GPU: reviewer 2's job 1095 used 0.0606 GPU-h (scontrol RunTime 00:03:38 on
+  1 H100, COMPLETED 0:0, 02:14:12-02:17:50 UTC, no leftover container). It
+  was submitted after read-only squeue checks and an in-command re-check
+  showed an empty queue, so the host rule held. It is added to the ledger as
+  "S2 gauntlet wave 2 ... open-weight review (D24)". The program total is
+  10.1432 on this branch. Phase 0 and Phase 1 used no GPU. The recorder's
+  one read-only ssh (02:23:52 UTC) found the queue empty and all GPUs at
+  0 MiB.
+- Waiting on Kevin: nothing to stop. Reopening S2 would be a new owner
+  decision with a new registration id. A v3 would need a P3/P4 falsifier
+  reachable at the admitted K, decisiveness shown under the perturbation
+  structure (or about 100 tasks), step-0 re-queue, a placebo layout cell, a
+  complete wrap set and a task-specific P6. Any 100 still needs the trust
+  store (D24).

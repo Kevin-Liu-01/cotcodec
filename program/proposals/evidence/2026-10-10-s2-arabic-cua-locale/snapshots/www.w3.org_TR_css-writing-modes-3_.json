@@ -1,0 +1,32 @@
+{
+ "url": "https://www.w3.org/TR/css-writing-modes-3/",
+ "fetched_at": "2026-10-11T00:18:28Z",
+ "http_status": 200,
+ "raw_bytes": 355883,
+ "raw_sha256": "39564c2366c0d46ad5cb4bf9363f232667e2d0b6833ac79931117baa24873aec",
+ "raw_stored": false,
+ "licence": "W3C document licence",
+ "extract": {
+  "patterns": [
+   "plaintext"
+  ],
+  "lines": {
+   "683": "<td class=\"prod\">normal <a data-link-type=\"grammar\" href=\"https://www.w3.org/TR/css-values-4/#comb-one\" id=\"ref-for-comb-one①\">|</a> embed <span id=\"ref-for-comb-one②\">|</span> isolate <span id=\"ref-for-comb-one③\">|</span> bidi-override <sp",
+   "738": "<th><abbr title=\"the box were a standalone paragraph ordered using UAX9 heuristics.\">plaintext</abbr>",
+   "740": "<td><a class=\"css\" data-link-type=\"maybe\" href=\"#valdef-unicode-bidi-plaintext\" id=\"ref-for-valdef-unicode-bidi-plaintext\">plaintext</a>",
+   "785": "<dt><dfn class=\"dfn-paneled css\" data-dfn-for=\"unicode-bidi\" data-dfn-type=\"value\" data-export id=\"valdef-unicode-bidi-plaintext\">plaintext</dfn>",
+   "849": "<th scope=\"row\"><a class=\"css\" data-link-type=\"maybe\" href=\"#valdef-unicode-bidi-plaintext\" id=\"ref-for-valdef-unicode-bidi-plaintext①\">plaintext</a>",
+   "860": "setting <a class=\"css\" data-link-type=\"maybe\" href=\"#valdef-unicode-bidi-bidi-override\" id=\"ref-for-valdef-unicode-bidi-bidi-override④\">bidi-override</a> or <a class=\"css\" data-link-type=\"maybe\" href=\"#valdef-unicode-bidi-plaintext\" id=\"ref",
+   "864": "<p class=\"note\" role=\"note\">Note that <a class=\"property\" data-link-type=\"propdesc\" href=\"#propdef-unicode-bidi\" id=\"ref-for-propdef-unicode-bidi①⑥\">unicode-bidi</a> does not affect the <a class=\"property\" data-link-type=\"propdesc\" href=\"#p",
+   "967": "when the computed <a class=\"property\" data-link-type=\"propdesc\" href=\"#propdef-unicode-bidi\" id=\"ref-for-propdef-unicode-bidi②⓪\">unicode-bidi</a> of the paragraph’s containing block is <a class=\"css\" data-link-type=\"maybe\" href=\"#valdef-uni",
+   "2773": "<li><a href=\"#valdef-unicode-bidi-plaintext\">plaintext</a><span>, in §2.2</span>",
+   "3855": "<td>normal | embed | isolate | bidi-override | isolate-override | plaintext",
+   "4114": "<aside class=\"dfn-panel\" data-for=\"valdef-unicode-bidi-plaintext\">",
+   "4115": "<b><a href=\"#valdef-unicode-bidi-plaintext\">#valdef-unicode-bidi-plaintext</a></b><b>Referenced in:</b>",
+   "4117": "<li><a href=\"#ref-for-valdef-unicode-bidi-plaintext\">2.2.",
+   "4118": "Embeddings and Overrides: the unicode-bidi property</a> <a href=\"#ref-for-valdef-unicode-bidi-plaintext①\">(2)</a> <a href=\"#ref-for-valdef-unicode-bidi-plaintext②\">(3)</a> <a href=\"#ref-for-valdef-unicode-bidi-plaintext③\">(4)</a>",
+   "4119": "<li><a href=\"#ref-for-valdef-unicode-bidi-plaintext④\">2.4.1."
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}
