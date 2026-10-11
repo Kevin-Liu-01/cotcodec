@@ -14,7 +14,9 @@ no network) and reuses the two registered offline scorers unchanged:
 
 ``raw`` is the item as it is (gold unsaved; S1a as captured). A saved cell's item is merged
 from the save stage's row (``controls.merge_lo``: a save that failed is excluded, never
-scored on its pre-save bytes). Each checker version is scored ``--repeat`` times (2); a
+scored on its pre-save bytes). Every saved cell's row carries ``save_status`` (``saved``, or
+the exclusion kind), also when the scorer itself failed (``harness_error``), so retention
+reads the save stage's outcome only. Each checker version is scored ``--repeat`` times (2); a
 timeout is retried twice and then is an infrastructure failure; scorings that disagree make
 the (item, cell, checker) nondeterministic. ``zinv`` is scored only where a task's checker is
 ``compare_pptx_files``; elsewhere it equals the pinned verdict.
@@ -66,6 +68,21 @@ def load_cell_rows(cell_dir: Path) -> dict[str, dict[str, Any]]:
                 raise ValueError(f"{cell_dir}: job {row['job_id']} has two save rows")
             rows[row["job_id"]] = row
     return rows
+
+
+def save_status(item: Mapping[str, Any], save_row: Mapping[str, Any] | None) -> str:
+    """``saved``, or why ``controls.merge_lo`` excludes the item (infra_error, no_lo_row,
+    save_failed)."""
+    from harness.q2_mutation.controls import merge_lo
+
+    _merged, excluded = merge_lo([item], [save_row] if save_row else [], suffix=None)
+    return str(excluded[0]["kind"]) if excluded else "saved"
+
+
+def cell_prefix(saves_prefix: str, cell: str, cell_dir: str) -> dict[str, str]:
+    """The save container wrote a cell's files under ``<saves_prefix>/<cell>/``; the score
+    container reads that directory at ``cell_dir``."""
+    return {f"{saves_prefix.rstrip('/')}/{cell}/": f"{cell_dir.rstrip('/')}/"}
 
 
 def save_summary(row: Mapping[str, Any] | None) -> dict[str, Any] | None:
@@ -176,6 +193,7 @@ def score_item(
     *,
     args: argparse.Namespace,
     tasks: Mapping[str, Mapping[str, Any]],
+    cell_dir: str = "",
 ) -> dict[str, Any]:
     from harness.q2_mutation.controls import merge_lo
     from harness.q2_stage1.rescore import _capture_worker, _job_worker, checker_funcs
@@ -196,11 +214,12 @@ def score_item(
         files: dict[str, str | None] = dict(item["files"])
     else:
         merged, excluded = merge_lo([item], [save_row] if save_row else [], suffix=None)
+        out["save_status"] = str(excluded[0]["kind"]) if excluded else "saved"
         if excluded:
             out["status"] = excluded[0]["kind"]
             out["reason"] = str(excluded[0]["reason"])[:400]
             return out
-        prefix = {args.saves_prefix.rstrip("/") + "/": args.saves_root.rstrip("/") + "/"}
+        prefix = cell_prefix(args.saves_prefix, cell, cell_dir)
         files = {p: remap_path(v, prefix) for p, v in merged[0]["files"].items()}
     out["office_sha256"] = _office_digests(files)
     if item["population"] == "gold":
@@ -265,8 +284,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         default=[],
         help="CELL=DIR with the save stage's reachability-*.jsonl, or 'raw'",
     )
-    parser.add_argument("--saves-root", required=True, help="mounted save-stage output root")
-    parser.add_argument("--saves-prefix", default="/out", help="that root inside the LO container")
+    parser.add_argument(
+        "--saves-prefix", default="/out", help="the save stage's output root in its container"
+    )
     parser.add_argument("--osworld", type=Path, required=True)
     parser.add_argument("--file-cache", type=Path, required=True)
     parser.add_argument("--vm-baseline", type=Path, default=None)
@@ -291,12 +311,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         rows = {} if cell == "raw" else load_cell_rows(Path(cell_dir))
 
         def one(
-            item: Mapping[str, Any], cell: str = cell, rows: Mapping[str, Any] = rows
+            item: Mapping[str, Any],
+            cell: str = cell,
+            rows: Mapping[str, Any] = rows,
+            cell_dir: str = cell_dir,
         ) -> dict[str, Any]:
+            save_row = rows.get(item["job_id"])
             try:
-                return score_item(item, cell, rows.get(item["job_id"]), args=args, tasks=tasks)
+                return score_item(item, cell, save_row, args=args, tasks=tasks, cell_dir=cell_dir)
             except Exception as exc:  # noqa: BLE001 - recorded as a harness failure
-                return {
+                failed: dict[str, Any] = {
                     "schema": SCHEMA,
                     "item_id": item["item_id"],
                     "cell": cell,
@@ -306,6 +330,13 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "status": "harness_error",
                     "reason": f"{type(exc).__name__}: {str(exc)[:300]}",
                 }
+                if cell != "raw":
+                    try:
+                        failed["save_status"] = save_status(item, save_row)
+                        failed["save"] = save_summary(save_row)
+                    except Exception:  # noqa: BLE001 - the save outcome stays unknown
+                        failed["save_status"] = "unknown"
+                return failed
 
         path = args.out / f"scores-{cell}.jsonl"
         counts: dict[str, int] = {}

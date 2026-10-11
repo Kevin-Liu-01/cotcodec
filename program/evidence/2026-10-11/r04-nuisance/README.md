@@ -1,11 +1,23 @@
 # R04 nuisance invariance: images, operating characteristics and dev-split smoke tests (2026-10-11)
 
+**Blind warning.** The score rows and analyses here name checker verdicts per gold task and
+per S1a state, as the checker-mutation study's released analysis does. Kevin's adjudication
+of that study's pool and his human spot check are pending: to stay blind, answer them before
+reading these files (`program/evidence/2026-10-08/q2-mutation-confirm/results/README.md`,
+"Pending for Kevin"). R04 reads no audit, decision, adjudication or rater file. Every
+reading here is "offline harness, VM fidelity unverified" (the parent's K2 label;
+registration section 2.1).
+
 Evidence for the DRAFT registration `r04-checker-nuisance-invariance-v1`
 (`program/preregistrations/r04-checker-nuisance-invariance-v1.md`), decision D73 (iii).
 **Exploratory and pre-freeze**: only the dev split ran; no confirm or reserve item was built,
 saved or scored; nothing here is a registered result. Every host job was CPU-only (no
 GRES) through the unchanged lane `infra/slurm/host-single-node/q2-mutation-cpu.sbatch`,
-submitted only on an empty queue by `infra/r04-nuisance/run/r04_host.py`.
+submitted only on an empty queue by `infra/r04-nuisance/run/r04_host.py`. One container ran
+outside the lane: a bare `docker run` of the B3 image that printed the build's own records
+under `/opt/r04` (the dpkg listings before and after the unpack, `soffice --version`, the
+bundled Python files, the tarball's identity), named in the drafting owner's report and in
+pre-freeze audit 1; it read no document and queued no job.
 
 ## Contents
 
@@ -136,6 +148,21 @@ unsaved scores equal v3's. A plan for the confirm split was refused by the host 
 any directory or job existed ("runs only after r04-checker-nuisance-invariance-v1 is
 frozen").
 
+## Pre-freeze audit 1: independent reproduction (jobs 1156-1158, 1160; exploratory)
+
+The auditor reran the dev smoke's control, de_DE and B4 cells from the staged export
+`16c1233` (code tree equal to `4b2acf2`'s, checked by digest), plan `audit-r04-repro-1`:
+jobs 1156 (items), 1157 (save B0), 1158 (save B4) and 1160 (score), CPU only, each submitted
+on an empty queue (1159 was another agent's job and did not overlap); about 7 minutes of
+lane time and about 1.9 allocated CPU-h. All 17 dev golds gave the same raw, control, de_DE
+and B4 verdicts as dev-smoke-v3 under both checkers: `6e99a1ad` fails under de_DE,
+`4ed5abd0` and `e4ef0baf` fail under B4 (`zinv` too), and the control's dev P1 flip
+`af23762e` reproduced. Every saved item's office file had another SHA-256 than in v3:
+LibreOffice's saves are not byte-deterministic, so the per-discordance digests of the
+registration's section 11 identify one session's files, and "byte for byte" in its section
+4.4 is about the profile only. The run directory is on the host under
+`r04-nuisance/runs/audit-r04-repro-1`; its records are not copied here.
+
 ## Cost
 
 | Run | Jobs | Lane wall time | Allocated CPU-h |
@@ -145,7 +172,8 @@ frozen").
 | dev-smoke-v2 (saves only) | 6 | 5.8 min | 1.5 |
 | dev-smoke-v3 (with both rounds) | 17 | 58.0 min | 18.4 |
 | dev-smoke-v4-control | 4 | 5.0 min | 2.0 |
-| **Total** | 37 | about 84 min | 25.5 |
+| **Total (drafting owner)** | 37 | about 84 min | 25.5 |
+| pre-freeze audit 1 reproduction | 4 | about 7 min | 1.9 |
 
 GPU: 0. Measured per (item, cell) in v3: save 4.6 worker-seconds, scoring 32.5
 worker-seconds (both checkers, two fresh-process scorings each). Projection for the

@@ -19,6 +19,8 @@ LibreOffice build, Ctrl+S, the VM's en_US desktop):
 
 from __future__ import annotations
 
+import math
+from collections.abc import Iterable, Sequence
 from dataclasses import asdict, dataclass
 
 EXPERIMENT_ID = "r04-checker-nuisance-invariance-v1"
@@ -33,6 +35,47 @@ TDF_ARCHIVE = "https://downloadarchive.documentfoundation.org/libreoffice/old"
 ROUTES = ("ctrl_s", "store_as", "headless_convert")
 CONTROL_CELL = "B0.ctrl_s.L0"
 REPLICATE_CELL = "B0.ctrl_s.L0.r2"
+RAW = "raw"  # the items unsaved (golds) or as captured (S1a); scored, never saved
+
+# The registered splits (one run holds the golds of both and S1a's confirm states), and the
+# only split sets a run or an analysis may cover: dev alone (smoke tests, before the freeze)
+# or exactly the registered pair.
+REGISTERED_SPLITS = ("confirm", "reserve")
+SPLIT_SETS = (("dev",), REGISTERED_SPLITS)
+# S1a's lane runs per split (directory names on the host; ``items.S1A_RUNS`` pins them).
+S1A_SPLIT_RUNS = {"dev": ("1037",), "confirm": ("1045", "1048", "1051", "1062")}
+
+# The frozen control runs of the checker-mutation study, by split: V1's reference (each
+# task's saved-gold verdict under the lock venv) and the item builder's check that its golds
+# are P1's counted golds. Path and SHA-256; the analysis and the item builder refuse others.
+CONTROL_SUMMARIES = {
+    "dev": (
+        "program/evidence/q2-mutation/harness/dev-controls-v9-summary.json",
+        "e13cbbe63c673724693eb2e4ccf7e2677593c8cdc865267b9e22e696e78a6e2f",
+    ),
+    "confirm": (
+        "program/evidence/2026-10-08/q2-mutation-confirm/results/released/controls/"
+        "confirm-controls-v1.summary.json",
+        "1ae206059607547bfc5704f41a47013d5dd1467b5c03baa268cb5bb5ff8a801f",
+    ),
+    "reserve": (
+        "program/evidence/2026-10-08/q2-mutation-confirm/results/released/controls/"
+        "reserve-controls-v1.summary.json",
+        "1da426424339678c35847380f63ba9bae9983cc4a88beaed19171b118c55bb9b",
+    ),
+}
+
+
+def check_split_set(splits: Iterable[str]) -> tuple[str, ...]:
+    """The split set as registered (``dev`` alone, or confirm and reserve), or raise."""
+    names = list(splits)
+    order = ("dev", "confirm", "reserve")
+    if len(set(names)) != len(names) or any(name not in order for name in names):
+        raise ValueError(f"unknown or repeated split in {names}")
+    chosen = tuple(name for name in order if name in names)
+    if chosen not in SPLIT_SETS:
+        raise ValueError(f"splits {names} are neither dev alone nor confirm and reserve")
+    return chosen
 
 
 @dataclass(frozen=True)
@@ -254,3 +297,69 @@ def describe() -> dict[str, object]:
         "routes": list(ROUTES),
         "cells": [c.as_dict() for c in registered_cells()],
     }
+
+
+# --- the registered run (registration section 6) ---------------------------------------
+
+# Measured in dev-smoke-v3, per (item, cell): 4.6 worker-seconds to save and 32.5 to score
+# (both checkers, two fresh-process scorings each). A job's time limit is LIMIT_FACTOR times
+# its projection from these rates and its item count, and at least LIMIT_FLOOR_MINUTES.
+SAVE_SECONDS_PER_ITEM_CELL = 4.6
+SCORE_SECONDS_PER_ITEM_CELL = 32.5
+LIMIT_FACTOR = 3.0
+LIMIT_FLOOR_MINUTES = 60
+REGISTERED_ITEMS = 553  # 92 golds (67 confirm, 25 reserve) and 461 S1a states
+REGISTERED_RUN: dict[str, object] = {
+    "splits": list(REGISTERED_SPLITS),
+    "golds": True,
+    "s1a_runs": list(S1A_SPLIT_RUNS["confirm"]),
+    "cells": [c.id for c in registered_cells()],
+    "workers": 16,
+    "cap_lane_hours": 20.0,
+}
+
+
+def save_groups(cells: Sequence[str]) -> list[tuple[str, list[str]]]:
+    """(group, cells) of the save jobs: one container per build, the replicate in a container
+    of its own, in the registered cell order."""
+    groups: dict[str, list[str]] = {}
+    for cell in registered_cells():
+        if cell.id not in cells:
+            continue
+        key = cell.build if cell.replicate == 1 else f"{cell.build}.r{cell.replicate}"
+        groups.setdefault(key, []).append(cell.id)
+    unknown = sorted(set(cells) - set(CELL_BY_ID))
+    if unknown:
+        raise KeyError(f"unregistered cells {unknown}")
+    return list(groups.items())
+
+
+def score_groups(cells: Sequence[str], raw: bool) -> list[tuple[str, str, list[str]]]:
+    """(group, role, cells) of the main run's score jobs, in order: the control's job (the
+    unsaved items, the control and the replicate), one job per primary arm, then the
+    secondary cells by route. Secondary jobs run last, so a binding cap drops them first."""
+    chosen = [c for c in registered_cells() if c.id in cells]
+    unknown = sorted(set(cells) - set(CELL_BY_ID))
+    if unknown:
+        raise KeyError(f"unregistered cells {unknown}")
+    out: list[tuple[str, str, list[str]]] = []
+    control = ([RAW] if raw else []) + [c.id for c in chosen if c.role in ("control", "validity")]
+    if control:
+        out.append(("control", "control", control))
+    for arm in PRIMARY_ARMS:
+        members = [c.id for c in chosen if c.role == "primary" and c.arm == arm]
+        if members:
+            out.append((arm, "primary", members))
+    for route in ROUTES[1:]:
+        members = [c.id for c in chosen if c.role == "secondary" and c.route == route]
+        if members:
+            out.append((f"secondary-{route}", "secondary", members))
+    return out
+
+
+def projected_minutes(items: int, cells: int, workers: int, seconds_per: float) -> float:
+    return items * cells * seconds_per / max(1, workers) / 60.0
+
+
+def limit_minutes(projected: float) -> int:
+    return max(LIMIT_FLOOR_MINUTES, math.ceil(LIMIT_FACTOR * projected))

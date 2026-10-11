@@ -21,6 +21,16 @@ a seeded sample of at most ``FAIL_PER_TASK`` per task (``random.Random(f"r04:s1a
 {task}")`` over the task's sorted state digests). S1a's A1 tasks are all in the confirm
 split; its A0a episodes are on dev tasks.
 
+One run holds every registered item: ``--split confirm reserve`` builds the golds of both
+splits and the S1a states of the confirm runs (``--split dev`` alone is the smoke tests'
+set; no other set is accepted). The golds of each split must be exactly P1's counted golds
+of that split's frozen control run (``levels.CONTROL_SUMMARIES``, checked by SHA-256): the
+builder refuses a manifest with one gold more or less (``check_p1_golds``).
+
+S1a states whose checker read no office file are not items: the capture holds only what the
+checker read, so a state whose checker read only a file derived from a document (a CSV,
+text or PDF export) has no document to re-save.
+
 An item is a save-stage job (``job_id``, ``task_id``, ``files``: VM path -> local path)
 plus what the scorer and the analysis need. Item files stay where they are (the file cache,
 the lane's captures on the host); the manifest holds paths and digests only.
@@ -39,6 +49,7 @@ from pathlib import Path
 from typing import Any
 
 from harness.q2_mutation.reachability import LO_SAVE_EXTENSIONS, build_plan, step_may_write
+from harness.r04_nuisance import levels
 
 SCHEMA = "r04-items-v1"
 FAIL_PER_TASK = 3
@@ -59,11 +70,42 @@ S1A_RUNS = {
     "1062": ("A1-4B-S2", "1b33883129f012009e2ff3a5c7ef2d2093d00b8f562cca1f8d309b56978de4c2",
              f"{_S1A}/a1-4b-s2/vm-1062/raw-sha256sums.txt"),
 }  # fmt: skip
-SPLIT_RUNS = {"dev": ("1037",), "confirm": ("1045", "1048", "1051", "1062")}
+SPLIT_RUNS = levels.S1A_SPLIT_RUNS
 
 
 class CaptureMismatch(RuntimeError):
     """A capture file differs from the digest S1a's evidence committed for it."""
+
+
+class GoldSetMismatch(RuntimeError):
+    """The rebuilt golds of a split are not P1's counted golds of its frozen control run."""
+
+
+def p1_counted_golds(src: Path, split: str) -> list[str]:
+    """P1's counted golds of a split's frozen control run (``report.p1_counted`` under the
+    lock venv, unemulated tasks excluded), from the pinned summary, checked by SHA-256."""
+    from harness.q2_mutation.report import p1_counted, unemulated_task
+
+    rel, digest = levels.CONTROL_SUMMARIES[split]
+    path = src / rel
+    if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+        raise GoldSetMismatch(f"{rel} differs from its pinned SHA-256")
+    tasks = json.loads(path.read_text(encoding="utf-8"))["tasks"]
+    return sorted(k for k, t in tasks.items() if not unemulated_task(t) and p1_counted(t, "lock"))
+
+
+def check_p1_golds(golds: Sequence[Mapping[str, Any]], src: Path, split: str) -> dict[str, Any]:
+    """Refuse unless the split's gold items are exactly P1's counted golds of that split."""
+    built = sorted(str(g["task_id"]) for g in golds if g["split"] == split)
+    counted = p1_counted_golds(src, split)
+    if built != counted:
+        extra = sorted(set(built) - set(counted))
+        missing = sorted(set(counted) - set(built))
+        raise GoldSetMismatch(
+            f"{split}: golds differ from P1's counted set (extra {extra[:5]}, missing "
+            f"{missing[:5]})"
+        )
+    return {"split": split, "golds": len(built), "equals_p1_counted": True}
 
 
 def read_sums(path: Path) -> dict[str, str]:
@@ -315,7 +357,13 @@ def _write_jsonl(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--splits", type=Path, required=True)
-    parser.add_argument("--split", required=True, choices=["dev", "confirm", "reserve"])
+    parser.add_argument(
+        "--split",
+        required=True,
+        nargs="+",
+        choices=["dev", "confirm", "reserve"],
+        help="dev alone, or confirm reserve (the registered run)",
+    )
     parser.add_argument("--osworld", type=Path)
     parser.add_argument("--file-cache", type=Path)
     parser.add_argument("--golds", action="store_true")
@@ -332,12 +380,16 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     splits = json.loads(args.splits.read_text(encoding="utf-8"))
     items: list[dict[str, Any]] = []
-    from harness.r04_nuisance.guard import require_split_allowed
+    from harness.r04_nuisance.guard import require_splits_allowed
 
-    frozen = require_split_allowed(args.split, args.src)
+    try:
+        chosen = levels.check_split_set(args.split)
+    except ValueError as exc:
+        parser.error(str(exc))
+    frozen = require_splits_allowed(list(chosen), args.src)
     report: dict[str, Any] = {
         "schema": SCHEMA,
-        "split": args.split,
+        "splits": list(chosen),
         "frozen_row": (frozen or {}).get("hash"),
     }
     if args.inputs is not None:
@@ -347,30 +399,41 @@ def main(argv: list[str] | None = None) -> int:
     if args.golds:
         if args.osworld is None or args.file_cache is None:
             parser.error("--golds needs --osworld and --file-cache")
-        golds, report["golds"] = gold_items(args.osworld, args.file_cache, splits, args.split)
-        items += golds
+        report["golds"] = {}
+        report["golds_check"] = {}
+        for split in chosen:
+            golds, report["golds"][split] = gold_items(args.osworld, args.file_cache, splits, split)
+            report["golds_check"][split] = check_p1_golds(golds, args.src, split)
+            items += golds
     if args.s1a_run:
         runs = {k: Path(v) for k, v in (item.split("=", 1) for item in args.s1a_run)}
+        allowed = {label for split in chosen for label in SPLIT_RUNS.get(split, ())}
         sums = {}
         for label, run_dir in runs.items():
             if label not in S1A_RUNS:
                 raise SystemExit(f"S1a run {label} is not registered")
-            if label not in SPLIT_RUNS.get(args.split, ()):
-                raise SystemExit(f"S1a run {label} is not a {args.split} run")
+            if label not in allowed:
+                raise SystemExit(f"S1a run {label} is not a run of {list(chosen)}")
             job, episodes_sha, sums_path = S1A_RUNS[label]
             got = hashlib.sha256((run_dir / "episodes.jsonl").read_bytes()).hexdigest()
             if got != episodes_sha:
                 raise SystemExit(f"S1a run {label} ({job}): episode records differ from evidence")
             sums[label] = read_sums(args.src / sums_path)
         states = s1a_states(runs, splits, sums)
-        wrong = sorted({s["task_id"] for s in states if s["split"] != args.split})
+        wrong = sorted({s["task_id"] for s in states if s["split"] not in chosen})
         if wrong:
-            raise SystemExit(f"S1a states outside split {args.split}: {wrong[:5]}")
+            raise SystemExit(f"S1a states outside splits {list(chosen)}: {wrong[:5]}")
         s1a, report["s1a"] = s1a_items(states)
         report["s1a"]["runs"] = {k: S1A_RUNS[k][0] for k in sorted(runs)}
         report["s1a"]["captures_verified"] = True
         items += s1a
+    ids = [i["item_id"] for i in items]
+    if len(ids) != len(set(ids)):
+        raise SystemExit("two items share an id")
     report["items"] = len(items)
+    report["items_by_split_and_population"] = dict(
+        sorted(Counter(f"{i['split']}:{i['population']}" for i in items).items())
+    )
     report["manifest_sha256"] = manifest_digest(items)
     _write_jsonl(args.out, items)
     args.out.with_suffix(".report.json").write_text(

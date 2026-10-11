@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -306,6 +307,24 @@ def test_scorer_small_helpers(tmp_path):
     assert "events" not in summary and "secret" not in json.dumps(summary)
 
 
+def test_score_rows_carry_the_save_outcome_and_read_each_cell_where_it_was_saved(tmp_path):
+    assert score.cell_prefix("/out", "B4.ctrl_s.L0", "/ro/saves/B4/B4.ctrl_s.L0") == {
+        "/out/B4.ctrl_s.L0/": "/ro/saves/B4/B4.ctrl_s.L0/"
+    }
+    prefix = score.cell_prefix("/out", "B4.ctrl_s.L0", "/ro/saves/B4.a2/B4.ctrl_s.L0")
+    assert (
+        score.remap_path("/out/B4.ctrl_s.L0/files/g:t/home/user/a.xlsx", prefix)
+        == "/ro/saves/B4.a2/B4.ctrl_s.L0/files/g:t/home/user/a.xlsx"
+    )
+    assert score.remap_path("/cache/a.xlsx", prefix) == "/cache/a.xlsx"
+    gold = tmp_path / "a.xlsx"
+    gold.write_bytes(b"x")
+    item = {"job_id": "g:t", "mutant_id": "g:t", "task_id": "t",
+            "files": {"/home/user/a.xlsx": str(gold)}}  # fmt: skip
+    assert score.save_status(item, None) == "no_lo_row"
+    assert score.save_status(item, {"job_id": "g:t", "infra_error": "boom"}) == "infra_error"
+
+
 # --- analysis -------------------------------------------------------------------------------
 
 
@@ -327,7 +346,7 @@ def _items(n_gold=10, s1a_tasks=4):
     return out
 
 
-def _row(iid, cell, v, status="scored", funcs=("compare_table",)):
+def _row(iid, cell, v, status="scored", funcs=("compare_table",), **extra):
     res = {"verdict": v, "nondeterministic": False, "infra_failed": False}
     return {
         "item_id": iid,
@@ -337,12 +356,15 @@ def _row(iid, cell, v, status="scored", funcs=("compare_table",)):
         "zinv": dict(res),
         "checker_funcs": list(funcs),
         "save": {"saves": []},
+        "office_sha256": {"/home/user/a.xlsx": f"{cell}:{iid}"},
+        **extra,
     }
 
 
-def _scores(its, cells, flips=None, status=None):
+def _scores(its, cells, flips=None, status=None, funcs=None):
     flips = flips or {}
     status = status or {}
+    funcs = funcs or {}
     out = {}
     for cell in cells:
         rows = []
@@ -351,26 +373,37 @@ def _scores(its, cells, flips=None, status=None):
             if it["item_id"] in flips.get(cell, ()):
                 v = "fail"
             rows.append(
-                _row(it["item_id"], cell, v, status.get(cell, {}).get(it["item_id"], "scored"))
+                _row(
+                    it["item_id"],
+                    cell,
+                    v,
+                    status.get(cell, {}).get(it["item_id"], "scored"),
+                    funcs.get(it["item_id"], ("compare_table",)),
+                )
             )
         out[cell] = rows
     return out
 
 
-def analyze_fast(*args, **kwargs):
-    return analysis.analyze(*args, n_boot=200, **kwargs)
+ALL = [levels.RAW, *[c.id for c in levels.registered_cells()]]
+REF = {f"tg{i}": "pass" for i in range(10)}
 
 
-PRIMARY = [c.id for c in levels.registered_cells() if c.role in ("control", "validity", "primary")]
+def analyze_fast(its, scores, **kwargs):
+    kwargs.setdefault("reference", REF)
+    kwargs.setdefault("splits", ("confirm", "reserve"))
+    return analysis.analyze(its, scores, n_boot=200, **kwargs)
+
+
+def _rounds(its, cells, flips):
+    return [_scores(its, [levels.CONTROL_CELL, *cells], flips)] * 2
 
 
 def test_analysis_invariant_minor_drift_and_confirmation():
     its = _items()
     flips = {"B3.ctrl_s.L0": {"g:0", "g:1", "g:2"}, "B0.ctrl_s.L1": {"s:0:0"}}
-    scores = _scores(its, ["raw", *PRIMARY], flips)
-    rounds = [_scores(its, [levels.CONTROL_CELL, "B3.ctrl_s.L0", "B0.ctrl_s.L1"], flips)] * 2
-    ref = {f"tg{i}": "pass" for i in range(10)}
-    out = analyze_fast(its, scores, rounds=rounds, reference=ref)
+    scores = _scores(its, ALL, flips)
+    out = analyze_fast(its, scores, rounds=_rounds(its, ["B3.ctrl_s.L0", "B0.ctrl_s.L1"], flips))
     cells = out["pinned"]["cells"]
     assert cells["B3.ctrl_s.L0"]["reading"] == "DRIFT"
     assert cells["B3.ctrl_s.L0"]["gold"]["confirmed"] == 3
@@ -378,39 +411,167 @@ def test_analysis_invariant_minor_drift_and_confirmation():
     assert cells["B0.store_as.L0"]["reading"] == "INVARIANT"
     assert out["validity"]["V1"]["status"] == "pass"
     assert out["validity"]["V2"]["status"] == "pass"
+    assert out["validity"]["control_retained"]["status"] == "pass"
     assert out["pinned"]["arms"]["build"]["reading"] == "DRIFT"
     assert out["pinned"]["arms"]["locale"]["reading"] == "MINOR"
     assert out["pinned"]["arms"]["route"]["reading"] == "INVARIANT"
     assert cells["B3.ctrl_s.L0"]["flips_against_raw"] == ["g:0", "g:1", "g:2"]
+    assert out["complete"] and out["vm_fidelity"]["label"] == analysis.K2_UNVERIFIED
+    assert "Kevin" in out["warning"] and "R03 (b)" in out["warning"]
+    # every discordance carries the control's and the cell's office digests
+    disc = cells["B3.ctrl_s.L0"]["gold"]["discordances"][0]
+    assert disc["control_office_sha256"] == {"/home/user/a.xlsx": "B0.ctrl_s.L0:g:0"}
+    assert disc["cell_office_sha256"] == {"/home/user/a.xlsx": "B3.ctrl_s.L0:g:0"}
 
 
 def test_unconfirmed_discordance_is_unstable_not_a_finding():
     its = _items()
     flips = {"B3.ctrl_s.L0": {"g:0", "g:1", "g:2"}}
-    scores = _scores(its, [*PRIMARY], flips)
+    scores = _scores(its, ALL, flips)
     # round 2 does not reproduce two of the three
     rounds = [
         _scores(its, [levels.CONTROL_CELL, "B3.ctrl_s.L0"], flips),
         _scores(its, [levels.CONTROL_CELL, "B3.ctrl_s.L0"], {"B3.ctrl_s.L0": {"g:0"}}),
     ]
-    out = analyze_fast(its, scores, rounds=rounds, reference={})
+    out = analyze_fast(its, scores, rounds=rounds)
     gold = out["pinned"]["cells"]["B3.ctrl_s.L0"]["gold"]
     assert gold["confirmed"] == 1 and gold["unstable"] == 2
     assert out["pinned"]["cells"]["B3.ctrl_s.L0"]["reading"] == "MINOR"
+    assert not out["pinned"]["cells"]["B3.ctrl_s.L0"]["harness_noise"]
 
 
-def test_pending_without_rounds_and_invalid_on_replicate_drift():
+def test_missing_round_rows_stay_pending_never_invariant():
     its = _items()
     flips = {"B3.ctrl_s.L0": {"g:0"}}
-    out = analyze_fast(its, _scores(its, PRIMARY, flips), reference=None)
-    assert out["pinned"]["cells"]["B3.ctrl_s.L0"]["reading"] == "PENDING"
-    assert out["validity"]["V1"]["status"] == "not_checked"
-    assert "pending" in out["pinned"]["arms"]["route"]["reading"]
-    flips = {levels.REPLICATE_CELL: {"g:4"}}
-    rounds = [_scores(its, [levels.CONTROL_CELL, levels.REPLICATE_CELL], flips)] * 2
-    out = analyze_fast(its, _scores(its, PRIMARY, flips), rounds=rounds, reference={})
+    # both rounds ran, but neither has a row for B3 (its round job ended without output)
+    rounds = [_scores(its, [levels.CONTROL_CELL], {})] * 2
+    out = analyze_fast(its, _scores(its, ALL, flips), rounds=rounds)
+    cell = out["pinned"]["cells"]["B3.ctrl_s.L0"]
+    assert cell["gold"]["pending"] == 1 and cell["reading"] == "PENDING"
+    assert out["pinned"]["arms"]["build"]["reading"] == "PENDING"
+    assert not out["complete"]
+
+
+def test_pending_without_rounds_marks_every_reading_and_replicate_drift_is_invalid():
+    its = _items()
+    flips = {"B3.ctrl_s.L0": {"g:0"}, levels.REPLICATE_CELL: {"g:5"}}
+    out = analyze_fast(its, _scores(its, ALL, flips))
+    assert out["confirmation_rounds"] == 0 and not out["complete"]
+    assert out["validity"]["V2"]["status"] == "pending"
+    cells = out["pinned"]["cells"]
+    assert cells["B3.ctrl_s.L0"]["reading"] == "PENDING (validity gate pending)"
+    assert cells["B0.store_as.L0"]["reading"] == "INVARIANT (validity gate pending)"
+    assert cells["B0.store_as.L0"]["reading_before_gates"] == "INVARIANT"
+    assert out["pinned"]["arms"]["route"]["reading"] == "INVARIANT (validity gate pending)"
+    flips = {levels.REPLICATE_CELL: {"g:4"}, "B3.ctrl_s.L0": {"g:1"}}
+    rounds = _rounds(its, [levels.REPLICATE_CELL, "B3.ctrl_s.L0"], flips)
+    out = analyze_fast(its, _scores(its, ALL, flips), rounds=rounds)
     assert out["validity"]["V2"]["status"] == "fail"
+    # a failed gate overwrites the cell readings as well as the arm readings
+    assert out["pinned"]["cells"]["B3.ctrl_s.L0"]["reading"] == "INVALID"
+    assert out["pinned"]["cells"]["B3.ctrl_s.L0"]["reading_before_gates"] == "MINOR"
     assert out["pinned"]["arms"]["build"]["reading"] == "INVALID"
+
+
+def test_a_cell_without_scores_is_refused_unless_named_with_its_reason():
+    its = _items()
+    scores = _scores(its, ALL)
+    for cid in ("B4.ctrl_s.L0", "B0.ctrl_s.L1"):
+        del scores[cid]
+    with pytest.raises(analysis.AnalysisError, match="neither scored nor named"):
+        analyze_fast(its, scores)
+    errors = {"B4.ctrl_s.L0": "score job failed 3 times", "B0.ctrl_s.L1": "cap"}
+    out = analyze_fast(its, scores, cell_errors=errors)
+    cell = out["pinned"]["cells"]["B4.ctrl_s.L0"]
+    assert (
+        cell["reading"] == "NOT_EVALUABLE" and cell["not_scored_reason"] == errors["B4.ctrl_s.L0"]
+    )
+    assert out["cells_not_scored"] == dict(sorted(errors.items()))
+    assert out["pinned"]["arms"]["build"]["cells"]["B4.ctrl_s.L0"] == "NOT_EVALUABLE"
+    # a reason may not knock out a cell that was scored
+    with pytest.raises(analysis.AnalysisError, match="only cells without scores"):
+        analyze_fast(its, _scores(its, ALL), cell_errors={"B3.ctrl_s.L0": "x"})
+    with pytest.raises(analysis.AnalysisError, match="unregistered"):
+        analyze_fast(its, {**_scores(its, ALL), "B9.ctrl_s.L0": []})
+
+
+def test_the_audit_case_fails_closed_on_the_committed_smoke(tmp_path):
+    """Score files removed from dev-smoke-v3 no longer turn the build and locale arms
+    INVARIANT: the analysis refuses."""
+    smoke = ROOT / "program/evidence/2026-10-11/r04-nuisance/dev-smoke-v3"
+    scores = tmp_path / "scores"
+    shutil.copytree(smoke / "scores", scores)
+    for cid in ("B4.ctrl_s.L0", "B5.ctrl_s.L0", "B0.ctrl_s.L1", "B0.ctrl_s.L2", "B0.ctrl_s.L4"):
+        (scores / f"scores-{cid}.jsonl").unlink()
+    argv = ["--items", str(smoke / "items/items.jsonl"), "--scores", str(scores),
+            "--round", str(smoke / "round-1/scores"), "--round", str(smoke / "round-2/scores"),
+            "--splits", "dev", "--reference", str(ROOT / levels.CONTROL_SUMMARIES["dev"][0]),
+            "--n-boot", "50", "--out", str(tmp_path / "a.json")]  # fmt: skip
+    with pytest.raises(SystemExit, match="neither scored nor named"):
+        analysis.main(argv)
+
+
+def test_dev_smoke_v3_readings_reproduce_from_committed_records(tmp_path):
+    smoke = ROOT / "program/evidence/2026-10-11/r04-nuisance/dev-smoke-v3"
+    out = tmp_path / "a.json"
+    pending = tmp_path / "p.json"
+    analysis.main(
+        ["--items", str(smoke / "items/items.jsonl"), "--scores", str(smoke / "scores"),
+         "--round", str(smoke / "round-1/scores"), "--round", str(smoke / "round-2/scores"),
+         "--splits", "dev", "--reference", str(ROOT / levels.CONTROL_SUMMARIES["dev"][0]),
+         "--n-boot", "50", "--out", str(out), "--pending-out", str(pending)]
+    )  # fmt: skip
+    new = json.loads(out.read_text())
+    old = json.loads((smoke / "analysis.json").read_text())
+    for checker in analysis.CHECKERS:
+        for cid, table in old[checker]["cells"].items():
+            assert new[checker]["cells"][cid]["reading"] == table["reading"], cid
+            assert new[checker]["cells"][cid]["gold"]["confirmed"] == table["gold"]["confirmed"]
+        assert {a: v["reading"] for a, v in new[checker]["arms"].items()} == {
+            a: v["reading"] for a, v in old[checker]["arms"].items()
+        }
+    assert new["validity"]["gate"] == "pass" and new["complete"]
+    assert new["inputs"]["scores"][0]["jobs"] == ["1138"]
+    assert [r[0]["jobs"] for r in new["inputs"]["rounds"]] == [["1147"], ["1151"]]
+    assert json.loads(pending.read_text()) == {"items": [], "cells": []}
+
+
+def test_exactly_zero_or_two_rounds():
+    its = _items()
+    scores = _scores(its, ALL)
+    one = _scores(its, [levels.CONTROL_CELL])
+    for rounds in ([one], [one, one, one]):
+        with pytest.raises(analysis.AnalysisError, match="exactly 0 or 2"):
+            analyze_fast(its, scores, rounds=rounds)
+
+
+def test_control_not_retained_or_not_scored_invalidates_every_reading():
+    its = _items()
+    status = {levels.CONTROL_CELL: {i["item_id"]: "save_failed" for i in its[:3]}}
+    out = analyze_fast(its, _scores(its, ALL, status=status))
+    assert out["validity"]["control_retained"]["status"] == "fail"
+    assert out["validity"]["gate"] == "invalid"
+    assert out["pinned"]["cells"]["B5.ctrl_s.L0"]["reading"] == "INVALID"
+    assert all(a["reading"] == "INVALID" for a in out["pinned"]["arms"].values())
+    scores = _scores(its, ALL)
+    del scores[levels.CONTROL_CELL]
+    out = analyze_fast(its, scores, cell_errors={levels.CONTROL_CELL: "save job failed 3 times"})
+    assert out["validity"]["gate"] == "invalid"
+    assert out["pinned"]["cells"]["B3.ctrl_s.L0"]["reading"] == "INVALID"
+    assert out["pinned"]["arms"]["route"]["reading"] == "INVALID"
+
+
+def test_replicate_not_scored_or_not_retained_makes_v2_not_evaluable():
+    its = _items()
+    scores = _scores(its, ALL)
+    del scores[levels.REPLICATE_CELL]
+    out = analyze_fast(its, scores, cell_errors={levels.REPLICATE_CELL: "cap"})
+    assert out["validity"]["V2"]["status"] == "not_evaluable"
+    assert out["pinned"]["arms"]["build"]["reading"] == "INVALID"
+    status = {levels.REPLICATE_CELL: {i["item_id"]: "infra_error" for i in its[:3]}}
+    out = analyze_fast(its, _scores(its, ALL, status=status))
+    assert out["validity"]["V2"]["status"] == "not_evaluable"
+    assert out["validity"]["gate"] == "invalid"
 
 
 def test_retention_drops_builds_and_build_arm_needs_two():
@@ -418,38 +579,261 @@ def test_retention_drops_builds_and_build_arm_needs_two():
     status = {}
     for b in ("B1", "B2", "B3", "B4"):
         status[f"{b}.ctrl_s.L0"] = {it["item_id"]: "save_failed" for it in its[:3]}
-    ref = {f"tg{i}": "pass" for i in range(10)}
-    out = analyze_fast(its, _scores(its, PRIMARY, status=status), reference=ref)
+    out = analyze_fast(its, _scores(its, ALL, status=status))
     cells = out["pinned"]["cells"]
     assert cells["B1.ctrl_s.L0"]["reading"] == "NOT_EVALUABLE"
     assert cells["B5.ctrl_s.L0"]["reading"] == "INVARIANT"
     assert out["builds_retained"]["B5"] and not out["builds_retained"]["B1"]
     assert out["pinned"]["arms"]["build"]["reading"] == "NOT_EVALUABLE"
     assert out["validity"]["V1"]["status"] == "pass"
+    assert {f["item_id"] for f in cells["B1.ctrl_s.L0"]["save_failures"]} == {"g:0", "g:1", "g:2"}
+
+
+def test_retention_counts_save_failures_not_scorer_failures():
+    its = _items()
+    scores = _scores(its, ALL)
+    rows = scores["B2.ctrl_s.L0"]
+    for row in rows[:3]:  # the scorer crashed on three items whose save succeeded
+        row["status"] = "harness_error"
+        row["save_status"] = "saved"
+    out = analyze_fast(its, scores)
+    cell = out["pinned"]["cells"]["B2.ctrl_s.L0"]
+    assert out["retention"]["B2.ctrl_s.L0"]["gold"]["saved"] == 10
+    assert cell["retained"] and cell["reading"] == "INVARIANT"
+    assert cell["scoring_failures_by_status"] == {"harness_error": 3}
+    assert cell["save_failures"] == []
+    for row in rows[:3]:
+        row["save_status"] = "save_failed"
+    out = analyze_fast(its, scores)
+    assert out["retention"]["B2.ctrl_s.L0"]["gold"]["saved"] == 7
+    assert out["pinned"]["cells"]["B2.ctrl_s.L0"]["reading"] == "NOT_EVALUABLE"
+
+
+def test_harness_noise_flag_changes_no_reading():
+    its = _items()
+    flips = {"B0.store_as.L0": {"g:0", "g:1", "s:0:0"}, levels.REPLICATE_CELL: {"g:7"}}
+    rounds = [_scores(its, [levels.CONTROL_CELL, "B0.store_as.L0", levels.REPLICATE_CELL], {})] * 2
+    out = analyze_fast(its, _scores(its, ALL, flips), rounds=rounds)
+    cell = out["pinned"]["cells"]["B0.store_as.L0"]
+    assert cell["harness_noise"] and cell["reading"] == "INVARIANT"
+    assert out["validity"]["V2"]["status"] == "pass" and out["validity"]["V2"]["harness_noise"]
 
 
 def test_task_level_s1a_count_and_v1_difference_limit():
     its = _items(s1a_tasks=4)
     flips = {"B0.headless_convert.L0": {"s:0:0", "s:0:1", "s:1:0", "s:2:1"}}
-    rounds = [_scores(its, [levels.CONTROL_CELL, "B0.headless_convert.L0"], flips)] * 2
-    ref = {f"tg{i}": "pass" for i in range(10)}
+    rounds = _rounds(its, ["B0.headless_convert.L0"], flips)
+    ref = dict(REF)
     ref["tg0"] = ref["tg1"] = "fail"
-    out = analyze_fast(its, _scores(its, PRIMARY, flips), rounds=rounds, reference=ref)
-    s1a = out["pinned"]["cells"]["B0.headless_convert.L0"]["s1a"]["s1a_pass"]
+    out = analyze_fast(its, _scores(its, ALL, flips), rounds=rounds, reference=ref)
+    table = out["pinned"]["cells"]["B0.headless_convert.L0"]
+    s1a = table["s1a"]["s1a_pass"]
     assert s1a["confirmed"] == 4 and s1a["confirmed_tasks"] == ["ts0", "ts1", "ts2"]
-    assert out["pinned"]["cells"]["B0.headless_convert.L0"]["reading"] == "DRIFT"
+    assert table["reading_before_gates"] == "DRIFT" and table["reading"] == "INVALID"
     assert out["validity"]["V1"]["status"] == "fail"  # two differences > 1
     assert out["pinned"]["arms"]["route"]["reading"] == "INVALID"
+    # a gold not valid in the control is listed, not compared
+    out = analyze_fast(
+        its, _scores(its, ALL, status={levels.CONTROL_CELL: {"g:3": "infra_failed"}})
+    )
+    assert (
+        out["validity"]["V1"]["not_compared"] == ["tg3"] and out["validity"]["V1"]["compared"] == 9
+    )
+    out = analyze_fast(its, _scores(its, ALL), reference={})
+    assert out["validity"]["V1"]["status"] == "fail" and out["validity"]["V1"]["compared"] == 0
 
 
-def test_analysis_scope_is_the_registered_splits():
+def test_analysis_scope_is_a_registered_split_set():
     its = _items()
     for it in its[:5]:
         it["split"] = "dev"
-    out = analyze_fast(its, _scores(its, PRIMARY), reference={})
+    out = analyze_fast(its, _scores(its, ALL))
     assert out["items"] == len(its) - 5
-    dev = analyze_fast(its, _scores(its, PRIMARY), reference={}, splits=("dev",))
+    dev = analyze_fast(its, _scores(its, ALL), splits=("dev",))
     assert dev["items"] == 5
+    for splits in (("confirm",), ("dev", "confirm"), ("reserve",), ("test",)):
+        with pytest.raises(ValueError):
+            analyze_fast(its, _scores(its, ALL), splits=splits)
+    assert levels.check_split_set(["reserve", "confirm"]) == ("confirm", "reserve")
+
+
+def test_k2_report_drops_a_family_and_reports_it_as_exploratory():
+    its = _items()
+    funcs = {"g:0": ("compare_pptx_files",), "g:1": ("compare_pptx_files",),
+             "g:2": ("compare_pptx_files",)}  # fmt: skip
+    flips = {"B4.ctrl_s.L0": {"g:0", "g:1", "g:2"}}
+    scores = _scores(its, ALL, flips, funcs=funcs)
+    rounds = [_scores(its, [levels.CONTROL_CELL, "B4.ctrl_s.L0"], flips, funcs=funcs)] * 2
+    k2 = {
+        "executor_commit": "abc",
+        "pairs": 80,
+        "outcome": "FAMILIES_DROPPED",
+        "disagreements": [
+            {"checker_family": "compare_pptx_files", "explanation": "unexplained"},
+            {"checker_family": "compare_table", "explanation": "nondeterministic"},
+        ],
+    }
+    out = analyze_fast(its, scores, rounds=rounds, k2=k2)
+    assert out["vm_fidelity"]["label"] == analysis.K2_VERIFIED
+    assert out["vm_fidelity"]["families_dropped"] == ["compare_pptx_files"]
+    assert out["pinned"]["cells"]["B4.ctrl_s.L0"]["reading"] == "INVARIANT"
+    full = out["k2_exploratory"]["including_dropped_families"]
+    assert full["pinned"]["cells"]["B4.ctrl_s.L0"]["reading"] == "DRIFT"
+    assert out["k2_exploratory"]["items_left_out"] == 3
+    clean = analyze_fast(its, scores, rounds=rounds, k2={**k2, "disagreements": []})
+    assert clean["pinned"]["cells"]["B4.ctrl_s.L0"]["reading"] == "DRIFT"
+    assert "k2_exploratory" not in clean
+    from harness.q2_mutation.campaign import checker_family
+
+    for f in (["b", "a", "b"], ["x"], []):
+        assert analysis.checker_family(f) == checker_family(f)
+
+
+def test_inputs_are_checked_files_from_finished_jobs(tmp_path):
+    with pytest.raises(analysis.AnalysisError, match="never reads"):
+        analysis.check_input(tmp_path / "audit-summary" / "adjudication-pool.jsonl")
+    with pytest.raises(analysis.AnalysisError, match="never reads"):
+        analysis.check_input(tmp_path / "x" / "decisions.jsonl")
+    a, b = tmp_path / "a", tmp_path / "b"
+    for d, job, status in ((a, "11", 0), (b, "12", 0)):
+        d.mkdir()
+        (d / f"receipt-{job}.json").write_text(json.dumps({"job_id": job, "exit_status": status}))
+        (d / "scores-B0.ctrl_s.L0.jsonl").write_text("")
+    with pytest.raises(analysis.AnalysisError, match="two directories"):
+        analysis.load_scores([a, b])
+    (b / "scores-B0.ctrl_s.L0.jsonl").unlink()
+    scores, record = analysis.load_scores([a, b])
+    assert record[0]["jobs"] == ["11"] and record[0]["cells"] == ["B0.ctrl_s.L0"]
+    (b / "receipt-12.json").write_text(json.dumps({"job_id": "12", "exit_status": 1}))
+    with pytest.raises(analysis.AnalysisError, match="exit status 0"):
+        analysis.load_scores([a, b])
+    (b / "receipt-12.json").unlink()
+    with pytest.raises(analysis.AnalysisError, match="no lane receipt"):
+        analysis.load_scores([a, b])
+    dev = ROOT / levels.CONTROL_SUMMARIES["dev"][0]
+    ref, rec = analysis.reference_from_control_summaries([dev], ["dev"])
+    assert len(ref) > 17 and rec[0]["split"] == "dev"
+    with pytest.raises(analysis.AnalysisError, match="not one of the pinned"):
+        analysis.reference_from_control_summaries([dev], ["confirm", "reserve"])
+    confirm = ROOT / levels.CONTROL_SUMMARIES["confirm"][0]
+    with pytest.raises(analysis.AnalysisError, match="were not given"):
+        analysis.reference_from_control_summaries([confirm], ["confirm", "reserve"])
+    with pytest.raises(analysis.AnalysisError, match="not one of the pinned"):
+        analysis.reference_from_control_summaries([confirm, confirm], ["confirm", "reserve"])
+
+
+def _write_run(tmp_path, its, scores, rounds=None, pending=None, states=None):
+    """A run directory as r04_host.py lays it out, with every step finished."""
+    root = "/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/t"
+    run = tmp_path / "t"
+    (run / "items").mkdir(parents=True)
+    (run / "items" / "items.jsonl").write_text("".join(json.dumps(i) + "\n" for i in its))
+    steps = [{"name": "items", "kind": "items", "out": "main", "state": "done", "job": "1",
+              "run_dir": f"{root}/items", "cells": []}]  # fmt: skip
+    outs = [("main", scores, [(g, c) for g, _r, c in levels.score_groups(ALL[1:], raw=True)])]
+    for k, rnd in enumerate(rounds or []):
+        outs.append((f"round-{k + 1}", rnd, [("round", sorted(rnd))]))
+    job = 100
+    for out, cell_rows, groups in outs:
+        for group, cells in groups:
+            job += 1
+            state = (states or {}).get(group, "done")
+            d = run / out / "scores" / group
+            d.mkdir(parents=True)
+            (d / f"receipt-{job}.json").write_text(
+                json.dumps({"job_id": str(job), "exit_status": 0})
+            )
+            for cid in cells:
+                if cid in cell_rows and state == "done":
+                    (d / f"scores-{cid}.jsonl").write_text(
+                        "".join(json.dumps(r) + "\n" for r in cell_rows[cid])
+                    )
+            steps.append({"name": f"{out}-score-{group}", "kind": "score", "out": out,
+                          "group": group, "cells": cells, "state": state, "job": str(job),
+                          "run_dir": f"{root}/{out}/scores/{group}",
+                          "reason": None if state == "done" else "cap"})  # fmt: skip
+    plan = {"name": "t", "splits": ["confirm", "reserve"], "run_root": root, "steps": steps,
+            "rounds": {"pending": pending} if rounds else None, "src_sha": "x"}  # fmt: skip
+    (run / "plan.json").write_text(json.dumps(plan))
+    return run
+
+
+def test_registered_analysis_reads_everything_from_the_run(tmp_path, monkeypatch):
+    its = _items()
+    flips = {"B3.ctrl_s.L0": {"g:0"}}
+    scores = _scores(its, ALL, flips)
+    src = tmp_path
+    # the frozen confirm summaries name real tasks, not tg0-tg9: V1 reads REF instead
+    monkeypatch.setattr(
+        analysis, "reference_from_control_summaries", lambda paths, splits: (REF, [])
+    )
+    run = _write_run(tmp_path, its, scores)
+    out_path, pending_path = tmp_path / "main.json", tmp_path / "pending.json"
+    analysis.main(["--run", str(run), "--src", str(src), "--n-boot", "50",
+                   "--out", str(out_path), "--pending-out", str(pending_path)])  # fmt: skip
+    main = json.loads(out_path.read_text())
+    pending = json.loads(pending_path.read_text())
+    assert main["inputs"]["mode"] == "run" and not main["complete"]
+    assert pending == {"items": ["g:0"], "cells": ["B3.ctrl_s.L0"]}
+    rounds = _rounds(its, ["B3.ctrl_s.L0"], flips)
+    run2 = _write_run(tmp_path / "r", its, scores, rounds=rounds, pending=pending)
+    analysis.main(["--run", str(run2), "--src", str(src), "--n-boot", "50",
+                   "--out", str(out_path)])  # fmt: skip
+    final = json.loads(out_path.read_text())
+    assert final["complete"] and final["confirmation_rounds"] == 2
+    assert final["pinned"]["cells"]["B3.ctrl_s.L0"]["reading"] == "MINOR"
+    # rounds that re-ran something else are refused
+    run3 = _write_run(tmp_path / "s", its, scores, rounds=rounds,
+                      pending={"items": ["g:1"], "cells": ["B3.ctrl_s.L0"]})  # fmt: skip
+    with pytest.raises(SystemExit, match="pending discordances"):
+        analysis.main(["--run", str(run3), "--src", str(src), "--out", str(out_path)])
+    # a score job that ended without output names its cells with the plan's reason
+    run4 = _write_run(tmp_path / "u", its, scores, states={"secondary-store_as": "dropped"})
+    analysis.main(["--run", str(run4), "--src", str(src), "--n-boot", "50",
+                   "--out", str(out_path)])  # fmt: skip
+    dropped = json.loads(out_path.read_text())
+    assert dropped["pinned"]["cells"]["B2.store_as.L0"]["reading"].startswith("NOT_EVALUABLE")
+    assert "dropped" in dropped["cells_not_scored"]["B2.store_as.L0"]
+    # an unfinished run is refused, and --run takes no other input
+    plan = json.loads((run4 / "plan.json").read_text())
+    plan["steps"][-1]["state"] = "submitted"
+    (run4 / "plan.json").write_text(json.dumps(plan))
+    with pytest.raises(SystemExit, match="unfinished"):
+        analysis.main(["--run", str(run4), "--src", str(src), "--out", str(out_path)])
+    with pytest.raises(SystemExit):
+        analysis.main(["--run", str(run), "--splits", "dev", "--out", str(out_path)])
+
+
+def test_pending_confirmations_lists_items_and_cells():
+    its = _items()
+    flips = {"B3.ctrl_s.L0": {"g:0"}, levels.REPLICATE_CELL: {"s:1:1"}}
+    out = analyze_fast(its, _scores(its, ALL, flips))
+    pending = analysis.pending_confirmations(out)
+    assert pending == {"items": ["g:0", "s:1:1"], "cells": [levels.REPLICATE_CELL, "B3.ctrl_s.L0"]}
+
+
+# --- items: the registered split set and P1's golds -------------------------------------------
+
+
+def test_item_builder_golds_must_be_p1_counted_golds():
+    smoke = ROOT / "program/evidence/2026-10-11/r04-nuisance/dev-smoke-v3/items/items.jsonl"
+    golds = [
+        g for g in map(json.loads, smoke.read_text().splitlines()) if g["population"] == "gold"
+    ]
+    assert items.check_p1_golds(golds, ROOT, "dev") == {
+        "split": "dev", "golds": 17, "equals_p1_counted": True,
+    }  # fmt: skip
+    with pytest.raises(items.GoldSetMismatch, match="missing"):
+        items.check_p1_golds(golds[1:], ROOT, "dev")
+    with pytest.raises(items.GoldSetMismatch, match="extra"):
+        items.check_p1_golds([*golds, {**golds[0], "task_id": "x"}], ROOT, "dev")
+    assert len(items.p1_counted_golds(ROOT, "confirm")) == 67
+    assert len(items.p1_counted_golds(ROOT, "reserve")) == 25
+    assert items.SPLIT_RUNS == levels.S1A_SPLIT_RUNS
+    assert set(levels.REGISTERED_RUN["s1a_runs"]) == set(items.SPLIT_RUNS["confirm"])
+    with pytest.raises(SystemExit):  # dev and a registered split never share a run
+        items.main(["--splits", str(ROOT / "program/evidence/q2-mutation/splits.json"),
+                    "--split", "dev", "confirm", "--out", "/nonexistent/x.jsonl"])  # fmt: skip
 
 
 # --- operating characteristics --------------------------------------------------------------
@@ -479,17 +863,20 @@ def test_power_run_is_deterministic_and_committed():
     assert a["familywise_under_null"]["0.0"]["false_drift_any_of_11"] == 0.0
 
 
-# --- freeze guard ---------------------------------------------------------------------------
+# --- freeze guard, code of record and the registration ----------------------------------------
 
 
-def test_guard_allows_dev_and_refuses_unfrozen_splits(tmp_path, monkeypatch):
-    assert guard.require_split_allowed("dev", tmp_path) is None
-    (tmp_path / "program" / "preregistrations").mkdir(parents=True)
-    (tmp_path / guard.LEDGER_PATH).write_text("")
-    with pytest.raises(guard.GuardError):
-        guard.require_split_allowed("confirm", tmp_path)
+def _fake_tree(root: Path, monkeypatch) -> None:
+    (root / "code").mkdir(parents=True)
+    (root / "code" / "a.py").write_text("x = 1\n")
+    (root / "code" / "README.md").write_text("docs\n")
+    monkeypatch.setattr(guard, "CODE_TREE_ROOTS", ("code",))
+
+
+def _freeze_copy(tmp_path: Path, text: str) -> Path:
     prereg = tmp_path / levels.PREREG_PATH
-    prereg.write_text('x\n```json\n{\n "r04_pins": 1,\n "images": {"B0": "sha256:a"}\n}\n```\n')
+    prereg.parent.mkdir(parents=True, exist_ok=True)
+    prereg.write_text(text)
     body = {
         "experiment_id": levels.EXPERIMENT_ID,
         "path": levels.PREREG_PATH,
@@ -500,45 +887,97 @@ def test_guard_allows_dev_and_refuses_unfrozen_splits(tmp_path, monkeypatch):
         json.dumps(body, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
     (tmp_path / guard.LEDGER_PATH).write_text(json.dumps(body) + "\n")
+    return prereg
+
+
+def test_guard_allows_dev_and_refuses_unfrozen_splits(tmp_path, monkeypatch):
+    assert guard.require_split_allowed("dev", tmp_path) is None
+    assert guard.require_splits_allowed(["dev"], tmp_path) is None
+    (tmp_path / "program" / "preregistrations").mkdir(parents=True)
+    (tmp_path / guard.LEDGER_PATH).write_text("")
+    with pytest.raises(guard.GuardError):
+        guard.require_split_allowed("confirm", tmp_path)
+    for splits in (["confirm"], ["dev", "confirm"], ["reserve"]):
+        with pytest.raises(guard.GuardError):
+            guard.require_splits_allowed(splits, tmp_path)
+    _fake_tree(tmp_path, monkeypatch)
+    digest = guard.code_tree_sha256(tmp_path)
+    pins = '{{\n "r04_pins": 1,\n "code_tree_sha256": {},\n "images": {{"B0": "sha256:a"}}\n}}'
+    prereg = _freeze_copy(tmp_path, f"x\n```json\n{pins.format(json.dumps(digest))}\n```\n")
     with pytest.raises(guard.GuardError, match="R04_PREREG_FROZEN"):
         guard.require_split_allowed("confirm", tmp_path)
     monkeypatch.setenv("R04_PREREG_FROZEN", levels.EXPERIMENT_ID)
     assert guard.require_split_allowed("confirm", tmp_path, {"B0": "sha256:a"})["hash"]
+    assert guard.require_splits_allowed(["reserve", "confirm"], tmp_path, {"B0": "sha256:a"})
     with pytest.raises(guard.GuardError, match="pins"):
         guard.require_split_allowed("confirm", tmp_path, {"B0": "sha256:b"})
+    # a staged code tree other than the frozen one is refused
+    (tmp_path / "code" / "a.py").write_text("x = 2\n")
+    with pytest.raises(guard.GuardError, match="code of record"):
+        guard.require_split_allowed("confirm", tmp_path)
+    (tmp_path / "code" / "a.py").write_text("x = 1\n")
+    (tmp_path / "code" / "README.md").write_text("other docs\n")  # docs are not code
+    assert guard.require_split_allowed("confirm", tmp_path)
+    # a frozen file whose pins block never got its code-tree digest refuses everything
+    _freeze_copy(tmp_path, f"x\n```json\n{pins.format('null')}\n```\n")
+    with pytest.raises(guard.GuardError, match="code of record"):
+        guard.require_split_allowed("confirm", tmp_path)
     prereg.write_text("changed")
     with pytest.raises(guard.GuardError, match="differs"):
         guard.require_split_allowed("confirm", tmp_path)
 
 
-def test_frozen_mutation_study_code_is_untouched():
-    """R04 must not change the checker-mutation study's pinned code tree."""
-    changed = subprocess.run(
-        [
-            "git",
-            "-C",
-            str(ROOT),
-            "diff",
-            "--name-only",
-            "main",
-            "--",
-            "harness/q2_mutation",
-            "infra/q2-mutation",
-            "infra/slurm/host-single-node/q2-mutation-cpu.sbatch",
-            "harness/q2_stage1",
-        ],
-        capture_output=True,
-        text=True,
-    )
-    if changed.returncode != 0:
-        pytest.skip("no main branch to compare with")
-    assert changed.stdout.strip() == ""
+def test_reused_code_is_the_frozen_code():
+    """R04 reuses the checker-mutation study's code (its frozen code-tree digest) and S1a's
+    rescorer, comparator and task loader (the digests R04's smoke tests ran) unchanged."""
+    from harness.q2_mutation.campaign import code_tree_sha256, prereg_pins
+
+    parent = (ROOT / "program/preregistrations/q2-evaluator-mutation-v1.md").read_text()
+    assert code_tree_sha256(ROOT) == prereg_pins(parent)["code_tree_sha256"]
+    s1a = {
+        "harness/q2_stage1/__init__.py": "0e2190149cf640fac07dab26332a26f6"
+        "96374ff4400c23aab82e8cf766f3b334",
+        "harness/q2_stage1/rescore.py": "d240db03e969c8aa5bb97403c5005cd4"
+        "c9e96016599a78f70e97850415893737",
+        "harness/q2_stage1/zinv.py": "64899d5056f4791008c2a10c38a7b0fb"
+        "b94fbe912d20a702ec74851a0ca7f655",
+        "harness/q2_stage1/osworld_live.py": "38b017c04f67b59e08bc1d764702a2ff"
+        "91c80ebde8054c8e80bc277746334313",
+    }
+    for rel, digest in s1a.items():
+        assert hashlib.sha256((ROOT / rel).read_bytes()).hexdigest() == digest, rel
+    assert set(s1a) <= set(guard.CODE_TREE_ROOTS)
+
+
+def _status_line(text: str) -> str:
+    return next(line for line in text.splitlines() if line.startswith("**Status: "))
+
+
+def _frozen() -> bool:
+    from scripts import preregister
+
+    try:
+        preregister.verify(levels.EXPERIMENT_ID)
+    except preregister.PreregistrationError:
+        return False
+    return True
 
 
 def test_registration_pins_match_the_code():
     text = (ROOT / levels.PREREG_PATH).read_text()
-    assert "Status: DRAFT" in text
+    status = _status_line(text)
     pins = guard.prereg_pins(text)
+    if _frozen() or status.startswith("**Status: frozen"):
+        # After the freeze: the status line says so, the ledger row is this file, the pins
+        # block carries the code tree of record and the tree here is that tree.
+        assert status.startswith("**Status: frozen")
+        row = guard.frozen_row(ROOT)
+        assert row is not None and row["path"] == levels.PREREG_PATH
+        assert pins["code_tree_sha256"] == guard.code_tree_sha256(ROOT)
+        assert "DRAFT" not in status
+    else:
+        assert status.startswith("**Status: DRAFT")
+        assert pins["code_tree_sha256"] is None  # filled at the freeze (section 17)
     assert pins["experiment_id"] == levels.EXPERIMENT_ID
     assert pins["images"]["B0"] == levels.LO_VM_IMAGE_ID
     assert sorted(pins["images"]) == [b.id for b in levels.BUILDS]
@@ -546,8 +985,75 @@ def test_registration_pins_match_the_code():
     assert pins["drift_min"] == analysis.DRIFT_MIN == power.DRIFT_MIN
     assert pins["retention_min"] == analysis.RETENTION_MIN
     assert pins["confirm_rounds"] == analysis.CONFIRM_ROUNDS
+    assert pins["registered_splits"] == list(levels.REGISTERED_SPLITS)
+    assert pins["cap_lane_hours"] == levels.REGISTERED_RUN["cap_lane_hours"]
+    assert pins["workers"] == levels.REGISTERED_RUN["workers"]
     splits = ROOT / "program/evidence/q2-mutation/splits.json"
     assert hashlib.sha256(splits.read_bytes()).hexdigest() == pins["splits_sha256"]
+    for split, (rel, digest) in levels.CONTROL_SUMMARIES.items():
+        assert hashlib.sha256((ROOT / rel).read_bytes()).hexdigest() == digest, split
+        assert digest[:8] in text
+
+
+def test_registration_freezes_against_a_scratch_ledger(tmp_path):
+    """The program owner's freeze command accepts this file (no TBD or angle-bracket
+    placeholder): run against an empty scratch ledger; the real ledger is not touched."""
+    from scripts import preregister
+
+    ledger = tmp_path / "ledger.jsonl"
+    real = (ROOT / guard.LEDGER_PATH).read_bytes()
+    row = preregister.freeze(ROOT / levels.PREREG_PATH, levels.EXPERIMENT_ID, ledger=ledger)
+    assert row["path"] == levels.PREREG_PATH
+    assert row["sha256"] == hashlib.sha256((ROOT / levels.PREREG_PATH).read_bytes()).hexdigest()
+    assert (ROOT / guard.LEDGER_PATH).read_bytes() == real
+    assert preregister.read_ledger(ledger)[0]["experiment_id"] == levels.EXPERIMENT_ID
+
+
+def test_registration_states_the_code_tree_and_the_registered_run():
+    text = (ROOT / levels.PREREG_PATH).read_text()
+    flat = " ".join(text.split())
+    for entry in guard.CODE_TREE_ROOTS:
+        assert f"`{entry}`" in flat, entry
+    # the registered command lines of section 6
+    for phrase in (
+        "r04_host.py plan --src SRC --name r04-registered-v1 --registered",
+        "r04_host.py next --name r04-registered-v1",
+        "python -m harness.r04_nuisance.analysis --run RUN --src . --out RUN/analysis-main.json "
+        "--pending-out RUN/pending.json",
+        "r04_host.py confirm --name r04-registered-v1 --pending RUN/pending.json",
+        "python -m harness.r04_nuisance.analysis --run RUN --src . --out RUN/analysis.json",
+        "export R04_PREREG_FROZEN=r04-checker-nuisance-invariance-v1",
+    ):
+        assert phrase in flat, phrase
+    # the projections and limits table of section 6 is levels' arithmetic
+    cells = [c.id for c in levels.registered_cells()]
+    for group, _role, members in levels.score_groups(cells, raw=True):
+        proj = levels.projected_minutes(
+            levels.REGISTERED_ITEMS, len(members), 16, levels.SCORE_SECONDS_PER_ITEM_CELL
+        )
+        assert (
+            f"| score `{group}` | {len(members)} | {proj:.0f} | {levels.limit_minutes(proj)} |"
+            in flat
+        )
+    for group, members in levels.save_groups(cells):
+        proj = levels.projected_minutes(
+            levels.REGISTERED_ITEMS, len(members), 16, levels.SAVE_SECONDS_PER_ITEM_CELL
+        )
+        assert (
+            f"| save `{group}` | {len(members)} | {proj:.0f} | {levels.limit_minutes(proj)} |"
+            in flat
+        )
+    assert "offline harness, VM fidelity unverified" in flat
+    assert "q2-evaluator-mutation-v1-k2" in flat
+
+
+def test_code_tree_digest_covers_the_code_of_record(tmp_path):
+    digest = guard.code_tree_sha256(ROOT)
+    assert digest == guard.code_tree_sha256(ROOT) and len(digest) == 64
+    for entry in guard.CODE_TREE_ROOTS:
+        assert (ROOT / entry).exists(), entry
+    with pytest.raises(guard.GuardError, match="missing"):
+        guard.code_tree_sha256(tmp_path)
 
 
 def test_activation_falls_back_to_the_em_dash_title(tmp_path, monkeypatch):
@@ -607,14 +1113,6 @@ def test_capture_verification_against_committed_digests(tmp_path):
         assert (ROOT / path).is_file()
 
 
-def test_pending_confirmations_lists_items_and_cells():
-    its = _items()
-    flips = {"B3.ctrl_s.L0": {"g:0"}, levels.REPLICATE_CELL: {"s:1:1"}}
-    out = analyze_fast(its, _scores(its, PRIMARY, flips), reference=None)
-    pending = analysis.pending_confirmations(out)
-    assert pending == {"items": ["g:0", "s:1:1"], "cells": [levels.REPLICATE_CELL, "B3.ctrl_s.L0"]}
-
-
 def _host_tool():
     import importlib.util
 
@@ -626,28 +1124,181 @@ def _host_tool():
     return module
 
 
-def test_host_tool_renders_cpu_only_lane_jobs(tmp_path):
+class _Lane:
+    """squeue and sbatch for the host tool's tests: jobs finish when told to."""
+
+    def __init__(self):
+        self.queue: list[str] = []
+        self.jobs: dict[str, list[str]] = {}
+        self.next_id = 2000
+
+    def squeue(self):
+        return [f"{j} r04 kevin RUNNING" for j in self.queue]
+
+    def sbatch(self, command):
+        self.next_id += 1
+        job = str(self.next_id)
+        self.jobs[job] = command
+        self.queue.append(job)
+        return job
+
+    def finish(self, step, status=0, hours=0.1):
+        self.queue.remove(step["job"])
+        receipt = {
+            "job_id": step["job"],
+            "exit_status": status,
+            "started_at": "2026-10-12T00:00:00Z",
+            "finished_at": f"2026-10-12T{int(hours):02d}:{int(hours % 1 * 60):02d}:00Z",
+        }
+        Path(step["run_dir"]).joinpath(f"receipt-{step['job']}.json").write_text(
+            json.dumps(receipt)
+        )
+
+
+def _host_env(tmp_path, monkeypatch):
     host = _host_tool()
+    lane = _Lane()
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / ".git_sha").write_text("f" * 40)
+    root = tmp_path / "stage0" / "r04-nuisance"
+    (root / "images").mkdir(parents=True)
     images = {b.id: f"sha256:{i:064x}" for i, b in enumerate(levels.BUILDS)}
+    (root / "images" / "images.json").write_text(json.dumps(images))
+    s1a = tmp_path / "s1a"
+    (s1a / "1037").mkdir(parents=True)
+    (s1a / "1037" / "episodes.jsonl").write_text("")
+    monkeypatch.setattr(host, "ROOT", root)
+    monkeypatch.setattr(host, "S1A_RUNS", s1a)
+    monkeypatch.setattr(host, "queue_jobs", lane.squeue)
+    monkeypatch.setattr(host, "sbatch", lane.sbatch)
+    return host, lane, src, root, images
+
+
+def _plan(host, root, name):
+    return json.loads((root / "runs" / name / "plan.json").read_text())
+
+
+def _drive(host, lane, root, name, *, fail=(), hours=0.1):
+    """Run next until complete; fail the named steps' first attempts."""
+    for _ in range(200):
+        host.main(["next", "--name", name])
+        plan = _plan(host, root, name)
+        running = [s for s in plan["steps"] if s["state"] == "submitted"]
+        if not running:
+            return plan
+        step = running[0]
+        if step["kind"] == "items":
+            Path(step["run_dir"]).joinpath("items.jsonl").write_text(
+                "".join(json.dumps({"item_id": f"g:{i}"}) + "\n" for i in range(34))
+            )
+        lane.finish(step, status=1 if step["name"] in fail else 0, hours=hours)
+    raise AssertionError("did not complete")
+
+
+def test_host_tool_plans_runs_and_renders_cpu_only_jobs(tmp_path, monkeypatch):
+    host, lane, src, root, images = _host_env(tmp_path, monkeypatch)
     cells = [c.id for c in levels.registered_cells()]
-    run = host.ROOT / "runs" / "t"
-    steps = host.save_steps(tmp_path, run, "main", cells, images, levels, s1a_ro=[],
-                            workers=8, only=None, minutes=60)  # fmt: skip
-    names = [s["name"] for s in steps]
-    assert names == ["main-save-B0", "main-save-B0.r2", "main-save-B1", "main-save-B2",
-                     "main-save-B3", "main-save-B4", "main-save-B5"]  # fmt: skip
-    b0 = steps[0]
-    assert b0["image"] == images["B0"] and levels.REPLICATE_CELL not in b0["argv"]
-    assert steps[1]["argv"][-1] == levels.REPLICATE_CELL
-    score = host.score_step(tmp_path, run, "main", cells, levels, s1a_ro=[], workers=8,
-                            only=None, raw=True, minutes=60)  # fmt: skip
-    for step in [*steps, score]:
+    host.main(["plan", "--src", str(src), "--name", "smoke", "--split", "dev", "--golds",
+               "--s1a", "1037", "--cells", *cells, "--workers", "8"])  # fmt: skip
+    plan = _plan(host, root, "smoke")
+    names = [s["name"] for s in plan["steps"]]
+    assert names == [
+        "items", "main-save-B0", "main-save-B0.r2", "main-save-B1", "main-save-B2",
+        "main-save-B3", "main-save-B4", "main-save-B5", "main-score-control", "main-score-route",
+        "main-score-build", "main-score-locale", "main-score-secondary-store_as",
+        "main-score-secondary-headless_convert",
+    ]  # fmt: skip
+    assert plan["splits"] == ["dev"] and plan["cap_lane_hours"] is None
+    plan = _drive(host, lane, root, "smoke", fail={"main-save-B4", "main-score-build"})
+    states = {s["name"]: s["state"] for s in plan["steps"]}
+    assert states["main-save-B4"] == "superseded" and states["main-save-B4.a2"] == "done"
+    assert states["main-score-build"] == "superseded" and states["main-score-build.a2"] == "done"
+    assert all(v in ("done", "superseded") for v in states.values())
+    by_name = {s["name"]: s for s in plan["steps"]}
+    for step in plan["steps"]:
+        if not step.get("command"):
+            continue
         command = " ".join(step["command"])
         assert "--gres" not in command and "--gpus" not in command
-        assert "Q2M_MODE=run" in command
-        assert command.endswith(host.LANE)
-    assert score["image"] == levels.METRIC_IMAGE_ID
-    assert "--cell raw" in " ".join(score["argv"])
+        assert "Q2M_MODE=run" in command and command.endswith(host.LANE)
+        assert f"--time={step['minutes'] // 60:02d}:{step['minutes'] % 60:02d}:00" in command
+        assert step["minutes"] >= levels.LIMIT_FLOOR_MINUTES
+    # each attempt has its own directory; scores read the save attempt that finished
+    assert by_name["main-save-B4.a2"]["run_dir"].endswith("main/saves/B4.a2")
+    argv = json.loads(bytes.fromhex(
+        next(e for e in by_name["main-score-build.a2"]["command"][-2].split(",")
+             if e.startswith("Q2M_ARGV_JSON_HEX=")).split("=", 1)[1]))  # fmt: skip
+    assert "B4.ctrl_s.L0=/ro/saves/B4.a2/B4.ctrl_s.L0" in argv
+    assert "B3.ctrl_s.L0=/ro/saves/B3/B3.ctrl_s.L0" in argv
+    control = json.loads(bytes.fromhex(
+        next(e for e in by_name["main-score-control"]["command"][-2].split(",")
+             if e.startswith("Q2M_ARGV_JSON_HEX=")).split("=", 1)[1]))  # fmt: skip
+    assert control[control.index("--cell") + 1] == "raw"
+    assert by_name["main-score-control"]["image"] == levels.METRIC_IMAGE_ID
+    assert by_name["main-save-B4.a2"]["image"] == images["B4"]
+    items_argv = json.loads(bytes.fromhex(
+        next(e for e in by_name["items"]["command"][-2].split(",")
+             if e.startswith("Q2M_ARGV_JSON_HEX=")).split("=", 1)[1]))  # fmt: skip
+    assert items_argv[items_argv.index("--split") + 1] == "dev" and "env" not in items_argv
+    # rounds: both added at once from the analysis's pending list, and only once
+    pending = tmp_path / "pending.json"
+    pending.write_text(json.dumps({"items": ["g:3", "g:1"], "cells": ["B4.ctrl_s.L0"]}))
+    host.main(["confirm", "--name", "smoke", "--pending", str(pending)])
+    with pytest.raises(SystemExit):
+        host.main(["confirm", "--name", "smoke", "--pending", str(pending)])
+    plan = _drive(host, lane, root, "smoke")
+    rounds = [s["name"] for s in plan["steps"] if s["out"] != "main"]
+    assert rounds == ["round-1-save-B0", "round-1-save-B4", "round-1-score",
+                      "round-2-save-B0", "round-2-save-B4", "round-2-score"]  # fmt: skip
+    assert plan["rounds"]["pending"] == {"items": ["g:1", "g:3"], "cells": ["B4.ctrl_s.L0"]}
+    assert (root / "runs/smoke/rounds/only.txt").read_text() == "g:1\ng:3\n"
+    # a third failure ends the step; its cells reach the analysis as not scored
+    host.main(["plan", "--src", str(src), "--name", "fails", "--split", "dev",
+               "--cells", levels.CONTROL_CELL, levels.REPLICATE_CELL, "B5.ctrl_s.L0"])  # fmt: skip
+    plan = _drive(host, lane, root, "fails",
+                  fail={"main-save-B5", "main-save-B5.a2", "main-save-B5.a3"})  # fmt: skip
+    by_name = {s["name"]: s for s in plan["steps"]}
+    assert by_name["main-save-B5.a3"]["state"] == "failed_final"
+    assert by_name["main-score-build"]["state"] == "not_run"
+    assert "B5.ctrl_s.L0" in by_name["main-score-build"]["not_scored"]
+
+
+def test_host_tool_cap_drops_secondary_then_stops(tmp_path, monkeypatch):
+    host, lane, src, root, _images = _host_env(tmp_path, monkeypatch)
+    cells = [c.id for c in levels.registered_cells()]
+    host.main(["plan", "--src", str(src), "--name", "capped", "--split", "dev", "--cells", *cells,
+               "--cap-lane-hours", "6.2"])  # fmt: skip
+    plan = _drive(host, lane, root, "capped", hours=0.5)
+    states = {s["name"]: s["state"] for s in plan["steps"]}
+    # 12 jobs of half an hour use 6 h of 6.2: the secondary score jobs are dropped first
+    assert states["main-score-secondary-store_as"] == "dropped"
+    assert states["main-score-secondary-headless_convert"] == "dropped"
+    assert states["main-score-locale"] == "done"
+    host.main(["plan", "--src", str(src), "--name", "stopped", "--split", "dev", "--cells", *cells,
+               "--cap-lane-hours", "2"])  # fmt: skip
+    plan = _drive(host, lane, root, "stopped", hours=0.5)
+    states = [s["state"] for s in plan["steps"]]
+    assert states.count("done") == 4 and "not_run" in states
+    assert all(s["reason"] for s in plan["steps"] if s["state"] in ("not_run", "dropped"))
+
+
+def test_host_tool_registered_plan_needs_the_freeze(tmp_path, monkeypatch):
+    host, _lane, src, root, _images = _host_env(tmp_path, monkeypatch)
+    with pytest.raises(SystemExit, match="fixes"):
+        host.main(["plan", "--src", str(src), "--name", "r", "--registered", "--split", "dev"])
+    with pytest.raises(guard.GuardError):
+        host.main(["plan", "--src", str(src), "--name", "r", "--registered"])
+    with pytest.raises(SystemExit, match="only as --registered"):
+        host.main(["plan", "--src", str(src), "--name", "r", "--split", "confirm", "reserve",
+                   "--cells", levels.CONTROL_CELL])  # fmt: skip
+    with pytest.raises(SystemExit, match="control"):
+        host.main(["plan", "--src", str(src), "--name", "r", "--split", "dev",
+                   "--cells", "B3.ctrl_s.L0"])  # fmt: skip
+    assert not (root / "runs" / "r").exists()
+    reg = levels.REGISTERED_RUN
+    assert reg["splits"] == ["confirm", "reserve"] and reg["workers"] == 16
+    assert reg["cells"] == [c.id for c in levels.registered_cells()]
 
 
 def test_headless_route_collects_like_the_registered_stage(tmp_path, monkeypatch):
@@ -719,3 +1370,56 @@ def test_store_as_save_event_from_the_uno_client(tmp_path, monkeypatch):
     assert calls[0][0] == "/opt/libreoffice24.8/program/python"
     assert calls[0][calls[0].index("--pipe") + 1] == "r04w0"
     assert any(e["event"] == "store_as" and e["ok"] for e in session.log)
+
+
+def test_save_summary_reads_both_save_layouts(tmp_path):
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "summarize_saves", ROOT / "infra/r04-nuisance/run/summarize_saves.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    row = {"job_id": "g:t", "saves": [{"written": True, "dialogs": []}], "seconds": 1.0}
+    for cell_dir in (
+        tmp_path / "flat" / "B0.ctrl_s.L0",
+        tmp_path / "jobs" / "B4.a2" / "B4.ctrl_s.L0",
+    ):
+        cell_dir.mkdir(parents=True)
+        (cell_dir / "reachability-0.jsonl").write_text(json.dumps(row) + "\n")
+        (cell_dir / "cell-0.json").write_text(json.dumps({"build_identity": {"build": "B0"}}))
+    (tmp_path / "jobs" / "B4.a2" / "logs").mkdir()
+    assert list(module.summarize(tmp_path / "flat")) == ["B0.ctrl_s.L0"]
+    summary = module.summarize(tmp_path / "jobs")
+    assert list(summary) == ["B4.a2/B4.ctrl_s.L0"] and summary["B4.a2/B4.ctrl_s.L0"]["rows"] == 1
+
+
+def test_no_r04_module_imports_audit_rater_or_packet_code():
+    """Registration section 2.1: R04 reads no audit or adjudication file and imports no audit,
+    rater or packet code (statically, and at import time with its reused modules)."""
+    import ast
+
+    forbidden = {"audit", "raters", "rater_runner", "packets"}
+    for path in sorted((ROOT / "harness/r04_nuisance").glob("*.py")):
+        for node in ast.walk(ast.parse(path.read_text())):
+            names = []
+            if isinstance(node, ast.ImportFrom) and node.module:
+                names = [node.module, *(f"{node.module}.{a.name}" for a in node.names)]
+            elif isinstance(node, ast.Import):
+                names = [a.name for a in node.names]
+            for name in names:
+                assert not forbidden & set(name.split(".")), (path.name, name)
+    code = (
+        "import sys\n"
+        "import harness.r04_nuisance.analysis, harness.r04_nuisance.items\n"
+        "import harness.r04_nuisance.score, harness.r04_nuisance.guard\n"
+        "import harness.q2_mutation.controls, harness.q2_mutation.offline_eval\n"
+        "import harness.q2_mutation.report, harness.q2_mutation.campaign\n"
+        "bad = [m for m in sys.modules if m.split('.')[-1] in "
+        f"{sorted(forbidden)!r} and m.startswith('harness')]\n"
+        "print(bad)\n"
+    )
+    out = subprocess.run(
+        [sys.executable, "-c", code], capture_output=True, text=True, cwd=ROOT, check=True
+    )
+    assert out.stdout.strip() == "[]"

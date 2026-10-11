@@ -34,9 +34,19 @@ registration.
 
 - Never edit `harness/q2_mutation/`, `infra/q2-mutation/`, the q2 lane or
   `harness/q2_stage1/`: they are pinned by frozen registrations (a test refuses a diff).
-- A discordance counts only after two confirmation rounds reproduce it.
+- A discordance counts only after two confirmation rounds reproduce it; missing round rows
+  keep it pending (never INVARIANT).
+- The analysis fails closed: every registered cell is scored or named with a reason, exactly
+  0 or 2 rounds, the pinned control summaries and a registered split set (dev alone, or
+  confirm and reserve). Never add a way to drop a scored cell or pick rounds by hand.
+- Every step writes to its own directory; a failed job is rerun as `.a2`/`.a3` by `next`.
+  Never write into another attempt's directory.
+- Every analysis output carries the K2 label and the blind warning; never read audit or
+  adjudication files (`analysis.FORBIDDEN_INPUT`).
 - Documents (golds, captures, saved files) stay on the host; commit manifests, verdicts,
   digests and save summaries only.
+- Any change to the code tree (`guard.CODE_TREE_ROOTS`, tests included) after the freeze
+  makes the guard refuse the registered splits.
 - One Slurm job at a time: `r04_host.py next` submits only on an empty queue.
 
 ## Common tasks → first action
@@ -45,8 +55,10 @@ registration.
 | Task | First action |
 |---|---|
 | Change a level | Edit `levels.py`, run `infra/r04-nuisance/render_dockerfiles.py`, rebuild the image, update the pins block, rerun the dev smoke. |
-| Run on the host | Stage `git archive HEAD` under `r04-nuisance/src/<sha>`, `r04_host.py plan ... --split dev`, then `next` until complete. |
-| Confirm discordances | `analysis --pending-out`, then `r04_host.py confirm --round 1` and `--round 2` with those items and cells. |
+| Dev smoke on the host | Stage `git archive HEAD` under `r04-nuisance/src/SHA` (with `.git_sha`), `r04_host.py plan --src SRC --name NAME --split dev --golds --s1a 1037 --cells ... --workers 8`, then `next` until complete. |
+| Registered run (after the freeze only) | `export R04_PREREG_FROZEN=r04-checker-nuisance-invariance-v1`, `r04_host.py plan --src SRC --name r04-registered-v1 --registered`, `next` until complete; the exact lines are the registration's section 6. |
+| Confirm discordances | `python -m harness.r04_nuisance.analysis --run RUN --src . --out RUN/analysis-main.json --pending-out RUN/pending.json`, then `r04_host.py confirm --name NAME --pending RUN/pending.json` (adds both rounds), `next` until complete, and the analysis again without `--pending-out`. |
+| Re-analyse old smoke evidence | The explicit form: `--items`, `--scores`, `--round` twice, `--splits dev`, `--reference` (the pinned dev summary). |
 
 ## Gotchas
 <!-- agent-docs:fill:gotchas -->
@@ -58,3 +70,7 @@ registration.
 - A cross-version UNO client (Ubuntu 7.3 pyuno against TDF 7.6 or 24.8) fails with "Binary
   URP bridge disposed during call"; use the build's own Python.
 - Locale data is compiled at start-up into `$TMPDIR` (`LOCPATH`); the image is unchanged.
+- LibreOffice saves are not byte-deterministic: compare verdicts, never saved bytes.
+- `r04_host.py plan` for the registered splits needs `R04_PREREG_FROZEN` exported in the
+  host shell (the host's own guard check), besides the frozen ledger row.
+- The analysis is slow on intervals (exact bounds); run the test file in the background.

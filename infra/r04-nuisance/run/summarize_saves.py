@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Per-cell summary of a run's save-stage rows (host, standard library only).
 
-    summarize_saves.py <run>/<out>/saves > saves-summary.json
+    summarize_saves.py RUN/OUT/saves > saves-summary.json
+
+Reads both layouts: one directory per save job (``saves/GROUP/CELL``, keyed ``GROUP/CELL``,
+attempts included as their own groups) and the earlier flat one (``saves/CELL``).
 
 Counts only, no document content: rows, infrastructure errors (reason prefixes), save
 failures, adapted window activations, saves unwritten or with a dialog, the store_as client's
@@ -17,9 +20,20 @@ from collections import Counter
 from pathlib import Path
 
 
+def cell_dirs(saves: Path) -> list[tuple[str, Path]]:
+    out = []
+    for path in sorted(p for p in saves.iterdir() if p.is_dir() and p.name != "logs"):
+        if any(path.glob("reachability-*.jsonl")) or any(path.glob("cell-*.json")):
+            out.append((path.name, path))
+            continue
+        for sub in sorted(q for q in path.iterdir() if q.is_dir() and q.name != "logs"):
+            out.append((f"{path.name}/{sub.name}", sub))
+    return out
+
+
 def summarize(saves: Path) -> dict[str, object]:
     out: dict[str, object] = {}
-    for cell_dir in sorted(p for p in saves.iterdir() if p.is_dir() and p.name != "logs"):
+    for key, cell_dir in cell_dirs(saves):
         rows = [
             json.loads(line)
             for path in sorted(cell_dir.glob("reachability-*.jsonl"))
@@ -35,7 +49,7 @@ def summarize(saves: Path) -> dict[str, object]:
                 if event.get("event") == "store_as":
                     store[(bool(event.get("ok")), str(event.get("error") or "")[:80])] += 1
         seconds = [float(r["seconds"]) for r in rows if r.get("seconds") is not None]
-        out[cell_dir.name] = {
+        out[key] = {
             "rows": len(rows),
             "infra_errors": dict(
                 Counter(str(r["infra_error"])[:80] for r in rows if r.get("infra_error"))
