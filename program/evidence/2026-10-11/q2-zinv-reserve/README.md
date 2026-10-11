@@ -40,6 +40,11 @@ ledgers stayed at 18 rows, unmodified:
    draft and the frozen state).
 4. At the fill commit (the row's `git_head_at_freeze`, whose tree has no row) the reserve
    split is refused: the registered run must be exported from the freeze commit itself.
+5. Repeated on a fresh scratch clone at the branch's `81d69a0b` (after the validity change):
+   the same results; scratch row 19 with file SHA-256 `4a61a311...` and row hash
+   `416898ea...` (fill commit `964ee481`, freeze commit `13e2ae0d`, ledger-only diff);
+   reserve refused without the variable, admitted with it, refused at the fill commit; the
+   suite 24 passed at the scratch freeze commit. The real ledger stayed at 18 rows.
 
 ## Host rehearsal (2026-10-11, no reserve job)
 
