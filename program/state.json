@@ -1002,6 +1002,13 @@
       ],
       "outcome": "review PARSED on attempt 1, total 62 (ten scores sum to 62, no cap binding), replicates byte-identical; wave score 58 (lower of 58 and 62), best 58; honest exit at wave 1 on the declared query budget (142 of 150 under the program convention, 8 left, below a compliant wave-2 triad's 18; 125 under the orx-only reading) with the triad stop (3/3 refuted); tokens 4.06M of 8M, $71.85 of $150, 186.7 of 600 minutes; reviewer inference only, not R01 Stage A, B or C work (A0 ran on the Mac CPU; P0 and Stage B wait on Kevin's admission); submitted 11:29:02 UTC 2026-10-11 with squeue empty at 11:29:01 after the operator waited 10:07-11:29 through other workflows' CPU-only jobs, ran 11:29:02-11:32:31 UTC (prolog: exclusive)",
       "basis": "physical (scontrol RunTime 00:03:29 = 209 s on 1 H100; 0.25 GPU-h cap; reason=completed, no leftover container, all GPUs at 0 MiB after the job; recorder's read-only check at 11:46:00 UTC: GPUs at 0 MiB, no compute apps, no cotcodec-1143 container)"
+    },
+    {
+      "experiment": "R01 gauntlet wave 2 (fresh run under D75; r01-rerun-noise-sources-v2 draft) open-weight review (D24): NOT RUN",
+      "gpu_hours": 0.0,
+      "jobs": [],
+      "outcome": "review NOT RUN: the lane job was rendered (manifest r01-run2-r2, request c42f9e46...) but never dry-run, tested or submitted, because another workflow's CPU job (1175 r04-main-score-locale) held the host queue at every check 13:45-13:53 UTC and the host rule allows the job only on an empty queue; the harness demanded output first. Wave score 57 (reviewer 1 only; an upper bound on the lower of two totals), best 58, trajectory 58 -> 57; honest exit under D75's stop line (below 60, and the wave-1 largest defect is still the largest, narrowed), the run's wave cap and the triad stop (3/3 refuted); R01 ends under D75. Tokens 2.68M of 8M, $54.77 of $150, 123.7 of 600 minutes, 43 of 80 queries",
+      "basis": "physical: no GPU job ran (no Slurm job submitted for this run); recorder's read-only check at 13:55:56 UTC: only 1175 in the queue, all eight GPUs at 0 MiB, no compute apps"
     }
   ],
   "results": [

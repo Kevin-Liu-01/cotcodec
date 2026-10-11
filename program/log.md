@@ -4613,3 +4613,97 @@ they say so.)
   - The realized-cost cap rule, blink-off outside D53's scope, and P0 and
     Stage B admission (Kevin's, D24 and D70).
   - Merging this branch with main (state.json and log.md).
+
+## 2026-10-11 — R01 gauntlet wave 2 (fresh run under D75): score 57, honest exit on D75's stop line; R01 ends (branch `gauntlet/r01-noise-sources`, not merged)
+
+- The fresh run used workflow `wf_2b705b28-469`, with budgets newly
+  declared and cumulative for the run: queries 80 (30 reserved for the
+  triad), wall_minutes 600, tokens 8,000,000, dollars 150, waves 1,
+  gpu_hours 0.3. A single owner repaired the candidate on the Mac CPU. Then
+  came one blind critic call, the refute-first triad, reviewer 1 and this
+  record.
+- The run is incomplete.
+  - The repair owner returned at the harness's demand at 13:14 UTC. It had
+    not filled its «P:» placeholders (12 distinct in the proposal, 13 in
+    registration v2), merged its four simulation parts, rebuilt
+    `bundle.json`, run the doctor or committed.
+  - The recorder committed the owner's 38 files unedited as `3a2b771`,
+    exactly as they were reviewed: proposal `f33658bd...`, DRAFT
+    registration `r01-rerun-noise-sources-v2` `4a63be26...` (not frozen,
+    not admitted), v1 unedited. This way the row binds to a commit.
+  - Reviewer 2 (open-weight) never ran. Another workflow's CPU job (1175)
+    held the host queue at every check from 13:45 to 13:53 UTC, and the
+    host rule allows the lane job only on an empty queue.
+  - The audit row is row 2 of
+    `program/gauntlet/2026-10-11-r01-rerun-noise-sources.jsonl`, with row
+    hash `44604d3906c550e4e155f0a4f60bfa498134f51107395219a3318747a7e15929`.
+- What the repair fixed (reviewer 1 confirms):
+  - the primary estimands are now step-1 hazards (226 pairs, step 2
+    secondary) in an onset-step 2^3 factorial (serving x clock region x
+    other screen regions);
+  - a VAL gate against S1a's own step-1 divergence;
+  - a two-stage onset model that agrees with the mechanism;
+  - caps repriced at 4.82 cap-GPU-h, with J3's overrun chance near 0;
+  - P0, replay and open-loop drivers built and tested against fakes. The
+    recorder reran the tests at `3a2b771`: 36 passed. The proposal claims
+    38.
+- Review: reviewer 1 (claude-opus-5-5) scored 57; its ten scores sum to 57.
+  It applied 74 and 89, and neither binds. The score is 57 because the
+  procedure takes the lower of two totals, and only one exists, so 57 is an
+  upper bound. Best 58. Trajectory 58 -> 57, a dip that stays recorded.
+- Blind discrimination: PASS. The critic judged the proposal (B) stronger
+  than cELldjX2oq's abstract-based paragraph. The Summers and Dinneen
+  packet was never judged.
+- Triad: all three refuted (28 counted queries: 14, 7, 7).
+  - Novelty: a recombination with a setting-only residual. The primary
+    cells are single-turn requests, and 2609.16617, 2608.08239, 2606.08998
+    and 2609.28851 are uncited or read only at abstract level. No direct
+    prior was found.
+  - Identification: the largest defect. Also, J3 sends R together with R2,
+    whose prompt begins with R's screenshot turn, and caches reset only at
+    the start of a pass. There is no placebo arm.
+  - Feasibility: VAL is UNRESOLVED 0.247 of the time even at a perfect
+    match, because it bootstraps S1a independently. The timing gate
+    recomputes think time and refuses J3 at a latency ratio of about 1.04.
+    P0 waits on A1 and on a lane adapter that does not exist yet.
+- Largest defect: the step's mechanism test and its payoff are settled
+  outside the GPU measurement.
+  - S1a's step-1 text divergence is 202/221 when the step-1 requests
+    differ, against 3/5 when they are identical. Given that, and VAL, the
+    joint reading is REDUNDANT with probability 1.000 in every
+    S1a-consistent scenario that passes VAL. So M's falsifier reduces to
+    VAL_FAIL, which is a fidelity check, not a test of M.
+  - P8's D_w predictions follow from a rho imported from S1a and held fixed
+    across removal arms. The D_w "validation" is the in-sample identity
+    (1 - N) x q.
+  - The recorder recomputed the S1a counts and read the identity in
+    `stepkick.py`.
+  - This is wave 1's largest defect, narrowed. The step pooling and the
+    model contradiction are fixed, but the predetermined text reading and
+    the undelivered D_w attribution survive.
+- Exit: D75's stop line fires on both prongs. The score is below 60 (and
+  could only fall with a second review), and the wave-1 largest defect is
+  still the largest. The run's wave cap is reached and the triad stopped
+  the candidate. termination_reason is
+  `honest_exit_d75_stop_line_triad_stop_and_wave_cap`. Under D75, R01
+  ends: v2 is neither frozen nor admitted. Stage A0's descriptive finding
+  (D75) stands.
+- Usage: 43 of 80 queries; 2,679,536 of 8M tokens; $54.77 of $150
+  (list-price equivalent); 123.7 of 600 minutes; GPU 0.0 of 0.3.
+- Doctor: the recorder ran it on the reviewed candidate (exit 1, FAIL).
+  Novelty and Compute are FAIL, and gpu_hours 0.3 parses as 0. The stale
+  bundle also causes a proposal_sha256 mismatch, three unsnapshotted URLs
+  and attestation hash mismatches. On a scratch copy the audit validator
+  finds the hash chain intact. It flags the counter restarts at the run
+  boundary, row 1's earlier exit, the wave count and the missing success
+  state.
+- GPU: no job ran. The ledger gains a 0.0 GPU-h row, "R01 gauntlet wave 2
+  ... open-weight review (D24): NOT RUN". The program total on this branch
+  stays 10.4791. Main is ahead by S2 v3's reviewer job 1162 (0.0558).
+- Waiting on the main session:
+  - a decision entry recording R01's end under D75;
+  - whether to keep `3a2b771` (the unfinished candidate) when merging;
+  - merging this branch with main (da95281), where `program/state.json`
+    and `program/log.md` conflict.
+  - If R01 is ever reopened, reviewer 1's list applies, as a new draft v3.
+    P0 and Stage B admission stays Kevin's (D24, D70).
