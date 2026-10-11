@@ -94,3 +94,40 @@ def test_decide_needs_62_admitted():
     assert out["K0"] == "PASS" and out["admitted"] == 62 and out["runnable"] == 63
     out = K.decide(tasks[1:], _metrics())
     assert out["K0"] == "FAIL" and out["admitted"] == 61
+
+
+def test_admission_inputs_from_the_dev_smoke_records():
+    import json
+    from pathlib import Path
+
+    from harness.s2_locale import k0_inputs as I
+
+    root = Path(__file__).resolve().parents[1]
+    records = I.load_records([root / "program/evidence/2026-10-11/s2v4-image/smoke-1197/probes.jsonl"])
+    pool = json.loads((root / "program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/"
+                       "compute/pool/pool-v3.json").read_text())  # fmt: skip
+    tasks = I.tasks_from_records(records, I.strict_titles(pool))
+    assert len(tasks) == 3 and all(set(t["cells"]) == set(K.ADMISSION_CELLS) for t in tasks)
+    e = tasks[0]["cells"]["E"]
+    assert e["observed"] and e["titles"] and e["donothing"] == "fail" and all(e["rewritten"].values())
+    # smoke 1197 ran no gold slots: every task lacks a passing-side control there
+    assert [r["status"] for r in I.admission(records, pool)] == ["runnable"] * 3
+
+
+def test_admission_inputs_setup_failure_and_gold():
+    from harness.s2_locale import k0_inputs as I
+
+    def rec(cell, kind="capture", attempt=1, **kw):
+        base = {"task_id": "t-1", "cell": cell, "kind": kind, "attempt": attempt,
+                "slot": f"t-1:{cell}:{'g' if kind == 'gold' else 'r'}1"}
+        return {**base, **kw}
+
+    ok = {"status": "probed", "verdict": "fail", "post_setup": {"facts": {"window_titles": ["w"]}},
+          "result_files": {"/home/user/x": {"rewritten": True}}}
+    rows = [rec(c, **ok) for c in K.ADMISSION_CELLS]
+    rows += [rec(c, "gold", status="probed", verdict="pass") for c in K.ADMISSION_CELLS]
+    assert I.admission(rows, {"tasks": []})[0]["status"] == "admitted"
+    rows[1] = rec("A", status="infrastructure", infrastructure_type="probe:reset_task")
+    rows.append(rec("A", attempt=2, status="infrastructure", infrastructure_type="probe:reset_task"))
+    out = I.admission(rows, {"tasks": []})[0]
+    assert out["status"] == "excluded" and "A1:A:setup_failed" in out["reasons"]
