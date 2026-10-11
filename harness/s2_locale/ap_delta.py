@@ -289,19 +289,33 @@ def is_rung(item: Mapping[str, Any]) -> bool:
     return len(item.get("cells") or []) > 1 or "qcow2" in item
 
 
+def _canon(rows: Sequence[Mapping[str, Any]]) -> list[str]:
+    return sorted(json.dumps(dict(r), sort_keys=True) for r in rows)
+
+
 def check_registered(m: Mapping[str, Any], source_dir: Path) -> None:
-    """A k1 manifest runs exactly the plan's campaigns for its check and cell."""
+    """A k1 manifest runs the plan's campaigns for its check and cell: all of them, or, as one
+    numbered part of a check too long for one job (``part``: index and count; C3 and A3), a
+    subset in the plan's order, so the parts together run each campaign once."""
     plan = load_k1_plan(source_dir)
     cells = "+".join(m["campaigns"][0]["cells"])
     want = [{k: v for k, v in e.items() if k not in ("check", "cell")} for e in plan
             if e["check"] == m["check"] and e["cell"] == cells]
     got = [campaign_key(item["manifest"]) for item in m["campaigns"]]
     _require(bool(want), f"the K1 plan has no {m['check']} campaigns on {cells}")
-    def canon(rows: list[dict[str, Any]]) -> list[str]:
-        return sorted(json.dumps(r, sort_keys=True) for r in rows)
-
-    _require(canon(got) == canon(want),
-             f"{m['check']} on {cells}: the campaigns are not the K1 plan's")  # fmt: skip
+    part = m.get("part")
+    if part is None:
+        _require(_canon(got) == _canon(want),
+                 f"{m['check']} on {cells}: the campaigns are not the K1 plan's")  # fmt: skip
+    else:
+        _require(isinstance(part, dict) and 1 <= int(part.get("index", 0)) <= int(
+            part.get("of", 0)), "part: index of count")  # fmt: skip
+        keys = [json.dumps(dict(w), sort_keys=True) for w in want]
+        mine = [json.dumps(dict(g), sort_keys=True) for g in got]
+        _require(len(set(mine)) == len(mine) and set(mine) <= set(keys),
+                 f"{m['check']} on {cells}: a part runs distinct campaigns of the K1 plan")
+        positions = [keys.index(k) for k in mine]
+        _require(positions == sorted(positions), "a part keeps the plan's order")
     for item in m["campaigns"]:
         q2m = item["manifest"]
         _require(q2m.get("purpose") in ("acceptance", "infrastructure-validation"),
@@ -743,9 +757,13 @@ def render_dev(args: argparse.Namespace) -> dict[str, Any]:
     return m
 
 
-def render_k1(args: argparse.Namespace) -> dict[str, Any]:
-    """The ``k1`` manifest of one check on one cell (or the rung), from the freeze export, with
-    the freeze commit checked with git and every campaign validated as the job will."""
+MAX_JOB_MINUTES = 1440
+
+
+def render_k1(args: argparse.Namespace) -> list[dict[str, Any]]:
+    """The ``k1`` manifests of one check on one cell (or the rung), from the freeze export, with
+    the freeze commit checked with git and every campaign validated as the job will: one manifest,
+    or numbered parts when the campaigns' budgets exceed one job's limit (C3, A3)."""
     source = Path(args.source_dir)
     row = L.frozen_registration(source)
     L.check_freeze_commit(args.repo, args.git_sha, row)
@@ -764,23 +782,39 @@ def render_k1(args: argparse.Namespace) -> dict[str, Any]:
             item["qcow2"] = {c: swap_disk(q2m, c, pins, args.images_root)["vm"]["qcow2"]
                              for c in cells}  # fmt: skip
         items.append(item)
-    m = {"schema": SCHEMA, "experiment_id": EXPERIMENT_ID, "purpose": "k1",
-         "name": f"k1-{args.check.lower()}-{key.replace('+', '').lower()}"[:60],
-         "check": args.check, "run_root": f"{args.host_root}/runs", "campaigns": items,
-         "freeze": {"commit": args.git_sha, "ledger_row_hash": row["hash"],
-                    "git_head_at_freeze": row["git_head_at_freeze"]}}  # fmt: skip
-    if args.check == "rung":
-        q2m = items[0]["manifest"]
-        cpus = RUNG_N * q2m["vm"]["cpu_cores"] + q2m["runner"]["cpus"]
-        mem = RUNG_N * (q2m["vm"]["memory_gb"] + 1) + 2
-    else:
-        cpus = max(int(i["manifest"]["slurm"]["cpus"]) for i in items)
-        mem = max(int(i["manifest"]["slurm"]["memory_gb"]) for i in items)
-    total = 10 + sum(campaign_minutes(i["manifest"], image_bytes({"campaigns": [i]}))
-                     for i in items)  # fmt: skip
-    m["slurm"] = {"cpus": cpus, "memory_gb": mem, "minutes": min(1440, total)}
-    validate_manifest(m, source)
-    return m
+    parts: list[list[dict[str, Any]]] = [[]]
+    used = 10
+    for item in items:
+        need = campaign_minutes(item["manifest"], image_bytes({"campaigns": [item]}))
+        if parts[-1] and used + need > MAX_JOB_MINUTES:
+            parts.append([])
+            used = 10
+        parts[-1].append(item)
+        used += need
+    out = []
+    for k, chunk in enumerate(parts, 1):
+        name = f"k1-{args.check.lower()}-{key.replace('+', '').lower()}"
+        m: dict[str, Any] = {
+            "schema": SCHEMA, "experiment_id": EXPERIMENT_ID, "purpose": "k1",
+            "name": (name if len(parts) == 1 else f"{name}-p{k}")[:60], "check": args.check,
+            "run_root": f"{args.host_root}/runs", "campaigns": chunk,
+            "freeze": {"commit": args.git_sha, "ledger_row_hash": row["hash"],
+                       "git_head_at_freeze": row["git_head_at_freeze"]}}  # fmt: skip
+        if len(parts) > 1:
+            m["part"] = {"index": k, "of": len(parts)}
+        if args.check == "rung":
+            q2m = chunk[0]["manifest"]
+            cpus = RUNG_N * q2m["vm"]["cpu_cores"] + q2m["runner"]["cpus"]
+            mem = RUNG_N * (q2m["vm"]["memory_gb"] + 1) + 2
+        else:
+            cpus = max(int(i["manifest"]["slurm"]["cpus"]) for i in chunk)
+            mem = max(int(i["manifest"]["slurm"]["memory_gb"]) for i in chunk)
+        total = 10 + sum(campaign_minutes(i["manifest"], image_bytes({"campaigns": [i]}))
+                         for i in chunk)  # fmt: skip
+        m["slurm"] = {"cpus": cpus, "memory_gb": mem, "minutes": total}
+        validate_manifest(m, source)
+        out.append(m)
+    return out
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -831,10 +865,13 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"campaigns": len(m["campaigns"]), **check_slurm(m)}))
         return 0
     if args.command == "render":
-        m = render_k1(args)
-        args.out.write_text(json.dumps(m, indent=1, sort_keys=True) + "\n")
-        print(json.dumps({"check": m["check"], "campaigns": len(m["campaigns"]),
-                          **check_slurm(m)}))  # fmt: skip
+        manifests = render_k1(args)
+        for m in manifests:
+            out = (args.out if len(manifests) == 1 else
+                   args.out.with_name(f"{args.out.stem}-p{m['part']['index']}{args.out.suffix}"))
+            out.write_text(json.dumps(m, indent=1, sort_keys=True) + "\n")
+            print(json.dumps({"check": m["check"], "part": m.get("part"), "out": out.name,
+                              "campaigns": len(m["campaigns"]), **check_slurm(m)}))  # fmt: skip
         return 0
     if args.command == "plan":
         import yaml

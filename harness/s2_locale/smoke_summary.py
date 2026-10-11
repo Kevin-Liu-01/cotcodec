@@ -89,6 +89,16 @@ def slot_row(rec: dict[str, Any], strict_titles: list[str]) -> dict[str, Any]:
         "ar_catalogs": (rec.get("facts_boot") or {}).get("ar_catalogs"),
         "toolbar_digest": ((rec.get("facts_boot") or {}).get("toolbars") or {}).get("sha256"),
         "input_methods": facts.get("input_methods"),
+        "input_sources": facts.get("input_sources"),
+        "ibus_engine": facts.get("ibus_engine"),
+        "server_locale_env": facts.get("server_locale_env"),
+        "office_locale_env": [p.get("locale_env")
+                              for p in facts.get("libreoffice_processes") or []],
+        "p010_values": (rec.get("p010") or {}).get("values"),
+        "fc_match_ar": (rec.get("end_facts") or {}).get("fc_match_ar"),
+        "arabic_font_families": (rec.get("end_facts") or {}).get("arabic_font_families"),
+        "unmet_packages": {k: v.get("status") for k, v in
+                           ((rec.get("end_facts") or {}).get("packages") or {}).items()},
         "strict_title_present": all(t in titles for t in strict_titles) if strict_titles else None,
         "arabic_share": share,
         "named_showing": summary.get("named_showing"),

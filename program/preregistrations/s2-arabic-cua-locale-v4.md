@@ -525,9 +525,11 @@ How `harness/s2_locale/ap_delta.py` drives harness/q2 (in one Slurm job per mani
 The registered campaigns are pinned before the freeze: `experiments/manifests/s2v4/k1-plan.json` (284
 campaigns: 56 per image and the A3 and rung campaigns; SHA-256
 `e1a4ac5b51d22a95f04905b0ebb7018ab521e2b21ca2abe2d62ced4dfd1a83cf`, pinned in `ap_delta.K1_PLAN_SHA256`),
-and a `k1` job runs exactly the plan's campaigns for its check and image. Each job's Slurm minutes are
-the sum of its campaigns' own harness/q2 budgets plus the image check the driver makes before and after
-each campaign (2 x ceil(24.5 GB / 30 GB per minute) = 2 minutes per campaign), plus 10.
+and a `k1` job runs exactly the plan's campaigns for its check and image, or, for a check whose
+campaigns' budgets exceed one job's 1,440 minutes (C3, A3), one numbered part of them in the plan's
+order, the parts together running each campaign once. Each job's Slurm minutes are the sum of its
+campaigns' own harness/q2 budgets plus the image check the driver makes before and after each
+campaign (2 x ceil(24.5 GB / 30 GB per minute) = 2 minutes per campaign), plus 10.
 
 | Check | Where | Pass line (D53's) | VM-h |
 |---|---|---|---:|
