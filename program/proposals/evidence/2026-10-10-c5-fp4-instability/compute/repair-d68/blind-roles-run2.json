@@ -1,0 +1,12 @@
+{
+ "proposal": "paragraph-65332d00.txt",
+ "closest_prior": "paragraph-ad76d839.txt",
+ "closest_prior_id": "Mechanism prior: arXiv:2510.25602 (INT v.s. FP: A Comprehensive Study of Fine-Grained Low-bit Quantization Formats, Chen et al., v1 2025-10-29; ICML 2026 per OpenReview 1GIYHWO9S5): Theorems 1-2 (UE8M0 overhead rho in [1, 2), up to 6.02 dB for INT; FP QSNR set by mantissa width), crossovers 2.04 and 2.39, Table 2, Secs. 5.1-5.3; combined with the ARITH 2025 study (Yang et al., DOI 10.1109/ARITH64983.2025.00011, open copy NSF PAR 10628832): Insight 5 and Fig. 9 (INT4 gains about 6.47 times E2M1's R-MSE reduction from B32 to B16 under E8M0), Insight 3 and Fig. 7, Fig. 6 (R-MSE against training-loss gap). Both read in full by the D68 repair owner on 2026-10-10. The combination is deliberate: wave 1's novelty refuter asked for the critic to be given 2510.25602 Theorems 1-2 plus ARITH Fig. 9 as the prior.",
+ "additional_packets": {
+  "paragraph-201f330b.txt": "Design prior arXiv:2505.19115 (FP4 All the Way, Chmiel, Fishman, Banner and Soudry; NeurIPS 2025 spotlight), wave 1's packet, unchanged; pair it with the new proposal paragraph paragraph-65332d00.txt"
+ },
+ "superseded": {
+  "paragraph-43655420.txt": "wave 1's proposal paragraph (v1 design); do not use in run 2"
+ },
+ "note": "Role mapping for the recorder only. Never give this file to the critic. The paragraphs avoid author, product, paper and hardware names and format mnemonics. One critic call per prior packet, each with the proposal paragraph, in randomized order, read by path, without this file or any other text."
+}
