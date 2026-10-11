@@ -1224,3 +1224,29 @@ No line can advance without a ruling by Kevin: the D24 trust store or an
 admission ruling for a gauntleted package (S2 v2 and C5 v2 are the strongest),
 successor E for Q2, the checker-mutation adjudication, the R580 driver for
 Q1, or the outward actions.
+
+**D71. With every line closed or waiting on Kevin, three CPU-only tracks
+start.** On 2026-10-11 the program owner again asked to continue everything.
+Decided:
+- (i) A question-renewal sweep, replaying the 2026-10-06 selection procedure
+  (discovery, primary-source verification, independent judges) on what the
+  program has since measured: S1a's noise floor and variance split, the
+  certified action path and its limits, the `compare_pptx_files` order defect
+  and the GUI-save gold flips, Q1's finding that the TF32 tolerance audit
+  certifies only gross destruction, Q3's NEGATIVE_CAPABLE_V3, and the
+  honest-exit pattern of the backfill gauntlets. It ends in a ranked,
+  verified slate of candidate questions for Kevin, not an adoption.
+- (ii) An S2 successor (S2 v3) as a new proposal with its own gauntlet. It
+  draws a larger task pool from OSWorld's LibreOffice tasks beyond S1a's
+  confirm split, so the SMALL falsifier becomes reachable. It also builds
+  Phase 0 as an executable CPU-only pilot (the derived Arabic-interface image
+  and the factorial render oracle on the real applications, in the CPU lane)
+  where the host allows, to attack the 79 cap. No GPU job runs, and Phase 1
+  admission stays Kevin's.
+- (iii) A Q2 technical report drafted in the repository. It consolidates the
+  action-path certification, S1a's registered result, the checker-mutation
+  findings (pending Kevin's adjudication) and the design study, states only
+  what the registered analyses support, and marks every pending sign-off.
+  Publishing it is an outward action and stays Kevin's.
+Every agent prompt carries the command rule. Any host job is CPU-only, and
+none overlaps another.
