@@ -1,0 +1,376 @@
+{
+ "method": "Per-size profile likelihoods (the size's own likelihood, its other seven parameters\nre-optimised; the cross-size correlations do not enter) for the components a design\nstudy varies: sigma_e, sigma_f, sigma_b and c.",
+ "provenance": {
+  "argv": [
+   "/Users/kevinliu/repos/cotcodec-wt-q2-design/harness/q2_design/study.py",
+   "profile",
+   "--fit",
+   "program/evidence/2026-10-10/q2-design-study/fit-base.json",
+   "--out",
+   "program/evidence/2026-10-10/q2-design-study/profile-base.json"
+  ],
+  "git_head": "34a57a8af0b42192ad96d4e9919d9d5132027d34",
+  "harness_dirty": true,
+  "numpy": "2.5.2",
+  "python": "3.13.14",
+  "scipy": "1.18.0"
+ },
+ "sizes": {
+  "4B": {
+   "profiles": {
+    "c": [
+     {
+      "loglik": -96.774361,
+      "lr": 11.272814,
+      "value": -3.0
+     },
+     {
+      "loglik": -94.204951,
+      "lr": 6.133994,
+      "value": -2.0
+     },
+     {
+      "loglik": -92.938535,
+      "lr": 3.601163,
+      "value": -1.5
+     },
+     {
+      "loglik": -91.840862,
+      "lr": 1.405816,
+      "value": -1.0
+     },
+     {
+      "loglik": -91.189447,
+      "lr": 0.102987,
+      "value": -0.5
+     },
+     {
+      "loglik": -91.344826,
+      "lr": 0.413744,
+      "value": 0.0
+     },
+     {
+      "loglik": -92.3621,
+      "lr": 2.448292,
+      "value": 0.5
+     },
+     {
+      "loglik": -93.888536,
+      "lr": 5.501164,
+      "value": 1.0
+     },
+     {
+      "loglik": -97.259906,
+      "lr": 12.243904,
+      "value": 2.0
+     }
+    ],
+    "log_sigma_b": [
+     {
+      "loglik": -91.260616,
+      "lr": 0.245325,
+      "value": 0.05
+     },
+     {
+      "loglik": -91.179981,
+      "lr": 0.084054,
+      "value": 0.5
+     },
+     {
+      "loglik": -91.155088,
+      "lr": 0.034267,
+      "value": 1.0
+     },
+     {
+      "loglik": -91.408384,
+      "lr": 0.540861,
+      "value": 1.5
+     },
+     {
+      "loglik": -91.932186,
+      "lr": 1.588463,
+      "value": 2.0
+     },
+     {
+      "loglik": -93.439852,
+      "lr": 4.603797,
+      "value": 3.0
+     },
+     {
+      "loglik": -95.155408,
+      "lr": 8.034908,
+      "value": 4.0
+     },
+     {
+      "loglik": -98.478462,
+      "lr": 14.681017,
+      "value": 6.0
+     }
+    ],
+    "sigma_e": [
+     {
+      "loglik": -91.137954,
+      "lr": -0.0,
+      "value": 0.0
+     },
+     {
+      "loglik": -91.26097,
+      "lr": 0.246033,
+      "value": 0.25
+     },
+     {
+      "loglik": -91.595499,
+      "lr": 0.915089,
+      "value": 0.5
+     },
+     {
+      "loglik": -92.805494,
+      "lr": 3.33508,
+      "value": 1.0
+     },
+     {
+      "loglik": -94.425273,
+      "lr": 6.574638,
+      "value": 1.5
+     },
+     {
+      "loglik": -96.16609,
+      "lr": 10.056272,
+      "value": 2.0
+     },
+     {
+      "loglik": -99.526552,
+      "lr": 16.777195,
+      "value": 3.0
+     }
+    ],
+    "sigma_f": [
+     {
+      "loglik": -91.137954,
+      "lr": -0.0,
+      "value": 0.0
+     },
+     {
+      "loglik": -91.196881,
+      "lr": 0.117854,
+      "value": 0.25
+     },
+     {
+      "loglik": -91.38064,
+      "lr": 0.485373,
+      "value": 0.5
+     },
+     {
+      "loglik": -92.154319,
+      "lr": 2.032731,
+      "value": 1.0
+     },
+     {
+      "loglik": -93.424291,
+      "lr": 4.572673,
+      "value": 1.5
+     },
+     {
+      "loglik": -95.04325,
+      "lr": 7.810592,
+      "value": 2.0
+     },
+     {
+      "loglik": -98.604679,
+      "lr": 14.93345,
+      "value": 3.0
+     }
+    ]
+   },
+   "size_estimate": [
+    -2.68312,
+    1.466104,
+    -0.330615,
+    -0.194673,
+    0.310765,
+    -0.620323,
+    0.0,
+    0.0
+   ],
+   "size_loglik_max": -91.137954
+  },
+  "9B": {
+   "profiles": {
+    "c": [
+     {
+      "loglik": -72.744125,
+      "lr": 3.923866,
+      "value": -3.0
+     },
+     {
+      "loglik": -71.540847,
+      "lr": 1.517309,
+      "value": -2.0
+     },
+     {
+      "loglik": -71.064267,
+      "lr": 0.564149,
+      "value": -1.5
+     },
+     {
+      "loglik": -70.801025,
+      "lr": 0.037664,
+      "value": -1.0
+     },
+     {
+      "loglik": -70.866254,
+      "lr": 0.168123,
+      "value": -0.5
+     },
+     {
+      "loglik": -71.286255,
+      "lr": 1.008124,
+      "value": 0.0
+     },
+     {
+      "loglik": -71.967123,
+      "lr": 2.36986,
+      "value": 0.5
+     },
+     {
+      "loglik": -72.779919,
+      "lr": 3.995452,
+      "value": 1.0
+     },
+     {
+      "loglik": -74.473444,
+      "lr": 7.382502,
+      "value": 2.0
+     }
+    ],
+    "log_sigma_b": [
+     {
+      "loglik": -71.491645,
+      "lr": 1.418905,
+      "value": 0.05
+     },
+     {
+      "loglik": -71.364442,
+      "lr": 1.164499,
+      "value": 0.5
+     },
+     {
+      "loglik": -71.041249,
+      "lr": 0.518113,
+      "value": 1.0
+     },
+     {
+      "loglik": -70.820342,
+      "lr": 0.076299,
+      "value": 1.5
+     },
+     {
+      "loglik": -70.793125,
+      "lr": 0.021864,
+      "value": 2.0
+     },
+     {
+      "loglik": -71.158254,
+      "lr": 0.752123,
+      "value": 3.0
+     },
+     {
+      "loglik": -71.807084,
+      "lr": 2.049784,
+      "value": 4.0
+     },
+     {
+      "loglik": -73.327535,
+      "lr": 5.090684,
+      "value": 6.0
+     }
+    ],
+    "sigma_e": [
+     {
+      "loglik": -70.782193,
+      "lr": -0.0,
+      "value": 0.0
+     },
+     {
+      "loglik": -70.878361,
+      "lr": 0.192336,
+      "value": 0.25
+     },
+     {
+      "loglik": -71.129744,
+      "lr": 0.695103,
+      "value": 0.5
+     },
+     {
+      "loglik": -71.972763,
+      "lr": 2.38114,
+      "value": 1.0
+     },
+     {
+      "loglik": -73.031542,
+      "lr": 4.498699,
+      "value": 1.5
+     },
+     {
+      "loglik": -73.998201,
+      "lr": 6.432016,
+      "value": 2.0
+     },
+     {
+      "loglik": -75.80957,
+      "lr": 10.054754,
+      "value": 3.0
+     }
+    ],
+    "sigma_f": [
+     {
+      "loglik": -70.782193,
+      "lr": -0.0,
+      "value": 0.0
+     },
+     {
+      "loglik": -70.803687,
+      "lr": 0.042989,
+      "value": 0.25
+     },
+     {
+      "loglik": -70.870747,
+      "lr": 0.177109,
+      "value": 0.5
+     },
+     {
+      "loglik": -71.157676,
+      "lr": 0.750966,
+      "value": 1.0
+     },
+     {
+      "loglik": -71.635814,
+      "lr": 1.707244,
+      "value": 1.5
+     },
+     {
+      "loglik": -72.245846,
+      "lr": 2.927306,
+      "value": 2.0
+     },
+     {
+      "loglik": -73.636847,
+      "lr": 5.709309,
+      "value": 3.0
+     }
+    ]
+   },
+   "size_estimate": [
+    -3.691613,
+    1.937697,
+    -0.837031,
+    0.599043,
+    1.307101,
+    -0.272954,
+    0.0,
+    0.0
+   ],
+   "size_loglik_max": -70.782193
+  }
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "committed": "program/evidence/2026-10-10/q2-design-study/validation-base-seed42.json",
+ "differences": [],
+ "identical": true,
+ "mode": "parametric_realized",
+ "rerun": "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2-design/repro-validation-seed42.json",
+ "rerun_provenance": {
+  "argv": [
+   "/Users/kevinliu/repos/cotcodec-wt-q2-design/harness/q2_design/study.py",
+   "validate",
+   "--fit",
+   "program/evidence/2026-10-10/q2-design-study/fit-base.json",
+   "--seed",
+   "42",
+   "--nsim",
+   "250",
+   "--modes",
+   "parametric_realized",
+   "--out",
+   "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2-design/repro-validation-seed42.json"
+  ],
+  "git_head": "a9985eecc585b7347dc366efb9865c65edbe2762",
+  "harness_dirty": true,
+  "numpy": "2.5.2",
+  "python": "3.13.14",
+  "scipy": "1.18.0"
+ }
+}

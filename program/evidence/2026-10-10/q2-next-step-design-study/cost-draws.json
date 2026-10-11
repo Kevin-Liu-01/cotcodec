@@ -1,0 +1,193 @@
+{
+ "cap_total_min": 478,
+ "designs": {
+  "A-K32-S2R2": {
+   "pool_mean": {
+    "caps_gpu_h": 2.266667,
+    "caps_min": 136,
+    "cpus_per_pair": 122,
+    "episodes": 512,
+    "jobs": 4,
+    "pairs_at_once": 1,
+    "physical_gpu_h": 1.565701,
+    "physical_gpu_h_per_episode": 0.003058,
+    "vm_h": 26.604559,
+    "wall_h_sequential": 1.565701,
+    "within_478_min": true
+   }
+  },
+  "A6-K32-S6R2": {
+   "pool_mean": {
+    "caps_gpu_h": 6.6,
+    "caps_min": 396,
+    "cpus_per_pair": 122,
+    "episodes": 1536,
+    "jobs": 12,
+    "pairs_at_once": 1,
+    "physical_gpu_h": 4.697104,
+    "physical_gpu_h_per_episode": 0.003058,
+    "vm_h": 79.813677,
+    "wall_h_sequential": 4.697104,
+    "within_478_min": true
+   }
+  },
+  "B-K113-S2R1": {
+   "pool_mean": {
+    "caps_gpu_h": 3.433333,
+    "caps_min": 206,
+    "cpus_per_pair": 122,
+    "episodes": 904,
+    "jobs": 4,
+    "pairs_at_once": 1,
+    "physical_gpu_h": 2.485897,
+    "physical_gpu_h_per_episode": 0.00275,
+    "vm_h": 45.008484,
+    "wall_h_sequential": 2.485897,
+    "within_478_min": true
+   }
+  },
+  "C-K113-S2R2": {
+   "pool_mean": {
+    "caps_gpu_h": 6.266667,
+    "caps_min": 376,
+    "cpus_per_pair": 122,
+    "episodes": 1808,
+    "jobs": 4,
+    "pairs_at_once": 1,
+    "physical_gpu_h": 4.736322,
+    "physical_gpu_h_per_episode": 0.00262,
+    "vm_h": 90.016968,
+    "wall_h_sequential": 4.736322,
+    "within_478_min": true
+   }
+  },
+  "D-K113-S3R1": {
+   "pool_mean": {
+    "caps_gpu_h": 5.1,
+    "caps_min": 306,
+    "cpus_per_pair": 122,
+    "episodes": 1356,
+    "jobs": 6,
+    "pairs_at_once": 1,
+    "physical_gpu_h": 3.728846,
+    "physical_gpu_h_per_episode": 0.00275,
+    "vm_h": 67.512726,
+    "wall_h_sequential": 3.728846,
+    "within_478_min": true
+   }
+  },
+  "E-K113-S4R1": {
+   "pool_mean": {
+    "caps_gpu_h": 6.766667,
+    "caps_min": 406,
+    "cpus_per_pair": 122,
+    "episodes": 1808,
+    "jobs": 8,
+    "pairs_at_once": 1,
+    "physical_gpu_h": 4.971795,
+    "physical_gpu_h_per_episode": 0.00275,
+    "vm_h": 90.016968,
+    "wall_h_sequential": 4.971795,
+    "within_478_min": true
+   }
+  },
+  "F-K94-S3R2": {
+   "draws": {
+    "P_over_478": 0.04,
+    "max": 483,
+    "median": 477.0
+   },
+   "pool_mean": {
+    "caps_gpu_h": 7.95,
+    "caps_min": 477,
+    "cpus_per_pair": 122,
+    "episodes": 2256,
+    "jobs": 6,
+    "pairs_at_once": 1,
+    "physical_gpu_h": 5.969313,
+    "physical_gpu_h_per_episode": 0.002646,
+    "vm_h": 112.322058,
+    "wall_h_sequential": 5.969313,
+    "within_478_min": true
+   }
+  },
+  "F5-K105-S5R1": {
+   "draws": {
+    "P_over_478": 0.3055,
+    "max": 481,
+    "median": 476.0
+   },
+   "pool_mean": {
+    "caps_gpu_h": 7.85,
+    "caps_min": 471,
+    "cpus_per_pair": 122,
+    "episodes": 2100,
+    "jobs": 10,
+    "pairs_at_once": 1,
+    "physical_gpu_h": 5.816438,
+    "physical_gpu_h_per_episode": 0.00277,
+    "vm_h": 104.555107,
+    "wall_h_sequential": 5.816438,
+    "within_478_min": true
+   }
+  },
+  "J-9B-K113-S4R2": {
+   "pool_mean": {
+    "caps_gpu_h": 6.5,
+    "caps_min": 390,
+    "cpus_per_pair": 122,
+    "episodes": 1808,
+    "jobs": 4,
+    "pairs_at_once": 1,
+    "physical_gpu_h": 4.898267,
+    "physical_gpu_h_per_episode": 0.002709,
+    "vm_h": 93.125446,
+    "wall_h_sequential": 4.898267,
+    "within_478_min": true
+   }
+  },
+  "J2-9B-K113-S2R2": {
+   "pool_mean": {
+    "caps_gpu_h": 3.3,
+    "caps_min": 198,
+    "cpus_per_pair": 122,
+    "episodes": 904,
+    "jobs": 2,
+    "pairs_at_once": 1,
+    "physical_gpu_h": 2.449134,
+    "physical_gpu_h_per_episode": 0.002709,
+    "vm_h": 46.562723,
+    "wall_h_sequential": 2.449134,
+    "within_478_min": true
+   }
+  },
+  "J3-9B-K113-S3R3": {
+   "pool_mean": {
+    "caps_gpu_h": 7.1,
+    "caps_min": 426,
+    "cpus_per_pair": 122,
+    "episodes": 2034,
+    "jobs": 3,
+    "pairs_at_once": 1,
+    "physical_gpu_h": 5.419803,
+    "physical_gpu_h_per_episode": 0.002665,
+    "vm_h": 104.766127,
+    "wall_h_sequential": 5.419803,
+    "within_478_min": true
+   }
+  }
+ },
+ "provenance": {
+  "argv": [
+   "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2-design/owner/run-2ded9da/harness/q2_design/successor.py",
+   "cost-draws",
+   "--out",
+   "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2-design/owner/out/cost-draws.json"
+  ],
+  "git_head": "2ded9da6c987b2a60341b32cfc7dd9c598ba5462",
+  "harness_dirty": false,
+  "numpy": "2.5.2",
+  "python": "3.13.14",
+  "scipy": "1.18.0"
+ }
+}
