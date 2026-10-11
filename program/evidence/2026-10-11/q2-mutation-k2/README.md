@@ -67,5 +67,36 @@ harness.q2_mutation_k2.report ... --only k2:000,k2:002,k2:004,k2:034,k2:037,k2c:
   in the VM as it does offline).
 - LibreOffice quit by Ctrl+Q in 0.2-0.4 s before every upload; no SIGTERM, no
   recovery dialog. Runs took 111-118 s. No target was unsaved at the checker's
-  read; the save-latency estimates (-0.02 to -0.01 s) are clock-offset noise
+  read; the save-time readings (-0.02 to -0.01 s) are clock-offset noise
   around a save that finished with the Ctrl+S call (reported only).
+
+## Development job 1130 (`k2-dev-full-v1`, executor `a06dc69`): dress rehearsal
+
+The registered job's shape on the dev split: all 80 pairs of the
+`dev-mutants-v9` K2 sample, then its 11 candidate events, two runs each, V = 8,
+40 CPUs and 64 GB, CPU-only (no GRES); submitted when the queue was empty.
+`dev-full-v1-job1130/run/` holds the records, receipt, manifest and preflight;
+`report/` the development report (no `--only`: every dev pair).
+
+- 182 of 182 runs scored; no exclusion and no re-queue, so the fitness gate
+  reads 0 of 80 excluded pairs.
+- K2 (dev sample): 80 of 80 pairs agree with the offline lock-exact verdict in
+  both runs (53 pass, 27 fail), over 7 checker families (`compare_table` 32,
+  `compare_pptx_files` 19, `compare_docx_files` 9, `compare_docx_tables` 7,
+  `compare_docx_files_and_ignore_new_lines` 6, `compare_pptx_files_robust` 5,
+  `compare_text_file` 2). Development outcome VERIFIED (never an analysis
+  input).
+- K2-C (dev candidate events): 11 of 11 reproduced in both runs. The 8
+  `pptx.eq.zorder_nonoverlap` false negatives (6 `compare_pptx_files`, 2
+  `compare_pptx_files_robust`) fail in the VM as they do offline; the 3
+  `docx.viol.drop_char_format` false positives pass in the VM as offline.
+- Saves: 156 postconfig saves, 22 agent saves, 4 targets without a save; no
+  target was unsaved at the checker's read, no late write, no postconfig reply
+  failure, no metric error. LibreOffice quit by Ctrl+Q with no signal in all
+  152 runs that had it open (26 runs had no LibreOffice to close).
+- Runs took 111-122 s (median 116 s); the job took 45.5 minutes. The save-time
+  reading has median -0.39 s because many tasks' Ctrl+S commands sleep after
+  the keystroke before replying (reported only).
+
+These are dev-split items: they test the executor and say nothing about the
+confirm campaign's K2 result.

@@ -4422,3 +4422,40 @@ they say so.)
   attention-only read at B1 with positive controls, a non-decisive futility
   stop, and a Semantic Scholar pass. Wave 1's value-of-information doubt
   (owner's prior P(PASS) about 0.1) stands.
+
+## 2026-10-11 — R03's K2 VM-fidelity executor built and tested on the dev split; addendum `q2-evaluator-mutation-v1-k2` drafted (DRAFT, not frozen; branch `stage0/q2-mutation-k2`, not merged)
+
+- D73 (ii): the checker-mutation study's K2 gate had no executor (dossier O3),
+  so its headline carries "offline harness, VM fidelity unverified". New code
+  in `harness/q2_mutation_k2/` (no file under `harness/q2_mutation/`,
+  `infra/q2-mutation/`, `harness/q2/` or `harness/q2_stage1/` changed; the
+  parent's code tree `58bee019...`, action-path v2's 86 pinned files and S1a's
+  section 20 files are byte-identical): an executor that runs the frozen plan
+  of `vm_injection.py` in a fresh certified VM through S1a's OSWorld session
+  code (setup, warm-up, the 60 s and 20 s settles, the pinned `evaluate()`
+  with `DONE`), the K2 lane (S1a's lane with K2 slots,
+  `infra/slurm/host-single-node/q2m-k2-vm.sbatch`), the run and pair rules
+  for the parent's four explanations, a fitness gate (at most 8 of 80 pairs
+  excluded) and the report that writes the parent analysis's `--k2-report`
+  only for the registered job.
+- Addendum `program/preregistrations/q2-evaluator-mutation-v1-k2.md` (DRAFT,
+  own experiment id): the comparison (in-VM verdict against the offline
+  lock-exact verdict for the same `candidate_sha256`), the items (the frozen
+  80-job K2 sample; K2-C, the 41 candidate events, descriptive only), two
+  independent runs per pair, the outcomes VERIFIED / FAMILIES_DROPPED (the
+  parent's consequence verbatim) / INCOMPLETE (label kept; one repair under a
+  new id), and the adjudication interplay (K2 reads no audit or adjudication
+  file; its outputs are unblinding and carry the warning; neither waits for
+  the other). Pre-freeze audit pending; the freeze is the owner's step.
+- Dev-split jobs (CPU-only, no GRES, each submitted on an empty queue): 1113
+  (void: SIGTERM left LibreOffice's recovery list, so reopened candidates sat
+  behind a Document Recovery dialog; one run contaminated by a manual probe;
+  fixed by a Ctrl+Q quit before any signal), 1122 (6 pairs, 12 of 12 runs
+  scored, all agree) and 1130, the dress rehearsal at the registered shape
+  (80 dev sample pairs and 11 dev candidate events, two runs each, V = 8):
+  182 of 182 runs scored, 0 excluded, 80 of 80 pairs and 11 of 11 candidate
+  events agree with the offline verdicts in both runs, 45.5 minutes.
+  Exploratory; nothing here is a confirm result. No GPU used.
+- Waiting on: the pre-freeze audit, then the owner's freeze, then the `k2` job
+  (about 1 hour on the CPU lane). Kevin's adjudication (34 items) and spot
+  check (25 items) are independent of K2 and stay his.
