@@ -117,7 +117,7 @@ freeze; `tests/test_q2_mutation_k2_prereg.py` fails on drift):
 | `harness/q2_mutation_k2/executor.py` | `bda81bda66bc7c368adf226b1ec689014c2866e8e726af43d98ecfdd090dde8a` |
 | `harness/q2_mutation_k2/guest/k2_guest.py` | `869ebb3811f44ee990f587077756c3bb774392930e6973a54a2225714608dda8` |
 | `harness/q2_mutation_k2/lane.py` | `472479c5a927cbdeac07f4280db675d836bd6fa90a397efbbda4bed5bf2f183c` |
-| `harness/q2_mutation_k2/report.py` | `b96416136da3e272a5fc84a41e176493b8ec89e6a4f4d485e401f954e4bfd9b4` |
+| `harness/q2_mutation_k2/report.py` | `c8a68a173c0ffc130ee576ecdc0bac6d74ec88a306c3d2f49591247891d204c4` |
 | `harness/q2_mutation_k2/rules.py` | `58ea109a1aff6d6b059b6ca841b99a3a8b7ca858fe698c8b5ab33238e6be8c05` |
 | `infra/slurm/host-single-node/q2m-k2-vm.sbatch` | `0cddd6bb624758f66e0f02c45b1c7cfb7a6e2d4dcc8aa9dc7e1d983077b8c6b0` |
 <!-- k2-code-table end -->
@@ -332,9 +332,11 @@ It writes `k2-pairs.jsonl` and `k2-summary.json` always, and `k2-report.json`
 `disagreements` with `checker_family` and `explanation`, the excluded pairs,
 the gate and the outcome) only for the `k2` job and only when the gate passes.
 It refuses inputs other than the registered ones. The executor commit and the
-VM image digest come from the lane receipt, written at the job's start from the
-exported tree's `.git_sha` and the manifest, before any comparison (the parent's
-section 10). The parent's analysis is then rerun with `--k2-report` added to
+VM image digest come from the lane receipt (`identity`: the exported tree's
+`.git_sha` and harness digest, which the batch file checks at the job's start
+and records in `preflight.txt`, and the manifest's VM pins). No in-VM verdict is
+compared with an offline one during the job: the comparison exists only in this
+report step, after the receipt is written (the parent's section 10). The parent's analysis is then rerun with `--k2-report` added to
 whatever audit inputs exist at that time (section 9).
 
 ## 8. K2-C and reported-only quantities (descriptive)

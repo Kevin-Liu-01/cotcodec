@@ -178,6 +178,7 @@ def test_report_feeds_the_parents_analysis_and_its_family_drop() -> None:
     assert k2["pairs"] == 80 and k2["compared"] == 80 and k2["agree"] == 79
     assert k2["executor_commit"] == "a" * 40
     assert k2["outcome"] == "FAMILIES_DROPPED"
+    assert result["summary"]["families_not_covered_by_k2"] == []
     exclusions = analysis.headline_exclusions(None, k2)
     assert exclusions["k2"]["families_dropped"] == ["compare_pptx_files"]
     assert exclusions["k2"]["label"] == "VM fidelity checked (K2)"

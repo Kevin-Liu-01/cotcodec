@@ -186,7 +186,10 @@ def build(
         "pairs": rows,
         "gate": gate,
         "outcome": result,
-        "summary": summarize(rows, records, receipts, purpose, gate, result),
+        "summary": {
+            **summarize(rows, records, receipts, purpose, gate, result),
+            "families_not_covered_by_k2": not_covered(rows, verdicts),
+        },
     }
     if purpose == "k2" and result and result["write_analysis_report"]:
         out["analysis_report"] = analysis_report(rows, receipts, gate, result)
@@ -245,6 +248,14 @@ def _brief(row: Mapping[str, Any]) -> dict[str, Any]:
         "explanation",
     )
     return {k: row.get(k) for k in keys}
+
+
+def not_covered(rows: Sequence[Mapping[str, Any]], verdicts: Sequence[Mapping[str, Any]]) -> list:
+    """Checker families of the mutation run with no compared K2 pair (section 6's "not
+    covered by K2"; descriptive)."""
+    covered = {r["checker_family"] for r in rows if r["set"] == "k2" and r["state"] != "excluded"}
+    every = {checker_family(v.get("checker_funcs") or []) for v in verdicts}
+    return sorted(every - covered)
 
 
 def summarize(
