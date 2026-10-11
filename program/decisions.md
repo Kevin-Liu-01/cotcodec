@@ -1194,3 +1194,33 @@ it would not change the program's next step. For S2, the study finds that a
 Relay's 18 suffice only if the effect is nearly homogeneous; LibreOffice's 64
 give power 0.60-0.62, all 113 give 0.79-0.83. S2's repair run (D68) uses these
 figures.
+
+**D70. The five D68 repair runs all end at honest exits; every open line is
+now closed or waits on Kevin.** Repair-run scores (wave 1, then repair; the
+lower of the two reviews):
+- S2: 49, then 59 (Claude 61). Phase 1 cannot falsify at K = 26.
+- C5: 54, then 58 (open-weight 71). The probe statistic C0 carries a
+  learning-rate artefact as large as the anchor and sets three decisions.
+- E5: 54, then 51. The new R_F guard pools channels that hold nothing, so KILL
+  can come from the guard.
+- E7: 51, then 51 (open-weight 47). The surface decoys miss where punctuation
+  sits after NFKC.
+- E3: 52, then 49. The default decision path cannot reach HEADROOM without a
+  gold sample, which needs an outward contact.
+Every repair fixed its wave-1 defect, and every refute-first triad refuted
+again. D68's stop line holds for all five; S2 misses it by one point. S2 is
+the strongest of the five: blind discrimination judged it the stronger
+contribution in both runs, it now sits on the certified OSWorld stack, and its
+Phase 1 fits under 8 GPU-h. A successor drawing more LibreOffice tasks from
+the full OSWorld set, so that SMALL becomes reachable, would be a new
+proposal. The program state after D63-D70:
+- Q1 is closed (D46).
+- Q2's harness-scale question is closed (D69). The checker-mutation study
+  waits on Kevin's adjudication.
+- Q3 is closed (D54).
+- Backfill E3, E4, E5, E7, C3 and C5, and the gated S2, ended at honest exits.
+- S3 needs prerequisites that do not exist and is above 8 GPU-h.
+No line can advance without a ruling by Kevin: the D24 trust store or an
+admission ruling for a gauntleted package (S2 v2 and C5 v2 are the strongest),
+successor E for Q2, the checker-mutation adjudication, the R580 driver for
+Q1, or the outward actions.
