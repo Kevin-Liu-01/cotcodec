@@ -1,0 +1,2468 @@
+{
+ "schema": "q2-mutation-k8-prior-art-v1",
+ "criterion": "K8 of program/preregistrations/q2-evaluator-mutation-v1.md section 10",
+ "registered_timing": "before drafting a note",
+ "actual_timing": "2026-10-11, after the first draft of paper/checker-mutation-note/draft.md (8899585a), before any publication",
+ "started_at": "2026-10-11T21:03:07Z",
+ "tools": {
+  "orx": "0.2.2 (reports itself outdated against 0.2.18), discover keyword / embedding / openalex, --limit 15, no date filter",
+  "semantic_scholar": "Graph API v1, /paper/arXiv:<id>/citations (fields title, externalIds, publicationDate; limit 1000) and /paper/batch for abstracts",
+  "openalex": "works API: title search and filter=cites:<work>",
+  "arxiv": "export.arxiv.org API id_list query, for first-version dates and abstracts"
+ },
+ "queries": [
+  {
+   "id": "k01",
+   "call": "orx discover keyword",
+   "query": "OSWorld evaluator mutation",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "2609.39903",
+     "title": "OSWorld-Science: A Benchmark of Computer Use Agents for Learning and Using Scientific Software",
+     "date": "2026-09-30"
+    },
+    {
+     "id": "2609.24890",
+     "title": "OSWorld-Pro: Process-based Evaluation for Computer Use Agents",
+     "date": "2026-09-21"
+    },
+    {
+     "id": "2610.03818",
+     "title": "Control OSWorld: An AI Control Environment for GUI Computer Use Agents",
+     "date": "2026-10-02"
+    },
+    {
+     "id": "2606.29537",
+     "title": "OSWorld 2.0: Benchmarking Computer Use Agents on Long-Horizon Real-World Tasks",
+     "date": "2026-06-28"
+    },
+    {
+     "id": "2609.36927",
+     "title": "Neuro-Symbolic Computer Use: Learning Reusable Policies for Reliable and Efficient Execution",
+     "date": "2026-09-29"
+    },
+    {
+     "id": "2609.37322",
+     "title": "Mubric: Mutation Testing-Guided Rubric Generation for LLM Evaluation",
+     "date": "2026-09-29"
+    },
+    {
+     "id": "2606.21654",
+     "title": "ChainWorld: Composing Long-Horizon Desktop Workloads from Atomic OSWorld Tasks",
+     "date": "2026-06-19"
+    },
+    {
+     "id": "2608.26827",
+     "title": "Evaluator-Dependent Patient-Adaptive ECG Lead-Channel Allocation",
+     "date": "2026-08-27"
+    },
+    {
+     "id": "2610.01891",
+     "title": "RipplePLM: Structural and Property Decoupling for Protein Mutation Effect Generation",
+     "date": "2026-10-01"
+    },
+    {
+     "id": "2608.10551",
+     "title": "Mutation-preserving generalized cluster algebras and Laurent mutation invariants",
+     "date": "2026-08-11"
+    },
+    {
+     "id": "2609.04869",
+     "title": "From Interaction Traces to Persistent Skills: Online Evolution for Computer-Use Agents",
+     "date": "2026-09-04"
+    },
+    {
+     "id": "2609.39536",
+     "title": "Tilting mutation of gentle algebras and its combinatorial description",
+     "date": "2026-09-30"
+    },
+    {
+     "id": "2609.23018",
+     "title": "Unique mutation cycles of nucleus-extension quivers",
+     "date": "2026-09-19"
+    },
+    {
+     "id": "2609.24842",
+     "title": "Towards Accurate Prediction of Mutation-Induced Changes in Protein Structure",
+     "date": "2026-09-21"
+    },
+    {
+     "id": "2608.08189",
+     "title": "Janus: An Algorithm-Evaluator Co-Evolution Framework for LLM-Driven Discovery under Expensive Evaluation Budgets",
+     "date": "2026-08-08"
+    }
+   ],
+   "raw_sha256": "6ffaf696864d11546adb0fcae868218260c422c2a779e1abe162176e34edea1a"
+  },
+  {
+   "id": "k02",
+   "call": "orx discover keyword",
+   "query": "mutation testing computer-use agent evaluators",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "2609.32750",
+     "title": "CUA-Sandbox: Efficient Environments for Computer-Use Agent Reinforcement Learning",
+     "date": "2026-09-26"
+    },
+    {
+     "id": "2608.14315",
+     "title": "Breaking Models to Test the Judge: A Mutation Testing Approach for Semantic Evaluators of Domain Class Diagrams",
+     "date": "2026-08-14"
+    },
+    {
+     "id": "2608.22077",
+     "title": "Spine-Branch Coordination for Multi-agent Computer Use",
+     "date": "2026-08-22"
+    },
+    {
+     "id": "2609.39903",
+     "title": "OSWorld-Science: A Benchmark of Computer Use Agents for Learning and Using Scientific Software",
+     "date": "2026-09-30"
+    },
+    {
+     "id": "2609.37322",
+     "title": "Mubric: Mutation Testing-Guided Rubric Generation for LLM Evaluation",
+     "date": "2026-09-29"
+    },
+    {
+     "id": "2609.22000",
+     "title": "RecreationWorld: Scalable and Verifiable Environments for Hybrid Computer-Use Agents",
+     "date": "2026-09-18"
+    },
+    {
+     "id": "2609.16251",
+     "title": "CADWorld: Computer-Use Benchmark for Long-Horizon Computer-Aided Design",
+     "date": "2026-09-14"
+    },
+    {
+     "id": "2609.36927",
+     "title": "Neuro-Symbolic Computer Use: Learning Reusable Policies for Reliable and Efficient Execution",
+     "date": "2026-09-29"
+    },
+    {
+     "id": "2609.36201",
+     "title": "SCOUT: Synergizing Reasoning and Tool-Use for Computer-Use Safety",
+     "date": "2026-09-28"
+    },
+    {
+     "id": "2608.02352",
+     "title": "Qwen-CUA: Native Computer Use for (almost) Everything",
+     "date": "2026-08-03"
+    },
+    {
+     "id": "2606.03854",
+     "title": "CLI-Anything: Towards Agent-Native Computer Use",
+     "date": "2026-06-02"
+    },
+    {
+     "id": "2607.28367",
+     "title": "How Benchmarks Mis-Score Computer-Use Agents",
+     "date": "2026-07-30"
+    },
+    {
+     "id": "2609.15134",
+     "title": "HazardAuditor: From Executable Threats to Safer Computer-Use Agents",
+     "date": "2026-09-14"
+    },
+    {
+     "id": "2608.06862",
+     "title": "SynChain: Inducing Computer-Use Agent Systems to Construct Their Own Attack Chains",
+     "date": "2026-08-07"
+    },
+    {
+     "id": "2608.24250",
+     "title": "Mutation Testing of Simulink Cyber-Physical System Models: Challenges and Solutions in Practice",
+     "date": "2026-08-25"
+    }
+   ],
+   "raw_sha256": "d155decfe0e1bf8bb97ae44e6d6d1aa0dfa58f43aaf18b6bf75719bd72fb9fd2"
+  },
+  {
+   "id": "k03",
+   "call": "orx discover keyword",
+   "query": "checker false negatives OSWorld",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "2610.03818",
+     "title": "Control OSWorld: An AI Control Environment for GUI Computer Use Agents",
+     "date": "2026-10-02"
+    },
+    {
+     "id": "2609.24890",
+     "title": "OSWorld-Pro: Process-based Evaluation for Computer Use Agents",
+     "date": "2026-09-21"
+    },
+    {
+     "id": "2606.29537",
+     "title": "OSWorld 2.0: Benchmarking Computer Use Agents on Long-Horizon Real-World Tasks",
+     "date": "2026-06-28"
+    },
+    {
+     "id": "2609.39903",
+     "title": "OSWorld-Science: A Benchmark of Computer Use Agents for Learning and Using Scientific Software",
+     "date": "2026-09-30"
+    },
+    {
+     "id": "2610.09700",
+     "title": "What Makes Synthetic Hard Negatives Work in Vision-Language Pretraining?",
+     "date": "2026-10-07"
+    },
+    {
+     "id": "2609.07667",
+     "title": "A monadic interpreter and type-and-effect checker",
+     "date": "2026-09-07"
+    },
+    {
+     "id": "2610.09142",
+     "title": "Finding Blind Spots in AppWorld and WorkArena Task Verifiers",
+     "date": "2026-10-06"
+    },
+    {
+     "id": "2609.09250",
+     "title": "No Free Checker: A Survey of Verifiers for Robot Policies",
+     "date": "2026-09-08"
+    },
+    {
+     "id": "2607.01504",
+     "title": "Kani: A Model Checker for Rust",
+     "date": "2026-07-01"
+    },
+    {
+     "id": "2609.27758",
+     "title": "Hard Negatives Reveal What Easy Negatives Hide: Cross-Lingual Harmfulness Representations Degrade with Resource Tier Under Hard Negatives",
+     "date": "2026-08-15"
+    },
+    {
+     "id": "2609.30864",
+     "title": "Persistent Negatives for Adversarial Black-Box On-Policy Distillation",
+     "date": "2026-09-25"
+    },
+    {
+     "id": "2608.24320",
+     "title": "QisMC: A Model Checker for QISKIT Program Debugging",
+     "date": "2026-08-25"
+    },
+    {
+     "id": "2606.21654",
+     "title": "ChainWorld: Composing Long-Horizon Desktop Workloads from Atomic OSWorld Tasks",
+     "date": "2026-06-19"
+    },
+    {
+     "id": "2606.01304",
+     "title": "When Hard Negatives Hurt: Bridging the Generative-Discriminative Gap in Hard Negative Synthesis for Retrieval",
+     "date": "2026-05-31"
+    },
+    {
+     "id": "2604.11092",
+     "title": "ARHN: Answer-Centric Relabeling of Hard Negatives with Open-Source LLMs for Dense Retrieval",
+     "date": "2026-04-13"
+    }
+   ],
+   "raw_sha256": "06b6ef59066085a37a90e51da2f68e828f7e2fc194ee520026fabfa448fd656b"
+  },
+  {
+   "id": "k04",
+   "call": "orx discover keyword",
+   "query": "compare_pptx_files",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "2506.02539",
+     "title": "VerificAgent: Domain-Specific Memory Verification for Scalable Oversight of Aligned Computer-Use Agents",
+     "date": "2025-06-03"
+    }
+   ],
+   "raw_sha256": "b6e0b0e9d5292a91372432c4a40d04857bfff1dbd91bae3a636c25fb927a5e78"
+  },
+  {
+   "id": "k05",
+   "call": "orx discover keyword",
+   "query": "OSWorld-Verified checker audit",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "2610.03818",
+     "title": "Control OSWorld: An AI Control Environment for GUI Computer Use Agents",
+     "date": "2026-10-02"
+    },
+    {
+     "id": "2609.24890",
+     "title": "OSWorld-Pro: Process-based Evaluation for Computer Use Agents",
+     "date": "2026-09-21"
+    },
+    {
+     "id": "2608.16003",
+     "title": "Prior Audit-Repair Context Shifts LLM Verifier Thresholds Toward Leniency",
+     "date": "2026-08-17"
+    },
+    {
+     "id": "2606.29537",
+     "title": "OSWorld 2.0: Benchmarking Computer Use Agents on Long-Horizon Real-World Tasks",
+     "date": "2026-06-28"
+    },
+    {
+     "id": "2609.39903",
+     "title": "OSWorld-Science: A Benchmark of Computer Use Agents for Learning and Using Scientific Software",
+     "date": "2026-09-30"
+    },
+    {
+     "id": "2610.09142",
+     "title": "Finding Blind Spots in AppWorld and WorkArena Task Verifiers",
+     "date": "2026-10-06"
+    },
+    {
+     "id": "2609.37315",
+     "title": "Do Agent Benchmarks Do What They Say? An Executable-Contract Audit of Tool-Using Agent Environments",
+     "date": "2026-09-29"
+    },
+    {
+     "id": "2608.01964",
+     "title": "LongHorizon-Harness: Advancing Long-Horizon Agents for Real-World Tasks",
+     "date": "2026-08-03"
+    },
+    {
+     "id": "2606.22948",
+     "title": "ENVS: Environment-Native Verified Search for Long-Horizon GUI Agents",
+     "date": "2026-06-22"
+    },
+    {
+     "id": "2607.01504",
+     "title": "Kani: A Model Checker for Rust",
+     "date": "2026-07-01"
+    },
+    {
+     "id": "2608.28402",
+     "title": "VERA-8B: Evidence-Grounded Audit Risk Reasoning from SEC Filings",
+     "date": "2026-08-28"
+    },
+    {
+     "id": "2608.13522",
+     "title": "Vero: Can AI Agents Build Formally Verified Software Repositories?",
+     "date": "2026-08-13"
+    },
+    {
+     "id": "2609.33855",
+     "title": "Program-Verified Self-Evolution for Vision-Language Models",
+     "date": "2026-09-27"
+    },
+    {
+     "id": "2608.05420",
+     "title": "Can Open-Weight LLMs Produce Kernel-Verified Coq Proofs? A Pilot Study",
+     "date": "2026-08-05"
+    },
+    {
+     "id": "2609.07667",
+     "title": "A monadic interpreter and type-and-effect checker",
+     "date": "2026-09-07"
+    }
+   ],
+   "raw_sha256": "8f9cd02d0e15b35b05b72dfdd976b69388891c99785bab88db87403cabf62466"
+  },
+  {
+   "id": "k06",
+   "call": "orx discover keyword",
+   "query": "desktop agent benchmark evaluation script bugs",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "2609.37771",
+     "title": "Faster and Better? Benchmark Bugs and Design Limitations Distort the Evaluation of Vision-Language-Action Acceleration",
+     "date": "2026-09-29"
+    },
+    {
+     "id": "2609.37864",
+     "title": "AgentBug-Smith: Automatically Reproducing Real-World Harness Bugs in Agentic Systems",
+     "date": "2026-09-29"
+    },
+    {
+     "id": "2609.11028",
+     "title": "BenchShield: Formal Model-Backed Instrumentation for Reward Integrity in LLM-Agent Evaluation Infrastructure",
+     "date": "2026-09-10"
+    },
+    {
+     "id": "2607.25904",
+     "title": "Interactive Reward Agent: GUI Task Evaluation via Environment-State Verification",
+     "date": "2026-07-28"
+    },
+    {
+     "id": "2610.10258",
+     "title": "QuSema: Detecting Silent Bugs in Quantum Libraries via Quantum-knowledge-enhanced Agents",
+     "date": "2026-10-07"
+    },
+    {
+     "id": "2607.25891",
+     "title": "Messier: A High-Resolution Corpus for Cross-Benchmark Agent Evaluation",
+     "date": "2026-07-28"
+    },
+    {
+     "id": "2609.35645",
+     "title": "CoSE-E: A Benchmark for Code-switched Speech Evaluation in Enterprise Settings",
+     "date": "2026-09-28"
+    },
+    {
+     "id": "2610.07274",
+     "title": "A Trust Layer for Agent Evaluation",
+     "date": "2026-10-05"
+    },
+    {
+     "id": "2607.15684",
+     "title": "Understanding Agent-Reactive Bugs at the Model-Harness Boundary: An Empirical Study of LLM Agent Issue Reports",
+     "date": "2026-07-17"
+    },
+    {
+     "id": "2606.22557",
+     "title": "MacAgentBench: Benchmarking AI Agents on Real-World macOS Desktop",
+     "date": "2026-06-21"
+    },
+    {
+     "id": "2608.27169",
+     "title": "Ancient-Bench: A Comprehensive Multi-millennial, Multi-medium, and Multi-script Benchmark for Ancient Chinese Artifact Text Recognition",
+     "date": "2026-08-27"
+    },
+    {
+     "id": "2606.09426",
+     "title": "WeaveBench: A Long-Horizon, Real-World Benchmark for Computer-Use Agents with Hybrid Interfaces",
+     "date": "2026-06-08"
+    },
+    {
+     "id": "2610.02320",
+     "title": "DeskForge: Dense Supervision from Desktop Environments for Computer-Use Agents",
+     "date": "2026-10-01"
+    },
+    {
+     "id": "2608.11434",
+     "title": "Benchmarking LLM Judges for Mobile Agent Evaluation",
+     "date": "2026-08-11"
+    },
+    {
+     "id": "2609.25195",
+     "title": "Qwen-Audio-Agent Technical Report",
+     "date": "2026-09-21"
+    }
+   ],
+   "raw_sha256": "d57f30d10762a5e85ae7c60a4e0368b9e74ce8ab162585137ea2cd635fefeaf9"
+  },
+  {
+   "id": "e01",
+   "call": "orx discover embedding",
+   "query": "mutation audit of desktop computer-use agent benchmark state checkers, false negatives and false positives",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "2610.09142",
+     "title": "Finding Blind Spots in AppWorld and WorkArena Task Verifiers",
+     "date": "2026-10-06"
+    },
+    {
+     "id": "2609.35889",
+     "title": "SINGED: Correct Outputs Do Not Certify Safe Execution in LLM Agents",
+     "date": "2026-09-27"
+    },
+    {
+     "id": "2610.11754",
+     "title": "What Output-Only Review Cannot Verify: Study Contracts for Research Agents",
+     "date": "2026-10-08"
+    },
+    {
+     "id": "2609.34262",
+     "title": "Maintaining Benchmarks Against Increasingly Capable Agents: Detection and Remediation of Unearned Passes",
+     "date": "2026-09-28"
+    },
+    {
+     "id": "2610.03448",
+     "title": "Passing the Test You Trained On: Re-evaluating Prompt-Injection Detectors for LLM Agents",
+     "date": "2026-10-02"
+    },
+    {
+     "id": "2609.37315",
+     "title": "Do Agent Benchmarks Do What They Say? An Executable-Contract Audit of Tool-Using Agent Environments",
+     "date": "2026-09-29"
+    },
+    {
+     "id": "2610.02928",
+     "title": "Discriminating Fixture Coverage in Agent-Infrastructure Verification Suites",
+     "date": "2026-10-02"
+    },
+    {
+     "id": "2610.05246",
+     "title": "What a Policy Gate Can and Cannot Know: Measured Boundaries of Cross-Platform Command Adjudication",
+     "date": "2026-10-04"
+    },
+    {
+     "id": "2609.33401",
+     "title": "Evaluating System One Models for Agent Security Decisions: Reliability, Calibration, and Selective Automation",
+     "date": "2026-09-27"
+    },
+    {
+     "id": "2610.03818",
+     "title": "Control OSWorld: An AI Control Environment for GUI Computer Use Agents",
+     "date": "2026-10-02"
+    },
+    {
+     "id": "2609.06966",
+     "title": "MOLE: Detecting Insider Threats in AI Agents",
+     "date": "2026-09-07"
+    },
+    {
+     "id": "2609.17885",
+     "title": "ERPBench: A State-Grounded Evaluation Paradigm for Computer-Use Agents in Enterprise Software",
+     "date": "2026-09-15"
+    },
+    {
+     "id": "2609.33160",
+     "title": "PDFa11yMut: Measuring Mutation-Specific Detection in PDF Accessibility Checkers",
+     "date": "2026-09-27"
+    },
+    {
+     "id": "2609.34198",
+     "title": "Frozen Judges, Moving Agents: Version-Dependent LLM-Judge Error and the Limits of Judge-Assisted Agent Evaluation",
+     "date": "2026-09-28"
+    },
+    {
+     "id": "2609.28090",
+     "title": "Can LLMs Catch a Rigged Backtest? A Clean-Control Calibration Benchmark",
+     "date": "2026-09-23"
+    }
+   ],
+   "raw_sha256": "b9d16e9bc039872933a24eedc8071c6724f80a4d1aea67fce842f682b57ca8cd"
+  },
+  {
+   "id": "e02",
+   "call": "orx discover embedding",
+   "query": "equivalent end states rejected by file-based evaluators in OSWorld LibreOffice tasks",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "2610.09142",
+     "title": "Finding Blind Spots in AppWorld and WorkArena Task Verifiers",
+     "date": "2026-10-06"
+    },
+    {
+     "id": "2609.24890",
+     "title": "OSWorld-Pro: Process-based Evaluation for Computer Use Agents",
+     "date": "2026-09-21"
+    },
+    {
+     "id": "2610.11436",
+     "title": "Adversarial Cues in Decision Models Used as Judges: The Role of Request Presentation",
+     "date": "2026-10-08"
+    },
+    {
+     "id": "2610.06668",
+     "title": "Language models can notice an impossible engineering problem yet still report it as solved",
+     "date": "2026-10-05"
+    },
+    {
+     "id": "2609.34469",
+     "title": "The Last Mile Is the File: OfficeEditBench for Preservation-Aware Office Editing",
+     "date": "2026-09-28"
+    },
+    {
+     "id": "2609.20812",
+     "title": "Quantifying Overclaiming Propensity in Frontier LLM Agents",
+     "date": "2026-09-17"
+    },
+    {
+     "id": "2609.26826",
+     "title": "What Makes a Terminal-Bench Task Hard? Separating Genuine Hardness from Fake-Hardness on an Adjudicated Agentic Corpus",
+     "date": "2026-09-20"
+    },
+    {
+     "id": "2609.08149",
+     "title": "SWE-Bench Pro Verified: A Reliable Benchmark for Software Engineering Agents",
+     "date": "2026-09-08"
+    },
+    {
+     "id": "2609.17885",
+     "title": "ERPBench: A State-Grounded Evaluation Paradigm for Computer-Use Agents in Enterprise Software",
+     "date": "2026-09-15"
+    },
+    {
+     "id": "2609.34198",
+     "title": "Frozen Judges, Moving Agents: Version-Dependent LLM-Judge Error and the Limits of Judge-Assisted Agent Evaluation",
+     "date": "2026-09-28"
+    },
+    {
+     "id": "2609.00048",
+     "title": "GUI-CC: Benchmarking Contextual Consistency of GUI World Models as Agent Environments",
+     "date": "2026-08-30"
+    },
+    {
+     "id": "2609.13299",
+     "title": "From Experiments to Decisions: Reusing Evidence in Autonomous Coding Research",
+     "date": "2026-09-10"
+    },
+    {
+     "id": "2607.27250",
+     "title": "Do Context Files Help Coding Agents? A Two-Agent Ablation Study on Real Repositories",
+     "date": "2026-07-28"
+    },
+    {
+     "id": "2609.04706",
+     "title": "FinalityBench: An Effect-Level Benchmark for Agent Decisions Under Delayed and Conflicting Financial Finality",
+     "date": "2026-09-04"
+    },
+    {
+     "id": "2608.20664",
+     "title": "DreamBench-SWE: A Multi-Session Memory-Hygiene Benchmark for Software Agents",
+     "date": "2026-08-21"
+    }
+   ],
+   "raw_sha256": "df6c5b202b8414cd84427d9aefab05a4f5df2a80b55e71114f13248e3b691ded"
+  },
+  {
+   "id": "e03",
+   "call": "orx discover embedding",
+   "query": "metamorphic testing of task verifiers for GUI and desktop agents",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "2609.34139",
+     "title": "Same Tasks, Different Apps: Why Mobile GUI Agents Fail to Generalize?",
+     "date": "2026-09-28"
+    },
+    {
+     "id": "2610.09142",
+     "title": "Finding Blind Spots in AppWorld and WorkArena Task Verifiers",
+     "date": "2026-10-06"
+    },
+    {
+     "id": "2609.30887",
+     "title": "From Tapping to Hopping: Augmenting Mobile GUI Agents with App-Native Deeplinks",
+     "date": "2026-09-25"
+    },
+    {
+     "id": "2610.03818",
+     "title": "Control OSWorld: An AI Control Environment for GUI Computer Use Agents",
+     "date": "2026-10-02"
+    },
+    {
+     "id": "2609.10451",
+     "title": "JarvisGUI: Towards Cross-Device GUI Agents with Dynamic Task Composition",
+     "date": "2026-09-09"
+    },
+    {
+     "id": "2609.00048",
+     "title": "GUI-CC: Benchmarking Contextual Consistency of GUI World Models as Agent Environments",
+     "date": "2026-08-30"
+    },
+    {
+     "id": "2608.25425",
+     "title": "RotDroid: Cross-Orientation State Equivalence Testing for Detecting GUI Rotation Bugs in Android Apps",
+     "date": "2026-08-26"
+    },
+    {
+     "id": "2607.25904",
+     "title": "Interactive Reward Agent: GUI Task Evaluation via Environment-State Verification",
+     "date": "2026-07-28"
+    },
+    {
+     "id": "2606.24551",
+     "title": "GUI vs. CLI: Execution Bottlenecks in Screen-Only and Skill-Mediated Computer-Use Agents",
+     "date": "2026-06-22"
+    },
+    {
+     "id": "2609.38184",
+     "title": "RealGUINoise: An Interactive Cross-Platform Benchmark for GUI Agent Robustness under Real-World Interface Noise",
+     "date": "2026-08-07"
+    },
+    {
+     "id": "2605.19769",
+     "title": "OpenComputer: Verifiable Software Worlds for Computer-Use Agents",
+     "date": "2026-05-19"
+    },
+    {
+     "id": "2605.29532",
+     "title": "GUITestScape: Towards Open-set Evaluation on Exploratory GUI Testing",
+     "date": "2026-05-28"
+    },
+    {
+     "id": "2605.28321",
+     "title": "Multi-Agent LLM-based Metamorphic Testing for REST APIs",
+     "date": "2026-05-27"
+    },
+    {
+     "id": "2603.24160",
+     "title": "Towards Automated Crowdsourced Testing via Personified-LLM",
+     "date": "2026-03-25"
+    },
+    {
+     "id": "2602.22579",
+     "title": "Metamorphic Testing of Vision-Language Action-Enabled Robots",
+     "date": "2026-02-26"
+    }
+   ],
+   "raw_sha256": "82e14cad307358ac315ce7ce88579e87ece11400749fe2caec318851398ab31b"
+  },
+  {
+   "id": "e04",
+   "call": "orx discover embedding",
+   "query": "reference solution fails its own checker after an application save round trip in an agent benchmark",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "2610.07557",
+     "title": "CheckerBench: Can Long-Horizon Agents Synthesize Static-Analysis Checkers?",
+     "date": "2026-10-06"
+    },
+    {
+     "id": "2610.02425",
+     "title": "Finding the Move Is Not Winning the Game: XiangqiBench for Closed-Loop Evaluation of LLM Agents",
+     "date": "2026-10-01"
+    },
+    {
+     "id": "2610.07274",
+     "title": "A Trust Layer for Agent Evaluation",
+     "date": "2026-10-05"
+    },
+    {
+     "id": "2610.09142",
+     "title": "Finding Blind Spots in AppWorld and WorkArena Task Verifiers",
+     "date": "2026-10-06"
+    },
+    {
+     "id": "2609.37315",
+     "title": "Do Agent Benchmarks Do What They Say? An Executable-Contract Audit of Tool-Using Agent Environments",
+     "date": "2026-09-29"
+    },
+    {
+     "id": "2609.08149",
+     "title": "SWE-Bench Pro Verified: A Reliable Benchmark for Software Engineering Agents",
+     "date": "2026-09-08"
+    },
+    {
+     "id": "2609.12345",
+     "title": "ParaRecover: A Process-Level Benchmark for Error Localization and Recovery in Parallel Tool-Use Agents",
+     "date": "2026-09-11"
+    },
+    {
+     "id": "2609.19844",
+     "title": "Trust, but Validate the Instrument: Auditing AI-Generated RTL Verification Plans on Authored Security-Regression Proxies",
+     "date": "2026-09-17"
+    },
+    {
+     "id": "2608.22808",
+     "title": "CatchBench: When Can an Agent Failure Be Caught?",
+     "date": "2026-08-24"
+    },
+    {
+     "id": "2609.13299",
+     "title": "From Experiments to Decisions: Reusing Evidence in Autonomous Coding Research",
+     "date": "2026-09-10"
+    },
+    {
+     "id": "2610.00126",
+     "title": "A Verifier Can Leak the Answer: Diagnosability Before Optimization in Closed-Loop Agent Debugging",
+     "date": "2026-09-09"
+    },
+    {
+     "id": "2608.25067",
+     "title": "SimVerity: When Does Simulated Agent Success Survive Physical Deployment?",
+     "date": "2026-08-25"
+    },
+    {
+     "id": "2608.15242",
+     "title": "LongRCA Bench: Root-Cause Localization in Long-Horizon Agent Trajectories",
+     "date": "2026-08-15"
+    },
+    {
+     "id": "2609.04706",
+     "title": "FinalityBench: An Effect-Level Benchmark for Agent Decisions Under Delayed and Conflicting Financial Finality",
+     "date": "2026-09-04"
+    },
+    {
+     "id": "2608.23616",
+     "title": "Rebuild Dossier: Mechanically-Enforced Specs for Agentic App Rebuilds, and What Model-Tier Failures Reveal",
+     "date": "2026-08-22"
+    }
+   ],
+   "raw_sha256": "500a3292b3e78ff502ffb882f468e0e254e41ee8b952d300b6fd6ba7412f3c0c"
+  },
+  {
+   "id": "o01",
+   "call": "orx discover openalex",
+   "query": "mutation testing OSWorld evaluator",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "10.36227/techrxiv.177222530.04005985/v1",
+     "title": "The Evaluation Challenge of Agency: Reliability, Contamination, and Evolution in LLM Agents",
+     "date": "2026-02-27"
+    },
+    {
+     "id": "W7134094023",
+     "title": "EvoTool: Self-Evolving Tool-Use Policy Optimization in LLM Agents via Blame-Aware Mutation and Diversity-Aware Selection",
+     "date": "2026-03-05"
+    },
+    {
+     "id": "10.18653/v1/2026.acl-long.2016",
+     "title": "EVOTOOL: Self-Evolving Tool-Use Policy Optimization in LLM Agents via Blame-Aware Mutation and Diversity-Aware Selection",
+     "date": "2026-01-01"
+    },
+    {
+     "id": "10.48550/arxiv.2607.11818",
+     "title": "MM-ToolSandBox: A Unified Framework for Evaluating Visual Tool-Calling Agents",
+     "date": "2026-07-13"
+    },
+    {
+     "id": "10.48550/arxiv.2608.24076",
+     "title": "AgentWorld: Personality-Aware Reliability Evaluation for Agentic Information Retrieval",
+     "date": "2026-08-25"
+    },
+    {
+     "id": "10.48550/arxiv.2609.23806",
+     "title": "WorkWorlds: An Infrastructure for Evaluating AI Agents on Workplace Tasks",
+     "date": "2026-09-20"
+    },
+    {
+     "id": "10.48550/arxiv.2609.27571",
+     "title": "FDE-Bench: Evaluating LLM Agents for Deployment Environment Configuration",
+     "date": "2026-09-23"
+    },
+    {
+     "id": "10.48550/arxiv.2608.29387",
+     "title": "EvoGenUI-Bench: Evaluating LLMs as Multi-Turn Generative UI Assistants",
+     "date": "2026-08-29"
+    },
+    {
+     "id": "10.48550/arxiv.2609.31906",
+     "title": "EmailBench: A Benchmark for Evaluating LLM Agents on Enterprise Email and Productivity Tasks",
+     "date": "2026-09-25"
+    },
+    {
+     "id": "10.48550/arxiv.2604.06742",
+     "title": "Evaluating LLM-Based 0-to-1 Software Generation in End-to-End CLI Tool Scenarios",
+     "date": "2026-04-08"
+    },
+    {
+     "id": "10.48550/arxiv.2608.08775",
+     "title": "OmnilingualGAIA2: Evaluating the Multilingual Gap in Frontier AI Agents",
+     "date": "2026-08-09"
+    },
+    {
+     "id": "10.48550/arxiv.2607.06624",
+     "title": "AgentLens: Production-Assessed Trajectory Reviews for Coding Agent Evaluation",
+     "date": "2026-07-07"
+    },
+    {
+     "id": "10.32736/sisfokom.v15i3.2634",
+     "title": "Security Risk Evaluation of ZombAI Claude: Prompt Injection as a Backdoor for Command and Control Exploits",
+     "date": "2026-07-01"
+    },
+    {
+     "id": "10.48550/arxiv.2604.14858",
+     "title": "Benchmarks for Trajectory Safety Evaluation and Diagnosis in OpenClaw and Codex: ATBench-Claw and ATBench-Codex",
+     "date": "2026-04-16"
+    },
+    {
+     "id": "W7212406396",
+     "title": "BenchShield: Formal Model-Backed Instrumentation for Reward Integrity in LLM-Agent Evaluation Infrastructure",
+     "date": "2026-09-10"
+    }
+   ],
+   "raw_sha256": "810343b7f65194f3aff3c81bd8242540a9bac8e97515b9ae9fe5e3bd724a7ce1"
+  },
+  {
+   "id": "o02",
+   "call": "orx discover openalex",
+   "query": "computer-use agent benchmark checker audit",
+   "limit": 15,
+   "hits": [
+    {
+     "id": "10.48550/arxiv.2607.28367",
+     "title": "How Benchmarks Mis-Score Computer-Use Agents",
+     "date": "2026-07-30"
+    },
+    {
+     "id": "10.48550/arxiv.2604.24955",
+     "title": "Who Guards the Benchmarks? Automated Auditing of LLM Agent Benchmarks",
+     "date": "2026-04-27"
+    },
+    {
+     "id": "10.48550/arxiv.2609.37315",
+     "title": "Do Agent Benchmarks Do What They Say? An Executable-Contract Audit of Tool-Using Agent Environments",
+     "date": "2026-09-29"
+    },
+    {
+     "id": "10.48550/arxiv.2609.22220",
+     "title": "Measuring the Checker: Mutation Analysis for GPU-Kernel Benchmark Oracles",
+     "date": "2026-09-02"
+    },
+    {
+     "id": "10.48550/arxiv.2605.12673",
+     "title": "Do Androids Dream of Breaking the Game? Systematically Auditing AI Agent Benchmarks with BenchJack",
+     "date": "2026-05-12"
+    },
+    {
+     "id": "10.48550/arxiv.2605.19769",
+     "title": "OpenComputer: Verifiable Software Worlds for Computer-Use Agents",
+     "date": "2026-05-19"
+    },
+    {
+     "id": "10.48550/arxiv.2608.18307",
+     "title": "ComponentBench: Diagnosing Component-Level Failures in Computer-Use Agents",
+     "date": "2026-08-18"
+    },
+    {
+     "id": "10.48550/arxiv.2604.27151",
+     "title": "Step-level Optimization for Efficient Computer-use Agents",
+     "date": "2026-04-29"
+    },
+    {
+     "id": "10.48550/arxiv.2604.11174",
+     "title": "EmbodiedGovBench: A Benchmark for Governance, Recovery, and Upgrade Safety in Embodied Agent Systems",
+     "date": "2026-04-13"
+    },
+    {
+     "id": "10.48550/arxiv.2609.35606",
+     "title": "TCSAlgBench: Benchmarking Automated Proving for Research-Level Theoretical Computer Science",
+     "date": "2026-09-28"
+    },
+    {
+     "id": "10.48550/arxiv.2608.12635",
+     "title": "GateTruth: Auditing the Rigor of RTL Design Benchmarks via Mutation Testing",
+     "date": "2026-08-12"
+    },
+    {
+     "id": "10.21203/rs.3.rs-10985030/v1",
+     "title": "Effective Segregation of Duties in Agentic Enterprise Authorization: Evaluating Shared-Dependence Risk in Maker–Checker Controls",
+     "date": "2026-09-23"
+    },
+    {
+     "id": "10.21203/rs.3.rs-8105108/v1",
+     "title": "Hybrid Multi-Agent Systems for Auditable AI Surveying",
+     "date": "2025-11-18"
+    },
+    {
+     "id": "10.48550/arxiv.2607.12480",
+     "title": "TRACE: An Operational Reasoning Schema for Auditable Agentic Commitments",
+     "date": "2026-07-14"
+    },
+    {
+     "id": "W7152331643",
+     "title": "AICCE: AI Driven Compliance Checker Engine",
+     "date": "2026-04-03"
+    }
+   ],
+   "raw_sha256": "32d1641208ad796e88ca108934f0c89167883a4306211e201f23e7ad28ee0ad0"
+  }
+ ],
+ "orx_unique_hits": 134,
+ "citers": {
+  "AgentRewardBench (arXiv 2504.08942)": {
+   "source": "Semantic Scholar",
+   "n": 110,
+   "items": [
+    {
+     "s2_paper_id": "2b87524217201b8df82cf0e1221f08e71d10152e",
+     "arxiv": "2610.11050",
+     "title": "AgentHorizon: Evaluating Agentic Judges for Long-Horizon Computer-Use Tasks",
+     "date": "2026-10-08"
+    },
+    {
+     "s2_paper_id": "09e4054febf02a1acc75813a376257e5ed87f2d3",
+     "arxiv": "2610.11678",
+     "title": "TRACE: Diagnosing Verifier Brittleness in Agentic Evaluation",
+     "date": "2026-10-08"
+    },
+    {
+     "s2_paper_id": "c56cbcd03f529efd19da2bfd54f5214a97be3844",
+     "arxiv": "2610.09142",
+     "title": "Finding Blind Spots in AppWorld and WorkArena Task Verifiers",
+     "date": "2026-10-06"
+    },
+    {
+     "s2_paper_id": "25c97215ea9ab363eec9d30543fa28b985f1b246",
+     "arxiv": "2610.05107",
+     "title": "SearchJev: A Fast and Calibrated System-1 Model for Search Agents",
+     "date": "2026-10-04"
+    },
+    {
+     "s2_paper_id": "92098e8dff4f5db0f8185c15ee63117ba7ba7ade",
+     "arxiv": "2610.04915",
+     "title": "Are We Measuring Scientific Intelligence? Rethinking the Evaluation of AI Scientists",
+     "date": "2026-10-04"
+    },
+    {
+     "s2_paper_id": "81aec183281cfc45cd8825e5f5c4916d25b8ec9a",
+     "arxiv": "2610.03315",
+     "title": "Lightweight, Rubric-Guided Trajectory Evaluation for Production AI Agents",
+     "date": "2026-10-02"
+    },
+    {
+     "s2_paper_id": "e472d00deae8a06ae1f1b7f6ea1d28bf9bb06d70",
+     "arxiv": "2610.01491",
+     "title": "Auditing Web Agent Evaluation on WebArena-Lite: Human Review of Outcomes and Trajectories",
+     "date": "2026-10-01"
+    },
+    {
+     "s2_paper_id": "19b2cac9acf9b13966f606f3437ba5db85eff825",
+     "arxiv": "2610.01195",
+     "title": "Federated Agent Optimization",
+     "date": "2026-10-01"
+    },
+    {
+     "s2_paper_id": "b1fbcab030e165fa785b30d90950b227137a6f2e",
+     "arxiv": "2609.34320",
+     "title": "Certified Selective Automation of LLM Agent Evaluation",
+     "date": "2026-09-28"
+    },
+    {
+     "s2_paper_id": "cad58b9c1051e2c5b01549f72f0f7baf70d7088e",
+     "arxiv": "2609.34139",
+     "title": "Same Tasks, Different Apps: Why Mobile GUI Agents Fail to Generalize?",
+     "date": "2026-09-28"
+    },
+    {
+     "s2_paper_id": "5697493caedb3a5fe77999fd7e2c0647e743fa4f",
+     "arxiv": "2609.33717",
+     "title": "Self-Designed Evaluators and Warm Memory for Long-Horizon Agents",
+     "date": "2026-09-27"
+    },
+    {
+     "s2_paper_id": "92068a3a2fb5ec9f51c176f012a817643e9a2c10",
+     "arxiv": "2609.32351",
+     "title": "From Trajectories to Grounded Preferences: Process Preference Synthesis via Interaction Element Graphs for Web PRMs",
+     "date": "2026-09-26"
+    },
+    {
+     "s2_paper_id": "baebf8f43e4312c495165d963c10b1b0c9db4797",
+     "arxiv": "2609.30604",
+     "title": "The Hard Part Comes After Search: Benchmarking Web Agents on Synthesizing, Organizing, and Displaying Knowledge",
+     "date": "2026-09-24"
+    },
+    {
+     "s2_paper_id": "20704c8ac6098cccfec3eda22849375d763f600d",
+     "arxiv": "2609.25804",
+     "title": "The Tasteful Agent: Measuring and Improving Taste in Long-Horizon Tasks",
+     "date": "2026-09-22"
+    },
+    {
+     "s2_paper_id": "4c654b4ea2559a913db631a1dc18f9c4a3149e56",
+     "arxiv": "2609.21423",
+     "title": "DENSE: Distilling Agent Trajectories into Evidence-Grounded Shortcut Trees for Self-Refinement",
+     "date": "2026-09-18"
+    },
+    {
+     "s2_paper_id": "aecd50ae24ee47b706a5d4f9f0019044dee30f01",
+     "arxiv": "2609.16900",
+     "title": "RiskChainBench: A Benchmark for Obfuscated Platform Message Restoration and Evidence-Grounded Web Investigation",
+     "date": "2026-09-15"
+    },
+    {
+     "s2_paper_id": "a4eadda8b5fa6316b0b0ef5d60c40ea021835f59",
+     "arxiv": "2609.17708",
+     "title": "Confidence Comes from Experience: Experiential Confidence Estimation from Reasoning to Agents",
+     "date": "2026-09-15"
+    },
+    {
+     "s2_paper_id": "f4a91a227df4156173b2c8140217ac75316da476",
+     "arxiv": "2609.17930",
+     "title": "Locating Hidden Failures Makes Long-Horizon Agents More Reliable",
+     "date": "2026-09-15"
+    },
+    {
+     "s2_paper_id": "bdcbe9c5106e9381dc26cd4b291c1125591129f4",
+     "arxiv": "2609.16093",
+     "title": "Evaluating Open-Weight E-Commerce Agents with Environment-Grounded Verification",
+     "date": "2026-09-14"
+    },
+    {
+     "s2_paper_id": "37c5fa99d9b4347e6f4d0455cc9cf0617a2fce29",
+     "arxiv": "2609.20301",
+     "title": "AgentPProf: Semantic Profiler for Long Horizon AI Agents",
+     "date": "2026-09-14"
+    },
+    {
+     "s2_paper_id": "deec7efda0f113949366e8d85a65e71a44ba61a0",
+     "arxiv": "2609.14637",
+     "title": "DynSTEER: Dynamic Stage-wise Trajectory Evaluation and Execution-time Review for Agents",
+     "date": "2026-09-13"
+    },
+    {
+     "s2_paper_id": "f5d579601900a42fbe5b881da292c373cc9df165",
+     "arxiv": "2609.12345",
+     "title": "ParaRecover: A Process-Level Benchmark for Error Localization and Recovery in Parallel Tool-Use Agents",
+     "date": "2026-09-11"
+    },
+    {
+     "s2_paper_id": "2e734225d36b75feb4d42b2f0fbd388f6b39b59f",
+     "arxiv": "2609.12017",
+     "title": "When Agent Metrics Measure Different Things: An Evidence-Grounded Audit of the Praxa AI Pipeline",
+     "date": "2026-09-10"
+    },
+    {
+     "s2_paper_id": "a8bd11d2063858b3bbcdce8257970c40e4098761",
+     "arxiv": "2609.06783",
+     "title": "AURA-Eval: Evaluation Framework for Acting Under Risk Awareness in LLM Agent Trajectories",
+     "date": "2026-09-06"
+    },
+    {
+     "s2_paper_id": "a16090db41bc380bbd23dd04c41f0ce5338fecd4",
+     "arxiv": "2609.00038",
+     "title": "trajectory-judge: What Outcome-Only LLM Judges Miss on Agent Trajectories",
+     "date": "2026-08-29"
+    },
+    {
+     "s2_paper_id": "03fa13afc9c4295bf50687f1e4c8bec77cfdce0a",
+     "arxiv": "2609.29578",
+     "title": "PartHackBench: Certified Equal-Progress Stress Tests for Partial-Credit Tool-Agent Evaluation",
+     "date": "2026-08-27"
+    },
+    {
+     "s2_paper_id": "c102bb2eaa3e8782ff9aa5e80147ea17e0588cfd",
+     "arxiv": "2608.26086",
+     "title": "TraceML: What Auto-Research Agents Miss in Long-Horizon ML Development",
+     "date": "2026-08-26"
+    },
+    {
+     "s2_paper_id": "209c5441a16ccb9f68976ade87b3fe481d39d21f",
+     "arxiv": "2608.19861",
+     "title": "PolicyGuide: From Guarding One Action to Guiding the Whole Workflow for Policy-Compliant LLM Agents",
+     "date": "2026-08-20"
+    },
+    {
+     "s2_paper_id": "4d79a25946e667db097bea3e2363e0f015b63b7a",
+     "arxiv": "2608.12996",
+     "title": "ATOBench: Tracing How Autonomous Penetration-Testing Agents Verify Vulnerabilities When Target Evidence Lies",
+     "date": "2026-08-13"
+    },
+    {
+     "s2_paper_id": "717f029d34f4b075c3b3bc7ef3fff202b338e2f1",
+     "arxiv": "2608.11434",
+     "title": "Benchmarking LLM Judges for Mobile Agent Evaluation",
+     "date": "2026-08-11"
+    },
+    {
+     "s2_paper_id": "f6e4b67862817f458c823584ab2e4368977d21e5",
+     "arxiv": "2608.09666",
+     "title": "Open Evaluation Agent: Efficient and Promptable Evaluation of Visual Generative Models",
+     "date": "2026-08-10"
+    },
+    {
+     "s2_paper_id": "64b5ed61779e5eea1ed7a7b6a5f22d1cd8fbf9df",
+     "arxiv": "2608.09573",
+     "title": "VideoVIBE: A Video-Grounded Diagnostic Benchmark for One-Shot Interactive Website Generation",
+     "date": "2026-08-10"
+    },
+    {
+     "s2_paper_id": "bf28b038483f4774d61653419c1a78b1fa40b132",
+     "arxiv": "2608.06704",
+     "title": "WebRider: Persona-Conditioned Intent Controllers for Live-Web Assistance",
+     "date": "2026-08-07"
+    },
+    {
+     "s2_paper_id": "2ce9e7a7777f53a137bda150daa2e1797e326658",
+     "arxiv": "2608.05573",
+     "title": "SkillTV-Bench: Benchmarking How Well Judges Perform on Skill-Augmented Agentic Execution",
+     "date": "2026-08-06"
+    },
+    {
+     "s2_paper_id": "e28b4b01c99ea81c1ce9d7ff0bfbd7bbbcaae890",
+     "arxiv": "2608.06171",
+     "title": "Routing Is Least Learnable Where It Is Most Valuable: Bounds on Representation Routing for Web Agents",
+     "date": "2026-08-06"
+    },
+    {
+     "s2_paper_id": "984f3fb8d8463706be16f0f7f5e3e54ec8b0d45a",
+     "arxiv": "2607.28367",
+     "title": "How Benchmarks Mis-Score Computer-Use Agents",
+     "date": "2026-07-30"
+    },
+    {
+     "s2_paper_id": "b94d30cd234186116c0eabdf087657ae517590cb",
+     "arxiv": "2607.25891",
+     "title": "Messier: A High-Resolution Corpus for Cross-Benchmark Agent Evaluation",
+     "date": "2026-07-28"
+    },
+    {
+     "s2_paper_id": "7e533323ecb61ace3d9dc6be1455e18af39a08d8",
+     "arxiv": "2607.23263",
+     "title": "SeekJudge: A Practical Reward Framework for Reinforcement Learning in Computer-Use Agents",
+     "date": "2026-07-25"
+    },
+    {
+     "s2_paper_id": "3b04534002e0d95801c53ea45b690a9a18ef4cf3",
+     "arxiv": "2607.11388",
+     "title": "StructAgent: Harness Long-horizon Digital Agents with Unified Causal Structure",
+     "date": "2026-07-13"
+    },
+    {
+     "s2_paper_id": "b0e98e5d19f0ae0dbce898aae4ca8ee5e342bc29",
+     "arxiv": "2607.09016",
+     "title": "SLBench: Evaluating How LLM Agents Follow Logical Relations in Skills",
+     "date": "2026-07-10"
+    },
+    {
+     "s2_paper_id": "d2292bb85d66f5aa044817ad38fba0fc3508bee8",
+     "arxiv": "2607.06140",
+     "title": "CurateEvo: Data-Curation Evolving for Agentic Post-Training",
+     "date": "2026-07-07"
+    },
+    {
+     "s2_paper_id": "853a1a119fc9ce6e70cb322a4220f18b96936604",
+     "arxiv": "2607.04419",
+     "title": "Agent Step Value: Auditing Evaluator-Channel Reversals in Black-Box Agent Traces",
+     "date": "2026-07-05"
+    },
+    {
+     "s2_paper_id": "6be141b5282ef2ba1014485e60f3e064120fc474",
+     "arxiv": "2606.32034",
+     "title": "QVal: Cheaply Evaluating Dense Supervision Signals for Long-Horizon LLM Agents",
+     "date": "2026-06-30"
+    },
+    {
+     "s2_paper_id": "ced3cd7f4983d0eadf666797844708c9eac1c0ce",
+     "arxiv": "2606.22741",
+     "title": "GRADE: Graph Representation of LLM Agent Dependency and Execution",
+     "date": "2026-06-22"
+    },
+    {
+     "s2_paper_id": "54020c30311cddfe541d9fad332db94acf465404",
+     "arxiv": "2606.22737",
+     "title": "GroundEval: A Deterministic Replacement for LLM-as-Judge in Stateful Agent Evaluation",
+     "date": "2026-06-22"
+    },
+    {
+     "s2_paper_id": "573886f093438f485e10616ff78d84758bb6e056",
+     "arxiv": "2606.21627",
+     "title": "Counsel: A Meta-Evaluation Dataset for Agentic Tasks",
+     "date": "2026-06-19"
+    },
+    {
+     "s2_paper_id": "3d9d5b2077ce792bfa60102005927569e45772c9",
+     "arxiv": "2606.20785",
+     "title": "Fara-1.5: Scalable Learning Environments for Computer Use Agents",
+     "date": "2026-06-18"
+    },
+    {
+     "s2_paper_id": "600127422a1a1c0af52a5a81ab901b8e1f53cc4b",
+     "arxiv": "2606.18671",
+     "title": "HANSEL: Extracting Breadcrumbs from Web Agent Trajectories for Interactive Verification",
+     "date": "2026-06-17"
+    },
+    {
+     "s2_paper_id": "eb7e7579704a16188df5f05f10b44f8ef93bbf90",
+     "arxiv": "2606.18890",
+     "title": "Skill-Guided Continuation Distillation for GUI Agents",
+     "date": "2026-06-17"
+    },
+    {
+     "s2_paper_id": "1eaa6e7d111f92dc567ac4d5b08357728de3e3a6",
+     "arxiv": "2606.10315",
+     "title": "Catching One in Five: LLM-as-Judge Blind Spots in Production Multi-Turn Transaction Agents",
+     "date": "2026-06-09"
+    },
+    {
+     "s2_paper_id": "23d277780185e98e349dfbd47e0f5aec06928b80",
+     "arxiv": "2606.08200",
+     "title": "Online Agent-as-a-Judge: Situation-Generating Evaluation for Interactive Agents",
+     "date": "2026-06-06"
+    },
+    {
+     "s2_paper_id": "fe39aef4b5d0df5547dd664775ff5d03ce0e0b88",
+     "arxiv": "2606.07027",
+     "title": "StainFlow: Entity-Stain Tracking and Evidence Linking for Process Rewards in GUI Agents",
+     "date": "2026-06-05"
+    },
+    {
+     "s2_paper_id": "9555d807d8bfe72dfd151b6ab034fffcb92c13c5",
+     "arxiv": "2606.03829",
+     "title": "BigFinanceBench: A Workflow-Grounded Benchmark for Financial-Research Agents",
+     "date": "2026-06-02"
+    },
+    {
+     "s2_paper_id": "9d1f516985d5a5848e816c1d877d312e9cdfb9cb",
+     "arxiv": "2606.02031",
+     "title": "OpenWebRL: Demystifying Online Multi-turn Reinforcement Learning for Visual Web Agents",
+     "date": "2026-06-01"
+    },
+    {
+     "s2_paper_id": "de27402d65a53e6ae2591f946f3eafd644e4317f",
+     "arxiv": "2605.29532",
+     "title": "GUITestScape: Towards Open-set Evaluation on Exploratory GUI Testing",
+     "date": "2026-05-28"
+    },
+    {
+     "s2_paper_id": "ba48b533086f2c1c99240de1dd2024572c81dcba",
+     "arxiv": "2605.22608",
+     "title": "Agentic CLEAR: Automating Multi-Level Evaluation of LLM Agents",
+     "date": "2026-05-21"
+    },
+    {
+     "s2_paper_id": "d4847ca0fe7712df52b85b3ed8fc6b289b0686db",
+     "arxiv": "2605.22564",
+     "title": "SynAE: A Framework for Measuring the Quality of Synthetic Data for Tool-Calling Agent Evaluations",
+     "date": "2026-05-21"
+    },
+    {
+     "s2_paper_id": "8f4eda3352ba5b155d64813312933bcca4d355af",
+     "arxiv": "2605.19932",
+     "title": "PEEK: Context Map as an Orientation Cache for Long-Context LLM Agents",
+     "date": "2026-05-19"
+    },
+    {
+     "s2_paper_id": "5cf6037bff960ed954cb4237e9d2512d66bdf39c",
+     "arxiv": "2605.19196",
+     "title": "Time to REFLECT: Can We Trust LLM Judges for Evidence-based Research Agents?",
+     "date": "2026-05-18"
+    },
+    {
+     "s2_paper_id": "95c5aa3986bd0e7fe3fd38c8d6953fa27142ae1c",
+     "arxiv": "2605.14865",
+     "title": "Holistic Evaluation and Failure Diagnosis of AI Agents",
+     "date": "2026-05-14"
+    },
+    {
+     "s2_paper_id": "c7abefaaee699d88d8403ae10b82c696b7e2bee4",
+     "arxiv": "2605.10448",
+     "title": "Can Agent Benchmarks Support Their Scores? Evidence-Supported Bounds for Interactive-Agent Evaluation",
+     "date": "2026-05-11"
+    },
+    {
+     "s2_paper_id": "9cff034a325d963f638b07fca403b5b6c2fa4af7",
+     "arxiv": "2604.24977",
+     "title": "A Survey on LLM-based Conversational User Simulation",
+     "date": "2026-04-27"
+    },
+    {
+     "s2_paper_id": "be1b1c3582da7646cc6269ef2f1f9ce44bc192b3",
+     "arxiv": "2604.07776",
+     "title": "Structured Distillation of Web Agent Capabilities Enables Generalization",
+     "date": "2026-04-09"
+    },
+    {
+     "s2_paper_id": "d0a2d856179fadd7266b8ef300f7e6fc7f3cab40",
+     "arxiv": "2604.08178",
+     "title": "Aligning Agents via Planning: A Benchmark for Trajectory-Level Reward Modeling",
+     "date": "2026-04-09"
+    },
+    {
+     "s2_paper_id": "695c31b44f975b5621ceafbccb747853c1fee7fd",
+     "arxiv": "2606.15673",
+     "title": "Where Did It Go Wrong? Process-Level Evaluation of Web Agents with Semantic State Tracking",
+     "date": "2026-04-08"
+    },
+    {
+     "s2_paper_id": "ec6cfecd3b908bce4f763ca05a68a84bf1853947",
+     "arxiv": "2604.06367",
+     "title": "WebSP-Eval: Evaluating Web Agents on Website Security and Privacy Tasks",
+     "date": "2026-04-07"
+    },
+    {
+     "s2_paper_id": "ca060bc50ce301a3ce6c9c595821d5a1f2485b3f",
+     "arxiv": "2604.04399",
+     "title": "GUIDE: Interpretable GUI Agent Evaluation via Hierarchical Diagnosis",
+     "date": "2026-04-06"
+    },
+    {
+     "s2_paper_id": "bba585a56bf7c9a861de68165a30c57c3f5b9388",
+     "arxiv": "2604.06240",
+     "title": "The Art of Building Verifiers for Computer Use Agents",
+     "date": "2026-04-05"
+    },
+    {
+     "s2_paper_id": "e8e945d7d9bcd2bf454cbffb883c46884ce9b605",
+     "arxiv": "2603.15798",
+     "title": "CUBE: A Standard for Unifying Agent Benchmarks",
+     "date": "2026-03-16"
+    },
+    {
+     "s2_paper_id": "98ad634c5393dc8354402190bb0179594cd5e579",
+     "arxiv": "2603.14465",
+     "title": "AgentProcessBench: Diagnosing Step-Level Process Quality in Tool-Using Agents",
+     "date": "2026-03-15"
+    },
+    {
+     "s2_paper_id": "f4331f883eec00bd20a84e2a5294e8694e23e436",
+     "arxiv": "2603.11494",
+     "title": "PRMB: Benchmarking Reward Models in Long-Horizon CBT-based Counseling Dialogue",
+     "date": "2026-03-12"
+    },
+    {
+     "s2_paper_id": "1e898ee0ab5821caefb7d4d2c089d72272f27934",
+     "arxiv": "2603.10178",
+     "title": "Video-Based Reward Modeling for Computer-Use Agents",
+     "date": "2026-03-10"
+    },
+    {
+     "s2_paper_id": "d6c399164e39e52cd783a81f15d2869fa6ac8d1f",
+     "arxiv": "2603.07432",
+     "title": "Generalization in Online Reinforcement Learning for Mobile Agents",
+     "date": "2026-03-08"
+    },
+    {
+     "s2_paper_id": "1022d1c7c2c27a0dc5b9e64384001359ea8425e1",
+     "arxiv": "2603.04738",
+     "title": "IF-RewardBench: Benchmarking Judge Models for Instruction-Following Evaluation",
+     "date": "2026-03-05"
+    },
+    {
+     "s2_paper_id": "16239fa7593a93573f1a3efefb4b1835269c95b3",
+     "arxiv": "2602.20502",
+     "title": "ActionEngine: From Reactive to Programmatic Web Agents via State Machine Memory",
+     "date": "2026-02-24"
+    },
+    {
+     "s2_paper_id": "6099ff1fe728a3172b9dea63b5222537bc8927cb",
+     "arxiv": "2602.14296",
+     "title": "AutoWebWorld: Synthesizing Infinite Verifiable Web Environments via Finite State Machines",
+     "date": "2026-02-15"
+    },
+    {
+     "s2_paper_id": "d89779fe83cab26e639e4df7bb95529a8e61eb56",
+     "arxiv": "2602.10356",
+     "title": "Autonomous Continual Learning for Environment Adaptation of Computer-Use Agents",
+     "date": "2026-02-10"
+    },
+    {
+     "s2_paper_id": "daf86606021ba8f672866a9ce2ee28e42a417f66",
+     "arxiv": "2601.21872",
+     "title": "WebArbiter: A Principle-Guided Reasoning Process Reward Model for Web Agents",
+     "date": "2026-01-29"
+    },
+    {
+     "s2_paper_id": "c2615047912d98e4da6c19386e83f8a5c14f1208",
+     "arxiv": "2601.22154",
+     "title": "Exploring Reasoning Reward Model for Agents",
+     "date": "2026-01-29"
+    },
+    {
+     "s2_paper_id": "1c938ea84ad551a0283f7e989563d54e2dfc9f7d",
+     "arxiv": "2601.15808",
+     "title": "Inference-Time Scaling of Verification: Self-Evolving Deep Research Agents via Test-Time Rubric-Guided Verification",
+     "date": "2026-01-22"
+    },
+    {
+     "s2_paper_id": "c30a733c202ffdf9948920d8988748008dd98061",
+     "arxiv": "2601.14691",
+     "title": "Gaming the Judge: Unfaithful Chain-of-Thought Can Undermine Agent Evaluation",
+     "date": "2026-01-21"
+    },
+    {
+     "s2_paper_id": "b845031a6c3cc83c5e60da92e342c8368fdc6a2d",
+     "arxiv": "2601.12294",
+     "title": "ToolPRMBench: Evaluating and Advancing Process Reward Models for Tool-using Agents",
+     "date": "2026-01-18"
+    },
+    {
+     "s2_paper_id": "0804aa39fc359b4f895d5062a6657e7e26787fe9",
+     "arxiv": "2512.10575",
+     "title": "RoleRMBench & RoleRM: Towards Reward Modeling for Profile-Based Role Play in Dialogue Systems",
+     "date": "2025-12-11"
+    },
+    {
+     "s2_paper_id": "a311866e09ec93c5128a0c41bf50a7de025460c4",
+     "arxiv": "2512.03109",
+     "title": "E-valuator: Reliable Agent Verifiers with Sequential Hypothesis Testing",
+     "date": "2025-12-02"
+    },
+    {
+     "s2_paper_id": "faaadbaf1dd7fb6cde2ed69ef59b47bb812a75a0",
+     "arxiv": "2511.07413",
+     "title": "DigiData: Training and Evaluating General-Purpose Mobile Control Agents",
+     "date": "2025-11-10"
+    },
+    {
+     "s2_paper_id": "da8437556dd2a6959bd168d8db9e9d6a9efff45e",
+     "arxiv": "2510.27140",
+     "title": "Measuring the Security of Mobile LLM Agents under Adversarial Prompts from Untrusted Third-Party Channels",
+     "date": "2025-10-31"
+    },
+    {
+     "s2_paper_id": "9b2e51a7a5ed9fd9ec7c74882f367a925d6da3ba",
+     "arxiv": "2510.23883",
+     "title": "Agentic AI Security: Threats, Defenses, Evaluation, and Open Challenges",
+     "date": "2025-10-27"
+    },
+    {
+     "s2_paper_id": "0a07c7aad2d6ee5d8a07c0165e759e75013c461e",
+     "arxiv": "2510.18596",
+     "title": "CUARewardBench: A Benchmark for Evaluating Reward Models on Computer-using Agent",
+     "date": "2025-10-21"
+    },
+    {
+     "s2_paper_id": "c1e5a4bc7a50ea9dd2b105a66b693e266cce5eea",
+     "arxiv": "2510.14545",
+     "title": "Agentic Entropy-Balanced Policy Optimization",
+     "date": "2025-10-16"
+    },
+    {
+     "s2_paper_id": "32fabfafe4ca1eb4c7b3ed4c7a667394fe93af95",
+     "arxiv": "2510.08847",
+     "title": "What Is Your Agent's GPA? A Framework for Evaluating Agent Goal-Plan-Action Alignment",
+     "date": "2025-10-09"
+    },
+    {
+     "s2_paper_id": "164188a2e6326e187b4d1699f17adf413f0d675d",
+     "arxiv": "2510.01353",
+     "title": "MEMTRACK: Evaluating Long-Term Memory and State Tracking in Multi-Platform Dynamic Agent Environments",
+     "date": "2025-10-01"
+    },
+    {
+     "s2_paper_id": "e9c9a00e2f6a78c89fa7f6307b76fff021286d31",
+     "arxiv": "2510.03285",
+     "title": "WAREX: Web Agent Reliability Evaluation on Existing Benchmarks",
+     "date": "2025-09-28"
+    },
+    {
+     "s2_paper_id": "9da0abd97c84df0d10eab4d60a3a61bb74b83028",
+     "arxiv": "2508.08189",
+     "title": "Reinforcement Learning for Large Model: A Survey",
+     "date": "2025-08-11"
+    },
+    {
+     "s2_paper_id": "c244200154abb5e5e45ff14f4e6202e1a42a678d",
+     "arxiv": "2508.04700",
+     "title": "SEAgent: Self-Evolving Computer Use Agent with Autonomous Learning from Experience",
+     "date": "2025-08-06"
+    },
+    {
+     "s2_paper_id": "7c9aa728ce58bb00b90ba612d19544f34c886abe",
+     "arxiv": "2508.01330",
+     "title": "NaturalGAIA: A Verifiable Benchmark and Hierarchical Framework for Long-Horizon GUI Tasks",
+     "date": "2025-08-02"
+    },
+    {
+     "s2_paper_id": "d33bd07c39b1e1c1907439a17ce6b35217ca2d41",
+     "arxiv": "2507.21645",
+     "title": "Libra: Assessing and Improving Reward Model by Learning to Think",
+     "date": "2025-07-29"
+    },
+    {
+     "s2_paper_id": "3c8b92a8b6eee1377077ecfea95e53223845af20",
+     "arxiv": "2507.19849",
+     "title": "Agentic Reinforced Policy Optimization",
+     "date": "2025-07-26"
+    },
+    {
+     "s2_paper_id": "d3944d49c26173e17c7ae05694e15d968f7bde16",
+     "arxiv": "2506.14205",
+     "title": "AgentSynth: Scalable Task Generation for Generalist Computer-Use Agents",
+     "date": "2025-06-17"
+    },
+    {
+     "s2_paper_id": "402dcb96467b49a524a6771918a0d3b96c49ba1e",
+     "arxiv": "2506.14866",
+     "title": "OS-Harm: A Benchmark for Measuring Safety of Computer Use Agents",
+     "date": "2025-06-17"
+    },
+    {
+     "s2_paper_id": "6069fa0fc5cccb8ebd0061c5e1816f5069cc255b",
+     "arxiv": "2506.01937",
+     "title": "RewardBench 2: Advancing Reward Model Evaluation",
+     "date": "2025-06-02"
+    },
+    {
+     "s2_paper_id": "e17d67990721add9597890e777cb337ef9a20973",
+     "arxiv": "2504.01382",
+     "title": "An Illusion of Progress? Assessing the Current State of Web Agents",
+     "date": "2025-04-02"
+    },
+    {
+     "s2_paper_id": "92056d644aed7caa6c5367fe77774883246af793",
+     "arxiv": "2411.16594",
+     "title": "From Generation to Judgment: Opportunities and Challenges of LLM-as-a-judge",
+     "date": "2024-11-25"
+    },
+    {
+     "s2_paper_id": "6088548d9edba1add03e24f77a56b304d6dfb752",
+     "arxiv": null,
+     "title": "Action Boundary Blindness: When LLM Agents Cannot Tell Where One Action Ends and Another Begins",
+     "date": null
+    },
+    {
+     "s2_paper_id": "16ebdb58e36c2349797e45ecf4ae31c8d791ca83",
+     "arxiv": null,
+     "title": "Thesis Proposal: When Does an Agent Know It Is Lost? Confidence Trajectory Analysis for Tool-Using LLMs",
+     "date": null
+    },
+    {
+     "s2_paper_id": "2ff8ef638397c81cd408840793c829f40f66796f",
+     "arxiv": null,
+     "title": "Measuring the Security of Mobile LLM Agents under Adversarial Prompts from Untrusted Third-Party Channels",
+     "date": null
+    },
+    {
+     "s2_paper_id": "dce9fa8e593f53d03322011122d7db2ddb7f849a",
+     "arxiv": null,
+     "title": "Enhancing GUI Agent with Uncertainty-Aware Self-Trained Evaluator",
+     "date": null
+    },
+    {
+     "s2_paper_id": "580d6c9c7d05e9a9b825e3b5f9d1f140b70c4ba0",
+     "arxiv": null,
+     "title": "ESDAE : E VALUATING S YNTHETIC D ATA FOR A GENT E VALUATION",
+     "date": null
+    },
+    {
+     "s2_paper_id": "96f6db049cb962b61872bfebb079e119a7ececfc",
+     "arxiv": null,
+     "title": "Reasoning Is More Than the Model: Harness-Aware Evaluation of Agents on Verifiable Reasoning Tasks",
+     "date": null
+    },
+    {
+     "s2_paper_id": "d17814bcbd8e40819a8d6bd3d1d53b2ec6dbc3e9",
+     "arxiv": null,
+     "title": "AgentPProf: Semantic Profiler for AI Agents",
+     "date": null
+    },
+    {
+     "s2_paper_id": "dcbc9eb5794e34b9cca7356eb490d92a71b32ab7",
+     "arxiv": null,
+     "title": "Grade: Graph Representation of LLM Agent Dependency and Execution",
+     "date": null
+    }
+   ],
+   "raw_sha256": "60222c38db627086f63ddcf0b71c67133de90ad3d874887d4d2b6c67bb245627"
+  },
+  "ABC (arXiv 2507.02825)": {
+   "source": "Semantic Scholar",
+   "n": 114,
+   "items": [
+    {
+     "s2_paper_id": "2b87524217201b8df82cf0e1221f08e71d10152e",
+     "arxiv": "2610.11050",
+     "title": "AgentHorizon: Evaluating Agentic Judges for Long-Horizon Computer-Use Tasks",
+     "date": "2026-10-08"
+    },
+    {
+     "s2_paper_id": "09e4054febf02a1acc75813a376257e5ed87f2d3",
+     "arxiv": "2610.11678",
+     "title": "TRACE: Diagnosing Verifier Brittleness in Agentic Evaluation",
+     "date": "2026-10-08"
+    },
+    {
+     "s2_paper_id": "5d039c21344c783ec6ab1b15cd1d4c638171eb35",
+     "arxiv": null,
+     "title": "From Automated Program Repair to Automated Agent Repair: Why Failed Trajectories Matter",
+     "date": "2026-10-07"
+    },
+    {
+     "s2_paper_id": "3abf7bf14f4c5d5ad9cbb2532270a283dcb5b8bc",
+     "arxiv": "2610.10619",
+     "title": "TestJack: Should you trust the results in coding benchmarks? Agentic Coding Benchmarks Auditing via Evaluator Evolution",
+     "date": "2026-10-07"
+    },
+    {
+     "s2_paper_id": "d4e5303e88aee497825bae2b49ee61a31b58ecc8",
+     "arxiv": "2610.09193",
+     "title": "Bookkeeping, Composition, or Unreachable Gold? Reading MemoryAgentBench's Conflict-Resolution Scores Against a Frozen Last-Write Resolver",
+     "date": "2026-10-06"
+    },
+    {
+     "s2_paper_id": "1b80f258fe77cc47264dcc304984f3bac6390225",
+     "arxiv": "2610.04379",
+     "title": "AgentPersonaBench: Benchmarking Persona-Driven User Simulation",
+     "date": "2026-10-03"
+    },
+    {
+     "s2_paper_id": "42b2763a33cead6a99c3a1173c1fc928b199a012",
+     "arxiv": null,
+     "title": "Agent-optimized GPU polygenic scoring at cohort scale",
+     "date": "2026-10-03"
+    },
+    {
+     "s2_paper_id": "1563589147d33ca9b2ae47a79c9c6535944ed1fc",
+     "arxiv": "2610.03585",
+     "title": "Threat-Preserving Representation Sensitivity in Agent-Security Benchmarks",
+     "date": "2026-10-02"
+    },
+    {
+     "s2_paper_id": "12ce92d29f5c697743e76b238d5872cce8d74112",
+     "arxiv": "2610.04123",
+     "title": "Agent Reliability Profiles in Financial Services",
+     "date": "2026-10-02"
+    },
+    {
+     "s2_paper_id": "4148c4d23a9d33d97da05968d2ba449828a5b392",
+     "arxiv": "2610.01618",
+     "title": "Agents Are Systems, Not Models: Rethinking Agentic Evaluation",
+     "date": "2026-10-01"
+    },
+    {
+     "s2_paper_id": "366a712ca978005734dfdcfb6714c337ca51db3d",
+     "arxiv": "2610.02304",
+     "title": "SimuVerity: Benchmarking Agents for Engineering-Grade Simulink Model Generation",
+     "date": "2026-10-01"
+    },
+    {
+     "s2_paper_id": "7032bfb738cd0f9839276a1f1a00d6c3bc93909b",
+     "arxiv": "2610.02563",
+     "title": "OpenGameEval: Benchmarking Agentic Programming and Exploration in a Stateful Game Engine",
+     "date": "2026-10-01"
+    },
+    {
+     "s2_paper_id": "497c417e16edd5d15963be7f02f704259c6ea4b1",
+     "arxiv": "2609.37315",
+     "title": "Do Agent Benchmarks Do What They Say? An Executable-Contract Audit of Tool-Using Agent Environments",
+     "date": "2026-09-29"
+    },
+    {
+     "s2_paper_id": "d7db559d5eaaa5ebb4e2956d1ba05aebec733d1a",
+     "arxiv": "2609.37236",
+     "title": "Asking for What Was Never Requested: Horizontal and Vertical Proactivity in Agents",
+     "date": "2026-09-29"
+    },
+    {
+     "s2_paper_id": "9e112134bbccff4432cbdbbde6d9b3e29b52c3a8",
+     "arxiv": "2609.38469",
+     "title": "The Backdrop Exposes What the World Around an Agent Costs It",
+     "date": "2026-09-29"
+    },
+    {
+     "s2_paper_id": "384b40d4ae4e2593367cdfc97221d2e99876a204",
+     "arxiv": "2609.35143",
+     "title": "Timeline-Bench: Evaluating Agents on Realistic Video-Editing Tasks, from Raw Footage to Final Cut",
+     "date": "2026-09-28"
+    },
+    {
+     "s2_paper_id": "c7f039af5a215c2157cf9fd89086f7a75f7eedbf",
+     "arxiv": "2609.34262",
+     "title": "Maintaining Benchmarks Against Increasingly Capable Agents: Detection and Remediation of Unearned Passes",
+     "date": "2026-09-28"
+    },
+    {
+     "s2_paper_id": "c1ebb8c5a9d1f219d2d2da5e2c57facf3815432f",
+     "arxiv": "2609.33812",
+     "title": "Identical Runs, Different Results: Benchmarking AI Coding Agents on Open-Weight Models",
+     "date": "2026-09-27"
+    },
+    {
+     "s2_paper_id": "8ea4e11342c8ea97276780a5739c0de9dbc32497",
+     "arxiv": "2609.33023",
+     "title": "SRE-Marathon: A Continuous, Change-Driven Benchmark for Autonomous Site Reliability Agents",
+     "date": "2026-09-26"
+    },
+    {
+     "s2_paper_id": "ad8f6772b17a04443359c07c7f9984aa73bf5340",
+     "arxiv": "2609.29095",
+     "title": "Where Does Exactly-Once Live? Model, Harness, and Tool-Contract Effects on Duplicate Side Effects in LLM Agents",
+     "date": "2026-09-24"
+    },
+    {
+     "s2_paper_id": "dfdcc167d0eab6ecea8db30f89e93f0eb2eaf52f",
+     "arxiv": "2609.24516",
+     "title": "LLJ Cards: Best practices for the Use of LLMs as Judges",
+     "date": "2026-09-21"
+    },
+    {
+     "s2_paper_id": "27029fa775db2f3ba47355aecf6ba94ee5500e15",
+     "arxiv": "2609.26826",
+     "title": "What Makes a Terminal-Bench Task Hard? Separating Genuine Hardness from Fake-Hardness on an Adjudicated Agentic Corpus",
+     "date": "2026-09-20"
+    },
+    {
+     "s2_paper_id": "20adb68cc123d83173410d39c17c78bb7ffff0bc",
+     "arxiv": "2609.19801",
+     "title": "DeliveryGym: An RL Environment for Long-Horizon Embodied Agent Planning with Adaptive Curriculum",
+     "date": "2026-09-17"
+    },
+    {
+     "s2_paper_id": "66d92daaf428e741b3d217274e3001cc139bafc4",
+     "arxiv": "2609.17394",
+     "title": "Coding Agents Have Converged: Why the SWE-bench Leaderboard Can No Longer Order Its Top Entries, and What to Measure Instead",
+     "date": "2026-09-15"
+    },
+    {
+     "s2_paper_id": "aa4610c4a27acfe4a865dfb65058452b1c119d36",
+     "arxiv": null,
+     "title": "SurveyUQBench: Recovering Complex-Survey Designs and Design-Based Uncertainty from Official Documentation",
+     "date": "2026-09-13"
+    },
+    {
+     "s2_paper_id": "b2d9c8e421a272db2c47b60ac669610b8d0bb256",
+     "arxiv": "2609.10494",
+     "title": "IBIB: A Protocol for Measuring Enterprise AI Systems by Serving Route, Not Model Identifier",
+     "date": "2026-09-09"
+    },
+    {
+     "s2_paper_id": "3d6d047e309bf0f1cc872d3ecd4217f865667917",
+     "arxiv": "2609.06815",
+     "title": "Typed Federated Artifacts for the Agentic Web:Sharing Tool-Routing Knowledge Across Frozen,Heterogeneous LLM Agents",
+     "date": "2026-09-06"
+    },
+    {
+     "s2_paper_id": "3d8846e3c7123c811f27a565ad7f63ece7cbfc23",
+     "arxiv": "2609.04748",
+     "title": "Same Request, Different Answer: Quantization Amplifies Cache-Induced Divergence in LLM Serving",
+     "date": "2026-09-04"
+    },
+    {
+     "s2_paper_id": "ab5f973795ed95415207328b393c839f908de5bf",
+     "arxiv": "2609.00949",
+     "title": "Calibration is the Bottleneck: An Action-Class Diagnostic of Multi-Turn Tool-Calling",
+     "date": "2026-09-01"
+    },
+    {
+     "s2_paper_id": "f7aec713d74ab3de912342cfb68a1ec7e05fdff2",
+     "arxiv": "2608.29463",
+     "title": "Benchmark Contamination: A Taxonomy Organized by Defeated Mitigation",
+     "date": "2026-08-29"
+    },
+    {
+     "s2_paper_id": "a16090db41bc380bbd23dd04c41f0ce5338fecd4",
+     "arxiv": "2609.00038",
+     "title": "trajectory-judge: What Outcome-Only LLM Judges Miss on Agent Trajectories",
+     "date": "2026-08-29"
+    },
+    {
+     "s2_paper_id": "cea382822501f3a3643463540ee83c948de8ddc4",
+     "arxiv": "2608.28281",
+     "title": "LoopArena: Benchmarking Models as Runtime Controllers for Loop Engineering",
+     "date": "2026-08-28"
+    },
+    {
+     "s2_paper_id": "48b33207781a7d1714a73d15e1f88e95414e05a4",
+     "arxiv": "2608.18066",
+     "title": "On the Fragility of Self-Improving Agents: Variance, Task Order, and Underspecification",
+     "date": "2026-08-18"
+    },
+    {
+     "s2_paper_id": "a54eed932095e05d19c6b5d8d1cbf2ea62f180ef",
+     "arxiv": "2608.16859",
+     "title": "HarnessEval-W: Agentifying the Evaluation of Visual Worlds",
+     "date": "2026-08-17"
+    },
+    {
+     "s2_paper_id": "91ef55c49add57dab9f4f83a24e8586b864f1e63",
+     "arxiv": "2608.14940",
+     "title": "When Is an Agent Evaluation Over? Outcome Finality and Cross-Unit Separation",
+     "date": "2026-08-14"
+    },
+    {
+     "s2_paper_id": "a55c25e2717a6cf7b74f8cf0e0be7e94d7bbe49f",
+     "arxiv": "2608.11274",
+     "title": "Agent Safety Should Be a Runtime Contract",
+     "date": "2026-08-11"
+    },
+    {
+     "s2_paper_id": "f6e4b67862817f458c823584ab2e4368977d21e5",
+     "arxiv": "2608.09666",
+     "title": "Open Evaluation Agent: Efficient and Promptable Evaluation of Visual Generative Models",
+     "date": "2026-08-10"
+    },
+    {
+     "s2_paper_id": "fe39497c5003978d8e6e1a2ef2bda58792e65192",
+     "arxiv": "2608.10030",
+     "title": "Causal Behavioral Evaluation of AI Agents at Scale via Automated Behavioral Science",
+     "date": "2026-08-10"
+    },
+    {
+     "s2_paper_id": "a0966f2bed40d5fb5e7b1d54e779f975c86f70e3",
+     "arxiv": "2608.08775",
+     "title": "OmnilingualGAIA2: Evaluating the Multilingual Gap in Frontier AI Agents",
+     "date": "2026-08-09"
+    },
+    {
+     "s2_paper_id": "e29c2710cc5d23f0ad3683f813e66d68f9e89ba7",
+     "arxiv": "2608.06663",
+     "title": "The Horizon Gap: Planning, Memory, Execution, Training, and Evaluation for Long-Horizon LLM Agents",
+     "date": "2026-08-07"
+    },
+    {
+     "s2_paper_id": "58687bf9b4d65649b88ee3655bdcdf427bfcd297",
+     "arxiv": "2608.00794",
+     "title": "Measurement Without Validity: The Compounding Reliability Problem in Agentic AI Evaluation",
+     "date": "2026-08-01"
+    },
+    {
+     "s2_paper_id": "d5aea8d8d1b8b220b73955f5f6118dd3ab3ce0af",
+     "arxiv": "2607.28802",
+     "title": "Model or Harness? An Interaction-Centric Taxonomy for Localizing Agent Failures",
+     "date": "2026-07-30"
+    },
+    {
+     "s2_paper_id": "4ee6f4c25b3a7fe48c0c3cd786cf6b02aa69861e",
+     "arxiv": "2607.27518",
+     "title": "Automated Transcript Analysis for Detecting Flaws in Agentic Benchmarks",
+     "date": "2026-07-29"
+    },
+    {
+     "s2_paper_id": "7e533323ecb61ace3d9dc6be1455e18af39a08d8",
+     "arxiv": "2607.23263",
+     "title": "SeekJudge: A Practical Reward Framework for Reinforcement Learning in Computer-Use Agents",
+     "date": "2026-07-25"
+    },
+    {
+     "s2_paper_id": "0e6e207201dbc3f5d817a9416f08896d62cbcee4",
+     "arxiv": "2607.21763",
+     "title": "Every Model Cheats: Prompt-Level Mitigation of Cheating on Offensive Cyber Tasks",
+     "date": "2026-07-23"
+    },
+    {
+     "s2_paper_id": "a77d8ca12859bccc77b6e4fffdb51bfd31e91e50",
+     "arxiv": "2607.18575",
+     "title": "RECEIPT: Deterministic, Reward-Hacking-Resistant Verification for White-Box Agentic XSS Discovery",
+     "date": "2026-07-20"
+    },
+    {
+     "s2_paper_id": "42d2d4f2d468d543a78775468840dc20c6bd2ea4",
+     "arxiv": "2607.14399",
+     "title": "Instrument Effects in Language-Model Honesty Evaluation: An Auditable Single-System Demonstration",
+     "date": "2026-07-15"
+    },
+    {
+     "s2_paper_id": "0a90c80224ff3d46c69bac6794622713cd2e7ec5",
+     "arxiv": "2607.09510",
+     "title": "Failure as a Process: An Anatomy of CLI Coding Agent Trajectories",
+     "date": "2026-07-10"
+    },
+    {
+     "s2_paper_id": "23c04e38e4bcc9a77d1f0d430db6cf8cb6b0579e",
+     "arxiv": "2607.02436",
+     "title": "Reasoning effort, not tool access, buys first-try reliability in agentic code generation: an observational study",
+     "date": "2026-07-02"
+    },
+    {
+     "s2_paper_id": "ac7318e7bb9564e46d6414d9d476803c8554a7b3",
+     "arxiv": null,
+     "title": "Capable language models can outgrow the benefits of collaboration",
+     "date": "2026-07-01"
+    },
+    {
+     "s2_paper_id": "4954c969180437a7b28019ca152b88f499efebf9",
+     "arxiv": "2608.07514",
+     "title": "Open Technical Problems in Open-Weight AI Model Risk Management",
+     "date": "2026-07-01"
+    },
+    {
+     "s2_paper_id": "c59afeaf11646a7991c66959b504fda4846b1c18",
+     "arxiv": "2606.28430",
+     "title": "Building to the Test: Coding Agents Deliver What You Check, Not What You Requested",
+     "date": "2026-06-26"
+    },
+    {
+     "s2_paper_id": "af6c0f49268434377c3685fcab7951b07a8adf97",
+     "arxiv": "2607.16241",
+     "title": "KernelBench-Verified: Do LLM-Generated Kernels Actually Beat PyTorch?",
+     "date": "2026-06-26"
+    },
+    {
+     "s2_paper_id": "4711822b0f85a88b717b52bc79dcda9e063b1bee",
+     "arxiv": "2606.26158",
+     "title": "Life After Benchmark Saturation: A Case Study of CORE-Bench",
+     "date": "2026-06-23"
+    },
+    {
+     "s2_paper_id": "2155f854db77a0f247a267264a80cf6f9f266d32",
+     "arxiv": "2606.19899",
+     "title": "Measuring Biological Capabilities and Risks of AI Agents",
+     "date": "2026-06-18"
+    },
+    {
+     "s2_paper_id": "a0a078fa0cba988406187798fa39cf3e539617c9",
+     "arxiv": "2606.16723",
+     "title": "AgentFairBench: Do LLM Agents Discriminate When They Act?",
+     "date": "2026-06-15"
+    },
+    {
+     "s2_paper_id": "67a29aa0248758001b8f1a03cf0e0a8cb71c46e5",
+     "arxiv": "2606.13003",
+     "title": "The Illusion of Multi-Agent Advantage",
+     "date": "2026-06-11"
+    },
+    {
+     "s2_paper_id": "18e80604111abf5cdcb57862f589fcbab2f0f328",
+     "arxiv": "2606.05391",
+     "title": "Human oversight of agentic systems in practice: Examining the oversight work, challenges, and heuristics of developers using software agents",
+     "date": "2026-06-03"
+    },
+    {
+     "s2_paper_id": "72393a54de49d6abb1e6ab7a741361f9e5697b38",
+     "arxiv": "2605.28556",
+     "title": "A Matter of TASTE: Improving Coverage and Difficulty of Agent Benchmarks",
+     "date": "2026-05-27"
+    },
+    {
+     "s2_paper_id": "dabc1906b2aa3c344116876b8983e9e38e587138",
+     "arxiv": "2605.26079",
+     "title": "Automated Benchmark Auditing for AI Agents and Large Language Models",
+     "date": "2026-05-25"
+    },
+    {
+     "s2_paper_id": "9c486f54914ef2614c439110487bdc5d3c5ff56d",
+     "arxiv": "2605.26321",
+     "title": "Anchor: Mitigating Artifact Drift in Agent Benchmark Generation",
+     "date": "2026-05-25"
+    },
+    {
+     "s2_paper_id": "cccb8564beed32e733af327cd8efd742d1aef998",
+     "arxiv": "2605.22568",
+     "title": "Measuring Security Without Fooling Ourselves: Why Benchmarking Agents Is Hard",
+     "date": "2026-05-21"
+    },
+    {
+     "s2_paper_id": "d4847ca0fe7712df52b85b3ed8fc6b289b0686db",
+     "arxiv": "2605.22564",
+     "title": "SynAE: A Framework for Measuring the Quality of Synthetic Data for Tool-Calling Agent Evaluations",
+     "date": "2026-05-21"
+    },
+    {
+     "s2_paper_id": "d38dafe4ea6cfe7bc4d28186b75068d08421696a",
+     "arxiv": "2605.17829",
+     "title": "Interactive Evaluation Requires a Design Science",
+     "date": "2026-05-18"
+    },
+    {
+     "s2_paper_id": "308863bbd7c2039856e325cc999a6c6c96b5f5ba",
+     "arxiv": "2605.20251",
+     "title": "ProcCtrlBench: Evaluating Process-Level Defects and Control Preservation in LLM Coding Agents",
+     "date": "2026-05-18"
+    },
+    {
+     "s2_paper_id": "b18257e277222dc66b336a62950e9cf4411b05e0",
+     "arxiv": "2605.13139",
+     "title": "SWE-Cycle: Benchmarking Code Agents across the Complete Issue Resolution Cycle",
+     "date": "2026-05-13"
+    },
+    {
+     "s2_paper_id": "41b59d4ef37317f3f7b43350eefba3443ac51fac",
+     "arxiv": "2605.12925",
+     "title": "AgentLens: Revealing The Lucky Pass Problem in SWE-Agent Evaluation",
+     "date": "2026-05-13"
+    },
+    {
+     "s2_paper_id": "c9aa581a733a3fe8770f1829104c2addb1f7757e",
+     "arxiv": "2607.19292",
+     "title": "The safety failures we are not instrumenting: a perspective on hidden safety-critical challenges in modern AI systems",
+     "date": "2026-05-12"
+    },
+    {
+     "s2_paper_id": "939bd622a3c947b3f814da40cb41cf9d72c5d296",
+     "arxiv": "2605.12105",
+     "title": "Autonomy and Agency in Agentic AI: Architectural Tactics for Regulated Contexts",
+     "date": "2026-05-12"
+    },
+    {
+     "s2_paper_id": "35693ab7dfb4e2edaba42ccea0e6f70dcb81ce8b",
+     "arxiv": "2605.08468",
+     "title": "PYTHALAB-MERA: Validation-Grounded Memory, Retrieval, and Acceptance Control for Frozen-LLM Coding Agents",
+     "date": "2026-05-08"
+    },
+    {
+     "s2_paper_id": "22e9c3d3b34aa9442cb5c639998be48c03248f09",
+     "arxiv": "2605.07161",
+     "title": "SREGym: A Live Benchmark for AI SRE Agents with High-Fidelity Failure Scenarios",
+     "date": "2026-05-08"
+    },
+    {
+     "s2_paper_id": "953769c7037ae68fb967edf1d59042e96096922b",
+     "arxiv": "2605.07073",
+     "title": "TeamBench: Evaluating Agent Coordination under Enforced Role Separation",
+     "date": "2026-05-08"
+    },
+    {
+     "s2_paper_id": "a9775ec5248289c8057f0815b4d70a1148e5cc36",
+     "arxiv": null,
+     "title": "PenPlan-PDDL: A Multi-Agent Framework for Automated Penetration Testing Planning With PDDL-Based Verification",
+     "date": "2026-05-03"
+    },
+    {
+     "s2_paper_id": "b4d7fa2850ca3df49fd6ebfd9ac95c17d781cbb9",
+     "arxiv": "2605.01698",
+     "title": "BIM Information Extraction Through LLM-based Adaptive Exploration",
+     "date": "2026-05-03"
+    },
+    {
+     "s2_paper_id": "439b62fabfb86f25db31a3bc4d3b70d0adf64aeb",
+     "arxiv": null,
+     "title": "When Prompts Fail to Differentiate: Understanding Discriminative Power in LLM Agent Evaluation",
+     "date": "2026-05-01"
+    },
+    {
+     "s2_paper_id": "655646943a73d97b78e244db0b1fc580f4c10f07",
+     "arxiv": "2605.00927",
+     "title": "BioVeil MATRIX: Uncovering and categorizing vulnerabilities of agentic biological AI scientists",
+     "date": "2026-04-30"
+    },
+    {
+     "s2_paper_id": "14acbea37645db3ea371b0b8c292a1ad34eeb5a0",
+     "arxiv": "2604.19818",
+     "title": "Beyond Task Success: An Evidence-Synthesis Framework for Evaluating, Governing, and Orchestrating Agentic AI",
+     "date": "2026-04-18"
+    },
+    {
+     "s2_paper_id": "a0445d9e9a80ff536f116e12bd7bd613cfdd9649",
+     "arxiv": "2604.05229",
+     "title": "From Governance Norms to Enforceable Controls: A Layered Translation Method for Runtime Guardrails in Agentic AI",
+     "date": "2026-04-06"
+    },
+    {
+     "s2_paper_id": "cc900e54826282ea859f97a12e35a9ca12f5b48b",
+     "arxiv": "2603.29139",
+     "title": "SciVisAgentBench: A Benchmark for Evaluating Scientific Data Analysis and Visualization Agents",
+     "date": "2026-03-31"
+    },
+    {
+     "s2_paper_id": "c91005c8e95ba1ac14ab025f0a51d8a47759456f",
+     "arxiv": "2603.29020",
+     "title": "Emergence WebVoyager: Toward Consistent and Transparent Evaluation of (Web) Agents in The Wild",
+     "date": "2026-03-30"
+    },
+    {
+     "s2_paper_id": "33e79758d49e4e26bc84ce19cf5cfefe7ec1c3a3",
+     "arxiv": "2603.23749",
+     "title": "Efficient Benchmarking of AI Agents",
+     "date": "2026-03-24"
+    },
+    {
+     "s2_paper_id": "69ddb757f0bd296a99c4cb121780873a174a5377",
+     "arxiv": "2603.20576",
+     "title": "Can AI Agents Answer Your Data Questions? A Benchmark for Data Agents",
+     "date": "2026-03-21"
+    },
+    {
+     "s2_paper_id": "573ee34b5ed1fc83e2837378641547489275ed6f",
+     "arxiv": "2603.15976",
+     "title": "An Agentic Evaluation Framework for AI-Generated Scientific Code in PETSc",
+     "date": "2026-03-16"
+    },
+    {
+     "s2_paper_id": "dd8ab2530ea62e87b8c184c06df0b881710b83b0",
+     "arxiv": "2603.14417",
+     "title": "Questionnaire Responses Do not Capture the Safety of AI Agents",
+     "date": "2026-03-15"
+    },
+    {
+     "s2_paper_id": "f3907291c97b14544c9acbcc933ee447f3f34b9b",
+     "arxiv": "2603.12440",
+     "title": "KernelFoundry: Hardware-aware evolutionary GPU kernel optimization",
+     "date": "2026-03-12"
+    },
+    {
+     "s2_paper_id": "e3a1443a207e24fbe454a4685693dd46f812af9d",
+     "arxiv": "2603.11245",
+     "title": "Mind the Sim2Real Gap in User Simulation for Agentic Tasks",
+     "date": "2026-03-11"
+    },
+    {
+     "s2_paper_id": "1d552b88a9d93b7137046bf9881d330bf4ba61fc",
+     "arxiv": "2603.08938",
+     "title": "AgentOS: From Application Silos to a Natural Language-Driven Data Ecosystem",
+     "date": "2026-03-09"
+    },
+    {
+     "s2_paper_id": "b87e348e52e2257d619ad9403ccc00c8d28ae78f",
+     "arxiv": "2603.03992",
+     "title": "Measuring AI R&D Automation",
+     "date": "2026-03-04"
+    },
+    {
+     "s2_paper_id": "98b171499d9271e039d8a416142738c48cb4cb44",
+     "arxiv": "2603.01203",
+     "title": "How Well Does Agent Development Reflect Real-World Work?",
+     "date": "2026-03-01"
+    },
+    {
+     "s2_paper_id": "f0b042d54ccc16c51a193a5a81c7cc8768235f5a",
+     "arxiv": "2603.02277",
+     "title": "Quantifying Frontier LLM Capabilities for Container Sandbox Escape",
+     "date": "2026-03-01"
+    },
+    {
+     "s2_paper_id": "16239fa7593a93573f1a3efefb4b1835269c95b3",
+     "arxiv": "2602.20502",
+     "title": "ActionEngine: From Reactive to Programmatic Web Agents via State Machine Memory",
+     "date": "2026-02-24"
+    },
+    {
+     "s2_paper_id": "1f09ae8491805852a18c386104ee2539d43e29d9",
+     "arxiv": "2602.12670",
+     "title": "SkillsBench: Benchmarking How Well Agent Skills Work Across Diverse Tasks",
+     "date": "2026-02-13"
+    },
+    {
+     "s2_paper_id": "b08e77c277b6637e1daf64bb53ff970216f2940c",
+     "arxiv": "2604.09563",
+     "title": "Seven simple steps for log analysis in AI systems",
+     "date": "2026-02-13"
+    },
+    {
+     "s2_paper_id": "09e5b6f74709fde59f4e29a7653d1beff1268a70",
+     "arxiv": "2602.00456",
+     "title": "Benchmarking Agents in Insurance Underwriting Environments",
+     "date": "2026-01-31"
+    },
+    {
+     "s2_paper_id": "99938e26f231bf414e2d380b7332c4a032c4f3c0",
+     "arxiv": "2601.19066",
+     "title": "Dynamic Cogeneration of Bug Reproduction Test in Agentic Program Repair",
+     "date": "2026-01-27"
+    },
+    {
+     "s2_paper_id": "6e5f30a3c4f708a7c814d3ccc28c2d288ecee2c6",
+     "arxiv": "2601.09883",
+     "title": "Beyond Rule-Based Workflows: An Information-Flow-Orchestrated Multi-Agents Paradigm via Agent-to-Agent Communication from CORAL",
+     "date": "2026-01-14"
+    },
+    {
+     "s2_paper_id": "8bddcee2c9792eface1840a90e8f44d7c369cbad",
+     "arxiv": "2601.04175",
+     "title": "Legal Alignment for Safe and Ethical AI",
+     "date": "2026-01-07"
+    },
+    {
+     "s2_paper_id": "2dab173de55ba65473b991812c50522d23a4d820",
+     "arxiv": "2601.08778",
+     "title": "Pervasive Annotation Errors Break Text-to-SQL Benchmarks and Leaderboards",
+     "date": "2026-01-01"
+    },
+    {
+     "s2_paper_id": "628dcc7046ea462b5e770a0f070c5b0988aaeee0",
+     "arxiv": "2512.08296",
+     "title": "Towards a Science of Scaling Agent Systems",
+     "date": "2025-12-09"
+    },
+    {
+     "s2_paper_id": "39662f71d18886efc752155c6c7b27a59e858124",
+     "arxiv": "2601.15290",
+     "title": "Agentic Persona Control and Task State Tracking for Realistic User Simulation in Interactive Scenarios",
+     "date": "2025-11-30"
+    },
+    {
+     "s2_paper_id": "0f3162693e6c6c7181358975bb220f1162d7d583",
+     "arxiv": "2511.20766",
+     "title": "OpenApps: Simulating Environment Variations to Measure UI-Agent Reliability",
+     "date": "2025-11-25"
+    },
+    {
+     "s2_paper_id": "28ae5820e1aa8925267ffb4f093ac1bfd4a5f0dd",
+     "arxiv": null,
+     "title": "AI-Augmented LCNC Frameworks for Multi-Jurisdictional Government Compliance: An Architectural Approach",
+     "date": "2025-11-18"
+    },
+    {
+     "s2_paper_id": "0a990df46cc7c07c3242cd5e84ad00f9c1f416d1",
+     "arxiv": "2511.12306",
+     "title": "UpBench: A Dynamically Evolving Real-World Labor-Market Agentic Benchmark Framework Built for Human-Centric AI",
+     "date": "2025-11-15"
+    },
+    {
+     "s2_paper_id": "7b08e12d6790e3a8912d37fa047fc5c1d3a70dad",
+     "arxiv": "2511.10865",
+     "title": "Towards a Human-in-the-Loop Framework for Reliable Patch Evaluation Using an LLM-as-a-Judge",
+     "date": "2025-11-14"
+    },
+    {
+     "s2_paper_id": "748b86eeaebce031d2f3b2a9504575f022e53306",
+     "arxiv": "2510.17830",
+     "title": "Multi-Agent Design Assistant for the Simulation of Inertial Fusion Energy",
+     "date": "2025-10-02"
+    },
+    {
+     "s2_paper_id": "290a8fe3618a3063f01b53105783ca01f51f43fc",
+     "arxiv": "2509.23488",
+     "title": "Mapping Overlaps in Benchmarks through Perplexity in the Wild",
+     "date": "2025-09-27"
+    },
+    {
+     "s2_paper_id": "2a8b26a7ac4a4d8d8f5d65977be948c300210c9f",
+     "arxiv": "2509.14528",
+     "title": "Why Johnny Can’t Use Agents: Industry Aspirations vs. User Realities with AI Agents",
+     "date": "2025-09-18"
+    },
+    {
+     "s2_paper_id": "87f26bb9f9b151a5a7d3ef812793e9449aa9933c",
+     "arxiv": "2508.12685",
+     "title": "ToolACE-MT: Non-Autoregressive Generation for Agentic Multi-Turn Interaction",
+     "date": "2025-08-18"
+    },
+    {
+     "s2_paper_id": "ad4066de43f1c78066b9bd3b540504a78a7dbc54",
+     "arxiv": "2508.09853",
+     "title": "STREAM (ChemBio): A Standard for Transparently Reporting Evaluations in AI Model Reports",
+     "date": "2025-08-13"
+    },
+    {
+     "s2_paper_id": "1ac6b0d31ad221a6fb6b505585ccdb107d8b92cb",
+     "arxiv": "2503.16416",
+     "title": "Survey on Evaluation of LLM-based Agents",
+     "date": "2025-03-20"
+    },
+    {
+     "s2_paper_id": "85695dac209458ca7aba7ca3a3a3010417a035c5",
+     "arxiv": null,
+     "title": "A Survey on Evaluation of LLM-based Agents",
+     "date": null
+    },
+    {
+     "s2_paper_id": "4ac1b9bbc5c787b66be28233824a39d8f011659e",
+     "arxiv": null,
+     "title": "Process Evaluation for Agentic Systems",
+     "date": null
+    },
+    {
+     "s2_paper_id": "415db28286793ecaa346e565c52bd2fa646509d2",
+     "arxiv": null,
+     "title": "Developing rigorous AI evaluation for trustworthy science and policy",
+     "date": null
+    },
+    {
+     "s2_paper_id": "580d6c9c7d05e9a9b825e3b5f9d1f140b70c4ba0",
+     "arxiv": null,
+     "title": "ESDAE : E VALUATING S YNTHETIC D ATA FOR A GENT E VALUATION",
+     "date": null
+    }
+   ],
+   "raw_sha256": "fdcdcbbd333b991f47cb63ec21a39a4d6a2752ada21e398fcddbf6c7ba8804fa"
+  },
+  "union_distinct": 216,
+  "openalex_cross_check": {
+   "AgentRewardBench": "W4415154343 (arXiv DOI record), cited_by_count 0",
+   "ABC": "W6929343257, cited_by_count 2; both citers are in the Semantic Scholar list",
+   "raw_sha256_abc_citers": "05a078f71e8e0fff63c0c7ce79349555597f6ba563f36d965b357cc99653c7c9"
+  }
+ },
+ "screen": {
+  "rule": "every orx hit and every citer title read; titles matching the regex below, plus every hit on desktop, OSWorld, office files or checker audits, were shortlisted and their abstracts read (Semantic Scholar batch for 20, arXiv API for 2 more)",
+  "title_regex": "osworld|desktop|computer[- ]use|\\bgui\\b|checker|evaluator|verifier|mutation|mutant|audit|false (negative|positive)|state[- ]check|office|spreadsheet|libreoffice",
+  "citer_titles_matching_regex": 28,
+  "abstracts_read": 22,
+  "abstracts_raw_sha256": {
+   "semantic_scholar_batch": "ff63b8fc292787c627426aafd429eea593a8636fd67215951bb2b728dbc408fa",
+   "arxiv_api": "4bcf9873f915d97ce64f0824309c7c3a5f7bbfd16ec0eadee254df073e9541d8"
+  },
+  "shortlist": [
+   {
+    "arxiv": "2605.12673",
+    "title": "Do Androids Dream of Breaking the Game? Systematically Auditing AI Agent Benchmarks with BenchJack",
+    "first_version": "2026-05-12",
+    "found_by": "OpenAlex query o02",
+    "decision": "relevant, not a pivot",
+    "reason": "Automated red-teaming with coding agents that searches 10 agent benchmarks, desktop computing among them, for reward-hacking exploits and patches them; the abstract reports fully patching WebArena and OSWorld within three iterations. It audits exploitable false accepts of the evaluation pipeline, not checker verdicts on equivalent or violating end states, and it builds no mutants of gold end states. Cited in the note."
+   },
+   {
+    "arxiv": "2609.37315",
+    "title": "Do Agent Benchmarks Do What They Say? An Executable-Contract Audit of Tool-Using Agent Environments",
+    "first_version": "2026-09-29",
+    "found_by": "queries e01, e04, k05, o02; ABC citer",
+    "decision": "not a pivot",
+    "reason": "Checks the tools of four tool-using agent benchmarks against their advertised contracts, with injected tool defects (abstract). No desktop state checker."
+   },
+   {
+    "arxiv": "2604.24955",
+    "title": "Who Guards the Benchmarks? Automated Auditing of LLM Agent Benchmarks (BenchGuard)",
+    "first_version": "2026-04-27",
+    "found_by": "OpenAlex query o02",
+    "decision": "not a pivot",
+    "reason": "LLM auditing of benchmark artifacts on scientific benchmarks (ScienceAgentBench, BIXBench; abstract). No desktop state checker."
+   },
+   {
+    "arxiv": "2610.09142",
+    "title": "Finding Blind Spots in AppWorld and WorkArena Task Verifiers",
+    "first_version": "2026-10-06",
+    "found_by": "queries e01-e04, k03, k05; AgentRewardBench citer",
+    "decision": "not a pivot",
+    "reason": "Already the note's closest prior (claim-registry c076): mutation testing of web and API task verifiers; names desktop checkers as out of scope."
+   },
+   {
+    "arxiv": "2607.28367",
+    "title": "How Benchmarks Mis-Score Computer-Use Agents",
+    "first_version": "2026-07-30",
+    "found_by": "query k02, o02; AgentRewardBench citer",
+    "decision": "not a pivot",
+    "reason": "Already cited (c066): hand audit of FAIL-scored trajectories, no mutants."
+   },
+   {
+    "arxiv": "2605.26079",
+    "title": "Automated Benchmark Auditing for AI Agents and Large Language Models",
+    "first_version": "2026-05-25",
+    "found_by": "ABC citer",
+    "decision": "not a pivot",
+    "reason": "Agentic per-task audit of 168 benchmarks for specification and grading issues (abstract); no mutation of end states, OSWorld not named in the abstract."
+   },
+   {
+    "arxiv": "2610.11678",
+    "title": "TRACE: Diagnosing Verifier Brittleness in Agentic Evaluation",
+    "first_version": "2026-10-08",
+    "found_by": "ABC and AgentRewardBench citer",
+    "decision": "not a pivot",
+    "reason": "Paired evaluation changes on synthetic tasks and tau2-bench (abstract); not desktop checkers."
+   },
+   {
+    "arxiv": "2610.10619",
+    "title": "TestJack: Agentic Coding Benchmarks Auditing via Evaluator Evolution",
+    "first_version": "2026-10-07",
+    "found_by": "ABC citer",
+    "decision": "not a pivot",
+    "reason": "Coding benchmarks' unit tests (abstract)."
+   },
+   {
+    "arxiv": "2610.11050",
+    "title": "AgentHorizon: Evaluating Agentic Judges for Long-Horizon Computer-Use Tasks",
+    "first_version": "2026-10-08",
+    "found_by": "ABC and AgentRewardBench citer",
+    "decision": "not a pivot",
+    "reason": "Judge accuracy on computer-use trajectories (abstract), not state checkers; already in the renewal slate."
+   },
+   {
+    "arxiv": "2607.25904",
+    "title": "Interactive Reward Agent: GUI Task Evaluation via Environment-State Verification",
+    "first_version": "2026-07-28",
+    "found_by": "queries e03, k06",
+    "decision": "not a pivot",
+    "reason": "Builds an agentic GUI-task evaluator (abstract); does not audit OSWorld's checkers."
+   },
+   {
+    "arxiv": "2609.34469",
+    "title": "The Last Mile Is the File: OfficeEditBench for Preservation-Aware Office Editing",
+    "first_version": "2026-09-28",
+    "found_by": "query e02",
+    "decision": "not a pivot",
+    "reason": "A new office-editing benchmark with its own task contracts and verifiers (abstract); not an audit of OSWorld checkers."
+   },
+   {
+    "arxiv": "2605.10448",
+    "title": "Can Agent Benchmarks Support Their Scores? Evidence-Supported Bounds for Interactive-Agent Evaluation",
+    "first_version": "2026-05-11",
+    "found_by": "AgentRewardBench citer",
+    "decision": "not a pivot",
+    "reason": "An outcome-evidence reporting layer for existing benchmarks (abstract); no mutants of desktop end states."
+   },
+   {
+    "arxiv": "2607.27518",
+    "title": "Automated Transcript Analysis for Detecting Flaws in Agentic Benchmarks",
+    "first_version": "2026-07-29",
+    "found_by": "ABC citer",
+    "decision": "not a pivot",
+    "reason": "Transcript scanners on Inspect Evals benchmarks (abstract)."
+   },
+   {
+    "arxiv": "2609.24890",
+    "title": "OSWorld-Pro: Process-based Evaluation for Computer Use Agents",
+    "first_version": "2026-09-21",
+    "found_by": "queries e02, k01, k03, k05",
+    "decision": "not a pivot",
+    "reason": "Subgoal-level LLM-judge evaluation (abstract); already in the renewal slate."
+   },
+   {
+    "arxiv": "2610.03818",
+    "title": "Control OSWorld: An AI Control Environment for GUI Computer Use Agents",
+    "first_version": "2026-10-02",
+    "found_by": "queries e01, e03, k01, k03, k05",
+    "decision": "not a pivot",
+    "reason": "Control monitors on OSWorld tasks with harmful side tasks (abstract)."
+   }
+  ]
+ },
+ "first_version_dates_arxiv_api": {
+  "2404.07972": "2024-04-11 (OSWorld)",
+  "2604.24955": "2026-04-27",
+  "2605.12673": "2026-05-12",
+  "2609.37315": "2026-09-29",
+  "2610.07274": "2026-10-05"
+ },
+ "newest_hit_date": "2026-10-08",
+ "result": "K8 does not fire. No mutation audit of desktop computer-use-agent checkers was found. One newly found desktop-touching benchmark audit, BenchJack (arXiv 2605.12673), red-teams OSWorld among 10 benchmarks for reward-hacking exploits; it is cited in the note as related work and does not change the note's scope.",
+ "coverage_limits": [
+  "Sources dated after the newest hit are not covered; the alphaXiv index and Semantic Scholar both lag new posts.",
+  "Citers come from Semantic Scholar only; OpenAlex's citation graph for both papers is nearly empty.",
+  "Not searched in this run: OpenReview, the ACL Anthology, Google Scholar, GitHub, X.",
+  "Abstracts, not full texts, were read for the shortlist."
+ ],
+ "not_committed": "raw query outputs and abstracts (third-party text); hashed above, kept in the session scratchpad"
+}
