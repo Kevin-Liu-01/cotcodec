@@ -5,7 +5,8 @@ preregistration, `program/preregistrations/q2-action-path-v1.md` (with its
 `-inputs` and `-executor` addenda), is frozen and invalid: its validity control
 C2 failed (job 768; decision D40). Its successor,
 `program/preregistrations/q2-action-path-v2.md` (with `-inputs` and
-`-executor`), is a **draft**; acceptance trials wait for its freeze.
+`-executor`), was frozen on 2026-10-08 (ledger rows 13-15) and ACCEPTED on
+attempt 1 (D53; N* = 32; `program/evidence/2026-10-08/q2-action-path-v2-acceptance/`).
 
 The suite checks that what a computer-use harness asks for is what the
 desktop receives, before any Stage-1 GPU episode is spent on it. It follows the
@@ -27,7 +28,7 @@ settings; and a volume certification split from development runs.
 | `vm/guest/*.py` | Scripts shipped to the guest as base64 argv: facts, reset sentinel, XRecord tap, tap self-test |
 | `action_path/ir.py` | Canonical action IR (Table 21 vocabulary plus explicit holds); `clamp_point`, the IR-boundary coordinate rule |
 | `action_path/keysyms.json`, `build_keysyms.py` | Every X keysym name (xorgproto 2024.1 `keysymdef.h`, MIT/X11 notice inside); the IR accepts any of them |
-| `action_path/catalog.yaml` | The 100-entry catalog (draft for the owner's freeze; key entries carry the job-393 R-dev streams) |
+| `action_path/catalog.yaml` | The 100-entry catalog (frozen with action-path v2; key entries carry the job-393 R-dev streams) |
 | `action_path/catalog.py` | Catalog loader, validator and hash |
 | `action_path/build_catalog.py` | Author tool that writes `catalog.yaml`; a test checks it reproduces the file byte for byte |
 | `action_path/rdev.py`, `rdev_plan.json` | R-dev reference: HMP chords per key entry, projection and stability rules |
