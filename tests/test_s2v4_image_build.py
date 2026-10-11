@@ -28,9 +28,23 @@ def _capture():
 
 
 @pytest.mark.parametrize("cell", B.CELLS)
-def test_selector_is_the_pilot_selector(cell):
-    assert B.selector_xcd(cell) == (PILOT / f"{cell}.xcd").read_text(encoding="utf-8")
-    assert B.selector_xcd(cell) == _capture().selector(cell)
+def test_selector_is_the_pilot_selector_read_last(cell):
+    assert B.pilot_selector(cell) == (PILOT / f"{cell}.xcd").read_text(encoding="utf-8")
+    assert B.pilot_selector(cell) == _capture().selector(cell)
+    text = B.selector_xcd(cell)
+    head, _, rest = text.partition(B.SELECTOR_DEPENDENCIES)
+    assert head == B.XCD_HEAD and rest.startswith("<oor:component-data")
+    assert '<dependency file="main"/>' in text and '<dependency file="ctl_ar" optional="true"/>' in text
+
+
+def test_selector_depends_on_every_other_layer_file():
+    # the derived images' /etc/libreoffice/registry: the certified disk's files plus the pack's two
+    certified = {"Langpack-en-US", "calc", "draw", "gnome", "graphicfilter", "impress",
+                 "lingucomponent", "main", "math", "ogltrans", "pdfimport", "pyuno", "writer",
+                 "xsltfilter"}
+    assert set(B.LAYER_FILES) | {"main"} == certified | {"Langpack-ar", "ctl_ar"}
+    assert {dst.rsplit("/", 1)[1][:-4] for _, dst in B.UCF_PAIRS if "/res/" not in dst} == {
+        "Langpack-ar", "ctl_ar"}
 
 
 def test_selector_keys():

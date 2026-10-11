@@ -167,7 +167,10 @@ checks that it is the pin set the committed build record gives.
 ### P0.3 Cells and the per-slot image
 
 Each cell image is the derived base plus the selector `/etc/libreoffice/registry/zz-s2v4-cell.xcd`
-(byte-identical to the S2 v3 pilot's selector for that cell; a test checks this) and, for PL only, the
+(the S2 v3 pilot's selector for that cell, byte for byte, after a block of `<dependency .../>`
+declarations on every other file of the system layer, `main` required and the rest optional, so that
+configmgr reads the selector last in its layer and its finalized values win there; tests check both)
+and, for PL only, the
 toolbar definitions whose items the seeded shuffle reorders; nothing else (checked block by block
 against the base: the changed blocks of each cell are the selector's data block, the registry
 directory's block, the inode-table blocks of the written and removed inodes, the bitmaps and the
@@ -184,7 +187,12 @@ superblock and group-descriptor copies).
 | AD | ar | key absent (the layout follows the language) | pins; P7 only |
 
 Pins in every derived cell, finalized: `SheetPrefix` "Sheet", `CTLFont` false (overrides the language
-pack's `ctl_ar.xcd`, which sets it true), `EnglishFunctionName` true. `ooSetupSystemLocale` is not set
+pack's `ctl_ar.xcd`, which sets it true), `EnglishFunctionName` true. The dependency block is a
+development finding (smoke 1197, dev split): configmgr reads the files of a layer in directory order
+unless dependencies order them, and a later file of the same layer overrides an earlier one's
+finalized value; without the block `ctl_ar.xcd` was read after the selector, CTL was on in every
+derived cell, and E's Formatting toolbar showed the two text-direction buttons that S's does not
+(masked E against S: 1,398 and 1,399 px on the Calc and Writer dev tasks). `ooSetupSystemLocale` is not set
 (the system locale). No environment variable differs between cells. Nothing is written to the user
 profile. E2 and ER2 (A/A replicates) are second boots of the E and ER images; PD (the planted document)
 is the ER image with the task's first document replaced by its planted copy in a file-cache variant

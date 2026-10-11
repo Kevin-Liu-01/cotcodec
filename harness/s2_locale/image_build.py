@@ -133,14 +133,28 @@ def _comp(package: str, name: str, body: str) -> str:
             "</oor:component-data>\n")  # fmt: skip
 
 
+# Every other configuration file of the derived images' system layer. The selector declares a
+# dependency on each, so configmgr reads it last in the layer and its finalized values win there.
+# Development smoke 1197 (dev split): without these declarations the language pack's ctl_ar.xcd,
+# read after the selector, set CTLFont true in every derived cell, and E showed the two
+# text-direction buttons that S does not (E against S: 1,398 and 1,399 px on the Calc and Writer
+# dev tasks). Only main is required; the rest are optional, as pdfimport.xcd declares its own.
+LAYER_FILES = ("Langpack-ar", "Langpack-en-US", "calc", "ctl_ar", "draw", "gnome", "graphicfilter",
+               "impress", "lingucomponent", "math", "ogltrans", "pdfimport", "pyuno", "writer",
+               "xsltfilter")  # fmt: skip
+SELECTOR_DEPENDENCIES = ('<dependency file="main"/>\n' + "".join(
+    f'<dependency file="{name}" optional="true"/>\n' for name in LAYER_FILES))
+
+
 def selector_xcd(cell: str) -> str:
-    """The cell's selector: byte-identical to the S2 v3 pilot's (capture.py ``selector``).
+    """The cell's selector: the S2 v3 pilot's values (capture.py ``selector``) after a block of
+    dependency declarations that makes the system layer read it last (``LAYER_FILES``).
 
     Text: both interface-language keys (``ooLocale`` for the gettext catalogs, ``UILocale``
     for the registry labels). Layout: the finalized ``UIMirroring`` key (absent in AD, whose
-    layout follows the language). Pins in every cell: ``CTLFont`` false, Calc's default sheet
-    prefix "Sheet" and English function names. ``ooSetupSystemLocale`` is not set (the system
-    locale, ``en_US.UTF-8``, in every cell)."""
+    layout follows the language). Pins in every cell: ``CTLFont`` false (over the language
+    pack's ``ctl_ar.xcd``), Calc's default sheet prefix "Sheet" and English function names.
+    ``ooSetupSystemLocale`` is not set (the system locale, ``en_US.UTF-8``, in every cell)."""
     if cell not in CELLS:
         raise BuildError(f"unknown cell {cell}")
     locale = "ar" if cell in ("A", "AR", "AD") else "en-US"
@@ -158,7 +172,12 @@ def selector_xcd(cell: str) -> str:
             + _comp("org.openoffice.Office", "Linguistic", ling)
             + _comp("org.openoffice.Office", "Common", ctl)
             + _comp("org.openoffice.Office", "Calc", calc))  # fmt: skip
-    return XCD_HEAD + body + XCD_TAIL
+    return XCD_HEAD + SELECTOR_DEPENDENCIES + body + XCD_TAIL
+
+
+def pilot_selector(cell: str) -> str:
+    """The selector without its dependency block: the S2 v3 pilot's bytes."""
+    return selector_xcd(cell).replace(SELECTOR_DEPENDENCIES, "", 1)
 
 
 def shuffled_toolbar(text: str, key: str) -> str:
