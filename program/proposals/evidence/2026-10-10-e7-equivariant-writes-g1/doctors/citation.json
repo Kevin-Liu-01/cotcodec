@@ -2,9 +2,10 @@
  "doctor": "Citation",
  "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "D68 repair pass by the single owner (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "URLs, dates, authors, and quantitative claims verified in primary sources",
  "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, source tracing, cross-referencing; UNVERIFIABLE_ACCESS for unreachable full texts)",
- "evidence": "Claim registry C01 to C43 in the proposal's Primary-Source Evidence section, each with URL, date, locator and read status; quantitative spans of C01, C03, C04, C05, C06, C07, C08, C09, C10, C13, C15, C16, C18 re-checked by synthesis in the cells' saved full texts (grep of the quoted numbers); every cited URL snapshotted (snapshots/) with HTTP status, body SHA-256 and, for arXiv, the version history; OpenReview items C02, C22, C23 marked abstract-only (UNVERIFIABLE_ACCESS for the PDFs); C13 labelled first-party and preliminary; seven corrections to the frozen dossier recorded in the proposal.",
- "remediation": "Read the ICLR 2027 PDFs (2610.06750's OpenReview version, CHARTA, MAPP) when accessible; open 2026.acl-long.1706 in full before citing it"
+ "evidence": "Claim registry C01 to C54 in the proposal, each with URL, date, locator and read status. Re-read in full by the repair owner with orx paper --full and the quoted spans checked in the saved texts: 2610.06750 Sec. 4.1 and 4.2 (conditions; 8.2k examples, average context 84k; 34.6 to 38.5 and 5.0 to 22.8), 2509.24552 Secs. 3, 4.1-4.3 and Figs. 5-6 (O(lw); 1.4B and 7B, 150B tokens, 16K sequences; window grid; train and test 512 average NIAH 0.33), 2402.19427 Sec. 6.2 (phonebook up to the 1,024 window), 2609.33093 Secs. 2.3, 3.1, 4.1 and App. F.2 (-36 to -79 pp; under 1%; 56.3% at 512 filler), 2408.10151 and 2503.01996 (dense models only; grep finds no recurrent model evaluated), 2504.10906 (abstract). New URLs snapshotted with HTTP status, body SHA-256 and arXiv version history. OpenReview items (C02, C22, C23, C47, C48) abstract-only, UNVERIFIABLE_ACCESS for PDFs. C13 first-party and preliminary. Repository evidence C51 to C54 points at hashed bundle artifacts.",
+ "remediation": "Read the ICLR 2027 PDFs (2610.06750's OpenReview version, CHARTA, MAPP, 5MKfXl078n, UUldzWxIL4) when a person can pass the challenge",
+ "supersedes_sha256": "63ecdb4bda336abdb52caa58e4461dad30129aa79b3b2873c8a50fdd11800d1f"
 }

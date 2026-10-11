@@ -1,0 +1,14 @@
+{
+ "proposal": "paragraph-fba6d3e8.txt",
+ "closest_prior": "paragraph-940ca7dd.txt",
+ "closest_prior_id": "arXiv:2610.06750 (Balancing Memory Pathways: Analyzing and Improving Memory Utilization in Hybrid LMs, v1 2026-10-05; ICLR 2027 submission OpenReview nIDJ2pPPOB); Sec. 4.1 re-read with orx paper --full by the D68 repair owner on 2026-10-10 (the recurrent-only and attention-only conditions, 8.2k examples, average context 84k tokens); Secs. 5.1-5.2 for the auxiliary loss and its results",
+ "additional_packets": {
+  "paragraph-8dc55292.txt": "arXiv:2509.24552 (Short window attention enables long-term memorization, SWAX; ICLR 2026 poster, OpenReview btgVfhudI1); Sec. 3 (receptive field O(lw)), Sec. 4.1 (1.4B and 7B, 150B tokens, 16K sequences), Sec. 4.3 and Figs. 5-6 (window grid 128-2,048, training-time against test-time window) re-read with orx paper --full on 2026-10-10"
+ },
+ "wave1_packets": {
+  "proposal": "paragraph-803016fc.txt",
+  "closest_prior": "paragraph-36695b43.txt",
+  "role_map": "compute/blind-roles.json"
+ },
+ "note": "Role mapping for the recorder only. Never give this file to a critic. One critic call per prior packet, each paired with the proposal paragraph in randomized order."
+}

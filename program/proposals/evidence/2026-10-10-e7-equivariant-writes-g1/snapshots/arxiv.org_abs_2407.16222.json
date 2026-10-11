@@ -1,0 +1,37 @@
+{
+ "url": "https://arxiv.org/abs/2407.16222",
+ "fetched_at": "2026-10-11T00:54:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41993,
+ "raw_sha256": "729b0af97a94377f4b36c8997750cd1cdf684209e7e0bb7198b051f4994b12b0",
+ "raw_stored": false,
+ "extract": {
+  "title": "PreAlign: Boosting Cross-Lingual Transfer by Early Establishment of Multilingual Alignment",
+  "authors": [
+   "Li, Jiahuan",
+   "Huang, Shujian",
+   "Ching, Aarron",
+   "Dai, Xinyu",
+   "Chen, Jiajun"
+  ],
+  "citation_date": "2024/07/23",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 23 Jul 2024 06:59:53 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 4 Oct 2024 11:34:23 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Sat, 16 Nov 2024 14:44:50 UTC"
+   }
+  ],
+  "abstract": "Large language models demonstrate reasonable multilingual abilities, despite predominantly English-centric pretraining. However, the spontaneous multilingual alignment in these models is shown to be weak, leading to unsatisfactory cross-lingual transfer and knowledge sharing. Previous works attempt to address this issue by explicitly injecting multilingual alignment information during or after pretraining. Thus for the early stage in pretraining, the alignment is weak for sharing information or knowledge across languages. In this paper, we propose PreAlign, a framework that establishes multilingual alignment prior to language model pretraining. PreAlign injects multilingual alignment by initializing the model to generate similar representations of aligned words and preserves this alignment using a code-switching strategy during pretraining. Extensive experiments in a synthetic English to English-Clone setting demonstrate that PreAlign significantly outperforms standard multilingual joint training in language modeling, zero-shot cross-lingual transfer, and cross-lingual knowledge application. Further experiments in real-world scenarios further validate PreAlign's effectiveness across various model sizes.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ },
+ "snapshot_run": "D68 repair"
+}

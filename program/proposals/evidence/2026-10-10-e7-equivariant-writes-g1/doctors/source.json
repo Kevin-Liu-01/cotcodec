@@ -2,17 +2,17 @@
  "doctor": "Source",
  "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "D68 repair pass by the single owner (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
- "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac; arxiv.org and export.arxiv.org abstract pages, the GitHub API and raw files, the Hugging Face dataset API and the OpenReview api2 search endpoint answered; 97 counted orx discover queries (frontier 46, kill-shot 23, cross-domain 24, synthesis 4) with returned ids and raw-output SHA-256; 63 uncounted log entries (19 OpenReview searches, 4 web searches, 1 author page, GitHub and Hugging Face reads, curl version checks, 36 paper-read entries); cutoff 2026-10-10.",
+ "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac; the OpenReview api2 search endpoint, the OpenAlex works API and arxiv.org abstract pages answered; the ACL Anthology bibliography (anthology+abstracts.bib.gz, sha256 a5b75a3e..., 131,473 entries, fetched 2026-10-10 by the E4 D60 repair) reused from its parsed cache without a new download. This run: 37 counted queries (orx keyword 16, embedding 6, openalex 5 of which 4 returned HTTP 429, OpenReview 4, ACL Anthology 4, OpenAlex citing works 2) with returned ids and raw-output SHA-256 in query-log-run2.json; 7 uncounted full-text reads; wave 1's 97 counted cell queries in query-log.json and the novelty refuter's 15 in the wave-1 record. Cutoff 2026-10-10.",
  "degraded_coverage": [
   "orx build 0.2.2 reports itself outdated (latest 0.2.18)",
-  "alphaXiv full texts can lag arXiv versions; versions resolved through export.arxiv.org v2/v3 pages",
-  "OpenAlex had not indexed 2610.06750",
-  "OpenReview per-note pages return a browser challenge; abstracts from search payloads only",
-  "ACL Anthology through web search and one author page only",
-  "Semantic Scholar and the arXiv API unreachable from the Mac; host relay not used",
+  "OpenAlex returned HTTP 429 on 4 of 5 orx openalex calls in this run",
+  "OpenAlex indexes almost no citations to 2026 arXiv preprints (SWAX 0, 2609.33093 0, 2610.06750 0, Griffin 8), so full-text BM25 search on each prior's title phrase is the citation proxy",
+  "OpenReview per-note pages return a browser challenge; abstracts from the search API only",
+  "Semantic Scholar and the arXiv API unreachable from the Mac; the host relay was not used (the only host job of this run is the reviewer lane job)",
   "no patents, X, Reddit, Hugging Face papers or Chinese-language sources"
  ],
- "remediation": "Semantic Scholar forward citations for 2610.06750, 2609.04434 and 2509.24552 through the host relay when no S1a job runs"
+ "remediation": "Semantic Scholar forward citations for 2610.06750, 2509.24552 and 2402.19427 through the host relay when the host is free",
+ "supersedes_sha256": "43066d9fbbbbe55e10a0eba168c588a6e7d7c7add1a23ace1dc7dc20ae8ed522"
 }

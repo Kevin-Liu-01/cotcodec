@@ -2,8 +2,9 @@
  "doctor": "Safety",
  "status": "PASS",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "D68 repair pass by the single owner (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Safety, monitorability, data rights, and project red lines addressed",
- "evidence": "Public, licensed data (FineWeb, FineWeb-2 ODC-By; ParaDocs Apache-2.0 packaging; ParaCrawl Bonus CC0 packaging; SCB-MT and NTREX-128 CC BY-SA 4.0) with source text kept out of the public repository; FLORES+ used only if Kevin accepts its gated terms; TED2020 (D4) and General Translation customer data excluded; 2610.06750's unlicensed code reimplemented, never vendored; no untrusted code executed (D7); no host job while S1a runs; no host address or credential in the repository.",
- "remediation": "none"
+ "evidence": "Public, licensed data (FineWeb, FineWeb-2 ODC-By; ParaDocs Apache-2.0 packaging; ParaCrawl Bonus CC0 packaging; SCB-MT and NTREX-128 CC BY-SA 4.0) with source text kept out of the public repository; the repair's P1 read NTREX-128 from a local scratchpad copy and wrote counts, rates and file hashes only; FLORES+ used only if Kevin accepts its gated terms; TED2020 (D4) and General Translation customer data excluded; 2610.06750's unlicensed code reimplemented, never vendored; no untrusted code executed (D7); the repair made no host contact; no host address or credential in the repository; no bot challenge bypassed.",
+ "remediation": "none",
+ "supersedes_sha256": "9a3ae8f95f24fef73dd40e59e68baf38c5997e476c723d0e0904e9d8a4e18e68"
 }
