@@ -1,9 +1,13 @@
 # S2 v4: shipped Arabic language packs, derived images and the development smoke
 
 Registration: `program/preregistrations/s2-arabic-cua-locale-v4.md` (DRAFT, not frozen; decision
-D80 (iv)). Nothing here is a Phase 0 result: the fetch and the image build construct the instrument,
-and the smoke (dev split only) decides nothing registered. The K0 rule was committed (commit
-`ee0841b3`) before any image existed.
+D80 (iv); repaired under D84). Nothing here is a Phase 0 result: the fetch and the image builds
+construct the instrument, and the smokes and the oracle's development run (dev split only) decide
+nothing registered. The K0 rule was committed (commit `ee0841b3`) before any image existed, and its
+section is unchanged.
+
+The download's scope (D84): `libreoffice-l10n-ar` is the download D80 (iv) approves; the two Ubuntu
+language packs are public research downloads under D1, their use read under D80 (iv) with D76 (a).
 
 ## fetch/
 
@@ -21,6 +25,12 @@ and the smoke (dev split only) decides nothing registered. The K0 rule was commi
   signed index stanza and to Launchpad's published SHA-256 and size.
 
 The archives stay on the host (`~/cotcodec-runs/stage0/s2v4/inputs/`).
+
+`verify.json` (repair round): the stored files re-checked offline on the login host with the hardened
+code (`fetch_langpacks.py --verify`, export of `d2f733e4`; no download): gpgv GOODSIG and VALIDSIG by the
+pinned signer `F6ECB3762474EDA9D21B7022871920D1991BC93C` (fingerprint and primary key), the signed
+`Suite: jammy-updates` and `Codename: jammy`, the stored signed text equal to gpgv's output,
+`Packages.xz` equal to its signed hash, each `.deb` equal to its signed stanza.
 
 ## image-build-1195/
 
