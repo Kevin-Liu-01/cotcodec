@@ -1,0 +1,714 @@
+{
+ "schema": "question-renewal-ranking-v1",
+ "date": "2026-10-11",
+ "rule": "Gates as in the 2026-10-06 dossier: lowest judge correctness at least 5 and lowest judge citability at least 6. Gate passers are ordered by mean significance, then mean novelty residual, then mean feasibility; candidates failing a gate follow in the same order. Means are rounded to 2 decimals after ordering on exact values.",
+ "judges": "three independent judges; scores 0-10 on the corrected question in slate.md, with verification.json available",
+ "owner_disposition_note": "The owner's disposition is advisory and is not a judge verdict or a gauntlet score.",
+ "ranked": [
+  {
+   "key": "R02-onpolicy-checker-audit",
+   "judges": [
+    {
+     "significance": 6,
+     "correctness": 6,
+     "citability": 8,
+     "novelty_residual": 5.5,
+     "feasibility": 5
+    },
+    {
+     "significance": 5,
+     "correctness": 5,
+     "citability": 8,
+     "novelty_residual": 5,
+     "feasibility": 5
+    },
+    {
+     "significance": 6,
+     "correctness": 6,
+     "citability": 8,
+     "novelty_residual": 5,
+     "feasibility": 5
+    }
+   ],
+   "mean": {
+    "significance": 5.67,
+    "correctness": 5.67,
+    "citability": 8.0,
+    "novelty_residual": 5.17,
+    "feasibility": 5.0
+   },
+   "min": {
+    "significance": 5,
+    "correctness": 5,
+    "citability": 8,
+    "novelty_residual": 5,
+    "feasibility": 5
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "RECOMMEND: backfill (after R03's adjudication)",
+   "rank": 1
+  },
+  {
+   "key": "R01-rerun-noise-sources",
+   "judges": [
+    {
+     "significance": 6,
+     "correctness": 6,
+     "citability": 8,
+     "novelty_residual": 5,
+     "feasibility": 6
+    },
+    {
+     "significance": 5,
+     "correctness": 6,
+     "citability": 8,
+     "novelty_residual": 5,
+     "feasibility": 7
+    },
+    {
+     "significance": 6,
+     "correctness": 7,
+     "citability": 8,
+     "novelty_residual": 5,
+     "feasibility": 8
+    }
+   ],
+   "mean": {
+    "significance": 5.67,
+    "correctness": 6.33,
+    "citability": 8.0,
+    "novelty_residual": 5.0,
+    "feasibility": 7.0
+   },
+   "min": {
+    "significance": 5,
+    "correctness": 6,
+    "citability": 8,
+    "novelty_residual": 5,
+    "feasibility": 6
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "RECOMMEND: lead",
+   "rank": 2
+  },
+  {
+   "key": "R03-mutation-note-completion",
+   "judges": [
+    {
+     "significance": 5,
+     "correctness": 7,
+     "citability": 9,
+     "novelty_residual": 4.5,
+     "feasibility": 6
+    },
+    {
+     "significance": 5,
+     "correctness": 6,
+     "citability": 8,
+     "novelty_residual": 5,
+     "feasibility": 7
+    },
+    {
+     "significance": 6,
+     "correctness": 7,
+     "citability": 9,
+     "novelty_residual": 4,
+     "feasibility": 7
+    }
+   ],
+   "mean": {
+    "significance": 5.33,
+    "correctness": 6.67,
+    "citability": 8.67,
+    "novelty_residual": 4.5,
+    "feasibility": 6.67
+   },
+   "min": {
+    "significance": 5,
+    "correctness": 6,
+    "citability": 8,
+    "novelty_residual": 4,
+    "feasibility": 6
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "RECOMMEND: spine",
+   "rank": 3
+  },
+  {
+   "key": "R14-crosslingual-lc-decomposition",
+   "judges": [
+    {
+     "significance": 5,
+     "correctness": 6,
+     "citability": 7,
+     "novelty_residual": 5,
+     "feasibility": 6
+    },
+    {
+     "significance": 5,
+     "correctness": 6,
+     "citability": 7,
+     "novelty_residual": 5,
+     "feasibility": 6
+    },
+    {
+     "significance": 5,
+     "correctness": 6,
+     "citability": 7,
+     "novelty_residual": 5,
+     "feasibility": 6
+    }
+   ],
+   "mean": {
+    "significance": 5.0,
+    "correctness": 6.0,
+    "citability": 7.0,
+    "novelty_residual": 5.0,
+    "feasibility": 6.0
+   },
+   "min": {
+    "significance": 5,
+    "correctness": 6,
+    "citability": 7,
+    "novelty_residual": 5,
+    "feasibility": 6
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "ALTERNATE",
+   "rank": 4
+  },
+  {
+   "key": "R11-tf32-protocol-consistency",
+   "judges": [
+    {
+     "significance": 5,
+     "correctness": 6,
+     "citability": 8,
+     "novelty_residual": 5,
+     "feasibility": 7
+    },
+    {
+     "significance": 5,
+     "correctness": 6,
+     "citability": 8,
+     "novelty_residual": 4,
+     "feasibility": 7
+    },
+    {
+     "significance": 5,
+     "correctness": 6,
+     "citability": 8,
+     "novelty_residual": 5,
+     "feasibility": 7
+    }
+   ],
+   "mean": {
+    "significance": 5.0,
+    "correctness": 6.0,
+    "citability": 8.0,
+    "novelty_residual": 4.67,
+    "feasibility": 7.0
+   },
+   "min": {
+    "significance": 5,
+    "correctness": 6,
+    "citability": 8,
+    "novelty_residual": 4,
+    "feasibility": 7
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "ALTERNATE",
+   "rank": 5
+  },
+  {
+   "key": "R12-interpreter-kernel-audit",
+   "judges": [
+    {
+     "significance": 5,
+     "correctness": 5,
+     "citability": 7,
+     "novelty_residual": 4.5,
+     "feasibility": 4
+    },
+    {
+     "significance": 4,
+     "correctness": 5,
+     "citability": 6,
+     "novelty_residual": 4,
+     "feasibility": 4
+    },
+    {
+     "significance": 5,
+     "correctness": 5,
+     "citability": 6,
+     "novelty_residual": 4,
+     "feasibility": 5
+    }
+   ],
+   "mean": {
+    "significance": 4.67,
+    "correctness": 5.0,
+    "citability": 6.33,
+    "novelty_residual": 4.17,
+    "feasibility": 4.33
+   },
+   "min": {
+    "significance": 4,
+    "correctness": 5,
+    "citability": 6,
+    "novelty_residual": 4,
+    "feasibility": 4
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "HOLD (D46; fidelity leg first)",
+   "rank": 6
+  },
+  {
+   "key": "R04-nuisance-invariance",
+   "judges": [
+    {
+     "significance": 4.5,
+     "correctness": 6,
+     "citability": 7,
+     "novelty_residual": 6,
+     "feasibility": 6
+    },
+    {
+     "significance": 4,
+     "correctness": 6,
+     "citability": 7,
+     "novelty_residual": 6,
+     "feasibility": 6
+    },
+    {
+     "significance": 5,
+     "correctness": 6,
+     "citability": 7,
+     "novelty_residual": 6,
+     "feasibility": 7
+    }
+   ],
+   "mean": {
+    "significance": 4.5,
+    "correctness": 6.0,
+    "citability": 7.0,
+    "novelty_residual": 6.0,
+    "feasibility": 6.33
+   },
+   "min": {
+    "significance": 4,
+    "correctness": 6,
+    "citability": 7,
+    "novelty_residual": 6,
+    "feasibility": 6
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "FOLD into S2 v3 Phase 0",
+   "rank": 7
+  },
+  {
+   "key": "R05-checker-revision-drift",
+   "judges": [
+    {
+     "significance": 4.5,
+     "correctness": 6,
+     "citability": 7,
+     "novelty_residual": 5.5,
+     "feasibility": 6
+    },
+    {
+     "significance": 4,
+     "correctness": 5,
+     "citability": 7,
+     "novelty_residual": 5,
+     "feasibility": 5
+    },
+    {
+     "significance": 5,
+     "correctness": 7,
+     "citability": 7,
+     "novelty_residual": 5,
+     "feasibility": 8
+    }
+   ],
+   "mean": {
+    "significance": 4.5,
+    "correctness": 6.0,
+    "citability": 7.0,
+    "novelty_residual": 5.17,
+    "feasibility": 6.33
+   },
+   "min": {
+    "significance": 4,
+    "correctness": 5,
+    "citability": 7,
+    "novelty_residual": 5,
+    "feasibility": 5
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "HOLD (after R03's executor)",
+   "rank": 8
+  },
+  {
+   "key": "R10-input-design-oracles",
+   "judges": [
+    {
+     "significance": 5,
+     "correctness": 6,
+     "citability": 8,
+     "novelty_residual": 5,
+     "feasibility": 8
+    },
+    {
+     "significance": 4,
+     "correctness": 5,
+     "citability": 7,
+     "novelty_residual": 3,
+     "feasibility": 8
+    },
+    {
+     "significance": 4,
+     "correctness": 6,
+     "citability": 8,
+     "novelty_residual": 4,
+     "feasibility": 9
+    }
+   ],
+   "mean": {
+    "significance": 4.33,
+    "correctness": 5.67,
+    "citability": 7.67,
+    "novelty_residual": 4.0,
+    "feasibility": 8.33
+   },
+   "min": {
+    "significance": 4,
+    "correctness": 5,
+    "citability": 7,
+    "novelty_residual": 3,
+    "feasibility": 8
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "FOLD into R11's CPU census",
+   "rank": 9
+  },
+  {
+   "key": "R07-action-path-defect-cost",
+   "judges": [
+    {
+     "significance": 4,
+     "correctness": 5,
+     "citability": 7,
+     "novelty_residual": 4.5,
+     "feasibility": 7
+    },
+    {
+     "significance": 4,
+     "correctness": 5,
+     "citability": 8,
+     "novelty_residual": 5,
+     "feasibility": 7
+    },
+    {
+     "significance": 4,
+     "correctness": 7,
+     "citability": 7,
+     "novelty_residual": 5,
+     "feasibility": 8
+    }
+   ],
+   "mean": {
+    "significance": 4.0,
+    "correctness": 5.67,
+    "citability": 7.33,
+    "novelty_residual": 4.83,
+    "feasibility": 7.33
+   },
+   "min": {
+    "significance": 4,
+    "correctness": 5,
+    "citability": 7,
+    "novelty_residual": 4.5,
+    "feasibility": 7
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "FOLD Stage 0 into the Q2 report; drop Stage 1",
+   "rank": 10
+  },
+  {
+   "key": "R15-translated-cua-referents",
+   "judges": [
+    {
+     "significance": 3.5,
+     "correctness": 5,
+     "citability": 7,
+     "novelty_residual": 5,
+     "feasibility": 3
+    },
+    {
+     "significance": 4,
+     "correctness": 5,
+     "citability": 7,
+     "novelty_residual": 5,
+     "feasibility": 4
+    },
+    {
+     "significance": 4,
+     "correctness": 6,
+     "citability": 7,
+     "novelty_residual": 5,
+     "feasibility": 4
+    }
+   ],
+   "mean": {
+    "significance": 3.83,
+    "correctness": 5.33,
+    "citability": 7.0,
+    "novelty_residual": 5.0,
+    "feasibility": 3.67
+   },
+   "min": {
+    "significance": 3.5,
+    "correctness": 5,
+    "citability": 7,
+    "novelty_residual": 5,
+    "feasibility": 3
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "HOLD (needs a larger informative pool)",
+   "rank": 11
+  },
+  {
+   "key": "R08-a11y-observation",
+   "judges": [
+    {
+     "significance": 3.5,
+     "correctness": 5.5,
+     "citability": 7,
+     "novelty_residual": 3,
+     "feasibility": 5
+    },
+    {
+     "significance": 4,
+     "correctness": 5,
+     "citability": 7,
+     "novelty_residual": 3,
+     "feasibility": 5
+    },
+    {
+     "significance": 4,
+     "correctness": 6,
+     "citability": 7,
+     "novelty_residual": 3,
+     "feasibility": 6
+    }
+   ],
+   "mean": {
+    "significance": 3.83,
+    "correctness": 5.5,
+    "citability": 7.0,
+    "novelty_residual": 3.0,
+    "feasibility": 5.33
+   },
+   "min": {
+    "significance": 3.5,
+    "correctness": 5,
+    "citability": 7,
+    "novelty_residual": 3,
+    "feasibility": 5
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "DROP as a line",
+   "rank": 12
+  },
+  {
+   "key": "R13-precision-premium",
+   "judges": [
+    {
+     "significance": 4,
+     "correctness": 5.5,
+     "citability": 6,
+     "novelty_residual": 5,
+     "feasibility": 5
+    },
+    {
+     "significance": 3,
+     "correctness": 6,
+     "citability": 6,
+     "novelty_residual": 4,
+     "feasibility": 5
+    },
+    {
+     "significance": 4,
+     "correctness": 6,
+     "citability": 6,
+     "novelty_residual": 4,
+     "feasibility": 5
+    }
+   ],
+   "mean": {
+    "significance": 3.67,
+    "correctness": 5.83,
+    "citability": 6.0,
+    "novelty_residual": 4.33,
+    "feasibility": 5.0
+   },
+   "min": {
+    "significance": 3,
+    "correctness": 5.5,
+    "citability": 6,
+    "novelty_residual": 4,
+    "feasibility": 5
+   },
+   "gates": {
+    "min_correctness_ge_5": true,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": true,
+   "owner_disposition": "DROP as a line",
+   "rank": 13
+  },
+  {
+   "key": "R09-noise-scale-ladder",
+   "judges": [
+    {
+     "significance": 4,
+     "correctness": 5,
+     "citability": 7,
+     "novelty_residual": 4,
+     "feasibility": 4
+    },
+    {
+     "significance": 4,
+     "correctness": 3,
+     "citability": 7,
+     "novelty_residual": 4,
+     "feasibility": 5
+    },
+    {
+     "significance": 4,
+     "correctness": 5,
+     "citability": 7,
+     "novelty_residual": 4,
+     "feasibility": 4
+    }
+   ],
+   "mean": {
+    "significance": 4.0,
+    "correctness": 4.33,
+    "citability": 7.0,
+    "novelty_residual": 4.0,
+    "feasibility": 4.33
+   },
+   "min": {
+    "significance": 4,
+    "correctness": 3,
+    "citability": 7,
+    "novelty_residual": 4,
+    "feasibility": 4
+   },
+   "gates": {
+    "min_correctness_ge_5": false,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": false,
+   "owner_disposition": "FAILS GATE (correctness)",
+   "rank": 14
+  },
+  {
+   "key": "R06-session-band-published-claims",
+   "judges": [
+    {
+     "significance": 4,
+     "correctness": 5,
+     "citability": 8,
+     "novelty_residual": 3.5,
+     "feasibility": 8
+    },
+    {
+     "significance": 4,
+     "correctness": 4,
+     "citability": 7,
+     "novelty_residual": 4,
+     "feasibility": 7
+    },
+    {
+     "significance": 4,
+     "correctness": 5,
+     "citability": 7,
+     "novelty_residual": 3,
+     "feasibility": 8
+    }
+   ],
+   "mean": {
+    "significance": 4.0,
+    "correctness": 4.67,
+    "citability": 7.33,
+    "novelty_residual": 3.5,
+    "feasibility": 7.67
+   },
+   "min": {
+    "significance": 4,
+    "correctness": 4,
+    "citability": 7,
+    "novelty_residual": 3,
+    "feasibility": 7
+   },
+   "gates": {
+    "min_correctness_ge_5": false,
+    "min_citability_ge_6": true
+   },
+   "passes_gates": false,
+   "owner_disposition": "FAILS GATE (correctness)",
+   "rank": 15
+  }
+ ]
+}
