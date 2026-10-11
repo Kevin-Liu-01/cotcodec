@@ -1276,3 +1276,29 @@ recompute lens reproduced every re-runnable output from SHA-checked copies,
 apart from the GLMM fits. The other checked every claim against the
 registration. The runbook's step-12 verification has no committed record,
 and the session-2 per-job checks have no second check.
+
+**D73. The question-renewal slate is ready for Kevin; three zero- or low-GPU
+steps start within program authority.** The D71 sweep ran five discovery
+cells, a single-owner slate of 15 candidates, verification of 202 claims at
+their primary sources (192 verified, 4 corrected, 6 unverifiable, 0 removed)
+and three independent judges. Two candidates fail the correctness gate.
+The dossier, `program/evidence/2026-10-11/question-renewal/dossier.md`,
+recommends:
+- R01, sources of rerun noise, as the lead (about 4.5 cap-GPU-h; Stage B
+  decisive by construction).
+- R03, completing the checker-mutation note, as the spine (0 GPU-h; under
+  the existing frozen registration; needs Kevin's adjudication and a K2 VM
+  executor).
+- R02, an on-policy checker audit, as the backfill (it waits on R03).
+Adopting a question as a program question is Kevin's call. Decided, as steps
+that leave his choices open:
+- (i) R01 gets a proposal, a draft registration and gauntlet wave 1. Its GPU
+  stage then waits on his admission (D24, D70).
+- (ii) R03's K2 VM-fidelity executor is built and tested on CPU, and goes to
+  a pre-freeze audit as an addendum to `q2-evaluator-mutation-v1`, frozen
+  separately before it runs. The adjudication and spot check stay Kevin's.
+- (iii) R04, whether checker verdicts on golds and on S1a's end states change
+  under other LibreOffice builds, save paths and desktop locales (0 GPU-h,
+  STILL_OPEN), is drafted as a registered CPU study with a pre-freeze audit.
+  It runs only after a freeze.
+Host jobs are CPU-only, and every agent prompt carries the command rule.
