@@ -50,3 +50,22 @@ each, V = 3, CPU-only (16 CPUs; no GRES). Cancelled after four records
 - Fix (`b5a5247`): `kill_process` asks LibreOffice to quit (Ctrl+Q in one of
   its windows) before any signal; executor setup steps are bounded at 180 s;
   every step prints a progress line to the run's container log.
+
+## Development job 1122 (`k2-dev-smoke-v2`, executor `1448559`)
+
+The same six pairs, two runs each, V = 3, CPU-only (16 CPUs; no GRES).
+`dev-smoke-v2-job1122/run/` holds the lane's records, receipt, manifest and
+preflight; `report/` the development report (`python -m
+harness.q2_mutation_k2.report ... --only k2:000,k2:002,k2:004,k2:034,k2:037,k2c:005`).
+
+- 12 of 12 runs scored, none excluded; every pair agrees with its offline
+  lock-exact verdict in both runs: `k2:000` (Calc postconfig save, pass),
+  `k2:002` (Writer agent save, pass), `k2:004` (Calc save with the derived CSV
+  left to the postconfig, pass), `k2:034` (text target without a save, fail),
+  `k2:037` (agent save after a `launch` setup, pass) and `k2c:005` (a
+  `pptx.eq.zorder_nonoverlap` false negative on `compare_pptx_files`: it fails
+  in the VM as it does offline).
+- LibreOffice quit by Ctrl+Q in 0.2-0.4 s before every upload; no SIGTERM, no
+  recovery dialog. Runs took 111-118 s. No target was unsaved at the checker's
+  read; the save-latency estimates (-0.02 to -0.01 s) are clock-offset noise
+  around a save that finished with the Ctrl+S call (reported only).

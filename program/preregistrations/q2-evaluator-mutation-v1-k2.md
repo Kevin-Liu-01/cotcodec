@@ -404,19 +404,30 @@ Kevin").
   Records and summaries are committed; captures, container logs and mutant
   documents stay on the host (OSWorld document contents stay out of the
   repository, as the study's packets did).
-- Budget: 242 runs of about 3 to 4 minutes (boot 18 s, setup about 11 s, 60 s
-  and 20 s settles, injection, evaluation, capture), about 15 VM-hours and 70
-  CPU-hours, about 2 hours of wall time at V = 8. Zero GPU-hours. No model runs
-  and no model-generated code runs (D3, D7, D29 not engaged).
+- Budget: 242 runs of about 2 minutes each (job 1122: 111-118 s, with boot,
+  setup, the 60 s and 20 s settles, injection, evaluation and capture), about
+  8 VM-hours and 40 CPU-hours, about 1 hour of wall time at V = 8 (the 360
+  minute limit leaves room for re-queues). Zero GPU-hours. No model runs and no
+  model-generated code runs (D3, D7, D29 not engaged).
 
 ## 11. Development record (dev split only; exploratory, never evidence)
 
-Pending: no development job has run yet. Development jobs inject items of the
-dev-split mutation run `dev-mutants-v9` (its K2 sample,
-`program/evidence/2026-10-11/q2-mutation-k2/dev-inputs/k2-sample.jsonl`, and
-its 11 candidate events, `k2c-candidates-dev.jsonl`) through the same lane,
-executor and report (purpose `development`), and are reported here with their
-records under `program/evidence/2026-10-11/q2-mutation-k2/`.
+Development jobs inject items of the dev-split mutation run `dev-mutants-v9`
+(its K2 sample, `program/evidence/2026-10-11/q2-mutation-k2/dev-inputs/k2-sample.jsonl`,
+80 jobs on 17 tasks, and its 11 candidate events, `k2c-candidates-dev.jsonl`)
+through the same lane, executor and report (purpose `development`; the lane
+refuses any confirm task before the freeze). Records and reports:
+`program/evidence/2026-10-11/q2-mutation-k2/`. All are CPU-only Slurm jobs
+(no GRES), one host job at a time.
+
+| Job | Executor | Items | Result |
+|---|---|---|---|
+| 1113 (`k2-dev-smoke-v1`) | `60ed1b0` | 6 pairs (a Calc postconfig save, two agent saves, a derived CSV, a text target without a save, a z-order FN candidate), V = 3 | Void, cancelled after 4 records. Defect: `kill_process` sent SIGTERM, which leaves the open document in LibreOffice's recovery list, so the reopened candidate came up behind a "Document Recovery" dialog; two runs were excluded at the pre-postconfig window check (cause (4)), as designed. One run was contaminated by a manual probe in its VM (the probe showed that LibreOffice's own Quit leaves no dialog on reopen). Fixed in `b5a5247` (section 3.2) |
+| 1122 (`k2-dev-smoke-v2`) | `1448559` | the same 6 pairs, two runs each, V = 3 | 12 of 12 runs scored; 6 of 6 pairs agree with the offline verdict in both runs (5 K2 pairs, 1 K2-C z-order FN that fails in the VM as offline); LibreOffice quit cleanly in 0.2-0.4 s with no signal; runs 111-118 s; no target unsaved at the checker's read; save-latency estimates -0.02 to -0.01 s (clock-offset noise around a save that finished with the Ctrl+S call) |
+
+The dress rehearsal at the registered job's shape (all 80 dev sample pairs and
+the 11 dev candidate events, two runs each, V = 8) is recorded here when it has
+run.
 
 ## 12. Readings of the parent's text
 
