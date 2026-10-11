@@ -400,11 +400,13 @@ study would not release.
 ## 14. Caps
 
 - **GPU: 0 GPU-h.** No job requests a GRES; the lane refuses a GPU.
-- **CPU:** the lane runs one job at a time with at most 32 CPUs. Measured on the dev smoke
-  (section 15) and scaled to the registered 553 items x 23 cells: see section 15's cost
-  line. Cap: 40 wall-clock hours of the 32-CPU lane (1,280 CPU-h) for the main run and both
-  confirmation rounds together. If the main run's projection from its first save job
-  exceeds the cap, secondary cells are dropped (section 4.5), and the drop is reported.
+- **CPU:** the lane runs one job at a time with at most 32 CPUs. Scaled from the dev smoke's
+  measured rates (section 15) to the registered 553 items x 23 cells plus the unsaved
+  scores, with 16 workers on 32 CPUs: save stage about 1.0 h, scoring about 7.5 h, two
+  confirmation rounds about 1 h, so about 9.5 lane-hours (about 300 CPU-h). Cap: 20
+  wall-clock hours of the 32-CPU lane (640 CPU-h) for the main run and both confirmation
+  rounds together. If the projection from the first save job exceeds the cap, secondary
+  cells are dropped (section 4.5), and the drop is reported.
 - **Downloads:** the five TDF tarballs (1.04 GB in all), already fetched by the image builds
   on 2026-10-11 and recorded in the build receipts.
 
@@ -431,8 +433,30 @@ profile.
   bridge disposed during call"); fixed by using each build's own Python (section 4.2). The
   title fallback was needed on every item under 7.6.7.2 and 24.8.7.2 and on none under TDF
   7.3.7.2. All four locales compiled offline. Stopped before scoring; superseded by v3.
-- **dev-smoke-v3** (all 23 cells at the fixed code, scored, with confirmation rounds): see
-  below.
+- **dev-smoke-v3** (all 23 cells at the fixed code, scored, both confirmation rounds; jobs
+  1125-1151): V1 and V2 held (the replicate, in its own container, changed no verdict);
+  every item was saved in every cell; no save timed out or showed a dialog. Route arm
+  INVARIANT; build arm MINOR (B1-B3 INVARIANT; B4 and B5 each flip two Impress golds,
+  `4ed5abd0` on `compare_pptx_files_robust` and `e4ef0baf` on `compare_pptx_files`, pass to
+  fail in all three routes, the corrected comparator too); locale arm MINOR (de_DE, ar_EG and
+  tr_TR flip `6e99a1ad` through the CSV export; ja_JP INVARIANT). Both rounds reproduced
+  every discordance (15 of 15 per checker, 0 unstable). No S1a A0a state changed verdict in
+  any cell. On 17 golds no cell reached DRIFT; the dev rates (2 of 17 for B4 and B5) suggest
+  the build arm may reach DRIFT on the registered 92, which the design can detect (section
+  10).
+- **dev-smoke-v4-control** (jobs 1152-1155, at the latest code of record): the item builder
+  verified the mounted inputs against the checker-mutation study's pins and rebuilt v3's
+  manifest byte for byte; the control's 34 verdicts equal v3's and the replicate's equal the
+  control's. A confirm-split plan was refused by the freeze guard before any job existed.
+
+No decision rule, threshold, population or level changed after a smoke result was read. The
+two fixes the smokes led to (the window-title fallback and the build's own UNO client) are
+harness repairs that let the registered save run under the builds; both are recorded per
+item, and neither touches a rule.
+
+Cost of all R04 host jobs so far (37 CPU-only jobs, about 84 minutes of lane time): 25.5
+allocated CPU-h, 0 GPU-h. Measured in v3, per (item, cell): 4.6 worker-seconds to save and
+32.5 worker-seconds to score (both checkers, two fresh-process scorings each).
 
 ## 16. Corrections to the slate's version
 

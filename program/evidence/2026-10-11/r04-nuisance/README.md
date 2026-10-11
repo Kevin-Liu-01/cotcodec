@@ -15,7 +15,9 @@ submitted only on an empty queue by `infra/r04-nuisance/run/r04_host.py`.
 | `images/` | the five derived LibreOffice images: per build the record of `r04_host.py check-image` (image ID, tag, layers added to the LO-VM image), the lane's build receipt and build log, and the submission record; `images.json` maps builds to image IDs |
 | `dev-smoke-v1/` | first smoke: 5 cells; items, scores, save summary, analysis |
 | `dev-smoke-v2/` | second smoke: the save stage of 17 of the 23 cells (B0, its replicate, B1-B3), stopped before B4, B5 and scoring when the `store_as` client defect showed; items and save summary |
-| `dev-smoke-v3/` | the smoke of record: all 23 cells at the fixed code, scored and analysed, with its confirmation rounds |
+| `dev-smoke-v3/` | the smoke of record: all 23 cells at the fixed code, scored and analysed, with both confirmation rounds |
+| `dev-smoke-v4-control/` | the control and replicate at the latest code (input check, freeze guard) |
+| `counts/` | pre-freeze count of the registered S1a items from S1a's committed records |
 
 No document is here: no gold, capture or saved file, no event log, no stdout tail. Items
 carry VM paths, container paths and digests; score rows carry scores, verdicts, digests and
@@ -83,6 +85,70 @@ every item under B2 (7.6.7.2) and B3 (24.8.7.2) and on none under B1 (TDF 7.3.7.
 em-dash titles arrived between 7.3 and 7.6. Locale data compiled offline for all four
 locales. v2 was stopped before scoring and superseded by v3.
 
-## dev-smoke-v3 (the smoke of record)
+## dev-smoke-v3 (the smoke of record; jobs 1125-1151; code `ac58b58`)
 
-Filled in below once the run and its confirmation rounds complete.
+All 23 registered cells on the 34 dev items, scored with the pinned checker and the corrected
+comparator, then both confirmation rounds on every discordant item (3 items x the 9 cells with
+a discordance, plus the control). `analysis.json` is the registered analysis over the main
+run and both rounds (`analysis-main.json`: the main run alone; `pending-round-1.json`: what
+the rounds re-ran; `pending-after-rounds.json`: nothing left pending).
+
+**Validity.** V1 passed (17 of 17 control gold verdicts equal the frozen dev control run's).
+V2 passed: the replicate cell, run in its own container, changed no verdict. Every item was
+saved in every cell (retention 100% everywhere); no save timed out or showed a dialog.
+
+**Readings on the dev split (exploratory; pinned checker, the corrected comparator agrees on
+every cell):**
+
+| Arm | Cells | Reading |
+|---|---|---|
+| route | `B0.store_as`, `B0.headless_convert` | INVARIANT (0 discordances) |
+| build | B1 (TDF 7.3.7.2), B2 (7.6.7.2), B3 (24.8.7.2): INVARIANT; B4 (25.8.7.3), B5 (26.2.6.2): MINOR | MINOR |
+| locale | de_DE, ar_EG, tr_TR: MINOR; ja_JP: INVARIANT | MINOR |
+
+Every discordance was a gold going from pass to fail, and both rounds reproduced every one
+(15 of 15 (item, cell) discordances confirmed under each checker, 0 unstable):
+
+- `4ed5abd0` (`compare_pptx_files_robust`) and `e4ef0baf` (`compare_pptx_files`), two
+  Impress golds, fail under B4 and B5 in all three routes and pass under B0-B3. The corrected
+  comparator fails them too, so this is not the z-order defect.
+- `6e99a1ad` (`compare_table` on the postconfig's CSV export) fails under de_DE, ar_EG and
+  tr_TR and passes under ja_JP: the decimal-separator path seen in v1.
+
+No S1a A0a state (8 pass, 9 fail) changed verdict in any cell. The control reproduced the dev
+P1 flip (`af23762e`, pass unsaved, fail saved) and every cell's flip set against the unsaved
+item contains it. On these 17 golds, DRIFT (3 or more) was not reached by any cell; at the
+registered 92 golds the B4/B5 and locale lines are the ones to watch.
+
+Save timing: the registered save wrote within 0.30 s (median 0.10 s); `store_as` returns
+after the write; `headless_convert` takes about 0.9-1.5 s per file (a different path, not
+read by a checker 0.5 s after Ctrl+S). The title fallback was used on every item under
+B2-B5 (`ctrl_s` and `store_as`) and on none under B0 and B1.
+
+## dev-smoke-v4-control (jobs 1152-1155; code `16c1233`)
+
+The control and the replicate at the latest code of record (the item builder now checks the
+freeze guard and the mounted inputs). The item builder verified the mounted inputs against
+the checker-mutation study's pins (OSWorld tree `4153c686...`, VM baseline `f3253818...`,
+447 file-cache files) and wrote a manifest identical to v3's (`8c6227b8...`). The control's
+34 verdicts equal v3's control verdicts, the replicate's equal the control's, and the
+unsaved scores equal v3's. A plan for the confirm split was refused by the host tool before
+any directory or job existed ("runs only after r04-checker-nuisance-invariance-v1 is
+frozen").
+
+## Cost
+
+| Run | Jobs | Lane wall time | Allocated CPU-h |
+|---|---:|---:|---:|
+| inspection, five image builds | 6 | about 2.5 min | 0.3 |
+| dev-smoke-v1 | 4 | 12.5 min | 3.3 |
+| dev-smoke-v2 (saves only) | 6 | 5.8 min | 1.5 |
+| dev-smoke-v3 (with both rounds) | 17 | 58.0 min | 18.4 |
+| dev-smoke-v4-control | 4 | 5.0 min | 2.0 |
+| **Total** | 37 | about 84 min | 25.5 |
+
+GPU: 0. Measured per (item, cell) in v3: save 4.6 worker-seconds, scoring 32.5
+worker-seconds (both checkers, two fresh-process scorings each). Projection for the
+registered run (553 items x 23 cells, plus the unsaved scores) on the 32-CPU lane with 16
+workers: save stage about 1.0 h, scoring about 7.5 h, two confirmation rounds about 1 h:
+about 9.5 lane-hours (about 300 CPU-h).

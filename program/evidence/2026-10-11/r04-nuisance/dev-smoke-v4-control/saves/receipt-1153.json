@@ -1,0 +1,15 @@
+{
+  "job_id": "1153",
+  "mode": "run",
+  "image_id": "sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361",
+  "argv_json_hex_sha256": "6c79aa981c82a910cf859a33c07a184651982b377a1a438eb4c17c28508eab14",
+  "argv_json_hex": "5b227368222c20222f7372632f696e6672612f7230342d6e756973616e63652f72756e2f7265736176652e7368222c20222f726f2f6974656d732f6974656d732e6a736f6e6c222c20222f6f7574222c20223132222c20222d222c202242302e6374726c5f732e4c30225d",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/16c123399cd8b8ba9ccba03e3c673ff131bc3990:/src:ro /home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v4-control/main/saves:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro /home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v4-control/items:/ro/items:ro /home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1037:/ro/s1a-1037:ro",
+  "network": "none",
+  "gpus_requested": 0,
+  "container_dev_nvidia": [],
+  "batch_sha256": "f97d3af96418fb4fa806f39456e4117f306cbf04b14e08533d77a95349b37443",
+  "exit_status": 0,
+  "started_at": "2026-10-11T11:51:16Z",
+  "finished_at": "2026-10-11T11:51:31Z"
+}
