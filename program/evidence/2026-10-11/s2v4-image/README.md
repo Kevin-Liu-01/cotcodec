@@ -88,15 +88,16 @@ host), `smoke-summary.json` (`smoke_summary.py`), `preflight.txt`.
   a dependency on every other file of the layer (configmgr then reads it last), and the images were
   rebuilt (below). This changed the instrument on the development set, not a rule.
 
-## image-build-1199/ (the pinned images)
+## image-build-1199/ (superseded by build 1207)
 
 Slurm 1199 (CPU only, 481 s, export of `4c516761`, the self-test first): the same install (404
 operations, 2,790 changed blocks against the certified disk, 0 unexplained) and six cell images whose
 selector declares a dependency on every other file of the system layer (configmgr reads it last). Each
 selector-only cell changes 8 blocks against the base and PL 466 (369 toolbar definitions); `e2fsck -fn`
 reports only the certified disk's finding on every image; `qemu-img compare` finds each qcow2 identical
-to its raw source. Digests: the registration's section "Images built" and
-`harness/s2_locale/images.json`. The images of build 1195 stay on the host, superseded and unpinned.
+to its raw source. Superseded in the repair round: this build stamped the wall clock into each superblock, so it could not be
+regenerated bit for bit. Its images stay on the host, unpinned; build 1195's images were deleted after
+build 1207 ran (their records stay here).
 
 ## smoke-1201/ (development, dev split only; the pinned images)
 
@@ -119,3 +120,45 @@ the same 24 capture slots as smoke 1197 on the images of build 1199, plus 10 gol
   reads Calc's default sheet name, so the SheetPrefix pin holds in the Arabic cells).
 - `k0_inputs.admission` over these records (development, three dev tasks, no instrument metrics):
   `12382c62` and `e528b65e` admitted, `2b94c692` runnable (it has no gold, so no passing-side control).
+
+## image-build-1207/ (the pinned images; repair round, D84)
+
+Slurm 1207 (CPU only, 16.5 minutes, `s2v4-cpu.sbatch` run mode in the `cotcodec-q2-vmprobe` image,
+`--network=none`, export of `c7a2b1d0`): the self-test first (`selftest.json`: planner refusals,
+readback with modification times, a second application of the plan one second later byte-identical
+under the fixed time and `s_wtime` equal to it, the inode-slot, superblock-field and outside-partition
+checks, and tampers that each must be flagged: an unplanned file, a changed untouched inode, a byte in
+the disk's tail), then `image_build.py build-twice`: two full builds from the same inputs into `a/` and
+`b/`, every `debugfs -w` session at `E2FSPROGS_FAKE_TIME` = 1754395037 (the certified root filesystem's
+own `s_wtime`).
+
+- `reproducibility.json`: both builds' digests (derived base, six cells, image manifest, cell
+  manifests) identical, `reproducible` true; against build 1199's derived base one 4 KiB block differs,
+  the primary superblock (its checksum and write time).
+- `a/build-record.json` (the pinned build; `b/build-record.json` beside it): per image the block
+  classification (the base 2,790 blocks against the certified disk, 411 changed inode slots, every one
+  a touched inode; each selector-only cell 8 blocks against the base, PL 466), the whole-image checks
+  (identical outside the root partition; superblock fields changed: checksum and free counts only;
+  `s_wtime` the fixed time), `e2fsck -fn` (the certified disk's one finding only), the readback (404
+  paths with their mtimes), `layer_files` (the system layer is `LAYER_FILES` plus `main`), and the
+  qcow2 (read-only, standalone, identical to its raw source).
+- `a/image-manifest.json`, `a/cell-manifests.json`: every path written, with mode, owner, mtime, inode
+  and SHA-256.
+- `a/maintainer-scripts/`: the three packages' control files and maintainer scripts, none of which ran
+  (the language packs' `install-language-pack ar`; `libreoffice-l10n-ar`'s `ucf`/`ucfr` registration and
+  `dpkg-maintscript-helper` upgrade helper; the `ucf` copies themselves are made by the build).
+- `receipt-1207.json`: the batch receipt (no GPU, network none, exit 0).
+
+Pins: `harness/s2_locale/images.json` (build a's files, host directory `image-build-v5/a`; build b's
+identical files are kept as a second copy). `tests/test_s2v4_image_build.py` checks the pins against
+this record and the reproducibility record.
+
+## pd-cache/ (the PD file-cache variant; repair round)
+
+`pd-cache-manifest.json`: built once on the login host by `python3 -m harness.s2_locale.pd_cache` from an
+export of `e958a22e` (no download; copies from the pinned file cache): every file the 17 dev tasks'
+setups download (23 files), each task's first supported document planted by `capture.py`'s
+`plant_document` (15 tasks, every one of K0's named PD tasks; `2b94c692` and `bf4e9888` have no text run
+on their first slide), with each file's SHA-256 and the plants. `files_sha256`
+`d51d66fa3d3a890c6a18ad231b926e3932881209ca91e467e8532319c549b46e` is pinned in
+`vm_lane.PD_CACHE_FILES_SHA256`; the lane re-checks the host directory against the manifest at submit.
