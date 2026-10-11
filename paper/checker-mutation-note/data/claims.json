@@ -1,0 +1,5681 @@
+{
+ "schema": "checker-mutation-note-claims-v1",
+ "note": "paper/checker-mutation-note/draft.md",
+ "description": "Every number in the note's text, with the committed file and key it comes from. A JSON evidence item gives 'key' (keys and indexes) and 'fmt'; its value rendered with 'fmt' must equal 'expect'. A text evidence item gives 'match', a substring of the committed file. 'expect' must occur in the claim's 'text'. Formats: int, comma (thousands separator), len (length of a list or object), raw (str of the value), pct1/pct2 (value x 100, half-up), pct1z (as pct1 but 0 and 1 render as '0' and '100'), round1/round2/round3 (half-up). 'structural' lists phrases whose digits are references, not quantities. Checked by scripts/check_claims.py.",
+ "base_commit": "746d60d2",
+ "sources": {
+  "ADJ_AN": "program/evidence/2026-10-11/q2-mutation-adjudication-v2/analysis/analysis.json",
+  "ADJ_SUM": "program/evidence/2026-10-11/q2-mutation-adjudication-v2/summary.json",
+  "ADJ_README": "program/evidence/2026-10-11/q2-mutation-adjudication-v2/README.md",
+  "MUT_README": "program/evidence/2026-10-08/q2-mutation-confirm/README.md",
+  "MUT_RES": "program/evidence/2026-10-08/q2-mutation-confirm/results/README.md",
+  "MUT_SUM": "program/evidence/2026-10-08/q2-mutation-confirm/results/summary.json",
+  "MUT_AN": "program/evidence/2026-10-08/q2-mutation-confirm/results/analysis.json",
+  "BUILD": "program/evidence/2026-10-08/q2-mutation-confirm/results/released/confirm-mutants-v1/build-summary.json",
+  "SAMPLE": "program/evidence/2026-10-08/q2-mutation-confirm/audit/sample/sample-summary.redacted.json",
+  "AUD_SUM": "program/evidence/2026-10-08/q2-mutation-confirm/audit/audit-summary/audit-summary.json",
+  "AUD_README": "program/evidence/2026-10-08/q2-mutation-confirm/audit/README.md",
+  "K2_SUM": "program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/report/k2-summary.json",
+  "K2_REG": "program/preregistrations/q2-evaluator-mutation-v1-k2.md",
+  "MUT_REG": "program/preregistrations/q2-evaluator-mutation-v1.md",
+  "DEC": "program/decisions.md",
+  "ZINV_V1": "program/evidence/2026-10-08/q2-stage1-g0/zinv/zinv-validation-v1-gate.json",
+  "ZINV_V2": "program/evidence/2026-10-08/q2-stage1-g0/zinv/zinv-validation-v2-gate.json",
+  "ZINV_V3": "program/evidence/2026-10-08/q2-stage1-g0/zinv/zinv-validation-v3.json",
+  "S1A_REG": "program/preregistrations/q2-stage1-rescoped-v1.md",
+  "S1A_RES": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+  "S1A_RESC": "program/evidence/2026-10-10/q2-stage1-analysis/rescore-coverage.json",
+  "DER": "paper/checker-mutation-note/data/derived.json",
+  "DOSSIER": "program/evidence/2026-10-11/question-renewal/dossier.md",
+  "CLAIMREG": "program/evidence/2026-10-11/question-renewal/claim-registry.json",
+  "VERIF": "program/evidence/2026-10-11/question-renewal/verification.json",
+  "PROV": "program/evidence/q2-mutation/integration/blind-spec-provenance.json"
+ },
+ "claims": [
+  {
+   "id": "k2-sample-size",
+   "text": "sample of 80 scoring jobs",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "gate",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "80"
+    }
+   ]
+  },
+  {
+   "id": "operators-64-summary",
+   "text": "confirm split with 64 operators",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "\"operators\": 64",
+     "expect": "64"
+    }
+   ]
+  },
+  {
+   "id": "zorder-36-of-40-summary",
+   "text": "36 of 40 evaluable mutants of",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "40"
+    }
+   ]
+  },
+  {
+   "id": "zorder-share-summary",
+   "text": "(90.0%; task-equal share 91.7%, 81.3-100%)",
+   "evidence": [
+    {
+     "file": "DOSSIER",
+     "match": "36 of 40 (90.0%; task-equal 91.7%)",
+     "expect": "90.0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "91.7"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "81.3"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "100"
+    }
+   ],
+   "note": "S11: 36 of 40 is 90.0% raw; 91.7% is the task-equal share"
+  },
+  {
+   "id": "zorder-family-split-summary",
+   "text": "35 of 39 and `compare_pptx_files_tolerant` 1 of 1",
+   "evidence": [
+    {
+     "file": "DEC",
+     "match": "`compare_pptx_files` 35 of 39",
+     "expect": "35 of 39"
+    },
+    {
+     "file": "DEC",
+     "match": "`compare_pptx_files_tolerant` 1 of 1",
+     "expect": "1 of 1"
+    }
+   ],
+   "note": "D72 (iii)"
+  },
+  {
+   "id": "zorder-adjudicated-summary",
+   "text": "After adjudication 33 are confirmed and 3",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "counts",
+      "by_audit_reading",
+      "confirmed"
+     ],
+     "fmt": "int",
+     "expect": "33"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "counts",
+      "by_audit_reading",
+      "label_contradicted"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "zorder-gold-defect-summary",
+   "text": "all 3 on one task whose gold",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "false_negative",
+      "on_gold_defect_tasks"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "view-selection-summary",
+   "text": "operator gave 0 failures (for example 0 of 85 selection changes",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.eq.view_selection",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.eq.view_selection",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "85"
+    }
+   ]
+  },
+  {
+   "id": "literal-formula-summary",
+   "text": "0 of 39 literal-for-formula alternatives",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.alt.literal_for_formula",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.alt.literal_for_formula",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "39"
+    }
+   ]
+  },
+  {
+   "id": "fn-confirmed-pooled-summary",
+   "text": "11.6% (6.4-17.3%) pooled over all 60 evaluable tasks",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "11.6"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "6.4"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "17.3"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "pooled",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "60"
+    }
+   ]
+  },
+  {
+   "id": "fn-confirmed-cpf-summary",
+   "text": "37.1% (28.3-44.6%) within",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_family",
+      "compare_pptx_files",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "37.1"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_family",
+      "compare_pptx_files",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "28.3"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_family",
+      "compare_pptx_files",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "44.6"
+    }
+   ]
+  },
+  {
+   "id": "fn-confirmed-zorder-summary",
+   "text": "85.4% (68.8-97.9%) within the z-order operator",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "85.4"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "68.8"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "97.9"
+    }
+   ]
+  },
+  {
+   "id": "probe-fp-28-summary",
+   "text": "hold 28 more false-positive events that nobody audited",
+   "evidence": [
+    {
+     "file": "MUT_RES",
+     "match": "no false-negative event; 28",
+     "expect": "28"
+    }
+   ]
+  },
+  {
+   "id": "fp-5-of-96-summary",
+   "text": "5 of 96 evaluable should-fail mutants",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "pooled",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "5"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "pooled",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "96"
+    }
+   ]
+  },
+  {
+   "id": "fp-candidate-share-summary",
+   "text": "(task-equal 5.9%, 0.8-12.3%)",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "5.9"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "0.8"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "12.3"
+    }
+   ]
+  },
+  {
+   "id": "fp-confirmed-summary",
+   "text": "2 are confirmed violations (2.1%, 0-5.4%)",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "confirmed_share",
+      "pooled",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "2"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "confirmed_share",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "2.1"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "confirmed_share",
+      "pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "confirmed_share",
+      "pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "5.4"
+    }
+   ]
+  },
+  {
+   "id": "fp-contradicted-summary",
+   "text": "for the other 3 the",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "counts",
+      "by_audit_reading",
+      "label_contradicted"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "p1-raw-summary",
+   "text": "4 of 92 golds that pass raw",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "raw_flips",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "4"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "raw_flips",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "92"
+    }
+   ]
+  },
+  {
+   "id": "p1-raw-ci-summary",
+   "text": "(exact 95% 1.20-10.76%); 3 of those flips",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "exact\n  Clopper-Pearson 95% intervals",
+     "expect": "95"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "raw_flips",
+      "low"
+     ],
+     "fmt": "pct2",
+     "expect": "1.20"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "raw_flips",
+      "high"
+     ],
+     "fmt": "pct2",
+     "expect": "10.76"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "audit_confirmed_flips",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "p1-confirmed-summary",
+   "text": "(3.26%, 0.68-9.23%)",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "audit_confirmed_flips",
+      "share"
+     ],
+     "fmt": "pct2",
+     "expect": "3.26"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "audit_confirmed_flips",
+      "low"
+     ],
+     "fmt": "pct2",
+     "expect": "0.68"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "audit_confirmed_flips",
+      "high"
+     ],
+     "fmt": "pct2",
+     "expect": "9.23"
+    }
+   ]
+  },
+  {
+   "id": "k2-78-of-78-summary",
+   "text": "78 of 78 compared pairs",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "78"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "differ"
+     ],
+     "fmt": "int",
+     "expect": "0",
+     "shown": "78 of 78"
+    }
+   ],
+   "note": "80 pairs, 2 excluded, 78 compared, 78 agree, 0 differ"
+  },
+  {
+   "id": "k2c-41-summary",
+   "text": "all 41 candidate events reproduce",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2c",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "41"
+    }
+   ]
+  },
+  {
+   "id": "s1a-0-of-1808-summary",
+   "text": "changed 0 of 1,808 verdicts of",
+   "evidence": [
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "verdict_sources",
+      "secondary",
+      "flips_total"
+     ],
+     "fmt": "len",
+     "expect": "0"
+    },
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "verdict_sources",
+      "secondary",
+      "scored_final_records"
+     ],
+     "fmt": "comma",
+     "expect": "1,808"
+    }
+   ]
+  },
+  {
+   "id": "kappa-summary",
+   "text": "Cohen's κ 0.343",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "audit",
+      "kappa"
+     ],
+     "fmt": "round3",
+     "expect": "0.343"
+    }
+   ]
+  },
+  {
+   "id": "spot-25-summary",
+   "text": "matched it on all 25 spot-check items",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "spot_check",
+      "a",
+      "by_stratum",
+      "all_25",
+      "agrees_with_anthropic_rater"
+     ],
+     "fmt": "int",
+     "expect": "25"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "spot_check",
+      "a",
+      "by_stratum",
+      "all_25",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "25"
+    }
+   ]
+  },
+  {
+   "id": "scope-205",
+   "text": "the 205 offline-checkable, web-free tasks",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "the 205 offline-checkable, web-free tasks of OSWorld-Verified",
+     "expect": "205"
+    }
+   ]
+  },
+  {
+   "id": "scope-splits",
+   "text": "361 tasks), split by a seeded draw into dev 32, confirm 120 and reserve 53 tasks",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "(`test_nogdrive.json`, 361 tasks)",
+     "expect": "361"
+    },
+    {
+     "file": "MUT_REG",
+     "match": "dev 32, confirm 120, reserve 53",
+     "expect": "dev 32"
+    },
+    {
+     "file": "MUT_REG",
+     "match": "dev 32, confirm 120, reserve 53",
+     "expect": "confirm 120"
+    },
+    {
+     "file": "MUT_REG",
+     "match": "dev 32, confirm 120, reserve 53",
+     "expect": "reserve 53"
+    }
+   ]
+  },
+  {
+   "id": "targets",
+   "text": "68 targets on 67 tasks (32 xlsx, 22 pptx, 13 docx, 1 text)",
+   "evidence": [
+    {
+     "file": "MUT_README",
+     "match": "68 targets on 67 tasks (32 xlsx, 22\n  pptx, 13 docx, 1 text)",
+     "expect": "68 targets"
+    },
+    {
+     "file": "MUT_README",
+     "match": "68 targets on 67 tasks (32 xlsx, 22\n  pptx, 13 docx, 1 text)",
+     "expect": "67 tasks"
+    },
+    {
+     "file": "MUT_README",
+     "match": "68 targets on 67 tasks (32 xlsx, 22\n  pptx, 13 docx, 1 text)",
+     "expect": "32 xlsx"
+    },
+    {
+     "file": "MUT_README",
+     "match": "68 targets on 67 tasks (32 xlsx, 22\n  pptx, 13 docx, 1 text)",
+     "expect": "13 docx"
+    },
+    {
+     "file": "MUT_README",
+     "match": "68 targets on 67 tasks (32 xlsx, 22\n  pptx, 13 docx, 1 text)",
+     "expect": "1 text"
+    },
+    {
+     "file": "MUT_README",
+     "match": "68 targets on 67 tasks (32 xlsx, 22\n  pptx, 13 docx, 1 text)",
+     "expect": "22"
+    },
+    {
+     "file": "BUILD",
+     "key": [
+      "targets"
+     ],
+     "fmt": "int",
+     "expect": "68"
+    },
+    {
+     "file": "MUT_REG",
+     "match": "| confirm | 120 | 67 | 68 (32 / 22 / 13 / 1) | 43 |"
+    }
+   ],
+   "note": "the confirm row of the registration's target table gives the same counts as 68 (32 / 22 / 13 / 1)"
+  },
+  {
+   "id": "no-complete-gold",
+   "text": "43 confirm tasks have no complete gold",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "| confirm | 120 | 67 | 68 (32 / 22 / 13 / 1) | 43 |",
+     "expect": "43"
+    }
+   ]
+  },
+  {
+   "id": "operators-64",
+   "text": "has 64 operators in five",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "\"operators\": 64",
+     "expect": "64"
+    }
+   ]
+  },
+  {
+   "id": "specs-205-598",
+   "text": "The 205 specs (598",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "205 YAML specs, 598 requirements",
+     "expect": "205"
+    },
+    {
+     "file": "MUT_REG",
+     "match": "205 YAML specs, 598 requirements",
+     "expect": "598"
+    }
+   ]
+  },
+  {
+   "id": "spec-author",
+   "text": "(Claude Opus 5.5)",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "by Claude Opus 5.5 (Anthropic",
+     "expect": "5.5"
+    }
+   ]
+  },
+  {
+   "id": "spec-checker-scan",
+   "text": "any of the 117 checker functions",
+   "evidence": [
+    {
+     "file": "PROV",
+     "key": [
+      "checker_function_names_scanned"
+     ],
+     "fmt": "int",
+     "expect": "117"
+    },
+    {
+     "file": "PROV",
+     "key": [
+      "specs_naming_a_checker_function"
+     ],
+     "fmt": "len",
+     "expect": "0",
+     "shown": "any of the 117"
+    }
+   ]
+  },
+  {
+   "id": "zorder-2mm",
+   "text": "within 2 mm of the other",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "within 2 mm (72,000 EMU) of the other",
+     "expect": "2 mm"
+    }
+   ]
+  },
+  {
+   "id": "lo-build",
+   "text": "(LibreOffice 7.3.7.2)",
+   "evidence": [
+    {
+     "file": "BUILD",
+     "match": "\"lo_build\": \"LibreOffice 7.3.7.2",
+     "expect": "7.3.7.2"
+    }
+   ]
+  },
+  {
+   "id": "t1-planned",
+   "text": "| Planned | 1,289 |",
+   "evidence": [
+    {
+     "file": "BUILD",
+     "key": [
+      "planned"
+     ],
+     "fmt": "comma",
+     "expect": "1,289"
+    }
+   ]
+  },
+  {
+   "id": "t1-admitted",
+   "text": "| Admitted (build-time purity passed, duplicates removed) | 1,232 |",
+   "evidence": [
+    {
+     "file": "BUILD",
+     "key": [
+      "admitted"
+     ],
+     "fmt": "comma",
+     "expect": "1,232"
+    },
+    {
+     "file": "BUILD",
+     "key": [
+      "duplicates"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "t1-evaluable",
+   "text": "| Evaluable (both dependency sets) | 888 |",
+   "evidence": [
+    {
+     "file": "MUT_README",
+     "match": "`evaluable` 888",
+     "expect": "888"
+    }
+   ]
+  },
+  {
+   "id": "t1-population",
+   "text": "on 60 tasks (the population) | 444 |",
+   "evidence": [
+    {
+     "file": "SAMPLE",
+     "key": [
+      "pool"
+     ],
+     "fmt": "int",
+     "expect": "444"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "population_outside_probe_cells",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "60"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "population_outside_probe_cells",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "444"
+    }
+   ]
+  },
+  {
+   "id": "t1-should-pass",
+   "text": "| 255 / 93 |",
+   "evidence": [
+    {
+     "file": "SAMPLE",
+     "key": [
+      "pool_by_label",
+      "should_pass_equiv"
+     ],
+     "fmt": "int",
+     "expect": "255"
+    },
+    {
+     "file": "SAMPLE",
+     "key": [
+      "pool_by_label",
+      "should_pass_alt_solution"
+     ],
+     "fmt": "int",
+     "expect": "93"
+    }
+   ]
+  },
+  {
+   "id": "t1-should-fail",
+   "text": "| 91 / 5 |",
+   "evidence": [
+    {
+     "file": "SAMPLE",
+     "key": [
+      "pool_by_label",
+      "should_fail_violation"
+     ],
+     "fmt": "int",
+     "expect": "91"
+    },
+    {
+     "file": "SAMPLE",
+     "key": [
+      "pool_by_label",
+      "should_fail_extra_change"
+     ],
+     "fmt": "int",
+     "expect": "5"
+    }
+   ]
+  },
+  {
+   "id": "k1",
+   "text": "70 of 74 confirm tasks, against a 90% line",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "K1"
+     ],
+     "fmt": "raw",
+     "expect": "70/74",
+     "shown": "70 of 74"
+    },
+    {
+     "file": "MUT_REG",
+     "match": "in at least 90% of tasks",
+     "expect": "90%"
+    }
+   ],
+   "note": "the K1 value renders as '70/74', written '70 of 74' in the text"
+  },
+  {
+   "id": "s3-normalized",
+   "text": "23 of 1,232 admitted",
+   "evidence": [
+    {
+     "file": "MUT_RES",
+     "match": "23 of 1,232 admitted mutants lost their edit in the save",
+     "expect": "23 of 1,232"
+    }
+   ]
+  },
+  {
+   "id": "s4-save-timing",
+   "text": "96 of 1,300 saves took longer than the 0.5 s",
+   "evidence": [
+    {
+     "file": "MUT_RES",
+     "match": "mutation run 96 of 1,300 saves slower than 0.5 s",
+     "expect": "96 of 1,300"
+    },
+    {
+     "file": "MUT_RES",
+     "match": "mutation run 96 of 1,300 saves slower than 0.5 s",
+     "expect": "0.5 s"
+    }
+   ]
+  },
+  {
+   "id": "s4-slowest-s7",
+   "text": "(slowest 1.20 s). 7 of 68 targets",
+   "evidence": [
+    {
+     "file": "MUT_RES",
+     "match": "slowest 1.20 s",
+     "expect": "1.20 s"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "K9",
+      "null_not_pass"
+     ],
+     "fmt": "int",
+     "expect": "7"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "K9",
+      "targets"
+     ],
+     "fmt": "int",
+     "expect": "68"
+    }
+   ]
+  },
+  {
+   "id": "census",
+   "text": "40 shams were audited: a census of 178 items",
+   "evidence": [
+    {
+     "file": "SAMPLE",
+     "key": [
+      "strata",
+      "sham"
+     ],
+     "fmt": "int",
+     "expect": "40"
+    },
+    {
+     "file": "SAMPLE",
+     "key": [
+      "audit_scope",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "178"
+    }
+   ]
+  },
+  {
+   "id": "shams",
+   "text": "33 saved golds, one for every audited task, and 7 saved",
+   "evidence": [
+    {
+     "file": "SAMPLE",
+     "key": [
+      "shams",
+      "gold"
+     ],
+     "fmt": "int",
+     "expect": "33"
+    },
+    {
+     "file": "SAMPLE",
+     "key": [
+      "shams",
+      "do_nothing"
+     ],
+     "fmt": "int",
+     "expect": "7"
+    }
+   ]
+  },
+  {
+   "id": "renders-100dpi",
+   "text": "100-dpi page renders",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "100-dpi page",
+     "expect": "100"
+    }
+   ]
+  },
+  {
+   "id": "claude-rater-outcomes",
+   "text": "177 ratings passed and 1 was voided",
+   "evidence": [
+    {
+     "file": "AUD_SUM",
+     "key": [
+      "answer_status",
+      "model-rater-anthropic",
+      "ok"
+     ],
+     "fmt": "int",
+     "expect": "177"
+    },
+    {
+     "file": "AUD_SUM",
+     "key": [
+      "answer_status",
+      "model-rater-anthropic",
+      "isolation_void"
+     ],
+     "fmt": "int",
+     "expect": "1"
+    }
+   ]
+  },
+  {
+   "id": "qwen-rater-outcomes",
+   "text": "answered all 178 items; 6 hit the token limit",
+   "evidence": [
+    {
+     "file": "AUD_README",
+     "match": "178 calls on 178 distinct items",
+     "expect": "178"
+    },
+    {
+     "file": "AUD_SUM",
+     "key": [
+      "answer_status",
+      "model-rater-open-weight",
+      "thinking_unfinished"
+     ],
+     "fmt": "int",
+     "expect": "6"
+    }
+   ]
+  },
+  {
+   "id": "qwen-gpu",
+   "text": "0.365 GPU-h",
+   "evidence": [
+    {
+     "file": "MUT_README",
+     "match": "0.365 GPU-h physical in all",
+     "expect": "0.365 GPU-h"
+    }
+   ]
+  },
+  {
+   "id": "pool-spot",
+   "text": "**adjudication pool** of 34 items. A stratified **spot check** of 25 items (7 also in the pool;",
+   "evidence": [
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "adjudication",
+      "pool"
+     ],
+     "fmt": "int",
+     "expect": "34"
+    },
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "adjudication",
+      "spot_check"
+     ],
+     "fmt": "int",
+     "expect": "25"
+    },
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "adjudication",
+      "spot_check_also_in_pool"
+     ],
+     "fmt": "int",
+     "expect": "7"
+    }
+   ]
+  },
+  {
+   "id": "distinct-52",
+   "text": "52 distinct) was set aside",
+   "evidence": [
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "adjudication",
+      "union_items"
+     ],
+     "fmt": "int",
+     "expect": "52"
+    }
+   ]
+  },
+  {
+   "id": "adj-transcripts",
+   "text": "52 transcripts, 52 passing the",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "isolation",
+      "a_collector",
+      "transcripts"
+     ],
+     "fmt": "int",
+     "expect": "52"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "isolation",
+      "a_registered_ingest",
+      "outcomes",
+      "ok"
+     ],
+     "fmt": "int",
+     "expect": "52"
+    }
+   ]
+  },
+  {
+   "id": "adj-tools",
+   "text": "registered isolation audit and 0 void. The agents used 711 Read calls and 52 structured",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "isolation",
+      "a_registered_ingest",
+      "void"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "Tools: 711 Read and 52 StructuredOutput",
+     "expect": "711"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "Tools: 711 Read and 52 StructuredOutput",
+     "expect": "52"
+    }
+   ]
+  },
+  {
+   "id": "adj-images",
+   "text": "opened 503 of 506 page images",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "image_coverage",
+      "run_a",
+      "opened"
+     ],
+     "fmt": "int",
+     "expect": "503"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "image_coverage",
+      "run_a",
+      "page_images"
+     ],
+     "fmt": "int",
+     "expect": "506"
+    }
+   ]
+  },
+  {
+   "id": "adj-answers",
+   "text": "The pool split 17 accept and 17 reject; the spot check 19 accept and 6 reject.",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "answers",
+      "a_pool",
+      "accept"
+     ],
+     "fmt": "int",
+     "expect": "17"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "answers",
+      "a_pool",
+      "reject"
+     ],
+     "fmt": "int",
+     "expect": "17"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "answers",
+      "a_spot_check",
+      "accept"
+     ],
+     "fmt": "int",
+     "expect": "19"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "answers",
+      "a_spot_check",
+      "reject"
+     ],
+     "fmt": "int",
+     "expect": "6"
+    }
+   ]
+  },
+  {
+   "id": "notation-12",
+   "text": "and the 12 items whose",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_c_12_marker_items",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "12"
+    }
+   ]
+  },
+  {
+   "id": "k2-sample-shape",
+   "text": "The sample is 80 jobs, 20 per domain, on 41 tasks, 73",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "gate",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "80"
+    },
+    {
+     "file": "K2_REG",
+     "match": "20 per domain over",
+     "expect": "20"
+    },
+    {
+     "file": "K2_REG",
+     "match": "41 tasks, 73 mutants and 7 null mutants",
+     "expect": "41 tasks"
+    },
+    {
+     "file": "K2_REG",
+     "match": "41 tasks, 73 mutants and 7 null mutants",
+     "expect": "73"
+    }
+   ]
+  },
+  {
+   "id": "k2-null-and-k2c",
+   "text": "mutants and 7 null mutants. K2-C, a descriptive companion, runs all 41 candidate events",
+   "evidence": [
+    {
+     "file": "K2_REG",
+     "match": "41 tasks, 73 mutants and 7 null mutants",
+     "expect": "7 null mutants"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2c",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "41"
+    }
+   ]
+  },
+  {
+   "id": "kappa-rule",
+   "text": "rule was κ ≥ 0.6 between",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "exclusions",
+      "d34_dev_exit",
+      "kappa_min"
+     ],
+     "fmt": "round1",
+     "expect": "0.6"
+    }
+   ]
+  },
+  {
+   "id": "dev-kappa",
+   "text": "audit κ was 0.066 under the registered ingest, and 0.575 with",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "exclusions",
+      "d34_dev_exit",
+      "kappa_registered"
+     ],
+     "fmt": "round3",
+     "expect": "0.066"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "exclusions",
+      "d34_dev_exit",
+      "kappa_relay_excepted_sensitivity"
+     ],
+     "fmt": "round3",
+     "expect": "0.575"
+    }
+   ]
+  },
+  {
+   "id": "dev-kappa-below",
+   "text": "Both are below 0.6.",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "exclusions",
+      "d34_dev_exit",
+      "kappa_min"
+     ],
+     "fmt": "round1",
+     "expect": "0.6"
+    }
+   ]
+  },
+  {
+   "id": "bootstrap",
+   "text": "Intervals are 95% task-cluster percentile bootstrap intervals (10,000 resamples, seed",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "task-cluster\npercentile bootstrap (10,000 resamples, seed 42, two-sided 95%)",
+     "expect": "95%"
+    },
+    {
+     "file": "MUT_REG",
+     "match": "task-cluster\npercentile bootstrap (10,000 resamples, seed 42, two-sided 95%)",
+     "expect": "10,000"
+    }
+   ]
+  },
+  {
+   "id": "bootstrap-seed",
+   "text": "42), and exact Clopper-Pearson",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "task-cluster\npercentile bootstrap (10,000 resamples, seed 42, two-sided 95%)",
+     "expect": "42"
+    }
+   ]
+  },
+  {
+   "id": "example-2mm",
+   "text": "more than 2 mm apart",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "within 2 mm (72,000 EMU)",
+     "expect": "2 mm"
+    }
+   ]
+  },
+  {
+   "id": "d72-36-of-40",
+   "text": "**36 of 40 evaluable z-order equivalence mutants fail",
+   "evidence": [
+    {
+     "file": "DEC",
+     "match": "36 of 40 evaluable z-order",
+     "expect": "36 of 40"
+    }
+   ]
+  },
+  {
+   "id": "d72-family",
+   "text": "their checker: `compare_pptx_files` 35 of 39, `compare_pptx_files_tolerant` 1 of 1.**",
+   "evidence": [
+    {
+     "file": "DEC",
+     "match": "`compare_pptx_files` 35 of 39",
+     "expect": "35 of 39"
+    },
+    {
+     "file": "DEC",
+     "match": "`compare_pptx_files_tolerant` 1 of 1",
+     "expect": "1 of 1"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zorder_population",
+      "by_family_and_verdict",
+      "compare_pptx_files",
+      "fail"
+     ],
+     "fmt": "int",
+     "expect": "35"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zorder_population",
+      "by_family_and_verdict",
+      "compare_pptx_files_tolerant",
+      "fail"
+     ],
+     "fmt": "int",
+     "expect": "1"
+    }
+   ]
+  },
+  {
+   "id": "d72-before",
+   "text": "adjudication, 29 of the 35 were confirmed by both raters and 6 were unresolved",
+   "evidence": [
+    {
+     "file": "DEC",
+     "match": "29 confirmed by both raters and 6 unresolved",
+     "expect": "29"
+    },
+    {
+     "file": "DEC",
+     "match": "29 confirmed by both raters and 6 unresolved",
+     "expect": "6"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zorder_population",
+      "by_family_and_verdict",
+      "compare_pptx_files",
+      "fail"
+     ],
+     "fmt": "int",
+     "expect": "35"
+    }
+   ]
+  },
+  {
+   "id": "d72-30-raw",
+   "text": "tolerant one was confirmed: 30 confirmed in all. The raw share is 90.0%; the task-equal share",
+   "evidence": [
+    {
+     "file": "DEC",
+     "match": "That is 30 confirmed in all",
+     "expect": "30 confirmed in all"
+    },
+    {
+     "file": "DOSSIER",
+     "match": "36 of 40 (90.0%; task-equal 91.7%)",
+     "expect": "90.0"
+    }
+   ]
+  },
+  {
+   "id": "zorder-task-equal",
+   "text": "is 91.7%, because the estimand weights the 16 tasks equally (S11). The 4 evaluable mutants the",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "91.7"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "16"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zorder_population",
+      "by_family_and_verdict",
+      "compare_pptx_files",
+      "pass"
+     ],
+     "fmt": "int",
+     "expect": "4"
+    }
+   ]
+  },
+  {
+   "id": "zorder-planned",
+   "text": "Of the 59 z-order mutants planned, 13 sit on",
+   "evidence": [
+    {
+     "file": "DER",
+     "key": [
+      "zorder_planned"
+     ],
+     "fmt": "int",
+     "expect": "59"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zorder_status_counts",
+      "null_not_pass"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    }
+   ]
+  },
+  {
+   "id": "zorder-other-status",
+   "text": "3 have ambiguous labels and 3 were not admitted",
+   "evidence": [
+    {
+     "file": "DER",
+     "key": [
+      "zorder_status_counts",
+      "ambiguous"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zorder_status_counts",
+      "not_admitted"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "zorder-after",
+   "text": "**33 are confirmed and 3 are label contradicted**. The 3 are all of",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "counts",
+      "by_audit_reading",
+      "confirmed"
+     ],
+     "fmt": "int",
+     "expect": "33"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "counts",
+      "by_audit_reading",
+      "label_contradicted"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "zorder-newly",
+   "text": "the 3 are reported as gold defects. The 3 newly confirmed",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "false_negative",
+      "on_gold_defect_tasks"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "The 3 newly confirmed",
+     "expect": "3 newly confirmed"
+    }
+   ]
+  },
+  {
+   "id": "t2-zorder",
+   "text": "| z-order operator | 40 (16) | 36 | 91.7% (81.3-100%) | 77.1% (61.5-90.6%) | 85.4% (68.8-97.9%) |",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "40"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "16"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "91.7"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "81.3"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "100"
+    },
+    {
+     "file": "MUT_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "77.1"
+    },
+    {
+     "file": "MUT_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "61.5"
+    },
+    {
+     "file": "MUT_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "90.6"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "85.4"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "68.8"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_operator",
+      "pptx.eq.zorder_nonoverlap",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "97.9"
+    }
+   ]
+  },
+  {
+   "id": "t2-cpf",
+   "text": "| `compare_pptx_files`, all should-pass | 85 (16) | 35 | 40.2% (32.9-46.3%) | 33.5% (24.8-41.7%) | 37.1% (28.3-44.6%) |",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_family",
+      "compare_pptx_files",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "85"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_family",
+      "compare_pptx_files",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "16"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_family",
+      "compare_pptx_files",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "35"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_family",
+      "compare_pptx_files",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "40.2"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_family",
+      "compare_pptx_files",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "32.9"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_family",
+      "compare_pptx_files",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "46.3"
+    },
+    {
+     "file": "MUT_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_family",
+      "compare_pptx_files",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "33.5"
+    },
+    {
+     "file": "MUT_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_family",
+      "compare_pptx_files",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "24.8"
+    },
+    {
+     "file": "MUT_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_family",
+      "compare_pptx_files",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "41.7"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_family",
+      "compare_pptx_files",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "37.1"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_family",
+      "compare_pptx_files",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "28.3"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "by_family",
+      "compare_pptx_files",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "44.6"
+    }
+   ]
+  },
+  {
+   "id": "t2-pooled",
+   "text": "| all families, all should-pass | 348 (60) | 36 | 12.4% (7.2-18.3%) | 10.6% (5.8-16.2%) | 11.6% (6.4-17.3%) |",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "pooled",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "348"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "pooled",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "60"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "pooled",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "12.4"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "7.2"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "18.3"
+    },
+    {
+     "file": "MUT_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "10.6"
+    },
+    {
+     "file": "MUT_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "5.8"
+    },
+    {
+     "file": "MUT_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "16.2"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "11.6"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "6.4"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "confirmed_share",
+      "pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "17.3"
+    }
+   ]
+  },
+  {
+   "id": "alt-0-of-93",
+   "text": "no alternative solution (0 of 93) fails",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_label",
+      "should_pass_alt_solution",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_label",
+      "should_pass_alt_solution",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "93"
+    }
+   ]
+  },
+  {
+   "id": "ops-line-1",
+   "text": "`xlsx.eq.view_selection` 0 of 85 (29 tasks), `pptx.eq.subvisible_nudge` 0 of 46,",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.eq.view_selection",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.eq.view_selection",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "85"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.eq.view_selection",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "29"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.subvisible_nudge",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "pptx.eq.subvisible_nudge",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "46"
+    }
+   ]
+  },
+  {
+   "id": "ops-line-2",
+   "text": "`xlsx.alt.literal_for_formula` 0 of 39, `xlsx.eq.view_zoom` 0 of 37, `docx.eq.view_zoom` 0 of",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.alt.literal_for_formula",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "39"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.eq.view_zoom",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.eq.view_zoom",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "37"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "docx.eq.view_zoom",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    }
+   ]
+  },
+  {
+   "id": "ops-line-3",
+   "text": "36, `xlsx.alt.absolute_refs` 0 of 34, and smaller cells",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "docx.eq.view_zoom",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.alt.absolute_refs",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_operator",
+      "xlsx.alt.absolute_refs",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "34"
+    }
+   ]
+  },
+  {
+   "id": "compare-table-218",
+   "text": "has 0 of 218 should-pass mutants on 30 tasks",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_family",
+      "compare_table",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_family",
+      "compare_table",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "218"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "candidate_share",
+      "by_family",
+      "compare_table",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "30"
+    }
+   ]
+  },
+  {
+   "id": "fig1-95",
+   "text": "with 95% task-cluster bootstrap intervals",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "two-sided 95%",
+     "expect": "95%"
+    }
+   ]
+  },
+  {
+   "id": "fp-5-96-26",
+   "text": "5 should-fail mutants pass their checker, out of 96 evaluable on 26 tasks (task-equal candidate",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "pooled",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "5"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "pooled",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "96"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "pooled",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "26"
+    }
+   ]
+  },
+  {
+   "id": "fp-share-and-labels",
+   "text": "share 5.9%, 0.8-12.3%). All 5 carry a violation label",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "5.9"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "0.8"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "12.3"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "counts",
+      "by_label",
+      "should_fail_violation"
+     ],
+     "fmt": "int",
+     "expect": "5"
+    }
+   ]
+  },
+  {
+   "id": "fp-extra-0-of-5",
+   "text": "probe-touched cells (0 of 5).",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "by_label",
+      "should_fail_extra_change",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "candidate_share",
+      "by_label",
+      "should_fail_extra_change",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "5"
+    }
+   ]
+  },
+  {
+   "id": "fp-textbox-2",
+   "text": "(2 mutants)",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "counts",
+      "audit",
+      "by_operator",
+      "pptx.alt.textbox_for_placeholder",
+      "label_contradicted"
+     ],
+     "fmt": "int",
+     "expect": "2"
+    }
+   ]
+  },
+  {
+   "id": "fp-confirmed-share",
+   "text": "The confirmed share is 2.1% (0-5.4%), from 2 events.",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "confirmed_share",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "2.1"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "confirmed_share",
+      "pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "confirmed_share",
+      "pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "5.4"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "confirmed_share",
+      "pooled",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "2"
+    }
+   ]
+  },
+  {
+   "id": "fp-upheld-a",
+   "text": "the 3 label-contradicted items were concordant",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "pool_effect_by_reason_and_stratum",
+      "a",
+      "concordant_contradicts_label / fp_violation / raters anthropic=accept, open_weight=accept",
+      "upholds the consensus"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "fp-upheld-b",
+   "text": "upheld the raters on all 3.",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "pool_effect_by_reason_and_stratum",
+      "a",
+      "concordant_contradicts_label / fp_violation / raters anthropic=accept, open_weight=accept",
+      "upholds the consensus"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "probe-fp-28",
+   "text": "Probe-touched cells hold 28 more false-positive events (`compare_table` 12,",
+   "evidence": [
+    {
+     "file": "MUT_RES",
+     "match": "no false-negative event; 28",
+     "expect": "28"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "probe_touched_events",
+      "false_positive",
+      "compare_table"
+     ],
+     "fmt": "int",
+     "expect": "12"
+    }
+   ]
+  },
+  {
+   "id": "probe-fp-families",
+   "text": "`compare_docx_tables` 7, `compare_docx_images` 6, `compare_docx_files` 3), none audited",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "probe_touched_events",
+      "false_positive",
+      "compare_docx_tables"
+     ],
+     "fmt": "int",
+     "expect": "7"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "probe_touched_events",
+      "false_positive",
+      "compare_docx_images"
+     ],
+     "fmt": "int",
+     "expect": "6"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "probe_touched_events",
+      "false_positive",
+      "compare_docx_files"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "fp-3-of-5",
+   "text": "3 of the 5 audited candidates were.",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "counts",
+      "by_audit_reading",
+      "label_contradicted"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_positive",
+      "counts",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "5"
+    }
+   ]
+  },
+  {
+   "id": "gold-shams-33",
+   "text": "Of the 33 gold shams, the raters split on",
+   "evidence": [
+    {
+     "file": "AUD_SUM",
+     "key": [
+      "gold_defects",
+      "gold_shams"
+     ],
+     "fmt": "int",
+     "expect": "33"
+    }
+   ]
+  },
+  {
+   "id": "gold-sham-splits",
+   "text": "4, all rejected by Claude. The adjudicator rejected 3:",
+   "evidence": [
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "adjudication",
+      "by_group",
+      "sham_gold"
+     ],
+     "fmt": "int",
+     "expect": "4"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "audit",
+      "gold_defect_tasks"
+     ],
+     "fmt": "len",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "gold-defect-zorder",
+   "text": "The 3 z-order candidates of",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "false_negative",
+      "on_gold_defect_tasks"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "gold-defect-alts",
+   "text": "All 10 alternative solutions on `881deb30` (6) and `8e116af7` (4) were rejected.",
+   "evidence": [
+    {
+     "file": "ADJ_README",
+     "match": "all 10 alternative solutions of `881deb30` (6)",
+     "expect": "10"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "all 10 alternative solutions of `881deb30` (6)",
+     "expect": "(6)"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "`8e116af7` (4) are rejected",
+     "expect": "(4)"
+    }
+   ]
+  },
+  {
+   "id": "alt-gate-before",
+   "text": "alternative-solution gate went from 72 accepted, 3 rejected and 18 unresolved to 82 accepted,",
+   "evidence": [
+    {
+     "file": "AUD_SUM",
+     "key": [
+      "by_label_class",
+      "should_pass_alt_solution",
+      "accept"
+     ],
+     "fmt": "int",
+     "expect": "72"
+    },
+    {
+     "file": "AUD_SUM",
+     "key": [
+      "by_label_class",
+      "should_pass_alt_solution",
+      "reject"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    },
+    {
+     "file": "AUD_SUM",
+     "key": [
+      "by_label_class",
+      "should_pass_alt_solution",
+      "unresolved"
+     ],
+     "fmt": "int",
+     "expect": "18"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "audit_gate",
+      "P2_alt_decisions",
+      "accept"
+     ],
+     "fmt": "int",
+     "expect": "82"
+    }
+   ]
+  },
+  {
+   "id": "alt-gate-after",
+   "text": "11 rejected and 0 unresolved; outside gold-defect tasks, 82 of 83 alternative solutions are",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "audit_gate",
+      "P2_alt_decisions",
+      "reject"
+     ],
+     "fmt": "int",
+     "expect": "11"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "audit",
+      "by_label_class",
+      "should_pass_alt_solution",
+      "unresolved"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "82 of 83",
+     "expect": "82 of 83"
+    }
+   ]
+  },
+  {
+   "id": "k3-equiv",
+   "text": "fell from 0.167 to 0.000 (33 items on 15 tasks, exact upper",
+   "evidence": [
+    {
+     "file": "AUD_SUM",
+     "key": [
+      "k3",
+      "should_pass_equiv",
+      "estimate"
+     ],
+     "fmt": "round3",
+     "expect": "0.167"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "audit",
+      "k3",
+      "should_pass_equiv",
+      "estimate"
+     ],
+     "fmt": "round3",
+     "expect": "0.000"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "audit",
+      "k3",
+      "should_pass_equiv",
+      "n_items"
+     ],
+     "fmt": "int",
+     "expect": "33"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "audit",
+      "k3",
+      "should_pass_equiv",
+      "n_tasks"
+     ],
+     "fmt": "int",
+     "expect": "15"
+    }
+   ]
+  },
+  {
+   "id": "k3-upper",
+   "text": "bound 0.087), and K4 no longer fires.",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "audit",
+      "k3",
+      "should_pass_equiv",
+      "upper"
+     ],
+     "fmt": "round3",
+     "expect": "0.087"
+    }
+   ]
+  },
+  {
+   "id": "gold-sham-sided",
+   "text": "on 3 of the 4 split gold shams",
+   "evidence": [
+    {
+     "file": "ADJ_README",
+     "match": "| split gold sham | `sham_gold` | reject / accept | 3 | 1 accept, 2 reject |"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "| split gold sham | `sham_gold` | reject / unsure | 1 | 1 reject |"
+    },
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "adjudication",
+      "by_group",
+      "sham_gold"
+     ],
+     "fmt": "int",
+     "expect": "4"
+    }
+   ],
+   "note": "2 rejects of reject/accept splits plus 1 reject of the reject/unsure split side with the Claude rater: 3 of 4"
+  },
+  {
+   "id": "p1-population",
+   "text": "The population is the 92 golds",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "raw_flips",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "92"
+    }
+   ]
+  },
+  {
+   "id": "p1-runs",
+   "text": "(confirm 67, reserve 25)",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "runs",
+      "confirm",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "67"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "runs",
+      "reserve",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "25"
+    }
+   ]
+  },
+  {
+   "id": "p1-raw",
+   "text": "- 4 flip raw (4.35%; exact 95% 1.20-10.76%):",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "raw_flips",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "4"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "raw_flips",
+      "share"
+     ],
+     "fmt": "pct2",
+     "expect": "4.35"
+    },
+    {
+     "file": "MUT_REG",
+     "match": "exact\n  Clopper-Pearson 95% intervals",
+     "expect": "95"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "raw_flips",
+      "low"
+     ],
+     "fmt": "pct2",
+     "expect": "1.20"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "raw_flips",
+      "high"
+     ],
+     "fmt": "pct2",
+     "expect": "10.76"
+    }
+   ]
+  },
+  {
+   "id": "p1-confirmed",
+   "text": "- 3 flips are audit-confirmed checker errors (3.26%; 0.68-9.23%)",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "audit_confirmed_flips",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "audit_confirmed_flips",
+      "share"
+     ],
+     "fmt": "pct2",
+     "expect": "3.26"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "audit_confirmed_flips",
+      "low"
+     ],
+     "fmt": "pct2",
+     "expect": "0.68"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P1",
+      "audit_confirmed_flips",
+      "high"
+     ],
+     "fmt": "pct2",
+     "expect": "9.23"
+    }
+   ]
+  },
+  {
+   "id": "p1-headless-confirm",
+   "text": "that flipped 7 of 63 confirm",
+   "evidence": [
+    {
+     "file": "DOSSIER",
+     "match": "the headless round trip flipped 7 of 63 and 1 of 26",
+     "expect": "7 of 63"
+    }
+   ]
+  },
+  {
+   "id": "p1-headless-reserve",
+   "text": "golds and 1 of 26 reserve golds",
+   "evidence": [
+    {
+     "file": "DOSSIER",
+     "match": "the headless round trip flipped 7 of 63 and 1 of 26",
+     "expect": "1 of 26"
+    }
+   ]
+  },
+  {
+   "id": "p2-pooled",
+   "text": "12.4% (7.2-18.3%) on 337 mutants and 60 tasks",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P2",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "12.4"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P2",
+      "pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "7.2"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P2",
+      "pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "18.3"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P2",
+      "pooled",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "337"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P2",
+      "pooled",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "60"
+    }
+   ]
+  },
+  {
+   "id": "p2-without-gd",
+   "text": "it is 12.2% (6.7-18.1%; 323 mutants,",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "gold_defects",
+      "P2_without_their_equivalence_mutants",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "12.2"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "gold_defects",
+      "P2_without_their_equivalence_mutants",
+      "pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "6.7"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "gold_defects",
+      "P2_without_their_equivalence_mutants",
+      "pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "18.1"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "gold_defects",
+      "P2_without_their_equivalence_mutants",
+      "pooled",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "323"
+    }
+   ]
+  },
+  {
+   "id": "p2-compare-table",
+   "text": "57 tasks). `compare_table` is 0 of 207 on 30 tasks (zero-event bound 9.5%); in the",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "gold_defects",
+      "P2_without_their_equivalence_mutants",
+      "pooled",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "57"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P2",
+      "by_family",
+      "compare_table",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P2",
+      "by_family",
+      "compare_table",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "207"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P2",
+      "by_family",
+      "compare_table",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "30"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P2",
+      "by_family",
+      "compare_table",
+      "zero_event_upper_bound"
+     ],
+     "fmt": "pct1",
+     "expect": "9.5"
+    }
+   ]
+  },
+  {
+   "id": "p2-sensitivity-table",
+   "text": "sensitivity 0 of 199 on 28 tasks, bound 10.1%. Adjudication moved the population from 327 to",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "gold_defects",
+      "P2_without_their_equivalence_mutants",
+      "by_family",
+      "compare_table",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "gold_defects",
+      "P2_without_their_equivalence_mutants",
+      "by_family",
+      "compare_table",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "199"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "gold_defects",
+      "P2_without_their_equivalence_mutants",
+      "by_family",
+      "compare_table",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "28"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "gold_defects",
+      "P2_without_their_equivalence_mutants",
+      "by_family",
+      "compare_table",
+      "zero_event_upper_bound"
+     ],
+     "fmt": "pct1",
+     "expect": "10.1"
+    },
+    {
+     "file": "MUT_AN",
+     "key": [
+      "P2",
+      "pooled",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "327"
+    }
+   ]
+  },
+  {
+   "id": "p2-337",
+   "text": "337, not the rate.",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P2",
+      "pooled",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "337"
+    }
+   ]
+  },
+  {
+   "id": "p3",
+   "text": "6.1% (0.8-13.1%) on 91 mutants and 25 tasks",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P3",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "6.1"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P3",
+      "pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "0.8"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P3",
+      "pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "13.1"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P3",
+      "pooled",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "91"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P3",
+      "pooled",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "25"
+    }
+   ]
+  },
+  {
+   "id": "p4",
+   "text": "0 of 5 on 2 tasks",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P4",
+      "pooled",
+      "rate"
+     ],
+     "fmt": "pct1z",
+     "expect": "0"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P4",
+      "pooled",
+      "mutants"
+     ],
+     "fmt": "int",
+     "expect": "5"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P4",
+      "pooled",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "2"
+    }
+   ]
+  },
+  {
+   "id": "p5",
+   "text": "17 of 60, 28.3% (exact",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P5",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "17"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P5",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "60"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P5",
+      "share"
+     ],
+     "fmt": "pct1",
+     "expect": "28.3"
+    }
+   ]
+  },
+  {
+   "id": "p5-ci",
+   "text": "17.5-41.4%).",
+   "evidence": [
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P5",
+      "low"
+     ],
+     "fmt": "pct1",
+     "expect": "17.5"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "P5",
+      "high"
+     ],
+     "fmt": "pct1",
+     "expect": "41.4"
+    }
+   ]
+  },
+  {
+   "id": "k2-job-time",
+   "text": "CPU only, 65 minutes",
+   "evidence": [
+    {
+     "file": "DEC",
+     "match": "job 1186, CPU only, 65 min",
+     "expect": "65"
+    }
+   ]
+  },
+  {
+   "id": "k2-gate",
+   "text": "2 of 80 pairs were excluded (at most 8 allowed)",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "gate",
+      "excluded"
+     ],
+     "fmt": "int",
+     "expect": "2"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "gate",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "80"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "gate",
+      "max_excluded"
+     ],
+     "fmt": "int",
+     "expect": "8"
+    }
+   ]
+  },
+  {
+   "id": "k2-agree",
+   "text": "All 78 compared pairs give the offline verdict in both runs (41 pass, 37 fail)",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "78"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_offline_verdict",
+      "pass",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "41"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_offline_verdict",
+      "fail",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "37"
+    }
+   ]
+  },
+  {
+   "id": "k2c-fn",
+   "text": "K2-C: all 41 candidate events reproduce in both runs. The 36 false negatives fail in the VM",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2c",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "41"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2c",
+      "by_offline_verdict",
+      "fail",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    }
+   ]
+  },
+  {
+   "id": "k2c-fp",
+   "text": "and the 5 false positives pass, as offline.",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2c",
+      "by_offline_verdict",
+      "pass",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "5"
+    }
+   ]
+  },
+  {
+   "id": "k2c-tolerant",
+   "text": "its 2 candidate events reproduce in K2-C.",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2c",
+      "by_family",
+      "compare_pptx_files_tolerant",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "2"
+    }
+   ]
+  },
+  {
+   "id": "t4-compare_table",
+   "text": "| `compare_table` | 27 | 27 | 0 |",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_table",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "27"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_table",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "27"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_table",
+      "excluded"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    }
+   ]
+  },
+  {
+   "id": "t4-compare_pptx_files",
+   "text": "| `compare_pptx_files` | 23 | 23 | 0 |",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_pptx_files",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "23"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_pptx_files",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "23"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_pptx_files",
+      "excluded"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    }
+   ]
+  },
+  {
+   "id": "t4-compare_docx_files",
+   "text": "| `compare_docx_files` | 11 | 9 | 2 |",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_docx_files",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "11"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_docx_files",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "9"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_docx_files",
+      "excluded"
+     ],
+     "fmt": "int",
+     "expect": "2"
+    }
+   ]
+  },
+  {
+   "id": "t4-compare_line_spacing",
+   "text": "| `compare_line_spacing` | 6 | 6 | 0 |",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_line_spacing",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "6"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_line_spacing",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "6"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_line_spacing",
+      "excluded"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    }
+   ]
+  },
+  {
+   "id": "t4-compare_docx_images",
+   "text": "| `compare_docx_images` | 6 | 6 | 0 |",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_docx_images",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "6"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_docx_images",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "6"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_docx_images",
+      "excluded"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    }
+   ]
+  },
+  {
+   "id": "t4-check_tabstops",
+   "text": "| `check_tabstops` | 3 | 3 | 0 |",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "check_tabstops",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "check_tabstops",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "check_tabstops",
+      "excluded"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    }
+   ]
+  },
+  {
+   "id": "t4-evaluate_strike_through_last_paragraph",
+   "text": "| `evaluate_strike_through_last_paragraph` | 2 | 2 | 0 |",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "evaluate_strike_through_last_paragraph",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "2"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "evaluate_strike_through_last_paragraph",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "2"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "evaluate_strike_through_last_paragraph",
+      "excluded"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    }
+   ]
+  },
+  {
+   "id": "t4-compare_docx_tables",
+   "text": "| `compare_docx_tables` | 1 | 1 | 0 |",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_docx_tables",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "1"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_docx_tables",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "1"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_docx_tables",
+      "excluded"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    }
+   ]
+  },
+  {
+   "id": "t4-compare_csv+compare_table",
+   "text": "| `compare_csv+compare_table` | 1 | 1 | 0 |",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_csv+compare_table",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "1"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_csv+compare_table",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "1"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "by_family",
+      "compare_csv+compare_table",
+      "excluded"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    }
+   ]
+  },
+  {
+   "id": "zinv-291",
+   "text": "the stored confirm campaign: 291 items, every evaluable mutant, gold and do-nothing state of",
+   "evidence": [
+    {
+     "file": "S1A_REG",
+     "match": "`compare_pptx_files`: 291 items)",
+     "expect": "291 items"
+    },
+    {
+     "file": "ZINV_V3",
+     "key": [
+      "gate",
+      "raw_reproduces_stored"
+     ],
+     "fmt": "int",
+     "expect": "291"
+    }
+   ]
+  },
+  {
+   "id": "zinv-16-tasks",
+   "text": "the 16 tasks whose every metric is",
+   "evidence": [
+    {
+     "file": "S1A_REG",
+     "match": "the 16 tasks whose every metric is",
+     "expect": "16 tasks"
+    }
+   ]
+  },
+  {
+   "id": "zinv-pass",
+   "text": "It passes all 29 then-confirmed z-order false negatives, and all 6 then-unresolved ones.",
+   "evidence": [
+    {
+     "file": "ZINV_V3",
+     "key": [
+      "gate",
+      "confirmed_zorder_pass_under_zinv"
+     ],
+     "fmt": "int",
+     "expect": "29"
+    },
+    {
+     "file": "ZINV_V3",
+     "key": [
+      "gate",
+      "confirmed_zorder"
+     ],
+     "fmt": "int",
+     "expect": "29"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zinv_zorder_rows",
+      "unresolved|raw=0.0|zinv=1.0"
+     ],
+     "fmt": "int",
+     "expect": "6"
+    }
+   ]
+  },
+  {
+   "id": "zinv-others",
+   "text": "The 256 other items keep the original verdict, including every should-fail mutant (113 that",
+   "evidence": [
+    {
+     "file": "ZINV_V3",
+     "key": [
+      "gate",
+      "others_equal_original"
+     ],
+     "fmt": "int",
+     "expect": "256"
+    },
+    {
+     "file": "ZINV_V3",
+     "key": [
+      "gate",
+      "others"
+     ],
+     "fmt": "int",
+     "expect": "256"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "zinv_should_fail_rows",
+      "raw=0.0|zinv=0.0"
+     ],
+     "fmt": "int",
+     "expect": "113"
+    }
+   ]
+  },
+  {
+   "id": "zinv-fp-stay",
+   "text": "the original rejects stay rejected, 3 that it passes stay passed) [DER].",
+   "evidence": [
+    {
+     "file": "DER",
+     "key": [
+      "zinv_should_fail_rows",
+      "raw=1.0|zinv=1.0"
+     ],
+     "fmt": "int",
+     "expect": "3"
+    }
+   ]
+  },
+  {
+   "id": "zinv-versions",
+   "text": "The first two versions failed the gate (0 of 29, then 26 of 29)",
+   "evidence": [
+    {
+     "file": "ZINV_V1",
+     "key": [
+      "gate",
+      "confirmed_zorder_pass_under_zinv"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "ZINV_V1",
+     "key": [
+      "gate",
+      "confirmed_zorder"
+     ],
+     "fmt": "int",
+     "expect": "29"
+    },
+    {
+     "file": "ZINV_V2",
+     "key": [
+      "gate",
+      "confirmed_zorder_pass_under_zinv"
+     ],
+     "fmt": "int",
+     "expect": "26"
+    }
+   ]
+  },
+  {
+   "id": "zinv-dev-set",
+   "text": "The 29 are therefore a development set",
+   "evidence": [
+    {
+     "file": "S1A_REG",
+     "match": "so the 29 are a\n   development set as much as a gate",
+     "expect": "29"
+    }
+   ]
+  },
+  {
+   "id": "part-b-95",
+   "text": "least 95% of held-out z-order mutants",
+   "evidence": [
+    {
+     "file": "DOSSIER",
+     "match": "least 95% of held-out z-order equivalence mutants",
+     "expect": "95%"
+    }
+   ]
+  },
+  {
+   "id": "reserve-targets",
+   "text": "The reserve split has 28 targets, 8 of them pptx",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "| reserve | 53 | 28 | 28 (12 / 8 / 5 / 3) |"
+    },
+    {
+     "file": "DOSSIER",
+     "match": "8 of them pptx",
+     "expect": "8 of them pptx"
+    }
+   ]
+  },
+  {
+   "id": "s1a-steps",
+   "text": "(screenshot only, 15 steps) over",
+   "evidence": [
+    {
+     "file": "S1A_RES",
+     "match": "Screenshot only, 15 steps",
+     "expect": "15 steps"
+    }
+   ]
+  },
+  {
+   "id": "s1a-episodes",
+   "text": "113 tasks and scored 1,808 episodes with no infrastructure loss",
+   "evidence": [
+    {
+     "file": "S1A_RES",
+     "match": "(here blocks 1-11, 113 tasks)",
+     "expect": "113 tasks"
+    },
+    {
+     "file": "S1A_RES",
+     "match": "No episode was lost to infrastructure in 1,808",
+     "expect": "1,808"
+    }
+   ]
+  },
+  {
+   "id": "s1a-288",
+   "text": "(72 episodes per job, 288 in",
+   "evidence": [
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "jobs",
+      "A1-4B-S1",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "72"
+    },
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "jobs",
+      "A1-4B-S2",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "72"
+    },
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "jobs",
+      "A1-9B-S1",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "72"
+    },
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "jobs",
+      "A1-9B-S2",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "72"
+    },
+    {
+     "file": "DOSSIER",
+     "match": "0 of the 288 `compare_pptx_files` episodes",
+     "expect": "288"
+    }
+   ]
+  },
+  {
+   "id": "s1a-flips",
+   "text": "all) changed **0 of 1,808 verdicts**, and 0 of the 512 primary ones",
+   "evidence": [
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "verdict_sources",
+      "secondary",
+      "flips_total"
+     ],
+     "fmt": "len",
+     "expect": "0"
+    },
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "verdict_sources",
+      "secondary",
+      "scored_final_records"
+     ],
+     "fmt": "comma",
+     "expect": "1,808"
+    },
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "verdict_sources",
+      "primary",
+      "scored_final_records"
+     ],
+     "fmt": "int",
+     "expect": "512"
+    }
+   ]
+  },
+  {
+   "id": "s1a-steps-2",
+   "text": "policies at 15 steps",
+   "evidence": [
+    {
+     "file": "S1A_RES",
+     "match": "Screenshot only, 15 steps",
+     "expect": "15 steps"
+    }
+   ]
+  },
+  {
+   "id": "t5-raters",
+   "text": "| Claude rater vs Qwen rater, real items of the census | 138 | 114 (82.6%) | 0.343 |",
+   "evidence": [
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "raw_agreement_real_items",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "138"
+    },
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "raw_agreement_real_items",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "114"
+    },
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "raw_agreement_real_items",
+      "share"
+     ],
+     "fmt": "pct1",
+     "expect": "82.6"
+    },
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "kappa_real_items"
+     ],
+     "fmt": "round3",
+     "expect": "0.343"
+    }
+   ]
+  },
+  {
+   "id": "t5-a-claude",
+   "text": "| Adjudicator vs Claude rater, the 52 adjudicated items | 52 | 41 | 0.60 |",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_anthropic_rater_all_52",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "52"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_anthropic_rater_all_52",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "41"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_anthropic_rater_all_52",
+      "cohen_kappa_all_categories"
+     ],
+     "fmt": "round2",
+     "expect": "0.60"
+    }
+   ]
+  },
+  {
+   "id": "t5-a-qwen",
+   "text": "| Adjudicator vs Qwen rater, the 52 adjudicated items | 52 | 35 | 0.34 |",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_open_weight_rater_all_52",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "52"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_open_weight_rater_all_52",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "35"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_open_weight_rater_all_52",
+      "cohen_kappa_all_categories"
+     ],
+     "fmt": "round2",
+     "expect": "0.34"
+    }
+   ]
+  },
+  {
+   "id": "t5-a-claude-splits",
+   "text": "| Adjudicator vs Claude rater, the 28 pool splits | 28 | 17 | 0.24 |",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_anthropic_rater_28_pool_splits",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "28"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_anthropic_rater_28_pool_splits",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "17"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_anthropic_rater_28_pool_splits",
+      "cohen_kappa_all_categories"
+     ],
+     "fmt": "round2",
+     "expect": "0.24"
+    }
+   ]
+  },
+  {
+   "id": "t5-a-qwen-splits",
+   "text": "| Adjudicator vs Qwen rater, the 28 pool splits | 28 | 11 | 0.00 |",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_open_weight_rater_28_pool_splits",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "28"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_open_weight_rater_28_pool_splits",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "11"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_open_weight_rater_28_pool_splits",
+      "cohen_kappa_all_categories"
+     ],
+     "fmt": "round2",
+     "expect": "0.00"
+    }
+   ]
+  },
+  {
+   "id": "t5-fable",
+   "text": "| Fable vs adjudicator, the 52 items | 52 | 51 | 0.96 |",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_b_all_52",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "52"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_b_all_52",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "51"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_b_all_52",
+      "cohen_kappa_all_categories"
+     ],
+     "fmt": "round2",
+     "expect": "0.96"
+    }
+   ]
+  },
+  {
+   "id": "raters-kappa",
+   "text": "κ is 0.343 on the 138 real items, below the registered 0.6",
+   "evidence": [
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "kappa_real_items"
+     ],
+     "fmt": "round3",
+     "expect": "0.343"
+    },
+    {
+     "file": "AUD_SUM",
+     "key": [
+      "n_items"
+     ],
+     "fmt": "int",
+     "expect": "138"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "exclusions",
+      "d34_dev_exit",
+      "kappa_min"
+     ],
+     "fmt": "round1",
+     "expect": "0.6"
+    }
+   ]
+  },
+  {
+   "id": "sham-accuracy",
+   "text": "Sham accuracy is 0.90 for Claude (36 of 40) and 0.975 for Qwen (39 of 40).",
+   "evidence": [
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "sham_accuracy",
+      "model-rater-anthropic"
+     ],
+     "fmt": "round2",
+     "expect": "0.90"
+    },
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "sham_accuracy",
+      "model-rater-open-weight"
+     ],
+     "fmt": "round3",
+     "expect": "0.975"
+    },
+    {
+     "file": "MUT_RES",
+     "match": "Sham accuracy: Claude 36/40 (0.90"
+    },
+    {
+     "file": "MUT_RES",
+     "match": "Qwen 39/40"
+    },
+    {
+     "file": "SAMPLE",
+     "key": [
+      "strata",
+      "sham"
+     ],
+     "fmt": "int",
+     "expect": "40"
+    }
+   ],
+   "note": "36/40 and 39/40 in the results README, written '36 of 40' and '39 of 40'"
+  },
+  {
+   "id": "unresolved-24",
+   "text": "24 of the 138 real items were unresolved before adjudication. On the 36 z-order candidates",
+   "evidence": [
+    {
+     "file": "AUD_SUM",
+     "key": [
+      "n_unresolved"
+     ],
+     "fmt": "int",
+     "expect": "24"
+    },
+    {
+     "file": "AUD_SUM",
+     "key": [
+      "n_items"
+     ],
+     "fmt": "int",
+     "expect": "138"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "counts",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    }
+   ]
+  },
+  {
+   "id": "zorder-concordant-30",
+   "text": "the raters agreed on 30.",
+   "evidence": [
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "decisions_by_group",
+      "fn_equiv",
+      "accept/accept -> accept"
+     ],
+     "fmt": "int",
+     "expect": "30"
+    }
+   ]
+  },
+  {
+   "id": "splits-sided",
+   "text": "On the 28 splits it sided with Claude 17 times and with",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_anthropic_rater_28_pool_splits",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "28"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_anthropic_rater_28_pool_splits",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "17"
+    }
+   ]
+  },
+  {
+   "id": "splits-qwen",
+   "text": "Qwen 11 times, including all 6 equivalence splits.",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_open_weight_rater_28_pool_splits",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "11"
+    },
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "adjudication",
+      "by_group",
+      "fn_equiv"
+     ],
+     "fmt": "int",
+     "expect": "6"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "It sides with Claude on all 6 equivalence splits"
+    }
+   ]
+  },
+  {
+   "id": "spot-detail",
+   "text": "rater on all 25 items and the raters' consensus on all 23 concordant ones, and it got all 5",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "spot_check",
+      "a",
+      "by_stratum",
+      "all_25",
+      "agrees_with_anthropic_rater"
+     ],
+     "fmt": "int",
+     "expect": "25"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "spot_check",
+      "a",
+      "by_stratum",
+      "all_25",
+      "agrees_with_concordant_raters"
+     ],
+     "fmt": "int",
+     "expect": "23"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "spot_check",
+      "a",
+      "by_stratum",
+      "all_25",
+      "raters_concordant"
+     ],
+     "fmt": "int",
+     "expect": "23"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "All 5 shams are correct.",
+     "expect": "5"
+    }
+   ]
+  },
+  {
+   "id": "fable-agree",
+   "text": "agreed with the record on 51 of 52",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_b_all_52",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "51"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_b_all_52",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "52"
+    }
+   ]
+  },
+  {
+   "id": "fable-splits",
+   "text": "items and 27 of 28 splits.",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_b_28_pool_splits",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "27"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_b_28_pool_splits",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "28"
+    }
+   ]
+  },
+  {
+   "id": "fable-shares-1",
+   "text": "32 confirmed false negatives and confirmed shares of 11.2% (6.2-17.0%) pooled, 35.8%",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "sensitivity_b_fable",
+      "false_negative",
+      "by_audit_reading",
+      "confirmed"
+     ],
+     "fmt": "int",
+     "expect": "32"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "sensitivity_b_fable",
+      "false_negative",
+      "confirmed_share_pooled",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "11.2"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "sensitivity_b_fable",
+      "false_negative",
+      "confirmed_share_pooled",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "6.2"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "sensitivity_b_fable",
+      "false_negative",
+      "confirmed_share_pooled",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "17.0"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "sensitivity_b_fable",
+      "false_negative",
+      "confirmed_share_compare_pptx_files",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "35.8"
+    }
+   ]
+  },
+  {
+   "id": "fable-shares-2",
+   "text": "(26.9-43.5%) for `compare_pptx_files` and 82.3% (66.6-95.8%) for the z-order operator.",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "sensitivity_b_fable",
+      "false_negative",
+      "confirmed_share_compare_pptx_files",
+      "low"
+     ],
+     "fmt": "pct1",
+     "expect": "26.9"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "sensitivity_b_fable",
+      "false_negative",
+      "confirmed_share_compare_pptx_files",
+      "high"
+     ],
+     "fmt": "pct1",
+     "expect": "43.5"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "sensitivity_b_fable",
+      "false_negative",
+      "confirmed_share_zorder_nonoverlap",
+      "rate"
+     ],
+     "fmt": "pct1",
+     "expect": "82.3"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "sensitivity_b_fable",
+      "false_negative",
+      "confirmed_share_zorder_nonoverlap",
+      "low"
+     ],
+     "fmt": "pct1z",
+     "expect": "66.6"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "sensitivity_b_fable",
+      "false_negative",
+      "confirmed_share_zorder_nonoverlap",
+      "high"
+     ],
+     "fmt": "pct1z",
+     "expect": "95.8"
+    }
+   ]
+  },
+  {
+   "id": "fable-strict-void",
+   "text": "the strict registered audit all 52 Fable answers are void",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "isolation",
+      "b_equivalent_audit",
+      "outcomes",
+      "isolation_void"
+     ],
+     "fmt": "int",
+     "expect": "52"
+    }
+   ]
+  },
+  {
+   "id": "fable-reminder",
+   "text": "calls, 171 entries in 52 transcripts)",
+   "evidence": [
+    {
+     "file": "ADJ_README",
+     "match": "171 entries in 52 transcripts",
+     "expect": "171"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "171 entries in 52 transcripts",
+     "expect": "52"
+    }
+   ]
+  },
+  {
+   "id": "notation-items",
+   "text": "The 12 items whose packets show the differ's",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_c_12_marker_items",
+      "items"
+     ],
+     "fmt": "int",
+     "expect": "12"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "agreement",
+      "a_vs_c_12_marker_items",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "12"
+    }
+   ]
+  },
+  {
+   "id": "notation-raters",
+   "text": "rejected 9 of these 12 and Qwen accepted all 12, which is descriptive only.",
+   "evidence": [
+    {
+     "file": "ADJ_README",
+     "match": "the Claude rater rejected 9 of these 12 items",
+     "expect": "9 of these 12"
+    },
+    {
+     "file": "ADJ_README",
+     "match": "and Qwen accepted all 12",
+     "expect": "Qwen accepted all 12"
+    }
+   ]
+  },
+  {
+   "id": "k3-violation",
+   "text": "(5 items on 4 tasks,",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "audit",
+      "k3",
+      "should_fail_violation",
+      "n_items"
+     ],
+     "fmt": "int",
+     "expect": "5"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "audit",
+      "k3",
+      "should_fail_violation",
+      "n_tasks"
+     ],
+     "fmt": "int",
+     "expect": "4"
+    }
+   ]
+  },
+  {
+   "id": "lim-k2",
+   "text": "on 80 registered jobs (78 compared) and on all 41",
+   "evidence": [
+    {
+     "file": "K2_SUM",
+     "key": [
+      "gate",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "80"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2",
+      "agree"
+     ],
+     "fmt": "int",
+     "expect": "78"
+    },
+    {
+     "file": "K2_SUM",
+     "key": [
+      "k2c",
+      "pairs"
+     ],
+     "fmt": "int",
+     "expect": "41"
+    }
+   ]
+  },
+  {
+   "id": "lim-1300",
+   "text": "It did not rerun all 1,300 scoring jobs in the VM",
+   "evidence": [
+    {
+     "file": "BUILD",
+     "key": [
+      "scoring_jobs"
+     ],
+     "fmt": "comma",
+     "expect": "1,300"
+    }
+   ]
+  },
+  {
+   "id": "lim-spot",
+   "text": "The adjudicator matched the Claude rater on all 25 spot-check items.",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "spot_check",
+      "a",
+      "by_stratum",
+      "all_25",
+      "agrees_with_anthropic_rater"
+     ],
+     "fmt": "int",
+     "expect": "25"
+    }
+   ]
+  },
+  {
+   "id": "lim-kappa",
+   "text": "**κ 0.34.** The raters agree at κ 0.343 on the real items, far below the registered 0.6.",
+   "evidence": [
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "kappa_real_items"
+     ],
+     "fmt": "round2",
+     "expect": "0.34"
+    },
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "kappa_real_items"
+     ],
+     "fmt": "round3",
+     "expect": "0.343"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "exclusions",
+      "d34_dev_exit",
+      "kappa_min"
+     ],
+     "fmt": "round1",
+     "expect": "0.6"
+    }
+   ]
+  },
+  {
+   "id": "lim-zorder-stable",
+   "text": "(30 of 36 concordant before adjudication, 33 confirmed",
+   "evidence": [
+    {
+     "file": "MUT_SUM",
+     "key": [
+      "decisions_by_group",
+      "fn_equiv",
+      "accept/accept -> accept"
+     ],
+     "fmt": "int",
+     "expect": "30"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "counts",
+      "events"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "ADJ_AN",
+     "key": [
+      "checker_candidates",
+      "false_negative",
+      "counts",
+      "by_audit_reading",
+      "confirmed"
+     ],
+     "fmt": "int",
+     "expect": "33"
+    }
+   ]
+  },
+  {
+   "id": "lim-fable-32",
+   "text": "after, 32 under Fable)",
+   "evidence": [
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "sensitivity_b_fable",
+      "false_negative",
+      "by_audit_reading",
+      "confirmed"
+     ],
+     "fmt": "int",
+     "expect": "32"
+    }
+   ]
+  },
+  {
+   "id": "lim-gpu",
+   "text": "apart from the open-weight rater's 0.365 GPU-h",
+   "evidence": [
+    {
+     "file": "MUT_README",
+     "match": "0.365 GPU-h physical in all",
+     "expect": "0.365 GPU-h"
+    }
+   ]
+  },
+  {
+   "id": "lim-lo",
+   "text": "LibreOffice 7.3.7.2 in one locale",
+   "evidence": [
+    {
+     "file": "BUILD",
+     "match": "\"lo_build\": \"LibreOffice 7.3.7.2",
+     "expect": "7.3.7.2"
+    },
+    {
+     "file": "DOSSIER",
+     "match": "One LibreOffice build (7.3.7.2), one locale",
+     "expect": "7.3.7.2"
+    }
+   ]
+  },
+  {
+   "id": "lim-population",
+   "text": "444 synthetic mutants on 60 confirm tasks",
+   "evidence": [
+    {
+     "file": "SAMPLE",
+     "key": [
+      "pool"
+     ],
+     "fmt": "int",
+     "expect": "444"
+    },
+    {
+     "file": "DER",
+     "key": [
+      "population_outside_probe_cells",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "60"
+    }
+   ]
+  },
+  {
+   "id": "lim-43",
+   "text": "Not covered: 43 confirm tasks without a",
+   "evidence": [
+    {
+     "file": "MUT_REG",
+     "match": "| confirm | 120 | 67 | 68 (32 / 22 / 13 / 1) | 43 |",
+     "expect": "43"
+    }
+   ]
+  },
+  {
+   "id": "lim-probe-28",
+   "text": "their 28 false-positive events are unaudited",
+   "evidence": [
+    {
+     "file": "MUT_RES",
+     "match": "no false-negative event; 28",
+     "expect": "28"
+    }
+   ]
+  },
+  {
+   "id": "lim-s1a",
+   "text": "flipped 0 of 1,808 S1a verdicts",
+   "evidence": [
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "verdict_sources",
+      "secondary",
+      "flips_total"
+     ],
+     "fmt": "len",
+     "expect": "0"
+    },
+    {
+     "file": "S1A_RESC",
+     "key": [
+      "verdict_sources",
+      "secondary",
+      "scored_final_records"
+     ],
+     "fmt": "comma",
+     "expect": "1,808"
+    }
+   ]
+  },
+  {
+   "id": "lim-steps",
+   "text": "(two policies, 15 steps)",
+   "evidence": [
+    {
+     "file": "S1A_RES",
+     "match": "Screenshot only, 15 steps",
+     "expect": "15 steps"
+    }
+   ]
+  },
+  {
+   "id": "rw-272",
+   "text": "the renewal sweep's 272 cell queries",
+   "evidence": [
+    {
+     "file": "DOSSIER",
+     "match": "272 retrieval queries",
+     "expect": "272"
+    }
+   ]
+  },
+  {
+   "id": "rw-22",
+   "text": "dossier owner's 22 queries",
+   "evidence": [
+    {
+     "file": "DOSSIER",
+     "match": "Dossier owner's retrieval (22 queries",
+     "expect": "22"
+    }
+   ]
+  },
+  {
+   "id": "rw-c066-a",
+   "text": "hand-audits 150 FAIL-scored trajectories from five benchmarks; of 57 OSWorld items,",
+   "evidence": [
+    {
+     "file": "CLAIMREG",
+     "match": "150 FAIL trajectories audited; 57 OSWorld items, 8 evaluator false negatives (14.0%)",
+     "expect": "150"
+    },
+    {
+     "file": "CLAIMREG",
+     "match": "150 FAIL trajectories audited; 57 OSWorld items, 8 evaluator false negatives (14.0%)",
+     "expect": "57"
+    },
+    {
+     "file": "VERIF",
+     "match": "150 failure-scored trajectories from five benchmarks"
+    }
+   ]
+  },
+  {
+   "id": "rw-c066-b",
+   "text": "8 are evaluator false negatives (14.0%)",
+   "evidence": [
+    {
+     "file": "CLAIMREG",
+     "match": "150 FAIL trajectories audited; 57 OSWorld items, 8 evaluator false negatives (14.0%)",
+     "expect": "8"
+    },
+    {
+     "file": "CLAIMREG",
+     "match": "150 FAIL trajectories audited; 57 OSWorld items, 8 evaluator false negatives (14.0%)",
+     "expect": "14.0"
+    }
+   ]
+  },
+  {
+   "id": "rw-webarena",
+   "text": "human review 5.45-8.49 pp of success",
+   "evidence": [
+    {
+     "file": "DOSSIER",
+     "match": "recovers 5.45-8.49 pp",
+     "expect": "5.45-8.49 pp"
+    }
+   ]
+  },
+  {
+   "id": "rw-trust",
+   "text": "on 108 Agents' Last Exam tasks and finds 22.6% of recorded passes",
+   "evidence": [
+    {
+     "file": "DOSSIER",
+     "match": "checks on 108 Agents' Last Exam tasks; 22.6%",
+     "expect": "108"
+    },
+    {
+     "file": "DOSSIER",
+     "match": "checks on 108 Agents' Last Exam tasks; 22.6%",
+     "expect": "22.6%"
+    }
+   ]
+  },
+  {
+   "id": "rw-kernel",
+   "text": "check misses 16.9% of its witnessed faults",
+   "evidence": [
+    {
+     "file": "CLAIMREG",
+     "match": "official KernelBench check misses 16.9% of witnessed faults",
+     "expect": "16.9%"
+    }
+   ]
+  },
+  {
+   "id": "rw-barr",
+   "text": "IEEE TSE 41(5), 2015",
+   "evidence": [
+    {
+     "file": "VERIF",
+     "match": "IEEE TSE 41(5), 2015",
+     "expect": "41(5), 2015"
+    }
+   ]
+  }
+ ],
+ "structural": [
+  "section 1",
+  "section 2",
+  "section 3",
+  "section 4",
+  "section 6",
+  "section 7",
+  "section 8",
+  "section 9",
+  "section 10",
+  "section 12",
+  "sections 1-2",
+  "sections 2 and 9",
+  "section 3.1",
+  "section 3.3",
+  "section 2.5",
+  "section 3.6",
+  "section 3.7",
+  "Table 1",
+  "Table 2",
+  "Table 3",
+  "Table 4",
+  "Table 5",
+  "Figure 1",
+  "Figure 2",
+  "ledger row 11",
+  "ledger row 17",
+  "Slurm job 1186",
+  "query 1",
+  "query 2",
+  "queries 10, 15 and 19",
+  "COLM 2026",
+  "ICLR 2027",
+  "SLATE\nsection 1"
+ ]
+}

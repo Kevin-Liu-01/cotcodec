@@ -1,0 +1,40 @@
+{
+ "schema": "checker-mutation-note-derived-v1",
+ "inputs": {
+  "outcomes": "program/evidence/2026-10-08/q2-mutation-confirm/results/released/confirm-mutants-v1/outcomes.jsonl",
+  "zinv": "program/evidence/2026-10-08/q2-stage1-g0/zinv/zinv-validation-v3.json"
+ },
+ "population_outside_probe_cells": {
+  "mutants": 444,
+  "tasks": 60
+ },
+ "zorder_planned": 59,
+ "zorder_status_counts": {
+  "ambiguous": 3,
+  "evaluable": 40,
+  "not_admitted": 3,
+  "null_not_pass": 13
+ },
+ "zorder_population": {
+  "mutants": 40,
+  "tasks": 16,
+  "by_family_and_verdict": {
+   "compare_pptx_files": {
+    "fail": 35,
+    "pass": 4
+   },
+   "compare_pptx_files_tolerant": {
+    "fail": 1
+   }
+  }
+ },
+ "zinv_zorder_rows": {
+  "None|raw=1.0|zinv=1.0": 4,
+  "confirmed|raw=0.0|zinv=1.0": 29,
+  "unresolved|raw=0.0|zinv=1.0": 6
+ },
+ "zinv_should_fail_rows": {
+  "raw=0.0|zinv=0.0": 113,
+  "raw=1.0|zinv=1.0": 3
+ }
+}
