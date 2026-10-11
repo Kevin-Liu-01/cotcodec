@@ -137,13 +137,13 @@ The derived base image is built offline by `image_build.py` in the `cotcodec-q2-
   build; the qcow2 equals its raw source (`qemu-img compare`) and has no backing file.
 
 The image digests and the block classification are in the build record
-(`program/evidence/2026-10-11/s2v4-image/build/`) and in `harness/s2_locale/images.json`, which
+(`program/evidence/2026-10-11/s2v4-image/image-build-1195/`) and in `harness/s2_locale/images.json`, which
 `vm_lane.py` enforces (section "Images built", added with the pins).
 
 ## Images built
 
 Built by Slurm job 1195 (CPU only, 455 s, from the export of commit `9c450da0`; the self-test passed
-first); record `program/evidence/2026-10-11/s2v4-image/build/build-record.json`, per-path manifests
+first); record `program/evidence/2026-10-11/s2v4-image/image-build-1195/build-record.json`, per-path manifests
 `image-manifest.json` and `cell-manifests.json`. Every image is a standalone qcow2 (virtual size
 53,687,091,200 B, 64 KiB clusters, no backing file) that `qemu-img compare` finds identical to its raw
 source, and `e2fsck -fn` reports on every image exactly the certified disk's one finding (inode 1214912).
