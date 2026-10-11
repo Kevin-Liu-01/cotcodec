@@ -265,9 +265,9 @@ checker on the post-setup state). (ii) Passing-side control: the task's gold end
 checker-mutation study's reference gold for the task) is injected in a gold slot (after setup and the
 settle, LibreOffice is closed through its own Quit, the gold uploaded through the pinned
 `SetupController` upload step, reopened through the task's own open step) and saved and scored through
-the pinned `evaluate()`; the executor is the K2 injection executor's code path
-(`harness/q2_mutation_k2/executor.py`, reused unedited through an S2 wrapper) with the cell image
-mounted.
+the pinned `evaluate()`; the executor is the K2 injection executor (`harness/q2_mutation_k2/executor.py`, reused unedited
+through `harness/s2_locale/vm_gold.py`, which adds the image check) with the cell image mounted; the
+gold files come from the pinned file cache, each checked against the cache's receipts.
 
 ### P0.10 Config invariance (C1 tasks)
 
@@ -596,8 +596,10 @@ EXCESS_OVER_PLACEBO given D PRESENT_HARM 0.5, T PRESENT_HARM 0.45, T SMALL 0.35.
 ## Freeze procedure
 
 1. Build and test, on dev tasks only, the remaining Phase 0 code: the oracle's adapter to VM renders and
-   OSWorld's accessibility XML, the gold-slot wrapper of the K2 injection executor, the PD file-cache
-   variant, the P0.10 reader, the capture and gold sweep renderer, and `ap_delta.py` for P0.6.
+   OSWorld's accessibility XML, the PD file-cache variant, the P0.10 reader, the census sweep renderer
+   (capture and gold slots for all 106 tasks), the reader that turns the sweep's records into
+   `k0_v4.decide`'s inputs, and `ap_delta.py` for P0.6. (Built and dev-smoked in this draft: the image
+   build, the per-slot lane, the capture probe and the gold slot.)
 2. A fresh agent's pre-freeze audit checks this file against the images, the code and the K0 commitment.
 3. `uv run python scripts/preregister.py freeze s2-arabic-cua-locale-v4 program/preregistrations/s2-arabic-cua-locale-v4.md`,
    then `verify` and `check-chain`.
