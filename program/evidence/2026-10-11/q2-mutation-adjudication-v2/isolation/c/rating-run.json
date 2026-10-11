@@ -1,0 +1,97 @@
+{
+ "agent_attempts": {
+  "1": 12
+ },
+ "agent_count": 12,
+ "agent_labels": "adj:0 .. adj:11, each started once",
+ "agent_models_reported_by_workflow": {
+  "claude-opus-5-5": 12
+ },
+ "agent_states": {
+  "done": 12
+ },
+ "default_model": "claude-opus-5-5",
+ "duration_ms": 136501,
+ "journal_lines": {
+  "launched": 1,
+  "result": 12,
+  "started": 12
+ },
+ "journal_sha256": "2cc041c19856bc167290aa19be7b2587539e9c939d7fb8f395818679c9a26765",
+ "label": "adjudicated by an isolated model on the owner's instruction (D80); not human-validated",
+ "note": "the run's own record with reasons omitted (reasons quote document text); the per-item answer files given to the audit hold {item_id, answer, reason} from the returned ratings, item_id_returned dropped after the equality check (not a registered answer key); answer files stay outside the repository, hashed in the audit outputs",
+ "phases": [
+  "Adjudicate"
+ ],
+ "record_timestamp_utc": "2026-10-11T19:07:01.587Z",
+ "resumed": false,
+ "returned": {
+  "answered": 12,
+  "answers": {
+   "accept": 12
+  },
+  "item_id_returned_equals_item_id": 12,
+  "n": 12
+ },
+ "returned_ids_and_answers": [
+  {
+   "answer": "accept",
+   "item_id": "06720e668a7c2d87"
+  },
+  {
+   "answer": "accept",
+   "item_id": "28b76980b2c9201a"
+  },
+  {
+   "answer": "accept",
+   "item_id": "35d237e376cca35d"
+  },
+  {
+   "answer": "accept",
+   "item_id": "365edabe1a57e9e2"
+  },
+  {
+   "answer": "accept",
+   "item_id": "4fe209883c28fdd5"
+  },
+  {
+   "answer": "accept",
+   "item_id": "5facff2b753bcdf4"
+  },
+  {
+   "answer": "accept",
+   "item_id": "77b434dad79aa067"
+  },
+  {
+   "answer": "accept",
+   "item_id": "a04937b5ea0f5811"
+  },
+  {
+   "answer": "accept",
+   "item_id": "ad78eacba984506b"
+  },
+  {
+   "answer": "accept",
+   "item_id": "cbcf768b16d617f4"
+  },
+  {
+   "answer": "accept",
+   "item_id": "d238e0f83e6fdef9"
+  },
+  {
+   "answer": "accept",
+   "item_id": "f65e9989406928dc"
+  }
+ ],
+ "role": "D81 (c) notation sensitivity",
+ "run_id": "wf_d750e081-ae1",
+ "schema": "q2m-d81-adjudication-run-v1",
+ "script_equals_record": true,
+ "script_file": "q2m-d81-adjudication-c-notation.js",
+ "script_sha256": "3ab0f8e9ec220949d11a320f8317b163ec8a7dbc86eb8c091a445c58ab334228",
+ "start_time_utc": "2026-10-11T19:04:45Z",
+ "status": "completed",
+ "total_tokens": 1435493,
+ "total_tool_calls": 136,
+ "workflow_name": "q2m-d81-adjudication-c-notation"
+}
