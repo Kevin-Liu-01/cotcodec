@@ -1,13 +1,21 @@
 # r04-checker-nuisance-invariance-v1: do OSWorld checker verdicts survive nuisance changes?
 
-**Status: DRAFT. Not frozen, no ledger row. Pre-freeze audit 1 (2026-10-11, at `4b2acf2`)
-found four blocking items and its re-audit (2026-10-11, at `84d0a549`) one more; all are
-fixed in this version (section 16).** Drafted on 2026-10-11 by the single owner of R04 under
-decision D73 (iii), on branch `stage0/r04-nuisance` (merged to `main` at `f7848a6d`, D77);
-the re-audit's fixes were made on branch `stage0/r04-fix2`. A registered CPU study at
-0 GPU-h: it runs only after a pre-freeze audit and the program owner's freeze (section 17);
-nothing here may be frozen by the agent that drafted it. Only dev-split smoke tests have
-run (section 15). Origin: the renewal dossier's `R04-nuisance-invariance` (`program/evidence/2026-10-11/question-renewal/`,
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the
+freeze time and `git_head_at_freeze`.** Drafted on 2026-10-11 by the single owner of R04
+under decision D73 (iii), on branch `stage0/r04-nuisance` (merged to `main` at `f7848a6d`,
+D77); the re-audit's fixes were made on branch `stage0/r04-fix2`. Pre-freeze audit 1
+(2026-10-11, at `4b2acf2`) found four blocking items and its re-audit (at `84d0a549`) one
+more; all are fixed (section 16). The program owner's reserved items of section 17 were
+decided by D80 (2026-10-11), under which Kevin delegated his pending research decisions:
+R04 runs standalone, not as S2 v3's Phase 0; the two adaptations of section 4.4 and the
+CPU cap of section 14 are accepted as drafted; the freeze is authorized. The freeze was
+made by an operator who did not draft this file, in the two commits of section 17 (the
+fill commit, then the freeze commit that adds only the ledger row). A registered CPU study
+at 0 GPU-h: the registered run (section 6) runs from an export of the freeze commit, and
+the guard admits the registered splits only while this file's SHA-256 equals the ledger
+row's and the staged code tree's digest equals the pins block's `code_tree_sha256`. A
+material change after the freeze is a new experiment id. Only dev-split smoke tests ran
+before the freeze (section 15). Origin: the renewal dossier's `R04-nuisance-invariance` (`program/evidence/2026-10-11/question-renewal/`,
 `dossier.md` section 7, `slate.md` section 5, `verification.json` claims c012, c019, c021,
 c036, c040-c042, c066, c091, c092, c181, c183, c202), with the judges' defects repaired
 (section 16).
@@ -99,7 +107,7 @@ possibly before R04's freeze; D73 (ii), D77). R04 follows the same rule:
 | Corrected comparator | `harness/q2_stage1/zinv.py` (S1a's validated `compare_pptx_files_zinv`, G0 item 8) |
 | S1a records | the lane runs 1037 (A0a, dev tasks) and 1045, 1048, 1051, 1062 (A1-9B-S1, A1-4B-S1, A1-9B-S2, A1-4B-S2), each `episodes.jsonl` by its committed SHA-256 and each capture file by S1a's committed `raw-sha256sums.txt` (`harness/r04_nuisance/items.S1A_RUNS`); the item builder refuses any difference |
 | Frozen control verdicts (V1) and P1's counted golds | `program/evidence/2026-10-08/q2-mutation-confirm/results/released/controls/confirm-controls-v1.summary.json` (`1ae20605...`) and `reserve-controls-v1.summary.json` (`1da42642...`); dev smoke: `program/evidence/q2-mutation/harness/dev-controls-v9-summary.json` (`e13cbbe6...`); full digests in `levels.CONTROL_SUMMARIES`, which the item builder and the analysis check |
-| Code of record | the code tree `guard.code_tree_sha256` hashes (relative path and SHA-256 of every file, README and SKILL files and Python caches excepted, as the parent's `campaign.code_tree_sha256`) over `guard.CODE_TREE_ROOTS`: `harness/r04_nuisance`, `infra/r04-nuisance`, `tests/test_r04_nuisance.py`, and, unchanged, `harness/q2_mutation` (all of it: reachability, controls, offline_eval, report, stats, campaign; its own frozen code tree `58bee019...`), `harness/q2_stage1/__init__.py`, `harness/q2_stage1/rescore.py`, `harness/q2_stage1/zinv.py`, `harness/q2_stage1/osworld_live.py` (`load_task`) and the lane `infra/slurm/host-single-node/q2-mutation-cpu.sbatch`. At the freeze its digest goes into the pins block (`code_tree_sha256`), and the fill commit's parent goes into this row (section 17 defines the fill and freeze commits): the commit the fill is made on, whose code tree has that digest. The guard binds by digest, not by commit (dev-smoke-v5 ran at `e56fb45`, whose code tree has the same digest, section 15); it refuses every registered split while the staged tree's digest differs |
+| Code of record | the code tree `guard.code_tree_sha256` hashes (relative path and SHA-256 of every file, README and SKILL files and Python caches excepted, as the parent's `campaign.code_tree_sha256`) over `guard.CODE_TREE_ROOTS`: `harness/r04_nuisance`, `infra/r04-nuisance`, `tests/test_r04_nuisance.py`, and, unchanged, `harness/q2_mutation` (all of it: reachability, controls, offline_eval, report, stats, campaign; its own frozen code tree `58bee019...`), `harness/q2_stage1/__init__.py`, `harness/q2_stage1/rescore.py`, `harness/q2_stage1/zinv.py`, `harness/q2_stage1/osworld_live.py` (`load_task`) and the lane `infra/slurm/host-single-node/q2-mutation-cpu.sbatch`. At the freeze its digest went into the pins block (`code_tree_sha256`: `1ffe2d19cd4ff8c6b70c6a37b7f99a9399fba40ac76e16b56856e24a6e709855`), and the fill commit's parent goes into this row (section 17 defines the fill and freeze commits): `c0971a77a3d970ea4c36ed25a9411611f47392a3`, the commit the fill is made on, whose code tree has that digest. The guard binds by digest, not by commit (dev-smoke-v5 ran at `e56fb45`, whose code tree has the same digest, section 15); it refuses every registered split while the staged tree's digest differs |
 | Lane | `infra/slurm/host-single-node/q2-mutation-cpu.sbatch`, unchanged (CPU only, no GRES) |
 
 Machine-readable pins (read by `harness/r04_nuisance/guard.py`, which refuses every split
@@ -127,7 +135,7 @@ freeze, so a frozen file without it refuses every registered split):
  "confirm_rounds": 2,
  "workers": 16,
  "cap_lane_hours": 20.0,
- "code_tree_sha256": null
+ "code_tree_sha256": "1ffe2d19cd4ff8c6b70c6a37b7f99a9399fba40ac76e16b56856e24a6e709855"
 }
 ```
 
