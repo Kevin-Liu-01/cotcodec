@@ -63,7 +63,9 @@ host), `smoke-summary.json` (`smoke_summary.py`), `preflight.txt`.
 - Interface as specified: Arabic chrome share 0.954 (Calc), 0.959 (Impress) and 0.979 (Writer) in A,
   AR and AD, 0 in S, E, ER and PL; the menu bar right to left in ER, AR and AD (first item "ملف" in the
   Arabic cells, "File" otherwise) and left to right elsewhere.
-- Keyboard `us,us` (`setxkbmap -query`, the stock image's own value) and no input method in every slot;
+- Keyboard `us,us` (`setxkbmap -query`, the stock image's own value) and the stock input-method process
+  `ibus-daemon` running in every slot, S included (corrected in the repair round: an earlier version of
+  this file said "no input method"); the guest server's locale `LANG=en_HK.UTF-8`, `LANGUAGE=en_HK:en`;
   the postconfig's strict activation target present and its save rewrote the checked file in every slot;
   the checker's verdict on the do-nothing state `fail` in every cell of every task.
 - Masked pixel differences: AD against AR 0 px on all three tasks (P7); E against E2 0-1 px (A/A); PL
@@ -96,8 +98,9 @@ the same 24 capture slots as smoke 1197 on the images of build 1199, plus 10 gol
 
 - 34 of 34 slots probed, no infrastructure loss; every guest reported its cell's selector.
 - Interface as specified: Arabic chrome share 0.953 (Calc), 0.959 (Impress), 0.979 (Writer) in A, AR
-  and AD and 0 elsewhere; the menu bar right to left exactly in ER, AR and AD; keyboard `us,us` and no
-  input method everywhere; every postconfig save rewrote the checked file; the do-nothing verdict
+  and AD and 0 elsewhere; the menu bar right to left exactly in ER, AR and AD; keyboard `us,us` with the
+  stock `ibus-daemon` running everywhere, S included (corrected: an earlier version said "no input
+  method"); every postconfig save rewrote the checked file; the do-nothing verdict
   `fail` in every cell of every task.
 - Masked pixel differences: **E against S 0, 1 and 1 px** (the CTL buttons are gone); AD against AR 0
   px; E against E2 0-1 px; PL against E 26,513-48,905 px.

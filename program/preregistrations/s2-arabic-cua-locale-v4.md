@@ -422,7 +422,8 @@ is in Arabic script, among those with Arabic or Latin letters (`vm_probe.a11y_su
 
 1. The freeze (section "Freeze procedure"), after the Phase 0 code is built and tested on dev tasks
    (done in the repair round) and a fresh audit.
-2. P0.6 (K1), about 44 VM-hours plus the rung (section "K1"), one `ap_delta` job at a time.
+2. P0.6 (K1), about 46 VM-hours (section "K1"), one `ap_delta` job at a time: about 37 jobs (C3 and A3
+   in parts), most at N = 1, so about 40 hours of wall clock in serial jobs plus queue waits.
 3. The capture and gold sweep: 1,322 slots (882 capture, 440 gold), about 80 VM-hours (about 3.5
    minutes per slot); one CPU job at V = 20, about 4 hours plus the image check, on an empty queue.
 4. The oracle (one CPU container job, `oracle_vm.py --k0`) and `k0_v4.decide`: K0.
@@ -762,7 +763,7 @@ The P0.6 suite: attempt 1's seeds (42, 43, 44, 45).
 
 | Job | Cap (GPU-h) | Arithmetic |
 |---|---:|---|
-| Phase 0 (P0.6, capture and gold sweep, oracle) | 0 | CPU-only lane and container jobs, no GRES; about 44 + 80 VM-hours |
+| Phase 0 (P0.6, capture and gold sweep, oracle) | 0 | CPU-only lane and container jobs, no GRES; about 46 + 80 VM-hours |
 | Overlay build and pre-funded retry | 0.10 | 3 + 3 minutes, as S1a |
 | Phase 1 (one job, K at most 106, n = 4 in the 2x2, n_pl = 2) | 6.73 | ceil(3 + 113.2/60 + (1,908 x 197.73/20 + 104.6) x 1.2 x 1.05 / 60) = 404 minutes |
 | Registered total | 6.83 | below D20's 8 GPU-h line; admitted by D80 (iv) if K0 and K1 pass |
