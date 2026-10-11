@@ -1,0 +1,52 @@
+{
+ "build": {
+  "certified_sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+  "derived_base": {
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v3/s2v4-derived-base.qcow2",
+   "sha256": "894528792a7c59488a6d30680b1ed39b82e68e47c8b5a7bc90585d371d895ff4",
+   "size_bytes": 24459214848
+  },
+  "dir": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v3",
+  "executor_commit": "9c450da0ea74a7fefa4fdc43e373e6b1f6e6f2aa",
+  "image_manifest_sha256": "9034094f86f172e6c8bc6c82ec2bb2e1e3c4244b711f692fbbd75f352a557545"
+ },
+ "cells": {
+  "A": {
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v3/s2v4-cell-A.qcow2",
+   "selector_sha256": "2500c24400f4555fbd771261712fa78addfa200bda6c89d4da1b75a81451d090",
+   "sha256": "1d2bb7ad14148e40c4298dab04fe3cee5d53f65330da0d8e0fe82e1fcfa6eb3e",
+   "size_bytes": 24459214848
+  },
+  "AD": {
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v3/s2v4-cell-AD.qcow2",
+   "selector_sha256": "235f348b05a4ce854065e00fb2cfb037fe42f05f2b5e64475249e3efec98068d",
+   "sha256": "3d5141b647afc42cd4819f3058cd929cfff0391f423035c77fad50afef11fed7",
+   "size_bytes": 24459214848
+  },
+  "AR": {
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v3/s2v4-cell-AR.qcow2",
+   "selector_sha256": "d69e21004eccc4135365c6285123304a0629b5ac59216a800b40522965f723c9",
+   "sha256": "1cf32571aa5c0fa98fa5c5387af2d56a155566467a36c70048844d54c00517d9",
+   "size_bytes": 24459214848
+  },
+  "E": {
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v3/s2v4-cell-E.qcow2",
+   "selector_sha256": "f486e44f3f8fff7fb738d4985b64171a8799c98516603e64f74758e4995b8e1b",
+   "sha256": "19792fbcc7b3b9bbc18b45f95cb0b09c7064b5bd8e841f144d381e5c063ea856",
+   "size_bytes": 24459214848
+  },
+  "ER": {
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v3/s2v4-cell-ER.qcow2",
+   "selector_sha256": "5a53083e0773c639d1fcbcee5b3fd2e4940c53f2770b2e37cc8631adc9280bba",
+   "sha256": "f4db3bba67e4a4fd0e941385799c5569c6c49524bb44b7ce6e2a9724685df18c",
+   "size_bytes": 24459214848
+  },
+  "PL": {
+   "file": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v3/s2v4-cell-PL.qcow2",
+   "selector_sha256": "f486e44f3f8fff7fb738d4985b64171a8799c98516603e64f74758e4995b8e1b",
+   "sha256": "d7402b1db5ff9072cc4e36fa4900bcba9966b593590fc0c3cd759f340e36a9e0",
+   "size_bytes": 24459214848
+  }
+ },
+ "schema": "s2v4-images-v1"
+}

@@ -8,7 +8,8 @@ Mode ``facts`` ``{"selector": PATH}``:
 
 * the cell selector's SHA-256 (``null`` when absent: the stock image), the Arabic language
   pack's files that LibreOffice reads (the gettext catalog count and the four registry files'
-  SHA-256), so every record names the image it ran on;
+  SHA-256) and a digest over the toolbar definitions (PL's differ), so every record names the
+  image it ran on;
 * ``setxkbmap -query`` and whether an input method runs (the keyboard check of P1's episode
   start);
 * ``wmctrl -l`` window titles and the LibreOffice processes (pid, comm, first argv element);
@@ -34,6 +35,7 @@ LANGPACK = {
     "res/fcfg_langpack_ar.xcd": REGISTRY + "/res/fcfg_langpack_ar.xcd",
 }
 CATALOGS = "/usr/lib/libreoffice/program/resource/ar/LC_MESSAGES/*.mo"
+TOOLBARS = "/usr/lib/libreoffice/share/config/soffice.cfg/modules/*/toolbar/*.xml"
 IM_NAMES = ("ibus-daemon", "fcitx", "fcitx5", "uim-xim", "scim")
 
 
@@ -49,6 +51,15 @@ def sha256_of(path):
             return hashlib.sha256(handle.read()).hexdigest()
     except OSError:
         return None
+
+
+def toolbar_digest():
+    """SHA-256 over every toolbar definition (path and content): tells PL's image from E's."""
+    digest = hashlib.sha256()
+    paths = sorted(glob.glob(TOOLBARS))
+    for path in paths:
+        digest.update(path.encode() + b"\0" + (sha256_of(path) or "").encode() + b"\n")
+    return {"files": len(paths), "sha256": digest.hexdigest()}
 
 
 def processes():
@@ -94,6 +105,7 @@ def mode_facts(config):
         "selector_sha256": sha256_of(config["selector"]),
         "langpack": {k: sha256_of(v) for k, v in LANGPACK.items()},
         "ar_catalogs": len(glob.glob(CATALOGS)),
+        "toolbars": toolbar_digest(),
         "setxkbmap": kb,
         "keyboard_layout": layout,
         "input_methods": sorted({p["comm"] for p in procs if p["comm"] in IM_NAMES}),

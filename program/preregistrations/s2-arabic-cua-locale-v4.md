@@ -140,6 +140,30 @@ The image digests and the block classification are in the build record
 (`program/evidence/2026-10-11/s2v4-image/build/`) and in `harness/s2_locale/images.json`, which
 `vm_lane.py` enforces (section "Images built", added with the pins).
 
+## Images built
+
+Built by Slurm job 1195 (CPU only, 455 s, from the export of commit `9c450da0`; the self-test passed
+first); record `program/evidence/2026-10-11/s2v4-image/build/build-record.json`, per-path manifests
+`image-manifest.json` and `cell-manifests.json`. Every image is a standalone qcow2 (virtual size
+53,687,091,200 B, 64 KiB clusters, no backing file) that `qemu-img compare` finds identical to its raw
+source, and `e2fsck -fn` reports on every image exactly the certified disk's one finding (inode 1214912).
+Two earlier attempts stopped at their own checks before writing any image (job 1189: the certified
+disk's pre-existing `e2fsck` finding; job 1192: a directory both language packs carry, created twice).
+
+| Image | SHA-256 | Bytes | Written | Changed 4 KiB blocks (every one explained) |
+|---|---|---:|---|---|
+| derived base | `894528792a7c59488a6d30680b1ed39b82e68e47c8b5a7bc90585d371d895ff4` | 24,459,214,848 | 404 writes, directories and links (385 files incl. 4 `ucf` copies, 18 directories, 1 symlink) | 2,790 vs the certified disk: 2,675 file data, 14 directory, 83 inode table, 13 bitmap, 5 superblock or descriptor |
+| E | `19792fbcc7b3b9bbc18b45f95cb0b09c7064b5bd8e841f144d381e5c063ea856` | 24,459,214,848 | selector (selector `f486e44f3f8f...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| A | `1d2bb7ad14148e40c4298dab04fe3cee5d53f65330da0d8e0fe82e1fcfa6eb3e` | 24,459,214,848 | selector (selector `2500c24400f4...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| ER | `f4db3bba67e4a4fd0e941385799c5569c6c49524bb44b7ce6e2a9724685df18c` | 24,459,214,848 | selector (selector `5a53083e0773...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| AR | `1cf32571aa5c0fa98fa5c5387af2d56a155566467a36c70048844d54c00517d9` | 24,459,214,848 | selector (selector `d69e21004ecc...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+| PL | `d7402b1db5ff9072cc4e36fa4900bcba9966b593590fc0c3cd759f340e36a9e0` | 24,459,214,848 | selector and 369 toolbar definitions (selector `f486e44f3f8f...`) | 466 vs the base: 390 file data, 10 directory, 47 inode table, 14 bitmap, 5 superblock or descriptor |
+| AD | `3d5141b647afc42cd4819f3058cd929cfff0391f423035c77fad50afef11fed7` | 24,459,214,848 | selector (selector `235f348b05a4...`) | 8 vs the base: 1 file data, 1 directory, 1 inode table, 2 bitmap, 3 superblock or descriptor |
+
+The stock cell S is the certified `Ubuntu.qcow2` (`6bf667a8...`). Images stay read-only on the host
+under the run root; `harness/s2_locale/images.json` pins them, and `tests/test_s2v4_image_build.py`
+checks that it is the pin set the committed build record gives.
+
 ### P0.3 Cells and the per-slot image
 
 Each cell image is the derived base plus the selector `/etc/libreoffice/registry/zz-s2v4-cell.xcd`

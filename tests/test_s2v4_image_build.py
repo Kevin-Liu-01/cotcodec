@@ -301,3 +301,17 @@ def test_pins_from_a_build_record():
     bad = {**rec, "cells": {"A": cell}}  # the E selector recorded under A
     with pytest.raises(B.BuildError):
         B.pins_from_record(bad, "/x")
+
+
+def test_images_json_is_the_committed_build_records_pin_set():
+    import json
+
+    rec = json.loads((ROOT / "program/evidence/2026-10-11/s2v4-image/build/build-record.json")
+                     .read_text())  # fmt: skip
+    pins = json.loads((ROOT / "harness/s2_locale/images.json").read_text())
+    assert pins == B.pins_from_record(rec, pins["build"]["dir"])
+    assert set(pins["cells"]) == set(B.CELLS)
+    for cell, r in rec["cells"].items():
+        assert r["changed_blocks"]["ok"] and r["changed_blocks"]["counts"]["unexplained"] == 0
+        assert r["fsck"]["findings"] == rec["fsck_certified"]["findings"]
+    assert rec["install"]["changed_blocks"]["ok"]

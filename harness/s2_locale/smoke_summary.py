@@ -86,6 +86,8 @@ def slot_row(rec: dict[str, Any], strict_titles: list[str]) -> dict[str, Any]:
         "setup_failures": len((rec.get("setup") or {}).get("failures") or []),
         "stable_two_shots": post.get("stable"),
         "keyboard_layout": facts.get("keyboard_layout"),
+        "ar_catalogs": (rec.get("facts_boot") or {}).get("ar_catalogs"),
+        "toolbar_digest": ((rec.get("facts_boot") or {}).get("toolbars") or {}).get("sha256"),
         "input_methods": facts.get("input_methods"),
         "strict_title_present": all(t in titles for t in strict_titles) if strict_titles else None,
         "arabic_share": share,
