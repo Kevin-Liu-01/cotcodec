@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2609.16617",
+ "fetched_at": "2026-10-11T09:46:51Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42253,
+ "raw_sha256": "8d141269bf0ab22f70a9058ac85b61f13c431933f84d509ae0ebdb28b341f7a3",
+ "raw_stored": false,
+ "extract": {
+  "title": "Divergence Timing and Cumulative Disagreement under KV-Cache Eviction",
+  "authors": [
+   "Luo, Xinyue",
+   "Yu, Fei"
+  ],
+  "citation_date": "2026/09/15",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 15 Sep 2026 04:23:53 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 18 Sep 2026 04:09:40 UTC"
+   }
+  ],
+  "abstract": "KV-cache eviction perturbs the conditional token distributions governing autoregressive generation. We investigate how first-divergence timing and subsequent token mismatch determine cumulative disagreement. We derive an exact decomposition under a specified stepwise maximal coupling: the expected mismatch fraction equals a first-mismatch contribution plus post-divergence exposure multiplied by its mismatch rate. An explicit construction over unrestricted autoregressive kernel pairs realizes the sharp interval of risks compatible with a finite divergence-aligned observation window. Residual-branch conditional Monte Carlo provides unbiased joint estimates of occurrence, occupation, and window/tail contributions, with per-replicate variance dominance for total token loss. Complete trajectories from Meta-Llama-3.1-8B-Instruct and Qwen2.5-7B-Instruct show that SnapKV at 50% retention enters divergence later and less often than SnapKV-512 or recent-token retention with the same 50% prompt-cache budget, while post-divergence total variation (TV) remains high. In an exploratory analysis of 288 documents, post-divergence exposure accounts for 85-90% of four aggregate mismatch gaps. On 288 independent documents at 90% retention, prespecified comparisons show higher branch-aligned TV in the late than in the early window in both models.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

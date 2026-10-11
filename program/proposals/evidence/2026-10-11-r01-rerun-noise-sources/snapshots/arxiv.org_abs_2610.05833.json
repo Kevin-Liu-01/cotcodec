@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2610.05833",
+ "fetched_at": "2026-10-11T09:46:51Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41815,
+ "raw_sha256": "e50cf34ee7f61c5feb33ee70b7d1c3f5b014f98a99c7d9b256956fd1c48e72aa",
+ "raw_stored": false,
+ "extract": {
+  "title": "Request Order Matters: Cache-History Sensitivity in Selective KV-Cache Reuse for Rolling Agents",
+  "authors": [
+   "Gu, Tiffany",
+   "Guan, Annie",
+   "Huang, Manshu",
+   "Rao, Nitin",
+   "Shah, Siddhant",
+   "Capetz, Margaret"
+  ],
+  "citation_date": "2026/10/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 5 Oct 2026 05:37:22 UTC"
+   }
+  ],
+  "abstract": "Long-running agents repeatedly call an LLM while retaining most of their document window, evicting old documents, and appending new ones. These rolling updates break exact prefix caching and motivate non-prefix KV-cache reuse with selective recomputation. We show that persistent KV-cache reuse with selective recomputation can be history-dependent: in our rolling-agent workload, an unchanged prompt can produce different answers depending on the requests processed before it. At a matched 5% recomputation budget, document-aligned recomputation reduces answer variation across request orders from 69.0% with CacheBlend's token top-$k$ policy to 26.1%. When each prompt is evaluated after a different sequence of preceding requests, document-aligned recomputation improves fidelity to full prefill by 34.5-52.5 percentage points over token top-$k$, while both policies achieve approximately 5.7$\\times$ median TTFT speedup. Our ablation study shows that, in our rolling-agent workload, contiguity is the main factor associated with robust selective recomputation.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

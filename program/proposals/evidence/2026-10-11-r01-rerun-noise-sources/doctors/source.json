@@ -1,0 +1,17 @@
+{
+ "name": "Source",
+ "status": "PASS",
+ "protocol": "K-Dense literature-review (PRISMA counts)",
+ "evidence": [
+  "orx 0.2.2 alphaXiv and OpenAlex reachable from the Mac (query-log.json: 103 counted discover queries with returned ids)",
+  "OpenReview api2 term searches (abstracts); arXiv API version checks through the host relay (frontier cell)",
+  "source cutoff 2026-10-11; newest alphaXiv results 2026-10-09 to 2026-10-10"
+ ],
+ "degraded_coverage": [
+  "orx client outdated (0.2.2 against 0.2.18)",
+  "OpenReview per-note pages and PDFs behind a challenge",
+  "no Semantic Scholar or Google Scholar citers, GitHub code search, vLLM issues, patents, X, Reddit, Chinese-language venues",
+  "ACL Anthology only through the renewal dossier's regex queries and two site-restricted web searches"
+ ],
+ "remediation": "Semantic Scholar citer refresh for 2604.17849 and cELldjX2oq through the host relay when free"
+}

@@ -1,0 +1,9 @@
+Using CPython 3.13.14
+Creating virtual environment at: .venv
+Installed 50 packages in 342ms
+ORX_NODE {"args": [], "direction": "r01-rerun-noise-sources", "doctor": "scripts/run_r01_stage_a0_doctor.py", "kind": "cpu-doctor"}
+ORX_ARGV /Users/kevinliu/.local/share/openresearch/local-runs/83ee815a-426a-4b94-a93f-cc1277972d76/repo/.venv/bin/python /Users/kevinliu/.local/share/openresearch/local-runs/83ee815a-426a-4b94-a93f-cc1277972d76/repo/scripts/run_r01_stage_a0_doctor.py --output /Users/kevinliu/.local/share/openresearch/local-runs/83ee815a-426a-4b94-a93f-cc1277972d76/repo/data/results/orx/r01-rerun-noise-sources-orx-local.json
+R01_A0_SUMMARY {"identical_ir_pairs": 227, "identical_ir_pairs_verdict_discordant": 0, "ir_differs": {"k": 2, "n": 27, "share": 0.0741, "wilson95": [0.0206, 0.2337]}, "natural_identical_requests": 27, "reply_text_differs": {"k": 16, "n": 27, "share": 0.5926, "wilson95": [0.4073, 0.7549]}, "same_minute_clear_screenshot_differs": {"k": 10, "n": 25, "share": 0.4, "wilson95": [0.234, 0.5926]}, "status": "PASS"}
+ORX_RECEIPT_SUMMARY {"cases": {"passed": 8, "total": 8}, "doctor": "r01-stage-a0", "evidence_grade": "records-only census of S1a (descriptive design input; enters no registered decision rule)", "status": "PASS"}
+ORX_RECEIPT_PATH /Users/kevinliu/.local/share/openresearch/local-runs/83ee815a-426a-4b94-a93f-cc1277972d76/repo/data/results/orx/r01-rerun-noise-sources-orx-local.json
+ORX_RESULT kind=cpu-doctor direction=r01-rerun-noise-sources exit=0

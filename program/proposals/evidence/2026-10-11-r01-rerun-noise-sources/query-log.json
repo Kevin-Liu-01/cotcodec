@@ -1,0 +1,1927 @@
+{
+ "schema": "r01-query-log-v1",
+ "gauntlet": "R01 first step, wave 1 (D73 i)",
+ "counting_rule": "orx discover queries count against the declared 150 (S2 precedent); other searches listed separately; reads uncounted",
+ "queries_against_budget": {
+  "declared": 150,
+  "reserve_for_triad": 30,
+  "orx_discover_by_cell": {
+   "frontier": 59,
+   "kill-shot": 19,
+   "cross-domain": 19,
+   "asset": 6
+  },
+  "orx_discover_total": 103,
+  "synthesis_searches": 0,
+  "remaining_under_counting_rule": 47,
+  "reserve_intact_under_counting_rule": true,
+  "other_searches": 18,
+  "failed_calls": 2,
+  "total_if_other_searches_counted": 121,
+  "remaining_if_other_searches_counted": 29
+ },
+ "prisma": {
+  "ids_returned_by_discover": 773,
+  "unique_ids": 560,
+  "screened": "by title, all unique ids",
+  "read_beyond_title_unique_papers": 33,
+  "papers_read": [
+   "1705.05937",
+   "2103.02669",
+   "2405.14573",
+   "2506.09501",
+   "2512.21326",
+   "2602.07150",
+   "2602.16666",
+   "2604.17849",
+   "2605.10516",
+   "2605.27763",
+   "2605.30218",
+   "2606.15621",
+   "2607.01469",
+   "2607.17136",
+   "2608.04714",
+   "2608.08239",
+   "2608.14376",
+   "2608.15286",
+   "2608.22331",
+   "2608.30310",
+   "2609.04748",
+   "2609.13582",
+   "2609.20625",
+   "2609.26693",
+   "2609.33812",
+   "2609.36931",
+   "2609.38981",
+   "2609.40284",
+   "2610.00651",
+   "2610.01138",
+   "2610.01618",
+   "2610.05833",
+   "2610.11678"
+  ],
+  "web_pages_fetched_cross_domain": "thinkingmachines.ai blog; docs.vllm.ai batch_invariance (latest); lmsys.org SGLang deterministic; Luo et al. 2014 PDF; DetTrace PDF (redirected, not read); Hermit README; gafferongames deterministic lockstep; playwright.dev PageAssertions; qemu.org replay docs; reproducible-builds.org timestamps",
+  "direct_priors": 0
+ },
+ "discover": [
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "On the Reliability of Computer Use Agents | --limit 10",
+   "returned_ids": [
+    "2609.17885",
+    "2604.17849",
+    "2609.38008",
+    "2609.22000",
+    "2610.02320",
+    "2609.32600"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "batch-invariant inference computer-use agent reliability --published-after 2026-01-01 | --limit 12",
+   "returned_ids": [
+    "2608.22077",
+    "2604.17849",
+    "2609.32750",
+    "2610.00651",
+    "2606.31270",
+    "2610.04123"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "The Evaluator Also Varies | --limit 10",
+   "returned_ids": [
+    "2608.26827",
+    "2607.25136",
+    "2609.22700",
+    "2608.29912",
+    "2608.08189",
+    "2610.02924"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Same Request, Different Answer prefix caching agent trajectories | --limit 10",
+   "returned_ids": [
+    "2609.04748",
+    "2610.05833",
+    "2608.25523",
+    "2608.30310",
+    "2608.01126",
+    "2609.32999"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Dating the Model hidden date --published-after 2026-06-01 | --limit 10",
+   "returned_ids": [
+    "2609.36931",
+    "2608.18984",
+    "2608.19545",
+    "2610.09104",
+    "2609.33929",
+    "2610.04642"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "noise floor agent benchmark reruns temperature zero --published-after 2026-07-01 | --limit 12",
+   "returned_ids": [
+    "2608.22331",
+    "2609.24928",
+    "2610.06274",
+    "2609.19876",
+    "2609.32292",
+    "2609.24974"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "on-screen clock screenshot agent nondeterminism --published-after 2025-01-01 | --limit 10",
+   "returned_ids": [
+    "2608.06065",
+    "2608.26991",
+    "2609.33646",
+    "2608.05784",
+    "2608.12219",
+    "2610.11942"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "open-loop replay recorded actions virtual machine verdict --published-after 2025-01-01 | --limit 10",
+   "returned_ids": [
+    "2608.26306",
+    "2610.05452",
+    "2607.07196",
+    "2609.20625",
+    "2609.31374",
+    "2610.00385"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Defeating Nondeterminism in LLM Inference batch invariance --published-after 2025-09-01 | --limit 15",
+   "returned_ids": [
+    "2608.14376",
+    "2609.25624",
+    "2609.38981",
+    "2610.09111",
+    "2608.24004",
+    "2609.16161"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "first divergence identical reruns agent trajectories --published-after 2026-01-01 | --limit 12",
+   "returned_ids": [
+    "2608.02276",
+    "2609.04148",
+    "2609.24928",
+    "2609.00829",
+    "2609.07782",
+    "2609.21423"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Greedy Decoding Is Not Precision-Invariant | --limit 8",
+   "returned_ids": [
+    "2609.26621",
+    "2610.05052",
+    "2609.15504",
+    "2610.10596",
+    "2609.00355",
+    "2609.17184"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "TRACE identical reruns flip outcomes tau2-bench --published-after 2026-08-01 | --limit 10",
+   "returned_ids": [
+    "2610.11678",
+    "2609.32514",
+    "2609.33717",
+    "2609.36647",
+    "2610.07115",
+    "2608.16765"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "decomposing run-to-run outcome variance of multimodal desktop computer-use agents into serving numerics, environment timing, and observation noise such as on-screen clocks --published-after 2026-05-01 --prioritize recency | --limit 15",
+   "returned_ids": [
+    "2610.11050",
+    "2610.02320",
+    "2610.01787",
+    "2610.03818",
+    "2609.37176",
+    "2609.32778"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "replaying byte-identical recorded LLM requests to measure serving nondeterminism under continuous batching and prefix caching versus batch size one --published-after 2025-09-01 | --limit 15",
+   "returned_ids": [
+    "2609.32283",
+    "2609.28870",
+    "2610.09778",
+    "2610.05833",
+    "2609.38981",
+    "2610.09981"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "record and replay of agent action traces in a reset environment to separate environment nondeterminism from policy nondeterminism --published-after 2025-01-01 | --limit 12",
+   "returned_ids": [
+    "2610.06100",
+    "2609.32283",
+    "2608.14380",
+    "2610.11707",
+    "2610.09581",
+    "2609.38648"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "timestamps and clocks rendered in screenshots make GUI agent observations differ between reruns and cause trajectory divergence --published-after 2025-01-01 | --limit 12",
+   "returned_ids": [
+    "2610.11320",
+    "2609.34769",
+    "2609.36931",
+    "2609.28991",
+    "2610.03818",
+    "2609.16732"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "variance decomposition of agent benchmark scores into task, rerun, seed and harness components; how many reruns are needed --published-after 2026-06-01 | --limit 15",
+   "returned_ids": [
+    "2610.01618",
+    "2610.00651",
+    "2610.00917",
+    "2609.32961",
+    "2610.07274",
+    "2609.28850"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "animations, cursor blink, loading timing and asynchronous rendering as sources of nondeterminism in web or desktop agent benchmarks --published-after 2025-01-01 | --limit 12",
+   "returned_ids": [
+    "2609.40284",
+    "2609.34139",
+    "2609.34769",
+    "2609.17885",
+    "2609.35026",
+    "2609.10451"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "batch-invariant deterministic inference kernels for hybrid linear attention, Gated DeltaNet or Mamba layers --published-after 2025-09-01 | --limit 12",
+   "returned_ids": [
+    "2609.33051",
+    "2609.07816",
+    "2609.38166",
+    "2610.08527",
+    "2609.38981",
+    "2609.04098"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "nondeterministic outputs of vision-language models at temperature zero under vLLM serving; reproducibility of multimodal inference --published-after 2025-09-01 | --limit 12",
+   "returned_ids": [
+    "2609.33003",
+    "2609.33044",
+    "2608.29193",
+    "2609.00868",
+    "2607.24372",
+    "2608.17084"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "computer-use agent benchmark reliability run-to-run variance | --limit 15",
+   "returned_ids": [
+    "2607.28367",
+    "2511.04307",
+    "2609.07603",
+    "2604.06240",
+    "2606.20636",
+    "2507.02950"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "nondeterminism large language model agent evaluation reruns | --limit 15",
+   "returned_ids": [
+    "10.15781/t2ff3mk0s",
+    "10.1145/3736167",
+    "2607.10508",
+    "10.1016/j.patter.2026.101644",
+    "2607.27484",
+    "W7171749523"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "flaky tests time dependency asynchronous wait screenshot comparison | --limit 10",
+   "returned_ids": [
+    "2103.02669",
+    "10.22399/ijcesen.3644",
+    "10.13016/m2kh0f27r",
+    "10.24215/16666038.18.e16",
+    "2302.09330",
+    "10.1109/icst62969.2025.10989030"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "rerun nondeterminism sources in computer-use or GUI agent evaluation --published-after 2026-10-03 --prioritize recency | --limit 15",
+   "returned_ids": [
+    "2610.contamination-clock-evaluation-validity",
+    "2610.05622",
+    "2610.10088",
+    "2610.10961",
+    "2610.10988",
+    "2610.11447"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "nondeterminism agent evaluation --published-after 2026-10-03 --prioritize recency | --limit 15",
+   "returned_ids": [
+    "2610.07274",
+    "2610.09872",
+    "2610.07675",
+    "2610.09163",
+    "2610.05778",
+    "2610.09111"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "batch invariant --published-after 2026-09-15 --prioritize recency | --limit 15",
+   "returned_ids": [
+    "2610.08975",
+    "2610.04685",
+    "2610.04746",
+    "2610.long-documents-make-a-training-batch-smaller-than-it-looks",
+    "2610.04881",
+    "2609.37808"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "libfaketime | --limit 10",
+   "returned_ids": [
+    "2609.32391",
+    "2607.06107",
+    "2608.01135",
+    "2609.18805",
+    "2504.06026",
+    "2602.18689"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "FlexBI batch-invariant execution flexibility | --limit 10",
+   "returned_ids": [
+    "2609.38020",
+    "2609.16822",
+    "2606.20537",
+    "2610.03088",
+    "2609.06128",
+    "2609.02470"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Measuring all the noises of LLM evals prediction noise data noise | --limit 10",
+   "returned_ids": [
+    "2512.21326",
+    "2610.10142",
+    "2609.14504",
+    "2609.12291",
+    "2609.21899",
+    "2606.08171"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "greedy vLLM replicates tau2-bench simulated user first discrepancy | --limit 10",
+   "returned_ids": [
+    "2608.14641",
+    "2608.03206",
+    "2609.38043",
+    "2609.33717",
+    "2610.09307",
+    "2610.02460"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "VLLM_BATCH_INVARIANT | --limit 10",
+   "returned_ids": [
+    "2605.27763",
+    "2606.15621",
+    "2609.25510",
+    "2609.01068",
+    "2609.32805",
+    "2610.05533"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "batch invariance vision-language model deterministic multimodal inference --published-after 2025-09-01 | --limit 12",
+   "returned_ids": [
+    "2609.40362",
+    "2610.05432",
+    "2609.38981",
+    "2610.05062",
+    "2608.14376",
+    "2609.10321"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "time-sensitive tasks OSWorld system clock date checker --published-after 2025-01-01 | --limit 10",
+   "returned_ids": [
+    "2606.29537",
+    "2610.03818",
+    "2609.24890",
+    "2609.39903",
+    "2606.21654",
+    "2608.01135"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Agentic Flakiness flaky-test LLM agent reliability | --limit 10",
+   "returned_ids": [
+    "2609.25528",
+    "2609.25516",
+    "2608.06535",
+    "2607.09345",
+    "2610.04921",
+    "2608.17528"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "same action sequence replayed in a reset desktop virtual machine yields a different final state; environment nondeterminism in OSWorld-style benchmarks --published-after 2024-06-01 | --limit 12",
+   "returned_ids": [
+    "2609.36518",
+    "2610.07715",
+    "2610.02363",
+    "2610.02860",
+    "2609.34160",
+    "2609.26975"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "freezing or virtualizing system time in a virtual machine or container for reproducible agent benchmark evaluation --published-after 2024-06-01 | --limit 12",
+   "returned_ids": [
+    "2610.09944",
+    "2610.contamination-clock-evaluation-validity",
+    "2609.32391",
+    "2609.21267",
+    "2609.11515",
+    "2609.12216"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "masking dynamic screen regions such as the clock or animations in screenshots given to GUI agents to make evaluation reproducible --published-after 2025-01-01 | --limit 12",
+   "returned_ids": [
+    "2610.09469",
+    "2609.36939",
+    "2609.34113",
+    "2609.32679",
+    "2609.32036",
+    "2610.03818"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "prefix cache hit versus miss changes greedy decoding output numerically; nondeterminism from KV cache reuse in serving engines --published-after 2025-06-01 | --limit 12",
+   "returned_ids": [
+    "2609.28870",
+    "2610.05833",
+    "2610.11245",
+    "2609.28006",
+    "2609.38706",
+    "2610.06251"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "batch invariant kernels deterministic LLM inference | --limit 12",
+   "returned_ids": [
+    "2608.14376",
+    "2609.38981",
+    "2511.17826",
+    "2605.30218",
+    "2606.00516",
+    "10.1145/3830418.3843901"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "pass^k reliability computer-use agent repeated trials variance OSWorld --published-after 2025-06-01 | --limit 12",
+   "returned_ids": [
+    "2609.39903",
+    "2610.03818",
+    "2609.24890",
+    "2609.36927",
+    "2606.29537",
+    "2604.17849"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "visual regression testing dynamic content masking screenshot flakiness | --limit 10",
+   "returned_ids": [
+    "2607.01728",
+    "10.3390/info15080464",
+    "10.1145/3832783.3834455",
+    "10.70917/ijcisim-2026-5315",
+    "10.54660/ijmer.2021.2.1.63-75",
+    "2608.23616"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "how much of agent benchmark rerun variance is caused by inference-engine nondeterminism rather than environment or sampling --published-after 2026-03-01 --prioritize recency | --limit 15",
+   "returned_ids": [
+    "2610.07274",
+    "2610.01618",
+    "2610.05532",
+    "2610.00651",
+    "2609.38469",
+    "2609.34710"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "On Randomness in Agentic Evals | --limit 6",
+   "returned_ids": [
+    "2602.07150",
+    "2607.scaling-agentic-rl",
+    "2610.10142",
+    "2607.27518",
+    "2610.10611",
+    "2606.24855"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Rabanser Kapoor agent reliability consistency robustness predictability | --limit 6",
+   "returned_ids": [
+    "2610.00651",
+    "2602.16666",
+    "2610.04123",
+    "2605.10516",
+    "2609.09218",
+    "2609.08832"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "BrowserGym reproducibility web agent nondeterminism | --limit 10",
+   "returned_ids": [
+    "2412.05467",
+    "2610.08773",
+    "2608.21898",
+    "2606.13608",
+    "2610.01491",
+    "2609.09774"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "web agent benchmark reproducibility problems: page load timing, dynamic content, live websites and reruns giving different outcomes --published-after 2024-06-01 | --limit 12",
+   "returned_ids": [
+    "2609.34139",
+    "2609.34537",
+    "2609.35814",
+    "2609.13582",
+    "2608.11234",
+    "2608.08392"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "making GUI agent screenshots byte-identical across episodes with a fixed clock, disabled animations and deterministic rendering --published-after 2024-01-01 | --limit 12",
+   "returned_ids": [
+    "2609.35671",
+    "2609.34321",
+    "2610.04800",
+    "2609.38778",
+    "2609.30609",
+    "2609.37176"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Windows Agent Arena OSWorld runs variance standard deviation repeated --published-after 2025-01-01 | --limit 10",
+   "returned_ids": [
+    "2609.34821",
+    "2610.03818",
+    "2609.39903",
+    "2609.24890",
+    "2609.33812",
+    "2606.29537"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "first-divergence audit | --limit 10",
+   "returned_ids": [
+    "2609.33662",
+    "2609.00406",
+    "2609.29928",
+    "2609.22534",
+    "2609.24020",
+    "2608.04896"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "rerun variance agents --published-after 2026-10-07 --prioritize recency | --limit 15",
+   "returned_ids": [
+    "2610.10468",
+    "2610.11593",
+    "2610.12028",
+    "2610.12374",
+    "2610.09856",
+    "2610.09858"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "status bar clock --published-after 2024-01-01 | --limit 10",
+   "returned_ids": [
+    "2610.03182",
+    "2607.25404",
+    "2609.11442",
+    "2610.contamination-clock-evaluation-validity",
+    "2609.31837",
+    "2609.31832"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "GUI agent temperature zero reproducibility nondeterminism screenshots | --limit 12",
+   "returned_ids": [
+    "2609.09404",
+    "2608.06171",
+    "2607.17136",
+    "2409.10741",
+    "2603.21263",
+    "10.3386/w35374"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Marconi prefix caching hybrid LLMs | --limit 6",
+   "returned_ids": [
+    "2608.30310",
+    "2609.33477",
+    "2411.19379",
+    "2610.08527",
+    "2608.11231",
+    "2605.05219"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "sources of nondeterminism in agent benchmark evaluation: serving, environment, simulator --published-after 2026-10-07 --prioritize recency | --limit 15",
+   "returned_ids": [
+    "2610.12452",
+    "2610.10310",
+    "2610.09426",
+    "2610.12360",
+    "2610.09872",
+    "2610.11877"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "Give Me FP32 or Give Me Death reproducible reasoning | --limit 6",
+   "returned_ids": [
+    "2609.08660",
+    "2609.32028",
+    "2609.24271",
+    "2609.14118",
+    "2609.24526",
+    "2609.21449"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "deterministic or batch-invariant LLM inference --published-after 2026-10-01 --prioritize recency | --limit 15",
+   "returned_ids": [
+    "2610.12325",
+    "2610.09111",
+    "2610.12083",
+    "2610.11765",
+    "2610.09778",
+    "2610.10655"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover embedding",
+   "query": "replaying recorded GUI agent action trajectories in a fresh desktop or mobile environment to check whether the same actions reproduce the same outcome --published-after 2024-06-01 | --limit 12",
+   "returned_ids": [
+    "2610.11707",
+    "2608.14380",
+    "2609.34139",
+    "2609.30887",
+    "2609.37176",
+    "2609.32130"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover openalex",
+   "query": "record and replay for Android are we there yet industrial cases | --limit 8",
+   "returned_ids": [
+    "10.1145/3106237.3117769",
+    "10.1145/3611643.3613880",
+    "2308.06657",
+    "2112.04128",
+    "10.1145/3544548.3580679",
+    "1605.08567"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "orx discover keyword",
+   "query": "replayed trajectories OSWorld success reproduce actions --published-after 2025-01-01 | --limit 10",
+   "returned_ids": [
+    "2609.24890",
+    "2610.03818",
+    "2607.19395",
+    "2607.28272",
+    "2609.39903",
+    "2608.26991"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "rerun nondeterminism computer-use agent serving environment decomposition",
+   "returned_ids": [
+    "2608.22077",
+    "2609.32750",
+    "2610.09111",
+    "2606.01533",
+    "2609.36201",
+    "2610.03818",
+    "2609.40284",
+    "2609.16251",
+    "2605.25707",
+    "2610.06597",
+    "2608.02352",
+    "2608.20319",
+    "2609.34432",
+    "2610.03088",
+    "2606.29472"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "open-loop replay recorded actions agent environment nondeterminism",
+   "returned_ids": [
+    "2609.32283",
+    "2609.33295",
+    "2610.01138",
+    "2608.08239",
+    "2609.20625",
+    "2609.40111",
+    "2609.24264",
+    "2610.06100",
+    "2609.16093",
+    "2608.27992",
+    "2608.00677",
+    "2608.25419",
+    "2609.35916",
+    "2608.23691",
+    "2607.17213"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "On the Reliability of Computer Use Agents",
+   "returned_ids": [
+    "2609.17885",
+    "2604.17849",
+    "2609.38008",
+    "2609.22000",
+    "2610.02320",
+    "2609.32600",
+    "2609.40284",
+    "2606.20636",
+    "2610.03089",
+    "2609.39903",
+    "2609.27273",
+    "2609.40253",
+    "2609.15134",
+    "2607.28367",
+    "2609.24890"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "The Evaluator Also Varies first divergence",
+   "returned_ids": [
+    "2607.05742",
+    "2606.31371",
+    "2608.26827",
+    "2607.25136",
+    "2609.22700",
+    "2608.29912",
+    "2606.29719",
+    "2608.08189",
+    "2610.02924",
+    "2609.34557",
+    "2610.10619",
+    "2608.04463",
+    "2609.32696",
+    "2610.00694",
+    "2609.32267"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "Same Request, Different Answer prefix caching agentic trajectories",
+   "returned_ids": [
+    "2609.04748",
+    "2610.05833",
+    "2608.25683",
+    "2609.28870",
+    "2610.05034",
+    "2609.32278",
+    "2608.30310",
+    "2608.01126",
+    "2609.33224",
+    "2609.35263",
+    "2609.33477",
+    "2609.09030",
+    "2609.24362",
+    "2608.22856",
+    "2609.11744"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover embedding",
+   "query": "We decompose run-to-run outcome variance of a greedy-decoded GUI agent on a desktop benchmark into serving numerics (identical requests replayed under batched prefix-cached serving versus batch-1), environment noise (open-loop replay of recorded actions in a fresh VM) and observation-time noise (masking the on-screen clock)",
+   "returned_ids": [
+    "2610.01787",
+    "2609.32283",
+    "2610.07782",
+    "2610.09778",
+    "2609.29452",
+    "2609.27490",
+    "2609.34160",
+    "2609.25960",
+    "2609.32130",
+    "2609.34710",
+    "2609.31381",
+    "2609.13582",
+    "2609.26642",
+    "2609.22478",
+    "2609.26866"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover embedding",
+   "query": "sources of nondeterminism in LLM agent benchmark reruns at temperature zero: inference engine batching versus environment",
+   "returned_ids": [
+    "2610.00651",
+    "2610.03102",
+    "2609.32283",
+    "2610.09778",
+    "2609.34215",
+    "2609.17695",
+    "2609.33044",
+    "2609.32379",
+    "2609.13582",
+    "2609.04667",
+    "2609.07785",
+    "2608.14376",
+    "2608.08239",
+    "2608.04714",
+    "2606.26185"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover openalex",
+   "query": "nondeterminism agent benchmark reruns temperature zero variance sources",
+   "returned_ids": [
+    "2609.13582",
+    "2608.06171",
+    "2607.07391",
+    "2608.22510",
+    "10.3390/a19070607",
+    "2606.22504",
+    "2608.13867",
+    "2609.33875",
+    "2608.15286",
+    "2606.06240",
+    "2607.20353",
+    "10.1145/3786335.3813154",
+    "10.2139/ssrn.7411618",
+    "2609.33153",
+    "10.11575/prism/50921"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "batch invariant inference agent benchmark reliability temperature zero reruns",
+   "returned_ids": [
+    "2610.00651",
+    "2609.24928",
+    "2609.35551",
+    "2608.02276",
+    "2608.24004",
+    "2610.04123",
+    "2609.24974",
+    "2610.05782",
+    "2609.13582",
+    "2607.25891",
+    "2605.30218",
+    "2610.06597",
+    "2610.07094",
+    "2609.33023",
+    "2609.09218"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "butterfly effect small perturbation agent trajectory divergence greedy decoding",
+   "returned_ids": [
+    "2609.26621",
+    "2609.39379",
+    "2609.34059",
+    "2610.01108",
+    "2607.27248",
+    "2609.35775",
+    "2609.24150",
+    "2608.29748",
+    "2607.24715",
+    "2609.15504",
+    "2608.24338",
+    "2608.27514",
+    "2608.03447",
+    "2610.00694",
+    "2610.07350"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "TRACE identical reruns flip outcomes tau2-bench",
+   "returned_ids": [
+    "2610.11678",
+    "2609.32514",
+    "2608.11236",
+    "2609.33717",
+    "2609.36647",
+    "2610.07115",
+    "2608.16765",
+    "2609.28236",
+    "2609.03553",
+    "2608.01678",
+    "2606.09863",
+    "2609.07785",
+    "2605.06544",
+    "2604.05336",
+    "2608.14641"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "clock timestamp screenshot nondeterminism GUI agent evaluation",
+   "returned_ids": [
+    "2608.06065",
+    "2610.01215",
+    "2607.25904",
+    "2608.26991",
+    "2607.28227",
+    "2609.13873",
+    "2609.00048",
+    "2610.05861",
+    "2609.07712",
+    "2609.32679",
+    "2608.09278",
+    "2609.03438",
+    "2609.12394",
+    "2609.25769",
+    "2608.17659"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "batch-invariant deterministic inference hybrid linear attention Gated DeltaNet vLLM",
+   "returned_ids": [
+    "2605.22791",
+    "2609.20744",
+    "2608.20961",
+    "2609.04098",
+    "2609.36529",
+    "2608.12149",
+    "2608.30310",
+    "2610.05739",
+    "2609.14320",
+    "2609.38166",
+    "2610.05842",
+    "2610.02816",
+    "2607.07953",
+    "2609.38981",
+    "2605.16640"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "trajectory divergence identical prompt agent rerun inference engine attribution environment --published-after 2026-01-01",
+   "returned_ids": [
+    "2610.08951",
+    "2609.01360",
+    "2608.06909",
+    "2609.33676",
+    "2608.29646",
+    "2608.09153",
+    "2610.11334",
+    "2609.19830",
+    "2608.25518",
+    "2609.19819",
+    "2609.22655",
+    "2610.11600",
+    "2609.39068",
+    "2607.18754",
+    "2608.26195"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover openalex",
+   "query": "reproducibility computer use agent OSWorld variance reruns",
+   "returned_ids": [
+    "2608.27808",
+    "2605.12131",
+    "2606.17929",
+    "W7160727055",
+    "2606.20363",
+    "2608.02352",
+    "2605.11030",
+    "2609.23953",
+    "2607.28609",
+    "2607.25891",
+    "2607.22368",
+    "2505.24876",
+    "2605.20833",
+    "2605.27922",
+    "2506.03231"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "identical inputs agent rerun divergence prefix cache batch composition screenshot agent --published-after 2026-08-01",
+   "returned_ids": [
+    "2608.25523",
+    "2609.04748",
+    "2609.32278",
+    "2609.32259",
+    "2609.28870",
+    "2608.06065",
+    "2609.34060",
+    "2610.05833",
+    "2609.19657",
+    "2609.32256",
+    "2610.08378",
+    "2609.35690",
+    "2609.32999",
+    "2608.26991",
+    "2609.37012"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover keyword",
+   "query": "OSWorld reruns variance deterministic replay environment --published-after 2026-06-01",
+   "returned_ids": [
+    "2610.03818",
+    "2609.24174",
+    "2609.39903",
+    "2609.24890",
+    "2610.12033",
+    "2606.29537",
+    "2609.03941",
+    "2606.22948",
+    "2610.04638",
+    "2609.05374",
+    "2609.20625",
+    "2609.11194",
+    "2607.21557",
+    "2609.15364",
+    "2606.21654"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover embedding",
+   "query": "deterministic inference does not reduce evaluation variance; rerun noise in agent benchmarks reflects policy sensitivity to any small perturbation, so making serving deterministic freezes noise rather than removing it",
+   "returned_ids": [
+    "2610.03102",
+    "2610.02860",
+    "2609.34215",
+    "2609.33044",
+    "2609.15940",
+    "2609.25528",
+    "2609.14400",
+    "2609.13582",
+    "2609.03203",
+    "2608.25067",
+    "2608.19269",
+    "2608.08239",
+    "2608.00152",
+    "2607.11116",
+    "2607.01469"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "orx discover openalex",
+   "query": "batch invariance deterministic LLM inference agent evaluation reproducibility",
+   "returned_ids": [
+    "2511.17826",
+    "2609.25624",
+    "10.37547/tajet/volume08issue03-09",
+    "2601.08626",
+    "2307.14324",
+    "2607.29678",
+    "2606.01065",
+    "2608.28363",
+    "2607.25308",
+    "2607.20827",
+    "10.32604/cmc.2026.088835",
+    "2605.18597",
+    "2609.04748",
+    "2607.05458",
+    "2608.08282"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "batch invariant kernels deterministic LLM inference",
+   "returned_ids": [
+    "2609.38981",
+    "2608.14376",
+    "2605.30218",
+    "2608.24004",
+    "2609.26621",
+    "2601.17768",
+    "2609.25624",
+    "2610.05305"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "reproducible reasoning greedy decoding numerical precision batch size",
+   "returned_ids": [
+    "2609.26621",
+    "2609.17184",
+    "2610.08975",
+    "2609.15504",
+    "2609.02728",
+    "2609.31796",
+    "2608.24004",
+    "2609.18723"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover embedding",
+   "query": "identical requests to an LLM serving engine produce different greedy outputs because of batching, prefix caching and chunked prefill; measuring and removing serving nondeterminism",
+   "returned_ids": [
+    "2609.32283",
+    "2609.38981",
+    "2609.28870",
+    "2610.05833",
+    "2609.38706",
+    "2610.06251",
+    "2609.26621",
+    "2609.33044",
+    "2609.04748",
+    "2607.24372",
+    "2608.14376"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "root causes of flaky tests empirical analysis",
+   "returned_ids": [
+    "10.1145/2635868.2635920",
+    "10.1145/3756681.3756945",
+    "2504.16777",
+    "10.1109/icse43902.2021.00141",
+    "10.1016/j.simpa.2025.100794",
+    "2103.02669",
+    "10.1002/stvr.1791",
+    "2207.01047"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "UI-based flaky tests empirical analysis",
+   "returned_ids": [
+    "10.1109/icse43902.2021.00141",
+    "2103.02669",
+    "10.1109/icse-companion52605.2021.00108",
+    "10.5281/zenodo.4456026",
+    "2207.01047",
+    "10.1145/3613372.3613406",
+    "2305.08592"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "Shapley effects global sensitivity analysis Sobol indices",
+   "returned_ids": [
+    "10.1615/int.j.uncertaintyquantification.2019028372",
+    "10.1051/proc/201965266",
+    "2101.05487",
+    "10.1137/18m1221801"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "reproducible containers deterministic execution DetTrace",
+   "returned_ids": [
+    "10.1145/3373376.3378519",
+    "10.1007/s11219-022-09607-z",
+    "2302.12691",
+    "2608.27125"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "Engineering record and replay for deployability",
+   "returned_ids": [
+    "1705.05937",
+    "10.1145/3820002.3828587",
+    "10.1109/ase.2019.00022",
+    "10.1145/3724381",
+    "10.1145/3192366.3192380",
+    "10.1145/3516807.3516819"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "isolating cause-effect chains delta debugging failure-inducing differences between program runs",
+   "returned_ids": [
+    "10.1613/jair.1.19716",
+    "10.22028/d291-26043",
+    "10.26190/unsworks/32244",
+    "10.1145/3832109",
+    "W1790484086"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "De-flake your tests automatically locating root causes of flaky tests",
+   "returned_ids": [
+    "10.1109/icsme46990.2020.00083",
+    "2207.10143",
+    "2305.04735",
+    "10.13016/m2kh0f27r",
+    "10.1109/icst53961.2022.00034"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "generalizability theory variance components crossed facets decision study",
+   "returned_ids": [
+    "10.1201/b20498-3",
+    "10.1002/0470013192.bsa248",
+    "2411.17880",
+    "10.3758/s13428-017-0986-3"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "prefix caching hybrid Mamba linear attention state cache determinism",
+   "returned_ids": [
+    "2608.30310",
+    "2609.33477",
+    "2610.08527",
+    "2608.30386",
+    "2609.11998",
+    "2609.28870",
+    "2608.11231",
+    "2607.01299",
+    "2609.15030",
+    "2609.32278"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "Sobol' indices and Shapley value",
+   "returned_ids": [
+    "10.1137/130936233",
+    "10.1615/int.j.uncertaintyquantification.2019028372",
+    "10.1051/proc/201965266"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "The analysis of failure times in the presence of competing risks",
+   "returned_ids": [
+    "10.2307/2530374",
+    "10.1002/sim.1135",
+    "10.21037/atm.2016.08.62",
+    "W179935622"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "Simplifying and isolating failure-inducing input",
+   "returned_ids": [
+    "10.1109/32.988498",
+    "10.1109/tse.2025.3537167",
+    "10.1145/347636.348938",
+    "10.1145/3395363.3397349"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "Modeling and ranking flaky tests at Apple",
+   "returned_ids": [
+    "10.1145/3377813.3381370",
+    "10.1145/3428270",
+    "10.1109/tse.2022.3201209",
+    "10.1145/3832216"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "Brennan generalizability theory fixed facets universe of generalization",
+   "returned_ids": [
+    "10.58379/vmak1620",
+    "10.29221/jce.2016.19.2.251",
+    "10.1177/014662168000400209",
+    "10.21449/ijate.569996"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover keyword",
+   "query": "agent trajectory divergence rerun nondeterminism first divergence step --published-after 2025-06-01",
+   "returned_ids": [
+    "2609.04748",
+    "2607.04528",
+    "2610.03529",
+    "2609.24928",
+    "2609.16617",
+    "2606.29038",
+    "2609.26621",
+    "2609.36864"
+   ]
+  },
+  {
+   "cell": "cross-domain",
+   "tool": "orx discover openalex",
+   "query": "Some guidelines and guarantees for common random numbers",
+   "returned_ids": [
+    "10.1287/mnsc.38.6.884",
+    "2605.04732",
+    "1410.6782"
+   ]
+  },
+  {
+   "cell": "asset",
+   "tool": "orx discover keyword",
+   "query": "batch invariant inference throughput overhead deterministic vLLM",
+   "returned_ids": [
+    "2609.38981",
+    "2608.14376"
+   ]
+  },
+  {
+   "cell": "asset",
+   "tool": "orx discover keyword",
+   "query": "prefix caching changes greedy agent trajectories nondeterminism",
+   "returned_ids": [
+    "2608.25523",
+    "2608.30310"
+   ]
+  },
+  {
+   "cell": "asset",
+   "tool": "orx discover keyword",
+   "query": "On the Reliability of Computer Use Agents",
+   "returned_ids": [
+    "2609.17885",
+    "2604.17849"
+   ]
+  },
+  {
+   "cell": "asset",
+   "tool": "orx discover embedding",
+   "query": "identical request replay isolates serving numerics",
+   "returned_ids": [
+    "2609.32283",
+    "(and",
+    "9",
+    "off-topic",
+    "results,",
+    "not",
+    "listed",
+    "by",
+    "the",
+    "cell)"
+   ]
+  },
+  {
+   "cell": "asset",
+   "tool": "orx discover openalex",
+   "query": "batch invariant deterministic LLM inference",
+   "returned_ids": [
+    "2608.14376",
+    "2605.30218",
+    "2609.38981",
+    "2511.17826",
+    "2609.26621",
+    "10.1145/3830418.3843901"
+   ]
+  },
+  {
+   "cell": "asset",
+   "tool": "orx discover keyword",
+   "query": "Gated DeltaNet prefix caching",
+   "returned_ids": [
+    "2608.30310",
+    "2609.33477",
+    "2609.15030"
+   ]
+  }
+ ],
+ "other_searches": [
+  {
+   "cell": "frontier",
+   "tool": "arXiv API search",
+   "query": "ti:\"Localizing Nondeterminism\" OR ti:FlexBI OR ti:\"Evaluator Also Varies\"",
+   "returned_ids": [
+    "none",
+    "relevant"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search",
+   "query": "The Evaluator Also Varies",
+   "returned_ids": [
+    "cELldjX2oq",
+    "RuzPH5rQbc",
+    "bwCNQvkEyB"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search",
+   "query": "FlexBI batch-invariant",
+   "returned_ids": [
+    "rGmv0X20Oj",
+    "4mirsxKGzl",
+    "WWCDDlfucZ",
+    "36IAuaaGIZ"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search",
+   "query": "computer-use agent nondeterminism rerun",
+   "returned_ids": [
+    "dKk6T7nVEP",
+    "P1rGwEYDxm",
+    "XScKMmbFmx",
+    "iysNU5LeqR"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search",
+   "query": "batch invariant inference agent evaluation",
+   "returned_ids": [
+    "rGmv0X20Oj",
+    "4mirsxKGzl",
+    "5eZmlUyFpl"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search",
+   "query": "screenshot clock agent reproducibility",
+   "returned_ids": [
+    "none",
+    "relevant"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search",
+   "query": "prefix caching nondeterminism",
+   "returned_ids": [
+    "RUaMUu7vMX",
+    "9bodvMSCwD",
+    "Vj48eXaQDM"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search",
+   "query": "run-to-run variance GUI agent",
+   "returned_ids": [
+    "I0GKaJXdCh",
+    "TqM6cln06N",
+    "39xo7Yz7Ed",
+    "gyBEOMWSeM"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search",
+   "query": "noise floor agent evaluation",
+   "returned_ids": [
+    "g9epz2aV4O",
+    "6uL7mSo94t"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search",
+   "query": "deterministic inference agent benchmark reproducibility",
+   "returned_ids": [
+    "qXJ0EkHo2X",
+    "5eZmlUyFpl",
+    "zgSkVdLJgD"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search",
+   "query": "computer use agent reliability repeated runs",
+   "returned_ids": [
+    "ezVIHPgaiG",
+    "dKk6T7nVEP",
+    "P1rGwEYDxm",
+    "ctXjjOR3g6"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "OpenReview api2 notes/search",
+   "query": "serving nondeterminism evaluation",
+   "returned_ids": [
+    "Up1plqCqo3"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "WebSearch",
+   "query": "vLLM batch invariance VLLM_BATCH_INVARIANT supported models hybrid Qwen3-Next",
+   "returned_ids": [
+    "docs.vllm.ai",
+    "batch_invariance",
+    "pages"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "WebSearch",
+   "query": "AndroidWorld benchmark device date time fixed reproducibility",
+   "returned_ids": [
+    "listing",
+    "pages;",
+    "verified",
+    "in",
+    "2405.14573",
+    "full",
+    "text"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "WebSearch",
+   "query": "vLLM prefix caching hybrid models mamba_cache_mode align Gated DeltaNet",
+   "returned_ids": [
+    "docs.lmcache.ai/mp/hybrid_models.html",
+    "docs.vllm.ai",
+    "automatic_prefix_caching"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "WebSearch",
+   "query": "OSWorld-Verified time-sensitive tasks date dependent",
+   "returned_ids": [
+    "none",
+    "relevant"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "WebSearch (site:aclanthology.org)",
+   "query": "nondeterminism greedy decoding agent evaluation reruns",
+   "returned_ids": [
+    "2025.naacl-long.211"
+   ]
+  },
+  {
+   "cell": "frontier",
+   "tool": "WebSearch (site:aclanthology.org)",
+   "query": "GUI agent reproducibility screenshot nondeterministic evaluation variance repeated runs",
+   "returned_ids": [
+    "2025.findings-emnlp.720",
+    "2609.07712",
+    "2604.11784"
+   ]
+  },
+  {
+   "cell": "kill-shot",
+   "tool": "OpenReview api2 (Mac and host relay)",
+   "query": "notes?id=cELldjX2oq; notes?forum=cELldjX2oq",
+   "returned_ids": [
+    "403",
+    "ChallengeRequiredError,",
+    "not",
+    "bypassed",
+    "(2",
+    "failed",
+    "calls)"
+   ]
+  }
+ ],
+ "reads_by_cell": {
+  "frontier": [
+   "2604.17849",
+   "2609.04748",
+   "2606.15621",
+   "2605.27763",
+   "2609.36931",
+   "2610.11678",
+   "2608.22331",
+   "2610.01618",
+   "2609.33812",
+   "2609.20625",
+   "2609.26693",
+   "2512.21326",
+   "2602.07150",
+   "2405.14573",
+   "2609.40284",
+   "2607.17136",
+   "2103.02669",
+   "2605.10516",
+   "2602.16666",
+   "2506.09501"
+  ],
+  "kill-shot": [
+   "2604.17849",
+   "2609.04748",
+   "2610.11678",
+   "2608.04714",
+   "2609.13582",
+   "2610.01138",
+   "2608.30310",
+   "2610.00651",
+   "2608.15286",
+   "2608.14376",
+   "2609.38981",
+   "2608.08239",
+   "2607.01469",
+   "2609.20625"
+  ],
+  "cross-domain": [
+   "2609.38981",
+   "2506.09501",
+   "2103.02669",
+   "1705.05937",
+   "2605.30218",
+   "2610.05833"
+  ],
+  "asset": [
+   "2609.38981"
+  ]
+ },
+ "raw_output_sha256": {
+  "r01-frontier": {
+   "e01.txt": "9c398c09c7f467423f55975dafa6e3190b7828aa8fcf66153b1038c06478c84b",
+   "e02.txt": "b2eedb071d6e295893d9e6cc7213bd7cda197455854e25a8005f9add11fae54d",
+   "e03.txt": "9ed117e5074f35217c7d9cf99d41c596581577d2d98a562824112ce88eeb2323",
+   "e04.txt": "2b0b8fbf58435aa07781e175bb44b032049d32db0feeb6485135efc3c3ddc2b3",
+   "e05.txt": "f2e0783cb1ddc1ac474d6a2ab03518d9f2d7026e8f35234d8ef4fa8ddafb4aa6",
+   "e06.txt": "f1d497735b892d9b1a3cf4d0c0afbfdd03c830234219e316f8ab0cebc4b85b72",
+   "e07.txt": "a488062139e6744d282ff821d5fe8526c4650466f8b983dbeaf7a13dccebddfc",
+   "e08.txt": "82e473357ce21f5ef391540839d853d709a807d8de5519ef5beda89fd0356a9a",
+   "e09.txt": "6174eeaebd2f3f6512a358e935306480858b646d18d7ecc32cf39fc2d85115e8",
+   "e10.txt": "61399a525fcf2989281e3f55ef8976dc721b7e9f114fa7caa82022472ffe1c48",
+   "e11.txt": "bb04a64bafbadb2bab7c3d6e9480fb68150ccc967aea4f13a3f2b8ec3b8c1b94",
+   "e12.txt": "5b96606c66093c4e210b13cb8e96bca29f963cf4cecf6c731a9e93bba746cf62",
+   "e13.txt": "2c3dfac338035566656c9a9aec07fb9eaabe3b62fa0e565dfb0a3cfa20cb48e6",
+   "e14.txt": "012dccf74829942a8ab2a1fa3ef80e5a4f471128f51c99d5e95b8dbd3a76b972",
+   "e15.txt": "f89c5fc52562428662d8c77ff82048da00ec9dcd7f08358d8d0c1b2465c8af3c",
+   "e16.txt": "3788fea20135718f8e3bec2ea20da7b0a985057897af0b284ae66bcd7187c160",
+   "full_2103.02669.txt": "946d64a446cbe6f1d84c8f2a352fc7a1f8e520668580bf7bbc02a666f185681b",
+   "full_2512.21326.txt": "6b8bc9ebdb240e9b3186bb802df42fea9e9e738380c43a465fdab8e44085b3c8",
+   "full_2602.07150.txt": "aab8ebcd283405dfe0a52506739a9917e2c7e4ce604ffbdeee68587d4479c4b9",
+   "full_2604.17849.txt": "6b1e18bc86020ac5c2f4955f89028a65151f22c73320142d77915bbc5419cd29",
+   "full_2605.27763.txt": "bea3806eb30e0c5337d05f50cea85c2d92289d40622f5e4ef36205e179ecd049",
+   "full_2606.15621.txt": "7177ddd22209ea09d8fd1791eabbfce0610f35eeb9fcf4b00251f72186c3f1eb",
+   "full_2607.17136.txt": "d48b12e710fc9e80bdba3d56a80959f568e144e9a0d95f22b699b2d5b090a0eb",
+   "full_2608.22331.txt": "4a29812e9bba6bee1bbacf35b15eaf14c64a97ac9093030a9c29078f2b422cdc",
+   "full_2609.04748.txt": "538e54c6ae97db507bbe6bcc492a4c98e5097bc788502638194d9ab4b6504a5d",
+   "full_2609.20625.txt": "8869ec11ae5c753d5e9adf2d6f829db64266e7db232955b33a2134425df16cc6",
+   "full_2609.26693.txt": "e013799e2eefd9299c16da3411bc97467a68a08d620e88f16dfb38bd1e49bd1e",
+   "full_2609.33812.txt": "f324b6ea49a1807d3f264ac31c6a97819ceaa3b6bced587297a19b50c837b0c5",
+   "full_2609.36931.txt": "f28cad9883789bd4dbc4df6f5c6c7e435cc7733601fa18b7c3447374167a11bf",
+   "full_2609.40284.txt": "5eb6d9f07179134da7a63c27c04360c2c52a9732f2d5ce0c86169180f0477cee",
+   "full_2610.01618.txt": "cc50061e94e4ec781c63c067a1b21688019605630d8237c67242c9f0208558cd",
+   "full_2610.11678.txt": "b48a00f9ad73fe0c47bcf07cc21f3122b87d5663688f63d22b2a806aede31af4",
+   "k01.txt": "23b1eea376b1b121a184362e07ad71501d4118bb5fcb483a05f211fe4aa18353",
+   "k02.txt": "2f48def3dfed070f1a48594773eda21d5fe2cce2221b9947af895be3dd369d28",
+   "k03.txt": "3e60b4ba9b40d7954934e10d31bcc4be34983bb64a9c0c76cc46cc57820484f8",
+   "k04.txt": "c0e4856e8ce11d7d260a96b26e17e4157ef8926c431d16e2c452d9742f2007ce",
+   "k05.txt": "0dd7b593509cfd1b27d438feb263bddc09a8ed169f4d9f2f2eb9df3fcd86405c",
+   "k06.txt": "7c4fb6a6ff97ca1c92d8f6031258c26d9b381ba812c06ab56c7d47a0545ef772",
+   "k07.txt": "d5d75bd89861890f03bfb095d146546c92e8431033af5ba2f56b34f3472e0e55",
+   "k08.txt": "fed1ab53e2448f1548cadf905abacf80067b667cf23c9800d1ab65ae9a505664",
+   "k09.txt": "728fd2a9fcefbc23504ef7b37c02895dcb432d91b73955edc973f7d50e72a765",
+   "k10.txt": "f56c4ca2e71ce11f3edd9d1a639ae5e11202192edf63184c4460f572f7091f99",
+   "k11.txt": "e161890af6c02303f099b9d1bb17be63a5cf0a9f49fd3213707fdae5b0d11562",
+   "k12.txt": "bc9ecaa8487928a5b371e867a2a676f36b887f903fd4e9fb1dda75c2a39e8d76",
+   "k13.txt": "4cd5b8017e3158f43dea9dab5fd5569e4c6edfeab531756fb0d37a9f78fc0e17",
+   "k14.txt": "3e15b974a851b6092a9a8314f29f513cd085e25d5a47a3a22839e9bd5957dac2",
+   "k15.txt": "5dc7a8e627c52f9d7f5c500113f6bc3d8aa487ed4c8b7d98e2e0b9f5b99f0799",
+   "k16.txt": "fdcfe8adab7b89dec7174ef3fab41401f2cca437f09e04129c61f5f78236c7f3",
+   "k17.txt": "6af9869cbac52b3db30c35914888b1358a0521d561373e8130530103a2a628a6",
+   "k18.txt": "29ed6d135d811eb5b7b6af29f56ef1265f4f8b10f8bc5c0b1d4b8b1cf870deac",
+   "k19.txt": "982014029f813b5865698f06e9b39143845c118f85bbfe9e3fc99485071a16b1",
+   "k20.txt": "ab778e6af108eff509da5703309246ba93f6e6a449907cf5aec88a94349834d9",
+   "k21.txt": "0c903fdbb18d76d90f121bbccc659937581e1b6f298614c9d3f9b01e22a33609",
+   "k22.txt": "d1717757055aa588d9ba69a34f1df981ef62c473c92ecd5e09486f5c8735646a",
+   "k23.txt": "d455aa936e613e6fb7c0637fce354a291cf16baf83b640c1f582597312959032",
+   "k24.txt": "8699db8975969c48e13c43eabb0764fcdfeb76457fb6bbeac745934f9c952975",
+   "k25.txt": "1f62ae4f9aadccdd777358d1e15b29f4442cfff998534fda657f9d2fb207b2b0",
+   "k26.txt": "63e56b289b5a5f13652d43765cd1864d8411b0870405d036dfc7de74fd34ae3d",
+   "k27.txt": "5a693e2d01597fc626835cda0738299ce3e49b94e094232f7695ff28cdc52a86",
+   "k28.txt": "39b2be30704ef2a9e3fd0ee3e833e5df6bb4400ed495dc8ca0612a14d24b2ac3",
+   "k29.txt": "238e68ea7c5c265f1193d6887e1fee9f4c4b6760f500c8c7070ba782b4a1ed5a",
+   "k30.txt": "0aa2a3bc25ed027a8a38509f77f972984f594f1a84d308ae14bb2755c73672d9",
+   "o01.txt": "e8df40d3a617112f4455ab44fe465a43455b1f80d37ba50e0323214f3aa3c0d2",
+   "o02.txt": "84b7a94f975bb4f537a7aea3b11acf8c06516e49d4e5cb32af832b83acae31d5",
+   "o03.txt": "506151e373ae38443ea8cc65506e1609eed50e2b1e6c62a8e68f03fcb87e9cbb",
+   "o04.txt": "e2213c4006582af7de50a1a0aee9f94b4a1549839a76fda826758f7c8d296153",
+   "o05.txt": "757eb4055a6d1dab95e333ee2516966b7ab4a5f31fcf0bf1592544c473ecd238",
+   "o06.txt": "483acf86ca1a6591003c9710e03b983c9b44d0289bd08099b2dd976aa99d918a",
+   "o07.txt": "424ab480fd613ae191d358ecdacd39b79ce8d8c662df5b5cf724c95b2e1582bb",
+   "p_2405.14573_full.txt": "4fa167f7f79b5e5b524d68c0d79ceeeb19dd327e5385befec0f683690b5e4b0a",
+   "p_2506.09501.txt": "94ea5eea5f91b978df2b732cb1448462064094852bbddb690c2aa5f24fceb321",
+   "p_2602.16666.txt": "ae7e8dbc08676a3f58a9772df239127150756b48f6e94e558289c1d0859d6e34",
+   "p_2604.17849_report.txt": "982c7c5e0b3d983ec9cb187d0c4c308f3cfd26a6b2f9a6e4a31dd13db9f547d4",
+   "p_2605.10516.txt": "6d5aa34a6a93e221391f1d7ef2cabccc9b694d1e189d4372a25ab2e378f4dd16",
+   "p_2609.26693_report.txt": "e013799e2eefd9299c16da3411bc97467a68a08d620e88f16dfb38bd1e49bd1e",
+   "querylog.txt": "536af14c059a88e3a858107c0389e975d824d79b1b3b9d1a5f6b9b03eee0cb4d",
+   "s01.txt": "c18525cbf1073eed363334ad05a0670cb51692414367fc0f951f744f651e9189",
+   "s02.txt": "3b06585a4f534cafe68e8318a1df8b7a9edf92197d0d3c45e5c8b4504d48652e",
+   "s03.txt": "26161f91d06710d94d732664dfafb1a3c7d53f5e623e6715ed5fd7ecd570e2a3",
+   "s04.txt": "150688ebcb6ddba0e1f22522c21feada75ecee875418dcd6d199a6109545ba07",
+   "s05.txt": "300ff7bb395bc0006285d7e9a516772df73f55b8339d67ff970316542ea2d8c7",
+   "s06.txt": "b0be27a98adb412ccfbfc5587fc32743855ffd1f064501fb45b5a5c1f93785b5"
+  },
+  "r01ks/orx": {
+   "e1.json": "b5b13c393b33bce04be7ccc72a55baa90cdff7a1b758b17204d5da98e1b72873",
+   "e2.json": "ce1e47e6b8a3ed03d38c28dd8730e0bde54603accd54d34305893d96d3e68a25",
+   "e3.json": "ee95a48222c312423fd8611ad43cd4ebd58a18fd8ee9e497e94803a90408b2f8",
+   "k1.json": "14f1bffa8a166bd4ef941dc1f38bcd91af35b04aa3c2df05b74b71c8f35ed5dc",
+   "k10.json": "c7ab4278d1102393abc45cf66cb3c5486438a81b77c2e8808f977fdbf6bc8ea5",
+   "k11.json": "839757e3f7f1c17ac878ba921ab6bc5dcfa2a447da41df0d408814f07ebc4943",
+   "k12.json": "ac95a081c397f305846d8fdabc3c64918dce3d8b6ff842ee8ed047df1b958d42",
+   "k13.json": "15f61e425dc1646b2329b8b213a85b2a46c800b32c60a25877e4ef52273be075",
+   "k2.json": "9241d54d9d46d911c976e90bcc3a010ee77d9f4cac68f112f73afa04e4a98bcc",
+   "k3.json": "a958553562b494234a70364f5979fda1c54f263c81d69cadcf887c10480f974b",
+   "k4.json": "650f5a782bb36f74adf87dfab3fe88b77c30c1921af4ddaa7eca0b80faa8e085",
+   "k5.json": "d75ac8a94c121e00044da0cef3b78a0c1cac7e5d9d443a775ebc8d8c2a069b38",
+   "k6.json": "15c3953e90df3149e2376b84ca6f50a835abc453ed9c272348ae84ab1871481d",
+   "k7.json": "6ec33c644fa011104967aa9c99b719391e09e30ce3b4b9c58e36eef80cfca13b",
+   "k8.json": "4084c97af20cda268d6296581e764ff85b4d0195a78c39a84db7c7779520696d",
+   "k9.json": "5118a4de99ecbf9a37562bf3fe568217d5c826cedfc470cafeaf9da8d31d65f6",
+   "o1.json": "6cca9434551b7d8c185b1fee4c506f588d1a92d6e4acc99a36adee7581b2c42f",
+   "o2.json": "e43ac70de0b33ea68bc0182725f2605381e2376b51ba8c23e3bd0b803b38dbc9",
+   "o3.json": "40eeefae5d2345a8eea262a7b3a49fa92cd27467154fb16c09d065762d5a3f2d"
+  },
+  "r01": {
+   "orx1.txt": "3db9ad4c1791b37fd6286a401601b34525f67d49d9b5ca09bb459311190956f5",
+   "orx2.txt": "de8b6b8ca68f9f5bb0d54ef5a2eda864164033d25710c35b9dc737004ee9eecb"
+  }
+ },
+ "coverage_limits": [
+  "orx 0.2.2 reports itself outdated (0.2.18); newest alphaXiv results 2026-10-09 to 2026-10-10",
+  "OpenReview per-note pages and PDFs behind a browser challenge; abstracts via api2 search only",
+  "ACL Anthology via the renewal dossier's regex queries 18-22 and two site-restricted web searches",
+  "not searched: Semantic Scholar or Google Scholar citers, GitHub code search, vLLM issues, patents, X, Reddit, Chinese-language venues"
+ ]
+}

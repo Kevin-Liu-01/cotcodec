@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2608.08239",
+ "fetched_at": "2026-10-11T09:46:50Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43971,
+ "raw_sha256": "cd5cd340adde34bda6f9153ddb5c0a4866f00606247c1b7cbcdb9edc2540d056",
+ "raw_stored": false,
+ "extract": {
+  "title": "The Replay Gap: Static Evaluation of Model Switching in LLM Agents Scores the Wrong World",
+  "authors": [
+   "Gonuguntla, Ashritha"
+  ],
+  "citation_date": "2026/08/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 8 Aug 2026 17:07:11 UTC"
+   }
+  ],
+  "abstract": "LLM routers promise efficiency by matching each request to the cheapest adequate model, and are increasingly applied per step inside multi-step agents. Yet agentic routers are evaluated like single-turn routers: by replaying logged trajectories and substituting another model's recorded outputs, assuming the rest of the trajectory is unaffected. We test this assumption with branching rollouts: we fork live SWE-bench agent trajectories at controlled points, rebuild the environment, continue each fork with a different model, and compare against same-model control forks that isolate sampling and replay noise. Across six paired runs (~900 rollouts), swaps exceed their matched control floors by +0.25 to +0.66 normalized edit distance (multiplicity-corrected CIs exclude zero), rewriting 61-94% of post-fork actions; 74-77% of early swaps diverge at the first post-fork action, versus 6-35% of controls, leaving only 3% of replayed states valid. Divergence decreases with fork depth in both directions. All five outcome flips we observe occur in swap arms, upgrades rescuing unsolved instances and a downgrade losing the sole solve, and zero occur across 359 control forks. Scoring these same swaps with a log-stitching replay evaluator, replay mispredicts every success-relevant outcome call and predicts patches with 0.00-0.11 similarity to reality. Auditing the noise floor, temperature-0 \"determinism\" is configuration-dependent: FP8-served controls diverge on over 90% of forks while AWQ-served ones remain near-identical; and under tight budgets the stronger model more often exhausts its steps without submitting. Replay-based benchmarks score the wrong world for agentic routing; we release our harness and all trajectories.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

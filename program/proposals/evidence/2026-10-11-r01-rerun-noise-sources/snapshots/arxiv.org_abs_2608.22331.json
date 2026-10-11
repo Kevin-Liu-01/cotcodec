@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2608.22331",
+ "fetched_at": "2026-10-11T09:46:50Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 39857,
+ "raw_sha256": "e00d8be6fa23a1bfcd3256e6d94d3d4b373b5aa049e83b2f27aab81772a6ca85",
+ "raw_stored": false,
+ "extract": {
+  "title": "Noise Floor Audit for Agent Benchmarks",
+  "authors": [
+   "Chen, Yihang",
+   "Qian, Pin",
+   "Wang, Su",
+   "Peng, Chong",
+   "Xu, Huan",
+   "Wu, Xiyang",
+   "Sun, Yiqi"
+  ],
+  "citation_date": "2026/08/23",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 23 Aug 2026 10:00:11 UTC"
+   }
+  ],
+  "abstract": "We audit measurement variability for 3 native tool-calling endpoints across 2 providers on the official BFCL multiple and parallel categories, using matched AST grading. At temperature 0, reruns are nearly deterministic across Groq endpoints and a thinking-enabled Gemini setting: ever-flip fractions are 0.7%, 2.0%, and 2.7%, with mean run correlations of 0.997, 0.966, and 0.961. Semantics-preserving prompt perturbations create the larger floor on all endpoints, with median perturbation paired SDs 11x to 58x larger than rerun paired SDs. The failure character also shifts: malformed-output failures account for 30%, 7%, and <1% of task failures, so marginal accuracy hides not only stability but also failure mode.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

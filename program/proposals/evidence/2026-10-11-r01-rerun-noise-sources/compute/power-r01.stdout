@@ -1,0 +1,21 @@
+{
+ "seeds": "ok",
+ "inputs": {
+  "a1_jsonl_sha256": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+  "census_sha256": "5568bc7f9d7c87f64a6f5a91bc845dd514e6b78f17a5d55cf231f099e269e4b7",
+  "s1a_4b_osw_counts_hist": {
+   "0": 67,
+   "1": 10,
+   "2": 7,
+   "3": 7,
+   "4": 22
+  }
+ },
+ "B_det": "ok",
+ "B_read": "ok",
+ "A1_cen": "ok",
+ "C_env": "ok",
+ "K6": "ok",
+ "CL": "ok",
+ "PRED": "ok"
+}

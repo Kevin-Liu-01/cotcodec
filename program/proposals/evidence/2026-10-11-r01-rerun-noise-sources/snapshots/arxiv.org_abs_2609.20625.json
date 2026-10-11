@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2609.20625",
+ "fetched_at": "2026-10-11T09:46:51Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41767,
+ "raw_sha256": "28b241daa9fc4634cfc96ea7eb42f3ba8b655195e0beed71cd10024876964c25",
+ "raw_stored": false,
+ "extract": {
+  "title": "Chronicle: Cut-Point Replay for Regression Testing of LLM Agents",
+  "authors": [
+   "Chawla, Tisha",
+   "Koul, Susheem"
+  ],
+  "citation_date": "2026/09/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 17 Sep 2026 16:09:57 UTC"
+   }
+  ],
+  "abstract": "Large language model responses are non-deterministic, so failures in LLM agents are hard to reproduce: a failure depends on inference that is not bitwise reproducible, on tools that read changing state, and on a multi-step trajectory that a re-run rarely repeats. Record-and-replay makes a run reproducible, but existing agent tooling records runs only to trace or score them, not to test a code change against them. We present Chronicle, which records an agent run at its non-deterministic boundaries as immutable envelopes and replays it from the record. Its central operation, cut-point replay, serves a chosen subset of boundaries from the record and executes the complementary subset live with new code, turning a recorded incident into a regression test that runs in continuous integration. On a benchmark of 6 recorded failures with simulated model boundaries, recording adds 23 {\\mu}s per crossing (0.008% of an assumed 300 ms model call), full replay issues zero model calls and is bit-stable across 20 repetitions, and cut-point tests fail on faulty code and pass on guarded and benign changes for all 6 incidents. In a mutation study of the guarded tools, cut-point tests catch every mutant that lets the recorded unsafe action through, while a baseline that stubs every boundary, using the same assertion, catches none. Chronicle and the benchmark are publicly available at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

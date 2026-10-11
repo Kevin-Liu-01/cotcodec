@@ -1,0 +1,327 @@
+{
+ "name": "Citation",
+ "status": "PASS",
+ "protocol": "ARS claim_verification_protocol.md",
+ "claim_registry": [
+  {
+   "claim_id": "C01",
+   "claim": "Temperature 0 plus batch-invariant inference on OSWorld: Qwen b − c = −20, OpenCUA +20, UI-TARS-1.5 +19; Pass^1 to Pass^3 drops persist; perturbation sets bundle timezone with wallpaper, cursor, dock and icon theme; no clock intervention, identical-input test or open-loop replay",
+   "source": "https://arxiv.org/abs/2604.17849",
+   "date": "2026-04-20 (v1)",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C02",
+   "claim": "ARR version decomposes the reliability gap into stochasticity, ambiguity and planning variability",
+   "source": "https://openreview.net/forum?id=ezVIHPgaiG",
+   "date": "2026-05-26",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200,
+   "note": "full text UNVERIFIABLE_ACCESS (browser challenge, not bypassed)"
+  },
+  {
+   "claim_id": "C03",
+   "claim": "First-divergence audit over replicated interactions with identical preceding recorded histories: 100 tau2-bench tasks, five greedy vLLM replicates, transcripts diverge on all, rewards on 20, first discrepancy in the simulated user on 83; cache-off and serving-configuration comparisons; ALFWorld cache resets restore agreement",
+   "source": "https://openreview.net/forum?id=cELldjX2oq",
+   "date": "2026-09-18",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200,
+   "note": "full text UNVERIFIABLE_ACCESS (browser challenge, not bypassed)"
+  },
+  {
+   "claim_id": "C04",
+   "claim": "Batch 1, cache off: 0 of 800 episodes differ; enabling the prefix cache changes 36.2% of trajectories at 16-bit, 75.0% at 4-bit; attention-only models",
+   "source": "https://arxiv.org/abs/2609.04748",
+   "date": "2026-09-04",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C05",
+   "claim": "Replica-floor design; batch-invariant kernels make all passes identical",
+   "source": "https://arxiv.org/abs/2606.15621",
+   "date": "2026-06-14",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C06",
+   "claim": "Paired batch-condition protocol: 22 of 55 flips, 0 of 55 with batch-invariant kernels",
+   "source": "https://arxiv.org/abs/2605.27763",
+   "date": "2026-05-26",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C07",
+   "claim": "Hidden date injection moves scores up to 6% (MCQA), 14% (math), more than batch size or precision",
+   "source": "https://arxiv.org/abs/2609.36931",
+   "date": "2026-09-29",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C08",
+   "claim": "AndroidWorld resets the device clock per task; fixed-seed reruns still vary",
+   "source": "https://arxiv.org/abs/2405.14573",
+   "date": "2024-05-23",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C09",
+   "claim": "Computer-use training and evaluation on snapshot-resettable mirrors with a frozen clock",
+   "source": "https://arxiv.org/abs/2607.17136",
+   "date": "2026-07-19",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C10",
+   "claim": "Vosti: vLLM batch-invariant mode bitwise-exact on Llama3.1-8B, fails on Gemma3-4B (chunked prefill 0 of 90; prefix reuse 11 of 14 with FA3)",
+   "source": "https://arxiv.org/abs/2609.38981",
+   "date": "2026-09-30",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C11",
+   "claim": "Batch-induced token flips on 0.3-1.3% of decode steps; low top-1/top-2 margins predict them",
+   "source": "https://arxiv.org/abs/2605.30218",
+   "date": "2026-05-28",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C12",
+   "claim": "Hybrid prefix caching stores recurrent-state checkpoints; hits resume only at boundaries",
+   "source": "https://arxiv.org/abs/2608.30310",
+   "date": "2026-08-31",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C13",
+   "claim": "Record-and-replay of agent runs at non-deterministic boundaries (Chronicle)",
+   "source": "https://arxiv.org/abs/2609.20625",
+   "date": "2026-09-17",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C14",
+   "claim": "Open-loop replay scores the wrong world: 3% of replayed states stay valid after a swap; 0 flips in 359 same-model control forks",
+   "source": "https://arxiv.org/abs/2608.08239",
+   "date": "2026-08-08",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C15",
+   "claim": "UI flaky tests: async wait 106 of 235, time 1 of 235",
+   "source": "https://arxiv.org/abs/2103.02669",
+   "date": "2021-03-03",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C16",
+   "claim": "TRACE: identical reruns flip 15-36% of tau2-bench outcomes; cause not located",
+   "source": "https://arxiv.org/abs/2610.11678",
+   "date": "2026-10-08",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C17",
+   "claim": "Noise-floor audit: temperature-0 ever-flip 0.7-2.7%; perturbation SDs 11-58x rerun SDs",
+   "source": "https://arxiv.org/abs/2608.22331",
+   "date": "2026-08-23",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C18",
+   "claim": "About 54% of outcome variance from repeating a configuration (coding agents)",
+   "source": "https://arxiv.org/abs/2610.01618",
+   "date": "2026-10-01",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C19",
+   "claim": "SWE-bench pass@1 SD above 1.5 pp at temperature 0; serving nondeterminism named, not decomposed",
+   "source": "https://arxiv.org/abs/2602.07150",
+   "date": "2026-02-06 (v3 2026-03-25)",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C20",
+   "claim": "Prediction noise against data noise by the law of total variance",
+   "source": "https://arxiv.org/abs/2512.21326",
+   "date": "2025-12-24 (v2)",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C21",
+   "claim": "Cumulative disagreement = first-mismatch contribution + post-divergence exposure x mismatch rate",
+   "source": "https://arxiv.org/abs/2609.16617",
+   "date": "2026-09-15",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C22",
+   "claim": "Up to 9% accuracy variation under bf16 greedy decoding across GPU count, type and batch size; Div_Index",
+   "source": "https://arxiv.org/abs/2506.09501",
+   "date": "2025-06 (v2)",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C23",
+   "claim": "Clinical text agents: twelve greedy noise-floor cells returned twenty identical completions",
+   "source": "https://arxiv.org/abs/2609.13582",
+   "date": "2026-09-11",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C24",
+   "claim": "Request order changes answers under selective KV reuse (69.0% and 26.1%)",
+   "source": "https://arxiv.org/abs/2610.05833",
+   "date": "2026-10-05",
+   "read_level": "full text read with orx paper --full by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C25",
+   "claim": "Stage-wise fixed widths give byte-identical VLA actions across batch contexts",
+   "source": "https://openreview.net/forum?id=qXJ0EkHo2X",
+   "date": "2026-09-10",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200,
+   "note": "full text UNVERIFIABLE_ACCESS (browser challenge, not bypassed)"
+  },
+  {
+   "claim_id": "C26",
+   "claim": "Single-run leaderboards admit no unbiased estimator of rerun variance",
+   "source": "https://openreview.net/forum?id=I0GKaJXdCh",
+   "date": "2026-08-04",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200,
+   "note": "full text UNVERIFIABLE_ACCESS (browser challenge, not bypassed)"
+  },
+  {
+   "claim_id": "C27",
+   "claim": "Batch size, not concurrency, drives endpoint nondeterminism; 80 unique of 1,000 completions, 1 with batch-invariant kernels",
+   "source": "https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/",
+   "date": "2025-09-10",
+   "read_level": "first-party page",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": null,
+   "note": "not replicated"
+  },
+  {
+   "claim_id": "C28",
+   "claim": "vLLM batch-invariance tested list has Qwen3-Next and Qwen3-VL, not Qwen3.5; silent on prefix caching and chunked prefill",
+   "source": "https://docs.vllm.ai/en/v0.31.0/features/batch_invariance/",
+   "date": "accessed 2026-10-11",
+   "read_level": "first-party page",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": null,
+   "note": "not replicated"
+  },
+  {
+   "claim_id": "C29",
+   "claim": "Sobol' closed and total indices bracket the Shapley value of a variable",
+   "source": "https://doi.org/10.1137/130936233",
+   "date": "2014",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": null
+  },
+  {
+   "claim_id": "C30",
+   "claim": "Qwen3.5-4B weights are Apache-2.0",
+   "source": "https://huggingface.co/Qwen/Qwen3.5-4B",
+   "date": "accessed 2026-10-11",
+   "read_level": "first-party page",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "licence confirmed on 2026-10-11 through https://huggingface.co/api/models/Qwen/Qwen3.5-4B: cardData.license apache-2.0, sha 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a (S1a's revision)"
+  },
+  {
+   "claim_id": "R1",
+   "claim": "S1a: 1,808 episodes, 0 losses; D_w 4B 11.1% on 113 tasks; first divergence labels; prefix-cache hit share 0.855-0.858; realized cost 0.0025-0.0027 GPU-h per episode",
+   "source": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
+   "date": "2026-10-10",
+   "read_level": "repository record",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": null
+  },
+  {
+   "claim_id": "R2",
+   "claim": "D72 (ii) corrected variance shares",
+   "source": "program/decisions.md` D72",
+   "date": "2026-10-11",
+   "read_level": "repository record",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": null
+  },
+  {
+   "claim_id": "R3",
+   "claim": "A0 census (every number in the registration's section 2.1)",
+   "source": "program/evidence/2026-10-11/r01-stage-a0/census.json`, orx run `83ee815a",
+   "date": "2026-10-11",
+   "read_level": "repository record",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": null
+  },
+  {
+   "claim_id": "R4",
+   "claim": "S1a engine argv (`--max-num-seqs 256`, `--max-num-batched-tokens 8192`, `--enable-prefix-caching`, `--seed 42`) and sampling (temperature 0, top-p 0.9)",
+   "source": "program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json",
+   "date": "2026-10-09",
+   "read_level": "repository record",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": null
+  }
+ ],
+ "summary": {
+  "claims": 34,
+  "verified_full_or_repository": 23,
+  "abstract_only": 8,
+  "first_party": 3
+ },
+ "remediation": "Read cELldjX2oq in full if a copy becomes reachable; replicate the first-party figures before any claim rests on them"
+}

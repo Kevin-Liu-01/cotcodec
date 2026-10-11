@@ -1,0 +1,24 @@
+{
+ "url": "https://arxiv.org/abs/2605.27763",
+ "fetched_at": "2026-10-11T09:46:49Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42958,
+ "raw_sha256": "db0f2e4d685b2e55f67bfeda5312073b5c6ecb4631235b0c60b781f34a5a2ef2",
+ "raw_stored": false,
+ "extract": {
+  "title": "A Paired Testing Protocol for Batch-Conditioned Refusal Robustness in LLM Serving",
+  "authors": [
+   "Kadadekar, Sahil"
+  ],
+  "citation_date": "2026/05/26",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 26 May 2026 23:22:55 UTC"
+   }
+  ],
+  "abstract": "Safety evaluations of language models often treat serving configuration as fixed background infrastructure, but batch condition is an untested treatment variable whenever the same prompt may be evaluated alone, in a synchronized batch, or inside a continuous-batching scheduler. We synthesize four artifact-backed studies into a paired testing protocol: Study A combines local discovery, scorer-corrected adjudication, and true-batching confirmation; Study B tests cross-model generalization; Study C tests continuous-batch composition; and Study D runs a batch-invariant-kernel ablation. The local test finds safety-label changes more often than capability-label changes (0.51% vs. 0.14%), but adjudication of 63 candidate rows leaves only 17 genuine behavioral flips, implying a corrected full-set rate of 0.16%. The 15-model extension finds no detectable universal safety-over-capability skew: flips are near parity (0.94x), alignment type has no detectable association ($p=0.942$, $\\eta^2=0.033$), and output instability is the strongest tested fragility screen ($r=0.909$, bootstrap 95% CI [0.65, 0.97]). In the targeted kernel ablation, standard vLLM reproduces 22/55 label flips on current score-flip candidates, while enabling VLLM_BATCH_INVARIANT=1 reduces the same test to 0/55 flips; the composition test separately finds no aggregate effect at 4.7pp sensitivity. The testing recommendation is exact-stack validation: evaluate refusal at the served batch setting, pair safety prompts with capability controls, and report low-rate directional flips separately from aggregate null effects.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
