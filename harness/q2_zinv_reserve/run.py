@@ -9,8 +9,8 @@
     Every evaluable mutant and every saved gold and do-nothing state checked by
     ``compare_pptx_files`` alone (``q2_stage1.rescore.validation_set``, with no audit input),
     scored in fresh processes with the original comparator and with ``compare_pptx_files_zinv``
-    installed (``q2_stage1.rescore``'s worker, unchanged), with the registered verdict and the
-    digest of the scored files kept beside each score.
+    installed (``q2_stage1.rescore``'s worker, unchanged), with the registered verdict and a
+    path-independent digest of the job's files, taken before and after both scorings.
 ``judge`` (anywhere)
     ``rules.judge`` over the rescored rows.
 
@@ -110,6 +110,23 @@ def cmd_select_targets(args: argparse.Namespace) -> int:
 # --------------------------------------------------------------------------- rescore
 
 
+def files_digest(files: Mapping[str, str | None]) -> str | None:
+    """SHA-256 over each VM path with the SHA-256 of its local file (``-`` for a deletion), in
+    path order (``controls._sha_files``' rule); None if a named local file is missing."""
+    digest = hashlib.sha256()
+    for vm_path in sorted(files):
+        local = files[vm_path]
+        digest.update(vm_path.encode())
+        if local is None:
+            digest.update(b"-")
+            continue
+        path = Path(local)
+        if not path.is_file():
+            return None
+        digest.update(hashlib.sha256(path.read_bytes()).digest())
+    return digest.hexdigest()
+
+
 def items_for(
     mutant_jobs: list[dict[str, Any]],
     mutant_verdicts: list[dict[str, Any]],
@@ -118,7 +135,8 @@ def items_for(
     gold_verdicts: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
     """The validation set of ``q2_stage1.rescore`` (no audit reading), each item with the
-    registered verdict row's scored-file digest and the outcome's probe flag and target."""
+    registered verdict row's ``scored_sha256`` (recorded only) and the outcome's probe flag
+    and target."""
     from harness.q2_stage1 import rescore
 
     items = rescore.validation_set(
@@ -165,6 +183,7 @@ def score_item(
         "stored": item.get("stored"),
         "stored_scored_sha256": item.get("stored_scored_sha256"),
     }
+    before = files_digest(job.get("files") or {})
     for name, corrected in (("raw", False), ("zinv", True)):
         result = run({**payload, "corrected": corrected}, timeout)
         row[name] = result.get("score")
@@ -172,6 +191,9 @@ def score_item(
         row[f"{name}_infra"] = bool(result.get("infra"))
         row[f"{name}_scored_sha256"] = result.get("scored_sha256")
         row[f"{name}_seconds"] = result.get("seconds")
+    after = files_digest(job.get("files") or {})
+    row["files_sha256"] = before
+    row["files_unchanged"] = before is not None and before == after
     return row
 
 

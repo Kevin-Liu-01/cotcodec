@@ -6,8 +6,12 @@ a reserve pptx target, or a saved gold or do-nothing state of a reserve task, ea
 ``compare_pptx_files`` alone. Its keys: ``id``, ``task_id``, ``kind`` (``mutant``, ``gold``,
 ``initial``), ``operator``, ``label``, ``stored`` (the registered lock-exact score of the
 frozen pipeline), ``raw`` and ``zinv`` (the rescoring's scores, None when the scoring raised),
-``raw_error``/``zinv_error``, ``raw_infra``/``zinv_infra`` (no result within the timeout) and
-the three ``*_scored_sha256`` digests of the files each scoring placed in the VM root.
+``raw_error``/``zinv_error``, ``raw_infra``/``zinv_infra`` (no result within the timeout),
+``files_sha256`` (a path-independent digest of the job's files: each VM path with the SHA-256
+of its local file) and ``files_unchanged`` (that digest taken again after both scorings is
+the same and no file is missing). The parent's ``scored_sha256`` is kept in the rows for the
+record but never compared: it hashes the scorer's temporary path, so it differs between any
+two scorings of the same files.
 
 The rule (section 6), as the dossier asks it: zinv accepts at least 95% of the held-out z-order
 equivalence mutants (condition A) while accepting no violation mutant the original rejects
@@ -151,18 +155,17 @@ def status_for(n: int, tasks: int) -> str:
     return "descriptive" if n < MIN_MUTANTS or tasks < MIN_TASKS else "registered_rule"
 
 
-def validity_problems(row: Mapping[str, Any], *, require_digests: bool = True) -> list[str]:
+def validity_problems(row: Mapping[str, Any], *, require_file_check: bool = True) -> list[str]:
     """Why a row cannot be read: infrastructure, a raw rescoring that does not reproduce the
-    registered verdict, or scored files that differ from the registered scoring's."""
+    registered verdict, or job files that changed or went missing during the rescoring."""
     problems = []
     if row.get("raw_infra") or row.get("zinv_infra"):
         problems.append("infrastructure")
     if verdict(row.get("raw")) != verdict(row.get("stored")):
         problems.append("raw_differs_from_stored")
-    digests = [row.get(f"{name}_scored_sha256") for name in ("stored", "raw", "zinv")]
-    present = [d for d in digests if d]
-    if (require_digests and len(present) < 3) or len(set(present)) > 1:
-        problems.append("scored_files_differ")
+    checked = row.get("files_unchanged")
+    if checked is False or (require_file_check and checked is not True):
+        problems.append("files_changed_or_missing")
     return problems
 
 
@@ -184,7 +187,7 @@ def _ids(rows: Iterable[Mapping[str, Any]]) -> list[str]:
 def judge(
     rows: Sequence[Mapping[str, Any]],
     *,
-    require_digests: bool = True,
+    require_file_check: bool = True,
     n_boot: int = N_BOOT,
     seed: int = SEED,
 ) -> dict[str, Any]:
@@ -198,7 +201,7 @@ def judge(
     invalid = {
         str(r["id"]): problems
         for r in rows
-        if (problems := validity_problems(r, require_digests=require_digests))
+        if (problems := validity_problems(r, require_file_check=require_file_check))
     }
     invalid_decision = sorted(i for i in invalid if i in decision)
 
@@ -249,7 +252,7 @@ def judge(
         "validity": {
             "invalid_rows": {k: invalid[k] for k in sorted(invalid)},
             "invalid_decision_rows": invalid_decision,
-            "require_digests": require_digests,
+            "require_file_check": require_file_check,
         },
     }
     if z:

@@ -65,8 +65,8 @@ def row(rid, task="t1", kind="mutant", operator=rules.ZORDER, label=rules.EQUIV,
         zinv=1.0, raw=None, digest="d", **extra):  # fmt: skip
     out = {"id": rid, "task_id": task, "kind": kind, "operator": operator, "label": label,
            "stored": stored, "raw": stored if raw is None else raw, "zinv": zinv,
-           "stored_scored_sha256": digest, "raw_scored_sha256": digest,
-           "zinv_scored_sha256": digest, "raw_infra": False, "zinv_infra": False}  # fmt: skip
+           "files_sha256": digest, "files_unchanged": True,
+           "raw_infra": False, "zinv_infra": False}  # fmt: skip
     out.update(extra)
     return out
 
@@ -114,8 +114,8 @@ def test_validity_failures_on_decision_rows_make_the_run_incomplete():
     for broken in (
         {"raw": 1.0},  # the fresh original scoring does not reproduce the registered fail
         {"zinv_infra": True},
-        {"zinv_scored_sha256": "other"},
-        {"stored_scored_sha256": None},
+        {"files_unchanged": False},
+        {"files_unchanged": None},
     ):
         rows = [*zrows(15, 6), vrow("v")]
         rows[0].update(broken)
@@ -153,7 +153,7 @@ def test_edge_outcomes_and_reported_quantities():
 def test_known_answer_on_zinvs_development_rows():
     """The registered rule read on job 1000's committed rows (the confirm development set)."""
     rows = json.loads(CONFIRM_ROWS.read_text())["rows"]
-    out = rules.judge(rows, require_digests=False, n_boot=500)
+    out = rules.judge(rows, require_file_check=False, n_boot=500)
     assert (out["outcome"], out["status"]) == ("PASS", "registered_rule")
     assert (out["condition_a"]["n"], out["condition_a"]["tasks"]) == (39, 15)
     assert out["condition_a"]["accepted"] == 39
@@ -302,8 +302,48 @@ def test_items_and_rows_carry_the_registered_verdict_and_digests():
                          run=fake)  # fmt: skip
     assert calls == [False, True]
     assert (out["raw"], out["zinv"], out["stored"]) == (0.0, 1.0, 0.0)
-    assert out["raw_scored_sha256"] == out["zinv_scored_sha256"] == out["stored_scored_sha256"]
-    assert rules.validity_problems(out) == [] and rules.in_z(out)
+    # the fixture's files do not exist: the file check fails and the row is invalid
+    assert out["files_sha256"] is None and out["files_unchanged"] is False
+    assert rules.validity_problems(out) == ["files_changed_or_missing"] and rules.in_z(out)
+
+
+def test_the_file_digest_is_path_independent_and_sees_a_change(tmp_path):
+    one, two = tmp_path / "a" / "x.pptx", tmp_path / "b" / "x.pptx"
+    for path in (one, two):
+        path.parent.mkdir()
+        path.write_bytes(b"deck")
+    files = {"/home/user/x.pptx": str(one), "/gone": None}
+    assert run.files_digest(files) == run.files_digest({**files, "/home/user/x.pptx": str(two)})
+    item = {"kind": "gold", "job": {"mutant_id": "g", "task_id": "t", "files": files},
+            "stored": 1.0}  # fmt: skip
+
+    def editing(payload, limit):  # a file changes between the two scorings
+        one.write_bytes(b"other")
+        return {"score": 1.0, "error": None}
+
+    out = run.score_item(item, osworld="/o", file_cache="/c", vm_baseline=None, timeout=5,
+                         run=editing)  # fmt: skip
+    assert out["files_unchanged"] is False
+    one.write_bytes(b"deck")
+    out = run.score_item(item, osworld="/o", file_cache="/c", vm_baseline=None, timeout=5,
+                         run=lambda payload, limit: {"score": 1.0})  # fmt: skip
+    assert out["files_unchanged"] is True and rules.validity_problems(out) == []
+
+
+def test_the_parents_scored_digest_is_path_dependent():
+    """Why the rows never compare ``scored_sha256``: on the confirm run it differs between the
+    lock-exact and the scoping scoring of every one of the 1,300 jobs."""
+    base = ROOT / "program/evidence/2026-10-08/q2-mutation-confirm/results/released/"
+    rows = {}
+    for arm in ("lock", "scout"):
+        path = base / f"confirm-mutants-v1/verdicts-{arm}.jsonl"
+        rows[arm] = {
+            json.loads(x)["mutant_id"]: json.loads(x) for x in path.read_text().splitlines()
+        }
+    equal = sum(rows["lock"][m]["scored_sha256"] == rows["scout"][m]["scored_sha256"]
+                for m in rows["lock"])  # fmt: skip
+    assert len(rows["lock"]) == 1300 and equal == 0
+    assert "0 of 1,300" in flat(text())
 
 
 def test_rescore_refuses_unregistered_reserve_controls(tmp_path):

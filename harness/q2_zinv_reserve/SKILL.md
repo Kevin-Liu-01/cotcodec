@@ -25,7 +25,7 @@ rejects? Registration: `program/preregistrations/q2-zinv-reserve-validation-v1.m
 - `run.py`: the container steps. `select-targets` (end of step 1: pptx targets
   only, the registered 8 on reserve), `rescore` (step 4: S1a's validation set
   and worker, unchanged, original then zinv, each row with the registered
-  verdict and scored-file digests), `judge`.
+  verdict and a path-independent file digest before and after), `judge`.
 - `guard.py`: standard library only; code table, reused pins, the parent's code
   tree; reserve needs this experiment's ledger row and `Q2ZR_PREREG_FROZEN`.
 - `infra/q2-zinv-reserve/run/zr_host.py`: the host tool (`plan`, `next`,

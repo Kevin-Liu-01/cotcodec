@@ -119,8 +119,8 @@ whose files differ, and `tests/test_q2_zinv_reserve.py` fails on drift):
 |---|---|
 | `harness/q2_zinv_reserve/__init__.py` | `ea19139fbe29b88d9e46f7fe337bab7bf6d1f9e21ac1905f455cc29b2a1d95e2` |
 | `harness/q2_zinv_reserve/guard.py` | `a1bf674ed7fe3dc476142b65aabacf5db742b536645a11ae8ec3903e33e9fbf0` |
-| `harness/q2_zinv_reserve/rules.py` | `228bf1764b2a369e658b8b736845e4a7986e4e928c0cc624dea1cdfbe96b7f8e` |
-| `harness/q2_zinv_reserve/run.py` | `6d73e4462a41a928afe7b312b393ad81f44ca536c99dfc63e85686d8972c5b26` |
+| `harness/q2_zinv_reserve/rules.py` | `c69ce05e8f801eecca5772221061d99555711485a2b824c2ea2761057f8a0639` |
+| `harness/q2_zinv_reserve/run.py` | `5c4cec4070a76c4d506d4b175f2cad6625ec22429c45f3dd0301d379080c1c38` |
 | `infra/q2-zinv-reserve/run/zr_host.py` | `a62175f6e7b766f23ba8ae53b818fa0fce03cbbf9e23f2789e9867689c654349` |
 <!-- q2zr-code-table end -->
 
@@ -204,8 +204,11 @@ time, with this addendum's guard first and one target filter added:
    is S1a's validated procedure (`q2_stage1.rescore.validation_set` with no audit input, its
    worker `_job_worker` and `run_worker`, each item scored in a fresh process, 7 workers,
    timeout 300 s): the original, then zinv installed in OSWorld's `metrics` namespace. Each
-   row keeps the registered verdict and the digest of the files every scoring placed in the
-   VM root (`scored_sha256`).
+   row keeps the registered verdict and a path-independent digest of the job's files (each
+   VM path with the SHA-256 of its local file), taken before and again after both scorings.
+   The parent's `scored_sha256` is recorded but never compared: it hashes the scorer's
+   temporary path, so it differs between any two scorings of the same files (0 of 1,300
+   lock-exact and scoping pairs are equal on the confirm run).
 
 Commands, from an export of the freeze commit staged on the host as
 `/home/kevin/cotcodec-runs/stage0/q2-zinv-reserve/src/` plus the freeze commit's id (with
@@ -237,8 +240,8 @@ Computed by `harness/q2_zinv_reserve/rules.py` (`judge`) over the rescored rows;
   holds; 14 of 15 does not). A zinv scoring that raises counts as not accepted.
 - **Condition B.** No mutant of V has an original fail and a zinv pass.
 - **Validity.** A row is invalid if either scoring hit the timeout, if the fresh original
-  scoring's verdict differs from the registered verdict, or if the three scored-file digests
-  (registered, original, zinv) are not all present and equal.
+  scoring's verdict differs from the registered verdict, or if the job's files changed or
+  went missing between the digest taken before the two scorings and the one taken after.
 - **Outcome.**
   - INCOMPLETE: any row of Z or V is invalid (after the one rerun of section 5).
   - NOT_TESTABLE: `n_Z` = 0.
