@@ -49,6 +49,8 @@ RUN_ROOT = s1a.RUN_ROOT
 MAX_CONCURRENCY = 32  # D53: certified at no more than 32 concurrent VMs
 STOCK = {"cell": "S", "sha256": s1a.QCOW2_SHA256, "size_bytes": s1a.QCOW2_BYTES}
 SLOT_FIELDS = ("slot", "task_id", "cell", "rep", "block")
+KINDS = ("capture", "gold")  # vm_probe.py, vm_gold.py
+FILE_CACHE_RECEIPTS = "program/evidence/q2-mutation/harness/file-cache-receipts.tsv"
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 SAFE = re.compile(r"^[A-Za-z0-9._:-]{1,96}$")
 BATCH = "infra/slurm/host-single-node/s2v4-vm.sbatch"
@@ -89,8 +91,36 @@ def ledger_row(source_dir: Path) -> dict[str, Any] | None:
     return None
 
 
-def slot_id(task_id: str, cell: str, rep: int) -> str:
-    return f"{task_id[:8]}:{cell}:r{rep}"
+def slot_id(task_id: str, cell: str, rep: int, kind: str = "capture") -> str:
+    return f"{task_id[:8]}:{cell}:{'g' if kind == 'gold' else 'r'}{rep}"
+
+
+def file_cache_receipts(source_dir: Path) -> dict[str, str]:
+    out = {}
+    for line in (source_dir / FILE_CACHE_RECEIPTS).read_text(encoding="utf-8").splitlines():
+        parts = line.split("\t")
+        if len(parts) >= 3 and HEX64.fullmatch(parts[2]):
+            out[parts[0]] = parts[2]
+    return out
+
+
+def check_gold(sid: str, gold: Any, receipts: Mapping[str, str]) -> None:
+    """A gold slot's files come from the pinned file cache, each with its receipt's SHA-256,
+    and one of them carries the candidate digest."""
+    _require(isinstance(gold, dict), f"{sid}: gold slots name their gold")
+    _require(bool(SAFE.fullmatch(str(gold.get("job_id", "")))), f"{sid}: gold.job_id")
+    files = gold.get("files")
+    _require(isinstance(files, dict) and bool(files), f"{sid}: gold.files")
+    target = False
+    for vm_path, entry in files.items():
+        _require(str(vm_path).startswith("/home/user/"), f"{sid}: {vm_path} outside /home/user")
+        rel = str(entry.get("rel", ""))
+        _require(bool(rel) and not rel.startswith("/") and ".." not in Path(rel).parts,
+                 f"{sid}: unsafe rel path")  # fmt: skip
+        _require(receipts.get(rel) == entry.get("sha256"),
+                 f"{sid}: {rel} differs from the file cache receipts")  # fmt: skip
+        target |= entry.get("sha256") == gold.get("candidate_sha256")
+    _require(target, f"{sid}: no gold file carries candidate_sha256")
 
 
 def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any]:
@@ -142,6 +172,7 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
     _require(isinstance(m.get("evaluate"), bool), "evaluate must be true or false")
     splits = json.loads((source_dir / SPLITS).read_text(encoding="utf-8"))
     dev = set(splits["dev"])
+    receipts = None
     slots = m.get("slots") or []
     _require(bool(slots), "no slots")
     seen: set[str] = set()
@@ -153,8 +184,15 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
         seen.add(sid)
         _require(slot["cell"] in images, f"{sid}: cell {slot['cell']} has no image in images")
         _require(isinstance(slot["rep"], int) and slot["rep"] >= 1, f"{sid}: rep")
-        _require(sid == slot_id(slot["task_id"], slot["cell"], slot["rep"]),
-                 f"{sid}: slot id must be task8:cell:r<rep>")  # fmt: skip
+        kind = slot.get("kind", "capture")
+        _require(kind in KINDS, f"{sid}: kind must be one of {KINDS}")
+        _require(sid == slot_id(slot["task_id"], slot["cell"], slot["rep"], kind),
+                 f"{sid}: slot id must be task8:cell:r<rep> (g<rep> for gold)")  # fmt: skip
+        if kind == "gold":
+            receipts = receipts if receipts is not None else file_cache_receipts(source_dir)
+            check_gold(sid, slot.get("gold"), receipts)
+        else:
+            _require("gold" not in slot, f"{sid}: only a gold slot names a gold")
         _require(bool(SAFE.fullmatch(str(slot["block"]))), f"{sid}: block")
         if purpose == "development":
             _require(slot["task_id"] in dev, f"{sid}: {slot['task_id']} is not a dev-split task")
@@ -204,7 +242,7 @@ def verify_images(m: Mapping[str, Any], workers: int = 4) -> dict[str, str]:
 
 
 def episode_argv(cfg: s1a.LaneConfig, name: str, vm: str, out_dir: Path,
-                 cpuset: str | None) -> list[str]:  # fmt: skip
+                 cpuset: str | None, kind: str = "capture") -> list[str]:  # fmt: skip
     m = cfg.manifest
     argv = [
         "docker", "run", "--rm", "--name", name,
@@ -226,7 +264,8 @@ def episode_argv(cfg: s1a.LaneConfig, name: str, vm: str, out_dir: Path,
     if cpuset:
         argv += ["--cpuset-cpus", cpuset]
     argv += [m["episode_image_id"], m.get("episode_python", "/opt/venv-lock/bin/python"),
-             "-m", "harness.s2_locale.vm_probe", "--config", "/out/config.json"]  # fmt: skip
+             "-m", "harness.s2_locale.vm_gold" if kind == "gold" else "harness.s2_locale.vm_probe",
+             "--config", "/out/config.json"]  # fmt: skip
     return argv
 
 
@@ -260,6 +299,20 @@ class S2Lane(s1a.Lane):
             "settle_after_reset_s": m["settle_after_reset_s"],
             "settle_before_eval_s": m["settle_before_eval_s"], "evaluate": m["evaluate"],
             "t_vm_start": t_vm_start,
+        }  # fmt: skip
+
+    def gold_config(self, slot: s1a.Slot, t_vm_start: float) -> dict:
+        d, m = slot.data, self.m
+        return {
+            "lane": m["name"], "purpose": m["purpose"], "slot": slot.id,
+            "task_id": d["task_id"], "cell": d["cell"], "block": d["block"], "rep": d["rep"],
+            "attempt": slot.attempt, "image_sha256": m["images"][d["cell"]]["sha256"],
+            "selector_sha256": self.pins[d["cell"]]["selector_sha256"], "out_dir": "/out",
+            "guest_ip": m["vm"]["guest_ip"], "server_port": m["vm"]["server_port"],
+            "osworld_dir": "/inputs/OSWorld", "file_cache_dir": "/inputs/file_cache/files",
+            "settle_after_reset_s": m["settle_after_reset_s"],
+            "settle_before_eval_s": m["settle_before_eval_s"], "t_vm_start": t_vm_start,
+            "gold": d["gold"],
         }  # fmt: skip
 
     def run_slot(self, slot: s1a.Slot, worker: int, cycle: int) -> dict[str, Any]:
@@ -299,9 +352,11 @@ class S2Lane(s1a.Lane):
 
     def episode(self, slot: s1a.Slot, out_dir: Path, t_vm: float, episode_name: str, vm: str,
                 cpus: Mapping[str, Any], host: dict[str, Any]) -> dict[str, Any]:  # fmt: skip
-        config = self.episode_config(slot, out_dir, t_vm)
+        kind = slot.data.get("kind", "capture")
+        config = (self.gold_config(slot, t_vm) if kind == "gold"
+                  else self.episode_config(slot, out_dir, t_vm))  # fmt: skip
         (out_dir / "config.json").write_text(json.dumps(config, indent=1), encoding="utf-8")
-        argv = episode_argv(self.cfg, episode_name, vm, out_dir, cpus["runner"])
+        argv = episode_argv(self.cfg, episode_name, vm, out_dir, cpus["runner"], kind)
         timeout = float(self.m["episode_timeout_s"])
         rc = self.docker.run_episode(argv, episode_name, timeout, self.stop,
                                      out_dir / "container.log")  # fmt: skip
@@ -320,7 +375,7 @@ class S2Lane(s1a.Lane):
         return {"schema": "s2v4-vm-probe-v1", "experiment_id": EXPERIMENT_ID,
                 "lane": self.m["name"], "purpose": self.m["purpose"], "slot": slot.id,
                 "task_id": d["task_id"], "cell": d["cell"], "block": d["block"],
-                "attempt": slot.attempt, "score": None}  # fmt: skip
+                "kind": d.get("kind", "capture"), "attempt": slot.attempt, "score": None}  # fmt: skip
 
     def loss(self, slot: s1a.Slot, kind: str, detail: str) -> dict[str, Any]:
         return {**self.base_record(slot), "status": "infrastructure", "infrastructure_type": kind,
@@ -404,6 +459,23 @@ def render(base: Mapping[str, Any], tasks: Sequence[str], cells: Sequence[str],
     return m
 
 
+def render_gold(manifest: Mapping[str, Any], golds: Sequence[Mapping[str, Any]],
+                cells: Sequence[str]) -> dict[str, Any]:  # fmt: skip
+    """Append a gold slot per (task's gold, cell), in each task's block (``golds``: rows with
+    ``task_id``, ``job_id``, ``candidate_sha256`` and ``files`` {vm path: {rel, sha256}})."""
+    m = json.loads(json.dumps(manifest))
+    blocks = {s["task_id"]: s["block"] for s in m["slots"]}
+    for g in golds:
+        block = blocks.get(g["task_id"], f"g{len(blocks):03d}")
+        for c in cells:
+            m["slots"].append({"slot": slot_id(g["task_id"], c, 1, "gold"), "task_id": g["task_id"],
+                               "cell": c, "rep": 1, "block": block, "kind": "gold",
+                               "gold": {"job_id": g["job_id"],
+                                        "candidate_sha256": g["candidate_sha256"],
+                                        "files": g["files"]}})  # fmt: skip
+    return m
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
@@ -425,12 +497,17 @@ def main(argv: list[str] | None = None) -> int:
     rend.add_argument("--cells", required=True, help="comma-separated cells")
     rend.add_argument("--reps", type=int, default=1)
     rend.add_argument("--reps-by-cell", default="", help="e.g. E=2,ER=2")
+    rend.add_argument("--golds", type=Path, default=None, help="gold rows (JSONL)")
+    rend.add_argument("--gold-cells", default="E,A,ER,AR,PL")
     rend.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.command == "render":
         by_cell = {k: int(v) for k, v in (x.split("=") for x in args.reps_by_cell.split(",") if x)}
         manifest = render(json.loads(args.base.read_text()), args.tasks.split(","),
                           args.cells.split(","), args.reps, by_cell)  # fmt: skip
+        if args.golds:
+            rows = [json.loads(x) for x in args.golds.read_text().splitlines() if x.strip()]
+            manifest = render_gold(manifest, rows, args.gold_cells.split(","))
         args.out.write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n")
         print(json.dumps({"slots": len(manifest["slots"]), "out": str(args.out)}))
         return 0

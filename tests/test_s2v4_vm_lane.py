@@ -23,6 +23,8 @@ def _source(tmp_path: Path) -> Path:
     (src / "harness/s2_locale").mkdir(parents=True)
     (src / "program/evidence/q2-mutation").mkdir(parents=True)
     shutil.copy(ROOT / L.SPLITS, src / L.SPLITS)
+    (src / "program/evidence/q2-mutation/harness").mkdir(parents=True)
+    shutil.copy(ROOT / L.FILE_CACHE_RECEIPTS, src / L.FILE_CACHE_RECEIPTS)
     (src / L.IMAGES).write_text(json.dumps({"schema": "s2v4-images-v1", "cells": {
         c: {"sha256": c[0].lower() * 64 if c != "AR" else "b" * 64, "size_bytes": 10 + i,
             "selector_sha256": SEL[c]} for i, c in enumerate(SEL)}}))
@@ -116,11 +118,13 @@ def test_vm_view_swaps_only_the_disk(tmp_path):
 class FakeDocker:
     def __init__(self, records):
         self.records, self.started, self.removed = records, [], []
+        self.started_episodes: list[list[str]] = []
 
     def start_vm(self, argv):
         self.started.append(argv)
 
     def run_episode(self, argv, name, timeout, stop, log):
+        self.started_episodes.append(argv)
         out = Path([a for a in argv if a.endswith(":/out")][0].split(":")[0])
         cfg = json.loads((out / "config.json").read_text())
         self.records.append(cfg)
@@ -304,3 +308,73 @@ def test_smoke_summary_masks_the_shell_and_caret(tmp_path):
     rows = {r["cell"]: r for r in out["slots"]}
     assert rows["A"]["arabic_as_expected"] and rows["AR"]["order_as_expected"]
     assert rows["E"]["arabic_as_expected"] and not rows["E"]["image_check_failed"]
+
+
+GOLD_REL = "libreoffice_calc/12382c62-0cd1-4bf2-bdc8-1d20bf9b2371/13_WeeklySales_gt1.xlsx"
+
+
+def _gold_row():
+    sha = L.file_cache_receipts(ROOT)[GOLD_REL]
+    return {"task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371", "job_id": "12382c62__gold",
+            "candidate_sha256": sha, "files": {"/home/user/WeeklySales.xlsx":
+                                               {"rel": GOLD_REL, "sha256": sha}}}
+
+
+def test_gold_slots_render_validate_and_run(tmp_path):
+    src = _source(tmp_path)
+    m = _manifest(src)
+    m = L.render(m, ["12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"], ["S", "E", "AR"])
+    m = L.render_gold(m, [_gold_row()], ["E", "AR"])
+    m = L.validate_manifest(m, src)
+    gold = [s for s in m["slots"] if s.get("kind") == "gold"]
+    assert [s["slot"] for s in gold] == ["12382c6:E:g1".replace("12382c6", "12382c62"),
+                                         "12382c62:AR:g1"]
+    assert gold[0]["block"] == "t000"
+    seen: list[dict] = []
+    docker = FakeDocker(seen)
+    lane = L.S2Lane(s1a.LaneConfig(m, "779", tmp_path / "run", src), docker=docker,
+                    verify=False, certified=[])
+    lane.run()
+    modules = [argv[argv.index("-m") + 1] for argv in docker.started_episodes]
+    assert modules.count("harness.s2_locale.vm_gold") == 2
+    cfg = [c for c in seen if "gold" in c][0]
+    assert cfg["gold"]["job_id"] == "12382c62__gold" and cfg["selector_sha256"] in SEL.values()
+
+
+@pytest.mark.parametrize("edit, match", [
+    (lambda g: g["files"]["/home/user/WeeklySales.xlsx"].update(sha256="0" * 64), "receipts"),
+    (lambda g: g.update(candidate_sha256="1" * 64), "candidate"),
+    (lambda g: g["files"].update({"/etc/x": {"rel": GOLD_REL, "sha256": g["candidate_sha256"]}}),
+     "outside"),
+])
+def test_gold_slot_refusals(tmp_path, edit, match):
+    src = _source(tmp_path)
+    m = L.render(_manifest(src), ["12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"], ["E"])
+    row = _gold_row()
+    edit(row)
+    m = L.render_gold(m, [row], ["E"])
+    with pytest.raises(L.LaneError, match=match):
+        L.validate_manifest(m, src)
+
+
+def test_gold_wrapper_config_and_record():
+    from harness.s2_locale import vm_gold as G
+
+    row = _gold_row()
+    cfg = {"lane": "l", "purpose": "development", "slot": "12382c62:E:g1", "task_id": row["task_id"],
+           "cell": "E", "block": "t000", "rep": 1, "attempt": 1, "image_sha256": "e" * 64,
+           "selector_sha256": SEL["E"], "guest_ip": "20.20.20.21", "server_port": 5000,
+           "osworld_dir": "/inputs/OSWorld", "settle_after_reset_s": 60, "settle_before_eval_s": 20,
+           "gold": {k: row[k] for k in ("job_id", "candidate_sha256", "files")}}
+    k2 = G.k2_config(cfg)
+    from harness.q2_mutation_k2.executor import K2Config
+
+    parsed = K2Config.from_json(k2)
+    assert parsed.files["/home/user/WeeklySales.xlsx"]["local"].endswith(GOLD_REL)
+    ok = G.gold_record(cfg, {"status": "scored", "score": 1.0, "verdict": "pass"}, SEL["E"], None)
+    assert ok["status"] == "probed" and ok["verdict"] == "pass"
+    wrong = G.gold_record(cfg, {"status": "scored", "score": 1.0, "verdict": "pass"}, None, None)
+    assert wrong["status"] == "infrastructure" and wrong["verdict"] is None
+    lost = G.gold_record(cfg, {"status": "infrastructure", "infrastructure_type": "vm_boot"},
+                         SEL["E"], None)
+    assert lost["infrastructure_type"] == "vm_boot"

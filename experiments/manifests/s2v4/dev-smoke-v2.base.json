@@ -49,7 +49,7 @@
  },
  "mode": "s2v4-probe",
  "name": "s2v4-dev-smoke-v2",
- "note": "Development smoke v2: the rebuilt images (build 1199, the selector read last in its layer) on the same three dev-split tasks, cells and replicate as v1. Never evidence for K0 or K1.",
+ "note": "Development smoke v2: the rebuilt images (build 1199, the selector read last in its layer) on the same three dev-split tasks, cells and replicate as v1, plus gold slots (the K2 injection executor) for the two tasks with a gold in E, A, ER, AR and PL. Never evidence for K0 or K1.",
  "osworld": {
   "commit": "b138d348256078fa634fc3b73567a7337c793e6b",
   "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/OSWorld"
@@ -62,7 +62,7 @@
  "slurm": {
   "cpus": 40,
   "memory_gb": 64,
-  "minutes": 60
+  "minutes": 75
  },
  "vm": {
   "concurrency": 8,

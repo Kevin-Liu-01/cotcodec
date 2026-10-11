@@ -49,7 +49,7 @@
  },
  "mode": "s2v4-probe",
  "name": "s2v4-dev-smoke-v2",
- "note": "Development smoke v2: the rebuilt images (build 1199, the selector read last in its layer) on the same three dev-split tasks, cells and replicate as v1. Never evidence for K0 or K1.",
+ "note": "Development smoke v2: the rebuilt images (build 1199, the selector read last in its layer) on the same three dev-split tasks, cells and replicate as v1, plus gold slots (the K2 injection executor) for the two tasks with a gold in E, A, ER, AR and PL. Never evidence for K0 or K1.",
  "osworld": {
   "commit": "b138d348256078fa634fc3b73567a7337c793e6b",
   "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/OSWorld"
@@ -227,12 +227,192 @@
    "rep": 1,
    "slot": "e528b65e:AD:r1",
    "task_id": "e528b65e-1107-4b8c-8988-490e4fece599"
+  },
+  {
+   "block": "t000",
+   "cell": "E",
+   "gold": {
+    "candidate_sha256": "8bc85b93043c2e2efdfe8ba83fe227dd495f0732c62ba883844ff17c1be88f2b",
+    "files": {
+     "/home/user/WeeklySales.xlsx": {
+      "rel": "libreoffice_calc/12382c62-0cd1-4bf2-bdc8-1d20bf9b2371/13_WeeklySales_gt1.xlsx",
+      "sha256": "8bc85b93043c2e2efdfe8ba83fe227dd495f0732c62ba883844ff17c1be88f2b"
+     }
+    },
+    "job_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371__gold"
+   },
+   "kind": "gold",
+   "rep": 1,
+   "slot": "12382c62:E:g1",
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+  },
+  {
+   "block": "t000",
+   "cell": "A",
+   "gold": {
+    "candidate_sha256": "8bc85b93043c2e2efdfe8ba83fe227dd495f0732c62ba883844ff17c1be88f2b",
+    "files": {
+     "/home/user/WeeklySales.xlsx": {
+      "rel": "libreoffice_calc/12382c62-0cd1-4bf2-bdc8-1d20bf9b2371/13_WeeklySales_gt1.xlsx",
+      "sha256": "8bc85b93043c2e2efdfe8ba83fe227dd495f0732c62ba883844ff17c1be88f2b"
+     }
+    },
+    "job_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371__gold"
+   },
+   "kind": "gold",
+   "rep": 1,
+   "slot": "12382c62:A:g1",
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+  },
+  {
+   "block": "t000",
+   "cell": "ER",
+   "gold": {
+    "candidate_sha256": "8bc85b93043c2e2efdfe8ba83fe227dd495f0732c62ba883844ff17c1be88f2b",
+    "files": {
+     "/home/user/WeeklySales.xlsx": {
+      "rel": "libreoffice_calc/12382c62-0cd1-4bf2-bdc8-1d20bf9b2371/13_WeeklySales_gt1.xlsx",
+      "sha256": "8bc85b93043c2e2efdfe8ba83fe227dd495f0732c62ba883844ff17c1be88f2b"
+     }
+    },
+    "job_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371__gold"
+   },
+   "kind": "gold",
+   "rep": 1,
+   "slot": "12382c62:ER:g1",
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+  },
+  {
+   "block": "t000",
+   "cell": "AR",
+   "gold": {
+    "candidate_sha256": "8bc85b93043c2e2efdfe8ba83fe227dd495f0732c62ba883844ff17c1be88f2b",
+    "files": {
+     "/home/user/WeeklySales.xlsx": {
+      "rel": "libreoffice_calc/12382c62-0cd1-4bf2-bdc8-1d20bf9b2371/13_WeeklySales_gt1.xlsx",
+      "sha256": "8bc85b93043c2e2efdfe8ba83fe227dd495f0732c62ba883844ff17c1be88f2b"
+     }
+    },
+    "job_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371__gold"
+   },
+   "kind": "gold",
+   "rep": 1,
+   "slot": "12382c62:AR:g1",
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+  },
+  {
+   "block": "t000",
+   "cell": "PL",
+   "gold": {
+    "candidate_sha256": "8bc85b93043c2e2efdfe8ba83fe227dd495f0732c62ba883844ff17c1be88f2b",
+    "files": {
+     "/home/user/WeeklySales.xlsx": {
+      "rel": "libreoffice_calc/12382c62-0cd1-4bf2-bdc8-1d20bf9b2371/13_WeeklySales_gt1.xlsx",
+      "sha256": "8bc85b93043c2e2efdfe8ba83fe227dd495f0732c62ba883844ff17c1be88f2b"
+     }
+    },
+    "job_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371__gold"
+   },
+   "kind": "gold",
+   "rep": 1,
+   "slot": "12382c62:PL:g1",
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+  },
+  {
+   "block": "t002",
+   "cell": "E",
+   "gold": {
+    "candidate_sha256": "6b2a1968cd8ba4a91ebf122d11a6168ffdc9fec314e1641b8f635fe7644ad74b",
+    "files": {
+     "/home/user/Desktop/Geography_And_Magical_Realism.docx": {
+      "rel": "libreoffice_writer/e528b65e-1107-4b8c-8988-490e4fece599/Geography_And_Magical_Realism_Gold.docx",
+      "sha256": "6b2a1968cd8ba4a91ebf122d11a6168ffdc9fec314e1641b8f635fe7644ad74b"
+     }
+    },
+    "job_id": "e528b65e-1107-4b8c-8988-490e4fece599__gold"
+   },
+   "kind": "gold",
+   "rep": 1,
+   "slot": "e528b65e:E:g1",
+   "task_id": "e528b65e-1107-4b8c-8988-490e4fece599"
+  },
+  {
+   "block": "t002",
+   "cell": "A",
+   "gold": {
+    "candidate_sha256": "6b2a1968cd8ba4a91ebf122d11a6168ffdc9fec314e1641b8f635fe7644ad74b",
+    "files": {
+     "/home/user/Desktop/Geography_And_Magical_Realism.docx": {
+      "rel": "libreoffice_writer/e528b65e-1107-4b8c-8988-490e4fece599/Geography_And_Magical_Realism_Gold.docx",
+      "sha256": "6b2a1968cd8ba4a91ebf122d11a6168ffdc9fec314e1641b8f635fe7644ad74b"
+     }
+    },
+    "job_id": "e528b65e-1107-4b8c-8988-490e4fece599__gold"
+   },
+   "kind": "gold",
+   "rep": 1,
+   "slot": "e528b65e:A:g1",
+   "task_id": "e528b65e-1107-4b8c-8988-490e4fece599"
+  },
+  {
+   "block": "t002",
+   "cell": "ER",
+   "gold": {
+    "candidate_sha256": "6b2a1968cd8ba4a91ebf122d11a6168ffdc9fec314e1641b8f635fe7644ad74b",
+    "files": {
+     "/home/user/Desktop/Geography_And_Magical_Realism.docx": {
+      "rel": "libreoffice_writer/e528b65e-1107-4b8c-8988-490e4fece599/Geography_And_Magical_Realism_Gold.docx",
+      "sha256": "6b2a1968cd8ba4a91ebf122d11a6168ffdc9fec314e1641b8f635fe7644ad74b"
+     }
+    },
+    "job_id": "e528b65e-1107-4b8c-8988-490e4fece599__gold"
+   },
+   "kind": "gold",
+   "rep": 1,
+   "slot": "e528b65e:ER:g1",
+   "task_id": "e528b65e-1107-4b8c-8988-490e4fece599"
+  },
+  {
+   "block": "t002",
+   "cell": "AR",
+   "gold": {
+    "candidate_sha256": "6b2a1968cd8ba4a91ebf122d11a6168ffdc9fec314e1641b8f635fe7644ad74b",
+    "files": {
+     "/home/user/Desktop/Geography_And_Magical_Realism.docx": {
+      "rel": "libreoffice_writer/e528b65e-1107-4b8c-8988-490e4fece599/Geography_And_Magical_Realism_Gold.docx",
+      "sha256": "6b2a1968cd8ba4a91ebf122d11a6168ffdc9fec314e1641b8f635fe7644ad74b"
+     }
+    },
+    "job_id": "e528b65e-1107-4b8c-8988-490e4fece599__gold"
+   },
+   "kind": "gold",
+   "rep": 1,
+   "slot": "e528b65e:AR:g1",
+   "task_id": "e528b65e-1107-4b8c-8988-490e4fece599"
+  },
+  {
+   "block": "t002",
+   "cell": "PL",
+   "gold": {
+    "candidate_sha256": "6b2a1968cd8ba4a91ebf122d11a6168ffdc9fec314e1641b8f635fe7644ad74b",
+    "files": {
+     "/home/user/Desktop/Geography_And_Magical_Realism.docx": {
+      "rel": "libreoffice_writer/e528b65e-1107-4b8c-8988-490e4fece599/Geography_And_Magical_Realism_Gold.docx",
+      "sha256": "6b2a1968cd8ba4a91ebf122d11a6168ffdc9fec314e1641b8f635fe7644ad74b"
+     }
+    },
+    "job_id": "e528b65e-1107-4b8c-8988-490e4fece599__gold"
+   },
+   "kind": "gold",
+   "rep": 1,
+   "slot": "e528b65e:PL:g1",
+   "task_id": "e528b65e-1107-4b8c-8988-490e4fece599"
   }
  ],
  "slurm": {
   "cpus": 40,
   "memory_gb": 64,
-  "minutes": 60
+  "minutes": 75
  },
  "vm": {
   "concurrency": 8,
