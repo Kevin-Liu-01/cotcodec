@@ -392,12 +392,15 @@ def submit(manifest_path: Path, source_dir: Path, dry_run: bool) -> dict[str, An
 
 
 def render(base: Mapping[str, Any], tasks: Sequence[str], cells: Sequence[str],
-           reps: int = 1) -> dict[str, Any]:  # fmt: skip
-    """Slots for every (task, cell, rep), blocked by task so a task's cells run together."""
+           reps: int = 1, reps_by_cell: Mapping[str, int] | None = None) -> dict[str, Any]:  # fmt: skip
+    """Slots for every (task, cell, rep), blocked by task so a task's cells run together;
+    ``reps_by_cell`` overrides ``reps`` for a cell (the A/A replicates E2, ER2)."""
     m = json.loads(json.dumps(base))
+    by_cell = dict(reps_by_cell or {})
     m["slots"] = [{"slot": slot_id(t, c, r), "task_id": t, "cell": c, "rep": r,
                    "block": f"t{i:03d}"}
-                  for i, t in enumerate(tasks) for r in range(1, reps + 1) for c in cells]  # fmt: skip
+                  for i, t in enumerate(tasks) for c in cells
+                  for r in range(1, by_cell.get(c, reps) + 1)]  # fmt: skip
     return m
 
 
@@ -421,11 +424,13 @@ def main(argv: list[str] | None = None) -> int:
     rend.add_argument("--tasks", required=True, help="comma-separated task ids")
     rend.add_argument("--cells", required=True, help="comma-separated cells")
     rend.add_argument("--reps", type=int, default=1)
+    rend.add_argument("--reps-by-cell", default="", help="e.g. E=2,ER=2")
     rend.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.command == "render":
+        by_cell = {k: int(v) for k, v in (x.split("=") for x in args.reps_by_cell.split(",") if x)}
         manifest = render(json.loads(args.base.read_text()), args.tasks.split(","),
-                          args.cells.split(","), args.reps)  # fmt: skip
+                          args.cells.split(","), args.reps, by_cell)  # fmt: skip
         args.out.write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n")
         print(json.dumps({"slots": len(manifest["slots"]), "out": str(args.out)}))
         return 0

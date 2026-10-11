@@ -48,6 +48,13 @@ def _manifest(src: Path) -> dict:
     return L.render(base, DEV[:2], ["S", "E", "AR"])
 
 
+def test_render_replicates_by_cell():
+    m = L.render({"x": 1}, DEV[:2], ["S", "E"], reps_by_cell={"E": 2})
+    assert [s["slot"] for s in m["slots"]][:3] == [f"{DEV[0][:8]}:S:r1", f"{DEV[0][:8]}:E:r1",
+                                                   f"{DEV[0][:8]}:E:r2"]
+    assert len(m["slots"]) == 6 and m["slots"][-1]["block"] == "t001"
+
+
 def test_pins_include_the_certified_stock_disk(tmp_path):
     pins = L.load_pins(_source(tmp_path))
     assert pins["S"] == {"sha256": s1a.QCOW2_SHA256, "size_bytes": s1a.QCOW2_BYTES,
