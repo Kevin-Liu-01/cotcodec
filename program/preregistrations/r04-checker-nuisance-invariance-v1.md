@@ -160,14 +160,17 @@ recorded in every save row.
    profile, so it opens no first-start or what's-new UI over the document. The control's
    profile is the VM's, byte for byte (`xcu.set_props` with no property is the identity; a
    test pins it).
-2. Builds from some release on title their windows "`<file>` — LibreOffice `<App>`" (an em
-   dash), while OSWorld's postconfig activates "`<file>` - LibreOffice `<App>`" with
-   `wmctrl -Fa`. The save stage tries the registered title first and, only if that fails,
-   the same title with the em dash. The VM's build never shows the em-dash title, so the
-   control behaves as registered. The dev smoke found that B3 needs it on every job (section
-   15). Each item's adapted activations are recorded and reported per cell: they are what a
-   re-hosted VM with that build would fail as written (postconfig replay under other
-   builds was untested, dossier O6).
+2. Builds from the 7.6 series on title their windows "`<file>` — LibreOffice `<App>`" (an
+   em dash; TDF 7.3.7.2 still uses the hyphen), while OSWorld's postconfig activates
+   "`<file>` - LibreOffice `<App>`" with `wmctrl -Fa`. The save stage tries the registered
+   title first and, only if that fails, the same title with the em dash. The VM's build
+   never shows the em-dash title, so the control behaves as registered. In the dev smoke
+   every item under 7.6.7.2 and 24.8.7.2 needed it (section 15). Each item's adapted
+   activations are recorded and reported per cell: they are what a re-hosted VM with that
+   build would fail as written (postconfig replay under other builds was untested,
+   dossier O6). Without the fallback the registered save treats the failure as a save
+   failure, and every build from 7.6 on would be dropped for retention, so the build arm
+   could not be read at all.
 
 Everything else is the registered save: the same profile template, display size, window
 manager, VCL plugin (gtk3), pyautogui, timeouts and collection of changed files.
