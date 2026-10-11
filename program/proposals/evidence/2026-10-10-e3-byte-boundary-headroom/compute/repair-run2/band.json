@@ -1,0 +1,1 @@
+{"alpha_min": 0.745, "alpha_max": 0.965, "agree_min": 0.45, "agree_max": 0.85, "note": "provisional constants used inside the OC runs; final verdict tables are recomputed from raw replicate statistics by oc_decide.py with the registered constants"}

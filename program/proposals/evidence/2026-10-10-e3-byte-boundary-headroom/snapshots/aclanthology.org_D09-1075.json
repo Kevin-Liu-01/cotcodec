@@ -1,0 +1,13 @@
+{
+ "url": "https://aclanthology.org/D09-1075/",
+ "fetched_at": "2026-10-11T00:58:25Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 33343,
+ "raw_sha256": "e5df5eb38b21200ed1a00c2fa723a087809a6d65b098a75d4c51bc8e0c787056",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "Unsupervised Tokenization for Machine Translation - ACL Anthology"
+ },
+ "snapshot_run": "run 2 (D68 repair)"
+}

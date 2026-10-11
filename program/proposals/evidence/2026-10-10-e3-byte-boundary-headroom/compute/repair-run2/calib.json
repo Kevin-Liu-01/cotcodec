@@ -1,0 +1,345 @@
+{
+ "script": "instrument_sim_v2.py --part calib",
+ "calib": {
+  "seed": 2042,
+  "pairs": 300,
+  "splits_spurious_to_missed": {
+   "balanced": 1.0,
+   "precision_heavy": 0.5,
+   "recall_heavy": 2.0
+  },
+  "table": {
+   "ko": {
+    "true_links_per_word": 0.5903,
+    "balanced": [
+     {
+      "aer_target": 0.05,
+      "d": 0.04911,
+      "s": 0.02899,
+      "aer": 0.05,
+      "precision": 0.9508,
+      "recall": 0.9492
+     },
+     {
+      "aer_target": 0.085,
+      "d": 0.08763,
+      "s": 0.05173,
+      "aer": 0.0851,
+      "precision": 0.9196,
+      "recall": 0.9103
+     },
+     {
+      "aer_target": 0.12,
+      "d": 0.12277,
+      "s": 0.07247,
+      "aer": 0.1198,
+      "precision": 0.8857,
+      "recall": 0.8747
+     },
+     {
+      "aer_target": 0.15,
+      "d": 0.15421,
+      "s": 0.09103,
+      "aer": 0.15,
+      "precision": 0.8563,
+      "recall": 0.8437
+     },
+     {
+      "aer_target": 0.2,
+      "d": 0.20846,
+      "s": 0.12306,
+      "aer": 0.2001,
+      "precision": 0.8049,
+      "recall": 0.7949
+     },
+     {
+      "aer_target": 0.25,
+      "d": 0.25857,
+      "s": 0.15264,
+      "aer": 0.2502,
+      "precision": 0.7574,
+      "recall": 0.7424
+     }
+    ]
+   },
+   "pl": {
+    "true_links_per_word": 0.5839,
+    "balanced": [
+     {
+      "aer_target": 0.05,
+      "d": 0.05294,
+      "s": 0.03091,
+      "aer": 0.05,
+      "precision": 0.9542,
+      "recall": 0.9457
+     },
+     {
+      "aer_target": 0.085,
+      "d": 0.0907,
+      "s": 0.05296,
+      "aer": 0.085,
+      "precision": 0.9226,
+      "recall": 0.9076
+     },
+     {
+      "aer_target": 0.12,
+      "d": 0.12724,
+      "s": 0.07429,
+      "aer": 0.1201,
+      "precision": 0.8867,
+      "recall": 0.8733
+     },
+     {
+      "aer_target": 0.15,
+      "d": 0.1598,
+      "s": 0.0933,
+      "aer": 0.15,
+      "precision": 0.8575,
+      "recall": 0.8426
+     },
+     {
+      "aer_target": 0.2,
+      "d": 0.21648,
+      "s": 0.1264,
+      "aer": 0.2001,
+      "precision": 0.807,
+      "recall": 0.793
+     },
+     {
+      "aer_target": 0.25,
+      "d": 0.26975,
+      "s": 0.1575,
+      "aer": 0.2501,
+      "precision": 0.7589,
+      "recall": 0.741
+     }
+    ]
+   },
+   "zh": {
+    "true_links_per_word": 0.6308,
+    "balanced": [
+     {
+      "aer_target": 0.05,
+      "d": 0.05413,
+      "s": 0.03414,
+      "aer": 0.0498,
+      "precision": 0.9526,
+      "recall": 0.9478
+     },
+     {
+      "aer_target": 0.085,
+      "d": 0.09147,
+      "s": 0.0577,
+      "aer": 0.0849,
+      "precision": 0.9197,
+      "recall": 0.9105
+     },
+     {
+      "aer_target": 0.12,
+      "d": 0.12972,
+      "s": 0.08183,
+      "aer": 0.1199,
+      "precision": 0.8876,
+      "recall": 0.8726
+     },
+     {
+      "aer_target": 0.15,
+      "d": 0.16185,
+      "s": 0.1021,
+      "aer": 0.15,
+      "precision": 0.8577,
+      "recall": 0.8425
+     },
+     {
+      "aer_target": 0.2,
+      "d": 0.21503,
+      "s": 0.13564,
+      "aer": 0.2003,
+      "precision": 0.8084,
+      "recall": 0.7911
+     },
+     {
+      "aer_target": 0.25,
+      "d": 0.26674,
+      "s": 0.16826,
+      "aer": 0.2499,
+      "precision": 0.7618,
+      "recall": 0.7387
+     }
+    ],
+    "precision_heavy": [
+     {
+      "aer_target": 0.05,
+      "d": 0.06873,
+      "s": 0.02168,
+      "aer": 0.0499,
+      "precision": 0.9676,
+      "recall": 0.9331
+     },
+     {
+      "aer_target": 0.085,
+      "d": 0.11496,
+      "s": 0.03626,
+      "aer": 0.085,
+      "precision": 0.9466,
+      "recall": 0.8855
+     },
+     {
+      "aer_target": 0.12,
+      "d": 0.16068,
+      "s": 0.05068,
+      "aer": 0.1201,
+      "precision": 0.9226,
+      "recall": 0.841
+     },
+     {
+      "aer_target": 0.15,
+      "d": 0.19941,
+      "s": 0.0629,
+      "aer": 0.15,
+      "precision": 0.9037,
+      "recall": 0.8023
+     },
+     {
+      "aer_target": 0.2,
+      "d": 0.26125,
+      "s": 0.0824,
+      "aer": 0.2,
+      "precision": 0.8689,
+      "recall": 0.7413
+     },
+     {
+      "aer_target": 0.25,
+      "d": 0.32193,
+      "s": 0.10154,
+      "aer": 0.2501,
+      "precision": 0.8307,
+      "recall": 0.6834
+     }
+    ],
+    "recall_heavy": [
+     {
+      "aer_target": 0.05,
+      "d": 0.03808,
+      "s": 0.04804,
+      "aer": 0.05,
+      "precision": 0.9351,
+      "recall": 0.9654
+     },
+     {
+      "aer_target": 0.085,
+      "d": 0.06548,
+      "s": 0.08261,
+      "aer": 0.085,
+      "precision": 0.8931,
+      "recall": 0.9379
+     },
+     {
+      "aer_target": 0.12,
+      "d": 0.09203,
+      "s": 0.1161,
+      "aer": 0.1199,
+      "precision": 0.8507,
+      "recall": 0.9117
+     },
+     {
+      "aer_target": 0.15,
+      "d": 0.11562,
+      "s": 0.14587,
+      "aer": 0.15,
+      "precision": 0.8156,
+      "recall": 0.8874
+     },
+     {
+      "aer_target": 0.2,
+      "d": 0.15817,
+      "s": 0.19956,
+      "aer": 0.1999,
+      "precision": 0.7563,
+      "recall": 0.8492
+     },
+     {
+      "aer_target": 0.25,
+      "d": 0.20397,
+      "s": 0.25734,
+      "aer": 0.2502,
+      "precision": 0.6982,
+      "recall": 0.8096
+     }
+    ]
+   }
+  }
+ },
+ "inputs": [
+  {
+   "file": "calib-ko-balanced.json",
+   "sha256": "de1c8ba28d8954fdbaeea8c7bda3cc43c5aa4c77d546263d739583f785b83a05",
+   "argv": [
+    "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/e3-repair-run2/out/calib-ko-balanced.json",
+    "--part",
+    "calib",
+    "--seeds",
+    "2042",
+    "--cells",
+    "ko:balanced"
+   ],
+   "elapsed_seconds": 79.8
+  },
+  {
+   "file": "calib-pl-balanced.json",
+   "sha256": "437c6bfb397add3d888e9789d141db2fe8018c456a6d769e963745e689f77cff",
+   "argv": [
+    "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/e3-repair-run2/out/calib-pl-balanced.json",
+    "--part",
+    "calib",
+    "--seeds",
+    "2042",
+    "--cells",
+    "pl:balanced"
+   ],
+   "elapsed_seconds": 79.5
+  },
+  {
+   "file": "calib-zh-balanced.json",
+   "sha256": "e08f89d3b273de858a41619f9563d05ee40b095be6c96de9d0b6cc52d77d0e39",
+   "argv": [
+    "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/e3-repair-run2/out/calib-zh-balanced.json",
+    "--part",
+    "calib",
+    "--seeds",
+    "2042",
+    "--cells",
+    "zh:balanced"
+   ],
+   "elapsed_seconds": 92.8
+  },
+  {
+   "file": "calib-zh-precision_heavy.json",
+   "sha256": "ed07ac873fe11391211b6827471c7c9a6e31d02d4376e9c2dcaf22025e005de2",
+   "argv": [
+    "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/e3-repair-run2/out/calib-zh-precision_heavy.json",
+    "--part",
+    "calib",
+    "--seeds",
+    "2042",
+    "--cells",
+    "zh:precision_heavy"
+   ],
+   "elapsed_seconds": 75.7
+  },
+  {
+   "file": "calib-zh-recall_heavy.json",
+   "sha256": "de00510fcaebf625cd58ce1a6ebfcece6b6b839cfeb4b0d63a32ce860f6f3744",
+   "argv": [
+    "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/e3-repair-run2/out/calib-zh-recall_heavy.json",
+    "--part",
+    "calib",
+    "--seeds",
+    "2042",
+    "--cells",
+    "zh:recall_heavy"
+   ],
+   "elapsed_seconds": 121.0
+  }
+ ]
+}

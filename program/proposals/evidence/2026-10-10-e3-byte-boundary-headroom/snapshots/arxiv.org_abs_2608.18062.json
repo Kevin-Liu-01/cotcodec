@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2608.18062",
+ "fetched_at": "2026-10-11T00:58:26Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41921,
+ "raw_sha256": "4910ea3da4e593420657fb76f3feb53488a1860f76e6e2c99abf8b594e57d6ff",
+ "raw_stored": false,
+ "extract": {
+  "title": "TokEval: A Tokenizer Evaluation Suite",
+  "authors": [
+   "Meister, Clara"
+  ],
+  "citation_date": "2026/08/18",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 18 Aug 2026 17:52:52 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 26 Aug 2026 17:36:25 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 9 Sep 2026 17:42:55 UTC"
+   }
+  ],
+  "abstract": "Language model tokenizers are typically selected with minimal evaluation, despite the fact that their design choices directly impact model capabilities. This can be partly attributed to a limited understanding of which tokenizer properties affect which aspects of downstream performance. We introduce TokEval, a framework of tokenizer evaluation metrics that goes beyond standard measures like fertility and compression rate to capture linguistically and structurally meaningful properties, e.g., UTF-8 character boundary integrity and digit place-value boundary alignment for mathematics. To validate whether these metrics are predictive of downstream model performance, we conduct controlled language model pretraining experiments, varying solely the tokenizers' training data mixture, pretokenization strategy, and training algorithm. We evaluate the resulting models on bits-per-byte (a tokenizer-agnostic version of perplexity) and several benchmarks, spanning linguistic understanding, mathematical reasoning, and code generation. Our experiments suggest that different intrinsic properties have different impacts on model abilities: information-theoretic metrics predict language modeling abilities (Spearman rho up to 0.80), while structure-sensitive metrics, such as those measuring digit and line-break handling, correlate with task accuracy. We hope TokEval enables more principled tokenizer evaluation, replacing pretraining sweeps with intrinsic measurement wherever the two agree.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ },
+ "snapshot_run": "run 2 (D68 repair)"
+}

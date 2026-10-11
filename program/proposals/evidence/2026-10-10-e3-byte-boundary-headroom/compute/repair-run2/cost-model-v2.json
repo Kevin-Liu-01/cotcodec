@@ -1,0 +1,98 @@
+{
+ "assumptions": {
+  "sentences_per_language": 2009,
+  "bytes_per_sentence_estimate": {
+   "eng_Latn": 130,
+   "cmn_Hans": 125,
+   "kor_Hang": 140,
+   "pol_Latn": 140
+  },
+  "english_words_per_sentence": 25,
+  "checkpoints": {
+   "cartesia-ai/hnet_2stage_XL": {
+    "params": 1600000000.0,
+    "encoder_fraction": 0.06
+   },
+   "cartesia-ai/hnet_2stage_XL_chinese": {
+    "params": 1755000000.0,
+    "encoder_fraction": 0.06
+   },
+   "cartesia-ai/hnet_1stage_XL": {
+    "params": 1300000000.0,
+    "encoder_fraction": 0.05
+   }
+  },
+  "effective_tflops_bf16": {
+   "central": 30.0,
+   "high": 20.0
+  },
+  "aligner_pairs_omnialign": 6327,
+  "aligner_pairs_binaryalign": 2309,
+  "binaryalign": {
+   "params": 280000000.0,
+   "tokens_per_pass": 90
+  },
+  "omnialign": {
+   "params": 305000000.0,
+   "tokens_per_pass": 80
+  },
+  "overhead_minutes": {
+   "container_start_and_env_check": {
+    "central": 3.0,
+    "high": 4.0
+   },
+   "per_checkpoint_load_and_kernel_jit": {
+    "central": 2.5,
+    "high": 4.0
+   },
+   "aligner_model_loads": {
+    "central": 1.5,
+    "high": 3.0
+   },
+   "hashing_and_writing": {
+    "central": 1.5,
+    "high": 2.0
+   }
+  },
+  "measured_on_host": "nothing: no H-Net or aligner throughput exists on this host"
+ },
+ "estimate": {
+  "central": {
+   "bytes": 1074815,
+   "hnet_flops": "5.724e+14",
+   "binaryalign_flops": "2.909e+15",
+   "omnialign_flops": "6.175e+14",
+   "compute_minutes": 2.28,
+   "overhead_minutes": 13.5,
+   "total_minutes": 15.78,
+   "gpu_hours_one_gpu": 0.263
+  },
+  "high": {
+   "bytes": 1612222,
+   "hnet_flops": "1.501e+16",
+   "binaryalign_flops": "4.364e+15",
+   "omnialign_flops": "6.175e+14",
+   "compute_minutes": 16.66,
+   "overhead_minutes": 21.0,
+   "total_minutes": 37.66,
+   "gpu_hours_one_gpu": 0.628
+  }
+ },
+ "caps": {
+  "smoke_job_cap_gpu_h": 0.2,
+  "smoke_job_scope": "one GPU: imports in the v2 overlay, weights_only loads of the three checkpoints, encoder-only stage-1 and stage-2 extraction of the 2-stage XL model on 64 synthetic byte strings (no FLORES text), the same extraction checked against a full upstream forward's boundary outputs on those strings, two runs bit-identical, a kill-and-resume of per-checkpoint files, and both aligners on 8 synthetic sentence pairs",
+  "probe_job_cap_gpu_h": 0.7,
+  "probe_cap_over_high_estimate": 1.115,
+  "probe_cap_rule": "cap >= 1.05 x high estimate: 0.7 >= 0.659",
+  "probe_cap_rule_met": true,
+  "sum_of_caps_gpu_h": 0.9,
+  "d22_counting": "sum of registered caps of every job whatever its outcome; the overlay build and the downloads are host CPU jobs (0 GPU-h); segmentation, parsing and scoring run on CPU (0 GPU-h)",
+  "threshold_gpu_h": 8.0,
+  "under_threshold": true
+ },
+ "cpu_analysis_estimate": {
+  "segmentation_and_parsing": "spaCy small pipelines on 2,009 sentences x 4 languages: minutes on one core",
+  "scoring": "allowed pairs about 7 ms, floor (64 draws) about 6 ms per sentence and aligner on the development Mac (S1v2, measured under load); 6,027 pairs x 2 aligners x (7 + 6) ms plus about 20 systems x 1 ms: under 5 CPU-minutes",
+  "bootstrap": "B = 2,000 document-cluster resamples of per-sentence counts: seconds"
+ }
+}

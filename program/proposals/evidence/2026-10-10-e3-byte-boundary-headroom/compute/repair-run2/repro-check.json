@@ -1,0 +1,11 @@
+{
+ "check": "rerun of OC condition seed 43, AER 0.085/0.05, c 0, with the final instrument_sim_v2.py and e3_estimator_v2.py, 3 replicates",
+ "compared_values": 108,
+ "identical": true,
+ "S_true_identical": true,
+ "agreement_identical": true,
+ "first_diffs": [],
+ "rerun_output_sha256": "fb49bd99bfaddef65849b782dcbe9b4854ed2348a8f8665e0e8247aee3a66393",
+ "final_estimator_sha256": "eaabedba3bd3bc1fe18e24ff4c995e50947c16d5d5ba1cdc8be4e050d1bd2a70",
+ "final_sim_sha256": "fc25f1b8d075543ba59df0efcc451c29f61c1672630821ef229ac218c584978e"
+}
