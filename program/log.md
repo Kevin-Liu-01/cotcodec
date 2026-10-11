@@ -5026,3 +5026,41 @@ they say so.)
 - Open before the freeze: G-E4 (CPU development smoke of E's lane on the host), G-E5 (the GLMM
   on E's shape in the pinned container), G-E6 (fresh pre-freeze audit) and the program's
   sign-off decision.
+
+## 2026-10-11 — Q2 successor E `q2-stage1-successor-e-v1`: first pre-freeze audit's items fixed (DRAFT, not frozen; branch `stage0/q2-successor-e`, not merged)
+
+- Single owner, CPU only; host read-only (job 1200, R04, was running). `main` at `746d60d2`
+  (ledger row 18, D81, D82) merged into the branch first (`23f00f4c`; only `program/log.md`
+  conflicted). Fixes in `acb886c5`; evidence regenerated from it, clean.
+- B1: section 9 now states what D82 found: three gold-defect tasks in E's primary set
+  (`5c1a6c3d`, `881deb30`, `8e116af7`; none in S1a's base or flagged list) and three
+  label-contradicted z-order candidates, all on `5c1a6c3d`, that the corrected outcome scores
+  as passing. New D82 gold-defect sensitivity: every primary reading on the 110 other tasks,
+  raw and corrected (plan field `gold_defect_tasks_d82`; `analysis.report`). S1a's seven
+  flagged tasks stay the flagged set. No primary set, rule or DR changes. Section 21 item 14,
+  disclosure 11.
+- B2: section 25 step 1 merges `main` again after the sign-off decision and freezes on the
+  merged tree (E's row after `main`'s last, row 19 as of `746d60d2`). New prereg tests: the
+  section 21 id must be a decision heading naming the registration whose entry signs items
+  1-14; the ledger must hold R04's row and a frozen E row must follow it. Rehearsed on a
+  scratch export: the freeze is accepted as row 19 and passes with a valid id; a nonexistent id
+  (D83) and a freeze on the pre-merge 17-row ledger each fail their test. Real ledger untouched
+  (18 rows).
+- B3 open: G-E4 (CPU development smoke), G-E5 (GLMM on E's shape), G-E6 (a fresh audit that
+  finds nothing blocking) and the program's sign-off decision. G-E4 needs a quiet host (D80).
+- Non-blocking: the session gap is 12 h plus a 5-minute margin, and a GPU job with no final
+  Slurm state counts its start plus its limit as its end (`lane.job_end`), so both D57 (ii)
+  readings hold; G-E4's draft-only sentence dated, with a test refusing draft-only wording;
+  section 18 says incomplete readings are registered readings under the label, with no power
+  claimed; L = 113 s disclosed as an assumption, with the p99 margins; section 23 pins the GPU
+  container, overlay and analysis infrastructure, and a test checks E's import closure; the
+  `e` purpose's first host run (E-9B-E1) disclosed; section 11 states that the R = 1 label
+  permutation is the exact per-cell sign flip. The review log (section 25) records audit 1
+  with every item's disposition.
+- Plan re-rendered: `plan_sha256` `4e7298a7...`, file `12bded25...`; tasks, orders, caps and
+  engine unchanged. `cap-sufficiency.json` and `analysis-identity.json` regenerated at
+  `acb886c5`: identical to the first outputs but for provenance (and the plan digest input).
+- Tests: E 62 passed on the draft (`test_q2_stage1e.py` 46, `test_q2_stage1e_prereg.py` 16);
+  60 passed and 2 skipped on the frozen rehearsal tree. S1a's and the design study's suites
+  (15 files): 310 passed, 3 skipped. (The earlier report of 293 passed and 4 skipped for these
+  files was wrong; audit 1 found the same 310/3.)

@@ -102,16 +102,16 @@
  "inputs": {
   "program/evidence/2026-10-10/q2-design-study/cost-model.json": "36887d3c13b9f4b0809b27ae4f6b825cab80dd824be5f0621bd74156d22346a9",
   "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
-  "program/evidence/2026-10-11/q2-stage1-successor-e/plan/plan-e.json": "e37a3d127d67e81c8b55f052c2fbc05eb62884d1b220a5514e86a17a86b4d322"
+  "program/evidence/2026-10-11/q2-stage1-successor-e/plan/plan-e.json": "12bded251c08755a6b713e8f34f3f327b46e788d55904f2b7118b97675294de8"
  },
  "method": "Do E's per-job caps hold every slot before the GPU job's USR1? (CPU only, seeded.)\n\nDR0 fires when an E job ends without completing its slots, and every E job's slots are the\nwhole task set (no fill rule), so a cap that is too tight stops E. This check simulates the\nlane's continuous dispatch (S1a section 5.6: V = 20 workers, each takes the next queued slot\nas soon as its previous VM is gone; a slot lost to infrastructure on its first attempt is\nqueued once more) for each E job in its registered order (``plan-e.json``), with slot\noccupancies resampled from S1a's realized slots for the same (size, task, harness) (four\nper cell: two sessions x two reruns, ``a1.jsonl``). The job starts at the longest S1a\nstart-up (Slurm start to first dispatch) and must finish its last slot before its USR1\npoint, the cap minus 180 s. Scenarios: S1a's slots as measured; every slot 10% and 20%\nlonger; and 5% of each (size, harness) cell's first attempts lost at full length and\nre-queued (the most DR0 tolerates).\n\nThe dispatch model is checked first on S1a's own four A1 jobs: replaying each job's realized\ndispatch order with its realized slot occupancies must reproduce its realized span from the\nfirst dispatch to the last teardown.\n\nUsage, from the repository root::\n\n    python program/evidence/2026-10-11/q2-stage1-successor-e/cap_sufficiency.py --out OUT.json\n",
  "provenance": {
   "argv": [
    "program/evidence/2026-10-11/q2-stage1-successor-e/cap_sufficiency.py",
    "--out",
-   "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2e-evidence/cap-sufficiency.json"
+   "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2e/cap-sufficiency.json"
   ],
-  "git_head": "29a25b5de9e1d4f69ec04e29f1634a37d5cd0a05",
+  "git_head": "acb886c5374c5eb24b82448f58de48052fb6a769",
   "numpy": "2.5.2",
   "python": "3.13.14",
   "tree_dirty": false
