@@ -119,7 +119,8 @@ def summarize(run_dir: Path, pool: dict[str, Any] | None = None) -> dict[str, An
         if rec.get("slot") not in latest or attempt > latest[rec["slot"]][0]:
             latest[rec["slot"]] = (attempt, probe.parent, rec)
     rows = [slot_row(rec, titles.get(rec.get("task_id", "")[:8], []))
-            for _, _, rec in latest.values() if rec.get("kind", "capture") == "capture"]  # fmt: skip
+            for _, _, rec in latest.values()
+            if rec.get("kind", "capture") == "capture"]  # fmt: skip
     golds = sorted(({"slot": rec.get("slot"), "task": rec.get("task_id", "")[:8],
                      "cell": rec.get("cell"), "status": rec.get("status"),
                      "infrastructure_type": rec.get("infrastructure_type"),

@@ -375,7 +375,8 @@ class S2Lane(s1a.Lane):
         return {"schema": "s2v4-vm-probe-v1", "experiment_id": EXPERIMENT_ID,
                 "lane": self.m["name"], "purpose": self.m["purpose"], "slot": slot.id,
                 "task_id": d["task_id"], "cell": d["cell"], "block": d["block"],
-                "kind": d.get("kind", "capture"), "attempt": slot.attempt, "score": None}  # fmt: skip
+                "kind": d.get("kind", "capture"), "attempt": slot.attempt,
+                "score": None}  # fmt: skip
 
     def loss(self, slot: s1a.Slot, kind: str, detail: str) -> dict[str, Any]:
         return {**self.base_record(slot), "status": "infrastructure", "infrastructure_type": kind,
@@ -447,7 +448,8 @@ def submit(manifest_path: Path, source_dir: Path, dry_run: bool) -> dict[str, An
 
 
 def render(base: Mapping[str, Any], tasks: Sequence[str], cells: Sequence[str],
-           reps: int = 1, reps_by_cell: Mapping[str, int] | None = None) -> dict[str, Any]:  # fmt: skip
+           reps: int = 1,
+           reps_by_cell: Mapping[str, int] | None = None) -> dict[str, Any]:  # fmt: skip
     """Slots for every (task, cell, rep), blocked by task so a task's cells run together;
     ``reps_by_cell`` overrides ``reps`` for a cell (the A/A replicates E2, ER2)."""
     m = json.loads(json.dumps(base))

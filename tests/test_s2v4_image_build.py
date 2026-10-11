@@ -34,7 +34,8 @@ def test_selector_is_the_pilot_selector_read_last(cell):
     text = B.selector_xcd(cell)
     head, _, rest = text.partition(B.SELECTOR_DEPENDENCIES)
     assert head == B.XCD_HEAD and rest.startswith("<oor:component-data")
-    assert '<dependency file="main"/>' in text and '<dependency file="ctl_ar" optional="true"/>' in text
+    assert '<dependency file="main"/>' in text
+    assert '<dependency file="ctl_ar" optional="true"/>' in text
 
 
 def test_selector_depends_on_every_other_layer_file():
@@ -320,12 +321,12 @@ def test_pins_from_a_build_record():
 def test_images_json_is_the_committed_build_records_pin_set():
     import json
 
-    rec = json.loads((ROOT / "program/evidence/2026-10-11/s2v4-image/image-build-1199/build-record.json")
-                     .read_text())  # fmt: skip
+    build = ROOT / "program/evidence/2026-10-11/s2v4-image/image-build-1199"
+    rec = json.loads((build / "build-record.json").read_text())
     pins = json.loads((ROOT / "harness/s2_locale/images.json").read_text())
     assert pins == B.pins_from_record(rec, pins["build"]["dir"])
     assert set(pins["cells"]) == set(B.CELLS)
-    for cell, r in rec["cells"].items():
+    for r in rec["cells"].values():
         assert r["changed_blocks"]["ok"] and r["changed_blocks"]["counts"]["unexplained"] == 0
         assert r["fsck"]["findings"] == rec["fsck_certified"]["findings"]
     assert rec["install"]["changed_blocks"]["ok"]

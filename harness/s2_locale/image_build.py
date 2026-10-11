@@ -612,7 +612,9 @@ def run(argv: Sequence[str], timeout: float = 3600, check: bool = True,
         **kw: Any) -> subprocess.CompletedProcess:  # fmt: skip
     proc = subprocess.run(list(argv), capture_output=True, timeout=timeout, **kw)
     if check and proc.returncode != 0:
-        err = proc.stderr.decode(errors="replace") if isinstance(proc.stderr, bytes) else proc.stderr
+        err = proc.stderr
+        if isinstance(err, bytes):
+            err = err.decode(errors="replace")
         raise BuildError(f"{argv[0]} {argv[1] if len(argv) > 1 else ''} failed "
                          f"({proc.returncode}): {err[-800:]}")  # fmt: skip
     return proc
@@ -875,7 +877,8 @@ def build_cell(cell: str, base_raw: Path, work: Path, out: Path, offset: int, le
     applied = apply_plan(img, plan, work / f"stage-{cell}")
     fsck = img.fsck()
     if not fsck_same(fsck, baseline or {"findings": []}):
-        raise BuildError(f"cell {cell}: e2fsck -fn differs from the baseline: {fsck['findings'][:5]}")
+        raise BuildError(f"cell {cell}: e2fsck -fn differs from the baseline: "
+                         f"{fsck['findings'][:5]}")
     verified = verify_plan(img, plan, work / f"readback-{cell}")
     classified = diff_against(img, base_raw, length, layout, verified["manifest"],
                               [e.ino for e in removed if e])  # fmt: skip
@@ -1018,7 +1021,8 @@ def selftest(work: Path) -> dict[str, Any]:
     with open(cert, "wb") as f:
         f.truncate(offset + length + (1 << 20))
     run(["mke2fs", "-q", "-F", "-t", "ext4", "-b", "4096", "-I", "256", "-O",
-         "metadata_csum,64bit", "-E", f"offset={offset}", str(cert), f"{length >> 10}k"])  # fmt: skip
+         "metadata_csum,64bit", "-E", f"offset={offset}", str(cert),
+         f"{length >> 10}k"])  # fmt: skip
     seed = Image(cert, offset)
     tb_a = ('<toolbar:toolbar><toolbar:toolbaritem xlink:href=".uno:A"/>'
             '<toolbar:toolbaritem xlink:href=".uno:B"/><toolbar:toolbarseparator/>'
@@ -1125,7 +1129,8 @@ def selftest(work: Path) -> dict[str, Any]:
                         if k.startswith(("refuses", "fsck", "base")))
                     and all(c["fsck"] and c["diff_ok"] for c in cells.values())
                     and cells["ER"].get("tamper_flagged") is True
-                    and cells["PL"]["rewritten"] == 1 and cells["ER"]["rewritten"] == 0)  # fmt: skip
+                    and cells["PL"]["rewritten"] == 1
+                    and cells["ER"]["rewritten"] == 0)  # fmt: skip
     shutil.rmtree(work, ignore_errors=True)
     return checks
 

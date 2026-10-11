@@ -361,7 +361,8 @@ def test_gold_wrapper_config_and_record():
     from harness.s2_locale import vm_gold as G
 
     row = _gold_row()
-    cfg = {"lane": "l", "purpose": "development", "slot": "12382c62:E:g1", "task_id": row["task_id"],
+    cfg = {"lane": "l", "purpose": "development", "slot": "12382c62:E:g1",
+           "task_id": row["task_id"],
            "cell": "E", "block": "t000", "rep": 1, "attempt": 1, "image_sha256": "e" * 64,
            "selector_sha256": SEL["E"], "guest_ip": "20.20.20.21", "server_port": 5000,
            "osworld_dir": "/inputs/OSWorld", "settle_after_reset_s": 60, "settle_before_eval_s": 20,

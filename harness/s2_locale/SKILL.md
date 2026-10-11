@@ -27,10 +27,13 @@ packages inside real VMs.
   `vm_lane.py` refuses any other image.
 - `vm_lane.py` + `infra/slurm/host-single-node/s2v4-vm.sbatch`: S1a's lane with a per-slot cell image
   (only `vm.qcow2` changes per slot); `vm_probe.py` runs in the episode container (setup, renders,
-  accessibility tree, keyboard, the task's postconfig and checker); `guest/s2_guest.py` is its
-  read-only guest helper.
+  accessibility tree, keyboard, the task's postconfig and checker); `vm_gold.py` runs a gold slot
+  (the K2 injection executor, unedited, then the image check); `guest/s2_guest.py` is their
+  read-only guest helper; `smoke_summary.py` summarizes a development run (masked pixel
+  differences, chrome language and direction, saves, verdicts).
 - `k0_v4.py`: the K0 admission rule exactly as the registration's committed section states it
-  (`tests/test_s2v4_registration.py` pins that section's hash).
+  (`tests/test_s2v4_registration.py` pins that section's hash); `k0_inputs.py` turns lane records
+  into its admission inputs (the instrument checks still need the oracle's VM adapter).
 
 ## Patterns to follow / invariants
 

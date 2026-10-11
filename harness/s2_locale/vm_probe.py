@@ -246,8 +246,8 @@ class Probe:
 
     def facts(self, tag: str) -> dict[str, Any]:
         try:
-            out = self.guest.run_script(GUEST_SCRIPT.read_text(encoding="utf-8"),
-                                        ["facts", json.dumps({"selector": SELECTOR_PATH})])  # fmt: skip
+            args = ["facts", json.dumps({"selector": SELECTOR_PATH})]
+            out = self.guest.run_script(GUEST_SCRIPT.read_text(encoding="utf-8"), args)
         except Exception as exc:  # noqa: BLE001 - a guest that cannot answer is infrastructure
             raise ProbeFailure(f"facts {tag}", f"{type(exc).__name__}: {exc}") from exc
         out.pop("_elapsed_s", None)
@@ -306,8 +306,8 @@ class Probe:
             boot = self.facts("boot")
             self.record["facts_boot"] = boot
             if boot.get("selector_sha256") != self.cfg.selector_sha256:
-                raise ProbeFailure("image_check", f"selector {boot.get('selector_sha256')} is "
-                                                  f"not the cell's {self.cfg.selector_sha256}")  # fmt: skip
+                seen, want = boot.get("selector_sha256"), self.cfg.selector_sha256
+                raise ProbeFailure("image_check", f"selector {seen} is not the cell's {want}")
             self.progress("reset_task")
             t = self.clock()
             try:
@@ -359,8 +359,9 @@ class Probe:
             kind = getattr(exc, "kind", None)
             if kind is not None:
                 kind = self._runner.restart_behind(exc)
+            detail = str(getattr(exc, "detail", exc))[:500]
             self.record.update(status="infrastructure", infrastructure_type=kind or "runner_crash",
-                               infrastructure_detail=str(getattr(exc, "detail", exc))[:500])  # fmt: skip
+                               infrastructure_detail=detail)
             if kind is None:
                 self.record["traceback_tail"] = traceback.format_exc()[-1500:]
         finally:

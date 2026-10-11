@@ -41,7 +41,8 @@ def test_exclusions(edits, reason):
 
 
 def test_title_absent_in_e_is_not_an_exclusion_and_e_not_saved_is_not_required():
-    t = _task(E__titles=["Untitled 1 - LibreOffice Calc"], E__rewritten={"/home/user/x.xlsx": False},
+    t = _task(E__titles=["Untitled 1 - LibreOffice Calc"],
+              E__rewritten={"/home/user/x.xlsx": False},
               A__titles=[], ER__rewritten={})
     assert K.admit(t)["status"] == "admitted"
 
@@ -63,7 +64,8 @@ def _metrics(**edits):
         "o5_block_detected": [True] * 100, "pd_detected": {t: True for t in K.PD_VISIBLE_DEV},
         "e_vs_s": [0] * 100, "e_vs_e2": [0] * 99 + [400], "ad_vs_ar": [28] * 100,
         "aa_dev": [0] * 17, "o1_text_pairs": [True] * 200, "o4_parents": [True] * 900,
-        "o3_shift_detected": [True] * 95 + [False] * 5, "o2_swap_detected": [True] * 89 + [False] * 11,
+        "o3_shift_detected": [True] * 95 + [False] * 5,
+        "o2_swap_detected": [True] * 89 + [False] * 11,
     }
     m.update(edits)
     return m
@@ -103,13 +105,15 @@ def test_admission_inputs_from_the_dev_smoke_records():
     from harness.s2_locale import k0_inputs as I
 
     root = Path(__file__).resolve().parents[1]
-    records = I.load_records([root / "program/evidence/2026-10-11/s2v4-image/smoke-1197/probes.jsonl"])
+    smoke = root / "program/evidence/2026-10-11/s2v4-image/smoke-1197"
+    records = I.load_records([smoke / "probes.jsonl"])
     pool = json.loads((root / "program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/"
                        "compute/pool/pool-v3.json").read_text())  # fmt: skip
     tasks = I.tasks_from_records(records, I.strict_titles(pool))
     assert len(tasks) == 3 and all(set(t["cells"]) == set(K.ADMISSION_CELLS) for t in tasks)
     e = tasks[0]["cells"]["E"]
-    assert e["observed"] and e["titles"] and e["donothing"] == "fail" and all(e["rewritten"].values())
+    assert e["observed"] and e["titles"] and e["donothing"] == "fail"
+    assert all(e["rewritten"].values())
     # smoke 1197 ran no gold slots: every task lacks a passing-side control there
     assert [r["status"] for r in I.admission(records, pool)] == ["runnable"] * 3
 
@@ -128,6 +132,7 @@ def test_admission_inputs_setup_failure_and_gold():
     rows += [rec(c, "gold", status="probed", verdict="pass") for c in K.ADMISSION_CELLS]
     assert I.admission(rows, {"tasks": []})[0]["status"] == "admitted"
     rows[1] = rec("A", status="infrastructure", infrastructure_type="probe:reset_task")
-    rows.append(rec("A", attempt=2, status="infrastructure", infrastructure_type="probe:reset_task"))
+    rows.append(rec("A", attempt=2, status="infrastructure",
+                    infrastructure_type="probe:reset_task"))
     out = I.admission(rows, {"tasks": []})[0]
     assert out["status"] == "excluded" and "A1:A:setup_failed" in out["reasons"]

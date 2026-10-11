@@ -298,7 +298,8 @@ def fetch(
             pkg["launchpad_matches"] = (lp.get("sha256") == entry["sha256"]
                                         and int(lp.get("size") or -1) == entry["size"])  # fmt: skip
             if not pkg["launchpad_matches"]:
-                raise FetchError(f"{filename}: Launchpad reports {lp.get('sha256')}/{lp.get('size')}")
+                raise FetchError(f"{filename}: Launchpad reports "
+                                 f"{lp.get('sha256')}/{lp.get('size')}")
         record["packages"].append(pkg)
     record["t_end_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     record["ok"] = True
