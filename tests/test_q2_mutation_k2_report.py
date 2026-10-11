@@ -196,6 +196,11 @@ def test_report_is_withheld_when_the_gate_fails_or_for_development() -> None:
         row["purpose"] = "development"
     dev_result = report.build(**dev)
     assert "analysis_report" not in dev_result and dev_result["gate"]["max_excluded"] == 1
+    picked = {**dev, "records": [r for r in dev["records"] if r["pair"] in (1, 3)]}
+    subset = report.build(**picked, only=["k2:001", "k2:003"])
+    assert [p["pair"] for p in subset["pairs"]] == [1, 3]
+    with pytest.raises(report.ReportError, match="every registered pair"):
+        report.build(**synthetic(), only=["k2:001"])
 
 
 def test_report_refuses_inconsistent_records() -> None:

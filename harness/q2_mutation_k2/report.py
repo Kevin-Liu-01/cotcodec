@@ -113,8 +113,12 @@ def build(
     verdicts: Sequence[Mapping[str, Any]],
     nondeterministic: Sequence[str],
     runs_per_pair: int = rules.RUNS_PER_PAIR,
+    only: Sequence[str] | None = None,
 ) -> dict[str, Any]:
-    """Every pair's reading, the gate, the outcome and the analysis report (if written)."""
+    """Every pair's reading, the gate, the outcome and the analysis report (if written).
+
+    ``only`` (``set:pair`` ids, e.g. ``k2:004``) restricts a development report to the pairs
+    a development job ran; the registered job's report reads every pair."""
     purposes = {str(r.get("purpose")) for r in records} | {str(r.get("purpose")) for r in receipts}
     if len(purposes) != 1:
         raise ReportError(f"records and receipts must share one purpose, got {sorted(purposes)}")
@@ -123,6 +127,13 @@ def build(
     unstable = set(nondeterministic)
     groups = group_records(records)
     pairs = pairs_of(sample, k2c)
+    if only:
+        if purpose == "k2":
+            raise ReportError("the k2 job's report reads every registered pair")
+        wanted = set(only)
+        pairs = [p for p in pairs if f"{p['set']}:{int(p['pair']):03d}" in wanted]
+        if len(pairs) != len(wanted):
+            raise ReportError(f"--only names pairs outside the sample and list: {sorted(wanted)}")
     known = {(p["set"], int(p["pair"])) for p in pairs}
     stray = sorted({(s, p) for s, p, _ in groups} - known)
     if stray:
@@ -356,6 +367,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--notes-summary", type=Path, required=True)
     parser.add_argument("--k2c-sha256", default=None, help="the registered K2-C list digest")
     parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument("--only", default=None, help="set:pair ids (development reports)")
     args = parser.parse_args(argv)
     inputs = load_inputs(args)
     digests = inputs.pop("digests")
@@ -366,7 +378,7 @@ def main(argv: list[str] | None = None) -> int:
                 raise ReportError(f"{key} is not the registered input ({digests[key]})")
         if not args.k2c or digests["k2c"] != args.k2c_sha256:
             raise ReportError("the k2 job's report reads the registered K2-C list")
-    result = build(**inputs)
+    result = build(**inputs, only=args.only.split(",") if args.only else None)
     args.out_dir.mkdir(parents=True, exist_ok=True)
     with (args.out_dir / "k2-pairs.jsonl").open("w", encoding="utf-8") as handle:
         for row in result["pairs"]:
