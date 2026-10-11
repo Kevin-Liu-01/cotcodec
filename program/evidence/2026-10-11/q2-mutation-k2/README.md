@@ -22,3 +22,31 @@ result: the registered K2 job runs only after the addendum is frozen.
 
 Development jobs (dev split only, exploratory, never evidence) are recorded
 below as they run.
+
+## Development job 1113 (`k2-dev-smoke-v1`, executor `60ed1b0`; void)
+
+Six dev pairs (`k2:000`, `002`, `004`, `034`, `037`, `k2c:005`), two runs
+each, V = 3, CPU-only (16 CPUs; no GRES). Cancelled after four records
+(`dev-smoke-v1-job1113/k2-runs.jsonl`, `manifest.json`, `preflight.txt`):
+
+- **Defect found.** The plan's `kill_process` sent SIGTERM to LibreOffice. That
+  leaves the open document in LibreOffice's recovery list
+  (`registrymodifications.xcu`, `Recovery/RecoveryList`), so the reopened
+  candidate came up behind a "LibreOffice 7.3 Document Recovery" dialog, and the
+  guest server's `/setup/open_file` returned only after 4 to 6 minutes.
+  `k2:000:r1` and `k2:004:r1` were excluded at the pre-postconfig window check
+  (`executor:pre_postconfig`, cause (4)), as designed.
+- **Manual probe (contaminates one run).** While `k2:002:r1`'s executor waited
+  on the open call, a probe script was run by hand in that VM (through
+  `docker exec` into the run's own episode container and the guest's
+  `/execute`): it killed LibreOffice, cleared the recovery list, opened the
+  document, quit it with Ctrl+Q, reopened it (no dialog), and finally signalled
+  it. The executor then went on with the probe's LibreOffice instance, so that
+  run's `scored`/`pass` record is void. The probe's readings: one recovery-list
+  entry exists while a document is open; after Ctrl+Q, LibreOffice exited in
+  0.5 s and the reopened document showed no dialog.
+- `k2:034:r1` (a text target with no save) ran as designed: `fail` in the VM,
+  `fail` offline.
+- Fix (`b5a5247`): `kill_process` asks LibreOffice to quit (Ctrl+Q in one of
+  its windows) before any signal; executor setup steps are bounded at 180 s;
+  every step prints a progress line to the run's container log.
