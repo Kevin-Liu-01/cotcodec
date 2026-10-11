@@ -63,7 +63,7 @@ docs = {
                      "and do-nothing states. Falsifiers P1-P8 and kill criteria K0-K9, reachable. Simulation of the registered estimators "
                      "(power-v4.py): sharp-null test corrected (0.048 at the null), census SMALL 0.97 at the null, PRESENT_HARM 0.86-0.96 at "
                      "a 15% harm, MIRROR_SPECIFIC 0.023-0.027 under direction-free scenarios. Admission by intention to treat."),
-        "disclosed_limits": ["the placebo is a smaller rearrangement than mirroring (median displacement 264 px against 996 px)",
+        "disclosed_limits": ["the placebo is a smaller rearrangement than mirroring (median displacement 271 px against 991 px)",
                              "MIRROR_SPECIFIC power 0.37-0.56 at a mirror-only 15% harm with n_pl = 2",
                              "the checker-invariance operationalization was chosen after the committed proxy's K0 result"],
         "remediation": "Rerun Phase 0 on the derived image with the shipped catalogs before the freeze.",

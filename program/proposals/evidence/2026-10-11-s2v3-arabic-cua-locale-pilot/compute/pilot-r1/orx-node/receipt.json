@@ -1,0 +1,265 @@
+{
+ "doctor": "s2v3-phase0-render-oracle",
+ "status": "PHASE0_K0_FAIL",
+ "evidence_grade": "CPU_LANE_CONTAINER_CAPTURE: the certified VM's LibreOffice 7.3.7.2 userland in a container (Xvfb, openbox) with generated pseudo-Arabic and tagged catalogs; not the derived image, not the VM lane, not the shipped Arabic catalogs. K1 (the D53 delta certification) is not decided here.",
+ "cases": {
+  "c01_manifest": {
+   "files": 3049,
+   "mismatched": [],
+   "missing": [],
+   "n_mismatched": 0,
+   "n_missing": 0,
+   "unlisted": [
+    "capture-record.json"
+   ],
+   "pass": true,
+   "code_sha256_capture_job": {
+    "capture.py": "6781c860f0ef0e8ff5a21e7f045f36ea47da19f575519be217bca52ca2614f7c",
+    "catalog.py": "9b95de047690570766e458fccce16ba90a8d0123b13cf3dc99d1f9e37fce57bf",
+    "reachability.py": "00e106f6003a9f1ef9b9ca4cdbd59fbf1145c5608c6c67e37b57a7a094da0e9b"
+   },
+   "code_sha256_checkout": {
+    "capture.py": "6781c860f0ef0e8ff5a21e7f045f36ea47da19f575519be217bca52ca2614f7c",
+    "catalog.py": "9b95de047690570766e458fccce16ba90a8d0123b13cf3dc99d1f9e37fce57bf",
+    "reachability.py": "00e106f6003a9f1ef9b9ca4cdbd59fbf1145c5608c6c67e37b57a7a094da0e9b"
+   },
+   "code_matches": true,
+   "status": "PASS"
+  },
+  "c02_gate_semantics": {
+   "o3_reflected_accepted": true,
+   "o3_shifted_rejected": true,
+   "o2_reordered_rejected": true,
+   "o2_reflected_run_identical": true,
+   "o5_same": "pass",
+   "o5_flipped": "fail_mirrored",
+   "o5_changed": "fail_changed",
+   "pass": true,
+   "status": "PASS"
+  },
+  "c03_calibration": {
+   "dev_tasks": 17,
+   "dy_vcl": 23,
+   "dy_vcl_by_dev_task": [
+    23,
+    27,
+    23,
+    25,
+    23,
+    23,
+    25,
+    25,
+    23,
+    23,
+    25,
+    25,
+    27,
+    25,
+    23,
+    25,
+    23
+   ],
+   "aa_elements": 2065,
+   "aa_worst_element_mismatch": 0.0,
+   "translation_elements": 1011,
+   "translation_p95_mismatch": 0.0,
+   "tol2": 0.02,
+   "reflection_dx_elements": 1809,
+   "tol3": 20,
+   "aa_full_diff_pixels": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol6": 50,
+   "aa_doc_diff_pixels": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol5": 50,
+   "pass": true,
+   "status": "PASS"
+  },
+  "c04_positive_controls": {
+   "pass": false,
+   "synthetic_by_app": {
+    "libreoffice_calc": {
+     "o3_shift_detected_n": 46,
+     "o3_shift_detected": 43,
+     "o2_reorder_detected_n": 46,
+     "o2_reorder_detected": 46,
+     "o5_doc_detected_n": 46,
+     "o5_doc_detected": 46
+    },
+    "libreoffice_impress": {
+     "o3_shift_detected_n": 40,
+     "o3_shift_detected": 39,
+     "o2_reorder_detected_n": 40,
+     "o2_reorder_detected": 29,
+     "o5_doc_detected_n": 40,
+     "o5_doc_detected": 40
+    },
+    "libreoffice_writer": {
+     "o3_shift_detected_n": 20,
+     "o3_shift_detected": 19,
+     "o2_reorder_detected_n": 20,
+     "o2_reorder_detected": 20,
+     "o5_doc_detected_n": 20,
+     "o5_doc_detected": 20
+    }
+   },
+   "in_app_document_plant_verdicts": {
+    "fail_changed": 15,
+    "pass": 2
+   },
+   "status": "FAIL"
+  },
+  "c05_o6_invisibility": {
+   "share": 1.0,
+   "n": 106,
+   "pass": true,
+   "status": "PASS"
+  },
+  "c06_o1_text_structure": {
+   "share": 1.0,
+   "n": 212,
+   "pass": true,
+   "status": "PASS"
+  },
+  "c07_o4_order": {
+   "share": 1.0,
+   "parents": 943,
+   "pass": true,
+   "status": "PASS"
+  },
+  "c08_p7_one_layout_treatment": {
+   "share": 1.0,
+   "n": 106,
+   "pass": true,
+   "status": "PASS"
+  },
+  "c09_aa_determinism": {
+   "share": 1.0,
+   "n": 106,
+   "pass": true,
+   "status": "PASS"
+  },
+  "c10_k0_admission": {
+   "admitted": 53,
+   "K_min": 62,
+   "excluded": 53,
+   "exclusion_reasons": {
+    "A5": 121,
+    "A4": 46,
+    "A2": 5
+   },
+   "pass": false,
+   "status": "FAIL"
+  },
+  "c11_coupled_string_plant": {
+   "dev_tasks": 17,
+   "flagged_by_o2": 17,
+   "tasks": [
+    "01b269ae",
+    "0e47de2a",
+    "12382c62",
+    "2b94c692",
+    "347ef137",
+    "4172ea6e",
+    "4ed5abd0",
+    "5cfb9197",
+    "6a33f9b9",
+    "6e99a1ad",
+    "936321ce",
+    "ac9bb6cb",
+    "af23762e",
+    "bf4e9888",
+    "d681960f",
+    "e4ef0baf",
+    "e528b65e"
+   ],
+   "pass": true,
+   "status": "PASS"
+  },
+  "c12_catalogs": {
+   "matched_length_all": true,
+   "mo_entries": 168616,
+   "registry_ar_values": 5580,
+   "arabic_chrome_share_median": 0.9333,
+   "arabic_chrome_share_min": 0.9057,
+   "tagged_covered_share_median": 0.9333,
+   "pass": true,
+   "status": "PASS"
+  },
+  "c13_checker_invariance_admission": {
+   "admitted": 105,
+   "K_min": 62,
+   "reasons": {
+    "A2' titles": 1
+   },
+   "admitted_by_app": {
+    "libreoffice_calc": 46,
+    "libreoffice_impress": 39,
+    "libreoffice_writer": 20
+   },
+   "verdict_rows": 1110,
+   "pass": true,
+   "in_committed_gate": false,
+   "status": "PASS"
+  }
+ },
+ "k0": "FAIL",
+ "admitted": 53,
+ "candidates": 106,
+ "admitted_checker_invariance": 105,
+ "records_out": "data/results/orx/s2v3-phase0-oracle-records.json",
+ "records_sha256": "bb8a0fe76e38d64b1c1f6ad90374d2d303d4adf8927c01caca52a830ca009fad",
+ "manifest_sha256": "7c0c7b421ec6eb41acacb6c46425370a955167c0c44655cc42138bbab6ca7b86",
+ "elapsed_seconds": 1896.9
+}

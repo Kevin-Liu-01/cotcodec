@@ -1,10 +1,10 @@
 {
  "schema_version": 1,
  "proposal": "program/proposals/2026-10-11-s2v3-arabic-cua-locale-pilot.md",
- "proposal_sha256": "77e80af02b118868a2fbe9c2dd577a5d640031f71f8feabd733d5481838b87d6",
+ "proposal_sha256": "e5f53151d9ae7343a789a1472581470bc55474567c15e467cba2a7d5e6712740",
  "draft_registration": {
   "path": "program/preregistrations/s2-arabic-cua-locale-v3.1.md",
-  "sha256": "64fdfbea31847283395c4f9bb961605ca2c1aa0aa79094d6062b33f8c634cb76",
+  "sha256": "f2a8478fa2733d1791cf49ee6e582b28cea6dc1239e23c0bacb86e58bedaf566",
   "experiment_id": "s2-arabic-cua-locale-v3.1",
   "status": "DRAFT, not frozen, no ledger row",
   "predecessor": {
@@ -201,7 +201,18 @@
    "artifact": "compute/pilot-r1/receipts/run-1131.json",
    "sha256": "9fcbcec08797071bd7dc850c853d5ff8729c493e4673c65c21bfa4c8372cab32"
   },
-  "orx_node": null,
+  "orx_node": {
+   "artifact": "compute/pilot-r1/orx-node/receipt.json",
+   "sha256": "21b8dbef6a23c757ff5ce4395980201df6d75dbd734bfa053564be81f9d3beea",
+   "log": {
+    "artifact": "compute/pilot-r1/orx-node/orx-run.log",
+    "sha256": "cf20e87b23310e58afb23bf2f52ce4383f2ece18c41601b73137d1ad60127daa"
+   },
+   "node_yaml": {
+    "artifact": "compute/pilot-r1/orx-node/node.yaml",
+    "sha256": "dc861da5f50b84d225cd7642f8a8f6d615e68ca9d76be06b336953137eb174f4"
+   }
+  },
   "phase0_pilot": {
    "sbatch": {
     "path": "infra/slurm/host-single-node/s2v3-pilot-cpu.sbatch",
@@ -222,7 +233,7 @@
     },
     {
      "path": "harness/s2_locale/phase0.py",
-     "sha256": "d7f5ddf7eebd7052f163b617ddd9b2026e46a60f63d747396e8fe4689e4152f2"
+     "sha256": "a15d8caffa16d953c5800e3e251f8d0c8d11d344937110897de0f61b6319c85e"
     },
     {
      "path": "harness/s2_locale/goldsave.py",
@@ -242,7 +253,7 @@
     },
     {
      "path": "scripts/run_s2v3_phase0_doctor.py",
-     "sha256": "cfac7d84a291591646af2b24e2efd28b049e2881cdb4f4ed77d4f485bb01df72"
+     "sha256": "ac89ba7400f869550660354254af6b8b374c9c7a3afa49a8513a8d443a81abc5"
     }
    ],
    "capture": [
@@ -569,7 +580,7 @@
     "files": [
      {
       "artifact": "compute/build-doctors-r1.py",
-      "sha256": "0d7a51b5a3498fada5ae6ef90fa4324bff3b63d8233e76afa10fd26e48ef5371"
+      "sha256": "fa689aea966656b238fa8ae1b279588c332ab82b38bcfeed53f3bde99e4e9045"
      },
      {
       "artifact": "compute/build-bundle-r1.py",
@@ -602,7 +613,7 @@
    "name": "Design",
    "status": "PASS",
    "artifact": "doctors-r1/design.json",
-   "sha256": "1e4f1a984ed3ad2ebf6d23f409680faec7014f70c4e7e402be53ff080e17cccb"
+   "sha256": "df7fe4314d1172c46ebe1919265bd8ee426d999a11c891c835eda9e5658ad876"
   },
   {
    "name": "Compute",
@@ -619,7 +630,7 @@
  ],
  "audit_log": null,
  "audit_log_status": "program/gauntlet/2026-10-11-s2v3-arabic-cua-locale-pilot.jsonl holds wave 1 (hash 8b0c6ef5...); this run's row is appended by the recorder after its reviewers score.",
- "evidence_root_sha256": "6d1c8da03a99995541d2e6704691deb8d5a4e69e6050676fd57db204a0db5978",
+ "evidence_root_sha256": "2a758e90e86b9c2c978ffa2b6efcee200c49a63d5ade3e5f70cc330e0c1a5f6a",
  "blind_discrimination_packet": {
   "proposal": {
    "artifact": "blind/paragraph-84279667.txt",

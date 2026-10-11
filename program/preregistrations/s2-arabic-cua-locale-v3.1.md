@@ -47,7 +47,7 @@ sharp-null variance and an admission rule that conditioned on how the treatment 
 | `ooSetupSystemLocale` pinned to en-US | Left at its default, the system locale, which is the same in every cell | smoke 1124: the pin changed Calc's default paper (A4 to Letter) in saved files against the stock cell |
 | `LANGUAGE=ar` for GTK (a second difference with no mechanism) | Dropped: the cells differ only in the selector file (and PL in its toolbar definitions) | capture 1131 |
 | Toolbars text-only in the container (broken icon-theme symlinks in the private copy) | Relative symlinks re-pointed; the VM's icon theme (Yaru) pinned identically in every cell including stock | capture 1131 worker records (12 symlinks) |
-| Oracle O2, O3, O6, controls not implemented; O3 on AT-SPI extents; O5 not discriminative | Implemented (`harness/s2_locale/oracle.py`): O1-O8 on pixel-located boxes (AT-SPI only in LTR cells, with the VCL coordinate offset estimated on the dev tasks), O2 as whole-run pixel identity, O5 by full-width alignment with a flipped comparison, O6 against a stock cell, planted controls in the application and synthetic plants on every task | orx node run «ORX_RUN» and Slurm 1132 |
+| Oracle O2, O3, O6, controls not implemented; O3 on AT-SPI extents; O5 not discriminative | Implemented (`harness/s2_locale/oracle.py`): O1-O8 on pixel-located boxes (AT-SPI only in LTR cells, with the VCL coordinate offset estimated on the dev tasks), O2 as whole-run pixel identity, O5 by full-width alignment with a flipped comparison, O6 against a stock cell, planted controls in the application and synthetic plants on every task | orx node run 9e78b49f and Slurm 1132 |
 | No tagged cell | Cell Q: LibreOffice's own KeyID UI language `qtz` tags every gettext string; registry labels tagged by a generated `registry_qtz.xcd` | capture 1131 |
 | Admission: O1-O7 pass in all four cells (conditions on how the treatment renders; discretionary exclusion or remedy) | Intention to treat: only agent-independent failures exclude; O2, O3, O5 and O8 are treatment descriptors and moderators; deterministic rules committed before the sweep (`harness/s2_locale/phase0.py`, commit `c8669d2`) | K0 below |
 | Census truth of D includes direction-free change; no comparator | A fifth Phase 1 cell, PL (placebo): the en-LTR interface with every toolbar's items in a fixed seeded order; P3 is read as a total effect with no mechanism; a mechanism label needs the population-frame excess of en-RTL over PL | simulated: false MIRROR_SPECIFIC 0.023-0.027 under direction-free scenarios |
@@ -225,7 +225,10 @@ application has its own interface switch).
   catalog in E and ER, cells PCL and PCR; bidi moves the colon in the mirrored VCL widget) and a planted
   document change (cell PD: ER with the first text run of the document changed before it opens), on
   the 17 dev tasks; synthetic plants on every task's ER screenshot (a widget shifted by tol3 + 8 px,
-  a text run with its halves swapped, an inverted 48 x 14 block in the document region).
+  a text run with its halves swapped, an inverted 48 x 14 block in the document region). Negative
+  controls, which must pass: the A/A replicates (E-E2 on every task, ER-ER2 on the dev tasks), the
+  stock cell against en-LTR (O6), the unplanted ER against PD's planted document, and the doctor's
+  synthetic fixtures (an exactly reflected widget, an unchanged document).
 - **P0.8 Source coverage (tagged cell Q).** UI language `qtz`, LibreOffice's KeyID locale: every
   gettext string renders as a five-character key, U+2016 and the English text, with no catalog;
   registry labels carry a generated `[r]` + U+2016 tag. (a) Visible chrome without a tag lies outside
@@ -292,7 +295,7 @@ metric container `sha256:2006c1a9...`; simulations in the project's research ima
 | 1139 | checker invariance, saves: 88 gold and 97 do-nothing jobs (106 tasks; 17 without a gold) x 6 cells (S, E, A, ER, AR, PL) through the checker-mutation study's GUI-faithful save stage | 1,110 saves, 0 save failures |
 | 1141 | checker invariance, scoring with the real OSWorld checkers (locked venv) | 1,110 verdicts; for every task and both controls the verdict is the same in all six cells (83 golds pass and 5 fail in every cell; 97 do-nothing states fail in every cell) |
 | 1142 | `power-v4.py` | the tables below (52.6 s) |
-| orx node «ORX_EXP» run «ORX_RUN» | `scripts/run_s2v3_phase0_doctor.py` over the committed manifest of 1131 and the verdicts of 1141 | «ORX_SUMMARY» |
+| orx node `c7bcde07` run `9e78b49f` | `scripts/run_s2v3_phase0_doctor.py` over the committed manifest of 1131 and the verdicts of 1141 | PHASE0_K0_FAIL; 11 of 13 cases pass (c04 planted controls and c10 the committed admission fail; c13, admission under checker invariance, passes with 105); `ORX_RESULT ... exit=0` in 1,897 s; every gate, admission and instrument verdict equals the host replicate 1132 (descriptors such as text-run identity differ by about one point through floating-point ties) |
 
 K0 as decided here:
 - Under the rules committed before the sweep (`harness/s2_locale/phase0.py` at `c8669d2`): **FAIL.**
@@ -318,13 +321,15 @@ K0 as decided here:
   elements within the mirror specification (tol3 = 20 px) of their reflection and locates 94% in
   their row (the rest have altered ink: RTL icon variants, compound widgets, clipped status-bar
   fields); the document is not mirrored (O5 passes for ER on 105 of 106 tasks; the flipped document
-  differs by at least 7,759 pixels on every task); text runs: 81% of E-ER runs are pixel-identical, the rest are
+  differs by at least 7,759 pixels on every task); text runs: 80% of E-ER runs are pixel-identical (81% in the host replicate), the rest are
   coupling-leak candidates (labels, sidebar list items) or clipped status-bar fields, for P0.4's
   remedy on the dev tasks; in 14 of 40 Impress tasks the Arabic interface changes the slide
   itself (O5 fails for A and AR): empty placeholders show localized prompt text, right-to-left;
   content leaks are localized default strings written on save (slide-master and notes-master
-  placeholder text in Impress, style names in Writer, header and footer defaults in Calc), none read
-  by a checker in any task (A4); the qtz cell leaves 2 named chrome elements per task untagged at
+  placeholder text in Impress, style names and generated style identifiers in Writer, header and
+  footer defaults in Calc), none changing a checker verdict in any task (A4); a checker that reads
+  style identifiers could be affected by an agent's own edits in Phase 1, which the per-task verdict
+  test cannot rule out; the qtz cell leaves 2 named chrome elements per task untagged at
   the median (1-10): names that are not catalog strings ("Menu", sheet names) and, in Impress, the
   welded GTK sidebar panel's labels, which GtkBuilder translates directly so LibreOffice's KeyID
   never sees them (the generated `.ui` catalog does render them in Arabic script); of the tagged
@@ -333,8 +338,10 @@ K0 as decided here:
 What the CPU lane decided toward K1 (P0.6): the keyboard map is `us` in every worker; the postconfig
 activation and save path works in every cell for every task (1,022 renders, 1,110 control saves);
 on the 17 dev tasks the keyboard edit probe (a Calc value and formula, a typed Writer line) saves
-identical files in en-RTL, the placebo and the en-LTR replicate, and in the Arabic cells differs only
-by localized defaults that no checker reads. Not decided: C1-C4, A1 at N = 1, A5, A2, A3, A6 and the
+identical files in en-RTL, the placebo and the en-LTR replicate; in the Arabic cells the typed content
+is the same and the files differ in localized style names, style identifiers (a Writer style id
+`FrameContents` saved as `Style9`) and default strings, none of which changes a checker verdict on any
+task's gold or do-nothing state. Not decided: C1-C4, A1 at N = 1, A5, A2, A3, A6 and the
 V = 20 rung, which run in the VM lane on the five cell overlays (about 44 VM-hours) after (a) Kevin
 approves the three package downloads, (b) the image-surgery script and the per-slot overlay lane
 change are written and reviewed, (c) a deviation of `q2-action-path-v2` is registered, and (d) the
@@ -354,7 +361,7 @@ the input path on each overlay (C1-C4, A1 at N = 1, A5), the harness layer (A2),
 - P1.2 Placebo cell PL: the en-LTR interface with the toolbar items in the fixed seeded order (P0.3),
   n_pl = 2 per task (one per harness). It is a direction-free rearrangement of the most-clicked chrome
   targets, smaller than mirroring: in the pilot it moved 53% of located chrome elements (mirroring:
-  all) by a median per-task mean of 264 px (mirroring: 996 px). It answers whether a mirror cost
+  all) by a median per-task mean of 271 px (mirroring: 991 px). It answers whether a mirror cost
   exceeds the agent's sensitivity to rearranging its toolbars, not to an equally large rearrangement.
 - Episodes: n = 4 per (task, cell) in the 2x2 (2 per harness) and 2 in PL. Total 18 K (1,908 at
   K = 106).
@@ -482,14 +489,17 @@ M1 in the non-inferiority sense, and both are fixed here before data.
 
 ## Reported regardless of outcome
 
-Phase 0: every gate item per task and cell; the leak inventory (O2), the coupling remedies and the
-content-leak list (P0.8); the RTL-defect inventory (O8); A/A tolerances; positive controls; the
-Arabic chrome share; functional A/A and config-invariance results; the mirror specification;
-moderator codings; the delta certification record; CPU time. Phase 1: per-task successes per cell
-and harness; D, T, I, Delta, M_ar, G with census and population intervals; R_D and R_T; the
-sharp-null test; the concentration guard; process metrics; moderator slopes; the en-cell reference
-against S1a; infrastructure losses and step-0 failures per cell; cost per cell; slot and batch per
-episode.
+Phase 0: every gate item per task and cell (A1-A4 and both admission verdicts: the committed proxy's
+and checker invariance); the instrument checks I1-I6 with the planted controls' detection by
+application; the leak inventory (P0.8b) with the parts and strings that leak; O2's coupling-leak
+candidates and any remedy; the RTL-defect inventory (O8); O3's fidelity per task; O5 per cell; A/A
+tolerances, the mirror specification and the VCL coordinate offset; the Arabic chrome share and the
+tagged cell's coverage; the placebo's displacement profile against mirroring's; config invariance;
+moderator codings; the delta certification record; CPU time. Phase 1: per-task successes per cell and
+harness; D, T, I, Delta, M_ar, G with census and population intervals; R_D and R_T; P and E_dir in both
+frames; the sharp-null test; the concentration guard; process metrics; moderator slopes; the en-cell
+reference against S1a; infrastructure losses and step-0 failures per cell; cost per cell; slot and
+batch per episode; D and T on all 106 candidates beside the admitted census.
 
 ## Statistics, sample sizes and simulation
 
