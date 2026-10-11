@@ -1,12 +1,13 @@
 # r04-checker-nuisance-invariance-v1: do OSWorld checker verdicts survive nuisance changes?
 
-**Status: DRAFT. Not frozen, no ledger row. The first pre-freeze audit (2026-10-11, at
-`4b2acf2`) found four blocking items, all fixed in this version (section 16).** Drafted on
-2026-10-11 by the single owner of R04 under decision D73 (iii), on branch
-`stage0/r04-nuisance`. A registered CPU study at 0 GPU-h: it runs only after a pre-freeze
-audit and the program owner's freeze (section 17); nothing here may be frozen by the agent
-that drafted it. Only dev-split smoke tests have run (section 15). Origin: the renewal
-dossier's `R04-nuisance-invariance` (`program/evidence/2026-10-11/question-renewal/`,
+**Status: DRAFT. Not frozen, no ledger row. Pre-freeze audit 1 (2026-10-11, at `4b2acf2`)
+found four blocking items and its re-audit (2026-10-11, at `84d0a549`) one more; all are
+fixed in this version (section 16).** Drafted on 2026-10-11 by the single owner of R04 under
+decision D73 (iii), on branch `stage0/r04-nuisance` (merged to `main` at `f7848a6d`, D77);
+the re-audit's fixes were made on branch `stage0/r04-fix2`. A registered CPU study at
+0 GPU-h: it runs only after a pre-freeze audit and the program owner's freeze (section 17);
+nothing here may be frozen by the agent that drafted it. Only dev-split smoke tests have
+run (section 15). Origin: the renewal dossier's `R04-nuisance-invariance` (`program/evidence/2026-10-11/question-renewal/`,
 `dossier.md` section 7, `slate.md` section 5, `verification.json` claims c012, c019, c021,
 c036, c040-c042, c066, c091, c092, c181, c183, c202), with the judges' defects repaired
 (section 16).
@@ -54,7 +55,8 @@ P1's frozen control verdicts. The parent registration (`q2-evaluator-mutation-v1
 10, K2) labels every offline result "offline harness, VM fidelity unverified" until a K2
 report exists, and takes a checker family with an unexplained in-VM difference out of its
 headline. Its executor and report are the K2 addendum, `q2-evaluator-mutation-v1-k2`
-(DRAFT on `stage0/q2-mutation-k2`, frozen separately; D73 (ii)). R04 follows the same rule:
+(merged to `main` at `4c8e6e13`; frozen and run separately under program authority,
+possibly before R04's freeze; D73 (ii), D77). R04 follows the same rule:
 
 - Every R04 reading and table carries the label "offline harness, VM fidelity unverified"
   (`analysis.py` writes it in `vm_fidelity`) until the K2 addendum's report
@@ -64,6 +66,11 @@ headline. Its executor and report are the K2 addendum, `q2-evaluator-mutation-v1
   every cell and arm reading, which are recomputed without them; the readings with them,
   and that family's discordances, are reported as exploratory (`k2_exploratory`). Both
   versions of the analysis are committed. An `INCOMPLETE` K2 leaves the label in place.
+- What the K2 label covers: K2 compares the offline save stage with the VM in the control
+  configuration only (the VM's build, en_US, Ctrl+S). The other builds, locales and routes
+  have no VM counterpart, so on their cells "VM fidelity checked (K2)" means that the
+  cell's paired control is VM-checked, not the cell itself. The label's text is the same
+  on every cell; this sentence is how it is read.
 - R04 reads no audit, decision, adjudication, spot-check or rater file: the analysis
   refuses an input path that names one (`analysis.FORBIDDEN_INPUT`), and no R04 module
   imports the audit, rater or packet code. Kevin's adjudication of the parent's 34-item
@@ -92,7 +99,7 @@ headline. Its executor and report are the K2 addendum, `q2-evaluator-mutation-v1
 | Corrected comparator | `harness/q2_stage1/zinv.py` (S1a's validated `compare_pptx_files_zinv`, G0 item 8) |
 | S1a records | the lane runs 1037 (A0a, dev tasks) and 1045, 1048, 1051, 1062 (A1-9B-S1, A1-4B-S1, A1-9B-S2, A1-4B-S2), each `episodes.jsonl` by its committed SHA-256 and each capture file by S1a's committed `raw-sha256sums.txt` (`harness/r04_nuisance/items.S1A_RUNS`); the item builder refuses any difference |
 | Frozen control verdicts (V1) and P1's counted golds | `program/evidence/2026-10-08/q2-mutation-confirm/results/released/controls/confirm-controls-v1.summary.json` (`1ae20605...`) and `reserve-controls-v1.summary.json` (`1da42642...`); dev smoke: `program/evidence/q2-mutation/harness/dev-controls-v9-summary.json` (`e13cbbe6...`); full digests in `levels.CONTROL_SUMMARIES`, which the item builder and the analysis check |
-| Code of record | the code tree `guard.code_tree_sha256` hashes (relative path and SHA-256 of every file, README and SKILL files and Python caches excepted, as the parent's `campaign.code_tree_sha256`) over `guard.CODE_TREE_ROOTS`: `harness/r04_nuisance`, `infra/r04-nuisance`, `tests/test_r04_nuisance.py`, and, unchanged, `harness/q2_mutation` (all of it: reachability, controls, offline_eval, report, stats, campaign; its own frozen code tree `58bee019...`), `harness/q2_stage1/__init__.py`, `harness/q2_stage1/rescore.py`, `harness/q2_stage1/zinv.py`, `harness/q2_stage1/osworld_live.py` (`load_task`) and the lane `infra/slurm/host-single-node/q2-mutation-cpu.sbatch`. Its digest goes into the pins block (`code_tree_sha256`) and the commit into this row at the freeze (section 17); the guard refuses every registered split while the staged tree's digest differs |
+| Code of record | the code tree `guard.code_tree_sha256` hashes (relative path and SHA-256 of every file, README and SKILL files and Python caches excepted, as the parent's `campaign.code_tree_sha256`) over `guard.CODE_TREE_ROOTS`: `harness/r04_nuisance`, `infra/r04-nuisance`, `tests/test_r04_nuisance.py`, and, unchanged, `harness/q2_mutation` (all of it: reachability, controls, offline_eval, report, stats, campaign; its own frozen code tree `58bee019...`), `harness/q2_stage1/__init__.py`, `harness/q2_stage1/rescore.py`, `harness/q2_stage1/zinv.py`, `harness/q2_stage1/osworld_live.py` (`load_task`) and the lane `infra/slurm/host-single-node/q2-mutation-cpu.sbatch`. At the freeze its digest goes into the pins block (`code_tree_sha256`), and the fill commit's parent goes into this row (section 17 defines the fill and freeze commits): the commit the fill is made on, whose code tree has that digest. The guard binds by digest, not by commit (dev-smoke-v5 ran at `e56fb45`, whose code tree has the same digest, section 15); it refuses every registered split while the staged tree's digest differs |
 | Lane | `infra/slurm/host-single-node/q2-mutation-cpu.sbatch`, unchanged (CPU only, no GRES) |
 
 Machine-readable pins (read by `harness/r04_nuisance/guard.py`, which refuses every split
@@ -206,8 +213,12 @@ recorded in every save row.
    OSWorld's postconfig activates "`FILE - LibreOffice APP`" with `wmctrl -Fa`. The save
    stage tries the registered title first and, only if that fails, the same title with the
    em dash. The VM's build never shows the em-dash title, so the control behaves as
-   registered. In the dev smoke every item under 7.6.7.2 and 24.8.7.2 needed it (section
-   15). Each item's adapted activations are recorded and reported per cell: they are what a
+   registered. (The control runs through the same session class as every cell,
+   `resave.NuisanceSession`, with no profile edit and no environment override; `resave.py`'s
+   docstring calls this an unmodified session. It too tries the em-dash title after a
+   failed registered activation, but under B0 that retry cannot succeed, so the control's
+   save outcomes are the registered stage's.) In the dev smoke every item under 7.6.7.2
+   and 24.8.7.2 needed it (section 15). Each item's adapted activations are recorded and reported per cell: they are what a
    re-hosted VM with that build would fail as written (postconfig replay under other builds
    was untested, dossier O6). Without the fallback the registered save treats the failure as
    a save failure, and every build from 7.6 on would be dropped for retention, so the build
@@ -328,10 +339,11 @@ plan (`plan.json`) records each step's state, job id, command and time limit.
    that pending list: each re-runs steps 2-3 for the control and every cell with a pending
    discordance, on the pending items only. Then the analysis runs again, with both rounds.
 
-The registered command lines (the staged export `SRC` of the frozen commit; `r04_host.py`
-is `python3 SRC/infra/r04-nuisance/run/r04_host.py` under the host's system Python; `RUN` is
-the run directory, on the host or as copied for the evidence, and the analysis runs from a
-checkout of the frozen commit):
+The registered command lines (`SRC` is the staged export of the freeze commit, the commit
+that adds this file's ledger row (section 17), never its parent: the guard reads the row
+from the export's tree; `r04_host.py` is `python3 SRC/infra/r04-nuisance/run/r04_host.py`
+under the host's system Python; `RUN` is the run directory, on the host or as copied for
+the evidence, and the analysis runs from a checkout of the freeze commit):
 
 ```bash
 export R04_PREREG_FROZEN=r04-checker-nuisance-invariance-v1   # the host's own guard check
@@ -369,7 +381,10 @@ workers:
 | score `secondary-store_as` | 5 | 94 | 281 |
 | score `secondary-headless_convert` | 5 | 94 | 281 |
 
-(The `control` score job's cells are the unsaved items, the control and the replicate.)
+(The `control` score job's cells are the unsaved items, the control and the replicate.
+The save and score jobs' limits are computed when `r04_host.py next` renders each job, from
+the item count of the items file step 1 wrote, which in the procedure exists by then; a
+score job rendered without it would show a 0-minute projection and the 60-minute floor.)
 The main run is projected at about 8.5 lane-hours. A confirmation round's jobs are
 projected the same way from its item and cell counts (the dev smoke's rounds, 3 items under
 9 cells and the control, took about 8 lane-minutes each). A job that fails is rerun as
@@ -549,7 +564,11 @@ a later one. A third failure ends the step (`failed_final`); its cells are then 
 in that run (or, for a save job, not saved) and read NOT_EVALUABLE with that reason, and a
 round job that ends that way leaves its discordances pending (section 7). The same applies
 to a step the cap stops (section 14). Rounds are numbered by the host tool (`round-1`,
-`round-2`, added together); there is no other round.
+`round-2`, added together); there is no other round. A failed item step (`failed_final`)
+ends the run with no reading: no later step can succeed without items, so the operator
+stops calling `r04_host.py next` once `r04_host.py status` shows it (the host tool itself
+would go on submitting the later steps, each failing, within the cap); the analysis
+refuses the run ("the item step did not finish"), and a successor needs a new id.
 
 ## 13. Data handling
 
@@ -561,7 +580,13 @@ container paths and digests), score rows (scores, verdicts, digests, save events
 dialogs, whether bytes changed; no event log, no stdout tail, no document text), the
 analysis JSON, receipts and Slurm records. `score.save_summary` drops the save stage's event
 log; a test pins that. No host address is recorded. Nothing is released that the
-checker-mutation study would not release.
+checker-mutation study would not release. The evidence copy of a run is its run directory
+without documents (no `captures` directory, no saved file): the plan, every finished step's
+directory with its receipt, the items, every score row and save summary, the rounds'
+pending list and the analyses. `tests/test_r04_evidence.py` (outside the code tree, so
+adding it moves no digest) checks every committed copy: each finished step of its plan is
+in it, nothing in it is git-ignored, and its `analysis.json` (made with `--run`, without a
+K2 report) reproduces from it.
 
 ## 14. Caps
 
@@ -640,7 +665,13 @@ profile.
   against 2 projected (the scorer runs a job's cells one after another, so a round with
   fewer items than workers leaves workers idle; the 60-minute floor covers it). If no code
   of record changes before the freeze, this is the dev smoke at the frozen code tree
-  (section 17, item 3).
+  (section 17, item 3). Its committed copy first lacked the build arm's score directory
+  (`main/scores/build/`, hidden by `.gitignore`'s `build/` rule), so it could not be
+  reproduced from the repository. The re-audit found this. The six files (the receipt of
+  job 1174 and `scores-B1.ctrl_s.L0.jsonl` to `scores-B5.ctrl_s.L0.jsonl`) were copied
+  from the host's run directory with SHA-256s equal to the host's, `.gitignore` now keeps
+  `program/evidence/**/scores/build/`, and `analysis --run` on the copy reproduces the
+  committed `analysis.json` exactly (`tests/test_r04_evidence.py`).
 - **Pre-freeze audit 1's reproduction** (jobs 1156-1158 and 1160, plan `audit-r04-repro-1`,
   from the staged export `16c1233`, whose code tree equals `4b2acf2`'s): the 17 dev golds
   gave v3's raw, control, de_DE and B4 verdicts under both checkers (`6e99a1ad` under de_DE;
@@ -650,6 +681,23 @@ profile.
   under `/opt/r04` (dpkg listings, `soffice --version`, the bundled Python files, the
   tarball identity); no document was read and no job queued. Every other R04 host job went
   through the lane.
+
+Not exercised before the freeze, and first run in the registered run:
+
+- **The registered item path**: the item step's `env R04_PREREG_FROZEN=...` prefix, the
+  guard passing inside the metric container, the confirm and reserve gold rebuild with its
+  check against P1's counted golds, and the digest check of the captures of the four
+  confirm runs. On dev no gold was unemulated; on confirm the builder must exclude exactly
+  the parent's two unemulated golds (`2a729ded`, `e8172110`;
+  `integration/prefreeze-counts-v2`) and keep all 67 counted golds. The committed counts
+  agree: of confirm's 77 complete golds, 8 place no office file the save stage rewrites and
+  2 are unemulated, leaving 67; of reserve's 32, 7 place none and none is unemulated,
+  leaving 25. A mismatch fails closed at step 1; fixing it needs a code change and so a new
+  id.
+- **The registered scale**: 553 items with 16 workers on 32 CPUs. The dev runs used 34
+  items and 8 workers; the parent's control runs used 16 workers on 16 CPUs. Retention and
+  timing at that scale are first seen in the registered run; every time limit is three
+  times its projection (section 6).
 
 No decision rule, threshold, population or level changed after a smoke result was read. The
 two fixes the smokes led to (the window-title fallback and the build's own UNO client) are
@@ -697,24 +745,63 @@ jobs and the one container run outside the lane (section 15). Not changed: the t
 adaptations of section 4.4 (Kevin's review item), and whether R04 runs on its own or inside
 S2 v3's Phase 0 (Kevin's call, section 17).
 
+The re-audit of pre-freeze audit 1's fixes (2026-10-11, at `84d0a549`; not ready to freeze,
+one blocking item) verified all four of audit 1's blocking items fixed and rehearsed the
+freeze and the launch path in scratch copies (the real ledger untouched). What this
+version changed:
+
+| Re-audit item | Fix |
+|---|---|
+| dev-smoke-v5, the smoke at the code tree being frozen (section 17, item 3), could not be reproduced from the committed records: `.gitignore`'s `build/` hid the build arm's score directory, and the registered run's evidence copy would have lost the same directory | `.gitignore` keeps `program/evidence/**/scores/build/`; the six missing files copied from the host (SHA-256s equal to the host's) and committed; `tests/test_r04_evidence.py`, outside the code tree, checks that every finished step of each committed run copy is in it, that nothing in it is git-ignored, and that its `analysis.json` reproduces from it (sections 13, 15) |
+
+Its cheap non-blocking items were fixed in text only, so the code tree, and with it
+dev-smoke-v5's standing, is unchanged (digest `1ffe2d19...`): the stale branch and status
+facts (header, section 2.1, section 17); which commit is which at the freeze (the fill and
+freeze commits, section 17; `SRC` and the code-of-record row, sections 3 and 6); what a
+failed item step means (section 12); what the K2 label covers outside the control
+configuration (section 2.1); the control's session class (section 4.4); when the time
+limits are computed (section 6); the untested registered item path and scale (section 15);
+and the explicit form that reproduces the main-run analysis once the rounds exist (the
+evidence README). Not done, and left to the program owner: a disclosed, configs-only dry
+run of the confirm and reserve gold rebuild before the freeze (it needs a host job, and a
+pre-freeze build of confirm and reserve items, which this draft has not made).
+
 The judges' other point stands as a prediction, not a design change: OOXML stores
 locale-neutral values, so locale re-saves are expected to be INVARIANT, and any locale flip
 is expected in a conversion or a date or text path (J1, J3).
 
 ## 17. Freeze checklist and sign-offs
 
+Two commits make the freeze, on `main`:
+
+- the **fill commit** fills the freeze-time slots of this file and changes nothing else:
+  the pins block's `code_tree_sha256` (`guard.code_tree_sha256` of the checkout's root),
+  section 3's code-of-record row (the fill commit's parent, the commit the fill is made
+  on), and the status line (item 4 below). It changes no code of record, so it and its
+  parent have the same code tree and digest. It becomes the ledger row's
+  `git_head_at_freeze`.
+- the **freeze commit** adds only the ledger row that `scripts/preregister.py freeze`
+  writes; its parent is the fill commit, and the two trees differ only by
+  `program/preregistrations/ledger.jsonl`. `SRC` (section 6) is the export of the freeze
+  commit (`git archive`, with `.git_sha` naming it), never of its parent, because the guard
+  reads the row from the export's tree; the analysis runs from a checkout of it.
+
 Before a freeze: (1) a pre-freeze audit by a fresh reviewer, its findings fixed or recorded
-(audit 1: section 16); (2) the code-tree digest of the frozen commit
-(`guard.code_tree_sha256` of the checkout's root) filled in the pins block's
-`code_tree_sha256`, and the commit in section 3's code-of-record row; (3) the dev smoke
-rerun at the frozen commit if any code of record changed after it; (4) the status line
-rewritten to the frozen wording (`**Status: frozen`), which `tests/test_r04_nuisance.py`
-then checks against the ledger row and the code tree; (5) the program owner's freeze
-(`scripts/preregister.py freeze`), which is Kevin's step and not the drafting agent's.
-Kevin's items: whether R04 runs at all, or as S2 v3's Phase 0 precondition (the dossier's
-disposition; D74's S2 v3 repair run is in progress); review of the two adaptations of
-section 4.4 (under the slate's own precondition, postconfig replay on at least 90% of golds,
-B2-B5 would have been dropped without the title fallback); the CPU cap.
+(audit 1 and its re-audit: section 16); (2) the fill commit, as above; (3) the dev smoke
+rerun at the frozen code tree if any code of record changed after dev-smoke-v5 (code tree
+`1ffe2d19...`; the guard compares digests, so a commit with that digest needs no rerun);
+(4) the status line rewritten to the frozen wording (`**Status: frozen`), which
+`tests/test_r04_nuisance.py` then checks against the ledger row and the code tree; (5) the
+program owner's freeze (`scripts/preregister.py freeze`, then `check-chain` and `verify`,
+and the freeze commit), which is Kevin's step and not the drafting agent's (D77: R04's
+freeze waits for Kevin's items).
+Kevin's items: whether R04 runs at all, on its own or as S2 v3's Phase 0 precondition (the
+dossier's disposition; S2 v3 ended at an honest exit, D76, and advances only through
+Kevin); review of the two adaptations of section 4.4 (under the slate's own precondition,
+postconfig replay on at least 90% of golds, B2-B5 would have been dropped without the
+title fallback); the CPU cap. Not a sign-off, but an order: R04's outputs name verdicts per
+gold task, so Kevin answers the checker-mutation pool and spot check before reading any
+R04 output (section 2.1).
 
 The derived images B1-B5 exist only on the host, by tag and by the IDs pinned in section 3.
 A rebuild from the same Dockerfile would not reproduce those IDs (image IDs include build

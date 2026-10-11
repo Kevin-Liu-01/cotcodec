@@ -29,7 +29,7 @@ pre-freeze audit 1; it read no document and queued no job.
 | `dev-smoke-v2/` | second smoke: the save stage of 17 of the 23 cells (B0, its replicate, B1-B3), stopped before B4, B5 and scoring when the `store_as` client defect showed; items and save summary |
 | `dev-smoke-v3/` | the smoke of record: all 23 cells at the fixed code, scored and analysed, with both confirmation rounds |
 | `dev-smoke-v4-control/` | the control and replicate at the latest code (input check, freeze guard) |
-| `dev-smoke-v5/` | the whole registered procedure on the dev split at the code that fixes pre-freeze audit 1 (`e56fb45`): a mirror of the host run directory without documents (plan, items, per-job receipts, score rows, save summaries, the rounds' pending list), `analysis-main.json` and `analysis.json` from `analysis --run` |
+| `dev-smoke-v5/` | the whole registered procedure on the dev split at the code that fixes pre-freeze audit 1 (`e56fb45`): a mirror of the host run directory without documents (plan, items, per-job receipts, score rows, save summaries, the rounds' pending list), `analysis-main.json` and `analysis.json` from `analysis --run`; the build arm's score directory was added after the re-audit (see the correction under dev-smoke-v5) |
 | `counts/` | pre-freeze count of the registered S1a items from S1a's committed records |
 
 No document is here: no gold, capture or saved file, no event log, no stdout tail. Items
@@ -176,8 +176,46 @@ step was dropped or stopped.
   (the 60-minute floor covers it). 22 jobs, 75.5 lane-minutes (59.4 for the main run),
   20.1 allocated CPU-h.
 
-Reproduce from this directory: `python -m harness.r04_nuisance.analysis --run
-program/evidence/2026-10-11/r04-nuisance/dev-smoke-v5 --src . --out OUT.json`.
+Reproduce from this directory (repository root as the working directory):
+
+- `analysis.json`: `python -m harness.r04_nuisance.analysis --run
+  program/evidence/2026-10-11/r04-nuisance/dev-smoke-v5 --src . --out OUT.json` gives it
+  byte for byte.
+- `analysis-main.json` and `pending.json`: once `confirm` has written the rounds into
+  `plan.json`, `--run` reads both rounds, so the main-run analysis reproduces only in the
+  explicit form. With `V=program/evidence/2026-10-11/r04-nuisance/dev-smoke-v5`:
+  `python -m harness.r04_nuisance.analysis --items $V/items/items.jsonl --scores
+  $V/main/scores/control $V/main/scores/route $V/main/scores/build $V/main/scores/locale
+  $V/main/scores/secondary-store_as $V/main/scores/secondary-headless_convert --splits dev
+  --reference program/evidence/q2-mutation/harness/dev-controls-v9-summary.json --out
+  MAIN.json --pending-out PENDING.json`. `PENDING.json` equals `pending.json` byte for
+  byte; `MAIN.json` equals `analysis-main.json` except for the run-mode inputs (`mode`,
+  `run`, `jobs`).
+
+`tests/test_r04_evidence.py` runs both, and checks that every step `plan.json` records as
+finished is in this mirror and that nothing here is git-ignored.
+
+**Correction (re-audit of pre-freeze audit 1).** The first commit of this mirror lacked the
+build arm's score directory, `main/scores/build/` (job 1174's receipt and
+`scores-B1.ctrl_s.L0.jsonl` to `scores-B5.ctrl_s.L0.jsonl`): `.gitignore`'s `build/` rule
+hid it, so `--run` refused the mirror (`main/scores/build: missing`). The six files were
+copied from the host's run directory read-only; their SHA-256s equal the host's:
+
+| File | SHA-256 |
+|---|---|
+| `receipt-1174.json` | `81a3bf2feb8e0254b95be0a665435f2fa1f70b6ce4e22193174e269c1a8a8449` |
+| `scores-B1.ctrl_s.L0.jsonl` | `8f5b1e20fff47f93ce54db6c29a73f8861ea455bc730e03c888571e2cb828d87` |
+| `scores-B2.ctrl_s.L0.jsonl` | `5c5b85be3b16a39c6ee43022a4bb55e4d0e6979a6d9b2e95d6dd5a1db8c2f642` |
+| `scores-B3.ctrl_s.L0.jsonl` | `30c01da30b7de18a0dca9fd2d3de9562e3ca1349d904e21bd27080b02464b879` |
+| `scores-B4.ctrl_s.L0.jsonl` | `dc95fc509649c5b44c3685603665a9a5a8e1cd3469b03a8a232fd074cdfa1c07` |
+| `scores-B5.ctrl_s.L0.jsonl` | `669dfc38d93259fb7f2fa5b28873c6b3224de9ad8cacad1c7982317f7ea2dc54` |
+
+The empty `captures/` directories of that step were not copied (the scorer's derived
+captures are deleted after scoring). `.gitignore` now keeps `program/evidence/**/scores/build/`,
+so the registered run's copy keeps the same directory. The committed analyses were not
+changed: they were computed from this mirror in the drafting owner's worktree, where the
+ignored directory was on disk (their input paths name it), and the committed mirror now
+reproduces them.
 
 ## Pre-freeze audit 1: independent reproduction (jobs 1156-1158, 1160; exploratory)
 

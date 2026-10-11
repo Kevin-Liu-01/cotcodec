@@ -4,6 +4,8 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+# R04's build-arm score job writes to <run>/main/scores/build/; its evidence copies are kept.
+!program/evidence/**/scores/build/
 .eggs/
 *.egg
 .venv/
