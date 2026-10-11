@@ -153,11 +153,46 @@ def task_count_histogram(y: np.ndarray) -> np.ndarray:
     return np.stack([(tot == c).sum(axis=-1) for c in range(n + 1)], axis=-1)
 
 
+FIX_NAMES = {f"{k}_{z}": 8 * zi + j for zi, z in enumerate(M.SIZES)
+             for j, k in enumerate(F.SIZE_KEYS)}  # fmt: skip
+FIX_NAMES.update(rho_a=16, rho_b=17)
+
+
+def parse_fix(specs: list[str] | None) -> dict[int, float]:
+    """``NAME=VALUE`` pairs on the natural scale (``rho_b=0``, ``sigma_b_4B=0.02``) as fixed
+    coordinates of the transformed parameter vector (``fit.fit``'s ``fixed``)."""
+    out: dict[int, float] = {}
+    for spec in specs or []:
+        name, _, val = spec.partition("=")
+        key = name.replace("sigma_a", "log_sigma_a").replace("sigma_b", "log_sigma_b")
+        if key not in FIX_NAMES or not val:
+            raise SystemExit(f"cannot fix {spec!r}; names: sigma_b_4B, rho_b, c_9B, ...")
+        v = float(val)
+        if key.startswith("log_"):
+            v = math.log(v)
+        elif key.startswith("rho_"):
+            v = math.atanh(v)
+        lo, hi = F.bounds()[FIX_NAMES[key]]
+        if not lo - 1e-12 <= v <= hi + 1e-12:
+            raise SystemExit(f"{spec}: outside the parameter's bounds")
+        out[FIX_NAMES[key]] = v
+    return out
+
+
 def cmd_fit(args: argparse.Namespace) -> int:
     s1a = D.load()
     y = s1a.y_base if args.set == "base" else s1a.y_pool
     t0 = time.time()
-    res = F.fit(y, harness=args.harness, log=log)
+    fixed = parse_fix(args.fix)
+    ref = json.loads(Path(args.warm).read_text(encoding="utf-8")) if args.warm else None
+    if ref is not None and (ref["set"] != args.set or ref.get("harness") != args.harness):
+        raise SystemExit("--warm must be a fit of the same set and harness model")
+    x0 = None
+    if ref is not None:  # warm start: the joint stage only, from the reference estimate
+        x0 = np.array(ref["x"], dtype=float)
+        for i, v in fixed.items():
+            x0[i] = v
+    res = F.fit(y, harness=args.harness, fixed=fixed, x0=x0, log=log)
     x, like = res["x"], res["likelihood"]
     sizes, rho_a, rho_b = F.unpack(x)
     se, se_info = _ses(like, x)
@@ -200,6 +235,13 @@ def cmd_fit(args: argparse.Namespace) -> int:
         "inputs": s1a.digests,
         "provenance": provenance(),
     }
+    if fixed:
+        out["fixed"] = {n.replace("log_", ""): F.unpack_value(i, x[i])
+                        for n, i in FIX_NAMES.items() if i in fixed}  # fmt: skip
+    if ref is not None:
+        out["warm_start"] = args.warm
+        out["reference_loglik"] = ref["loglik"]
+        out["lr_vs_reference"] = 2 * (ref["loglik"] - res["loglik"])
     _write(Path(args.out), out)
     log({"wrote": args.out, "seconds": out["seconds"]})
     return 0
@@ -670,6 +712,8 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("fit")
     p.add_argument("--set", choices=("base", "pool"), required=True)
     p.add_argument("--harness", choices=("normal", "spike-slab"), default="normal")
+    p.add_argument("--fix", nargs="*", help="hold parameters: rho_b=0 sigma_b_4B=0.02 ...")
+    p.add_argument("--warm", help="warm-start from this fit (same set and harness model)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("profile")
     p.add_argument("--fit", required=True)
