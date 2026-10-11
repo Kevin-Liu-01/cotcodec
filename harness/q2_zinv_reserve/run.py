@@ -238,6 +238,7 @@ def cmd_rescore(args: argparse.Namespace) -> int:
     out = {
         "schema": ROWS_SCHEMA,
         "experiment_id": rules.EXPERIMENT_ID,
+        "warning": rules.BLIND_WARNING,
         "split": args.split,
         "comparator_sha256": sha256_file(ZINV_PATH),
         "rescore_sha256": sha256_file(RESCORE_PATH),

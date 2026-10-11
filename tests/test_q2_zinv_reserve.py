@@ -130,6 +130,45 @@ def test_validity_failures_on_decision_rows_make_the_run_incomplete():
     }
 
 
+def test_incomplete_takes_precedence_over_fail_and_both_conditions_are_still_reported():
+    rows = [*zrows(15, 6, accepted=10), vrow("v1", zinv=1.0)]
+    rows[0].update(files_unchanged=False)  # one invalid decision row
+    out = rules.judge(rows, n_boot=50)
+    assert out["outcome"] == "INCOMPLETE"
+    assert out["fail_reasons"] == ["acceptance_below_95_percent", "violation_newly_accepted"]
+    assert out["condition_b"]["new_accepts"] == ["v1"]
+    assert "precedence over FAIL" in out["license"] and "no rerun" in out["license"]
+    body = flat(text())
+    assert "INCOMPLETE takes precedence over FAIL" in body
+    assert "Invalid rows are final" in body
+
+
+def test_licenses_match_section_7_and_every_output_carries_the_blind_warning():
+    registered = rules.LICENSES["PASS"]["registered_rule"]
+    descriptive = rules.LICENSES["PASS"]["descriptive"]
+    for license_text in (registered, descriptive):
+        assert "generaliz" not in license_text and "observed rate" not in license_text
+        assert "not developed on, at this size" in license_text
+    assert "at most about 0.88" in registered and "not 95%" in registered
+    body = flat(text())
+    assert "the population statement is the lower bound (at most about 0.88), not 95%" in body
+    assert "held on documents it was not developed on, at this size" in body
+    out = rules.judge([*zrows(15, 6), vrow("v")], n_boot=50)
+    assert out["warning"] == rules.BLIND_WARNING
+    assert "spot check (D9) is still pending" in rules.BLIND_WARNING
+    assert "blind warning" in body and "`rules.BLIND_WARNING`" in body
+
+
+def test_no_zorder_cell_is_probe_touched_on_the_registered_tasks():
+    probe = json.loads((ROOT / campaign.PROBE_TOUCHED).read_text())
+    cells = campaign.probe_touched_cells(probe)
+    for task in rules.RESERVE_PPTX_TASKS:
+        assert probe["tasks"][task]["split"] == "reserve"
+        assert cells[task], task  # the scoping probe touched every one of the 8 tasks
+        assert not campaign.is_probe_touched(cells, task, rules.ZORDER), task
+    assert "no `pptx.eq.zorder_nonoverlap` cell is probe-touched on the 8 tasks" in flat(text())
+
+
 def test_edge_outcomes_and_reported_quantities():
     assert rules.judge([vrow("v")], n_boot=50)["outcome"] == "NOT_TESTABLE"
     assert rules.judge([vrow("v", zinv=1.0)], n_boot=50)["outcome"] == "FAIL"
@@ -376,6 +415,24 @@ def test_judge_command_reads_a_rows_file(tmp_path):
                      "--out", str(tmp_path / "j.json")]) == 2  # fmt: skip
 
 
+def test_rescore_command_writes_rows_with_the_blind_warning(tmp_path, monkeypatch):
+    names = ("mutant_jobs", "mutant_verdicts", "outcomes", "gold_jobs", "gold_verdicts")
+    for name, rows in zip(names, fixture_inputs(), strict=True):
+        run.write_jsonl(tmp_path / f"{name}.jsonl", rows)
+
+    def fake(item, **_kwargs):
+        return {"id": item["job"]["mutant_id"], "kind": item["kind"]}
+
+    monkeypatch.setattr(run, "score_item", fake)
+    argv = ["rescore", "--split", "dev", "--osworld", "/o", "--file-cache", "/c",
+            "--out", str(tmp_path / "rows.json")]  # fmt: skip
+    for name in names:
+        argv += [f"--{name.replace('_', '-')}", str(tmp_path / f"{name}.jsonl")]
+    assert run.main(argv) == 0
+    data = json.loads((tmp_path / "rows.json").read_text())
+    assert data["warning"] == rules.BLIND_WARNING and len(data["rows"]) == 4
+
+
 # --------------------------------------------------------------------------- guard
 
 
@@ -486,32 +543,41 @@ def test_the_status_paragraph_is_replaced_whole_at_the_freeze():
         assert row["sha256"] == sha(REGISTRATION)
 
 
+def frozen_scratch(tmp_path: Path) -> tuple[Path, str, dict]:
+    """A scratch tree whose ledger copy holds this experiment's row: before the real freeze
+    (the draft or the fill commit) the filled file is frozen into the copy; after it, the
+    frozen tree itself (the real ledger is never written)."""
+    body = text()
+    if guard.frozen_row(ROOT) is not None:
+        return scratch_tree(tmp_path / "frozen", body), body, guard.frozen_row(ROOT)
+    filled = fill_status(body) if is_draft(body) else body
+    src = scratch_tree(tmp_path / "filled", filled)
+    rows_before = len(preregister.read_ledger(src / guard.LEDGER))
+    row = preregister.freeze(src / guard.REGISTRATION, guard.EXPERIMENT_ID,
+                             ledger=src / guard.LEDGER, root=src)  # fmt: skip
+    assert len(preregister.read_ledger(src / guard.LEDGER)) == rows_before + 1
+    return src, filled, row
+
+
 def test_scratch_ledger_rehearsal_of_the_freeze_and_the_reserve_guard(tmp_path, monkeypatch):
     """On a scratch tree with its own copy of the ledger: the draft is refused by the freeze
-    guard and by the reserve guard; the filled file freezes into the copy, and the reserve split
-    is then admitted only with the environment variable; an edit after the freeze, of the
-    registration or of the code, is refused. Once the real freeze exists, the frozen tree
-    itself is checked the same way (the real ledger is never written)."""
+    guard, and a tree without the row by the reserve guard; the filled file freezes into the
+    copy, and the reserve split is then admitted only with the environment variable; an edit
+    after the freeze, of the registration or of the code, is refused. The branch is chosen by
+    the real ledger, so the suite holds at the draft, at the fill commit (filled, no row) and
+    at the freeze commit (the real ledger is never written)."""
     body = text()
     monkeypatch.delenv(guard.FROZEN_ENV, raising=False)
-    if is_draft(body):
-        draft = scratch_tree(tmp_path / "draft", body)
-        with pytest.raises(preregister.PreregistrationError, match="TBD"):
-            preregister.freeze(draft / guard.REGISTRATION, guard.EXPERIMENT_ID,
-                               ledger=draft / guard.LEDGER, root=draft)  # fmt: skip
-        assert guard.require_split_allowed("dev", draft) is None
+    if guard.frozen_row(ROOT) is None:
+        unfrozen = scratch_tree(tmp_path / "unfrozen", body)
+        if is_draft(body):
+            with pytest.raises(preregister.PreregistrationError, match="TBD"):
+                preregister.freeze(unfrozen / guard.REGISTRATION, guard.EXPERIMENT_ID,
+                                   ledger=unfrozen / guard.LEDGER, root=unfrozen)  # fmt: skip
+        assert guard.require_split_allowed("dev", unfrozen) is None
         with pytest.raises(guard.GuardError, match="only after"):
-            guard.require_split_allowed("reserve", draft)
-        filled = fill_status(body)
-        src = scratch_tree(tmp_path / "filled", filled)
-        rows_before = len(preregister.read_ledger(src / guard.LEDGER))
-        row = preregister.freeze(src / guard.REGISTRATION, guard.EXPERIMENT_ID,
-                                 ledger=src / guard.LEDGER, root=src)  # fmt: skip
-        assert len(preregister.read_ledger(src / guard.LEDGER)) == rows_before + 1
-    else:
-        filled = body
-        src = scratch_tree(tmp_path / "frozen", body)
-        row = guard.frozen_row(ROOT)
+            guard.require_split_allowed("reserve", unfrozen)
+    src, filled, row = frozen_scratch(tmp_path)
     assert preregister.verify(guard.EXPERIMENT_ID, ledger=src / guard.LEDGER, root=src)
     with pytest.raises(guard.GuardError, match="reserve split only"):
         guard.require_split_allowed("confirm", src)
@@ -596,7 +662,7 @@ def host_setup(tmp_path, monkeypatch, split="dev"):
 def test_host_plan_and_next_submit_one_job_at_a_time(tmp_path, monkeypatch):
     host, src, root = host_setup(tmp_path, monkeypatch)
     monkeypatch.delenv(guard.FROZEN_ENV, raising=False)
-    refusal = "only after" if is_draft(text()) else guard.FROZEN_ENV
+    refusal = "only after" if guard.frozen_row(ROOT) is None else guard.FROZEN_ENV
     with pytest.raises(guard.GuardError, match=refusal):
         host.make_plan(src, "r", "reserve", None, root)
     with pytest.raises(host.HostError, match="controls-run"):
@@ -679,6 +745,109 @@ def test_host_runs_all_four_steps_and_mounts_the_finished_attempts(tmp_path, mon
     assert Counter(c.split("=")[0] for c in submitted[0])["--export"] == 1
     # the lane-hour cap: 4 x 0.5 h used, nothing more would be submitted
     assert host.hours_used(host.read_plan(root, "d")[1]) == pytest.approx(2.0)
+
+
+def test_the_reserve_split_has_one_registered_plan_name(tmp_path, monkeypatch):
+    host, _src, root = host_setup(tmp_path, monkeypatch)
+    src, _filled, _row = frozen_scratch(tmp_path)
+    (src / ".git_sha").write_text("f" * 40 + "\n")
+    monkeypatch.setenv(guard.FROZEN_ENV, guard.EXPERIMENT_ID)
+    with pytest.raises(host.HostError, match="one registered plan is reserve-v1"):
+        host.make_plan(src, "reserve-v2", "reserve", None, root)
+    saved = tmp_path / "q2m" / "runs" / rules.RESERVE_CONTROLS_RUN / "saved"
+    saved.mkdir(parents=True)
+    (saved.parent / "lo").mkdir()
+    for name in rules.RESERVE_CONTROLS:
+        (saved / name).write_text("{}\n")
+    # the registered name passes the name check and meets the control-file digests next
+    with pytest.raises(host.HostError, match="differs from its registered digest"):
+        host.make_plan(src, rules.RESERVE_PLAN, "reserve", None, root)
+    body = flat(text())
+    assert f"--name {rules.RESERVE_PLAN} --split reserve" in body
+    assert "Only the plan named `reserve-v1` is evidence" in body
+
+
+def finished_dev_run(tmp_path, monkeypatch):
+    """A dev plan whose four steps finished (step 1 after one rerun), with the files the
+    parent's ``campaign export`` reads (empty row files) and this addendum's step outputs."""
+    host, src, root = host_setup(tmp_path, monkeypatch)
+    plan = host.make_plan(src, "d", "dev", "dev-controls-v9", root)
+    run_dir = root / "runs" / "d"
+    run_dir.mkdir(parents=True)
+    host.write_plan(run_dir, plan)
+    monkeypatch.setattr(host, "queue_jobs", lambda: [])
+    jobs = iter(range(501, 510))
+    monkeypatch.setattr(host, "sbatch", lambda c: str(next(jobs)))
+    exits = iter([1, 0, 0, 0, 0])  # the first targets attempt fails, its rerun finishes
+    while True:
+        host.main(["--root", str(root), "next", "--name", "d"])
+        steps = host.read_plan(root, "d")[1]["steps"]
+        step = next((s for s in steps if s["state"] == "submitted"), None)
+        if step is None:
+            break
+        out = Path(step["run_dir"])
+        files = {
+            "targets": {"targets.report.json": {"split": "dev", "targets": 1},
+                        "targets-selection.json": {"split": "dev", "targets_kept": 1}},
+            "build": {"build-summary.json": {"mutants": 0}, "mutations.jsonl": None,
+                      "admission.jsonl": None, "targets-built.jsonl": None,
+                      "scoring-jobs.jsonl": None},
+            "score": {"jobs-saved.jsonl": None, "recheck.jsonl": None, "outcomes.jsonl": None,
+                      "report.json": {"rows": 0}, "mut-verdicts-lock.jsonl": None,
+                      "mut-notes-lock.jsonl": None},
+            "zinv": {"zinv-rows.json": {"schema": run.ROWS_SCHEMA, "rows": [
+                         {"id": "m1", "zinv_error": "KeyError: " + "x" * 200, "raw_error": None}]},
+                     "judgement.json": {"outcome": "PASS", "status": "descriptive"}},
+        }[step["stage"]]  # fmt: skip
+        for name, data in files.items():
+            (out / name).write_text("" if data is None else json.dumps(data))
+        receipt = {"exit_status": next(exits), "started_at": "2026-10-11T00:00:00Z",
+                   "finished_at": "2026-10-11T00:05:00Z", "argv_json_hex": ""}  # fmt: skip
+        (out / f"receipt-{step['job']}.json").write_text(json.dumps(receipt))
+    assert [s["state"] for s in host.read_plan(root, "d")[1]["steps"]] == [
+        "superseded", "done", "done", "done", "done"]  # fmt: skip
+    return host, root, run_dir
+
+
+def test_export_writes_the_parents_release_view_of_the_finished_attempts(tmp_path, monkeypatch):
+    host, root, run_dir = finished_dev_run(tmp_path, monkeypatch)
+    assert host.main(["--root", str(root), "export", "--name", "d"]) == 0
+    view, release = run_dir / "view", run_dir / "release"
+    submitted = json.loads((view / "submitted.json").read_text())
+    assert {"run", "split", "git_sha", "apply_to", "jobs"} <= set(submitted)
+    assert submitted["jobs"] == [502, 503, 504, 505] and submitted["superseded_jobs"] == [501]
+    assert (view / "prep").resolve() == (run_dir / "prep.a2").resolve()
+    manifest = json.loads((release / "campaign" / "manifest.json").read_text())
+    assert (manifest["run"], manifest["split"], manifest["slurm_jobs"]) == (
+        "d", "dev", [502, 503, 504, 505])  # fmt: skip
+    stages = [r["stage"] for r in json.loads((release / "campaign" / "receipts.json").read_text())]
+    assert stages == ["build", "prep", "score", "zinv"]
+    rows = json.loads((release / "zinv-rows.json").read_text())["rows"]
+    assert rows[0]["zinv_error"] == "KeyError: " + "x" * 70 + "..."
+    ours = json.loads((release / "manifest.json").read_text())
+    assert ours["warning"] == rules.BLIND_WARNING and ours["outcome"] == "PASS"
+    assert (release / "BLIND-WARNING.txt").read_text().strip() == rules.BLIND_WARNING
+    assert sorted(p.name for p in (release / "receipts").iterdir()) == [
+        "build-receipt-503.json", "score-receipt-504.json", "targets-receipt-501.json",
+        "targets.a2-receipt-502.json", "zinv-receipt-505.json"]  # fmt: skip
+    for rel, digest in ours["files_sha256"].items():
+        assert sha(release / rel) == digest, rel
+    assert "campaign/outcomes.jsonl" in ours["files_sha256"]
+    assert not (run_dir / "release.partial").exists()
+    assert host.main(["--root", str(root), "export", "--name", "d"]) == 2  # written once
+
+
+def test_export_refuses_an_incomplete_or_reused_plan(tmp_path, monkeypatch):
+    host, src, root = host_setup(tmp_path, monkeypatch)
+    plan = host.make_plan(src, "d", "dev", "dev-controls-v9", root)
+    (root / "runs" / "d").mkdir(parents=True)
+    host.write_plan(root / "runs" / "d", plan)
+    with pytest.raises(host.HostError, match="not complete"):
+        host.export_release(root, "d")
+    plan["reuse_parent_run"] = "dev-mutants-v9"
+    with pytest.raises(host.HostError, match="reuses a parent run"):
+        host.make_view(root / "runs" / "d", plan)
+    assert "zr_host.py export --name reserve-v1" in text()
 
 
 # --------------------------------------------------------------------------- registration

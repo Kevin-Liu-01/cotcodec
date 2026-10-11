@@ -2,8 +2,8 @@
 
 **Status: DRAFT, not frozen (TBD: at the freeze this whole paragraph is replaced by the
 paragraph section 13 states under "At the freeze").** Drafted on 2026-10-11 by the single
-owner of R03 (b) on branch `stage0/r03-zinv-reserve` from main at `746d60d2`. No ledger row
-exists; nothing on the reserve split has run under this file. The freeze is the
+owner of R03 (b) on branch `stage0/r03-zinv-reserve` from main at `746d60d2` (main merged
+again at `08033ba7`). No ledger row exists; nothing on the reserve split has run under this file. The freeze is the
 orchestrator's (D80), after a pre-freeze audit (section 13).
 
 - Experiment id: `q2-zinv-reserve-validation-v1`, an addendum to `q2-evaluator-mutation-v1`
@@ -80,9 +80,18 @@ State of the reserve split on 2026-10-11:
   `program/evidence/2026-10-08/q2-mutation-confirm/results/released/controls/reserve-controls-v1.summary.json`)
   saved and scored all 32 golds and 53 do-nothing states, and R04's registered run (in
   progress) re-saves and rescores the reserve golds, zinv included.
-- No reserve mutant exists: the parent's host run root holds no reserve mutation run
-  (listing of 2026-10-11: its only reserve run is `reserve-controls-v1`; its mutation runs
-  are `confirm-mutants-v1` and `dev-mutants-v1` to `-v9`), and no released file names one.
+- No mutant of the frozen operators exists on the reserve split: the parent's host run root
+  holds no reserve mutation run (listing of 2026-10-11: its only reserve run is
+  `reserve-controls-v1`; its mutation runs are `confirm-mutants-v1` and `dev-mutants-v1` to
+  `-v9`), and no released file names one.
+- Two earlier uses touched the 8 registered tasks, neither with zinv nor with a frozen
+  operator: the pre-registration scoping probe
+  (`program/evidence/q2-mutation/harness/probe_touched.json`) built probe edits on all 8
+  (E-META, E-ZIP, F-TYPO, F-TYPO-BODY or F-TYPO-TABLE, E-RUNSPLIT; none a z-order edit),
+  and the S2 v3 locale pilot saved and scored their golds and do-nothing states with the
+  original comparator under six locale conditions (96 verdicts;
+  `program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pilot-r1/goldscore-1141`).
+  Neither touches zinv's held-out status.
 
 Conclusion: a reserve-split zinv evaluation is not registered (no rule, inputs or code), so
 this addendum registers it. Running it needs: the reserve pptx mutants built with the frozen
@@ -119,9 +128,9 @@ whose files differ, and `tests/test_q2_zinv_reserve.py` fails on drift):
 |---|---|
 | `harness/q2_zinv_reserve/__init__.py` | `ea19139fbe29b88d9e46f7fe337bab7bf6d1f9e21ac1905f455cc29b2a1d95e2` |
 | `harness/q2_zinv_reserve/guard.py` | `a1bf674ed7fe3dc476142b65aabacf5db742b536645a11ae8ec3903e33e9fbf0` |
-| `harness/q2_zinv_reserve/rules.py` | `1348420f9b1984d76dfec63bfcf6b8895210a08bd0056818e710f7cd473db644` |
-| `harness/q2_zinv_reserve/run.py` | `5c4cec4070a76c4d506d4b175f2cad6625ec22429c45f3dd0301d379080c1c38` |
-| `infra/q2-zinv-reserve/run/zr_host.py` | `a62175f6e7b766f23ba8ae53b818fa0fce03cbbf9e23f2789e9867689c654349` |
+| `harness/q2_zinv_reserve/rules.py` | `36d9e5ee2f4b1ce102b51d49e41594ae99cf0e39a3b0f8aeafa2cb456b435e20` |
+| `harness/q2_zinv_reserve/run.py` | `4e052c88344bb0323bf17899f1eaf3823af351bd0dfb40cab9131faeaeac2a6d` |
+| `infra/q2-zinv-reserve/run/zr_host.py` | `09b5be4a145ebdee35ce446013d14d2564244f9ceb2122c8c8f004ecbe522cbc` |
 <!-- q2zr-code-table end -->
 
 ## 4. Populations, expected size and what the sample can detect
@@ -135,6 +144,10 @@ Items (all scored under the lock-exact venv, the parent's primary):
 - **V (condition B).** Every evaluable mutant with label `should_fail_violation`, of any
   operator, on the same tasks (probe-touched cells included: the question compares two
   comparators, not the checker's error rate).
+- Probe-touched cells and Z: no `pptx.eq.zorder_nonoverlap` cell is probe-touched on the 8
+  tasks (`campaign.is_probe_touched` is false for every one; the probe's cells there are
+  document properties, extra changes and text-edit violations; checked by the tests), so Z
+  needs no probe rule.
 - **Reported only.** Every other evaluable mutant on those tasks (other equivalence,
   alternative-solution and extra-change mutants), and the saved gold and do-nothing state of
   every reserve task checked by `compare_pptx_files` alone (from `reserve-controls-v1`).
@@ -218,12 +231,19 @@ Commands, from an export of the freeze commit staged on the host as
 python3 SRC/infra/q2-zinv-reserve/run/zr_host.py plan --src SRC --name reserve-v1 --split reserve
 python3 SRC/infra/q2-zinv-reserve/run/zr_host.py next --name reserve-v1   # repeat until "complete"
 python3 SRC/infra/q2-zinv-reserve/run/zr_host.py status --name reserve-v1
+python3 SRC/infra/q2-zinv-reserve/run/zr_host.py export --name reserve-v1 # the release view, section 10
 ```
+
+Only the plan named `reserve-v1` is evidence. The host tool refuses any other reserve plan
+name (`rules.RESERVE_PLAN`) and never plans an existing run root again; any other reserve
+plan, run or rescoring, by any tool, is not evidence under this id.
 
 Reruns and caps. A step that fails (exit status other than 0, or no receipt) is rerun once
 in full in a fresh directory (`.a2`), and later steps read the attempt that finished; a
-second failure ends the run (`failed_final`), and the outcome is INCOMPLETE. No job is
-submitted once the lane hours used (receipt start to finish) reach 4.0. Projected wall time:
+second failure ends the run (`failed_final`), and the outcome is INCOMPLETE. Invalid rows
+are final: step 4 exits 0 once it has written its rows, whatever their validity, so an
+invalid row triggers no rerun (section 6). No job is submitted once the lane hours used
+(receipt start to finish) reach 4.0. Projected wall time:
 about 30 minutes in all (the confirm run's 68 targets took 12 minutes to build and save and
 60 minutes to score 1,300 jobs; this run has 8 targets and about 170 jobs; job 1000 rescored
 291 items in 15 minutes). GPU: 0.
@@ -243,7 +263,10 @@ Computed by `harness/q2_zinv_reserve/rules.py` (`judge`) over the rescored rows;
   scoring's verdict differs from the registered verdict, or if the job's files changed or
   went missing between the digest taken before the two scorings and the one taken after.
 - **Outcome.**
-  - INCOMPLETE: any row of Z or V is invalid (after the one rerun of section 5).
+  - INCOMPLETE: a step ended `failed_final` after the one rerun of section 5 (no rows
+    exist), or any row of Z or V is invalid. Invalid rows are final (no rerun), and
+    INCOMPLETE takes precedence over FAIL: a run with an invalid row in Z or V is INCOMPLETE
+    even if a condition fails on its valid rows, and both conditions are still reported.
   - FAIL: B fails (whatever `n_Z`), or `n_Z` is at least 1 and A fails; the failed
     conditions are named.
   - NOT_TESTABLE: `n_Z` = 0 and B holds.
@@ -284,7 +307,8 @@ evidence.
 - **NOT_TESTABLE, INCOMPLETE.** Nothing is licensed; the cause is reported.
 
 In every case the result is offline (the K2 VM check covered the confirm sample only) and
-rests on the operator's labels (no rater read a reserve mutant).
+rests on the operator's labels (no rater read a reserve mutant). The judgement's `license`
+field carries these texts (`rules.LICENSES`).
 
 ## 8. Reported regardless of outcome
 
@@ -318,10 +342,24 @@ rests on the operator's labels (no rater read a reserve mutant).
 CPU only, 0 GPU-h, at most 4.0 lane-hours on the shared lane, one job at a time, nothing
 submitted while another job is queued (R04, S2 v4 and Successor E share the host). Mutant
 documents, recipes and saved files are third-party content and stay on the host (parent
-section 16). Released after the run: `zinv-rows.json` (ids, labels, operators, scores,
-errors, digests), `judgement.json`, the selection summary, the receipts, and the run's
-release view through the parent's `campaign export` (redacted recipes, outcomes, verdict
-rows, summaries). No outward action.
+section 16). Released after the run, written by `zr_host.py export --name reserve-v1`
+(section 5) into the run's `release/` and committed:
+
+- `campaign/`: the parent's own `campaign export` (redacted recipes, outcomes, verdict
+  rows, summaries, receipts, manifest) of `view/`, a run root in the parent's layout
+  (`prep`, `build`, `score` and `zinv` link to the finished attempts; `submitted.json`
+  holds the parent's keys `run`, `split`, `git_sha`, `apply_to` and `jobs`, the finished
+  jobs). Its `targets.json` is the parent's report on the split's 28 targets, of which step
+  1 kept 8.
+- `zinv-rows.json` (ids, labels, operators, scores, digests; checker messages cut to 80
+  characters, as the parent's release cuts them), `judgement.json`,
+  `targets-selection.json`, every receipt of every attempt, the plan, and `manifest.json`
+  with each file's SHA-256.
+
+Blind warning: D9's human spot check is still pending, so every released file that names
+verdicts per mutant carries the parent's blind warning (`rules.BLIND_WARNING`): a field of
+the rows, the judgement and the manifest, and `BLIND-WARNING.txt` beside `campaign/`, whose
+parent-format files carry none of their own. No outward action.
 
 ## 11. Development record (exploratory, never evidence)
 

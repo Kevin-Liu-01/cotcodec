@@ -77,6 +77,19 @@ RESERVE_CONTROLS_SUMMARY_SHA256 = "1da426424339678c35847380f63ba9bae9983cc4a88be
 # (released outcomes, targets sorted by task id; section 4): the expected-size model.
 CONFIRM_ZORDER_YIELDS = (3, 3, 3, 0, 3, 3, 3, 3, 2, 2, 3, 2, 3, 1, 2, 3)
 
+# The one registered plan of the reserve split (section 5). The host tool refuses any other
+# reserve plan name, and a run root that exists is never planned again.
+RESERVE_PLAN = "reserve-v1"
+# Section 10: every released file that names verdicts per mutant carries this warning.
+BLIND_WARNING = (
+    "Blind warning (D9, D82): this file names checker verdicts per mutant, as the checker-"
+    "mutation study's released analysis does. The parent's human spot check (D9) is still "
+    "pending: if you are doing it, answer from its blind packets before reading this file "
+    "(program/evidence/2026-10-08/q2-mutation-confirm/results/README.md, 'Pending for "
+    "Kevin'). No reserve mutant is in the spot check or the adjudication pool, and this "
+    "addendum reads no audit, adjudication, spot-check or rater file."
+)
+
 OUTCOMES = ("PASS", "PASS_A_ONLY", "FAIL", "NOT_TESTABLE", "INCOMPLETE")
 STATUSES = ("descriptive", "registered_rule")
 # What each reading licenses (section 7); written into the judgement.
@@ -91,9 +104,10 @@ LICENSES = {
         ),
         "registered_rule": (
             "The registered rule passed at the registered size (at least 20 mutants on 8 "
-            "tasks). It licenses 'the correction generalizes to held-out reserve documents at "
-            "the observed rate', with the exact and task-level lower bounds stated; the rule "
-            "is a point-estimate rule, so the population claim is the lower bound, not 95%."
+            "tasks). It licenses 'the correction held on reserve documents it was not "
+            "developed on, at this size'; the population statement is the exact one-sided and "
+            "task-level lower bounds (at most about 0.88 at 24 mutants), not 95%. The rule "
+            "tests for held-out counterexamples; it does not estimate a 95% rate."
         ),
     },
     "PASS_A_ONLY": {
@@ -119,7 +133,9 @@ LICENSES = {
     "INCOMPLETE": {
         status: (
             "A decision item failed a validity check (infrastructure, a rescoring that does "
-            "not reproduce the registered verdict, or scored files that differ); no outcome."
+            "not reproduce the registered verdict, or scored files that differ); no outcome. "
+            "INCOMPLETE takes precedence over FAIL (both conditions are still reported), and "
+            "invalid rows are final: they trigger no rerun."
         )
         for status in STATUSES
     },
@@ -212,7 +228,7 @@ def judge(
     status = status_for(len(z), len(z_tasks))
     cond_a = meets_threshold(len(accepted), len(z))
     cond_b = not new_accepts
-    if invalid_decision:
+    if invalid_decision:  # precedence over FAIL (section 6); invalid rows are final
         outcome = "INCOMPLETE"
     elif not cond_b:
         outcome = "FAIL"  # a newly accepted violation is a counterexample at any size
@@ -230,6 +246,7 @@ def judge(
 
     out: dict[str, Any] = {
         "experiment_id": EXPERIMENT_ID,
+        "warning": BLIND_WARNING,
         "outcome": outcome,
         "status": status,
         "license": LICENSES[outcome][status],

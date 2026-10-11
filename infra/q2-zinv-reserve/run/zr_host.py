@@ -31,6 +31,17 @@ frozen ``infra/q2-mutation/run/submit_mutants.sh``, submitted one at a time:
     zr_host.py plan ... --split dev --controls-run dev-controls-v9 --reuse-parent-run dev-mutants-v9
     zr_host.py next --name NAME [--dry-run]                         # repeat until "complete"
     zr_host.py status --name NAME
+    zr_host.py export --name NAME                                   # after "complete"
+
+``export`` writes the release view of a complete plan to ``<run>/release/`` (registration
+section 10): ``<run>/view/`` is a run root in the parent's layout (``prep``, ``build``,
+``score`` and ``zinv`` link to the finished attempts; ``submitted.json`` has the parent's keys
+and the finished jobs), the parent's own ``campaign export`` writes ``release/campaign/`` from
+it, and the step outputs of this addendum (``zinv-rows.json`` with checker messages cut as the
+parent cuts them, ``judgement.json``, ``targets-selection.json``), every receipt of every
+attempt and the plan are copied beside it, with ``BLIND-WARNING.txt`` (the per-mutant verdict
+files of ``campaign/`` carry no warning of their own), listed with their digests in
+``manifest.json``.
 """
 
 from __future__ import annotations
@@ -40,6 +51,7 @@ import copy
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -71,6 +83,9 @@ RESOURCES = {  # cpus, memory, tmpfs, time limit (minutes; at least three times 
     "zinv": (8, "32G", "16g", 60),
 }
 TERMINAL = ("done", "superseded", "failed_final")
+VIEW_DIR = "view"
+RELEASE_DIR = "release"
+ERROR_HEAD = 80  # the parent's release_verdict: a checker message is cut to 80 characters
 
 
 class HostError(RuntimeError):
@@ -336,6 +351,8 @@ def make_plan(
     row = guard.require_split_allowed(split, src)
     pins = parent_pins(src, campaign)
     if split == rules.SPLIT:
+        if name != rules.RESERVE_PLAN:
+            raise HostError(f"the reserve split's one registered plan is {rules.RESERVE_PLAN}")
         if controls_run not in (None, rules.RESERVE_CONTROLS_RUN):
             raise HostError(f"the reserve split reads {rules.RESERVE_CONTROLS_RUN} only")
         controls_run = rules.RESERVE_CONTROLS_RUN
@@ -501,6 +518,135 @@ def cmd_status(args: argparse.Namespace) -> None:
     print(json.dumps(out, indent=1))
 
 
+# --- release view ------------------------------------------------------------------------
+
+
+def finished_steps(plan: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """The finished attempt of every stage; refuses a plan that is not complete."""
+    done: dict[str, dict[str, Any]] = {}
+    for step in plan["steps"]:
+        if step["state"] == "done":
+            done[step["stage"]] = step
+        elif step["state"] != "superseded":
+            raise HostError(f"step {step['name']} is {step['state']}: the plan is not complete")
+    missing = [stage for stage in STAGES if stage not in done]
+    if missing:
+        raise HostError(f"no finished step for {missing}")
+    return done
+
+
+def make_view(run: Path, plan: dict[str, Any]) -> Path:
+    """``<run>/view``: a run root in the parent's layout for its ``campaign export``."""
+    if plan.get("reuse_parent_run"):
+        raise HostError("a plan that reuses a parent run is released by that run's export")
+    done = finished_steps(plan)
+    submitted = {
+        "run": plan["name"],
+        "split": plan["split"],
+        "git_sha": plan["git_sha"],
+        "apply_to": plan["apply_to"],
+        "jobs": [int(done[stage]["job"]) for stage in STAGES],
+        "superseded_jobs": [
+            int(s["job"]) for s in plan["steps"] if s["state"] == "superseded" and s.get("job")
+        ],
+        "experiment_id": EXPERIMENT_ID,
+    }
+    links = {STAGE_DIRS[stage]: done[stage]["run_dir"] for stage in STAGES}
+    view = run / VIEW_DIR
+    if view.exists():
+        current = json.loads((view / "submitted.json").read_text(encoding="utf-8"))
+        if current != submitted or any(
+            os.readlink(view / name) != target for name, target in links.items()
+        ):
+            raise HostError(f"{view} exists and differs from the plan")
+        return view
+    view.mkdir()
+    for name, target in links.items():
+        os.symlink(target, view / name)
+    (view / "submitted.json").write_text(json.dumps(submitted, sort_keys=True) + "\n")
+    return view
+
+
+def release_rows(data: dict[str, Any]) -> dict[str, Any]:
+    """The rows file with every checker message cut to the parent's release length."""
+    out = copy.deepcopy(data)
+    for row in out.get("rows", []):
+        for key in ("raw_error", "zinv_error"):
+            head = row.get(key)
+            if isinstance(head, str) and len(head) > ERROR_HEAD:
+                row[key] = head[:ERROR_HEAD] + "..."
+    return out
+
+
+def write_json(path: Path, data: Any) -> None:
+    """``run.write_json``'s format, so an unchanged rows file keeps its bytes."""
+    path.write_text(json.dumps(data, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def export_release(root: Path, name: str) -> dict[str, Any]:
+    run, plan = read_plan(root, name)
+    src = Path(plan["src"])
+    if check_src(src) != plan["git_sha"]:
+        raise HostError("the staged export changed since the plan")
+    guard, rules, campaign = load_staged(src)
+    guard.require_split_allowed(plan["split"], src)
+    final = run / RELEASE_DIR
+    if final.exists():
+        raise HostError(f"{final} exists; the release view is written once")
+    view = make_view(run, plan)
+    done = finished_steps(plan)
+    if plan["split"] != "dev":  # the parent's export re-checks its own frozen row and pins
+        os.environ["Q2M_PREREG_FROZEN"] = PARENT_ID
+    out = run / f"{RELEASE_DIR}.partial"  # an interrupted export leaves only this behind
+    if out.exists():
+        shutil.rmtree(out)
+    out.mkdir()
+    code = campaign.main(
+        ["export", "--run", str(view), "--out", str(out / "campaign"), "--src", str(src)]
+    )
+    if code != 0:
+        raise HostError("the parent's campaign export refused the view")
+    zinv_dir, prep_dir = Path(done["zinv"]["run_dir"]), Path(done["targets"]["run_dir"])
+    rows = json.loads((zinv_dir / "zinv-rows.json").read_text(encoding="utf-8"))
+    write_json(out / "zinv-rows.json", release_rows(rows))
+    for source in (zinv_dir / "judgement.json", prep_dir / "targets-selection.json"):
+        (out / source.name).write_bytes(source.read_bytes())
+    (out / "receipts").mkdir()
+    for step in plan["steps"]:
+        receipt = Path(step["run_dir"]) / f"receipt-{step['job']}.json"
+        if step.get("job") and receipt.is_file():
+            target = out / "receipts" / f"{step['name']}-receipt-{step['job']}.json"
+            target.write_bytes(receipt.read_bytes())
+    (out / "plan.json").write_bytes((run / "plan.json").read_bytes())
+    # campaign/ holds the parent's per-mutant verdict files, which carry no warning of their own
+    (out / "BLIND-WARNING.txt").write_text(rules.BLIND_WARNING + "\n", encoding="utf-8")
+    files = {
+        path.relative_to(out).as_posix(): sha256_file(path)
+        for path in sorted(out.rglob("*"))
+        if path.is_file()
+    }
+    judgement = json.loads((out / "judgement.json").read_text(encoding="utf-8"))
+    manifest = {
+        "experiment_id": EXPERIMENT_ID,
+        "name": plan["name"],
+        "split": plan["split"],
+        "git_sha": plan["git_sha"],
+        "frozen_ledger_hash": plan.get("frozen_ledger_hash"),
+        "warning": rules.BLIND_WARNING,
+        "outcome": judgement.get("outcome"),
+        "status": judgement.get("status"),
+        "zinv_rows_sha256_on_host": sha256_file(zinv_dir / "zinv-rows.json"),
+        "files_sha256": files,
+    }
+    write_json(out / "manifest.json", manifest)
+    out.rename(final)
+    return {"release": str(final), "files": len(files) + 1, "outcome": manifest["outcome"]}
+
+
+def cmd_export(args: argparse.Namespace) -> None:
+    print(json.dumps(export_release(args.root, args.name)))
+
+
 def main(argv: list[str] | None = None) -> int:
     os.umask(0o022)
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -517,9 +663,12 @@ def main(argv: list[str] | None = None) -> int:
     nx.add_argument("--dry-run", action="store_true")
     st = sub.add_parser("status")
     st.add_argument("--name", required=True)
+    ex = sub.add_parser("export", help="the release view of a complete plan (section 10)")
+    ex.add_argument("--name", required=True)
     args = parser.parse_args(argv)
+    commands = {"plan": cmd_plan, "next": cmd_next, "status": cmd_status, "export": cmd_export}
     try:
-        {"plan": cmd_plan, "next": cmd_next, "status": cmd_status}[args.command](args)
+        commands[args.command](args)
     except HostError as exc:
         print(f"refused: {exc}", file=sys.stderr)
         return 2

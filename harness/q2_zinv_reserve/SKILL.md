@@ -29,8 +29,10 @@ rejects? Registration: `program/preregistrations/q2-zinv-reserve-validation-v1.m
 - `guard.py`: standard library only; code table, reused pins, the parent's code
   tree; reserve needs this experiment's ledger row and `Q2ZR_PREREG_FROZEN`.
 - `infra/q2-zinv-reserve/run/zr_host.py`: the host tool (`plan`, `next`,
-  `status`); steps 1-3 are the parent's frozen `submit_mutants.sh` jobs, one at a
-  time, through the unchanged CPU lane.
+  `status`, `export`); steps 1-3 are the parent's frozen `submit_mutants.sh` jobs,
+  one at a time, through the unchanged CPU lane. `export` writes `release/`: the
+  parent's `campaign export` of `view/` (the run in the parent's layout) plus
+  this addendum's rows, judgement, selection, receipts and the blind warning.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
@@ -50,7 +52,7 @@ rejects? Registration: `program/preregistrations/q2-zinv-reserve-validation-v1.m
 | Task | First action |
 |---|---|
 | Rehearse on dev (before the freeze) | Stage `git archive HEAD` under `/home/kevin/cotcodec-runs/stage0/q2-zinv-reserve/src/SHA` with `.git_sha`; `python3 SRC/infra/q2-zinv-reserve/run/zr_host.py plan --src SRC --name dev-rehearsal-vN --split dev --controls-run dev-controls-v9`, then `next --dry-run`, then `next` on an empty queue |
-| The registered run (after the freeze) | Export the freeze commit, export `Q2ZR_PREREG_FROZEN=q2-zinv-reserve-validation-v1`, `plan --split reserve --name reserve-v1`, `next` until complete |
+| The registered run (after the freeze) | Export the freeze commit, export `Q2ZR_PREREG_FROZEN=q2-zinv-reserve-validation-v1`, `plan --split reserve --name reserve-v1` (the only reserve name the tool accepts), `next` until complete, then `export --name reserve-v1` |
 | Read a result | `zr_host.py status --name NAME`; `zinv/judgement.json` in the run directory |
 
 ## Gotchas
@@ -61,3 +63,7 @@ rejects? Registration: `program/preregistrations/q2-zinv-reserve-validation-v1.m
 - The host runs Python 3.10: `guard.py` and `zr_host.py` stay standard library
   only and 3.10 compatible.
 - `k2-sample` in step 3 records "not drawn" (one domain); that is expected.
+- Invalid rows are final: step 4 exits 0 with invalid rows, and the outcome is
+  INCOMPLETE (it takes precedence over FAIL); nothing is rerun for them.
+- Released per-mutant verdicts carry `rules.BLIND_WARNING` (D9's human spot
+  check is still pending).
