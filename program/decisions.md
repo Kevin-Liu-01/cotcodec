@@ -1530,3 +1530,56 @@ of its answers exist:
 Every output carries the D80 label. The correlated judge remains: (a) uses
 the Anthropic rater's model, and (b) exists to measure that. D9's human spot
 check stays pending as a human validation.
+
+**D82. The checker-mutation adjudication is complete (D81 run 2), adjudicated
+by an isolated model on the owner's instruction (D80); not human-validated.**
+- Isolation audit. Run 2's primary session (`wf_843930b8-5af`, 52 agents,
+  `claude-opus-5-5`, the registered template as each task turn) passed the
+  frozen `collect-transcripts` and `ingest-isolated` unmodified: 52 `ok`, 0
+  void. The only tools used were Read (711) and the structured output (52),
+  and 503 of 506 page images were opened.
+- Answers. The pool split 17 accept, 17 reject. The spot check split 19
+  accept, 6 reject.
+- Against the K2 rerun, the parent analysis rerun from `65bc2e2` with
+  `--adjudications` and `--k2-report` changes:
+  - Gold-defect tasks: 0 to 3.
+  - False-negative candidates: 30 confirmed and 6 unresolved become 33
+    confirmed and 3 label-contradicted, all 3 on gold-defect task `5c1a6c3d`.
+  - Confirmed false-negative shares: pooled 10.6% to 11.6% (6.4-17.3%),
+    `compare_pptx_files` 33.5% to 37.1%, the z-order operator 77.1% to 85.4%.
+  - The alternative-solution gate: 72/3/18 to 82/11/0, with 10 of the 11
+    rejects on two `compare_table` gold-defect tasks.
+  - P2: the population goes from 327 to 337 at an unchanged 12.4%
+    (7.2-18.3%). Without the gold-defect equivalence mutants it is 12.2%
+    (6.7-18.1%; 323 mutants, 57 tasks).
+  - K3: the equivalence label error goes from 0.167 to 0.000. K3 still fires,
+    through kappa 0.343 alone.
+  - K4 no longer fires.
+  - Unchanged: kappa, P1 (3 of 92 confirmed), P3-P5, the false-positive table
+    (2 confirmed) and the candidate shares.
+- The sensitivities committed in D81 change no conclusion:
+  - (b) Fable agreed on 51 of 52 items (kappa 0.96) and 27 of 28 splits; its
+    one unsure leaves 32 confirmed false negatives. Under the strict
+    registered audit all 52 Fable answers are void, because its session
+    carries an attachment type off the registered list (a fixed harness
+    reminder to batch tool calls), so (b) is reported with that one type
+    excepted.
+  - (c), the notation sentence: the 12 marker items were accepted, as in (a),
+    and the analysis is byte-identical.
+- The correlated judge is plain in the numbers:
+  - On the 28 splits, (a) sided with the Claude rater 17 times and with Qwen
+    11 times.
+  - In the spot check, it matched the Claude rater on all 25 items and the
+    raters' consensus on all 23 concordant items, and it got all 5 shams
+    right.
+  - So the model spot check cannot validate the Claude rater independently.
+    D9's human spot check stays open as the only independent validation.
+- Verification. Two fresh verifiers reproduced everything:
+  - the isolation audit of all 116 transcripts;
+  - every audit summary and analysis, the main run, both sensitivities and
+    both controls, byte for byte from the frozen code;
+  - the agreement tables.
+  Their minor wording items were fixed (`ecc90a22`).
+- Evidence: `program/evidence/2026-10-11/q2-mutation-adjudication-v2/`. The
+  checker-mutation note (R03) can now be finished as a descriptive,
+  model-adjudicated result.
