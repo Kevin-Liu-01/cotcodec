@@ -1324,3 +1324,27 @@ at 60. It renders the text factor with a generated pseudo-Arabic catalog
 with pixel-located boxes and planted controls, and decides K0 and K1 on what
 can run. Fetching the applications' real Arabic language packs for Phase 1
 is a download Kevin approves. Phase 1 admission stays his (D24).
+
+**D75. R01 scored 58 at wave 1; one repair run, under D60's stop line.**
+R01 (rerun-noise sources; D73 i) scored 58, the lower of the two reviews
+(Claude 58, open-weight 62). It ended at an honest exit: the triad refuted 3
+of 3, and 142 of 150 queries are spent. Its executable records-only pilot,
+Stage A0 (orx cpu-doctor node, 8 of 8 cases passing), already reports a
+descriptive finding from S1a's own logs:
+- of 27 requests replayed with byte-identical input under greedy decoding,
+  16 gave different reply text (0.59; at step 1, 12 of 19);
+- pairs with identical parsed actions never disagreed on the outcome (0 of
+  227, an upper bound of 1.3% per pair).
+So serving-side nondeterminism, not the environment, looks like the main
+source of S1a's rerun disagreement. This reading is descriptive, from
+natural pairs only. The largest defect is that Stage B's primary estimands
+weight steps 1-8 equally, while 205 of 226 within-session pairs first
+diverge at step 1. Only 40 of 320 requests measure the hazard the mechanism
+needs, and the step-kick prediction does not follow from them. The per-job
+caps are also underpriced, and two replay drivers do not exist yet. Decided:
+one repair run, a single owner, CPU only. It restricts the primary estimands
+to the divergence-onset step (step 1, with step 2 as secondary), reprices the
+caps per job with arithmetic, builds and tests the P0 bitwise self-test and
+the replay drivers on CPU where possible, and restates the prediction. A score
+below 60, or the same largest defect, ends R01. Its GPU stages stay Kevin's
+(D24, D70).
