@@ -74,8 +74,35 @@ def dev_manifest(n: int = 2, **kw: Any) -> dict[str, Any]:
     return {**base(**kw), "slots": lane.expand_runs(pairs)}
 
 
-def test_a_dev_manifest_validates_and_runs_each_pair_twice_in_two_blocks() -> None:
-    m = lane.validate_manifest(dev_manifest(3), ROOT)
+def draft_tree(tmp_path: Path) -> Path:
+    """A source tree holding what the lane reads for a development job (the splits and the
+    file cache receipts) and no ledger: the addendum as a draft. Development manifests are
+    validated here, never against the repository's tree, so this suite passes on the freeze
+    commit too, where the repository's tree refuses every development job (S1a's V-B1)."""
+    src = tmp_path / "draft"
+    for rel in (lane.SPLITS, lane.FILE_CACHE_RECEIPTS):
+        (src / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(ROOT / rel, src / rel)
+    assert lane.ledger_row(src) is None
+    return src
+
+
+def test_the_repositorys_tree_admits_development_only_until_the_freeze() -> None:
+    """Before the freeze the repository's tree admits a development job and refuses k2; once
+    its ledger holds this addendum's row it refuses every development job."""
+    m = dev_manifest()
+    if lane.ledger_row(ROOT) is None:
+        lane.validate_manifest(m, ROOT)
+        with pytest.raises(lane.LaneError, match="only after the addendum is frozen"):
+            lane.validate_manifest(mutate(m, "purpose", "k2"), ROOT)
+    else:
+        lane.frozen_registration(ROOT)
+        with pytest.raises(lane.LaneError, match="only the registered k2 job"):
+            lane.validate_manifest(m, ROOT)
+
+
+def test_a_dev_manifest_validates_and_runs_each_pair_twice_in_two_blocks(tmp_path: Path) -> None:
+    m = lane.validate_manifest(dev_manifest(3), draft_tree(tmp_path))
     assert [s["slot"] for s in m["slots"]] == [
         "k2:000:r1",
         "k2:001:r1",
@@ -118,7 +145,7 @@ def mutate(m: dict[str, Any], path: str, value: Any) -> dict[str, Any]:
         ("slots.0.candidate_sha256", "e" * 64, "carries candidate_sha256"),
     ],
 )
-def test_manifest_refusals(path: str, value: Any, message: str) -> None:
+def test_manifest_refusals(tmp_path: Path, path: str, value: Any, message: str) -> None:
     m = dev_manifest()
     if path.startswith("slots.0.files./home/user/X.xlsx."):
         bad = json.loads(json.dumps(m))
@@ -126,24 +153,25 @@ def test_manifest_refusals(path: str, value: Any, message: str) -> None:
     else:
         bad = mutate(m, path, value)
     with pytest.raises(lane.LaneError, match=message):
-        lane.validate_manifest(bad, ROOT)
+        lane.validate_manifest(bad, draft_tree(tmp_path))
 
 
-def test_a_confirm_mutation_run_cannot_be_named_development() -> None:
+def test_a_confirm_mutation_run_cannot_be_named_development(tmp_path: Path) -> None:
     m = dev_manifest(run="confirm-mutants-v1")
     with pytest.raises(lane.LaneError, match="dev-split mutation run"):
-        lane.validate_manifest(m, ROOT)
+        lane.validate_manifest(m, draft_tree(tmp_path))
 
 
-def test_context_files_must_match_the_file_cache_receipts() -> None:
+def test_context_files_must_match_the_file_cache_receipts(tmp_path: Path) -> None:
+    src = draft_tree(tmp_path)
     m = dev_manifest(1)
-    rel, digest = next(iter(lane.file_cache_receipts(ROOT).items()))
+    rel, digest = next(iter(lane.file_cache_receipts(src).items()))
     for slot in m["slots"]:
         slot["files"]["/home/user/ctx.bin"] = {"root": "file_cache", "rel": rel, "sha256": digest}
-    lane.validate_manifest(m, ROOT)
+    lane.validate_manifest(m, src)
     m["slots"][0]["files"]["/home/user/ctx.bin"]["sha256"] = "0" * 64
     with pytest.raises(lane.LaneError, match="file cache receipts"):
-        lane.validate_manifest(m, ROOT)
+        lane.validate_manifest(m, src)
 
 
 def frozen_tree(tmp_path: Path, *, k2c_sha: str | None = None) -> Path:
@@ -200,6 +228,12 @@ def test_after_the_freeze_only_the_registered_k2_job_runs(tmp_path: Path) -> Non
         lane.validate_manifest({k: v for k, v in m.items() if k != "jobs_sha256"}, src)
     with pytest.raises(lane.LaneError, match="jobs_sha256"):
         lane.validate_manifest({**m, "jobs_sha256": "0" * 64}, src)
+    # The run root is the registered one, so the one-job guard sees every k2 job: another
+    # directory under the host's run root would pass the generic check and hide an earlier job.
+    assert m["run_root"] == lane.REGISTERED_RUN_ROOT
+    for other in (RUN_ROOT + "stage0/q2-mutation-k2/runs-2", RUN_ROOT + "elsewhere"):
+        with pytest.raises(lane.LaneError, match="run root"):
+            lane.validate_manifest({**m, "run_root": other}, src)
     lane.check_slurm(m)
     (src / lane.REGISTRATION).write_text("edited after the freeze\n")
     with pytest.raises(lane.LaneError, match="changed after the freeze"):
@@ -268,6 +302,11 @@ def test_submit_and_run_refuse_a_second_k2_job(
     src = frozen_tree(tmp_path)
     host_root = tmp_path / "host"
     monkeypatch.setattr(lane, "RUN_ROOT", str(host_root))
+    monkeypatch.setattr(
+        lane,
+        "REGISTERED_RUN_ROOT",
+        lane.REGISTERED_RUN_ROOT.replace(RUN_ROOT.rstrip("/"), str(host_root)),
+    )
     text = json.dumps(registered_manifest(src)).replace(RUN_ROOT.rstrip("/"), str(host_root))
     manifest = tmp_path / "k2.json"
     manifest.write_text(text)
@@ -403,7 +442,7 @@ class FakeDocker:
 
 
 def test_the_k2_lane_dispatches_requeues_once_and_records(tmp_path: Path) -> None:
-    m = lane.validate_manifest(dev_manifest(2, v=1), ROOT)
+    m = lane.validate_manifest(dev_manifest(2, v=1), draft_tree(tmp_path))
     src = tmp_path / "src"
     src.mkdir()
     (src / ".git_sha").write_text("b" * 40 + "\n")

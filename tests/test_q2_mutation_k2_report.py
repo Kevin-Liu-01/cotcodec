@@ -367,6 +367,10 @@ def test_the_summary_reports_each_set_by_family_verdict_and_save_path() -> None:
         "postconfig_save": {"pairs": 1, "agree": 1, "differ": 0, "excluded": 0, "explanations": {}},
     }
     assert summary["runs"]["attempts"] == 163  # pooled over both sets
+    # Agreement is per set only (section 8): no table pools K2 with K2-C.
+    for key in ("by_family", "by_offline_verdict", "by_save_path", "agree", "pairs"):
+        assert key not in summary, key
+    assert summary["blind_warning"] == report.BLIND_WARNING
     assert rows[("k2", 4)]["save_path"] == "postconfig_save"  # its scored attempts recorded it
     bare = synthetic(10)
     for record in bare["records"]:
@@ -416,6 +420,8 @@ def frozen_repo(tmp_path: Path, *, extra_in_freeze: bool = False) -> dict[str, A
     registration.write_text(
         f"# test registration\n\nK2-C list SHA-256: `{report.sha256_file(K2C)}`\n"
     )
+    (repo / "harness" / "q2_mutation_k2").mkdir(parents=True)  # the code the export runs
+    (repo / "harness" / "q2_mutation_k2" / "lane.py").write_text("RUN = 'k2'\n")
     git(repo, "init", "-q")
     git(repo, "add", "-A")
     git(repo, "commit", "-q", "-m", "registration")
@@ -428,10 +434,18 @@ def frozen_repo(tmp_path: Path, *, extra_in_freeze: bool = False) -> dict[str, A
         (repo / "other.txt").write_text("not the ledger\n")
     git(repo, "add", "-A")
     git(repo, "commit", "-q", "-m", "freeze")
-    return {"repo": repo, "parent": parent, "freeze": git(repo, "rev-parse", "HEAD"), "row": row}
+    return {
+        "repo": repo,
+        "parent": parent,
+        "freeze": git(repo, "rev-parse", "HEAD"),
+        "row": row,
+        "tree": lane.tree_sha256(repo),  # what the lane records for an export of either commit
+    }
 
 
-def registered_run(tmp_path: Path, frozen: dict[str, Any], commit: str, name: str = "run") -> Path:
+def registered_run(
+    tmp_path: Path, frozen: dict[str, Any], commit: str, name: str = "run", tree: str | None = None
+) -> Path:
     """A k2 run directory whose runs all give the offline verdict (the real registered inputs)."""
     sample = read_jsonl(RELEASED / "k2/k2-sample.jsonl")
     k2c = read_jsonl(K2C)
@@ -464,6 +478,7 @@ def registered_run(tmp_path: Path, frozen: dict[str, Any], commit: str, name: st
             "executor_commit": commit,
             "git_head_at_freeze": frozen["row"]["git_head_at_freeze"],
             "ledger_row_hash": frozen["row"]["hash"],
+            "source_tree_sha256": tree or frozen.get("tree"),
             "vm_image_id": lane.VM_PINS["image_id"],
         },
     }
@@ -503,7 +518,10 @@ def test_the_k2_report_checks_the_freeze_commit_and_reads_one_job(tmp_path: Path
     assert k2["outcome"] == "VERIFIED" and k2["executor_commit"] == frozen["freeze"]
     assert k2["freeze"]["git_head_at_freeze"] == frozen["parent"]
     assert k2["freeze"]["changed"] == [lane.LEDGER]
+    assert k2["freeze"]["source_tree_sha256"] == frozen["tree"]
+    assert k2["blind_warning"] == report.BLIND_WARNING
     summary = json.loads((out / "k2-summary.json").read_text())
+    assert summary["blind_warning"] == report.BLIND_WARNING
     assert summary["freeze"]["ledger_row_hash"] == frozen["row"]["hash"]
     assert summary["k2"]["pairs"] == 80 and summary["k2c"]["pairs"] == 41
     # An export of git_head_at_freeze (the parent) is not the executor of record.
@@ -524,6 +542,32 @@ def test_the_k2_report_checks_the_freeze_commit_and_reads_one_job(tmp_path: Path
     (run_dir / "lane-receipt.json").write_text(json.dumps(receipt))
     with pytest.raises(report.ReportError, match="not the frozen row"):
         report.main(report_argv([run_dir], frozen["repo"], tmp_path / "o5"))
+    # An export whose .git_sha names the freeze commit but whose harness/ tree is not that
+    # commit's (the receipt records the digest of the tree that ran) is refused.
+    other = registered_run(tmp_path, frozen, frozen["freeze"], name="other-tree", tree="d" * 64)
+    with pytest.raises(report.ReportError, match="source tree digest"):
+        report.main(report_argv([other], frozen["repo"], tmp_path / "o6"))
+
+
+@pytest.mark.skipif(shutil.which("git") is None, reason="needs git")
+def test_the_commit_tree_digest_is_the_lanes_source_tree_digest(tmp_path: Path) -> None:
+    """``report.commit_tree_sha256`` (from ``git archive``) equals the digest the batch file
+    checks and the lane receipt records (``harness.q2.vm.manifest.source_tree_sha256``)."""
+    repo = tmp_path / "repo"
+    (repo / "harness" / "sub").mkdir(parents=True)
+    (repo / "harness" / "a.py").write_text("A = 1\n")
+    (repo / "harness" / "sub" / "b.txt").write_bytes(b"\x00binary\n")
+    (repo / "other.txt").write_text("outside harness/\n")
+    git(repo, "init", "-q")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-q", "-m", "tree")
+    (repo / "harness" / "__pycache__").mkdir()  # bytecode the lane may leave in an export
+    (repo / "harness" / "__pycache__" / "a.cpython-310.pyc").write_bytes(b"pyc")
+    assert report.commit_tree_sha256(repo, "HEAD") == lane.tree_sha256(repo)
+    (repo / "harness" / "a.py").write_text("A = 2\n")  # the export differs from the commit
+    assert report.commit_tree_sha256(repo, "HEAD") != lane.tree_sha256(repo)
+    with pytest.raises(report.ReportError, match="git archive"):
+        report.commit_tree_sha256(repo, "0" * 40)
 
 
 @pytest.mark.skipif(shutil.which("git") is None, reason="needs git")

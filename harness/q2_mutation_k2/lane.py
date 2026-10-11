@@ -21,8 +21,9 @@ run's candidates. After the freeze only ``k2`` runs: from a source tree whose re
 still has its ledger row's SHA-256 (an export of the freeze commit, the commit that adds the
 row; its parent, the row's ``git_head_at_freeze``, has no row), with the registered settings,
 a manifest rendered from the pinned job list, and exactly the registered slots (the frozen K2
-sample, then the K2-C candidate list, two runs each). One ``k2`` job: ``submit`` and ``run``
-refuse while any run directory under the run root already holds a ``k2`` manifest of this id.
+sample, then the K2-C candidate list, two runs each), under the registered run root. One
+``k2`` job: ``submit`` and ``run`` refuse while any run directory under that run root already
+holds a ``k2`` manifest of this id.
 """
 
 from __future__ import annotations
@@ -69,6 +70,9 @@ REGISTERED_SETTINGS = {
 REGISTERED_CONCURRENCY = 8
 REGISTERED_SLURM = {"cpus": 40, "memory_gb": 64, "minutes": 360}
 REGISTERED_CANDIDATES_RUN = "confirm-mutants-v1"
+# The k2 job's run root (the committed base manifest's): every k2 job writes its run directory
+# here, so the one-job guard (``check_one_job``) sees every earlier k2 job.
+REGISTERED_RUN_ROOT = RUN_ROOT + "stage0/q2-mutation-k2/runs"
 # The frozen K2 sample (parent section 10, drawn in job 3 of confirm-mutants-v1) and the K2-C
 # candidate list (section 8), both committed; their SHA-256 are the registration's.
 REGISTERED_SAMPLE = (
@@ -424,7 +428,8 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
 
 
 def check_registered(m: Mapping[str, Any], source_dir: Path) -> None:
-    """Purpose k2: the registered settings and exactly the registered slots (section 4)."""
+    """Purpose k2: the registered settings, run root and exactly the registered slots
+    (section 4)."""
     for key, value in REGISTERED_SETTINGS.items():
         _require(m.get(key, value) == value, f"{key} is fixed at {value} for the k2 job")
     _require(
@@ -437,6 +442,10 @@ def check_registered(m: Mapping[str, Any], source_dir: Path) -> None:
     _require(
         m["candidates"]["run"] == REGISTERED_CANDIDATES_RUN,
         f"the k2 job injects {REGISTERED_CANDIDATES_RUN}",
+    )
+    _require(
+        m.get("run_root") == REGISTERED_RUN_ROOT,
+        f"the k2 job's run root is {REGISTERED_RUN_ROOT} (the one-job guard reads it)",
     )
     _require(
         m.get("jobs_sha256") == REGISTERED_JOBS_SHA256,

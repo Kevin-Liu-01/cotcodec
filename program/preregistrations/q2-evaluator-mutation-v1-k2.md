@@ -1,11 +1,12 @@
 # q2-evaluator-mutation-v1-k2: K2 VM-fidelity addendum to q2-evaluator-mutation-v1
 
-**Status: DRAFT. Not frozen; no ledger row exists. The first pre-freeze audit
-(decision D73 (ii)) found two blocking items, both addressed on this branch
-(section 14); the freeze is the program owner's step.** Until this file has its
-own ledger row the K2 lane refuses every confirm-split job and runs only
-development jobs on dev-split items (section 4). Nothing in this file is a
-result.
+**Status: DRAFT, not frozen (TBD: at the freeze this whole paragraph is
+replaced by the frozen status paragraph that section 14 states under "At the
+freeze").** The first pre-freeze audit (D73 (ii)) and a fresh re-audit (D77)
+found blocking items, all addressed on the branch (section 14); the freeze, under
+program authority, waits for a clean re-audit (D77). Until this file has its own
+ledger row the K2 lane refuses every confirm-split job and runs only development
+jobs on dev-split items (section 4). Nothing in this file is a result.
 
 - Experiment id: `q2-evaluator-mutation-v1-k2`, an addendum to
   `q2-evaluator-mutation-v1` (ledger row 11: file SHA-256
@@ -39,7 +40,10 @@ offline verdict for the same `candidate_sha256`:
   `DesktopEnv.evaluate()` running over the VM, with `DONE` as the last action.
   The verdict is `pass` iff the score is 1.0, `error` iff `evaluate()` raised
   inside the checker or returned `None`, and `fail` otherwise
-  (`harness.q2_mutation.schema.verdict_for_score`, the offline rule).
+  (`harness.q2_mutation.schema.verdict_for_score`, the offline rule, after the
+  offline harness's `float()` coercion). A score that is not a finite number is
+  no verdict: `verdict_for_score` refuses it and the run is excluded (section
+  5.1).
 - **The candidate.** The files of the job's row in the mutation run's
   `build/scoring-jobs.jsonl`: the mutant (or null mutant) file the offline save
   stage started from, whose SHA-256 is the job's `candidate_sha256`, plus the
@@ -82,7 +86,7 @@ Every pair is run twice, in two independent fresh VMs (section 4).
 | Object | Pin |
 |---|---|
 | Parent | `program/preregistrations/q2-evaluator-mutation-v1.md`, ledger row 11 (above); its pins block (code tree `58bee0190c0c7eb5d44f36e27c0f1e0daab82c1c48716009a9066777c69a0721`) is unchanged: this addendum adds no file under `harness/q2_mutation/` or `infra/q2-mutation/` |
-| K2 sample | `program/evidence/2026-10-08/q2-mutation-confirm/results/released/k2/k2-sample.jsonl`, SHA-256 `1194168019c4aa87fa3f4aa0ad02f9ed53c207a86ebec264e731545afed6525a`; its summary (`mutants-confirm-v1/score/k2-sample.summary.json`) records `jobs_sha256` `9c2426b7dce17f6357950b0bdb2560ce1a20005a5702a49b5058d840fa811b14`, seed 42 |
+| K2 sample | `program/evidence/2026-10-08/q2-mutation-confirm/results/released/k2/k2-sample.jsonl`, SHA-256 `1194168019c4aa87fa3f4aa0ad02f9ed53c207a86ebec264e731545afed6525a`; its summary, written on the host as the run's `confirm-mutants-v1/score/k2-sample.summary.json` and committed byte for byte as `program/evidence/2026-10-08/q2-mutation-confirm/mutants-confirm-v1/score/k2-sample.summary.json` (SHA-256 `2c0007f1387bfc356d8b850618cb863603669d967da562c7ed39dcd041b00c9b`), records `jobs_sha256` `9c2426b7dce17f6357950b0bdb2560ce1a20005a5702a49b5058d840fa811b14`, the sample's `sample_sha256`, seed 42, 41 tasks and 20 jobs per domain |
 | Job list | the host's `confirm-mutants-v1/build/scoring-jobs.jsonl`, SHA-256 `9c2426b7dce17f6357950b0bdb2560ce1a20005a5702a49b5058d840fa811b14` (the sample summary's `jobs_sha256`): `lane render` maps the slots' files from this list only and refuses any other, and the `k2` manifest carries the digest |
 | K2-C list | `program/evidence/2026-10-11/q2-mutation-k2/k2c-candidates-confirm.jsonl`, written by `harness/q2_mutation_k2/candidates.py` from the released outcomes and verdicts. K2-C list SHA-256: `c7b1869049749c8311e73f3ba09ea98e53e45086d49922c6ccea72ab6bb8a028` |
 | Offline verdicts | `released/confirm-mutants-v1/verdicts-lock.jsonl`, SHA-256 `e9289a954d5aee21156d0b317267b6f818f630b140ac5337e8fae0cc4c66b021` (1,300 rows) |
@@ -118,8 +122,8 @@ freeze; `tests/test_q2_mutation_k2_prereg.py` fails on drift):
 | `harness/q2_mutation_k2/candidates.py` | `cf1dbcb56de21a452015eb45652128384fae2eb7d766a2e951fe5a8daeb6df3b` |
 | `harness/q2_mutation_k2/executor.py` | `0d104aa6c51dde519d42a33829fdf5f811b524b202463eab5389f1c49d7c48b7` |
 | `harness/q2_mutation_k2/guest/k2_guest.py` | `869ebb3811f44ee990f587077756c3bb774392930e6973a54a2225714608dda8` |
-| `harness/q2_mutation_k2/lane.py` | `d7744ce2fec906b622eeb57069e68382d92ce67d7d057dd3cfaba21ced4ce2b1` |
-| `harness/q2_mutation_k2/report.py` | `af05bcf90ab6ac81e6ac9c15577012338e85cfd0788b547bfab5601fc8435356` |
+| `harness/q2_mutation_k2/lane.py` | `77b019768c04bd98775324a889db84feec1729d99a32705a401ca9c988a53554` |
+| `harness/q2_mutation_k2/report.py` | `dbb5404b03ce4e2e57ac9adec4179b7fc896fa16ecc73625aa5b3f9a88976dde` |
 | `harness/q2_mutation_k2/rules.py` | `58ea109a1aff6d6b059b6ca841b99a3a8b7ca858fe698c8b5ab33238e6be8c05` |
 | `infra/slurm/host-single-node/q2m-k2-vm.sbatch` | `0cddd6bb624758f66e0f02c45b1c7cfb7a6e2d4dcc8aa9dc7e1d983077b8c6b0` |
 <!-- k2-code-table end -->
@@ -214,19 +218,24 @@ check.
 - The K2 lane (`harness/q2_mutation_k2/lane.py`) is S1a's lane
   (`harness.q2_stage1.lane.Lane`) with K2's slots and records: continuous
   dispatch, one re-queue of a run lost to infrastructure on its first attempt
-  (at the end of its block), the USR1 stop (runs cut or never dispatched are
-  recorded `cap_truncated`), host snapshots and the D12 stop.
+  (S1a's dispatcher: at the end of its block while that block still has runs
+  queued, otherwise at the front of the queue, so it is dispatched next), the
+  USR1 stop (runs cut or never dispatched are recorded `cap_truncated`), host
+  snapshots and the D12 stop.
 - The registered job (purpose `k2`): V = 8 concurrent VMs (at most 32, D53),
   Slurm 40 CPUs, 64 GB, 360 minutes, run timeout 900 s, settles 60 s and 20 s,
   candidates from `confirm-mutants-v1`, and exactly the registered slots (the
   K2 sample in its order, then the K2-C list in its order, two runs each). The
   lane refuses any other manifest after this file's freeze, and refuses the
   `k2` purpose before it. One job; it is rerun only under section 6's repair
-  rule. The lane enforces this: `lane submit` refuses, and `lane run` refuses
-  before it starts any VM, while any run directory under the run root holds a
-  `k2` manifest or receipt of this id (a job that started; a run that refused
-  itself is marked and does not count), and the report reads exactly one `k2`
-  run directory (section 7).
+  rule. The lane enforces this: a `k2` manifest must name the registered run
+  root, the committed base manifest's
+  `/home/kevin/cotcodec-runs/stage0/q2-mutation-k2/runs`, under which the batch
+  file writes each job's run directory; `lane submit` refuses, and `lane run`
+  refuses before it starts any VM, while any run directory under that run root
+  holds a `k2` manifest or receipt of this id (a job that started; a run that
+  refused itself is marked and does not count); and the report reads exactly
+  one `k2` run directory (section 7).
 - CPU-only Slurm job through `infra/slurm/host-single-node/q2m-k2-vm.sbatch`
   (S1a's VM batch file with K2's names: no GRES, no GPU variables, the batch
   file's, manifest's and source tree's digests checked, the export's
@@ -253,7 +262,9 @@ A run is **scored** when its in-VM verdict exists (pass, fail or error). It is
   undelivered (S1a's D53 (iii) rule); the checker asks for a URL the offline
   run cannot serve; the guest server restarts (S1a's identity check after the
   settle and after the capture); the run exceeds 900 s; the VM container does
-  not start; the runner crashes.
+  not start; the runner crashes (recorded `runner_crash`; this includes a score
+  that is not a finite number after `float()`, which `verdict_for_score`
+  refuses).
 
 A run lost on its first attempt is dispatched once more; the run is scored if
 either attempt scored, and excluded otherwise (cause (3) if either attempt
@@ -317,6 +328,16 @@ offline verdict. Otherwise it **differs**, and its explanation is the first of:
     another job, requires none); its code table is refreshed either way. It
     reruns every slot, and both attempts are reported. A second `INCOMPLETE`
     ends K2 at an honest exit with the label kept.
+  - A `k2` job that ends without writing `lane-receipt.json` (cancelled, stopped
+    by TERM, which the batch file passes to the lane and the lane does not
+    catch, or lost with its node) reads as every slot missing (cause (4)): the
+    gate fails and the outcome is `INCOMPLETE`, whatever records it wrote. The
+    report step refuses a run directory without a receipt, so no K2 report
+    exists for the analysis. The job's manifest still counts for the one-job
+    guard (section 4), so only the repair rule above can run K2 again. (At the
+    time limit the batch file's USR1 reaches the lane 120 s early, and the lane
+    stops and writes its receipt; this rule applies only if it has not done so
+    when Slurm ends the job.)
 - R03's kill line "K2 reproduces fewer than 50% of confirmed verdicts in the
   VM" is not adopted here: adopting R03 is Kevin's call (D73). Its input is
   reported (section 8).
@@ -352,8 +373,11 @@ the ledger row of the export's own ledger (its `git_head_at_freeze` and row
 hash), the source tree digest and the manifest's VM pins. For the `k2` job the
 report checks, in the `--repo` checkout, that the executor commit has exactly
 one parent, the row's `git_head_at_freeze`, that the two trees differ only by
-`program/preregistrations/ledger.jsonl`, and that the receipt's row is the
-checkout's row; any mismatch refuses the report. No in-VM verdict is compared
+`program/preregistrations/ledger.jsonl`, that the receipt's row is the
+checkout's row, and that the executor commit's `harness/` tree digest (the
+batch file's digest, computed from `git archive` of that commit) equals the
+receipt's `source_tree_sha256`, so the export's self-declared `.git_sha` is not
+taken on trust; any mismatch refuses the report. No in-VM verdict is compared
 with an offline one during the job: the comparison exists only in this report
 step, after the receipt is written (the parent's section 10). The parent's
 analysis is then rerun with `--k2-report` added to whatever audit inputs exist
@@ -365,28 +389,38 @@ at that time (section 9).
   rules as a K2 pair, and reported beside that candidate in the note's
   candidate lists as "reproduced in the VM" (every scored run gives the offline
   verdict), "not reproduced" (with its explanation) or "excluded", with counts
-  per family and per event type. K2-C is selected on the checker's verdict, so
-  it is a reproduction check of the reported events, never a fidelity estimate;
+  per family and per event type (in the registered list every false negative's
+  offline verdict is `fail` and every false positive's is `pass`, so K2-C's
+  table by offline verdict is its table by event type). K2-C is selected on the
+  checker's verdict, so it is a reproduction check of the reported events,
+  never a fidelity estimate;
   it changes no registered number, it is never passed to the analysis, and its
   results drop no family. If Kevin adopts R03's kill line, its input is K2-C's
   reproduction among the candidates his adjudication confirms; that join is the
   note's, outside this addendum's code.
-- **Reported only.** Per set (`k2`, `k2c`) and pooled over both: agreement by
-  family, by offline verdict and by save path (a pair's save path is its
-  targets' save paths in the plan its runs recorded, `postconfig_save`,
-  `agent_save` or `no_save`, joined with `+` when its targets differ, and
-  `not_recorded` when no attempt reached the plan); single-run pairs;
-  exclusions by type; the run attempts' statuses and infrastructure types;
-  targets by save path; runs with a target unsaved at the checker's read; late
-  writes; postconfig reply failures; metric errors; checker observations
-  (S1a's per-run summary summed: calls, retried, slow, undelivered, unusual,
-  and the longest call); the save-time reading (each postconfig-saved target's
-  guest mtime minus the reply time of the postconfig's first `execute` step,
-  mapped through the guest clock offset read at `pre_postconfig`; a task whose
-  Ctrl+S command sleeps after the keystroke makes it negative, so it only
-  bounds the save, and it decides nothing; cause (1) reads the checker's bytes)
-  and the run times. Per receipt: the host snapshots (start, each block, end)
-  that saw another Slurm job, and those jobs.
+- **Reported only.** Per set (`k2`, `k2c`) only: pairs agreeing, differing
+  and excluded, with explanations and exclusion causes; agreement by family, by
+  offline verdict and by save path (a pair's save path is its targets' save
+  paths in the plan its runs recorded, `postconfig_save`, `agent_save` or
+  `no_save`, joined with `+` when its targets differ, and `not_recorded` when
+  no attempt reached the plan); single-run pairs. Agreement is never pooled
+  over the two sets: K2 is a random sample and K2-C is selected on the
+  checker's verdict, so a rate over both would estimate nothing. Per set and
+  pooled over every run attempt of the job: the run attempts' statuses and
+  infrastructure types; targets by save path; runs with a target unsaved at the
+  checker's read; late writes; postconfig reply failures; metric errors;
+  checker observations (S1a's per-run summary summed: calls, retried, slow,
+  undelivered, unusual, and the longest call); the save-time reading (each
+  postconfig-saved target's guest mtime minus the reply time of the
+  postconfig's first `execute` step, mapped through the guest clock offset read
+  at `pre_postconfig`; a task whose Ctrl+S command sleeps after the keystroke
+  makes it negative, so it only bounds the save, and it decides nothing; cause
+  (1) reads the checker's bytes) and the run times. The pooled statistics count
+  each attempt once: the pair that is in both sets is run in each, in its own
+  VMs, so its K2 runs count in the `k2` statistics, its K2-C runs in the `k2c`
+  statistics, and all of them once in the pooled statistics. Per receipt: the
+  host snapshots (start, each block, end) that saw another Slurm job, and
+  those jobs.
 
 ## 9. Interaction with the pending adjudication
 
@@ -413,8 +447,11 @@ Kevin").
    per mutant and which mutants are candidate events, so they are unblinding
    in the same way as the files the results README tells Kevin not to read
    before he answers (`sample.jsonl`, `decisions.jsonl`, `analysis.json`,
-   `summary.json`). Every K2 evidence directory's README opens with that
-   warning, and the K2 outputs are committed only under
+   `summary.json`). Every K2 output carries that warning (D77):
+   `k2-summary.json` and `k2-report.json` as their `blind_warning` field
+   (`report.BLIND_WARNING`), and the line-per-record outputs (`k2-pairs.jsonl`,
+   the run records and the K2-C list) through the README that every directory
+   holding them opens with. The K2 outputs are committed only under
    `program/evidence/2026-10-11/q2-mutation-k2/` and the K2 run's own dated
    directory, never inside the audit's packet tree. Packets are not changed
    and carry nothing from K2.
@@ -461,15 +498,32 @@ refuses any confirm task before the freeze). Records and reports:
 | 1113 (`k2-dev-smoke-v1`) | `60ed1b0` | 6 pairs (a Calc postconfig save, two agent saves, a derived CSV, a text target without a save, a z-order FN candidate), V = 3 | Void, cancelled after 4 records. Defect: `kill_process` sent SIGTERM, which leaves the open document in LibreOffice's recovery list, so the reopened candidate came up behind a "Document Recovery" dialog; two runs were excluded at the pre-postconfig window check (cause (4)), as designed. One run was contaminated by a manual probe in its VM (the probe showed that LibreOffice's own Quit leaves no dialog on reopen). Fixed in `b5a5247` (section 3.2) |
 | 1122 (`k2-dev-smoke-v2`) | `1448559` | the same 6 pairs, two runs each, V = 3 | 12 of 12 runs scored; 6 of 6 pairs agree with the offline verdict in both runs (5 K2 pairs, 1 K2-C z-order FN that fails in the VM as offline); LibreOffice quit cleanly in 0.2-0.4 s with no signal; runs 111-118 s; no target unsaved at the checker's read; save-latency estimates -0.02 to -0.01 s (clock-offset noise around a save that finished with the Ctrl+S call); the host snapshots show another CPU job (1123, 32 CPUs) from the second block on |
 | 1130 (`k2-dev-full-v1`) | `a06dc69` | the dress rehearsal at the registered job's shape: all 80 pairs of the dev K2 sample, then the 11 dev candidate events, two runs each, V = 8, 40 CPUs | 182 of 182 runs scored, none excluded or re-queued (gate: 0 of 80 excluded); 80 of 80 K2 pairs agree with the offline verdict in both runs (53 pass, 27 fail; 7 families: `compare_table` 32, `compare_pptx_files` 19, `compare_docx_files` 9, `compare_docx_tables` 7, `compare_docx_files_and_ignore_new_lines` 6, `compare_pptx_files_robust` 5, `compare_text_file` 2); 11 of 11 K2-C events reproduced in both runs (the 8 z-order false negatives fail in the VM, the 3 false positives pass); 156 postconfig saves, 22 agent saves, 4 targets without a save; no target unsaved at the checker's read; LibreOffice quit by Ctrl+Q with no signal in all 152 runs that had it open; runs 111-122 s (median 116 s); 45.5 minutes of wall time; submitted on an empty queue, another CPU job (1132, 32 CPUs) appears only in the end snapshot (after the last block's start) |
-| 1163 (`k2-dev-smoke-v3`) | `2307253` | job 1122's 6 pairs, two runs each, V = 3, after the pre-freeze audit fixes (the code of section 2's table: bounded upload, `float()` scores, the receipt's freeze fields, the job-list check at render) | 12 of 12 runs scored; 6 of 6 pairs agree with the offline verdict in both runs, the same readings as job 1122; every upload went through the bounded step; LibreOffice quit by Ctrl+Q in 0.2-0.4 s with no signal; runs 111-119 s; no target unsaved at the checker's read; render's job-list check passed on the host's `dev-mutants-v9` list and gave job 1122's slots; no other Slurm job in any host snapshot |
+| 1163 (`k2-dev-smoke-v3`) | `2307253` | job 1122's 6 pairs, two runs each, V = 3, after the first pre-freeze audit's fixes (bounded upload, `float()` scores, the receipt's freeze fields, the job-list check at render; section 2's code but for the two re-audit changes below) | 12 of 12 runs scored; 6 of 6 pairs agree with the offline verdict in both runs, the same readings as job 1122; every upload went through the bounded step; LibreOffice quit by Ctrl+Q in 0.2-0.4 s with no signal; runs 111-119 s; no target unsaved at the checker's read; render's job-list check passed on the host's `dev-mutants-v9` list and gave job 1122's slots; no other Slurm job in any host snapshot |
 
 Development outcome: on the dev split the executor met the fitness gate with
 no exclusion and found no in-VM/offline difference (job 1130 at the registered
-shape; job 1163 with the code of section 2 as it now stands). This is exploratory and
-says nothing about the confirm campaign's K2 result. The pre-freeze auditor's
-own dev smoke (job 1159, executor `a06dc69`, job 1122's six pairs under another
-name, on an empty queue) gave the same: 12 of 12 runs scored, 6 of 6 pairs
-agreeing in both runs; its records stay on the host.
+shape; job 1163 with the code of section 2 but for the two re-audit changes
+below). This is exploratory and says nothing about the confirm campaign's K2
+result. The pre-freeze auditor's own dev smoke (job 1159, executor `a06dc69`,
+job 1122's six pairs under another name, on an empty queue) gave the same: 12
+of 12 runs scored, 6 of 6 pairs agreeing in both runs; its records stay on the
+host.
+
+Code changes after job 1163 (the re-audit, section 14). Two files of section
+2's table changed, and neither touches anything a job runs in the VM or a
+development job runs on the host; the executor, the guest helper, the rules,
+the candidate list code and the batch file are byte-identical to job 1163's:
+
+- `lane.py`: `check_registered`, which only a `k2` manifest reaches, requires
+  the registered run root (section 4).
+- `report.py`, which runs after a job: for the `k2` job, `check_freeze_commit`
+  also compares the executor commit's `harness/` tree digest with the
+  receipt's (section 7; on the three development receipts the digest computed
+  from `git archive` of the recorded commit equals the recorded one); every
+  summary and analysis report carries `blind_warning` (section 9.3). The
+  development reports of jobs 1122, 1130 and 1163 were regenerated from the
+  same committed records: each `k2-pairs.jsonl` is byte-identical and each
+  `k2-summary.json` differs only by the added `blind_warning`.
 
 Shapes of the confirm split that no development job exercised (from the
 audit's host check of the 121 confirm plans): two tasks whose own setup drives
@@ -493,7 +547,8 @@ rule.
    section 20), and this addendum's injection code, pinned in section 2. The
    executor commit of record is the freeze commit (section 14), whose tree is
    `git_head_at_freeze`'s plus the ledger row; the K2 report records it, the
-   tree digest and the VM image, and checks it against the row (section 7).
+   tree digest and the VM image, and checks it against the row and its
+   `harness/` tree against the receipt's digest (section 7).
 2. **One `evaluate()` call for the plan's last three ops** (section 3.4). A
    guest hash between the postconfig and the getters would delay the
    checker's read and hide the save timing that cause (1) is about.
@@ -541,34 +596,105 @@ and any repair attempt with the decision that allowed it.
   12 now name the freeze commit, as S1a's section 1 does), and section 8's
   per-set and per-save-path quantities were not produced by the report code
   (now produced and tested). Its cheaper items are addressed too.
+- A fresh, independent re-audit (2026-10-11, D77) rehearsed the freeze on a
+  scratch clone with its own copy of the ledger (row 17; `check-chain` and
+  `verify` passed), rendered the `k2` manifest on the host without writing to
+  it (242 slots from the job list `9c2426b7...`), validated it on the freeze
+  commit's export (and saw it refused on the parent's), ran the submit-time
+  checks without submitting, and fed synthetic records to the report. It found
+  three blocking items, all fixed:
+  (1) the status paragraph would have been frozen saying the file is not
+  frozen (the defect of D32 and D39): the draft's status paragraph now holds
+  the placeholder the freeze guard refuses, so the draft cannot be frozen as it
+  stands, and "At the freeze" below states the frozen paragraph word for word
+  (`tests/test_q2_mutation_k2_prereg.py` checks both states);
+  (2) 17 K2 tests failed at the scratch freeze commit, because development
+  manifests were validated against the repository's tree and the prereg test
+  asserted that no row exists: they now validate against a draft tree, and the
+  repository's tree must refuse every development job once it holds the row,
+  so the suite passes before and after the freeze;
+  (3) section 8 promised agreement tables pooled over both sets that the
+  report does not produce: section 8 now says that agreement is per set only
+  (a rate pooled over a random sample and a set selected on the checker's
+  verdict would estimate nothing) and that the run statistics are per set and
+  pooled, and how the pair in both sets is counted.
+  Its cheaper items are addressed too: section 2's sample-summary path; the
+  `k2` job's run root is pinned (section 4), so the one-job guard sees every
+  `k2` job; a `k2` job without a lane receipt reads as `INCOMPLETE` (section
+  6); the report checks the executor commit's `harness/` tree digest against
+  the receipt's (section 7); the summary and the analysis report carry the
+  blind warning (section 9.3); a non-finite score is named under cause (4)
+  (section 5.1); section 4 states where S1a's dispatcher re-queues a run.
+  Section 11 lists the two code changes. One item is not changed: submission
+  does not re-derive each slot's file map from the job list (the job list is
+  on the host and the manifest's `jobs_sha256` is the manifest's own claim);
+  the registered manifest is `lane render`'s output, submitted unedited (step
+  3 below), render maps files from the pinned list only, and every file is
+  hashed at submission and again inside the run.
 - The development record of section 11 complete, the code table refreshed, and
-  `uv run pytest -q tests/test_q2_mutation_k2_*.py` passing.
+  `uv run pytest -q tests/test_q2_mutation_k2_*.py` passing both before the
+  freeze and at the freeze commit.
 - The branch merged to `main` first, so that the freeze adds its row to
   `main`'s ledger and the hash chain stays linear while other registrations
   (R01, R04, S2 v3) may also freeze.
-- The freeze, by the program owner, on `main`:
-  `uv run python scripts/preregister.py freeze q2-evaluator-mutation-v1-k2 program/preregistrations/q2-evaluator-mutation-v1-k2.md`,
-  then `check-chain` and `verify`; the ledger row is committed alone. That
-  commit is the **freeze commit**: it adds only the ledger row, its parent is
-  the row's `git_head_at_freeze` (which holds the code of record and this file
-  as frozen), and the two trees differ only by
-  `program/preregistrations/ledger.jsonl`
-  (`git diff --name-only HEAD^ HEAD` prints that one path). The freeze commit
-  is the executor commit.
-- After the freeze: export the freeze commit itself, never its parent, to the
-  host (`git archive` of the freeze commit into a `src/` directory named by
-  its id, with `.git_sha` naming it): the lane reads the ledger row from the
-  export's tree, and the parent's tree has no row, so an export of
-  `git_head_at_freeze` is refused ("k2 runs only after the addendum is
-  frozen"). From that export:
-  render the `k2` manifest from the registered slots
-  (`lane render --base experiments/manifests/q2-mutation-k2/k2-confirm-v1.base.json`
-  with the confirm `build/scoring-jobs.jsonl`, the registered sample and the
-  K2-C list, hashing every candidate file), `lane validate`, then submit it
-  when `squeue` shows no other job (the registered job takes about an hour);
-  check the receipt's host snapshots for overlap (section 8). Then the report
-  step from a checkout that holds the freeze commit (section 7), and the
-  parent's analysis rerun.
 - Kevin's own items are unchanged: the adjudication pool and the spot check
   (D9), the disclosure to xlang-ai (an outward action, D2), and whether R03 is
   adopted as a program question (D73).
+
+### At the freeze
+
+One slot is filled only at the freeze: the status paragraph at the top of this
+file, whose draft holds the placeholder that `scripts/preregister.py freeze`
+refuses. Nothing else is filled at the freeze; the code table and every digest
+above are final.
+
+The freeze replaces the whole status paragraph, from its first line to the
+line before the first bullet, with the paragraph below, word for word (its line
+breaks may differ). Nothing else in that paragraph survives.
+
+> **Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger
+> row for the freeze time and `git_head_at_freeze`.** An addendum to
+> `q2-evaluator-mutation-v1` (D73 (ii)), frozen under program authority after
+> its pre-freeze audits (D77; section 14). The registered `k2` job runs from an
+> export of the freeze commit, the commit that adds this file's ledger row
+> (sections 7 and 14); the lane admits only that job while this file's SHA-256
+> equals the row's, and refuses every development job (section 4). A material
+> change after the freeze is a new experiment id (section 6). Nothing in this
+> file is a result.
+
+The steps, in order:
+
+1. On `main`, after the branch's merge, one commit replaces the status
+   paragraph as stated and changes nothing else (no file of section 2's code
+   table changes). `uv run pytest -q tests/test_q2_mutation_k2_*.py` passes on
+   it: the prereg test then requires the stated paragraph. This commit becomes
+   the row's `git_head_at_freeze`: it holds the code of record and this file as
+   frozen. Before the real freeze, on a scratch clone of this commit, the
+   freeze into the clone's own copy of the ledger is accepted, `check-chain`
+   and `verify` pass, the row is committed alone, and the K2 suite passes at
+   that scratch freeze commit; the real ledger is not touched.
+2. The freeze, on `main` with that commit as `HEAD`:
+   `uv run python scripts/preregister.py freeze q2-evaluator-mutation-v1-k2 program/preregistrations/q2-evaluator-mutation-v1-k2.md`,
+   then `check-chain` and `verify`; the ledger row is committed alone. That
+   commit is the **freeze commit**: it adds only the ledger row, its parent is
+   the row's `git_head_at_freeze`, and the two trees differ only by
+   `program/preregistrations/ledger.jsonl` (`git diff --name-only HEAD^ HEAD`
+   prints that one path). The freeze commit is the executor commit.
+3. After the freeze: export the freeze commit itself, never its parent, to the
+   host (`git archive` of the freeze commit into a `src/` directory named by
+   its id, with `.git_sha` naming it): the lane reads the ledger row from the
+   export's tree, and the parent's tree has no row, so an export of
+   `git_head_at_freeze` is refused ("k2 runs only after the addendum is
+   frozen"). From that export: render the `k2` manifest from the registered
+   slots (`lane render --base experiments/manifests/q2-mutation-k2/k2-confirm-v1.base.json`
+   with the confirm `build/scoring-jobs.jsonl`, the registered sample and the
+   K2-C list, hashing every candidate file), `lane validate`, then submit the
+   rendered manifest unedited when `squeue` shows no other job (the registered
+   job takes about an hour); check the receipt's host snapshots for overlap
+   (section 8). Then the report step from a checkout that holds the freeze
+   commit (section 7), and the parent's analysis rerun with `--k2-report`
+   (section 9.4).
+4. After the freeze commit, never in it: `program/state.json`,
+   `program/log.md` and `HANDOFF.md` record the freeze and its row, and the K2
+   evidence README and the package's `SKILL.md`, which say DRAFT as dated
+   records, are brought up to date.
