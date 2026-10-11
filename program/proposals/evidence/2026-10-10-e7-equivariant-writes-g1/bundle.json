@@ -745,9 +745,9 @@
  "evidence_root_sha256": "0d975c1100924cd40e8fe401ecc5532ef7feb31271426b73f4d380d03c0774b1",
  "blind_discrimination_packet": {
   "proposal": {
-   "artifact": "blind/paragraph-468efcb2.txt",
-   "sha256": "b278d950435ba8d9e050cf7acd953c94782fe5815368430c0d679d9c972f67e7",
-   "text_sha256": "468efcb28ec0fe426e08cf4d8232eb9a03079a68716ca33cb748b48fbf51390d"
+   "artifact": "blind/paragraph-fba6d3e8.txt",
+   "sha256": "badca0190c6fa782dbfcdad138480b90349b45cd4c31450474d84fc2a662ccce",
+   "text_sha256": "fba6d3e8477583afeeef3376d8b3dcbd9629326018fe6881e4725412635dc6a0"
   },
   "closest_prior": {
    "artifact": "blind/paragraph-940ca7dd.txt",

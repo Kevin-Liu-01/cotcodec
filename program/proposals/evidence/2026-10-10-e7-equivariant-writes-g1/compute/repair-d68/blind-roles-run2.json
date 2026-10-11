@@ -1,5 +1,5 @@
 {
- "proposal": "paragraph-468efcb2.txt",
+ "proposal": "paragraph-fba6d3e8.txt",
  "closest_prior": "paragraph-940ca7dd.txt",
  "closest_prior_id": "arXiv:2610.06750 (Balancing Memory Pathways: Analyzing and Improving Memory Utilization in Hybrid LMs, v1 2026-10-05; ICLR 2027 submission OpenReview nIDJ2pPPOB); Sec. 4.1 re-read with orx paper --full by the D68 repair owner on 2026-10-10 (the recurrent-only and attention-only conditions, 8.2k examples, average context 84k tokens); Secs. 5.1-5.2 for the auxiliary loss and its results",
  "additional_packets": {
