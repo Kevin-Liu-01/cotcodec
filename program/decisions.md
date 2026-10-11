@@ -1250,3 +1250,29 @@ Decided:
   Publishing it is an outward action and stays Kevin's.
 Every agent prompt carries the command rule. Any host job is CPU-only, and
 none overlaps another.
+
+**D72. Corrections to D53, D66, D69 and the handoff, found while drafting the
+Q2 report.** Decision text stays as written; these corrections govern.
+(i) D66 and HANDOFF label S1a's pooled δ "H-OSW-fixed minus H-GA". The
+registration and RESULTS.md define δ = H-GA minus H-OSW-fixed, and −3.1 pp
+(−1.1 pp on all 113 tasks) follows that definition: H-GA succeeded slightly
+less often.
+(ii) D69's variance shares (rerun noise 20-33%, task-by-harness 3-4%) are
+fit-base's probability-scale shares, and fit-base failed the design study's
+extended check at 4B. Under the calibrations that passed (fit-pool, ρ_b = 0
+and the 4B-zero refit), rerun noise is 21-27% of outcome variance;
+task-by-harness is about 4% at 9B and at most 1% at 4B.
+(iii) The checker-mutation counts in HANDOFF and the pending xlang-ai
+disclosure read "35 of 36". The evidence gives 36 of 40 evaluable z-order
+equivalence mutants failing their checker: `compare_pptx_files` 35 of 39,
+29 confirmed by both raters and 6 unresolved, and
+`compare_pptx_files_tolerant` 1 of 1, confirmed. That is 30 confirmed in all.
+Any disclosure text uses these.
+(iv) The stage B verification paragraph of the action-path README (and the
+log entry of 2026-10-09) says 107,988 re-judged trials. The verifier's own
+checks list 14,000 + 64,028 + 30,960 = 108,988.
+(v) D66 says two fresh verifiers "reproduced the analysis". One did: the
+recompute lens reproduced every re-runnable output from SHA-checked copies,
+apart from the GLMM fits. The other checked every claim against the
+registration. The runbook's step-12 verification has no committed record,
+and the session-2 per-job checks have no second check.

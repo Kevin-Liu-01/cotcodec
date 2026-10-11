@@ -1349,3 +1349,7 @@ at the observed rate); the cumulative VM-hour total mixes receipt-span and
 occupied-span definitions; and the no-foreign-job evidence for A7's window rests on
 the driver's fail-open squeue snapshots. What the verdict licenses and does not
 license for Stage 1 is in its `interpretation_notes`.
+
+Erratum (2026-10-11, D72 iv): the stage B paragraph above says "107,988"
+re-judged trials; the verifier's checks list 14,000 (ladder) + 64,028 (A4) +
+30,960 (A7) = 108,988.
