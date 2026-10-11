@@ -105,6 +105,27 @@ The registered job's shape on the dev split: all 80 pairs of the
 These are dev-split items: they test the executor and say nothing about the
 confirm campaign's K2 result.
 
+## Development job 1163 (`k2-dev-smoke-v3`, executor `2307253`): after the audit fixes
+
+Job 1122's six pairs again, two runs each, V = 3, CPU-only (16 CPUs; no GRES),
+submitted on an empty queue, from an export of `2307253`, whose code is
+section 2's table after the pre-freeze audit fixes (the executor's upload is a
+bounded step, scores are coerced with `float()`, the receipt records the
+export's ledger row, `lane render` checks the job list against the sample
+summary). `dev-smoke-v3-job1163/run/` holds the records, receipt, manifest
+and preflight; `report/` the development report (`--only` as for job 1122).
+
+- 12 of 12 runs scored, none excluded; the six pairs give the same readings as
+  in job 1122 (every pair agrees with its offline verdict in both runs).
+- `lane render` with `--sample-summary` accepted the host's `dev-mutants-v9`
+  `scoring-jobs.jsonl` and produced job 1122's twelve slots unchanged.
+- Every upload went through the bounded step; LibreOffice quit by Ctrl+Q in
+  0.2-0.4 s with no signal; runs took 111-119 s; no target was unsaved at the
+  checker's read; no checker observation went undelivered.
+- No other Slurm job appears in any host snapshot. The receipt's identity
+  carries `git_head_at_freeze`, `ledger_row_hash` and `registration_sha256`,
+  all empty because the addendum is not frozen.
+
 ## Reports regenerated after the pre-freeze audit
 
 Both development reports (`dev-smoke-v2-job1122/report/`,

@@ -1,0 +1,293 @@
+{
+  "candidates": {
+    "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/dev-mutants-v9/build/files",
+    "run": "dev-mutants-v9"
+  },
+  "engine": {
+    "kind": "none"
+  },
+  "episode_image_id": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+  "episode_python": "/opt/venv-lock/bin/python",
+  "episode_timeout_s": 900,
+  "experiment_id": "q2-evaluator-mutation-v1-k2",
+  "file_cache": {
+    "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/file_cache_1e112283/files"
+  },
+  "jobs_sha256": "5a5e2f0f7f590b85de6aaa88c47a5b5695bc164f3aa64631edfaaba9764d245e",
+  "mode": "k2-inject",
+  "name": "k2-dev-smoke-v3",
+  "note": "Development smoke (third) of the K2 executor after the pre-freeze audit fixes (bounded upload, float() score coercion, the lane's freeze identity and job-list check): job 1122's six dev-split pairs of dev-mutants-v9, two runs each. Never evidence.",
+  "osworld": {
+    "commit": "b138d348256078fa634fc3b73567a7337c793e6b",
+    "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/OSWorld"
+  },
+  "purpose": "development",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/q2-mutation-k2/runs",
+  "runs_per_pair": 2,
+  "schema": "q2m-k2-lane-v1",
+  "settle_after_reset_s": 60,
+  "settle_before_eval_s": 20,
+  "slots": [
+    {
+      "block": "k2-r1",
+      "candidate_sha256": "82ed15a9f3bec53f8b91efc76adf5d00b804dbf7dbb29d555d7b167ff3fc7fb2",
+      "files": {
+        "/home/user/Student_Level_Fill_Blank.xlsx": {
+          "rel": "01b269ae-2111-4a07-81fd-3fcd711993b0__xlsx.eq.doc_property__695f418be0ec/home/user/Student_Level_Fill_Blank.xlsx",
+          "root": "candidates",
+          "sha256": "82ed15a9f3bec53f8b91efc76adf5d00b804dbf7dbb29d555d7b167ff3fc7fb2"
+        }
+      },
+      "job_id": "01b269ae-2111-4a07-81fd-3fcd711993b0__xlsx.eq.doc_property__695f418be0ec",
+      "kind": "mutant",
+      "mutant_id": "01b269ae-2111-4a07-81fd-3fcd711993b0__xlsx.eq.doc_property__695f418be0ec",
+      "pair": 0,
+      "run": 1,
+      "set": "k2",
+      "slot": "k2:000:r1",
+      "task_id": "01b269ae-2111-4a07-81fd-3fcd711993b0"
+    },
+    {
+      "block": "k2-r1",
+      "candidate_sha256": "57bf6928c57ca0d39a5cd73fcb7e280513123345d2a550a0469bec72b6f4cb5e",
+      "files": {
+        "/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx": {
+          "rel": "936321ce-5236-426a-9a20-e0e3c5dc536f__docx.extra.format_unrelated_run__d7894861e498/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx",
+          "root": "candidates",
+          "sha256": "57bf6928c57ca0d39a5cd73fcb7e280513123345d2a550a0469bec72b6f4cb5e"
+        }
+      },
+      "job_id": "936321ce-5236-426a-9a20-e0e3c5dc536f__docx.extra.format_unrelated_run__d7894861e498",
+      "kind": "mutant",
+      "mutant_id": "936321ce-5236-426a-9a20-e0e3c5dc536f__docx.extra.format_unrelated_run__d7894861e498",
+      "pair": 2,
+      "run": 1,
+      "set": "k2",
+      "slot": "k2:002:r1",
+      "task_id": "936321ce-5236-426a-9a20-e0e3c5dc536f"
+    },
+    {
+      "block": "k2-r1",
+      "candidate_sha256": "cd3da896b5dd99456d0f921714eb8e997a5ed3ff590620e7f5f43b308d71e69c",
+      "files": {
+        "/home/user/Keep_Two_decimal_points-Sheet1.csv": {
+          "rel": "libreoffice_calc/6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5/Keep_Two_decimal_points_gold-Sheet1.csv",
+          "root": "file_cache",
+          "sha256": "056a91e4e7d38aecff3fc67ea5629887489d0edfab8ea7061cca87df8977b529"
+        },
+        "/home/user/Keep_Two_decimal_points.xlsx": {
+          "rel": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5__xlsx.alt.named_style_for_direct__90896bd7c87a/home/user/Keep_Two_decimal_points.xlsx",
+          "root": "candidates",
+          "sha256": "cd3da896b5dd99456d0f921714eb8e997a5ed3ff590620e7f5f43b308d71e69c"
+        }
+      },
+      "job_id": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5__xlsx.alt.named_style_for_direct__90896bd7c87a",
+      "kind": "mutant",
+      "mutant_id": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5__xlsx.alt.named_style_for_direct__90896bd7c87a",
+      "pair": 4,
+      "run": 1,
+      "set": "k2",
+      "slot": "k2:004:r1",
+      "task_id": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5"
+    },
+    {
+      "block": "k2-r1",
+      "candidate_sha256": "7e878e444bafa43384d0a3ee5288b93bf237de2c175d3d40177797508d4fdb3d",
+      "files": {
+        "/home/user/Desktop/res.txt": {
+          "rel": "20236825-b5df-46e7-89bf-62e1d640a897__text.eq.trailing_newline__b8fd871b46e0/home/user/Desktop/res.txt",
+          "root": "candidates",
+          "sha256": "7e878e444bafa43384d0a3ee5288b93bf237de2c175d3d40177797508d4fdb3d"
+        }
+      },
+      "job_id": "20236825-b5df-46e7-89bf-62e1d640a897__text.eq.trailing_newline__b8fd871b46e0",
+      "kind": "mutant",
+      "mutant_id": "20236825-b5df-46e7-89bf-62e1d640a897__text.eq.trailing_newline__b8fd871b46e0",
+      "pair": 34,
+      "run": 1,
+      "set": "k2",
+      "slot": "k2:034:r1",
+      "task_id": "20236825-b5df-46e7-89bf-62e1d640a897"
+    },
+    {
+      "block": "k2-r1",
+      "candidate_sha256": "ad60954a2540707cc21f1564fd3ef9ed53483a69622085971bf058e0facf07ba",
+      "files": {
+        "/home/user/authors.xlsx": {
+          "rel": "b5062e3e-641c-4e3a-907b-ac864d2e7652__xlsx.eq.doc_property__b3792549a546/home/user/authors.xlsx",
+          "root": "candidates",
+          "sha256": "ad60954a2540707cc21f1564fd3ef9ed53483a69622085971bf058e0facf07ba"
+        }
+      },
+      "job_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652__xlsx.eq.doc_property__b3792549a546",
+      "kind": "mutant",
+      "mutant_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652__xlsx.eq.doc_property__b3792549a546",
+      "pair": 37,
+      "run": 1,
+      "set": "k2",
+      "slot": "k2:037:r1",
+      "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    },
+    {
+      "block": "k2-r2",
+      "candidate_sha256": "82ed15a9f3bec53f8b91efc76adf5d00b804dbf7dbb29d555d7b167ff3fc7fb2",
+      "files": {
+        "/home/user/Student_Level_Fill_Blank.xlsx": {
+          "rel": "01b269ae-2111-4a07-81fd-3fcd711993b0__xlsx.eq.doc_property__695f418be0ec/home/user/Student_Level_Fill_Blank.xlsx",
+          "root": "candidates",
+          "sha256": "82ed15a9f3bec53f8b91efc76adf5d00b804dbf7dbb29d555d7b167ff3fc7fb2"
+        }
+      },
+      "job_id": "01b269ae-2111-4a07-81fd-3fcd711993b0__xlsx.eq.doc_property__695f418be0ec",
+      "kind": "mutant",
+      "mutant_id": "01b269ae-2111-4a07-81fd-3fcd711993b0__xlsx.eq.doc_property__695f418be0ec",
+      "pair": 0,
+      "run": 2,
+      "set": "k2",
+      "slot": "k2:000:r2",
+      "task_id": "01b269ae-2111-4a07-81fd-3fcd711993b0"
+    },
+    {
+      "block": "k2-r2",
+      "candidate_sha256": "57bf6928c57ca0d39a5cd73fcb7e280513123345d2a550a0469bec72b6f4cb5e",
+      "files": {
+        "/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx": {
+          "rel": "936321ce-5236-426a-9a20-e0e3c5dc536f__docx.extra.format_unrelated_run__d7894861e498/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx",
+          "root": "candidates",
+          "sha256": "57bf6928c57ca0d39a5cd73fcb7e280513123345d2a550a0469bec72b6f4cb5e"
+        }
+      },
+      "job_id": "936321ce-5236-426a-9a20-e0e3c5dc536f__docx.extra.format_unrelated_run__d7894861e498",
+      "kind": "mutant",
+      "mutant_id": "936321ce-5236-426a-9a20-e0e3c5dc536f__docx.extra.format_unrelated_run__d7894861e498",
+      "pair": 2,
+      "run": 2,
+      "set": "k2",
+      "slot": "k2:002:r2",
+      "task_id": "936321ce-5236-426a-9a20-e0e3c5dc536f"
+    },
+    {
+      "block": "k2-r2",
+      "candidate_sha256": "cd3da896b5dd99456d0f921714eb8e997a5ed3ff590620e7f5f43b308d71e69c",
+      "files": {
+        "/home/user/Keep_Two_decimal_points-Sheet1.csv": {
+          "rel": "libreoffice_calc/6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5/Keep_Two_decimal_points_gold-Sheet1.csv",
+          "root": "file_cache",
+          "sha256": "056a91e4e7d38aecff3fc67ea5629887489d0edfab8ea7061cca87df8977b529"
+        },
+        "/home/user/Keep_Two_decimal_points.xlsx": {
+          "rel": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5__xlsx.alt.named_style_for_direct__90896bd7c87a/home/user/Keep_Two_decimal_points.xlsx",
+          "root": "candidates",
+          "sha256": "cd3da896b5dd99456d0f921714eb8e997a5ed3ff590620e7f5f43b308d71e69c"
+        }
+      },
+      "job_id": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5__xlsx.alt.named_style_for_direct__90896bd7c87a",
+      "kind": "mutant",
+      "mutant_id": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5__xlsx.alt.named_style_for_direct__90896bd7c87a",
+      "pair": 4,
+      "run": 2,
+      "set": "k2",
+      "slot": "k2:004:r2",
+      "task_id": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5"
+    },
+    {
+      "block": "k2-r2",
+      "candidate_sha256": "7e878e444bafa43384d0a3ee5288b93bf237de2c175d3d40177797508d4fdb3d",
+      "files": {
+        "/home/user/Desktop/res.txt": {
+          "rel": "20236825-b5df-46e7-89bf-62e1d640a897__text.eq.trailing_newline__b8fd871b46e0/home/user/Desktop/res.txt",
+          "root": "candidates",
+          "sha256": "7e878e444bafa43384d0a3ee5288b93bf237de2c175d3d40177797508d4fdb3d"
+        }
+      },
+      "job_id": "20236825-b5df-46e7-89bf-62e1d640a897__text.eq.trailing_newline__b8fd871b46e0",
+      "kind": "mutant",
+      "mutant_id": "20236825-b5df-46e7-89bf-62e1d640a897__text.eq.trailing_newline__b8fd871b46e0",
+      "pair": 34,
+      "run": 2,
+      "set": "k2",
+      "slot": "k2:034:r2",
+      "task_id": "20236825-b5df-46e7-89bf-62e1d640a897"
+    },
+    {
+      "block": "k2-r2",
+      "candidate_sha256": "ad60954a2540707cc21f1564fd3ef9ed53483a69622085971bf058e0facf07ba",
+      "files": {
+        "/home/user/authors.xlsx": {
+          "rel": "b5062e3e-641c-4e3a-907b-ac864d2e7652__xlsx.eq.doc_property__b3792549a546/home/user/authors.xlsx",
+          "root": "candidates",
+          "sha256": "ad60954a2540707cc21f1564fd3ef9ed53483a69622085971bf058e0facf07ba"
+        }
+      },
+      "job_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652__xlsx.eq.doc_property__b3792549a546",
+      "kind": "mutant",
+      "mutant_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652__xlsx.eq.doc_property__b3792549a546",
+      "pair": 37,
+      "run": 2,
+      "set": "k2",
+      "slot": "k2:037:r2",
+      "task_id": "b5062e3e-641c-4e3a-907b-ac864d2e7652"
+    },
+    {
+      "block": "k2c-r1",
+      "candidate_sha256": "3f337ba3e398a5cce0191c46760b46526d6508c82a3987e84768bec858817f2b",
+      "files": {
+        "/home/user/Desktop/33_1.pptx": {
+          "rel": "5cfb9197-e72b-454b-900e-c06b0c802b40__pptx.eq.zorder_nonoverlap__aad0ba671cd3/home/user/Desktop/33_1.pptx",
+          "root": "candidates",
+          "sha256": "3f337ba3e398a5cce0191c46760b46526d6508c82a3987e84768bec858817f2b"
+        }
+      },
+      "job_id": "5cfb9197-e72b-454b-900e-c06b0c802b40__pptx.eq.zorder_nonoverlap__aad0ba671cd3",
+      "kind": "mutant",
+      "mutant_id": "5cfb9197-e72b-454b-900e-c06b0c802b40__pptx.eq.zorder_nonoverlap__aad0ba671cd3",
+      "pair": 5,
+      "run": 1,
+      "set": "k2c",
+      "slot": "k2c:005:r1",
+      "task_id": "5cfb9197-e72b-454b-900e-c06b0c802b40"
+    },
+    {
+      "block": "k2c-r2",
+      "candidate_sha256": "3f337ba3e398a5cce0191c46760b46526d6508c82a3987e84768bec858817f2b",
+      "files": {
+        "/home/user/Desktop/33_1.pptx": {
+          "rel": "5cfb9197-e72b-454b-900e-c06b0c802b40__pptx.eq.zorder_nonoverlap__aad0ba671cd3/home/user/Desktop/33_1.pptx",
+          "root": "candidates",
+          "sha256": "3f337ba3e398a5cce0191c46760b46526d6508c82a3987e84768bec858817f2b"
+        }
+      },
+      "job_id": "5cfb9197-e72b-454b-900e-c06b0c802b40__pptx.eq.zorder_nonoverlap__aad0ba671cd3",
+      "kind": "mutant",
+      "mutant_id": "5cfb9197-e72b-454b-900e-c06b0c802b40__pptx.eq.zorder_nonoverlap__aad0ba671cd3",
+      "pair": 5,
+      "run": 2,
+      "set": "k2c",
+      "slot": "k2c:005:r2",
+      "task_id": "5cfb9197-e72b-454b-900e-c06b0c802b40"
+    }
+  ],
+  "slurm": {
+    "cpus": 16,
+    "memory_gb": 32,
+    "minutes": 60
+  },
+  "vm": {
+    "concurrency": 3,
+    "cpu_cores": 4,
+    "disk_size": "32G",
+    "guest_ip": "20.20.20.21",
+    "hmp_port": 7100,
+    "image": "happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+    "image_id": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+    "memory_gb": 6,
+    "network": "none-netns",
+    "qcow2": {
+      "host_path": "/home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2",
+      "sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+      "size_bytes": 24460197888
+    },
+    "ram_size": "4G",
+    "server_port": 5000
+  }
+}

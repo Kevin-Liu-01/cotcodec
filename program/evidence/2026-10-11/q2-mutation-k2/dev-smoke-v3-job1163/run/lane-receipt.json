@@ -1,0 +1,121 @@
+{
+ "bridge_dir": null,
+ "dispatched": [
+  "k2:000:r1#1",
+  "k2:002:r1#1",
+  "k2:004:r1#1",
+  "k2:034:r1#1",
+  "k2:037:r1#1",
+  "k2:000:r2#1",
+  "k2:002:r2#1",
+  "k2:004:r2#1",
+  "k2:034:r2#1",
+  "k2:037:r2#1",
+  "k2c:005:r1#1",
+  "k2c:005:r2#1"
+ ],
+ "engine_ready": null,
+ "experiment_id": "q2-evaluator-mutation-v1-k2",
+ "fill": [],
+ "first_dispatch": 1791723839.336385,
+ "gpu_job": null,
+ "identity": {
+  "candidates_run": "dev-mutants-v9",
+  "episode_image_id": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+  "executor_commit": "23072530bd26d9192e1501f166840896013c5270",
+  "git_head_at_freeze": null,
+  "ledger_row_hash": null,
+  "osworld_commit": "b138d348256078fa634fc3b73567a7337c793e6b",
+  "qcow2_sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+  "registration_sha256": null,
+  "source_tree_sha256": "fe80388dcd94edb4606f04f7337b49e697ce699cd1e7ec56ee0d25925e13ef3d",
+  "vm_image": "happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+  "vm_image_id": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4"
+ },
+ "job_id": "1163",
+ "name": "k2-dev-smoke-v3",
+ "purpose": "development",
+ "records": 12,
+ "schema": "q2m-k2-lane-receipt-v1",
+ "snapshots": [
+  {
+   "block": "start",
+   "containers_ours": 0,
+   "containers_running_total": 1,
+   "loadavg": [
+    "0.07",
+    "0.30",
+    "0.50"
+   ],
+   "squeue_foreign": [],
+   "t": 1791723839.3034062
+  },
+  {
+   "block": "k2-r1",
+   "containers_ours": 0,
+   "containers_running_total": 1,
+   "loadavg": [
+    "0.07",
+    "0.30",
+    "0.50"
+   ],
+   "squeue_foreign": [],
+   "t": 1791723839.3357785
+  },
+  {
+   "block": "k2-r2",
+   "containers_ours": 3,
+   "containers_running_total": 3,
+   "loadavg": [
+    "1.00",
+    "0.76",
+    "0.65"
+   ],
+   "squeue_foreign": [],
+   "t": 1791723959.8017392
+  },
+  {
+   "block": "k2c-r1",
+   "containers_ours": 2,
+   "containers_running_total": 3,
+   "loadavg": [
+    "1.16",
+    "1.31",
+    "0.93"
+   ],
+   "squeue_foreign": [],
+   "t": 1791724191.6579142
+  },
+  {
+   "block": "k2c-r2",
+   "containers_ours": 2,
+   "containers_running_total": 3,
+   "loadavg": [
+    "1.16",
+    "1.31",
+    "0.93"
+   ],
+   "squeue_foreign": [],
+   "t": 1791724191.6879613
+  },
+  {
+   "block": "end",
+   "containers_ours": 0,
+   "containers_running_total": 1,
+   "loadavg": [
+    "0.84",
+    "1.30",
+    "0.99"
+   ],
+   "squeue_foreign": [],
+   "t": 1791724311.1382232
+  }
+ ],
+ "statuses": {
+  "scored": 12
+ },
+ "stopped": false,
+ "t_end": 1791724311.1637225,
+ "t_start": 1791723839.303405,
+ "usr1_epoch": null
+}
