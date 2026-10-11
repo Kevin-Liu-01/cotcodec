@@ -1487,3 +1487,46 @@ Not covered by the delegation, so not done:
 - C5's Phase 1 (70-97 GPU-h), whose identification defect stands.
 Host jobs are serialized: at most one VM-lane campaign at a time, and S1a-style
 quiet-host rules apply while a registered VM or GPU job runs.
+
+**D81. The first D80 adjudication run is void; the adjudication is redone with
+the frozen template, its rules committed here before any new answer exists.**
+The first run (workflow `wf_cdd11126-1a7`, branch
+`ops/q2-mutation-adjudication` at `2944557c`) did not start its adjudicators
+with the registered template (`isolated_rater_prompt.txt`, `0e9d4eb6...`).
+The orchestrator's own prompt told each adjudicator to fetch its packet over
+ssh, and all 101 attempts failed because the packets are local. The prompt
+also gave context beyond the item: the pool and spot-check sizes and the split
+rules. As a result, all 52 adjudicators used Bash, which the template forbids
+and says voids the answer. Under the registered transcript audit, all 52
+answers are void. A fresh verifier confirmed this and the collector's
+substitute check (each agent read only its own packet). The run is kept on its
+branch as a disclosed void run. Its answers and numbers are used nowhere. The
+orchestrator saw them, and that is disclosed. Run 2's rules, fixed before any
+of its answers exist:
+- (a) Primary, which is the record. One workflow session contains the
+  adjudicator agents and nothing else, one per distinct item (52, in `item_id`
+  order). Each starts with exactly the registered template rendered for its
+  item, with the export's `iso_root`. The model is `claude-opus-5-5`, which
+  the registered tooling pins, and the schema is `{item_id, answer, reason}`.
+  The session is audited with `rater_runner collect-transcripts` and
+  `ingest-isolated`, the registered isolation audit. An item that audit voids
+  stays unadjudicated under section 9, with no re-rating beyond the registered
+  relay-frame rule. Accept and reject answers go to `adjudications.jsonl` (the
+  pool) and to the spot-check answers. The parent analysis is rerun from
+  `65bc2e2` with `--adjudications` and `--k2-report`.
+- (b) Independence sensitivity. The same 52 items and the same rendered
+  prompts run in a separate session with `claude-fable-5-1`, a model that is
+  neither rater's. It is reported as agreement with (a) and as an alternative
+  analysis. It never replaces (a).
+- (c) Notation sensitivity. The 12 items whose packet shows the differ's
+  added-sheet marker run in a separate session with `claude-opus-5-5`. They
+  get the rendered template plus one fixed, label-blind sentence: "In the
+  packet's file listings, a path of the form sheets/%2B<name> (or
+  sheets/+<name>) means that a sheet named <name> was added; %2B is the
+  percent-encoded plus sign that the diff tool uses as its 'added' marker, and
+  it is not part of the sheet name." The marker comes from the frozen differ
+  (`_diff.py`). The original raters read the same notation. This is reported
+  as a sensitivity only.
+Every output carries the D80 label. The correlated judge remains: (a) uses
+the Anthropic rater's model, and (b) exists to measure that. D9's human spot
+check stays pending as a human validation.
