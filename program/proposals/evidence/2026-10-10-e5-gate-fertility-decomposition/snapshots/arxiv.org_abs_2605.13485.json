@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2605.13485",
+ "fetched_at": "2026-10-11T00:47:43Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44630,
+ "raw_sha256": "20895a5ebe1608d693f53612144e498d2ed1dfc4179e3be8ee3e866c06a71240",
+ "raw_stored": false,
+ "extract": {
+  "title": "Effective Context in Transformers: An Analysis of Fragmentation and Tokenization",
+  "authors": [
+   "Fesharaki, Amirmehdi Jafari",
+   "Rami, Mohammadamin",
+   "Tchamkerten, Aslan"
+  ],
+  "citation_date": "2026/05/13",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 13 May 2026 13:08:08 UTC"
+   }
+  ],
+  "abstract": "Transformers predict over a representation of a sequence. The same data can be written as bytes, characters, or subword tokens, and these representations may be lossless. Yet, under a fixed context window, they need not expose the same information to the model. This raises a basic question: how does the choice of representation change what a finite-context predictor can achieve? We study this question on Markov sources and uncover two complementary phenomena. First, we observe that moving to smaller representation units can hurt prediction even when the context window is enlarged to cover the relevant source history. To explain this, we introduce fragmentation: a lossless recoding that replaces each source symbol by several smaller units. We prove that fragmentation can strictly increase the optimal finite-context log-loss, showing that the gap is not merely an optimization or capacity issue, but can be intrinsic to the representation. This gives a theoretical account of the finite-context gap observed in byte- and character-level models such as ByT5 and CANINE relative to subword-tokenized models. Second, we study the opposite direction: greedy tokenization -- BPE, WordPiece, and related methods -- which groups source symbols into larger units. We show that tokenization can make a short token window behave like a longer source-context window, and we give a loss guarantee describing when this is achievable. The guarantee depends on how reliably token windows span the needed source history, together with the compression rate of the tokenizer. This also yields a simple diagnostic for real tokenizers: measuring how much source context a fixed token window reliably contains. Together, the two directions establish a finite-context information-theoretic framework for reasoning about representation choices in Transformers.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
