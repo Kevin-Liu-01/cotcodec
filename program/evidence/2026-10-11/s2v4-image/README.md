@@ -75,3 +75,34 @@ host), `smoke-summary.json` (`smoke_summary.py`), `preflight.txt`.
   Under the committed K0 rule this would fail I2 on the Calc and Writer tasks. The selector now declares
   a dependency on every other file of the layer (configmgr then reads it last), and the images were
   rebuilt (below). This changed the instrument on the development set, not a rule.
+
+## image-build-1199/ (the pinned images)
+
+Slurm 1199 (CPU only, 481 s, export of `4c516761`, the self-test first): the same install (404
+operations, 2,790 changed blocks against the certified disk, 0 unexplained) and six cell images whose
+selector declares a dependency on every other file of the system layer (configmgr reads it last). Each
+selector-only cell changes 8 blocks against the base and PL 466 (369 toolbar definitions); `e2fsck -fn`
+reports only the certified disk's finding on every image; `qemu-img compare` finds each qcow2 identical
+to its raw source. Digests: the registration's section "Images built" and
+`harness/s2_locale/images.json`. The images of build 1195 stay on the host, superseded and unpinned.
+
+## smoke-1201/ (development, dev split only; the pinned images)
+
+Slurm 1201 (CPU only; export of `513a5aa5`; manifest `experiments/manifests/s2v4/dev-smoke-v2.json`):
+the same 24 capture slots as smoke 1197 on the images of build 1199, plus 10 gold slots
+(`vm_gold.py`, the K2 injection executor unedited, then the image check) for the two tasks with a gold
+(`12382c62`, `e528b65e`) in E, A, ER, AR and PL. The lane hashed all seven images before dispatching
+(the pinned digests).
+
+- 34 of 34 slots probed, no infrastructure loss; every guest reported its cell's selector.
+- Interface as specified: Arabic chrome share 0.953 (Calc), 0.959 (Impress), 0.979 (Writer) in A, AR
+  and AD and 0 elsewhere; the menu bar right to left exactly in ER, AR and AD; keyboard `us,us` and no
+  input method everywhere; every postconfig save rewrote the checked file; the do-nothing verdict
+  `fail` in every cell of every task.
+- Masked pixel differences: **E against S 0, 1 and 1 px** (the CTL buttons are gone); AD against AR 0
+  px; E against E2 0-1 px; PL against E 26,513-48,905 px.
+- Gold slots: the gold saved through the task's own postconfig and scored by the pinned checker
+  **passes in all five admission cells for both tasks** (10 of 10; for `12382c62`, a task whose checker
+  reads Calc's default sheet name, so the SheetPrefix pin holds in the Arabic cells).
+- `k0_inputs.admission` over these records (development, three dev tasks, no instrument metrics):
+  `12382c62` and `e528b65e` admitted, `2b94c692` runnable (it has no gold, so no passing-side control).

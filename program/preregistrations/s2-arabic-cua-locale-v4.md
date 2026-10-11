@@ -415,7 +415,9 @@ map, saves through the task's own postconfig, and (gold slots) saves and scores 
 are under `program/evidence/2026-10-11/s2v4-image/smoke-*/`; it decides nothing registered and changes
 no rule above. The first run (Slurm 1197, images of build 1195) found that the language pack's
 `ctl_ar.xcd` overrode the CTL pin (section P0.3); the images were rebuilt (build 1199) and the smoke
-repeated on them.
+repeated on them (Slurm 1201): 34 of 34 slots probed; masked E against S 0, 1 and 1 px, AD against AR 0
+px, E against E2 0-1 px; Arabic chrome share 0.95-0.98 in A, AR and AD and 0 elsewhere; the menu bar
+right to left exactly in ER, AR and AD; the two tasks' golds pass in all five admission cells.
 
 ## Phase 1 (admitted under D80 (iv) if K0 and K1 pass)
 

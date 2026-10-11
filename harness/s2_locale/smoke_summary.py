@@ -119,10 +119,18 @@ def summarize(run_dir: Path, pool: dict[str, Any] | None = None) -> dict[str, An
         if rec.get("slot") not in latest or attempt > latest[rec["slot"]][0]:
             latest[rec["slot"]] = (attempt, probe.parent, rec)
     rows = [slot_row(rec, titles.get(rec.get("task_id", "")[:8], []))
-            for _, _, rec in latest.values()]  # fmt: skip
+            for _, _, rec in latest.values() if rec.get("kind", "capture") == "capture"]  # fmt: skip
+    golds = sorted(({"slot": rec.get("slot"), "task": rec.get("task_id", "")[:8],
+                     "cell": rec.get("cell"), "status": rec.get("status"),
+                     "infrastructure_type": rec.get("infrastructure_type"),
+                     "verdict": rec.get("verdict"), "score": rec.get("score"),
+                     "k2_status": (rec.get("k2") or {}).get("status"),
+                     "selector_in_guest": rec.get("selector_in_guest")}
+                    for _, _, rec in latest.values() if rec.get("kind") == "gold"),
+                   key=lambda r: (r["task"], r["cell"] or ""))  # fmt: skip
     by_task: dict[str, dict[str, Path]] = defaultdict(dict)
     for slot, (_, path, rec) in latest.items():
-        if rec.get("status") == "probed":
+        if rec.get("status") == "probed" and rec.get("kind", "capture") == "capture":
             rep = slot.rsplit(":r", 1)[-1]
             key = rec["cell"] if rep == "1" else f"{rec['cell']}{rep}"
             by_task[rec["task_id"][:8]][key] = path
@@ -141,6 +149,7 @@ def summarize(run_dir: Path, pool: dict[str, Any] | None = None) -> dict[str, An
         "development_only": True,
         "lane_receipt": json.loads(receipt.read_text()) if receipt.is_file() else None,
         "slots": sorted(rows, key=lambda r: (r["task"], r["cell"] or "", r["slot"])),
+        "gold_slots": golds,
         "pixel_diffs": diffs,
         "donothing_verdicts": verdicts,
         "masks": {"shell_rows": SHELL_ROWS, "caret": "pixels differing between the two shots"},
