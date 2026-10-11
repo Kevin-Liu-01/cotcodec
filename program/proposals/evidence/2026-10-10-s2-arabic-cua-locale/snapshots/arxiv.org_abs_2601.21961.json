@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2601.21961",
+ "fetched_at": "2026-10-11T01:03:02Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43654,
+ "raw_sha256": "4510bc860779559cb22aef9d3914c69294ca92e67388e912bac961505e774193",
+ "raw_stored": false,
+ "extract": {
+  "title": "How do Visual Attributes Influence Web Agents? A Comprehensive Evaluation of User Interface Design Factors",
+  "authors": [
+   "Yu, Kuai",
+   "Yu, Naicheng",
+   "Wang, Han",
+   "Yang, Rui",
+   "Zhang, Huan"
+  ],
+  "citation_date": "2026/01/29",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 29 Jan 2026 16:40:15 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 27 Feb 2026 16:47:40 UTC"
+   }
+  ],
+  "abstract": "Web agents have demonstrated strong performance on a wide range of web-based tasks. However, existing research on the effect of environmental variation has mostly focused on robustness to adversarial attacks, with less attention to agents' preferences in benign scenarios. Although early studies have examined how textual attributes influence agent behavior, a systematic understanding of how visual attributes shape agent decision-making remains limited. To address this, we introduce VAF, a controlled evaluation pipeline for quantifying how webpage Visual Attribute Factors influence web-agent decision-making. Specifically, VAF consists of three stages: (i) variant generation, which ensures the variants share identical semantics as the original item while only differ in visual attributes; (ii) browsing interaction, where agents navigate the page via scrolling and clicking the interested item, mirroring how human users browse online; (iii) validating through both click action and reasoning from agents, which we use the Target Click Rate and Target Mention Rate to jointly evaluate the effect of visual attributes. By quantitatively measuring the decision-making difference between the original and variant, we identify which visual attributes influence agents' behavior most. Extensive experiments, across 8 variant families (48 variants total), 5 real-world websites (including shopping, travel, and news browsing), and 4 representative web agents, show that background color contrast, item size, position, and card clarity have a strong influence on agents' actions, whereas font styling, text color, and item image clarity exhibit minor effects.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

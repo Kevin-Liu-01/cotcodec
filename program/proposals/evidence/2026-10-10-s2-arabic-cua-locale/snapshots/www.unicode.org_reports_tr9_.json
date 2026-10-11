@@ -1,0 +1,24 @@
+{
+ "url": "https://www.unicode.org/reports/tr9/",
+ "fetched_at": "2026-10-11T00:18:28Z",
+ "http_status": 200,
+ "raw_bytes": 188933,
+ "raw_sha256": "3c281b38800bad85b16bf3a169b8cb693d8a2dbceb60903feb26e68a2659ee8a",
+ "raw_stored": false,
+ "licence": "Unicode terms",
+ "extract": {
+  "patterns": [
+   "FIRST STRONG ISOLATE",
+   "POP DIRECTIONAL ISOLATE",
+   "X5c"
+  ],
+  "lines": {
+   "190": "<a href=\"#X5\">X5</a>, <a href=\"#X5a\">X5a</a>, <a href=\"#X5b\">X5b</a>, <a href=\"#X5c\">X5c</a>,",
+   "803": "<p>As rules <a href=\"#X5a\">X5a</a> through <a href=\"#X5c\">X5c</a> will specify,",
+   "1334": "even if the depth limit (as defined in rules <a href=\"#X5a\">X5a</a> through <a href=\"#X5c\">X5c</a> below)",
+   "1536": "<p><i><b><a name=\"X5c\" href=\"#X5c\">X5c</a>.</b>",
+   "2573": "This does <b>not</b> apply when deciding how to treat FSI in rule <a href=\"#X5c\">X5c</a>.</i>"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}

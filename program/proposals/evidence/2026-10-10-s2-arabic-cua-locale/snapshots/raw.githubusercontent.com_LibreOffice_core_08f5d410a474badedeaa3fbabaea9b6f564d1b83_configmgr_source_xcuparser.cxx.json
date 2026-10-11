@@ -1,0 +1,42 @@
+{
+ "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/configmgr/source/xcuparser.cxx",
+ "fetched_at": "2026-10-11T00:18:24Z",
+ "http_status": 200,
+ "raw_bytes": 34005,
+ "raw_sha256": "b60ce120bb63ab216efd55c785694a83401b2f9233945850c5453e4adafb8a95",
+ "raw_stored": false,
+ "licence": "MPL-2.0",
+ "extract": {
+  "patterns": [
+   "finalized"
+  ],
+  "lines": {
+   "221": "bool XcuParser::isAlreadyFinalized(int finalizedLayer) const {",
+   "222": "return finalizedLayer != Data::NO_LAYER && finalizedLayer <= valueParser_.getLayer();",
+   "231": "bool finalized = false;",
+   "264": "attrLn == \"finalized\")",
+   "266": "finalized = xmldata::parseBoolean(reader.getAttributeValue(true));",
+   "311": "if (finalized) {",
+   "334": "int finalizedLayer;",
+   "337": "path, nullptr, &path_, &finalizedLayer));",
+   "372": "if (isAlreadyFinalized(finalizedLayer)) {",
+   "557": "bool finalized = false;",
+   "576": "attrLn == \"finalized\")",
+   "578": "finalized = xmldata::parseBoolean(reader.getAttributeValue(true));",
+   "599": "handleUnknownGroupProp(reader, group, name, type, op, finalized);",
+   "603": "handlePlainGroupProp(reader, group, i, name, type, op, finalized);",
+   "609": "type, op, finalized);",
+   "620": "OUString const & name, Type type, Operation operation, bool finalized)",
+   "636": "if (finalized) {",
+   "657": "Type type, Operation operation, bool finalized)",
+   "669": "if (finalized) {",
+   "701": "OUString const & name, Type type, Operation operation, bool finalized)",
+   "711": "if (finalized) {",
+   "750": "bool finalized = false;",
+   "765": "attrLn == \"finalized\")",
+   "767": "finalized = xmldata::parseBoolean(reader.getAttributeValue(true));",
+   "805": "if (finalized) {"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}

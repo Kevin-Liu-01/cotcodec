@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2604.17849",
+ "fetched_at": "2026-10-11T01:03:02Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41002,
+ "raw_sha256": "884df87fab8efdf0ac21b06a4b2263c742870eceac2179be1482ccea23f153e9",
+ "raw_stored": false,
+ "extract": {
+  "title": "On the Reliability of Computer Use Agents",
+  "authors": [
+   "Gonzalez-Pumariega, Gonzalo",
+   "Agashe, Saaket",
+   "Yang, Jiachen",
+   "Li, Ang",
+   "Wang, Xin Eric"
+  ],
+  "citation_date": "2026/04/20",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 20 Apr 2026 05:59:04 UTC"
+   }
+  ],
+  "abstract": "Computer-use agents have rapidly improved on real-world tasks such as web navigation, desktop automation, and software interaction, in some cases surpassing human performance. Yet even when the task and model are unchanged, an agent that succeeds once may fail on a repeated execution of the same task. This raises a fundamental question: if an agent can succeed at a task once, what prevents it from doing so reliably? In this work, we study the sources of unreliability in computer-use agents through three factors: stochasticity during execution, ambiguity in task specification, and variability in agent behavior. We analyze these factors on OSWorld using repeated executions of the same task together with paired statistical tests that capture task-level changes across settings. Our analysis shows that reliability depends on both how tasks are specified and how agent behavior varies across executions. These findings suggest the need to evaluate agents under repeated execution, to allow agents to resolve task ambiguity through interaction, and to favor strategies that remain stable across runs.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

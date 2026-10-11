@@ -1,0 +1,25 @@
+{
+ "url": "https://raw.githubusercontent.com/mozilla/gecko-dev/master/intl/locale/LocaleService.cpp",
+ "fetched_at": "2026-10-11T00:18:27Z",
+ "http_status": 200,
+ "raw_bytes": 20737,
+ "raw_sha256": "64bca0e51987b3cf0a6eb27c1aad69685fb21ed2c837adb967e75ec6bc0c7443",
+ "raw_stored": false,
+ "licence": "MPL-2.0",
+ "extract": {
+  "patterns": [
+   "intl\\.uidirection",
+   "IsAppLocaleRTL\\(\\) \\{",
+   "EqualsLiteral\\(\\\"bidi\\\"\\)",
+   "EqualsLiteral\\(\\\"accented\\\"\\)",
+   "return IsLocaleRTL\\(locale\\)"
+  ],
+  "lines": {
+   "276": "bool LocaleService::IsAppLocaleRTL() {",
+   "280": "if (pseudoLocale.EqualsLiteral(\"bidi\")) {",
+   "283": "if (pseudoLocale.EqualsLiteral(\"accented\")) {",
+   "290": "return IsLocaleRTL(locale);"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}

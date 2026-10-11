@@ -1,16 +1,16 @@
 {
  "doctor": "Source",
  "status": "PASS",
- "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "D68 repair by the single owner (Claude agent), 2026-10-10/11 UTC; not an independent review",
  "pass_condition": "Required backends reachable; cutoff and degraded coverage recorded",
- "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac; 113 counted orx discover queries with returned ids and raw-output SHA-256 (frontier 45, kill-shot 33, cross-domain 21, asset 10, synthesis 4); 9 orx calls failed with HTTP 429 and are logged, not counted; 65 uncounted searches and fetches logged (OpenReview 11 term searches and 1 failed fetch, OpenAlex API 2 plus 4 failed, Semantic Scholar via the host relay 4 citation calls plus 6 failed searches, arXiv abstract pages 5, Crossref 11, web 18, source code 3); cutoff 2026-10-10; query-log.json",
+ "evidence": "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex) reachable from the development Mac. Wave 1: 123 counted orx discover queries with returned ids and raw-output SHA-256 (query-log.json; 113 by cells and synthesis, 10 by the novelty refuter) and 65 uncounted searches and fetches. This run (query-log-run2.json): 22 counted queries (14 orx discover: 10 keyword, 2 embedding, 2 OpenAlex; 4 ACL Anthology searches over the full anthology+abstracts bibliography; 4 OpenReview API searches), 2 uncounted paper reads, 13 uncounted primary-source fetches with line numbers; cutoff 2026-10-10; no 429 failures in this run",
  "degraded_coverage": [
-  "Semantic Scholar keyword search: all 6 attempts HTTP 429; citation lists only",
-  "OpenAlex API: free daily budget exhausted mid-run; ACL-DOI-filtered searches not done; the ACL Anthology was searched only through OpenAlex and web search",
-  "OpenReview: per-note pages and PDFs behind a browser challenge (403); abstract-level only",
-  "alphaXiv keyword search is recency-biased; --prioritize historical used on 7 queries; one embedding query bounded before 2026-01-01",
-  "not searched: X, Reddit, Hacker News, Google Scholar, patents, Chinese-language sources, GitHub code search, vendor technical-report appendices"
+  "Semantic Scholar: not used in this run (the host relay was not used; the host is reserved for the reviewer's lane job); wave 1 had citer lists only",
+  "OpenReview: per-note pages behind a browser challenge; search-API titles only in this run",
+  "Chinese-language coverage: one Chinese-language alphaXiv embedding query (R2-q12); no Chinese-language venue searched",
+  "alphaXiv keyword search is recency-biased and the embedding index favours recent papers",
+  "not searched: X, Reddit, Hacker News, Google Scholar, patents beyond wave 1's IBM family"
  ],
- "remediation": "Rerun Semantic Scholar keyword searches and an ACL Anthology venue-filtered search when rate limits reset"
+ "remediation": "Semantic Scholar keyword searches and a citer refresh for 2506.04135 when the host relay is free"
 }

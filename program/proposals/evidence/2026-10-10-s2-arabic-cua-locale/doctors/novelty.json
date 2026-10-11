@@ -1,17 +1,16 @@
 {
  "doctor": "Novelty",
  "status": "FAIL",
- "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_on": "2026-10-11",
+ "evaluated_by": "D68 repair by the single owner (Claude agent), 2026-10-10/11 UTC; not an independent review",
  "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
  "protocol": "K-Dense literature-review (PRISMA counts); orx rule: at least six discover queries per candidate including keyword with exact terms and each closest prior's title phrase, embedding with the mechanism paragraph, openalex; orx paper --full for every closest prior",
- "evidence": "Merged verdict NARROWED with the residual STILL_OPEN (frontier and kill-shot cells independently; none OCCUPIED). Closest prior macOSWorld (2506.04135) read in full by two cells and re-read by synthesis; v4 2025-10-18 is the latest version; 34 Semantic Scholar citers and 27 OpenAlex full-text mentions screened by title with no decomposition. New concurrent work narrows but does not occupy: RealGUINoise 2609.38184, WebPageBench 2609.35026, BreakingWeb 2609.35814 (all read in full). PRISMA-style: about 650 identified, about 120 screened by abstract, about 30 read in full or by section, 0 direct priors.",
+ "evidence": "Merged verdict NARROWED with the residual STILL_OPEN. Wave 1: frontier and kill-shot cells independently found no direct prior; the novelty refuter's 'already published' prong failed (its refutation was trivial recombination, which the repair answers by restating the claim narrowly and crediting every component's prior). This run: title-phrase keyword queries for RealGUINoise, WebPageBench, BreakingWeb and macOSWorld; English and Chinese embedding queries with the new mechanism; two OpenAlex queries; four ACL Anthology and four OpenReview searches; VAF (2601.21961) read in full (no language or direction factor). 358 unique ids screened by title, 0 direct priors. Residual: the paired, render-certified split of application-level localization into text and layout direction. Prior art used as infrastructure: UAX #9 isolates, pseudo-locales, GWALI and the IBM GUI-mirroring test family, paired UI variants (WebPageBench, BreakingWeb, VAF).",
  "why_fail": [
-  "the blind closest-prior critic has not run on blind/",
-  "the novelty refuter of the triad has not run",
-  "the ACL Anthology was not searched directly and Semantic Scholar keyword search failed",
-  "citing-paper lists were screened by title only; a citer whose title hides an RTL analysis could be missed"
+  "this run's blind closest-prior critic has not run on the fresh blind/ packet",
+  "this run's novelty refuter has not run",
+  "Semantic Scholar keyword search and Chinese-language venues not searched"
  ],
- "queries_remaining_for_triad": 37,
- "remediation": "Run the blind critic and the novelty refuter (37 queries remain, above the reserve of 30)"
+ "queries_remaining_for_triad": 58,
+ "remediation": "Run the blind critic and the novelty refuter (58 queries remain, above the reserve of 30)"
 }
