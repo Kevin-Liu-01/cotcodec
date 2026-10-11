@@ -1,0 +1,122 @@
+{
+ "P4_reproduced": true,
+ "shares": {
+  "N0": {
+   "4B": {
+    "harness": 0.0004,
+    "harness_x_session": 0.0,
+    "rerun": 0.3264,
+    "session": 0.0065,
+    "task": 0.6298,
+    "task_x_harness": 0.027,
+    "task_x_harness_x_session": 0.0012,
+    "task_x_session": 0.0086
+   },
+   "9B": {
+    "harness": 0.0015,
+    "harness_x_session": 0.0,
+    "rerun": 0.1966,
+    "session": 0.0025,
+    "task": 0.754,
+    "task_x_harness": 0.0385,
+    "task_x_harness_x_session": 0.0015,
+    "task_x_session": 0.0055
+   }
+  },
+  "P0": {
+   "4B": {
+    "harness": 0.0003,
+    "harness_x_session": 0.0,
+    "rerun": 0.2645,
+    "session": 0.0,
+    "task": 0.7171,
+    "task_x_harness": 0.0078,
+    "task_x_harness_x_session": 0.0051,
+    "task_x_session": 0.0051
+   },
+   "9B": {
+    "harness": 0.0,
+    "harness_x_session": 0.0,
+    "rerun": 0.2076,
+    "session": 0.0,
+    "task": 0.7514,
+    "task_x_harness": 0.0405,
+    "task_x_harness_x_session": 0.0001,
+    "task_x_session": 0.0004
+   }
+  },
+  "P4": {
+   "4B": {
+    "harness": 0.0004,
+    "harness_x_session": 0.0,
+    "rerun": 0.2651,
+    "session": 0.0,
+    "task": 0.7235,
+    "task_x_harness": 0.0008,
+    "task_x_harness_x_session": 0.0051,
+    "task_x_session": 0.0051
+   },
+   "9B": {
+    "harness": 0.0,
+    "harness_x_session": 0.0,
+    "rerun": 0.2077,
+    "session": 0.0,
+    "task": 0.7532,
+    "task_x_harness": 0.0386,
+    "task_x_harness_x_session": 0.0001,
+    "task_x_session": 0.0004
+   }
+  },
+  "P4sf": {
+   "4B": {
+    "harness": 0.0004,
+    "harness_x_session": 0.0,
+    "rerun": 0.262,
+    "session": 0.0,
+    "task": 0.6961,
+    "task_x_harness": 0.0007,
+    "task_x_harness_x_session": 0.0204,
+    "task_x_session": 0.0204
+   },
+   "9B": {
+    "harness": 0.0,
+    "harness_x_session": 0.0,
+    "rerun": 0.2063,
+    "session": 0.0,
+    "task": 0.7273,
+    "task_x_harness": 0.0344,
+    "task_x_harness_x_session": 0.0159,
+    "task_x_session": 0.0162
+   }
+  },
+  "PR": {
+   "4B": {
+    "harness": 0.0005,
+    "harness_x_session": 0.0,
+    "rerun": 0.2647,
+    "session": 0.0,
+    "task": 0.7188,
+    "task_x_harness": 0.0058,
+    "task_x_harness_x_session": 0.0051,
+    "task_x_session": 0.0051
+   },
+   "9B": {
+    "harness": 0.0,
+    "harness_x_session": 0.0,
+    "rerun": 0.2077,
+    "session": 0.0,
+    "task": 0.753,
+    "task_x_harness": 0.0389,
+    "task_x_harness_x_session": 0.0001,
+    "task_x_session": 0.0004
+   }
+  }
+ },
+ "source": {
+  "N0": "program/evidence/2026-10-10/q2-design-study/fit-base.json",
+  "P0": "program/evidence/2026-10-10/q2-design-study/fit-pool.json",
+  "P4": "program/evidence/2026-10-10/q2-next-step-design-study/fit-pool-4b0.json",
+  "P4sf": "program/evidence/2026-10-10/q2-next-step-design-study/fit-pool-4b0.json with sigma_f=1.0 (computed here)",
+  "PR": "program/evidence/2026-10-10/q2-next-step-design-study/fit-pool-rhob0.json"
+ }
+}
