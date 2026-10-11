@@ -20,7 +20,7 @@ Kevin (D70):
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 16 rows). Decisions taken
-on Kevin's behalf are D1-D70 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D71 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
@@ -40,10 +40,16 @@ Q1 Stage 0 is closed on the audit-metric study (D46): under TF32 a tolerance
 audit certifies "not grossly wrong", not 1% correctness
 (`program/evidence/2026-10-08/q1-audit-metric-study/`).
 
-## In progress
+## In progress (D71)
 
-Nothing. The last runs (five repair runs and the Q2 design study) ended on
-2026-10-11; see D69 and D70.
+- A question-renewal sweep replays the 2026-10-06 selection on what the
+  program has measured (branch `stage0/question-renewal`). It ends in a
+  ranked slate for Kevin.
+- An S2 successor (S2 v3) runs its first gauntlet wave, with a larger
+  LibreOffice task pool and an executable CPU-only Phase 0 pilot (branch
+  `gauntlet/s2v3-locale`).
+- A Q2 technical report draft is under way (branch `stage0/q2-report`,
+  `paper/q2-report/draft.md`). Publishing it stays Kevin's.
 
 ## Waiting on Kevin
 
@@ -51,7 +57,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D70, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D71, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 
