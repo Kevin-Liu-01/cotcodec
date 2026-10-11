@@ -321,11 +321,29 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--golds", action="store_true")
     parser.add_argument("--s1a-run", action="append", default=[], help="LABEL=RUN_DIR")
     parser.add_argument("--src", type=Path, default=Path("."), help="repository root")
+    parser.add_argument(
+        "--inputs",
+        type=Path,
+        default=None,
+        help="mounted inputs root: refuse an OSWorld tree, VM baseline or file cache that "
+        "differs from the checker-mutation study's pins",
+    )
     parser.add_argument("--out", type=Path, required=True, help="items JSONL")
     args = parser.parse_args(argv)
     splits = json.loads(args.splits.read_text(encoding="utf-8"))
     items: list[dict[str, Any]] = []
-    report: dict[str, Any] = {"schema": SCHEMA, "split": args.split}
+    from harness.r04_nuisance.guard import require_split_allowed
+
+    frozen = require_split_allowed(args.split, args.src)
+    report: dict[str, Any] = {
+        "schema": SCHEMA,
+        "split": args.split,
+        "frozen_row": (frozen or {}).get("hash"),
+    }
+    if args.inputs is not None:
+        from harness.q2_mutation.campaign import check_inputs
+
+        report["inputs"] = check_inputs(args.src, args.inputs)
     if args.golds:
         if args.osworld is None or args.file_cache is None:
             parser.error("--golds needs --osworld and --file-cache")

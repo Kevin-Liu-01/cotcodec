@@ -370,6 +370,8 @@ def cmd_plan(args: argparse.Namespace) -> None:
         args.split,
         "--out",
         "/out/items.jsonl",
+        "--inputs",
+        "/inputs",
     ]
     if args.golds:
         items_argv += [

@@ -1,0 +1,52 @@
+{
+ "golds": {
+  "gold_equals_initial": [
+   "2b94c692-6abb-48ae-ab0b-b3e8a19cb340"
+  ],
+  "items": 17,
+  "no_gold": [
+   "08c73485-7c6d-4681-999d-919f5c32dcfa",
+   "0e47de2a-32e0-456c-a366-8c607ef7a9d2",
+   "276cc624-87ea-4f08-ab93-f770e3790175",
+   "3f28fe4f-5d9d-4994-a456-efd78cfae1a3",
+   "415ef462-bed3-493a-ac36-ca8c6d23bf1b",
+   "72f83cdc-bf76-4531-9a1b-eb893a13f8aa",
+   "8ba5ae7a-5ae5-4eab-9fcc-5dd4fe3abf89",
+   "9219480b-3aed-47fc-8bac-d2cffc5849f7",
+   "9d425400-e9b2-4424-9a4b-d4c7abac4140",
+   "ac9bb6cb-1888-43ab-81e4-a98a547918cd",
+   "d52d6308-ec58-42b7-a2c9-de80e4837b2b",
+   "f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce"
+  ],
+  "not_exposed": [
+   "20236825-b5df-46e7-89bf-62e1d640a897",
+   "aa4b5023-aef6-4ed9-bdc9-705f59ab9ad6"
+  ],
+  "split": "dev",
+  "tasks": 32,
+  "unemulated": {}
+ },
+ "items": 34,
+ "manifest_sha256": "8c6227b8a10cb631e7b684db9cecbfca17cf1f2d2c322cc19f984c3e2be2ed7a",
+ "s1a": {
+  "fail_per_task": 3,
+  "fail_states_sampled": 9,
+  "items": 17,
+  "items_by_population": {
+   "s1a_fail": 9,
+   "s1a_pass": 8
+  },
+  "states": 20,
+  "states_by_population": {
+   "s1a_fail": 12,
+   "s1a_pass": 8
+  },
+  "tasks_by_population": {
+   "s1a_fail": 3,
+   "s1a_mixed": 0,
+   "s1a_pass": 2
+  }
+ },
+ "schema": "r04-items-v1",
+ "split": "dev"
+}
