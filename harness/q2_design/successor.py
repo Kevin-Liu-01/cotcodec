@@ -373,7 +373,8 @@ def cmd_merge_designs(args: argparse.Namespace) -> int:
                            "fit": parts[0]["fit"], "set_param": parts[0]["set_param"],
                            "params": parts[0]["params"], "source": parts[0]["source"],
                            "cells": {}}  # fmt: skip
-    for key in parts[0]["cells"]:
+    keys = list(dict.fromkeys(k for p in parts for k in p["cells"]))  # design groups differ
+    for key in keys:
         cells = [p["cells"][key] for p in parts if key in p["cells"]]
         per = {
             k: np.concatenate(
@@ -386,7 +387,7 @@ def cmd_merge_designs(args: argparse.Namespace) -> int:
         }
         summ = summarise_cell(per)
         per_seed = {}
-        for p, c in zip(parts, cells, strict=False):
+        for p, c in ((p, p["cells"][key]) for p in parts if key in p["cells"]):
             pc = {k: np.asarray(c["per_set"][k], dtype=object if k in ("dr2", "dr5") else float)
                   for k in STORE}  # fmt: skip
             ss = AN.summarise(pc)
