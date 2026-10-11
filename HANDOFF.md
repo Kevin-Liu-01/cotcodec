@@ -20,7 +20,7 @@ Kevin (D70):
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 16 rows). Decisions taken
-on Kevin's behalf are D1-D75 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D76 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
@@ -50,8 +50,8 @@ audit certifies "not grossly wrong", not 1% correctness
 - The Q2 technical report draft is merged (`paper/q2-report/`), unpublished.
   The corrections it found are recorded in D72.
 - Running:
-  - S2 v3's repair run, completing its Phase 0 pilot (wave 1 scored 60, the
-    best package so far; stop line 65; D74).
+  - (S2 v3 finished: 60, then 65, the program's best score; it ended at an
+    honest exit on the defect test and waits on Kevin's five asks, D76.)
   - R01's repair run (wave 1 scored 58; D75). Its Stage A0 census of S1a's
     logs already shows that identical requests got different replies 59% of
     the time under greedy decoding, while identical actions never gave
@@ -65,7 +65,7 @@ See `pending_decisions_for_kevin` in `program/state.json`: the gauntlet trust
 store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
-before their sign-off, review of D1-D75, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D76, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 
