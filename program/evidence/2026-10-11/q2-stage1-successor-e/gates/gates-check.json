@@ -1,0 +1,270 @@
+{
+ "G-E4": {
+  "checks": {
+   "manifest_is_the_committed_dev_smoke": true,
+   "preflight": {
+    "batch_is_section_23s_q2e_vm_sbatch": true,
+    "docker_runtime_runc": true,
+    "job_id": true,
+    "lane_exit_0": true,
+    "no_gres": true,
+    "no_labelled_container_left": true,
+    "source_git_sha_is_the_draft_commit": true
+   },
+   "receipt": {
+    "error": null,
+    "foreign_slurm_jobs_in_snapshots": 0,
+    "purpose": "development",
+    "records": 4,
+    "statuses": {
+     "scored": 4
+    },
+    "stopped": false
+   },
+   "records": {
+    "accepted_by_e_validate": 4,
+    "attempts": [
+     1
+    ],
+    "gpu_devices_seen": 0,
+    "infrastructure_types": [
+     "None"
+    ],
+    "labels_are_the_manifest_slots": true,
+    "n_records": 4,
+    "one_record_per_manifest_slot": true,
+    "refused_by_s1a_validate": 4,
+    "sessions": [
+     "E1"
+    ],
+    "statuses": [
+     "scored"
+    ]
+   },
+   "rescoring": {
+    "per_episode": [
+     {
+      "errors": [],
+      "live_offline_match": true,
+      "live_score_equal": true,
+      "raw_equals_live": true,
+      "row": true,
+      "slot": "E-dev:dev:000",
+      "state_sha256_equal": true
+     },
+     {
+      "errors": [],
+      "live_offline_match": true,
+      "live_score_equal": true,
+      "raw_equals_live": true,
+      "row": true,
+      "slot": "E-dev:dev:001",
+      "state_sha256_equal": true
+     },
+     {
+      "errors": [],
+      "live_offline_match": true,
+      "live_score_equal": true,
+      "raw_equals_live": true,
+      "row": true,
+      "slot": "E-dev:dev:002",
+      "state_sha256_equal": true
+     },
+     {
+      "errors": [],
+      "live_offline_match": true,
+      "live_score_equal": true,
+      "raw_equals_live": true,
+      "row": true,
+      "slot": "E-dev:dev:003",
+      "state_sha256_equal": true
+     }
+    ],
+    "receipt_batch_is_s1a_cpu_sbatch": true,
+    "receipt_container_dev_nvidia": [],
+    "receipt_exit_status": 0,
+    "receipt_gpus_requested": 0,
+    "receipt_image_is_the_metric_image": true,
+    "receipt_job_id": "1208",
+    "rows": 4
+   }
+  },
+  "criteria": {
+   "a_scored_record_with_session_E1": true,
+   "all_4_slots_scored_records_accepted_by_e_validate": true,
+   "lane_receipt_holds_no_error": true,
+   "offline_rescoring_matches_live_on_every_episode": true
+  },
+  "passed": true,
+  "scores_live": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "supporting_checks_hold": true
+ },
+ "G-E5": {
+  "bootstrap": {
+   "refits_failed": 0,
+   "refits_not_converged": 42,
+   "refits_used": 200,
+   "shares_ci95": {
+    "harness:session": [
+     3.22812702356558e-15,
+     0.00401477036821442
+    ],
+    "session": [
+     9.83685592781826e-19,
+     0.00392230057252146
+    ],
+    "task": [
+     0.129999571348647,
+     0.322779404210545
+    ],
+    "task:harness": [
+     0.0887740692953665,
+     0.255743411670401
+    ],
+    "task:harness:session": [
+     5.29886464914743e-13,
+     1.77587457859877e-08
+    ],
+    "task:session": [
+     6.26677408842421e-13,
+     2.78585047722546e-05
+    ],
+    "task:size": [
+     2.58103971209589e-11,
+     0.0229482869515628
+    ],
+    "task:size:harness": [
+     2.73370796619602e-11,
+     0.0192308440336016
+    ]
+   }
+  },
+  "both_fits_converged_with_pd_hessian": true,
+  "checks": {
+   "exit_code_file": "0",
+   "glmm_r_is_s1as": true,
+   "input_regenerated_byte_for_byte_by_e_code": true,
+   "input_sha256": "41d87779d26d280e98fc5ec672a87ee7a075a9b2cd07d5669360797d7c83b707",
+   "r_package_lock_is_s1as": true,
+   "receipt_batch_is_s1a_cpu_sbatch": true,
+   "receipt_container_dev_nvidia": [],
+   "receipt_exit_status": 0,
+   "receipt_gpus_requested": 0,
+   "receipt_image_is_the_pinned_glmm_image": true,
+   "receipt_network": "none",
+   "receipt_started_finished": [
+    "2026-10-11T23:35:12Z",
+    "2026-10-11T23:49:52Z"
+   ]
+  },
+  "fixed_effects": {
+   "(Intercept)": -1.03247691133846,
+   "harnessH-OSW-fixed": -0.0120587018089943,
+   "size9B": 0.549883760033154,
+   "size9B:harnessH-OSW-fixed": 0.0804475657210457
+  },
+  "full": {
+   "df": 12,
+   "logLik": -1041.36997268327,
+   "ok": true,
+   "optimizer_convergence": 0,
+   "optimizer_message": "relative convergence (4)",
+   "pdHess": true
+  },
+  "latent_shares": {
+   "harness:session": 3.18539874679072e-09,
+   "session": 8.75121631739967e-10,
+   "task": 0.238115691778665,
+   "task:harness": 0.173738917667151,
+   "task:harness:session": 4.02738884842138e-09,
+   "task:session": 9.38247476746735e-09,
+   "task:size": 0.00103844747559047,
+   "task:size:harness": 9.85960909167565e-09
+  },
+  "lrt_task_harness": {
+   "both_converged": true,
+   "df": 1,
+   "p_value": 5.21167793467445e-09,
+   "p_value_boundary_corrected": 2.60583896733723e-09,
+   "statistic": 34.1087353864186
+  },
+  "ran_as_registered": true,
+  "reduced": {
+   "df": 11,
+   "logLik": -1058.42434037647,
+   "ok": true,
+   "optimizer_convergence": 0,
+   "optimizer_message": "relative convergence (4)",
+   "pdHess": true
+  },
+  "shape": {
+   "R_version": "R version 4.4.2 (2024-10-31)",
+   "TMB_version": "1.9.16",
+   "glmmTMB_version": "1.1.10",
+   "n_boot": 200,
+   "n_episodes": 1808,
+   "n_tasks": 113,
+   "schema": "q2-stage1a-glmm-v1",
+   "seed": 42
+  },
+  "variance_components": {
+   "harness:session": 1.78494607184474e-08,
+   "session": 4.903765723316e-09,
+   "task": 1.33428717240857,
+   "task:harness": 0.973550325305351,
+   "task:harness:session": 2.25675730927677e-08,
+   "task:session": 5.25749295821942e-08,
+   "task:size": 0.00581896613175903,
+   "task:size:harness": 5.52485635772974e-08
+  },
+  "variance_components_generating": {
+   "harness:session": 0.0025000000000000005,
+   "session": 0.010000000000000002,
+   "task": 2.25,
+   "task:harness": 1.0,
+   "task:harness:session": 0.09,
+   "task:session": 0.09,
+   "task:size": 0.09,
+   "task:size:harness": 0.04000000000000001
+  }
+ },
+ "draft_commit_exported": "8a23a483dc39f6e34aa52dca75a9a5e106b18375",
+ "experiment_id": "q2-stage1-successor-e-v1",
+ "provenance": {
+  "checked_at_commit": "2f627aed7139102e63c6bc36fbae0b1865b1cad0",
+  "harness_dirty": false,
+  "inputs_sha256": {
+   "check_gates.py": "adc939d28752023a46a4556ef5df8c3057e6f34e464dba1851b9d643197ea313",
+   "ge4/episodes.jsonl": "e0e580895811488038f191395cde2598ff4260ec0a005ddde92dc6bbc7b0b607",
+   "ge4/lane-receipt.json": "70fb043585417b49e72ded17093f0f5e0bedde63da1e5a903f64805da8319481",
+   "ge4/manifest.json": "3e190325723e043f2cff5eaea19b8f3697ad8b2bd8b735e38d534894620df5ed",
+   "ge4/preflight.txt": "52c12d8f835c6e57c3060e8016191908ca1a4f93b42b2a29b1c79b7ce5d24eee",
+   "ge4/receipt-1208.json": "fcfab7b52a60db5adb584a73fe0c860db837116437c8052d8d8dfa2b899cc26f",
+   "ge4/rescore-submit-1208.json": "4d95be88c8c7929135492c790251ec5129bc6383938ad30d6489cc577ebccaaa",
+   "ge4/rescored-1208.jsonl": "9b37a6d351a14c8cac27023d418a5df4a37d4e9562907f1e5bd5a27f4bd11f08",
+   "ge4/slurm-1206.out": "246f100b52b8cd8f2dde947ed77f6b978eec811518f72d7eb4ff87b8d39a2563",
+   "ge4/slurm-1208.out": "90f5f43b1807197132d0a957f5114f6e138ac5a45f13f39120b2fe093036f6d2",
+   "ge4/submit-1206.json": "61bb0aab6efaee163bffde3661b3fd539cb7c271ce409dec35c0ec06c83532f5",
+   "ge5/glmm-synthetic-e-k113.json": "d6aa8f143d3a1b3aaba8acb973b514c5ca2789f0febba588c72056f5d98e32cf",
+   "ge5/glmm.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+   "ge5/glmm.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ge5/r-packages.json": "abb8871de4549732cd396dc60fc1f2aec78bf1fffad788cb841e8bf61668bfc7",
+   "ge5/r-packages.sha256": "8434f0268636d1328bf64f7a80ca8a55782c75c87b8b69a876bed1d2c444da9b",
+   "ge5/receipt-1210.json": "bc42f389954b8f301552da9d1b0d74d8c7050af42f7fd2aba5e79217bced0b5a",
+   "ge5/slurm-1210.out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ge5/submit-1210.json": "08a92e01d9ba3fe338865c936b05d9c3739f32da3d1911cc38662927626fc52a",
+   "ge5/synthetic-e-k113.csv": "41d87779d26d280e98fc5ec672a87ee7a075a9b2cd07d5669360797d7c83b707",
+   "ge5/synthetic-e-k113.truth.json": "442918bdf6d1b7a912619cf7fca53e4d1fdbd0ccc41d0ba3abb7adaf513cd360",
+   "scripts/ge4-rescore-wait-submit.sh": "15af17183ca1086fa26a920cf89ec1256215f3afd8a31cea985f0fd63bf0ce68",
+   "scripts/ge4-wait-submit.sh": "aa9c74145852e31b87d15cefc4c4e6f55c1e51ecf19d141f457c2af4f5e50c85",
+   "scripts/ge5-glmm-wait-submit.sh": "14e1c38b476f838393c3bfa88b78181c64828232475ea40d8fc0a1c714345799"
+  },
+  "python": "3.13.14"
+ },
+ "schema": "q2-stage1e-gates-check-v1"
+}

@@ -125,14 +125,32 @@ E is S1a's design with more data. The table is the whole of the difference.
   refuses that label at its final check, so it would leave no record. It touches no confirm
   task and runs no model. It does not reach the `e` purpose's own checks (prior jobs, the
   session gap, the engine argv and the Slurm limit), which CPU tests cover (section 22,
-  disclosure 10). Result: TBD
+  disclosure 10). Result: **passed** (VM job 1206, 2026-10-11, 7 min 38 s, from the
+  read-only export of the draft commit `8a23a483`; CPU only, no GRES; submitted with the Slurm
+  queue empty, and the lane's snapshots saw no foreign job): 4 of 4 slots scored, all with
+  session `E1`; every record is accepted by E's `records.validate` and refused by S1a's; the
+  lane receipt holds no error (lane exit 0, no labelled container left). Each episode ran
+  cold boot (18.3 s), setup (11.4 s), the warm-up, both settles, a click and `terminate`,
+  `DesktopEnv.evaluate()`, the capture and teardown, in a slot of 113-114 s. Offline rescoring
+  (CPU job 1208, the metric image, `rescore.py capture` unchanged) matched the live score on
+  4 of 4, on the same state digests. Evidence:
+  `program/evidence/2026-10-11/q2-stage1-successor-e/gates/` (`gates-check.json`)
 - **G-E5. The registered GLMM on data of E's shape (CPU only, pre-freeze).** S1a's `glmm.R`
   was accepted on two sessions x two reruns (S1a G0 item 12, job 984). Before the freeze it
   runs, unchanged, in the pinned container (`s1a-cpu.sbatch`, image
   `sha256:b15584f3954f1c83fc3e5067e29c57c5c55e3b2a50ef28e4e68a394e595aabed`) on synthetic
   rows of E's shape (`python -m harness.q2_stage1e.analysis glmm-synthetic`, 113 tasks, seed
   42). Its convergence and Hessian are reported. The GLMM is secondary, so its outcome changes
-  no registered rule; a fit that fails is disclosed here before the freeze. Result: TBD
+  no registered rule; a fit that fails is disclosed here before the freeze. Result: **passed**
+  (CPU job 1210, 2026-10-11, 14 min 41 s, from the export of `8a23a483`; no GRES, no network;
+  `glmm.R` and the R package lock are S1a's by SHA-256; input 1,808 rows, SHA-256
+  `41d87779...`, which E's code regenerates byte for byte): both fits converged (optimizer
+  code 0) with positive-definite Hessians; 200 refits used, none failed, 42 not converged
+  (reported). Estimated variances: task 1.33 (generating 2.25), task:harness 0.97 (1.00),
+  task:size 0.006 (0.09), task:session and task:harness:session near 0 (0.09 each; the latter
+  is not identified at R = 1, section 11), every other component near 0. The task:harness
+  likelihood-ratio test gives chi-square 34.1 (p 5.2e-9, boundary-corrected 2.6e-9). Evidence:
+  `program/evidence/2026-10-11/q2-stage1-successor-e/gates/` (`gates-check.json`)
 - **G-E6. A fresh, independent pre-freeze audit** that finds nothing blocking (earlier rounds
   and their dispositions are in section 25's review log), then the freeze
   (`scripts/preregister.py freeze`, section 25's steps). Audit record: TBD

@@ -55,6 +55,9 @@ INFRA_FILES = (
     "ops/s1a-analysis/cpu-step.sbatch",
 )
 INFRA_MARK = "**Infrastructure E runs that neither table above pins.**"
+# The two pre-freeze gate result slots (section 4.1): "TBD" while open, then the gate's verdict.
+GATE_SLOTS = {"G-E4": "disclosure 10). Result: ", "G-E5": "before the freeze. Result: "}
+GATES_EVIDENCE = "program/evidence/2026-10-11/q2-stage1-successor-e/gates/"
 
 
 def _text() -> str:
@@ -271,10 +274,18 @@ def test_open_slots_and_the_frozen_status_wording():
         return
     status = text.split("\n\n", 2)[1]
     assert status.startswith("**Status: DRAFT.") and "no ledger row" in status
-    assert text.count("TBD") == 5
-    for slot in ("disclosure 10). Result: TBD", "before the freeze. Result: TBD",
-                 "Audit record: TBD", "(decision id): TBD"):  # fmt: skip
+    open_gates = [gate for gate, prefix in GATE_SLOTS.items() if f"{prefix}TBD" in joined]
+    assert text.count("TBD") == 3 + len(open_gates)
+    for slot in ("Audit record: TBD", "(decision id): TBD"):
         assert slot in joined, slot
+    for gate, prefix in GATE_SLOTS.items():
+        if gate in open_gates:
+            continue
+        # A filled gate slot states its verdict and points at the gates' evidence bundle.
+        filled = re.search(re.escape(prefix) + r"\*\*(passed|failed)\*\*(.*?)(?= - \*\*G-E|$)",
+                           joined)  # fmt: skip
+        assert filled, f"{gate}'s slot holds neither TBD nor a verdict"
+        assert GATES_EVIDENCE in filled.group(2), f"{gate}'s result names no evidence"
     frozen = _section(text, "25. Pre-freeze review log and the freeze").split("> ", 1)[1]
     assert "**Status: frozen in `program/preregistrations/ledger.jsonl`" in frozen
 

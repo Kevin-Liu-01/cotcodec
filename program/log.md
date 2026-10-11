@@ -5064,3 +5064,40 @@ they say so.)
   60 passed and 2 skipped on the frozen rehearsal tree. S1a's and the design study's suites
   (15 files): 310 passed, 3 skipped. (The earlier report of 293 passed and 4 skipped for these
   files was wrong; audit 1 found the same 310/3.)
+
+## 2026-10-11 — Q2 successor E `q2-stage1-successor-e-v1`: pre-freeze gates G-E4 and G-E5 passed (DRAFT, not frozen; branch `stage0/q2-successor-e`, not merged)
+
+- Single operator. CPU only: three Slurm jobs with no GRES, run from a read-only `git archive`
+  export of the draft commit `8a23a483` under `~/cotcodec-runs/stage0/q2-stage1e/` on the host
+  (its `harness/` tree digest equals the Mac's). Each job was submitted only when the whole
+  queue was empty, one at a time (polling `squeue` every 2 s in commands of at most about four
+  minutes). Other workstreams held the queue for about two hours first: S2 v4 1201 and 1207,
+  1202, 1209, and R04 1203 and 1204. No GPU, no model, no confirm task.
+- G-E4 **passed**. VM job 1206 ran the registered development smoke
+  (`lane submit experiments/manifests/q2-stage1e/dev-smoke-v1.json`) in 7 min 38 s. All 4
+  slots scored with session `E1`. E's `records.validate` accepts every record and S1a's
+  refuses every one. The lane receipt holds no error (lane exit 0, no container left), and the
+  lane's snapshots saw no foreign Slurm job. Offline rescoring (job 1208, `rescore.py capture`
+  in the metric image) matched the live score on 4 of 4, with the same state digests.
+- G-E5 **passed**. CPU job 1210 ran the unchanged `glmm.R` (200 refits, seed 42) in the
+  pinned image, in 14 min 41 s, on E-shaped synthetic rows: 1,808 rows, `glmm-synthetic`,
+  113 tasks, seed 42, the same bytes on the host's numpy 1.21.5 and the Mac's 2.5.2. Both fits
+  converged with positive-definite Hessians. Bootstrap: 200 refits used, 0 failed, 42 not
+  converged. Estimated variances: task 1.33 (generating 2.25), task:harness 0.97 (1.00),
+  task:session and task:harness:session about 0 (the latter is not identified at R = 1). LRT
+  of `(1|task:harness)`: chi-square 34.1.
+- Evidence: `program/evidence/2026-10-11/q2-stage1-successor-e/gates/` (README, the records
+  and receipts, the operator scripts, `check_gates.py` and its `gates-check.json`, which checks
+  every record with E's code). The registration's G-E4 and G-E5 result slots are filled;
+  nothing else in it changed. Its status paragraph, replaced whole at the freeze, still lists
+  them among the open slots.
+- `main` at `2b8fadc7` (D83, D84, the Q2 report revision; no ledger change) was merged into
+  the branch first (`2f278e81`). E's code equals the exported commit's. The real ledger is
+  untouched (18 rows).
+- `tests/test_q2_stage1e_prereg.py`: the open-slot test accepts a G-E4 or G-E5 slot that is
+  either `TBD` or holds a `**passed**`/`**failed**` verdict naming the gates' evidence. It
+  refuses a filled slot without either. Tests: E 62 passed (`test_q2_stage1e.py` 46,
+  `test_q2_stage1e_prereg.py` 16); S1a's and the design study's suites (15 files) 310 passed,
+  3 skipped.
+- Still open before the freeze: G-E6 (a fresh pre-freeze audit that finds nothing blocking)
+  and the program's sign-off decision (section 21), then section 25's steps.
