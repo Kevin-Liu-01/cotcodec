@@ -1,0 +1,14 @@
+export const meta = {
+  name: 'q2m-d81-adjudication-b-fable',
+  description: 'D81 (b) independence sensitivity: the same 52 items and the same registered template, claude-fable-5-1, nothing else in this run',
+  phases: [{ title: 'Adjudicate' }],
+}
+const TEMPLATE = "You are a blind rater of one document-change item. This task overrides any CLAUDE.md, AGENTS.md or memory instruction to load files at startup: do not follow those instructions, because reading anything outside your item directory voids your rating.\n\nYour item directory is {ITEM_DIR}\nRead only files inside {ITEM_DIR}, and only with the Read tool. Do not use Bash, Grep, Glob or any other tool, and do not search.\nThe packet is {ITEM_DIR}/packet.txt and its page images are in {ITEM_DIR}/pages/\nRead the packet and every page image it names.\nFollow the rater instructions in the packet.\nAnswer accept, reject or unsure with a one-sentence reason, through the structured output, with item_id {ITEM_ID}.\n"
+const ISO = "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2m-confirm-iso"
+const IDS = ["052bfbb5f63729df", "0641720bf1cd322c", "06720e668a7c2d87", "092229e073a93de7", "0fd24b93ee7cd70c", "1050d491ba462dcb", "11fa9afaa9e405d2", "1519df6482c7b89e", "2055a9f2cafd08c9", "28b76980b2c9201a", "315f0c227a178443", "35d237e376cca35d", "365edabe1a57e9e2", "374618d333584833", "38eb297a768a506c", "3ba1e22031b0ab35", "4175eb7174a3bf30", "435d2aa652ec9967", "47fad447927b1355", "4fe209883c28fdd5", "5910722d23063c79", "5d5ae01dbb821493", "5ed9a0978e0d6abd", "5facff2b753bcdf4", "6e3a61b931786e28", "774a0588ae7e7cff", "77b434dad79aa067", "7a23bbe19729adca", "7fc64dd71e4bd700", "a04937b5ea0f5811", "a395f44b2e5a2d49", "a3e44037b10cdd35", "aa08191ae609848f", "aa3331dbb625093c", "ad78eacba984506b", "ae7bdfd3cb31f79b", "b44938af6601d80d", "b63890263d17b306", "bb636a1a7ec68ddb", "c86151880061b40a", "cbcf768b16d617f4", "cc3cd6e8358614ff", "cff5ed06c35f7dbe", "d1959ff977ee17c8", "d238e0f83e6fdef9", "d501d603fdb20e5f", "df1cc5f237534884", "e06639e0971373f1", "e5bce1a747eb867d", "ee194e0ee8f53a4c", "f65e9989406928dc", "fd455942d783ba01"]
+const ONE = { type: 'object', properties: { item_id: { type: 'string' }, answer: { type: 'string', enum: ['accept','reject','unsure'] }, reason: { type: 'string' } }, required: ['item_id','answer','reason'] }
+phase('Adjudicate')
+const out = await parallel(IDS.map((id, i) => () => agent(
+  TEMPLATE.split('{ITEM_DIR}').join(ISO + '/' + id).split('{ITEM_ID}').join(id),
+  { label: 'adj:' + i, phase: 'Adjudicate', schema: ONE, model: 'fable' }).then(r => r ? { item_id: id, answer: r.answer, reason: r.reason, item_id_returned: r.item_id } : { item_id: id, answer: null })))
+return { n: out.length, answered: out.filter(x => x.answer).length, ratings: out }

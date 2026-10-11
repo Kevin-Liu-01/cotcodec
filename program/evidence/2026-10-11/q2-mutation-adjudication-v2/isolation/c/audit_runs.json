@@ -1,0 +1,668 @@
+{
+ "agents_started": 12,
+ "agents_with_result": 12,
+ "answers": {
+  "accept": 12
+ },
+ "attachment_types": {
+  "auto_mode": 12,
+  "credential_org": 12,
+  "date": 12,
+  "deferred_tools_delta": 24,
+  "environment": 12,
+  "instructions": 12,
+  "mcp_instructions_delta": 12,
+  "model": 12,
+  "prompt_snapshot": 24,
+  "read_truncation_notice": 12,
+  "remote_session_change": 12,
+  "session_context": 12,
+  "skill_listing": 12,
+  "structured_output": 12,
+  "total_tokens_reminder": 55
+ },
+ "frozen_source": "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/adjudication-v2/src65",
+ "items": [
+  {
+   "answer": "accept",
+   "answer_file_sha256": "568a72a0f1ed6b72037d039340fee4cc2aedfde0a4dc6264b1bbecf00e0969ff",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "06720e668a7c2d87",
+   "outcome": "ok",
+   "packet_reads": 4,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "a969f697559dca441",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 734947,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 17
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "4d953199bc45bb125235e2a3caa1ecffafc1edb3bbcf1bb1fb2e66225a2e760c",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 11,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  },
+  {
+   "answer": "accept",
+   "answer_file_sha256": "fefe6ef8b79e863c0d6fb192d98bd3786788665c8a43db53679640eb1c7fbe10",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "28b76980b2c9201a",
+   "outcome": "ok",
+   "packet_reads": 5,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "a1ca8377c8757d8cd",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 5
+     },
+     "bytes": 736861,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 19
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "f47400e94400937176eefbb67a890306e2811c1bb8798d6d034861a45400616a",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 12,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  },
+  {
+   "answer": "accept",
+   "answer_file_sha256": "4db238a04ba7906c807c2251f6248191ff28a8689de33edac9c751b96e449a3c",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "35d237e376cca35d",
+   "outcome": "ok",
+   "packet_reads": 5,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "a9f22bcc0a3b4a002",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 5
+     },
+     "bytes": 739703,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 19
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "0b602ba11e8c03488c80b079556ee036632d0cd9f06c1931aeda4b7bb6532e2e",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 12,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  },
+  {
+   "answer": "accept",
+   "answer_file_sha256": "5571e0e7c493e109591f7ee53aaace0a670b373b9da7bdb243af4165e9287ac9",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "365edabe1a57e9e2",
+   "outcome": "ok",
+   "packet_reads": 5,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "a725a83ba73f1ddb0",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 5
+     },
+     "bytes": 731345,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 18
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "8386ee2bcc47f4f30813f8b5db6c9a1b3d8ba0b77b888038ad29c39c13aad969",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 12,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  },
+  {
+   "answer": "accept",
+   "answer_file_sha256": "45e0e8d18b5af9eebcd546808e2d48dc0e0b4b2a01d9e792a358fee00d31150b",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "4fe209883c28fdd5",
+   "outcome": "ok",
+   "packet_reads": 4,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "ab1435ce86dba040c",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 726538,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 17
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "55711a5a8505993b2e810bb45ecef297ab659a613a266f528a9814c12fa1aad6",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 11,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  },
+  {
+   "answer": "accept",
+   "answer_file_sha256": "02bcb00013b24d27e2066b7b1a783078bfc56941939fffef29f96c268511e230",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "5facff2b753bcdf4",
+   "outcome": "ok",
+   "packet_reads": 5,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "a9c2ecfa3a8bd8af8",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 5
+     },
+     "bytes": 734031,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 19
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "bd3c6c726b5713076216c617b1a0a416cafcc9d94727269e38424995fd98cc6c",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 12,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  },
+  {
+   "answer": "accept",
+   "answer_file_sha256": "14dfb7a05e05ab12aa7a26ebb138daa89720fc96fb0405e332ea20855c29a8a1",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "77b434dad79aa067",
+   "outcome": "ok",
+   "packet_reads": 4,
+   "page_images": 6,
+   "page_images_opened": 6,
+   "transcripts": [
+    {
+     "agent_id": "a0d68d94157fd9f9d",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 5
+     },
+     "bytes": 1251075,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 16
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "9ac6ff7cdb1e175ef17b951846a9ba87bc117c12a3520ca8d41d86edf474dbfd",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 10,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  },
+  {
+   "answer": "accept",
+   "answer_file_sha256": "85511bca1c0d60ee567730db7b0f6da78147950d8be17c3d9e695d20eab9f8a3",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "a04937b5ea0f5811",
+   "outcome": "ok",
+   "packet_reads": 3,
+   "page_images": 3,
+   "page_images_opened": 3,
+   "transcripts": [
+    {
+     "agent_id": "a39b01b7b444eaa0a",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 488143,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 11
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "20c65af5e9ebac5631fa1ccba363cfdde14bcc117b2df9300810a33f555b5f02",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 6,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  },
+  {
+   "answer": "accept",
+   "answer_file_sha256": "9562a643a298cc027ceabf5fa489b50dd6b6952fce60694f483afaba4b09aec8",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "ad78eacba984506b",
+   "outcome": "ok",
+   "packet_reads": 4,
+   "page_images": 6,
+   "page_images_opened": 6,
+   "transcripts": [
+    {
+     "agent_id": "a42b4a2558b24f9af",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 1227759,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 16
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "6e5689e82bb978fd3566667495db962f693151e7f5543667b7b9ed4c1b1ef563",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 10,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  },
+  {
+   "answer": "accept",
+   "answer_file_sha256": "9bb0e582e355893d8c75f037324669f1918d027ebbecbb35f9885b2af6ea2c7a",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "cbcf768b16d617f4",
+   "outcome": "ok",
+   "packet_reads": 4,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "aeca6f0e1ef25a15a",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 5
+     },
+     "bytes": 732749,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 18
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "db820147735708ea89a5f3890b71918c6bde0d46bcb1f619f9ad4eed3f9c98e6",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 11,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  },
+  {
+   "answer": "accept",
+   "answer_file_sha256": "b32b984680bfed83fda362b5e616f000718ccf87842c721951d5d547fd22484a",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "d238e0f83e6fdef9",
+   "outcome": "ok",
+   "packet_reads": 4,
+   "page_images": 3,
+   "page_images_opened": 3,
+   "transcripts": [
+    {
+     "agent_id": "a493a90daa2696daf",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 496673,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 12
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "8373986ca69c3fc2ac590df7c085095fd454f5593949b669ca64ae4789a64627",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 7,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  },
+  {
+   "answer": "accept",
+   "answer_file_sha256": "87f2b630b03a3131fdabfeb4f0ea93f9cbf56e6ce145cd78ca2c2ff2604fc900",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "f65e9989406928dc",
+   "outcome": "ok",
+   "packet_reads": 4,
+   "page_images": 6,
+   "page_images_opened": 6,
+   "transcripts": [
+    {
+     "agent_id": "a5e53589826145586",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 5
+     },
+     "bytes": 1217803,
+     "journal_result": true,
+     "models": {
+      "claude-opus-5-5": 17
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "39ede00b2994776750019afab9592c1c5dce76efe566ed9b457bd34b355ed9aa",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 10,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": []
+  }
+ ],
+ "items_mapped": 12,
+ "items_opening_every_page_image": 12,
+ "items_with_answer_record": 12,
+ "journal_sha256": "2cc041c19856bc167290aa19be7b2587539e9c939d7fb8f395818679c9a26765",
+ "label": "adjudicated by an isolated model on the owner's instruction (D80); not human-validated",
+ "manifest_sha256": "f9c91d57ca5644ccecbb53ec9b2d48d8b2f7faeb8deb0736dfe06d50255c2b9a",
+ "model_required": "claude-opus-5-5",
+ "models": {
+  "claude-opus-5-5": 199
+ },
+ "outcomes": {
+  "ok": 12
+ },
+ "packets_checked": null,
+ "page_images": 73,
+ "page_images_opened": 73,
+ "refusals": [],
+ "relay_frames": {},
+ "run_dir": "/Users/kevinliu/.claude/projects/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/subagents/workflows/wf_d750e081-ae1",
+ "schema": "q2m-d81-run-audit-v1",
+ "suffix": "In the packet's file listings, a path of the form sheets/%2B<name> (or sheets/+<name>) means that a sheet named <name> was added; %2B is the percent-encoded plus sign that the diff tool uses as its 'added' marker, and it is not part of the sheet name.\n",
+ "suffix_sha256": "87f97110a5bcdad416cefbffab8ac0a71d962d3602725e7b88335621ef2ef466",
+ "template_sha256": "0e9d4eb6597c347d40db7f8ae150e3345fc8a88820d6e8501d02543c9ccbed44",
+ "tool_calls": {
+  "Read": 124,
+  "StructuredOutput": 12
+ },
+ "transcripts_of_items_without_answer_record": [],
+ "unregistered_attachment_types": []
+}

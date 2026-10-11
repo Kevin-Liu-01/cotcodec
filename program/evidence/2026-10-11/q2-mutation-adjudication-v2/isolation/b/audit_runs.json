@@ -1,0 +1,2977 @@
+{
+ "agents_started": 52,
+ "agents_with_result": 52,
+ "answers": {
+  "unsure": 52
+ },
+ "attachment_types": {
+  "auto_mode": 52,
+  "batching_reminder_sent": 171,
+  "credential_org": 52,
+  "date": 52,
+  "deferred_tools_delta": 104,
+  "environment": 52,
+  "instructions": 52,
+  "mcp_instructions_delta": 52,
+  "model": 52,
+  "prompt_snapshot": 104,
+  "read_truncation_notice": 43,
+  "remote_session_change": 52,
+  "session_context": 52,
+  "skill_listing": 52,
+  "structured_output": 52,
+  "total_tokens_reminder": 171
+ },
+ "frozen_source": "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/adjudication-v2/src65",
+ "items": [
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "49528696698fd6ca5abc0852167828c128fae1419790c0d77e7a9d11cac91de6",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "052bfbb5f63729df",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 10,
+   "page_images_opened": 10,
+   "transcripts": [
+    {
+     "agent_id": "afabe22da7befd3a8",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 3306440,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 20
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "758f6e2430d2c897caeaccb314404688fd66290bb8a886d638738f67009f1b73",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 15,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 55)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "32adcf74a09cc63b894a3be40aadb1651d7b1e2a2364e4409a36dcff405e17a5",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "0641720bf1cd322c",
+   "outcome": "isolation_void",
+   "packet_reads": 4,
+   "page_images": 24,
+   "page_images_opened": 24,
+   "transcripts": [
+    {
+     "agent_id": "a19139826a1477770",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 6466495,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 37
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "89f8cb93e1ca76f400449e1cfa1b28b4a443fde99b181b43c634ac59277fd482",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 28,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 84)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "50501abb16cd8c1e67c74ba9dfe954bd8a25f78c9d30c5cd90f005345fc4962a",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "06720e668a7c2d87",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "abbc07b568f953e32",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 809829,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 20
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "605fc08f35e09f3c981ef109809c42106f5b3d4f8489a080b33b438a1308f320",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 12,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 33)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 51)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "29c692f6d255ae9dd6cdb5149901703810a12288892444108abb72f52df29616",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "092229e073a93de7",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 12,
+   "page_images_opened": 12,
+   "transcripts": [
+    {
+     "agent_id": "a298e170f9b9f276d",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 3974020,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 25
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "a11fcab62552eae72fa617c157b66e552a62832eda591b82efc5f10f5b8fa185",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 17,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 33)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 61)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "8abb482d13c56cc82b72770d95918f7bd79074453ae192f053538d621ca4ef90",
+   "answer_given": "unsure",
+   "answer_source": "structured_output",
+   "item_id": "0fd24b93ee7cd70c",
+   "outcome": "isolation_void",
+   "packet_reads": 6,
+   "page_images": 15,
+   "page_images_opened": 15,
+   "transcripts": [
+    {
+     "agent_id": "ab84d41c249df303d",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 3060483,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 26
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "afba360a8fcee3a2d08f1ffb916088a2aeda9de0001ef454e7a80409e5d0505e",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 21,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 34)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 67)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "89f0a4d4e3cdb84b8a96dc7a5bdcd035d934b4a39e7eb69be4d5cef11f359e61",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "1050d491ba462dcb",
+   "outcome": "isolation_void",
+   "packet_reads": 1,
+   "page_images": 2,
+   "page_images_opened": 2,
+   "transcripts": [
+    {
+     "agent_id": "a8b3809c3a147d7b9",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 2,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 2
+     },
+     "bytes": 316584,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 8
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "8a34d88efabe771329345549f765da3acf99e22714db43d01a45f6e7d30a9585",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 3,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 28)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "74e2a090aa7118404cb5dac3481829241b8080990e9a2416c4ca274fd133e7be",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "11fa9afaa9e405d2",
+   "outcome": "isolation_void",
+   "packet_reads": 4,
+   "page_images": 24,
+   "page_images_opened": 24,
+   "transcripts": [
+    {
+     "agent_id": "aa0f54ef381ff4b35",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 6465221,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 37
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "824f263759789b258e1bb4a33b6e1e7b276b10423afdb005759bea757c588ff0",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 28,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 84)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "d904e7869ed123a1d159a574f2eb37baabcb5b129bf6d9bda92db84640d27f41",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "1519df6482c7b89e",
+   "outcome": "isolation_void",
+   "packet_reads": 13,
+   "page_images": 40,
+   "page_images_opened": 40,
+   "transcripts": [
+    {
+     "agent_id": "a1dcdcf6f379b9922",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 4,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 8324771,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 63
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "676a9316f5a860fd8786cb787dc0b191e784d9cee6c7d8ff0b84507c193670b5",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 53,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 33)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 53)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 137)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "ffaa37e3670443a57e1f8685217f50e398c4552bd3b3b18cd04ec2ca4cea793d",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "2055a9f2cafd08c9",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 4,
+   "page_images_opened": 4,
+   "transcripts": [
+    {
+     "agent_id": "a814c7aaa699a052d",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 4,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 808167,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 15
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "cbbd2c049efb1e721b50595cb0351de72cda669af48c34bbd3815aaef29365ad",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 9,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 26)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 34)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 46)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "d059d7cd083ef5b50b75b59a68808e1251594736b21955ff30a8de768331d093",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "28b76980b2c9201a",
+   "outcome": "isolation_void",
+   "packet_reads": 6,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "a695fa7829e05574c",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 7,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 7
+     },
+     "bytes": 850114,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 21
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "6668cd1de335e6506c308928c6ed8833b80c908e613509f6994148120c1f8a72",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 13,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 27)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 31)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 35)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 39)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 43)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 61)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "a820524daf644d3b9643540bdbaa071c5f8d77139b4954b500214ab7cd7f6d45",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "315f0c227a178443",
+   "outcome": "isolation_void",
+   "packet_reads": 1,
+   "page_images": 4,
+   "page_images_opened": 4,
+   "transcripts": [
+    {
+     "agent_id": "a75fb6445775dc492",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 2,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 2
+     },
+     "bytes": 498528,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 10
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "3850e11811bce236841135ecbf3b672afdf5d82853e6ecde5e5947fb37ac1ed1",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 5,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "f73d902d4fbcf6b470aadefccba38fdfcde22062701ffd1a42c9c725ec5a0e62",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "35d237e376cca35d",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "a6fe3ebc96a25821e",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 831670,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 21
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "c6e7cd94ab4e8189807c399e1a185d55488a95b01551bc9e4ac9ab1c1ab361be",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 12,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 34)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 52)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "6bfc6fdcd5fb096fc9dc076f1fa171b96a3179ca0ff0c3a9a77017fad9f6fc10",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "365edabe1a57e9e2",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "ab6fcb5c6df17ac41",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 5,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 5
+     },
+     "bytes": 820462,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 22
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "f87cf0ef7765931b36d2b5c904c21a35c2df7fe586cb0f427c00957313a4c216",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 12,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 27)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 31)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 39)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 57)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "577688c409c1412996d701d17fa1e49265310f256d86e45ae8b3eb02d706f52a",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "374618d333584833",
+   "outcome": "isolation_void",
+   "packet_reads": 4,
+   "page_images": 24,
+   "page_images_opened": 24,
+   "transcripts": [
+    {
+     "agent_id": "acc90036dbf4bc842",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 4,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 6467472,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 36
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "96c8836d312c17d97ff0f638394c80df4853c8bc88b7ccd416412fd60adcedd2",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 28,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 27)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 44)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 85)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "3cf69e1ffcf5bfbb2d135c97c3f45633507eb1feabf180587a2dd889a0f7df6a",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "38eb297a768a506c",
+   "outcome": "isolation_void",
+   "packet_reads": 4,
+   "page_images": 24,
+   "page_images_opened": 24,
+   "transcripts": [
+    {
+     "agent_id": "ac24526987a4869a1",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 4,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 6479739,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 39
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "d7880c8d9dd9a65bc20388a801eefc1b1c340be5dd7e60074e155c023e68e7cf",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 28,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 60)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 88)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "00f33e619bd511ca431c595e613ed0ac304bdc5bd921e8ba517a447950ad27b2",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "3ba1e22031b0ab35",
+   "outcome": "isolation_void",
+   "packet_reads": 7,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "a092419112f0070e3",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 1368194,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 23
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "1291dd42662929c7f814223b289451234a51793d7efb3b194938100985f948cc",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 14,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 38)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 56)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "9b640a6102f7432d54316be78b1ab022fcb66959f28661f2c8961a80902f1745",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "4175eb7174a3bf30",
+   "outcome": "isolation_void",
+   "packet_reads": 4,
+   "page_images": 24,
+   "page_images_opened": 24,
+   "transcripts": [
+    {
+     "agent_id": "a377ebc964b9ae347",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 6470855,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 36
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "3a550beea3c65965152d97891afec3d836f07bb1d49144c3955bbcb821afe069",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 28,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 31)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 83)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "070bd1c81b405dff5d317ee2b85f2960c0d93fb04599e7e13eb6859bd5f21388",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "435d2aa652ec9967",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 10,
+   "page_images_opened": 10,
+   "transcripts": [
+    {
+     "agent_id": "a0856d2876e9b3b5e",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 5,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 5
+     },
+     "bytes": 4661310,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 24
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "1569365b21f997f3c35d9edb49d1e36b63239fe58f14c28d3f620a276dece75b",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 15,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 27)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 31)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 38)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 62)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "d8e96561e173184ddb2104cddb0bda7dd3b928bd74352bc5fa53753e390acab7",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "47fad447927b1355",
+   "outcome": "isolation_void",
+   "packet_reads": 4,
+   "page_images": 4,
+   "page_images_opened": 4,
+   "transcripts": [
+    {
+     "agent_id": "a73ad619a5cb0d4a2",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 669102,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 16
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "dc36733fa0253d4454e76118e2d089e28e5feecb3910c1bbf006b970f3d89511",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 8,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 44)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "ccfb84306cbdb2981507c2a843e43c50b063a2d3184b736382c5a6a6a4796a06",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "4fe209883c28fdd5",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "a6ae14c6c6937da24",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 833964,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 20
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "2a94f9f5b300804158b880ae34c1b5ceb878c155921d105ad14ab1a95bb0c2e6",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 12,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 33)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 51)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "b343dd437adb812aff4d1c8a2d529e5e6441e0f242666de6099b641244d57366",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "5910722d23063c79",
+   "outcome": "isolation_void",
+   "packet_reads": 7,
+   "page_images": 8,
+   "page_images_opened": 8,
+   "transcripts": [
+    {
+     "agent_id": "a9e74369fd5be7482",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 4,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 3104769,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 21
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "f9825a41bb2dbaa0d9d1999a86d0e30baf662097c9dd0827a8006a29e49bee71",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 15,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 30)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 47)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 58)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "e6002cb74a0f4562511720a71337209fae74ed50c74f809b778f1edbf1319574",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "5d5ae01dbb821493",
+   "outcome": "isolation_void",
+   "packet_reads": 4,
+   "page_images": 24,
+   "page_images_opened": 24,
+   "transcripts": [
+    {
+     "agent_id": "ad6941913dea9936e",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 6463108,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 36
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "26a891b5f7ce7b1a7f7a73c895fcb2eb9b8827bf24ab426fb7495e0d718a6c21",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 28,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 31)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 83)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "ef3b8b3cfce075856a8d99314c83da39ba3b529cdb496cc3a00f1236a3efc5a9",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "5ed9a0978e0d6abd",
+   "outcome": "isolation_void",
+   "packet_reads": 1,
+   "page_images": 4,
+   "page_images_opened": 4,
+   "transcripts": [
+    {
+     "agent_id": "a87cd311bf363c7e3",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 2,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 2
+     },
+     "bytes": 495938,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 10
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "9ee9faab22f99de66315c29605125f06c04f02817aa9cd3a6d25655d8a673303",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 5,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "1f9e2890da58fdbf58b78572e040d0618a294fa20a3698712a45fd29697c85c0",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "5facff2b753bcdf4",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "ad01e922a6c088fc4",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 4,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 803706,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 17
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "ba226f93ef10c30f7cfc3f5db2c7fcd6435eb5a012bc98668da99f1eb5e7dbf2",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 12,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 26)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 34)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 51)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "833896556fceca1db2871763f73b0bb6a2afbddb5e81539942be1ad70f0cc91f",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "6e3a61b931786e28",
+   "outcome": "isolation_void",
+   "packet_reads": 4,
+   "page_images": 24,
+   "page_images_opened": 24,
+   "transcripts": [
+    {
+     "agent_id": "a85d167d6bb1cc513",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 4,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 6458601,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 34
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "824f0edd4d68de14e212657b3599581063d4c41d85286f39cbb23c18b24bb0f2",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 28,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 30)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 51)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 84)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "6b872e3dc1f368d0724408a424152339034193eacdfc6ead9faec2161a263d06",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "774a0588ae7e7cff",
+   "outcome": "isolation_void",
+   "packet_reads": 1,
+   "page_images": 4,
+   "page_images_opened": 4,
+   "transcripts": [
+    {
+     "agent_id": "a8d7a773eefa971e8",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 2,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 2
+     },
+     "bytes": 472085,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 8
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "a2aeb6f955abfe932f8511c95cb9e70d3dd8e0f05b028d1c0292ed1524cafe5e",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 5,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 20)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 30)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "08a9ca792e5071d2eae16b7b4616b398ed4558919ae9fd488d200b5808bec265",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "77b434dad79aa067",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 6,
+   "page_images_opened": 6,
+   "transcripts": [
+    {
+     "agent_id": "a6c84c74a0afb2272",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 1360882,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 19
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "071eefb49cc82cc2c8f603f0d368104cb6c1cc4bb9e21810933e144e07f9f952",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 11,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 33)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 49)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "787ee867cfbccf36ca5bb704b70e8d8876441b0cf3c3223dbf7dd39127dacadb",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "7a23bbe19729adca",
+   "outcome": "isolation_void",
+   "packet_reads": 13,
+   "page_images": 40,
+   "page_images_opened": 40,
+   "transcripts": [
+    {
+     "agent_id": "ac04bff54bfc92dc4",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 4,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 8318226,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 64
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "bc5793cf7f626a2c512f85d2d825210bb6e2d39bd89286cd615ca7511679438a",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 53,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 34)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 54)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 138)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "a525058c5dcea7d0525f5f209134d5dad26655ae1033566f963cfc90acca14d1",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "7fc64dd71e4bd700",
+   "outcome": "isolation_void",
+   "packet_reads": 1,
+   "page_images": 4,
+   "page_images_opened": 4,
+   "transcripts": [
+    {
+     "agent_id": "a4c6d7f413d895e6e",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 2,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 2
+     },
+     "bytes": 503302,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 10
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "a923740d78001016de4d33d7bad6323cbcbe9b6c86692b2effc90dbeb6a5c761",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 5,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "fb6013034246579d0ade701feeebf806a38c9a1fc6e1d48bb6b88a1010782054",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "a04937b5ea0f5811",
+   "outcome": "isolation_void",
+   "packet_reads": 3,
+   "page_images": 3,
+   "page_images_opened": 3,
+   "transcripts": [
+    {
+     "agent_id": "ab647d21f0d92791b",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 547822,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 13
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "8fef2ac52d1ac004c2beaea2267e9e9ba8163fd6c4fe9d3d2e83d91d6e84413a",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 6,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 28)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 38)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "745a39aca5d23e7c5a21fa6231fd3ed37159f15d902249fe58706278aca218fc",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "a395f44b2e5a2d49",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 10,
+   "page_images_opened": 10,
+   "transcripts": [
+    {
+     "agent_id": "a8c96ce751f40f9f9",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 3295692,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 24
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "a03adc634e8c38b053c835d9b5da92015da1656f7bcc4da5eaeb0614d731d2b4",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 15,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 34)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 58)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "2e4988218aca677ca5be38ab78a6b57fc32aae1d4e296473cc69c862dd953155",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "a3e44037b10cdd35",
+   "outcome": "isolation_void",
+   "packet_reads": 1,
+   "page_images": 4,
+   "page_images_opened": 4,
+   "transcripts": [
+    {
+     "agent_id": "ad2ca6228f76c4610",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 2,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 2
+     },
+     "bytes": 628797,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 12
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "90194c8062a5915f6a07c4036ebd9deb7520dd7cc616083573c7bfadf1c4c0f2",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 5,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 33)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "4aa303a7e5419c16b7d89a98d8f13243b6fa38d5873573dffb79e33aa8722718",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "aa08191ae609848f",
+   "outcome": "isolation_void",
+   "packet_reads": 7,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "af16cd1e786eedeef",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 1359843,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 20
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "9cb37215163f0575efdadb172d067133b2112c3af40d8778faa992bc3cfbae60",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 14,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 36)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 53)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "3cb1a0e1abb6bbf6c2777c2fd5ca9ba30287bdb88b430984132b5374ce8ccc57",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "aa3331dbb625093c",
+   "outcome": "isolation_void",
+   "packet_reads": 7,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "a695bd19a588f119e",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 4,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 1362759,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 20
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "6a5971202dd3e2fb42cad035ae9f293118afae2e038009312c2bd8ccaf5f65b7",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 14,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 26)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 39)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 56)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "99af989b7ff36a8ff00a1585dcf05191f52562f1a9ec61aa6baa42afd25f5a48",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "ad78eacba984506b",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 6,
+   "page_images_opened": 6,
+   "transcripts": [
+    {
+     "agent_id": "a901780e9972b2665",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 1368624,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 16
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "07c1621c333712e9b596b11973714be63a8cf95ef7e1417ea99a27ff8d29cced",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 11,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 47)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "d585091f8b7495bef4e38efc41f4b1110e4e2e646dcd37faaf9b276de43efed4",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "ae7bdfd3cb31f79b",
+   "outcome": "isolation_void",
+   "packet_reads": 4,
+   "page_images": 2,
+   "page_images_opened": 2,
+   "transcripts": [
+    {
+     "agent_id": "aad7ea77add7d46f1",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 521404,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 15
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "58d5f955259d8db0a2734af282dcc832feace2829ef0bcf5f428465ecf867df8",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 6,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 40)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "b7924a7e22f370abe594668772027c57a3823877e262fa7be72c0ffe8ca1d1f5",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "b44938af6601d80d",
+   "outcome": "isolation_void",
+   "packet_reads": 1,
+   "page_images": 2,
+   "page_images_opened": 2,
+   "transcripts": [
+    {
+     "agent_id": "a04a98b100abf47da",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 2,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 2
+     },
+     "bytes": 390230,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 8
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "1ccb2ad9546dd2741a1f3adf02e386da04e529ea82b38d4465bd84b07c9fe00f",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 3,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 28)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "3ffb45c624e81141561a00feacb2e5472b874b23dba04fe36a51c965f0e9b90a",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "b63890263d17b306",
+   "outcome": "isolation_void",
+   "packet_reads": 8,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "a14d9f654ef37f338",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 8,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 8
+     },
+     "bytes": 1377245,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 24
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "70d7eb53d7b5c6811e4c004ac6e2e898ed084d5c782c84d17dc5b90d0425b8bc",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 15,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 26)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 30)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 35)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 39)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 44)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 51)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 69)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "eb21aaaf79771ffb48bbeb91b7c417b10aeadf2a97b9906878fc85c55e112fc1",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "bb636a1a7ec68ddb",
+   "outcome": "isolation_void",
+   "packet_reads": 4,
+   "page_images": 2,
+   "page_images_opened": 2,
+   "transcripts": [
+    {
+     "agent_id": "aba452b54db8230a7",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 4,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 524308,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 15
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "a46e72298bc1a541b8b4f1cdd7a57a699a216a092edd8f61724c5d76bc8f94f0",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 6,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 27)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 34)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 42)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "d9272405e4bafa164780c8953c7cc0a4540b928b91bd7a8d1ed3476cd7ab13cb",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "c86151880061b40a",
+   "outcome": "isolation_void",
+   "packet_reads": 2,
+   "page_images": 2,
+   "page_images_opened": 2,
+   "transcripts": [
+    {
+     "agent_id": "ac67db825d85b007a",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 667972,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 7
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "3f338cbec9add789b7b50986ed64e15a2e86d012004bf34f5a3f5c69f12ce98a",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 4,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 27)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 31)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "3564599369d4f12cea3b44137efbc0a5302b1cf8f83dbb3f39bc7b7b4ce469fb",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "cbcf768b16d617f4",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "ab97f95331c1f6ea5",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 816115,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 17
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "0221d3b4bb54e8d2546c619c53b9470505f97ff9621e64eb558ec941631c11a1",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 12,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 49)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "12223973731919ec5d6ec942a0b35e9f1008503c5c69fd68ac12655676edebfc",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "cc3cd6e8358614ff",
+   "outcome": "isolation_void",
+   "packet_reads": 1,
+   "page_images": 10,
+   "page_images_opened": 10,
+   "transcripts": [
+    {
+     "agent_id": "a9bf04ff73ff75d6e",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 2,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 2
+     },
+     "bytes": 663266,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 17
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "eb2c5a904874eb4f9b5787045579db02c0305f87899876a87248f062e8aaaa62",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 11,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 44)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "68d63c4b513515be6e34501a903d0ac737fd5f961230d7dd04afe21b1e7aa527",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "cff5ed06c35f7dbe",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 10,
+   "page_images_opened": 10,
+   "transcripts": [
+    {
+     "agent_id": "af909e7fb7fa3e709",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 3308242,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 21
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "972dddfc45f317dee0dce4bdab3cd513421ccf5d1be60373a764f516b9d0ea68",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 15,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 55)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "20028e5780b7654eaee6ff9b275a8b5d7c5643806c6541cbc91e5dbdf2bfc1a6",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "d1959ff977ee17c8",
+   "outcome": "isolation_void",
+   "packet_reads": 1,
+   "page_images": 2,
+   "page_images_opened": 2,
+   "transcripts": [
+    {
+     "agent_id": "a8ee2c2449be9ecb0",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 2,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 2
+     },
+     "bytes": 391848,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 8
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "51e7d7bea88abcb7d138a670a832e598a6e9431810125dbedc157fc4fa32ac98",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 3,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 28)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "8f7757201569474f43030dfde7b50c11423551266bace3fbc3a337802701b312",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "d238e0f83e6fdef9",
+   "outcome": "isolation_void",
+   "packet_reads": 3,
+   "page_images": 3,
+   "page_images_opened": 3,
+   "transcripts": [
+    {
+     "agent_id": "ad973d9bc67bfada8",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 549001,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 13
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "63f4dfa17fa6ff02eefb8d549a4c70feeb3ed78c12f7cabb081dc3e9ccb61f07",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 6,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 28)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 38)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "bf43800c197a50e5e384e88ea3246532c87a92470b00afbc64b950452ca4c2c6",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "d501d603fdb20e5f",
+   "outcome": "isolation_void",
+   "packet_reads": 4,
+   "page_images": 3,
+   "page_images_opened": 3,
+   "transcripts": [
+    {
+     "agent_id": "a98af07b7b60ddd3c",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 617030,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 14
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "d6e9c723d87bd07286a0fb000e6797290686d1e2202e5581036f36dc8c0641fd",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 7,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 31)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 41)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "a6be89564a828eabfc8aafa3d6c24633c701ae839fe511f743706ee3841f2f51",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "df1cc5f237534884",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 4,
+   "page_images_opened": 4,
+   "transcripts": [
+    {
+     "agent_id": "a9379f8397a2b9c0c",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 4,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 4
+     },
+     "bytes": 795041,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 14
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "5e1af5e2853ad47fa27eab6f73486409f14ae12c3973c8b85cd7fe33fc8ce144",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 9,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 26)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 34)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 45)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "f6b2c6f9b458e04e66e01cf8c0450a28c6d8a17145172a1004564114a488b79a",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "e06639e0971373f1",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 6,
+   "page_images_opened": 6,
+   "transcripts": [
+    {
+     "agent_id": "a073695285600099f",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 735524,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 19
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "5173945861752b59b8267d1eac22370db785c7e328883a2be3f2ab9f67fe7d9f",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 11,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 34)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 50)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "f22c238707d8ab69ba5dfde17a15318b77d4a5977921e61b535325756bbe9a98",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "e5bce1a747eb867d",
+   "outcome": "isolation_void",
+   "packet_reads": 7,
+   "page_images": 7,
+   "page_images_opened": 7,
+   "transcripts": [
+    {
+     "agent_id": "aae7640492cc0c73f",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 1363825,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 23
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "a1fa08dfe324a65bcebf7c5ddd75a4c80cc9b24fcb673c15196cbc6f6b63356d",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 14,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 38)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 56)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "8730eef59186a8e5e70d5c343b4910f28760516fc4f9b1cee6113824fb7e7068",
+   "answer_given": "reject",
+   "answer_source": "structured_output",
+   "item_id": "ee194e0ee8f53a4c",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 10,
+   "page_images_opened": 10,
+   "transcripts": [
+    {
+     "agent_id": "a23deb3b760caba23",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 3304843,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 24
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "e752f26ab683fc6697a9e2b9de8e2a47ea66111ac2e178a58a592f199c50a70d",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 15,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 34)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 58)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "55b846bd5c197749db1d47541e257a092065de88a86a4b218596578c04fb4417",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "f65e9989406928dc",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 6,
+   "page_images_opened": 6,
+   "transcripts": [
+    {
+     "agent_id": "a7af48d8edf3054c4",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 1370053,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 19
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "e591077a071d0476242dd7ecd3940443a515f086a153ecf0d7649c52ad973215",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 11,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 22)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 34)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 50)"
+   ]
+  },
+  {
+   "answer": "unsure",
+   "answer_file_sha256": "69bc6524d4a1895ca8639d7e738ab817e69e7e9c6fbf7410b5ca1c8ce02e77fc",
+   "answer_given": "accept",
+   "answer_source": "structured_output",
+   "item_id": "fd455942d783ba01",
+   "outcome": "isolation_void",
+   "packet_reads": 5,
+   "page_images": 2,
+   "page_images_opened": 2,
+   "transcripts": [
+    {
+     "agent_id": "ad0ac7136d22c4195",
+     "answers": true,
+     "attachment_types": {
+      "auto_mode": 1,
+      "batching_reminder_sent": 3,
+      "credential_org": 1,
+      "date": 1,
+      "deferred_tools_delta": 2,
+      "environment": 1,
+      "instructions": 1,
+      "mcp_instructions_delta": 1,
+      "model": 1,
+      "prompt_snapshot": 2,
+      "read_truncation_notice": 1,
+      "remote_session_change": 1,
+      "session_context": 1,
+      "skill_listing": 1,
+      "structured_output": 1,
+      "total_tokens_reminder": 3
+     },
+     "bytes": 681866,
+     "journal_result": true,
+     "models": {
+      "claude-fable-5-1": 12
+     },
+     "other_user_turns": 0,
+     "packet_read": true,
+     "relay_frames": 0,
+     "sha256": "efb07685b98686abe9236d603d3fcef5534eefeab50c8a2e814b62a53e9a2733",
+     "task_turns": 1,
+     "tool_calls": {
+      "Read": 7,
+      "StructuredOutput": 1
+     },
+     "user_turns": 1
+    }
+   ],
+   "tree_rehashed_equals_export": true,
+   "void_reasons": [
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 21)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 32)",
+    "attachment 'batching_reminder_sent' is not a registered harness attachment type (line 39)"
+   ]
+  }
+ ],
+ "items_mapped": 52,
+ "items_opening_every_page_image": 52,
+ "items_with_answer_record": 52,
+ "journal_sha256": "eccf32902afab9c4c3c70f4b92d17918326ae80a1a5cea22e72ac1e368a1080e",
+ "label": "adjudicated by an isolated model on the owner's instruction (D80); not human-validated",
+ "manifest_sha256": "f9c91d57ca5644ccecbb53ec9b2d48d8b2f7faeb8deb0736dfe06d50255c2b9a",
+ "model_required": "claude-fable-5-1",
+ "models": {
+  "claude-fable-5-1": 1113
+ },
+ "outcomes": {
+  "isolation_void": 52
+ },
+ "packets_checked": null,
+ "page_images": 506,
+ "page_images_opened": 506,
+ "refusals": [],
+ "relay_frames": {},
+ "run_dir": "/Users/kevinliu/.claude/projects/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/subagents/workflows/wf_4d1fa210-001",
+ "schema": "q2m-d81-run-audit-v1",
+ "suffix": null,
+ "suffix_sha256": null,
+ "template_sha256": "0e9d4eb6597c347d40db7f8ae150e3345fc8a88820d6e8501d02543c9ccbed44",
+ "tool_calls": {
+  "Read": 743,
+  "StructuredOutput": 52
+ },
+ "transcripts_of_items_without_answer_record": [],
+ "unregistered_attachment_types": [
+  "batching_reminder_sent"
+ ]
+}

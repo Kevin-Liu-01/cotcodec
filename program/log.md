@@ -4915,3 +4915,73 @@ they say so.)
 - Waiting on: Kevin's adjudication and spot check; after his answers the
   analysis is rerun once with `--k2-report` and the post-answer audit inputs.
   Adopting R03's kill line stays his (D73).
+
+## 2026-10-11 — Checker-mutation pool and spot check adjudicated (D81 run 2, the record); parent analysis rerun with `--adjudications` and `--k2-report` (branch `ops/q2-mutation-adjudication-v2`, not merged)
+
+- Label: adjudicated by an isolated model on the owner's instruction (D80);
+  not human-validated. This is a disclosed deviation from D9. The human spot
+  check stays pending as a human validation. Run 1 (`wf_cdd11126-1a7`, branch
+  `ops/q2-mutation-adjudication`) is void under D81, and none of its answers
+  or numbers is used.
+- Run 2's rules were committed in D81 (`9890d11b`, 19:04:07Z) before any
+  answer existed. Three workflow sessions, each holding adjudicator agents
+  only:
+  - (a), the record: `wf_843930b8-5af`, `claude-opus-5-5`, 52 items, the
+    registered template;
+  - (b): `wf_4d1fa210-001`, `claude-fable-5-1`, the same prompts;
+  - (c): `wf_d750e081-ae1`, `claude-opus-5-5`, the 12 marker items plus D81's
+    sentence.
+  Every agent ran once, and no run was resumed.
+- Isolation audit.
+  - (a): the frozen `collect-transcripts` and `ingest-isolated`, from a git
+    archive of `65bc2e2` with pins checked, gave **52 `ok`, 0 void**. Read and
+    StructuredOutput only, all inside the item directories, one task turn
+    each, registered attachments only, every tree equal to the export.
+  - (b): the frozen ingest refuses the model pin, and (c): the frozen
+    collector refuses the added sentence. Neither is an isolation failure.
+    Both were audited by `audit_runs.py`, which calls the frozen functions
+    unmodified and reproduces the frozen ingest on (a) and on the 2026-10-08
+    rating, every item equal.
+  - (c): 12 `ok`.
+  - (b): every check passes except the attachment allow-list. The harness
+    added `batching_reminder_sent`, a fixed tool-batching sentence (171
+    entries), to every Fable transcript, so under the strict rules all 52 are
+    void. The (b) sensitivity uses them with that type excepted, as a
+    disclosed departure.
+- Answers. Pool: 17 accept and 17 reject, all 34 decided, in
+  `adjudications.jsonl`. Spot check: 19 accept and 6 reject. Run from
+  `65bc2e2`: `audit summarize --adjudications`, then the analysis with
+  `--k2-report`. Controls, all byte for byte: the 2026-10-08 summary, the K2
+  rerun analysis, and the 2026-10-08 analysis.
+- What changed against the K2 rerun:
+  - Gold-defect tasks: 3 split gold shams were rejected (`5c1a6c3d`,
+    `881deb30`, `8e116af7`).
+  - FN: 33 confirmed and 3 label-contradicted, where before it was 30 and 6
+    unresolved. The 3 are all on gold-defect task `5c1a6c3d`. Confirmed
+    shares: pooled 11.6%, `compare_pptx_files` 37.1%, z-order 85.4%.
+  - Alternative-solution gate: 82 accepted, 11 rejected, 0 unresolved. 10 of
+    the rejects are on the two `compare_table` gold-defect tasks.
+  - P2: the population is 337 and the rate is unchanged at 12.4%. P2 without
+    the gold-defect equivalence mutants is 12.2% on 57 tasks.
+  - The equivalence K3 label error is 0 (upper 0.087). K3 still fires through
+    κ.
+  - K4 no longer fires.
+- Unchanged: κ 0.343, P1, P3-P5, the FP table, the candidate shares, and
+  every other K.
+- Sensitivities. (b) differs from (a) only on one equivalence split, which
+  Fable answered unsure: FN 32 confirmed and 1 unresolved, equivalence K3
+  0.030. (c) is byte-identical to (a), because all 12 marker items are
+  accept with and without the sentence.
+- Agreement and the correlated-judge caveat:
+  - (a) vs (b): 51 of 52 items.
+  - (a) vs the Claude rater: 41 of 52. (a) vs Qwen: 35 of 52.
+  - On the 28 splits, (a) sides with Claude 17 times and with Qwen 11 times.
+  - On the spot check, (a) matches the raters' consensus on 23 of 23 and
+    the Claude rater on 25 of 25.
+  - The adjudicator shares a model, and with (b) a provider, with the
+    Anthropic rater.
+- Image coverage: (a) opened 503 of 506 images, and the registered rating
+  opened 502 of 506 on the same items (1,453 of 1,457 overall).
+- Records: `program/evidence/2026-10-11/q2-mutation-adjudication-v2/`.
+  Transcripts and answer files with reasons stay outside the repository,
+  hashed. 0 GPU-h.
