@@ -117,7 +117,7 @@ freeze; `tests/test_q2_mutation_k2_prereg.py` fails on drift):
 | `harness/q2_mutation_k2/executor.py` | `bda81bda66bc7c368adf226b1ec689014c2866e8e726af43d98ecfdd090dde8a` |
 | `harness/q2_mutation_k2/guest/k2_guest.py` | `869ebb3811f44ee990f587077756c3bb774392930e6973a54a2225714608dda8` |
 | `harness/q2_mutation_k2/lane.py` | `472479c5a927cbdeac07f4280db675d836bd6fa90a397efbbda4bed5bf2f183c` |
-| `harness/q2_mutation_k2/report.py` | `d0091a3c2701c183c7a7ed38eae8ce6e2cbe84f7603c0d30c2d80bf3e8ca2203` |
+| `harness/q2_mutation_k2/report.py` | `b96416136da3e272a5fc84a41e176493b8ec89e6a4f4d485e401f954e4bfd9b4` |
 | `harness/q2_mutation_k2/rules.py` | `58ea109a1aff6d6b059b6ca841b99a3a8b7ca858fe698c8b5ab33238e6be8c05` |
 | `infra/slurm/host-single-node/q2m-k2-vm.sbatch` | `0cddd6bb624758f66e0f02c45b1c7cfb7a6e2d4dcc8aa9dc7e1d983077b8c6b0` |
 <!-- k2-code-table end -->

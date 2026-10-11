@@ -175,6 +175,12 @@ def build(
     if purpose == "k2" and n != rules.REGISTERED_PAIRS:
         raise ReportError(f"the k2 job's sample has {n} pairs, not {rules.REGISTERED_PAIRS}")
     result = rules.outcome(gate, registered) if gate else None
+    if result is not None and purpose != "k2":
+        result = {
+            **result,
+            "write_analysis_report": False,
+            "label": "development (never an analysis input)",
+        }
     out: dict[str, Any] = {
         "purpose": purpose,
         "pairs": rows,
@@ -291,17 +297,20 @@ def run_stats(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     latencies = [v for r in records for v in (r.get("save_latency") or {}).values()]
     run_s = [float(r["timings"]["run_s"]) for r in records if (r.get("timings") or {}).get("run_s")]
 
-    def dist(values: Sequence[float]) -> dict[str, Any] | None:
+    def dist(values: Sequence[float], *, over: float | None = None) -> dict[str, Any] | None:
         if not values:
             return None
         ordered = sorted(values)
-        return {
+        out = {
             "n": len(ordered),
+            "min": round(ordered[0], 3),
             "median": round(statistics.median(ordered), 3),
             "p95": round(ordered[min(len(ordered) - 1, int(0.95 * len(ordered)))], 3),
             "max": round(ordered[-1], 3),
-            "over_0_5s": sum(1 for v in ordered if v > 0.5),
         }
+        if over is not None:
+            out[f"over_{over}s"] = sum(1 for v in ordered if v > over)
+        return out
 
     return {
         "attempts": len(records),
@@ -320,7 +329,7 @@ def run_stats(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         ),
         "metric_errors": sum(1 for r in records if r.get("metric_error")),
         "postconfig_failures": sum(int(r.get("postconfig_failures") or 0) for r in records),
-        "save_latency_s": dist(latencies),
+        "save_latency_s": dist(latencies, over=0.5),
         "run_s": dist(run_s),
     }
 

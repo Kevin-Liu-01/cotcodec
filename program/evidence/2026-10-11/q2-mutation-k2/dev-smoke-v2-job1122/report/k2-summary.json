@@ -1,0 +1,139 @@
+{
+ "gate": {
+  "excluded": 0,
+  "excluded_by_cause": {},
+  "max_excluded": 0,
+  "pairs": 5,
+  "passes": true
+ },
+ "inputs": {
+  "k2c": "94460c361c41a23b14d991439b60f841d9bcf6d81c2e3ab5f0d25e31ff80313e",
+  "notes_summary": "5a30faab069500654da317cf40071c5b44e969594c390e1ed990377dae0f5efe",
+  "sample": "94d7bb2233bf78f780902f1c50aeaffbe4f36f933acebdf1b1d109a49a6960a6",
+  "verdicts": "d612e6db9df32aaa72bc038a58f2722ef3ab85b38c7a9b90fd598f0dabe778de"
+ },
+ "k2": {
+  "agree": 5,
+  "by_family": {
+   "compare_docx_tables": {
+    "agree": 1,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 1
+   },
+   "compare_table": {
+    "agree": 3,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 3
+   },
+   "compare_text_file": {
+    "agree": 1,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 1
+   }
+  },
+  "by_offline_verdict": {
+   "fail": {
+    "agree": 1,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 1
+   },
+   "pass": {
+    "agree": 4,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 4
+   }
+  },
+  "differ": 0,
+  "excluded": 0,
+  "explanations": {},
+  "pairs": 5,
+  "single_run_pairs": 0
+ },
+ "k2c": {
+  "agree": 1,
+  "by_family": {
+   "compare_pptx_files": {
+    "agree": 1,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 1
+   }
+  },
+  "by_offline_verdict": {
+   "fail": {
+    "agree": 1,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 1
+   }
+  },
+  "differ": 0,
+  "excluded": 0,
+  "explanations": {},
+  "pairs": 1,
+  "single_run_pairs": 0
+ },
+ "outcome": {
+  "families_dropped": [],
+  "label": "development (never an analysis input)",
+  "outcome": "VERIFIED",
+  "write_analysis_report": false
+ },
+ "purpose": "development",
+ "receipts": [
+  {
+   "error": null,
+   "job_id": "1122",
+   "name": "k2-dev-smoke-v2",
+   "records": 12,
+   "statuses": {
+    "scored": 12
+   },
+   "stopped": false
+  }
+ ],
+ "runs": {
+  "attempts": 12,
+  "infrastructure_types": {},
+  "late_writes": 0,
+  "metric_errors": 0,
+  "postconfig_failures": 0,
+  "run_s": {
+   "max": 118.065,
+   "median": 115.415,
+   "min": 111.367,
+   "n": 12,
+   "p95": 118.065
+  },
+  "save_latency_s": {
+   "max": -0.009,
+   "median": -0.015,
+   "min": -0.514,
+   "n": 6,
+   "over_0.5s": 0,
+   "p95": -0.009
+  },
+  "save_paths": {
+   "agent_save": 4,
+   "no_save": 2,
+   "postconfig_save": 6
+  },
+  "statuses": {
+   "scored": 12
+  },
+  "unsaved_at_read_runs": 0
+ },
+ "schema": "q2m-k2-summary-v1"
+}
