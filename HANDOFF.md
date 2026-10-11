@@ -8,7 +8,8 @@ Kevin (D70):
 - Q2: S1a is done and verified (D66). S1b and the harness-scale question are
   closed on the design study (D69). Successor E (6.77 cap-GPU-h) is available
   if a decisive harness reading is wanted. The checker-mutation study waits on
-  Kevin's adjudication.
+  Kevin's adjudication; its K2 VM-fidelity addendum is frozen (row 17) and
+  ran: VERIFIED (D78).
 - Backfill E3, E4, E5, E7, C3 and C5, and the gated S2, all ended at honest
   exits after a repair run (D63, D65, D68, D70). S2 v2 (59) and C5 v2 (58) are
   the strongest packages. No candidate can score 100 without the trust store
@@ -34,6 +35,7 @@ on Kevin's behalf are D1-D78 in `program/decisions.md`. GPU-hours are in
 | `q2-action-path-v2` (+ addenda) | **ACCEPTED on attempt 1** (D53): C1-C4, A1-A7 pass, independently verified in two stages; N* = 32 (rung 40 hit the host's inotify limit), so the program kill criterion applies; a whole-boot `/accessibility` failure without restart (1 of 1,245 boots) is outside every criterion | `program/evidence/2026-10-08/q2-action-path-v2-acceptance/` |
 | `q2-stage1-rescoped-v1` (S1a) | **DR2 Inconclusive** (pooled δ, H-GA minus H-OSW-fixed, −3.1 pp, 90% [−8.9, +2.7]); **DR5 INCONCLUSIVE** (π_small 0.055, [0, 0.26] vs M 0.13), so no S1b; P1 falsified (no between-session excess, upper bound 0.78 pp); 1,808 episodes, 0 infrastructure losses; realized cost 0.22-0.24 of the card's high price; not externally anchored; recomputed from the raw records and claims-checked by two fresh lenses (D66, D72) | `program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md` |
 | `q2-evaluator-mutation-v1` | Descriptive (D35): the z-order operator fails its checker on 36 of 40 equivalent shape-order edits (`compare_pptx_files` 35 of 39; 30 confirmed by both raters in all; family FN share 40.2%); a GUI-faithful save flips 3 of 92 reference golds (confirmed); false positives few; kappa 0.34; adjudication pending | `program/evidence/2026-10-08/q2-mutation-confirm/` |
+| `q2-evaluator-mutation-v1-k2` | **VERIFIED** (job 1186, CPU only, from the freeze commit `7d9c881a`): gate 2 of 80 K2 pairs excluded (one task's reopen timed out after LibreOffice did not quit); the 78 compared pairs agree with the offline verdicts in both runs; 41 of 41 candidate events reproduced; no family dropped; the parent analysis now carries "VM fidelity checked (K2)". Its outputs name verdicts per mutant: read after the adjudication | `program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/` |
 
 Gauntlet records: K1 v2 (45, honest exit), K1 v3 (51, 55, 56; honest exit, D54), Q1 Stage 0 (45, honest exit).
 Q1 Stage 0 is closed on the audit-metric study (D46): under TF32 a tolerance
@@ -61,6 +63,12 @@ audit certifies "not grossly wrong", not 1% correctness
   blind-adjudication warning.
 - R04 is verified ready to freeze; its freeze and three reserved items are
   Kevin's (D78).
+- K2 VM-fidelity addendum: re-audit fixed and verified, frozen (row 17) and
+  run as job 1186: VERIFIED; the parent analysis was rerun with
+  `--k2-report` (D78; branch `ops/q2-mutation-k2`). After Kevin's answers the
+  analysis is rerun once more with `--k2-report`.
+- R04 nuisance-invariance study: verified ready to freeze; its freeze and its
+  three reserved items are Kevin's (D77, D78).
 
 ## Waiting on Kevin
 
@@ -69,6 +77,7 @@ store or an admission ruling (D24: blocks anything over 8 GPU-h, including a K1
 v3 and Q2 Stage 1), the checker-mutation adjudication (34 items) and spot check
 (25 items), the R580 driver and a licensed policy (Q1), the specs published
 before their sign-off, review of D1-D78, the host inotify limit behind N* = 32, and the outward actions (disclosures
+before their sign-off, review of D1-D78, R04's freeze and its three reserved items, the host inotify limit behind N* = 32, and the outward actions (disclosures
 to Letta and xlang-ai, now including the `compare_pptx_files` finding; licence
 requests; a history purge; key rotation; a valid Anthropic API key).
 

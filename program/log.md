@@ -4875,3 +4875,43 @@ they say so.)
 - Waiting on: a re-check of the fixes if the owner wants one, the merge to
   `main` (`program/log.md` conflicts only by both sides appending), then the
   owner's freeze and the `k2` job.
+
+## 2026-10-11 — K2 addendum `q2-evaluator-mutation-v1-k2` frozen (ledger row 17) and run: job 1186, VERIFIED; parent analysis rerun with `--k2-report` (branch `ops/q2-mutation-k2`, not merged)
+
+- Blind warning (D77, D78): the K2 outputs name checker verdicts per mutant
+  and which mutants are candidate events; Kevin answers his adjudication (34
+  items) and spot check (25 items) before reading
+  `program/evidence/2026-10-11/q2-mutation-k2/`. This entry gives aggregates
+  only.
+- Freeze (D78, section 14 steps 1-2, done on `main` before this branch):
+  status-paragraph commit `0a864682` (the row's `git_head_at_freeze`), row 17
+  committed alone in the freeze commit `7d9c881a` (row hash `7d03d928...`,
+  registration SHA-256 `564f8c5c...`); `check-chain` (17 rows) and `verify`
+  pass; the K2 suite passes at the freeze commit (92).
+- Section 14 step 3: `git archive` of the freeze commit (never its parent) to
+  the host as `src/7d9c881a.../` with `.git_sha`, read-only; its `harness/`
+  digest `1e087a0e...` equals the commit's. `lane render` from the pinned job
+  list (`9c2426b7...`, sample summary checked) gave the 242 registered slots;
+  `lane validate` passed (manifest `00830fde...`); `prior_k2_runs` empty (the
+  run root held only development jobs), `check_one_job`, `check_slurm` and
+  `check_host` (130 files hashed) passed. Submitted on an empty queue at
+  15:56:19 UTC as job 1186 (CPU only, 40 CPUs, no GRES, V = 8); it ran 65.0
+  minutes, the lane exited 0 and wrote its receipt, no labelled container was
+  left, and no host snapshot saw another Slurm job.
+- Outcome **VERIFIED**: gate 2 of 80 K2 pairs excluded (cause (4), both on
+  task `51f5801c`: in all 8 attempts LibreOffice did not quit on Ctrl+Q within
+  15 s, SIGTERM ended it, and the reopen of the Writer target got no reply
+  within 180 s; a shape no development job had); 78 compared K2 pairs agree
+  with the offline verdicts in both runs, none differs, no family dropped;
+  K2-C 41 of 41 events reproduced in both runs (descriptive). 246 attempts,
+  238 scored; no target unsaved at the checker's read; two save-time readings
+  above 0.5 s (one pair, reported only). The report's freeze check passed.
+- Parent analysis rerun (section 9.4) with `--k2-report` and the audit inputs
+  as they stand: only `exclusions.k2` changes, to "VM fidelity checked (K2)"
+  with no family dropped. Control: the same archive and interpreter without
+  `--k2-report` reproduce the committed `analysis.json` byte for byte.
+- Records, report, rerun analysis and blind READMEs:
+  `program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/`. 0 GPU-h.
+- Waiting on: Kevin's adjudication and spot check; after his answers the
+  analysis is rerun once with `--k2-report` and the post-answer audit inputs.
+  Adopting R03's kill line stays his (D73).

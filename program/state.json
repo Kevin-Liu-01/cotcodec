@@ -269,7 +269,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "S1a's registered analysis ran (2026-10-10; RESULTS: program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md; evidence: program/evidence/2026-10-10/q2-stage1-analysis/; every output 'not externally anchored'; data complete). DR0 does not fire; DR1 does not fire (4B 28.9%/26.6%); DR2 Inconclusive (delta -3.1 pp, 90% t [-8.9, 2.7], p 0.37; X sign flip p 0.46; pi_small UB 0.26); DR4 does not fire (0.0025-0.0027 GPU-h/episode vs 0.011274); DR5 INCONCLUSIVE (pi_small 0.055, one-sided 95% [0.000, 0.260] vs M 0.13), so S1b does not go to the gauntlet (D47). P1 falsified (excess UB 0.78 pp < 1 pp); P2-P5 stand. Next: the runbook's independent verification of the analysis (step 12) and of the session-2 per-job checks; then Kevin's choice whether to propose more sessions at 4B and 9B (the registered pointer after INCONCLUSIVE; a new proposal with its own gauntlet). The checker-mutation study waits on Kevin's adjudication (34 items) and spot check (25 items).",
+      "next_action": "S1a's registered analysis ran (2026-10-10; RESULTS: program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md; evidence: program/evidence/2026-10-10/q2-stage1-analysis/; every output 'not externally anchored'; data complete). DR0 does not fire; DR1 does not fire (4B 28.9%/26.6%); DR2 Inconclusive (delta -3.1 pp, 90% t [-8.9, 2.7], p 0.37; X sign flip p 0.46; pi_small UB 0.26); DR4 does not fire (0.0025-0.0027 GPU-h/episode vs 0.011274); DR5 INCONCLUSIVE (pi_small 0.055, one-sided 95% [0.000, 0.260] vs M 0.13), so S1b does not go to the gauntlet (D47). P1 falsified (excess UB 0.78 pp < 1 pp); P2-P5 stand. Next: the runbook's independent verification of the analysis (step 12) and of the session-2 per-job checks; then Kevin's choice whether to propose more sessions at 4B and 9B (the registered pointer after INCONCLUSIVE; a new proposal with its own gauntlet). The checker-mutation study waits on Kevin's adjudication (34 items) and spot check (25 items); its K2 VM-fidelity addendum (ledger row 17) ran as job 1186 with outcome VERIFIED (D78), and the parent analysis carries 'VM fidelity checked (K2)'.",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -351,6 +351,14 @@
             "human_spot_check": "25 items, audit/released/confirm-audit-v1/spot-check.jsonl (7 also in the pool)"
           },
           "gpu_hours": 0.0
+        },
+        "k2": {
+          "registration": "q2-evaluator-mutation-v1-k2 (ledger row 17; git_head_at_freeze 0a864682, freeze commit and executor commit 7d9c881a; D73 (ii), D77, D78)",
+          "job": "1186 k2-confirm-v1 (CPU only, V = 8, 242 slots; branch ops/q2-mutation-k2, not merged)",
+          "outcome": "VERIFIED: gate 2/80 excluded; 78/78 compared K2 pairs agree in both runs; K2-C 41/41 reproduced; no family dropped",
+          "analysis_rerun": "program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/analysis-with-k2/ (only exclusions.k2 changes; the audit inputs as they stand, before Kevin's answers)",
+          "evidence": "program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/README.md",
+          "next": "after Kevin's answers, rerun audit summarize --adjudications and the analysis once with --k2-report and the post-answer --audit-summary and --decisions (section 9.4)"
         }
       },
       "stage1_s1a": {
@@ -459,7 +467,7 @@
     "Decide whether to purge the old host address and the internal corpus inventory from public git history (requires a force-push)",
     "Spot-check the 25-item human sample of the Q2 checker-mutation confirm audit (decision D9; program/evidence/2026-10-08/q2-mutation-confirm/audit/released/confirm-audit-v1/spot-check.jsonl; 7 of the 25 are also in the adjudication pool)",
     "Moonshot (Kimi) account is suspended for insufficient balance; recharge it if a Kimi model should be a rater or reviewer (rotate the exposed key at the same time)",
-    "Q2 checker-mutation (q2-evaluator-mutation-v1, frozen at 65bc2e2, descriptive under D35 and D38): the confirm audit and the registered analysis have run (program/evidence/2026-10-08/q2-mutation-confirm/results/README.md). Adjudicate the 34-item blind pool (24 splits, 6 concordant contradictions, 4 split gold shams; ids only in audit/audit-summary/adjudication-pool.jsonl), answering from the packets before reading the released sample, decisions or results (they name labels and decisions); your answers decide 6 unresolved false-negative candidates (30-36 confirmed), 3 false-positive candidates the raters both accepted (2-5 confirmed), 21 alternative solutions at P2's gate (72-93 in P2) and 4 split gold shams (0-4 gold-defect tasks); kappa (0.343), P1 (3/92 confirmed), P3-P5 do not change. Then audit summarize --adjudications and the analysis are rerun. Still yours as well: the outward actions and the carried-over sign-offs of prereg section 17 (the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, P1 with reserve-split golds, the spec release, the D34 rules as implemented)",
+    "Q2 checker-mutation (q2-evaluator-mutation-v1, frozen at 65bc2e2, descriptive under D35 and D38): the confirm audit and the registered analysis have run (program/evidence/2026-10-08/q2-mutation-confirm/results/README.md). Adjudicate the 34-item blind pool (24 splits, 6 concordant contradictions, 4 split gold shams; ids only in audit/audit-summary/adjudication-pool.jsonl), answering from the packets before reading the released sample, decisions or results (they name labels and decisions); your answers decide 6 unresolved false-negative candidates (30-36 confirmed), 3 false-positive candidates the raters both accepted (2-5 confirmed), 21 alternative solutions at P2's gate (72-93 in P2) and 4 split gold shams (0-4 gold-defect tasks); kappa (0.343), P1 (3/92 confirmed), P3-P5 do not change. Then audit summarize --adjudications and the analysis are rerun, the analysis with --k2-report (K2 ran on 2026-10-11: VERIFIED; its outputs under program/evidence/2026-10-11/q2-mutation-k2/ name checker verdicts per mutant, so read them only after answering). Still yours as well: the outward actions and the carried-over sign-offs of prereg section 17 (the D23/D25/D27 rater lineup with unfixed Claude sampling and public OSWorld files sent to the Claude model, P1 with reserve-split golds, the spec release, the D34 rules as implemented)",
     "The ANTHROPIC_API_KEY on this machine is invalid (HTTP 401); supply a valid key if the Claude rater and gauntlet reviews should use the API rather than the agent harness (D25)",
     "Decide whether to ask the KernelGYM authors for a licence: gate_b.py was rewritten from the spec after the review found a transliteration (stage0/q1-gates, never pushed); a licence would remove the residual risk",
     "Q1 after D46: Stage 0 is closed on the audit-metric study (program/evidence/2026-10-08/q1-audit-metric-study/). To revive Q1: approve the R580 upgrade or accept the risk in writing, choose a licensed policy (D5), rule on D14 (is TF32 truncation admissible, and is 'never grossly wrong' an acceptable primary contract), and fund a 1.2 GPU-h S1-cal pilot of rule q1-audit-metric/2",
@@ -1020,6 +1028,15 @@
       "jobs": [],
       "outcome": "review NOT RUN: the lane job was rendered (manifest r01-run2-r2, request c42f9e46...) but never dry-run, tested or submitted, because another workflow's CPU job (1175 r04-main-score-locale) held the host queue at every check 13:45-13:53 UTC and the host rule allows the job only on an empty queue; the harness demanded output first. Wave score 57 (reviewer 1 only; an upper bound on the lower of two totals), best 58, trajectory 58 -> 57; honest exit under D75's stop line (below 60, and the wave-1 largest defect is still the largest, narrowed), the run's wave cap and the triad stop (3/3 refuted); R01 ends under D75. Tokens 2.68M of 8M, $54.77 of $150, 123.7 of 600 minutes, 43 of 80 queries",
       "basis": "physical: no GPU job ran (no Slurm job submitted for this run); recorder's read-only check at 13:55:56 UTC: only 1175 in the queue, all eight GPUs at 0 MiB, no compute apps"
+    },
+    {
+      "experiment": "q2-evaluator-mutation-v1-k2 registered k2 job (K2 VM-fidelity addendum, ledger row 17; CPU only)",
+      "gpu_hours": 0.0,
+      "jobs": [
+        "1186 k2-confirm-v1 (CPU, 40 CPUs, no GRES)"
+      ],
+      "outcome": "VERIFIED: 242 slots, 246 attempts (238 scored, 8 infrastructure on task 51f5801c); gate 2/80 K2 pairs excluded (cause 4); 78/78 compared K2 pairs agree with the offline verdicts in both runs; K2-C 41/41 reproduced; no family dropped; parent analysis rerun with --k2-report changes only the K2 label; submitted 15:56:19 UTC 2026-10-11 on an empty queue, ran 15:56:20-17:01:17 UTC, no other Slurm job in any host snapshot",
+      "basis": "physical: CPU-only Slurm job through q2m-k2-vm.sbatch (no --gres; preflight TRES=cpu=40,mem=64G,node=1; GPU variables refused by the batch file); no GPU requested"
     }
   ],
   "results": [
@@ -1077,6 +1094,13 @@
       "label": "COMPLETE (not externally anchored): DR2 Inconclusive, DR5 INCONCLUSIVE; S1b not admitted",
       "outcome": "Base 32 tasks, 2 sessions x 2 reruns per size: delta (H-GA minus H-OSW-fixed) -3.1 pp, 90% t [-8.9, 2.7] (p 0.37); X sign flip p 0.46; D_b 11.3% [5.9, 17.2], D_w 12.5%, excess -1.2 pp (UB 0.78: P1 falsified); pi_small 0.055 [0.000, 0.260] vs M 0.13; 4B 28.9%/26.6% (DR1 no); 0.0025-0.0027 GPU-h per episode (DR4 no); 0 infrastructure losses in 1,808 episodes; GLMM primary did not converge; checker correction 0 flips",
       "evidence": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md"
+    },
+    {
+      "registration": "q2-evaluator-mutation-v1-k2",
+      "date": "2026-10-11",
+      "label": "VERIFIED (K2 VM fidelity checked; blind warning: answer the adjudication before reading the K2 outputs)",
+      "outcome": "Registered k2 job 1186 from the freeze commit 7d9c881a: fitness gate passes (2 of 80 K2 pairs excluded, cause 4, both on task 51f5801c: LibreOffice did not quit on Ctrl+Q and the reopen of the Writer target timed out); 78 compared K2 pairs agree with the offline lock-exact verdicts in both runs, none differs, no family dropped (compare_pptx_files_tolerant not covered by K2, descriptive); K2-C 41/41 candidate events reproduced in both runs (descriptive); the parent analysis rerun with --k2-report replaces the label 'offline harness, VM fidelity unverified' with 'VM fidelity checked (K2)' and changes nothing else",
+      "evidence": "program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/README.md"
     }
   ]
 }
