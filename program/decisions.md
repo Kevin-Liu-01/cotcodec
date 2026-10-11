@@ -1487,3 +1487,99 @@ Not covered by the delegation, so not done:
 - C5's Phase 1 (70-97 GPU-h), whose identification defect stands.
 Host jobs are serialized: at most one VM-lane campaign at a time, and S1a-style
 quiet-host rules apply while a registered VM or GPU job runs.
+
+**D81. The first D80 adjudication run is void; the adjudication is redone with
+the frozen template, its rules committed here before any new answer exists.**
+The first run (workflow `wf_cdd11126-1a7`, branch
+`ops/q2-mutation-adjudication` at `2944557c`) did not start its adjudicators
+with the registered template (`isolated_rater_prompt.txt`, `0e9d4eb6...`).
+The orchestrator's own prompt told each adjudicator to fetch its packet over
+ssh, and all 101 attempts failed because the packets are local. The prompt
+also gave context beyond the item: the pool and spot-check sizes and the split
+rules. As a result, all 52 adjudicators used Bash, which the template forbids
+and says voids the answer. Under the registered transcript audit, all 52
+answers are void. A fresh verifier confirmed this and the collector's
+substitute check (each agent read only its own packet). The run is kept on its
+branch as a disclosed void run. Its answers and numbers are used nowhere. The
+orchestrator saw them, and that is disclosed. Run 2's rules, fixed before any
+of its answers exist:
+- (a) Primary, which is the record. One workflow session contains the
+  adjudicator agents and nothing else, one per distinct item (52, in `item_id`
+  order). Each starts with exactly the registered template rendered for its
+  item, with the export's `iso_root`. The model is `claude-opus-5-5`, which
+  the registered tooling pins, and the schema is `{item_id, answer, reason}`.
+  The session is audited with `rater_runner collect-transcripts` and
+  `ingest-isolated`, the registered isolation audit. An item that audit voids
+  stays unadjudicated under section 9, with no re-rating beyond the registered
+  relay-frame rule. Accept and reject answers go to `adjudications.jsonl` (the
+  pool) and to the spot-check answers. The parent analysis is rerun from
+  `65bc2e2` with `--adjudications` and `--k2-report`.
+- (b) Independence sensitivity. The same 52 items and the same rendered
+  prompts run in a separate session with `claude-fable-5-1`, a model that is
+  neither rater's. It is reported as agreement with (a) and as an alternative
+  analysis. It never replaces (a).
+- (c) Notation sensitivity. The 12 items whose packet shows the differ's
+  added-sheet marker run in a separate session with `claude-opus-5-5`. They
+  get the rendered template plus one fixed, label-blind sentence: "In the
+  packet's file listings, a path of the form sheets/%2B<name> (or
+  sheets/+<name>) means that a sheet named <name> was added; %2B is the
+  percent-encoded plus sign that the diff tool uses as its 'added' marker, and
+  it is not part of the sheet name." The marker comes from the frozen differ
+  (`_diff.py`). The original raters read the same notation. This is reported
+  as a sensitivity only.
+Every output carries the D80 label. The correlated judge remains: (a) uses
+the Anthropic rater's model, and (b) exists to measure that. D9's human spot
+check stays pending as a human validation.
+
+**D82. The checker-mutation adjudication is complete (D81 run 2), adjudicated
+by an isolated model on the owner's instruction (D80); not human-validated.**
+- Isolation audit. Run 2's primary session (`wf_843930b8-5af`, 52 agents,
+  `claude-opus-5-5`, the registered template as each task turn) passed the
+  frozen `collect-transcripts` and `ingest-isolated` unmodified: 52 `ok`, 0
+  void. The only tools used were Read (711) and the structured output (52),
+  and 503 of 506 page images were opened.
+- Answers. The pool split 17 accept, 17 reject. The spot check split 19
+  accept, 6 reject.
+- Against the K2 rerun, the parent analysis rerun from `65bc2e2` with
+  `--adjudications` and `--k2-report` changes:
+  - Gold-defect tasks: 0 to 3.
+  - False-negative candidates: 30 confirmed and 6 unresolved become 33
+    confirmed and 3 label-contradicted, all 3 on gold-defect task `5c1a6c3d`.
+  - Confirmed false-negative shares: pooled 10.6% to 11.6% (6.4-17.3%),
+    `compare_pptx_files` 33.5% to 37.1%, the z-order operator 77.1% to 85.4%.
+  - The alternative-solution gate: 72/3/18 to 82/11/0, with 10 of the 11
+    rejects on two `compare_table` gold-defect tasks.
+  - P2: the population goes from 327 to 337 at an unchanged 12.4%
+    (7.2-18.3%). Without the gold-defect equivalence mutants it is 12.2%
+    (6.7-18.1%; 323 mutants, 57 tasks).
+  - K3: the equivalence label error goes from 0.167 to 0.000. K3 still fires,
+    through kappa 0.343 alone.
+  - K4 no longer fires.
+  - Unchanged: kappa, P1 (3 of 92 confirmed), P3-P5, the false-positive table
+    (2 confirmed) and the candidate shares.
+- The sensitivities committed in D81 change no conclusion:
+  - (b) Fable agreed on 51 of 52 items (kappa 0.96) and 27 of 28 splits; its
+    one unsure leaves 32 confirmed false negatives. Under the strict
+    registered audit all 52 Fable answers are void, because its session
+    carries an attachment type off the registered list (a fixed harness
+    reminder to batch tool calls), so (b) is reported with that one type
+    excepted.
+  - (c), the notation sentence: the 12 marker items were accepted, as in (a),
+    and the analysis is byte-identical.
+- The correlated judge is plain in the numbers:
+  - On the 28 splits, (a) sided with the Claude rater 17 times and with Qwen
+    11 times.
+  - In the spot check, it matched the Claude rater on all 25 items and the
+    raters' consensus on all 23 concordant items, and it got all 5 shams
+    right.
+  - So the model spot check cannot validate the Claude rater independently.
+    D9's human spot check stays open as the only independent validation.
+- Verification. Two fresh verifiers reproduced everything:
+  - the isolation audit of all 116 transcripts;
+  - every audit summary and analysis, the main run, both sensitivities and
+    both controls, byte for byte from the frozen code;
+  - the agreement tables.
+  Their minor wording items were fixed (`ecc90a22`).
+- Evidence: `program/evidence/2026-10-11/q2-mutation-adjudication-v2/`. The
+  checker-mutation note (R03) can now be finished as a descriptive,
+  model-adjudicated result.

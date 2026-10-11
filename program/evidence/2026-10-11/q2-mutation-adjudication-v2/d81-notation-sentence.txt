@@ -1,0 +1,1 @@
+In the packet's file listings, a path of the form sheets/%2B<name> (or sheets/+<name>) means that a sheet named <name> was added; %2B is the percent-encoded plus sign that the diff tool uses as its 'added' marker, and it is not part of the sheet name.

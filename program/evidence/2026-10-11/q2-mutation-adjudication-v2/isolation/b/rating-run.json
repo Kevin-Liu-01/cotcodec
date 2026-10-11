@@ -1,0 +1,259 @@
+{
+ "agent_attempts": {
+  "1": 52
+ },
+ "agent_count": 52,
+ "agent_labels": "adj:0 .. adj:51, each started once",
+ "agent_models_reported_by_workflow": {
+  "claude-fable-5-1": 52
+ },
+ "agent_states": {
+  "done": 52
+ },
+ "default_model": "claude-opus-5-5",
+ "duration_ms": 581349,
+ "journal_lines": {
+  "launched": 1,
+  "result": 52,
+  "started": 52
+ },
+ "journal_sha256": "eccf32902afab9c4c3c70f4b92d17918326ae80a1a5cea22e72ac1e368a1080e",
+ "label": "adjudicated by an isolated model on the owner's instruction (D80); not human-validated",
+ "note": "the run's own record with reasons omitted (reasons quote document text); the per-item answer files given to the audit hold {item_id, answer, reason} from the returned ratings, item_id_returned dropped after the equality check (not a registered answer key); answer files stay outside the repository, hashed in the audit outputs",
+ "phases": [
+  "Adjudicate"
+ ],
+ "record_timestamp_utc": "2026-10-11T19:14:18.371Z",
+ "resumed": false,
+ "returned": {
+  "answered": 52,
+  "answers": {
+   "accept": 31,
+   "reject": 20,
+   "unsure": 1
+  },
+  "item_id_returned_equals_item_id": 52,
+  "n": 52
+ },
+ "returned_ids_and_answers": [
+  {
+   "answer": "reject",
+   "item_id": "052bfbb5f63729df"
+  },
+  {
+   "answer": "reject",
+   "item_id": "0641720bf1cd322c"
+  },
+  {
+   "answer": "accept",
+   "item_id": "06720e668a7c2d87"
+  },
+  {
+   "answer": "accept",
+   "item_id": "092229e073a93de7"
+  },
+  {
+   "answer": "unsure",
+   "item_id": "0fd24b93ee7cd70c"
+  },
+  {
+   "answer": "reject",
+   "item_id": "1050d491ba462dcb"
+  },
+  {
+   "answer": "reject",
+   "item_id": "11fa9afaa9e405d2"
+  },
+  {
+   "answer": "accept",
+   "item_id": "1519df6482c7b89e"
+  },
+  {
+   "answer": "accept",
+   "item_id": "2055a9f2cafd08c9"
+  },
+  {
+   "answer": "accept",
+   "item_id": "28b76980b2c9201a"
+  },
+  {
+   "answer": "accept",
+   "item_id": "315f0c227a178443"
+  },
+  {
+   "answer": "accept",
+   "item_id": "35d237e376cca35d"
+  },
+  {
+   "answer": "accept",
+   "item_id": "365edabe1a57e9e2"
+  },
+  {
+   "answer": "reject",
+   "item_id": "374618d333584833"
+  },
+  {
+   "answer": "reject",
+   "item_id": "38eb297a768a506c"
+  },
+  {
+   "answer": "reject",
+   "item_id": "3ba1e22031b0ab35"
+  },
+  {
+   "answer": "reject",
+   "item_id": "4175eb7174a3bf30"
+  },
+  {
+   "answer": "accept",
+   "item_id": "435d2aa652ec9967"
+  },
+  {
+   "answer": "accept",
+   "item_id": "47fad447927b1355"
+  },
+  {
+   "answer": "accept",
+   "item_id": "4fe209883c28fdd5"
+  },
+  {
+   "answer": "accept",
+   "item_id": "5910722d23063c79"
+  },
+  {
+   "answer": "reject",
+   "item_id": "5d5ae01dbb821493"
+  },
+  {
+   "answer": "accept",
+   "item_id": "5ed9a0978e0d6abd"
+  },
+  {
+   "answer": "accept",
+   "item_id": "5facff2b753bcdf4"
+  },
+  {
+   "answer": "reject",
+   "item_id": "6e3a61b931786e28"
+  },
+  {
+   "answer": "accept",
+   "item_id": "774a0588ae7e7cff"
+  },
+  {
+   "answer": "accept",
+   "item_id": "77b434dad79aa067"
+  },
+  {
+   "answer": "accept",
+   "item_id": "7a23bbe19729adca"
+  },
+  {
+   "answer": "reject",
+   "item_id": "7fc64dd71e4bd700"
+  },
+  {
+   "answer": "accept",
+   "item_id": "a04937b5ea0f5811"
+  },
+  {
+   "answer": "reject",
+   "item_id": "a395f44b2e5a2d49"
+  },
+  {
+   "answer": "accept",
+   "item_id": "a3e44037b10cdd35"
+  },
+  {
+   "answer": "reject",
+   "item_id": "aa08191ae609848f"
+  },
+  {
+   "answer": "reject",
+   "item_id": "aa3331dbb625093c"
+  },
+  {
+   "answer": "accept",
+   "item_id": "ad78eacba984506b"
+  },
+  {
+   "answer": "accept",
+   "item_id": "ae7bdfd3cb31f79b"
+  },
+  {
+   "answer": "accept",
+   "item_id": "b44938af6601d80d"
+  },
+  {
+   "answer": "reject",
+   "item_id": "b63890263d17b306"
+  },
+  {
+   "answer": "accept",
+   "item_id": "bb636a1a7ec68ddb"
+  },
+  {
+   "answer": "reject",
+   "item_id": "c86151880061b40a"
+  },
+  {
+   "answer": "accept",
+   "item_id": "cbcf768b16d617f4"
+  },
+  {
+   "answer": "accept",
+   "item_id": "cc3cd6e8358614ff"
+  },
+  {
+   "answer": "reject",
+   "item_id": "cff5ed06c35f7dbe"
+  },
+  {
+   "answer": "accept",
+   "item_id": "d1959ff977ee17c8"
+  },
+  {
+   "answer": "accept",
+   "item_id": "d238e0f83e6fdef9"
+  },
+  {
+   "answer": "accept",
+   "item_id": "d501d603fdb20e5f"
+  },
+  {
+   "answer": "accept",
+   "item_id": "df1cc5f237534884"
+  },
+  {
+   "answer": "reject",
+   "item_id": "e06639e0971373f1"
+  },
+  {
+   "answer": "reject",
+   "item_id": "e5bce1a747eb867d"
+  },
+  {
+   "answer": "reject",
+   "item_id": "ee194e0ee8f53a4c"
+  },
+  {
+   "answer": "accept",
+   "item_id": "f65e9989406928dc"
+  },
+  {
+   "answer": "accept",
+   "item_id": "fd455942d783ba01"
+  }
+ ],
+ "role": "D81 (b) independence sensitivity",
+ "run_id": "wf_4d1fa210-001",
+ "schema": "q2m-d81-adjudication-run-v1",
+ "script_equals_record": true,
+ "script_file": "q2m-d81-adjudication-b-fable.js",
+ "script_sha256": "6d5e01b22d582d3b424688e23e0679d1f32c7605905d202d1400607df3bdc1e3",
+ "start_time_utc": "2026-10-11T19:04:37Z",
+ "status": "completed",
+ "total_tokens": 7889955,
+ "total_tool_calls": 795,
+ "workflow_name": "q2m-d81-adjudication-b-fable"
+}
