@@ -1,0 +1,173 @@
+{
+ "phase0": 0.0,
+ "overlay_reserve_gpu_h": 0.1,
+ "phase1_rule": "one job: ceil(3 + L/60 + (4 K n x s / V + drain) x 1.2 x 1.05 / 60) min, L = 113.2 s, drain = 104.6 s, V = 20, s = high slot price; n = 16 if K <= 35 else 12",
+ "slot_high_s": 197.73,
+ "phase1_plus_overlay_by_K": {
+  "26": {
+   "n": 16,
+   "episodes": 1664,
+   "physical_gpu_h": 4.63,
+   "job_cap_min": 353,
+   "registered_caps_gpu_h_incl_overlay": 5.983,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 4.57
+  },
+  "27": {
+   "n": 16,
+   "episodes": 1728,
+   "physical_gpu_h": 4.806,
+   "job_cap_min": 366,
+   "registered_caps_gpu_h_incl_overlay": 6.2,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 4.75
+  },
+  "28": {
+   "n": 16,
+   "episodes": 1792,
+   "physical_gpu_h": 4.982,
+   "job_cap_min": 380,
+   "registered_caps_gpu_h_incl_overlay": 6.433,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 4.92
+  },
+  "29": {
+   "n": 16,
+   "episodes": 1856,
+   "physical_gpu_h": 5.158,
+   "job_cap_min": 393,
+   "registered_caps_gpu_h_incl_overlay": 6.65,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.1
+  },
+  "30": {
+   "n": 16,
+   "episodes": 1920,
+   "physical_gpu_h": 5.333,
+   "job_cap_min": 406,
+   "registered_caps_gpu_h_incl_overlay": 6.867,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.27
+  },
+  "31": {
+   "n": 16,
+   "episodes": 1984,
+   "physical_gpu_h": 5.509,
+   "job_cap_min": 419,
+   "registered_caps_gpu_h_incl_overlay": 7.083,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.45
+  },
+  "32": {
+   "n": 16,
+   "episodes": 2048,
+   "physical_gpu_h": 5.685,
+   "job_cap_min": 433,
+   "registered_caps_gpu_h_incl_overlay": 7.317,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.62
+  },
+  "33": {
+   "n": 16,
+   "episodes": 2112,
+   "physical_gpu_h": 5.861,
+   "job_cap_min": 446,
+   "registered_caps_gpu_h_incl_overlay": 7.533,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.8
+  },
+  "34": {
+   "n": 16,
+   "episodes": 2176,
+   "physical_gpu_h": 6.036,
+   "job_cap_min": 459,
+   "registered_caps_gpu_h_incl_overlay": 7.75,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.98
+  },
+  "35": {
+   "n": 16,
+   "episodes": 2240,
+   "physical_gpu_h": 6.212,
+   "job_cap_min": 473,
+   "registered_caps_gpu_h_incl_overlay": 7.983,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 6.15
+  },
+  "36": {
+   "n": 12,
+   "episodes": 1728,
+   "physical_gpu_h": 4.806,
+   "job_cap_min": 366,
+   "registered_caps_gpu_h_incl_overlay": 6.2,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 4.75
+  },
+  "37": {
+   "n": 12,
+   "episodes": 1776,
+   "physical_gpu_h": 4.938,
+   "job_cap_min": 376,
+   "registered_caps_gpu_h_incl_overlay": 6.367,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 4.88
+  },
+  "38": {
+   "n": 12,
+   "episodes": 1824,
+   "physical_gpu_h": 5.07,
+   "job_cap_min": 386,
+   "registered_caps_gpu_h_incl_overlay": 6.533,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.01
+  },
+  "39": {
+   "n": 12,
+   "episodes": 1872,
+   "physical_gpu_h": 5.201,
+   "job_cap_min": 396,
+   "registered_caps_gpu_h_incl_overlay": 6.7,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.14
+  },
+  "40": {
+   "n": 12,
+   "episodes": 1920,
+   "physical_gpu_h": 5.333,
+   "job_cap_min": 406,
+   "registered_caps_gpu_h_incl_overlay": 6.867,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.27
+  },
+  "41": {
+   "n": 12,
+   "episodes": 1968,
+   "physical_gpu_h": 5.465,
+   "job_cap_min": 416,
+   "registered_caps_gpu_h_incl_overlay": 7.033,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.4
+  },
+  "42": {
+   "n": 12,
+   "episodes": 2016,
+   "physical_gpu_h": 5.597,
+   "job_cap_min": 426,
+   "registered_caps_gpu_h_incl_overlay": 7.2,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.54
+  },
+  "43": {
+   "n": 12,
+   "episodes": 2064,
+   "physical_gpu_h": 5.729,
+   "job_cap_min": 436,
+   "registered_caps_gpu_h_incl_overlay": 7.367,
+   "under_8_gpu_h": true,
+   "wall_h_one_job": 5.67
+  }
+ },
+ "maximum_over_K": 7.983,
+ "d22_line": 8.0,
+ "admission": "below D20's 8 GPU-h line for every admissible K; by D68's structural note the GPU stage still waits on Kevin's admission ruling or D24's trust store"
+}

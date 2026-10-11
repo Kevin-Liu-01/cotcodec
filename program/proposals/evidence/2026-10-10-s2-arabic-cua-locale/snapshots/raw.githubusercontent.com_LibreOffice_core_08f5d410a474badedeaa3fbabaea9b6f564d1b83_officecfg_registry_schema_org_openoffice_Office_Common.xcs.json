@@ -1,0 +1,21 @@
+{
+ "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/officecfg/registry/schema/org/openoffice/Office/Common.xcs",
+ "fetched_at": "2026-10-11T00:18:25Z",
+ "http_status": 200,
+ "raw_bytes": 275177,
+ "raw_sha256": "7ebab20cda71792b8b794c6725acde424d36a6aec366f7d91caac450f5add61b",
+ "raw_stored": false,
+ "licence": "MPL-2.0",
+ "extract": {
+  "patterns": [
+   "UIMirroring",
+   "CTLFont"
+  ],
+  "lines": {
+   "6400": "<prop oor:name=\"CTLFont\" oor:type=\"xs:boolean\" oor:nillable=\"false\">",
+   "6458": "<prop oor:name=\"UIMirroring\" oor:type=\"xs:boolean\">",
+   "6466": "<prop oor:name=\"PreferCTLFontTab\" oor:type=\"xs:boolean\" oor:nillable=\"false\">"
+  }
+ },
+ "purpose": "S2 D68 repair: per-application locale and direction switches, text-direction isolation"
+}

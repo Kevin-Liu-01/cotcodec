@@ -1,0 +1,12 @@
+{
+ "url": "https://aclanthology.org/2026.findings-acl.1723/",
+ "fetched_at": "2026-10-11T01:03:01Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 46857,
+ "raw_sha256": "3524b10ccc2e504d043a279ec0b4772c6832e63e12a8b59d744893cd77daa851",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "How do Visual Attributes Influence Web Agents? A Comprehensive Evaluation of User Interface Design Factors - ACL Anthology"
+ }
+}

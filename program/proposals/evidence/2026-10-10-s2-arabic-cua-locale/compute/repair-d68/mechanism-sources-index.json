@@ -1,0 +1,67 @@
+[
+ {
+  "file": "raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_vcl_source_text_ImplLayoutArgs.cxx.json",
+  "http_status": 200,
+  "matched_lines": 5
+ },
+ {
+  "file": "raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_vcl_source_outdev_outdev.cxx.json",
+  "http_status": 200,
+  "matched_lines": 3
+ },
+ {
+  "file": "raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_unotools_source_i18n_resmgr.cxx.json",
+  "http_status": 200,
+  "matched_lines": 7
+ },
+ {
+  "file": "raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_vcl_unx_gtk3_gtkinst.cxx.json",
+  "http_status": 200,
+  "matched_lines": 2
+ },
+ {
+  "file": "raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_configmgr_source_xcuparser.cxx.json",
+  "http_status": 200,
+  "matched_lines": 25
+ },
+ {
+  "file": "raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_officecfg_registry_schema_org_openoffice_Office_Calc.xcs.json",
+  "http_status": 200,
+  "matched_lines": 1
+ },
+ {
+  "file": "raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_officecfg_registry_schema_org_openoffice_Office_Common.xcs.json",
+  "http_status": 200,
+  "matched_lines": 3
+ },
+ {
+  "file": "raw.githubusercontent.com_GNOME_gtk_3.24.33_gtk_gtkmain.c.json",
+  "http_status": 200,
+  "matched_lines": 11
+ },
+ {
+  "file": "raw.githubusercontent.com_GNOME_gtk_2.24.33_gtk_gtkmain.c.json",
+  "http_status": 200,
+  "matched_lines": 7
+ },
+ {
+  "file": "raw.githubusercontent.com_GNOME_pango_1.50.6_pango_pango-layout.c.json",
+  "http_status": 200,
+  "matched_lines": 5
+ },
+ {
+  "file": "raw.githubusercontent.com_mozilla_gecko-dev_master_intl_locale_LocaleService.cpp.json",
+  "http_status": 200,
+  "matched_lines": 4
+ },
+ {
+  "file": "www.unicode.org_reports_tr9_.json",
+  "http_status": 200,
+  "matched_lines": 5
+ },
+ {
+  "file": "www.w3.org_TR_css-writing-modes-3_.json",
+  "http_status": 200,
+  "matched_lines": 15
+ }
+]

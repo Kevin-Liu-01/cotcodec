@@ -1,14 +1,29 @@
 {
  "schema_version": 1,
  "proposal": "program/proposals/2026-10-10-s2-arabic-cua-locale.md",
- "proposal_sha256": "e16214cf97df717f3d1a8d7dd32a13bc3640dc0dc1df1e5896b76bf13a2578d0",
+ "proposal_sha256": "c13c8464c149d25e1e4c9902e8489a1fd08ea8e4dc81de6d914b28008a343c65",
  "draft_registration": {
-  "path": "program/preregistrations/s2-arabic-cua-locale-v1.md",
-  "sha256": "866f994dd07daf565d7d07d6dfde637f42cf08a936dee02da1b54a2d18ef0cac",
-  "experiment_id": "s2-arabic-cua-locale-v1",
-  "status": "DRAFT, not frozen, no ledger row"
+  "path": "program/preregistrations/s2-arabic-cua-locale-v2.md",
+  "sha256": "a2aaaed93a44a1f04bdd29a472ba3600969dfbad654497d207748e7726282a72",
+  "experiment_id": "s2-arabic-cua-locale-v2",
+  "status": "DRAFT, not frozen, no ledger row",
+  "supersedes": {
+   "path": "program/preregistrations/s2-arabic-cua-locale-v1.md",
+   "sha256": "866f994dd07daf565d7d07d6dfde637f42cf08a936dee02da1b54a2d18ef0cac",
+   "experiment_id": "s2-arabic-cua-locale-v1",
+   "note": "wave 1's Relay draft, left unedited (gauntlet rule 3)"
+  }
  },
  "source_snapshots": [
+  {
+   "url": "https://aclanthology.org/2026.findings-acl.1723/",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T01:03:01Z",
+   "raw_sha256": "3524b10ccc2e504d043a279ec0b4772c6832e63e12a8b59d744893cd77daa851",
+   "raw_bytes": 46857,
+   "artifact": "snapshots/aclanthology.org_2026.findings-acl.1723.json",
+   "sha256": "c9f2bcb6ebe657fe1a084624477f91e967593f55a286470b6e93c755b5ec2ad4"
+  },
   {
    "url": "https://aclanthology.org/2026.mellm-1.13/",
    "http_status": 200,
@@ -91,6 +106,15 @@
    "sha256": "70bc150dee3916df6cbe49aad9e0848da2d1a75eb3394c2112a8141a2392fe4a"
   },
   {
+   "url": "https://arxiv.org/abs/2601.21961",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T01:03:02Z",
+   "raw_sha256": "4510bc860779559cb22aef9d3914c69294ca92e67388e912bac961505e774193",
+   "raw_bytes": 43654,
+   "artifact": "snapshots/arxiv.org_abs_2601.21961.json",
+   "sha256": "f15449af6a1b8134a972c63d071ce7399e4ca2bd561d3fe62f5e2403c0f5860a"
+  },
+  {
    "url": "https://arxiv.org/abs/2604.12978",
    "http_status": 200,
    "fetched_at": "2026-10-10T21:54:19Z",
@@ -98,6 +122,15 @@
    "raw_bytes": 42312,
    "artifact": "snapshots/arxiv.org_abs_2604.12978.json",
    "sha256": "ffff0d1fd81d958e7188e44e70171cef0c44042931a9be9448e5d70428e22e3e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.17849",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T01:03:02Z",
+   "raw_sha256": "884df87fab8efdf0ac21b06a4b2263c742870eceac2179be1482ccea23f153e9",
+   "raw_bytes": 41002,
+   "artifact": "snapshots/arxiv.org_abs_2604.17849.json",
+   "sha256": "bb974ac32e00a682db7af41a08d2ab785ce22372ffc02d7ddb44bda6da8feb40"
   },
   {
    "url": "https://arxiv.org/abs/2606.17188",
@@ -273,6 +306,33 @@
    "content_note": "HTTP 200 browser-challenge page ('Verifying your browser | OpenReview'); verifies nothing about content; abstract from the OpenReview search API (query-log.json)"
   },
   {
+   "url": "https://raw.githubusercontent.com/GNOME/gtk/2.24.33/gtk/gtkmain.c",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:26Z",
+   "raw_sha256": "ead8aa678040800d7866c6e306b24090d6658bc002fc55026e168d0510f8b05f",
+   "raw_bytes": 72431,
+   "artifact": "snapshots/raw.githubusercontent.com_GNOME_gtk_2.24.33_gtk_gtkmain.c.json",
+   "sha256": "dbd623cba973a8f11011e2e4c43ff76ad9b67eb85895555c4b7d6f3065465d2d"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/GNOME/gtk/3.24.33/gtk/gtkmain.c",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:26Z",
+   "raw_sha256": "b591026ada215a7d02e2753c2a6995f0b1f4cb96219a9c2c22a34dce5fcaa7dc",
+   "raw_bytes": 80086,
+   "artifact": "snapshots/raw.githubusercontent.com_GNOME_gtk_3.24.33_gtk_gtkmain.c.json",
+   "sha256": "0acc946a8c5db38ece06a158f284a3dee347e9b10acc42bed9975ecc16f7d87b"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/GNOME/pango/1.50.6/pango/pango-layout.c",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:27Z",
+   "raw_sha256": "74824721761f9cd6fac07c8ad6a588e384219f2f3f6fdaa068b641176d761211",
+   "raw_bytes": 234992,
+   "artifact": "snapshots/raw.githubusercontent.com_GNOME_pango_1.50.6_pango_pango-layout.c.json",
+   "sha256": "4eaaa0e52901e4f6694b2920e2417a974eaa52a7cad9347d6974f13ed5a1625c"
+  },
+  {
    "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/source/app/settings.cxx",
    "http_status": 200,
    "fetched_at": "2026-10-10T21:55:11Z",
@@ -280,6 +340,96 @@
    "raw_bytes": 81277,
    "artifact": "snapshots/raw.githubusercontent.com_LibreOffice_core_08f5d410_vcl_source_app_settings.cxx.json",
    "sha256": "872ea37a06c8ea3376cd70c31002e1d9731300e47e549b1fefe3759a7e8af5f8"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/configmgr/source/xcuparser.cxx",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:24Z",
+   "raw_sha256": "b60ce120bb63ab216efd55c785694a83401b2f9233945850c5453e4adafb8a95",
+   "raw_bytes": 34005,
+   "artifact": "snapshots/raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_configmgr_source_xcuparser.cxx.json",
+   "sha256": "4bd7a10cc2a5f19831dd3a29f5741603cf7b4b993d5161cd4c822f77afb5db5f"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/officecfg/registry/schema/org/openoffice/Office/Calc.xcs",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:25Z",
+   "raw_sha256": "7f26a797a408706b613311233cac1bd4c279f292fdf6c5d2522aac71f02cd54a",
+   "raw_bytes": 81259,
+   "artifact": "snapshots/raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_officecfg_registry_schema_org_openoffice_Office_Calc.xcs.json",
+   "sha256": "856857c34d5641c14ad9485fede3f0ad6bd3fb2e3d47d6e3d335cfb0dd5585b8"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/officecfg/registry/schema/org/openoffice/Office/Common.xcs",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:25Z",
+   "raw_sha256": "7ebab20cda71792b8b794c6725acde424d36a6aec366f7d91caac450f5add61b",
+   "raw_bytes": 275177,
+   "artifact": "snapshots/raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_officecfg_registry_schema_org_openoffice_Office_Common.xcs.json",
+   "sha256": "c89d9c1bef48df8a6ffac66abe1a1f4b268e0ff9197260c75c3f1dec04c3c6d6"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/unotools/source/i18n/resmgr.cxx",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:22Z",
+   "raw_sha256": "4597e52653f6d195a57f033dad41ab38a83c0afbe5ca14de4d915477514276b3",
+   "raw_bytes": 11713,
+   "artifact": "snapshots/raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_unotools_source_i18n_resmgr.cxx.json",
+   "sha256": "a68643faefb02fc3a3df597a7caa3d48d94e004666bd27f891b60ed1d55e926d"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/source/outdev/outdev.cxx",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:21Z",
+   "raw_sha256": "2e9950a86e043513ac77fc7c38a9872ce76daba61eade8be051d618f19354079",
+   "raw_bytes": 23945,
+   "artifact": "snapshots/raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_vcl_source_outdev_outdev.cxx.json",
+   "sha256": "1d14dd58042d4068fd7de4828168d2d3361f7e760301d9e6a4e3f2a8db55b689"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/source/text/ImplLayoutArgs.cxx",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:20Z",
+   "raw_sha256": "8e71c33ac7cee35945b68f1a62709cd2ef122fd4782ab67877516123b81da3fa",
+   "raw_bytes": 10328,
+   "artifact": "snapshots/raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_vcl_source_text_ImplLayoutArgs.cxx.json",
+   "sha256": "2ffd9b8dadacf481c53927136b066f4a211afd7f89bd4f1d4ace9091d81a4d14"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/LibreOffice/core/08f5d410a474badedeaa3fbabaea9b6f564d1b83/vcl/unx/gtk3/gtkinst.cxx",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:24Z",
+   "raw_sha256": "a458fb124fda6e45a6ac0c0d0102846420221a38274ddde4e78096d62bf7a717",
+   "raw_bytes": 880944,
+   "artifact": "snapshots/raw.githubusercontent.com_LibreOffice_core_08f5d410a474badedeaa3fbabaea9b6f564d1b83_vcl_unx_gtk3_gtkinst.cxx.json",
+   "sha256": "3db08f800c1c92303b72ecc1bb0cc7d8b3b130d8d224c06f2b21fa231724dd5a"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/mozilla/gecko-dev/master/intl/locale/LocaleService.cpp",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:27Z",
+   "raw_sha256": "64bca0e51987b3cf0a6eb27c1aad69685fb21ed2c837adb967e75ec6bc0c7443",
+   "raw_bytes": 20737,
+   "artifact": "snapshots/raw.githubusercontent.com_mozilla_gecko-dev_master_intl_locale_LocaleService.cpp.json",
+   "sha256": "769bdc211ebe79dccdb22ece1a9e7259d96b07ff2ff22b066f7ee4424575bda3"
+  },
+  {
+   "url": "https://www.unicode.org/reports/tr9/",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:28Z",
+   "raw_sha256": "3c281b38800bad85b16bf3a169b8cb693d8a2dbceb60903feb26e68a2659ee8a",
+   "raw_bytes": 188933,
+   "artifact": "snapshots/www.unicode.org_reports_tr9_.json",
+   "sha256": "9be0feb8d9794f214a76e5790a48581647d31a1ea043302a8b96a5d6dd4a128f"
+  },
+  {
+   "url": "https://www.w3.org/TR/css-writing-modes-3/",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:18:28Z",
+   "raw_sha256": "39564c2366c0d46ad5cb4bf9363f232667e2d0b6833ac79931117baa24873aec",
+   "raw_bytes": 355883,
+   "artifact": "snapshots/www.w3.org_TR_css-writing-modes-3_.json",
+   "sha256": "3434f5a5127546a91ea0271f7d627d6aa29730784be10c7f8d52e3cd1ba93905"
   }
  ],
  "query_log": {
@@ -309,53 +459,314 @@
    },
    "total_if_other_searches_counted": 178
   },
+  "run2": {
+   "artifact": "query-log-run2.json",
+   "sha256": "4f9954ca6f0b4db5c6c163d256a47300cef5b6f512eb29b491c29c2b83d4e3d8",
+   "counted": 22,
+   "by_tool": {
+    "acl": 4,
+    "openreview": 4,
+    "orx embedding": 2,
+    "orx keyword": 10,
+    "orx openalex": 2
+   },
+   "declared": 80,
+   "remaining": 58,
+   "note": "the D68 repair run's queries; this run's budget is fresh (80, at least 30 reserved for the triad)"
+  },
   "note": "113 counted orx discover queries against the declared 150 (remaining 37, reserve of 30 intact); 9 orx calls failed with HTTP 429 (not counted); 65 uncounted searches and fetches (178 if counted)"
  },
  "reviews": [],
- "reviews_status": "NOT_RUN: the blind critic, the refute-first triad and both reviewers run after synthesis. No trusted Ed25519 store exists (D24), so no review can be signed.",
+ "reviews_status": "NOT_RUN for this run: the blind critic, the refute-first triad and both reviewers run after the D68 repair (wave 1's reviews are in the gauntlet record). No trusted Ed25519 store exists (D24), so no review can be signed.",
  "compute": {
-  "scope": "s2-arabic-cua-locale-v1 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: power-gate.py (analytic MDE grid, cost model, gate on transported S1a inputs, Monte Carlo of the staged design) with its output, and the discovery cells' scripts and outputs (compute/cells/, local test tokens redacted).",
+  "scope": "s2-arabic-cua-locale-v2 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). The D68 repair's CPU evidence is under compute/repair-d68/: the task screen and the power analysis under the registered estimator anchored on S1a's records (power-osworld.py/.json; the superseded first run power-osworld-v0-partial.json is kept), the render oracle and its validation on Chromium fixtures (render-oracle/), and the primary-source lines behind each switch (fetch-mechanism-sources.py, mechanism-sources-index.json, snapshots/). Wave 1's Relay evidence (power-gate.py/.json, cells/) is kept as history.",
   "image_digest": "docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f",
-  "image_scope": "engine base image (vLLM v0.31.0, commit db9527a4); the cu129 overlay is rebuilt per source commit by scripts/build_vllm_overlay_on_h100.sh, as S1a did; the Relay environment image is not built (E3)",
-  "environment_base_digest": "node:24.13.0-bookworm-slim@sha256:4660b1ca8b28d6d1906fd644abe34b2ed81d15434d26d845ef0aced307cf4b6f",
+  "image_scope": "engine base image (vLLM v0.31.0, commit db9527a4); the cu129 overlay is rebuilt per source commit by scripts/build_vllm_overlay_on_h100.sh, as S1a did; the VM image is S1a's certified OSWorld image, and the derived localized image is not built (Phase 0)",
   "real_model_loop": false,
-  "real_model_loop_scope": "none for Relay: no local-engine transport (E1) and no qwen35vl adapter for Relay's action set (E2)",
+  "real_model_loop_scope": "S1a's loop exists and ran 1,808 episodes (D66); no S2 episode has run: the cell selector, step-0 and keyboard checks and the derived image do not exist",
   "benchmark_adapter": null,
-  "benchmark_adapter_scope": "none: Relay has no locale parameter, catalogs, test ids or gate doctor (Phase 0 creates them)",
+  "benchmark_adapter_scope": "OSWorld b138d348 as S1a ran it; S2 adds no adapter, only the derived image and the selector (Phase 0)",
   "manifest": null,
-  "manifest_scope": "no Slurm manifest exists for Stage 1a or Stage 1b (E5)",
+  "manifest_scope": "no Phase 1 Slurm manifest exists; Phase 0's CPU lane jobs are not written",
   "container_smoke": {
    "label": "container_smoke",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "d8d56b1b95734a01323716b81a3854b0db2be0d976f09e7fd8151937a58b4dd0"
+   "sha256": "8b6f8f87a3d09c13847d6e00a68a02465a2d4ecdb8c06d30f0555ff09fdbb864"
   },
   "slurm_test": {
    "label": "slurm_test",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "d8d56b1b95734a01323716b81a3854b0db2be0d976f09e7fd8151937a58b4dd0"
+   "sha256": "8b6f8f87a3d09c13847d6e00a68a02465a2d4ecdb8c06d30f0555ff09fdbb864"
   },
   "provenance_verification": {
    "label": "provenance_verification",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "d8d56b1b95734a01323716b81a3854b0db2be0d976f09e7fd8151937a58b4dd0"
+   "sha256": "8b6f8f87a3d09c13847d6e00a68a02465a2d4ecdb8c06d30f0555ff09fdbb864"
   },
   "registered_caps_gpu_h": {
    "phase0": 0.0,
-   "stage1a": 2.0,
-   "stage1b": "4 x K_inf x n x 1.5 x pilot-measured English GPU-h per episode + 0.10, at most 15.0",
-   "total": 17.0,
+   "overlay_reserve_gpu_h": 0.1,
+   "phase1_rule": "one job: ceil(3 + L/60 + (4 K n x s / V + drain) x 1.2 x 1.05 / 60) min, L = 113.2 s, drain = 104.6 s, V = 20, s = high slot price; n = 16 if K <= 35 else 12",
+   "slot_high_s": 197.73,
+   "phase1_plus_overlay_by_K": {
+    "26": {
+     "n": 16,
+     "episodes": 1664,
+     "physical_gpu_h": 4.63,
+     "job_cap_min": 353,
+     "registered_caps_gpu_h_incl_overlay": 5.983,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 4.57
+    },
+    "27": {
+     "n": 16,
+     "episodes": 1728,
+     "physical_gpu_h": 4.806,
+     "job_cap_min": 366,
+     "registered_caps_gpu_h_incl_overlay": 6.2,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 4.75
+    },
+    "28": {
+     "n": 16,
+     "episodes": 1792,
+     "physical_gpu_h": 4.982,
+     "job_cap_min": 380,
+     "registered_caps_gpu_h_incl_overlay": 6.433,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 4.92
+    },
+    "29": {
+     "n": 16,
+     "episodes": 1856,
+     "physical_gpu_h": 5.158,
+     "job_cap_min": 393,
+     "registered_caps_gpu_h_incl_overlay": 6.65,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.1
+    },
+    "30": {
+     "n": 16,
+     "episodes": 1920,
+     "physical_gpu_h": 5.333,
+     "job_cap_min": 406,
+     "registered_caps_gpu_h_incl_overlay": 6.867,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.27
+    },
+    "31": {
+     "n": 16,
+     "episodes": 1984,
+     "physical_gpu_h": 5.509,
+     "job_cap_min": 419,
+     "registered_caps_gpu_h_incl_overlay": 7.083,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.45
+    },
+    "32": {
+     "n": 16,
+     "episodes": 2048,
+     "physical_gpu_h": 5.685,
+     "job_cap_min": 433,
+     "registered_caps_gpu_h_incl_overlay": 7.317,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.62
+    },
+    "33": {
+     "n": 16,
+     "episodes": 2112,
+     "physical_gpu_h": 5.861,
+     "job_cap_min": 446,
+     "registered_caps_gpu_h_incl_overlay": 7.533,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.8
+    },
+    "34": {
+     "n": 16,
+     "episodes": 2176,
+     "physical_gpu_h": 6.036,
+     "job_cap_min": 459,
+     "registered_caps_gpu_h_incl_overlay": 7.75,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.98
+    },
+    "35": {
+     "n": 16,
+     "episodes": 2240,
+     "physical_gpu_h": 6.212,
+     "job_cap_min": 473,
+     "registered_caps_gpu_h_incl_overlay": 7.983,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 6.15
+    },
+    "36": {
+     "n": 12,
+     "episodes": 1728,
+     "physical_gpu_h": 4.806,
+     "job_cap_min": 366,
+     "registered_caps_gpu_h_incl_overlay": 6.2,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 4.75
+    },
+    "37": {
+     "n": 12,
+     "episodes": 1776,
+     "physical_gpu_h": 4.938,
+     "job_cap_min": 376,
+     "registered_caps_gpu_h_incl_overlay": 6.367,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 4.88
+    },
+    "38": {
+     "n": 12,
+     "episodes": 1824,
+     "physical_gpu_h": 5.07,
+     "job_cap_min": 386,
+     "registered_caps_gpu_h_incl_overlay": 6.533,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.01
+    },
+    "39": {
+     "n": 12,
+     "episodes": 1872,
+     "physical_gpu_h": 5.201,
+     "job_cap_min": 396,
+     "registered_caps_gpu_h_incl_overlay": 6.7,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.14
+    },
+    "40": {
+     "n": 12,
+     "episodes": 1920,
+     "physical_gpu_h": 5.333,
+     "job_cap_min": 406,
+     "registered_caps_gpu_h_incl_overlay": 6.867,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.27
+    },
+    "41": {
+     "n": 12,
+     "episodes": 1968,
+     "physical_gpu_h": 5.465,
+     "job_cap_min": 416,
+     "registered_caps_gpu_h_incl_overlay": 7.033,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.4
+    },
+    "42": {
+     "n": 12,
+     "episodes": 2016,
+     "physical_gpu_h": 5.597,
+     "job_cap_min": 426,
+     "registered_caps_gpu_h_incl_overlay": 7.2,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.54
+    },
+    "43": {
+     "n": 12,
+     "episodes": 2064,
+     "physical_gpu_h": 5.729,
+     "job_cap_min": 436,
+     "registered_caps_gpu_h_incl_overlay": 7.367,
+     "under_8_gpu_h": true,
+     "wall_h_one_job": 5.67
+    }
+   },
+   "maximum_over_K": 7.983,
    "d22_line": 8.0,
-   "admission": "D24 ruling (design decision 1 offers a 2.0 GPU-h split for the pilot)"
+   "admission": "below D20's 8 GPU-h line for every admissible K; by D68's structural note the GPU stage still waits on Kevin's admission ruling or D24's trust store"
   },
   "supplementary_cpu_evidence": [
    {
-    "label": "power gate: analytic MDE grid (exact noncentral t), TOST power, cost model, gate on transported S1a inputs, pass region, Monte Carlo of pilot + gate + main study (4 assumed base-rate scenarios x 3 heterogeneity patterns x 4 true effects; 1,500 replicates per cell over seeds 42/43/44)",
+    "label": "D68 repair: task screen of S1a's pool, beta-binomial propensity model fitted and checked on S1a's cells, simulation of the registered estimator (paired t, sign flip, TOST, rare-break bound) over 4 task sets x 3 n x 17 scenarios, 1,000 replicates per seed x 3 seeds, cost by the Q2 design study's slot rule, exact noncentral-t MDE grid",
+    "script": {
+     "artifact": "compute/repair-d68/power-osworld.py",
+     "sha256": "3613896e8077082987bf2153c915a0c3feb4b231ad3acacdc576671589f96399"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/power-osworld.json",
+     "sha256": "b32fee5706ce60821eb5b9eaa6341c22d24d91984f44ce4d1181085749c1b479"
+    }
+   },
+   {
+    "label": "D68 repair: first, superseded run (no rare-break bound; n = 4-16 on the LibreOffice strict set only), kept because it showed the t interval under-covering for complete breaks",
+    "output": {
+     "artifact": "compute/repair-d68/power-osworld-v0-partial.json",
+     "sha256": "986baa89d236a04952794acdf7deb349d7cdea1c6f3bb598de4891c46d5f973f"
+    }
+   },
+   {
+    "label": "D68 repair: second, superseded run (rare-break bound with a break at D_t <= -0.5), kept because it let unqualified SMALL through in up to 0.087 of replicates at a true -5 pp at K = 43, which is why a large drop is now D_t <= -0.25",
+    "output": {
+     "artifact": "compute/repair-d68/power-osworld-v1-break050.json",
+     "sha256": "821379006e162df3e63842ac30d14fcfbe461327cad7008496ba5e5882e2a74c"
+    }
+   },
+   {
+    "label": "D68 repair: registered Phase 1 caps by K",
+    "script": {
+     "artifact": "compute/repair-d68/registered-caps.py",
+     "sha256": "a926d1149b7296f694192cb72668243e3f2a0242c72ceaa53a107d20899bbac4"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/registered-caps.json",
+     "sha256": "8fdcc13f5904eea3f343cefbf563b60e14e4d371572980ba592abd7510a65622"
+    }
+   },
+   {
+    "label": "D68 repair: render oracle (O1-O5 here; O6 is a lane check), Chromium fixture renderer (7 variants plus A/A), validation driver and result",
+    "files": [
+     {
+      "artifact": "compute/repair-d68/render-oracle/fixture.mjs",
+      "sha256": "b7aba10bb496fc62d9c3f71617c2d4f4c6ce81bbf7f80ee32e7d2c029a5a34a7"
+     },
+     {
+      "artifact": "compute/repair-d68/render-oracle/oracle-validation.json",
+      "sha256": "024731b4d45a6a8b2151c477bf18af92c80595d7310764b0cdfc1d8ee6791a22"
+     },
+     {
+      "artifact": "compute/repair-d68/render-oracle/oracle.py",
+      "sha256": "ba214d425391a1b4bae97fe97ae91e883ece18109926909e011c96dc3f11f32e"
+     },
+     {
+      "artifact": "compute/repair-d68/render-oracle/validate.py",
+      "sha256": "b4593b5592975f0f6bd0f429f6eab2ea62fe0cfc1c24c35b4c9c184a7dbefcfb"
+     }
+    ]
+   },
+   {
+    "label": "D68 repair: primary-source snapshots of the per-application switches (matched line numbers) and their index",
+    "script": {
+     "artifact": "compute/repair-d68/fetch-mechanism-sources.py",
+     "sha256": "e8970f7decb2b008328759b5e0a5dc5fcfa34c0bb3c2117a076b1047a7a1fe15"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/mechanism-sources-index.json",
+     "sha256": "d6fad53fad91ad704ae94e236a4398f1427fbeeb1451c28d0a130ec35674213f"
+    }
+   },
+   {
+    "label": "D68 repair: builder of query-log-run2.json from the session's query runner",
+    "script": {
+     "artifact": "compute/repair-d68/build-query-log-run2.py",
+     "sha256": "dbe2b114ec648f7100ac4c9c273007a73875f8973365b2673d10cce58feb23bd"
+    }
+   },
+   {
+    "label": "D68 repair: this bundle builder (wave 1's compute/build-bundle.py is left as it was)",
+    "script": {
+     "artifact": "compute/repair-d68/build-bundle-v2.py",
+     "sha256": "4ad4e83e5976a921c3d0e971c256c1e404d9dd032460ab3a18f838c824117aae"
+    }
+   },
+   {
+    "label": "wave 1 (Relay, history): power gate, analytic MDE grid, cost model, Monte Carlo of the staged design",
     "script": {
      "artifact": "compute/power-gate.py",
      "sha256": "05c05ba34ab6a70d2d540e176d2b6457f106dcddabb5a15c04fbd6bbbb247bb4"
@@ -366,21 +777,21 @@
     }
    },
    {
-    "label": "query-log builder (parses the cells' raw orx outputs from the session scratchpad)",
+    "label": "wave 1 (history): query-log builder",
     "script": {
      "artifact": "compute/build-query-log.py",
      "sha256": "9c6cca18e22c2ebb047720c6b7fa323dd21c3faad23ab432a84abeaf1ffaa309"
     }
    },
    {
-    "label": "snapshot script for source_snapshots",
+    "label": "snapshot script for source_snapshots (arXiv metadata and page titles)",
     "script": {
      "artifact": "compute/snapshot-sources.py",
      "sha256": "729d1e5e75507415184b1ca3dfd4ec313c1f329a935a9d698b6026e8f1a4203c"
     }
    },
    {
-    "label": "discovery-cell scripts and outputs (kill-shot power simulation and Relay probes; cross-domain MDE grid; asset power and chrome-share measurement); tokens redacted, originals' SHA-256 in ORIGINAL_SHA256.txt",
+    "label": "wave 1 (history): discovery-cell scripts and outputs; tokens redacted, originals' SHA-256 in ORIGINAL_SHA256.txt",
     "files": [
      {
       "artifact": "compute/cells/s2-asset__chrome-ratio.json",
@@ -438,11 +849,11 @@
    }
   ],
   "repository_evidence_used": {
-   "s1a_records": "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl (SHA-256 in power-gate.json inputs)",
+   "s1a_records": "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl (SHA-256 in power-osworld.json inputs)",
+   "s1a_plan": "program/evidence/2026-10-09/q2-stage1-prefreeze/plan/plan-a0a.json (task domains, flagged tasks)",
    "s1a_results": "program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md",
-   "s1a_costs": "program/evidence/2026-10-10/q2-stage1-analysis/costs.json",
-   "serving_probe_v2": "program/evidence/2026-10-07/serving-throughput-probe-v2/README.md",
-   "relay": "~/repos/Relay at e6c815e634f6 (read-only; public as github.com/Kevin-Liu-01/Relay)"
+   "design_study_cost_model": "stage0/q2-design-study 79096f8 program/evidence/2026-10-10/q2-design-study/cost-model.json (constants copied into power-osworld.py)",
+   "d53_acceptance": "program/evidence/2026-10-08/q2-action-path-v2-acceptance/README.md; program/decisions.md D53"
   }
  },
  "doctors": [
@@ -450,58 +861,85 @@
    "name": "Source",
    "status": "PASS",
    "artifact": "doctors/source.json",
-   "sha256": "3b873b3b7ef8ba4dd3ad87c92240ae9915ed42b6515d464b327e2d38030ae263"
+   "sha256": "581e1c4d81e80fe90898dfc4c6e3f3e3b5d90bd2e6a6ccadfc9839c204a2f127"
   },
   {
    "name": "Citation",
    "status": "PASS",
    "artifact": "doctors/citation.json",
-   "sha256": "4de35598974fc93bbc56a91b7ecac25136776def9a02618ad922d6c28857caa5"
+   "sha256": "bd9a3b93484f843afab944d1d6e89e27f772d5b0ee3c153a067634656134273e"
   },
   {
    "name": "Novelty",
    "status": "FAIL",
    "artifact": "doctors/novelty.json",
-   "sha256": "61a662fc8c464d9a8c819d7aa0a62b564b61a9924cd0b8f586bd3a4d7e8aea38"
+   "sha256": "0722b55bdedc3259ac900dbbe5d5a30325a2ec4cf12f407037fa9481177353e0"
   },
   {
    "name": "Design",
-   "status": "FAIL",
+   "status": "PASS",
    "artifact": "doctors/design.json",
-   "sha256": "a8cdfb37b7816155b67686ffefd40e38fb258d07b698e522b30884f3b2be7715"
+   "sha256": "1a1021b0d425621c4adda69b1da53894567c81a06af1b10510474b8e494e351d"
   },
   {
    "name": "Compute",
    "status": "FAIL",
    "artifact": "doctors/compute.json",
-   "sha256": "f7815806c9bab2d4290894c3101fa518422dcb7d5c0440b4b5dd96abd5af0f9f"
+   "sha256": "197d077257a0dc257f18a2c4923a4479826db37273877e34a46df23d34afb47b"
   },
   {
    "name": "Safety",
    "status": "PASS",
    "artifact": "doctors/safety.json",
-   "sha256": "8ab11a0cf33c00b66f70e953307a89e991dd78bf61dd81ef2c6830c6e6b2f449"
+   "sha256": "0e074baafecfb6c58e8b65c1b4fb9f08e888379aef3636f8962908033265e7e8"
   }
  ],
  "audit_log": null,
- "audit_log_status": "This gauntlet's wave-1 row is appended to program/gauntlet/2026-10-10-s2-arabic-cua-locale.jsonl with scripts/research_gauntlet_record.py after its reviewers score.",
- "evidence_root_sha256": "391126683306c0bbb88ef1c9ad197a549a5e7af3ebb8dd79e4a7046b2af9460d",
+ "audit_log_status": "Wave 1's row is in program/gauntlet/2026-10-10-s2-arabic-cua-locale.jsonl (row hash 1a24cee8...); this run's row is appended with scripts/research_gauntlet_record.py after its reviewers score.",
+ "evidence_root_sha256": "d92056da89c7f704c0360158d11ae1bd10aead5a97657a4ac537a8a8a1dc5a41",
  "blind_discrimination_packet": {
   "proposal": {
-   "artifact": "blind/paragraph-434639fe.txt",
-   "sha256": "05ef503907e0f0db34de4813d41441b740bcbccabe6619fa4250e3650db5c347",
-   "text_sha256": "434639fe8f6d123afb80d338008d5620f2ec76ce95e25e27f4aa73564baa04eb"
+   "artifact": "blind/paragraph-ce477c3d.txt",
+   "sha256": "c0ee59e571de65c975b30c5ed6d85ed81228b2d86acae77fddbebb06ae323b21",
+   "text_sha256": "ce477c3d55201e17db0ccad366f0890473f8e59bc666cbd16f14c94d0392f565"
   },
   "closest_prior": {
-   "artifact": "blind/paragraph-9242d8b5.txt",
-   "sha256": "7e0053e9431891e485a49291acc1b9a0aaa123c843a38f54de852f3e32f7d552",
-   "text_sha256": "9242d8b5531599c28cc770d32b60a1c41ddd66249fe04e7b3c014df14c7427dc"
+   "artifact": "blind/paragraph-6d1a67fc.txt",
+   "sha256": "4a12234cb314f38e60390df69ec61dc89c438a68e33fc97668ca635736a805c8",
+   "text_sha256": "6d1a67fc75d82b611042aa6db6fae4eae5142047ba73500cdc57ded44935320c"
   },
-  "closest_prior_id": "arXiv:2506.04135 (macOSWorld: A Multilingual Interactive Benchmark for GUI Agents, Yang, Ci and Shou, NeurIPS 2025; v4 2025-10-18); full text read by the frontier and kill-shot cells and re-read by synthesis on 2026-10-10 (Secs. 3.2-3.4, 4.1-4.2, 5.1-5.3, Tables 3-4, App. D.1 Tables 6-7, App. Fig. 19 text, checklist item 7)",
-  "note": "File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text."
+  "closest_prior_id": "arXiv:2506.04135 (macOSWorld: A Multilingual Interactive Benchmark for GUI Agents, Yang, Ci and Shou, NeurIPS 2025; v4 2025-10-18); paragraph rewritten for this run from wave 1's full-text reads (Secs. 3.2-3.4, 4.1-4.2, 5.1-5.3, Tables 3-4, App. D.1, checklist item 7)",
+  "note": "This run's packet (compute/repair-d68/blind-roles-run2.json, recorder only). File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text. Wave 1's packet (compute/blind-roles.json) stays for the record."
  },
  "budget_ledger": {
-  "declared": {
+  "declared_this_run": {
+   "queries": 80,
+   "wall_minutes": 600,
+   "tokens": 8000000,
+   "dollars": 150,
+   "waves": 1,
+   "gpu_hours": 0.3,
+   "refuter_query_reserve": 30
+  },
+  "used_by_repair": {
+   "queries": 22,
+   "queries_by_tool": {
+    "acl": 4,
+    "openreview": 4,
+    "orx embedding": 2,
+    "orx keyword": 10,
+    "orx openalex": 2
+   },
+   "uncounted": "2 paper reads; 13 primary-source fetches (plus 3 inspection re-fetches of the same files)",
+   "gpu_hours": 0.0,
+   "host": "none (no host contact)",
+   "cpu": "power-osworld.py on the development Mac (heavily loaded host machine; tens of minutes); Chromium fixture renders and oracle validation (minutes)",
+   "tokens_and_dollars": "not metered by the repair agent; the recorder meters from transcripts",
+   "wall_clock": "repair started 2026-10-10T23:53:33Z"
+  },
+  "remaining_queries_this_run": 58,
+  "refuter_reserve_intact": true,
+  "wave1_declared": {
    "queries": 150,
    "wall_minutes": 600,
    "tokens": 8000000,
@@ -509,28 +947,15 @@
    "waves": 3,
    "gpu_hours": 0.3
   },
-  "used_by_discovery_cells": {
-   "queries": 109,
-   "failed_orx_calls": 9,
-   "uncounted_searches_and_fetches": 65,
-   "gpu_hours": 0.0,
-   "wall_minutes_reported": "frontier about 60; others not reported",
-   "host": "read-only ssh by the frontier cell for the Semantic Scholar relay; no host job"
-  },
-  "used_by_synthesis": {
-   "queries": 4,
-   "paper_reads": "1 re-read of the closest prior's orx full text (cell file); spot checks of 6 cell-fetched texts; LibreOffice source re-fetched",
-   "gpu_hours": 0.0,
-   "host": "one read-only squeue at 2026-10-10T21:42:52Z (empty); no host job",
-   "cpu": "power-gate.py (about 25 minutes on the development Mac at nrep 500 x 3 seeds), snapshot fetches",
-   "tokens_and_dollars": "not metered by the synthesis agent; the recorder meters from transcripts"
-  },
-  "remaining_queries": 37,
-  "refuter_reserve_intact": true
+  "wave1_used": {
+   "queries": 123,
+   "gpu_hours": 0.0553,
+   "note": "see the wave-1 gauntlet row"
+  }
  },
  "direction_doctor_run": {
   "artifact": "doctors/research-direction-doctor-output.json",
-  "sha256": "912afe7091d5b1de2f4b155c174c1f0589bc66911115454bef32ee1361955342",
+  "sha256": "5f1f31be872ebb797769d562a6f96f33836dbe66d3e475edc54e2079cac1c9bc",
   "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-s2-arabic-cua-locale.md",
   "note": "Outside evidence_root by design: the doctor output depends on this bundle."
  }
