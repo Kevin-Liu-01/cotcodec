@@ -4004,3 +4004,89 @@ they say so.)
     - delta rows for kappa_M and the SMT segmentation lineage, and a SOMBRERO
       blind packet.
   - Sign-offs R1-R5 (registration sec. 16) also remain open.
+
+## 2026-10-10 — E5 first-step gauntlet run 2 (D68): score 51, honest exit; E5 ends (branch `gauntlet/e5-d20`, not merged)
+
+- Fresh run under D68 in workflow `wf_7f7725c7-157`, with new budgets: queries
+  80 (30 reserved for the triad), wall_minutes 600, tokens 8,000,000, dollars
+  150, waves 1, gpu_hours 0.3. A single owner did the CPU-only repair (commit
+  `fff98da`): proposal `22b43bcf...`, DRAFT registration
+  `e5-gate-fertility-decomposition-v2` (`a0bbd08b...`; v1 unedited and
+  superseded; not frozen, not admitted). The repair removed K = 1, chose one
+  primary load on held-out episodes under a ceiling gate, put the line on a
+  guessing-corrected scale, made the design a 2 x 2 factorial (CAN, DEC,
+  CLAMP, NAT) with TE = PNIE + PNDE + INT exact, gated KILL on median
+  R_F >= 1.5, and credited 2606.27510, legacy D20's span oracle and Tallec and
+  Ollivier. Audit row 2 (gauntlet wave 2, run wave 1) is appended to
+  `program/gauntlet/2026-10-10-e5-gate-fertility-decomposition.jsonl`, row
+  hash `18e2060ef99f0a8bae988f29bdd19bb3b8bdaac84e3e28a437c449737f58bbe7`.
+- Reviews: 61 (claude-opus-5-5) and 51 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1089). Each total equals the sum of its ten scores, and no cap binds (74, 79
+  and 89 all apply). Score 51, best 54. Trajectory 54 -> 51, a dip of 3:
+  reviewer 1 rose 57 -> 61 (wave 1's named identification mechanisms are
+  repaired), reviewer 2 fell 54 -> 51. Neither review is signed (D24).
+- Blind discrimination: passed by the letter, weakly, for the second time. The
+  critic told the proposal and Lee et al. (2609.33093) apart and judged the
+  prior the stronger contribution, but called the proposal "crisper and more
+  falsifiable", so the prior is stronger, not strictly dominant. Reviewer 2
+  again wrote "strictly dominant", which the critic did not. The packets match
+  the bundle files exactly. Only one prior was judged; the Boesch and Wee
+  packet the repair prepared was not.
+- Refute-first triad: 3 of 3 refuted again (orx discover queries 9, 8, 8).
+  - Novelty: a trivial recombination, no direct prior (NARROWED). The 2 x 2 is
+    VanderWeele's three-way decomposition (2013), and LongMamba (2504.16053),
+    Zhan et al. (2409.18962) and 2204.05192 are published decay-mass alignments
+    at inference; none is cited. The repair's two OpenAlex mediation queries
+    had failed with HTTP 429.
+  - Identification: KILL comes from the new R_F guard, not from decay. R_F is
+    an unweighted median pooled over every layer-head (G) or layer-channel (R),
+    most of which retain nothing across the passage. With the bundle's own
+    toy and estimator, KILL reads with probability 1.00 when decay is inert,
+    when the fact-carrying unit fully self-normalises while a per-token clock
+    would cost 42.4 points per log-f (once two fast units per slow unit are
+    pooled), and under partial self-normalisation with DOSE up to 4.6 times
+    the line. DOSE, the only arm that separates these worlds, is descriptive.
+  - Feasibility: S2v2 draws arm noise per episode (within-article contrast ICC
+    0.001-0.039) although four episodes share a passage. At an ICC of
+    0.11-0.32 a true null reads KILL per subject 0.63-0.92 (f_p 2.7) and
+    0.49-0.81 (f_p 2.0); two-subject power is unreported, and decide_overall
+    has no INFEASIBLE branch. Reviewer 1 shows one episode per article at the
+    same episode count removes most of the loss at no GPU cost.
+- Largest defect: the identification of the decision-bearing KILL reading,
+  through the pooled R_F guard and the fertility-scaled line (both reviewers;
+  the identification refuter). With identical contrasts, decide_subject reads
+  SELF_NORMALIZED at a pooled R_F of 1.49 and KILL at 1.51. Runner-up: the
+  article-clustering decisiveness gap above.
+- Honest exit: D68's stop line. The score is 51, below 60. The same-defect
+  prong also holds by category: wave 1's specific mechanisms (K = 1 at ceiling;
+  the clamp NIE absorbing INT) are repaired, but identification of the KILL
+  reading is again the largest defect, as D63 read E4's. The wave cap
+  (waves=1) and the triad stop also apply. Under D68, E5 ends here. Not exits:
+  queries 37 of 80, tokens 2.95M of 8M, $53.92 of $150, 121.1 of 600 minutes,
+  GPU 0.0553 of 0.3. The doctor re-run is byte-identical to the bundle copy
+  (FAIL, accepted 0, cap 89, as expected). Gauntlet-cumulative: 172 queries,
+  6.22M tokens, $108.73, 264.0 minutes, 0.1097 GPU-h over two rows.
+- GPU: reviewer 2's job 1089 used 0.0553 GPU-h (scontrol RunTime 00:03:19 on 1
+  H100, COMPLETED 0:0, 01:21:17-01:24:36 UTC on 2026-10-11, no leftover
+  container). It was submitted after read-only squeues at 01:19:31 and
+  01:20:42 showed an empty queue, re-checked in the submit command, so the
+  host rule held. Added to the ledger as "E5 first-step gauntlet wave 2 (fresh
+  run 2 under D68, e5-gate-fertility-decomposition-v2 draft) open-weight review
+  (D24)". The program total is 10.1379 on this branch. The step itself used no
+  GPU.
+- Process defects: one critic call only (Boesch and Wee packet not judged);
+  the repair's OpenAlex mediation queries failed and LongMamba, named in wave
+  1, is still uncredited; reviewer 2 reversed the identification refuter's
+  inert-decay point and glossed the ICC (operator observations); the
+  identification refuter misreported one file hash suffix (part.json, contents
+  as reported).
+- Waiting on Kevin: nothing, to stop. Closing D20 by citing 2609.33093 is the
+  dossier's own fallback. Reopening E5 would be a new attempt with its own id
+  and gauntlet. It would need, in one version: the R_F guard on retaining
+  units (weighted), KILL gated also on DOSE, dose-normalised contrasts and
+  S1v2 worlds with a minority of retaining units; one episode per article (or
+  an ICC-sized n) with two-subject power and an INFEASIBLE branch; a
+  registered precision and measured throughput; credit for VanderWeele,
+  LongMamba, Zhan et al. and 2204.05192 with one blind critic call per prior
+  packet; and a harness (cap 79). Data-rights decision 1 for subject G is moot
+  while E5 stays closed.
