@@ -7,16 +7,17 @@ it, or keep it out of any circulated copy, before the report is shared.
 
 ## Pending sign-offs, keyed to `program/state.json`
 
-Indices are 0-based positions in `pending_decisions_for_kevin` at commit `360058d`.
+Indices are 0-based positions in `pending_decisions_for_kevin` at commit `360058d`. Each index
+points at the same item at `08033ba7`, against which revision 3 updated the checker-study rows.
 
 | Item | Index | What it affects in the report |
 |---|---:|---|
 | Publication of the report | (D71 (iii); not an index) | everything; an outward action |
 | Disclosure to xlang-ai of the checker defects (and the earlier OSWorld findings) | 3 | section 6; must be settled before publication (the owner may decline to disclose) |
-| Checker-mutation adjudication, 34 items | 8 | section 6.7's ranges; corrected verdicts' standing in S1a |
-| Human spot check, 25 items (D9) | 6 | every audit-dependent output in section 6 |
+| Checker-mutation adjudication, 34 items: done under D80-D82 by an isolated model, not human-validated; the outward actions and the registration's carried-over sign-offs stay the owner's | 8 | section 6.7's before-and-after table; a human adjudication could change the gold-defect calls and the audit-confirmed counts |
+| Human spot check, 25 items (D9): optional, and the only independent validation; the isolated model that answered it under D80-D82 matched the Claude rater on all 25 | 6 | every audit-dependent output in section 6 |
 | Release of the checker study's blind specs, published before sign-off | 13 | the public checker-study materials |
-| Review of decisions D1-D70 (and D71) taken on the owner's behalf | 12 | D53 and D57 (action path accepted; S1a session-1 disclosures), D56 (S1a sign-off), D59-D62 (analysis-code defects), D66, D69 |
+| Review of decisions D1-D82 (and D83) taken on the owner's behalf | 12 | D53 and D57 (action path accepted; S1a session-1 disclosures), D56 (S1a sign-off), D59-D62 (analysis-code defects), D66, D69, D79-D82 (K2 and the model adjudication, section 6) |
 | Action path: shell-side observation of grabbed chords; the job 851 guest-server restart; the A4/A7 governance deviation | 14 | sections 2.6-2.7 and 11 |
 | Host inotify limit (host administrator) | 16 | V* = 32 and the concurrency scope |
 | Successor E | 17 | sections 5 and 11 |
@@ -47,7 +48,10 @@ before the report is circulated.
   evaluable reorder mutants on `compare_pptx_files`, and 36 of 40 with the tolerant variant (S1a
   registration section 8; `harness/q2_stage1/zinv.py`; the checker study's results README). 36 is
   the total number of false-negative candidates. The disclosure text should be corrected before it
-  is sent.
+  is sent. Resolved at the source: D72 (iii) records the correction, and `HANDOFF.md` and
+  pending decision 3 now give 35 of 39 for `compare_pptx_files`. Per the checker-mutation note
+  (D83), any disclosure gives a confirmed count as 30 by both raters, or as 33 after the D82
+  model adjudication with the D80 label.
 - **D4. "Independently verified".** The phrase "independently verified (D66)" is in `HANDOFF.md`
   (State table, S1a row), not in D66. D66's own words are "Two fresh verifiers reproduced the
   analysis, one recomputing it from the raw records and one checking every claim". That
