@@ -69,6 +69,8 @@ harness.q2_mutation_k2.report ... --only k2:000,k2:002,k2:004,k2:034,k2:037,k2c:
   recovery dialog. Runs took 111-118 s. No target was unsaved at the checker's
   read; the save-time readings (-0.02 to -0.01 s) are clock-offset noise
   around a save that finished with the Ctrl+S call (reported only).
+- The lane's host snapshots show another CPU job (1123, 32 CPUs, S2 v3's
+  pilot) running from the second block on.
 
 ## Development job 1130 (`k2-dev-full-v1`, executor `a06dc69`): dress rehearsal
 
@@ -97,6 +99,26 @@ The registered job's shape on the dev split: all 80 pairs of the
 - Runs took 111-122 s (median 116 s); the job took 45.5 minutes. The save-time
   reading has median -0.39 s because many tasks' Ctrl+S commands sleep after
   the keystroke before replying (reported only).
+- Submitted on an empty queue; another CPU job (1132, 32 CPUs) appears only in
+  the end snapshot, after the last block had started.
 
 These are dev-split items: they test the executor and say nothing about the
 confirm campaign's K2 result.
+
+## Reports regenerated after the pre-freeze audit
+
+Both development reports (`dev-smoke-v2-job1122/report/`,
+`dev-full-v1-job1130/report/`) were rerun with the report code of the audit
+fixes, from the same committed records. Each pair row gains `save_path`; every
+other field of every pair row is unchanged. The summaries now give, per set,
+agreement by save path and the run statistics (with S1a's checker-observation
+summary summed), the receipt's host-snapshot overlap, and (job 1122's summary
+predated it) `families_not_covered_by_k2`. Commands (dev inputs; the dev notes
+summary is `program/evidence/q2-mutation/integration/dev-mutants-v9/notes-summary.json`):
+
+```bash
+python -m harness.q2_mutation_k2.report --run-dir <job>/run \
+  --sample dev-inputs/k2-sample.jsonl --k2c dev-inputs/k2c-candidates-dev.jsonl \
+  --verdicts dev-inputs/verdicts-lock.jsonl --notes-summary <dev notes summary> \
+  --out-dir <job>/report   # job 1122 adds --only k2:000,k2:002,k2:004,k2:034,k2:037,k2c:005
+```

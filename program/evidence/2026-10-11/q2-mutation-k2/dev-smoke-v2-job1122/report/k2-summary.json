@@ -1,4 +1,10 @@
 {
+ "families_not_covered_by_k2": [
+  "compare_docx_files",
+  "compare_docx_files_and_ignore_new_lines",
+  "compare_pptx_files",
+  "compare_pptx_files_robust"
+ ],
  "gate": {
   "excluded": 0,
   "excluded_by_cause": {},
@@ -53,10 +59,73 @@
     "pairs": 4
    }
   },
+  "by_save_path": {
+   "agent_save": {
+    "agree": 2,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 2
+   },
+   "no_save": {
+    "agree": 1,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 1
+   },
+   "postconfig_save": {
+    "agree": 2,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 2
+   }
+  },
   "differ": 0,
   "excluded": 0,
   "explanations": {},
   "pairs": 5,
+  "runs": {
+   "attempts": 10,
+   "infrastructure_types": {},
+   "late_writes": 0,
+   "metric_errors": 0,
+   "observations": {
+    "calls": 26,
+    "max_s": 0.014,
+    "retried": 0,
+    "runs": 10,
+    "slow": 0,
+    "undelivered": 0,
+    "unusual": 0
+   },
+   "postconfig_failures": 0,
+   "run_s": {
+    "max": 118.065,
+    "median": 115.415,
+    "min": 111.367,
+    "n": 10,
+    "p95": 118.065
+   },
+   "save_latency_s": {
+    "max": -0.009,
+    "median": -0.011,
+    "min": -0.019,
+    "n": 4,
+    "over_0.5s": 0,
+    "p95": -0.009
+   },
+   "save_paths": {
+    "agent_save": 4,
+    "no_save": 2,
+    "postconfig_save": 4
+   },
+   "statuses": {
+    "scored": 10
+   },
+   "unsaved_at_read_runs": 0
+  },
   "single_run_pairs": 0
  },
  "k2c": {
@@ -79,10 +148,57 @@
     "pairs": 1
    }
   },
+  "by_save_path": {
+   "postconfig_save": {
+    "agree": 1,
+    "differ": 0,
+    "excluded": 0,
+    "explanations": {},
+    "pairs": 1
+   }
+  },
   "differ": 0,
   "excluded": 0,
   "explanations": {},
   "pairs": 1,
+  "runs": {
+   "attempts": 2,
+   "infrastructure_types": {},
+   "late_writes": 0,
+   "metric_errors": 0,
+   "observations": {
+    "calls": 8,
+    "max_s": 0.011,
+    "retried": 0,
+    "runs": 2,
+    "slow": 0,
+    "undelivered": 0,
+    "unusual": 0
+   },
+   "postconfig_failures": 0,
+   "run_s": {
+    "max": 117.728,
+    "median": 115.844,
+    "min": 113.96,
+    "n": 2,
+    "p95": 117.728
+   },
+   "save_latency_s": {
+    "max": -0.497,
+    "median": -0.506,
+    "min": -0.514,
+    "n": 2,
+    "over_0.5s": 0,
+    "p95": -0.497
+   },
+   "save_paths": {
+    "postconfig_save": 2
+   },
+   "statuses": {
+    "scored": 2
+   },
+   "unsaved_at_read_runs": 0
+  },
   "single_run_pairs": 0
  },
  "outcome": {
@@ -95,6 +211,18 @@
  "receipts": [
   {
    "error": null,
+   "host_overlap": {
+    "foreign_jobs": {
+     "1123": {
+      "cpus": "32",
+      "name": "cotcodec-s2v3-pilot-cpu"
+     }
+    },
+    "snapshots": 6,
+    "with_foreign_jobs": [
+     "k2-r2"
+    ]
+   },
    "job_id": "1122",
    "name": "k2-dev-smoke-v2",
    "records": 12,
@@ -109,6 +237,15 @@
   "infrastructure_types": {},
   "late_writes": 0,
   "metric_errors": 0,
+  "observations": {
+   "calls": 34,
+   "max_s": 0.014,
+   "retried": 0,
+   "runs": 12,
+   "slow": 0,
+   "undelivered": 0,
+   "unusual": 0
+  },
   "postconfig_failures": 0,
   "run_s": {
    "max": 118.065,
