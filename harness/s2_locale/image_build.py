@@ -608,7 +608,10 @@ class Image:
         self.dev = f"{raw}?offset={offset}"
 
     def debugfs(self, script: str, write: bool = False, timeout: float = 3600) -> tuple[str, str]:
-        argv = ["debugfs"] + (["-w"] if write else []) + ["-f", "-", self.dev]
+        # Reads run with -n (no metadata checksum verification): the certified disk has one inode
+        # whose checksum does not match (1214912, a VS Code file), and an inode scan (icheck,
+        # ncheck) stops at it otherwise. Writes verify checksums as usual.
+        argv = ["debugfs"] + (["-w"] if write else ["-n"]) + ["-f", "-", self.dev]
         proc = subprocess.run(argv, input=script.encode(), capture_output=True, timeout=timeout)
         return proc.stdout.decode(errors="replace"), proc.stderr.decode(errors="replace")
 
@@ -625,8 +628,26 @@ class Image:
 
     def fsck(self) -> dict[str, Any]:
         proc = run(["e2fsck", "-fn", self.dev], check=False)
-        tail = (proc.stdout + proc.stderr).decode(errors="replace").strip().splitlines()[-4:]
-        return {"returncode": proc.returncode, "tail": tail}
+        text = (proc.stdout + proc.stderr).decode(errors="replace")
+        return {"returncode": proc.returncode, "findings": fsck_findings(text),
+                "tail": text.strip().splitlines()[-4:]}  # fmt: skip
+
+
+def fsck_findings(text: str) -> list[str]:
+    """The problems ``e2fsck -fn`` reports (pass headers, banner, warning and summary removed)."""
+    out = []
+    for line in text.splitlines():
+        line = line.strip()
+        if (not line or line.startswith(("Pass ", "e2fsck ")) or "still has errors" in line
+                or re.match(r"^\S+: \d+/\d+ files", line)):  # fmt: skip
+            continue
+        out.append(line)
+    return out
+
+
+def fsck_same(result: Mapping[str, Any], baseline: Mapping[str, Any]) -> bool:
+    """No operational error and exactly the baseline's findings (none new, none gone)."""
+    return not (int(result["returncode"]) & 8) and result["findings"] == baseline["findings"]
 
 
 def errors_of(stderr: str) -> list[str]:
@@ -813,7 +834,8 @@ def diff_against(img: Image, ref: Path, length: int, layout: Layout,
 
 
 def build_cell(cell: str, base_raw: Path, work: Path, out: Path, offset: int, length: int,
-               layout: Layout, toolbars: Mapping[str, bytes]) -> dict[str, Any]:  # fmt: skip
+               layout: Layout, toolbars: Mapping[str, bytes],
+               baseline: Mapping[str, Any] | None = None) -> dict[str, Any]:  # fmt: skip
     t0 = time.time()
     raw = work / f"cell-{cell}.raw"
     run(["cp", "--sparse=always", str(base_raw), str(raw)])
@@ -825,8 +847,8 @@ def build_cell(cell: str, base_raw: Path, work: Path, out: Path, offset: int, le
         PurePosixPath(op.path).name) for op in plan.ops if op.kind == "rm"]  # fmt: skip
     applied = apply_plan(img, plan, work / f"stage-{cell}")
     fsck = img.fsck()
-    if fsck["returncode"] != 0:
-        raise BuildError(f"cell {cell}: e2fsck -fn returned {fsck['returncode']}: {fsck['tail']}")
+    if not fsck_same(fsck, baseline or {"findings": []}):
+        raise BuildError(f"cell {cell}: e2fsck -fn differs from the baseline: {fsck['findings'][:5]}")
     verified = verify_plan(img, plan, work / f"readback-{cell}")
     classified = diff_against(img, base_raw, length, layout, verified["manifest"],
                               [e.ino for e in removed if e])  # fmt: skip
@@ -891,8 +913,10 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     if not state or state.group(1).strip() != "clean" or "needs_recovery" in head:
         raise BuildError(f"the root filesystem is not clean: {rec['filesystem']}")
     pre = cert.fsck()
-    if pre["returncode"] != 0:
-        raise BuildError(f"the certified filesystem fails e2fsck -fn: {pre['tail']}")
+    if int(pre["returncode"]) & 8:
+        raise BuildError(f"e2fsck could not check the certified filesystem: {pre['tail']}")
+    # The certified disk's own findings (one inode checksum mismatch in a VS Code file, inode
+    # 1214912) are the baseline: every image built here must report exactly these, none new.
     rec["fsck_certified"] = pre
     log("copying the raw disk for the derived base")
     base_raw = work / "base.raw"
@@ -908,9 +932,9 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     log(f"applying {len(plan.ops)} operations")
     rec["install"]["applied"] = apply_plan(img, plan, work / "stage-base")
     post = img.fsck()
-    if post["returncode"] != 0:
-        raise BuildError(f"e2fsck -fn after the install returned {post['returncode']}: "
-                         f"{post['tail']}")  # fmt: skip
+    if not fsck_same(post, pre):
+        raise BuildError(f"e2fsck -fn after the install differs from the certified baseline: "
+                         f"{post['findings'][:5]}")  # fmt: skip
     rec["fsck_derived"] = post
     verified = verify_plan(img, plan, work / "readback-base")
     rec["install"]["verified_paths"] = verified["verified_paths"]
@@ -941,7 +965,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     rec["cells"] = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, args.parallel)) as pool:
         futures = {pool.submit(build_cell, c, base_raw, work, out, offset, length, layout,
-                               toolbars): c for c in cells}  # fmt: skip
+                               toolbars, pre): c for c in cells}  # fmt: skip
         for fut in concurrent.futures.as_completed(futures):
             cell = futures[fut]
             rec["cells"][cell] = fut.result()
@@ -975,6 +999,7 @@ def selftest(work: Path) -> dict[str, Any]:
     (work / "a.xml").write_text(tb_a)
     (work / "b.xml").write_text(tb_b)
     (work / "main.xcd").write_text("<main/>\n")
+    (work / "bad.json").write_text("{}\n" * 2000)
     script = "\n".join([
         "mkdir /etc", "mkdir /etc/libreoffice", "mkdir /etc/libreoffice/registry",
         "mkdir /etc/libreoffice/registry/res", "mkdir /usr", "mkdir /usr/lib",
@@ -987,7 +1012,8 @@ def selftest(work: Path) -> dict[str, Any]:
         "symlink /usr/lib/libreoffice/share/registry /etc/libreoffice/registry",
         "cd /etc/libreoffice/registry", f"write {work / 'main.xcd'} main.xcd",
         f"cd {TOOLBAR_ROOT}/scalc/toolbar", f"write {work / 'a.xml'} a.xml",
-        f"write {work / 'b.xml'} b.xml", "cd /",
+        f"write {work / 'b.xml'} b.xml", "cd /usr/share/doc", f"write {work / 'bad.json'} bad.json",
+        "cd /", "sif /usr/share/doc/bad.json checksum 0xdeadbeef",
     ]) + "\n"
     _, err = seed.debugfs(script, write=True)
     if errors_of(err):
@@ -1016,6 +1042,8 @@ def selftest(work: Path) -> dict[str, Any]:
     ucf = [("/usr/lib/libreoffice/share/.registry/Langpack-ar.xcd",
             "/etc/libreoffice/registry/Langpack-ar.xcd")]  # fmt: skip
     checks: dict[str, Any] = {}
+    baseline = Image(cert, offset).fsck()  # one inode checksum mismatch, as on the certified disk
+    checks["baseline_has_the_planted_finding"] = any("checksum" in f for f in baseline["findings"])
     # refusals: a path through the image's symlink, and an existing file
     through = [*members[:6], Member("/usr/lib/libreoffice/share/registry/res/x.xcd", "file",
                                     0o644, 0, 0, t, b"x")]  # fmt: skip
@@ -1034,7 +1062,7 @@ def selftest(work: Path) -> dict[str, Any]:
     targets = [m.path for m in members] + [d for _, d in ucf]
     plan = plan_install(members, ucf, img.ls_dirs(base_listing_dirs(targets)))
     apply_plan(img, plan, work / "stage-base")
-    checks["fsck_base"] = img.fsck()["returncode"] == 0
+    checks["fsck_base"] = fsck_same(img.fsck(), baseline)
     ver = verify_plan(img, plan, work / "rb-base")
     layout = parse_dumpe2fs(run(["dumpe2fs", img.dev]).stdout.decode(errors="replace"))
     diff = diff_against(img, cert, length, layout, ver["manifest"])
@@ -1054,7 +1082,7 @@ def selftest(work: Path) -> dict[str, Any]:
         cver = verify_plan(ci, cplan, work / f"rb-{cell}")
         cdiff = diff_against(ci, base, length, layout, cver["manifest"],
                              [e.ino for e in removed if e])  # fmt: skip
-        cells[cell] = {"fsck": ci.fsck()["returncode"] == 0, "diff_ok": cdiff["ok"],
+        cells[cell] = {"fsck": fsck_same(ci.fsck(), baseline), "diff_ok": cdiff["ok"],
                        "rewritten": sum(op.kind == "rm" for op in cplan.ops),
                        "counts": cdiff["counts"]}  # fmt: skip
         if cell == "ER":
@@ -1065,7 +1093,8 @@ def selftest(work: Path) -> dict[str, Any]:
             cells[cell]["tamper_flagged"] = not tdiff["ok"]
         raw.unlink()
     checks["cells"] = cells
-    checks["ok"] = (all(v for k, v in checks.items() if k.startswith(("refuses", "fsck", "base")))
+    checks["ok"] = (all(v for k, v in checks.items()
+                        if k.startswith(("refuses", "fsck", "base")))
                     and all(c["fsck"] and c["diff_ok"] for c in cells.values())
                     and cells["ER"].get("tamper_flagged") is True
                     and cells["PL"]["rewritten"] == 1 and cells["ER"]["rewritten"] == 0)  # fmt: skip
