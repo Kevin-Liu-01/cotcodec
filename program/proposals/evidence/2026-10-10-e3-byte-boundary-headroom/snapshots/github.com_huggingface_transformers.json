@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/huggingface/transformers",
+ "fetched_at": "2026-10-11T00:58:29Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 454580,
+ "raw_sha256": "10892abd1f5c21530e118a933a484f01761c0eadf83c32266f460426d9f8a6f6",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "GitHub - huggingface/transformers: 🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both inference and training. · GitHub"
+ },
+ "snapshot_run": "run 2 (D68 repair)"
+}

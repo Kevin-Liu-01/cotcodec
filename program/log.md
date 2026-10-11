@@ -4183,3 +4183,76 @@ they say so.)
   LongMamba, Zhan et al. and 2204.05192 with one blind critic call per prior
   packet; and a harness (cap 79). Data-rights decision 1 for subject G is moot
   while E5 stays closed.
+## 2026-10-10 — E3 Stage-0 headroom probe gauntlet wave 2 (fresh run under D68): score 49, honest exit, E3 ends (branch `gauntlet/e3-d18`, not merged)
+
+- The one repair run D68 allowed ran in workflow `wf_f6d515f0-29f` with newly
+  declared cumulative budgets: queries 80 (at least 30 reserved for the
+  triad), wall_minutes 600, tokens 8,000,000, dollars 150, waves 1, gpu_hours
+  0.3. A single owner repaired wave 1's defects on the Mac CPU (common
+  word-gap budget, two-sided floor, two-family consensus ITG target, error
+  model at published aligner rates, band and gold attenuation paths, working
+  stack on paper) and wrote proposal `cfacf766...`, DRAFT registration
+  `e3-byte-boundary-headroom-v2` (`8dc19cb8...`; v1 `30f1fe76...` unedited;
+  not frozen, not admitted) and the bundle (evidence root `7f4562d6...`) at
+  `39f2b35`. Audit row 2 (gauntlet wave 2, wave 1 of the fresh run) is
+  appended to `program/gauntlet/2026-10-10-e3-byte-boundary-headroom.jsonl`,
+  row hash `81dc7ba66213b7f07d16c009726128d1e5002954331c09bc21df265d183dc06f`.
+- Reviews: 55 (claude-opus-5-5) and 49 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1091). Each total equals the sum of its ten scores, and no cap binds (74,
+  79 and 89 all apply). Score 49, best 52. Trajectory 52 -> 49: a dip of 3,
+  recorded as is. Reviewer 1 rose 52 -> 55 (controls +2 after the density
+  collapse was repaired); reviewer 2 fell 57 -> 49 (mechanism 7 -> 3,
+  evaluation 7 -> 4, feasibility 5 -> 3). Neither review is signed (D24).
+- Blind discrimination: a weak PASS by the rule's letter, as in wave 1. The
+  critic told the probe and token alignability (2502.06468) apart and judged
+  the prior the stronger contribution, while rating the probe ahead on rigor;
+  the prior is not strictly dominant. Reviewer 2 again read "strictly
+  dominant", which the critic did not say. Only one critic call ran: the
+  SOMBRERO packet was not judged, and the newly raised prior has no packet.
+- Refute-first triad: 3 of 3 refuted (queries: novelty 12, identification 7,
+  feasibility 7; the repair used 20; 46 of 80 in all).
+  - Novelty: the recombination prong. Yarmohammadi et al. 2013 (I13-1141)
+    already scores a segmenter's boundaries against alignment-consistent
+    split points (P/R/F1); permutation trees, Kuhn 2004 and Artstein and
+    Poesio 2008 are also uncited. No direct prior was found for the object
+    (learned byte boundaries across translations).
+  - Identification: the kill and the monolingual guard are reachable only by
+    oracle systems (`M_high` is the truth oracle); one oracle attenuation is
+    applied to every system although real aligner errors are concentrated;
+    line M's tie convention moves it by 0.03-0.04.
+  - Feasibility: see the largest defect below.
+- Largest defect (both reviewers; recorder reproduced): the registered rule
+  cannot reach a verdict on its default path, and the proposal reports
+  decisiveness for a rule the registration does not use.
+  - `final_verdict()` needs the primary system AND line M at H for HEADROOM.
+    Without R5 (XL-WA EN-ZH, which needs contacting Babelscape) the band path
+    divides line M by alpha_min 0.52-0.58, so any monolingual reference with
+    true S above about 0.5 is never H.
+  - At the published aligner rates, band-path final P(decisive) is 0.136
+    (0.125 over random-displacement systems), against the 0.51 the proposal
+    reports from primary-only verdicts, and P(HEADROOM) is 0.00 for every
+    primary true S of 0.42 or less. NO_HEADROOM fires only near true S 1.00.
+    The recorder re-ran reviewer 1's recomputation on the committed
+    `oc-decisions.json` (byte-identical output).
+  - Only the gold path is decisive (0.78), and its asset is not in hand.
+- Wave 1's largest defect (density collapse at the stage-1 EN-ZH point) is
+  repaired and not reproduced. The new defect is a different mechanism but
+  repeats wave 1's secondary theme (verdicts unreachable at the realistic
+  operating point).
+- Honest exit: D68's stop line applies on its score prong (49 is below 60),
+  so E3 ends here. The wave cap (waves=1) and the triad stop also apply.
+  Exits that do not apply: tokens 3.04M of 8M, $59.82 of $150, 125.4 of 600
+  minutes, 46 of 80 queries. The doctor re-run at record time is
+  byte-identical to the bundle copy (FAIL, as expected).
+- GPU: reviewer 2's job 1091 used 0.0572 GPU-h (scontrol RunTime 00:03:26 on
+  1 H100, COMPLETED 0:0, 01:30:01-01:33:27 UTC 2026-10-11, no leftover
+  container). The queue was empty before and at submission, so the host rule
+  held. It is added to the ledger as "E3 Stage-0 headroom probe gauntlet wave
+  2 ... open-weight review (D24)". The program total is 10.1398 on this
+  branch. The probe itself used no GPU.
+- Waiting on Kevin: nothing to stop E3. Reopening it would be a new decision
+  and a new proposal, needing line M as a relative comparison rather than a
+  conjunct (or R5 as a prerequisite), operating characteristics under the
+  final rule with non-oracle references, per-system attenuation, XL-WA EN-ZH
+  in hand, a BinaryAlign inference path, and delta rows plus blind packets
+  for Yarmohammadi 2013 and SOMBRERO.

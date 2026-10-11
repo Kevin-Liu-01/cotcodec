@@ -1,0 +1,451 @@
+{
+ "script": "instrument_sim_v2.py --part linem",
+ "linem": [
+  {
+   "seed": 42,
+   "pairs": 800,
+   "rows": [
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8841,
+     "S_A": 0.6206,
+     "S_B": 0.6264,
+     "S_C": 0.7676
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8795,
+     "S_A": 0.6171,
+     "S_B": 0.6264,
+     "S_C": 0.7634
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7403,
+     "S_A": 0.5223,
+     "S_B": 0.5271,
+     "S_C": 0.64
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8328,
+     "S_A": 0.5852,
+     "S_B": 0.5927,
+     "S_C": 0.7204
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8318,
+     "S_A": 0.5848,
+     "S_B": 0.5938,
+     "S_C": 0.721
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7295,
+     "S_A": 0.5142,
+     "S_B": 0.5195,
+     "S_C": 0.6299
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8033,
+     "S_A": 0.5683,
+     "S_B": 0.5733,
+     "S_C": 0.6943
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7952,
+     "S_A": 0.564,
+     "S_B": 0.5685,
+     "S_C": 0.6882
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7136,
+     "S_A": 0.5005,
+     "S_B": 0.5079,
+     "S_C": 0.6122
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7554,
+     "S_A": 0.5319,
+     "S_B": 0.5389,
+     "S_C": 0.6526
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7596,
+     "S_A": 0.5331,
+     "S_B": 0.5409,
+     "S_C": 0.6518
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6935,
+     "S_A": 0.4887,
+     "S_B": 0.4942,
+     "S_C": 0.5958
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7361,
+     "S_A": 0.52,
+     "S_B": 0.5255,
+     "S_C": 0.6333
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7252,
+     "S_A": 0.5098,
+     "S_B": 0.5197,
+     "S_C": 0.6232
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6748,
+     "S_A": 0.4792,
+     "S_B": 0.4815,
+     "S_C": 0.5819
+    }
+   ],
+   "_source": "linemC-42.json"
+  },
+  {
+   "seed": 43,
+   "pairs": 800,
+   "rows": [
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.884,
+     "S_A": 0.622,
+     "S_B": 0.6225,
+     "S_C": 0.769
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8745,
+     "S_A": 0.616,
+     "S_B": 0.617,
+     "S_C": 0.7593
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7432,
+     "S_A": 0.524,
+     "S_B": 0.5275,
+     "S_C": 0.6384
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8338,
+     "S_A": 0.5862,
+     "S_B": 0.5844,
+     "S_C": 0.722
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.828,
+     "S_A": 0.5844,
+     "S_B": 0.5836,
+     "S_C": 0.7178
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7145,
+     "S_A": 0.5077,
+     "S_B": 0.5084,
+     "S_C": 0.614
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7994,
+     "S_A": 0.565,
+     "S_B": 0.5608,
+     "S_C": 0.6918
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8009,
+     "S_A": 0.564,
+     "S_B": 0.5623,
+     "S_C": 0.6894
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7093,
+     "S_A": 0.4983,
+     "S_B": 0.496,
+     "S_C": 0.6073
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7552,
+     "S_A": 0.5393,
+     "S_B": 0.5308,
+     "S_C": 0.648
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.759,
+     "S_A": 0.5363,
+     "S_B": 0.5293,
+     "S_C": 0.6515
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6911,
+     "S_A": 0.4922,
+     "S_B": 0.483,
+     "S_C": 0.5898
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7273,
+     "S_A": 0.5131,
+     "S_B": 0.5099,
+     "S_C": 0.619
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7261,
+     "S_A": 0.5147,
+     "S_B": 0.5089,
+     "S_C": 0.62
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6862,
+     "S_A": 0.4815,
+     "S_B": 0.4774,
+     "S_C": 0.5829
+    }
+   ],
+   "_source": "linemC-43.json"
+  },
+  {
+   "seed": 44,
+   "pairs": 800,
+   "rows": [
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.8947,
+     "S_A": 0.6286,
+     "S_B": 0.6451,
+     "S_C": 0.7745
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8899,
+     "S_A": 0.631,
+     "S_B": 0.6402,
+     "S_C": 0.7696
+    },
+    {
+     "rotation_q": 0.0,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7495,
+     "S_A": 0.526,
+     "S_B": 0.5416,
+     "S_C": 0.6436
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.839,
+     "S_A": 0.5923,
+     "S_B": 0.6082,
+     "S_C": 0.7237
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.8364,
+     "S_A": 0.5897,
+     "S_B": 0.602,
+     "S_C": 0.7194
+    },
+    {
+     "rotation_q": 0.1,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.7367,
+     "S_A": 0.5208,
+     "S_B": 0.532,
+     "S_C": 0.633
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7979,
+     "S_A": 0.56,
+     "S_B": 0.5755,
+     "S_C": 0.6846
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7933,
+     "S_A": 0.5613,
+     "S_B": 0.5728,
+     "S_C": 0.6813
+    },
+    {
+     "rotation_q": 0.2,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.707,
+     "S_A": 0.4993,
+     "S_B": 0.5154,
+     "S_C": 0.6061
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7648,
+     "S_A": 0.5415,
+     "S_B": 0.5557,
+     "S_C": 0.652
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7656,
+     "S_A": 0.5389,
+     "S_B": 0.5519,
+     "S_C": 0.6522
+    },
+    {
+     "rotation_q": 0.35,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.694,
+     "S_A": 0.4965,
+     "S_B": 0.5019,
+     "S_C": 0.5912
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.0,
+     "S_T": 0.7337,
+     "S_A": 0.5187,
+     "S_B": 0.5344,
+     "S_C": 0.6293
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 0.3,
+     "S_T": 0.7291,
+     "S_A": 0.5135,
+     "S_B": 0.5277,
+     "S_C": 0.625
+    },
+    {
+     "rotation_q": 0.5,
+     "parse_noise_sigma": 1.0,
+     "S_T": 0.6808,
+     "S_A": 0.4778,
+     "S_B": 0.4916,
+     "S_C": 0.579
+    }
+   ],
+   "_source": "linemC-44.json"
+  }
+ ],
+ "inputs": [
+  {
+   "file": "linemC-42.json",
+   "sha256": "e1f7dd5fd8e047903144732cf7006d5347451607e3b17782d2c211de1054fc27",
+   "argv": [
+    "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/e3-repair-run2/out/linemC-42.json",
+    "--part",
+    "linem",
+    "--seeds",
+    "42",
+    "--pool",
+    "800"
+   ],
+   "elapsed_seconds": 148.3,
+   "estimator_constants": {
+    "RHO": 0.5,
+    "FLOOR_DRAWS": 64,
+    "NH_POINT": 0.9,
+    "NH_LOWER": 0.88,
+    "H_UPPER": 0.85
+   }
+  },
+  {
+   "file": "linemC-43.json",
+   "sha256": "9b08dc13ca7c70727301ae5e4b9ae71a497e5813e909f2c205040ebba43b74ab",
+   "argv": [
+    "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/e3-repair-run2/out/linemC-43.json",
+    "--part",
+    "linem",
+    "--seeds",
+    "43",
+    "--pool",
+    "800"
+   ],
+   "elapsed_seconds": 146.3,
+   "estimator_constants": {
+    "RHO": 0.5,
+    "FLOOR_DRAWS": 64,
+    "NH_POINT": 0.9,
+    "NH_LOWER": 0.88,
+    "H_UPPER": 0.85
+   }
+  },
+  {
+   "file": "linemC-44.json",
+   "sha256": "4d76bb52b53e68e2bd1d43e0cc95d21b325102854d908897860ea5e644e42734",
+   "argv": [
+    "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/e3-repair-run2/out/linemC-44.json",
+    "--part",
+    "linem",
+    "--seeds",
+    "44",
+    "--pool",
+    "800"
+   ],
+   "elapsed_seconds": 148.8,
+   "estimator_constants": {
+    "RHO": 0.5,
+    "FLOOR_DRAWS": 64,
+    "NH_POINT": 0.9,
+    "NH_LOWER": 0.88,
+    "H_UPPER": 0.85
+   }
+  }
+ ]
+}

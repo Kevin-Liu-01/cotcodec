@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/explosion/spacy-models/releases/tag/zh_core_web_sm-3.8.0",
+ "fetched_at": "2026-10-11T00:58:28Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 196555,
+ "raw_sha256": "26fccd2abd80572891f9025f8321f8b70031aee63206b8f7afe250162a3b1bdd",
+ "raw_stored": false,
+ "extract": {
+  "html_title": "Release zh_core_web_sm-3.8.0 · explosion/spacy-models · GitHub"
+ },
+ "snapshot_run": "run 2 (D68 repair)"
+}

@@ -2,16 +2,16 @@
  "doctor": "Design",
  "status": "FAIL",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "repair pass by the single owner (Claude agent) under D68, 2026-10-10; not an independent review",
  "pass_condition": "Intervention, controls, falsifier, metrics, leakage, and statistics specified",
- "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data, three-way decisions, operating characteristics by simulation; K-Dense statistical-analysis for clustered intervals",
- "evidence": "Primary instrument PBD with a circular-shift floor and a budget-matched self ceiling; instrument gates I1 to I6 on dev; a three-way decision rule with an aligner-agreement gate and line M; two aligners must agree; 90% cluster-bootstrap intervals (B = 2,000, seed 42). S1 (compute/instrument_sim.py; 31 process runs, seeds 42/43/44) shows: the dossier's UOT instrument fails alignment sensitivity (aligned over permuted 0.86 to 1.02), rate robustness (normalized S undefined in 10 of 24 ZH-like cells, -3.00 to 9.64 on PL-like) and convention invariance (loss ratio up to 3.97); PBD passes all three (Bernoulli absolute S at most 0.019; permuted PBD at most 0.027; convention round trip identity 1.0); the registered rule never declares HEADROOM at true S of 0.90 or more and its only wrong-side calls are NO_HEADROOM at true S 0.887 to 0.897.",
+ "protocol": "K-Dense experimental-design and statistical-power (vendored): design before data, the estimator as code, operating characteristics by simulation at the published error rates; K-Dense statistical-analysis for clustered intervals",
+ "evidence": "The registered estimator is code (compute/repair-run2/e3_estimator_v2.py) and S1v2 imports it unchanged. S1v2 (seeds 42/43/44) shows: random selections at 0 (absolute S at most 0.010); a word-end-only system at 0; S invariant to Chinese density 0.54-0.99 and English word-end misses 0-10% (within 0.02); cut-count-preserving I1 at 0.05-0.06 against 1.00; 52-55% of true allowed pairs are nested or inverted; a single aligner's target loses about 0.3 of S at AER 0.085, the two-family consensus keeps alpha 0.92-0.96 with independent errors; band constants from the attenuation map; operating characteristics under both attenuation paths with no wrong decisive verdict inside the band (see the proposal's Evaluation section).",
  "why_fail": [
-  "every number is synthetic; the real inter-aligner agreement, attenuation and rates are unknown until dev is read",
-  "the synthetic generator's monolingual word structure aligns closely with units (word reference S 0.99 to 1.00), so line M's behaviour on real data is untested",
-  "the decision pair's two sides come from two different models; same-model variants are descriptive only",
-  "the registered NO_HEADROOM line tolerates true S down to about 0.887 (0.013 under the dossier's 0.90)",
-  "the scorer, canonicalization and cut builder are not yet in harness/ with unit tests, so the design cannot be checked against production code"
+  "every number is synthetic; the aligners' error rates and correlation on FLORES+ are unknown",
+  "the band path assumes each aligner's link AER is at most 0.15 on FLORES+; with worse and strongly shared errors it can return a false HEADROOM (S1v2: 0.09 at AER 0.20, c 0.5, true S 0.92)",
+  "the band path decides only near the extremes (NO_HEADROOM only for true S near 1); the gold path needs R5, an outward action",
+  "the synthetic generator's synchronous tree makes monolingual syntax unusually predictive, so line M's real behaviour is untested",
+  "the estimator is not yet in harness/ with unit tests (gate I7)"
  ],
- "remediation": "Restore the scorer with unit tests and S1's gates as an orx cpu-doctor node; pre-freeze audit."
+ "remediation": "Port the estimator with unit tests as an orx cpu-doctor node passing I7; decide R5; pre-freeze audit"
 }

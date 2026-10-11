@@ -1,0 +1,588 @@
+{
+ "counted_by_repair_owner": 20,
+ "counted_by_tool": {
+  "orx discover embedding": 3,
+  "orx discover keyword": 6,
+  "orx discover openalex": 11
+ },
+ "counting_rule": "every orx discover call is counted (keyword, embedding, openalex), including empty or failed ones; paper reads (orx paper) and metadata reads (OpenAlex by DOI, GitHub, Hugging Face, raw files) are not counted, as in wave 1",
+ "coverage_notes": [
+  "orx 0.2.2 (alphaXiv keyword and embedding, OpenAlex); the alphaXiv keyword search with --published-after favours recent unrelated items (R06)",
+  "OpenAlex through orx returns no forward-citation lists; forward citations of 2502.06468 and 2601.22805 were approximated by title (R17, R18) and embedding (R07) searches",
+  "Semantic Scholar and the arXiv API were not used (unreachable from the Mac; the host is reserved for the reviewer lane job)"
+ ],
+ "declared_budget_queries": 80,
+ "metadata_reads_not_counted": [
+  "OpenAlex works by DOI: 10.1177/001316446002000104 (Cohen 1960), 10.1093/oxfordjournals.aje.a112510 (Rogan and Gladen 1978), 10.3115/1118693.1118732 (Fox 2002), 10.3115/1220175.1220298 (Wellington et al. 2006), 10.3115/1609067.1609128 (Ma and Way 2009), 10.3115/1599081.1599209 (Xu et al. 2008)",
+  "GitHub API and raw files: goombalab/hnet at 3673fe12 (pyproject.toml, hnet/modules/dc.py, hnet/models/hnet.py, hnet/modules/mha.py, hnet/models/mixer_seq.py, generate.py); state-spaces/mamba at a6a1dae and main (mamba_ssm/__init__.py, utils/generation.py, setup.py, commit date); huggingface/transformers v5.15.0 and v4.57.1 (generation/__init__.py, setup.py); Dao-AILab/flash-attention release v2.8.0.post2 assets; Dao-AILab/causal-conv1d commit e940ead; MilkDargon/OmniAlign, sufenlp/AccAlign, neulab/awesome-align, SapienzaNLP/XL-WA, ubisoft/ubisoft-laforge-binaryalign (repository metadata, tree, README, licence, requirements, LFS pointer)",
+  "Hugging Face API: WPS-Qingqiu/OmniAlign (config.json, modeling.py imports), spacy/en_core_web_sm, spacy/zh_core_web_sm; GitHub release explosion/spacy-models zh_core_web_sm-3.8.0",
+  "TsinghuaAligner page: HTTP 502 (2026-10-10)"
+ ],
+ "paper_reads_not_counted": [
+  {
+   "id": "2608.18474",
+   "sections": "orx paper --full: Secs. 2-3, Tables 3, 4, 6, 8",
+   "title": "OmniAlign (Yang et al., 2026)"
+  },
+  {
+   "id": "2407.12881",
+   "sections": "orx paper --full: Secs. 4.1-4.3, Tables 1, 2, 4, 7, Appendix A.2",
+   "title": "BinaryAlign (Latouche et al., ACL 2024)"
+  },
+  {
+   "id": "2601.22805",
+   "sections": "orx paper --full: Secs. 3.4, 3.5",
+   "title": "SOMBRERO (Neitemeier et al., 2026)"
+  },
+  {
+   "id": "2502.06468",
+   "sections": "orx paper --full: Secs. 3.2, 4, 5",
+   "title": "Token alignability (Hammerl et al., NAACL 2025)"
+  },
+  {
+   "id": "2608.18062",
+   "sections": "orx paper report: abstract, Sec. 3",
+   "title": "TokEval (Meister, COLM 2026)"
+  }
+ ],
+ "payload_sha256": "403c9229f6a5f1f1cf96846b09f5395d713683a3179d64f0ce4ec321d045178b",
+ "prisma": {
+  "full_texts_or_reports_read": 5,
+  "identified": 201,
+  "included_as_direct_prior": 0,
+  "screened_by_title": 184,
+  "unique": 184
+ },
+ "queries": [
+  {
+   "args": [
+    "Chinese-English word alignment AER supervised",
+    "--limit",
+    "15"
+   ],
+   "at_utc": "2026-10-10T23:57:33Z",
+   "failed": false,
+   "qid": "R01",
+   "raw_path": "raw/R01.txt",
+   "raw_sha256": "b9bc661137f16d00a3e76f8ef7d5a01716ac4d923d1be395fb2a3fb7b9a91404",
+   "returncode": 0,
+   "returned_ids": [
+    "2608.18474",
+    "2608.28508",
+    "2605.28128",
+    "2608.21023",
+    "2608.16577",
+    "2606.10675",
+    "2608.08283",
+    "2606.15266",
+    "2605.12281",
+    "2605.28315",
+    "2605.29667",
+    "2606.13227",
+    "2605.23032",
+    "2603.15227",
+    "2604.13828"
+   ],
+   "tool": "orx discover keyword"
+  },
+  {
+   "args": [
+    "BinaryAlign: Word Alignment as Binary Sequence Labeling",
+    "--limit",
+    "10"
+   ],
+   "at_utc": "2026-10-10T23:58:33Z",
+   "failed": false,
+   "qid": "R02",
+   "raw_path": "raw/R02.txt",
+   "raw_sha256": "d9ad374281b9f6c5f1d9ca9f639ed336dc0a7e5f0f69900b52ee17c3a69651f6",
+   "returncode": 0,
+   "returned_ids": [
+    "2407.12881",
+    "2608.18474",
+    "2610.11695",
+    "2608.21023",
+    "2610.02262",
+    "2610.06287",
+    "2608.28508",
+    "2607.26891",
+    "2608.11766",
+    "2606.10675"
+   ],
+   "tool": "orx discover keyword"
+  },
+  {
+   "args": [
+    "maximum attainable kappa given marginal distributions kappa max Cohen",
+    "--limit",
+    "10"
+   ],
+   "at_utc": "2026-10-11T00:15:58Z",
+   "failed": false,
+   "qid": "R03",
+   "raw_path": "raw/R03.txt",
+   "raw_sha256": "c47e3dd9427e383303aa2cce14de7daf18e50bed6c3ac7e95a0022451974e9f7",
+   "returncode": 0,
+   "returned_ids": [
+    "10.1007/s11336-022-09844-y",
+    "10.48550/arxiv.2605.05428",
+    "10.1007/s10342-020-01309-0",
+    "10.1016/j.foreco.2013.12.032",
+    "10.1007/s11336-009-9116-1",
+    "10.1111/j.1467-9574.2008.00412.x",
+    "10.21622/resd.2015.01.2.243",
+    "10.3354/meps08858",
+    "W2562908439",
+    "10.3390/a14070201"
+   ],
+   "tool": "orx discover openalex"
+  },
+  {
+   "args": [
+    "bilingually motivated word segmentation statistical machine translation",
+    "--limit",
+    "12"
+   ],
+   "at_utc": "2026-10-11T00:16:16Z",
+   "failed": false,
+   "qid": "R04",
+   "raw_path": "raw/R04.txt",
+   "raw_sha256": "9fa02f12712ebd02c5b2f304a6ef1f3d7fe6a480d71df57ce6344a52ff3991d3",
+   "returncode": 0,
+   "returned_ids": [
+    "10.1145/1526252.1526255",
+    "10.3115/1609067.1609128",
+    "W2555559948",
+    "10.1007/978-3-540-78135-6_38",
+    "10.1184/r1/6473582",
+    "10.3115/1599081.1599209",
+    "W2387655713",
+    "10.1587/transinf.e94.d.690",
+    "10.18653/v1/w17-4706",
+    "10.1109/isuc.2008.10",
+    "10.18653/v1/d18-1399",
+    "10.18653/v1/2020.coling-main.378"
+   ],
+   "tool": "orx discover openalex"
+  },
+  {
+   "args": [
+    "phrasal cohesion and statistical machine translation",
+    "--limit",
+    "10"
+   ],
+   "at_utc": "2026-10-11T00:16:27Z",
+   "failed": false,
+   "qid": "R05",
+   "raw_path": "raw/R05.txt",
+   "raw_sha256": "bc2851c505e7a4b1dd23a03a171fdbde4f912656f1d8d4b10e398be9975d8e98",
+   "returncode": 0,
+   "returned_ids": [
+    "10.3115/1118693.1118732",
+    "10.1162/tacl_a_00107",
+    "10.3115/1220175.1220241",
+    "W2142632103",
+    "W2997040636",
+    "10.3115/1220175.1220207",
+    "10.3115/1219840.1219888",
+    "10.3115/1610075.1610085",
+    "10.3115/1628960.1628978",
+    "10.1609/aaai.v27i1.8566"
+   ],
+   "tool": "orx discover openalex"
+  },
+  {
+   "args": [
+    "token alignability",
+    "--published-after",
+    "2025-03-01",
+    "--limit",
+    "15"
+   ],
+   "at_utc": "2026-10-11T00:16:27Z",
+   "failed": false,
+   "qid": "R06",
+   "raw_path": "raw/R06.txt",
+   "raw_sha256": "5ddc492779d55cc4344e9becb7f70b67d5ccb2adf2efe193c0a8ff146144eb07",
+   "returncode": 0,
+   "returned_ids": [
+    "2610.05816",
+    "2609.35232",
+    "2610.00575",
+    "2609.12303",
+    "2610.06031",
+    "2608.25643",
+    "2610.02491",
+    "2609.33970",
+    "2610.11284",
+    "2609.26484",
+    "2609.33405",
+    "2606.20475",
+    "2608.27382",
+    "2610.01973",
+    "2610.02618"
+   ],
+   "tool": "orx discover keyword"
+  },
+  {
+   "args": [
+    "word alignment of subword tokens across translations measures tokenizer cross-lingual alignability and predicts transfer",
+    "--published-after",
+    "2025-03-01",
+    "--limit",
+    "15"
+   ],
+   "at_utc": "2026-10-11T00:16:37Z",
+   "failed": false,
+   "qid": "R07",
+   "raw_path": "raw/R07.txt",
+   "raw_sha256": "7d1bec2ce2ca1ea7d256cdcd6802818a76a7f69a0d15a67814b0116ce0e73eb6",
+   "returncode": 0,
+   "returned_ids": [
+    "2610.01921",
+    "2608.27115",
+    "2608.21023",
+    "2608.18474",
+    "2608.03446",
+    "2607.29355",
+    "2606.21954",
+    "2606.20993",
+    "2606.10675",
+    "2606.08673",
+    "2605.26683",
+    "2604.26361",
+    "2603.29026",
+    "2603.18863",
+    "2603.24258"
+   ],
+   "tool": "orx discover embedding"
+  },
+  {
+   "args": [
+    "SOMBRERO boundary placement hierarchical sequence models",
+    "--limit",
+    "12"
+   ],
+   "at_utc": "2026-10-11T00:17:56Z",
+   "failed": false,
+   "qid": "R08",
+   "raw_path": "raw/R08.txt",
+   "raw_sha256": "e4b330d0fa68c1bef1d766b5760943fe990378c489bdfca1a3c0e4fed0260af6",
+   "returncode": 0,
+   "returned_ids": [
+    "2601.22805",
+    "2609.39749",
+    "2610.09531",
+    "2608.01150",
+    "2606.30460",
+    "2608.02347",
+    "2609.19946",
+    "2609.12556",
+    "2609.26793",
+    "2608.13156",
+    "2608.13790",
+    "2606.07301"
+   ],
+   "tool": "orx discover keyword"
+  },
+  {
+   "args": [
+    "selecting the same number of strongest word boundaries in a sentence and its translation and counting how many form alignment-consistent split points, corrected for chance, to test whether a byte-level model's learned chunk boundaries correspond across languages",
+    "--limit",
+    "15"
+   ],
+   "at_utc": "2026-10-11T00:18:56Z",
+   "failed": false,
+   "qid": "R09",
+   "raw_path": "raw/R09.txt",
+   "raw_sha256": "81d7cf429f76b84a7df3585274ed92707ee1fc236f5d2d8617f27e0d29624aef",
+   "returncode": 0,
+   "returned_ids": [
+    "2609.30167",
+    "2610.03827",
+    "2609.33691",
+    "2609.13725",
+    "2608.26576",
+    "2609.25012",
+    "2605.28128",
+    "2605.00618",
+    "2603.29026",
+    "2601.18536",
+    "2510.19419",
+    "2507.12838",
+    "2506.18639",
+    "2506.01846",
+    "2507.05927"
+   ],
+   "tool": "orx discover embedding"
+  },
+  {
+   "args": [
+    "multilingual dynamic chunking byte-level model learned boundaries many languages released weights",
+    "--published-after",
+    "2026-05-01",
+    "--limit",
+    "15"
+   ],
+   "at_utc": "2026-10-11T00:19:05Z",
+   "failed": false,
+   "qid": "R10",
+   "raw_path": "raw/R10.txt",
+   "raw_sha256": "115d85768ea9af4e1dc9e37dbfb8b2d02c50389e6e107ebbf52df56eab383458",
+   "returncode": 0,
+   "returned_ids": [
+    "2608.27658",
+    "2610.01984",
+    "2609.29828",
+    "2605.30080",
+    "2606.10675",
+    "2608.15454",
+    "2607.23319",
+    "2608.14658",
+    "2608.03599",
+    "2607.10371",
+    "2609.12674",
+    "2610.12144",
+    "2610.03367",
+    "2610.05978",
+    "2609.00463"
+   ],
+   "tool": "orx discover keyword"
+  },
+  {
+   "args": [
+    "inversion transduction grammar empirical coverage word alignments binarizable translational equivalence",
+    "--limit",
+    "12"
+   ],
+   "at_utc": "2026-10-11T00:19:20Z",
+   "failed": false,
+   "qid": "R11",
+   "raw_path": "raw/R11.txt",
+   "raw_sha256": "bef0ab0f2e0536475d9dd5ca472be105759b76ed5cc69ecdb8829047c0736906",
+   "returncode": 0,
+   "returned_ids": [
+    "10.2478/pralin-2014-0003"
+   ],
+   "tool": "orx discover openalex"
+  },
+  {
+   "args": [
+    "Stochastic inversion transduction grammars and bilingual parsing of parallel corpora",
+    "--limit",
+    "6"
+   ],
+   "at_utc": "2026-10-11T00:19:33Z",
+   "failed": false,
+   "qid": "R12",
+   "raw_path": "raw/R12.txt",
+   "raw_sha256": "3215d3fb372483b1fbb5b75f9fded5444a3dde09895c73fc07f042d985f9b224",
+   "returncode": 0,
+   "returned_ids": [
+    "W2158388102",
+    "10.5555/972705.972707",
+    "W74075037",
+    "10.63317/25hhw4ac87kw",
+    "10.3115/1219840.1219899",
+    "10.3115/1697236.1697242"
+   ],
+   "tool": "orx discover openalex"
+  },
+  {
+   "args": [
+    "Empirical lower bounds on the complexity of translational equivalence",
+    "--limit",
+    "6"
+   ],
+   "at_utc": "2026-10-11T00:19:34Z",
+   "failed": false,
+   "qid": "R13",
+   "raw_path": "raw/R13.txt",
+   "raw_sha256": "4547d2219d463c53d9a5483358c61552e1b4825cc832996ab3c4ede8825d9495",
+   "returncode": 0,
+   "returned_ids": [
+    "10.3115/1220175.1220298",
+    "10.3115/1626344.1626347",
+    "10.1214/19-aos1876",
+    "W3109167026",
+    "10.2478/pralin-2014-0003",
+    "W7519655"
+   ],
+   "tool": "orx discover openalex"
+  },
+  {
+   "args": [
+    "Estimating prevalence from the results of a screening test Rogan Gladen",
+    "--limit",
+    "6"
+   ],
+   "at_utc": "2026-10-11T00:20:32Z",
+   "failed": false,
+   "qid": "R14",
+   "raw_path": "raw/R14.txt",
+   "raw_sha256": "01869490cde061aa5146c3c97527344938ee5e25c6ec204fffa6e2fc3c8b7f03",
+   "returncode": 0,
+   "returned_ids": [
+    "10.14709/barbj.15.1.2022.09",
+    "10.3109/08958378.2014.955932",
+    "10.1371/journal.pcbi.1012749",
+    "10.1186/s12889-020-09177-4",
+    "10.1503/cmaj.170691",
+    "10.1017/s0950268810000385"
+   ],
+   "tool": "orx discover openalex"
+  },
+  {
+   "args": [
+    "manually annotated gold word alignment test set for English and Chinese, publicly available, used to evaluate neural word aligners",
+    "--limit",
+    "15"
+   ],
+   "at_utc": "2026-10-11T00:20:34Z",
+   "failed": false,
+   "qid": "R15",
+   "raw_path": "raw/R15.txt",
+   "raw_sha256": "5d67a3013982cce961c04e0eaa4fd501770876f3bee88524f018cca56b3c1f9f",
+   "returncode": 0,
+   "returned_ids": [
+    "2608.18474",
+    "2606.08673",
+    "2603.15227",
+    "2601.09648",
+    "2512.21842",
+    "2311.18743",
+    "2508.05722",
+    "2104.08588",
+    "2004.08728",
+    "2407.12881",
+    "2101.08231",
+    "2306.04116",
+    "1812.10464",
+    "2306.05644",
+    "1909.02074"
+   ],
+   "tool": "orx discover embedding"
+  },
+  {
+   "args": [
+    "Straight to the Tree: Constituency Parsing with Neural Syntactic Distance",
+    "--limit",
+    "6"
+   ],
+   "at_utc": "2026-10-11T00:20:35Z",
+   "failed": false,
+   "qid": "R16",
+   "raw_path": "raw/R16.txt",
+   "raw_sha256": "2161a743cdee9097fcd5f4567cba1515cc4f1c5dbc2ea65d82b96bb7bdd34bae",
+   "returncode": 0,
+   "returned_ids": [
+    "2609.29855",
+    "2608.27035",
+    "2609.06070",
+    "2610.11520",
+    "2605.28131",
+    "2609.37883"
+   ],
+   "tool": "orx discover keyword"
+  },
+  {
+   "args": [
+    "SOMBRERO: Measuring and Steering Boundary Placement in End-to-End Hierarchical Sequence Models",
+    "--limit",
+    "8"
+   ],
+   "at_utc": "2026-10-11T00:40:53Z",
+   "failed": false,
+   "qid": "R17",
+   "raw_path": "raw/R17.txt",
+   "raw_sha256": "8e9282b9d01e48444b2fb04fb74ce0294f570b421ea5569ec48f2261a69fe08d",
+   "returncode": 0,
+   "returned_ids": [
+    "10.48550/arxiv.2601.22805",
+    "10.34660/inf.2020.18.73.001",
+    "10.34660/inf.2020.46.36.002",
+    "10.34660/inf.2020.56.96.001",
+    "10.34660/inf.2020.84.84.001",
+    "10.34660/inf.2020.52.92.001",
+    "10.34660/inf.2020.75.84.001",
+    "10.34660/inf.2020.74.75.001"
+   ],
+   "tool": "orx discover openalex"
+  },
+  {
+   "args": [
+    "Beyond Literal Token Overlap: Token Alignability for Multilinguality",
+    "--limit",
+    "8"
+   ],
+   "at_utc": "2026-10-11T00:40:55Z",
+   "failed": false,
+   "qid": "R18",
+   "raw_path": "raw/R18.txt",
+   "raw_sha256": "229ace2b59dde7b61e96e10c712171835f04801432b26a790bc9f3da18faa21c",
+   "returncode": 0,
+   "returned_ids": [
+    "10.18653/v1/2025.naacl-short.63",
+    "10.48550/arxiv.2502.06468",
+    "10.18653/v1/2026.findings-acl.1632",
+    "10.48550/arxiv.2406.17378",
+    "10.48550/arxiv.2605.21699",
+    "10.18653/v1/2025.findings-emnlp.1153",
+    "10.48550/arxiv.2608.18062",
+    "10.18653/v1/2026.acl-demo.41"
+   ],
+   "tool": "orx discover openalex"
+  },
+  {
+   "args": [
+    "combining word alignments intersection union symmetrization high precision alignment",
+    "--limit",
+    "10"
+   ],
+   "at_utc": "2026-10-11T00:40:56Z",
+   "failed": false,
+   "qid": "R19",
+   "raw_path": "raw/R19.txt",
+   "raw_sha256": "1fd5af0b7f40ffe2c4547d63264053ac55e9224c63a681800a88dd453f988959",
+   "returncode": 0,
+   "returned_ids": [
+    "10.3115/1219840.1219897",
+    "10.1162/coli.2007.33.3.293",
+    "10.1162/089120103321337421",
+    "10.3115/1220175.1220240",
+    "10.1162/coli_a_00001",
+    "10.3115/1220175.1220272",
+    "10.18154/rwth-conv-120579",
+    "10.3115/1220355.1220361",
+    "W610424550",
+    "10.63317/2gimdvbtvz2e"
+   ],
+   "tool": "orx discover openalex"
+  },
+  {
+   "args": [
+    "Optimizing Chinese word segmentation for machine translation performance",
+    "--limit",
+    "6"
+   ],
+   "at_utc": "2026-10-11T00:40:57Z",
+   "failed": false,
+   "qid": "R20",
+   "raw_path": "raw/R20.txt",
+   "raw_sha256": "221d40a34b0a97e1a01053c5e396d1ae0f901461ebca0b918fd2164ad884d229",
+   "returncode": 0,
+   "returned_ids": [
+    "10.3115/1626394.1626430",
+    "W2188581170",
+    "10.1007/978-3-642-37256-8_21",
+    "10.1145/1526252.1526255",
+    "10.3115/1626394.1626429",
+    "10.3115/1599081.1599209"
+   ],
+   "tool": "orx discover openalex"
+  }
+ ],
+ "remaining_after_repair": 60,
+ "reserved_for_refuters": 30,
+ "run": "E3 Stage-0 probe fresh gauntlet run after the D68 repair (2026-10-10)"
+}

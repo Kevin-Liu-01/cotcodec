@@ -1,0 +1,189 @@
+{
+ "groups": {
+  "G1": {
+   "name": "published rates (AER 0.085 and 0.05), c 0-0.5",
+   "summary": {
+    "band": {
+     "mean_decisive": 0.509,
+     "mean_correct_outside_tolerance": 0.543,
+     "max_wrong_decisive": 0.0
+    },
+    "gold": {
+     "mean_decisive": 0.805,
+     "mean_correct_outside_tolerance": 0.859,
+     "max_wrong_decisive": 0.0
+    },
+    "gold+0.03": {
+     "mean_decisive": 0.842,
+     "mean_correct_outside_tolerance": 0.842,
+     "max_wrong_decisive": 0.01
+    },
+    "gold-0.03": {
+     "mean_decisive": 0.768,
+     "mean_correct_outside_tolerance": 0.768,
+     "max_wrong_decisive": 0.0
+    }
+   },
+   "runs": [
+    "seed 42 AER 0.085/0.05 c 0.0 balanced",
+    "seed 42 AER 0.085/0.05 c 0.5 balanced",
+    "seed 43 AER 0.085/0.05 c 0.0 balanced",
+    "seed 43 AER 0.085/0.05 c 0.5 balanced",
+    "seed 44 AER 0.085/0.05 c 0.0 balanced",
+    "seed 44 AER 0.085/0.05 c 0.5 balanced"
+   ]
+  },
+  "G2": {
+   "name": "published rates, identical errors (c 1)",
+   "summary": {
+    "band": {
+     "mean_decisive": 0.0,
+     "mean_correct_outside_tolerance": 0.0,
+     "max_wrong_decisive": 0.0
+    },
+    "gold": {
+     "mean_decisive": 0.78,
+     "mean_correct_outside_tolerance": 0.832,
+     "max_wrong_decisive": 0.0
+    },
+    "gold+0.03": {
+     "mean_decisive": 0.054,
+     "mean_correct_outside_tolerance": 0.053,
+     "max_wrong_decisive": 0.02
+    },
+    "gold-0.03": {
+     "mean_decisive": 0.769,
+     "mean_correct_outside_tolerance": 0.769,
+     "max_wrong_decisive": 0.0
+    }
+   },
+   "runs": [
+    "seed 42 AER 0.085/0.05 c 1.0 balanced",
+    "seed 43 AER 0.085/0.05 c 1.0 balanced",
+    "seed 44 AER 0.085/0.05 c 1.0 balanced"
+   ]
+  },
+  "G3": {
+   "name": "band (AER 0.085-0.15), c 0-0.5",
+   "summary": {
+    "band": {
+     "mean_decisive": 0.502,
+     "mean_correct_outside_tolerance": 0.535,
+     "max_wrong_decisive": 0.0
+    },
+    "gold": {
+     "mean_decisive": 0.765,
+     "mean_correct_outside_tolerance": 0.816,
+     "max_wrong_decisive": 0.0
+    },
+    "gold+0.03": {
+     "mean_decisive": 0.522,
+     "mean_correct_outside_tolerance": 0.553,
+     "max_wrong_decisive": 0.005
+    },
+    "gold-0.03": {
+     "mean_decisive": 0.753,
+     "mean_correct_outside_tolerance": 0.802,
+     "max_wrong_decisive": 0.0
+    }
+   },
+   "runs": [
+    "seed 42 AER 0.085/0.085 c 0.25 balanced",
+    "seed 42 AER 0.12/0.12 c 0.0 balanced",
+    "seed 42 AER 0.12/0.12 c 0.5 balanced",
+    "seed 42 AER 0.15/0.15 c 0.0 balanced",
+    "seed 42 AER 0.15/0.15 c 0.5 recall_heavy",
+    "seed 42 AER 0.15/0.15 c 0.5 balanced",
+    "seed 43 AER 0.15/0.15 c 0.0 balanced",
+    "seed 43 AER 0.15/0.15 c 0.5 balanced",
+    "seed 44 AER 0.15/0.15 c 0.0 balanced",
+    "seed 44 AER 0.15/0.15 c 0.5 balanced"
+   ]
+  },
+  "G4": {
+   "name": "band edge (AER 0.15), identical errors (c 1)",
+   "summary": {
+    "band": {
+     "mean_decisive": 0.0,
+     "mean_correct_outside_tolerance": 0.0,
+     "max_wrong_decisive": 0.0
+    },
+    "gold": {
+     "mean_decisive": 0.0,
+     "mean_correct_outside_tolerance": 0.0,
+     "max_wrong_decisive": 0.0
+    },
+    "gold+0.03": {
+     "mean_decisive": 0.0,
+     "mean_correct_outside_tolerance": 0.0,
+     "max_wrong_decisive": 0.0
+    },
+    "gold-0.03": {
+     "mean_decisive": 0.0,
+     "mean_correct_outside_tolerance": 0.0,
+     "max_wrong_decisive": 0.0
+    }
+   },
+   "runs": [
+    "seed 42 AER 0.15/0.15 c 1.0 balanced",
+    "seed 43 AER 0.15/0.15 c 1.0 balanced",
+    "seed 44 AER 0.15/0.15 c 1.0 balanced"
+   ]
+  },
+  "G5": {
+   "name": "beyond the band (AER 0.20 at c 0.5; 0.25 at c 1)",
+   "summary": {
+    "band": {
+     "mean_decisive": 0.376,
+     "mean_correct_outside_tolerance": 0.367,
+     "max_wrong_decisive": 0.045
+    },
+    "gold": {
+     "mean_decisive": 0.323,
+     "mean_correct_outside_tolerance": 0.344,
+     "max_wrong_decisive": 0.0
+    }
+   },
+   "runs": [
+    "seed 42 AER 0.2/0.2 c 0.5 balanced",
+    "seed 42 AER 0.25/0.25 c 1.0 balanced"
+   ]
+  }
+ },
+ "conditions": {
+  "G1": [
+   "seed 42 AER 0.085/0.05 c 0.0 balanced",
+   "seed 42 AER 0.085/0.05 c 0.5 balanced",
+   "seed 43 AER 0.085/0.05 c 0.0 balanced",
+   "seed 43 AER 0.085/0.05 c 0.5 balanced",
+   "seed 44 AER 0.085/0.05 c 0.0 balanced",
+   "seed 44 AER 0.085/0.05 c 0.5 balanced"
+  ],
+  "G2": [
+   "seed 42 AER 0.085/0.05 c 1.0 balanced",
+   "seed 43 AER 0.085/0.05 c 1.0 balanced",
+   "seed 44 AER 0.085/0.05 c 1.0 balanced"
+  ],
+  "G3": [
+   "seed 42 AER 0.085/0.085 c 0.25 balanced",
+   "seed 42 AER 0.12/0.12 c 0.0 balanced",
+   "seed 42 AER 0.12/0.12 c 0.5 balanced",
+   "seed 42 AER 0.15/0.15 c 0.0 balanced",
+   "seed 42 AER 0.15/0.15 c 0.5 recall_heavy",
+   "seed 42 AER 0.15/0.15 c 0.5 balanced",
+   "seed 43 AER 0.15/0.15 c 0.0 balanced",
+   "seed 43 AER 0.15/0.15 c 0.5 balanced",
+   "seed 44 AER 0.15/0.15 c 0.0 balanced",
+   "seed 44 AER 0.15/0.15 c 0.5 balanced"
+  ],
+  "G4": [
+   "seed 42 AER 0.15/0.15 c 1.0 balanced",
+   "seed 43 AER 0.15/0.15 c 1.0 balanced",
+   "seed 44 AER 0.15/0.15 c 1.0 balanced"
+  ],
+  "G5": [
+   "seed 42 AER 0.2/0.2 c 0.5 balanced",
+   "seed 42 AER 0.25/0.25 c 1.0 balanced"
+  ]
+ }
+}
