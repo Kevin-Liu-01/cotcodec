@@ -4004,3 +4004,97 @@ they say so.)
     - delta rows for kappa_M and the SMT segmentation lineage, and a SOMBRERO
       blind packet.
   - Sign-offs R1-R5 (registration sec. 16) also remain open.
+
+## 2026-10-10 — C5 FP4 instability gauntlet run 2 (D68): score 58, honest exit; C5 stops (branch `gauntlet/c5-fp4`, not merged)
+
+- Fresh run under D68 in workflow `wf_9e0ea822-f4e`, with new budgets: queries
+  80 (30 reserved for the triad), wall_minutes 600, tokens 8,000,000, dollars
+  150, waves 1, gpu_hours 0.3. A single owner did the CPU-only repair (commit
+  `aafa69d`): proposal `2b9d768a...` and DRAFT registration
+  `c5-fp4-instability-v2` (`4db20a54...`; v1 unedited and superseded; not
+  frozen, not admitted). It credits the power-of-two-scale penalty to
+  2510.25602 Theorems 1-2 and ARITH 2025, and narrows P2 to I_prec32 (E8M0
+  against BF16 scales at B32). The gate moves into Phase 0 as J4 on its own
+  probe seeds, which also measure sigma and the anchor. Caps are recomputed.
+  Audit row 2 (gauntlet wave 2, run wave 1) is appended to
+  `program/gauntlet/2026-10-10-c5-fp4-instability.jsonl`, row hash
+  `875e04dd427c4ee2bcbe2583ebada40416a19ba5f860db8b669e8d0e55675afa`.
+- Reviews: 58 (claude-opus-5-5) and 71 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1087). Each total equals the sum of its ten scores. No cap binds (reviewer 1
+  applies 74, 79 and 89; reviewer 2 applies 79 and 89). Score 58, best 58.
+  Trajectory 54 -> 58 (reviewer 1 54 -> 58, reviewer 2 65 -> 71). Neither
+  review is signed (D24).
+- Blind discrimination passed by the letter, weakly. The packet now pairs the
+  proposal with the mechanism prior (2510.25602 with ARITH 2025). The critic
+  judged them the same mechanism, which is true by construction because the
+  proposal now tests a published prediction. It judged the prior the stronger
+  contribution but not strictly dominant: it credits the proposal with the
+  first training test of the 4-bit INT claim and sharper identification. The
+  packets match the bundle files exactly. Only one prior packet was judged.
+- Refute-first triad: 3 of 3 refuted. Each refuter ran at least six orx
+  queries (11 plus 1 OpenReview, 7, 7).
+  - Novelty: a trivial recombination, no direct prior (NARROWED). Two
+    training precedents are uncredited. 2510.25602 App. D.2 Table 10 already
+    trains the BF16-against-UE8M0 scale contrast at INT8 (0.0018 nats at
+    B32, 0.0267 at B256; 145M, 20B tokens, single runs). 2505.14302 Fig. 2
+    trains INT4 against E2M1 by group size with full-precision scales.
+  - Identification: J4's C0 drives the verdicts (below).
+  - Feasibility: J4 fits inside 8.0 GPU-h only at about 277k tok/s or more
+    per process, and Phase 0 reruns are not counted against the line.
+- Largest defect (reviewer 1, authoritative; the identification refuter
+  agrees): J4's probe statistic C0 sets G1, Phase 1's seed count n and P2's
+  ABSENT band. C0 is measured at one untuned LR on three probe seeds (df 2)
+  and selected by G1. Its LR artefact (SD about 0.010 nats at curvature 0.02)
+  is the size of the credited anchor (0.011).
+  - In the bundle's own power-sim-v2.json, end-to-end wrong-decisive reaches
+    0.131 at half the registered effect size. The registration says "at or
+    below 0.08 in every reported cell"; that holds only at the registered
+    size (at most 0.072).
+  - G1 says GO 0.14-0.29 under a tuned-LR null with LR spread, against a
+    nominal 0.05.
+  Reviewer 2 named the missing executable pilot instead. That defect is
+  structural (cap 79) and binds every candidate here.
+- Relation to wave 1's largest defect: what wave 1 named is repaired. P2 is
+  identified by design, the mechanism is credited, and no gate run enters a
+  Phase 1 estimate. The new defect descends from wave 1's gate-reuse part:
+  the selected probe statistic now enters the decision rule instead of the
+  estimates. That is the same defect class by another route, as with E4
+  under D63; on a strict reading it is not the same defect.
+- Honest exit: D68's stop line (D60's rule) applies on its score prong
+  (58 < 60), whichever reading of the largest-defect prong is taken. The wave
+  cap (waves=1) and the triad stop also apply. C5 stops here: v2 is not
+  frozen and not admitted.
+  - Not exits: queries 42 of 80; tokens 3.21M of 8M; $53.85 of $150
+    (list-price equivalent); 115.0 of 600 minutes; GPU 0.0553 of 0.3.
+  - Gauntlet cumulative over both rows: 174 queries, 6.87M tokens, $121.48,
+    273.2 minutes, 0.1136 GPU-h.
+  - The doctor re-run is byte-identical to the bundle copy (FAIL: Novelty
+    and Compute).
+- Process defects:
+  - Only one blind critic call ran; the design-prior packet was not judged.
+  - Reviewer 2 misread the blind result ("distinct mechanism") and the
+    novelty refuter's verdict. It also said the uncredited priors "are now
+    credited" and that the design has "fallbacks and explicit D22 counting".
+    Its scores are recorded as produced.
+  - The repaired package still says "costs GPU time, not a false claim"
+    (proposal L88-89) and "wrong decisive at most 0.08" (registration
+    L556-559), and presents N3's tautological toggles as identification
+    evidence. None of these was edited (rule 3).
+- GPU: reviewer 2's job 1087 used 0.0553 GPU-h (scontrol RunTime 00:03:19 on
+  1 H100, COMPLETED 0:0, 01:10:48-01:14:07 UTC on 2026-10-11, no leftover
+  container). It was submitted after read-only squeue checks at 01:09:59 and
+  01:10:39 and an in-command re-check showed an empty queue (no S1a or other
+  job), so the host rule held. Added to the ledger as "C5 FP4 instability
+  gauntlet wave 2 (fresh run 2 under D68, c5-fp4-instability-v2 draft, Phase
+  0 and Phase 1 design) open-weight review (D24)". Program total 10.1379 on
+  this branch. Phase 0 and Phase 1 used no GPU; the repair, the refuters and
+  reviewer 1 made no host contact.
+- Waiting on Kevin: nothing, to stop. Reopening C5 would be a new owner
+  decision. One new version would need all of the following:
+  - the ABSENT margin taken from Phase 1's own tuned-LR anchor, with its
+    uncertainty;
+  - G1 computed on LR-matched probe configurations;
+  - Phase 0 reruns counted under D22, with a fallback J4 that always fits;
+  - delta rows for 2510.25602 Table 10 and 2505.14302;
+  - a cpu-doctor orx node as the first executable evidence.
+  Phase 1 admission and any 100 still need D24.
