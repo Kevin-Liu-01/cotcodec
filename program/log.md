@@ -4422,3 +4422,102 @@ they say so.)
   attention-only read at B1 with positive controls, a non-decisive futility
   stop, and a Semantic Scholar pass. Wave 1's value-of-information doubt
   (owner's prior P(PASS) about 0.1) stands.
+
+## 2026-10-11 — S2 v3 gauntlet wave 1 (D71 ii): score 60, no honest exit; candidate does not proceed as drafted (branch `gauntlet/s2v3-locale`, not merged)
+
+- Wave 1 ran in workflow `wf_59308530-d56` with declared cumulative budgets:
+  queries 150 (at least 30 reserved for the triad), wall_minutes 600, tokens
+  8,000,000, dollars 150, waves 3, gpu_hours 0.3. Four discovery cells fed one
+  synthesis owner. The owner wrote proposal `d4e1f765...`, DRAFT registration
+  `s2-arabic-cua-locale-v3` (`74f969e1...`; not frozen, not admitted; v2
+  unedited) and the evidence bundle (`685da276...`, evidence root
+  `5820c999...`) at `4d8e17e`. Scope: Phase 0 as an executable CPU pilot,
+  plus the Phase 1 design (a 2x2 census of 106 OSWorld LibreOffice tasks,
+  n = 4, cap 6.10 GPU-h). The audit row starts the new file
+  `program/gauntlet/2026-10-11-s2v3-arabic-cua-locale-pilot.jsonl`, row hash
+  `8b0c6ef5297b123c98d5b6bc24089f8807dc744e5e7a71c71c778409827d25f5`.
+- Pilot: four CPU-only Slurm jobs (1097-1100; 1096 cancelled), no GRES,
+  `--network=none`, each on an empty queue, in the LO-VM container
+  (`f5b4c40e...`), about 20 minutes in all.
+  - UIMirroring is pixel-identical to SAL_RTL_ENABLED.
+  - A pinned SheetPrefix fixes the translated default sheet name.
+  - Window titles are identical across cells for the 104 of 106 tasks that
+    opened.
+  - AT-SPI extents cannot certify mirroring (a median 53% of matched
+    accessibles keep their unmirrored extents).
+  - Not built or run: the derived Arabic image, the VM-lane oracle and P0.6.
+    The three Launchpad packages wait on a go-ahead.
+- Reviews: 61 (claude-opus-5-5) and 60 (qwen3.6-35b-a3b, self-hosted, Slurm
+  1102). Each total equals the sum of its ten scores. No cap binds (reviewer 1
+  applied 74, 79 and 89; reviewer 2 applied 79 and 89). Score 60, best 60.
+  Neither review is signed (D24).
+- Blind discrimination: PASS. The critic judged the proposal (A) and
+  macOSWorld (2506.04135) to be different mechanisms, and the proposal the
+  stronger contribution. The packets match the bundle files, and the prompt
+  names nothing. Reviewer 1's caveat: paragraph A presents checks that were not
+  run, or did not discriminate, as done. Only macOSWorld was judged.
+- Refute-first triad: 3 of 3 refuted (35 counted queries: 21, 7 and 7).
+  - Novelty: no direct prior. It is a recombination: OSWorld's own LibreOffice
+    domains, the census variance of 2411.00640, a bioequivalence ratio margin
+    and shipped LibreOffice keys. The measured object is narrower than
+    macOSWorld's open split.
+  - Identification: census D also includes generic screen-change fragility.
+    Under direction-free reshuffles the realized D has an SD of 1.59-2.67 pp,
+    PRESENT_HARM comes out at 0.12-0.22, and there is no placebo. The
+    sharp-null guard is miscomputed, and admission depends on how the
+    treatment renders.
+  - Feasibility: see the largest defect. Phase 1's fit also depends on an
+    unadopted cap rule (19.1 GPU-h under S1a's c_proj).
+- Largest defect (both reviewers and the feasibility refuter): the pilot
+  decides neither K0 nor K1 of Phase 0, and the run that could decide them
+  cannot start with the assets that exist.
+  - No real or full pseudo-Arabic catalog was rendered: L4 fell back to
+    English strings.
+  - ar-LTR ran only on blank documents.
+  - The registered oracle (O2, ink-located O3, O6, positive controls) is not
+    implemented.
+  - O5 did not discriminate. The recorder's recompute: Calc 13 unflipped
+    against 26 flipped, Impress 0 of 40 unflipped, Writer 2 of 20. Yet the
+    proposal and the blind packet say documents stay unmirrored.
+  - The selector sat in an extra configuration layer, in a container, outside
+    an orx node, so the 79 cap binds.
+  - The decisive run needs three downloads, image-surgery code nobody has
+    reviewed, a lane version that accepts a new qcow2 digest and the reserve
+    tasks, a per-VM cell mechanism (P0.3 also sets LANGUAGE=ar) and a P0.6
+    deviation.
+  - Neither earlier S2 largest defect is open. Relay was moved in v2. The
+    106-task census makes SMALL reachable (0.92-0.97 at the null).
+- Secondary, all checked by the recorder: the sharp-null test uses variance v
+  instead of 4v. It rejects in 0.32 at the exact null (power-v3.json). Reruns
+  gave 0.34075 against 0.053 and 0.324 against 0.044, equal to the agents'
+  outputs. This disables PRESENT_FRAGILE.
+- No honest exit applies. Usage: wave 1 of 3; 4,586,573 of 8M tokens; $91.11 of
+  $150 (list-price equivalent; $81.70 at the reported cache TTLs); 159.4 of
+  600 minutes; GPU 0.0553 of 0.3. No direct prior, no safety failure.
+  Queries are 127 of 150 (126 backed by logged records), with 23 left: enough
+  for one wave-2 triad (18) plus at most 5 repair queries, and no wave 3. A
+  repair wave at this wave's cost without cells would reach about 7.5M tokens
+  and $150. The row's termination_reason is null (CONTINUE_PENDING).
+- Doctor checks: the re-run at record time is byte-identical to the bundle
+  copy (FAIL, as expected; gpu_hours 0.3 is parsed as 0 and left as
+  declared). On a scratch copy the doctor's audit validator finds the chain
+  intact. With gpu_hours parsed as 0 it flags only 'invalid cumulative
+  gpu_hours' and the missing success state; with 0.3, only the success state.
+- GPU: reviewer 2's job 1102 used 0.0553 GPU-h (scontrol RunTime 00:03:19 on
+  1 H100, COMPLETED 0:0, 09:00:14-09:03:33 UTC). The queue was empty before
+  submission and at the in-command re-check. The recorder's read-only check
+  at 09:13:52 UTC found the queue empty, all GPUs at 0 MiB and no leftover
+  container. It is added to the ledger as "S2 v3 gauntlet wave 1 ...
+  open-weight review (D24)", and the program total on this branch is 10.4210.
+  The pilot used no GPU.
+- Waiting on the orchestrator or Kevin:
+  - Whether wave 2 runs. Without Kevin it could implement the oracle with
+    positive controls on the existing captures, sweep an offline pseudo-Arabic
+    catalog in all four cells, move the selector to /etc/libreoffice/registry,
+    run as an orx node, and fix the variance and the admission rule.
+  - The three packages. The owner held them for Kevin. D1 may cover public
+    research downloads; the recorder takes no position.
+  - Review of the image and lane code.
+  - The cap rule and Phase 1 admission (Kevin's).
+  - R04: D73's dossier folds it into S2 v3's Phase 0, while D73 (iii) drafts
+    it separately. Neither the triad nor the reviewers saw D73.
