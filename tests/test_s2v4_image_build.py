@@ -330,3 +330,95 @@ def test_images_json_is_the_committed_build_records_pin_set():
         assert r["changed_blocks"]["ok"] and r["changed_blocks"]["counts"]["unexplained"] == 0
         assert r["fsck"]["findings"] == rec["fsck_certified"]["findings"]
     assert rec["install"]["changed_blocks"]["ok"]
+
+
+def test_layer_files_check():
+    names = [f"{n}.xcd" for n in (*B.LAYER_FILES, "main")] + ["oo-ldap.xcd.sample"]
+    assert B.check_layer_files(names)["ok"]
+    assert B.check_layer_files([*names, "zz-s2v4-cell.xcd"])["ok"]  # the selector itself
+    extra = B.check_layer_files([*names, "zzz-late.xcd"])
+    assert not extra["ok"] and extra["unlisted"] == ["zzz-late"]
+    missing = B.check_layer_files([n for n in names if n != "ctl_ar.xcd"])
+    assert not missing["ok"] and missing["missing"] == ["ctl_ar"]
+
+
+HEAD_A = """dumpe2fs 1.46.5 (30-Dec-2021)
+Filesystem volume name:   <none>
+Filesystem state:         clean
+Free blocks:              100
+Free inodes:              50
+Last write time:          Thu Mar 21 10:00:00 2024
+Lifetime writes:          10 GB
+Checksum:                 0x1
+Journal size:             128M
+"""
+
+
+def test_superblock_changes():
+    after = (HEAD_A.replace("100", "90").replace("0x1", "0x2")
+             .replace("10 GB", "11 GB"))  # fmt: skip
+    ok = B.superblock_changes(HEAD_A, after)
+    assert ok["ok"] and ok["changed"] == ["Checksum", "Free blocks", "Lifetime writes"]
+    bad = B.superblock_changes(HEAD_A, after.replace("clean", "not clean"))
+    assert not bad["ok"] and bad["unexpected"] == ["Filesystem state"]
+    assert not B.superblock_changes("", "")["ok"]  # nothing parsed is not a pass
+
+
+def test_inode_slot_changes():
+    ref = bytes(4096)
+    img = bytearray(ref)
+    img[256 * 3 + 7] = 1  # the fourth slot
+    inodes = list(range(17, 33))
+    assert B.inode_slot_changes(ref, bytes(img), inodes, 256) == [20]
+    assert B.inode_slot_changes(ref, ref, inodes, 256) == []
+
+
+def test_classify_reads_inode_slots():
+    lay = B.parse_dumpe2fs(DUMPE2FS)
+    common = dict(owner={}, paths={}, layout=lay, intended=set(), intended_dirs=set(),
+                  touched_inodes={1})
+    # inode 1 touched, inode 2 changed in the same table block: unexplained with slots
+    assert B.classify_blocks([1061], **common)["ok"]
+    assert not B.classify_blocks([1061], **common, table_slots={1061: [1, 2]})["ok"]
+    assert B.classify_blocks([1061], **common, table_slots={1061: [1]})["ok"]
+
+
+def test_stat_mtime():
+    text = (" ctime: 0x00000007:00000000 -- Thu Jan  1 00:00:07 1970\n"
+            " mtime: 0x65765100:00000000 -- Mon Dec 11 00:00:00 2023\n")  # fmt: skip
+    assert B.stat_mtime(text) == B.CELL_MTIME
+    assert B.stat_mtime(" mtime: 0x0000000a -- x\n") == 10 and B.stat_mtime("") is None
+
+
+def test_superblock_wtime_and_outside_partition(tmp_path):
+    raw = tmp_path / "d.raw"
+    offset = 1 << 20
+    sb = bytearray(1024)
+    sb[B.S_MAGIC:B.S_MAGIC + 2] = B.EXT4_MAGIC.to_bytes(2, "little")
+    sb[B.S_WTIME:B.S_WTIME + 4] = (1_700_000_000).to_bytes(4, "little")
+    with open(raw, "wb") as f:
+        f.truncate(offset + (8 << 20) + (1 << 20))
+        f.seek(offset + B.SUPERBLOCK_OFFSET)
+        f.write(sb)
+    assert B.superblock_wtime(raw, offset) == 1_700_000_000
+    with pytest.raises(B.BuildError):
+        B.superblock_wtime(raw, 0)
+    other = tmp_path / "e.raw"
+    shutil.copyfile(raw, other)
+    assert B.outside_partition_blocks(raw, other, offset, 8 << 20)["ok"]
+    with open(other, "r+b") as f:
+        f.seek(offset + (8 << 20) + 5)
+        f.write(b"x")
+    got = B.outside_partition_blocks(raw, other, offset, 8 << 20)
+    assert not got["ok"] and got["tail"] == [0] and got["head"] == []
+    with open(other, "r+b") as f:  # inside the partition: not this check's business
+        f.seek(offset + (8 << 20) + 5)
+        f.write(b"\0")
+        f.seek(offset + 4096 * 9)
+        f.write(b"y")
+    assert B.outside_partition_blocks(raw, other, offset, 8 << 20)["ok"]
+
+
+def test_write_sessions_need_the_fixed_time(tmp_path):
+    with pytest.raises(B.BuildError, match="fixed time"):
+        B.Image(tmp_path / "x.raw", 0).debugfs("stats\n", write=True)

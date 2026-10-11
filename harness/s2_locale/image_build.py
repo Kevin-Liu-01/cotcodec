@@ -23,26 +23,43 @@ packages fetched by ``fetch_langpacks.py`` puts on disk:
   ``/etc/libreoffice/registry``); the pairs are read from the package's own postinst and must
   equal ``UCF_PAIRS``.
 
-Not done, and recorded: the language packs' postinst (``locale-gen --keep-existing ar``: no
-Arabic system locale is generated, the system locale stays ``en_US.UTF-8`` in every cell, and
-neither LibreOffice's nor GTK's catalogs need one) and the package databases (``dpkg``'s status
-and ``ucf``'s hash file are not edited, so ``dpkg -l`` in the guest does not list the three
-packages; ``image-manifest.json`` lists every file written instead).
+Not done, and recorded: the packages' maintainer scripts (the two language packs' postinst
+runs ``locale-gen --keep-existing ar``, so no Arabic system locale is generated; the guest's
+locale stays its stock ``LANG=en_HK.UTF-8``, ``LANGUAGE=en_HK:en`` in every cell, as every probe
+record of the guest server's environment shows) and the package databases (``dpkg``'s status and
+``ucf``'s hash file are not edited, so ``dpkg -l`` in the guest does not list the three packages;
+``image-manifest.json`` lists every file written instead). The maintainer scripts and control
+files are copied into the build's ``maintainer-scripts/`` directory, so the "not run" claims can
+be audited.
 
 Each cell image is ``D`` plus the cell's files and nothing else:
 
 * every cell: the selector ``/etc/libreoffice/registry/zz-s2v4-cell.xcd`` (``selector_xcd``),
-  in the system configuration layer that both ``xcsxcu:`` and ``res:`` read; it sorts after
-  every package file, and its values are finalized, so the user profile cannot override them;
+  in the system configuration layer that both ``xcsxcu:`` and ``res:`` read; it declares a
+  dependency on every other file of that layer (``LAYER_FILES``, checked against the base's
+  directory listing at build time: ``check_layer_files``), so configmgr reads it last, and its
+  values are finalized, so neither a later file of the layer nor the user profile overrides them;
 * PL: also every toolbar definition under ``share/config/soffice.cfg/modules/*/toolbar`` whose
   items the seeded shuffle reorders (``shuffled_toolbar``, the pilot's function and key).
 
-Every cell image is checked block by block against ``D``: each 4 KiB block of the root
-filesystem that differs is classified (``classify_blocks``) as data of a file the cell writes,
-a directory the cell edits, the inode-table block of an inode the cell writes or removes, a
-block or inode bitmap, or a superblock or group-descriptor copy; any other changed block fails
-the build. The cell images and ``D`` are written as standalone qcow2 files (no backing file),
-each checked against its raw source with ``qemu-img compare`` and pinned by SHA-256.
+Checks. Every image is compared block by block with its reference (``D`` with the certified
+disk, each cell with ``D``): each 4 KiB block of the root filesystem that differs is classified
+(``classify_blocks``) as data of a file the step writes, a directory it edits, an inode-table
+block in which only the slots of inodes the step writes, removes or links into changed
+(``inode_slot_changes``), a block or inode bitmap, or a superblock or group-descriptor copy; any
+other changed block fails the build. Outside the root partition (the GPT, the EFI partition and
+the tail) the raw disks must be byte-identical (``outside_partition_blocks``), and of the
+superblock fields ``dumpe2fs -h`` prints only free counts, lifetime writes, the checksum and the
+write time may differ (``superblock_changes``). Every written path is read back with its bytes,
+mode, owner, link target and modification time. The cell images and ``D`` are written as
+standalone qcow2 files (no backing file), each checked against its raw source with ``qemu-img
+compare``, made read-only and pinned by SHA-256.
+
+Reproducibility. ``debugfs -w`` stamps the superblock's write time (and new inodes' times,
+which the plan then overrides) from libext2fs's clock, ``E2FSPROGS_FAKE_TIME`` when set. Every
+write session here sets it to the certified disk's own last write time (``s_wtime``, read from
+its primary superblock), so the images are a function of the code and the inputs only;
+``build-twice`` builds twice in one job and requires identical digests.
 
 Usage (inside the container):
   python3 -m harness.s2_locale.image_build build --certified /ro/vm/Ubuntu.qcow2
@@ -105,6 +122,16 @@ TOOLBAR_ROOT = "/usr/lib/libreoffice/share/config/soffice.cfg/modules"
 LO_ROOT = "/usr/lib/libreoffice"
 CELL_MTIME = 1_702_252_800  # 2023-12-11T00:00:00Z, the l10n archive's own date
 SEED = 42
+# ext4's primary superblock (at 1024 bytes into the partition): fields this build reads.
+SUPERBLOCK_OFFSET = 1024
+S_WTIME, S_MAGIC, S_WTIME_HI = 0x30, 0x38, 0x274
+EXT4_MAGIC = 0xEF53
+# ``dumpe2fs -h`` fields an install may change (block and inode allocation, the write counter,
+# the checksum over the superblock, the write time); any other field that differs fails.
+SUPERBLOCK_MAY_CHANGE = ("Free blocks", "Free inodes", "Lifetime writes", "Checksum",
+                         "Last write time")  # fmt: skip
+MAINTAINER_FILES = ("control", "preinst", "postinst", "prerm", "postrm", "config", "triggers")
+REGISTRY_DIR = "/etc/libreoffice/registry"
 # The Phase 1 cells and the Phase 0 layout-by-language cell (P7). S, the stock cell, is the
 # certified disk itself.
 CELLS = ("E", "A", "ER", "AR", "PL", "AD")
@@ -154,7 +181,8 @@ def selector_xcd(cell: str) -> str:
     for the registry labels). Layout: the finalized ``UIMirroring`` key (absent in AD, whose
     layout follows the language). Pins in every cell: ``CTLFont`` false (over the language
     pack's ``ctl_ar.xcd``), Calc's default sheet prefix "Sheet" and English function names.
-    ``ooSetupSystemLocale`` is not set (the system locale, ``en_US.UTF-8``, in every cell)."""
+    ``ooSetupSystemLocale`` is not set: the locale settings follow the guest's stock locale
+    (``LANG=en_HK.UTF-8``, ``LANGUAGE=en_HK:en``), the same in every cell."""
     if cell not in CELLS:
         raise BuildError(f"unknown cell {cell}")
     locale = "ar" if cell in ("A", "AR", "AD") else "en-US"
@@ -195,6 +223,20 @@ def toolbar_key(image_path: str) -> str:
     """The pilot's shuffle key: the path relative to ``/usr/lib/libreoffice``."""
     rel = PurePosixPath(image_path).relative_to(LO_ROOT)
     return str(rel)
+
+
+def check_layer_files(names: Iterable[str]) -> dict[str, Any]:
+    """The derived base's system layer against the selector's dependency block.
+
+    ``names``: the regular files of ``/etc/libreoffice/registry`` in the derived base. Every
+    ``*.xcd`` there other than the selector must be ``main`` or in ``LAYER_FILES``, and every
+    ``LAYER_FILES`` entry must exist: only then does configmgr read the selector last in its
+    layer, whatever the base (review: the list is hand-typed, so the build checks it)."""
+    selector = PurePosixPath(SELECTOR_PATH).name
+    stems = {n[: -len(".xcd")] for n in names if n.endswith(".xcd") and n != selector}
+    want = set(LAYER_FILES) | {"main"}
+    return {"xcd_files": sorted(stems), "missing": sorted(want - stems),
+            "unlisted": sorted(stems - want), "ok": stems == want}  # fmt: skip
 
 
 # --------------------------------------------------------------------------- packages
@@ -551,6 +593,74 @@ def changed_blocks(a: Path, b: Path, offset: int, length: int, block: int = FS_B
     return out
 
 
+def outside_partition_blocks(a: Path, b: Path, offset: int, length: int) -> dict[str, Any]:
+    """4 KiB blocks that differ between two raw disks outside the root partition (the GPT, the
+    EFI partition and the tail): the build changes nothing there."""
+    size_a, size_b = a.stat().st_size, b.stat().st_size
+    if size_a != size_b:
+        return {"ok": False, "sizes": [size_a, size_b], "head": [], "tail": []}
+    head = changed_blocks(a, b, 0, offset)
+    tail = changed_blocks(a, b, offset + length, size_a - offset - length)
+    return {"ok": not head and not tail, "head": head[:20], "tail": tail[:20],
+            "head_region_bytes": offset, "tail_region_bytes": size_a - offset - length}  # fmt: skip
+
+
+def superblock_wtime(raw: Path, offset: int) -> int:
+    """``s_wtime`` (with its high byte) of the ext4 filesystem at ``offset`` in a raw disk."""
+    with open(raw, "rb") as f:
+        f.seek(offset + SUPERBLOCK_OFFSET)
+        sb = f.read(1024)
+    if len(sb) < 1024 or int.from_bytes(sb[S_MAGIC:S_MAGIC + 2], "little") != EXT4_MAGIC:
+        raise BuildError(f"{raw}: no ext4 superblock at offset {offset}")
+    return int.from_bytes(sb[S_WTIME:S_WTIME + 4], "little") | (sb[S_WTIME_HI] << 32)
+
+
+def superblock_fields(text: str) -> dict[str, str]:
+    """``Field: value`` lines of ``dumpe2fs -h`` (the superblock and the journal's summary)."""
+    out: dict[str, str] = {}
+    for line in text.splitlines():
+        m = re.match(r"^([A-Za-z][A-Za-z0-9 /#()_-]*?):\s+(.*)$", line)
+        if m and m.group(1) not in out:
+            out[m.group(1).strip()] = m.group(2).strip()
+    return out
+
+
+def superblock_changes(before: str, after: str) -> dict[str, Any]:
+    """The ``dumpe2fs -h`` fields that differ; only ``SUPERBLOCK_MAY_CHANGE`` may."""
+    a, b = superblock_fields(before), superblock_fields(after)
+    changed = sorted(k for k in set(a) | set(b) if a.get(k) != b.get(k))
+    unexpected = [k for k in changed if k not in SUPERBLOCK_MAY_CHANGE]
+    return {"changed": changed, "unexpected": unexpected, "ok": bool(a) and not unexpected,
+            "unexpected_values": {k: [a.get(k), b.get(k)] for k in unexpected}}  # fmt: skip
+
+
+def inode_slot_changes(ref_block: bytes, img_block: bytes, inodes: Sequence[int],
+                       inode_size: int) -> list[int]:  # fmt: skip
+    """The inodes of one inode-table block whose on-disk slot differs between two images."""
+    out = []
+    for i, ino in enumerate(inodes):
+        lo, hi = i * inode_size, (i + 1) * inode_size
+        if ref_block[lo:hi] != img_block[lo:hi]:
+            out.append(ino)
+    return out
+
+
+def read_block(path: Path, offset: int, block: int, size: int = FS_BLOCK) -> bytes:
+    with open(path, "rb") as f:
+        f.seek(offset + block * size)
+        data = f.read(size)
+    return data + b"\0" * (size - len(data))
+
+
+STAT_MTIME = re.compile(r"^\s*mtime:\s*0x([0-9a-fA-F]+)", re.M)
+
+
+def stat_mtime(text: str) -> int | None:
+    """The modification time (seconds) in ``debugfs stat`` output."""
+    m = STAT_MTIME.search(text)
+    return int(m.group(1), 16) if m else None
+
+
 def parse_icheck(text: str) -> dict[int, int | None]:
     out: dict[int, int | None] = {}
     for line in text.splitlines():
@@ -572,8 +682,14 @@ def parse_ncheck(text: str) -> dict[int, list[str]]:
 def classify_blocks(blocks: Iterable[int], owner: Mapping[int, int | None],
                     paths: Mapping[int, Sequence[str]], layout: Layout,
                     intended: set[str], intended_dirs: set[str],
-                    touched_inodes: set[int]) -> dict[str, Any]:  # fmt: skip
-    """Every changed block must be explained by the cell's own writes."""
+                    touched_inodes: set[int],
+                    table_slots: Mapping[int, Sequence[int]] | None = None,
+                    ) -> dict[str, Any]:  # fmt: skip
+    """Every changed block must be explained by the step's own writes.
+
+    ``table_slots`` (when given): for each changed inode-table block, the inodes whose slot
+    differs (``inode_slot_changes``); the block is then explained only if every one of them
+    is an inode the step touched (without it, any touched inode in the block explains it)."""
     kinds: dict[str, list[int]] = {k: [] for k in (
         "file_data", "directory", "inode_table", "block_bitmap", "inode_bitmap", "sb_gdt",
         "unexplained")}  # fmt: skip
@@ -596,10 +712,12 @@ def classify_blocks(blocks: Iterable[int], owner: Mapping[int, int | None],
             kinds["inode_bitmap"].append(blk)
         else:
             inodes = layout.inodes_in_table_block(blk)
-            if inodes is not None and set(inodes) & touched_inodes:
-                kinds["inode_table"].append(blk)
+            if inodes is not None and table_slots is not None:
+                changed = set(table_slots.get(blk) or ())
+                explained = bool(changed) and changed <= touched_inodes
             else:
-                kinds["unexplained"].append(blk)
+                explained = inodes is not None and bool(set(inodes) & touched_inodes)
+            kinds["inode_table" if explained else "unexplained"].append(blk)
     counts = {k: len(v) for k, v in kinds.items()}
     return {"counts": counts, "ok": not kinds["unexplained"],
             "unexplained": kinds["unexplained"][:50]}  # fmt: skip
@@ -631,18 +749,32 @@ def sha256_file(path: Path) -> str:
 class Image:
     """A raw disk file and its ext4 root partition at a byte offset (e2fsprogs ``?offset=``)."""
 
-    def __init__(self, raw: Path, offset: int):
+    def __init__(self, raw: Path, offset: int, fake_time: int | None = None):
         self.raw = raw
         self.offset = offset
         self.dev = f"{raw}?offset={offset}"
+        self.fake_time = fake_time
 
     def debugfs(self, script: str, write: bool = False, timeout: float = 3600) -> tuple[str, str]:
         # Reads run with -n (no metadata checksum verification): the certified disk has one inode
         # whose checksum does not match (1214912, a VS Code file), and an inode scan (icheck,
-        # ncheck) stops at it otherwise. Writes verify checksums as usual.
+        # ncheck) stops at it otherwise. Writes verify checksums as usual. A write session runs
+        # with E2FSPROGS_FAKE_TIME (libext2fs's clock for the superblock's write time and new
+        # inodes' times; the plan sets every written inode's times itself), so a rebuild from
+        # the same inputs gives the same bytes.
         argv = ["debugfs"] + (["-w"] if write else ["-n"]) + ["-f", "-", self.dev]
-        proc = subprocess.run(argv, input=script.encode(), capture_output=True, timeout=timeout)
+        env = None
+        if write:
+            if self.fake_time is None:
+                raise BuildError("a debugfs write session needs a fixed time (fake_time)")
+            env = {**os.environ, "E2FSPROGS_FAKE_TIME": str(int(self.fake_time))}
+        proc = subprocess.run(argv, input=script.encode(), capture_output=True, timeout=timeout,
+                              env=env)  # fmt: skip
         return proc.stdout.decode(errors="replace"), proc.stderr.decode(errors="replace")
+
+    def head(self) -> str:
+        """``dumpe2fs -h`` of the filesystem (superblock and journal summary)."""
+        return run(["dumpe2fs", "-h", self.dev], check=False).stdout.decode(errors="replace")
 
     def ls_dirs(self, dirs: Iterable[str]) -> dict[str, dict[str, Entry]]:
         dirs = sorted(set(dirs))
@@ -713,8 +845,7 @@ def verify_plan(img: Image, plan: Plan, readback: Path) -> dict[str, Any]:
     files = sorted(p for p, op in final.items() if op.kind == "write")
     for i, path in enumerate(files):
         script.append(f"dump {path} {readback / f'{i:06d}'}")
-    links = sorted(p for p, op in final.items() if op.kind == "symlink")
-    for path in links:
+    for path in sorted(final):  # every written path: its link target and modification time
         script.append(f"stat {path}")
     out, err = img.debugfs("\n".join(script) + "\n")
     parts = split_debugfs_output(out)
@@ -727,8 +858,11 @@ def verify_plan(img: Image, plan: Plan, readback: Path) -> dict[str, Any]:
             continue
         if ent.mode != op.mode or ent.uid != op.uid or ent.gid != op.gid:
             bad.append(f"{path}: mode/owner {ent.mode:o} {ent.uid}:{ent.gid}")
+        stat = parts.get(f"stat {path}", "")
+        if stat_mtime(stat) != op.mtime:
+            bad.append(f"{path}: mtime {stat_mtime(stat)} (planned {op.mtime})")
         row = {"path": path, "kind": op.kind, "mode": f"{op.mode:o}", "uid": op.uid,
-               "gid": op.gid, "source": op.source, "ino": ent.ino}  # fmt: skip
+               "gid": op.gid, "mtime": op.mtime, "source": op.source, "ino": ent.ino}  # fmt: skip
         if op.kind == "write":
             got = readback / f"{files.index(path):06d}"
             data = got.read_bytes() if got.is_file() else None
@@ -736,8 +870,7 @@ def verify_plan(img: Image, plan: Plan, readback: Path) -> dict[str, Any]:
                 bad.append(f"{path}: content differs")
             row.update(size=len(op.data), sha256=hashlib.sha256(op.data).hexdigest())
         elif op.kind == "symlink":
-            text = parts.get(f"stat {path}", "")
-            m = re.search(r'Fast link dest: "([^"]*)"', text)
+            m = re.search(r'Fast link dest: "([^"]*)"', stat)
             if not m or m.group(1) != op.target:
                 bad.append(f"{path}: link target {m.group(1) if m else None!r}")
             row.update(target=op.target)
@@ -748,7 +881,7 @@ def verify_plan(img: Image, plan: Plan, readback: Path) -> dict[str, Any]:
     shutil.rmtree(readback, ignore_errors=True)
     if bad:
         raise BuildError(f"readback failed on {len(bad)} paths: {bad[:5]}")
-    return {"verified_paths": len(final), "manifest": manifest}
+    return {"verified_paths": len(final), "mtimes_read_back": len(final), "manifest": manifest}
 
 
 def to_qcow2(raw: Path, out: Path) -> dict[str, Any]:
@@ -761,6 +894,7 @@ def to_qcow2(raw: Path, out: Path) -> dict[str, Any]:
         raise BuildError(f"qemu-img compare {out}: {cmp.stdout.decode()[-300:]}")
     if info.get("backing-filename"):
         raise BuildError(f"{out} has a backing file")
+    out.chmod(0o444)  # the lane mounts only read-only images
     return {
         "path": out.name,
         "sha256": sha256_file(out),
@@ -793,7 +927,11 @@ def log(msg: str) -> None:
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
-def load_debs(debs_dir: Path) -> tuple[list[Member], list[tuple[str, str]], list[dict]]:
+def load_debs(debs_dir: Path, keep: Path | None = None,
+              ) -> tuple[list[Member], list[tuple[str, str]], list[dict]]:  # fmt: skip
+    """The archives' data members, the postinst's ``ucf`` pairs and a record per archive; with
+    ``keep``, each archive's control file and maintainer scripts are copied to
+    ``keep/<package>/`` (none of them is run)."""
     members: list[Member] = []
     ucf: list[tuple[str, str]] = []
     records = []
@@ -808,12 +946,21 @@ def load_debs(debs_dir: Path) -> tuple[list[Member], list[tuple[str, str]], list
         shutil.rmtree(ctrl_dir, ignore_errors=True)
         run(["dpkg-deb", "-e", str(path), str(ctrl_dir)])
         postinst = (ctrl_dir / "postinst").read_text() if (ctrl_dir / "postinst").is_file() else ""
+        kept = {}
+        for name in MAINTAINER_FILES:
+            src = ctrl_dir / name
+            if src.is_file() and not src.is_symlink():
+                data = src.read_bytes()
+                kept[name] = {"sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
+                if keep is not None:
+                    (keep / package).mkdir(parents=True, exist_ok=True)
+                    (keep / package / name).write_bytes(data)
         pairs = ucf_pairs(postinst)
         ucf += pairs
         records.append({"filename": filename, "package": package, "sha256": sha, "bytes": size,
                         "members": len(mem), "files": sum(m.kind == "file" for m in mem),
                         "postinst_sha256": hashlib.sha256(postinst.encode()).hexdigest(),
-                        "ucf_pairs": pairs,
+                        "ucf_pairs": pairs, "control_files": kept,
                         "postinst_not_run": bool(postinst.strip())})  # fmt: skip
         members += mem
     if sorted(ucf) != sorted(UCF_PAIRS):
@@ -847,6 +994,14 @@ def diff_against(img: Image, ref: Path, length: int, layout: Layout,
             script = "".join("ncheck " + " ".join(map(str, inos[i:i + batch])) + "\n"
                              for i in range(0, len(inos), batch))  # fmt: skip
             paths = parse_ncheck(img.debugfs(script)[0])
+    table_slots: dict[int, list[int]] = {}
+    for blk in blocks:
+        inodes = layout.inodes_in_table_block(blk)
+        if owner.get(blk) is None and inodes is not None:
+            table_slots[blk] = inode_slot_changes(
+                read_block(ref, img.offset, blk, layout.block_size),
+                read_block(img.raw, img.offset, blk, layout.block_size), inodes,
+                layout.inode_size)  # fmt: skip
     written = {str(r["path"]) for r in manifest}
     touched = {int(r["ino"]) for r in manifest} | set(removed_inodes)
     dirs = {str(PurePosixPath(p).parent) for p in written}
@@ -857,18 +1012,43 @@ def diff_against(img: Image, ref: Path, length: int, layout: Layout,
             touched.add(2)  # the root directory's inode
         elif ent is not None:
             touched.add(ent.ino)
-    out = classify_blocks(blocks, owner, paths, layout, written, dirs, touched)
+    out = classify_blocks(blocks, owner, paths, layout, written, dirs, touched, table_slots)
     out["blocks"] = len(blocks)
+    out["inode_slots_changed"] = sum(len(v) for v in table_slots.values())
+    return out
+
+
+def image_checks(img: Image, ref_raw: Path, ref_head: str, length: int,
+                 fake_time: int) -> dict[str, Any]:  # fmt: skip
+    """The whole-image checks of one built raw disk against its reference: nothing outside the
+    root partition changed, only the allowed superblock fields changed, and the superblock's
+    write time is the fixed build time."""
+    outside = outside_partition_blocks(ref_raw, img.raw, img.offset, length)
+    head = img.head()
+    sb = superblock_changes(ref_head, head)
+    wtime = superblock_wtime(img.raw, img.offset)
+    out = {"outside_partition": outside, "superblock": sb, "s_wtime": wtime,
+           "s_wtime_is_fake_time": wtime == fake_time}  # fmt: skip
+    if not outside["ok"]:
+        raise BuildError(f"{img.raw.name}: blocks outside the root partition changed: {outside}")
+    if not sb["ok"]:
+        raise BuildError(f"{img.raw.name}: superblock fields changed: {sb['unexpected_values']}")
+    if wtime != fake_time:
+        raise BuildError(f"{img.raw.name}: s_wtime {wtime} is not the build time {fake_time} "
+                         "(E2FSPROGS_FAKE_TIME not honoured)")  # fmt: skip
     return out
 
 
 def build_cell(cell: str, base_raw: Path, work: Path, out: Path, offset: int, length: int,
                layout: Layout, toolbars: Mapping[str, bytes],
-               baseline: Mapping[str, Any] | None = None) -> dict[str, Any]:  # fmt: skip
+               baseline: Mapping[str, Any] | None = None, fake_time: int | None = None,
+               base_head: str = "") -> dict[str, Any]:  # fmt: skip
     t0 = time.time()
+    if fake_time is None:
+        raise BuildError("build_cell needs the fixed build time")
     raw = work / f"cell-{cell}.raw"
     run(["cp", "--sparse=always", str(base_raw), str(raw)])
-    img = Image(raw, offset)
+    img = Image(raw, offset, fake_time)
     targets = [SELECTOR_PATH] + (sorted(toolbars) if cell == "PL" else [])
     listing = img.ls_dirs(base_listing_dirs(targets))
     plan = plan_cell(cell, listing, toolbars if cell == "PL" else None)
@@ -884,6 +1064,7 @@ def build_cell(cell: str, base_raw: Path, work: Path, out: Path, offset: int, le
                               [e.ino for e in removed if e])  # fmt: skip
     if not classified["ok"]:
         raise BuildError(f"cell {cell}: unexplained changed blocks {classified['unexplained']}")
+    checks = image_checks(img, base_raw, base_head, length, fake_time)
     qcow = to_qcow2(raw, out / f"s2v4-cell-{cell}.qcow2")
     raw.unlink()
     selector = selector_xcd(cell).encode()
@@ -895,8 +1076,10 @@ def build_cell(cell: str, base_raw: Path, work: Path, out: Path, offset: int, le
         "applied": applied,
         "fsck": fsck,
         "verified_paths": verified["verified_paths"],
+        "mtimes_read_back": verified["mtimes_read_back"],
         "manifest": verified["manifest"],
         "changed_blocks": classified,
+        "image_checks": checks,
         "qcow2": qcow,
         "seconds": round(time.time() - t0, 1),
     }
@@ -922,7 +1105,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
                         "virtual_size": CERTIFIED_VIRTUAL,
                         "hash_checked": not args.skip_certified_hash}  # fmt: skip
     log("reading the archives")
-    members, ucf, debs = load_debs(Path(args.debs))
+    members, ucf, debs = load_debs(Path(args.debs), out / "maintainer-scripts")
     rec["debs"] = debs
     log("converting the certified disk to raw")
     cert_raw = work / "certified.raw"
@@ -935,13 +1118,18 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     offset, length = start * SECTOR, size * SECTOR
     rec["root_partition"] = {"start_sector": start, "sectors": size, "offset": offset}
     cert = Image(cert_raw, offset)
-    head = run(["dumpe2fs", "-h", cert.dev], check=False).stdout.decode(errors="replace")
+    head = cert.head()
     state = re.search(r"^Filesystem state:\s+(.+)$", head, re.M)
     features = re.search(r"^Filesystem features:\s+(.+)$", head, re.M)
     rec["filesystem"] = {"state": state.group(1).strip() if state else None,
                          "features": features.group(1).split() if features else None}  # fmt: skip
     if not state or state.group(1).strip() != "clean" or "needs_recovery" in head:
         raise BuildError(f"the root filesystem is not clean: {rec['filesystem']}")
+    # The fixed build time: the certified filesystem's own last write time (reproducibility).
+    fake_time = superblock_wtime(cert_raw, offset)
+    rec["fake_time"] = {"E2FSPROGS_FAKE_TIME": fake_time,
+                        "source": "s_wtime of the certified root filesystem",
+                        "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(fake_time))}
     pre = cert.fsck()
     if int(pre["returncode"]) & 8:
         raise BuildError(f"e2fsck could not check the certified filesystem: {pre['tail']}")
@@ -951,7 +1139,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     log("copying the raw disk for the derived base")
     base_raw = work / "base.raw"
     run(["cp", "--sparse=always", str(cert_raw), str(base_raw)])
-    img = Image(base_raw, offset)
+    img = Image(base_raw, offset, fake_time)
     log("planning the install")
     targets = [m.path for m in members] + [dst for _, dst in ucf]
     listing = img.ls_dirs(base_listing_dirs(targets))
@@ -969,8 +1157,14 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     rec["fsck_derived"] = post
     verified = verify_plan(img, plan, work / "readback-base")
     rec["install"]["verified_paths"] = verified["verified_paths"]
+    rec["install"]["mtimes_read_back"] = verified["mtimes_read_back"]
     (out / "image-manifest.json").write_text(json.dumps(verified["manifest"], indent=0))
     rec["install"]["manifest_sha256"] = sha256_file(out / "image-manifest.json")
+    registry = img.ls_dirs([REGISTRY_DIR]).get(REGISTRY_DIR) or {}
+    rec["layer_files"] = check_layer_files(
+        name for name, ent in registry.items() if (ent.mode & 0o170000) == 0o100000)
+    if not rec["layer_files"]["ok"]:
+        raise BuildError(f"the system layer is not LAYER_FILES + main: {rec['layer_files']}")
     full = run(["dumpe2fs", img.dev], check=False).stdout.decode(errors="replace")
     layout = parse_dumpe2fs(full)
     log("checking the derived base against the certified disk, block by block")
@@ -979,6 +1173,8 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     if not rec["install"]["changed_blocks"]["ok"]:
         raise BuildError(f"derived base: unexplained changed blocks "
                          f"{rec['install']['changed_blocks']['unexplained']}")  # fmt: skip
+    rec["install"]["image_checks"] = image_checks(img, cert_raw, head, length, fake_time)
+    base_head = img.head()
     cert_raw.unlink()
     tb_dir = work / "toolbars"
     shutil.rmtree(tb_dir, ignore_errors=True)
@@ -996,7 +1192,8 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     rec["cells"] = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, args.parallel)) as pool:
         futures = {pool.submit(build_cell, c, base_raw, work, out, offset, length, layout,
-                               toolbars, pre): c for c in cells}  # fmt: skip
+                               toolbars, pre, fake_time, base_head): c
+                   for c in cells}  # fmt: skip
         for fut in concurrent.futures.as_completed(futures):
             cell = futures[fut]
             rec["cells"][cell] = fut.result()
@@ -1006,6 +1203,80 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     rec["seconds"] = round(time.time() - t0, 1)
     rec["ok"] = True
     return rec
+
+
+def write_record(out: Path, rec: dict[str, Any]) -> dict[str, Any]:
+    """Write ``build-record.json`` and ``cell-manifests.json`` (the per-path cell manifests are
+    moved out of the record)."""
+    sha = Path("/src/.git_sha")
+    if sha.is_file():
+        rec["executor_commit"] = sha.read_text().strip()
+    cells_manifest = {c: r.pop("manifest") for c, r in rec["cells"].items() if "manifest" in r}
+    (out / "cell-manifests.json").write_text(json.dumps(cells_manifest, indent=0))
+    (out / "build-record.json").write_text(json.dumps(rec, indent=1, sort_keys=True))
+    return rec
+
+
+def digests(rec: Mapping[str, Any], out: Path) -> dict[str, str]:
+    """Every digest that identifies a build's output."""
+    d = {"derived_base": rec["derived_base"]["sha256"],
+         "image_manifest": rec["install"]["manifest_sha256"],
+         "cell_manifests": sha256_file(out / "cell-manifests.json")}  # fmt: skip
+    for cell, r in sorted(rec["cells"].items()):
+        d[f"cell_{cell}"] = r["qcow2"]["sha256"]
+    return d
+
+
+def build_twice(args: argparse.Namespace) -> dict[str, Any]:
+    """Two full builds from the same inputs, one after the other, into ``out/a`` and ``out/b``;
+    the build is reproducible only if every output digest is the same (review item: the pins
+    must be regenerable from the committed code and inputs)."""
+    result: dict[str, Any] = {"schema": "s2v4-image-reproducibility-v1", "builds": {}}
+    for tag in ("a", "b"):
+        sub = argparse.Namespace(**{**vars(args), "out": args.out / tag})
+        sub.out.mkdir(parents=True, exist_ok=True)
+        log(f"build {tag}")
+        rec = write_record(sub.out, build(sub))
+        result["builds"][tag] = {"dir": tag, "digests": digests(rec, sub.out),
+                                 "seconds": rec["seconds"],
+                                 "fake_time": rec["fake_time"]["E2FSPROGS_FAKE_TIME"]}  # fmt: skip
+    a, b = result["builds"]["a"]["digests"], result["builds"]["b"]["digests"]
+    result["differing"] = sorted(k for k in set(a) | set(b) if a.get(k) != b.get(k))
+    result["reproducible"] = not result["differing"]
+    if args.compare_with:
+        log("comparing the derived base with the earlier build's")
+        result["earlier_build"] = compare_images(
+            Path(args.compare_with), args.out / "a" / "s2v4-derived-base.qcow2",
+            args.out / "compare-work")  # fmt: skip
+    (args.out / "reproducibility.json").write_text(json.dumps(result, indent=1, sort_keys=True))
+    return result
+
+
+def compare_images(old: Path, new: Path, work: Path) -> dict[str, Any]:
+    """Which 4 KiB blocks differ between two qcow2 disks of this build (raw copies), classified
+    as superblock or group-descriptor copies of the root filesystem or anything else."""
+    shutil.rmtree(work, ignore_errors=True)
+    work.mkdir(parents=True)
+    raws = []
+    for name, src in (("old", old), ("new", new)):
+        raw = work / f"{name}.raw"
+        run(["qemu-img", "convert", "-U", "-f", "qcow2", "-O", "raw", "-m", "8", str(src),
+             str(raw)])  # fmt: skip
+        raws.append(raw)
+    offset, length = ROOT_START_SECTOR * SECTOR, ROOT_SECTORS * SECTOR
+    inside = changed_blocks(raws[0], raws[1], offset, length)
+    outside = outside_partition_blocks(raws[0], raws[1], offset, length)
+    layout = parse_dumpe2fs(run(["dumpe2fs", f"{raws[1]}?offset={offset}"],
+                                check=False).stdout.decode(errors="replace"))  # fmt: skip
+    sb = [b for b in inside if b in layout.sb_gdt]
+    other = [b for b in inside if b not in layout.sb_gdt]
+    heads = [run(["dumpe2fs", "-h", f"{r}?offset={offset}"], check=False).stdout.decode(
+        errors="replace") for r in raws]  # fmt: skip
+    shutil.rmtree(work, ignore_errors=True)
+    return {"old": str(old), "new": new.name, "blocks_differing": len(inside),
+            "sb_gdt": len(sb), "other": other[:50], "outside_partition_identical": outside["ok"],
+            "superblock_fields_differing": superblock_changes(heads[0], heads[1])["changed"],
+            "only_superblock_copies_differ": not other and outside["ok"]}  # fmt: skip
 
 
 def selftest(work: Path) -> dict[str, Any]:
@@ -1023,7 +1294,7 @@ def selftest(work: Path) -> dict[str, Any]:
     run(["mke2fs", "-q", "-F", "-t", "ext4", "-b", "4096", "-I", "256", "-O",
          "metadata_csum,64bit", "-E", f"offset={offset}", str(cert),
          f"{length >> 10}k"])  # fmt: skip
-    seed = Image(cert, offset)
+    seed = Image(cert, offset, 1_600_000_000)
     tb_a = ('<toolbar:toolbar><toolbar:toolbaritem xlink:href=".uno:A"/>'
             '<toolbar:toolbaritem xlink:href=".uno:B"/><toolbar:toolbarseparator/>'
             '<toolbar:toolbaritem xlink:href=".uno:C"/></toolbar:toolbar>\n')  # fmt: skip
@@ -1088,24 +1359,45 @@ def selftest(work: Path) -> dict[str, Any]:
             checks[f"refuses_{name}"] = False
         except BuildError:
             checks[f"refuses_{name}"] = True
-    base = work / "base.raw"
+    fake = 1_650_000_000
+    base, again = work / "base.raw", work / "base-again.raw"
     run(["cp", "--sparse=always", str(cert), str(base)])
-    img = Image(base, offset)
+    run(["cp", "--sparse=always", str(cert), str(again)])
+    img = Image(base, offset, fake)
     targets = [m.path for m in members] + [d for _, d in ucf]
     plan = plan_install(members, ucf, img.ls_dirs(base_listing_dirs(targets)))
     apply_plan(img, plan, work / "stage-base")
+    time.sleep(1.1)  # a second build one second later: only the fixed time makes them equal
+    apply_plan(Image(again, offset, fake), plan, work / "stage-again")
+    checks["base_reproducible"] = sha256_file(base) == sha256_file(again)
+    checks["base_s_wtime_is_fake_time"] = superblock_wtime(base, offset) == fake
+    again.unlink()
     checks["fsck_base"] = fsck_same(img.fsck(), baseline)
     ver = verify_plan(img, plan, work / "rb-base")
+    checks["base_mtimes_read_back"] = ver["mtimes_read_back"] == len(ver["manifest"])
     layout = parse_dumpe2fs(run(["dumpe2fs", img.dev]).stdout.decode(errors="replace"))
     diff = diff_against(img, cert, length, layout, ver["manifest"])
     checks["base_diff_explained"] = diff["ok"] and diff["blocks"] > 0
+    checks["base_inode_slots_checked"] = diff["inode_slots_changed"] > 0
+    sb = superblock_changes(seed.head(), img.head())
+    checks["base_superblock_fields_allowed"] = sb["ok"] and bool(sb["changed"])
+    checks["base_outside_partition_identical"] = outside_partition_blocks(
+        cert, base, offset, length)["ok"]  # fmt: skip
+    tail = work / "tail.raw"
+    run(["cp", "--sparse=always", str(base), str(tail)])
+    with open(tail, "r+b") as f:
+        f.seek(offset + length + 100)
+        f.write(b"x")
+    checks["base_outside_partition_tamper_flagged"] = not outside_partition_blocks(
+        base, tail, offset, length)["ok"]  # fmt: skip
+    tail.unlink()
     toolbars = {f"{TOOLBAR_ROOT}/scalc/toolbar/a.xml": tb_a.encode(),
                 f"{TOOLBAR_ROOT}/scalc/toolbar/b.xml": tb_b.encode()}  # fmt: skip
     cells: dict[str, Any] = {}
     for cell in ("ER", "PL"):
         raw = work / f"{cell}.raw"
         run(["cp", "--sparse=always", str(base), str(raw)])
-        ci = Image(raw, offset)
+        ci = Image(raw, offset, fake)
         listing = ci.ls_dirs(base_listing_dirs([SELECTOR_PATH, *toolbars]))
         cplan = plan_cell(cell, listing, toolbars if cell == "PL" else None)
         removed = [(listing.get(str(PurePosixPath(op.path).parent)) or {}).get(
@@ -1123,12 +1415,17 @@ def selftest(work: Path) -> dict[str, Any]:
             ci.debugfs(f"cd /usr/share/doc\nwrite {work / 'extra'} extra\n", write=True)
             tdiff = diff_against(ci, base, length, layout, cver["manifest"])
             cells[cell]["tamper_flagged"] = not tdiff["ok"]
+            # an untouched existing inode changed in place must be flagged too
+            ci.debugfs("sif /etc/libreoffice/registry/main.xcd uid 7\n", write=True)
+            sdiff = diff_against(ci, base, length, layout, cver["manifest"])
+            cells[cell]["inode_tamper_flagged"] = not sdiff["ok"]
         raw.unlink()
     checks["cells"] = cells
     checks["ok"] = (all(v for k, v in checks.items()
                         if k.startswith(("refuses", "fsck", "base")))
                     and all(c["fsck"] and c["diff_ok"] for c in cells.values())
                     and cells["ER"].get("tamper_flagged") is True
+                    and cells["ER"].get("inode_tamper_flagged") is True
                     and cells["PL"]["rewritten"] == 1
                     and cells["ER"]["rewritten"] == 0)  # fmt: skip
     shutil.rmtree(work, ignore_errors=True)
@@ -1173,6 +1470,15 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("cell")
     st = sub.add_parser("selftest")
     st.add_argument("--work", type=Path, required=True)
+    bt = sub.add_parser("build-twice", help="two builds in one job; identical digests required")
+    bt.add_argument("--certified", required=True)
+    bt.add_argument("--debs", required=True)
+    bt.add_argument("--out", type=Path, required=True)
+    bt.add_argument("--cells", default=",".join(CELLS))
+    bt.add_argument("--parallel", type=int, default=3)
+    bt.add_argument("--skip-certified-hash", action="store_true")
+    bt.add_argument("--compare-with", default=None,
+                    help="an earlier build's derived-base qcow2 to compare block by block")
     pn = sub.add_parser("pins", help="images.json from a build record")
     pn.add_argument("record", type=Path)
     pn.add_argument("--build-dir", required=True)
@@ -1190,17 +1496,15 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if result["ok"] else 1
     args.out.mkdir(parents=True, exist_ok=True)
     try:
-        rec = build(args)
+        if args.command == "build-twice":
+            result = build_twice(args)
+            log(f"reproducible: {result['reproducible']} (differing: {result['differing']})")
+            return 0 if result["reproducible"] else 4
+        write_record(args.out, build(args))
     except BuildError as exc:
         (args.out / "build-failed.json").write_text(json.dumps({"ok": False, "error": str(exc)}))
         log(f"FAILED: {exc}")
         return 2
-    sha = Path("/src/.git_sha")
-    if sha.is_file():
-        rec["executor_commit"] = sha.read_text().strip()
-    cells_manifest = {c: r.pop("manifest") for c, r in rec["cells"].items()}
-    (args.out / "cell-manifests.json").write_text(json.dumps(cells_manifest, indent=0))
-    (args.out / "build-record.json").write_text(json.dumps(rec, indent=1, sort_keys=True))
     log("done")
     return 0
 
