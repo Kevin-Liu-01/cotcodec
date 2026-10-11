@@ -1,0 +1,291 @@
+{
+ "schema": "r01-caps-v2",
+ "inputs": {
+  "digests_sha256": "91f848432df45be3fe79f4175f4ab8b4f8103f4a646d2e800f6eca30a92d01df",
+  "a1_jsonl_sha256": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+  "step_costs": {
+   "1": {
+    "prompt_tokens_mean": 3427.0,
+    "latency_mean_s": 1.9286,
+    "latency_p95_s": 2.6499,
+    "n": 452,
+    "batch1_central_s": 2.2146,
+    "batch1_high_s": 3.172,
+    "warm_central_s": 1.9286,
+    "warm_high_s": 2.6499
+   },
+   "2": {
+    "prompt_tokens_mean": 5765.5,
+    "latency_mean_s": 2.4008,
+    "latency_p95_s": 3.3511,
+    "n": 452,
+    "batch1_central_s": 2.8479,
+    "batch1_high_s": 4.1953,
+    "warm_central_s": 2.4008,
+    "warm_high_s": 3.3511
+   }
+  },
+  "think_mean_s_J3": 9.19
+ },
+ "cap_rule": {
+  "lead_min": 3.0,
+  "engine_start_min": 2.0,
+  "dr4": 1.2,
+  "requeue": 1.05,
+  "reset_s_per_request": 0.05,
+  "reset_s_per_pass": 0.2,
+  "prefill_central_tok_s": 14519.0,
+  "high_latency_scale_loaded": 1.25,
+  "loaded_quantile": 0.95,
+  "sim_draws": 20000,
+  "sim_seed": 42
+ },
+ "jobs": [
+  {
+   "job": "P0",
+   "config": "E-det, then E-s1a",
+   "arms": "self-test: probe x 3 passes + 1 without logprobs (E-det); one loaded pass (E-s1a)",
+   "conditional": false,
+   "engine_starts": 2,
+   "requests": {
+    "batch1": {
+     "1": 160,
+     "2": 80
+    },
+    "warm": {},
+    "loaded": {
+     "per_pass": {
+      "1": 40,
+      "2": 20
+     },
+     "passes": 1
+    }
+   },
+   "work_min_central": 10.72,
+   "work_min_high": 15.52,
+   "loaded_sim_central": {
+    "mean_s": 61.2,
+    "p95_s": 86.5,
+    "p99_s": 103.0
+   },
+   "loaded_sim_high": {
+    "mean_s": 62.9,
+    "p95_s": 88.1,
+    "p99_s": 104.9
+   },
+   "cap_min": 27,
+   "cap_gpu_h": 0.45,
+   "physical_gpu_h_central": 0.245,
+   "arithmetic": "ceil(3.0 + 2.0 x 2 + 15.52 x 1.2 x 1.05) = 27"
+  },
+  {
+   "job": "P0'",
+   "config": "E-det + VLLM_BATCH_INVARIANT=1",
+   "arms": "self-test repeated (if P0 shows any difference)",
+   "conditional": true,
+   "engine_starts": 1,
+   "requests": {
+    "batch1": {
+     "1": 160,
+     "2": 80
+    },
+    "warm": {},
+    "loaded": {
+     "per_pass": {},
+     "passes": 0
+    }
+   },
+   "work_min_central": 9.7,
+   "work_min_high": 14.05,
+   "loaded_sim_central": null,
+   "loaded_sim_high": null,
+   "cap_min": 23,
+   "cap_gpu_h": 0.383,
+   "physical_gpu_h_central": 0.195,
+   "arithmetic": "ceil(3.0 + 2.0 x 1 + 14.05 x 1.2 x 1.05) = 23"
+  },
+  {
+   "job": "J1",
+   "config": "E-det",
+   "arms": "step 1: R, R' (replica), C, O, X on 226 pairs; step 2: R2, R2', C2, O2, X2 on 113 pairs",
+   "conditional": false,
+   "engine_starts": 1,
+   "requests": {
+    "batch1": {
+     "1": 1130,
+     "2": 565
+    },
+    "warm": {},
+    "loaded": {
+     "per_pass": {},
+     "passes": 0
+    }
+   },
+   "work_min_central": 68.53,
+   "work_min_high": 99.24,
+   "loaded_sim_central": null,
+   "loaded_sim_high": null,
+   "cap_min": 131,
+   "cap_gpu_h": 2.183,
+   "physical_gpu_h_central": 1.175,
+   "arithmetic": "ceil(3.0 + 2.0 x 1 + 99.24 x 1.2 x 1.05) = 131"
+  },
+  {
+   "job": "J1b",
+   "config": "E-det",
+   "arms": "blink-off non-clock cell (if A1 reads MULTI_REGION with caret-like components >= half): R', O' on 113 pairs",
+   "conditional": true,
+   "engine_starts": 1,
+   "requests": {
+    "batch1": {
+     "1": 226
+    },
+    "warm": {},
+    "loaded": {
+     "per_pass": {},
+     "passes": 0
+    }
+   },
+   "work_min_central": 8.34,
+   "work_min_high": 11.95,
+   "loaded_sim_central": null,
+   "loaded_sim_high": null,
+   "cap_min": 21,
+   "cap_gpu_h": 0.35,
+   "physical_gpu_h_central": 0.172,
+   "arithmetic": "ceil(3.0 + 2.0 x 1 + 11.95 x 1.2 x 1.05) = 21"
+  },
+  {
+   "job": "J2",
+   "config": "E-c1",
+   "arms": "cache channel: R cold + warm on 226 step-1 pairs",
+   "conditional": false,
+   "engine_starts": 1,
+   "requests": {
+    "batch1": {
+     "1": 226
+    },
+    "warm": {
+     "1": 226
+    },
+    "loaded": {
+     "per_pass": {},
+     "passes": 0
+    }
+   },
+   "work_min_central": 15.61,
+   "work_min_high": 21.93,
+   "loaded_sim_central": null,
+   "loaded_sim_high": null,
+   "cap_min": 33,
+   "cap_gpu_h": 0.55,
+   "physical_gpu_h_central": 0.293,
+   "arithmetic": "ceil(3.0 + 2.0 x 1 + 21.93 x 1.2 x 1.05) = 33"
+  },
+  {
+   "job": "J3",
+   "config": "E-s1a",
+   "arms": "5 loaded passes: R+R2, R+R2, C+C2, O+O2, X+X2 (226 step-1 + 113 step-2 items each)",
+   "conditional": false,
+   "engine_starts": 1,
+   "requests": {
+    "batch1": {},
+    "warm": {},
+    "loaded": {
+     "per_pass": {
+      "1": 226,
+      "2": 113
+     },
+     "passes": 5
+    }
+   },
+   "work_min_central": 21.99,
+   "work_min_high": 24.46,
+   "loaded_sim_central": {
+    "mean_s": 1319.5,
+    "p95_s": 1421.8,
+    "p99_s": 1469.4
+   },
+   "loaded_sim_high": {
+    "mean_s": 1364.6,
+    "p95_s": 1467.5,
+    "p99_s": 1514.8
+   },
+   "cap_min": 36,
+   "cap_gpu_h": 0.6,
+   "physical_gpu_h_central": 0.4,
+   "arithmetic": "ceil(3.0 + 2.0 x 1 + 24.46 x 1.2 x 1.05) = 36",
+   "overrun_probability_at_cap_high_latency": 0.0,
+   "work_available_s_at_cap": 1860.0,
+   "sim_check_seed43_high": {
+    "mean_s": 1365.0,
+    "max_s": 1652.7
+   }
+  },
+  {
+   "job": "J4",
+   "config": "E-nc",
+   "arms": "batch channel: 2 loaded passes of R+R2",
+   "conditional": false,
+   "engine_starts": 1,
+   "requests": {
+    "batch1": {},
+    "warm": {},
+    "loaded": {
+     "per_pass": {
+      "1": 226,
+      "2": 113
+     },
+     "passes": 2
+    }
+   },
+   "work_min_central": 8.79,
+   "work_min_high": 10.18,
+   "loaded_sim_central": {
+    "mean_s": 527.5,
+    "p95_s": 592.5,
+    "p99_s": 626.6
+   },
+   "loaded_sim_high": {
+    "mean_s": 545.5,
+    "p95_s": 610.7,
+    "p99_s": 644.7
+   },
+   "cap_min": 18,
+   "cap_gpu_h": 0.3,
+   "physical_gpu_h_central": 0.18,
+   "arithmetic": "ceil(3.0 + 2.0 x 1 + 10.18 x 1.2 x 1.05) = 18",
+   "overrun_probability_at_cap_high_latency": 0.0,
+   "work_available_s_at_cap": 780.0,
+   "sim_check_seed43_high": {
+    "mean_s": 545.9,
+    "max_s": 765.8
+   }
+  }
+ ],
+ "total_cap_min": 289,
+ "total_cap_gpu_h": 4.817,
+ "total_cap_min_without_conditional": 245,
+ "total_cap_gpu_h_without_conditional": 4.083,
+ "physical_gpu_h_central": 2.66,
+ "d22_line_gpu_h": 8.0,
+ "wave1_comparison": {
+  "J3_wave1_cap_min": 26,
+  "J3_wave1_rule": "one lane's mean (16 x (latency + 11.9 s)) x 4 passes",
+  "wave1_total_cap_gpu_h": 4.217
+ },
+ "cpu_lane": {
+  "a1_boots": 678,
+  "a1_vm_h_central": 20.52,
+  "a1_vm_h_high": 25.6,
+  "stage_c_vm_h_central": 43.35,
+  "stage_c_vm_h_high": 54.66,
+  "stage_c_blink_conditional_vm_h": 10.84,
+  "overhead_to_first_observation_s": {
+   "mean": 95.6,
+   "max": 122.5
+  },
+  "wall_h_at_V20_high": 4.55,
+  "gpu_h": 0.0
+ }
+}

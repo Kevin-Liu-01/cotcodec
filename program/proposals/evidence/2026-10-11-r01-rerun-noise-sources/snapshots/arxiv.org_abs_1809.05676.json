@@ -1,0 +1,43 @@
+{
+ "url": "https://arxiv.org/abs/1809.05676",
+ "fetched_at": "2026-10-11T12:58:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42316,
+ "raw_sha256": "aa9b4058e33db98d67b9b6e2c38a6f1b7dc210b26f7e89e9588c8c2f8061aeea",
+ "raw_stored": false,
+ "extract": {
+  "title": "Deterministic Implementations for Reproducibility in Deep Reinforcement Learning",
+  "authors": [
+   "Nagarajan, Prabhat",
+   "Warnell, Garrett",
+   "Stone, Peter"
+  ],
+  "citation_date": "2018/09/15",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sat, 15 Sep 2018 08:53:28 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 19 Sep 2018 11:13:05 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Mon, 31 Dec 2018 04:39:18 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Tue, 8 Jan 2019 15:55:22 UTC"
+   },
+   {
+    "version": "v5",
+    "date": "Sun, 9 Jun 2019 12:56:34 UTC"
+   }
+  ],
+  "abstract": "While deep reinforcement learning (DRL) has led to numerous successes in recent years, reproducing these successes can be extremely challenging. One reproducibility challenge particularly relevant to DRL is nondeterminism in the training process, which can substantially affect the results. Motivated by this challenge, we study the positive impacts of deterministic implementations in eliminating nondeterminism in training. To do so, we consider the particular case of the deep Q-learning algorithm, for which we produce a deterministic implementation by identifying and controlling all sources of nondeterminism in the training process. One by one, we then allow individual sources of nondeterminism to affect our otherwise deterministic implementation, and measure the impact of each source on the variance in performance. We find that individual sources of nondeterminism can substantially impact the performance of agent, illustrating the benefits of deterministic implementations. In addition, we also discuss the important role of deterministic implementations in achieving exact replicability of results.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ },
+ "fetched_by": "D75 repair run"
+}

@@ -1,0 +1,15 @@
+{
+ "run": "R01 fresh gauntlet run under D75",
+ "proposal": "paragraph-3fe4da7c.txt",
+ "closest_prior": "paragraph-69e5c3ef.txt",
+ "closest_prior_id": "cELldjX2oq",
+ "closest_prior_title": "The Evaluator Also Varies: Localizing Nondeterminism in Interactive Agent Benchmarks (ICLR 2027 submission)",
+ "closest_prior_source": "OpenReview abstract as recorded by wave 1's frontier cell (full text UNVERIFIABLE_ACCESS: two fetch routes returned browser challenges on 2026-10-11)",
+ "second_prior": "paragraph-d8ac91b5.txt",
+ "second_prior_id": "arXiv:2103.04514",
+ "second_prior_title": "Nondeterminism and Instability in Neural Network Optimization (Summers and Dinneen, ICML 2021)",
+ "second_prior_source": "full text read with orx paper --full by the repair owner (2026-10-11)",
+ "second_prior_reason": "wave 1's reviewer 1: the blind pass held against the text-agent prior only; this prior carries the one-source-at-a-time protocol and the redundancy-through-instability finding",
+ "wave1_paragraphs_kept": ["paragraph-981a94ca.txt (wave-1 proposal)", "paragraph-30141ede.txt (wave-1 cELldjX2oq)"],
+ "note": "Recorder only. Never give this file to a critic. Give the proposal paragraph and one prior paragraph per critic call, in randomized order."
+}
