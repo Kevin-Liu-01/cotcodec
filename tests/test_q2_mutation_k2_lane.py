@@ -164,14 +164,12 @@ def frozen_tree(tmp_path: Path, *, k2c_sha: str | None = None) -> Path:
 
 
 def registered_manifest(src: Path) -> dict[str, Any]:
+    """The committed base manifest of the registered job with the registered slots."""
     pairs = [{**p, "files": pair_files(p)} for p in lane.registered_pairs(src)]
-    m = base("k2", "confirm-mutants-v1", v=lane.REGISTERED_CONCURRENCY)
-    return {
-        **m,
-        **lane.REGISTERED_SETTINGS,
-        "slurm": dict(lane.REGISTERED_SLURM),
-        "slots": lane.expand_runs(pairs),
-    }
+    m = json.loads(
+        (ROOT / "experiments/manifests/q2-mutation-k2/k2-confirm-v1.base.json").read_text()
+    )
+    return {**m, "slots": lane.expand_runs(pairs)}
 
 
 def test_after_the_freeze_only_the_registered_k2_job_runs(tmp_path: Path) -> None:

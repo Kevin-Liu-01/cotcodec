@@ -1,0 +1,52 @@
+{
+ "candidates": {
+  "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/runs/confirm-mutants-v1/build/files",
+  "run": "confirm-mutants-v1"
+ },
+ "engine": {
+  "kind": "none"
+ },
+ "episode_image_id": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+ "episode_python": "/opt/venv-lock/bin/python",
+ "episode_timeout_s": 900,
+ "experiment_id": "q2-evaluator-mutation-v1-k2",
+ "file_cache": {
+  "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/file_cache_1e112283/files"
+ },
+ "mode": "k2-inject",
+ "name": "k2-confirm-v1",
+ "note": "The registered K2 job of q2-evaluator-mutation-v1-k2: the frozen 80-job K2 sample of confirm-mutants-v1, then the 41-event K2-C list, two runs each (section 4). Runs only after the addendum is frozen, from the ledger row's git_head_at_freeze.",
+ "osworld": {
+  "commit": "b138d348256078fa634fc3b73567a7337c793e6b",
+  "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/OSWorld"
+ },
+ "purpose": "k2",
+ "run_root": "/home/kevin/cotcodec-runs/stage0/q2-mutation-k2/runs",
+ "runs_per_pair": 2,
+ "schema": "q2m-k2-lane-v1",
+ "settle_after_reset_s": 60,
+ "settle_before_eval_s": 20,
+ "slurm": {
+  "cpus": 40,
+  "memory_gb": 64,
+  "minutes": 360
+ },
+ "vm": {
+  "concurrency": 8,
+  "cpu_cores": 4,
+  "disk_size": "32G",
+  "guest_ip": "20.20.20.21",
+  "hmp_port": 7100,
+  "image": "happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+  "image_id": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+  "memory_gb": 6,
+  "network": "none-netns",
+  "qcow2": {
+   "host_path": "/home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2",
+   "sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+   "size_bytes": 24460197888
+  },
+  "ram_size": "4G",
+  "server_port": 5000
+ }
+}

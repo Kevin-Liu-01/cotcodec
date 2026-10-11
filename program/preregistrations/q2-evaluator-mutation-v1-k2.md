@@ -370,9 +370,14 @@ Kevin").
    other's input.
 3. **Blindness.** The K2 outputs (`k2-pairs.jsonl`, `k2-summary.json`,
    `k2-report.json`, the run records) and the K2-C list name checker verdicts
-   per mutant and which mutants are candidate events. They join the files the
-   results README tells Kevin not to read before he answers. Packets are not
-   changed and carry nothing from K2.
+   per mutant and which mutants are candidate events, so they are unblinding
+   in the same way as the files the results README tells Kevin not to read
+   before he answers (`sample.jsonl`, `decisions.jsonl`, `analysis.json`,
+   `summary.json`). Every K2 evidence directory's README opens with that
+   warning, and the K2 outputs are committed only under
+   `program/evidence/2026-10-11/q2-mutation-k2/` and the K2 run's own dated
+   directory, never inside the audit's packet tree. Packets are not changed
+   and carry nothing from K2.
 4. **Order.** Neither waits for the other: freezing and running K2 need no
    adjudication answer, and adjudicating needs no K2 result. When both exist
    the parent's analysis is rerun once with `--k2-report` and
