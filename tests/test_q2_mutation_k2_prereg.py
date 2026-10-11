@@ -51,7 +51,12 @@ def test_registration_states_the_registered_inputs() -> None:
     body = text()
     k2c = sha(lane.REGISTERED_K2C)
     assert lane.registered_k2c_sha256(ROOT) == k2c
-    for digest in (lane.REGISTERED_SAMPLE_SHA256, *report.REGISTERED_INPUTS.values(), k2c):
+    for digest in (
+        lane.REGISTERED_SAMPLE_SHA256,
+        lane.REGISTERED_JOBS_SHA256,
+        *report.REGISTERED_INPUTS.values(),
+        k2c,
+    ):
         assert digest in body
     assert sha(lane.REGISTERED_SAMPLE) == lane.REGISTERED_SAMPLE_SHA256
     for key in ("image", "image_id"):
@@ -102,3 +107,30 @@ def test_the_parents_code_tree_and_explanations_are_unchanged() -> None:
     )
     assert "58bee0190c0c7eb5d44f36e27c0f1e0daab82c1c48716009a9066777c69a0721" in text()
     assert rules.K2_EXPLANATIONS == analysis.K2_EXPLANATIONS
+
+
+def test_the_k2_job_runs_from_the_freeze_commit_in_every_text() -> None:
+    """The lane accepts k2 only from a tree holding the ledger row, so the job runs from the
+    freeze commit (the row's commit), never from its parent ``git_head_at_freeze``."""
+    body = text()
+    assert "export the freeze commit itself, never its parent" in body
+    assert "The freeze commit\n  is the executor commit." in body
+    assert "`git_head_at_freeze` is the executor commit" not in body
+    base = (ROOT / "experiments/manifests/q2-mutation-k2/k2-confirm-v1.base.json").read_text()
+    assert "export of the freeze commit" in base
+    assert "from the ledger row's git_head_at_freeze" not in base
+    skill = (ROOT / "harness/q2_mutation_k2/SKILL.md").read_text()
+    assert "never its parent" in skill
+    # The report takes the K2-C digest from the registration, not from an argument.
+    assert "--k2c-sha256" not in body
+
+
+def test_the_reported_quantities_are_produced_by_the_report_code() -> None:
+    """Section 8's per-set quantities exist in the report's summary (a test of report.py
+    builds them; here the text and the code name the same tables)."""
+    body = text()
+    for phrase in ("by save path", "checker observations", "host snapshots"):
+        assert phrase in body
+    source = (ROOT / "harness/q2_mutation_k2/report.py").read_text()
+    for key in ('"by_save_path"', '"observations"', '"host_overlap"', '"by_offline_verdict"'):
+        assert key in source

@@ -18,8 +18,11 @@ run's candidate files read-only, and its own output directory read-write.
 v2 runtime's, the episode image is the metric image, the concurrency is at most 32 (D53).
 Before this addendum is frozen only ``development`` runs, on dev-split tasks and a dev mutation
 run's candidates. After the freeze only ``k2`` runs: from a source tree whose registration
-still has its ledger row's SHA-256, with the registered settings, and with exactly the
-registered slots (the frozen K2 sample, then the K2-C candidate list, two runs each).
+still has its ledger row's SHA-256 (an export of the freeze commit, the commit that adds the
+row; its parent, the row's ``git_head_at_freeze``, has no row), with the registered settings,
+a manifest rendered from the pinned job list, and exactly the registered slots (the frozen K2
+sample, then the K2-C candidate list, two runs each). One ``k2`` job: ``submit`` and ``run``
+refuse while any run directory under the run root already holds a ``k2`` manifest of this id.
 """
 
 from __future__ import annotations
@@ -73,6 +76,10 @@ REGISTERED_SAMPLE = (
 )
 REGISTERED_SAMPLE_SHA256 = "1194168019c4aa87fa3f4aa0ad02f9ed53c207a86ebec264e731545afed6525a"
 REGISTERED_K2C = "program/evidence/2026-10-11/q2-mutation-k2/k2c-candidates-confirm.jsonl"
+# The confirm run's build/scoring-jobs.jsonl the sample was drawn from (its summary's
+# ``jobs_sha256``, section 2): the k2 job's candidate files are mapped from this list only.
+REGISTERED_JOBS_SHA256 = "9c2426b7dce17f6357950b0bdb2560ce1a20005a5702a49b5058d840fa811b14"
+REFUSED = "refused.json"  # written by a k2 run that found an earlier k2 job (section 4)
 SLOT_FIELDS = (
     "slot",
     "set",
@@ -431,6 +438,10 @@ def check_registered(m: Mapping[str, Any], source_dir: Path) -> None:
         m["candidates"]["run"] == REGISTERED_CANDIDATES_RUN,
         f"the k2 job injects {REGISTERED_CANDIDATES_RUN}",
     )
+    _require(
+        m.get("jobs_sha256") == REGISTERED_JOBS_SHA256,
+        "the k2 job's slots are rendered from the pinned scoring-jobs.jsonl (jobs_sha256)",
+    )
     expected = expand_runs(registered_pairs(source_dir))
     got = [{k: s[k] for k in ("slot", *IDENTITY_FIELDS)} for s in m["slots"]]
     want = [{k: s[k] for k in ("slot", *IDENTITY_FIELDS)} for s in expected]
@@ -709,10 +720,16 @@ class K2Lane(s1a.Lane):
 
 def identity(source_dir: Path, m: Mapping[str, Any]) -> dict[str, Any]:
     """What the K2 report records as the executor before any comparison (parent section 10):
-    the exported tree's commit and digest, the VM image and disk, the episode image."""
+    the exported tree's commit and digest, the freeze it holds (the export's own ledger row:
+    for the k2 job the commit is the freeze commit, whose parent is the row's
+    ``git_head_at_freeze``), the VM image and disk, the episode image."""
     sha = source_dir / ".git_sha"
+    row = ledger_row(source_dir)
     return {
         "executor_commit": sha.read_text(encoding="utf-8").strip() if sha.is_file() else None,
+        "git_head_at_freeze": row.get("git_head_at_freeze") if row else None,
+        "ledger_row_hash": row.get("hash") if row else None,
+        "registration_sha256": row.get("sha256") if row else None,
         "source_tree_sha256": tree_sha256(source_dir),
         "vm_image": m["vm"]["image"],
         "vm_image_id": m["vm"]["image_id"],
@@ -734,8 +751,50 @@ def canonical(manifest: Mapping[str, Any]) -> str:
     return json.dumps(manifest, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
+def prior_k2_runs(run_root: Path, exclude: Path | None = None) -> list[str]:
+    """Run directories under ``run_root`` whose job started as this id's ``k2`` job (the batch
+    file writes ``manifest.json`` before the lane starts), other than ``exclude``; a directory
+    whose run refused itself (``refused.json``) never started a VM and does not count."""
+    out = []
+    if not run_root.is_dir():
+        return out
+    for run_dir in sorted(p for p in run_root.iterdir() if p.is_dir()):
+        if exclude is not None and run_dir.resolve() == exclude.resolve():
+            continue
+        if (run_dir / REFUSED).exists():
+            continue
+        for name in ("manifest.json", "lane-receipt.json"):
+            path = run_dir / name
+            if not path.is_file():
+                continue
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                out.append(run_dir.name)  # unreadable: fail closed
+                break
+            if data.get("purpose") == "k2" and data.get("experiment_id", EXPERIMENT_ID) == (
+                EXPERIMENT_ID
+            ):
+                out.append(run_dir.name)
+                break
+    return out
+
+
+def check_one_job(m: Mapping[str, Any], run_dir: Path | None = None) -> None:
+    """Section 4's "one job": a second k2 job is refused at submission and at its start."""
+    if m["purpose"] != "k2":
+        return
+    prior = prior_k2_runs(Path(m["run_root"]), exclude=run_dir)
+    _require(
+        not prior,
+        f"a k2 job already ran under the run root ({prior}); it is rerun only under section "
+        "6's repair rule, with its own experiment id",
+    )
+
+
 def submit(manifest_path: Path, source_dir: Path, dry_run: bool) -> dict[str, Any]:
     m = validate_manifest(json.loads(manifest_path.read_text(encoding="utf-8")), source_dir)
+    check_one_job(m)
     request = check_slurm(m)
     host = check_host(m)
     text = canonical(m)
@@ -771,10 +830,37 @@ def submit(manifest_path: Path, source_dir: Path, dry_run: bool) -> dict[str, An
     return out
 
 
+def check_job_list(purpose: str, sample: Path, jobs: Path, summary: Path | None) -> dict[str, str]:
+    """The job list the slots are mapped from is the one the sample was drawn from: its
+    SHA-256 equals the sample summary's ``jobs_sha256`` (and, for the k2 job, the registered
+    one), and the sample's equals the summary's ``sample_sha256``."""
+    digests = {"sample_sha256": sha256_file(sample), "jobs_sha256": sha256_file(jobs)}
+    if purpose == "k2":
+        _require(
+            digests["jobs_sha256"] == REGISTERED_JOBS_SHA256,
+            f"{jobs} is not the pinned scoring-jobs.jsonl ({digests['jobs_sha256']})",
+        )
+        _require(
+            digests["sample_sha256"] == REGISTERED_SAMPLE_SHA256,
+            "the K2 sample is not the frozen sample",
+        )
+    if summary is not None:
+        drawn = json.loads(summary.read_text(encoding="utf-8"))
+        for key, value in digests.items():
+            _require(drawn.get(key) == value, f"{key} differs from {summary}")
+    elif purpose != "k2":
+        raise LaneError("a development render names the sample's summary (--sample-summary)")
+    return digests
+
+
 def render(args: argparse.Namespace) -> dict[str, Any]:
     """A manifest from a sample (and an optional candidate list) and the mutation run's job
     list, with every candidate file hashed on the host."""
     base = json.loads(Path(args.base).read_text(encoding="utf-8"))
+    digests = check_job_list(
+        str(base.get("purpose")), Path(args.sample), Path(args.jobs), args.sample_summary
+    )
+    base["jobs_sha256"] = digests["jobs_sha256"]
     pairs = [
         {"set": "k2", "pair": i, **_identity(r)} for i, r in enumerate(read_jsonl(args.sample))
     ]
@@ -816,6 +902,12 @@ def main(argv: list[str] | None = None) -> int:
     rend.add_argument("--k2c", type=Path, default=None, help="K2-C candidate list (JSONL)")
     rend.add_argument("--only", default=None, help="comma-separated set:pair ids (development)")
     rend.add_argument("--jobs", required=True, help="the mutation run's build/scoring-jobs.jsonl")
+    rend.add_argument(
+        "--sample-summary",
+        type=Path,
+        default=None,
+        help="the sample's k2-sample.summary.json (jobs_sha256, sample_sha256)",
+    )
     rend.add_argument("--build-prefix", default="/out/files")
     rend.add_argument("--cache-prefix", default="/inputs/file_cache_1e112283/files")
     rend.add_argument("--out", type=Path, required=True)
@@ -836,6 +928,12 @@ def main(argv: list[str] | None = None) -> int:
     if not re.fullmatch(r"[1-9][0-9]{0,19}", args.job_id):
         raise SystemExit("job id must be numeric")
     manifest = validate_manifest(json.loads(args.manifest.read_text()), args.source_dir)
+    try:
+        check_one_job(manifest, args.run_dir)
+    except LaneError as exc:
+        # Recorded so that this directory, which started no VM, never counts as a k2 run.
+        (args.run_dir / REFUSED).write_text(json.dumps({"refused": str(exc)}), encoding="utf-8")
+        raise SystemExit(f"refused: {exc}") from exc
     from harness.q2.vm.driver import slurm_cpu_ids, snapshot_host
 
     cpusets = s1a.plan_cpusets(

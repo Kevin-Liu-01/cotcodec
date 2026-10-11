@@ -630,3 +630,58 @@ def test_a_setup_step_that_never_returns_fails_the_run_within_its_bound(tmp_path
     release.set()
     assert record["infrastructure_type"] == "executor:config_step"
     assert "no reply within 0.2 s" in record["infrastructure_detail"]
+
+
+def test_an_upload_that_never_returns_fails_the_run_within_the_step_bound(tmp_path: Path) -> None:
+    import threading
+
+    injector, vm, _, _ = make(
+        tmp_path, CALC, {"/home/user/A.xlsx": b"GOOD"}, "/home/user/A.xlsx", step_timeout_s=0.2
+    )
+    release = threading.Event()
+    original = vm.upload
+
+    def hang(path: str, local: str) -> dict[str, Any]:
+        release.wait(5)  # an upload the guest never answers
+        return original(path, local)
+
+    vm.upload = hang  # type: ignore[method-assign]
+    record = injector.run()
+    release.set()
+    assert record["infrastructure_type"] == "executor:upload"
+    assert "no reply within 0.2 s" in record["infrastructure_detail"]
+
+
+def test_an_upload_that_raises_is_cause_4(tmp_path: Path) -> None:
+    injector, vm, _, _ = make(tmp_path, CALC, {"/home/user/A.xlsx": b"GOOD"}, "/home/user/A.xlsx")
+
+    def broken(path: str, local: str) -> dict[str, Any]:
+        raise OSError("connection reset")
+
+    vm.upload = broken  # type: ignore[method-assign]
+    record = injector.run()
+    assert record["exclusion"] == rules.VM_INFRA
+    assert record["infrastructure_type"] == "executor:upload"
+    assert record["infrastructure_detail"].startswith("OSError: connection reset")
+
+
+@pytest.mark.parametrize(("result", "verdict"), [(True, "pass"), (False, "fail"), ("x", "error")])
+def test_scores_are_coerced_as_the_offline_harness_does(
+    tmp_path: Path, result: Any, verdict: str
+) -> None:
+    injector, _, session, _ = make(
+        tmp_path, CALC, {"/home/user/A.xlsx": b"GOOD"}, "/home/user/A.xlsx"
+    )
+    original = session.evaluate
+
+    def evaluate(last_action: str | None) -> Any:
+        original(last_action)
+        return result
+
+    session.evaluate = evaluate  # type: ignore[method-assign]
+    record = injector.run()
+    assert record["status"] == "scored" and record["verdict"] == verdict
+    if verdict == "error":
+        assert record["score"] is None and "not a number" in record["metric_error"]
+    else:
+        assert record["score"] == float(result)

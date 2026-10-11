@@ -56,8 +56,9 @@ LibreOffice save it as the pipeline does, scores it with the pinned
 | Task | First action |
 |---|---|
 | Change executor or rules | `uv run pytest -q tests/test_q2_mutation_k2_*.py`, then refresh the code table |
-| Development run (dev split) | On the host from an exported tree: `python3 -E -s -m harness.q2_mutation_k2.lane render --base BASE.json --sample ... --jobs <dev run>/build/scoring-jobs.jsonl --out M.json`, check `squeue`, then `lane submit M.json --source-dir .` |
-| Report | `python -m harness.q2_mutation_k2.report --run-dir RUN --sample ... --verdicts ... --notes-summary ... --out-dir OUT` |
+| Development run (dev split) | On the host from an exported tree: `python3 -E -s -m harness.q2_mutation_k2.lane render --base BASE.json --sample ... --sample-summary .../k2-sample.summary.json --jobs <dev run>/build/scoring-jobs.jsonl --out M.json`, check `squeue`, then `lane submit M.json --source-dir .` |
+| Registered `k2` job (after the freeze) | Export the **freeze commit** (the commit that adds only the ledger row), never its parent `git_head_at_freeze`: the lane reads the row from the export's tree. Render from the pinned confirm `scoring-jobs.jsonl` (render refuses another), validate, submit on an empty queue; a second `k2` job is refused |
+| Report | `python -m harness.q2_mutation_k2.report --run-dir RUN --sample ... --verdicts ... --notes-summary ... --out-dir OUT` (the `k2` job: one run dir, `--repo` a checkout holding the freeze commit; the K2-C digest comes from the frozen registration) |
 
 ## Gotchas
 <!-- agent-docs:fill:gotchas -->

@@ -15,7 +15,7 @@
  },
  "mode": "k2-inject",
  "name": "k2-confirm-v1",
- "note": "The registered K2 job of q2-evaluator-mutation-v1-k2: the frozen 80-job K2 sample of confirm-mutants-v1, then the 41-event K2-C list, two runs each (section 4). Runs only after the addendum is frozen, from the ledger row's git_head_at_freeze.",
+ "note": "The registered K2 job of q2-evaluator-mutation-v1-k2: the frozen 80-job K2 sample of confirm-mutants-v1, then the 41-event K2-C list, two runs each (section 4). Runs only after the addendum is frozen, from an export of the freeze commit (the commit that adds only the ledger row; its parent, the row's git_head_at_freeze, has no row and the lane refuses it), rendered from the pinned confirm build/scoring-jobs.jsonl (jobs_sha256 9c2426b7...).",
  "osworld": {
   "commit": "b138d348256078fa634fc3b73567a7337c793e6b",
   "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/OSWorld"

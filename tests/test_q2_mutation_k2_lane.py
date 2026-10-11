@@ -164,12 +164,13 @@ def frozen_tree(tmp_path: Path, *, k2c_sha: str | None = None) -> Path:
 
 
 def registered_manifest(src: Path) -> dict[str, Any]:
-    """The committed base manifest of the registered job with the registered slots."""
+    """The committed base manifest of the registered job with the registered slots, as
+    ``lane render`` writes it (with the pinned job list's digest)."""
     pairs = [{**p, "files": pair_files(p)} for p in lane.registered_pairs(src)]
     m = json.loads(
         (ROOT / "experiments/manifests/q2-mutation-k2/k2-confirm-v1.base.json").read_text()
     )
-    return {**m, "slots": lane.expand_runs(pairs)}
+    return {**m, "jobs_sha256": lane.REGISTERED_JOBS_SHA256, "slots": lane.expand_runs(pairs)}
 
 
 def test_after_the_freeze_only_the_registered_k2_job_runs(tmp_path: Path) -> None:
@@ -195,10 +196,118 @@ def test_after_the_freeze_only_the_registered_k2_job_runs(tmp_path: Path) -> Non
         lane.validate_manifest(mutate(m, "vm.concurrency", 4), src)
     with pytest.raises(lane.LaneError, match="Slurm request"):
         lane.validate_manifest(mutate(m, "slurm.minutes", 30), src)
+    with pytest.raises(lane.LaneError, match="jobs_sha256"):
+        lane.validate_manifest({k: v for k, v in m.items() if k != "jobs_sha256"}, src)
+    with pytest.raises(lane.LaneError, match="jobs_sha256"):
+        lane.validate_manifest({**m, "jobs_sha256": "0" * 64}, src)
     lane.check_slurm(m)
     (src / lane.REGISTRATION).write_text("edited after the freeze\n")
     with pytest.raises(lane.LaneError, match="changed after the freeze"):
         lane.validate_manifest(m, src)
+
+
+def test_the_k2_job_runs_from_the_freeze_commit_never_its_parent(tmp_path: Path) -> None:
+    """The freeze commit's tree holds the ledger row; its parent's (git_head_at_freeze) does
+    not, so an export of the parent is refused (S1a section 1's convention)."""
+    parent_tree = frozen_tree(tmp_path)
+    m = registered_manifest(parent_tree)
+    lane.validate_manifest(m, parent_tree)  # the freeze commit's tree: row present
+    (parent_tree / lane.LEDGER).unlink()  # git_head_at_freeze's tree: no row
+    with pytest.raises(lane.LaneError, match="only after the addendum is frozen"):
+        lane.validate_manifest(m, parent_tree)
+
+
+def test_the_receipt_identity_names_the_exports_freeze(tmp_path: Path) -> None:
+    src = frozen_tree(tmp_path)
+    (src / ".git_sha").write_text("c" * 40 + "\n")
+    (src / "harness").mkdir()
+    (src / "harness" / "x.py").write_text("x = 1\n")
+    row = lane.ledger_row(src)
+    assert row is not None
+    ident = lane.identity(src, registered_manifest(src))
+    assert ident["executor_commit"] == "c" * 40
+    assert ident["git_head_at_freeze"] == row["git_head_at_freeze"]
+    assert ident["ledger_row_hash"] == row["hash"]
+    assert ident["registration_sha256"] == row["sha256"]
+    (src / lane.LEDGER).unlink()
+    dev = lane.identity(src, registered_manifest(src))
+    assert dev["git_head_at_freeze"] is None and dev["ledger_row_hash"] is None
+
+
+def write_run(run_root: Path, name: str, purpose: str, **extra: Any) -> Path:
+    run_dir = run_root / name
+    run_dir.mkdir(parents=True)
+    manifest = {"experiment_id": lane.EXPERIMENT_ID, "purpose": purpose}
+    (run_dir / "manifest.json").write_text(json.dumps(manifest))
+    for file_name, text in extra.items():
+        (run_dir / file_name).write_text(text)
+    return run_dir
+
+
+def test_one_k2_job_prior_runs_are_found_and_refused(tmp_path: Path) -> None:
+    run_root = tmp_path / "runs"
+    write_run(run_root, "1130", "development")
+    assert lane.prior_k2_runs(run_root) == []
+    lane.check_one_job({"purpose": "k2", "run_root": str(run_root)})
+    first = write_run(run_root, "1200", "k2")
+    assert lane.prior_k2_runs(run_root) == ["1200"]
+    assert lane.prior_k2_runs(run_root, exclude=first) == []
+    with pytest.raises(lane.LaneError, match="already ran"):
+        lane.check_one_job({"purpose": "k2", "run_root": str(run_root)})
+    lane.check_one_job({"purpose": "development", "run_root": str(run_root)})
+    write_run(run_root, "1201", "k2", **{lane.REFUSED: "{}"})
+    assert lane.prior_k2_runs(run_root) == ["1200"]  # a refused run started no VM
+    (run_root / "1202").mkdir()
+    (run_root / "1202" / "lane-receipt.json").write_text("{not json")
+    assert lane.prior_k2_runs(run_root) == ["1200", "1202"]  # unreadable: fail closed
+
+
+def test_submit_and_run_refuse_a_second_k2_job(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    src = frozen_tree(tmp_path)
+    host_root = tmp_path / "host"
+    monkeypatch.setattr(lane, "RUN_ROOT", str(host_root))
+    text = json.dumps(registered_manifest(src)).replace(RUN_ROOT.rstrip("/"), str(host_root))
+    manifest = tmp_path / "k2.json"
+    manifest.write_text(text)
+    run_root = Path(json.loads(text)["run_root"])
+    write_run(run_root, "1200", "k2")
+    with pytest.raises(lane.LaneError, match="already ran"):
+        lane.submit(manifest, src, dry_run=True)
+    second = write_run(run_root, "1201", "k2")
+    argv = ["run", "--manifest", str(manifest), "--run-dir", str(second)]
+    with pytest.raises(SystemExit, match="refused"):
+        lane.main([*argv, "--source-dir", str(src), "--job-id", "1201"])
+    assert (second / lane.REFUSED).is_file()
+    assert lane.prior_k2_runs(run_root) == ["1200"]
+
+
+def test_render_maps_slots_only_from_the_sampled_job_list(tmp_path: Path) -> None:
+    sample = tmp_path / "k2-sample.jsonl"
+    sample.write_text('{"job_id": "m1"}\n')
+    jobs = tmp_path / "scoring-jobs.jsonl"
+    jobs.write_text('{"job_id": "m1"}\n')
+    digests = {"sample_sha256": lane.sha256_file(sample), "jobs_sha256": lane.sha256_file(jobs)}
+    summary = tmp_path / "k2-sample.summary.json"
+    summary.write_text(json.dumps(digests))
+    assert lane.check_job_list("development", sample, jobs, summary) == digests
+    with pytest.raises(lane.LaneError, match="--sample-summary"):
+        lane.check_job_list("development", sample, jobs, None)
+    other = tmp_path / "other-jobs.jsonl"
+    other.write_text('{"job_id": "m2"}\n')
+    with pytest.raises(lane.LaneError, match="jobs_sha256 differs"):
+        lane.check_job_list("development", sample, other, summary)
+    with pytest.raises(lane.LaneError, match="pinned scoring-jobs.jsonl"):
+        lane.check_job_list("k2", ROOT / lane.REGISTERED_SAMPLE, jobs, None)
+    registered = json.loads(
+        (
+            ROOT / "program/evidence/2026-10-08/q2-mutation-confirm/mutants-confirm-v1/score/"
+            "k2-sample.summary.json"
+        ).read_text()
+    )
+    assert registered["jobs_sha256"] == lane.REGISTERED_JOBS_SHA256
+    assert registered["sample_sha256"] == lane.REGISTERED_SAMPLE_SHA256
 
 
 def test_a_k2c_list_other_than_the_registered_one_is_refused(tmp_path: Path) -> None:

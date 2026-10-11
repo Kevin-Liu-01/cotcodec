@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 import json
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
 import pytest
 
 from harness.q2_mutation import analysis, campaign
-from harness.q2_mutation_k2 import candidates, report, rules
+from harness.q2_mutation_k2 import candidates, lane, report, rules
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASED = ROOT / "program/evidence/2026-10-08/q2-mutation-confirm/results/released"
@@ -290,3 +293,254 @@ def test_the_frozen_sample_is_the_registered_one() -> None:
         report.sha256_file(RELEASED / "confirm-mutants-v1/notes-summary.json")
         == (report.REGISTERED_INPUTS["notes_summary"])
     )
+
+
+def test_the_summary_reports_each_set_by_family_verdict_and_save_path() -> None:
+    inputs = synthetic(80)
+    inputs["k2c"] = [dict(inputs["sample"][0])]
+    for record in inputs["records"]:
+        if record["pair"] in (1, 2):
+            record["save_paths"] = {"/f.docx": "agent_save"}
+        if record["pair"] == 3:
+            record["save_paths"] = {"/f.docx": "agent_save", "/g.xlsx": "no_save"}
+        if record["pair"] == 2:
+            record["verdict"] = "fail"  # an unexplained difference on an agent save
+        record["observations"] = {"calls": 3, "retried": 1, "slow": 0, "undelivered": 0,
+                                  "unusual": [], "max_s": 0.2}  # fmt: skip
+    for run in (1, 2):
+        inputs["records"].append(
+            {
+                **scored("pass"),
+                "set": "k2c",
+                "pair": 0,
+                "run": run,
+                "attempt": 1,
+                "purpose": "k2",
+                "slot": f"k2c:000:r{run}",
+                "candidate_sha256": inputs["sample"][0]["candidate_sha256"],
+                "timings": {"run_s": 100.0 + run},
+            }
+        )
+    inputs["records"].append(
+        {
+            "status": "infrastructure",
+            "exclusion": rules.VM_INFRA,
+            "set": "k2",
+            "pair": 4,
+            "run": 1,
+            "attempt": 2,
+            "purpose": "k2",
+            "slot": "k2:004:r1",
+            "infrastructure_type": "executor:upload",
+            "candidate_sha256": inputs["sample"][4]["candidate_sha256"],
+        }
+    )
+    result = report.build(**inputs)
+    rows = {(r["set"], r["pair"]): r for r in result["pairs"]}
+    assert rows[("k2", 0)]["save_path"] == "postconfig_save"
+    assert rows[("k2", 3)]["save_path"] == "agent_save+no_save"
+    summary = result["summary"]
+    k2 = summary["k2"]
+    assert k2["by_save_path"]["agent_save"] == {
+        "pairs": 2,
+        "agree": 1,
+        "differ": 1,
+        "excluded": 0,
+        "explanations": {rules.UNEXPLAINED: 1},
+    }
+    assert k2["by_save_path"]["postconfig_save"]["pairs"] == 77
+    assert set(k2["by_offline_verdict"]) == {"pass"}
+    assert k2["runs"]["attempts"] == 161 and summary["k2c"]["runs"]["attempts"] == 2
+    assert k2["runs"]["infrastructure_types"] == {"executor:upload": 1}
+    assert summary["k2c"]["runs"]["infrastructure_types"] == {}
+    assert k2["runs"]["observations"] == {
+        "runs": 160,
+        "calls": 480,
+        "retried": 160,
+        "slow": 0,
+        "undelivered": 0,
+        "unusual": 0,
+        "max_s": 0.2,
+    }
+    assert summary["k2c"]["runs"]["run_s"]["n"] == 2
+    assert summary["k2c"]["by_save_path"] == {
+        "postconfig_save": {"pairs": 1, "agree": 1, "differ": 0, "excluded": 0, "explanations": {}},
+    }
+    assert summary["runs"]["attempts"] == 163  # pooled over both sets
+    assert rows[("k2", 4)]["save_path"] == "postconfig_save"  # its scored attempts recorded it
+    bare = synthetic(10)
+    for record in bare["records"]:
+        if record["pair"] == 0:
+            record.update(status="infrastructure", exclusion=rules.VM_INFRA, verdict=None)
+            record.pop("save_paths")
+    for row in bare["records"] + bare["receipts"]:
+        row["purpose"] = "development"
+    assert report.build(**bare)["pairs"][0]["save_path"] == report.NOT_RECORDED
+
+
+def test_the_receipt_summary_names_jobs_seen_in_the_host_snapshots() -> None:
+    snapshots = [
+        {"block": "start", "squeue_foreign": []},
+        {"block": "k2-r1", "squeue_foreign": []},
+        {"block": "end", "squeue_foreign": [["1132", "u", "RUNNING", "32", "N/A", "pilot-cpu"]]},
+    ]
+    assert report.host_overlap(snapshots) == {
+        "snapshots": 3,
+        "with_foreign_jobs": ["end"],
+        "foreign_jobs": {"1132": {"cpus": "32", "name": "pilot-cpu"}},
+    }
+    inputs = synthetic()
+    inputs["receipts"][0]["snapshots"] = snapshots
+    summary = report.build(**inputs)["summary"]
+    assert summary["receipts"][0]["host_overlap"]["with_foreign_jobs"] == ["end"]
+
+
+# --------------------------------------------------------------------------- the k2 report CLI
+
+
+def git(repo: Path, *args: str) -> str:
+    done = subprocess.run(
+        ["git", "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@example.invalid",
+         "-c", "commit.gpgsign=false", "-c", "core.hooksPath=/dev/null", *args],
+        capture_output=True, text=True, check=True,
+    )  # fmt: skip
+    return done.stdout.strip()
+
+
+def frozen_repo(tmp_path: Path, *, extra_in_freeze: bool = False) -> dict[str, Any]:
+    """A scratch repository: a commit holding the registration (git_head_at_freeze), then the
+    freeze commit adding only its ledger row (the real ledger is never touched)."""
+    repo = tmp_path / "repo"
+    registration = repo / lane.REGISTRATION
+    registration.parent.mkdir(parents=True)
+    registration.write_text(
+        f"# test registration\n\nK2-C list SHA-256: `{report.sha256_file(K2C)}`\n"
+    )
+    git(repo, "init", "-q")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-q", "-m", "registration")
+    parent = git(repo, "rev-parse", "HEAD")
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import preregister
+
+    row = preregister.freeze(registration, lane.EXPERIMENT_ID, ledger=repo / lane.LEDGER, root=repo)
+    if extra_in_freeze:
+        (repo / "other.txt").write_text("not the ledger\n")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-q", "-m", "freeze")
+    return {"repo": repo, "parent": parent, "freeze": git(repo, "rev-parse", "HEAD"), "row": row}
+
+
+def registered_run(tmp_path: Path, frozen: dict[str, Any], commit: str, name: str = "run") -> Path:
+    """A k2 run directory whose runs all give the offline verdict (the real registered inputs)."""
+    sample = read_jsonl(RELEASED / "k2/k2-sample.jsonl")
+    k2c = read_jsonl(K2C)
+    offline = {
+        v["mutant_id"]: v["verdict"]
+        for v in read_jsonl(RELEASED / "confirm-mutants-v1/verdicts-lock.jsonl")
+    }
+    records = []
+    for set_name, rows in (("k2", sample), ("k2c", k2c)):
+        for i, row in enumerate(rows):
+            for run in (1, 2):
+                records.append(
+                    {
+                        **scored(offline[row["job_id"]]),
+                        "set": set_name,
+                        "pair": i,
+                        "run": run,
+                        "purpose": "k2",
+                        "slot": f"{set_name}:{i:03d}:r{run}",
+                        "candidate_sha256": row["candidate_sha256"],
+                    }
+                )
+    run_dir = tmp_path / name
+    run_dir.mkdir()
+    (run_dir / "k2-runs.jsonl").write_text("".join(json.dumps(r) + "\n" for r in records))
+    receipt = {
+        "purpose": "k2",
+        "job_id": "1300",
+        "identity": {
+            "executor_commit": commit,
+            "git_head_at_freeze": frozen["row"]["git_head_at_freeze"],
+            "ledger_row_hash": frozen["row"]["hash"],
+            "vm_image_id": lane.VM_PINS["image_id"],
+        },
+    }
+    (run_dir / "lane-receipt.json").write_text(json.dumps(receipt))
+    return run_dir
+
+
+def report_argv(run_dirs: list[Path], repo: Path, out: Path) -> list[str]:
+    argv = []
+    for run_dir in run_dirs:
+        argv += ["--run-dir", str(run_dir)]
+    return [
+        *argv,
+        "--repo",
+        str(repo),
+        "--sample",
+        str(RELEASED / "k2/k2-sample.jsonl"),
+        "--k2c",
+        str(K2C),
+        "--verdicts",
+        str(RELEASED / "confirm-mutants-v1/verdicts-lock.jsonl"),
+        "--notes-summary",
+        str(RELEASED / "confirm-mutants-v1/notes-summary.json"),
+        "--out-dir",
+        str(out),
+    ]
+
+
+@pytest.mark.skipif(shutil.which("git") is None, reason="needs git")
+def test_the_k2_report_checks_the_freeze_commit_and_reads_one_job(tmp_path: Path) -> None:
+    frozen = frozen_repo(tmp_path)
+    assert frozen["row"]["git_head_at_freeze"] == frozen["parent"]
+    run_dir = registered_run(tmp_path, frozen, frozen["freeze"])
+    out = tmp_path / "out"
+    assert report.main(report_argv([run_dir], frozen["repo"], out)) == 0
+    k2 = json.loads((out / "k2-report.json").read_text())
+    assert k2["outcome"] == "VERIFIED" and k2["executor_commit"] == frozen["freeze"]
+    assert k2["freeze"]["git_head_at_freeze"] == frozen["parent"]
+    assert k2["freeze"]["changed"] == [lane.LEDGER]
+    summary = json.loads((out / "k2-summary.json").read_text())
+    assert summary["freeze"]["ledger_row_hash"] == frozen["row"]["hash"]
+    assert summary["k2"]["pairs"] == 80 and summary["k2c"]["pairs"] == 41
+    # An export of git_head_at_freeze (the parent) is not the executor of record.
+    parent_run = registered_run(tmp_path, frozen, frozen["parent"], name="parent-run")
+    with pytest.raises(report.ReportError, match="not the freeze commit"):
+        report.main(report_argv([parent_run], frozen["repo"], tmp_path / "o2"))
+    # One job: a second run directory is refused.
+    second = registered_run(tmp_path, frozen, frozen["freeze"], name="second")
+    with pytest.raises(report.ReportError, match="exactly one run directory"):
+        report.main(report_argv([run_dir, second], frozen["repo"], tmp_path / "o3"))
+    # The K2-C digest comes from the frozen registration, never from an argument.
+    with pytest.raises(SystemExit):
+        report.main([*report_argv([run_dir], frozen["repo"], tmp_path / "o4"),
+                     "--k2c-sha256", "0" * 64])  # fmt: skip
+    # A receipt whose ledger row is not the checkout's row is refused.
+    receipt = json.loads((run_dir / "lane-receipt.json").read_text())
+    receipt["identity"]["ledger_row_hash"] = "0" * 64
+    (run_dir / "lane-receipt.json").write_text(json.dumps(receipt))
+    with pytest.raises(report.ReportError, match="not the frozen row"):
+        report.main(report_argv([run_dir], frozen["repo"], tmp_path / "o5"))
+
+
+@pytest.mark.skipif(shutil.which("git") is None, reason="needs git")
+def test_the_k2_report_refuses_a_freeze_commit_that_changes_more_than_the_ledger(
+    tmp_path: Path,
+) -> None:
+    frozen = frozen_repo(tmp_path, extra_in_freeze=True)
+    run_dir = registered_run(tmp_path, frozen, frozen["freeze"])
+    with pytest.raises(report.ReportError, match="more than the ledger"):
+        report.main(report_argv([run_dir], frozen["repo"], tmp_path / "out"))
+
+
+def test_the_k2_report_needs_the_frozen_registration(tmp_path: Path) -> None:
+    repo = tmp_path / "unfrozen"
+    (repo / lane.REGISTRATION).parent.mkdir(parents=True)
+    (repo / lane.REGISTRATION).write_text(f"K2-C list SHA-256: `{report.sha256_file(K2C)}`\n")
+    frozen = {"row": {"git_head_at_freeze": "a" * 40, "hash": "b" * 64}}
+    run_dir = registered_run(tmp_path, frozen, "c" * 40)
+    with pytest.raises(report.ReportError, match="not frozen"):
+        report.main(report_argv([run_dir], repo, tmp_path / "out"))

@@ -1,17 +1,27 @@
 """The K2 report: in-VM verdicts against offline verdicts (registration sections 5-9).
 
-Reads only the K2 job's run records and lane receipts, the frozen K2 sample, the K2-C list,
+Reads only the K2 job's run records and lane receipt, the frozen K2 sample, the K2-C list,
 the offline lock-exact verdict rows and the offline notes summary (whose ``nondeterministic``
-list is cause (2)'s offline side). It never reads an audit summary, a decision, the
-adjudication pool, an adjudication answer, a spot check or a rater output: every input path is
-checked against ``FORBIDDEN_INPUT`` and refused if it names one (section 9).
+list is cause (2)'s offline side), and, for the registered job, the frozen registration and
+its ledger row. It never reads an audit summary, a decision, the adjudication pool, an
+adjudication answer, a spot check or a rater output: every input path is checked against
+``FORBIDDEN_INPUT`` and refused if it names one (section 9).
+
+For the registered job (purpose ``k2``, section 7) it reads exactly one run directory, refuses
+inputs other than the registered ones (the K2-C digest is read from the frozen registration,
+never from an argument), and checks in a git checkout that the executor commit is the freeze
+commit: its only parent is the ledger row's ``git_head_at_freeze`` and the two trees differ
+only by the ledger.
 
 Outputs (``--out-dir``):
 
-* ``k2-pairs.jsonl``: one row per pair (set, pair, job, checker family, offline verdict, each
-  run's reading, the pair's reading and explanation);
-* ``k2-summary.json``: counts, the fitness gate, the registered outcome, per-family and
-  per-save-path agreement, the K2-C summary (descriptive) and the reported-only timings;
+* ``k2-pairs.jsonl``: one row per pair (set, pair, job, checker family, save path, offline
+  verdict, each run's reading, the pair's reading and explanation);
+* ``k2-summary.json``: counts, the fitness gate, the registered outcome and, per set,
+  agreement by family, by offline verdict and by save path, single-run pairs and the
+  reported-only run statistics (save paths, unsaved-at-read runs, late writes, postconfig
+  reply failures, metric errors, checker observations, save-time and run-time distributions),
+  the same statistics pooled, and the receipt with the host snapshots' foreign jobs;
 * ``k2-report.json``: the parent analysis's ``--k2-report`` input (``executor_commit``,
   ``pairs``, ``disagreements`` with ``checker_family`` and ``explanation``), written only for
   the registered job (purpose ``k2``), and only when the fitness gate passes (section 6).
@@ -24,12 +34,13 @@ import hashlib
 import json
 import re
 import statistics
+import subprocess
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-from harness.q2_mutation_k2 import rules
+from harness.q2_mutation_k2 import lane, rules
 
 FORBIDDEN_INPUT = re.compile(
     r"adjudicat|audit-summary|decisions|spot-check|pool|answers|rater|calls\.jsonl|sample\.jsonl$",
@@ -37,6 +48,8 @@ FORBIDDEN_INPUT = re.compile(
 )
 ALLOWED_SAMPLE = re.compile(r"k2-sample\.jsonl$")
 REPORT_SCHEMA = "q2m-k2-report-v1"
+NOT_RECORDED = "not_recorded"  # a pair none of whose attempts reached the plan
+HEX40 = re.compile(r"^[0-9a-f]{40}$")
 # Registered inputs of the k2 job (section 2): the released confirm-campaign files.
 REGISTERED_INPUTS = {
     "sample": "1194168019c4aa87fa3f4aa0ad02f9ed53c207a86ebec264e731545afed6525a",
@@ -156,10 +169,16 @@ def build(
         reading = rules.classify_pair(
             run_rows, str(verdict_row["verdict"]), str(pair["job_id"]) in unstable
         )
+        attempts_of_pair = [
+            a
+            for run in range(1, runs_per_pair + 1)
+            for a in groups.get((pair["set"], int(pair["pair"]), run), [])
+        ]
         rows.append(
             {
                 **pair,
                 "checker_family": checker_family(verdict_row.get("checker_funcs") or []),
+                "save_path": save_path_of(attempts_of_pair),
                 "offline_nondeterministic": str(pair["job_id"]) in unstable,
                 "runs": run_rows,
                 **reading,
@@ -194,6 +213,54 @@ def build(
     if purpose == "k2" and result and result["write_analysis_report"]:
         out["analysis_report"] = analysis_report(rows, receipts, gate, result)
     return out
+
+
+def check_freeze_commit(repo: Path, identity: Mapping[str, Any], row: Mapping[str, Any]) -> dict:
+    """The registered job ran from the freeze commit (section 14): the receipt's executor
+    commit has exactly one parent, the ledger row's ``git_head_at_freeze``; the two trees
+    differ only by the ledger; and the export's own ledger row (recorded by the lane) is this
+    row. Needs a git checkout of the repository that holds both commits."""
+    commit = str(identity.get("executor_commit") or "")
+    parent = str(row.get("git_head_at_freeze") or "")
+    if not HEX40.fullmatch(commit) or not HEX40.fullmatch(parent):
+        raise ReportError("the executor commit and git_head_at_freeze must be full commit ids")
+    if identity.get("ledger_row_hash") != row.get("hash") or (
+        identity.get("git_head_at_freeze") != parent
+    ):
+        raise ReportError("the lane receipt's ledger row is not the frozen row")
+
+    def git(*args: str) -> str:
+        try:
+            done = subprocess.run(
+                ["git", "-C", str(repo), *args], capture_output=True, text=True, timeout=60
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            raise ReportError(f"git is needed to check the freeze commit: {exc}") from exc
+        if done.returncode != 0:
+            raise ReportError(
+                f"git {' '.join(args)}: {done.stderr.strip()[:200]} (run the report in a "
+                "checkout that holds the freeze commit)"
+            )
+        return done.stdout
+
+    parents = git("rev-list", "--parents", "-n", "1", commit).split()[1:]
+    if parents != [parent]:
+        raise ReportError(
+            f"the executor commit {commit[:12]} is not the freeze commit: its parents are "
+            f"{[p[:12] for p in parents]}, not git_head_at_freeze {parent[:12]}"
+        )
+    changed = git("diff", "--name-only", parent, commit).split()
+    if changed != [lane.LEDGER]:
+        raise ReportError(f"the freeze commit changes more than the ledger: {changed[:5]}")
+    return {"executor_commit": commit, "git_head_at_freeze": parent, "changed": changed}
+
+
+def save_path_of(attempts: Sequence[Mapping[str, Any]]) -> str:
+    """A pair's save path: its targets' save paths from the plan its runs recorded
+    (``postconfig_save``, ``agent_save``, ``no_save``; joined with ``+`` when its targets
+    differ), or ``not_recorded`` when no attempt reached the plan."""
+    kinds = {str(how) for a in attempts for how in (a.get("save_paths") or {}).values()}
+    return "+".join(sorted(kinds)) if kinds else NOT_RECORDED
 
 
 def identity_of(receipts: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
@@ -275,27 +342,52 @@ def summarize(
             "explanations": dict(Counter(r["explanation"] for r in subset if r["explanation"])),
         }
 
+    def by(subset: Sequence[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        groups: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+        for r in subset:
+            groups[str(r[key])].append(r)
+        return {k: counts(v) for k, v in sorted(groups.items())}
+
     out: dict[str, Any] = {"purpose": purpose, "gate": gate, "outcome": result}
     for set_name in rules_sets(rows):
         subset = [r for r in rows if r["set"] == set_name]
-        by_family = defaultdict(list)
-        for r in subset:
-            by_family[r["checker_family"]].append(r)
         out[set_name] = {
             **counts(subset),
             "single_run_pairs": sum(1 for r in subset if r["runs_scored"] == 1),
-            "by_family": {f: counts(v) for f, v in sorted(by_family.items())},
-            "by_offline_verdict": {
-                v: counts([r for r in subset if r["offline_verdict"] == v])
-                for v in sorted({r["offline_verdict"] for r in subset})
-            },
+            "by_family": by(subset, "checker_family"),
+            "by_offline_verdict": by(subset, "offline_verdict"),
+            "by_save_path": by(subset, "save_path"),
+            "runs": run_stats([r for r in records if r.get("set") == set_name]),
         }
     out["runs"] = run_stats(records)
     out["receipts"] = [
-        {k: r.get(k) for k in ("job_id", "name", "statuses", "records", "stopped", "error")}
+        {
+            **{k: r.get(k) for k in ("job_id", "name", "statuses", "records", "stopped", "error")},
+            "host_overlap": host_overlap(r.get("snapshots") or []),
+        }
         for r in receipts
     ]
     return out
+
+
+def host_overlap(snapshots: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Reported only: the lane's host snapshots (start, each block, end) that saw another
+    Slurm job, and those jobs (id, CPUs, name)."""
+    foreign: dict[str, dict[str, Any]] = {}
+    seen_at = []
+    for snap in snapshots:
+        rows = snap.get("squeue_foreign") or []
+        if rows:
+            seen_at.append(snap.get("block"))
+        for row in rows:
+            if row:
+                cpus = row[3] if len(row) > 3 else None
+                foreign[str(row[0])] = {"cpus": cpus, "name": row[-1] if len(row) > 5 else None}
+    return {
+        "snapshots": len(snapshots),
+        "with_foreign_jobs": seen_at,
+        "foreign_jobs": dict(sorted(foreign.items())),
+    }
 
 
 def rules_sets(rows: Sequence[Mapping[str, Any]]) -> list[str]:
@@ -323,6 +415,16 @@ def run_stats(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
             out[f"over_{over}s"] = sum(1 for v in ordered if v > over)
         return out
 
+    observed = [r["observations"] for r in records if isinstance(r.get("observations"), dict)]
+    observations = {
+        "runs": len(observed),
+        **{
+            key: sum(int(o.get(key) or 0) for o in observed)
+            for key in ("calls", "retried", "slow", "undelivered")
+        },
+        "unusual": sum(len(o.get("unusual") or []) for o in observed),
+        "max_s": max((float(o.get("max_s") or 0.0) for o in observed), default=None),
+    }
     return {
         "attempts": len(records),
         "statuses": dict(Counter(str(r.get("status")) for r in records)),
@@ -340,6 +442,7 @@ def run_stats(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         ),
         "metric_errors": sum(1 for r in records if r.get("metric_error")),
         "postconfig_failures": sum(int(r.get("postconfig_failures") or 0) for r in records),
+        "observations": observations,
         "save_latency_s": dist(latencies, over=0.5),
         "run_s": dist(run_s),
     }
@@ -348,6 +451,8 @@ def run_stats(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
 def load_inputs(args: argparse.Namespace) -> dict[str, Any]:
     records: list[dict[str, Any]] = []
     receipts: list[dict[str, Any]] = []
+    if len(set(args.run_dir)) != len(args.run_dir):
+        raise ReportError("a run directory is named twice")
     for run_dir in args.run_dir:
         records += read_jsonl(check_input(run_dir / "k2-runs.jsonl"))
         receipts.append(json.loads(check_input(run_dir / "lane-receipt.json").read_text()))
@@ -372,6 +477,32 @@ def load_inputs(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+def check_registered_inputs(
+    args: argparse.Namespace, inputs: Mapping[str, Any], digests: Mapping[str, Any]
+) -> dict[str, Any]:
+    """The registered job's report (section 7): one run directory, the registered inputs
+    (the K2-C digest read from the frozen registration) and the freeze commit."""
+    if len(args.run_dir) != 1 or len(inputs["receipts"]) != 1:
+        raise ReportError("the k2 job's report reads exactly one run directory (one job)")
+    if args.only:
+        raise ReportError("the k2 job's report reads every registered pair")
+    try:
+        row = lane.frozen_registration(args.repo)
+        k2c_sha256 = lane.registered_k2c_sha256(args.repo)
+    except lane.LaneError as exc:
+        raise ReportError(f"the frozen registration: {exc}") from exc
+    for key, expected in REGISTERED_INPUTS.items():
+        if digests[key] != expected:
+            raise ReportError(f"{key} is not the registered input ({digests[key]})")
+    if not args.k2c or digests["k2c"] != k2c_sha256:
+        raise ReportError("the k2 job's report reads the registered K2-C list")
+    return {
+        **check_freeze_commit(args.repo, identity_of(inputs["receipts"]), row),
+        "ledger_row_hash": row.get("hash"),
+        "registration_sha256": row.get("sha256"),
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
@@ -385,28 +516,33 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--k2c", type=Path, default=None)
     parser.add_argument("--verdicts", type=Path, required=True, help="offline verdicts (lock)")
     parser.add_argument("--notes-summary", type=Path, required=True)
-    parser.add_argument("--k2c-sha256", default=None, help="the registered K2-C list digest")
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--only", default=None, help="set:pair ids (development reports)")
+    parser.add_argument(
+        "--repo",
+        type=Path,
+        default=Path("."),
+        help="the repository checkout holding the frozen registration, its ledger row and the "
+        "freeze commit (read for the k2 job only)",
+    )
     args = parser.parse_args(argv)
     inputs = load_inputs(args)
     digests = inputs.pop("digests")
     purposes = {str(r.get("purpose")) for r in inputs["receipts"]}
+    freeze = None
     if purposes == {"k2"}:
-        for key, expected in REGISTERED_INPUTS.items():
-            if digests[key] != expected:
-                raise ReportError(f"{key} is not the registered input ({digests[key]})")
-        if not args.k2c or digests["k2c"] != args.k2c_sha256:
-            raise ReportError("the k2 job's report reads the registered K2-C list")
+        freeze = check_registered_inputs(args, inputs, digests)
     result = build(**inputs, only=args.only.split(",") if args.only else None)
     args.out_dir.mkdir(parents=True, exist_ok=True)
     with (args.out_dir / "k2-pairs.jsonl").open("w", encoding="utf-8") as handle:
         for row in result["pairs"]:
             handle.write(json.dumps(row, sort_keys=True) + "\n")
     summary = {"schema": "q2m-k2-summary-v1", "inputs": digests, **result["summary"]}
+    if freeze is not None:
+        summary["freeze"] = freeze
     (args.out_dir / "k2-summary.json").write_text(json.dumps(summary, indent=1, sort_keys=True))
     if "analysis_report" in result:
-        report = {**result["analysis_report"], "inputs": digests}
+        report = {**result["analysis_report"], "inputs": digests, "freeze": freeze}
         (args.out_dir / "k2-report.json").write_text(json.dumps(report, indent=1, sort_keys=True))
     print(
         json.dumps(

@@ -13,15 +13,18 @@ certified VM runtime (action-path v2) and writes one run record:
 3. the guard's keyboard warm-up, once per boot (action-path v2 design decision 31; the
    postconfig's Ctrl+S must not be the boot's first XTest key event), and OSWorld's 60 s
    settle (S1a section 7.1 step 4);
-4. the plan's ops, in the plan's order: ``kill_process`` (SIGTERM, then SIGKILL after 20 s;
-   then LibreOffice's stale lock files for the targets are removed), ``assert_no_window``,
+4. the plan's ops, in the plan's order: ``kill_process`` (for LibreOffice its own Quit first,
+   Ctrl+Q in one of its windows, awaited 15 s; then SIGTERM to what is still alive, SIGKILL
+   after 20 s; then LibreOffice's stale lock files for the targets are removed; section 3.2),
+   ``assert_no_window``,
    ``hash pre_inject``, ``upload`` (the pinned ``SetupController._upload_file_setup``: the
    ``/setup/upload`` endpoint the task's download step uses), ``hash post_inject`` (each
    placed file must equal the candidate's SHA-256, else cause (3)), ``config_step`` (the
    task's own ``open``/``launch`` step through the pinned ``SetupController``, then a wait
    for a window that names the file), ``agent_save`` (open if no window names the file,
    ``activate_window`` strict, the postconfig's own Ctrl+S command, then a wait for the
-   write) and ``open_file`` (the ``open`` step, then the window wait);
+   write) and ``open_file`` (the ``open`` step, then the window wait); every executor setup
+   step (upload, open, activate, Ctrl+S) is bounded at 180 s;
 5. S1a's 20 s settle before evaluation and its guest-server restart check;
 6. ``hash pre_postconfig``; then the plan's ``postconfig``, ``hash post_postconfig`` and
    ``evaluate`` are one call of the pinned ``DesktopEnv.evaluate()`` (it runs the postconfig
@@ -44,8 +47,9 @@ checker observation, an offline refusal, a guest-server restart or a runner cras
 run as ``vm_infrastructure_failure`` (cause 4); a placed file whose in-VM hash differs from
 the candidate's ends it as ``injection_hash_mismatch`` (cause 3). A metric that raises, or an
 ``evaluate()`` that returns ``None``, is the in-VM verdict ``error`` (the offline harness's
-reading), never an exclusion. The record keeps no stdout tail of any guest command
-(``driver.strip_stdout``).
+reading), never an exclusion; a score is coerced with ``float()`` as the offline harness does
+(``offline_eval``: ``float(result)``), so a boolean metric result is 1.0 or 0.0. The record
+keeps no stdout tail of any guest command (``driver.strip_stdout``).
 """
 
 from __future__ import annotations
@@ -353,23 +357,21 @@ class Injector:
         if result.get("ok") is False:
             raise InjectionFailure(op, "the setup controller could not reach the guest")
 
-    def run_steps(self, op: str, steps: Sequence[Mapping[str, Any]]) -> None:
-        """Executor setup steps through the pinned ``SetupController``, bounded by
-        ``step_timeout_s``: the guest server's ``/setup/open_file`` waits up to 1,800 s for a
-        window, and a step that has not returned by then fails the run (cause (4)); the
-        thread is left behind and the run ends."""
+    def bounded(self, op: str, call: Callable[[], dict[str, Any]]) -> dict[str, Any]:
+        """One executor setup step, bounded by ``step_timeout_s``: the guest server's
+        ``/setup/open_file`` waits up to 1,800 s for a window, and a step that has not returned
+        by then fails the run (cause (4)); the thread is left behind and the run ends."""
         import threading
 
-        assert self.ops is not None
         box: dict[str, Any] = {}
 
-        def call() -> None:
+        def target() -> None:
             try:
-                box["result"] = self.ops.run_steps(list(steps))  # type: ignore[union-attr]
+                box["result"] = call()
             except BaseException as exc:  # noqa: BLE001 - re-raised in the run's thread
                 box["error"] = exc
 
-        worker = threading.Thread(target=call, daemon=True)
+        worker = threading.Thread(target=target, daemon=True)
         worker.start()
         worker.join(self.cfg.step_timeout_s)
         if worker.is_alive():
@@ -377,7 +379,13 @@ class Injector:
         if "error" in box:
             exc = box["error"]
             raise InjectionFailure(op, f"{type(exc).__name__}: {str(exc)[:300]}") from exc
-        self.steps_ok(op, box["result"])
+        return box["result"]
+
+    def run_steps(self, op: str, steps: Sequence[Mapping[str, Any]]) -> None:
+        """Executor setup steps through the pinned ``SetupController`` (bounded)."""
+        assert self.ops is not None
+        ops = self.ops
+        self.steps_ok(op, self.bounded(op, lambda: ops.run_steps(list(steps))))
 
     # ---------------------------------------------------------------- the run
     def candidate(self) -> tuple[dict[str, dict[str, str]], list[str]]:
@@ -582,12 +590,10 @@ class Injector:
             raise InjectionFailure("remove_locks", str(result["error"]))
 
     def upload(self, path: str, local: str) -> None:
+        """The pinned ``/setup/upload`` step (bounded like every executor setup step)."""
         assert self.ops is not None
-        try:
-            result = self.ops.upload(path, local)
-        except Exception as exc:  # noqa: BLE001
-            raise InjectionFailure("upload", f"{type(exc).__name__}: {str(exc)[:300]}") from exc
-        self.steps_ok("upload", result)
+        ops = self.ops
+        self.steps_ok("upload", self.bounded("upload", lambda: ops.upload(path, local)))
 
     def agent_save(self, path: str, window: str | None) -> None:
         """Open if no window names the file, activate it (strict), the postconfig's own Ctrl+S,
@@ -661,9 +667,9 @@ class Injector:
                     1 for r in replies if setup_reply_failed(r)
                 )
         self.timings["evaluate_s"] = round(self.clock() - t, 3)
-        if score is not None and not isinstance(score, bool):
+        if score is not None:
             try:
-                score = float(score)
+                score = float(score)  # the offline harness's coercion (a bool is 1.0 or 0.0)
             except (TypeError, ValueError):
                 self.record["metric_error"] = f"score {score!r} is not a number"
                 score = None
