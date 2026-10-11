@@ -10,8 +10,9 @@ adjudication answer, a spot check or a rater output: every input path is checked
 For the registered job (purpose ``k2``, section 7) it reads exactly one run directory, refuses
 inputs other than the registered ones (the K2-C digest is read from the frozen registration,
 never from an argument), and checks in a git checkout that the executor commit is the freeze
-commit: its only parent is the ledger row's ``git_head_at_freeze`` and the two trees differ
-only by the ledger.
+commit: its only parent is the ledger row's ``git_head_at_freeze``, the two trees differ only
+by the ledger, and the commit's ``harness/`` tree digest is the one the lane receipt recorded
+for the export it ran (so the export's ``.git_sha`` is not taken on trust).
 
 Outputs (``--out-dir``):
 
@@ -21,20 +22,26 @@ Outputs (``--out-dir``):
   agreement by family, by offline verdict and by save path, single-run pairs and the
   reported-only run statistics (save paths, unsaved-at-read runs, late writes, postconfig
   reply failures, metric errors, checker observations, save-time and run-time distributions),
-  the same statistics pooled, and the receipt with the host snapshots' foreign jobs;
+  the same run statistics pooled over every attempt (agreement is never pooled over the two
+  sets), and the receipt with the host snapshots' foreign jobs;
 * ``k2-report.json``: the parent analysis's ``--k2-report`` input (``executor_commit``,
   ``pairs``, ``disagreements`` with ``checker_family`` and ``explanation``), written only for
   the registered job (purpose ``k2``), and only when the fitness gate passes (section 6).
+
+The summary and the analysis report carry ``blind_warning`` (section 9.3, D77): they name
+checker verdicts per mutant and which mutants are candidate events.
 """
 
 from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import re
 import statistics
 import subprocess
+import tarfile
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -56,6 +63,12 @@ REGISTERED_INPUTS = {
     "verdicts": "e9289a954d5aee21156d0b317267b6f818f630b140ac5337e8fae0cc4c66b021",
     "notes_summary": "de597827720bce5aacffa6e51f649510f425bbd89cf558f52da5fe0f881ee823",
 }
+# Section 9.3 and D77: every K2 output carries the blind warning for the adjudication.
+BLIND_WARNING = (
+    "Blind warning (D9, D77): this file names checker verdicts per mutant and which mutants "
+    "are checker candidate events. If you are adjudicating the q2-evaluator-mutation-v1 pool "
+    "or doing its spot check, answer from the blind packets before reading it."
+)
 
 
 class ReportError(ValueError):
@@ -218,8 +231,10 @@ def build(
 def check_freeze_commit(repo: Path, identity: Mapping[str, Any], row: Mapping[str, Any]) -> dict:
     """The registered job ran from the freeze commit (section 14): the receipt's executor
     commit has exactly one parent, the ledger row's ``git_head_at_freeze``; the two trees
-    differ only by the ledger; and the export's own ledger row (recorded by the lane) is this
-    row. Needs a git checkout of the repository that holds both commits."""
+    differ only by the ledger; the export's own ledger row (recorded by the lane) is this row;
+    and the commit's ``harness/`` tree digest equals the receipt's ``source_tree_sha256`` (the
+    digest of the export that ran), so the export's self-declared ``.git_sha`` is checked.
+    Needs a git checkout of the repository that holds both commits."""
     commit = str(identity.get("executor_commit") or "")
     parent = str(row.get("git_head_at_freeze") or "")
     if not HEX40.fullmatch(commit) or not HEX40.fullmatch(parent):
@@ -252,7 +267,56 @@ def check_freeze_commit(repo: Path, identity: Mapping[str, Any], row: Mapping[st
     changed = git("diff", "--name-only", parent, commit).split()
     if changed != [lane.LEDGER]:
         raise ReportError(f"the freeze commit changes more than the ledger: {changed[:5]}")
-    return {"executor_commit": commit, "git_head_at_freeze": parent, "changed": changed}
+    tree = commit_tree_sha256(repo, commit)
+    if identity.get("source_tree_sha256") != tree:
+        raise ReportError(
+            f"the receipt's source tree digest is not the harness/ tree of {commit[:12]} "
+            f"({identity.get('source_tree_sha256')} != {tree}): the export's .git_sha does not "
+            "name the code that ran"
+        )
+    return {
+        "executor_commit": commit,
+        "git_head_at_freeze": parent,
+        "changed": changed,
+        "source_tree_sha256": tree,
+    }
+
+
+def commit_tree_sha256(repo: Path, commit: str, subdir: str = "harness") -> str:
+    """``harness.q2.vm.manifest.source_tree_sha256`` (what the batch file checks and the lane
+    receipt records) of a commit's ``subdir``, read from ``git archive`` without a checkout:
+    one ``<relpath>\\0<sha256>\\n`` line per regular file, sorted, bytecode excluded, a
+    symlink refused (a test keeps the two equal)."""
+    try:
+        done = subprocess.run(
+            ["git", "-C", str(repo), "archive", "--format=tar", commit, subdir],
+            capture_output=True,
+            timeout=120,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ReportError(f"git archive is needed to check the freeze commit: {exc}") from exc
+    if done.returncode != 0:
+        detail = done.stderr.decode(errors="replace").strip()[:200]
+        raise ReportError(f"git archive {commit[:12]} {subdir}: {detail}")
+    entries = []
+    with tarfile.open(fileobj=io.BytesIO(done.stdout)) as tar:
+        for member in tar.getmembers():
+            parts = member.name.split("/")
+            if member.issym() or member.islnk():
+                raise ReportError(f"the executor commit's tree holds a link: {member.name}")
+            if not member.isfile() or "__pycache__" in parts[:-1]:
+                continue
+            if member.name.endswith((".pyc", ".pyo")):
+                continue
+            handle = tar.extractfile(member)
+            assert handle is not None
+            entries.append((member.name, hashlib.sha256(handle.read()).hexdigest()))
+    if not entries:
+        raise ReportError(f"the executor commit has no {subdir}/ tree")
+    outer = hashlib.sha256()
+    for relative, digest in sorted(entries):
+        outer.update(f"{relative}\0{digest}\n".encode())
+    return outer.hexdigest()
 
 
 def save_path_of(attempts: Sequence[Mapping[str, Any]]) -> str:
@@ -288,6 +352,7 @@ def analysis_report(
     registered = [r for r in rows if r["set"] == "k2"]
     return {
         "schema": REPORT_SCHEMA,
+        "blind_warning": BLIND_WARNING,
         "experiment_id": rules.EXPERIMENT_ID,
         "parent": rules.PARENT_ID,
         **ident,
@@ -348,7 +413,15 @@ def summarize(
             groups[str(r[key])].append(r)
         return {k: counts(v) for k, v in sorted(groups.items())}
 
-    out: dict[str, Any] = {"purpose": purpose, "gate": gate, "outcome": result}
+    out: dict[str, Any] = {
+        "blind_warning": BLIND_WARNING,
+        "purpose": purpose,
+        "gate": gate,
+        "outcome": result,
+    }
+    # Agreement is per set only: K2 is a random sample and K2-C is selected on the checker's
+    # verdict, so a rate pooled over both would estimate nothing (section 8). The run
+    # statistics are also pooled, over every attempt (the pair in both sets is run in each).
     for set_name in rules_sets(rows):
         subset = [r for r in rows if r["set"] == set_name]
         out[set_name] = {

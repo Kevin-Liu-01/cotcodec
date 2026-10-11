@@ -143,3 +143,18 @@ python -m harness.q2_mutation_k2.report --run-dir <job>/run \
   --verdicts dev-inputs/verdicts-lock.jsonl --notes-summary <dev notes summary> \
   --out-dir <job>/report   # job 1122 adds --only k2:000,k2:002,k2:004,k2:034,k2:037,k2c:005
 ```
+
+## Summaries regenerated after the re-audit
+
+The fresh re-audit (D77) asked that the K2 outputs carry the blind warning.
+`report.py` now writes it into every `k2-summary.json` (and the registered
+job's `k2-report.json`) as `blind_warning`; the three development summaries
+(`dev-smoke-v2-job1122`, `dev-full-v1-job1130`, `dev-smoke-v3-job1163`) were
+rerun with the same commands from the same committed records. Each
+`k2-pairs.jsonl` is byte-identical, and each `k2-summary.json` differs only by
+the added `blind_warning` field. The re-audit's other report change (the
+freeze-commit check also compares the executor commit's `harness/` tree digest
+with the receipt's) applies to the registered job only; on the three
+development receipts, the digest computed from `git archive` of the recorded
+commit equals the recorded `source_tree_sha256` (`2307253`, `a06dc69`,
+`1448559`).

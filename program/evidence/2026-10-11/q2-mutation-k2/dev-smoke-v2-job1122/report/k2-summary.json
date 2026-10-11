@@ -1,4 +1,5 @@
 {
+ "blind_warning": "Blind warning (D9, D77): this file names checker verdicts per mutant and which mutants are checker candidate events. If you are adjudicating the q2-evaluator-mutation-v1 pool or doing its spot check, answer from the blind packets before reading it.",
  "families_not_covered_by_k2": [
   "compare_docx_files",
   "compare_docx_files_and_ignore_new_lines",
