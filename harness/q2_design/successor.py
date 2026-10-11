@@ -396,6 +396,7 @@ def cmd_merge_designs(args: argparse.Namespace) -> int:
         draws = [c["caps_over_draws"] for c in cells if c["caps_over_draws"]]
         out["cells"][key] = {
             "design": cells[0]["design"], "scenario": cells[0]["scenario"],
+            "scenario_spec": cells[0].get("scenario_spec"),
             "truth": cells[0]["truth"], "cost": cells[0]["cost"],
             "caps_over_draws": {"median": float(np.median([d["median"] for d in draws])),
                                 "max": max(d["max"] for d in draws),
