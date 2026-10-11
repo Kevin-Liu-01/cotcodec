@@ -1,0 +1,41 @@
+{
+ "url": "https://arxiv.org/abs/2606.26560",
+ "fetched_at": "2026-10-11T00:47:43Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44623,
+ "raw_sha256": "3581770c0470b3d88394e543af46e995e4052c3070256e38b3ca3685ccf03ea3",
+ "raw_stored": false,
+ "extract": {
+  "title": "Erase-then-Delta Attention: Decoupling Erase and Write Addresses in Delta-Rule Linear Attention",
+  "authors": [
+   "Li, Xiao",
+   "Zhang, Chengruidong",
+   "Luo, Hao",
+   "Lin, Xi",
+   "Wang, Zekun",
+   "Qiu, Zihan",
+   "Mao, Yunfei",
+   "Chen, Langshi",
+   "Yuan, Man",
+   "Sun, Minmin",
+   "Jiang, Huiqiang",
+   "Zhang, Siqi",
+   "Men, Rui",
+   "Hu, Wei",
+   "Cheng, Gong",
+   "Zheng, Bo",
+   "Liu, Dayiheng",
+   "Zhou, Jingren"
+  ],
+  "citation_date": "2026/06/25",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 25 Jun 2026 03:12:19 UTC"
+   }
+  ],
+  "abstract": "Delta-rule linear attention improves recurrent memory updates by correcting what is already stored at the current write address before writing new content. However, the active correction is still anchored to that same write address. As a result, stale information stored at a different address cannot be actively removed before new content is written elsewhere. We propose Erase-then-Delta Attention (EDA), a memory update rule that decouples where to erase from where to write. The key insight is that recurrent memory models should not only correct the current write, but also selectively suppress outdated memory at an independently chosen address. Concretely, our method first applies a targeted erase step along a learned erase direction, and then performs the standard delta-style corrective write along the current write direction. This preserves the corrective behavior of delta-rule updates while expanding their memory-management capacity. Language-model pretraining experiments across dense 2.5B and MoE 25B-A2.8B model families show that EDA performs best in both settings. The gain persists after 80B-token long-context midtraining of the MoE models, where EDA also performs best in long-context evaluations from 4k to 128k contexts. A compact update analysis and memory-state probes suggest why: EDA keeps the delta-rule corrective write intact while allocating an additional cleanup path most strongly when passive decay is weak. These results suggest that recurrent memory models should decide not only what to write, but also what stale information to erase and where.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

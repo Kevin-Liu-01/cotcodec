@@ -1,0 +1,10 @@
+{
+ "proposal": "paragraph-bab395c3.txt",
+ "closest_prior": "paragraph-e2ac6471.txt",
+ "closest_prior_id": "arXiv:2609.33093 (How Linear Attention Remembers, Lee, Park, Kim and Ko, v1 2026-09-27); full text re-read by the repair owner on 2026-10-10 (Secs. 2.1-2.3, 4.2, 5, 6, App. B)",
+ "additional_packets": {
+  "paragraph-3f647ca8.txt": "arXiv:2609.16183 (Anatomy of Associative Recall in Fixed-State Recurrences, Boesch and Wee, v1 2026-09-14); full text re-read by the repair owner (abstract, Axis 3, Secs. 5-6)"
+ },
+ "wave1_packets": {"proposal": "paragraph-b4bd575e.txt", "closest_prior": "paragraph-ac4ee22c.txt", "role_map": "compute/blind-roles.json"},
+ "note": "Role mapping for the recorder only. Never give this file to the critic. One critic call per prior packet, each paired with the proposal paragraph in randomized order."
+}

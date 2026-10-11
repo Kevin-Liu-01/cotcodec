@@ -1,11 +1,15 @@
 {
  "schema_version": 1,
  "proposal": "program/proposals/2026-10-10-e5-gate-fertility-decomposition.md",
- "proposal_sha256": "5c12ae3aeb516f676a940c426304778c9ea3ee32260dfa3c08d41dd849c20efb",
+ "proposal_sha256": "22b43bcf6c69cfa986af7eaf4133d73aa4c3ebc8066f3ae6921d59b88a8fbe64",
  "draft_registration": {
-  "path": "program/preregistrations/e5-gate-fertility-decomposition-v1.md",
-  "sha256": "f4abf4282ae6d80fc24fcc5fa2fda3c01017d3c84d8a41a220b5bf19098c174b",
-  "status": "DRAFT, not frozen, no ledger row"
+  "path": "program/preregistrations/e5-gate-fertility-decomposition-v2.md",
+  "sha256": "a0bbd08bc9cbb3b4f20b037b8047fc04be3c9de929d676a8212f5b7ccc0d20fa",
+  "status": "DRAFT, not frozen, no ledger row; supersedes v1",
+  "superseded_v1": {
+   "path": "program/preregistrations/e5-gate-fertility-decomposition-v1.md",
+   "sha256": "f4abf4282ae6d80fc24fcc5fa2fda3c01017d3c84d8a41a220b5bf19098c174b"
+  }
  },
  "source_snapshots": [
   {
@@ -43,6 +47,15 @@
    "raw_bytes": 44095,
    "artifact": "snapshots/arxiv.org_abs_2008.07669.json",
    "sha256": "f9cd1474c80d66d32504a8ad8cb6b812f6ff489791c9b66d9b5e93d64957f99d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2111.00396",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:47:43Z",
+   "raw_sha256": "9723e49e0453de53b7f904a5b516fa18db5b0b025fd5c5b44cc43a7d1905bf03",
+   "raw_bytes": 45004,
+   "artifact": "snapshots/arxiv.org_abs_2111.00396.json",
+   "sha256": "2135e3973c53ed7cc17bf3d6e4602ecddefa9e026a10357caefb2912daa20107"
   },
   {
    "url": "https://arxiv.org/abs/2305.15425",
@@ -162,6 +175,15 @@
    "sha256": "2e653470f229caa89cf361c0f8c20da0c7ff36b90a9218f6808379810ab88b76"
   },
   {
+   "url": "https://arxiv.org/abs/2605.13485",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:47:43Z",
+   "raw_sha256": "20895a5ebe1608d693f53612144e498d2ed1dfc4179e3be8ee3e866c06a71240",
+   "raw_bytes": 44630,
+   "artifact": "snapshots/arxiv.org_abs_2605.13485.json",
+   "sha256": "4815e150e89362fa0a47834f55b9f5f5c4d34f22f4e716111a86ad75cb9304d4"
+  },
+  {
    "url": "https://arxiv.org/abs/2605.22791",
    "http_status": 200,
    "fetched_at": "2026-10-10T21:26:38Z",
@@ -187,6 +209,24 @@
    "raw_bytes": 43539,
    "artifact": "snapshots/arxiv.org_abs_2606.15521.json",
    "sha256": "34116ed5128a2a3ac141c136157ad2b915aa8236ab9b94899b57d4a8e3a9eb7f"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.26560",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:47:43Z",
+   "raw_sha256": "3581770c0470b3d88394e543af46e995e4052c3070256e38b3ca3685ccf03ea3",
+   "raw_bytes": 44623,
+   "artifact": "snapshots/arxiv.org_abs_2606.26560.json",
+   "sha256": "2c60175c19c621d2396d88c1d47873ef66cb8f81763ed627db86e81816e60b39"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.27510",
+   "http_status": 200,
+   "fetched_at": "2026-10-11T00:47:43Z",
+   "raw_sha256": "6a0252f734d2961a91392977741b20915e0fa22609ad4e06f8cb4f20f0c81bdc",
+   "raw_bytes": 43509,
+   "artifact": "snapshots/arxiv.org_abs_2606.27510.json",
+   "sha256": "2c4bad5ef7fd93877f6d58fbcd32edd9b9b82dfc6bed0a3285418b66a8e9af95"
   },
   {
    "url": "https://arxiv.org/abs/2607.26831",
@@ -298,19 +338,25 @@
   }
  ],
  "query_log": {
-  "artifact": "query-log.json",
-  "sha256": "73416f0c053191ff118ba437b663e1b3ae57788e7e445e8253d067141fa6b0ad",
-  "queries_against_budget": 120,
-  "note": "120 counted orx discover queries (frontier 47, kill-shot 24, cross-domain 43, asset 6, synthesis 0) against the declared 150; exactly the triad's reserve of 30 remains; uncounted OpenReview, web and Anthology searches and 57 cell paper reads logged separately."
+  "artifact": "query-log-run2.json",
+  "sha256": "fcb449e5dc0d71c0953cf58a7dba548edb6ad48027603cd9ebaee4da61a198ea",
+  "queries_against_budget": 12,
+  "declared_budget": 80,
+  "reserved_for_refuters": 30,
+  "wave1_query_log": {
+   "artifact": "query-log.json",
+   "sha256": "73416f0c053191ff118ba437b663e1b3ae57788e7e445e8253d067141fa6b0ad"
+  },
+  "note": "This run's counted queries so far (the repair's); wave 1's are in query-log.json and the wave-1 record."
  },
  "reviews": [],
- "reviews_status": "NOT_RUN: the blind critic, the refute-first triad and both reviewers run after synthesis. No trusted Ed25519 store exists (D24), so no review can be signed.",
+ "reviews_status": "NOT_RUN for this run: the blind critic, the refute-first triad and both reviewers run after the repair. Wave 1's reviews are in program/gauntlet/2026-10-10-e5-gate-fertility-decomposition.jsonl (row 1). No trusted Ed25519 store exists (D24).",
  "compute": {
-  "scope": "e5-gate-fertility-decomposition-v1 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: S1 identification simulation, S2 operating characteristics, S3 cost model, S4 splitting rules on the real tokenizers, and the registered estimator as code.",
+  "scope": "e5-gate-fertility-decomposition-v2 is a DRAFT; no compute attestation of its own exists (compute/attestations-not-run.md). Supplementary CPU evidence: the D68 repair's registered estimator as code, S1v2 (identification in a two-layer toy through the registered path), S2v2 (the whole decision path's operating characteristics through the registered estimator), S3v2 (cost per branch), and wave 1's S1-S4 (kept unedited).",
   "image_digest": "127.0.0.1:5000/cotcodec-research@sha256:13a9de831cff50461d8ecee3c2794f0c6d6bcffe9d602968fe2ee06e5a1096e9",
   "image_scope": "build 855 from commit ed5d5a93 (image ID sha256:500f3b027173a2d772b7d6ea00ea667dbe1bc956df51e3c2c4455d9c08a2714b; fla and fla-core 0.5.2, torch 2.11.0, transformers 5.15.0); neither subject has been loaded in it on this host",
   "real_model_loop": false,
-  "real_model_loop_scope": "none: the harness (model loop, hooks, forced-choice scorer, ledgers, checkpoint and resume) is not written",
+  "real_model_loop_scope": "none: the harness (model loop, clamp, transplant, CLAMP-LAST, DOSE, r = 2 and silencing hooks, forced-choice scorer, ledgers, checkpoint and resume) is not written",
   "benchmark_adapter": null,
   "benchmark_adapter_scope": "none: the episode builder is not written; the splitting rules exist only as the CPU prototype compute/resegment.py",
   "manifest": null,
@@ -320,43 +366,154 @@
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "e7ff2ff20a818734daf5039c12741935e42b4f516df97b05279ffaade8493667"
+   "sha256": "58c7f11eb8ee5af825d736d04c8d5828359bef5492e24e40e4221fdae9efd8b8"
   },
   "slurm_test": {
    "label": "slurm_test",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "e7ff2ff20a818734daf5039c12741935e42b4f516df97b05279ffaade8493667"
+   "sha256": "58c7f11eb8ee5af825d736d04c8d5828359bef5492e24e40e4221fdae9efd8b8"
   },
   "provenance_verification": {
    "label": "provenance_verification",
    "status": "NOT_RUN",
    "return_code": null,
    "artifact": "compute/attestations-not-run.md",
-   "sha256": "e7ff2ff20a818734daf5039c12741935e42b4f516df97b05279ffaade8493667"
+   "sha256": "58c7f11eb8ee5af825d736d04c8d5828359bef5492e24e40e4221fdae9efd8b8"
   },
   "registered_caps_gpu_h": {
-   "smoke": 0.25,
-   "gdn_main": 1.25,
-   "rwkv_main": 2.5,
-   "sum": 4.0,
+   "smoke": 0.75,
+   "gdn_main": 1.75,
+   "rwkv_main": 3.75,
+   "sum": 6.25,
    "d22_limit": 8.0
-  },
-  "estimate_gpu_h": {
-   "central": 1.257,
-   "high": 3.291
   },
   "supplementary_cpu_evidence": [
    {
-    "label": "registered estimator and decision rules as code",
+    "label": "v2 registered estimator, operating-point rule and decision rules as code",
+    "script": {
+     "artifact": "compute/repair-d68/estimator_v2.py",
+     "sha256": "ce3ef1fb5ec0f424b78e69d275cd9ec70845b9df7f5ec1ab52b35cd882519297"
+    }
+   },
+   {
+    "label": "S1v2 identification: two-layer gated delta-rule toy with state-dependent writes and decays, presence channel, registered operating-point rule, 2 x 2 factorial plus SIL and DOSE, pool truths and resampled operating characteristics at the registered n, v1 rule's K = 1 dilution",
+    "script": {
+     "artifact": "compute/repair-d68/mech-sim-v2.py",
+     "sha256": "feb7d6a6e206e2ef8a765df0e95a6121a344b2db7e571d239ef2eeb9b8e0e143"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/mech-sim-v2.json",
+     "sha256": "47eb20b6d23dd48e62d2f33408995db01de5c93b142ade35f9c08afa7955dc0b"
+    }
+   },
+   {
+    "label": "S2v2 the whole v2 decision path through the registered estimator (held-out selection, four paired arms, article clustering, discordance to about 0.45, every operating-point branch, article heterogeneity, interval coverage against the bootstrap, v1's dilution reproduced with v1's estimator)",
+    "script": {
+     "artifact": "compute/repair-d68/power-sim-v2.py",
+     "sha256": "dc1f3d4e98ca220e67bf460a7f1ffedd4175cbe13caf67812f359371f309c98b"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/power-sim-v2.json",
+     "sha256": "a8264c58c76ce8ba8d4a117fad13e088ab262271ce4d6bf8958ba87d7a43b7b9"
+    }
+   },
+   {
+    "label": "S2v2 part merger",
+    "script": {
+     "artifact": "compute/repair-d68/merge-power-v2.py",
+     "sha256": "98e0949fd2e1db699143603da0b9046aa4a961960dfee026fb267cefc89a5da7"
+    }
+   },
+   {
+    "label": "S1v2 per-world merger",
+    "script": {
+     "artifact": "compute/repair-d68/merge-mech-v2.py",
+     "sha256": "32a05a27e269639b8b35b1a87b8b6b676ebdcc8448a47703c926fd5b575ddccd"
+    }
+   },
+   {
+    "label": "S1v2 probe: where the decay-by-write interaction changes sign, and whether that region passes the floors",
+    "script": {
+     "artifact": "compute/repair-d68/int-sign-probe.py",
+     "sha256": "6b95adaf18e37569471f9abc2c3b20cf402c78313cf09a96219f8bff7dfae5da"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/int-sign-probe.json",
+     "sha256": "8bb3d5e8c459bd1f7fd4f46eaaa08bea545b94753e0f85b811885135c80f5346"
+    }
+   },
+   {
+    "label": "unit checks of estimator_v2 (operating point, readings, overall rule, identity, interval paths)",
+    "script": {
+     "artifact": "compute/repair-d68/estimator-v2-checks.py",
+     "sha256": "2ea6a38838280697856b4038763e9dd02117a8b2064af259136dfc7718ede21f"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/estimator-v2-checks.out",
+     "sha256": "5cd9d6fc84f4436227d17fb4a706864993f88338a4913b26b74f529966f580e0"
+    }
+   },
+   {
+    "label": "superseded: S2v2 merged and S1v2 W3, W5 and both W9 attempts under the native floor of 40 that the repair tried first and dropped (kept unedited)",
+    "outputs": [
+     {
+      "artifact": "compute/repair-d68/superseded-floor40/mech-W3-floor40.json",
+      "sha256": "86c4bb0ba26d89d64782614ec1dc8e3ea29fae163a4732004b096b9085aa499e"
+     },
+     {
+      "artifact": "compute/repair-d68/superseded-floor40/mech-W5-floor40.json",
+      "sha256": "6a1206ddbfa0c654f2791b495a126540e27421b03773a83176ca05c32eedfe3b"
+     },
+     {
+      "artifact": "compute/repair-d68/superseded-floor40/mech-W9-tb015-030-floor40-not-admissible.json",
+      "sha256": "c28aa97373dd81d4f109383e3bf7a9205386c60c20333908e199dd99992cbad4"
+     },
+     {
+      "artifact": "compute/repair-d68/superseded-floor40/mech-W9-tb040-080-floor40-not-admissible.json",
+      "sha256": "701c9cbc92c4b71b6ac0d00960a8181985cc4de04d740f62873b10c993928c18"
+     },
+     {
+      "artifact": "compute/repair-d68/superseded-floor40/power-sim-v2-floor40.json",
+      "sha256": "0a7a358590353f5a144ece8168fb96dc2426f0cf55d28dc4d258ee11a703e3fe"
+     }
+    ]
+   },
+   {
+    "label": "S3v2 tokens, GPU-hours, caps and ladder per (K_p, f_p) branch",
+    "script": {
+     "artifact": "compute/repair-d68/cost-model-v2.py",
+     "sha256": "014e30241ee23e64ecd4d7b21ed067034b5c57ab4eb6da243c5081a2914f4cb4"
+    },
+    "output": {
+     "artifact": "compute/repair-d68/cost-model-v2.json",
+     "sha256": "b83a0e12ed0b2730a4cc9852fce58f1ceb7360523dc7d563cc233ec38ac77f6e"
+    }
+   },
+   {
+    "label": "run-2 query log builder",
+    "script": {
+     "artifact": "compute/repair-d68/build-query-log-run2.py",
+     "sha256": "3d89e3ecf873be5b046a437a57b3805cde11940b96b554a9e7f4341f079c7bd3"
+    }
+   },
+   {
+    "label": "run-2 doctor-record builder",
+    "script": {
+     "artifact": "compute/repair-d68/build-doctors-v2.py",
+     "sha256": "c32f5b01d6d456a7d6e4076a1a1d07c1c3604a245486910a579502527550932e"
+    }
+   },
+   {
+    "label": "wave-1 registered estimator (kept unedited)",
     "script": {
      "artifact": "compute/estimator.py",
      "sha256": "5e0a02b1a6f8d45278bdba25007a96a5348cd1f5953994e0070d579311f15c06"
     }
    },
    {
-    "label": "S1 identification: per-token decay clamp against the uniform r = 2 rescale on a NumPy gated delta-rule memory, six worlds, seeds 42/43/44 x 600 episodes per load",
+    "label": "wave-1 S1 (kept unedited)",
     "script": {
      "artifact": "compute/mech-sim.py",
      "sha256": "f8deaa1dab4e05baa95376bd3c5175b5fc8403127c34c293a6434cf1f168ae0d"
@@ -367,7 +524,7 @@
     }
    },
    {
-    "label": "S2 operating characteristics of every threshold (paired, passage-clustered; assumed discordance 0.05 to 0.30; 4,000 replicates per cell; bootstrap coverage check)",
+    "label": "wave-1 S2 (kept unedited)",
     "script": {
      "artifact": "compute/power-sim.py",
      "sha256": "1d5e56174c2215884f7ae7801af29d617b99c1d8315a335268407d2bf08cfaaa"
@@ -378,7 +535,7 @@
     }
    },
    {
-    "label": "S3 token counts, GPU-hour estimate, caps and degradation ladder (assumed throughputs; no inference throughput measured on the host)",
+    "label": "wave-1 S3 (kept unedited)",
     "script": {
      "artifact": "compute/cost-model.py",
      "sha256": "e82fa1672f5e1b268be6b828dbae8dbf46390e124507bae8a9f43ca477195979"
@@ -389,7 +546,7 @@
     }
    },
    {
-    "label": "S4 splitting rules R(f, seed) and B(seed) on the real m-a-p and RWKV World tokenizers (CC0 arXiv abstracts as stand-in text)",
+    "label": "S4 splitting rules on the real tokenizers (wave 1; still the reference)",
     "script": {
      "artifact": "compute/resegment.py",
      "sha256": "cc27a085a8249f7ab827cf7d13ec2f59cb2a432d99d99ef29f292d392a75d1a9"
@@ -397,20 +554,6 @@
     "output": {
      "artifact": "compute/resegment.json",
      "sha256": "c9616374b8c4d06dbbec92e73cd8622cbd3af3854a06b287961b0c121b0fb7e1"
-    }
-   },
-   {
-    "label": "query-log builder (parses the cells' raw orx outputs from the session scratchpad)",
-    "script": {
-     "artifact": "compute/build-query-log.py",
-     "sha256": "5559a9ccd37ec8edbeed421d5b4bc5338a7eb86f18ff31527be489b4abdc47e8"
-    }
-   },
-   {
-    "label": "doctor-record builder (claim registry parsed from the proposal)",
-    "script": {
-     "artifact": "compute/build-doctors.py",
-     "sha256": "032bb9a102cdfce3ee02077f8c48c8909a989cedaddd5eecddf82134fe1a9025"
     }
    },
    {
@@ -423,14 +566,12 @@
   ],
   "tokenizer_inputs": {
    "m-a-p tokenizer.json": {
-    "sha256": "1d5b9634c23bdd4540f633d327120e1fa4b57a2a723a56d7a92debfc4d15c061",
-    "git_blob_sha1": "b667161bc937dfaed6f27e9e7849a664c3e869b3",
-    "hf_tree_oid": "b667161bc937dfaed6f27e9e7849a664c3e869b3"
+    "sha256": "1d5b9634c23bdd4540f633d327120e1fa4b57a2a723a56d7a92debfc4d15c061"
    },
    "rwkv_vocab_v20230424.txt": {
     "sha256": "e6dee3d4e31b4d5c40ac99508ac6c701ceef4bed681bf2167ce9a908552bca89"
    },
-   "location": "session scratchpad (fetched by the frontier cell); not committed"
+   "location": "session scratchpad (fetched by the wave-1 frontier cell); not committed"
   }
  },
  "doctors": [
@@ -438,86 +579,94 @@
    "name": "Source",
    "status": "PASS",
    "artifact": "doctors/source.json",
-   "sha256": "feedcc71402f6b0064f47a4d4529bf3ab7205b9bdc0c327baf786245257262b8"
+   "sha256": "478a7dbcc38ca885a6422e9783487bf43bbe09ef82dbb9079b453bcc104503b7"
   },
   {
    "name": "Citation",
    "status": "PASS",
    "artifact": "doctors/citation.json",
-   "sha256": "e1c9649466b51c872aad91b39295bd32b38096b9d61587a98c2042676a3122b3"
+   "sha256": "a337980701c76c3298b716e182bf170a1a6cd1ebc264491180b38ca4e779eb5c"
   },
   {
    "name": "Novelty",
    "status": "FAIL",
    "artifact": "doctors/novelty.json",
-   "sha256": "58436dbb37e4223071d35c084494f5a6a4cf40c2460e6c7284784a4c97235711"
+   "sha256": "d29c6020fe2717518505e042379be31ed48578681d30e925fbae24277194b310"
   },
   {
    "name": "Design",
    "status": "FAIL",
    "artifact": "doctors/design.json",
-   "sha256": "a94dfbe6f24268146c0f7c1c31d04d6746163b9ad6a262758df88ed3246e5cfa"
+   "sha256": "e0c2abd5c66b8ac61e86ed56f051a9533024bac62b6032d50a9400ac97cd8fdd"
   },
   {
    "name": "Compute",
    "status": "FAIL",
    "artifact": "doctors/compute.json",
-   "sha256": "c19779a001e64c536792cd02b14287ed5eec35ac133afa55bccbca7c6bdb4565"
+   "sha256": "4994b52ad14b92731ac31ebe0246c7e44b673a1ea6394347ca43610b3f08ebb2"
   },
   {
    "name": "Safety",
    "status": "PASS",
    "artifact": "doctors/safety.json",
-   "sha256": "9ce1c91f006294557a79fdc759693c7d652e55a00a2efcc9d60ff0536d5abb63"
+   "sha256": "daa800813f6746c6f3e312e3400f0b928f5135c29f2659c3eba136a7c639f28c"
   }
  ],
  "audit_log": null,
- "audit_log_status": "This gauntlet's wave-1 row is appended to program/gauntlet/2026-10-10-e5-gate-fertility-decomposition.jsonl with scripts/research_gauntlet_record.py after its reviewers score.",
- "evidence_root_sha256": "dab86d8e00cbd00c5057b28308cf8c8f4b6a7e74934423656283000a9a49f53b",
+ "audit_log_status": "Wave 1's row is the first row of program/gauntlet/2026-10-10-e5-gate-fertility-decomposition.jsonl (hash 8b808c0c...); this run's row is appended after its reviewers score.",
+ "evidence_root_sha256": "56e3509471652e5c336c56bd4ee19443f0dcff8783bfa002f58076cfe3d94c77",
  "blind_discrimination_packet": {
   "proposal": {
-   "artifact": "blind/paragraph-b4bd575e.txt",
-   "sha256": "cf42b2c3c08161e5dc2b4db66d48daf69cc1fb4e4a5ee639e96cfc65883367b5",
-   "text_sha256": "4af0aa163e8103e82abc73a525c93b29910f8b9b2c6fa6d0b31f87c95aa0b8e6"
+   "artifact": "blind/paragraph-bab395c3.txt",
+   "sha256": "c29f9e4aaf85979287f0695a96246dc5e49c66671c3de50d3f74a327e779ddcc",
+   "text_sha256": "bab395c37ae55a083c37b9b1af89e1b56c42bc4b650ffe334b0d8f72a5732a5e"
   },
   "closest_prior": {
-   "artifact": "blind/paragraph-ac4ee22c.txt",
-   "sha256": "aab5a112f761f44f9d4a85a4793af67a242c3a4958d6affc0be80ae13ad2f003",
-   "text_sha256": "a8e9b804e1cdac075dc4d13143818653778f77a296ad4608f1da66ef0fa44b1c"
+   "artifact": "blind/paragraph-e2ac6471.txt",
+   "sha256": "0af986cded19e5955d672a67275ac6769afb05258b6e8b851b8a9e71d6ce2926",
+   "text_sha256": "e2ac64718de8529ca56e14131c8f56ee0e6a555e757975f6029c7ccea3b5f881"
   },
-  "closest_prior_id": "arXiv:2609.33093 (How Linear Attention Remembers, Lee, Park, Kim and Ko, v1 2026-09-27); full text read by the frontier, kill-shot and cross-domain cells and re-read by synthesis on 2026-10-10 (Secs. 2.2-2.3, 4.1-4.2, App. A)",
-  "note": "File names carry no role and each file holds only its paragraph. The critic receives the two texts in randomized order, read by path, without this mapping or any other text."
+  "closest_prior_id": "arXiv:2609.33093 (How Linear Attention Remembers, Lee, Park, Kim and Ko, v1 2026-09-27); full text re-read by the repair owner on 2026-10-10 (Secs. 2.1-2.3, 4.2, 5, 6, App. B)",
+  "additional_prior_packets": [
+   {
+    "packet": {
+     "artifact": "blind/paragraph-3f647ca8.txt",
+     "sha256": "f00dfb90a5e4ba09fdfa187719d6695f71254d480761201a8f6f855caaba419c",
+     "text_sha256": "3f647ca8899f9ce7751adb6f107776d9116ffb5d65a3439823e12fd123e56440"
+    },
+    "prior": "arXiv:2609.16183 (Anatomy of Associative Recall in Fixed-State Recurrences, Boesch and Wee, v1 2026-09-14); full text re-read by the repair owner (abstract, Axis 3, Secs. 5-6)"
+   }
+  ],
+  "wave1_packets": {
+   "proposal": "paragraph-b4bd575e.txt",
+   "closest_prior": "paragraph-ac4ee22c.txt",
+   "role_map": "compute/blind-roles.json"
+  },
+  "note": "File names carry no role and each file holds only its paragraph. One critic call per prior packet, each with the proposal paragraph, in randomized order, read by path, without the role map or any other text."
  },
  "budget_ledger": {
   "declared": {
-   "queries": 150,
+   "queries": 80,
    "wall_minutes": 600,
    "tokens": 8000000,
    "dollars": 150,
-   "waves": 3,
+   "waves": 1,
    "gpu_hours": 0.3
   },
-  "used_by_discovery_cells": {
-   "queries": 120,
-   "uncounted_searches": 18,
-   "paper_reads": 57,
+  "used_by_repair": {
+   "queries": 12,
+   "failed_not_counted": 2,
+   "paper_reads": 8,
+   "citation_graph_lookups": 6,
    "gpu_hours": 0.0,
-   "host": "read-only ssh by the kill-shot and asset cells (squeue empty; cached cards, receipts, tokenizer files); no host job"
+   "host": "none (no ssh, no host job)",
+   "wall_minutes_and_tokens": "metered by the recorder from transcripts"
   },
-  "used_by_synthesis": {
-   "queries": 0,
-   "paper_reads": "re-reads of cell-fetched full texts (2609.33093, 2609.16183, 2507.06457, 2506.19004, 2609.14320, 2410.07145, MambaExtend); 32 arXiv and Hugging Face snapshot fetches (auxiliary)",
-   "gpu_hours": 0.0,
-   "host": "one read-only squeue at 21:41 UTC (empty); no host job",
-   "cpu": "S1 (612 s), S2 (79 s), S3 and S4 (159 s wall) on the development Mac",
-   "tokens_and_dollars": "not metered by the synthesis agent; the recorder meters from transcripts"
-  },
-  "remaining_queries": 30,
-  "refuter_reserve_shortfall": 0
+  "remaining_queries": 68
  },
  "direction_doctor_run": {
   "artifact": "doctors/research-direction-doctor-output.json",
-  "sha256": "c6e5aa8cd1fdd8f691034baa39a56e2bba0454b50008c5953633d1f0fc2bb7da",
+  "sha256": "61e4441598ea3b0be173fb0d6306e4aa199fa7151fc1fa797f7b0354cf4d7839",
   "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-10-e5-gate-fertility-decomposition.md",
   "note": "Outside evidence_root by design: the doctor output depends on this bundle."
  }

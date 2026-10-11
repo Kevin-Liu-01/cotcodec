@@ -2,14 +2,13 @@
  "doctor": "Novelty",
  "status": "FAIL",
  "evaluated_on": "2026-10-10",
- "evaluated_by": "synthesis pass by the single synthesis owner (Claude agent), 2026-10-10; not an independent review",
+ "evaluated_by": "pass by the single repair owner under D68 (Claude agent), 2026-10-10; not an independent review",
  "pass_condition": "Synonyms, component pairs, citation graph, code, and adjacent fields searched",
- "evidence": "No direct prior art found through 2026-10-10 under the recorded coverage (120 counted orx queries including each closest prior's title phrase, the mechanism in plain words and published-after bounds; 40 distinct papers opened; 0 direct priors). Merged verdict NARROWED: Lee et al. (2609.33093), Boesch and Wee (2609.16183), MambaExtend, DeciMamba (2406.14528), Mamba Modulation (2509.19633), SpectralShift (2609.14320) and the re-segmentation literature each occupy one component.",
+ "evidence": "No direct prior art found through 2026-10-10 under wave 1's coverage plus this run's 12 counted queries (the factorial's components, the v2 mechanism in plain words, both closest priors' title phrases bounded after their first versions, noising and denoising in recurrent models, decay patching, forgetting-mass parity) and the OpenAlex citation-graph lookups. The verdict stays NARROWED and the proposal claims no new mechanism: the factorial is the noising/denoising pair of 2606.27510 applied to the decay channel; the clamp is legacy D20's span oracle at token granularity, i.e. Tallec and Ollivier's time-warp condition imposed on decay only.",
  "why_fail": [
-  "the blind closest-prior critic has not run (packets in blind/)",
-  "the novelty refuter has not run",
-  "no counted query targeted activation patching of decay or gate parameters as such; synthesis had no queries left above the triad's reserve of 30",
-  "no full OpenReview sweep of ICLR 2027 submissions; no citation-graph traversal beyond OpenAlex"
+  "this run's blind closest-prior critic has not run (packets in blind/, role map compute/repair-d68/blind-roles-run2.json)",
+  "this run's novelty refuter has not run",
+  "no Semantic Scholar citation traversal; OpenReview and the ACL Anthology not searched again"
  ],
- "remediation": "Run the blind critic on blind/ and the novelty refuter, including the query 'activation patching decay gate recurrent language model mediation'."
+ "remediation": "Run the blind critic on the proposal packet against each prior packet, and the novelty refuter, with OpenReview and Semantic Scholar if reachable."
 }
