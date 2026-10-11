@@ -39,7 +39,8 @@ file, ``zz-s2v3-cell.xcd`` (cell selector), byte-for-byte recorded:
        (O5 must fail)
 
 Every derived cell also pins, finalized: SheetPrefix "Sheet", CTLFont false,
-EnglishFunctionName true, ooSetupSystemLocale en-US. A container-fidelity layer, identical in
+EnglishFunctionName true; the interface language is set by both of its keys (Setup ooLocale and
+Linguistic UILocale); ooSetupSystemLocale stays at its default (the system locale). A container-fidelity layer, identical in
 every cell including S, pins the icon theme the VM's GNOME session uses (Yaru), because openbox
 gives LibreOffice no desktop to infer it from. GTK caret blinking is off in every cell (a
 deterministic screenshot), through the profile's GTK settings.
@@ -159,7 +160,10 @@ def selector(cell: str) -> str | None:
         return None
     locale = {"A": "ar", "AR": "ar", "AD": "ar", "Q": "qtz"}.get(cell, "en-US")
     mirror = {"ER": "true", "AR": "true", "ER2": "true", "PCR": "true", "PD": "true", "AD": None}.get(cell, "false")
-    setup = '<node oor:name="L10N">' + prop("ooLocale", locale) + prop("ooSetupSystemLocale", "en-US") + "</node>"
+    # ooSetupSystemLocale (number, date and paper defaults) is left at its default, the system
+    # locale (en_US.UTF-8 in every cell), so it is held fixed without a pin: pinning it to en-US
+    # changed the default paper from A4 to Letter in saved files (smoke 1124, S against E).
+    setup = '<node oor:name="L10N">' + prop("ooLocale", locale) + "</node>"
     # The interface language has two keys: ooLocale (gettext catalogs) and Linguistic's UILocale,
     # which, when the profile sets it, decides the configuration locale of every registry label
     # (menus, commands, toolbars). Both carry the cell's language (smoke job 1116 and debug 1120:
