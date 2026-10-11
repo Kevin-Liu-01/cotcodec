@@ -28,6 +28,7 @@ frozen ``infra/q2-mutation/run/submit_mutants.sh``, submitted one at a time:
 
     zr_host.py plan --src SRC --name NAME --split reserve          # Q2ZR_PREREG_FROZEN exported
     zr_host.py plan --src SRC --name NAME --split dev --controls-run dev-controls-v9
+    zr_host.py plan ... --split dev --controls-run dev-controls-v9 --reuse-parent-run dev-mutants-v9
     zr_host.py next --name NAME [--dry-run]                         # repeat until "complete"
     zr_host.py status --name NAME
 """
@@ -319,8 +320,17 @@ def read_plan(root: Path, name: str) -> tuple[Path, dict[str, Any]]:
 
 
 def make_plan(
-    src: Path, name: str, split: str, controls_run: str | None, root: Path = ROOT
+    src: Path,
+    name: str,
+    split: str,
+    controls_run: str | None,
+    root: Path = ROOT,
+    reuse_parent_run: str | None = None,
 ) -> dict[str, Any]:
+    """A run plan. ``reuse_parent_run`` (dev only, a rehearsal of step 4) records steps 1-3 as
+    done in an existing parent mutation run of the dev split, so only ``zinv`` is submitted."""
+    if reuse_parent_run is not None and split != "dev":
+        raise HostError("only a dev rehearsal may reuse a parent run")
     sha = check_src(src)
     guard, rules, campaign = load_staged(src)
     row = guard.require_split_allowed(split, src)
@@ -347,6 +357,15 @@ def make_plan(
         }
         for stage in STAGES
     ]
+    if reuse_parent_run is not None:
+        parent_run = Q2M / "runs" / reuse_parent_run
+        submitted = json.loads((parent_run / "submitted.json").read_text(encoding="utf-8"))
+        if submitted.get("split") != "dev":
+            raise HostError(f"{parent_run} is not a dev-split mutation run")
+        for step in steps[:3]:
+            step["run_dir"] = str(parent_run / STAGE_DIRS[step["stage"]])
+            step["state"] = "done"
+            step["reused"] = reuse_parent_run
     return {
         "experiment_id": EXPERIMENT_ID,
         "name": name,
@@ -361,13 +380,17 @@ def make_plan(
         "apply_to": pins["apply_to"],
         "family": FAMILY,
         "cap_lane_hours": CAP_LANE_HOURS,
+        "reuse_parent_run": reuse_parent_run,
         "created_at": now(),
         "steps": steps,
     }
 
 
 def cmd_plan(args: argparse.Namespace) -> None:
-    plan = make_plan(args.src.resolve(), args.name, args.split, args.controls_run, args.root)
+    plan = make_plan(
+        args.src.resolve(), args.name, args.split, args.controls_run, args.root,
+        args.reuse_parent_run,
+    )  # fmt: skip
     run = run_root(args.root, args.name)
     run.mkdir(parents=True)
     (args.root / "slurm").mkdir(parents=True, exist_ok=True)
@@ -488,6 +511,7 @@ def main(argv: list[str] | None = None) -> int:
     pl.add_argument("--name", required=True)
     pl.add_argument("--split", required=True, choices=["dev", "reserve"])
     pl.add_argument("--controls-run", default=None)
+    pl.add_argument("--reuse-parent-run", default=None, help="dev only: rehearse step 4 alone")
     nx = sub.add_parser("next")
     nx.add_argument("--name", required=True)
     nx.add_argument("--dry-run", action="store_true")

@@ -670,3 +670,26 @@ def test_the_registration_states_the_registered_values():
     for outcome in rules.OUTCOMES:
         assert outcome in body
     assert "export the freeze commit itself, never its parent" in body
+
+
+def test_a_dev_rehearsal_of_step_4_alone_reuses_a_parent_dev_run(tmp_path, monkeypatch):
+    host, src, root = host_setup(tmp_path, monkeypatch)
+    parent = tmp_path / "q2m" / "runs" / "dev-mutants-v9"
+    for sub in ("prep", "build", "score"):
+        (parent / sub).mkdir(parents=True)
+    (parent / "submitted.json").write_text(json.dumps({"split": "dev"}))
+    with pytest.raises(host.HostError, match="only a dev rehearsal"):
+        host.make_plan(src, "r", "reserve", None, root, "dev-mutants-v9")
+    plan = host.make_plan(src, "z", "dev", "dev-controls-v9", root, "dev-mutants-v9")
+    assert [s["state"] for s in plan["steps"]] == ["done", "done", "done", "pending"]
+    run_dir = root / "runs" / "z"
+    run_dir.mkdir(parents=True)
+    host.write_plan(run_dir, plan)
+    monkeypatch.setattr(host, "queue_jobs", lambda: [])
+    submitted = []
+    monkeypatch.setattr(host, "sbatch", lambda c: submitted.append(c) or "77")
+    host.main(["--root", str(root), "next", "--name", "z"])
+    assert len(submitted) == 1 and "--job-name=q2zr-z-zinv" in submitted[0]
+    export = next(a for a in submitted[0] if a.startswith("--export="))
+    assert f"Q2M_EXTRA_RO={parent}/build:/ro/build+{parent}/score:/ro/score+" in export
+    assert f"Q2M_RUN_DIR={run_dir}/zinv" in export

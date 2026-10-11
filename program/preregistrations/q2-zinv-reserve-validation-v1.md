@@ -121,7 +121,7 @@ whose files differ, and `tests/test_q2_zinv_reserve.py` fails on drift):
 | `harness/q2_zinv_reserve/guard.py` | `a1bf674ed7fe3dc476142b65aabacf5db742b536645a11ae8ec3903e33e9fbf0` |
 | `harness/q2_zinv_reserve/rules.py` | `228bf1764b2a369e658b8b736845e4a7986e4e928c0cc624dea1cdfbe96b7f8e` |
 | `harness/q2_zinv_reserve/run.py` | `6d73e4462a41a928afe7b312b393ad81f44ca536c99dfc63e85686d8972c5b26` |
-| `infra/q2-zinv-reserve/run/zr_host.py` | `e41d16132c1ae641a7bfbedcfdbe815810f9f9181a2704a24496dc1936f46fb2` |
+| `infra/q2-zinv-reserve/run/zr_host.py` | `a62175f6e7b766f23ba8ae53b818fa0fce03cbbf9e23f2789e9867689c654349` |
 <!-- q2zr-code-table end -->
 
 ## 4. Populations, expected size and what the sample can detect
