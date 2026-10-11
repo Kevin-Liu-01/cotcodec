@@ -1,0 +1,20 @@
+{
+ "build": "B5",
+ "job": "1108",
+ "tag": "cotcodec-q2-r04-lo-b5:2043b4262ffe",
+ "dockerfile_sha256": "2043b4262ffe5063ee7e3986a46c50d97b0fa03acba0946afd2de328d86b0e9c",
+ "context": "/home/kevin/cotcodec-runs/stage0/r04-nuisance/images/B5-2043b4262ffe",
+ "src_sha": "c9e3189edc3664f9a1ea284da9a8518bfc5a437a",
+ "command": [
+  "sbatch",
+  "--parsable",
+  "--job-name=r04-build-B5",
+  "--cpus-per-task=8",
+  "--mem=16G",
+  "--time=00:45:00",
+  "--output=/home/kevin/cotcodec-runs/stage0/r04-nuisance/slurm/slurm-%x-%j.out",
+  "--export=ALL,Q2M_MODE=build,Q2M_CONTEXT=/home/kevin/cotcodec-runs/stage0/r04-nuisance/images/B5-2043b4262ffe,Q2M_TAG=cotcodec-q2-r04-lo-b5:2043b4262ffe",
+  "/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/c9e3189edc3664f9a1ea284da9a8518bfc5a437a/infra/slurm/host-single-node/q2-mutation-cpu.sbatch"
+ ],
+ "submitted_at": "2026-10-11T09:21:03Z"
+}

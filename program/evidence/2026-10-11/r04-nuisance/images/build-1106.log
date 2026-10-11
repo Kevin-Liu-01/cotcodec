@@ -1,0 +1,88 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.33kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/cotcodec-q2-lo-vm:4d5db07d
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/2] FROM docker.io/library/cotcodec-q2-lo-vm:4d5db07d
+#4 CACHED
+
+#5 [2/2] RUN set -eux;     mkdir -p /opt/r04;     dpkg-query -W -f='${Package}\t${Version}\t${Status}\n' > /opt/r04/dpkg-before.tsv;     cd /tmp;     curl -fsSL --retry 3 -o lo.tar.gz "https://downloadarchive.documentfoundation.org/libreoffice/old/7.6.7.2/deb/x86_64/LibreOffice_7.6.7.2_Linux_x86-64_deb.tar.gz";     test "$(stat -c %s lo.tar.gz)" = "208207432";     echo "5fbd379bd9cedb037fa00b6e7e830619bff503a9451bc321e2b4e8d646081920  lo.tar.gz" | sha256sum -c -;     tar -xzf lo.tar.gz;     for deb in LibreOffice_*_Linux_x86-64_deb/DEBS/*.deb; do       case "$deb" in *debian-menus*) continue ;; esac;       dpkg-deb -x "$deb" /;     done;     rm -rf /tmp/lo.tar.gz /tmp/LibreOffice_*;     dpkg-query -W -f='${Package}\t${Version}\t${Status}\n' > /opt/r04/dpkg-after.tsv;     cmp /opt/r04/dpkg-before.tsv /opt/r04/dpkg-after.tsv;     chmod -R a+rX /opt/libreoffice7.6;     HOME=/tmp/r04-version-home /opt/libreoffice7.6/program/soffice --version > /opt/r04/soffice-version.txt 2>&1;     rm -rf /tmp/r04-version-home;     grep -q "LibreOffice 7.6.7.2" /opt/r04/soffice-version.txt;     (ls -1 /opt/libreoffice7.6/program | grep -i -E "^(python|libpython|pyuno)" || true) > /opt/r04/python.txt;     printf '%s\n' "B2" "7.6.7.2" "5fbd379bd9cedb037fa00b6e7e830619bff503a9451bc321e2b4e8d646081920" "208207432" > /opt/r04/build.txt
+#5 0.058 + mkdir -p /opt/r04
+#5 0.060 + dpkg-query -W -f=${Package}\t${Version}\t${Status}\n
+#5 0.076 + cd /tmp
+#5 0.076 + curl -fsSL --retry 3 -o lo.tar.gz https://downloadarchive.documentfoundation.org/libreoffice/old/7.6.7.2/deb/x86_64/LibreOffice_7.6.7.2_Linux_x86-64_deb.tar.gz
+#5 8.899 + stat -c %s lo.tar.gz
+#5 8.900 + test 208207432 = 208207432
+#5 8.900 + echo 5fbd379bd9cedb037fa00b6e7e830619bff503a9451bc321e2b4e8d646081920  lo.tar.gz
+#5 8.900 + sha256sum -c -
+#5 9.541 + tar -xzf lo.tar.gz
+#5 9.542 lo.tar.gz: OK
+#5 10.57 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-base_7.6.7.2-2_amd64.deb /
+#5 10.64 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-calc_7.6.7.2-2_amd64.deb /
+#5 11.03 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-core_7.6.7.2-2_amd64.deb /
+#5 15.35 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-draw_7.6.7.2-2_amd64.deb /
+#5 15.35 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-en-us_7.6.7.2-2_amd64.deb /
+#5 15.35 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-extension-beanshell-script-provider_7.6.7.2-2_amd64.deb /
+#5 15.38 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-extension-javascript-script-provider_7.6.7.2-2_amd64.deb /
+#5 15.42 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-extension-mediawiki-publisher_7.6.7.2-2_amd64.deb /
+#5 15.52 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-extension-nlpsolver_7.6.7.2-2_amd64.deb /
+#5 15.58 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-extension-pdf-import_7.6.7.2-2_amd64.deb /
+#5 15.76 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-extension-report-builder_7.6.7.2-2_amd64.deb /
+#5 15.93 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-firebird_7.6.7.2-2_amd64.deb /
+#5 16.09 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-gnome-integration_7.6.7.2-2_amd64.deb /
+#5 16.12 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-graphicfilter_7.6.7.2-2_amd64.deb /
+#5 16.19 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-images_7.6.7.2-2_amd64.deb /
+#5 19.25 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-impress_7.6.7.2-2_amd64.deb /
+#5 19.27 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-kde-integration_7.6.7.2-2_amd64.deb /
+#5 19.35 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-librelogo_7.6.7.2-2_amd64.deb /
+#5 19.36 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-libreofficekit-data_7.6.7.2-2_amd64.deb /
+#5 19.37 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-math_7.6.7.2-2_amd64.deb /
+#5 19.40 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-ogltrans_7.6.7.2-2_amd64.deb /
+#5 19.41 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-onlineupdate_7.6.7.2-2_amd64.deb /
+#5 19.42 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-ooofonts_7.6.7.2-2_amd64.deb /
+#5 20.26 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-ooolinguistic_7.6.7.2-2_amd64.deb /
+#5 20.27 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-postgresql-sdbc_7.6.7.2-2_amd64.deb /
+#5 20.38 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-python-script-provider_7.6.7.2-2_amd64.deb /
+#5 20.38 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-pyuno_7.6.7.2-2_amd64.deb /
+#5 20.80 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-writer_7.6.7.2-2_amd64.deb /
+#5 21.01 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libobasis7.6-xsltfilter_7.6.7.2-2_amd64.deb /
+#5 21.03 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6-base_7.6.7.2-2_amd64.deb /
+#5 21.04 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6-calc_7.6.7.2-2_amd64.deb /
+#5 21.04 + continue
+#5 21.04 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6-dict-en_7.6.7.2-2_amd64.deb /
+#5 21.27 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6-dict-es_7.6.7.2-2_amd64.deb /
+#5 21.36 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6-dict-fr_7.6.7.2-2_amd64.deb /
+#5 21.43 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6-draw_7.6.7.2-2_amd64.deb /
+#5 21.43 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6-en-us_7.6.7.2-2_amd64.deb /
+#5 21.44 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6-impress_7.6.7.2-2_amd64.deb /
+#5 21.44 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6-math_7.6.7.2-2_amd64.deb /
+#5 21.44 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6-ure_7.6.7.2-2_amd64.deb /
+#5 22.20 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6-writer_7.6.7.2-2_amd64.deb /
+#5 22.20 + dpkg-deb -x LibreOffice_7.6.7.2_Linux_x86-64_deb/DEBS/libreoffice7.6_7.6.7.2-2_amd64.deb /
+#5 22.24 + rm -rf /tmp/lo.tar.gz /tmp/LibreOffice_7.6.7.2_Linux_x86-64_deb
+#5 22.30 + dpkg-query -W -f=${Package}\t${Version}\t${Status}\n
+#5 22.31 + cmp /opt/r04/dpkg-before.tsv /opt/r04/dpkg-after.tsv
+#5 22.32 + chmod -R a+rX /opt/libreoffice7.6
+#5 22.38 + HOME=/tmp/r04-version-home /opt/libreoffice7.6/program/soffice --version
+#5 22.45 + rm -rf /tmp/r04-version-home
+#5 22.46 + grep -q LibreOffice 7.6.7.2 /opt/r04/soffice-version.txt
+#5 22.46 + ls -1 /opt/libreoffice7.6/program
+#5 22.46 + grep -i -E ^(python|libpython|pyuno)
+#5 22.46 + printf %s\n B2 7.6.7.2 5fbd379bd9cedb037fa00b6e7e830619bff503a9451bc321e2b4e8d646081920 208207432
+#5 DONE 22.9s
+
+#6 exporting to image
+#6 exporting layers
+#6 exporting layers 1.9s done
+#6 writing image sha256:c39f6957ec75ac270db031c333dd59f5f010056288131453b10aff4ed818a0cb
+#6 writing image sha256:c39f6957ec75ac270db031c333dd59f5f010056288131453b10aff4ed818a0cb done
+#6 naming to docker.io/library/cotcodec-q2-r04-lo-b2:477adcc3ed81 done
+#6 DONE 1.9s

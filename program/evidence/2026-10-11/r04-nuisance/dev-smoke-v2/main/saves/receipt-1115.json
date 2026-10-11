@@ -1,0 +1,15 @@
+{
+  "job_id": "1115",
+  "mode": "run",
+  "image_id": "sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361",
+  "argv_json_hex_sha256": "6dabede3f0cd452be74186bf3961257b49540e5b90901cc278851f16c0a83e7c",
+  "argv_json_hex": "5b227368222c20222f7372632f696e6672612f7230342d6e756973616e63652f72756e2f7265736176652e7368222c20222f726f2f6974656d732f6974656d732e6a736f6e6c222c20222f6f7574222c202238222c20222d222c202242302e6374726c5f732e4c30222c202242302e73746f72655f61732e4c30222c202242302e686561646c6573735f636f6e766572742e4c30222c202242302e6374726c5f732e4c31222c202242302e6374726c5f732e4c32222c202242302e6374726c5f732e4c33222c202242302e6374726c5f732e4c34225d",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/b116f1165087a8951037909b0d0b3c30ce0c6115:/src:ro /home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v2/main/saves:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro /home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v2/items:/ro/items:ro /home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1037:/ro/s1a-1037:ro",
+  "network": "none",
+  "gpus_requested": 0,
+  "container_dev_nvidia": [],
+  "batch_sha256": "f97d3af96418fb4fa806f39456e4117f306cbf04b14e08533d77a95349b37443",
+  "exit_status": 0,
+  "started_at": "2026-10-11T09:44:15Z",
+  "finished_at": "2026-10-11T09:46:41Z"
+}

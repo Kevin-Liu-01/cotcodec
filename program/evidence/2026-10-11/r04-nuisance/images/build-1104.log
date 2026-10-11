@@ -1,0 +1,87 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.34kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/cotcodec-q2-lo-vm:4d5db07d
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/2] FROM docker.io/library/cotcodec-q2-lo-vm:4d5db07d
+#4 DONE 0.0s
+
+#5 [2/2] RUN set -eux;     mkdir -p /opt/r04;     dpkg-query -W -f='${Package}\t${Version}\t${Status}\n' > /opt/r04/dpkg-before.tsv;     cd /tmp;     curl -fsSL --retry 3 -o lo.tar.gz "https://downloadarchive.documentfoundation.org/libreoffice/old/24.8.7.2/deb/x86_64/LibreOffice_24.8.7.2_Linux_x86-64_deb.tar.gz";     test "$(stat -c %s lo.tar.gz)" = "209653445";     echo "c4e40e78d722508fa8f6e42d4e4113889f50a198a5d2c9360b86d5af8b6f7ab9  lo.tar.gz" | sha256sum -c -;     tar -xzf lo.tar.gz;     for deb in LibreOffice_*_Linux_x86-64_deb/DEBS/*.deb; do       case "$deb" in *debian-menus*) continue ;; esac;       dpkg-deb -x "$deb" /;     done;     rm -rf /tmp/lo.tar.gz /tmp/LibreOffice_*;     dpkg-query -W -f='${Package}\t${Version}\t${Status}\n' > /opt/r04/dpkg-after.tsv;     cmp /opt/r04/dpkg-before.tsv /opt/r04/dpkg-after.tsv;     chmod -R a+rX /opt/libreoffice24.8;     HOME=/tmp/r04-version-home /opt/libreoffice24.8/program/soffice --version > /opt/r04/soffice-version.txt 2>&1;     rm -rf /tmp/r04-version-home;     grep -q "LibreOffice 24.8.7.2" /opt/r04/soffice-version.txt;     (ls -1 /opt/libreoffice24.8/program | grep -i -E "^(python|libpython|pyuno)" || true) > /opt/r04/python.txt;     printf '%s\n' "B3" "24.8.7.2" "c4e40e78d722508fa8f6e42d4e4113889f50a198a5d2c9360b86d5af8b6f7ab9" "209653445" > /opt/r04/build.txt
+#5 0.059 + mkdir -p /opt/r04
+#5 0.062 + dpkg-query -W -f=${Package}\t${Version}\t${Status}\n
+#5 0.077 + cd /tmp
+#5 0.077 + curl -fsSL --retry 3 -o lo.tar.gz https://downloadarchive.documentfoundation.org/libreoffice/old/24.8.7.2/deb/x86_64/LibreOffice_24.8.7.2_Linux_x86-64_deb.tar.gz
+#5 9.759 + stat -c %s lo.tar.gz
+#5 9.760 + test 209653445 = 209653445
+#5 9.761 + echo c4e40e78d722508fa8f6e42d4e4113889f50a198a5d2c9360b86d5af8b6f7ab9  lo.tar.gz
+#5 9.761 + sha256sum -c -
+#5 10.38 lo.tar.gz: OK
+#5 10.38 + tar -xzf lo.tar.gz
+#5 11.38 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-base_24.8.7.2-2_amd64.deb /
+#5 11.46 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-calc_24.8.7.2-2_amd64.deb /
+#5 11.91 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-core_24.8.7.2-2_amd64.deb /
+#5 16.51 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-draw_24.8.7.2-2_amd64.deb /
+#5 16.51 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-en-us_24.8.7.2-2_amd64.deb /
+#5 16.52 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-extension-beanshell-script-provider_24.8.7.2-2_amd64.deb /
+#5 16.54 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-extension-javascript-script-provider_24.8.7.2-2_amd64.deb /
+#5 16.62 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-extension-mediawiki-publisher_24.8.7.2-2_amd64.deb /
+#5 16.74 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-extension-nlpsolver_24.8.7.2-2_amd64.deb /
+#5 16.80 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-extension-pdf-import_24.8.7.2-2_amd64.deb /
+#5 16.98 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-extension-report-builder_24.8.7.2-2_amd64.deb /
+#5 17.16 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-firebird_24.8.7.2-2_amd64.deb /
+#5 17.33 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-gnome-integration_24.8.7.2-2_amd64.deb /
+#5 17.37 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-graphicfilter_24.8.7.2-2_amd64.deb /
+#5 17.45 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-images_24.8.7.2-2_amd64.deb /
+#5 20.44 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-impress_24.8.7.2-2_amd64.deb /
+#5 20.46 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-kde-integration_24.8.7.2-2_amd64.deb /
+#5 20.55 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-librelogo_24.8.7.2-2_amd64.deb /
+#5 20.56 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-libreofficekit-data_24.8.7.2-2_amd64.deb /
+#5 20.56 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-math_24.8.7.2-2_amd64.deb /
+#5 20.60 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-ogltrans_24.8.7.2-2_amd64.deb /
+#5 20.61 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-onlineupdate_24.8.7.2-2_amd64.deb /
+#5 20.62 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-ooofonts_24.8.7.2-2_amd64.deb /
+#5 21.38 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-ooolinguistic_24.8.7.2-2_amd64.deb /
+#5 21.39 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-postgresql-sdbc_24.8.7.2-2_amd64.deb /
+#5 21.49 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-python-script-provider_24.8.7.2-2_amd64.deb /
+#5 21.50 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-pyuno_24.8.7.2-2_amd64.deb /
+#5 21.90 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-writer_24.8.7.2-2_amd64.deb /
+#5 22.12 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libobasis24.8-xsltfilter_24.8.7.2-2_amd64.deb /
+#5 22.15 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8-base_24.8.7.2-2_amd64.deb /
+#5 22.15 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8-calc_24.8.7.2-2_amd64.deb /
+#5 22.15 + continue
+#5 22.15 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8-dict-en_24.8.7.2-2_amd64.deb /
+#5 22.39 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8-dict-es_24.8.7.2-2_amd64.deb /
+#5 22.47 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8-dict-fr_24.8.7.2-2_amd64.deb /
+#5 22.54 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8-draw_24.8.7.2-2_amd64.deb /
+#5 22.55 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8-en-us_24.8.7.2-2_amd64.deb /
+#5 22.55 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8-impress_24.8.7.2-2_amd64.deb /
+#5 22.55 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8-math_24.8.7.2-2_amd64.deb /
+#5 22.56 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8-ure_24.8.7.2-2_amd64.deb /
+#5 23.29 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8-writer_24.8.7.2-2_amd64.deb /
+#5 23.29 + dpkg-deb -x LibreOffice_24.8.7.2_Linux_x86-64_deb/DEBS/libreoffice24.8_24.8.7.2-2_amd64.deb /
+#5 23.33 + rm -rf /tmp/lo.tar.gz /tmp/LibreOffice_24.8.7.2_Linux_x86-64_deb
+#5 23.39 + dpkg-query -W -f=${Package}\t${Version}\t${Status}\n
+#5 23.40 + cmp /opt/r04/dpkg-before.tsv /opt/r04/dpkg-after.tsv
+#5 23.40 + chmod -R a+rX /opt/libreoffice24.8
+#5 23.47 + HOME=/tmp/r04-version-home /opt/libreoffice24.8/program/soffice --version
+#5 23.56 + rm -rf /tmp/r04-version-home
+#5 23.56 + grep -q LibreOffice 24.8.7.2 /opt/r04/soffice-version.txt
+#5 23.56 + ls -1 /opt/libreoffice24.8/program
+#5 23.56 + grep -i -E ^(python|libpython|pyuno)
+#5 23.57 + printf %s\n B3 24.8.7.2 c4e40e78d722508fa8f6e42d4e4113889f50a198a5d2c9360b86d5af8b6f7ab9 209653445
+#5 DONE 24.0s
+
+#6 exporting to image
+#6 exporting layers
+#6 exporting layers 2.0s done
+#6 writing image sha256:728aaa69a5ea8484895f0678f5e0ba45ac92ab6f4485ccc9fb8700abffe87ce9 done
+#6 naming to docker.io/library/cotcodec-q2-r04-lo-b3:1d29bbbfea03 done
+#6 DONE 2.0s

@@ -1,0 +1,176 @@
+{
+ "name": "dev-smoke-v1",
+ "split": "dev",
+ "src": "/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/c9e3189edc3664f9a1ea284da9a8518bfc5a437a",
+ "src_sha": "c9e3189edc3664f9a1ea284da9a8518bfc5a437a",
+ "cells": [
+  "B0.ctrl_s.L0",
+  "B0.store_as.L0",
+  "B0.headless_convert.L0",
+  "B3.ctrl_s.L0",
+  "B0.ctrl_s.L1"
+ ],
+ "s1a": [
+  "1037"
+ ],
+ "golds": true,
+ "images": {
+  "B0": "sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361",
+  "B3": "sha256:728aaa69a5ea8484895f0678f5e0ba45ac92ab6f4485ccc9fb8700abffe87ce9"
+ },
+ "steps": [
+  {
+   "name": "items",
+   "image": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+   "argv": [
+    "/opt/venv-lock/bin/python",
+    "-m",
+    "harness.r04_nuisance.items",
+    "--splits",
+    "/src/program/evidence/q2-mutation/splits.json",
+    "--split",
+    "dev",
+    "--out",
+    "/out/items.jsonl",
+    "--golds",
+    "--osworld",
+    "/inputs/OSWorld",
+    "--file-cache",
+    "/inputs/file_cache_1e112283/files",
+    "--s1a-run",
+    "1037=/ro/s1a-1037"
+   ],
+   "run_dir": "/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/items",
+   "command": [
+    "sbatch",
+    "--parsable",
+    "--job-name=r04-items",
+    "--cpus-per-task=4",
+    "--mem=96G",
+    "--time=00:30:00",
+    "--output=/home/kevin/cotcodec-runs/stage0/r04-nuisance/slurm/slurm-%x-%j.out",
+    "--export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID=sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230,Q2M_ARGV_JSON_HEX=5b222f6f70742f76656e762d6c6f636b2f62696e2f707974686f6e222c20222d6d222c20226861726e6573732e7230345f6e756973616e63652e6974656d73222c20222d2d73706c697473222c20222f7372632f70726f6772616d2f65766964656e63652f71322d6d75746174696f6e2f73706c6974732e6a736f6e222c20222d2d73706c6974222c2022646576222c20222d2d6f7574222c20222f6f75742f6974656d732e6a736f6e6c222c20222d2d676f6c6473222c20222d2d6f73776f726c64222c20222f696e707574732f4f53576f726c64222c20222d2d66696c652d6361636865222c20222f696e707574732f66696c655f63616368655f31653131323238332f66696c6573222c20222d2d7331612d72756e222c2022313033373d2f726f2f7331612d31303337225d,Q2M_SOURCE=/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/c9e3189edc3664f9a1ea284da9a8518bfc5a437a,Q2M_RUN_DIR=/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/items,Q2M_INPUTS=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs,Q2M_TMPFS_SIZE=32g,Q2M_EXTRA_RO=/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1037:/ro/s1a-1037",
+    "/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/c9e3189edc3664f9a1ea284da9a8518bfc5a437a/infra/slurm/host-single-node/q2-mutation-cpu.sbatch"
+   ],
+   "job": "1109",
+   "state": "done",
+   "submitted_at": "2026-10-11T09:22:11Z",
+   "finished_seen_at": "2026-10-11T09:22:28Z"
+  },
+  {
+   "name": "main-save-B0",
+   "image": "sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361",
+   "argv": [
+    "sh",
+    "/src/infra/r04-nuisance/run/resave.sh",
+    "/ro/items/items.jsonl",
+    "/out",
+    "8",
+    "-",
+    "B0.ctrl_s.L0",
+    "B0.store_as.L0",
+    "B0.headless_convert.L0",
+    "B0.ctrl_s.L1"
+   ],
+   "run_dir": "/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/main/saves",
+   "command": [
+    "sbatch",
+    "--parsable",
+    "--job-name=r04-main-save-B0",
+    "--cpus-per-task=16",
+    "--mem=96G",
+    "--time=00:40:00",
+    "--output=/home/kevin/cotcodec-runs/stage0/r04-nuisance/slurm/slurm-%x-%j.out",
+    "--export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID=sha256:f5b4c40eefd2b92f846652910ba34db35e1ae7bf90fa474595cc745cc5895361,Q2M_ARGV_JSON_HEX=5b227368222c20222f7372632f696e6672612f7230342d6e756973616e63652f72756e2f7265736176652e7368222c20222f726f2f6974656d732f6974656d732e6a736f6e6c222c20222f6f7574222c202238222c20222d222c202242302e6374726c5f732e4c30222c202242302e73746f72655f61732e4c30222c202242302e686561646c6573735f636f6e766572742e4c30222c202242302e6374726c5f732e4c31225d,Q2M_SOURCE=/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/c9e3189edc3664f9a1ea284da9a8518bfc5a437a,Q2M_RUN_DIR=/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/main/saves,Q2M_INPUTS=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs,Q2M_TMPFS_SIZE=32g,Q2M_EXTRA_RO=/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/items:/ro/items+/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1037:/ro/s1a-1037",
+    "/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/c9e3189edc3664f9a1ea284da9a8518bfc5a437a/infra/slurm/host-single-node/q2-mutation-cpu.sbatch"
+   ],
+   "job": "1110",
+   "state": "done",
+   "submitted_at": "2026-10-11T09:22:28Z",
+   "finished_seen_at": "2026-10-11T09:23:49Z"
+  },
+  {
+   "name": "main-save-B3",
+   "image": "sha256:728aaa69a5ea8484895f0678f5e0ba45ac92ab6f4485ccc9fb8700abffe87ce9",
+   "argv": [
+    "sh",
+    "/src/infra/r04-nuisance/run/resave.sh",
+    "/ro/items/items.jsonl",
+    "/out",
+    "8",
+    "-",
+    "B3.ctrl_s.L0"
+   ],
+   "run_dir": "/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/main/saves",
+   "command": [
+    "sbatch",
+    "--parsable",
+    "--job-name=r04-main-save-B3",
+    "--cpus-per-task=16",
+    "--mem=96G",
+    "--time=00:40:00",
+    "--output=/home/kevin/cotcodec-runs/stage0/r04-nuisance/slurm/slurm-%x-%j.out",
+    "--export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID=sha256:728aaa69a5ea8484895f0678f5e0ba45ac92ab6f4485ccc9fb8700abffe87ce9,Q2M_ARGV_JSON_HEX=5b227368222c20222f7372632f696e6672612f7230342d6e756973616e63652f72756e2f7265736176652e7368222c20222f726f2f6974656d732f6974656d732e6a736f6e6c222c20222f6f7574222c202238222c20222d222c202242332e6374726c5f732e4c30225d,Q2M_SOURCE=/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/c9e3189edc3664f9a1ea284da9a8518bfc5a437a,Q2M_RUN_DIR=/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/main/saves,Q2M_INPUTS=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs,Q2M_TMPFS_SIZE=32g,Q2M_EXTRA_RO=/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/items:/ro/items+/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1037:/ro/s1a-1037",
+    "/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/c9e3189edc3664f9a1ea284da9a8518bfc5a437a/infra/slurm/host-single-node/q2-mutation-cpu.sbatch"
+   ],
+   "job": "1111",
+   "state": "done",
+   "submitted_at": "2026-10-11T09:23:49Z",
+   "finished_seen_at": "2026-10-11T09:24:21Z"
+  },
+  {
+   "name": "main-score",
+   "image": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+   "argv": [
+    "/opt/venv-lock/bin/python",
+    "-m",
+    "harness.r04_nuisance.score",
+    "--items",
+    "/ro/items/items.jsonl",
+    "--saves-root",
+    "/ro/saves",
+    "--saves-prefix",
+    "/out",
+    "--osworld",
+    "/inputs/OSWorld",
+    "--file-cache",
+    "/inputs/file_cache_1e112283/files",
+    "--vm-baseline",
+    "/inputs/vm-baseline",
+    "--out",
+    "/out",
+    "--workers",
+    "8",
+    "--cell",
+    "raw",
+    "--cell",
+    "B0.ctrl_s.L0=/ro/saves/B0.ctrl_s.L0",
+    "--cell",
+    "B0.store_as.L0=/ro/saves/B0.store_as.L0",
+    "--cell",
+    "B0.headless_convert.L0=/ro/saves/B0.headless_convert.L0",
+    "--cell",
+    "B3.ctrl_s.L0=/ro/saves/B3.ctrl_s.L0",
+    "--cell",
+    "B0.ctrl_s.L1=/ro/saves/B0.ctrl_s.L1"
+   ],
+   "run_dir": "/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/main/scores",
+   "command": [
+    "sbatch",
+    "--parsable",
+    "--job-name=r04-main-score",
+    "--cpus-per-task=16",
+    "--mem=96G",
+    "--time=00:40:00",
+    "--output=/home/kevin/cotcodec-runs/stage0/r04-nuisance/slurm/slurm-%x-%j.out",
+    "--export=ALL,Q2M_MODE=run,Q2M_IMAGE_ID=sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230,Q2M_ARGV_JSON_HEX=5b222f6f70742f76656e762d6c6f636b2f62696e2f707974686f6e222c20222d6d222c20226861726e6573732e7230345f6e756973616e63652e73636f7265222c20222d2d6974656d73222c20222f726f2f6974656d732f6974656d732e6a736f6e6c222c20222d2d73617665732d726f6f74222c20222f726f2f7361766573222c20222d2d73617665732d707265666978222c20222f6f7574222c20222d2d6f73776f726c64222c20222f696e707574732f4f53576f726c64222c20222d2d66696c652d6361636865222c20222f696e707574732f66696c655f63616368655f31653131323238332f66696c6573222c20222d2d766d2d626173656c696e65222c20222f696e707574732f766d2d626173656c696e65222c20222d2d6f7574222c20222f6f7574222c20222d2d776f726b657273222c202238222c20222d2d63656c6c222c2022726177222c20222d2d63656c6c222c202242302e6374726c5f732e4c303d2f726f2f73617665732f42302e6374726c5f732e4c30222c20222d2d63656c6c222c202242302e73746f72655f61732e4c303d2f726f2f73617665732f42302e73746f72655f61732e4c30222c20222d2d63656c6c222c202242302e686561646c6573735f636f6e766572742e4c303d2f726f2f73617665732f42302e686561646c6573735f636f6e766572742e4c30222c20222d2d63656c6c222c202242332e6374726c5f732e4c303d2f726f2f73617665732f42332e6374726c5f732e4c30222c20222d2d63656c6c222c202242302e6374726c5f732e4c313d2f726f2f73617665732f42302e6374726c5f732e4c31225d,Q2M_SOURCE=/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/c9e3189edc3664f9a1ea284da9a8518bfc5a437a,Q2M_RUN_DIR=/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/main/scores,Q2M_INPUTS=/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs,Q2M_TMPFS_SIZE=32g,Q2M_EXTRA_RO=/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/items:/ro/items+/home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/dev-smoke-v1/main/saves:/ro/saves+/home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1037:/ro/s1a-1037",
+    "/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/c9e3189edc3664f9a1ea284da9a8518bfc5a437a/infra/slurm/host-single-node/q2-mutation-cpu.sbatch"
+   ],
+   "job": "1112",
+   "state": "done",
+   "submitted_at": "2026-10-11T09:24:21Z",
+   "finished_seen_at": "2026-10-11T09:35:18Z"
+  }
+ ],
+ "created_at": "2026-10-11T09:22:01Z"
+}
