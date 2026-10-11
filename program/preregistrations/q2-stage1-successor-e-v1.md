@@ -244,7 +244,10 @@ size's cap, pin S1a's prompt date and the registered episode image, and hold exa
 plan's slots, or that sets the re-queue rule, the episode timeout or the interpreter, or a
 fill rule. The GPU half is rendered from the validated VM manifest
 (`scripts/render_q2e_manifest.py gpu`, filling S1a's GPU template with S1a's
-`gpu_manifest`): its size and cap come from the manifest, never from the command line.
+`gpu_manifest`): its size and cap come from the manifest, never from the command line. The
+filled template passes the docker submitter's checks (one H100, 32 CPUs, `--time` equal to the
+cap, USR1 at 180 s, `--dependency=after:` the VM job; a test checks both sizes). Its job name
+keeps the template's `q2s1a-` prefix, a label only.
 
 ### 6.3 What the lane checks before and while it runs
 

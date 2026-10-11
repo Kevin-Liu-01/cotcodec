@@ -87,11 +87,12 @@
   "argv": [
    "program/evidence/2026-10-11/q2-stage1-successor-e/analysis_identity.py",
    "--out",
-   "program/evidence/2026-10-11/q2-stage1-successor-e/analysis-identity.json"
+   "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2e-evidence/analysis-identity.json"
   ],
-  "git_head": "c0971a77a3d970ea4c36ed25a9411611f47392a3",
+  "git_head": "29a25b5de9e1d4f69ec04e29f1634a37d5cd0a05",
   "numpy": "2.5.2",
-  "python": "3.13.14"
+  "python": "3.13.14",
+  "tree_dirty": false
  },
  "s1a_committed_readings": {
   "primary": {

@@ -494,6 +494,27 @@ def test_gpu_half_uses_s1a_template_for_the_jobs_size_and_cap(frozen_tree):
     assert data["resources"]["minutes"] == 52 and "9B" in data["command"]
     assert data["model"]["revision"] == "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
     assert data["start_after_job_id"] == 123
+    from scripts.submit_docker_research_job import sbatch_argv
+    from scripts.submit_docker_research_job import validate_manifest as validate_gpu
+
+    for size, cap in (("9B", 52), ("4B", 48)):
+        vm = copy.deepcopy(m)
+        vm["e"]["size"], vm["engine"]["gpu_cap_min"] = size, cap
+        manifest = validate_gpu(
+            yaml.safe_load(
+                builder.gpu_for_vm_manifest(template, vm, vm_job_id="4321", values=values)
+            )
+        )
+        argv = sbatch_argv(manifest, test_only=False)
+        for flag in (
+            "--gres=gpu:h100:1",
+            "--cpus-per-task=32",
+            "--signal=B:USR1@180",
+            "--dependency=after:4321",
+            f"--time=00:{cap}:00",
+        ):
+            assert flag in argv, flag
+        assert manifest["command"][-6:-4] == ["--size", size]
 
 
 def test_batch_script_is_s1a_with_e_lane_module():

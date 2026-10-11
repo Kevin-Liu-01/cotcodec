@@ -51,3 +51,7 @@ From the repository root, with the project's Python (numpy 2.5.2, scipy 1.18.0) 
 
 `cap_sufficiency.py` takes about a minute and `analysis_identity.py` about ten. Each output
 records its inputs' SHA-256, the commit, whether the tree was dirty, and the versions.
+
+The committed outputs were generated in the worktree at `29a25b5d`, clean (the commit that
+added E's code and this bundle; `tree_dirty` false). A first run from the uncommitted tree gave
+the same values in every field but the provenance.
