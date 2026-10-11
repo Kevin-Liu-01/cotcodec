@@ -234,8 +234,11 @@ states nested in it.
 submits a plan's next job only when `squeue` is empty and the previous job's receipt has
 exit status 0:
 
-1. **items** (metric image): `python -m harness.r04_nuisance.items` for the split, with the
-   S1a runs mounted read-only and checked against their committed digests.
+1. **items** (metric image): `python -m harness.r04_nuisance.items` for the split. It
+   refuses a split other than dev unless this file is frozen (`guard.py`), checks the
+   mounted OSWorld tree, VM baseline and file cache against the checker-mutation study's
+   pins (`campaign.check_inputs`), and checks every S1a capture it uses against S1a's
+   committed digests.
 2. **save** (one job per build, in that build's image): `infra/r04-nuisance/run/resave.sh`
    runs `harness.r04_nuisance.resave` with N workers, each on its own Xvfb display, every
    cell of the build in sequence. Each (item, cell) gets the registered save row
