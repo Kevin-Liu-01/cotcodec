@@ -192,11 +192,20 @@ def cmd_fit(args: argparse.Namespace) -> int:
         x0 = np.array(ref["x"], dtype=float)
         for i, v in fixed.items():
             x0[i] = v
+    if args.free:  # a conditional fit: every other coordinate held at the warm start
+        if x0 is None:
+            raise SystemExit("--free needs --warm")
+        free = {FIX_NAMES[n.replace("sigma_a", "log_sigma_a").replace("sigma_b", "log_sigma_b")]
+                for n in args.free}  # fmt: skip
+        fixed.update({i: float(x0[i]) for i in range(len(x0)) if i not in free | set(fixed)})
     res = F.fit(y, harness=args.harness, fixed=fixed, x0=x0, log=log)
     x, like = res["x"], res["likelihood"]
     sizes, rho_a, rho_b = F.unpack(x)
-    se, se_info = _ses(like, x)
-    sess = F.session_variances(sizes, se)
+    if args.no_se:  # the warm start's session SDs; no observed information
+        se, se_info, sess = None, None, ref["session_variances"]
+    else:
+        se, se_info = _ses(like, x)
+        sess = F.session_variances(sizes, se)
     params = F.to_params(x, sess)
     # Grid check: the log-likelihood at the estimate on a finer grid.
     fine = F.Likelihood(y, F.Grid.default(0.125)).loglik(x)
@@ -220,7 +229,7 @@ def cmd_fit(args: argparse.Namespace) -> int:
             "rho_b": rho_b,
             "w_b": F.w_of(x),
         },  # fmt: skip
-        "se": dict(zip(M.SIZES, se, strict=True)),
+        "se": dict(zip(M.SIZES, se, strict=True)) if se else None,
         "se_info": se_info,
         "session_variances": sess,
         "params": params.to_json(),
@@ -238,6 +247,7 @@ def cmd_fit(args: argparse.Namespace) -> int:
     if fixed:
         out["fixed"] = {n.replace("log_", ""): F.unpack_value(i, x[i])
                         for n, i in FIX_NAMES.items() if i in fixed}  # fmt: skip
+        out["free"] = [n.replace("log_", "") for n, i in FIX_NAMES.items() if i not in fixed]
     if ref is not None:
         out["warm_start"] = args.warm
         out["reference_loglik"] = ref["loglik"]
@@ -714,6 +724,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--harness", choices=("normal", "spike-slab"), default="normal")
     p.add_argument("--fix", nargs="*", help="hold parameters: rho_b=0 sigma_b_4B=0.02 ...")
     p.add_argument("--warm", help="warm-start from this fit (same set and harness model)")
+    p.add_argument("--free", nargs="*", help="conditional fit: only these move (needs --warm)")
+    p.add_argument("--no-se", action="store_true", help="skip the observed information")
     p.add_argument("--out", required=True)
     p = sub.add_parser("profile")
     p.add_argument("--fit", required=True)
