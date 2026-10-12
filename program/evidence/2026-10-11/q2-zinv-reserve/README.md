@@ -159,3 +159,35 @@ No defect was found, so no fix and no second rehearsal were needed. Left on the 
 staged sources `9b364be1`, `317e89c1`, `bc14599e`, `046f82e7`; plans `dev-rehearsal-v1` and
 `dev-zinv-v1` (never submitted), `dev-zinv-v2` and `dev-rehearsal-v2` (complete). No
 reserve plan exists.
+
+## Scratch freeze rehearsal at the final draft (`06ee7280`)
+
+On a fresh scratch clone (session scratchpad) of the branch at `06ee7280`: a scratch `main`
+from `f6144d6b` (successor E frozen, 19 ledger rows), the branch merged into it (`20e59c22`),
+then section 13's steps on the clone's own copy of the ledger. The worktree's and the main
+checkout's ledgers stayed at 19 rows, unmodified.
+
+| Commit | What | `tests/test_q2_zinv_reserve.py` |
+|---|---|---|
+| merge `20e59c22` (draft) | `preregister.py freeze` refused ("still contains TBD or placeholder text") | 31 passed |
+| fill `2fd80080` | the status paragraph replaced by section 13's, nothing else | 31 passed |
+| freeze `fbb34000` | scratch row 20 (file SHA-256 `c3a621dc...`, row hash `aa3057f8...`, `git_head_at_freeze` `2fd80080`); `check-chain` PASS (20 rows), `verify` PASS; the diff from the fill commit is `program/preregistrations/ledger.jsonl` alone | 31 passed |
+
+On `git archive` exports of the two commits: the freeze export refuses the reserve split
+without `Q2ZR_PREREG_FROZEN`, admits it with the variable (row hash `aa3057f8...`), refuses
+confirm and admits dev; the fill export refuses the reserve split ("runs only after ... is
+frozen"); the parent's `require_split_allowed('reserve')` passes on the freeze export. The
+ledger-reading suites at the scratch freeze commit (ledger, parent, K2, S1a and successor E
+preregistrations, R04, the parent's campaign) pass with the extra row: 144 passed, 5
+skipped.
+
+On the host (Python 3.10.12), the guard's inputs from the scratch freeze export, unpacked
+in a temp directory outside the run root and removed afterwards: `make_plan` for the
+reserve split refused `reserve-v1` without the variable, refused `reserve-v2` with it ("the
+reserve split's one registered plan is reserve-v1"), and admitted `reserve-v1` with it (the
+pinned `reserve-controls-v1` files matched on the host); nothing was written and the run
+root's plans were unchanged.
+
+An earlier pass of the same rehearsal at `046f82e7` (main at `2b8fadc7`, scratch row 19)
+gave the same results (31, 31 and 31 passed; 130 passed and 3 skipped in the ledger-reading
+suites without successor E's).
