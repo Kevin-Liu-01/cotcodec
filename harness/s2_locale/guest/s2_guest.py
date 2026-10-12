@@ -2,7 +2,9 @@
 
 Shipped as base64 in an argv list through the guest server's ``/execute``
 (``GuestClient.run_script``), so nothing is shell-parsed. Standard library only (the guest's
-Python 3.10). Prints one JSON object on its last stdout line. It reads; it changes nothing.
+Python 3.10), except mode ``pointer``, which uses the guest's python-xlib as the certified guard
+(``harness/q2/vm/guest/guard.py``) does. Prints one JSON object on its last stdout line. Every mode
+but ``pointer`` reads and changes nothing.
 
 Mode ``facts`` ``{"selector": PATH}``:
 
@@ -26,6 +28,15 @@ Mode ``registry`` ``{"path": XCU, "keys": [[item path, prop name], ...]}``: P0.1
 user profile's ``registrymodifications.xcu``: the file's SHA-256, size and mtime, its item count,
 and per key every ``value`` text of a ``prop`` with that name under an ``item`` with that
 ``oor:path`` (the way the three C1 checkers read it).
+
+Mode ``pointer`` ``{"x": X, "y": Y}`` (registration P0.7 and Phase 1: once per boot, after the
+guard's keyboard warm-up and before the 60 s settle): one absolute XTest pointer motion to (X, Y)
+(``xtest.fake_input(MotionNotify, x, y)`` and ``XSync``, the guard's own ``park`` call), so the
+pointer jumps there with no intermediate position and the window under (X, Y) receives one motion
+event at that point; then the pointer's position is read back. Before it, the pointer rests where
+the boot left it, and LibreOffice's last motion event (Impress shows it in the status bar's
+pointer-position field) is whatever the window saw while it was being laid out, which differs
+between boots in the mirrored layouts (smoke 1214).
 
 Mode ``end`` ``{}`` (run once, after the slot's last observation, so nothing it might touch can
 change a measurement): ``fc-match :lang=ar`` and the number of Arabic-capable font families, and
@@ -222,6 +233,29 @@ def mode_registry(config):
     return out
 
 
+POINTER_SETTLE_S = 0.2
+
+
+def mode_pointer(config):
+    """One absolute XTest motion to (x, y), then the pointer's position before and after."""
+    from Xlib import X, display
+    from Xlib.ext import xtest
+
+    x, y = int(config["x"]), int(config["y"])
+    d = display.Display(os.environ.get("DISPLAY", ":0"))
+    try:
+        root = d.screen().root
+        before = root.query_pointer()
+        xtest.fake_input(d, X.MotionNotify, x=x, y=y)
+        d.sync()
+        time.sleep(POINTER_SETTLE_S)
+        after = root.query_pointer()
+    finally:
+        d.close()
+    return {"target": [x, y], "before": [before.root_x, before.root_y],
+            "after": [after.root_x, after.root_y]}
+
+
 def mode_end(config):
     match = run(["fc-match", ":lang=ar", "family"])
     families = run(["fc-list", ":lang=ar", "family"])
@@ -240,7 +274,8 @@ def mode_end(config):
             "packages": packages}
 
 
-MODES = {"facts": mode_facts, "hash": mode_hash, "registry": mode_registry, "end": mode_end}
+MODES = {"facts": mode_facts, "hash": mode_hash, "registry": mode_registry,
+         "pointer": mode_pointer, "end": mode_end}
 
 
 def main(argv):

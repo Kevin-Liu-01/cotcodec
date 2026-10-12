@@ -129,6 +129,7 @@ def _census(src: Path, monkeypatch, m: dict) -> list:
 
 def _registered(src: Path, row: dict, m: dict) -> dict:
     m = dict(m, purpose="phase0", episode_timeout_s=L.EPISODE_TIMEOUT_S,
+             run_root=L.PHASE0_RUN_ROOT,
              freeze={"commit": "b" * 40, "ledger_row_hash": row["hash"],
                      "git_head_at_freeze": row["git_head_at_freeze"]},
              osworld=dict(m["osworld"], host_dir=L.OSWORLD_HOST),
@@ -183,21 +184,109 @@ def test_phase0_admitted_only_from_the_freeze_export(tmp_path, monkeypatch):
         L.validate_manifest(m, src)
 
 
-def test_phase0_resume_is_a_census_suffix(tmp_path, monkeypatch):
+def _interrupted(root: Path, job: str, m: dict, records: list) -> Path:
+    """An interrupted census job's run directory as the lane and the batch file leave it."""
+    run = root / job
+    run.mkdir(parents=True)
+    (run / "manifest.json").write_text(json.dumps(m, indent=2, sort_keys=True))
+    (run / "lane-receipt.json").write_text(json.dumps({"job_id": job, "t_start": 1.0}))
+    (run / "probes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in records))
+    return run
+
+
+def _phase0_root(tmp_path: Path, monkeypatch) -> Path:
+    root = tmp_path / "phase0-runs"
+    monkeypatch.setattr(L, "RUN_ROOT", "/")
+    monkeypatch.setattr(L, "PHASE0_RUN_ROOT", str(root))
+    return root
+
+
+def test_phase0_resume_is_recomputed_from_the_interrupted_job(tmp_path, monkeypatch):
     src = _source(tmp_path)
     row = _freeze(src)
     base = _manifest(src)
     slots = _census(src, monkeypatch, base)
     monkeypatch.setattr(L, "CAPTURE_CELLS", ("S", "E", "AR"))
     monkeypatch.setattr(L, "IMAGE_OF", {})
+    root = _phase0_root(tmp_path, monkeypatch)
     m = _registered(src, row, base)
-    resumed = dict(m, slots=slots[3:], resume_from_block="t001",
-                   resumes={"records_sha256": "d" * 64})
+    assert L.validate_manifest(m, src)
+
+    def rec(slot, status, attempt=1):
+        return {"slot": slot["slot"], "block": slot["block"], "status": status,
+                "attempt": attempt}
+
+    # block t000 finished; in t001 one slot was lost once and its re-queue cut by the stop signal
+    records = [rec(s, "probed") for s in slots[:3]]
+    records += [rec(slots[3], "infrastructure"), rec(slots[3], "cap_truncated", 2)]
+    records += [rec(s, "probed") for s in slots[4:]]
+    run = _interrupted(root, "1300", m, records)
+    fields = L.resume_fields(run, slots)
+    assert fields["resume_from_block"] == "t001" and fields["slots"] == slots[3:]
+    assert fields["resumes"] == {"job_id": "1300", "run_dir": f"{root}/1300",
+                                 "records_sha256": L.interrupted_job(run)["records_sha256"]}
+    resumed = {**m, **fields}
     assert L.validate_manifest(resumed, src)
-    with pytest.raises(L.LaneError, match="not a block"):
-        L.validate_manifest(dict(resumed, resume_from_block="t000"), src)
-    with pytest.raises(L.LaneError, match="records_sha256"):
-        L.validate_manifest(dict(resumed, resumes={}), src)
+    for edit, match in (
+        (dict(resume_from_block="t000", slots=slots), "must be t001"),
+        (dict(resumes={**fields["resumes"], "records_sha256": "0" * 64}), "records_sha256"),
+        (dict(resumes={**fields["resumes"], "run_dir": "/elsewhere/1300"}), "run directory"),
+        (dict(resumes={}), "resumes"),
+        (dict(slots=slots[4:]), "census suffix"),
+    ):
+        with pytest.raises(L.LaneError, match=match):
+            L.validate_manifest({**resumed, **edit}, src)
+    # a resumed job is never resumed again
+    again = _interrupted(root, "1301", resumed, [rec(slots[3], "cap_truncated")])
+    with pytest.raises(L.LaneError, match="not resumed again"):
+        L.resume_fields(again, slots)
+    # every slot final (probed, or lost twice): nothing to resume
+    done = [rec(s, "probed") for s in slots[:3]]
+    done += [rec(slots[3], "infrastructure"), rec(slots[3], "infrastructure", 2)]
+    done += [rec(s, "probed") for s in slots[4:]]
+    with pytest.raises(L.LaneError, match="final record for every slot"):
+        L.resume_fields(_interrupted(root, "1302", m, done), slots)
+
+
+def test_render_census_resume_from_records_is_what_validation_requires(tmp_path, monkeypatch):
+    src = _source(tmp_path)
+    row = _freeze(src)
+    base = _manifest(src)
+    slots = _census(src, monkeypatch, base)
+    monkeypatch.setattr(L, "CAPTURE_CELLS", ("S", "E", "AR"))
+    monkeypatch.setattr(L, "IMAGE_OF", {})
+    root = _phase0_root(tmp_path, monkeypatch)
+    m = _registered(src, row, base)
+    records = [{"slot": s["slot"], "status": "probed", "attempt": 1} for s in slots[:3]]
+    run = _interrupted(root, "1300", m, records)
+    monkeypatch.setattr(L, "census_slots", lambda tasks, golds: slots)
+    monkeypatch.setattr("harness.s2_locale.golds.pool_tasks", lambda pool: [])
+    base_path = tmp_path / "base.json"
+    base_path.write_text(json.dumps({k: v for k, v in m.items() if k != "slots"}))
+    (tmp_path / "pool.json").write_text("{}")
+    (tmp_path / "golds.jsonl").write_text("")
+    out = tmp_path / "resume.json"
+    assert L.main(["render-census", "--base", str(base_path), "--pool",
+                   str(tmp_path / "pool.json"), "--golds", str(tmp_path / "golds.jsonl"),
+                   "--resume-from-records", str(run / "probes.jsonl"), "--out", str(out)]) == 0
+    resumed = json.loads(out.read_text())
+    assert resumed["resume_from_block"] == "t001" and resumed["slots"] == slots[3:]
+    assert L.validate_manifest(resumed, src)
+
+
+def test_submission_runs_the_census_once_and_resumes_it_at_most_once(tmp_path, monkeypatch):
+    root = _phase0_root(tmp_path, monkeypatch)
+    census = {"purpose": "phase0", "run_root": str(root)}
+    resume = {**census, "resume_from_block": "b010"}
+    L.check_once(census)  # nothing has run
+    _interrupted(root, "1300", census, [])
+    with pytest.raises(L.LaneError, match="has run already"):
+        L.check_once(census)
+    L.check_once(resume)  # the one resume
+    _interrupted(root, "1301", resume, [])
+    with pytest.raises(L.LaneError, match="resumed already"):
+        L.check_once(resume)
+    L.check_once({"purpose": "development", "run_root": str(root)})
 
 
 def test_census_slots_order_and_content():
@@ -357,11 +446,19 @@ def test_a11y_summary_text_and_direction():
 
 
 class FakeGuest:
-    def __init__(self, selector):
+    def __init__(self, selector, pointer_after=None, events=None):
         self.selector = selector
         self.hashes = 0
+        self.pointer_after = pointer_after
+        self.events = events if events is not None else []
 
     def run_script(self, source, args):
+        self.events.append(args[0])
+        if args[0] == "pointer":
+            cfg = json.loads(args[1])
+            target = [cfg["x"], cfg["y"]]
+            return {"target": target, "before": [1732, 978],
+                    "after": self.pointer_after or target}
         if args[0] == "hash":
             self.hashes += 1
             paths = json.loads(args[1])["paths"]
@@ -400,17 +497,91 @@ class FakeSession:
         pass
 
 
-def _probe(tmp_path, selector_in_guest, expected, replies=None, task_id=None):
+def _probe(tmp_path, selector_in_guest, expected, replies=None, task_id=None, guest=None,
+           events=None):
     cfg = P.ProbeConfig(lane="l", purpose="development", slot="s", task_id=task_id or DEV[0],
                         cell="E", block="t000", attempt=1, image_sha256="e" * 64,
                         selector_sha256=expected, out_dir=str(tmp_path / "out"))
     task = {"id": DEV[0], "evaluator": {"result": {"type": "vm_file", "path": "~/x.xlsx"}}}
-    probe = P.Probe(cfg, guest=FakeGuest(selector_in_guest), task=task,
-                    session_factory=lambda c, t: FakeSession(replies), sleep=lambda s: None,
-                    gpu_glob=lambda: [])
-    probe._runner.warm_up = lambda: None
+    events = events if events is not None else []
+    probe = P.Probe(cfg, guest=guest or FakeGuest(selector_in_guest, events=events), task=task,
+                    session_factory=lambda c, t: FakeSession(replies),
+                    sleep=lambda s: events.append(("sleep", s)), gpu_glob=lambda: [])
+    probe._runner.warm_up = lambda: events.append("warm_up")
     probe._runner.check_restarts = lambda key="server_end": None
     return probe.run()
+
+
+def test_probe_warps_the_pointer_after_the_warm_up_and_before_the_settle(tmp_path):
+    events: list = []
+    rec = _probe(tmp_path, SEL["E"], SEL["E"], events=events)
+    assert rec["status"] == "probed"
+    start = events.index("warm_up")
+    assert events[start:start + 3] == ["warm_up", "pointer", ("sleep", 60.0)]
+    assert events.count("pointer") == 1  # once per boot
+    assert rec["pointer"] == {"target": list(P.POINTER_TARGET), "before": [1732, 978],
+                              "after": list(P.POINTER_TARGET), "moved": True}
+
+
+def test_a_pointer_read_back_elsewhere_is_infrastructure(tmp_path):
+    guest = FakeGuest(SEL["E"], pointer_after=[1732, 978])
+    rec = _probe(tmp_path, SEL["E"], SEL["E"], guest=guest)
+    assert rec["status"] == "infrastructure" and rec["infrastructure_type"] == "probe:pointer"
+    assert "post_setup" not in rec  # nothing is observed after a failed warp
+
+
+def test_guest_pointer_mode_is_one_absolute_xtest_motion(monkeypatch):
+    """The guest helper's ``pointer`` mode with a stand-in python-xlib: one XTest MotionNotify at
+    the target, an XSync, and the position read before and after."""
+    import importlib.util
+    import sys
+    import types
+
+    calls: list = []
+    position = {"xy": (1732, 978)}
+
+    class Reply:
+        def __init__(self, xy):
+            self.root_x, self.root_y = xy
+
+    class Root:
+        def query_pointer(self):
+            return Reply(position["xy"])
+
+    class Display:
+        def __init__(self, name=None):
+            calls.append(("display", name))
+
+        def screen(self):
+            return types.SimpleNamespace(root=Root())
+
+        def sync(self):
+            calls.append("sync")
+
+        def close(self):
+            calls.append("close")
+
+    def fake_input(d, kind, x=None, y=None):
+        calls.append(("fake_input", kind, x, y))
+        position["xy"] = (x, y)
+
+    xlib = types.ModuleType("Xlib")
+    xlib.X = types.SimpleNamespace(MotionNotify=6)
+    xlib.display = types.SimpleNamespace(Display=Display)
+    ext = types.ModuleType("Xlib.ext")
+    ext.xtest = types.SimpleNamespace(fake_input=fake_input)
+    for name, mod in {"Xlib": xlib, "Xlib.ext": ext, "Xlib.ext.xtest": ext.xtest,
+                      "Xlib.display": xlib.display, "Xlib.X": xlib.X}.items():
+        monkeypatch.setitem(sys.modules, name, mod)
+    spec = importlib.util.spec_from_file_location("s2_guest", P.GUEST_SCRIPT)
+    guest = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(guest)
+    monkeypatch.setattr(guest.time, "sleep", lambda s: None)
+    out = guest.MODES["pointer"]({"x": 995, "y": 540})
+    assert out == {"target": [995, 540], "before": [1732, 978], "after": [995, 540]}
+    motions = [c for c in calls if isinstance(c, tuple) and c[0] == "fake_input"]
+    assert motions == [("fake_input", 6, 995, 540)]  # one jump, no intermediate position
+    assert calls.index("sync") > calls.index(motions[0]) and calls[-1] == "close"
 
 
 def test_probe_records_a_probed_slot(tmp_path):

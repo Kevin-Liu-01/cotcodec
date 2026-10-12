@@ -29,8 +29,12 @@ record. This module renders those manifests, checks them, and drives harness/q2 
   change: 20 workers on the slices of ``driver.plan_cpusets_multi``, worker k on image
   ``RUNG_CELLS[k % 5]``, worker k running sessions k and k + 20 of ``driver.acceptance_plan``,
   so session i runs on image i mod 5 (8 sessions per image, four VMs per image at once), each
-  through the unchanged ``driver.run_cycle`` with that image's ``vm.qcow2``. Every image is hashed
-  before and after; the receipt has harness/q2's fields, so ``acceptance.rung`` reads it.
+  through the unchanged ``driver.run_cycle`` with that image's ``vm.qcow2``. Before any session it
+  makes ``driver.main``'s pre-run checks with harness/q2's own functions (Docker's server facts,
+  the VM image's ID and digest reference agreeing, the runner image present, per image the
+  regular read-only file, its size and digest and ``qemu-img info``, and the dangling volumes
+  before and after); every image is hashed before and after; the receipt has harness/q2's
+  fields, so ``acceptance.rung`` reads it.
 
 Purposes: ``development`` (q2 development workloads, seed 42, on cell images) before the freeze;
 ``k1`` (the registered campaigns, ``K1_PLAN``) only after it, from an export of the freeze commit
@@ -299,6 +303,12 @@ def check_registered(m: Mapping[str, Any], source_dir: Path) -> None:
     subset in the plan's order, so the parts together run each campaign once."""
     plan = load_k1_plan(source_dir)
     cells = "+".join(m["campaigns"][0]["cells"])
+    for item in m["campaigns"]:
+        _require("+".join(item["cells"]) == cells,
+                 f"every campaign of a k1 job runs on {cells}, the first campaign's image")
+        _require(item["manifest"]["vm"]["qcow2"]["host_path"]
+                 == m["campaigns"][0]["manifest"]["vm"]["qcow2"]["host_path"],
+                 "every campaign of a k1 job mounts the first campaign's image")  # fmt: skip
     want = [{k: v for k, v in e.items() if k not in ("check", "cell")} for e in plan
             if e["check"] == m["check"] and e["cell"] == cells]
     got = [campaign_key(item["manifest"]) for item in m["campaigns"]]
@@ -424,7 +434,24 @@ def run_rung(item: Mapping[str, Any], run_dir: Path, source_dir: Path, job_id: s
     }  # fmt: skip
     rc = 3
     try:
-        before = {}
+        # driver.main's pre-run checks, with harness/q2's own functions and messages
+        info = json.loads(driver.run([driver.DOCKER, "info", "--format", "{{json .}}"],
+                                     timeout=60).stdout)  # fmt: skip
+        receipt["docker"] = {"server_version": info.get("ServerVersion"),
+                             "default_runtime": info.get("DefaultRuntime"),
+                             "runtimes": sorted((info.get("Runtimes") or {}).keys()),
+                             "cgroup_version": info.get("CgroupVersion")}  # fmt: skip
+        vm = q2m["vm"]
+        image_check = driver.run([driver.DOCKER, "image", "inspect", "--format",
+                                  "{{.Id}} {{json .RepoDigests}}", vm["image_id"]],
+                                 timeout=60).stdout.strip()  # fmt: skip
+        if not image_check.startswith(vm["image_id"]) or vm["image"] not in image_check:
+            raise driver.DriverError("VM image ID and digest reference do not agree")
+        runner_id = driver.run([driver.DOCKER, "image", "inspect", "--format", "{{.Id}}",
+                                q2m["runner"]["image_id"]], timeout=60).stdout.strip()  # fmt: skip
+        if runner_id != q2m["runner"]["image_id"]:
+            raise driver.DriverError("runner image is missing")
+        before, qinfo = {}, {}
         for c, e in images.items():
             st = os.stat(e["host_path"], follow_symlinks=False)
             _require(os.path.isfile(e["host_path"]) and not os.path.islink(e["host_path"]),
@@ -433,7 +460,15 @@ def run_rung(item: Mapping[str, Any], run_dir: Path, source_dir: Path, job_id: s
                      f"{c}: image size differs or it is writable")  # fmt: skip
             before[c] = driver.sha256_file(e["host_path"])
             _require(before[c] == e["sha256"], f"{c}: image digest differs")
+            mine = dict(q2m, vm=dict(vm, qcow2=dict(e)))
+            qimg = driver.run(driver.qemu_img_info_argv(mine, job_id), timeout=120)
+            out = json.loads(qimg.stdout)
+            qinfo[c] = {k: out.get(k) for k in ("format", "virtual-size", "actual-size")}
         receipt["qcow2_sha256_before"] = before
+        receipt["qcow2_info"] = qinfo
+        dangling = driver.run([driver.DOCKER, "volume", "ls", "-q", "--filter", "dangling=true"],
+                              timeout=60)  # fmt: skip
+        receipt["dangling_volumes_before"] = len(dangling.stdout.split())
         cells_data = json.loads((source_dir / CELLS_FILE).read_text(encoding="utf-8"))
         volume = json.loads((source_dir / VOLUME_PLAN).read_text(encoding="utf-8"))
         plan = (driver.acceptance_plan(q2m, cells_data, volume)
@@ -472,6 +507,9 @@ def run_rung(item: Mapping[str, Any], run_dir: Path, source_dir: Path, job_id: s
         receipt["labelled_containers_left"] = docker(
             "ps", "-a", "--filter", f"label=cotcodec.slurm_job={job_id}", "--format",
             "{{.Names}}").stdout.split()  # fmt: skip
+        dangling = driver.run([driver.DOCKER, "volume", "ls", "-q", "--filter", "dangling=true"],
+                              timeout=60)  # fmt: skip
+        receipt["dangling_volumes_after"] = len(dangling.stdout.split())
         receipt["host_end"] = driver.snapshot_host(job_id)
         summary = driver.summarize(verdicts, records)
         summary["sessions"] = driver.session_summary(records)
@@ -484,7 +522,7 @@ def run_rung(item: Mapping[str, Any], run_dir: Path, source_dir: Path, job_id: s
         receipt["summary"] = summary
         receipt["verdicts"] = verdicts
         rc = 0 if summary["infra_gates_pass"] else 3
-    except DeltaError as exc:
+    except (DeltaError, driver.DriverError) as exc:
         receipt["error"] = str(exc)[:500]
     receipt["finished_at"] = time.time()
     (run_dir / "receipt.json").write_text(json.dumps(receipt, indent=2, sort_keys=True))

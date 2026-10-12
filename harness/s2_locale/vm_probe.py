@@ -12,7 +12,8 @@ VM container mounts the slot's cell image (the certified disk for the stock cell
    always names the image it ran on (``guest/s2_guest.py`` ``facts``);
 3. ``reset_task``: the task's own setup, offline from the pinned file cache
    (``osworld_live.LiveTask.setup``, S1a's unmodified call of the pinned code);
-4. the guard's keyboard warm-up and OSWorld's 60 s settle (S1a section 7.1 step 4);
+4. the guard's keyboard warm-up; the pointer warp (``warp_pointer``: one absolute XTest motion
+   to ``POINTER_TARGET``, read back; P0.7); OSWorld's 60 s settle (S1a section 7.1 step 4);
 5. the post-setup observation: two screenshots 1 s apart (kept on the host, never committed),
    the accessibility tree (kept on the host; its summary is recorded: named showing nodes, the
    share in Arabic script, the menu bar's left-to-right order), the window titles, the keyboard
@@ -24,12 +25,13 @@ VM container mounts the slot's cell image (the certified disk for the stock cell
    screenshot and the end facts (fonts, the unmet package dependencies).
 
 Classification (registration, "Infrastructure failures and exclusions"): a failed boot, image
-check, setup step, warm-up or guest transport, an undelivered observation, a guest-server
-restart, or a postconfig server error (any ``/setup/*`` reply of the postconfig with no HTTP
-status or a status of 500 or above: the guest server's own failure; a non-zero ``returncode``
-under HTTP 200 is the guest's state and is scored) ends the slot as ``infrastructure``, and the
-lane re-queues it once; otherwise the slot is ``probed`` with whatever the observation and the
-checker returned (a metric that raises is recorded as ``error``, never an exclusion).
+check, setup step, warm-up, pointer warp or guest transport, an undelivered observation, a
+guest-server restart, or a postconfig server error (any ``/setup/*`` reply of the postconfig with
+no HTTP status or a status of 500 or above: the guest server's own failure; a non-zero
+``returncode`` under HTTP 200 is the guest's state and is scored) ends the slot as
+``infrastructure``, and the lane re-queues it once; otherwise the slot is ``probed`` with whatever
+the observation and the checker returned (a metric that raises is recorded as ``error``, never an
+exclusion).
 """
 
 from __future__ import annotations
@@ -67,6 +69,17 @@ P010_KEYS: dict[str, tuple[tuple[str, str], ...]] = {
 }
 # Every other task reads all three (the reader is exercised on every slot, dev tasks included).
 P010_ALL = tuple(k for keys in P010_KEYS.values() for k in keys)
+# P0.7 and Phase 1: the screen point the pointer is warped to once per boot, after the warm-up and
+# before the 60 s settle. Chosen on smoke 1214's dev renders: inside the document region of Calc,
+# Writer and Impress in every cell (Impress's slide editing window spans about x 275-1510 and
+# y 250-1045 left to right, x 480-1720 mirrored; Calc's grid x 82-1820, y 281-997; Writer's
+# document x 70-1849, y 246-1034); on the LibreOffice window's mirror axis (the window spans
+# x 70-1919, and the mirrored layout puts at x what the left-to-right one has at 1989 - x, so the
+# point and its mirror image are 1 px apart and the pointer rests over the same document element
+# in both directions); and away from the point where the boot leaves the pointer (1732, 978) in
+# all 177 capture renders of smoke 1214 (the guest server draws the cursor into every screenshot
+# at the pointer), so the warp always moves it.
+POINTER_TARGET = (995, 540)
 
 
 def p010_keys(task_id: str) -> tuple[tuple[str, str], ...]:
@@ -85,6 +98,22 @@ class ProbeFailure(RuntimeError):
         super().__init__(f"{step}: {detail}")
         self.step = step
         self.detail = detail
+
+
+def warp_pointer(guest: Any, target: tuple[int, int] = POINTER_TARGET) -> dict[str, Any]:
+    """P0.7's pointer warp (also Phase 1's at every episode start): the guest helper's ``pointer``
+    mode moves the pointer to ``target`` in one absolute XTest motion and reads it back. A guest
+    that cannot do it, or a pointer read back elsewhere, is an infrastructure loss."""
+    try:
+        out = guest.run_script(GUEST_SCRIPT.read_text(encoding="utf-8"),
+                               ["pointer", json.dumps({"x": target[0], "y": target[1]})])
+    except Exception as exc:  # noqa: BLE001 - a guest that cannot answer is infrastructure
+        raise ProbeFailure("pointer", f"{type(exc).__name__}: {exc}") from exc
+    out.pop("_elapsed_s", None)
+    if out.get("after") != list(target):
+        raise ProbeFailure("pointer", f"the pointer reads {out.get('after')}, not {list(target)}")
+    out["moved"] = out.get("before") != out.get("after")
+    return out
 
 
 @dataclass
@@ -360,6 +389,8 @@ class Probe:
                 raise ProbeFailure("reset_task", f"failed in the guest: {setup['failures'][0]}")
             self.progress("warm_up")
             self._runner.warm_up()
+            self.progress("pointer")
+            self.record["pointer"] = warp_pointer(self.guest)
             t = self.clock()
             self.sleep(self.cfg.settle_after_reset_s)
             self.timings["settle_after_reset_s"] = round(self.clock() - t, 3)

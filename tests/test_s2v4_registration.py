@@ -98,6 +98,23 @@ def test_code_and_inputs_of_record_table_is_the_tree():
     assert pins_table.read(text) == pins_table.digests(ROOT)
 
 
+def test_code_of_record_includes_the_shared_code_the_lanes_import():
+    """The table lists every repository file the lane, probe, gold slot, oracle, K0 reader and
+    ap_delta import (found by walking their imports), the guest scripts, and harness/q2's closed
+    world, besides the S2 v4 files."""
+    from harness.q2.vm.manifest import closed_world
+
+    listed = set(pins_table.read(REG.read_text(encoding="utf-8")))
+    closure = set(pins_table.import_closure(ROOT))
+    for shared in ("harness/q2_stage1/lane.py", "harness/q2_stage1/driver.py",
+                   "harness/q2_stage1/osworld_live.py", "harness/q2/vm/desktop.py",
+                   "harness/q2/vm/guest_http.py", "harness/q2/vm/driver.py",
+                   "harness/q2_mutation_k2/executor.py", "harness/q2_mutation/controls.py",
+                   "harness/q2_mutation/offline_eval.py", "harness/s2_locale/k0_v4.py"):
+        assert shared in closure, shared
+    assert closure | set(pins_table.GUEST) | set(closed_world(str(ROOT))) <= listed
+
+
 def test_registration_states_the_pinned_digests():
     flat = " ".join(REG.read_text(encoding="utf-8").split())
     assert L.CENSUS_SHA256 in flat and L.PD_CACHE_FILES_SHA256 in flat

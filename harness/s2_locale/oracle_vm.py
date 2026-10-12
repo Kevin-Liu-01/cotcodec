@@ -11,8 +11,10 @@ quantities K0 reads and the oracle's descriptors, and the global instrument metr
 Definitions (fixed before the freeze; every parameter from the 17 dev tasks by a formula):
 
 * Renders. A (task, cell, rep) render is the capture slot's counted attempt (``k0_inputs.counted``:
-  the first job with a final record, its last attempt) when it ended ``probed``; E2 and ER2 are the
-  rep-2 capture slots of E and ER; PD is the PD slot (the ER image with the planted document).
+  the first job in job order with a final record, its last attempt; the run directories are put in
+  job order by ``k0_inputs.load_runs``, whatever order they are named in) when it ended ``probed``;
+  E2 and ER2 are the rep-2 capture slots of E and ER; PD is the PD slot (the ER image with the
+  planted document).
 * Masks (K0): the GNOME top bar (rows 0-31) and, per render, the caret mask (every pixel that
   differs between its two screenshots), applied to both renders compared.
 * Pixel count. A pixel differs when any channel differs by more than ``oracle.INK_DIFF / 2`` (the
@@ -46,6 +48,13 @@ Definitions (fixed before the freeze; every parameter from the 17 dev tasks by a
 Runs where numpy, scipy and Pillow exist (the development Mac, or a CPU container job):
   python -m harness.s2_locale.oracle_vm --runs RUN_DIR [RUN_DIR] --pool POOL --out oracle.json
       [--k0 k0.json]
+
+The registered route (P0.7, freeze procedure step 5): one CPU container job through
+``infra/slurm/host-single-node/s2v4-cpu.sbatch`` (run mode) in ``ORACLE_IMAGE_ID`` (the
+checker-mutation metric image, the lane's episode image) with ``registered_argv``'s argv, the
+export of the freeze commit at ``/src`` and each run directory mounted read-only at
+``/ro/run<i>``. The output records the interpreter and the numpy, scipy and Pillow versions
+(``environment``).
 """
 
 from __future__ import annotations
@@ -70,6 +79,33 @@ NO_DESCEND = ("table", "tree table", "document text", "document spreadsheet",
               "document presentation", "document frame", "paragraph")  # fmt: skip
 PLANT_SEED = 42
 A11Y_DY = 0  # the VM reports VCL widgets at screen position (dev renders); see the docstring
+# The registered route: the metric image (``harness.q2_stage1.lane.EPISODE_IMAGE_ID``) and its
+# lock-exact interpreter; the pool file inside the export.
+ORACLE_IMAGE_ID = "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230"
+ORACLE_PYTHON = "/opt/venv-lock/bin/python"
+POOL = ("program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pool/"
+        "pool-v3.json")
+ORACLE_WORKERS = 16
+
+
+def registered_argv(n_runs: int, workers: int = ORACLE_WORKERS) -> list[str]:
+    """The container argv of the registered oracle job: ``n_runs`` run directories (the census job
+    and at most one resume) mounted at ``/ro/run1``, ``/ro/run2``; outputs in ``/out``."""
+    runs = [f"/ro/run{i}" for i in range(1, n_runs + 1)]
+    return [ORACLE_PYTHON, "-m", "harness.s2_locale.oracle_vm", "--runs", *runs, "--pool", POOL,
+            "--out", "/out/oracle.json", "--k0", "/out/k0.json", "--workers", str(workers)]
+
+
+def environment() -> dict[str, Any]:
+    """The interpreter and the numeric libraries the oracle ran with."""
+    import platform
+
+    import numpy
+    import PIL
+    import scipy
+
+    return {"python": platform.python_version(), "numpy": numpy.__version__,
+            "scipy": scipy.__version__, "pillow": PIL.__version__}
 
 
 # --------------------------------------------------------------------------- inputs
@@ -112,10 +148,11 @@ def slot_dir(run_dir: Path, slot: str, attempt: int) -> Path:
 
 
 def render_index(run_dirs: Sequence[Path]) -> dict[tuple[str, str, int], Path]:
-    """(task id, cell, rep) -> the slot directory of the counted, probed capture attempt."""
+    """(task id, cell, rep) -> the slot directory of the counted, probed capture attempt (the run
+    directories in job order, ``k0_inputs.load_runs``)."""
     from harness.s2_locale import k0_inputs
 
-    records = k0_inputs.load_records([d / "probes.jsonl" for d in run_dirs])
+    ordered, records = k0_inputs.load_runs(run_dirs)
     out = {}
     for _sid, rows in k0_inputs.counted(records).items():
         last = rows[-1]
@@ -123,7 +160,7 @@ def render_index(run_dirs: Sequence[Path]) -> dict[tuple[str, str, int], Path]:
             continue
         rep = int(str(last["slot"]).rsplit(":r", 1)[1])
         out[(last["task_id"], last["cell"], rep)] = slot_dir(
-            run_dirs[int(last.get("_run", 0))], str(last["slot"]), int(last.get("attempt") or 1))
+            ordered[int(last.get("_run", 0))], str(last["slot"]), int(last.get("attempt") or 1))
     return out
 
 
@@ -453,7 +490,10 @@ def run(run_dirs: Sequence[Path], pool: Mapping[str, Any], workers: int = 1) -> 
         if executor is not None:
             executor.shutdown()
     m = metrics(per_task, tol)
-    return {"schema": SCHEMA, "runs": [str(d) for d in run_dirs], "tasks": len(tasks),
+    from harness.s2_locale.k0_inputs import run_order
+
+    return {"schema": SCHEMA, "runs": [str(d) for d in run_order(run_dirs)],
+            "environment": environment(), "tasks": len(tasks),
             "dev_tasks": dev, "tolerances": tol, "metrics": m,
             "instrument_checks": k0_v4.instrument_checks(m), "per_task": per_task}  # fmt: skip
 
@@ -472,7 +512,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.k0:
         from harness.s2_locale import k0_inputs, k0_v4
 
-        records = k0_inputs.load_records([d / "probes.jsonl" for d in args.runs])
+        _ordered, records = k0_inputs.load_runs(args.runs)
         tasks = k0_inputs.tasks_from_records(
             records, k0_inputs.strict_titles(pool),
             pool_ids=[t["task_id"] for t in pool["tasks"] if t.get("exclusion") is None])

@@ -152,8 +152,31 @@ def test_run_rung_puts_session_i_on_image_i_mod_n(tmp_path, monkeypatch):
         "containers_removed_all": True, "leaked_volumes": []})
     monkeypatch.setattr(driver, "session_summary", lambda r: {"runner_errors": []})
     monkeypatch.setattr(D, "docker", lambda *a, **k: type("P", (), {"stdout": ""})())
+    q2m = item["manifest"]
+    pre: list = []
+
+    def run(argv, timeout=120.0, check=True):
+        pre.append(argv)
+        if argv[1] == "info":
+            out = json.dumps({"ServerVersion": "27", "DefaultRuntime": "runc"})
+        elif argv[1:3] == ["image", "inspect"] and argv[-1] == q2m["vm"]["image_id"]:
+            out = f"{q2m['vm']['image_id']} [\"{q2m['vm']['image']}\"]"
+        elif argv[1:3] == ["image", "inspect"]:
+            out = q2m["runner"]["image_id"]
+        elif argv[1] == "run":  # qemu-img info, one per image
+            out = json.dumps({"format": "qcow2", "virtual-size": 53687091200})
+        else:  # dangling volumes
+            out = ""
+        return type("P", (), {"stdout": out})()
+
+    monkeypatch.setattr(driver, "run", run)
     rc = D.run_rung(item, tmp_path / "run", Path(args.source_dir), "77")
     assert rc == 0
+    # driver.main's pre-run checks, made before any session: docker info, the VM and runner
+    # images, qemu-img info per image, the dangling volumes before (and after)
+    assert [a[1] for a in pre[:3]] == ["info", "image", "image"]
+    assert sum(1 for a in pre if a[1] == "run") == 2
+    assert [a[1:3] for a in pre].count(["volume", "ls"]) == 2
     pins = L.load_pins(args.source_dir)
     assert [seen[i] for i in range(6)] == [pins["E"]["sha256"], pins["AR"]["sha256"]] * 3
     receipt = json.loads((tmp_path / "run" / "receipt.json").read_text())
@@ -161,3 +184,35 @@ def test_run_rung_puts_session_i_on_image_i_mod_n(tmp_path, monkeypatch):
     assert receipt["image_of_session"] == {str(i): ["E", "AR"][i % 2] for i in range(6)}
     assert (tmp_path / "run" / "preflight.txt").read_text().splitlines()[-1] == (
         "driver_exit=0 labelled_containers_left=0")
+    assert set(receipt["qcow2_info"]) == {"E", "AR"} and receipt["docker"]["server_version"]
+    assert receipt["dangling_volumes_before"] == receipt["dangling_volumes_after"] == 0
+    # a missing runner image stops the rung before any session, as driver.main stops
+    seen.clear()
+    monkeypatch.setattr(driver, "run", lambda argv, timeout=120.0, check=True: type(
+        "P", (), {"stdout": "" if argv[-1] == q2m["runner"]["image_id"] else run(argv).stdout})())
+    assert D.run_rung(item, tmp_path / "run2", Path(args.source_dir), "78") == 3
+    assert not seen and "runner image is missing" in json.loads(
+        (tmp_path / "run2" / "receipt.json").read_text())["error"]
+
+
+def test_k1_job_campaigns_all_run_on_one_image(monkeypatch):
+    """check_registered matches the plan on the first campaign's image: every other campaign of
+    the job must run on that image too."""
+    entry = {"kind": "suite-acceptance", "criterion": "C1", "layer": "H-GA-buggy", "seed": 42,
+             "mutant": None, "concurrency": 1}
+    other = dict(entry, layer="H-OSW-up")
+    monkeypatch.setattr(D, "load_k1_plan", lambda src: [
+        {"check": "C1", "cell": "E", **entry}, {"check": "C1", "cell": "E", **other}])
+
+    def item(cell, key):
+        q2m = {"workload": {k: key[k] for k in ("kind", "criterion", "layer", "mutant")},
+               "randomness": {"seeds": [key["seed"]]},
+               "vm": {"concurrency": 1, "qcow2": {"host_path": f"/x/{cell}.qcow2"}},
+               "purpose": "acceptance", "run_root": f"{D.K1_ROOT}/x"}
+        return {"cells": [cell], "manifest": q2m}
+
+    m = {"check": "C1", "campaigns": [item("E", entry), item("E", other)]}
+    D.check_registered(m, Path("."))
+    m["campaigns"][1] = item("A", other)
+    with pytest.raises(D.DeltaError, match="first campaign's image"):
+        D.check_registered(m, Path("."))

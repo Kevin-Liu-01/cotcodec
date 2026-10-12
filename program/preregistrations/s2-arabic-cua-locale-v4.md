@@ -1,9 +1,9 @@
 # S2 v4: Arabic interface text versus mirrored layout on the certified OSWorld stack, with the shipped Arabic language packs, a fixed Phase 0 admission rule and a registered delta certification of the action path (s2-arabic-cua-locale-v4)
 
 **Status: DRAFT, not frozen; no ledger row.** Written on 2026-10-11 by the single owner of the S2
-v4 run (decision D80 (iv)) on branch `stage0/s2-v4`, and repaired in one round under D84 (section
-"Changes in the repair round (D84): review log" lists every review and audit item and its
-disposition). It is a new experiment id: `s2-arabic-cua-locale-v3` and `v3.1` (the package that
+v4 run (decision D80 (iv)) on branch `stage0/s2-v4`, and repaired in two rounds, under D84 and D87
+(sections "Changes in the repair round (D84): review log" and "Changes in the third round (D87):
+review log" list every review and audit item and its disposition). It is a new experiment id: `s2-arabic-cua-locale-v3` and `v3.1` (the package that
 scored 60 and 65, D74 and D76) are left unedited, and this file carries v3.1's design with the
 changes listed below. D80 (iv) approved, on Kevin's delegation: fetching the official LibreOffice
 Arabic language packs that match the guest's LibreOffice 7.3.7; reviewed image-surgery code; a
@@ -13,9 +13,9 @@ read; and Phase 1 (6.83 GPU-h) admitted under D24 if Phase 0 passes as registere
 fetched Ubuntu's `language-pack-ar-base` and `language-pack-gnome-ar-base`, which are not
 LibreOffice packs: D84 records them as public research downloads under D1, their use read under D80
 (iv) together with D76 (a) ("the applications' real Arabic language packs"); P0.2 states that
-reading and the packages' unmet dependencies. Phase 0 is CPU only. Evidence for this draft:
+reading and the packages' unmet dependencies. Phase 0 is CPU only. Evidence:
 `program/evidence/2026-10-11/s2v4-image/` (the fetch provenance and its offline re-check, the image
-builds, the PD file-cache variant, the development smokes and the oracle's development run).
+builds, the PD file-cache variant, the development smokes and the oracle's development runs).
 
 The K0 rule (section "K0: Phase 0 admission rule") and its code (`harness/s2_locale/k0_v4.py`,
 `tests/test_s2v4_k0.py`) were committed in the first commit that carries this file, before any
@@ -43,6 +43,8 @@ after any Phase 0 result has been read voids the commitment (a new experiment id
 | Images built once, digests of one build's files | Reproducible build: every `debugfs -w` session runs at the certified disk's own last write time (`E2FSPROGS_FAKE_TIME`), one job builds twice and requires identical digests, and the images are re-pinned (section "Images built") | Repair round (review blocking item 1) |
 | Phase 0 and K1 code "built before the freeze" | Built and dev-tested: the oracle's VM adapter (`oracle_vm.py`), the PD file-cache variant (`pd_cache.py`), the P0.10 reader, the census renderer and the registered `phase0` purpose of `vm_lane.py`, `ap_delta.py` with its plan and batch file; registered jobs run only from the freeze commit's export | Repair round (audit blocking item 1) |
 | Phase 1 rules written, no executor | Phase 1's step-0 mask, keyboard check, image check and infrastructure rule defined here; its runner and analysis code are a Phase 1 executor addendum, dry-run on dev tasks, audited and frozen as its own ledger row before any Phase 1 episode | Repair round (audit blocking item 2) |
+| The pointer left where the boot put it | One warp of the pointer to the screen point (995, 540) after the warm-up and before the 60 s settle, in every Phase 0 capture slot and at every Phase 1 episode start (P0.7, Phase 1) | Third round (D87): in smoke 1214 Impress's status-bar pointer readout changed from boot to boot in the mirrored cells |
+| A resumed Phase 0 job's records counted in the order the run directories were named | Counted in job order (the lane receipts' job ids and start times); a first-attempt loss whose re-queue was cut is rerun by the resume; the resume manifest is computed from the interrupted job's records and checked against them; at most one resume (P0.7) | Third round (D87) |
 
 ## Question
 
@@ -105,7 +107,7 @@ and no task is selected on an agent outcome.
 
 ## Phase 0 (CPU only; host CPU lane jobs; no GPU)
 
-### P0.2 Inputs and the derived image (done in this draft's run)
+### P0.2 Inputs and the derived image (done before the freeze)
 
 Fetched on the login host by `python3 -m harness.s2_locale.fetch_langpacks --launchpad` from an export
 of commit `f1cff923` (provenance: `program/evidence/2026-10-11/s2v4-image/fetch/provenance.json`).
@@ -302,7 +304,8 @@ to right); the system shell (English, left to right; the GNOME top bar is masked
 comparison); the guest's stock locale `LANG=en_HK.UTF-8`, `LANGUAGE=en_HK:en` (number, date and paper
 defaults; as every slot of the development smokes records for the guest server, S included; v3's
 container forced `en_US.UTF-8`, which the VM does not use); the document default language; the
-SheetPrefix, CTLFont and English-function-name pins; autocorrect and spelling languages; the stock
+SheetPrefix, CTLFont and English-function-name pins; autocorrect and spelling languages; the
+pointer's position at the capture and at each episode start (the warp of P0.7); the stock
 keyboard: `setxkbmap -query` layout `us,us`, the stock input-method process (`ibus-daemon`, running in
 every slot of the smokes, S included) and GNOME's configured input sources, each equal to the stock
 cell S's record (Phase 1's keyboard check, below); 1920x1080; the agent, decoding, step cap and
@@ -319,7 +322,8 @@ See section "K1: the registered deviation of q2-action-path-v2".
 One slot is one fresh VM boot on one cell image, running `vm_probe.py` in the episode container:
 S1a's boot wait; the image check (the guest's selector SHA-256 equals the cell's; none in S); the task's
 own setup offline from the pinned file cache (the PD variant for PD slots; S1a's unmodified call); the
-guard's keyboard warm-up; the 60 s settle; two screenshots 1 s apart; the accessibility tree; window
+guard's keyboard warm-up; the pointer warp (below); the 60 s settle; two screenshots 1 s apart; the
+accessibility tree; window
 titles, `setxkbmap -query`, the input-method processes, GNOME's input sources, IBus's engine and each
 LibreOffice process's initial locale variables; the 20 s settle; the SHA-256 and mtime of every file
 the checker reads; the pinned `DesktopEnv.evaluate()` with `DONE` (the task's own postconfig and its
@@ -327,8 +331,29 @@ checker, on the do-nothing state); the guest-server restart check; the files' SH
 P0.10's reader; a last screenshot; the end facts (fonts; `dpkg-query` status of the packs' unmet
 dependencies and recommendations). Screenshots and trees stay on the host; records are committed.
 
+Pointer warp (third round, D87). After the warm-up and before the 60 s settle, the probe moves the
+pointer once to the screen point (995, 540) (`vm_probe.POINTER_TARGET`): the guest helper's `pointer`
+mode (`guest/s2_guest.py`, called by `vm_probe.warp_pointer`) sends one absolute XTest motion to that
+point (python-xlib's `xtest.fake_input(MotionNotify, x=995, y=540)` and `XSync`, the call the
+certified guard makes to park the pointer, through the input path D53 certified), so the pointer
+jumps there with no intermediate position, and then reads the position back (the record keeps it
+before and after). Why: until then the pointer rests where the boot left it ((1732, 978) in all 177
+capture renders of smoke 1214), and LibreOffice's last motion event is whatever the window received
+while it was being laid out. Impress shows that event's position in its status bar, and in the
+mirrored cells it changed from boot to boot (section "Development smoke"). After the warp, the last
+motion event is at one fixed point of the laid-out window. The point was chosen on smoke 1214's dev
+renders: it lies inside the document region of Calc, Writer and Impress in every cell (Impress's
+slide editing window spans about x 275-1510 left to right and x 480-1720 mirrored, y 250-1045; Calc's
+grid x 82-1820, y 281-997; Writer's document x 70-1849, y 246-1034); it lies on the LibreOffice
+window's mirror axis (the window spans x 70-1919, and the mirrored layout shows at x what the
+left-to-right one shows at 1989 - x, so the pointer rests over the same document element in both
+directions); and it is away from the boot's resting point, so the warp always moves the pointer. The
+guest server draws the cursor into every screenshot at the pointer, so every render shows the cursor
+at that point. Gold slots (P0.9) take no screenshot that K0 reads and do not warp.
+
 Infrastructure, the one rule of section "Infrastructure failures and exclusions": a failed boot, image
-check or setup step in the guest, a guest transport failure, an undelivered observation, a guest-server
+check or setup step in the guest, a failed pointer warp (the guest cannot make it, or the pointer reads
+back elsewhere), a guest transport failure, an undelivered observation, a guest-server
 restart, or a postconfig server error (a postconfig `/setup/*` reply with no HTTP status or a status of
 500 or above: the guest server's own failure; a non-zero `returncode` under HTTP 200 is the guest's
 state and is scored) is an infrastructure loss: the slot is re-queued once at the end of its block (S1a's
@@ -344,16 +369,45 @@ gold slots; the sequence cut into 67 blocks of 20, each block shuffled (one PCG6
 cells of a block run side by side. The census is committed before the freeze
 (`experiments/manifests/s2v4/phase0-census.json`, SHA-256
 `02bfc97bf8c14f48f2bfd57c26a34b5fac0b57d9aa18981b474a286d38589cf0`, pinned in `vm_lane.CENSUS_SHA256`),
-and the registered `phase0` job runs exactly these slots: one CPU job at V = 20 (81 CPUs, 126 GB,
-ceil(6 + 1.5 x 1,322 x 3.5 / 20 + 10) = 364 minutes requested, the expected time near 4 hours plus the
-image check). A `phase0` job that ends before every slot has a final record is resumed once by a
-`phase0` job whose slots are the census from the first block without one (`resume_from_block`, naming
-the interrupted job's record file by SHA-256); per slot the earlier job's final record stands
-(`k0_inputs.counted`).
+and the registered `phase0` job runs exactly these slots: one CPU job at V = 20 into the registered run
+root (81 CPUs requested, which Slurm rounds to 82 as it did for smoke 1214; 126 GB; ceil(6 + 1.5 x 1,322
+x 3.5 / 20 + 10) = 364 minutes requested, from a 3.5-minute slot estimate with a 1.5 margin). Smoke
+1214's capture slots took 4.3 minutes per attempt at the median (247 attempts, re-queues included, in
+53 minutes at V = 20), so the census's about 1,360 attempts need about 4.9 hours and about 95 VM-hours;
+the request covers that with about 20% to spare, and an overrun is the resume rule's case.
+
+Resume (third round, D87; `k0_inputs`, `vm_lane`). A slot's records in one job are final when an
+attempt ended `probed` or the slot was lost to infrastructure on its second attempt (lost twice:
+unobserved). A first-attempt loss whose re-queue the job did not finish (cut at the stop signal, never
+dispatched, or without a record) is not final, nor is a `cap_truncated` record: such a slot has not had
+its registered second attempt, so the resumed job runs it afresh (its attempts there count, with the
+lane's one re-queue; the interrupted job's loss is reported, not counted). A `phase0` job that ends
+before every slot has a final record is resumed once: `vm_lane.py render-census --freeze-commit ...
+--resume-from-records RUN_DIR/probes.jsonl` renders the census from the first block (in census order)
+holding a slot without a final record (`resume_from_block`), naming the interrupted job (`resumes`: its
+Slurm job id, its run directory under the registered run root and the SHA-256 of its `probes.jsonl`);
+the lane recomputes all of this from that run directory and admits the resume manifest only if it is
+exactly that rendering; the interrupted job must be the census job itself (a resumed job is never
+resumed), and `submit` refuses a second census job and a second resume. Which record counts: the jobs
+are taken in job order, read from each run directory's lane receipt (the Slurm job id, which must give
+the same order as the receipt's `t_start`; a directory without a receipt is refused), never in the
+order the directories are named; per slot the attempts of the first job with a final record count, and
+of those the last (`k0_inputs.load_runs`, `counted`; `oracle_vm.py` reads its renders the same way).
+
+The oracle's registered route: one CPU container job through `infra/slurm/host-single-node/s2v4-cpu.sbatch`
+(run mode, no GRES, `--network=none`, read-only root, no capabilities) in the checker-mutation metric
+image `sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230` (the lane's episode
+image; `oracle_vm.ORACLE_IMAGE_ID`), the freeze commit's export at `/src`, the census job's run
+directory (and its resume's, if any) mounted read-only at `/ro/run1` (`/ro/run2`), and the argv
+`oracle_vm.registered_argv`: `/opt/venv-lock/bin/python -m harness.s2_locale.oracle_vm --runs /ro/run1
+[/ro/run2] --pool program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pool/pool-v3.json
+--out /out/oracle.json --k0 /out/k0.json --workers 16` (the result does not depend on the number of
+workers). Its output records the interpreter and the numpy, scipy and Pillow versions it ran with; the
+development run of this route is in section "Development smoke".
 
 Oracle (`harness/s2_locale/oracle_vm.py`: v3's `oracle.py` and `phase0.py` plants on the VM's renders and
 OSWorld's accessibility XML; every parameter decided on the 17 dev tasks by a fixed formula; it runs as
-one CPU container job in the checker-mutation metric image after the sweep):
+the registered container job above, after the sweep):
 - renders: a (task, cell, rep) render is the counted capture attempt when it ended `probed`;
   accessibility nodes are LibreOffice's application subtree with screen boxes, roles from the XML tags;
 - masks in every pixel comparison: the GNOME top bar (rows 0-31) and, per render, the caret mask (every
@@ -440,12 +494,15 @@ is in Arabic script, among those with Arabic or Latin letters (`vm_probe.a11y_su
 
 1. The freeze (section "Freeze procedure"), after the Phase 0 code is built and tested on dev tasks
    (done in the repair round) and a fresh audit.
-2. P0.6 (K1), about 46 VM-hours (section "K1"), one `ap_delta` job at a time: 49 jobs (per image C1,
-   C2, A1, A2, A5, A6 and C3 in three parts; A3 in three parts; the rung), most at N = 1, so about 45
-   hours of wall clock in serial jobs plus queue waits.
-3. The capture and gold sweep: 1,322 slots (882 capture, 440 gold), about 80 VM-hours (about 3.5
-   minutes per slot); one CPU job at V = 20, about 4 hours plus the image check, on an empty queue.
-4. The oracle (one CPU container job, `oracle_vm.py --k0`) and `k0_v4.decide`: K0.
+2. P0.6 (K1), about 44.3 VM-hours (section "K1"), one `ap_delta` job at a time: 49 jobs (per image C1,
+   C2, A1, A2, A5, A6 and C3 in three parts; A3 in three parts; the rung), all but the rung at N = 1,
+   so about 42 hours of VM time in serial jobs, plus the driver's two image checks per campaign
+   (budgeted at 2 minutes per campaign, at most about 9.5 hours over the 284 campaigns) and queue
+   waits: about 42-52 hours of wall clock.
+3. The capture and gold sweep: 1,322 slots (882 capture, 440 gold), about 1,360 attempts with
+   re-queues, about 95 VM-hours (4.3 minutes per attempt, smoke 1214); one CPU job at V = 20, about 4.9
+   hours plus the image check, on an empty queue.
+4. The oracle (the registered container job, `oracle_vm.py --k0`) and `k0_v4.decide`: K0.
 
 <!-- K0:BEGIN -->
 ## K0: Phase 0 admission rule (committed before any Phase 0 result)
@@ -539,15 +596,21 @@ How `harness/s2_locale/ap_delta.py` drives harness/q2 (in one Slurm job per mani
   20 workers on the CPU slices of `driver.plan_cpusets_multi`, worker k on image k mod 5 (E, A, ER, AR,
   PL), running sessions k and k + 20 of `driver.acceptance_plan`, so session i runs on image i mod 5
   (8 sessions per image, four VMs per image at once), each through the unchanged `driver.run_cycle`
-  with that image's `vm.qcow2`; every image is hashed before and after, and the receipt carries
-  harness/q2's fields, so `acceptance.rung` reads it.
+  with that image's `vm.qcow2`. Before any session it makes `driver.main`'s pre-run checks with
+  harness/q2's own functions and messages (Docker's server facts, the VM image's ID and digest
+  reference agreeing, the runner image present, per image the regular read-only file with the pinned
+  size and digest and its `qemu-img info`, and the dangling Docker volumes before and after; third
+  round, D87: the repair round's `run_rung` had dropped them, and development jobs 1217 and 1218 ran
+  without them); every image is hashed before and after, and the receipt carries harness/q2's fields,
+  so `acceptance.rung` reads it.
 
 The registered campaigns are pinned before the freeze: `experiments/manifests/s2v4/k1-plan.json` (284
 campaigns: 56 per image and the A3 and rung campaigns; SHA-256
 `e1a4ac5b51d22a95f04905b0ebb7018ab521e2b21ca2abe2d62ced4dfd1a83cf`, pinned in `ap_delta.K1_PLAN_SHA256`),
 and a `k1` job runs exactly the plan's campaigns for its check and image, or, for a check whose
 campaigns' budgets exceed one job's 1,440 minutes (C3, A3), one numbered part of them in the plan's
-order, the parts together running each campaign once. Each job's Slurm minutes are the sum of its
+order, the parts together running each campaign once; every campaign of a `k1` job runs on the same
+image (the first campaign's, which names the plan's entries). Each job's Slurm minutes are the sum of its
 campaigns' own harness/q2 budgets plus the image check the driver makes before and after each
 campaign (2 x ceil(24.5 GB / 30 GB per minute) = 2 minutes per campaign), plus 10.
 
@@ -582,7 +645,8 @@ aborts twice, or one that ran without aborting and is rerun anyway, does not qua
 submits no Slurm job while it runs. `acceptance.rung` decides every condition but the step p95 over the
 whole rung, and the step condition is read per image as stated.
 
-Total about 46 VM-hours. **K1 passes** if every check passes on every image named and the rung
+Total about 44.3 VM-hours (7.51 per image on each of the five images, A3's 4.76 and the rung's about
+2). **K1 passes** if every check passes on every image named and the rung
 qualifies. Not rerun, and why: A4 (volume) and A7 (observation service) carry over from D53. The
 derived images differ from the certified disk in (i) LibreOffice's Arabic language-pack files, the
 four `ucf` registry copies and the selector (and PL's toolbar definitions), (ii) Ubuntu's base and
@@ -925,19 +989,19 @@ plan and `ap_delta.py`, the image pins and the batch files.
 | File | SHA-256 |
 |---|---|
 | `harness/s2_locale/k0_v4.py` | `d76ad39b8bb6da7e96e8afd3a43de2f8b9a90050bc509cb555f192a233712081` |
-| `harness/s2_locale/k0_inputs.py` | `7f8f29c6a69ce75cab258892852580b54162faf7ca9053d6a88a4f2abf3cd15f` |
+| `harness/s2_locale/k0_inputs.py` | `20378c65aa66658351e22be27b0b0bd1057a4d3fbc4e5a65f3e6f972334f0e34` |
 | `harness/s2_locale/oracle.py` | `c43c731daaf2319a3fb3f7a17b3104e5e1c4e73ba0c84802c2a8a3884d139798` |
-| `harness/s2_locale/oracle_vm.py` | `9d323b81c1bb0a07adc09a939466fba97236afb2058682dccf61114fe5002162` |
+| `harness/s2_locale/oracle_vm.py` | `566445789199000ecc18460c9f03ff9252ca891c2549468c992115a965603b07` |
 | `harness/s2_locale/phase0.py` | `a15d8caffa16d953c5800e3e251f8d0c8d11d344937110897de0f61b6319c85e` |
 | `harness/s2_locale/capture.py` | `6781c860f0ef0e8ff5a21e7f045f36ea47da19f575519be217bca52ca2614f7c` |
 | `harness/s2_locale/catalog.py` | `9b95de047690570766e458fccce16ba90a8d0123b13cf3dc99d1f9e37fce57bf` |
-| `harness/s2_locale/vm_lane.py` | `6758fee766e16f7423fa3f55eefbc2e7b0feaeead0acc40f617187b6784e0bdf` |
-| `harness/s2_locale/vm_probe.py` | `d825f05f7815f8ef690e87fd3f539ed11496149225519a4c44f0bf44e2e11feb` |
+| `harness/s2_locale/vm_lane.py` | `5ce51aee378123adb77a1ecd9b857d0ba525ec1960f893c87a3e716f202a115f` |
+| `harness/s2_locale/vm_probe.py` | `af599a7e27d31170207a373d4a93342bebb4ed22d6263c7f9ae1f0d9ec59b9c4` |
 | `harness/s2_locale/vm_gold.py` | `20ccb99a03ed311a7db15a81da19d8d6a3e4aa150636b9bb53aa957e6821a27f` |
-| `harness/s2_locale/guest/s2_guest.py` | `757fdb1414ab4aeb0230df8d6799352aa720e5778935722c9afd7bf572d46fff` |
+| `harness/s2_locale/guest/s2_guest.py` | `891170d8265665b0cbccca18bc6f7470ae1fcbc6f0cad5b514bf13e43b5bb94b` |
 | `harness/s2_locale/golds.py` | `0d8fad9fde736ee3fcd80492b5c905d7d6a35e690f9cf66559cf42ff87c25f9e` |
 | `harness/s2_locale/pd_cache.py` | `f75c520a6d8fbc7675c12ff1873ec36817eff9efa00ffa4b190fa05e81a10ddd` |
-| `harness/s2_locale/ap_delta.py` | `506204e76c79c12da1793b9b1102e5cdbac3e240e28e69f4a09d8feace5176d3` |
+| `harness/s2_locale/ap_delta.py` | `481c1e21e22093d5ed3e0f3358cbbfd3305192cfb1a707a283f8fb266a1f1d37` |
 | `harness/s2_locale/image_build.py` | `a8f937d856af59b645c10000b028611d4743651f09a23c2d8511084a4bccef66` |
 | `harness/s2_locale/fetch_langpacks.py` | `9415e5e82aa92be3d343895e577aebeb67973102681f0a36c6c1536a07b55b24` |
 | `harness/s2_locale/images.json` | `a95d4df25957c7301a47d6c8d719b9016a6ac4e9ca51f6377d44b8e28794d767` |
@@ -952,6 +1016,94 @@ plan and `ap_delta.py`, the image pins and the batch files.
 | `program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pool/pool-v3.json` | `f730e464366c03f4d6b12769be96d477609689d9f8ef3db2d7e1ddd2d3237ada` |
 | `program/evidence/q2-mutation/splits.json` | `2099792e6fb86c69e4f79b1ce47d2839cc25623f5c4633698e95822553c007d9` |
 | `program/evidence/q2-mutation/harness/file-cache-receipts.tsv` | `9a3e06a48afe95c2286d0fa26d56edf947e1a5e0f121d414d565b58d30abe5fb` |
+| `harness/__init__.py` | `17dac2704be26050e324aa36aba6d2c855abbd592e4d72f750b9b6e9c4399fec` |
+| `harness/q2/__init__.py` | `0932bda132c1dab03f40e460874a6827c4609424815e65eedcfefd3cd0b943a1` |
+| `harness/q2/action_path/__init__.py` | `8ce4d0afdd20f6b09dbb4e9d40d24acead2fc1992fccebd1ddf3891ec402613f` |
+| `harness/q2/action_path/acceptance.py` | `ae5470e56e00a4a4a31fb591d41654efe29f7f0a4f45203c9cb03419ec55c573` |
+| `harness/q2/action_path/adapters.py` | `3a62eb109d656a717dfe9cbce31fba3bcf02457e9f5690f3e20639e8becbaf40` |
+| `harness/q2/action_path/build_catalog.py` | `f7b5b9650c8d416b99507ebaf8522f8075aad928ead7e4c3b702bd2ee63435d8` |
+| `harness/q2/action_path/build_derived.py` | `c3e05c8f72c3f49849be7ce59a7b655067c61679e5dbdfa8ac2c130c5299c4e0` |
+| `harness/q2/action_path/build_keysyms.py` | `1a977f6c4e8981f3f0ce2040f2ecae28c87f8cf8c730977c9480db900ff91cbf` |
+| `harness/q2/action_path/build_suite.py` | `1980d245c8bd4a7175124a74f2131d513facc127abfc5c10ec0db25fd1cfbc3a` |
+| `harness/q2/action_path/canary.yaml` | `16e15b6a48a6a560958500b1e6507e1be7368fd0fff2348cb5ed7188e66881ff` |
+| `harness/q2/action_path/canary_targets.json` | `a49782274cf7c3dec0b6ceca64564207824220b2dc1572387f98339b0d4805f6` |
+| `harness/q2/action_path/catalog.py` | `2223a05b4e88dbc8af52751c9c87b10db99a121cdb93e5289979c657bf92126b` |
+| `harness/q2/action_path/catalog.yaml` | `5934c4281cb85a8309be32cb98442b038054a2bba0e7ec3755e20112710b7bba` |
+| `harness/q2/action_path/controls.py` | `d96e7b2acdecfef134c08c22f23113c8d78fae9d8a35d0e5ad826a2f0af9cc72` |
+| `harness/q2/action_path/corpus.py` | `b4b1f974d481c249fcb22f2b77102579fcb82e504c64375a9183783f63bfbe49` |
+| `harness/q2/action_path/executor.py` | `d5c43bbb76926da056c15a39ddcbf05e1c328bd7dddb6a726cde3c46c2f9776a` |
+| `harness/q2/action_path/expressible_entries.json` | `380e058e9aced24e30cbfc93ebace901a5cb02b567b42f0cceb7543c87c822ac` |
+| `harness/q2/action_path/gating_set.json` | `fe2afcaa5fcb6710f54510555633bcd86bc8d516f01211253cfd46271fdf5a6a` |
+| `harness/q2/action_path/ir.py` | `33dc24771b823597eef453a4994faf730d0364bd090488aa13e9de5e3498d305` |
+| `harness/q2/action_path/keynames.py` | `ed7afec8fd66e1f1ba1a08e2df6eccd834a24f9f22e6bd4a79604153e3816b72` |
+| `harness/q2/action_path/keysyms.json` | `a1ea436d9bd4ae8d9fbc8305772f7dca776858b023092ce1cea059a693924acb` |
+| `harness/q2/action_path/l0_raw.py` | `391249f7900dfc327947505526b22710f7dd6bf70f71a230d9865ae7da174f84` |
+| `harness/q2/action_path/l0_raw_prediction.yaml` | `8b947acafeae1d2bf4fda5a715888556d9ca672e57d488a4c31dadc420f9302a` |
+| `harness/q2/action_path/l0_raw_prediction_v2.yaml` | `5ce6beeb6736560e9a0fc9f84557aa3c9e35d7d30ac423b3541863613e35b489` |
+| `harness/q2/action_path/mutants.py` | `1791311503e0b57808b0f378ce2cd4c93167c76a99c80f8b6666f559a1a90beb` |
+| `harness/q2/action_path/mutation_operators.yaml` | `429cbc389238404b1b6c345b883db9ada5b470ebad3594a8895187aa377e1259` |
+| `harness/q2/action_path/order.py` | `cc709bd455f1899df11e8bf1e780d7efadc0ad374d8e2786bdc6f6e589b65676` |
+| `harness/q2/action_path/qwen35_chat_template.jinja` | `a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715` |
+| `harness/q2/action_path/rdev.py` | `c526f7ed5b8cc560c5419f9f5e25541b46178f2c375b24cbbee84e0093daab83` |
+| `harness/q2/action_path/rdev_plan.json` | `5c9b7215c89aadfa6308bdd94c629a716c7c822a8ca626315157e84bd1495d89` |
+| `harness/q2/action_path/rdev_reference.json` | `5cc48d5177a7f07baed36b90ab76ce3e10de835b42596fc6a53427add49b518a` |
+| `harness/q2/action_path/suite_cells.json` | `a79073a2f5e6e7d7e109b14d50fb4c1e2791f856504c32cd855911e726a95c95` |
+| `harness/q2/action_path/trial_times.json` | `a33ca2e024d6f24a31a60ff62053be1fb197af48c996ae99fb75aff4d20217e5` |
+| `harness/q2/action_path/upstream/PROVENANCE.json` | `5bef93df835c560b1f8dc6e8cfe7d6c207ba7fbe2e26c861541878563062744d` |
+| `harness/q2/action_path/upstream/__init__.py` | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `harness/q2/action_path/upstream/gym_anything_aae6f7607.py` | `c624cee586e3b8b8b2ac12102ae1fca91e7de154b494035c4289123f38887aa6` |
+| `harness/q2/action_path/upstream/gym_anything_bf965cde0.py` | `f5fb13d2ab6eb024be48f28a439ecb3147308f126217054d4587649f9b1b818f` |
+| `harness/q2/action_path/upstream/osworld_bfd62bdc.py` | `9e21622823994721407dc04f606b58c8cbd8848e780e4657e8ee13cb363c77ab` |
+| `harness/q2/action_path/upstream/osworld_bfd62bdc_fixed.py` | `9558b956004f6c971e881f073c42792e3d5d437396dbe6c0b407b250df3d8fdf` |
+| `harness/q2/action_path/upstream/vendor.py` | `afae1b5d89cf47709727281eab01b1104e6f6b5eabf1c6960e0947c3b23d236f` |
+| `harness/q2/action_path/verdict.py` | `29e4501532ab740922645a26a05a365a8aedc95f237efc66be5048df8354c8c4` |
+| `harness/q2/action_path/vm_hours.json` | `5fc0617303a2782c02e67888be4584261239e5f90268e4e39d7524aff625636e` |
+| `harness/q2/action_path/vm_hours.py` | `58b7379377ae87a72c85076ee87441fbb2da12042a15e9ae4aa62f67365074b1` |
+| `harness/q2/action_path/vocab.py` | `f26dd7d34988aebf8e8bbeb3ea118e6da3b9d37505ba8433a6eb6d9f0f186792` |
+| `harness/q2/action_path/volume.py` | `91cbbb7f2bf7cd8715ae7c3c88fb8744ff40bd89955283eb680578c24d2a09c7` |
+| `harness/q2/action_path/volume_plan.json` | `9567d257b769273788153c4193981f1c7eb1e8664b4d1ef36389b4fbd211802a` |
+| `harness/q2/vm/__init__.py` | `43fce1e08200acef9b9b82c914eba0713c0d60716bd2be0feaaade042dee3b19` |
+| `harness/q2/vm/canary_run.py` | `295bdd0916869adf79015bc6da6cba4aff2a0ab9f0dab089e4ed3a3565abb119` |
+| `harness/q2/vm/desktop.py` | `67030d6b5d79753e2db65b33bc12af2b5faaee2eacbaa5e49b4eb2de0a31c188` |
+| `harness/q2/vm/driver.py` | `06f3a29f39ad3a5de55efafd23fdfdfe121914f0f7f5dba281f4aabb68f74f7c` |
+| `harness/q2/vm/guest/__init__.py` | `99215662111076fd8ca080805ee2b36156cdec720470d16b612954c50f83362f` |
+| `harness/q2/vm/guest/canary.py` | `32742019db56b4f09905c50c71159c2ef3fe024a044d07f4bffb31cd41fcea1e` |
+| `harness/q2/vm/guest/canary_targets.py` | `8b7233391b1da78092326c11d394f0385ee42052835a83554c76260e4201aab3` |
+| `harness/q2/vm/guest/facts.py` | `4a071a39d4586a58b62419796a57b678568bdbc3bfd77ec6d50e841414dcd255` |
+| `harness/q2/vm/guest/guard.py` | `19fe2da1c97c88e07062e9113a8df1b8958b583f6f3bf0e1a763f52eb10a5748` |
+| `harness/q2/vm/guest/l0_fixed.py` | `7f8bed98ad22eee662d92d5422ee564d80459645d2e0c58bb6f3df74a94425f1` |
+| `harness/q2/vm/guest/probe.py` | `ba5c0f1d364c80d5f8190f3c357b915cd504d754891285c3772ba959a804efeb` |
+| `harness/q2/vm/guest/sentinel.py` | `98f46a7faafc58e9c65466b19ae3547288fc8829378ad7aa169b09a17161b18b` |
+| `harness/q2/vm/guest/tap_selftest.py` | `7e051c0bcb45ba81c2b1fb855a9dc70115957fafa3ec7f333c8b3be5ab3bf835` |
+| `harness/q2/vm/guest/xrecord_tap.py` | `6a6e9453f138776b0717a9087767be0f97460f1ea0d5302f31e21ae1a4a80a74` |
+| `harness/q2/vm/guest_http.py` | `13e34f874c89b0b32f7f82ffae658682d2608bc9a0614a569742459d6b796ceb` |
+| `harness/q2/vm/hmp.py` | `34b10c2661c6cf40039ca172a704fb5613d0a805e60223acc729f040caf4776a` |
+| `harness/q2/vm/manifest.py` | `f238f12bdb8470919c8892eff46fe8b721e1e0c83ad08a60c0293ed8da3b9e2e` |
+| `harness/q2/vm/marker.py` | `b786b347fc5573425f14090bd67621294ac5c84671bf67f47e663d693ab17fb9` |
+| `harness/q2/vm/runner.py` | `bc944df5db3712322e6f01fc54fa6214aa6d9b6ce727282f33ae1043df303f4e` |
+| `harness/q2/vm/suite.py` | `6485ddb977d8adaf42ecc8c97f6520d3467633c54aeefba0cec877986805797a` |
+| `harness/q2/vm/validation.py` | `2ab5508e5a42269d447312e481b58c9f491d815d73e4977ba9c55d235231116f` |
+| `harness/q2_mutation/__init__.py` | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `harness/q2_mutation/controls.py` | `0fbc20d1a967e48689937359d7065b53bebd2cea50d7c3f8088fef12c702624f` |
+| `harness/q2_mutation/offline_eval.py` | `a598e7fb71c434a7ef135afd250576db1025c4b0e77715413ab78c3e521f877a` |
+| `harness/q2_mutation/reachability.py` | `00e106f6003a9f1ef9b9ca4cdbd59fbf1145c5608c6c67e37b57a7a094da0e9b` |
+| `harness/q2_mutation/schema.py` | `65d91703754b4026b15f6c53a4a6069da723b58d749730770da2910c1edf427d` |
+| `harness/q2_mutation/tasks.py` | `4040d852b18d06eea2fe47155ac642af689dea5477cd4a16a2dd5c71f42d8ecc` |
+| `harness/q2_mutation/vm_injection.py` | `43886a101ea7f0dc569454be99bd7bfd1fea051713e0ec886ca25dcf3071f567` |
+| `harness/q2_mutation_k2/__init__.py` | `66667a5fcd60b2bfcb72dbe74c94b1443f68dbe75a6ce0cf28816807cccc1ebf` |
+| `harness/q2_mutation_k2/executor.py` | `0d104aa6c51dde519d42a33829fdf5f811b524b202463eab5389f1c49d7c48b7` |
+| `harness/q2_mutation_k2/guest/k2_guest.py` | `869ebb3811f44ee990f587077756c3bb774392930e6973a54a2225714608dda8` |
+| `harness/q2_mutation_k2/rules.py` | `58ea109a1aff6d6b059b6ca841b99a3a8b7ca858fe698c8b5ab33238e6be8c05` |
+| `harness/q2_stage1/__init__.py` | `0e2190149cf640fac07dab26332a26f696374ff4400c23aab82e8cf766f3b334` |
+| `harness/q2_stage1/agents.py` | `8e72acbd79645b45ccd95cd213d5f8564d7114af538561e28219c12cf0eb0ba1` |
+| `harness/q2_stage1/driver.py` | `52f835f6a2f8149ec0b3c14720593c02a42e1d410ab25062845fd3700aeee227` |
+| `harness/q2_stage1/engine.py` | `3e0942349a8fc5b2aef5294a28c029ca318acff88f4cd897df274bb6e3b51bf9` |
+| `harness/q2_stage1/lane.py` | `d646b144f857d5947ed20d27a5d33107123913321969c89af22729674246eaa5` |
+| `harness/q2_stage1/osworld_live.py` | `38b017c04f67b59e08bc1d764702a2ff91c80ebde8054c8e80bc277746334313` |
+| `harness/q2_stage1/plan.py` | `1f9c77f758ed590d99597488219cc49fae0e0f3c53567d628d14382346fc2187` |
+| `harness/q2_stage1/records.py` | `8c276018b98312dd8aab5a626be55e6421f3d1470aefc6ceae70a471c9082e85` |
+| `harness/q2_stage1/rules.py` | `63ed09b0362595e85ac65c9bd29b090dc8b1a3a5e4ab3ace559243a82389d8b0` |
+| `harness/s2_locale/__init__.py` | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
 <!-- PINS:END -->
 
 ## Design decisions (for the owner's acceptance)

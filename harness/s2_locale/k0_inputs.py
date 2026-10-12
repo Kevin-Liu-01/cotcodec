@@ -18,9 +18,19 @@ cell:
   and in every admission cell, False when one differs, None when a cell has no reading.
 
 A pool task with no record at all is still listed (every cell unobserved, so excluded), so the
-census report covers all 106. Which records count: a ``cap_truncated`` record is not a final
-record; per slot, the attempts of the first job (in the order the record files are given) that
-has a final record for it count, and of those the last attempt (the lane's re-queue).
+census report covers all 106. Which records count (registration P0.7):
+
+* the jobs are taken in job order, read from each run directory's ``lane-receipt.json`` (its
+  Slurm job id, which must agree with its ``t_start``; ``run_order`` refuses a directory without
+  one), never in the order the directories are named; at most two jobs: the census job and its
+  one resume, whose manifest names the first job (``load_runs``);
+* one job's records of a slot are final (``final_in_job``) when an attempt ended ``probed`` or the
+  slot was lost to infrastructure on its second attempt (lost twice: unobserved). A first-attempt
+  infrastructure loss whose re-queue the job did not finish (cut at the stop signal, never
+  dispatched, or no record) is not final, nor is a ``cap_truncated`` record: the resumed job runs
+  that slot afresh;
+* per slot, the attempts of the first job (in job order) whose records of it are final count, and
+  of those the last attempt (the lane's re-queue).
 
 The instrument checks need the oracle's per-task metrics (``oracle_vm.py``).
 """
@@ -36,17 +46,73 @@ from typing import Any
 from harness.s2_locale import k0_v4
 
 SETUP_FAILURE = "probe:reset_task"
-FINAL = ("probed", "infrastructure")
+FINAL = ("probed", "infrastructure")  # the statuses a counted attempt can have
+MAX_RUNS = 2  # the census job and at most one resume (P0.7)
+
+
+class RunOrderError(ValueError):
+    """The run directories cannot be put in job order, or are not one job and its one resume."""
 
 
 def load_records(paths: Iterable[Path]) -> list[dict[str, Any]]:
-    """Every record of the given ``probes.jsonl`` files, each tagged with its file's position."""
+    """Every record of the given ``probes.jsonl`` files, each tagged with its file's position
+    (``_run``). The position is the job order only when the files are given in job order:
+    ``load_runs`` takes run directories and orders them itself."""
     out = []
     for run, path in enumerate(paths):
         for line in Path(path).read_text().splitlines():
             if line.strip():
                 out.append({**json.loads(line), "_run": run})
     return out
+
+
+def _receipt(run_dir: Path) -> tuple[int, float]:
+    path = Path(run_dir) / "lane-receipt.json"
+    if not path.is_file():
+        raise RunOrderError(f"{run_dir}: no lane-receipt.json, so its job order cannot be read")
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    job, start = str(receipt.get("job_id", "")), receipt.get("t_start")
+    if not job.isdigit() or not isinstance(start, int | float) or isinstance(start, bool):
+        raise RunOrderError(f"{run_dir}: the lane receipt has no numeric job_id and t_start")
+    return int(job), float(start)
+
+
+def run_order(run_dirs: Sequence[Path]) -> list[Path]:
+    """The run directories in job order: by the lane receipt's Slurm job id (ascending as Slurm
+    assigns them), which must give the same order as the receipts' ``t_start``. Refuses a
+    directory without a receipt, a repeated job id and job ids and start times that disagree.
+    The order in which the directories are named never matters."""
+    rows = sorted((*_receipt(d), Path(d)) for d in run_dirs)
+    jobs = [job for job, _, _ in rows]
+    if len(set(jobs)) != len(jobs):
+        raise RunOrderError(f"a job is named twice: {jobs}")
+    starts = [start for _, start, _ in rows]
+    if any(b <= a for a, b in zip(starts, starts[1:], strict=False)):
+        raise RunOrderError(f"job ids {jobs} and start times {starts} give different orders")
+    return [d for _, _, d in rows]
+
+
+def load_runs(run_dirs: Sequence[Path]) -> tuple[list[Path], list[dict[str, Any]]]:
+    """The run directories in job order (``run_order``) and every record of their
+    ``probes.jsonl``, tagged with the job's position (``_run``). At most ``MAX_RUNS``: a second
+    directory must be the resume of the first (its ``manifest.json`` names the first job in
+    ``resumes.job_id``)."""
+    ordered = run_order(run_dirs)
+    if len(ordered) > MAX_RUNS:
+        raise RunOrderError(f"{len(ordered)} jobs: the census job is resumed at most once")
+    if len(ordered) == 2:
+        first = str(_receipt(ordered[0])[0])
+        manifest = json.loads((ordered[1] / "manifest.json").read_text(encoding="utf-8"))
+        if (manifest.get("resumes") or {}).get("job_id") != first:
+            raise RunOrderError(f"{ordered[1]} is not the resume of job {first}")
+    return ordered, load_records([d / "probes.jsonl" for d in ordered])
+
+
+def final_in_job(rows: Iterable[Mapping[str, Any]]) -> bool:
+    """Whether one job's records of a slot are final (see the module docstring)."""
+    rows = list(rows)
+    return any(r.get("status") == "probed" for r in rows) or any(
+        r.get("status") == "infrastructure" and int(r.get("attempt") or 1) >= 2 for r in rows)
 
 
 def strict_titles(pool: Mapping[str, Any]) -> dict[str, list[str]]:
@@ -59,16 +125,18 @@ def strict_titles(pool: Mapping[str, Any]) -> dict[str, list[str]]:
 
 
 def counted(records: Iterable[Mapping[str, Any]]) -> dict[str, list[Mapping[str, Any]]]:
-    """Per slot id, the attempts that count (see the module docstring), oldest first."""
-    by_slot: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    """Per slot id, the attempts that count (see the module docstring), oldest first. ``_run``
+    is the job's position in job order (``load_runs``). A slot no job has a final record for has
+    no entry (unobserved)."""
+    by_job: dict[str, dict[int, list[Mapping[str, Any]]]] = defaultdict(lambda: defaultdict(list))
     for r in records:
-        if r.get("status") in FINAL:
-            by_slot[str(r["slot"])].append(r)
+        by_job[str(r["slot"])][int(r.get("_run", 0))].append(r)
     out = {}
-    for sid, rows in by_slot.items():
-        first = min(int(r.get("_run", 0)) for r in rows)
-        out[sid] = sorted((r for r in rows if int(r.get("_run", 0)) == first),
-                          key=lambda r: int(r.get("attempt") or 1))
+    for sid, jobs in by_job.items():
+        final = [run for run in sorted(jobs) if final_in_job(jobs[run])]
+        if final:
+            out[sid] = sorted((r for r in jobs[final[0]] if r.get("status") in FINAL),
+                              key=lambda r: int(r.get("attempt") or 1))
     return out
 
 

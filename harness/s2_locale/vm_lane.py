@@ -23,9 +23,15 @@ the row's SHA-256, whose ``.git_sha`` is the manifest's freeze commit (the commi
 row; ``render-census`` checks with git that its only parent is the row's ``git_head_at_freeze``
 and that it changes only the ledger), and with exactly the committed census slots
 (``CENSUS``, pinned by ``CENSUS_SHA256``; rendered by ``census_slots`` with PCG64 seed 42), at
-V = 20. A ``phase0`` job that ends before its last slot is resumed once by a ``phase0`` job whose
-slots are the census from the first block without a final record (``resume_from_block``). Once
-the id is frozen, ``development`` is refused (D56).
+V = 20, into ``PHASE0_RUN_ROOT``. A ``phase0`` job that ends before every slot has a final record
+(``k0_inputs.final_in_job``: probed, or lost twice; a first-attempt loss whose re-queue was cut is
+not final) is resumed once: ``render-census --resume-from-records RUN_DIR/probes.jsonl`` renders
+the census from the first block holding a slot without a final record (``resume_from_block``),
+naming the interrupted job (``resumes``: its job id, run directory and the SHA-256 of its records),
+and ``check_registered`` recomputes all of it from that run directory, so the resume manifest must
+be exactly that rendering; a resumed job is never resumed again, and ``submit`` refuses a second
+census job or a second resume (``check_once``). Once the id is frozen, ``development`` is refused
+(D56).
 
 PD slots (the planted-document control) run on the ER image with the planted-document file-cache
 variant (``pd_cache.py``) mounted instead of the pinned file cache; the variant is pinned by its
@@ -352,21 +358,84 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
     return m
 
 
+def interrupted_job(run_dir: Path) -> dict[str, Any]:
+    """An interrupted ``phase0`` job's run directory: its job id (``lane-receipt.json``), its
+    manifest (``manifest.json``, written by the batch file) and its records (``probes.jsonl``)."""
+    run_dir = Path(run_dir)
+    for name in ("lane-receipt.json", "manifest.json", "probes.jsonl"):
+        _require((run_dir / name).is_file(), f"{run_dir}: {name} is missing")
+    receipt = json.loads((run_dir / "lane-receipt.json").read_text(encoding="utf-8"))
+    job = str(receipt.get("job_id", ""))
+    _require(job.isdigit() and run_dir.name == job,
+             f"{run_dir}: the run directory is not named by its lane receipt's job id")  # fmt: skip
+    data = (run_dir / "probes.jsonl").read_bytes()
+    records = [json.loads(x) for x in data.decode("utf-8").splitlines() if x.strip()]
+    return {"job_id": job, "run_dir": str(run_dir), "records": records,
+            "records_sha256": hashlib.sha256(data).hexdigest(),
+            "manifest": json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))}
+
+
+def resume_point(records: Sequence[Mapping[str, Any]],
+                 slots: Sequence[Mapping[str, Any]]) -> str | None:  # fmt: skip
+    """The first census block (in census order) holding a slot that has no final record in the
+    interrupted job's records (``k0_inputs.final_in_job``), or None when every slot has one."""
+    from collections import defaultdict
+
+    from harness.s2_locale.k0_inputs import final_in_job
+
+    by_slot: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for r in records:
+        by_slot[str(r.get("slot"))].append(r)
+    for slot in slots:
+        if not final_in_job(by_slot.get(str(slot["slot"]), [])):
+            return str(slot["block"])
+    return None
+
+
+def resume_fields(run_dir: Path, slots: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """What a resume manifest carries, computed from the interrupted job's run directory:
+    ``resume_from_block``, ``resumes`` and the census suffix (``slots``). Refuses a job that is
+    itself a resume (the census job is resumed at most once) or that needs no resume."""
+    job = interrupted_job(run_dir)
+    prior = job["manifest"]
+    _require(prior.get("purpose") == "phase0" and prior.get("resume_from_block") is None
+             and prior.get("slots") == list(slots),
+             "the interrupted job must be the census job itself: a resumed job is not resumed "
+             "again")  # fmt: skip
+    block = resume_point(job["records"], slots)
+    _require(block is not None, f"job {job['job_id']} has a final record for every slot")
+    index = next(i for i, s in enumerate(slots) if s["block"] == block)
+    return {"resume_from_block": block, "slots": [dict(s) for s in slots[index:]],
+            "resumes": {"job_id": job["job_id"], "run_dir": job["run_dir"],
+                        "records_sha256": job["records_sha256"]}}  # fmt: skip
+
+
 def check_registered(m: Mapping[str, Any], source_dir: Path) -> None:
-    """A ``phase0`` job: exactly the committed census (or its suffix from a block, to resume an
-    interrupted job once), at V = 20, with evaluate on and the registered episode timeout."""
+    """A ``phase0`` job: exactly the committed census, or, to resume an interrupted census job
+    once, exactly what ``resume_fields`` computes from that job's run directory; at V = 20 into
+    ``PHASE0_RUN_ROOT``, with evaluate on, the lane's re-queue and the registered episode
+    timeout."""
     census = census_file(source_dir)
     slots = census["slots"]
     resume = m.get("resume_from_block")
     if resume is None:
         _require(m["slots"] == slots, "phase0's slots differ from the committed census")
+        _require("resumes" not in m, "only a resumed job names an interrupted job")
     else:
-        index = next((i for i, s in enumerate(slots) if s["block"] == resume), None)
-        _require(index is not None and index > 0, f"resume_from_block {resume!r} is not a block")
-        _require(m["slots"] == slots[index:], "phase0's resumed slots are not the census suffix")
         prior = m.get("resumes") or {}
-        _require(bool(HEX64.fullmatch(str(prior.get("records_sha256", "")))),
-                 "a resumed job names the interrupted job's records (resumes.records_sha256)")
+        job = str(prior.get("job_id", ""))
+        _require(job.isdigit() and prior.get("run_dir") == f"{PHASE0_RUN_ROOT}/{job}",
+                 f"a resumed job names the interrupted job's id and its run directory under "
+                 f"{PHASE0_RUN_ROOT} (resumes)")  # fmt: skip
+        want = resume_fields(Path(PHASE0_RUN_ROOT) / job, slots)
+        _require(prior.get("records_sha256") == want["resumes"]["records_sha256"],
+                 "resumes.records_sha256 is not the interrupted job's probes.jsonl")  # fmt: skip
+        _require(resume == want["resume_from_block"],
+                 f"resume_from_block must be {want['resume_from_block']}, the first block with a "
+                 f"slot that has no final record")  # fmt: skip
+        _require(m["slots"] == want["slots"], "phase0's resumed slots are not the census suffix")
+    _require(m["run_root"] == PHASE0_RUN_ROOT, f"phase0 runs into {PHASE0_RUN_ROOT}")
+    _require(m.get("requeue", True) is True, "phase0 keeps the lane's one re-queue")
     _require(m["vm"]["concurrency"] == V_REGISTERED, f"phase0 runs at V = {V_REGISTERED}")
     _require(m["evaluate"] is True, "phase0 runs the task's postconfig and checker")
     _require(m["episode_timeout_s"] == EPISODE_TIMEOUT_S,
@@ -379,6 +448,25 @@ def check_registered(m: Mapping[str, Any], source_dir: Path) -> None:
              and ("PD" not in m["images"]
                   or (m.get("file_cache_pd") or {}).get("host_dir") == PD_CACHE_HOST),
              "phase0 reads the registered host inputs")  # fmt: skip
+
+
+def check_once(m: Mapping[str, Any]) -> None:
+    """At submission: the census job runs once and is resumed at most once. Refuses a census job
+    when the run root already holds a ``phase0`` job, and a resume when it already holds one."""
+    if m.get("purpose") not in REGISTERED_PURPOSES:
+        return
+    root = Path(m["run_root"])
+    prior = []
+    for path in sorted(root.glob("*/manifest.json")) if root.is_dir() else []:
+        if path.parent.name.isdigit():
+            data = json.loads(path.read_text(encoding="utf-8"))
+            if data.get("purpose") == "phase0":
+                prior.append((path.parent.name, data.get("resume_from_block") is not None))
+    if m.get("resume_from_block") is None:
+        _require(not prior, f"the census job has run already ({[j for j, _ in prior]})")
+    else:
+        _require(not any(r for _, r in prior),
+                 f"the census job has been resumed already ({[j for j, r in prior if r]})")
 
 
 def image_bytes(m: Mapping[str, Any]) -> int:
@@ -626,6 +714,7 @@ def canonical(manifest: Mapping[str, Any]) -> str:
 
 def submit(manifest_path: Path, source_dir: Path, dry_run: bool) -> dict[str, Any]:
     m = validate_manifest(json.loads(manifest_path.read_text(encoding="utf-8")), source_dir)
+    check_once(m)
     request = check_slurm(m)
     host = check_host(m, source_dir)
     text = canonical(m)
@@ -800,6 +889,9 @@ def main(argv: list[str] | None = None) -> int:
                      help="also write the census file (CENSUS) for pinning")
     cen.add_argument("--freeze-commit", default=None,
                      help="phase0: the freeze commit, checked with git in --repo")
+    cen.add_argument("--resume-from-records", type=Path, default=None,
+                     help="phase0: resume the interrupted census job whose run directory holds "
+                          "this probes.jsonl (from its first block without a final record)")
     cen.add_argument("--repo", type=Path, default=Path("."))
     cen.add_argument("--source-dir", type=Path, default=Path("."),
                      help="phase0: the export of the freeze commit (its ledger row)")
@@ -827,9 +919,15 @@ def main(argv: list[str] | None = None) -> int:
             base["freeze"] = {"commit": args.freeze_commit, "ledger_row_hash": row["hash"],
                               "git_head_at_freeze": row["git_head_at_freeze"]}  # fmt: skip
         manifest = render_census(base, slots)
+        if args.resume_from_records:
+            _require(args.resume_from_records.name == "probes.jsonl",
+                     "--resume-from-records names the interrupted job's probes.jsonl")
+            manifest.update(resume_fields(args.resume_from_records.parent, slots))
         args.out.write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n")
-        kinds = {k: sum(1 for x in slots if x.get("kind", "capture") == k) for k in KINDS}
-        print(json.dumps({"slots": len(slots), **kinds, "out": str(args.out)}))
+        out_slots = manifest["slots"]
+        kinds = {k: sum(1 for x in out_slots if x.get("kind", "capture") == k) for k in KINDS}
+        print(json.dumps({"slots": len(out_slots), **kinds, "out": str(args.out),
+                          "resume_from_block": manifest.get("resume_from_block")}))
         return 0
     if args.command == "render":
         by_cell = {k: int(v) for k, v in (x.split("=") for x in args.reps_by_cell.split(",") if x)}

@@ -119,6 +119,7 @@ def test_render_index_takes_the_counted_probed_attempt(tmp_path):
     ]
     run.mkdir()
     (run / "probes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    (run / "lane-receipt.json").write_text(json.dumps({"job_id": "1300", "t_start": 1.0}))
     index = V.render_index([run])
     assert index[("aaaaaaaa-1", "E", 1)] == run / "slots" / "aaaaaaaa_E_r1.a2"
     assert index[("aaaaaaaa-1", "E", 2)].name == "aaaaaaaa_E_r2.a1"
@@ -129,3 +130,63 @@ def test_render_index_takes_the_counted_probed_attempt(tmp_path):
 @pytest.mark.parametrize("verdict", ["fail_changed", "fail_mirrored"])
 def test_detected_verdicts(verdict):
     assert V.detected(verdict)
+
+
+def _run(root: Path, job: str, t_start: float, rows: list, resumes: str | None = None) -> Path:
+    run = root / job
+    run.mkdir(parents=True)
+    (run / "probes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    (run / "lane-receipt.json").write_text(json.dumps({"job_id": job, "t_start": t_start}))
+    manifest = {"purpose": "phase0"}
+    if resumes:
+        manifest.update(resume_from_block="b001", resumes={"job_id": resumes})
+    (run / "manifest.json").write_text(json.dumps(manifest))
+    return run
+
+
+def test_render_index_reads_jobs_in_job_order_whatever_the_argument_order(tmp_path):
+    """A slot both jobs finished counts from the earlier job (by Slurm job id and start time),
+    never from the directory named first."""
+    def rec(status, attempt=1):
+        return {"slot": "aaaaaaaa:E:r1", "task_id": "aaaaaaaa-1", "cell": "E",
+                "attempt": attempt, "status": status}
+
+    first = _run(tmp_path, "1300", 10.0, [rec("probed")])
+    second = _run(tmp_path, "1301", 20.0, [rec("probed")], resumes="1300")
+    for order in ([first, second], [second, first]):
+        index = V.render_index(order)
+        assert index[("aaaaaaaa-1", "E", 1)] == first / "slots" / "aaaaaaaa_E_r1.a1"
+    # a slot lost once, whose re-queue the interruption cut, is rerun by the resumed job
+    cut = _run(tmp_path / "x", "1400", 10.0, [rec("infrastructure"), rec("cap_truncated", 2)])
+    rerun = _run(tmp_path / "x", "1401", 20.0, [rec("probed")], resumes="1400")
+    index = V.render_index([rerun, cut])
+    assert index[("aaaaaaaa-1", "E", 1)] == rerun / "slots" / "aaaaaaaa_E_r1.a1"
+
+
+def test_render_index_refuses_runs_without_a_job_order(tmp_path):
+    from harness.s2_locale import k0_inputs
+
+    row = {"slot": "aaaaaaaa:E:r1", "task_id": "aaaaaaaa-1", "cell": "E", "attempt": 1,
+           "status": "probed"}
+    a = _run(tmp_path, "1300", 20.0, [row])
+    b = _run(tmp_path, "1301", 10.0, [row], resumes="1300")  # a later id that started earlier
+    with pytest.raises(k0_inputs.RunOrderError, match="different orders"):
+        V.render_index([a, b])
+    (b / "lane-receipt.json").unlink()
+    with pytest.raises(k0_inputs.RunOrderError, match="no lane-receipt"):
+        V.render_index([a, b])
+    c = _run(tmp_path, "1302", 30.0, [row], resumes="1299")
+    with pytest.raises(k0_inputs.RunOrderError, match="not the resume"):
+        V.render_index([a, c])
+
+
+def test_registered_oracle_route_is_pinned():
+    from harness.q2_stage1 import lane as s1a
+
+    assert V.ORACLE_IMAGE_ID == s1a.EPISODE_IMAGE_ID  # the checker-mutation metric image
+    argv = V.registered_argv(2)
+    assert argv[:3] == [V.ORACLE_PYTHON, "-m", "harness.s2_locale.oracle_vm"]
+    assert argv[argv.index("--runs") + 1:argv.index("--pool")] == ["/ro/run1", "/ro/run2"]
+    assert (Path(__file__).resolve().parents[1] / V.POOL).is_file()
+    assert "--k0" in argv and argv[argv.index("--out") + 1] == "/out/oracle.json"
+    assert set(V.environment()) == {"python", "numpy", "scipy", "pillow"}

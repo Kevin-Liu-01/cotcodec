@@ -147,6 +147,7 @@ def test_p010_from_the_reader_records():
 
 
 def test_resumed_job_records_count_once():
+    """``_run`` is the job's position in job order (``load_runs``)."""
     from harness.s2_locale import k0_inputs as I
 
     base = {"task_id": "t-1", "cell": "E", "kind": "capture", "slot": "t-1:E:r1", "attempt": 1}
@@ -155,6 +156,45 @@ def test_resumed_job_records_count_once():
     assert I.counted(first + second)["t-1:E:r1"][-1]["verdict"] == "pass"
     done = [{**base, "status": "probed", "verdict": "fail", "_run": 0}]
     assert I.counted(done + second)["t-1:E:r1"][-1]["verdict"] == "fail"  # the first job stands
+    assert I.counted(second + done)["t-1:E:r1"][-1]["verdict"] == "fail"  # record order is moot
+
+
+def test_a_cut_requeue_is_not_final_and_the_resumed_job_reruns_the_slot():
+    from harness.s2_locale import k0_inputs as I
+
+    base = {"task_id": "t-1", "cell": "E", "kind": "capture", "slot": "t-1:E:r1"}
+    lost = {**base, "attempt": 1, "status": "infrastructure", "_run": 0}
+    cut = {**base, "attempt": 2, "status": "cap_truncated", "_run": 0}
+    rerun = {**base, "attempt": 1, "status": "probed", "verdict": "pass", "_run": 1}
+    assert not I.final_in_job([lost]) and not I.final_in_job([lost, cut])
+    assert I.counted([lost, cut, rerun])["t-1:E:r1"] == [rerun]
+    assert "t-1:E:r1" not in I.counted([lost, cut])  # unobserved until a job finishes it
+    twice = {**base, "attempt": 2, "status": "infrastructure", "_run": 0}
+    assert I.final_in_job([lost, twice])  # lost twice: final, and unobserved
+    assert I.counted([lost, twice, rerun])["t-1:E:r1"] == [lost, twice]
+
+
+def test_run_order_follows_the_lane_receipts(tmp_path):
+    import json
+
+    from harness.s2_locale import k0_inputs as I
+
+    def run(job, start, resumes=None):
+        d = tmp_path / job
+        d.mkdir()
+        (d / "lane-receipt.json").write_text(json.dumps({"job_id": job, "t_start": start}))
+        (d / "probes.jsonl").write_text(json.dumps({"slot": "t-1:E:r1", "status": "probed"}))
+        (d / "manifest.json").write_text(json.dumps({"resumes": {"job_id": resumes}}))
+        return d
+
+    a, b = run("1300", 1.0), run("1301", 2.0, resumes="1300")
+    assert I.run_order([b, a]) == [a, b]
+    ordered, records = I.load_runs([b, a])
+    assert ordered == [a, b] and [r["_run"] for r in records] == [0, 1]
+    with pytest.raises(I.RunOrderError, match="named twice"):
+        I.run_order([a, a])
+    with pytest.raises(I.RunOrderError, match="at most once"):
+        I.load_runs([a, b, run("1302", 3.0, resumes="1301")])
 
 
 def test_admission_inputs_setup_failure_and_gold():
