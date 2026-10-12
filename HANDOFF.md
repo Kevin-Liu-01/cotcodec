@@ -16,10 +16,15 @@ for whatever gains actual results"; D80). Under that delegation:
   - P2 at 12.4% on 337;
   - K4 no longer fires.
   R03, the checker-mutation note, can now be finished.
-- Successor E is being registered and audited before its freeze
-  (`stage0/q2-successor-e`).
-- S2 v4 (language packs, derived image, v4 registration) is being built and
-  audited (`stage0/s2-v4`).
+- R03, the checker-mutation note, is drafted and verified, and not published
+  (D83; `paper/checker-mutation-note/`). The Q2 report is synced to revision 3.
+- R03 part (b), zinv on the held-out reserve split, is frozen (row 20; D86).
+  Its CPU run (`reserve-v1`) is in progress on `ops/r03-zinv-reserve`.
+- Successor E is frozen (row 19; sign-off D85; freeze `f6144d6b`). Its four
+  sessions (about 42 h, 6.77 cap-GPU-h) are running on `ops/q2-successor-e`.
+  Other host work runs only in its gaps.
+- S2 v4: the images are built; a repair round is in progress before the freeze
+  (D84; `stage0/s2-v4`).
 Still closed: Q1 (D46) and Q3 (D54). Still Kevin's: the outward actions, Q1's
 R570 GPU code and C5 Phase 1 (D80), and an optional human spot check (D9).
 See `pending_decisions_for_kevin` in `program/state.json`.
@@ -28,8 +33,8 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
-`uv run python scripts/preregister.py check-chain`, 18 rows). Decisions taken
-on Kevin's behalf are D1-D82 in `program/decisions.md`. GPU-hours are in
+`uv run python scripts/preregister.py check-chain`, 20 rows). Decisions taken
+on Kevin's behalf are D1-D86 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
