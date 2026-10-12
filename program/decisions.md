@@ -1912,3 +1912,33 @@ After the freeze:
 - Then the oracle and K0 run.
 - Phase 1 needs its own executor addendum, frozen as its own ledger row, and
   runs only if K0 and K1 pass (D80 (iv)).
+
+**D92. Kevin approves all pending items (2026-10-12).** Asked what he should
+do, Kevin wrote: "what do you want me to do? i approve all".
+Read as approved now (internal; no outward effect):
+- the review of D1-D91 is accepted;
+- the carried-over sign-offs of the checker-mutation registration's section
+  17 are given: the D23/D25/D27 rater lineup, P1 with reserve-split golds, the
+  spec release (the blind specs published early stay public) and the D34 rules
+  as implemented;
+- the D24 admission question is answered in favour of admitting gauntleted
+  designs below 100. No current package uses it: C5's identification defect
+  stands, and K1 v3 ended at an honest exit.
+Not executed on a blanket approval, because each sends something under
+Kevin's name, publishes, or cannot be undone. Each is drafted, reviewed and
+shown to him with its exact text and destination for a yes on that item:
+- the xlang-ai disclosure (checker defects, R04's drift);
+- a private security report on OSWorld's hardcoded API key;
+- the Letta disclosure, after a recheck against Letta's current main;
+- the public-history purge (a force-push);
+- the publication of the checker-mutation note and the Q2 report;
+- the licence requests;
+- the host-administrator request (R580 driver, inotify limit).
+Kevin's own (credentials, payment or human judgment):
+- key rotation and a valid Anthropic API key;
+- the Moonshot recharge;
+- the optional D9 human spot check;
+- the gauntlet trust-store keys;
+- Q1's untrusted GPU code on the R570 driver, which stays off until the
+  driver is upgraded or he accepts that specific host-security risk in
+  writing.
