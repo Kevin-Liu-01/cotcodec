@@ -1646,3 +1646,40 @@ download.**
   a fresh audit come after it. The K0 section stays byte-identical. Phase 0
   (about 124 VM-h with K1) and Phase 1 run only after a clean audit, one
   VM-lane campaign at a time.
+
+**D85. Q2 successor E `q2-stage1-successor-e-v1` is signed off for the
+freeze.** Under D80 (iii), the program signs items 1-14 of the
+registration's section 21:
+- E adds data to S1a's design without a gauntlet, at 6.77 GPU-h by caps.
+- Design:
+  - all 113 eligible tasks, with S1a's 32 base tasks as the secondary set;
+  - four sessions per size, at least 12 h 5 min apart, 9B then 4B, one
+    episode per cell;
+  - arithmetic caps (52 and 48 minutes; 406 in all).
+- Estimands and inference:
+  - the quantities that are not estimable at R = 1 are reported as not
+    estimable;
+  - the frozen, conservative X test is the primary test;
+  - the two-session quantities are reported per session pair, descriptively;
+  - the GLMM runs unchanged, with its identification note;
+  - E is its own sample, and the joint reading with S1a is descriptive;
+  - DR5's consequence follows D47 and D69.
+- Process:
+  - the D59, D61 and D62 rules are registered up front, with the
+    `incomplete` reading and no power claimed for it;
+  - the quiet host and D80's serialization apply;
+  - E's code is S1a's code of record plus `harness/q2_stage1e/`.
+- D82's three gold-defect tasks stay in the primary set, with one sensitivity
+  that excludes them.
+Basis for signing:
+- The pre-freeze gates passed on the host: G-E4 is development smoke job 1206
+  with rescoring job 1208 (4 of 4 slots scored through E's entry point), and
+  G-E5 is GLMM job 1210 (both fits converged).
+- The second fresh audit (G-E6) found nothing blocking. Its freeze rehearsal
+  gave row 19 after R04's row, with check-chain and verify passing and the
+  full suite green.
+- No E outcome exists. The design was chosen after S1a's results, as its
+  disclosure 1 states.
+E runs from its freeze commit with host jobs serialized. Other workstreams
+may use the host only in the gaps between E's sessions, never during an E
+job.
