@@ -1,0 +1,13 @@
+{
+ "post_save_admitted": 96,
+ "post_save_failed_by_operator": {
+  "pptx.viol.drop_char_format": {
+   "edit_landed": 1,
+   "survived_save": 1
+  }
+ },
+ "rows": 97,
+ "status": {
+  "checked": 97
+ }
+}

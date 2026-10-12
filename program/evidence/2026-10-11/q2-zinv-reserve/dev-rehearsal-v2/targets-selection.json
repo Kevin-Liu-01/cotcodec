@@ -1,0 +1,27 @@
+{
+ "dropped_by_family": {
+  "docx": 4,
+  "text": 1,
+  "xlsx": 7
+ },
+ "family": "pptx",
+ "kept_target_ids": [
+  "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a__fb4e51d6",
+  "5cfb9197-e72b-454b-900e-c06b0c802b40__3fc44236",
+  "af23762e-2bfd-4a1d-aada-20fa8de9ce07__8ec4cc5b",
+  "bf4e9888-f10f-47af-8dba-76413038b73c__f4908ffc",
+  "e4ef0baf-4b52-4590-a47e-d4d464cca2d7__749651fa"
+ ],
+ "split": "dev",
+ "targets_all": 17,
+ "targets_all_sha256": "c6072292c89dbe0edd077eadad15f243e89ddf739669b8434837f65e51ae55ee",
+ "targets_kept": 5,
+ "targets_sha256": "9a50b727aa7a48bf6e956c023d89cc1e2689a2b53cc516c6f80341649ed43036",
+ "tasks_kept": [
+  "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a",
+  "5cfb9197-e72b-454b-900e-c06b0c802b40",
+  "af23762e-2bfd-4a1d-aada-20fa8de9ce07",
+  "bf4e9888-f10f-47af-8dba-76413038b73c",
+  "e4ef0baf-4b52-4590-a47e-d4d464cca2d7"
+ ]
+}
