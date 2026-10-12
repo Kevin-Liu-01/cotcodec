@@ -3,7 +3,7 @@
 **Status: DRAFT, not frozen (TBD: at the freeze this whole paragraph is replaced by the
 paragraph section 13 states under "At the freeze").** Drafted on 2026-10-11 by the single
 owner of R03 (b) on branch `stage0/r03-zinv-reserve` from main at `746d60d2` (main merged
-again at `08033ba7` and `2b8fadc7`). No ledger row exists; nothing on the reserve split has run under this file. The freeze is the
+again at `08033ba7`, `2b8fadc7` and `f6144d6b`). No ledger row exists; nothing on the reserve split has run under this file. The freeze is the
 orchestrator's (D80), after a pre-freeze audit (section 13).
 
 - Experiment id: `q2-zinv-reserve-validation-v1`, an addendum to `q2-evaluator-mutation-v1`
@@ -368,9 +368,9 @@ parent-format files carry none of their own. No outward action.
   commands against the frozen `submit_mutants.sh`, the code table and this file's status).
 - Scratch-ledger rehearsal (2026-10-11): on a scratch copy of the branch with its own copy
   of the ledger, the draft is refused by the freeze guard, the filled file freezes into the
-  copy (row 19), `check-chain` and `verify` pass, the guard then admits the reserve split
-  only with `Q2ZR_PREREG_FROZEN` set, and refuses it after any edit of this file; the real
-  ledger is untouched. Record: `program/evidence/2026-10-11/q2-zinv-reserve/README.md`.
+  copy (row 19 while main's ledger had 18 rows), `check-chain` and `verify` pass, the guard
+  then admits the reserve split only with `Q2ZR_PREREG_FROZEN` set, and refuses it after any
+  edit of this file; the real ledger is untouched. Record: `program/evidence/2026-10-11/q2-zinv-reserve/README.md`.
 - Host rehearsal: the draft is staged on the host; `plan --split reserve` is refused (no
   ledger row); `plan --split dev` with `next --dry-run` renders step 1 without submitting;
   a scratch-frozen tree in a host temp directory passes the host-side reserve checks (the
@@ -441,7 +441,7 @@ unless named):
 | N4 | The promised `campaign export` release view cannot run on the host tool's layout (no `submitted.json`, reruns in `.a2`) | Fixed: `zr_host.py export` writes `view/` in the parent's layout and runs the parent's own `campaign export` on it (section 10); tested and rehearsed on dev |
 | N5 | `rules.LICENSES['PASS']['registered_rule']` claimed generalization "at the observed rate", beyond section 7 | Fixed: aligned with section 7 (the lower bound, not 95%); tested |
 | N6 | Invalid rows trigger no rerun; INCOMPLETE takes precedence over FAIL in `rules.judge` but was not stated | Fixed: stated in sections 5 and 6 and in the INCOMPLETE license text; tested |
-| N7 | Main moved to `08033ba7`; the merge is conflict-free | Merged (`08033ba7`, then `2b8fadc7`; no ledger, harness or registration file changed), every ledger row kept (18) |
+| N7 | Main moved to `08033ba7`; the merge is conflict-free | Merged (`08033ba7` and `2b8fadc7`, which changed no ledger, harness or registration file; then `f6144d6b`, which adds successor E's ledger row 19 and touches none of the code of section 3), every ledger row kept (19) |
 | N8 | Design numbers, yields, known answer and the rejudged dev step-4 rows reproduce | No change |
 | N9 | Host: the pinned reserve control files and both images match | No change |
 | N10 | Section 4 was silent on probe-touched z-order cells | Fixed: none on the 8 tasks (section 4); tested |
