@@ -1837,3 +1837,41 @@ Verification. A fresh verifier reproduced the run and the analysis. It found:
   1e-15.
 R04 jobs also ran in gaps between other workstreams' jobs, never during an E
 session, as D87 records.
+
+**D90. S2 v4 after round 3: one final repair round, with its stop rule
+committed now.**
+- Round 3's fixes did not clear the two blocking items, according to a fresh
+  code review and a fresh pre-freeze audit:
+  - (B1) Warping the pointer before the 60 s settle did not make Impress's
+    status-bar pointer field the same on every boot. The warp lands while the
+    window is still being laid out. In the development smoke (Slurm 1240) and
+    on the oracle's registered route (1241), I2 is 16 of 17, and the variation
+    moved into the left-to-right pairs.
+  - (B2) The resume fix made `lane-receipt.json` the only source of job order.
+    A run that ends by TERM, or fails the image check, writes no receipt or no
+    `t_start`, so it can be neither read nor resumed.
+- The round-3 owner agent returned placeholder output. The reviewer and the
+  auditor reviewed the branch head (`c1a56989`) directly. K0 stays
+  byte-identical, and the scratch freeze and resume rehearsals pass.
+- Round 4 is the last repair round for S2 v4. Its fixes are the ones both
+  reviewers proposed:
+  - warp after the settle, then wait a fixed interval longer than
+    LibreOffice's help-tip delay, chosen before the smoke, at Phase 0 capture
+    and at each Phase 1 episode start;
+  - order jobs by the Slurm job id the batch file writes before the lane
+    starts, with the receipt's `t_start` as a cross-check only;
+  - handle SIGTERM in the lane, put `t_start` in the image-check receipt, and
+    define the zero-record case.
+- Round 4's acceptance criterion, fixed now. The development smoke covers the
+  240 slots plus a second replicate of every capture cell on the 7 Impress
+  development tasks, about 130 Impress boots. It must give every masked boot
+  pair at most tol6 on all 17 development tasks: E-E2, ER-ER2, AD-AR and E-S,
+  so I2, I5 and I6 are each 17 of 17. No Impress boot may show a deviating
+  status-bar field.
+- Stop rule, fixed now. If that smoke misses the criterion, or a fresh audit
+  of round 4 finds a blocking item that needs another host smoke, S2 v4 ends
+  at an honest exit. Its instrument findings (the shipped catalogs, the
+  reproducible images, the pointer-field instability) are reported as a
+  record. No round 5 follows.
+- Host scheduling. S2 v4 submits nothing during a successor E session. E2
+  starts no earlier than about 17:51Z on 2026-10-12.
