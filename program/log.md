@@ -5101,3 +5101,38 @@ they say so.)
   3 skipped.
 - Still open before the freeze: G-E6 (a fresh pre-freeze audit that finds nothing blocking)
   and the program's sign-off decision (section 21), then section 25's steps.
+
+## 2026-10-12 — R03 (b) `q2-zinv-reserve-validation-v1` run (`reserve-v1`): PASS, descriptive (branch `ops/r03-zinv-reserve`, not merged)
+
+- Single operator, under D80 and D86. Run from an export of the freeze commit `ff802ca5`
+  (ledger row 20), staged with `git archive | ssh tar -x`; its 7,640 regular files equal the
+  commit's blobs, with no AppleDouble file. The plan `reserve-v1` was created at 01:35Z by an
+  earlier session of this operator, which was restarted before submitting anything; this
+  session verified it and continued it with `next`. Nothing was planned twice and no step
+  was rerun.
+- Scheduling: the session waited, submitting nothing, through successor E's whole session E1
+  (9B pair 1219/1221 from 04:28Z, 4B pair 1222/1224 to 05:46:36Z) and R04 job 1225. It then
+  submitted the four steps one at a time, each on an empty queue, in E's gap (E2 not before
+  about 17:51Z): Slurm 1226 `targets`, 1227 `build`, 1228 `score`, 1229 `zinv`, 07:15-07:28Z.
+  All four exited 0, network none, no GPU; 0.221 of the 4.0 lane-hours; 0 GPU-h.
+- **Outcome as `rules.judge` gives it: PASS, status descriptive.** zinv accepted 13 of 13
+  held-out z-order equivalence mutants on 8 of 8 tasks (`n_Z` 13, `t_Z` 8). It newly accepted
+  none of 15 violation mutants (`n_V` 15, 5 tasks). All 106 rows are valid. The status is
+  descriptive because `n_Z` < 20: the operators planned 13 z-order mutants on these targets,
+  against an expected 19.5.
+- Bounds:
+  - acceptance, exact one-sided 95% lower bound 0.794 (two-sided 0.753-1.000);
+  - task level 0.688;
+  - new-accept rate, upper bound 0.181 per mutant and 0.451 per task.
+- Licensed (section 7): the correction held on reserve documents it was not developed on, at
+  this size, with that lower bound. Not licensed: a population claim that zinv accepts 95% of
+  z-order equivalents.
+- The result is offline and rests on the operators' labels.
+- The original `compare_pptx_files` failed 13 of 13 of the z-order mutants (a held-out
+  replication of the defect, descriptive). zinv changed no other verdict (93 of 93 equal). It
+  raised no error and turned no pass into a fail.
+- Step 3's checker-error tables for these 8 targets are exploratory.
+- Evidence: `program/evidence/2026-10-12/q2-zinv-reserve-run/`, with its README and
+  `release/`, exactly as `zr_host.py export` wrote it (23 files, digests in its manifest). The
+  blind warning (D9, D82) applies to every per-mutant verdict file. Mutant documents and step
+  logs stay on the host. No outward action.

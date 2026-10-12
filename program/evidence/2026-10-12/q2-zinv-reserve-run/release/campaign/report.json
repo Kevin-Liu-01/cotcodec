@@ -1,0 +1,206 @@
+{
+ "admitted": 116,
+ "by_operator": {
+  "pptx.alt.textbox_for_placeholder": {
+   "ambiguous:ambiguous:None": 4,
+   "should_fail_violation:evaluable:ok": 1
+  },
+  "pptx.eq.doc_property": {
+   "should_pass_equiv:evaluable:ok": 24
+  },
+  "pptx.eq.subvisible_nudge": {
+   "should_pass_equiv:evaluable:ok": 23
+  },
+  "pptx.eq.zorder_nonoverlap": {
+   "should_pass_equiv:evaluable:FN": 13
+  },
+  "pptx.extra.add_textbox": {
+   "should_fail_extra_change:evaluable:ok": 14
+  },
+  "pptx.viol.delete_bound_shape": {
+   "ambiguous:ambiguous:None": 3,
+   "should_fail_violation:evaluable:ok": 9
+  },
+  "pptx.viol.drop_char_format": {
+   "ambiguous:ambiguous:None": 4,
+   "should_fail_violation:evaluable:ok": 1
+  },
+  "pptx.viol.move_shape": {
+   "ambiguous:ambiguous:None": 9
+  },
+  "pptx.viol.table_cell_text": {
+   "ambiguous:ambiguous:None": 6
+  },
+  "pptx.viol.text_edit": {
+   "ambiguous:ambiguous:None": 1,
+   "should_fail_violation:evaluable:ok": 4
+  }
+ },
+ "icc_by_event": {
+  "FN": -0.23640241734802697,
+  "FN_alt": null,
+  "FP_F": null,
+  "FP_R": null
+ },
+ "icc_max_defined": -0.23640241734802697,
+ "labels_admitted": {
+  "ambiguous": 27,
+  "should_fail_extra_change": 14,
+  "should_fail_violation": 15,
+  "should_pass_equiv": 60
+ },
+ "mdr_reference": {
+  "13_tasks_icc_0.13": 0.1715,
+  "13_tasks_icc_0.5": 0.2087,
+  "13_tasks_icc_1.0": 0.2506,
+  "21_tasks_icc_0.13": 0.1423,
+  "21_tasks_icc_0.5": 0.1703,
+  "21_tasks_icc_1.0": 0.202,
+  "31_tasks_icc_0.13": 0.1241,
+  "31_tasks_icc_0.5": 0.1462,
+  "31_tasks_icc_1.0": 0.1714,
+  "59_tasks_icc_0.13": 0.1018,
+  "59_tasks_icc_0.5": 0.1169,
+  "59_tasks_icc_1.0": 0.134
+ },
+ "mean_evaluable_mutants_per_task": 5.88,
+ "normalization_by_operator": {
+  "pptx.alt.textbox_for_placeholder": {
+   "checked": 5,
+   "normalized": 0
+  },
+  "pptx.eq.doc_property": {
+   "checked": 24,
+   "normalized": 0
+  },
+  "pptx.eq.subvisible_nudge": {
+   "checked": 23,
+   "normalized": 0
+  },
+  "pptx.eq.zorder_nonoverlap": {
+   "checked": 13,
+   "normalized": 0
+  },
+  "pptx.extra.add_textbox": {
+   "checked": 14,
+   "normalized": 0
+  },
+  "pptx.viol.delete_bound_shape": {
+   "checked": 12,
+   "normalized": 0
+  },
+  "pptx.viol.drop_char_format": {
+   "checked": 5,
+   "normalized": 0
+  },
+  "pptx.viol.move_shape": {
+   "checked": 9,
+   "normalized": 0
+  },
+  "pptx.viol.table_cell_text": {
+   "checked": 6,
+   "normalized": 0
+  },
+  "pptx.viol.text_edit": {
+   "checked": 5,
+   "normalized": 0
+  }
+ },
+ "null_verdicts": {
+  "lock": {
+   "05dd4c1d-c489-4c85-8389-a7836c4f0567__9ff7a775": "pass",
+   "39be0d19-634d-4475-8768-09c130f5425d__d2780c8e": "pass",
+   "7dbc52a6-11e0-4c9a-a2cb-1e36cfda80d8__a4b92c53": "pass",
+   "841b50aa-df53-47bd-a73a-22d3a9f73160__582b1d70": "pass",
+   "8979838c-54a5-4454-a2b8-3d135a1a5c8f__c581943f": "pass",
+   "986fc832-6af2-417c-8845-9272b3a1528b__80598812": "pass",
+   "c82632a4-56b6-4db4-9dd1-3820ee3388e4__9371e6f5": "pass",
+   "f23acfd2-c485-4b7c-a1e7-d4303ddfe864__b2ce75ad": "pass"
+  },
+  "scout": {
+   "05dd4c1d-c489-4c85-8389-a7836c4f0567__9ff7a775": "pass",
+   "39be0d19-634d-4475-8768-09c130f5425d__d2780c8e": "pass",
+   "7dbc52a6-11e0-4c9a-a2cb-1e36cfda80d8__a4b92c53": "pass",
+   "841b50aa-df53-47bd-a73a-22d3a9f73160__582b1d70": "pass",
+   "8979838c-54a5-4454-a2b8-3d135a1a5c8f__c581943f": "pass",
+   "986fc832-6af2-417c-8845-9272b3a1528b__80598812": "pass",
+   "c82632a4-56b6-4db4-9dd1-3820ee3388e4__9371e6f5": "pass",
+   "f23acfd2-c485-4b7c-a1e7-d4303ddfe864__b2ce75ad": "pass"
+  }
+ },
+ "planned": 116,
+ "primary_dep_set": "lock",
+ "rates_exploratory": {
+  "FN": {
+   "by_checker": {
+    "compare_pptx_files": {
+     "high": 0.4062,
+     "low": 0.2896,
+     "mutants": 36,
+     "rate": 0.3479,
+     "tasks": 8
+    }
+   },
+   "pooled": {
+    "high": 0.4062,
+    "low": 0.2896,
+    "mutants": 36,
+    "rate": 0.3479,
+    "tasks": 8
+   }
+  },
+  "FN_alt": {
+   "by_checker": {},
+   "pooled": null
+  },
+  "FP_F": {
+   "by_checker": {},
+   "pooled": null
+  },
+  "FP_R": {
+   "by_checker": {
+    "compare_pptx_files": {
+     "high": 0.0,
+     "low": 0.0,
+     "mutants": 11,
+     "rate": 0.0,
+     "tasks": 5
+    }
+   },
+   "pooled": {
+    "high": 0.0,
+    "low": 0.0,
+    "mutants": 11,
+    "rate": 0.0,
+    "tasks": 5
+   }
+  }
+ },
+ "s1": {
+  "candidates": [],
+  "confirmed": [],
+  "rule": "verdicts differ between venvs and 5 fresh-process scorings agree within each venv",
+  "unstable": []
+ },
+ "s5_unstable_at_repeat_5": {
+  "lock": [],
+  "scout": []
+ },
+ "save_stage_exclusions": [],
+ "status": {
+  "lock": {
+   "ambiguous": 27,
+   "evaluable": 89
+  },
+  "scout": {
+   "ambiguous": 27,
+   "evaluable": 89
+  }
+ },
+ "task_escape": {
+  "tasks": 8,
+  "with_escape": 8
+ },
+ "unemulated_tasks": [],
+ "venv_disagreements": []
+}
