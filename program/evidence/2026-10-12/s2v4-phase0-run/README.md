@@ -99,6 +99,7 @@ directories (E2's held only its staged configuration, no job).
 | 1259 | K1 C2 on ER | 362 | 19:36:02 | 19:36:02-19:46:15 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 | 1260 | K1 C2 on AR | 362 | 19:47:50 | 19:47:50-19:58:03 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 | 1261 | K1 C2 on PL | 362 | 19:58:51 | 19:58:51-20:09:03 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
+| 1262 | K1 A6 on E (cross-app canary: Writer, Chrome, VS Code, GNOME Terminal; seed 43) | 222 | 20:10:20 | 20:10:20-20:59:56 (49.6 min) | COMPLETED 0:0 | A6 pass; the campaign counts |
 
 Per job:
 - **1245 (C1, E).** Limit ends 17:19:33Z, before E2's earliest start 17:51:36Z. H-GA-buggy: 70
@@ -164,6 +165,12 @@ Per job:
   `type_long_500` FLAKY); 9 cold boots at most 17.9 s; step p95 1.19 s; 8 of 8 reset sentinels
   pristine. C2 on PL `pass`. No problem of any kind. Host snapshot: load 0.42, queue empty, no
   labelled container. All five C2 jobs are done.
+- **1262 (A6, E).** Limit ends 23:53:20Z. One canary campaign, screenshot setting: 5 sessions of
+  60 trials, 300 of 300 passed, all 60 entries PASS (Writer, Chrome, VS Code and GNOME Terminal, 5
+  repetitions each); 5 cold boots at most 17.2 s; step p95 1.83 s; 4 of 4 reset sentinels
+  pristine; 0 guest-server restarts. A6 on E `pass`. Driver exit 0, `infra_gates_pass` true, image
+  unchanged, no labelled container left; no counting, foreign-abort or snapshot problem. Host
+  snapshot: load 0.29, queue empty, no labelled container.
 
 ## Schedule for the rest of K1 (the operator's plan; not a registered rule)
 
