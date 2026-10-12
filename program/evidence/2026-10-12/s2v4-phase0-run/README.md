@@ -97,6 +97,7 @@ directories (E2's held only its staged configuration, no job).
 | 1257 | K1 C2 on E (L0-raw, seed 45) | 362 | 19:13:59 | 19:14:00-19:24:12 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 | 1258 | K1 C2 on A | 362 | 19:24:54 | 19:24:55-19:35:04 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 | 1259 | K1 C2 on ER | 362 | 19:36:02 | 19:36:02-19:46:15 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
+| 1260 | K1 C2 on AR | 362 | 19:47:50 | 19:47:50-19:58:03 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 
 Per job:
 - **1245 (C1, E).** Limit ends 17:19:33Z, before E2's earliest start 17:51:36Z. H-GA-buggy: 70
@@ -153,6 +154,10 @@ Per job:
   prediction's 8 entries not PASS (`strict_entries` also has `seq_type_chord_type` FLAKY); 9 cold
   boots at most 17.3 s; step p95 1.19 s; 8 of 8 reset sentinels pristine. C2 on ER `pass`. No
   problem of any kind. Host snapshot: load 0.45, queue empty, no labelled container.
+- **1260 (C2, AR).** Limit ends 01:50:50Z. 500 trials, 457 passed; C2's reading: exactly the
+  prediction's 8 entries not PASS (`strict_entries` also has `seq_type_chord_type` FLAKY); 9 cold
+  boots at most 17.2 s; step p95 1.19 s; 8 of 8 reset sentinels pristine. C2 on AR `pass`. No
+  problem of any kind. Host snapshot: load 0.20, queue empty, no labelled container.
 
 ## Schedule for the rest of K1 (the operator's plan; not a registered rule)
 

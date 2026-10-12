@@ -1,0 +1,27 @@
+JobId=1260 JobName=s2v4-apd-k1-c2-ar
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900500 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:10:13 TimeLimit=06:02:00 TimeMin=N/A
+   SubmitTime=2026-10-12T19:47:50 EligibleTime=2026-10-12T19:47:50
+   AccrueTime=2026-10-12T19:47:50
+   StartTime=2026-10-12T19:47:50 EndTime=2026-10-12T19:58:03 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-12T19:47:50 Scheduler=Backfill
+   Partition=research AllocNode:Sid=fal-h100-01:1508426
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=6 NumTasks=1 CPUs/Task=5 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=6,mem=12G,node=1,billing=6
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=5 MinMemoryNode=12G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/s2v4/k1/src/cf17405026ca2aa20f528b39bdaaff3b257a6610/infra/slurm/host-single-node/s2v4-apdelta.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/stage0/s2v4/k1/src/cf17405026ca2aa20f528b39bdaaff3b257a6610
+   StdErr=/home/kevin/cotcodec-runs/stage0/s2v4/slurm/slurm-s2v4-apd-k1-c2-ar-1260.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/s2v4/slurm/slurm-s2v4-apd-k1-c2-ar-1260.out
+   Power=
+   
