@@ -1,0 +1,658 @@
+{
+ "B0.r2/B0.ctrl_s.L0.r2": {
+  "build_identity": [
+   "{\"build\": \"B0\", \"label\": \"ubuntu-1:7.3.7-0ubuntu0.22.04.4\", \"package\": \"libreoffice-core 1:7.3.7-0ubuntu0.22.04.4\", \"uno_python\": \"/usr/bin/python3\", \"version_line\": \"LibreOffice 7.3.7.2 30(Build:2)\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 24.057,
+   "median": 4.125,
+   "sum": 2594.249
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B0/B0.ctrl_s.L0": {
+  "build_identity": [
+   "{\"build\": \"B0\", \"label\": \"ubuntu-1:7.3.7-0ubuntu0.22.04.4\", \"package\": \"libreoffice-core 1:7.3.7-0ubuntu0.22.04.4\", \"uno_python\": \"/usr/bin/python3\", \"version_line\": \"LibreOffice 7.3.7.2 30(Build:2)\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 24.087,
+   "median": 4.125,
+   "sum": 2595.391
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B0/B0.ctrl_s.L1": {
+  "build_identity": [
+   "{\"build\": \"B0\", \"label\": \"ubuntu-1:7.3.7-0ubuntu0.22.04.4\", \"package\": \"libreoffice-core 1:7.3.7-0ubuntu0.22.04.4\", \"uno_python\": \"/usr/bin/python3\", \"version_line\": \"LibreOffice 7.3.7.2 30(Build:2)\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 24.074,
+   "median": 4.14,
+   "sum": 2606.397
+  },
+  "locale_data": [
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-0/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-1/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-10/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-11/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-12/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-13/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-14/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-15/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-2/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-3/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-4/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-5/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-6/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-7/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-8/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d.%m.%Y\\\"\", \"locale\": \"de_DE.UTF-8\", \"locpath\": \"/tmp/r04lo-9/locales\"}"
+  ],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/L10N/ooSetupSystemLocale=de-DE\", \"/org.openoffice.Setup/L10N/ooLocale=en-US\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B0/B0.ctrl_s.L2": {
+  "build_identity": [
+   "{\"build\": \"B0\", \"label\": \"ubuntu-1:7.3.7-0ubuntu0.22.04.4\", \"package\": \"libreoffice-core 1:7.3.7-0ubuntu0.22.04.4\", \"uno_python\": \"/usr/bin/python3\", \"version_line\": \"LibreOffice 7.3.7.2 30(Build:2)\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 24.297,
+   "median": 4.136,
+   "sum": 2601.351
+  },
+  "locale_data": [
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-0/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-1/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-10/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-11/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-12/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-13/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-14/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-15/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-2/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-3/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-4/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-5/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-6/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-7/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-8/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%d %b, %Y\\\"\", \"locale\": \"ar_EG.UTF-8\", \"locpath\": \"/tmp/r04lo-9/locales\"}"
+  ],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/L10N/ooSetupSystemLocale=ar-EG\", \"/org.openoffice.Setup/L10N/ooLocale=en-US\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B0/B0.ctrl_s.L3": {
+  "build_identity": [
+   "{\"build\": \"B0\", \"label\": \"ubuntu-1:7.3.7-0ubuntu0.22.04.4\", \"package\": \"libreoffice-core 1:7.3.7-0ubuntu0.22.04.4\", \"uno_python\": \"/usr/bin/python3\", \"version_line\": \"LibreOffice 7.3.7.2 30(Build:2)\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 24.173,
+   "median": 4.078,
+   "sum": 2605.964
+  },
+  "locale_data": [
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-0/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-1/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-10/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-11/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-12/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-13/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-14/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-15/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-2/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-3/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-4/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-5/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-6/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-7/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-8/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\".\\\"\\nthousands_sep=\\\",\\\"\\nd_fmt=\\\"%Y\\u5e74%m\\u6708%d\\u65e5\\\"\", \"locale\": \"ja_JP.UTF-8\", \"locpath\": \"/tmp/r04lo-9/locales\"}"
+  ],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/L10N/ooSetupSystemLocale=ja-JP\", \"/org.openoffice.Setup/L10N/ooLocale=en-US\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B0/B0.ctrl_s.L4": {
+  "build_identity": [
+   "{\"build\": \"B0\", \"label\": \"ubuntu-1:7.3.7-0ubuntu0.22.04.4\", \"package\": \"libreoffice-core 1:7.3.7-0ubuntu0.22.04.4\", \"uno_python\": \"/usr/bin/python3\", \"version_line\": \"LibreOffice 7.3.7.2 30(Build:2)\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 24.084,
+   "median": 4.068,
+   "sum": 2592.409
+  },
+  "locale_data": [
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-0/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-1/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-10/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-11/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-12/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-13/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-14/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-15/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-2/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-3/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-4/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-5/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-6/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-7/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-8/locales\"}",
+   "{\"lc_numeric_time\": \"decimal_point=\\\",\\\"\\nthousands_sep=\\\".\\\"\\nd_fmt=\\\"%d-%m-%Y\\\"\", \"locale\": \"tr_TR.UTF-8\", \"locpath\": \"/tmp/r04lo-9/locales\"}"
+  ],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/L10N/ooSetupSystemLocale=tr-TR\", \"/org.openoffice.Setup/L10N/ooLocale=en-US\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B0/B0.headless_convert.L0": {
+  "build_identity": [
+   "{\"build\": \"B0\", \"label\": \"ubuntu-1:7.3.7-0ubuntu0.22.04.4\", \"package\": \"libreoffice-core 1:7.3.7-0ubuntu0.22.04.4\", \"uno_python\": \"/usr/bin/python3\", \"version_line\": \"LibreOffice 7.3.7.2 30(Build:2)\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 2.889,
+   "median": 1.284,
+   "sum": 794.5
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B0/B0.store_as.L0": {
+  "build_identity": [
+   "{\"build\": \"B0\", \"label\": \"ubuntu-1:7.3.7-0ubuntu0.22.04.4\", \"package\": \"libreoffice-core 1:7.3.7-0ubuntu0.22.04.4\", \"uno_python\": \"/usr/bin/python3\", \"version_line\": \"LibreOffice 7.3.7.2 30(Build:2)\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 24.301,
+   "median": 4.011,
+   "sum": 2624.951
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [
+   {
+    "error": "",
+    "n": 556,
+    "ok": true
+   }
+  ],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B1/B1.ctrl_s.L0": {
+  "build_identity": [
+   "{\"build\": \"B1\", \"install_dir\": \"/opt/libreoffice7.3\", \"label\": \"tdf-7.3.7.2\", \"uno_python\": \"/opt/libreoffice7.3/program/python\", \"version_line\": \"LibreOffice 7.3.7.2 e114eadc50a9ff8d8c8a0567d6da8f454beeb84f\", \"versionrc_sha256\": \"dec349ea34c791605db230b10054d90f09d982ab237b940647010a5fbc473fa9\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 24.571,
+   "median": 4.632,
+   "sum": 2879.116
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B1/B1.headless_convert.L0": {
+  "build_identity": [
+   "{\"build\": \"B1\", \"install_dir\": \"/opt/libreoffice7.3\", \"label\": \"tdf-7.3.7.2\", \"uno_python\": \"/opt/libreoffice7.3/program/python\", \"version_line\": \"LibreOffice 7.3.7.2 e114eadc50a9ff8d8c8a0567d6da8f454beeb84f\", \"versionrc_sha256\": \"dec349ea34c791605db230b10054d90f09d982ab237b940647010a5fbc473fa9\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 3.689,
+   "median": 1.809,
+   "sum": 1064.704
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B1/B1.store_as.L0": {
+  "build_identity": [
+   "{\"build\": \"B1\", \"install_dir\": \"/opt/libreoffice7.3\", \"label\": \"tdf-7.3.7.2\", \"uno_python\": \"/opt/libreoffice7.3/program/python\", \"version_line\": \"LibreOffice 7.3.7.2 e114eadc50a9ff8d8c8a0567d6da8f454beeb84f\", \"versionrc_sha256\": \"dec349ea34c791605db230b10054d90f09d982ab237b940647010a5fbc473fa9\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 24.969,
+   "median": 4.583,
+   "sum": 2950.113
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [
+   {
+    "error": "",
+    "n": 556,
+    "ok": true
+   }
+  ],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B2/B2.ctrl_s.L0": {
+  "build_identity": [
+   "{\"build\": \"B2\", \"install_dir\": \"/opt/libreoffice7.6\", \"label\": \"tdf-7.6.7.2\", \"uno_python\": \"/opt/libreoffice7.6/program/python\", \"version_line\": \"LibreOffice 7.6.7.2 dd47e4b30cb7dab30588d6c79c651f218165e3c5\", \"versionrc_sha256\": \"2cfb679da416f157c7efeafa0f0ae4a6589a2b586d8d1fc91c88edc21d2bfc50\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 26.016,
+   "median": 4.557,
+   "sum": 2955.597
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=7.6\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 553,
+  "with_failures": 0
+ },
+ "B2/B2.headless_convert.L0": {
+  "build_identity": [
+   "{\"build\": \"B2\", \"install_dir\": \"/opt/libreoffice7.6\", \"label\": \"tdf-7.6.7.2\", \"uno_python\": \"/opt/libreoffice7.6/program/python\", \"version_line\": \"LibreOffice 7.6.7.2 dd47e4b30cb7dab30588d6c79c651f218165e3c5\", \"versionrc_sha256\": \"2cfb679da416f157c7efeafa0f0ae4a6589a2b586d8d1fc91c88edc21d2bfc50\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 7.906,
+   "median": 1.753,
+   "sum": 1099.521
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=7.6\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B2/B2.store_as.L0": {
+  "build_identity": [
+   "{\"build\": \"B2\", \"install_dir\": \"/opt/libreoffice7.6\", \"label\": \"tdf-7.6.7.2\", \"uno_python\": \"/opt/libreoffice7.6/program/python\", \"version_line\": \"LibreOffice 7.6.7.2 dd47e4b30cb7dab30588d6c79c651f218165e3c5\", \"versionrc_sha256\": \"2cfb679da416f157c7efeafa0f0ae4a6589a2b586d8d1fc91c88edc21d2bfc50\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 25.763,
+   "median": 4.538,
+   "sum": 3017.278
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=7.6\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [
+   {
+    "error": "",
+    "n": 556,
+    "ok": true
+   }
+  ],
+  "with_adapted_activation": 553,
+  "with_failures": 0
+ },
+ "B3/B3.ctrl_s.L0": {
+  "build_identity": [
+   "{\"build\": \"B3\", \"install_dir\": \"/opt/libreoffice24.8\", \"label\": \"tdf-24.8.7.2\", \"uno_python\": \"/opt/libreoffice24.8/program/python\", \"version_line\": \"LibreOffice 24.8.7.2 e07d0a63a46349d29051da79b1fde8160bab2a89\", \"versionrc_sha256\": \"8d12d3f157592b1f516d4e6128568d9f5100c50296794ebcf518d9965f96bf9e\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 25.778,
+   "median": 4.556,
+   "sum": 2957.077
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=24.8\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 553,
+  "with_failures": 0
+ },
+ "B3/B3.headless_convert.L0": {
+  "build_identity": [
+   "{\"build\": \"B3\", \"install_dir\": \"/opt/libreoffice24.8\", \"label\": \"tdf-24.8.7.2\", \"uno_python\": \"/opt/libreoffice24.8/program/python\", \"version_line\": \"LibreOffice 24.8.7.2 e07d0a63a46349d29051da79b1fde8160bab2a89\", \"versionrc_sha256\": \"8d12d3f157592b1f516d4e6128568d9f5100c50296794ebcf518d9965f96bf9e\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 7.985,
+   "median": 1.68,
+   "sum": 1091.613
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=24.8\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B3/B3.store_as.L0": {
+  "build_identity": [
+   "{\"build\": \"B3\", \"install_dir\": \"/opt/libreoffice24.8\", \"label\": \"tdf-24.8.7.2\", \"uno_python\": \"/opt/libreoffice24.8/program/python\", \"version_line\": \"LibreOffice 24.8.7.2 e07d0a63a46349d29051da79b1fde8160bab2a89\", \"versionrc_sha256\": \"8d12d3f157592b1f516d4e6128568d9f5100c50296794ebcf518d9965f96bf9e\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 26.094,
+   "median": 4.568,
+   "sum": 3035.242
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=24.8\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [
+   {
+    "error": "",
+    "n": 556,
+    "ok": true
+   }
+  ],
+  "with_adapted_activation": 553,
+  "with_failures": 0
+ },
+ "B4/B4.ctrl_s.L0": {
+  "build_identity": [
+   "{\"build\": \"B4\", \"install_dir\": \"/opt/libreoffice25.8\", \"label\": \"tdf-25.8.7.3\", \"uno_python\": \"/opt/libreoffice25.8/program/python\", \"version_line\": \"LibreOffice 25.8.7.3 30742500f2d3eb4366ac312fa33d3dcabdb3eba5\", \"versionrc_sha256\": \"1e628f2a9509163962753f04d1b56d386bd4aebf888de3d86cdc7b223c2570ee\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 25.684,
+   "median": 4.567,
+   "sum": 2950.477
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=25.8\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 553,
+  "with_failures": 0
+ },
+ "B4/B4.headless_convert.L0": {
+  "build_identity": [
+   "{\"build\": \"B4\", \"install_dir\": \"/opt/libreoffice25.8\", \"label\": \"tdf-25.8.7.3\", \"uno_python\": \"/opt/libreoffice25.8/program/python\", \"version_line\": \"LibreOffice 25.8.7.3 30742500f2d3eb4366ac312fa33d3dcabdb3eba5\", \"versionrc_sha256\": \"1e628f2a9509163962753f04d1b56d386bd4aebf888de3d86cdc7b223c2570ee\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 7.386,
+   "median": 1.677,
+   "sum": 1224.726
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=25.8\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B4/B4.store_as.L0": {
+  "build_identity": [
+   "{\"build\": \"B4\", \"install_dir\": \"/opt/libreoffice25.8\", \"label\": \"tdf-25.8.7.3\", \"uno_python\": \"/opt/libreoffice25.8/program/python\", \"version_line\": \"LibreOffice 25.8.7.3 30742500f2d3eb4366ac312fa33d3dcabdb3eba5\", \"versionrc_sha256\": \"1e628f2a9509163962753f04d1b56d386bd4aebf888de3d86cdc7b223c2570ee\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 25.996,
+   "median": 4.588,
+   "sum": 3025.066
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=25.8\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [
+   {
+    "error": "",
+    "n": 556,
+    "ok": true
+   }
+  ],
+  "with_adapted_activation": 553,
+  "with_failures": 0
+ },
+ "B5/B5.ctrl_s.L0": {
+  "build_identity": [
+   "{\"build\": \"B5\", \"install_dir\": \"/opt/libreoffice26.2\", \"label\": \"tdf-26.2.6.2\", \"uno_python\": \"/opt/libreoffice26.2/program/python\", \"version_line\": \"LibreOffice 26.2.6.2 ad5cf9fd4989cacf0bca866ebefc0ec8926cb0b2\", \"versionrc_sha256\": \"9bd159c10fd2154f07578dce504345c73c0aa412555e843c0b043506ebcdbb05\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 25.777,
+   "median": 4.384,
+   "sum": 2922.409
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=26.2\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 553,
+  "with_failures": 0
+ },
+ "B5/B5.headless_convert.L0": {
+  "build_identity": [
+   "{\"build\": \"B5\", \"install_dir\": \"/opt/libreoffice26.2\", \"label\": \"tdf-26.2.6.2\", \"uno_python\": \"/opt/libreoffice26.2/program/python\", \"version_line\": \"LibreOffice 26.2.6.2 ad5cf9fd4989cacf0bca866ebefc0ec8926cb0b2\", \"versionrc_sha256\": \"9bd159c10fd2154f07578dce504345c73c0aa412555e843c0b043506ebcdbb05\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 7.832,
+   "median": 1.678,
+   "sum": 1098.37
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=26.2\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [],
+  "with_adapted_activation": 0,
+  "with_failures": 0
+ },
+ "B5/B5.store_as.L0": {
+  "build_identity": [
+   "{\"build\": \"B5\", \"install_dir\": \"/opt/libreoffice26.2\", \"label\": \"tdf-26.2.6.2\", \"uno_python\": \"/opt/libreoffice26.2/program/python\", \"version_line\": \"LibreOffice 26.2.6.2 ad5cf9fd4989cacf0bca866ebefc0ec8926cb0b2\", \"versionrc_sha256\": \"9bd159c10fd2154f07578dce504345c73c0aa412555e843c0b043506ebcdbb05\"}"
+  ],
+  "cell_errors": [],
+  "failure_kinds": {},
+  "infra_errors": {},
+  "job_seconds": {
+   "max": 26.678,
+   "median": 4.7,
+   "sum": 3107.99
+  },
+  "locale_data": [],
+  "profile_set": [
+   "[\"/org.openoffice.Setup/Product/ooSetupLastVersion=26.2\"]"
+  ],
+  "rows": 553,
+  "saves": 556,
+  "saves_unwritten": 0,
+  "saves_with_dialog": 0,
+  "store_as_client": [
+   {
+    "error": "",
+    "n": 556,
+    "ok": true
+   }
+  ],
+  "with_adapted_activation": 553,
+  "with_failures": 0
+ }
+}
