@@ -1,0 +1,103 @@
+{
+ "acceptance": {
+  "exact_95": [
+   0.5407418735600994,
+   1.0
+  ],
+  "exact_one_sided_95_lower": 0.6069622310029172,
+  "share": 1.0,
+  "task_equal": {
+   "estimate": 1.0,
+   "high": 1.0,
+   "low": 1.0,
+   "method": "task-cluster percentile bootstrap, 10000 resamples, seed 42",
+   "n_clusters": 2,
+   "n_units": 6
+  },
+  "task_level_one_sided_95_lower": 0.22360679774997894,
+  "tasks_all_accepted": 2
+ },
+ "comparator_sha256": "64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655",
+ "condition_a": {
+  "accepted": 6,
+  "held": true,
+  "n": 6,
+  "not_accepted": [],
+  "rule": "accepted * 100 >= 95 * n",
+  "tasks": 2
+ },
+ "condition_b": {
+  "held": true,
+  "n": 6,
+  "new_accepts": [],
+  "rule": "no violation mutant with an original fail and a zinv pass",
+  "tasks": 1,
+  "tested": true
+ },
+ "descriptive_floor": {
+  "min_mutants": 20,
+  "min_tasks": 8
+ },
+ "experiment_id": "q2-zinv-reserve-validation-v1",
+ "fail_reasons": [],
+ "license": "Descriptive: zinv accepted at least 95% of the held-out z-order mutants and newly accepted no violation mutant, on fewer than 20 mutants or 8 tasks. It licenses 'the correction held on reserve documents it was not developed on, at this size', with the exact lower bound stated; not a claim that zinv accepts 95% of z-order equivalents in general.",
+ "original_on_z": {
+  "fails": 6,
+  "n": 6,
+  "task_equal": {
+   "estimate": 1.0,
+   "high": 1.0,
+   "low": 1.0,
+   "method": "task-cluster percentile bootstrap, 10000 resamples, seed 42",
+   "n_clusters": 2,
+   "n_units": 6
+  }
+ },
+ "outcome": "PASS",
+ "reported": {
+  "by_kind": {
+   "gold": 4,
+   "initial": 5,
+   "mutant": 39
+  },
+  "extra_change_new_accepts": [],
+  "mutants_by_label": {
+   "should_fail_extra_change": 9,
+   "should_fail_violation": 6,
+   "should_pass_equiv": 24
+  },
+  "other_items": 42,
+  "other_items_changed": [],
+  "other_items_equal": 42,
+  "regressions_pass_to_not_pass": [],
+  "rows": 48,
+  "zinv_errors": [],
+  "zorder_other_labels": []
+ },
+ "rows_sha256": "d8c77b28d26896736cfd99bc6cd27f7c3f75deb4eafce9fc755139104be27e69",
+ "schema": "q2-zinv-reserve-judgement-v1",
+ "split": "dev",
+ "status": "descriptive",
+ "validity": {
+  "invalid_decision_rows": [],
+  "invalid_rows": {},
+  "require_file_check": true
+ },
+ "violation_bounds": {
+  "mutant_one_sided_95_upper": 0.39303776899708276,
+  "original_passes": [],
+  "task_one_sided_95_upper": 0.95
+ },
+ "z_by_task": {
+  "5cfb9197-e72b-454b-900e-c06b0c802b40": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 3
+  },
+  "e4ef0baf-4b52-4590-a47e-d4d464cca2d7": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 3
+  }
+ }
+}
