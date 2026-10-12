@@ -1789,3 +1789,51 @@ held-out tasks.**
   - one float differs in its last digit.
 - Next. Add the result to the R03 note, and to the Q2 report where it
   discusses `zinv`.
+
+**D89. R04 result: OSWorld's office checkers are not invariant to the
+LibreOffice build or to the system locale.** R04
+(`r04-checker-nuisance-invariance-v1`, row 18) ran from its freeze commit
+`e312e996`:
+- 24 CPU-only jobs, every one exit 0 on its first attempt;
+- 10.27 of 20 lane-hours, 0 GPU-h;
+- every cell kept 100% of its items (92 golds and 461 S1a end states).
+The validity gates pass. V1: the control golds equal the frozen control
+runs'. V2: the replicate cell has 0 discordances. Both confirmation rounds
+reproduced all 108 discordances, so none is unstable.
+Registered arm readings, on the pinned checker (the corrected comparator
+`zinv` reads the same in every cell):
+- **Build arm: DRIFT.**
+  - The TDF builds 7.3.7.2, 7.6 and 24.8 are INVARIANT.
+  - 25.8.7.3 flips 18 of 92 golds (19.6%, 12.0-29.1%) and 6 of 32 S1a
+    tasks; 26.2.6.2 flips 20 of 92 (21.7%) and 6 of 32.
+  - The flips are mostly `compare_pptx_files` golds going from pass to fail.
+    All 67 flipped S1a pass states are `compare_pptx_files`.
+  - The same items flip under every save route.
+- **Locale arm: DRIFT.**
+  - de_DE, ar_EG and tr_TR flip the same three `compare_table` golds and five
+    pass states of one task. ar_EG also flips the `compare_pptx_files` gold
+    of `5c1a6c3d`, one of D82's gold-defect tasks.
+  - ja_JP is INVARIANT.
+- **Route arm: MINOR.** store_as is invariant. headless_convert flips one
+  `compare_table` gold.
+Descriptive results:
+- The control replicates the parent's P1 count of 4 of 92.
+- S1a's fixed point moves for 1 of 270 pass states and 3 of 180 fail states.
+- K2 changes only the label.
+What section 9 licenses: OSWorld's office checkers cannot be reused unchanged
+on a re-hosted image with LibreOffice 25.8 or later, or under the de_DE, ar_EG
+or tr_TR system locale, without accepting these flips. No flip was found up
+to 24.8, under ja_JP, or for store_as. None of these flips has been
+adjudicated. They feed the checker note, and S2 v4's K0 passing-side control
+(A4 (ii)), which checks gold passes per cell, guards against the same hazard.
+Verification. A fresh verifier reproduced the run and the analysis. It found:
+- two disclosed low items:
+  - an exploratory analysis of a partial copy before the main run ended, kept
+    in scratch, with nothing chosen after it;
+  - the operator was restarted mid-run, and the second instance continued the
+    same plan with no edits;
+- the committed analysis is the Mac's rerun from the evidence copy. The host
+  originals are kept beside it and differ only in floating-point bits below
+  1e-15.
+R04 jobs also ran in gaps between other workstreams' jobs, never during an E
+session, as D87 records.
