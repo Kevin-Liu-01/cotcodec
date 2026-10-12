@@ -95,6 +95,7 @@ directories (E2's held only its staged configuration, no job).
 | 1249 | K1 C1 on PL | 154 | 15:13:00 | 15:13:00-15:19:28 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count |
 | 1250 | K1 V = 20 rung over E, A, ER, AR, PL (seed-43 order x 12; 40 sessions, 2,400 trials) | 110 | 15:20:07 | 15:20:07-15:29:10 (9.1 min) | COMPLETED 0:0 | Not aborted; 2,400 of 2,400 trials pass; every condition but the per-image step p95 met; the step condition waits for each image's A1 |
 | 1257 | K1 C2 on E (L0-raw, seed 45) | 362 | 19:13:59 | 19:14:00-19:24:12 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
+| 1258 | K1 C2 on A | 362 | 19:24:54 | 19:24:55-19:35:04 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 
 Per job:
 - **1245 (C1, E).** Limit ends 17:19:33Z, before E2's earliest start 17:51:36Z. H-GA-buggy: 70
@@ -142,6 +143,11 @@ Per job:
   on E `pass`, no problem. Driver exit 0, `infra_gates_pass` true, image unchanged, no labelled
   container left; no counting, foreign-abort or snapshot problem. Host snapshot: load 0.91, queue
   empty, no labelled container; E's pair directories held E2's two collected pairs.
+- **1258 (C2, A).** Limit ends 01:27:54Z. 500 trials, 457 passed; C2's reading: exactly the
+  prediction's 8 entries not PASS (`strict_entries` also has `seq_type_chord_type` and
+  `type_symbols_shifted` FLAKY); 9 cold boots at most 17.2 s; step p95 1.19 s; 8 of 8 reset
+  sentinels pristine. C2 on A `pass`. No problem of any kind. Host snapshot: load 0.49, queue
+  empty, no labelled container; E's operator had staged `e-9b-e3` and `e-4b-e3` (no job).
 
 ## Schedule for the rest of K1 (the operator's plan; not a registered rule)
 
