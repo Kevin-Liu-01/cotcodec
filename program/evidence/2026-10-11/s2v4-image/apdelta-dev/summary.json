@@ -1,0 +1,179 @@
+{
+ "jobs": {
+  "1217": {
+   "campaigns": [
+    {
+     "batch_end": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+     },
+     "boot_s": [
+      19.067
+     ],
+     "campaign_id": "s2v4-apd-dev-single",
+     "cells": [
+      "E"
+     ],
+     "concurrency": 1,
+     "counting_problems": [],
+     "foreign_abort": [],
+     "image_of_session": null,
+     "labelled_containers_left": [],
+     "qcow2_sha256_before": "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42",
+     "qcow2_unchanged": true,
+     "sessions": 1,
+     "snapshot_problems": [],
+     "step_p95_s": 0.6843,
+     "trials": 3,
+     "trials_passed": 3
+    },
+    {
+     "acceptance_rung": {
+      "aborted": false,
+      "boot_p95_s": 18.169,
+      "boots": 2,
+      "n": 2,
+      "problems": [
+       "rung N=2: the trials run (6) are not the realized order (1200)",
+       "2 cold boots measured (at least 20)",
+       "gating entries not PASS: ['caps_lock_roundtrip', 'chord_alt_f4', 'chord_alt_tab', 'chord_ctrl_a', 'chord_ctrl_alone', 'chord_ctrl_alt_shift_r', 'chord_ctrl_c', "
+      ],
+      "qualifies": false,
+      "step_p95_s": 1.8971
+     },
+     "batch_end": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+     },
+     "boot_s": [
+      18.078,
+      18.169
+     ],
+     "campaign_id": "s2v4-apd-dev-rung",
+     "cells": [
+      "E",
+      "AR"
+     ],
+     "concurrency": 2,
+     "counting_problems": [],
+     "foreign_abort": [],
+     "image_of_session": {
+      "0": "E",
+      "1": "AR"
+     },
+     "labelled_containers_left": [],
+     "qcow2_sha256_before": {
+      "AR": "77cd9a2ab6aa37ef6c7d80ff27486b63e2f2e8a417c46d2768c1d8020cc6311f",
+      "E": "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42"
+     },
+     "qcow2_unchanged": true,
+     "sessions": 2,
+     "snapshot_problems": [],
+     "step_p95_s": 1.8971,
+     "trials": 6,
+     "trials_passed": 6
+    }
+   ],
+   "executor_commit": "4a4ae0c552aedccf7b06453b0c5437d8ab78be89",
+   "preflight": [
+    "job_id=1217",
+    "batch_sha256=0423c0257d32a055d6c812cc3d8a287676d604b41b3742012550178e4d0d89cb",
+    "manifest_sha256=aabbbebdcfcd6db0502b6016a88eacfb440e94889d29513a048c951949f0f9c7",
+    "source_tree_sha256=0a0f7e69d3b471fd455864745ee3d59c142469d8665539c3c0228e3944208524",
+    "source_git_sha=4a4ae0c552aedccf7b06453b0c5437d8ab78be89",
+    "docker_default_runtime=runc",
+    "job_tres=TRES=cpu=10,mem=16G,node=1,billing=10 ",
+    "lane_exit=0 labelled_containers_left=0"
+   ],
+   "purpose": "development"
+  },
+  "1218": {
+   "campaigns": [
+    {
+     "batch_end": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+     },
+     "boot_s": [
+      17.179
+     ],
+     "campaign_id": "s2v4-apd-dev-single",
+     "cells": [
+      "E"
+     ],
+     "concurrency": 1,
+     "counting_problems": [],
+     "foreign_abort": [],
+     "image_of_session": null,
+     "labelled_containers_left": [],
+     "qcow2_sha256_before": "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42",
+     "qcow2_unchanged": true,
+     "sessions": 1,
+     "snapshot_problems": [],
+     "step_p95_s": 0.6254,
+     "trials": 3,
+     "trials_passed": 3
+    },
+    {
+     "acceptance_rung": {
+      "aborted": false,
+      "boot_p95_s": 17.475,
+      "boots": 2,
+      "n": 2,
+      "problems": [
+       "rung N=2: the trials run (6) are not the realized order (1200)",
+       "2 cold boots measured (at least 20)",
+       "gating entries not PASS: ['caps_lock_roundtrip', 'chord_alt_f4', 'chord_alt_tab', 'chord_ctrl_a', 'chord_ctrl_alone', 'chord_ctrl_alt_shift_r', 'chord_ctrl_c', "
+      ],
+      "qualifies": false,
+      "step_p95_s": 1.896
+     },
+     "batch_end": {
+      "driver_exit": 0,
+      "labelled_containers_left": 0
+     },
+     "boot_s": [
+      17.475,
+      17.221
+     ],
+     "campaign_id": "s2v4-apd-dev-rung",
+     "cells": [
+      "E",
+      "AR"
+     ],
+     "concurrency": 2,
+     "counting_problems": [],
+     "foreign_abort": [],
+     "image_of_session": {
+      "0": "E",
+      "1": "AR"
+     },
+     "labelled_containers_left": [],
+     "qcow2_sha256_before": {
+      "AR": "77cd9a2ab6aa37ef6c7d80ff27486b63e2f2e8a417c46d2768c1d8020cc6311f",
+      "E": "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42"
+     },
+     "qcow2_unchanged": true,
+     "sessions": 2,
+     "snapshot_problems": [],
+     "step_p95_s": 1.896,
+     "trials": 6,
+     "trials_passed": 6
+    }
+   ],
+   "executor_commit": "4a4ae0c552aedccf7b06453b0c5437d8ab78be89",
+   "preflight": [
+    "job_id=1218",
+    "batch_sha256=0423c0257d32a055d6c812cc3d8a287676d604b41b3742012550178e4d0d89cb",
+    "manifest_sha256=aabbbebdcfcd6db0502b6016a88eacfb440e94889d29513a048c951949f0f9c7",
+    "source_tree_sha256=0a0f7e69d3b471fd455864745ee3d59c142469d8665539c3c0228e3944208524",
+    "source_git_sha=4a4ae0c552aedccf7b06453b0c5437d8ab78be89",
+    "docker_default_runtime=runc",
+    "job_tres=TRES=cpu=10,mem=16G,node=1,billing=10 ",
+    "lane_exit=0 labelled_containers_left=0"
+   ],
+   "purpose": "development"
+  }
+ },
+ "schema": "s2v4-apdelta-dev-summary-v1"
+}

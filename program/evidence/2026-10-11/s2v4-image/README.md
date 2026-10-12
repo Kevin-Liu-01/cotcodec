@@ -32,7 +32,7 @@ pinned signer `F6ECB3762474EDA9D21B7022871920D1991BC93C` (fingerprint and primar
 `Suite: jammy-updates` and `Codename: jammy`, the stored signed text equal to gpgv's output,
 `Packages.xz` equal to its signed hash, each `.deb` equal to its signed stanza.
 
-## image-build-1195/
+## image-build-1195/ (superseded; its images deleted after build 1207 ran)
 
 Slurm 1195 (CPU only, no GRES, `s2v4-cpu.sbatch` run mode, `cotcodec-q2-vmprobe` image
 `sha256:0cde2db1...`, `--network=none`, host uid, read-only root, no capabilities; 455 s), from an
@@ -51,7 +51,7 @@ export of `9c450da0`:
 - `image-manifest.json`, `cell-manifests.json`: every path written, with mode, owner, inode and SHA-256;
 - `receipt-1195.json`: the batch receipt (no GPU, network none).
 
-Pins: `harness/s2_locale/images.json` (a test checks it equals the pin set this record gives).
+Its digests were the first pins; builds 1199 and then 1207 replaced them (below).
 
 Two earlier attempts stopped at their own checks before writing an image: Slurm 1189 (the certified
 disk's pre-existing `e2fsck` finding failed a precondition that required a clean check; the build now
@@ -99,7 +99,7 @@ to its raw source. Superseded in the repair round: this build stamped the wall c
 regenerated bit for bit. Its images stay on the host, unpinned; build 1195's images were deleted after
 build 1207 ran (their records stay here).
 
-## smoke-1201/ (development, dev split only; the pinned images)
+## smoke-1201/ (development, dev split only; the images of build 1199, then pinned)
 
 Slurm 1201 (CPU only; export of `513a5aa5`; manifest `experiments/manifests/s2v4/dev-smoke-v2.json`):
 the same 24 capture slots as smoke 1197 on the images of build 1199, plus 10 gold slots
@@ -193,12 +193,41 @@ attempt), `smoke-summary.json`, `lane-receipt.json` (host snapshots removed), `p
   pointer-position readout); O1 text pairs and O4 order 100%; descriptor plants O3 13/17, O2 15/17.
   `k0-dev.json` (development; 89 pool tasks have no record here): 13 dev tasks admitted, 4 runnable.
 
+## apdelta-dev/ (development, dev split only; repair round)
+
+Slurm 1217 and 1218 (CPU only, `s2v4-apdelta.sbatch`, batch SHA-256 `0423c025...`, export of
+`4a4ae0c5`, 10 CPUs and 16 GB; manifest `experiments/manifests/s2v4/apdelta-dev-v1.json`, stored on the
+host in canonical form as `aabbbebd...`, the same content): `ap_delta.py`'s development purpose, a
+harness/q2 development workload (L0-fixed, seed 42, the three cells `click_left_center`, `type_plain`,
+`key_enter`, one repetition) on the pinned images of build 1207. Each job ran two campaigns:
+
+- a single-image campaign on E through `python3 -m harness.q2.vm.driver` unchanged (one VM, one
+  screenshot-setting session): 3 of 3 trials pass in each job;
+- a development rung on E and AR at N = 2 through `ap_delta.run_rung` (session i on image i mod 2:
+  session 0 on E in the screenshot setting, session 1 on AR with accessibility): 6 of 6 pass in each job;
+  both images hashed before and after the campaign and unchanged; no labelled container left; host
+  snapshots present; no foreign job.
+
+`summary.json` (`summarize.py`, which reads the run directories with harness/q2's own
+`acceptance.load`, `counting_problems`, `foreign_abort`, `snapshot_problems` and `acceptance.rung`):
+every campaign counts (no counting problem); cold boots 17.2-19.1 s; screenshot-setting steps 0.52-0.70 s
+in both campaigns and the AR session's accessibility-setting steps 1.74-1.90 s (each step also fetches
+the accessibility tree). `acceptance.rung` reads the development rung and, as it must, does not qualify
+it (2 boots of the 20 required, and a 6-trial workload instead of the 1,200-trial order). In the
+registered rung each image runs 4 sessions in each setting (sessions 0-19 screenshot, 20-39
+accessibility, session i on image i mod 5), as each image's A1 reference does, so the per-image step
+comparison of section "K1" is between like workloads. The job directories (receipts, preflights,
+manifests, session plans) are copied here; the per-trial cycles and VM logs stay on the host. 1218
+repeats 1217 from the same manifest; it was submitted after 1217 ended, on an empty queue, and its
+records agree with 1217's.
+
 ## freeze-rehearsal/ (repair round)
 
 `rehearsal.json`: a scratch freeze of a local clone of the branch at `5d61a63a` (origin removed, its own
 ledger; the real ledger was not touched): the status fill, `scripts/preregister.py freeze`, `verify` and
-`check-chain`, the ledger row committed alone (the freeze commit changes only the ledger); the S2 v4 tests
-at the freeze commit (78 passed, the status test reading the frozen wording against the row); from an
+`check-chain`, the ledger row committed alone (the freeze commit changes only the ledger); four S2 v4 test files
+at the freeze commit (registration, lane, K0 and `ap_delta`: 78 passed, the status test reading the
+frozen wording against the row); from an
 export of the freeze commit, the registered census manifest (1,322 slots; `render-census
 --freeze-commit`, the commit checked with git) and a census resumed from block `b010` validated, K1
 manifests rendered and validated (C1 on E; C3 on AR in three parts; A3 on AR in three parts; the rung,

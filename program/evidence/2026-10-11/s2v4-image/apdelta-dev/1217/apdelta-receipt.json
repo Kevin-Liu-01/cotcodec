@@ -1,0 +1,28 @@
+{
+ "campaigns": [
+  {
+   "campaign_id": "s2v4-apd-dev-single",
+   "cells": [
+    "E"
+   ],
+   "dir": "00-s2v4-apd-dev-single",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v4-apd-dev-rung",
+   "cells": [
+    "E",
+    "AR"
+   ],
+   "dir": "01-s2v4-apd-dev-rung",
+   "driver_exit": 0
+  }
+ ],
+ "check": "rung",
+ "executor_commit": "4a4ae0c552aedccf7b06453b0c5437d8ab78be89",
+ "job_id": "1217",
+ "purpose": "development",
+ "schema": "s2v4-apdelta-receipt-v1",
+ "t_end": 1791776065.1279135,
+ "t_start": 1791775906.3715985
+}

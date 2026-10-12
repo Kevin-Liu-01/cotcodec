@@ -1,0 +1,224 @@
+{
+  "ap_delta": {
+    "assignment": "session i on cells[i % len(cells)]",
+    "rung_cells": [
+      "E",
+      "AR"
+    ]
+  },
+  "campaign_id": "s2v4-apd-dev-rung",
+  "cpusets": [
+    {
+      "allocated": "0-9",
+      "runner": "8",
+      "vm": "0-3",
+      "vm_mems": "0",
+      "vm_numa_nodes": [
+        0
+      ]
+    },
+    {
+      "allocated": "0-9",
+      "runner": "8",
+      "vm": "4-7",
+      "vm_mems": "0",
+      "vm_numa_nodes": [
+        0
+      ]
+    }
+  ],
+  "driver_python": "3.10.12",
+  "finished_at": 1791776065.1060772,
+  "git_sha": "4a4ae0c552aedccf7b06453b0c5437d8ab78be89",
+  "host_end": {
+    "containers_ours": 0,
+    "containers_running_total": 1,
+    "loadavg": [
+      "2.21",
+      "9.37",
+      "13.35"
+    ],
+    "squeue_foreign": [],
+    "t": 1791776065.0517974
+  },
+  "host_start": {
+    "containers_ours": 0,
+    "containers_running_total": 1,
+    "loadavg": [
+      "3.30",
+      "11.20",
+      "14.18"
+    ],
+    "squeue_foreign": [],
+    "t": 1791776000.628723
+  },
+  "image_of_session": {
+    "0": "E",
+    "1": "AR"
+  },
+  "job_id": "1217",
+  "labelled_containers_left": [],
+  "manifest_sha256": "14799beeb94f27e4e77978a574eae1e285185d5399412dc3ec2622160f79a462",
+  "qcow2_sha256_after": {
+    "AR": "77cd9a2ab6aa37ef6c7d80ff27486b63e2f2e8a417c46d2768c1d8020cc6311f",
+    "E": "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42"
+  },
+  "qcow2_sha256_before": {
+    "AR": "77cd9a2ab6aa37ef6c7d80ff27486b63e2f2e8a417c46d2768c1d8020cc6311f",
+    "E": "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42"
+  },
+  "qcow2_unchanged": true,
+  "schema": "cotcodec-vm-campaign-receipt-v1",
+  "session_plan_sha256": "416660526af892bcb4566d5d4c38eaf7152a3be4183f4b91317cb8459333dab9",
+  "source_tree_sha256": "0a0f7e69d3b471fd455864745ee3d59c142469d8665539c3c0228e3944208524",
+  "started_at": 1791775967.2010913,
+  "summary": {
+    "boot_s": {
+      "max": 18.169,
+      "n": 2,
+      "p50": 18.078,
+      "p95": 18.169
+    },
+    "boots_ok": 2,
+    "containers_removed_all": true,
+    "cycles": 2,
+    "distinct_boot_ids": 2,
+    "errors": [],
+    "hmp_cycles_all_ok": 0,
+    "hmp_step_pass_counts": {},
+    "infra_gates_pass": true,
+    "latency_s": {
+      "accessibility_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "execute_noop_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "screenshot_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      }
+    },
+    "leaked_volumes": [],
+    "nat_modes": [
+      "nat"
+    ],
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "sentinel_pristine": 1,
+    "sentinel_readback_dconf": 0,
+    "sentinel_readback_file": 0,
+    "sentinel_readback_gsettings": 0,
+    "sentinel_reset_checks": 1,
+    "sessions": {
+      "accessibility_calls": 4,
+      "cell_counts": {
+        "FAIL": 0,
+        "FLAKY": 0,
+        "PASS": 6
+      },
+      "cells": {
+        "screenshot+a11y|click_left_center": "PASS",
+        "screenshot+a11y|key_enter": "PASS",
+        "screenshot+a11y|type_plain": "PASS",
+        "screenshot|click_left_center": "PASS",
+        "screenshot|key_enter": "PASS",
+        "screenshot|type_plain": "PASS"
+      },
+      "guest_server_restarts": 0,
+      "infra_failures": {},
+      "observation_retries": {},
+      "runner_errors": [],
+      "sessions": [
+        {
+          "accessibility_calls": 0,
+          "cycle": 0,
+          "guest_server_restarts": 0,
+          "passed": 3,
+          "probe_relaunches": 0,
+          "setting": "screenshot",
+          "tap_relaunches": 0,
+          "trials": 3,
+          "wall_s": 24.96
+        },
+        {
+          "accessibility_calls": 4,
+          "cycle": 1,
+          "guest_server_restarts": 0,
+          "passed": 3,
+          "probe_relaunches": 0,
+          "setting": "screenshot+a11y",
+          "tap_relaunches": 0,
+          "trials": 3,
+          "wall_s": 30.02
+        }
+      ],
+      "step_s": {
+        "n": 6,
+        "p50": 0.6955,
+        "p95": 1.8971
+      },
+      "trial_s": {
+        "n": 6,
+        "p50": 0.8996,
+        "p95": 2.0975,
+        "sum": 8.65
+      }
+    },
+    "settled_s": {
+      "n": 2,
+      "p50": 21.209,
+      "p95": 21.281
+    },
+    "tap_selftest_ok": 0
+  },
+  "verdicts": [
+    {
+      "boot_id": "7fe0ccd7-fbdc-4158-85ce-b4c5deed7a89",
+      "boot_s": 18.078,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 0,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 21.209,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "f7ca0606-749c-45c0-acf6-916f877a1540",
+      "boot_s": 18.169,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 1,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 21.281,
+      "tap_selftest_ok": null
+    }
+  ]
+}

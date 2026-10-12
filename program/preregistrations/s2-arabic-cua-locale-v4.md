@@ -649,6 +649,16 @@ above, and the screenshots and trees stay on the host.
   over the 106 tasks. They show one risk to I5 that K0's fixed masks cannot remove (a status-bar
   readout that follows the pointer can differ between boots on Impress tasks), recorded here before
   the freeze.
+- The `ap_delta` development run (Slurm 1217, repeated as 1218 from the same manifest;
+  `experiments/manifests/s2v4/apdelta-dev-v1.json`; records `apdelta-dev/`): a harness/q2 development
+  workload (L0-fixed, seed 42, three cells, one repetition) on the pinned images, once as a
+  single-image campaign on E through harness/q2's driver unchanged and once as a development rung on E
+  and AR at N = 2 through `ap_delta.run_rung` (session i on image i mod 2). Every trial passed (3 of 3
+  and 6 of 6 in each job), both images were unchanged before and after, no labelled container was
+  left, and harness/q2's `acceptance.load` reads every run directory with no counting problem;
+  `acceptance.rung` reads the development rung (which cannot qualify at N = 2). The rung's step p95
+  (1.90 s) is its accessibility-setting session's (screenshot-setting steps were 0.52-0.70 s in both
+  campaigns); the registered rung gives every image 4 sessions in each setting, as its A1 reference has.
 
 ## Phase 1 (admitted under D80 (iv) if K0 and K1 pass)
 
@@ -1017,7 +1027,7 @@ Pre-freeze audit, blocking:
 
 | Item | Disposition |
 |---|---|
-| A1. Phase 0 could not run from the freeze commit: five components missing, the lane refusing every job once frozen | Fixed. (a) `oracle_vm.py` (VM renders and OSWorld's XML; I1-doc, I2, I5, I6, tol6; masks in every comparison) run on the development smokes; (b) the PD variant (`pd_cache.py`, pinned) dev-tested on all 17 dev tasks in the VM, the 15 named ones included, with the off-screen rule fixed in P0.3; (c) the P0.10 reader in `vm_probe`; (d) the census renderer and the `phase0` purpose, admitted only with the ledger row and from the freeze commit's export, with V = 20 sizing and one resume rule; (e) `ap_delta.py` with its K1 plan, batch file and verdict, dev-run on the host. The scratch freeze rehearsal rendered and validated the registered census manifest (1,322 slots), a resumed census, and K1 manifests (C1, C3, the rung) from the freeze export, and refused development manifests |
+| A1. Phase 0 could not run from the freeze commit: five components missing, the lane refusing every job once frozen | Fixed. (a) `oracle_vm.py` (VM renders and OSWorld's XML; I1-doc, I2, I5, I6, tol6; masks in every comparison) run on the development smokes; (b) the PD variant (`pd_cache.py`, pinned) dev-tested on all 17 dev tasks in the VM, the 15 named ones included, with the off-screen rule fixed in P0.3; (c) the P0.10 reader in `vm_probe`; (d) the census renderer and the `phase0` purpose, admitted only with the ledger row and from the freeze commit's export, with V = 20 sizing and one resume rule; (e) `ap_delta.py` with its K1 plan, batch file and verdict, dev-run on the host (Slurm 1217 and 1218: a single-image campaign and a two-image development rung, read by harness/q2's own `acceptance` code; section "Development smoke"). The scratch freeze rehearsal rendered and validated the registered census manifest (1,322 slots), a resumed census, and K1 manifests (C1, C3, the rung) from the freeze export, and refused development manifests |
 | A2. Phase 1 had no executor, was not in the freeze procedure, and its step-0 mask was ambiguous | Fixed. The step-0 mask (top bar and the Phase 0 render's caret mask), the keyboard and image checks and the postconfig rule are defined; the Phase 1 executor addendum (code, dev-only dry run, fresh audit, its own ledger row before any episode) is step 6 of the freeze procedure |
 | A3. K1's V = 20 rung was under-specified, and harness/q2 cannot run it unedited | Fixed. Section 9's full rule at N = 20 (r = 12, 2,400 trials in 40 sessions, runner CPUs 10, boot and step p95, at most two excused trials, snapshots, foreign abort with one rerun), the step reference per image (its own A1), and how `ap_delta` drives the five images; harness/q2 stays byte-identical (its closed-world ledger check); A6 runs all four applications (harness/q2's validator; already the budgeted cost); the keyboard claim is restricted to A6 in A and AR |
 | A4. Held-fixed facts contradicted the records | As R2 |
@@ -1040,4 +1050,13 @@ Pre-freeze audit, not blocking:
 | The carry-over argument for A4 and A7 was inaccurate; a docstring was stale | Fixed: section "K1" lists every class of change (the Ubuntu and GNOME catalogs, help files and `supported.d/ar`, ext4 metadata) and calls the carry-over an argument; `image_build.py`'s docstring gives the dependency block as the reason the selector is read last |
 | The review's non-blocking items | As above |
 | Program records (decisions, state, handoff) | The orchestrator's; not edited in this round |
+
+Closing the round: `main` was merged in with every ledger row kept (rows 19 and 20 are other
+experiments'; this id still has none); the `ap_delta` development jobs' records were committed
+(`apdelta-dev/`, section "Development smoke"); the evidence README's statements about the superseded
+builds were corrected; and the scratch freeze rehearsal was repeated at the merged head
+(`freeze-rehearsal/rehearsal.json`). Found in development and not fixed in this round, recorded for
+the next review: the Impress status bar's pointer-position readout made AD differ from AR on
+`ac9bb6cb` (section "Development smoke"); parking the pointer before the capture would be a change to
+P0.7's capture, not to K0, and would need a development smoke on the host first.
 
