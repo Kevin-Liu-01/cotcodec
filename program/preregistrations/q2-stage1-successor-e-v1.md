@@ -1,8 +1,12 @@
 # Preregistration: q2-stage1-successor-e-v1 (Q2 successor E: S1a's design on all 113 pool tasks with four new serving sessions per size)
 
-**Status: DRAFT. Not frozen, no ledger row; no E episode and no E GPU job may run under it.
-Open slots: TBD** (the status paragraph, which the freeze replaces whole with the wording of
-section 25; the program's sign-off of section 21; G-E4's, G-E5's and G-E6's slots are filled).
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the
+freeze time and `git_head_at_freeze`.** The development smoke (G-E4) and the GLMM shape run
+(G-E5) ran on CPU before the freeze, from the draft commit named in their records; no E GPU
+job ran before it. Section 21 records the program's sign-off. OE and every E job run from an
+export of the freeze commit, the commit that adds this file's ledger row, and E's lane admits
+an E job only while this file's SHA-256 equals that row's and refuses the development purpose.
+A material change after the freeze is a new experiment id.
 
 - Drafted 2026-10-11 on branch `stage0/q2-successor-e` from `main` at `c0971a77`, by the
   single owner of successor E under decision D80 (iii) ("registered, audited before the freeze,
@@ -778,7 +782,7 @@ The sign-off decision is one entry of `program/decisions.md`, on `main`, before 
 its bold heading names `q2-stage1-successor-e-v1`, and its entry signs "items 1-14" of this
 section. `tests/test_q2_stage1e_prereg.py` refuses any other id in the slot below.
 
-- Program sign-off of items 1-14 (decision id): TBD
+- Program sign-off of items 1-14 (decision id): D85
 
 ## 22. Disclosures and known limitations
 
