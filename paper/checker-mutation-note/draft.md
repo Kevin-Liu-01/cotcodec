@@ -1,6 +1,7 @@
 # Do OSWorld's file-state checkers accept equivalent end states? A descriptive mutation audit
 
-Research note, draft of 2026-10-11. CoTCodec research program, question Q2
+Research note, draft of 2026-10-11, revised on 2026-10-12 with the result of R03 part (b).
+CoTCodec research program, question Q2
 (`program/questions/q2-calibrated-cua-instrument.md`), item R03 of the question-renewal dossier
 (`program/evidence/2026-10-11/question-renewal/dossier.md`, section 3). Program owner: Kevin Liu.
 
@@ -8,9 +9,12 @@ Repository: <https://github.com/Kevin-Liu-01/cotcodec> (public). Every evidence 
 resolves on `main` at `746d60d2`, the base of this draft's branch `stage0/r03-note`, except
 what that branch adds: the note's script, figures and number table
 (`paper/checker-mutation-note/scripts/`, `figures/`, `data/`) and the record of the prior-art
-check K8 (`program/evidence/2026-10-11/q2-mutation-k8-prior-art/`). The note expands section 6
-of the Q2 report draft (`paper/q2-report/draft.md`), which predates K2 (D79) and the
-adjudication (D82); where the two differ, the numbers here are the later ones.
+check K8 (`program/evidence/2026-10-11/q2-mutation-k8-prior-art/`). The part (b) registration
+and run record ([ZR-REG], [ZR]) and decisions D86 and D88 resolve on `main` at `b880275c`, the
+base of the revision's branch `stage0/r03-partb-text`. The note expands section 6 of the Q2
+report draft (`paper/q2-report/draft.md`), whose first two revisions predate K2 (D79) and the
+adjudication (D82); its revision 3 took this note's numbers, and its revision 4 adds part (b).
+Where the two differ, the numbers here are the later ones.
 
 > **Status: DRAFT. Not published, not for circulation.**
 >
@@ -30,6 +34,15 @@ adjudication (D82); where the two differ, the numbers here are the later ones.
 >   before drafting as registered, and did not fire (section 6).
 > - The offline harness's verdicts were **checked inside real VMs by K2** (D79) on a registered
 >   sample of 80 scoring jobs.
+> - R03 part (b), the held-out test of the corrected comparator `zinv` on the reserve split,
+>   ran on 2026-10-12 under its own frozen addendum (D86, D88). Its outcome is **PASS,
+>   descriptive**, on 13 z-order mutants, fewer than the registered 20. It licenses saying that
+>   the correction held on reserve documents it was not developed on, at this size; it is not a
+>   claim that `zinv` accepts 95% of z-order equivalents (section 3.7).
+> - **Blind warning (D9, D82).** The part (b) run's released files name the checker's verdict
+>   for every reserve mutant. Whoever does D9's pending human spot check should answer from its
+>   blind packets before reading them. No reserve mutant is in the spot check or the
+>   adjudication pool, and this note gives only counts.
 > - The note quotes no OSWorld task document. Task ids are OSWorld's public task identifiers.
 
 ## Summary
@@ -64,6 +77,12 @@ both read against the label.
   are audit-confirmed checker errors (3.26%, 0.68-9.23%).
 - **The result holds inside the VM.** On the registered K2 sample, 78 of 78 compared pairs give
   the offline verdict in both runs, and all 41 candidate events reproduce.
+- **The defect replicates on held-out decks, and the correction holds there.** On the reserve
+  split's 8 pptx tasks, never used to find the defect or to build the fix, `compare_pptx_files`
+  failed 13 of 13 z-order equivalence mutants. The corrected comparator `zinv` accepted all 13
+  (exact one-sided 95% lower bound 0.794) and newly accepted none of 15 violation mutants (R03
+  part (b): PASS, descriptive, below the registered 20 mutants). The correction held on
+  documents it was not developed on, at this size; this is not a 95% acceptance rate.
 - **No on-policy consequence is shown.** A corrected comparator changed 0 of 1,808 verdicts of
   two Qwen3.5 policies in the program's S1a run.
 - **The audit rests on correlated models.** The two raters agree at Cohen's κ 0.343; the
@@ -91,7 +110,8 @@ blind-labelled mutants, each with its audit decision, and states no confirmatory
 This note completes R03 of the question-renewal dossier, whose corrected question has three
 parts [DOSSIER, section 3]. Part (a), whether mutants saved inside the certified VM get the
 offline verdict, is answered by K2 (section 3.6). Part (b), whether the corrected comparator
-`zinv` holds on the held-out reserve split, has not run (section 3.7). Part (c), operator
+`zinv` holds on the held-out reserve split, ran under its own frozen addendum and passed,
+descriptively (section 3.7). Part (c), operator
 families for the pool's non-office checkers, would need a new registration and has not been
 written. The adjudication the dossier left to the owner was done by an isolated model under
 D80 (section 2.5).
@@ -439,7 +459,7 @@ Table 4. K2 pairs compared per checker family [K2 `k2-summary.json`].
 With K2's report, the analysis label became "VM fidelity checked (K2)"; nothing else in the
 analysis changed.
 
-### 3.7 A corrected comparator, validated where it was built
+### 3.7 A corrected comparator, validated where it was built and on held-out decks
 
 `compare_pptx_files_zinv` realigns the agent deck's shapes to the reference order only where
 the swapped shapes are apart by the operator's own rule, then runs the original comparator with
@@ -459,10 +479,51 @@ do-nothing states [S1A-REG section 3.1, item 8; ZINV-VAL; DER]:
   [S1A-REG section 3.1, item 8].
 - `compare_pptx_files_tolerant` is not corrected.
 
-So `zinv` is validated only on the split it was built for. R03 part (b), whether it accepts at
-least 95% of held-out z-order mutants on the reserve split while accepting no violation the
-original rejects, has not run. The reserve split has 28 targets, 8 of them pptx, so that test
-will probably be descriptive (O4).
+Those runs validate `zinv` only on the split it was built for. R03 part (b) asks whether it
+accepts at least 95% of held-out z-order mutants on the reserve split while accepting no
+violation that the original rejects [ZR-REG section 1].
+
+The reserve split has 28 targets, 8 of them pptx; they sit on 8 tasks, and no mutant of the
+frozen operators had been built on any of them. A frozen addendum,
+`q2-zinv-reserve-validation-v1` (ledger row 20), built, saved and scored their mutants with the
+parent's frozen operators and pipeline, then rescored every item with the original comparator
+and with `zinv` [ZR-REG section 5]. Condition A asks that `zinv` accept at least 95% of the
+evaluable z-order equivalence mutants; condition B, that no violation mutant fail under the
+original and pass under `zinv`. The reading is descriptive below 20 mutants or 8 tasks (O4)
+[ZR-REG section 6]. The registered run, CPU only, gave **PASS, descriptive** [ZR; D88]:
+
+- **Condition A holds.** `zinv` accepted 13 of 13 evaluable z-order equivalence mutants, on all
+  8 tasks. The exact one-sided 95% lower bound on its acceptance is 0.794 per mutant (exact
+  two-sided interval 0.753-1.000) and 0.688 per task (8 of 8 tasks with every z-order mutant
+  accepted).
+- **Condition B holds.** Of 15 violation mutants on 5 of the tasks, `zinv` newly accepted 0. The
+  exact one-sided 95% upper bound on the new-accept rate is 0.181 per mutant and 0.451 per task.
+  The original failed all 15, and so did `zinv`.
+- **Why descriptive.** The 13 z-order mutants are fewer than the registered 20; the 8 tasks meet
+  their floor of 8. The registration expected a mean of 19.5 [ZR-REG section 4]. The frozen
+  operators planned 13 z-order mutants on these targets, and all 13 were evaluable [ZR].
+- **The defect replicates.** The original `compare_pptx_files` failed 13 of 13 of the same
+  mutants, on tasks and documents never used to find the defect or to build the fix. This is a
+  held-out replication of section 3.1's finding, and it is descriptive.
+- **Nothing else moved.** The 93 other items (the other equivalence, extra-change and violation
+  mutants, 8 saved golds and 9 saved do-nothing states) kept their registered verdict under
+  `zinv`, and `zinv` raised no error. None of the 106 rows was invalid: each fresh original
+  scoring reproduced the registered verdict, and no job's files changed during the rescoring.
+
+What this licenses, by the addendum's section 7: the correction held on reserve documents it
+was not developed on, at this size. It is not a claim that `zinv` accepts at least 95% of
+z-order equivalents in general: a PASS bounds acceptance only from below, here at 0.794 per
+mutant. "Held out" means unseen by `zinv`'s development; the reserve decks come from the same
+OSWorld pool as the confirm decks. The result is offline (K2 covered the confirm sample only),
+and it rests on the operators' labels: no rater, model or person read a reserve mutant.
+`compare_pptx_files_tolerant` has no reserve task and is still not corrected
+[ZR-REG section 12].
+
+**Blind warning (D9, D82).** The run's released files (`release/zinv-rows.json`,
+`judgement.json` and the campaign's verdict files) name the checker's verdict for every reserve
+mutant. D9's human spot check is still pending; whoever does it should answer from its blind
+packets before reading those files. No reserve mutant is in the spot check or the adjudication
+pool, and this section gives only counts [ZR].
 
 ### 3.8 What the defect did on policy
 
@@ -547,10 +608,10 @@ These bound every result above, and they are stated as plainly as the results.
 - **A narrow population.** The population is 444 synthetic mutants on 60 confirm tasks, mostly
   LibreOffice spreadsheets, documents and decks. Not covered: 43 confirm tasks without a
   complete gold, 10 whose complete gold has no file an operator handles, 7 target tasks whose
-  saved null mutant fails its own checker, the reserve split (apart from MUT-P1's golds),
-  live-state and web tasks, and every non-office checker (GIMP, VLC, Thunderbird, VS Code, OS
-  settings). Probe-touched cells were excluded and their 28 false-positive events are
-  unaudited.
+  saved null mutant fails its own checker, the reserve split (apart from MUT-P1's golds and
+  part (b)'s check of `zinv` on its 8 pptx targets, section 3.7), live-state and web tasks,
+  and every non-office checker (GIMP, VLC, Thunderbird, VS Code, OS settings). Probe-touched
+  cells were excluded and their 28 false-positive events are unaudited.
 - **Ambiguous mutants are out.** 186 of the 1,232 admitted mutants end with an ambiguous
   label, 3 of them z-order swaps. They are counted, kept out of the population and never
   audited, so what the checkers do on them is not described here.
@@ -562,9 +623,13 @@ These bound every result above, and they are stated as plainly as the results.
   the z-order swap dominates says that this catalog found one kind of defect, shape-order
   sensitivity in the pptx comparators; it does not say other checkers are sound against edits
   the catalog lacks.
-- **The correction is validated only on its build split.** `zinv` was developed and validated
-  on the confirm campaign's own z-order mutants. The held-out reserve-split check (R03 part (b))
-  is pending.
+- **The correction's held-out check is small.** `zinv` was developed and validated on the
+  confirm campaign's own z-order mutants. On the held-out reserve split (R03 part (b)) it
+  accepted 13 of 13 z-order mutants and newly accepted 0 of 15 violation mutants, a descriptive
+  PASS below the registered 20 mutants. That bounds its acceptance below at 0.794 per mutant and
+  0.688 per task, not at 95%. The check is offline and rests on the operators' labels, the
+  reserve decks come from the same OSWorld pool, and the study has no unseen pptx target left
+  for another held-out test.
 - **No on-policy consequence shown.** The corrected comparator flipped 0 of 1,808 S1a verdicts
   (two policies, 15 steps). The defect is real on constructed end states; this note does not
   show that it changed any agent's score.
@@ -626,8 +691,8 @@ problem (IEEE TSE 41(5), 2015) [CLAIMS c182].
 **What is left to this note.** Mutation tests of desktop document checkers; false rejects of
 equivalent shape reorders by the pptx comparators, the most frequent candidate error under this
 catalog outside probe-touched cells; gold files that are not a fixed point of the pipeline's
-own save; a VM fidelity check of the offline harness; and a zero on-policy consequence for two
-small policies.
+own save; a VM fidelity check of the offline harness; a corrected comparator with a held-out
+check; and a zero on-policy consequence for two small policies.
 
 ## 7. Reproducing this note
 
@@ -646,7 +711,15 @@ z-order operator's statuses and per-family verdicts, read from `outcomes.jsonl`;
 per reading and their tasks; MUT-P1's raw-passing golds, from the controls summaries; the
 confirm tasks without a target, from the pre-freeze target counts; and the operators in
 Figure 1. The registered analyses themselves are reproduced by the commands in [MUT],
-[K2] and [ADJ].
+[K2] and [ADJ]. Part (b)'s frozen rule recomputes its judgement from the released rows; for
+this revision it gave the committed `judgement.json` again, apart from the last digit of one
+float [ZR]:
+
+```bash
+uv run --locked python -m harness.q2_zinv_reserve.run judge \
+  --rows program/evidence/2026-10-12/q2-zinv-reserve-run/release/zinv-rows.json \
+  --out /tmp/zr-judgement.json
+```
 
 Not in the repository: the mutant documents, packets, rater transcripts and answer reasons,
 because they hold or quote third-party task documents. They are hashed in the committed
@@ -657,8 +730,10 @@ receipts.
 AI agents (Claude models) ran the campaign, the audit, the adjudication and the analyses under
 the program's frozen registrations and decisions, and an AI agent wrote this draft as its single
 author from committed evidence only; the same agent ran the K8 searches. Decisions D80-D82 delegated the adjudication to an isolated
-model. No human has reviewed this note, adjudicated an item or validated a label. Kevin Liu owns
-the program and every outward action, including any disclosure and publication.
+model. AI agents also ran R03 part (b) under its frozen addendum (D86, D88), and a later agent
+session added its result to this draft from the committed run record. No human has reviewed
+this note, adjudicated an item or validated a label. Kevin Liu owns the program and every
+outward action, including any disclosure and publication.
 
 ## Sources
 
@@ -676,6 +751,9 @@ Program evidence (paths from the repository root):
   `summary.json`; [ADJ-AN] its `analysis/analysis.json`.
 - [ZINV] `harness/q2_stage1/zinv.py`; [ZINV-VAL]
   `program/evidence/2026-10-08/q2-stage1-g0/zinv/zinv-validation-v3.json`.
+- [ZR-REG] `program/preregistrations/q2-zinv-reserve-validation-v1.md` (frozen, ledger row 20),
+  the R03 part (b) addendum; [ZR] `program/evidence/2026-10-12/q2-zinv-reserve-run/README.md`
+  and its `release/judgement.json` and `release/zinv-rows.json` (blind warning above).
 - [S1A-REG] `program/preregistrations/q2-stage1-rescoped-v1.md`; [S1A]
   `program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md`; [S1A-RESC]
   `program/evidence/2026-10-10/q2-stage1-analysis/rescore-coverage.json`.
@@ -684,7 +762,7 @@ Program evidence (paths from the repository root):
   (added on this draft's branch).
 - [DOSSIER] `program/evidence/2026-10-11/question-renewal/dossier.md`; [SLATE] `slate.md`;
   [CLAIMS] `claim-registry.json` and `verification.json` in the same directory.
-- Decisions D2, D9, D23, D25, D27, D34, D35, D38, D72, D79, D80, D81 and D82:
+- Decisions D2, D9, D23, D25, D27, D34, D35, D38, D72, D79, D80, D81, D82, D86 and D88:
   `program/decisions.md`.
 
 External sources (arXiv dates are first-version dates, as the program's verifier or K8's arXiv
