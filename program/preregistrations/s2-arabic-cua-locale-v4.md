@@ -1283,8 +1283,8 @@ PRESENT_HARM 0.5, T PRESENT_HARM 0.45, T SMALL 0.35.
    dev tasks only, audited, frozen as its own ledger row), then Phase 1 under D80 (iv) within its cap.
 
 Steps 3 and 4 and the admission of step 5's registered manifests were rehearsed on a scratch clone
-three times: in the repair round at `0a1d18e7` (section "Changes in the repair round (D84): review
-log"); by the third round's auditor at that round's head, with a stand-in resume run directory
+four times: in the repair round at `5d61a63a` (`rehearsal.json`, key `earlier`) and again at
+`0a1d18e7` (section "Changes in the repair round (D84): review log"); by the third round's auditor at that round's head, with a stand-in resume run directory
 remapped in scratch (D90); and by round 4's auditor at `24257614`
 (`program/evidence/2026-10-11/s2v4-image/freeze-rehearsal/rehearsal.json`, key `round4_audit`).
 Round 4's rehearsal ran on a `--shared` clone with its origin removed and its own ledger copy:
@@ -1710,5 +1710,5 @@ Closing round 4. Its one blocking audit item was text, resolved in one text-only
 commit's export (Slurm 1244) and passed every pre-run check, so the restored checks are no longer
 only unit-tested. The commit after it adds that rung's records, updates this text and the evidence
 READMEs, and changes no code. Every S2 v4 test file gives 155 passed and 1 skipped at the round's
-last head, and `pins_table --check` passes. What remains is the freeze procedure's steps 3 and 4
-(the status fill and the freeze).
+last head, and `pins_table --check` passes. The status fill and the freeze (the freeze procedure's
+steps 3 and 4) came next.
