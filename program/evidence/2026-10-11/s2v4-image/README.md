@@ -1,7 +1,7 @@
 # S2 v4: shipped Arabic language packs, derived images and the development smoke
 
 Registration: `program/preregistrations/s2-arabic-cua-locale-v4.md` (DRAFT, not frozen; decision
-D80 (iv); repaired under D84). Nothing here is a Phase 0 result: the fetch and the image builds
+D80 (iv); repaired under D84 and D87). Nothing here is a Phase 0 result: the fetch and the image builds
 construct the instrument, and the smokes and the oracle's development run (dev split only) decide
 nothing registered. The K0 rule was committed (commit `ee0841b3`) before any image existed, and its
 section is unchanged.
@@ -192,6 +192,14 @@ attempt), `smoke-summary.json`, `lane-receipt.json` (host snapshots removed), `p
   a plant); E-S 17/17 and E-E2 17/17 within tol6; AD-AR 16/17 (`ac9bb6cb`: 513 px in Impress's status-bar
   pointer-position readout); O1 text pairs and O4 order 100%; descriptor plants O3 13/17, O2 15/17.
   `k0-dev.json` (development; 89 pool tasks have no record here): 13 dev tasks admitted, 4 runnable.
+- Boot-to-boot pairs (masked, tol6 = 50; corrected in the third round, which found that this file and
+  the registration reported only the AD-AR case): E-E2 0 or 1 px on all 17 tasks; ER-ER2 0-2 px on 13
+  tasks, 13 px on `936321ce` (Writer), and 293, 148 and 139 px on the Impress tasks `2b94c692`,
+  `ac9bb6cb` and `e4ef0baf`; AD-AR 0 px on 16 tasks and 513 px on `ac9bb6cb`. Every differing pixel of
+  the four pairs above tol6 is in Impress's status-bar pointer-position field (y 1064-1076), which takes
+  a fresh value at each boot in the mirrored layout (`2b94c692`'s uncounted first ER attempt matched
+  ER2 to 0 px). The pointer rested at (1732, 978) in all 177 capture renders. The third round adds a
+  pointer warp to the capture (smoke NNNN below).
 
 ## apdelta-dev/ (development, dev split only; repair round)
 
@@ -218,8 +226,14 @@ registered rung each image runs 4 sessions in each setting (sessions 0-19 screen
 accessibility, session i on image i mod 5), as each image's A1 reference does, so the per-image step
 comparison of section "K1" is between like workloads. The job directories (receipts, preflights,
 manifests, session plans) are copied here; the per-trial cycles and VM logs stay on the host. 1218
-repeats 1217 from the same manifest; it was submitted after 1217 ended, on an empty queue, and its
-records agree with 1217's.
+repeats 1217 from the same manifest, and its records agree with 1217's.
+
+Timing relative to R04 (disclosed under D87): both jobs were submitted on an empty queue between steps
+of R04's CPU campaign. 1217 went in about 2 s after R04's job 1216 ended; 1218 went in right after
+1217 ended, while R04's driver was waiting for an empty queue to submit its next step. Neither
+overlapped an R04 job, but R04's next step waited for 1218; R04's report records any effect on its
+timing. These jobs also ran `ap_delta.run_rung` before the third round restored `driver.main`'s
+pre-run checks in it (Docker facts, the VM and runner images, `qemu-img info`, dangling volumes).
 
 ## freeze-rehearsal/ (repair round)
 

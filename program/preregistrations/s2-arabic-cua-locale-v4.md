@@ -323,8 +323,7 @@ One slot is one fresh VM boot on one cell image, running `vm_probe.py` in the ep
 S1a's boot wait; the image check (the guest's selector SHA-256 equals the cell's; none in S); the task's
 own setup offline from the pinned file cache (the PD variant for PD slots; S1a's unmodified call); the
 guard's keyboard warm-up; the pointer warp (below); the 60 s settle; two screenshots 1 s apart; the
-accessibility tree; window
-titles, `setxkbmap -query`, the input-method processes, GNOME's input sources, IBus's engine and each
+accessibility tree; window titles, `setxkbmap -query`, the input-method processes, GNOME's input sources, IBus's engine and each
 LibreOffice process's initial locale variables; the 20 s settle; the SHA-256 and mtime of every file
 the checker reads; the pinned `DesktopEnv.evaluate()` with `DONE` (the task's own postconfig and its
 checker, on the do-nothing state); the guest-server restart check; the files' SHA-256 and mtime again;
@@ -345,9 +344,10 @@ motion event is at one fixed point of the laid-out window. The point was chosen 
 renders: it lies inside the document region of Calc, Writer and Impress in every cell (Impress's
 slide editing window spans about x 275-1510 left to right and x 480-1720 mirrored, y 250-1045; Calc's
 grid x 82-1820, y 281-997; Writer's document x 70-1849, y 246-1034); it lies on the LibreOffice
-window's mirror axis (the window spans x 70-1919, and the mirrored layout shows at x what the
-left-to-right one shows at 1989 - x, so the pointer rests over the same document element in both
-directions); and it is away from the boot's resting point, so the warp always moves the pointer. The
+window's mirror axis (the window spans x 70-1919, and the mirrored layout puts each part of the window
+at the mirror image, about x = 994.5, of its left-to-right place: Impress's slide editing window at
+x 480-1720 for 275-1510), so the pointer rests over the same part of the window in both directions;
+and it is away from the boot's resting point, so the warp always moves the pointer. The
 guest server draws the cursor into every screenshot at the pointer, so every render shows the cursor
 at that point. Gold slots (P0.9) take no screenshot that K0 reads and do not warp.
 
@@ -701,18 +701,47 @@ above, and the screenshots and trees stay on the host.
   slot of S and of the derived cells (the checker raises on PD's planted documents). The Arabic chrome share was 0.95-0.98 in A, AR and AD and 0 elsewhere; the
   menu bar ran right to left in ER, AR, AD and PD. Golds: 13 of the 14 pass in all five admission cells;
   `af23762e`'s fails in all five, E included (no passing-side control).
-- The oracle's development run on smoke 1214 (`oracle_vm.py --k0`, on copies of the renders;
-  `smoke-1214/oracle-dev.json`, `k0-dev.json`): tol6 = tol5 = 50 (the dev tasks' masked E-vs-E2 counts
-  are 0 or 1 px); I1-doc's synthetic plant detected on 17 of 17 tasks, and PD detected on all 15 named
-  tasks (and, correctly, not on `2b94c692` and `bf4e9888`, which have no plant), so the off-screen rule
-  of P0.3 did not fire; I2 17 of 17; I6 17 of 17; I5 16 of 17: on the Impress task `ac9bb6cb` AD
-  differs from AR by 513 px, all in the status bar's pointer-position readout (the pointer's position on
-  the slide differs between the two boots); I3 and I4 at 100%; the O3 and O2 descriptor plants detected
-  on 13 and 15 of 17 tasks (below the 90% descriptor bar on the dev tasks). On the dev tasks K0's
-  admission gives 13 admitted and 4 runnable. These are development numbers: K0 reads Phase 0 proper
-  over the 106 tasks. They show one risk to I5 that K0's fixed masks cannot remove (a status-bar
-  readout that follows the pointer can differ between boots on Impress tasks), recorded here before
-  the freeze.
+- The oracle's development run on smoke 1214 (`oracle_vm.py --k0` on the Mac, on copies of the
+  renders; `smoke-1214/oracle-dev.json`, `k0-dev.json`), before the pointer warp existed. tol6 = tol5 =
+  50 (the dev tasks' masked E-vs-E2 counts are 0 or 1 px). Every boot-to-boot pair the run has (masked
+  counts against tol6 = 50):
+  - E against E2 (the pair I6 reads), 17 tasks: 0 or 1 px on every task.
+  - ER against ER2 (dev tasks only), 17 tasks: 0-2 px on 13 tasks; 13 px on the Writer task
+    `936321ce`; 293 px on `2b94c692`, 148 px on `ac9bb6cb` and 139 px on `e4ef0baf`, three of the seven
+    Impress dev tasks, all above tol6.
+  - AD against AR (the pair I5 reads), 17 tasks: 0 px on 16; 513 px on the Impress task `ac9bb6cb`.
+  - Every differing pixel of the four pairs above tol6 lies in Impress's status bar (y 1064-1076, x
+    about 820-933 in the mirrored layout), in its pointer-position field. On `ac9bb6cb` it read
+    16.46 / 0.90 in ER and 15.62 / 0.90 in ER2, 15.62 / 0.90 in AD and 16.48 / 3.46 in AR. On
+    `2b94c692` the counted ER attempt read 18.32 / 1.50 and ER2 20.23 / 2.92, while the uncounted
+    first ER attempt differed from ER2 by 0 px: the field takes a fresh value at each boot, not one
+    value per task. In the left-to-right cells it read the same value in every boot (-0.39 / -1.40 on
+    `ac9bb6cb`). The pointer itself rested at (1732, 978) in every capture render; the field shows
+    the last motion event LibreOffice received, which in the mirrored layout arrived while the window
+    was being laid out.
+
+  So 4 of the 7 Impress dev tasks varied between boots in a mirrored cell, and I5 was 16 of 17
+  (0.941): on the dev tasks I5 fails its 95% bar. I5 allows at most 5 failures among the 106 pool
+  tasks, 40 of which are Impress tasks; the pre-freeze audit put P(I5 holds) at about 0.48 at the
+  AD-AR rate (1 in 7 Impress tasks) and about 0.01 at the pooled mirrored boot-pair rate (4 in 14), and
+  a failed I5 is an infrastructure exit after about 126 VM-hours. In Phase 1 the step-0 check compares
+  each ER and AR episode with one Phase 0 boot, and the A/A-unstable exemption read only E against E2,
+  so these tasks would have failed step-0 at random. The third round removes the cause in the capture
+  (the pointer warp, P0.7, in Phase 0 and Phase 1) and masks the status bar in step-0 (Phase 1); K0 is
+  unchanged. Smoke NNNN below measures the warp on the dev tasks.
+
+  The other development numbers of this run, stated plainly: I1-doc's synthetic plant was detected on
+  17 of 17 tasks and PD on all 15 named tasks (correctly not on `2b94c692` and `bf4e9888`, which have no
+  plant), so the off-screen rule of P0.3 did not fire; I2 17 of 17; I6 17 of 17; I3 and I4 100%. The O3
+  and O2 descriptor plants were detected on 13 and 15 of 17 tasks (76% and 88%), below the 90% bar: if
+  that held in the census, every O2, O3 and O8 quantity would be labelled instrument-limited, and O8's
+  moderator and P5's O8 route would be dropped (unresolved). K0's admission on the dev tasks: 13
+  admitted and 4 runnable; `af23762e`'s gold fails in all five admission cells, E included, so it has
+  no passing-side control (runnable). What I1-doc's synthetic plant tests in practice: judged against
+  the unplanted render of the same image, it fails only when a task's ER render has no document region
+  or O5's alignment fails, and with its 100% bar a single such task fails K0. One PD slot, or one ER
+  slot of a named dev task, lost twice (unobserved) also fails I1-doc. These are development numbers:
+  K0 reads Phase 0 proper over the 106 tasks.
 - The `ap_delta` development run (Slurm 1217, repeated as 1218 from the same manifest;
   `experiments/manifests/s2v4/apdelta-dev-v1.json`; records `apdelta-dev/`): a harness/q2 development
   workload (L0-fixed, seed 42, three cells, one repetition) on the pinned images, once as a
@@ -723,6 +752,11 @@ above, and the screenshots and trees stay on the host.
   `acceptance.rung` reads the development rung (which cannot qualify at N = 2). The rung's step p95
   (1.90 s) is its accessibility-setting session's (screenshot-setting steps were 0.52-0.70 s in both
   campaigns); the registered rung gives every image 4 sessions in each setting, as its A1 reference has.
+  These jobs ran `run_rung` before the third round restored `driver.main`'s pre-run checks (section
+  "K1"). Both were submitted on an empty queue between steps of R04's CPU campaign (1217 about 2 s
+  after R04's job 1216 ended; 1218 right after 1217 ended, while R04's driver was waiting for an empty
+  queue to submit its next step), so neither overlapped an R04 job, but R04's next step waited for
+  1218 (D87; R04's report records any effect on its timing).
 
 ## Phase 1 (admitted under D80 (iv) if K0 and K1 pass)
 
@@ -733,25 +767,43 @@ above, and the screenshots and trees stay on the host.
 - Order: one serving session (one GPU job and its CPU VM job). Task blocks in a seeded order (PCG64 seed
   42); within a block the 18 episodes in a seeded interleave; cells assigned to VM slots at random within
   each batch of 20, slot and batch recorded.
-- Step-0 check: each episode's first screenshot (after S1a's setup, warm-up and 60 s settle, as the
-  Phase 0 capture slot's first screenshot) against the first screenshot of the Phase 0 render of its
-  (task, cell) from the same lane and image, counted as P0.7 counts (a channel differing by more than
-  20), outside the mask: the GNOME top bar (rows 0-31) and the caret mask of the Phase 0 render (the
-  pixels that differ between its two screenshots 1 s apart; the episode has one screenshot, so its own
-  caret cannot be masked, and a caret blinking at the reference's place differs by far fewer pixels
-  than tol6's 50-pixel floor). The episode is valid if the count is at most tol6 (K0's tolerance, frozen
-  with K0's oracle record); a mismatch makes it invalid.
+- Pointer warp, at every episode start: after the guard's warm-up and before the 60 s settle, the
+  pointer is moved once to (995, 540) exactly as in P0.7 (`vm_probe.warp_pointer`: one absolute XTest
+  motion, read back); a failed warp is an infrastructure loss. So the agent's first screenshot shows
+  the cursor at (995, 540), over the document region, not where the boot leaves it ((1732, 978) in
+  every capture render of smoke 1214). S1a's episodes started from the boot's resting point, so this
+  is a difference from S1a that K5's comparison of the en cell with S1a's English success carries
+  (disclosed).
+- Step-0 check: each episode's first screenshot (after S1a's setup, the warm-up, the pointer warp and
+  the 60 s settle, as the Phase 0 capture slot's first screenshot) against the first screenshot of the
+  Phase 0 render of its (task, cell) from the same lane and image, counted as P0.7 counts (a channel
+  differing by more than 20), outside the mask: the GNOME top bar (rows 0-31); LibreOffice's status
+  bar (rows 1060-1079, below its top border at row 1059 in every dev render of Calc, Writer and Impress
+  in both directions; it holds Impress's pointer-position field, the only part of the screen smoke 1214
+  saw change between boots); and the caret mask of the Phase 0 render (the pixels that differ between
+  its two screenshots 1 s apart; the episode has one screenshot, so its own caret cannot be masked,
+  and a caret blinking at the reference's place differs by far fewer pixels than tol6's 50-pixel
+  floor). The status-bar rows are step-0's own mask, a Phase 1 rule; K0's masks are unchanged. The
+  episode is valid if the count is at most tol6 (K0's tolerance, frozen with K0's oracle record); a
+  mismatch makes it invalid.
 - Step-0 and the A/A gate (I6 lets up to 5% of tasks exceed tol6 between E and E2, while K3 stops Phase
   1 above 2% step-0 failures in a cell; a task whose screen varies between boots would fail step-0 in
   every episode). A task whose Phase 0 E against E2 count exceeds tol6 is A/A-unstable: its episodes
   take no step-0 check (the image check and the keyboard check still run), they are valid, they are
   outside K3's base, and every estimand is also reported without the A/A-unstable tasks. K0 is not
-  touched: this reads its I6 per task.
+  touched: this reads its I6 per task. The census has a second boot of the mirrored layout (ER2) only
+  for the 17 dev tasks, so the A/A reading per task is E against E2 in every cell. The mirrored-layout
+  variation smoke 1214 found (Impress's status-bar pointer field: above tol6 between ER and ER2 on 3 of
+  the 7 Impress dev tasks and between AD and AR on 1, never between E and E2) is removed at its cause by
+  the pointer warp (smoke NNNN) and lies inside step-0's status-bar mask in any case. A mirrored-layout
+  variation elsewhere on the screen would still count against K3, and is reported per cell.
 - Keyboard check, at every episode start: the guest's `setxkbmap -query` layout, its set of running
   input-method processes and GNOME's configured input sources (`gsettings get
   org.gnome.desktop.input-sources sources`) each equal the stock cell S's record of the same task in
-  Phase 0 (the development smokes record `us,us` and `ibus-daemon` in every slot, S included); a
-  difference is an infrastructure loss.
+  Phase 0 (the development smokes record `us,us` and `ibus-daemon` in every slot, S included); when that
+  task's S slot is unobserved (lost twice; S is not an admission cell), they must equal one of the
+  census's S records (in smokes 1201, 1214 and NNNN every S slot recorded the same facts); a difference
+  is an infrastructure loss.
 - Image check: the guest's selector SHA-256 equals the cell's at every episode start; a mismatch is an
   infrastructure loss.
 - Postconfig server errors: the one rule (section "Infrastructure failures and exclusions"): a
@@ -884,7 +936,7 @@ assumed identical). The P0.6 suite: attempt 1's seeds (42, 43, 44, 45).
 
 | Job | Cap (GPU-h) | Arithmetic |
 |---|---:|---|
-| Phase 0 (P0.6, capture and gold sweep, oracle) | 0 | CPU-only lane and container jobs, no GRES; about 46 + 80 VM-hours |
+| Phase 0 (P0.6, capture and gold sweep, oracle) | 0 | CPU-only lane and container jobs, no GRES; about 44 + 95 VM-hours |
 | Overlay build and pre-funded retry | 0.10 | 3 + 3 minutes, as S1a |
 | Phase 1 (one job, K at most 106, n = 4 in the 2x2, n_pl = 2) | 6.73 | ceil(3 + 113.2/60 + (1,908 x 197.73/20 + 104.6) x 1.2 x 1.05 / 60) = 404 minutes |
 | Registered total | 6.83 | below D20's 8 GPU-h line; admitted by D80 (iv) if K0 and K1 pass |
@@ -893,7 +945,8 @@ assumed identical). The P0.6 suite: attempt 1's seeds (42, 43, 44, 45).
 
 One rule for Phase 0 and Phase 1. As `q2-stage1-rescoped-v1` section 15 and D56, plus the image check,
 the keyboard check and one departure: an undelivered observation, a guest-server restart, a guest
-transport failure (no reply), a setup step that fails in the guest, a postconfig server error (a
+transport failure (no reply), a setup step that fails in the guest, a failed pointer warp (the guest
+cannot make it, or the pointer reads back elsewhere; P0.7), a postconfig server error (a
 postconfig `/setup/*` reply with no HTTP status or a status of 500 or above), a VM or container failure,
 an engine error or timeout, a failed keyboard check and a failed image check are infrastructure losses;
 a step-0 mismatch is invalid. Both are re-queued (at most twice in Phase 1, at the end of the task block;
@@ -954,7 +1007,10 @@ EXCESS_OVER_PLACEBO given D PRESENT_HARM 0.5, T PRESENT_HARM 0.45, T SMALL 0.35.
    build (reproducible, re-pinned), the per-slot lane with the `phase0` purpose and the census, the
    capture probe with the P0.10 reader, the gold slot and the gold rows, the PD variant, the oracle's VM
    adapter with the reader of the sweep's records into `k0_v4.decide`'s inputs, and `ap_delta.py` with
-   its K1 plan, verdict and batch file (development runs: section "Development smoke").
+   its K1 plan, verdict and batch file. Third round (D87): the pointer warp in the capture, the resume
+   counted in job order with its manifest computed and checked from the interrupted job's records,
+   `run_rung`'s pre-run checks, the oracle's registered route (development runs: section "Development
+   smoke").
 2. A fresh code review and a fresh agent's pre-freeze audit check this file against the images, the
    code and the K0 commitment.
 3. Status fill, one commit: the status paragraph's first line becomes "**Status: frozen in
@@ -969,21 +1025,33 @@ EXCESS_OVER_PLACEBO given D PRESENT_HARM 0.5, T PRESENT_HARM 0.45, T SMALL 0.35.
 5. From the freeze commit's export (its `.git_sha` is the freeze commit): P0.6 (K1) through `ap_delta.py
    render` (which checks the freeze commit with git) and `submit`, one job at a time, and `ap_delta.py
    verdict`; then the capture and gold sweep through `vm_lane.py render-census --freeze-commit` and
-   `submit`; then the oracle (one CPU container job, `oracle_vm.py --k0`) and `k0_v4.decide` (K0).
+   `submit` (and, if the census job is interrupted, its one resume through `render-census
+   --resume-from-records`); then the oracle (the registered container job of P0.7, `oracle_vm.py
+   --k0`) and `k0_v4.decide` (K0).
 6. If K0 and K1 pass as registered: the Phase 1 executor addendum (section "Phase 1": built, dry-run on
    dev tasks only, audited, frozen as its own ledger row), then Phase 1 under D80 (iv) within its cap.
 
 Steps 3 and 4 and the admission of step 5's registered manifests were rehearsed on a scratch clone in the
-repair round (section "Changes in the repair round (D84): review log").
+repair round (section "Changes in the repair round (D84): review log"), at `0a1d18e7`, before the third
+round. A resume manifest is now admitted only against the interrupted job's run directory, so a
+rehearsal of it needs a stand-in run directory; the unit tests do that
+(`tests/test_s2v4_vm_lane.py`), and the next rehearsal repeats the rest at the third round's head.
 
 ## Code and inputs of record
 
 Phase 0 and K1 run from the freeze commit's export (D56's words). The table gives the SHA-256 of every
-file they run or read at this file's commit; the status-fill commit re-fills it (`python -m
-harness.s2_locale.pins_table`), and `tests/test_s2v4_registration.py` keeps it equal to the tree, so the
-frozen text names the K0 code (`k0_v4.py`, `k0_inputs.py`, `oracle_vm.py` and the v3 oracle and plants it
-reuses), the lane, probe, gold slot and guest helper, the census, the gold rows, the PD variant, the K1
-plan and `ap_delta.py`, the image pins and the batch files.
+file they run or read at this file's commit: first the S2 v4 code and inputs (the K0 code: `k0_v4.py`,
+`k0_inputs.py`, `oracle_vm.py` and the v3 oracle and plants it reuses; the lane, probe, gold slot and
+guest helper; the census, the gold rows, the PD variant, the K1 plan and `ap_delta.py`; the image pins
+and the batch files), then, sorted, the shared code they import (found by walking the imports of the
+lane, the probe, the gold slot, the oracle, the K0 reader, the PD variant's builder, the image build
+and `ap_delta`: S1a's lane, driver and OSWorld adapter, harness/q2's VM modules, the K2 injection
+executor and the checker-mutation controls), the guest scripts the lanes run in the VM (the guard,
+the K2 guest helper), and every file of harness/q2's closed world, which K1 runs through harness/q2's
+driver and which its own frozen executor addendum also pins (`pins_table.files`). The status-fill
+commit re-fills the table (`python -m harness.s2_locale.pins_table`), and
+`tests/test_s2v4_registration.py` keeps it equal to the tree and checks that it holds every file of the
+import walk.
 
 <!-- PINS:BEGIN -->
 | File | SHA-256 |
@@ -996,7 +1064,7 @@ plan and `ap_delta.py`, the image pins and the batch files.
 | `harness/s2_locale/capture.py` | `6781c860f0ef0e8ff5a21e7f045f36ea47da19f575519be217bca52ca2614f7c` |
 | `harness/s2_locale/catalog.py` | `9b95de047690570766e458fccce16ba90a8d0123b13cf3dc99d1f9e37fce57bf` |
 | `harness/s2_locale/vm_lane.py` | `5ce51aee378123adb77a1ecd9b857d0ba525ec1960f893c87a3e716f202a115f` |
-| `harness/s2_locale/vm_probe.py` | `af599a7e27d31170207a373d4a93342bebb4ed22d6263c7f9ae1f0d9ec59b9c4` |
+| `harness/s2_locale/vm_probe.py` | `f8894240c97edd3c7ef21faddb4588fb1ca5c453f7b991b77ac165cf3ee1749c` |
 | `harness/s2_locale/vm_gold.py` | `20ccb99a03ed311a7db15a81da19d8d6a3e4aa150636b9bb53aa957e6821a27f` |
 | `harness/s2_locale/guest/s2_guest.py` | `891170d8265665b0cbccca18bc6f7470ae1fcbc6f0cad5b514bf13e43b5bb94b` |
 | `harness/s2_locale/golds.py` | `0d8fad9fde736ee3fcd80492b5c905d7d6a35e690f9cf66559cf42ff87c25f9e` |
@@ -1146,6 +1214,17 @@ Added in the repair round (D84):
 99. Phase 1's runner and analysis code as an executor addendum, dry-run on dev tasks, audited and frozen as
     its own ledger row before any Phase 1 episode.
 
+Added in the third round (D87):
+
+100. One warp of the pointer to (995, 540) after the warm-up and before the 60 s settle, in every Phase
+     0 capture slot and at every Phase 1 episode start (P0.7, Phase 1).
+101. Phase 0's records counted in job order (the lane receipts), a cut re-queue rerun by the resume, the
+     resume manifest computed from and checked against the interrupted job's records, at most one resume
+     (P0.7).
+102. Step-0's own mask adds LibreOffice's status bar (rows 1060-1079); K0's masks are unchanged (Phase 1).
+103. The oracle's registered route: the metric image and the argv pinned, its environment recorded
+     (P0.7).
+
 ## Changes in the repair round (D84): review log
 
 A fresh code review and a fresh pre-freeze audit of `47c169f9` found the package not ready to freeze
@@ -1195,7 +1274,7 @@ Pre-freeze audit, not blocking:
 | K0 committed before any Phase 0 result; `k0_v4.py` implements it | Confirmed; the K0 section is byte-identical (`ed38b953...`, tested) and `k0_v4.py` is unchanged |
 | Wave 2 defect 4: state the K8 consequence at the p95 slot price | Fixed: Phase 1's cap paragraph states it (7.70 GPU-h needed, 6.83 admitted, K8 at the last complete block) |
 | K1 takes about 40 hours of serial jobs and image hashing | Budgeted: each `ap_delta` job's minutes include the image checks; one job at a time on an empty queue |
-| I6 lets 5% of tasks fail A/A while K3 allows 2% step-0 failures | Fixed without touching K0: A/A-unstable tasks take no step-0 check and are outside K3's base, and every estimand is also reported without them |
+| I6 lets 5% of tasks fail A/A while K3 allows 2% step-0 failures | Not fixed in this round (corrected in the third round): A/A-unstable tasks (E against E2 above tol6) take no step-0 check and are outside K3's base, and every estimand is also reported without them, but that rule reads only E against E2, and smoke 1214 had already shown boot-to-boot differences in the mirrored cells that it does not cover (ER against ER2 above tol6 on 3 Impress dev tasks, AD against AR on 1). The third round removes their cause (the pointer warp) and masks the status bar in step-0 (section "Changes in the third round (D87): review log") |
 | PD rested on container renders | Fixed: dev-tested in the VM on all named tasks, with a rule for an off-screen plant fixed before the freeze |
 | Pin `k0_inputs.py` and `k0_v4.py`; `k0_inputs` drops tasks with no records | Fixed: both are in section "Code and inputs of record"; `k0_inputs.admission` lists every pool task (unobserved tasks are excluded, not dropped) |
 | "The freeze commit or its successor" is vague | Fixed: D56's words in section "Identity", enforced by the lane and `ap_delta` |
@@ -1207,8 +1286,43 @@ Closing the round: `main` was merged in with every ledger row kept (rows 19 and 
 experiments'; this id still has none); the `ap_delta` development jobs' records were committed
 (`apdelta-dev/`, section "Development smoke"); the evidence README's statements about the superseded
 builds were corrected; and the scratch freeze rehearsal was repeated at the merged head
-(`freeze-rehearsal/rehearsal.json`). Found in development and not fixed in this round, recorded for
-the next review: the Impress status bar's pointer-position readout made AD differ from AR on
-`ac9bb6cb` (section "Development smoke"); parking the pointer before the capture would be a change to
-P0.7's capture, not to K0, and would need a development smoke on the host first.
+(`freeze-rehearsal/rehearsal.json`). The round left one development finding unresolved: Impress's
+status-bar pointer-position field varied between boots in the mirrored cells (smoke 1214, section
+"Development smoke"), and this log reported only its AD-against-AR case. The fresh review and audit
+found the rest and made it blocking (D87); the third round resolves it (next section).
 
+
+## Changes in the third round (D87): review log
+
+A fresh code review and a fresh pre-freeze audit of `b3c5537f` found the package not ready to freeze,
+with two blocking items (D87). Every item, and what this round did. "Fixed" items are in the code and
+text above; the development runs are under `program/evidence/2026-10-11/s2v4-image/` (smoke NNNN and
+the oracle-route job MMMM).
+
+Blocking (the review and the audit found both):
+
+| Item | Disposition |
+|---|---|
+| B1. Impress's status-bar pointer-position field changes from boot to boot in the mirrored cells: in smoke 1214, ER against ER2 above tol6 on 3 of the 7 Impress dev tasks (293, 148 and 139 px) and AD against AR on 1 (513 px), E against E2 never. I5 is 16 of 17 on the dev tasks, and P(I5 holds) is about 0.48 to 0.01; Phase 1's A/A exemption read only E against E2; the registration reported only the AD-AR case, called the I6/K3 fix "Fixed" and left an open item "recorded for the next review" | Fixed in the capture; K0 untouched. (a) The pointer warp: one absolute XTest motion to (995, 540) after the warm-up and before the 60 s settle, read back, through the guest helper (`s2_guest.py` mode `pointer`, `vm_probe.warp_pointer`), in every Phase 0 capture slot (P0.7) and at every Phase 1 episode start (Phase 1); P0.7 states the point, the mechanism and the reason; a failed warp is an infrastructure loss. Tests: the probe warps once, after the warm-up and before the settle; a pointer read back elsewhere is a loss; the guest mode sends one MotionNotify at the target (`tests/test_s2v4_vm_lane.py`). (b) Phase 1's A/A rule matched to the layout through step-0's own mask of LibreOffice's status bar (rows 1060-1079; the audit's second option); the A/A-unstable reading stays E against E2, since the census has ER2 only for the dev tasks (stated in Phase 1). (c) Every boot-to-boot pair of smoke 1214 is reported (section "Development smoke"), the repair-round log's I6/K3 disposition is corrected, and its closing note's open item is replaced. (d) Smoke NNNN, smoke 1214's shape on the dev tasks with the warp: RESULTS. (e) The forecast is revised |
+| B2. Which records count after a resumed Phase 0 job depended on the order of `--runs`; a first-attempt loss whose re-queue the interruption cut counted as final (unobserved after one loss); the resume manifest was checked only loosely (any later block, any 64-hex string, any number of resumes), and nothing rendered it | Fixed. `k0_inputs.run_order` and `load_runs` put the run directories in job order by the lane receipt's job id, which must agree with its `t_start` (refused otherwise; at most two jobs, the second the resume of the first), and `oracle_vm` reads its renders through them. `final_in_job`: probed, or lost on the second attempt; a cut re-queue is not final and the resumed job reruns the slot (chosen over "counts as unobserved"; P0.7). `vm_lane.py render-census --resume-from-records RUN_DIR/probes.jsonl` computes `resume_from_block` and `resumes` (job id, run directory, records SHA-256) from the interrupted job's run directory, and `check_registered` recomputes them and admits only that rendering; a resumed job is not resumed again, `submit` refuses a second census job and a second resume (`check_once`), and `phase0` is pinned to its run root. Tests: the order of the arguments does not matter; directories without a job order are refused; a cut re-queue is rerun; the rendered resume is admitted and every edit of it refused; one census job and one resume (`tests/test_s2v4_k0.py`, `test_s2v4_oracle_vm.py`, `test_s2v4_vm_lane.py`) |
+
+Not blocking:
+
+| Item | Disposition |
+|---|---|
+| K0 byte-identical and `k0_v4.py` unchanged; the S2 v4 tests pass; the ledger equals main's | Confirmed: the K0 section hashes to `ed38b953...` (tested), `k0_v4.py` is unchanged since `ee0841b3`, and `main` was merged with every ledger row kept (rows 1-20; this id has none) |
+| Reproducibility from the double-build records; the K1 checks the owner's rehearsal skipped (C2, A5, A6, A1 and A2 on PL) admitted from a freeze export; no network inside measurement VMs; the postconfig rule implemented; the P0.10 reader matches the checkers | Confirmed by the review and the audit; nothing to change. A1 and A2 on PL fit one job with 46 and 96 minutes of headroom (noted) |
+| The code-and-inputs table omitted the shared code the lanes import | Fixed: the table lists the S2 v4 files, the shared code found by walking the imports of the lane, probe, gold slot, oracle, K0 reader, PD builder, image build and `ap_delta` (S1a's lane, driver and OSWorld adapter; harness/q2's VM modules; the K2 executor; the checker-mutation controls and offline evaluator), the guest scripts the lanes run in the VM (the guard, the K2 guest helper) and harness/q2's closed world (`pins_table.files`); a test checks that the table holds the whole import walk. `smoke_summary.py`, which the review listed, is a development summary that no registered job imports or runs, so it is not listed |
+| The registered oracle route never ran as registered; its image (the metric image, not v3's oracle image) and argv were not pinned | Fixed: P0.7 pins the image ID and the argv (`oracle_vm.ORACLE_IMAGE_ID`, `registered_argv`), and the output records the interpreter and the numpy, scipy and Pillow versions. The route ran on the dev records as a CPU container job: ORACLE |
+| Census timing: 4.3 minutes per attempt, so about 4.9 hours and 95 VM-hours, not 3.5 minutes, 4 hours and 80 VM-hours; 81 CPUs against smoke 1214's 82 | Fixed in the text (P0.7, "Order and cost", compute caps). The 364-minute request stays (about 20% above the expected time; an overrun is the resume rule's case); Slurm rounds the 81 CPUs requested to 82, as it did for smoke 1214 |
+| K1's table sums to about 44.3 VM-hours, not 46 | Fixed |
+| `run_rung` dropped `driver.main`'s pre-run checks | Fixed: restored with harness/q2's own functions (Docker's facts, the VM image's ID and digest, the runner image, per image the file checks and `qemu-img info`, the dangling volumes before and after) and tested, including a missing runner image stopping the rung before any session; development jobs 1217 and 1218 ran without them (disclosed) |
+| `check_registered` matched K1 plan entries on the first campaign's cells only | Fixed: every campaign of a `k1` job must name the first campaign's cells and mount its image; tested |
+| Development numbers to state plainly (the descriptor plants, I1-doc's practical meaning, K0 on the dev tasks, `af23762e`'s gold) | Fixed (section "Development smoke") |
+| Phase 1's keyboard reference when S was unobserved | Fixed: then any of the census's S records (Phase 1) |
+| The timing of 1217 and 1218 relative to R04 was not in the evidence README | Fixed: in the README and in section "Development smoke" (D87) |
+| Frozen-text wording ("Evidence for this draft", "done in this draft's run") | Fixed: "Evidence", "done before the freeze" |
+| Optional hardening: `validate_manifest` comparing the export's files with the frozen table | Not done: the run-time gate stays `check_export` (the export's `.git_sha` is the manifest's freeze commit, which `render-census` and `ap_delta.py render` check with git); the tests check the table against the tree at the freeze commit |
+| Program records; superseded images on the host | The orchestrator's; unchanged (build 1199's images and build 1207's copy b are kept, unpinned) |
+
+Tests at this round's head: TESTS.
