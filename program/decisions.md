@@ -1752,3 +1752,40 @@ follows.**
   session (after its 9B pair starts and before its 4B pair ends). Between
   another workstream's campaign steps, a job goes in only when that
   workstream's own driver is not about to submit.
+
+**D88. R03 part (b) result: `zinv` passes the held-out reserve test
+(descriptive), and the original comparator's z-order defect replicates on
+held-out tasks.**
+- The run. `q2-zinv-reserve-validation-v1` (row 20) ran plan `reserve-v1`
+  from its freeze commit `ff802ca5`: Slurm 1226-1229, CPU only, all exit 0,
+  0.221 of 4.0 lane-hours, 0 GPU-h. Of 106 rows, none was invalid.
+- Registered outcome: **PASS, status descriptive**, because n_Z = 13 < 20
+  while t_Z = 8 meets its floor.
+  - Condition A: `zinv` accepted 13 of 13 z-order equivalence mutants on the 8
+    reserve pptx tasks. The exact one-sided 95% lower bound is 0.794 per
+    mutant and 0.688 per task.
+  - Condition B: of 15 violation mutants on 5 tasks, `zinv` newly accepted 0.
+    The one-sided 95% upper bound is 0.181 per mutant.
+  - 93 of 93 other items kept their verdict, and `zinv` raised no errors.
+- Replication of the defect. The original `compare_pptx_files` rejected 13 of
+  13 of the same held-out z-order equivalence mutants. That replicates the
+  defect on tasks and documents that were never used to find it or to build
+  the fix.
+- What this licenses (section 7). The correction held on reserve documents it
+  was not developed on, at this size. It is not an estimate of a 95% rate. The
+  blind warning stays on the per-mutant verdicts, because D9's human spot
+  check is pending.
+- Verification. A fresh verifier reproduced the outcome:
+  - every receipt's argv and image, against the staged tree;
+  - that tree, against `ff802ca5`, by blob id;
+  - the release, against the host, byte for byte;
+  - the judgement, by the frozen `rules.judge` and by an independent
+    re-implementation of section 6.
+  It found only information-level items:
+  - the run continued a plan staged by an earlier operator session that never
+    submitted a step;
+  - steps 2-4 went in with no separate E check, though none could reach E2's
+    earliest start;
+  - one float differs in its last digit.
+- Next. Add the result to the R03 note, and to the Q2 report where it
+  discusses `zinv`.
