@@ -198,8 +198,8 @@ attempt), `smoke-summary.json`, `lane-receipt.json` (host snapshots removed), `p
   `ac9bb6cb` and `e4ef0baf`; AD-AR 0 px on 16 tasks and 513 px on `ac9bb6cb`. Every differing pixel of
   the four pairs above tol6 is in Impress's status-bar pointer-position field (y 1064-1076), which takes
   a fresh value at each boot in the mirrored layout (`2b94c692`'s uncounted first ER attempt matched
-  ER2 to 0 px). The pointer rested at (1732, 978) in all 177 capture renders. The third round adds a
-  pointer warp to the capture (smoke NNNN below).
+  ER2 to 0 px). The cursor is drawn at the same point in all 177 capture renders (the boot's resting point, (1728, 972) as the third round's warp reads it). The third round adds a
+  pointer warp to the capture (smoke 1240 below).
 
 ## apdelta-dev/ (development, dev split only; repair round)
 
@@ -234,6 +234,45 @@ of R04's CPU campaign. 1217 went in about 2 s after R04's job 1216 ended; 1218 w
 overlapped an R04 job, but R04's next step waited for 1218; R04's report records any effect on its
 timing. These jobs also ran `ap_delta.run_rung` before the third round restored `driver.main`'s
 pre-run checks in it (Docker facts, the VM and runner images, `qemu-img info`, dangling volumes).
+
+## smoke-1240/ (development, dev split only; third round, D87: the pointer warp)
+
+Slurm 1240 (CPU only, `s2v4-vm.sbatch`, export of `688b2880`, manifest
+`experiments/manifests/s2v4/dev-smoke-v4.json`: smoke 1214's 240 slots under a new name; 81 CPUs
+requested, 82 allocated, 126 GB, V = 20; 49 minutes). Submitted at 09:51 UTC on an empty queue, once
+R04's campaign had no step pending (its round-2 score had ended at 09:49 and its plan had no open step
+for three checks a minute apart); no E session was in progress. `probes.jsonl` (every attempt),
+`lane-receipt.json` (host snapshots removed), `preflight.txt`, `smoke-summary.json`
+(`smoke_summary.py` on a copy of the capture records and renders).
+
+- 240 of 240 slots probed; 4 re-queued once after a guest-server restart (end-of-slot check) and
+  probed on the second attempt; `lane_exit=0`, no labelled container left.
+- The pointer warp ran in all 174 capture attempts: before (1728, 972), after (995, 540), about
+  0.23 s in the guest. Gold slots do not warp.
+- Held fixed in every slot, S included, as in smoke 1214 (keyboard, input method, input sources, IBus
+  engine, the guest server's and LibreOffice's `en_HK` locale variables, fonts, P0.10's values).
+- Every postconfig save rewrote its file; do-nothing verdict `fail` everywhere but PD (`error` on the
+  15 planted documents); golds 13 of 14 pass in all five admission cells, `af23762e`'s fails in all
+  five.
+
+## oracle-route-1241/ (development; the oracle's registered route, third round)
+
+Slurm 1241 (CPU only, `s2v4-cpu.sbatch` run mode, `--network=none`, submitted right after 1240 ended,
+on an empty queue): the metric image `sha256:2006c1a9...` running `oracle_vm.registered_argv(1)` on
+smoke 1240's run directory (read-only at `/ro/run1`), the export of `688b2880` at `/src`; 34 s.
+`oracle.json` and `k0.json` (development only), `receipt-1241.json`, `slurm-1241.out`, and
+`mac-crosscheck.json`: the same code on the Mac, on a copy of the records and renders, gave the same
+metrics, tolerances, instrument checks and K0 output in a different environment (Python 3.13, numpy
+2.5, scipy 1.18, Pillow 12.3, against the container's Python 3.12.13, numpy 1.26.4, scipy 1.17.1,
+Pillow 11.0.0); one reported per-task mean displacement differs in its last digit.
+
+- tol6 = 50; tol2 0.0202, tol3 18; I1-doc holds (17/17, PD 15/15); I3, I4 100%.
+- I5 AD-AR 17/17 (0 px everywhere); I6 E-E2 17/17 (at most 1 px); the three ER-ER2 tasks of 1214 at
+  0 px.
+- Not resolved: Impress's pointer-position field took another value in 2 of the 70 Impress capture
+  boots (the window's layout still changed after the warp): ER-ER2 142 px on `af23762e` and E-S 148 px
+  on `ac9bb6cb` (I2 16/17), every differing pixel in rows 1066-1074 of the status bar.
+- Descriptor plants O3 17/17, O2 15/17; K0's admission on the dev tasks 13 admitted, 4 runnable.
 
 ## freeze-rehearsal/ (repair round)
 

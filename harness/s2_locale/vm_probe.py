@@ -76,9 +76,9 @@ P010_ALL = tuple(k for keys in P010_KEYS.values() for k in keys)
 # document x 70-1849, y 246-1034); on the LibreOffice window's mirror axis (the window spans
 # x 70-1919, and the mirrored layout puts each part of the window at the mirror image, about
 # x = 994.5, of its left-to-right place, so the pointer rests over the same part of the window in
-# both directions); and away from the point where the boot leaves the pointer (1732, 978) in
-# all 177 capture renders of smoke 1214 (the guest server draws the cursor into every screenshot
-# at the pointer), so the warp always moves it.
+# both directions); and away from the point where the boot leaves the pointer, (1728, 972) as the
+# warp reads it in every slot of smoke 1240 (the screenshots of smoke 1214 show the cursor there in
+# all 177 capture renders), so the warp always moves it.
 POINTER_TARGET = (995, 540)
 
 

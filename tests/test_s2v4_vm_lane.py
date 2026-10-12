@@ -457,7 +457,7 @@ class FakeGuest:
         if args[0] == "pointer":
             cfg = json.loads(args[1])
             target = [cfg["x"], cfg["y"]]
-            return {"target": target, "before": [1732, 978],
+            return {"target": target, "before": [1728, 972],
                     "after": self.pointer_after or target}
         if args[0] == "hash":
             self.hashes += 1
@@ -519,12 +519,12 @@ def test_probe_warps_the_pointer_after_the_warm_up_and_before_the_settle(tmp_pat
     start = events.index("warm_up")
     assert events[start:start + 3] == ["warm_up", "pointer", ("sleep", 60.0)]
     assert events.count("pointer") == 1  # once per boot
-    assert rec["pointer"] == {"target": list(P.POINTER_TARGET), "before": [1732, 978],
+    assert rec["pointer"] == {"target": list(P.POINTER_TARGET), "before": [1728, 972],
                               "after": list(P.POINTER_TARGET), "moved": True}
 
 
 def test_a_pointer_read_back_elsewhere_is_infrastructure(tmp_path):
-    guest = FakeGuest(SEL["E"], pointer_after=[1732, 978])
+    guest = FakeGuest(SEL["E"], pointer_after=[1728, 972])
     rec = _probe(tmp_path, SEL["E"], SEL["E"], guest=guest)
     assert rec["status"] == "infrastructure" and rec["infrastructure_type"] == "probe:pointer"
     assert "post_setup" not in rec  # nothing is observed after a failed warp
@@ -538,7 +538,7 @@ def test_guest_pointer_mode_is_one_absolute_xtest_motion(monkeypatch):
     import types
 
     calls: list = []
-    position = {"xy": (1732, 978)}
+    position = {"xy": (1728, 972)}
 
     class Reply:
         def __init__(self, xy):
@@ -578,7 +578,7 @@ def test_guest_pointer_mode_is_one_absolute_xtest_motion(monkeypatch):
     spec.loader.exec_module(guest)
     monkeypatch.setattr(guest.time, "sleep", lambda s: None)
     out = guest.MODES["pointer"]({"x": 995, "y": 540})
-    assert out == {"target": [995, 540], "before": [1732, 978], "after": [995, 540]}
+    assert out == {"target": [995, 540], "before": [1728, 972], "after": [995, 540]}
     motions = [c for c in calls if isinstance(c, tuple) and c[0] == "fake_input"]
     assert motions == [("fake_input", 6, 995, 540)]  # one jump, no intermediate position
     assert calls.index("sync") > calls.index(motions[0]) and calls[-1] == "close"
