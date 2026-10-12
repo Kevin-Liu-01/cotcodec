@@ -5188,3 +5188,50 @@ they say so.)
   `release/`, exactly as `zr_host.py export` wrote it (23 files, digests in its manifest). The
   blind warning (D9, D82) applies to every per-mutant verdict file. Mutant documents and step
   logs stay on the host. No outward action.
+## 2026-10-12 — R04 `r04-checker-nuisance-invariance-v1` frozen (ledger row 18) and run: build DRIFT, locale DRIFT, route MINOR; gates pass (branch `ops/r04`, not merged)
+
+- Blind warning: the R04 outputs name checker verdicts per gold task and S1a state. The
+  checker-mutation pool and spot check were adjudicated by an isolated model (D81, D82); if
+  Kevin does his optional human spot check (D9) blind, he does it before reading
+  `program/evidence/2026-10-12/r04-nuisance-confirm/`.
+- Freeze (D80; section 17), by an operator who did not draft the file, on `main`: fill
+  commit `c908b978` on `c0971a77` (status paragraph, `code_tree_sha256` `1ffe2d19...`,
+  code-of-record row); scratch freeze first (R04 suite 62 passed at the scratch freeze
+  commit; the ledger-touching suites 574 passed, 11 skipped); then `freeze`, `check-chain`,
+  `verify` and the freeze commit `e312e996` with row 18 alone (row hash `f7b350a3...`,
+  registration SHA-256 `1191a4a0...`, 2026-10-11T18:27:01Z; R04 suite 62 passed), pushed.
+  At the fill commit itself one R04 test failed by construction (the frozen status line needs
+  the ledger row of the next commit).
+- Run (section 6) from a `git archive` export of `e312e996` on the host, CPU only: plan
+  `r04-registered-v1 --registered`, 14 main jobs (1187-1225), `analysis --run` (108 items,
+  24 of them golds, pending under 11 cells), `confirm`, 10 round jobs (1230-1239), `analysis
+  --run`, then the same with `--k2-report`. Every job was submitted by the host tool on an
+  empty queue and finished on its first attempt; the last main job waited for successor E's
+  first session (1219-1224) to end. 24 jobs, 10.27 lane-hours of the 20 h cap (main 8.04,
+  rounds 2.23), 328.6 allocated CPU-h, 0 GPU-h. The workflow's first operator instance
+  stopped polling at 03:33 UTC; a second instance resumed from the same plan at 04:28 UTC.
+- Items: 553 (92 golds, equal to P1's counted golds; S1a 270 pass, 180 fail, 11 mixed
+  states). Every cell saved every item (556 saves per cell, no failure, no dialog), every pair
+  is valid, no scoring failure; the em-dash title fallback was used on 553 items in each
+  `ctrl_s` and `store_as` cell of B2-B5 and nowhere else.
+- Gates: control retained, V1 pass (92 of 92, 0 differences), V2 pass (replicate: 0
+  discordances). Both rounds reproduced every discordance: 0 unstable, no `harness_noise`.
+- **Readings (pinned checker; `zinv` identical):** build arm **DRIFT** (B1-B3 INVARIANT; B4
+  TDF 25.8.7.3 DRIFT, `k_gold` 18 of 92, `t_s1a` 6 of 32; B5 TDF 26.2.6.2 DRIFT, 20 and 6;
+  `compare_pptx_files` 17-18 golds and 67 pass states, identical across all three routes);
+  locale arm **DRIFT** (de_DE 3 and 1, ar_EG 4 and 2, tr_TR 3 and 1, all three on the same
+  `compare_table` golds; ja_JP INVARIANT); route arm **MINOR** (`store_as` INVARIANT;
+  `headless_convert` 1 gold and 1 task, `compare_table`). Secondary cells follow their
+  build. P1 replication: the control flips 4 of 92 golds (as P1).
+- K2: with the K2 report (job 1186, VERIFIED, no family dropped) only the label changes, to
+  "VM fidelity checked (K2)"; both analyses are committed.
+- Disclosed: the first operator instance ran an exploratory explicit-form peek at the
+  partial main run (about 02:04 UTC; scratch only, nothing chosen after it); the registered
+  analyses ran on the host from the freeze export (Python 3.10.12) because the Mac was
+  overloaded; the committed `analysis.json` and `analysis-k2.json` are the Mac
+  reproductions from the evidence copy (repository venv), which differ from the host's
+  (kept in `host-analysis/`) only in the last bits of Clopper-Pearson bounds (max absolute
+  difference 8.2e-16) and input paths; `tests/test_r04_evidence.py`'s glob widened to
+  `r04-nuisance*/` (outside the code tree).
+- Evidence: `program/evidence/2026-10-12/r04-nuisance-confirm/` (README, the run copy
+  without documents, analyses, operator scripts).

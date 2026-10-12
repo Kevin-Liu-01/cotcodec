@@ -1,4 +1,4 @@
-"""Committed R04 run mirrors (``program/evidence/*/r04-nuisance/*/plan.json``, the layout of
+"""Committed R04 run mirrors (``program/evidence/*/r04-nuisance*/*/plan.json``, the layout of
 ``r04_host.py``): every step that finished is in the mirror, nothing in a mirror is
 git-ignored, and each mirror's ``analysis.json`` reproduces from the committed records.
 
@@ -23,7 +23,8 @@ from harness.r04_nuisance import analysis, levels
 ROOT = Path(__file__).resolve().parents[1]
 MIRRORS = sorted(
     p.parent
-    for p in ROOT.glob("program/evidence/*/r04-nuisance/*/plan.json")
+    # r04-nuisance/ holds the pre-freeze smokes; r04-nuisance-confirm/ the registered run
+    for p in ROOT.glob("program/evidence/*/r04-nuisance*/*/plan.json")
     if "run_root" in json.loads(p.read_text(encoding="utf-8"))
 )
 V5 = ROOT / "program/evidence/2026-10-11/r04-nuisance/dev-smoke-v5"

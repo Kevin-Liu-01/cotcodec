@@ -1789,3 +1789,89 @@ held-out tasks.**
   - one float differs in its last digit.
 - Next. Add the result to the R03 note, and to the Q2 report where it
   discusses `zinv`.
+
+**D89. R04 result: OSWorld's office checkers are not invariant to the
+LibreOffice build or to the system locale.** R04
+(`r04-checker-nuisance-invariance-v1`, row 18) ran from its freeze commit
+`e312e996`:
+- 24 CPU-only jobs, every one exit 0 on its first attempt;
+- 10.27 of 20 lane-hours, 0 GPU-h;
+- every cell kept 100% of its items (92 golds and 461 S1a end states).
+The validity gates pass. V1: the control golds equal the frozen control
+runs'. V2: the replicate cell has 0 discordances. Both confirmation rounds
+reproduced all 108 discordances, so none is unstable.
+Registered arm readings, on the pinned checker (the corrected comparator
+`zinv` reads the same in every cell):
+- **Build arm: DRIFT.**
+  - The TDF builds 7.3.7.2, 7.6 and 24.8 are INVARIANT.
+  - 25.8.7.3 flips 18 of 92 golds (19.6%, 12.0-29.1%) and 6 of 32 S1a
+    tasks; 26.2.6.2 flips 20 of 92 (21.7%) and 6 of 32.
+  - The flips are mostly `compare_pptx_files` golds going from pass to fail.
+    All 67 flipped S1a pass states are `compare_pptx_files`.
+  - The same items flip under every save route.
+- **Locale arm: DRIFT.**
+  - de_DE, ar_EG and tr_TR flip the same three `compare_table` golds and five
+    pass states of one task. ar_EG also flips the `compare_pptx_files` gold
+    of `5c1a6c3d`, one of D82's gold-defect tasks.
+  - ja_JP is INVARIANT.
+- **Route arm: MINOR.** store_as is invariant. headless_convert flips one
+  `compare_table` gold.
+Descriptive results:
+- The control replicates the parent's P1 count of 4 of 92.
+- S1a's fixed point moves for 1 of 270 pass states and 3 of 180 fail states.
+- K2 changes only the label.
+What section 9 licenses: OSWorld's office checkers cannot be reused unchanged
+on a re-hosted image with LibreOffice 25.8 or later, or under the de_DE, ar_EG
+or tr_TR system locale, without accepting these flips. No flip was found up
+to 24.8, under ja_JP, or for store_as. None of these flips has been
+adjudicated. They feed the checker note, and S2 v4's K0 passing-side control
+(A4 (ii)), which checks gold passes per cell, guards against the same hazard.
+Verification. A fresh verifier reproduced the run and the analysis. It found:
+- two disclosed low items:
+  - an exploratory analysis of a partial copy before the main run ended, kept
+    in scratch, with nothing chosen after it;
+  - the operator was restarted mid-run, and the second instance continued the
+    same plan with no edits;
+- the committed analysis is the Mac's rerun from the evidence copy. The host
+  originals are kept beside it and differ only in floating-point bits below
+  1e-15.
+R04 jobs also ran in gaps between other workstreams' jobs, never during an E
+session, as D87 records.
+
+**D90. S2 v4 after round 3: one final repair round, with its stop rule
+committed now.**
+- Round 3's fixes did not clear the two blocking items, according to a fresh
+  code review and a fresh pre-freeze audit:
+  - (B1) Warping the pointer before the 60 s settle did not make Impress's
+    status-bar pointer field the same on every boot. The warp lands while the
+    window is still being laid out. In the development smoke (Slurm 1240) and
+    on the oracle's registered route (1241), I2 is 16 of 17, and the variation
+    moved into the left-to-right pairs.
+  - (B2) The resume fix made `lane-receipt.json` the only source of job order.
+    A run that ends by TERM, or fails the image check, writes no receipt or no
+    `t_start`, so it can be neither read nor resumed.
+- The round-3 owner agent returned placeholder output. The reviewer and the
+  auditor reviewed the branch head (`c1a56989`) directly. K0 stays
+  byte-identical, and the scratch freeze and resume rehearsals pass.
+- Round 4 is the last repair round for S2 v4. Its fixes are the ones both
+  reviewers proposed:
+  - warp after the settle, then wait a fixed interval longer than
+    LibreOffice's help-tip delay, chosen before the smoke, at Phase 0 capture
+    and at each Phase 1 episode start;
+  - order jobs by the Slurm job id the batch file writes before the lane
+    starts, with the receipt's `t_start` as a cross-check only;
+  - handle SIGTERM in the lane, put `t_start` in the image-check receipt, and
+    define the zero-record case.
+- Round 4's acceptance criterion, fixed now. The development smoke covers the
+  240 slots plus a second replicate of every capture cell on the 7 Impress
+  development tasks, about 130 Impress boots. It must give every masked boot
+  pair at most tol6 on all 17 development tasks: E-E2, ER-ER2, AD-AR and E-S,
+  so I2, I5 and I6 are each 17 of 17. No Impress boot may show a deviating
+  status-bar field.
+- Stop rule, fixed now. If that smoke misses the criterion, or a fresh audit
+  of round 4 finds a blocking item that needs another host smoke, S2 v4 ends
+  at an honest exit. Its instrument findings (the shipped catalogs, the
+  reproducible images, the pointer-field instability) are reported as a
+  record. No round 5 follows.
+- Host scheduling. S2 v4 submits nothing during a successor E session. E2
+  starts no earlier than about 17:51Z on 2026-10-12.

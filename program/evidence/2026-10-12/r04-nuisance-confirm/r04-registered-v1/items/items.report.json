@@ -1,0 +1,167 @@
+{
+ "frozen_row": "f7b350a330b79c6a08eca3ead97aa191a125c9696f72ca96f92cb94669bfac8d",
+ "golds": {
+  "confirm": {
+   "gold_equals_initial": [],
+   "items": 67,
+   "no_gold": [
+    "02ce9a50-7af2-47ed-8596-af0c230501f8",
+    "06ca5602-62ca-47f6-ad4f-da151cde54cc",
+    "0f84bef9-9790-432e-92b7-eece357603fb",
+    "10a730d5-d414-4b40-b479-684bed1ae522",
+    "185f29bd-5da0-40a6-b69c-ba7f4e0324ef",
+    "26150609-0da3-4a7d-8868-0faf9c5f01bb",
+    "2cd43775-7085-45d8-89fa-9e35c0a915cf",
+    "337d318b-aa07-4f4f-b763-89d9a2dd013f",
+    "3b27600c-3668-4abd-8f84-7bcdebbccbdb",
+    "3ef2b351-8a84-4ff2-8724-d86eae9b842e",
+    "3f49d2cc-f400-4e7d-90cc-9b18e401cc31",
+    "47f7c0ce-a5fb-4100-a5e6-65cd0e7429e5",
+    "4c26e3f3-3a14-4d86-b44a-d3cedebbb487",
+    "4e6fcf72-daf3-439f-a232-c434ce416af6",
+    "5203d847-2572-4150-912a-03f062254390",
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb",
+    "554785e9-4523-4e7a-b8e1-8016f565f56a",
+    "5ac2891a-eacd-4954-b339-98abba077adb",
+    "6ed0a554-cbee-4b44-84ea-fd6c042f4fe1",
+    "6f81754e-285d-4ce0-b59e-af7edb02d108",
+    "70745df8-f2f5-42bd-8074-fbc10334fcc5",
+    "778efd0a-153f-4842-9214-f05fc176b877",
+    "77b8ab4d-994f-43ac-8930-8ca087d7c4b4",
+    "7a4deb26-d57d-4ea9-9a73-630f66a7b568",
+    "7b7617bd-57cc-468e-9c91-40c4ec2bcb3d",
+    "9195653c-f4aa-453d-aa95-787f6ccfaae9",
+    "930fdb3b-11a8-46fe-9bac-577332e2640e",
+    "982d12a5-beab-424f-8d38-d2a48429e511",
+    "9b7bc335-06b5-4cd3-9119-1a649c478509",
+    "9bc3cc16-074a-45ac-9bdc-b2a362e1daf3",
+    "a5bbbcd5-b398-4c91-83d4-55e1e31bbb81",
+    "a669ef01-ded5-4099-9ea9-25e99b569840",
+    "aa3a8974-2e85-438b-b29e-a64df44deb4b",
+    "b148e375-fe0b-4bec-90e7-38632b0d73c2",
+    "c59742c0-4323-4b9d-8a02-723c251deaa0",
+    "d06f0d4d-2cd5-4ede-8de9-598629438c6e",
+    "d38192b0-17dc-4e1d-99c3-786d0117de77",
+    "dfac9ee8-9bc4-4cdc-b465-4a4bfcd2f397",
+    "e2b5e914-ffe1-44d2-8e92-58f8c5d92bb2",
+    "e2dd0213-26db-4349-abe5-d5667bfd725c",
+    "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+    "f178a4a9-d090-4b56-bc4c-4b72a61a035d",
+    "f3977615-2b45-4ac5-8bba-80c17dbe2a37"
+   ],
+   "not_exposed": [
+    "09a37c51-e625-49f4-a514-20a773797a8a",
+    "2a729ded-3296-423d-aec4-7dd55ed5fbb3",
+    "2fe4b718-3bd7-46ec-bdce-b184f5653624",
+    "455d3c66-7dc6-4537-a39a-36d3e9119df7",
+    "5df7b33a-9f77-4101-823e-02f863e1c1ae",
+    "8df7e444-8e06-4f93-8a1a-c5c974269d82",
+    "a503b07f-9119-456b-b75d-f5146737d24f",
+    "e8172110-ec08-421b-a6f5-842e6451911f",
+    "ec71221e-ac43-46f9-89b8-ee7d80f7e1c5",
+    "fba2c100-79e8-42df-ae74-b592418d54f4"
+   ],
+   "split": "confirm",
+   "tasks": 120,
+   "unemulated": {}
+  },
+  "reserve": {
+   "gold_equals_initial": [],
+   "items": 25,
+   "no_gold": [
+    "0e763496-b6bb-4508-a427-fad0b6c3e195",
+    "215dfd39-f493-4bc3-a027-8a97d72c61bf",
+    "21760ecb-8f62-40d2-8d85-0cee5725cb72",
+    "2373b66a-092d-44cb-bfd7-82e86e7a3b4d",
+    "357ef137-7eeb-4c80-a3bb-0951f26a8aff",
+    "386dbd0e-0241-4a0a-b6a2-6704fba26b1c",
+    "5d901039-a89c-4bfb-967b-bf66f4df075e",
+    "734d6579-c07d-47a8-9ae2-13339795476b",
+    "7767eef2-56a3-4cea-8c9f-48c070c7d65b",
+    "7f35355e-02a6-45b5-b140-f0be698bcf85",
+    "82e3c869-49f6-4305-a7ce-f3e64a0618e7",
+    "9439a27b-18ae-42d8-9778-5f68f891805e",
+    "a097acff-6266-4291-9fbd-137af7ecd439",
+    "a10b69e1-6034-4a2b-93e1-571d45194f75",
+    "c6bf789c-ba3a-4209-971d-b63abf0ab733",
+    "ce88f674-ab7a-43da-9201-468d38539e4a",
+    "d16c99dc-2a1e-46f2-b350-d97c86c85c15",
+    "dd84e895-72fd-4023-a336-97689ded257c",
+    "ea98c5d7-3cf9-4f9b-8ad3-366b58e0fcae",
+    "f201fbc3-44e6-46fc-bcaa-432f9815454c",
+    "f723c744-e62c-4ae6-98d1-750d3cd7d79d"
+   ],
+   "not_exposed": [
+    "0ed39f63-6049-43d4-ba4d-5fa2fe04a951",
+    "3aaa4e37-dc91-482e-99af-132a612d40f3",
+    "4bcb1253-a636-4df4-8cb0-a35c04dfef31",
+    "8f080098-ddb1-424c-b438-4e96e5e4786e",
+    "91190194-f406-4cd6-b3f9-c43fac942b22",
+    "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+    "f918266a-b3e0-4914-865d-4faa564f1aef"
+   ],
+   "split": "reserve",
+   "tasks": 53,
+   "unemulated": {}
+  }
+ },
+ "golds_check": {
+  "confirm": {
+   "equals_p1_counted": true,
+   "golds": 67,
+   "split": "confirm"
+  },
+  "reserve": {
+   "equals_p1_counted": true,
+   "golds": 25,
+   "split": "reserve"
+  }
+ },
+ "inputs": {
+  "file_cache_files_verified": 447,
+  "osworld_tree_sha256": "4153c68678fedd44a285800b45f4b7e538336a044f614f748f432a7ce5246076",
+  "vm_baseline_tree_sha256": "f32538182c72aa44ca348a42fcc1c04a1faf35b2c18a8f76d8af1d3bfafcb1df"
+ },
+ "items": 553,
+ "items_by_split_and_population": {
+  "confirm:gold": 67,
+  "confirm:s1a_fail": 180,
+  "confirm:s1a_mixed": 11,
+  "confirm:s1a_pass": 270,
+  "reserve:gold": 25
+ },
+ "manifest_sha256": "880d61cbf904e6bb40ddec3fb25d4424e76c6e5b3f8dcefc4b8002406b8a7a37",
+ "s1a": {
+  "captures_verified": true,
+  "fail_per_task": 3,
+  "fail_states_sampled": 180,
+  "items": 461,
+  "items_by_population": {
+   "s1a_fail": 180,
+   "s1a_mixed": 11,
+   "s1a_pass": 270
+  },
+  "runs": {
+   "1045": "A1-9B-S1",
+   "1048": "A1-4B-S1",
+   "1051": "A1-9B-S2",
+   "1062": "A1-4B-S2"
+  },
+  "states": 970,
+  "states_by_population": {
+   "s1a_fail": 689,
+   "s1a_mixed": 11,
+   "s1a_pass": 270
+  },
+  "tasks_by_population": {
+   "s1a_fail": 63,
+   "s1a_mixed": 2,
+   "s1a_pass": 32
+  }
+ },
+ "schema": "r04-items-v1",
+ "splits": [
+  "confirm",
+  "reserve"
+ ]
+}
