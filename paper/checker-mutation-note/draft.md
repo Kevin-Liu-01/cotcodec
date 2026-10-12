@@ -1,6 +1,7 @@
 # Do OSWorld's file-state checkers accept equivalent end states? A descriptive mutation audit
 
-Research note, draft of 2026-10-11. CoTCodec research program, question Q2
+Research note, draft of 2026-10-11, revised on 2026-10-12 with the results of R03 part (b) and
+of R04. CoTCodec research program, question Q2
 (`program/questions/q2-calibrated-cua-instrument.md`), item R03 of the question-renewal dossier
 (`program/evidence/2026-10-11/question-renewal/dossier.md`, section 3). Program owner: Kevin Liu.
 
@@ -8,9 +9,14 @@ Repository: <https://github.com/Kevin-Liu-01/cotcodec> (public). Every evidence 
 resolves on `main` at `746d60d2`, the base of this draft's branch `stage0/r03-note`, except
 what that branch adds: the note's script, figures and number table
 (`paper/checker-mutation-note/scripts/`, `figures/`, `data/`) and the record of the prior-art
-check K8 (`program/evidence/2026-10-11/q2-mutation-k8-prior-art/`). The note expands section 6
-of the Q2 report draft (`paper/q2-report/draft.md`), which predates K2 (D79) and the
-adjudication (D82); where the two differ, the numbers here are the later ones.
+check K8 (`program/evidence/2026-10-11/q2-mutation-k8-prior-art/`). The part (b) registration
+and run record ([ZR-REG], [ZR]) and decisions D86 and D88 resolve on `main` at `b880275c`, the
+base of the revision's branch `stage0/r03-partb-text`. The R04 registration and run record
+([NUI-REG], [NUI]) and decision D89 resolve on `main` at `9d320c6e`, the base of the revision's
+branch `stage0/r04-text`. The note expands section 6 of the Q2 report draft
+(`paper/q2-report/draft.md`), whose first two revisions predate K2 (D79) and the adjudication
+(D82); its revision 3 took this note's numbers, its revision 4 adds part (b), and its revision 5
+adds R04. Where the two differ, the numbers here are the later ones.
 
 > **Status: DRAFT. Not published, not for circulation.**
 >
@@ -21,7 +27,9 @@ adjudication (D82); where the two differ, the numbers here are the later ones.
 >   (36 of 40 evaluable z-order mutants fail: `compare_pptx_files` 35 of 39 plus
 >   `compare_pptx_files_tolerant` 1 of 1) and gives any confirmed count as 30 by both raters,
 >   or as 33 after D82's model adjudication, with the D80 label.
-> - Every result is **descriptive** (D35). Nothing here is confirmatory.
+> - Every result of the mutation study is **descriptive** (D35). Nothing here is confirmatory.
+>   R04's cell and arm readings (section 3.9) come from its own frozen decision rule; they count
+>   verdict changes against a paired control and judge none of them.
 > - Every audit-dependent number rests on two model raters. The 34 items they split on or both
 >   read against the label (the adjudication pool) and the 25-item spot check were answered by
 >   an isolated model: **adjudicated by an isolated model on the owner's instruction (D80); not
@@ -30,6 +38,21 @@ adjudication (D82); where the two differ, the numbers here are the later ones.
 >   before drafting as registered, and did not fire (section 6).
 > - The offline harness's verdicts were **checked inside real VMs by K2** (D79) on a registered
 >   sample of 80 scoring jobs.
+> - R03 part (b), the held-out test of the corrected comparator `zinv` on the reserve split,
+>   ran on 2026-10-12 under its own frozen addendum (D86, D88). Its outcome is **PASS,
+>   descriptive**, on 13 z-order mutants, fewer than the registered 20. It licenses saying that
+>   the correction held on reserve documents it was not developed on, at this size; it is not a
+>   claim that `zinv` accepts 95% of z-order equivalents (section 3.7).
+> - R04, a registered study of whether checker verdicts survive a change of LibreOffice build,
+>   locale or save route, ran on 2026-10-11 and 2026-10-12 (D89). Its build and locale arms
+>   read DRIFT and its route arm MINOR (section 3.9). **None of its flips is adjudicated.** It
+>   scored offline; its K2 label covers the control configuration only.
+> - **Blind warning (D9, D82).** The part (b) run's released files name the checker's verdict
+>   for every reserve mutant. Whoever does D9's pending human spot check should answer from its
+>   blind packets before reading them. No reserve mutant is in the spot check or the
+>   adjudication pool, and this note gives only counts for them. R04's analysis files name the
+>   checker's verdict per gold task and per S1a end state, and section 3.9 names the golds whose
+>   verdict flips; the same order applies to them.
 > - The note quotes no OSWorld task document. Task ids are OSWorld's public task identifiers.
 
 ## Summary
@@ -62,8 +85,23 @@ both read against the label.
 - **The gold is not a fixed point of a GUI save.** 4 of the 92 save-exposed golds pass raw but
   fail after a GUI-faithful LibreOffice save (4.35%; exact 95% 1.20-10.76%); 3 of those flips
   are audit-confirmed checker errors (3.26%, 0.68-9.23%).
+- **Verdicts are not invariant to the LibreOffice build or the locale (R04, registered; not
+  adjudicated).** Re-saved with one factor changed at a time, and with every flip reproduced in
+  two confirmation rounds, the 92 golds and S1a's agent end states keep their verdicts under the
+  builds up to 24.8, under ja_JP and under a Save As. LibreOffice 25.8 and 26.2 flip 18 and 20
+  gold verdicts (19.6%, exact 95% 12.0-29.1%; 21.7%, 13.8-31.6%), mostly `compare_pptx_files`
+  passes turning to fails; the de_DE, ar_EG and tr_TR locales flip 3, 4 and 3. The corrected
+  comparator reads the same. An image re-hosted with either change cannot keep OSWorld's
+  checkers as they are without accepting these flips.
 - **The result holds inside the VM.** On the registered K2 sample, 78 of 78 compared pairs give
   the offline verdict in both runs, and all 41 candidate events reproduce.
+- **The defect replicates on held-out decks, and the correction held there in a small,
+  descriptive test.** On the reserve split's 8 pptx tasks, never used to find the defect or to
+  build the fix, `compare_pptx_files` failed 13 of 13 z-order equivalence mutants. The corrected
+  comparator `zinv` accepted all 13 (exact one-sided 95% lower bound 0.794) and newly accepted
+  none of 15 violation mutants (R03 part (b): PASS, descriptive, below the registered 20
+  mutants). The correction held on documents it was not developed on, at this size; this is not
+  a 95% acceptance rate.
 - **No on-policy consequence is shown.** A corrected comparator changed 0 of 1,808 verdicts of
   two Qwen3.5 policies in the program's S1a run.
 - **The audit rests on correlated models.** The two raters agree at Cohen's κ 0.343; the
@@ -91,10 +129,12 @@ blind-labelled mutants, each with its audit decision, and states no confirmatory
 This note completes R03 of the question-renewal dossier, whose corrected question has three
 parts [DOSSIER, section 3]. Part (a), whether mutants saved inside the certified VM get the
 offline verdict, is answered by K2 (section 3.6). Part (b), whether the corrected comparator
-`zinv` holds on the held-out reserve split, has not run (section 3.7). Part (c), operator
-families for the pool's non-office checkers, would need a new registration and has not been
-written. The adjudication the dossier left to the owner was done by an isolated model under
-D80 (section 2.5).
+`zinv` holds on the held-out reserve split, ran under its own frozen addendum and passed,
+descriptively (section 3.7). Part (c), operator families for the pool's non-office checkers,
+would need a new registration and has not been written. The adjudication the dossier left to
+the owner was done by an isolated model under D80 (section 2.5). A separate registered item of
+the dossier, R04, asks whether the checkers' verdicts survive a change of LibreOffice build,
+locale or save route (section 3.9).
 
 ## 2. Method
 
@@ -439,7 +479,7 @@ Table 4. K2 pairs compared per checker family [K2 `k2-summary.json`].
 With K2's report, the analysis label became "VM fidelity checked (K2)"; nothing else in the
 analysis changed.
 
-### 3.7 A corrected comparator, validated where it was built
+### 3.7 A corrected comparator, validated where it was built and checked on held-out decks (descriptive)
 
 `compare_pptx_files_zinv` realigns the agent deck's shapes to the reference order only where
 the swapped shapes are apart by the operator's own rule, then runs the original comparator with
@@ -459,10 +499,61 @@ do-nothing states [S1A-REG section 3.1, item 8; ZINV-VAL; DER]:
   [S1A-REG section 3.1, item 8].
 - `compare_pptx_files_tolerant` is not corrected.
 
-So `zinv` is validated only on the split it was built for. R03 part (b), whether it accepts at
-least 95% of held-out z-order mutants on the reserve split while accepting no violation the
-original rejects, has not run. The reserve split has 28 targets, 8 of them pptx, so that test
-will probably be descriptive (O4).
+Those runs validate `zinv` only on the split it was built for. R03 part (b) asks whether it
+accepts at least 95% of held-out z-order mutants on the reserve split while accepting no
+violation that the original rejects [ZR-REG section 1].
+
+The reserve split has 28 targets, 8 of them pptx; they sit on 8 tasks, and no mutant of the
+frozen operators had been built on any of them. A frozen addendum,
+`q2-zinv-reserve-validation-v1` (ledger row 20), built, saved and scored their mutants with the
+parent's frozen operators and pipeline, then rescored every item with the original comparator
+and with `zinv` [ZR-REG section 5]. Condition A asks that `zinv` accept at least 95% of the
+evaluable z-order equivalence mutants; condition B, that no violation mutant fail under the
+original and pass under `zinv`. The reading is descriptive below 20 mutants or 8 tasks (O4)
+[ZR-REG section 6]. The registered run, CPU only, gave **PASS, descriptive** [ZR; D88]:
+
+- **Condition A holds.** `zinv` accepted 13 of 13 evaluable z-order equivalence mutants, on all
+  8 tasks. The exact one-sided 95% lower bound on its acceptance is 0.794 per mutant (exact
+  two-sided interval 0.753-1.000) and 0.688 per task (8 of 8 tasks with every z-order mutant
+  accepted).
+- **Condition B holds.** Of 15 violation mutants on 5 of the tasks, `zinv` newly accepted 0. The
+  exact one-sided 95% upper bound on the new-accept rate is 0.181 per mutant and 0.451 per task.
+  The original failed all 15, and so did `zinv`.
+- **Why descriptive.** The 13 z-order mutants are fewer than the registered 20; the 8 tasks meet
+  their floor of 8. The registration expected a mean of 19.5 [ZR-REG section 4]. The frozen
+  operators planned 13 z-order mutants on these targets, and all 13 were evaluable [ZR].
+- **The defect replicates.** The original `compare_pptx_files` failed 13 of 13 of the same
+  mutants, on tasks and documents never used to find the defect or to build the fix. This is a
+  held-out replication of section 3.1's finding, and it is descriptive.
+- **Nothing else moved.** The 93 other items (the other equivalence, extra-change and violation
+  mutants, 8 saved golds and 9 saved do-nothing states) kept their registered verdict under
+  `zinv`, and `zinv` raised no error. None of the 106 rows was invalid: each fresh original
+  scoring reproduced the registered verdict, and no job's files changed during the rescoring.
+
+What this licenses, by the addendum's section 7: the correction held on reserve documents it
+was not developed on, at this size. It is not a claim that `zinv` accepts at least 95% of
+z-order equivalents in general: a PASS bounds acceptance only from below, here at 0.794 per
+mutant. "Held out" means unseen by `zinv`'s development; the reserve decks come from the same
+OSWorld pool as the confirm decks. The result is offline (K2 covered the confirm sample only),
+and it rests on the operators' labels: no rater, model or person read a reserve mutant.
+`compare_pptx_files_tolerant` has no reserve task and is still not corrected
+[ZR-REG section 12].
+
+The addendum also states what the test can and cannot show [ZR-REG section 1]. `zinv` moves a
+shape only past shapes that are apart by the operator's own rule, the rule that also decides
+which swaps the operator builds. On a correct implementation, every operator-built z-order
+mutant whose deck is otherwise unchanged therefore passes by construction. What condition A
+tests is the implementation's pairing of shapes on documents it was not developed on (its
+development fixes were for LibreOffice's save rounding, empty text runs and identical
+pictures); condition B tests that the realignment never hides a real violation. A PASS
+therefore does not test the idea behind the correction, whether the shared rule picks out
+exactly the reorders a viewer cannot see.
+
+**Blind warning (D9, D82).** The run's released files (`release/zinv-rows.json`,
+`judgement.json` and the campaign's verdict files) name the checker's verdict for every reserve
+mutant. D9's human spot check is still pending; whoever does it should answer from its blind
+packets before reading those files. No reserve mutant is in the spot check or the adjudication
+pool, and this section gives only counts [ZR].
 
 ### 3.8 What the defect did on policy
 
@@ -477,9 +568,130 @@ episode is among them [S1A; S1A-RESC; MUT `controls/`]. For these two policies a
 the reorder defect moved no outcome. A stronger agent that rebuilds or reorders slide shapes
 could meet it; S1a does not measure that.
 
+### 3.9 Verdicts under another LibreOffice build, locale or save route (R04, registered)
+
+Everything above holds the environment fixed: the VM's own LibreOffice, the en_US locale and a
+GUI Ctrl+S save. R04 (`r04-checker-nuisance-invariance-v1`, ledger row 18) asks whether a
+checker gives the same verdict on a fixed end state when that environment changes in ways that
+should not matter to the task [NUI-REG section 1]. A changed verdict shows a checker that is not
+invariant to the factor on that end state, whatever the cause; R04 does not ask whether the
+changed verdict is right. Its readings come from its own frozen decision rule.
+
+**Blind warning (D9).** This section names golds whose verdict flips, and R04's analysis files
+name the checker's verdict per gold task and per S1a end state. Whoever does D9's pending human
+spot check should answer it from its blind packets before reading either [NUI].
+
+The design [NUI-REG sections 4-9]:
+
+- **End states.** The 92 save-exposed golds of MUT-P1 (section 3.4) and 461 end states that S1a's
+  agents saved: all 270 states whose every episode passed, on 32 tasks; 180 sampled failing
+  states; and 11 mixed ones.
+- **Three arms, one factor at a time.** The control is this study's save stage unchanged (the
+  VM's build, en_US, Ctrl+S). The build arm swaps in five TDF builds: 7.3.7.2, 7.6.7.2, 24.8.7.2,
+  25.8.7.3 and 26.2.6.2. The locale arm sets de_DE, ar_EG, ja_JP or tr_TR for the desktop and
+  LibreOffice, with the interface language kept en-US. The route arm saves with a Save As in the
+  document's own format, or with a headless same-format conversion.
+- **An adaptation.** Builds from 7.6 on title their windows with an em dash, so the window
+  activation in OSWorld's postconfig fails as written. The save stage then retries with the em
+  dash, as it did for all 553 items in every Ctrl+S and Save As cell of those builds [NUI-REG
+  section 4.4; NUI].
+- **Paired verdicts, confirmed twice.** Each item's verdict in a cell is paired with its verdict
+  in the control. A discordance counts only if two confirmation rounds, each re-saving and
+  re-scoring the item under both, reproduce both verdicts.
+- **Gates.** V1: the control's gold verdicts must equal this study's frozen control runs (at most
+  one difference). V2: a second run of the control, in its own session, must show no confirmed
+  discordance.
+- **Rule** [NUI-REG section 9]. A cell reads DRIFT if at least 3 golds or 3 S1a tasks flip,
+  INVARIANT if none does and MINOR otherwise; an arm reads DRIFT if any of its cells does. The
+  pinned checker is primary, and `zinv` gets the same tables.
+
+The registered run took 24 CPU-only jobs, every one finished on its first attempt, in 10.27
+lane-hours and 0 GPU-h [NUI; D89]. Every cell saved all 553 items. **V1 passes** (92 of 92
+control gold verdicts equal the frozen ones) and **V2 passes** (0 discordances). Both rounds
+reproduced every discordance of the main run (108 items under 11 cells), so none is unstable or
+pending.
+
+Table 5. Readings per primary cell, pinned checker [NUI `analysis.json` `pinned.cells`,
+`pinned.arms`]. A flip is a confirmed discordance with the paired control; an S1a task counts
+if any of its passing states (270 in all) flips. Intervals are exact (Clopper-Pearson) 95%. No
+flip is adjudicated.
+
+| Arm (reading) | Level | Cell reading | Golds flipped (of 92) | S1a tasks flipped (of 32); pass states | Families of the flipped golds |
+|---|---|---|---|---|---|
+| build (DRIFT) | TDF 7.3.7.2, 7.6.7.2, 24.8.7.2 | INVARIANT | 0 | 0; 0 | |
+| | TDF 25.8.7.3 | DRIFT | 18 (19.6%, 12.0-29.1%) | 6 (18.8%, 7.2-36.4%); 67 | `compare_pptx_files` 17, `compare_table` 1 |
+| | TDF 26.2.6.2 | DRIFT | 20 (21.7%, 13.8-31.6%) | 6 (18.8%, 7.2-36.4%); 67 | `compare_pptx_files` 18, `compare_table` 2 |
+| locale (DRIFT) | de_DE | DRIFT | 3 (3.3%, 0.7-9.2%) | 1 (3.1%, 0.1-16.2%); 5 | `compare_table` 3 |
+| | ar_EG | DRIFT | 4 (4.3%, 1.2-10.8%) | 2 (6.3%, 0.8-20.8%); 6 | `compare_table` 3, `compare_pptx_files` 1 |
+| | ja_JP | INVARIANT | 0 | 0; 0 | |
+| | tr_TR | DRIFT | 3 (3.3%, 0.7-9.2%) | 1 (3.1%, 0.1-16.2%); 5 | `compare_table` 3 |
+| route (MINOR) | Save As, own format | INVARIANT | 0 | 0; 0 | |
+| | headless conversion | MINOR | 1 (1.1%, 0.0-5.9%) | 1 (3.1%, 0.1-16.2%); 7 | `compare_table` 1 |
+
+- **Builds.** The builds up to 24.8 change no verdict. Under 25.8 and 26.2 the flipped golds are
+  mostly `compare_pptx_files` golds that go from pass to fail, and all 67 flipped S1a pass states
+  are `compare_pptx_files`. The same golds flip in the secondary cells that combine each build
+  with the other two routes, so the flips do not come from the save route. One flip goes the
+  other way: the reserve gold `3a7c8185`, one of MUT-P1's flips, fails in the control and passes
+  again under both builds.
+- **Locales.** de_DE and tr_TR flip the same three `compare_table` golds (`21df9241`,
+  `4f07fbe9`, `7e287123`) and five pass states of task `4f07fbe9`, and turn one failing state of
+  task `a01fbce3` to pass. ar_EG flips those three golds and five states, plus the
+  `compare_pptx_files` gold of `5c1a6c3d` and one pass state of that task. ja_JP flips nothing.
+  Each of the three `compare_table` golds, and each of the five states of `4f07fbe9`, holds a
+  CSV export of its sheet beside the workbook. The save leaves that CSV byte for byte as it was
+  under the control and ja_JP and rewrites it under de_DE, ar_EG and tr_TR, while it rewrites
+  the workbook with other bytes in every cell, the control included (score rows,
+  `save.outputs`; read for this note). Saves are not byte-deterministic [NUI-REG section 4.4]
+  and R04 keeps digests, not documents, so these digests do not show which file changes the
+  verdict, or why.
+- **Routes.** The Save As changes nothing. The headless conversion flips one gold (`4188d3a4`,
+  `compare_table`, pass to fail) and seven pass states of that task, and turns three failing
+  states of task `1334ca3e` to pass.
+- **`zinv` reads the same.** The corrected comparator gives the same reading, with the same
+  counts, in every cell and arm [NUI `zinv`]. None of these flips is a stacking-order change
+  that the correction absorbs.
+- **The control.** Against the unsaved golds it flips the same 4 of 92 golds as MUT-P1
+  (section 3.4); against S1a's captured states, 1 of 270 passing and 3 of 180 failing states.
+- **VM fidelity.** Rerun with K2's report, the analysis changes only its label, to "VM fidelity
+  checked (K2)". K2 compared the offline save stage with the VM in the control configuration
+  only, so on every other cell the label means that the cell's paired control is VM-checked,
+  not the cell itself [NUI-REG section 2.1; NUI `analysis-k2.json`].
+
+**The gold-defect task.** ar_EG flips the gold of `5c1a6c3d`, one of the three tasks whose
+saved gold the model adjudicator rejected (section 3.3; adjudicated by an isolated model on the
+owner's instruction (D80); not human-validated). Builds 25.8 and 26.2 flip that gold too. A
+flip of a gold the audit does not accept says little about the checker; ar_EG's three other
+flipped golds alone meet the DRIFT threshold, so its reading does not rest on this task.
+
+**What the readings license** [NUI-REG section 9; D89]. DRIFT names, for 25.8, 26.2, de_DE,
+ar_EG and tr_TR, at least three golds or three S1a tasks whose verdict the level changes
+reproducibly. An OSWorld image re-hosted with LibreOffice 25.8 or 26.2, or a desktop under one
+of those three locales, therefore cannot keep OSWorld's checkers as they are without accepting
+these flips; builds after 26.2 were not tested. INVARIANT (the TDF builds up to 24.8, ja_JP and
+the Save As) bounds that level's gold discordance rate below 3.20% and its S1a task rate below
+8.94% (exact one-sided 95%): a bound at these sizes, not a proof of invariance. MINOR lists the
+headless conversion's one gold and one task.
+
+**What they do not license:**
+
+- Whether any flip is a checker defect or a real change in the document. No rater, model or
+  person has read a flipped file, and none of the flips is adjudicated.
+- Anything about agents in a localized desktop. The interface language stayed en-US, the
+  keyboard layout stayed US, and no agent ran.
+- Builds, locales or routes other than the registered ones, Windows or macOS LibreOffice, or
+  another OSWorld revision.
+- S1a end states whose checker read only a file derived from a document (a CSV, text or PDF
+  file): they were not items, having no document to re-save [NUI-REG section 5]. A state whose
+  capture holds such a file beside the document, as the five pass states of task `4f07fbe9`
+  do, was an item.
+- What a re-hosted VM would do as written. The readings for builds from 7.6 on rest on the
+  em-dash retry, without which OSWorld's postconfig fails to activate the window.
+- An in-VM reading: the scoring ran offline, and K2 covers the control configuration only.
+
 ## 4. How reliable the audit is
 
-Table 5. Agreement [MUT `summary.json`; ADJ `summary.json` `agreement`, `spot_check`]. The
+Table 6. Agreement [MUT `summary.json`; ADJ `summary.json` `agreement`, `spot_check`]. The
 adjudicator rows are adjudicated by an isolated model on the owner's instruction (D80); not
 human-validated.
 
@@ -542,15 +754,23 @@ These bound every result above, and they are stated as plainly as the results.
 - **One host, one snapshot.** Every save, scoring and VM job ran on one host (`fal-h100-01`;
   CPU-only jobs, apart from the open-weight rater's 0.365 GPU-h) against one benchmark
   snapshot: OSWorld at `b138d348`, the VM image at Hugging Face revision `a5d9c3ea`,
-  LibreOffice 7.3.7.2 in one locale [MUT-REG section 2]. Another LibreOffice build, locale or
-  OSWorld revision may give other verdicts.
+  LibreOffice 7.3.7.2 in one locale [MUT-REG section 2]. R04 (section 3.9) shows that other
+  builds and locales do change some verdicts of golds and agent end states: the two newest
+  builds it tested, 25.8 and 26.2, and three of its four other locales. The mutants were not
+  rerun under any of them, and no other OSWorld revision was tested.
+- **R04's flips are listed, not judged.** Its readings count reproducible verdict changes
+  against a paired control. Nobody has read a flipped file or adjudicated a flip, so R04 does not
+  say which flips are checker defects and which are real changes in the document. It scored
+  offline (K2 covers its control configuration only), tested only the registered levels, kept
+  the interface language en-US, and left out the S1a end states whose checker read only a
+  derived file such as a CSV (section 3.9).
 - **A narrow population.** The population is 444 synthetic mutants on 60 confirm tasks, mostly
   LibreOffice spreadsheets, documents and decks. Not covered: 43 confirm tasks without a
   complete gold, 10 whose complete gold has no file an operator handles, 7 target tasks whose
-  saved null mutant fails its own checker, the reserve split (apart from MUT-P1's golds),
-  live-state and web tasks, and every non-office checker (GIMP, VLC, Thunderbird, VS Code, OS
-  settings). Probe-touched cells were excluded and their 28 false-positive events are
-  unaudited.
+  saved null mutant fails its own checker, the reserve split (apart from MUT-P1's golds and
+  part (b)'s check of `zinv` on its 8 pptx targets, section 3.7), live-state and web tasks,
+  and every non-office checker (GIMP, VLC, Thunderbird, VS Code, OS settings). Probe-touched
+  cells were excluded and their 28 false-positive events are unaudited.
 - **Ambiguous mutants are out.** 186 of the 1,232 admitted mutants end with an ambiguous
   label, 3 of them z-order swaps. They are counted, kept out of the population and never
   audited, so what the checkers do on them is not described here.
@@ -562,9 +782,15 @@ These bound every result above, and they are stated as plainly as the results.
   the z-order swap dominates says that this catalog found one kind of defect, shape-order
   sensitivity in the pptx comparators; it does not say other checkers are sound against edits
   the catalog lacks.
-- **The correction is validated only on its build split.** `zinv` was developed and validated
-  on the confirm campaign's own z-order mutants. The held-out reserve-split check (R03 part (b))
-  is pending.
+- **The correction's held-out check is small.** `zinv` was developed and validated on the
+  confirm campaign's own z-order mutants. On the held-out reserve split (R03 part (b)) it
+  accepted 13 of 13 z-order mutants and newly accepted 0 of 15 violation mutants, a descriptive
+  PASS below the registered 20 mutants. That bounds its acceptance below at 0.794 per mutant and
+  0.688 per task, not at 95%. It checks `zinv`'s implementation on unseen decks, not the rule it
+  shares with the operator, under which a correct implementation passes every operator-built
+  z-order mutant by construction (section 3.7). The check is offline and rests on the operators' labels, the
+  reserve decks come from the same OSWorld pool, and the study has no unseen pptx target left
+  for another held-out test.
 - **No on-policy consequence shown.** The corrected comparator flipped 0 of 1,808 S1a verdicts
   (two policies, 15 steps). The defect is real on constructed end states; this note does not
   show that it changed any agent's score.
@@ -626,8 +852,12 @@ problem (IEEE TSE 41(5), 2015) [CLAIMS c182].
 **What is left to this note.** Mutation tests of desktop document checkers; false rejects of
 equivalent shape reorders by the pptx comparators, the most frequent candidate error under this
 catalog outside probe-touched cells; gold files that are not a fixed point of the pipeline's
-own save; a VM fidelity check of the offline harness; and a zero on-policy consequence for two
-small policies.
+own save; a VM fidelity check of the offline harness; a corrected comparator with a held-out
+check; a zero on-policy consequence for two small policies; and a registered test of whether
+checker verdicts survive a change of LibreOffice build, locale or save route. For builds and
+locales, R04's registration records no prior in the renewal sweep's searches; for save routes,
+its priors include the earlier headless round trip of the golds (section 3.4) [NUI-REG
+section 18].
 
 ## 7. Reproducing this note
 
@@ -646,7 +876,24 @@ z-order operator's statuses and per-family verdicts, read from `outcomes.jsonl`;
 per reading and their tasks; MUT-P1's raw-passing golds, from the controls summaries; the
 confirm tasks without a target, from the pre-freeze target counts; and the operators in
 Figure 1. The registered analyses themselves are reproduced by the commands in [MUT],
-[K2] and [ADJ].
+[K2] and [ADJ]. Part (b)'s frozen rule recomputes its judgement from the released rows; for
+this revision it gave the committed `judgement.json` again, apart from the last digit of one
+float [ZR]:
+
+```bash
+uv run --locked python -m harness.q2_zinv_reserve.run judge \
+  --rows program/evidence/2026-10-12/q2-zinv-reserve-run/release/zinv-rows.json \
+  --out /tmp/zr-judgement.json
+```
+
+R04's registered analysis runs on the standard library and reproduces from its evidence copy,
+from the repository root at R04's freeze commit or later; it gives the committed `analysis.json`
+apart from input paths, which `tests/test_r04_evidence.py` checks [NUI]:
+
+```bash
+V=program/evidence/2026-10-12/r04-nuisance-confirm/r04-registered-v1
+python -m harness.r04_nuisance.analysis --run $V --src . --out /tmp/r04-analysis.json
+```
 
 Not in the repository: the mutant documents, packets, rater transcripts and answer reasons,
 because they hold or quote third-party task documents. They are hashed in the committed
@@ -657,8 +904,12 @@ receipts.
 AI agents (Claude models) ran the campaign, the audit, the adjudication and the analyses under
 the program's frozen registrations and decisions, and an AI agent wrote this draft as its single
 author from committed evidence only; the same agent ran the K8 searches. Decisions D80-D82 delegated the adjudication to an isolated
-model. No human has reviewed this note, adjudicated an item or validated a label. Kevin Liu owns
-the program and every outward action, including any disclosure and publication.
+model. AI agents also ran R03 part (b) under its frozen addendum (D86, D88), and a later agent
+session added its result to this draft from the committed run record. AI agents ran R04 under
+its frozen registration (D89), and a later agent session added its result from the committed
+run record in the same way. No human has reviewed
+this note, adjudicated an item or validated a label. Kevin Liu owns the program and every
+outward action, including any disclosure and publication.
 
 ## Sources
 
@@ -676,6 +927,14 @@ Program evidence (paths from the repository root):
   `summary.json`; [ADJ-AN] its `analysis/analysis.json`.
 - [ZINV] `harness/q2_stage1/zinv.py`; [ZINV-VAL]
   `program/evidence/2026-10-08/q2-stage1-g0/zinv/zinv-validation-v3.json`.
+- [ZR-REG] `program/preregistrations/q2-zinv-reserve-validation-v1.md` (frozen, ledger row 20),
+  the R03 part (b) addendum; [ZR] `program/evidence/2026-10-12/q2-zinv-reserve-run/README.md`
+  and its `release/judgement.json` and `release/zinv-rows.json` (blind warning above).
+- [NUI-REG] `program/preregistrations/r04-checker-nuisance-invariance-v1.md` (frozen,
+  ledger row 18), R04's registration; [NUI]
+  `program/evidence/2026-10-12/r04-nuisance-confirm/README.md` and its
+  `r04-registered-v1/analysis.json` and `analysis-k2.json` (the registered analysis without and
+  with the K2 report) and score rows `r04-registered-v1/main/scores/` (blind warning above).
 - [S1A-REG] `program/preregistrations/q2-stage1-rescoped-v1.md`; [S1A]
   `program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md`; [S1A-RESC]
   `program/evidence/2026-10-10/q2-stage1-analysis/rescore-coverage.json`.
@@ -684,7 +943,7 @@ Program evidence (paths from the repository root):
   (added on this draft's branch).
 - [DOSSIER] `program/evidence/2026-10-11/question-renewal/dossier.md`; [SLATE] `slate.md`;
   [CLAIMS] `claim-registry.json` and `verification.json` in the same directory.
-- Decisions D2, D9, D23, D25, D27, D34, D35, D38, D72, D79, D80, D81 and D82:
+- Decisions D2, D9, D23, D25, D27, D34, D35, D38, D72, D79, D80, D81, D82, D86, D88 and D89:
   `program/decisions.md`.
 
 External sources (arXiv dates are first-version dates, as the program's verifier or K8's arXiv

@@ -1,0 +1,27 @@
+{
+ "admitted": 116,
+ "applied": 116,
+ "apply_to": "gold",
+ "duplicates": 0,
+ "labels_admitted": {
+  "ambiguous": 27,
+  "should_fail_extra_change": 14,
+  "should_fail_violation": 15,
+  "should_pass_equiv": 60
+ },
+ "labels_planned": {
+  "ambiguous": 27,
+  "should_fail_extra_change": 14,
+  "should_fail_violation": 15,
+  "should_pass_equiv": 60
+ },
+ "lo_build": "LibreOffice 7.3.7.2 30(Build:2)",
+ "planned": 116,
+ "purity_admitted": 116,
+ "scoring_jobs": 124,
+ "target_status": {
+  "planned": 8
+ },
+ "targets": 8,
+ "targets_planned": 8
+}

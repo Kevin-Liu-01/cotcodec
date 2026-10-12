@@ -1,0 +1,33 @@
+{
+ "dropped_by_family": {
+  "docx": 5,
+  "text": 3,
+  "xlsx": 12
+ },
+ "family": "pptx",
+ "kept_target_ids": [
+  "05dd4c1d-c489-4c85-8389-a7836c4f0567__9ff7a775",
+  "39be0d19-634d-4475-8768-09c130f5425d__d2780c8e",
+  "7dbc52a6-11e0-4c9a-a2cb-1e36cfda80d8__a4b92c53",
+  "841b50aa-df53-47bd-a73a-22d3a9f73160__582b1d70",
+  "8979838c-54a5-4454-a2b8-3d135a1a5c8f__c581943f",
+  "986fc832-6af2-417c-8845-9272b3a1528b__80598812",
+  "c82632a4-56b6-4db4-9dd1-3820ee3388e4__9371e6f5",
+  "f23acfd2-c485-4b7c-a1e7-d4303ddfe864__b2ce75ad"
+ ],
+ "split": "reserve",
+ "targets_all": 28,
+ "targets_all_sha256": "4f01a58d1203af2c3559f7d9383a9c74e52102f01b1403f91f2962c0f6532d97",
+ "targets_kept": 8,
+ "targets_sha256": "c8575cdf8a0c43a12d53cdda615dfe8a15bcba2b2a1a86cf886d7ec2e1dc9538",
+ "tasks_kept": [
+  "05dd4c1d-c489-4c85-8389-a7836c4f0567",
+  "39be0d19-634d-4475-8768-09c130f5425d",
+  "7dbc52a6-11e0-4c9a-a2cb-1e36cfda80d8",
+  "841b50aa-df53-47bd-a73a-22d3a9f73160",
+  "8979838c-54a5-4454-a2b8-3d135a1a5c8f",
+  "986fc832-6af2-417c-8845-9272b3a1528b",
+  "c82632a4-56b6-4db4-9dd1-3820ee3388e4",
+  "f23acfd2-c485-4b7c-a1e7-d4303ddfe864"
+ ]
+}

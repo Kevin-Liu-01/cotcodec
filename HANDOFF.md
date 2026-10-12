@@ -4,8 +4,12 @@
 
 Kevin delegated his pending research decisions on 2026-10-11 ("do it yourself
 for whatever gains actual results"; D80). Under that delegation:
-- R04 is frozen (ledger row 18; fill `c908b978`, freeze `e312e996`). Its
-  registered CPU run is in progress on `ops/r04`.
+- R04 is done (row 18; D89). OSWorld's office checkers are not invariant:
+  - LibreOffice 25.8 and 26.2 flip about 20% of the 92 golds (mostly
+    `compare_pptx_files`). Builds up to 24.8 flip none.
+  - The de_DE, ar_EG and tr_TR locales flip three `compare_table` golds.
+  - Every flip reproduced in two confirmation rounds.
+  Evidence: `program/evidence/2026-10-12/r04-nuisance-confirm/`.
 - The checker-mutation adjudication is complete (D81, D82), adjudicated by an
   isolated model and not human-validated. The first run was void (D81).
   Run 2 passed the registered isolation audit (52 `ok`). The parent analysis,
@@ -18,13 +22,21 @@ for whatever gains actual results"; D80). Under that delegation:
   R03, the checker-mutation note, can now be finished.
 - R03, the checker-mutation note, is drafted and verified, and not published
   (D83; `paper/checker-mutation-note/`). The Q2 report is synced to revision 3.
-- R03 part (b), zinv on the held-out reserve split, is frozen (row 20; D86).
-  Its CPU run (`reserve-v1`) is in progress on `ops/r03-zinv-reserve`.
+- R03 part (b) is done (row 20; D86, D88). On the held-out reserve split,
+  zinv's result is PASS, descriptive: it accepts 13 of 13 z-order equivalence
+  mutants on 8 tasks and newly accepts none of 15 violation mutants. The
+  original `compare_pptx_files` rejects all 13, so the defect replicates on
+  held-out tasks. Evidence: `program/evidence/2026-10-12/q2-zinv-reserve-run/`.
+- Successor E session E1 is done (jobs 1219/1221 and 1222/1224, ending
+  05:46Z on 2026-10-12). E2 starts no earlier than about 17:51Z.
 - Successor E is frozen (row 19; sign-off D85; freeze `f6144d6b`). Its four
   sessions (about 42 h, 6.77 cap-GPU-h) are running on `ops/q2-successor-e`.
   Other host work runs only in its gaps.
-- S2 v4: the images are built; a repair round is in progress before the freeze
-  (D84; `stage0/s2-v4`).
+- S2 v4: the images are built and reproducible. Round 3 did not clear the
+  pointer readout or the resume dead end (D90). Round 4 is the last round,
+  with its acceptance criterion and stop rule fixed in D90. If it misses, S2
+  v4 ends at an honest exit (`stage0/s2-v4`).
+- The R03 note and the Q2 report (revision 5) now include R03 (b) and R04.
 Still closed: Q1 (D46) and Q3 (D54). Still Kevin's: the outward actions, Q1's
 R570 GPU code and C5 Phase 1 (D80), and an optional human spot check (D9).
 See `pending_decisions_for_kevin` in `program/state.json`.
@@ -34,7 +46,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 20 rows). Decisions taken
-on Kevin's behalf are D1-D86 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D90 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
@@ -49,6 +61,9 @@ on Kevin's behalf are D1-D86 in `program/decisions.md`. GPU-hours are in
 | `q2-stage1-rescoped-v1` (S1a) | **DR2 Inconclusive** (pooled δ, H-GA minus H-OSW-fixed, −3.1 pp, 90% [−8.9, +2.7]); **DR5 INCONCLUSIVE** (π_small 0.055, [0, 0.26] vs M 0.13), so no S1b; P1 falsified (no between-session excess, upper bound 0.78 pp); 1,808 episodes, 0 infrastructure losses; realized cost 0.22-0.24 of the card's high price; not externally anchored; recomputed from the raw records and claims-checked by two fresh lenses (D66, D72) | `program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md` |
 | `q2-evaluator-mutation-v1` | Descriptive (D35): the z-order operator fails its checker on equivalent shape-order edits (`compare_pptx_files` 35 of 39); a GUI-faithful save flips 3 of 92 reference golds; kappa 0.34. **Adjudicated (D82), by an isolated model, not human-validated**: 33 confirmed false negatives (11.6%; `compare_pptx_files` 37.1%, z-order 85.4%), 3 gold-defect tasks, P2 12.4% on 337, false positives 2 | `program/evidence/2026-10-08/q2-mutation-confirm/`, `program/evidence/2026-10-11/q2-mutation-adjudication-v2/` |
 | `q2-evaluator-mutation-v1-k2` | **VERIFIED** (job 1186, CPU only, from the freeze commit `7d9c881a`): gate 2 of 80 K2 pairs excluded (one task's reopen timed out after LibreOffice did not quit); the 78 compared pairs agree with the offline verdicts in both runs; 41 of 41 candidate events reproduced; no family dropped; the parent analysis now carries "VM fidelity checked (K2)". Its outputs name verdicts per mutant: read after the adjudication | `program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/` |
+| `r04-checker-nuisance-invariance-v1` | **Build arm DRIFT, locale arm DRIFT, route arm MINOR** (D89). LibreOffice 25.8 flips 18 of 92 golds and 26.2 flips 20; builds up to 24.8 flip none. de_DE, ar_EG and tr_TR flip 3 `compare_table` golds; ja_JP flips none. Headless convert flips 1 gold. Every discordance reproduced in two rounds. Not adjudicated | `program/evidence/2026-10-12/r04-nuisance-confirm/` |
+| `q2-stage1-successor-e-v1` | Frozen (row 19; D85). Running: four sessions per size; E1 done | `ops/q2-successor-e` |
+| `q2-zinv-reserve-validation-v1` | **PASS, descriptive** (D88). zinv accepts 13 of 13 held-out z-order equivalence mutants and newly accepts none of 15 violation mutants. The original comparator rejects 13 of 13 | `program/evidence/2026-10-12/q2-zinv-reserve-run/` |
 
 Gauntlet records: K1 v2 (45, honest exit), K1 v3 (51, 55, 56; honest exit, D54), Q1 Stage 0 (45, honest exit).
 Q1 Stage 0 is closed on the audit-metric study (D46): under TF32 a tolerance
