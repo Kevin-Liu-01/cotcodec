@@ -192,3 +192,14 @@ attempt), `smoke-summary.json`, `lane-receipt.json` (host snapshots removed), `p
   a plant); E-S 17/17 and E-E2 17/17 within tol6; AD-AR 16/17 (`ac9bb6cb`: 513 px in Impress's status-bar
   pointer-position readout); O1 text pairs and O4 order 100%; descriptor plants O3 13/17, O2 15/17.
   `k0-dev.json` (development; 89 pool tasks have no record here): 13 dev tasks admitted, 4 runnable.
+
+## freeze-rehearsal/ (repair round)
+
+`rehearsal.json`: a scratch freeze of a local clone of the branch at `5d61a63a` (origin removed, its own
+ledger; the real ledger was not touched): the status fill, `scripts/preregister.py freeze`, `verify` and
+`check-chain`, the ledger row committed alone (the freeze commit changes only the ledger); the S2 v4 tests
+at the freeze commit (78 passed, the status test reading the frozen wording against the row); from an
+export of the freeze commit, the registered census manifest (1,322 slots; `render-census
+--freeze-commit`, the commit checked with git) and a census resumed from block `b010` validated, K1
+manifests rendered and validated (C1 on E; C3 on AR in three parts; A3 on AR in three parts; the rung,
+90 CPUs, 142 GB), and development manifests of both the lane and `ap_delta` refused.
