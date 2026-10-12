@@ -120,3 +120,20 @@ Per job:
   verdict against each image's own A1 at N = 1 (step p95 at most 2 x A1's). The rung did not abort,
   so it is not rerun (registration section "K1"). Host snapshot before submission: load 0.57, queue
   empty, no labelled container.
+
+## Schedule for the rest of K1 (the operator's plan; not a registered rule)
+
+- E's first gap (now to 17:51:36Z) is used up: after the rung (ended 15:29:10Z) no remaining K1
+  job's limit fits before E2's earliest start (the shortest left is A5 at 192 minutes).
+- E2 (9B pair, then 4B pair, about 1.3 h) may start at 17:51:36Z. Nothing is submitted from then
+  until E2's 4B pair has ended (its later job end, from E's `scontrol` records under
+  `~/cotcodec-runs/stage0/q2-stage1e/pairs/e-4b-e2/`). The next gap runs from that end to 12 h
+  5 min after it (E3's earliest start), and so on for E3 and E4.
+- In the E2-E3 and E3-E4 gaps: the 15 short jobs left (C2, A5 and A6 on each image; limits 362,
+  192 and 222 minutes, expected about 15-20, 20 and 55 minutes each), each submitted only on an
+  empty queue and only if its limit ends before E's next earliest start.
+- After E4's 4B pair has ended: the 28 long jobs (C3's 15 parts, A1 and A2 on each image, A3's 3
+  parts on AR; limits 982-1,404 minutes, expected about 1-2.5 hours each), one at a time; then
+  `ap_delta.py verdict` over all 49 job directories (K1), then the census (`render-census
+  --freeze-commit`, `submit`; 364-minute limit), its one resume if interrupted, the oracle's
+  registered container job and `k0_v4.decide` (K0).
