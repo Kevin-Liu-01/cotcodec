@@ -234,6 +234,8 @@ of R04's CPU campaign. 1217 went in about 2 s after R04's job 1216 ended; 1218 w
 overlapped an R04 job, but R04's next step waited for 1218; R04's report records any effect on its
 timing. These jobs also ran `ap_delta.run_rung` before the third round restored `driver.main`'s
 pre-run checks in it (Docker facts, the VM and runner images, `qemu-img info`, dangling volumes).
+Round 4's development rung (Slurm 1244, `program/evidence/2026-10-12/s2v4-apdelta-rung/`) ran
+the same workload with those checks, and every one passed.
 
 ## smoke-1240/ (development, dev split only; third round, D87: the pointer warp)
 

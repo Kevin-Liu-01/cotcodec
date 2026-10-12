@@ -28,7 +28,9 @@ each 17 of 17; and no Impress boot shows a deviating status-bar field. Its readi
   is detected on 17 of 17 tasks, and PD on all 15 named tasks. I2, I5 and I6 are each 17 of 17. I3
   and I4 are 100%.
 
-D90's stop rule does not fire on the smoke. It still applies to a fresh audit of round 4.
+D90's stop rule does not fire on the smoke. Nor did it fire on the fresh review and audit of round
+4 that followed: neither found a blocking item needing another host smoke (registration, section
+"Changes in round 4 (D90): review log").
 
 ## smoke-1242/ (Slurm 1242)
 
@@ -129,7 +131,10 @@ container's on all 68 registered pairs, both the masked and the exact counts. Th
 
 ## Not done here
 
-These are recorded as open in the round-4 review log:
-- the fresh audit of round 4;
-- the scratch freeze rehearsal at the final head;
-- the host development rung for `ap_delta.run_rung`'s pre-run checks.
+When this README was written, these were still to come. Each is now recorded in the
+registration's round-4 review log:
+- the fresh review and audit of round 4 (no blocking item needing a host smoke);
+- the scratch freeze rehearsal, done by round 4's auditor at `24257614`
+  (`program/evidence/2026-10-11/s2v4-image/freeze-rehearsal/rehearsal.json`);
+- the host development rung for `ap_delta.run_rung`'s pre-run checks
+  (`program/evidence/2026-10-12/s2v4-apdelta-rung/`).
