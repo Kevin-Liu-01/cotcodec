@@ -1646,3 +1646,73 @@ download.**
   a fresh audit come after it. The K0 section stays byte-identical. Phase 0
   (about 124 VM-h with K1) and Phase 1 run only after a clean audit, one
   VM-lane campaign at a time.
+
+**D85. Q2 successor E `q2-stage1-successor-e-v1` is signed off for the
+freeze.** Under D80 (iii), the program signs items 1-14 of the
+registration's section 21:
+- E adds data to S1a's design without a gauntlet, at 6.77 GPU-h by caps.
+- Design:
+  - all 113 eligible tasks, with S1a's 32 base tasks as the secondary set;
+  - four sessions per size, at least 12 h 5 min apart, 9B then 4B, one
+    episode per cell;
+  - arithmetic caps (52 and 48 minutes; 406 in all).
+- Estimands and inference:
+  - the quantities that are not estimable at R = 1 are reported as not
+    estimable;
+  - the frozen, conservative X test is the primary test;
+  - the two-session quantities are reported per session pair, descriptively;
+  - the GLMM runs unchanged, with its identification note;
+  - E is its own sample, and the joint reading with S1a is descriptive;
+  - DR5's consequence follows D47 and D69.
+- Process:
+  - the D59, D61 and D62 rules are registered up front, with the
+    `incomplete` reading and no power claimed for it;
+  - the quiet host and D80's serialization apply;
+  - E's code is S1a's code of record plus `harness/q2_stage1e/`.
+- D82's three gold-defect tasks stay in the primary set, with one sensitivity
+  that excludes them.
+Basis for signing:
+- The pre-freeze gates passed on the host: G-E4 is development smoke job 1206
+  with rescoring job 1208 (4 of 4 slots scored through E's entry point), and
+  G-E5 is GLMM job 1210 (both fits converged).
+- The second fresh audit (G-E6) found nothing blocking. Its freeze rehearsal
+  gave row 19 after R04's row, with check-chain and verify passing and the
+  full suite green.
+- No E outcome exists. The design was chosen after S1a's results, as its
+  disclosure 1 states.
+E runs from its freeze commit with host jobs serialized. Other workstreams
+may use the host only in the gaps between E's sessions, never during an E
+job.
+
+**D86. R03 part (b), `q2-zinv-reserve-validation-v1`, runs under program
+authority (D80).** D80 does not name R03 (b). D83 said it was being scouted.
+The program adopts it now under D80's delegation ("whatever gains actual
+results"), because it produces one: the first held-out test of the corrected
+z-order comparator `zinv`.
+- Why a new registration was needed. The frozen parent registers no reserve
+  split test and no zinv. The reserve split has never been opened for mutants
+  of the frozen operators.
+- The test. On the 8 reserve pptx tasks, zinv must accept at least 95% of the
+  evaluable z-order equivalence mutants (A) and must accept no violation
+  mutant that the original comparator rejects (B). The reading is descriptive
+  below 20 mutants or 8 tasks.
+- What each outcome licenses. A FAIL is informative at any size. A PASS bounds
+  zinv's acceptance only from below (at most about 0.88), never at 95%.
+- Pre-freeze record:
+  - Audit 1 found one blocking defect (two tests failed at the fill commit),
+    since fixed.
+  - The full development rehearsal ran steps 1-4 (Slurm 1205, 1209, 1212 and
+    1213; exit 0; CPU only). Its outcomes match the parent's stored dev runs
+    as a multiset, and its release view is byte-identical to the host's.
+  - A second fresh audit found nothing blocking and rehearsed the whole freeze
+    on a scratch clone.
+  - Two outcome cases it found undefined are now defined in the text before
+    the freeze: a stop at the 4.0 lane-hour cap is INCOMPLETE, and an
+    unfinished run's records are committed by hand.
+- Staging note from the audit. The freeze export is staged with
+  `git archive | ssh host tar -x`. macOS bsdtar adds AppleDouble files, and the
+  guard then refuses every split.
+- Scheduling. The run is CPU only, at most 4.0 lane-hours, one job at a time
+  on an empty queue. It is never submitted while a successor E session is in
+  progress, that is, after the session's 9B pair and before its 4B pair has
+  ended. It runs in E's gaps.

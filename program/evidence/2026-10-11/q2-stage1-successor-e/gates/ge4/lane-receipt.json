@@ -1,0 +1,63 @@
+{
+ "bridge_dir": "/home/kevin/cotcodec-runs/stage0/q2-stage1e/runs/1206/bridge",
+ "dispatched": [
+  "E-dev:dev:000#1",
+  "E-dev:dev:001#1",
+  "E-dev:dev:002#1",
+  "E-dev:dev:003#1"
+ ],
+ "engine_ready": null,
+ "fill": [],
+ "first_dispatch": 1791760021.6544666,
+ "gpu_job": null,
+ "job_id": "1206",
+ "name": "e-dev-smoke-v1",
+ "purpose": "development",
+ "records": 4,
+ "schema": "q2-stage1a-lane-receipt-v1",
+ "snapshots": [
+  {
+   "block": "start",
+   "containers_ours": 0,
+   "containers_running_total": 1,
+   "loadavg": [
+    "10.75",
+    "14.73",
+    "15.51"
+   ],
+   "squeue_foreign": [],
+   "t": 1791760021.099705
+  },
+  {
+   "block": "dev",
+   "containers_ours": 0,
+   "containers_running_total": 1,
+   "loadavg": [
+    "10.75",
+    "14.73",
+    "15.51"
+   ],
+   "squeue_foreign": [],
+   "t": 1791760021.628701
+  },
+  {
+   "block": "end",
+   "containers_ours": 0,
+   "containers_running_total": 1,
+   "loadavg": [
+    "0.23",
+    "3.48",
+    "9.62"
+   ],
+   "squeue_foreign": [],
+   "t": 1791760478.1881118
+  }
+ ],
+ "statuses": {
+  "scored": 4
+ },
+ "stopped": false,
+ "t_end": 1791760478.213084,
+ "t_start": 1791760021.099703,
+ "usr1_epoch": null
+}

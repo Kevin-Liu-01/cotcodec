@@ -1,14 +1,20 @@
 # What an open computer-use benchmark comparison measures: a certified action path, a rerun noise floor and candidate checker defects on OSWorld
 
-Technical report, draft of 2026-10-11 (revision 2). CoTCodec research program, question Q2, "a
+Technical report, draft of 2026-10-11 (revision 3). CoTCodec research program, question Q2, "a
 calibrated computer-use instrument" (`program/questions/q2-calibrated-cua-instrument.md`).
 Program owner and author of record: Kevin Liu. The section "Authorship and process" says which
 steps AI agents carried out and what a human has and has not reviewed.
 
 Repository: <https://github.com/Kevin-Liu-01/cotcodec> (public). Every evidence path below
 resolves at commit `360058d` on `main`, the base of this draft's branch `stage0/q2-report`. The
-draft's own scripts, data file and figures (`paper/q2-report/scripts/`, `data/`, `figures/`) are
-added on that branch.
+draft's own scripts, data file, figures and cover note (`paper/q2-report/scripts/`, `data/`,
+`figures/`, `cover-note.md`) are added on that branch. Revision 3 brings section 6, and every
+passage that summarises it, up to the checker study's VM fidelity check (K2) and its model
+adjudication. The evidence it adds ([K2], [K2-REG], [ADJ], [ADJ-AN], [R03] and [DEC D79-D83]),
+and three other references absent at `360058d` (the K2 addendum's row in Appendix D.1 and
+section 6.1 [LEDGER row 17], the K2 executor `harness/q2_mutation_k2/` in section 10.3, and
+`program/evidence/2026-10-11/question-renewal/claim-registry.json` in the references), resolve
+at `08033ba7` on `main`, the base of the revision's branch `stage0/q2-report-sync`.
 
 > **Status: DRAFT. Not published, not for circulation.**
 >
@@ -18,9 +24,13 @@ added on that branch.
 >   settled before any publication.
 > - Every number from the harness study (section 4) carries the label **not externally
 >   anchored**.
-> - Every checker-study number (section 6) is stated **before the owner's adjudication of a
->   34-item pool and a 25-item human spot check**, and carries the registered label **offline
->   harness, VM fidelity unverified**.
+> - Every checker-study number (section 6) carries the analysis label **VM fidelity checked
+>   (K2)**: a registered rerun inside real VMs agreed with the offline verdicts. K2 checked a
+>   registered sample of 80 scoring jobs (78 compared) plus the 41 candidate events, not all
+>   1,300 scoring jobs. Every
+>   audit-dependent number after the adjudication is **adjudicated by an isolated model on the
+>   owner's instruction (D80); not human-validated**. The adjudicator is the same model as one of
+>   the two raters, and the human spot check is still pending.
 > - Section 12 lists what still waits on human review. Program-record corrections found while
 >   drafting are in the internal cover note (`paper/q2-report/cover-note.md`), not in this report.
 
@@ -72,13 +82,18 @@ summarises and its main evidence keys.
    it more than adding reruns. The calibrations were chosen after S1a's readings and are not
    externally anchored [DS2].
 4. **Candidate checker defects** (section 6). The audit is descriptive: its two model raters
-   agreed at Cohen's κ = 0.343 against the registered 0.6, and the owner's adjudication and a
-   human spot check are pending [MUT]. OSWorld's `compare_pptx_files` failed 35 of 39 edits that
-   only swap the stacking order of two shapes that do not overlap, which changes nothing a
-   viewer sees. Both raters accept 29 of those 35 end states as correct and split on 6.
-   Re-saving the 92 reference end states ("golds") through LibreOffice's GUI save path flips 4
-   of them from pass to fail; in 3 of the 4, both raters accept the saved gold as still correct
-   [MUT].
+   agreed at Cohen's κ = 0.343 against the registered 0.6 [MUT]. OSWorld's `compare_pptx_files`
+   failed 35 of 39 edits that only swap the stacking order of two shapes that do not overlap,
+   which changes nothing a viewer sees (36 of 40 with its tolerant variant). Both raters accept
+   29 of those 35 end states as correct and split on 6. After an isolated model adjudicated the
+   items the raters split on, 33 of the 36 failures are confirmed and 3 have their label
+   contradicted, all 3 on one task whose reference end state the adjudicator also rejected.
+   That reading is adjudicated by an isolated model on the owner's instruction (D80); not
+   human-validated, and the adjudicator is the same model as the Claude rater [ADJ]. Re-saving
+   the 92 reference end states ("golds") through LibreOffice's GUI save path flips 4 of them from
+   pass to fail; in 3 of the 4, both raters accept the saved gold as still correct [MUT]. Rerun
+   inside real VMs on a registered sample, all 78 compared pairs and all 41 candidate events gave
+   the offline verdicts [K2].
 5. **The public Holo3-35B-A3B pair differs by more than rerun noise, for reasons the
    trajectories do not show** (section 3). Two same-day maintainer runs of one agent score 82.56
    and 78.15 on the OSWorld-Verified leaderboard, a 4.4-point gap. Per task they are not
@@ -110,7 +125,10 @@ for anyone running an OSWorld comparison. Against the closest prior (cua-speedru
 the between-session floor with a registered within-against-between contrast, the task-by-harness
 share and the checker audit on the same certified stack are new as far as we know. The harness
 study's blind closest-prior check did not run, so this is not a verified novelty claim
-(`program/proposals/2026-10-08-q2-stage1-rescoped.md`, wave 0).
+(`program/proposals/2026-10-08-q2-stage1-rescoped.md`, wave 0). For the checker audit, the
+registered prior-art check K8 ran on 2026-10-11, after the checker-mutation note's first draft
+rather than before drafting as registered, and found no mutation audit of desktop computer-use
+checkers [R03, section 6; DEC D83].
 
 ## Authorship and process
 
@@ -121,15 +139,23 @@ this report. Fresh agent sessions with no part in a run re-verified the action p
 verifiers, one per stage) [AP2-VA, AP2-VB] and the harness study (a recompute and a claims
 check) [S1A, disclosure 5]. The design study was attacked by an adversarial review [DS2]. The
 checker study's registered analysis was run by its operator from a fresh export of the frozen
-code; no independent re-verification of it is recorded [MUT]. One of the checker audit's two
-raters was Claude, run as one isolated agent per item [DEC D25]. The program's adversarial design
-reviews also use an open-weight reviewer model.
+code [MUT]. A fresh verifier reproduced its rerun with the VM fidelity report [DEC D79], and two
+fresh verifiers reproduced the adjudication's isolation audit and, byte for byte from the frozen
+code, every audit summary and analysis of its record, its sensitivities and its controls [DEC
+D82].
+One of the checker audit's two raters was Claude, run as one isolated agent per item [DEC D25].
+The checker study's adjudication pool and spot check were answered by isolated agents of the
+same Claude model (section 6.5) [DEC D80, D81]. The program's adversarial design reviews also use
+an open-weight reviewer model.
 
 The program owner, a human, made two rulings used here: accepting the harness study's
 replacement decision rules (DR1 and DR5, section 4.2) and its offline-setup task exclusion [DEC
-D55]. The owner also asked the program to continue its work. The owner has not reviewed this
-draft, the other decisions taken on the owner's behalf, the 34-item adjudication pool or the
-25-item spot check. No human has re-run any analysis.
+D55]. The owner also asked the program to continue its work, and on 2026-10-11 delegated his
+pending research decisions to the program [DEC D80]. Under that delegation an isolated model,
+not the owner, adjudicated the checker study's 34-item pool and answered its 25-item spot check,
+a disclosed deviation from the registered plan [DEC D9, D80]. The owner has not reviewed this
+draft or the other decisions taken on the owner's behalf. No human has answered the adjudication
+pool or the spot check, and no human has re-run any analysis.
 
 ## How to read this report
 
@@ -141,6 +167,7 @@ draft, the other decisions taken on the owner's behalf, the 34-item adjudication
 | *registered secondary* | computed as a frozen registration specifies, entering no rule (includes the GLMM) |
 | *registered descriptive* | a descriptive output the registration fixes in advance, read by no rule |
 | *descriptive* | an output of the checker-mutation study, frozen as a descriptive protocol after its rater gate failed |
+| *adjudicated by an isolated model on the owner's instruction (D80); not human-validated* | a checker-study output that depends on the model adjudication of section 6.5, whose adjudicator is the same model as one of the two raters |
 | *model-based* | from the CPU design study's fitted model; not a registered analysis |
 | *derived* | arithmetic on reported numbers done for this report; not a registered or committed analysis |
 | *operator count* | counted from raw or released records by a script and reported, never judged |
@@ -155,13 +182,17 @@ percentile intervals (10,000 resamples, seed 42) unless stated otherwise. A "one
 bound" is labelled as such; two-sided intervals are 95% unless stated.
 
 **Identifiers.** Program decision numbers (D*n*), Slurm job numbers and ledger rows appear only
-inside square-bracket citations and in Appendix D, which says what each decision decided.
+inside square-bracket citations and in Appendix D, which says what each decision decided. The
+one exception is the registered label wording "adjudicated by an isolated model on the owner's
+instruction (D80); not human-validated", which is quoted as registered wherever it applies.
 Registered names of rules (DR0-DR5), criteria (C1-C4, A1-A7) and layers (L0-fixed, H-OSW-fixed,
 H-GA) are defined in the glossary, section 4.2 and Table 1.
 
 **Evidence keys.** Each number cites its evidence with a key in square brackets, in its own
 sentence or in the caption or lead-in of its table or list. Keys map to paths in the repository
-above, at commit `360058d`:
+above, at commit `360058d`. The keys revision 3 adds ([K2], [K2-REG], [ADJ], [ADJ-AN], [R03]),
+the citations [DEC D79-D83] and [LEDGER row 17], and the other paths it adds (section 10.3's
+`harness/q2_mutation_k2/` and the references' `claim-registry.json`) resolve at `08033ba7`:
 
 | Key | Path |
 |---|---|
@@ -180,6 +211,11 @@ above, at commit `360058d`:
 | [MUT] | `program/evidence/2026-10-08/q2-mutation-confirm/results/README.md` (with `analysis.json`, `summary.json`, `released/confirm-mutants-v1/outcomes.jsonl`) |
 | [MUT-CTL] | `program/evidence/2026-10-08/q2-mutation-confirm/README.md` (the control stage: the harness check K1 and the gold control runs) |
 | [MUT-REG] | `program/preregistrations/q2-evaluator-mutation-v1.md` (section numbers given) |
+| [K2] | `program/evidence/2026-10-11/q2-mutation-k2/README.md` and `k2-confirm-v1-job1186/` (`README.md`, `report/k2-summary.json`, `analysis-with-k2/analysis.json`) |
+| [K2-REG] | `program/preregistrations/q2-evaluator-mutation-v1-k2.md` (the K2 addendum; section numbers given) |
+| [ADJ] | `program/evidence/2026-10-11/q2-mutation-adjudication-v2/README.md` (with `summary.json`, `adjudications.jsonl`, `spot-check-answers.jsonl`) |
+| [ADJ-AN] | the same directory, `analysis/analysis.json` (the parent analysis rerun with the adjudications and the K2 report) |
+| [R03] | `paper/checker-mutation-note/draft.md`, the checker-mutation note (a draft; `data/claims.json` maps each of its numbers to a committed source) |
 | [ZINV] | `harness/q2_stage1/zinv.py` (module docstring) |
 | [H3] | `program/evidence/2026-10-07/holo3-v2/RESULTS.md` and its receipts |
 | [H3-REG] | `program/preregistrations/q2-holo3-rerun-audit-v2.md` (and the v1 post hoc record beside it) |
@@ -226,6 +262,10 @@ above, at commit `360058d`:
 | task-equal share | the mean over tasks of each task's share of mutants with the event (tasks weighted equally) | 6.2 |
 | harness relay turn | a byte-identical copy of the session request the agent harness put before resumed rater tasks, which voided those transcripts under the registered ingest | 6.1 |
 | K1 | the checker study's harness check: raw golds must pass their own checkers (90% line) | 6.3 |
+| K2 | the checker study's VM fidelity check: verdicts inside freshly booted certified VMs compared with the offline verdicts, on a registered sample | 6.1 |
+| confirmed; label contradicted | a candidate whose audit decision agrees with its label (a failed should-pass end state accepted, a passed should-fail end state rejected); one whose decision is the opposite | 6.2 |
+| adjudication pool; spot check | the 34 audit items the raters split on or both read against the label, gold shams included; a stratified 25-item sample set aside for a human check | 6.5 |
+| gold-defect task | a task whose saved gold the audit rejects; its mutants are judged against a reference the audit does not accept | 6.5 |
 | zinv | `compare_pptx_files_zinv`, the corrected comparator | 6.2 |
 | clean task; net flips | (Holo3 audit) a task scored in both runs with no infrastructure flag; run-1-only passes minus run-2-only passes among clean tasks | 3 |
 
@@ -291,9 +331,14 @@ variance share and no checker testing
 ([2609.40284](https://arxiv.org/abs/2609.40284), 2026-09-30). A G-theory decomposition over 22
 benchmarks has few repeated cells, so it cannot identify rerun variance
 ([2610.00651](https://arxiv.org/abs/2610.00651), 2026-09-30). The nearest work to the checker
-audit is the hand audit of FAIL verdicts above, which covers false negatives only, and mutation
-analysis of kernel-benchmark oracles ([2609.22220](https://arxiv.org/abs/2609.22220),
-2026-09-02). Section 8 lists what this report does not claim.
+audit is the hand audit of FAIL verdicts above, which covers false negatives only; BenchJack,
+which audits 10 agent benchmarks, desktop computing among them, for reward-hacking exploits and
+builds no mutants of gold end states ([2605.12673](https://arxiv.org/abs/2605.12673),
+2026-05-12); mutation analysis of kernel-benchmark oracles
+([2609.22220](https://arxiv.org/abs/2609.22220), 2026-09-02); and mutation tests of task
+verifiers on two web and API suites, which name OSWorld-Verified-class desktop checkers as
+outside their scope ([2610.09142](https://arxiv.org/abs/2610.09142), 2026-10-06) [R03, section
+6]. Section 8 lists what this report does not claim.
 
 ## 2. Component 1: a certified action path
 
@@ -683,8 +728,9 @@ interval, and the dashed lines are the ±7.5 pp margin. Drawn from [S1A-AN
 - Treating the one metric-exception episode as missing changes nothing.
 - Treating every episode with a postconfig server error as missing drops no episode.
 - Excluding the two flagged base tasks (`70bca0cc`, a confirmed false positive, and `358aa0a7`,
-  a false-positive candidate whose violation label both raters contradicted, pending the owner;
-  section 6.4) gives δ = −2.50 pp, and DR2 and DR5 read the same.
+  a false-positive candidate whose violation label both raters contradicted, as did the
+  adjudicator: adjudicated by an isolated model on the owner's instruction (D80); not
+  human-validated; sections 6.4-6.5) gives δ = −2.50 pp, and DR2 and DR5 read the same.
 - Scoring with the fractional score itself gives δ = −3.06 pp.
 
 **Registered secondary set** (113 tasks; *registered secondary*, enters no rule) [S1A]:
@@ -922,7 +968,7 @@ carried calibrations.
   for design A but not for any 113-task design or A6 [DS2 section 5].
 
 **Decision.** The program closed the scale question on this study, and no successor GPU time is
-spent on it [DEC D69]. Section 11 notes the one successor left available.
+spent on it [DEC D69]. Section 11 gives the status of the one successor taken forward, design E.
 
 ### 5.3 The probability-scale variance split, and reconciling the harness shares
 
@@ -996,8 +1042,12 @@ whereas π divides only by the within-task part (harness plus rerun).
 
 ## 6. Component 3: candidate checker defects (checker-mutation study)
 
-*Descriptive.* No number in this section is confirmatory. **[PENDING: program owner]** The
-adjudication of a 34-item pool and the human spot check of 25 items [DEC D9].
+*Descriptive.* No number in this section is confirmatory. Every number that depends on the
+adjudication is **adjudicated by an isolated model on the owner's instruction (D80); not
+human-validated**, and that adjudicator is the same model as the Claude rater (section 6.5).
+**[PENDING: program owner]** The human spot check of 25 items, which stays open as the only
+independent validation of the model audit [DEC D9, D82]. The checker-mutation note expands this
+section, and its verified numbers are the ones used here [R03].
 
 ### 6.1 Design and how it became descriptive
 
@@ -1006,9 +1056,10 @@ reject end states that satisfy the task instruction (false negatives), and accep
 violate it (false positives) [MUT-REG section 1]. Its design aim was that every office end state
 should reach the checker the way it does in the real pipeline, re-saved by the VM's own
 LibreOffice [MUT-REG sections 1 and 3]. In fact scoring ran in an offline harness built from
-the VM's extracted files, not in the VM itself, and no VM fidelity report (the registered K2 gate)
-exists. Every result in this section therefore carries the registered label **offline harness,
-VM fidelity unverified** [MUT, K criteria; MUT-REG section 10]. The design:
+the VM's extracted files, not in the VM itself. The registered K2 gate, whose executor did not
+exist at the freeze, later checked that harness inside real VMs (below), and the analysis label
+changed from "offline harness, VM fidelity unverified" to **VM fidelity checked (K2)** [K2; DEC
+D79; MUT-REG section 10]. The design:
 
 - **Mutants.** 64 operators edit gold end states of the confirm-split tasks. They work through
   LibreOffice's document model, or splice characters in text files.
@@ -1023,7 +1074,9 @@ VM fidelity unverified** [MUT, K criteria; MUT-REG section 10]. The design:
   scorings agree, and its label is not ambiguous [MUT-REG section 7].
 - **Audit.** Every candidate checker error, every gold flip and a set of shams were audited blind
   by two model raters: Claude (`claude-opus-5-5`, through the agent harness with one isolated
-  agent per item) and Qwen3.6-35B-A3B [DEC D25].
+  agent per item) and Qwen3.6-35B-A3B [DEC D25]. The 34 items they split on or both read against
+  the label, and a 25-item spot check, were then answered by isolated model adjudicators
+  (section 6.5) [DEC D80-D82].
 
 The study's hypotheses are named MUT-P1 to MUT-P5 here. The registered rater-agreement gate was
 κ ≥ 0.6. Development κ came out at 0.066 under the registered ingest, and 0.575 with a harness
@@ -1031,10 +1084,33 @@ relay turn excepted (a byte-identical copy of the session request that the agent
 before resumed raters' tasks). The program's exit rule then fired: no other rater was tried, and
 MUT-P2 to MUT-P5 left the confirmatory headline. The study was frozen as a pre-specified
 descriptive protocol, with candidates listed and counted, each with its audit decision [MUT-REG
-status block; DEC D34, D35, D38]. On the confirm audit, the label-error criterion K3 fires (κ =
-0.343; the equivalence group's label-error bound 0.314 against 0.10; the violation group
-insufficiently audited), and K4 fires (both groups above 10%). Both are reported only, with no
-stop [MUT, K criteria; DEC D35].
+status block; DEC D34, D35, D38]. On the confirm audit before adjudication, the label-error
+criterion K3 fired (κ = 0.343; the equivalence group's label-error bound 0.314 against 0.10; the
+violation group insufficiently audited), and K4 fired (both groups above 10%) [MUT, K criteria].
+After the adjudication, K3 fires through κ alone for the equivalence group and fires for the
+violation group (5 items on 4 tasks, insufficiently audited), and K4 no longer fires (section
+6.7; adjudicated by an isolated model on the owner's instruction (D80); not human-validated)
+[ADJ]. Both are reported only, with no stop [DEC D35].
+
+**VM fidelity (K2).** The registration's K2 gate compares, for a sample of scoring jobs drawn
+before any verdict existed, the verdict inside a freshly booted certified VM with the offline
+verdict for the same candidate bytes [MUT-REG section 10]. A frozen addendum [LEDGER row 17]
+supplied the executor: the candidate is uploaded into the VM after the task's own setup, opened
+and saved by the VM's own LibreOffice, and scored by the unmodified evaluator [K2-REG section
+1]. The sample is 80 jobs, 20 per domain, on 41 tasks, and every pair runs twice. The registered
+job (CPU only, 65 minutes) gave **VERIFIED** [K2, job 1186; DEC D79]:
+
+- **Fitness gate.** 2 of 80 pairs were excluded (at most 8 allowed), both VM infrastructure
+  failures on task `51f5801c`, where a LibreOffice window that the task's setup had opened did
+  not quit in time.
+- **Agreement.** All 78 compared pairs give the offline verdict in both runs (41 pass, 37 fail),
+  so no family was dropped.
+- **Candidate events.** All 41 candidate events of sections 6.2 and 6.4 reproduce in both runs:
+  the 36 false negatives fail in the VM and the 5 false positives pass, as offline.
+- **Not covered.** `compare_pptx_files_tolerant` has no pair in the sample (its 2 candidate
+  events reproduce), and K2 did not rerun all 1,300 scoring jobs in the VM.
+
+With K2's report the analysis changed only its label [K2].
 
 ### 6.2 `compare_pptx_files` fails equivalent shape reorders
 
@@ -1051,21 +1127,35 @@ reference's *A* with the mutant's *B* and the reference's *B* with the mutant's 
 text and positions differ, and the checker fails the mutant [ZINV].
 
 Table 8. Reorder mutants and candidate shares, in the evaluable population outside probe-touched
-cells [MUT; ZINV; outcomes in `released/confirm-mutants-v1/outcomes.jsonl`]. Shares are
-task-equal: each task's share of its mutants with the event, averaged over tasks with every task
-weighted equally (the registered estimand, because mutants inside one task share checker code
-paths). That is why 36 of 40 raw (90.0%) appears as 91.7%. Intervals are task-cluster percentile
-bootstrap intervals (10,000 resamples, seed 42).
+cells [MUT; ZINV; ADJ-AN `checker_candidates.false_negative`; ADJ, "What changed against the K2
+rerun"; outcomes in `released/confirm-mutants-v1/outcomes.jsonl`]. Shares are task-equal: each
+task's share of its mutants with the event, averaged over tasks with every task weighted equally
+(the registered estimand, because mutants inside one task share checker code paths). That is
+why 36 of 40 raw (90.0%) appears as 91.7%. Intervals are task-cluster percentile bootstrap
+intervals (10,000 resamples, seed 42). Before adjudication an unresolved candidate counts as not
+confirmed. The columns after adjudication are adjudicated by an isolated model on the owner's
+instruction (D80); not human-validated, and the adjudicator is the same model as the Claude
+rater; "contradicted" means label contradicted.
 
-| Checker | Mutants | Evaluable (tasks) | Checker fails | Both raters accept | Raters split | Task-equal candidate share | Audit-confirmed share |
-|---|---|---:|---:|---:|---:|---|---|
-| `compare_pptx_files` | reorder | 39 | 35 | 29 | 6 | | |
-| `compare_pptx_files_tolerant` | reorder | 1 | 1 | 1 | 0 | | |
-| both | reorder | 40 (16) | 36 | 30 | 6 | 91.7% (81.3-100%) | 77.1% (61.5-90.6%) |
-| `compare_pptx_files` | all should-pass | 85 (16) | 35 | 29 | 6 | 40.2% (32.9-46.3%) | 33.5% (24.8-41.7%) |
-| all families | all should-pass | 348 (60) | 36 | 30 | 6 | 12.4% (7.2-18.3%) | 10.6% (5.8-16.2%) |
+| Checker | Mutants | Evaluable (tasks) | Checker fails | Both raters accept | Raters split | After adjudication: confirmed / contradicted | Task-equal candidate share | Confirmed share before adjudication | Confirmed share after adjudication |
+|---|---|---:|---:|---:|---:|---:|---|---|---|
+| `compare_pptx_files` | reorder | 39 | 35 | 29 | 6 | 32 / 3 | | | |
+| `compare_pptx_files_tolerant` | reorder | 1 | 1 | 1 | 0 | 1 / 0 | | | |
+| both | reorder | 40 (16) | 36 | 30 | 6 | 33 / 3 | 91.7% (81.3-100%) | 77.1% (61.5-90.6%) | 85.4% (68.8-97.9%) |
+| `compare_pptx_files` | all should-pass | 85 (16) | 35 | 29 | 6 | 32 / 3 | 40.2% (32.9-46.3%) | 33.5% (24.8-41.7%) | 37.1% (28.3-44.6%) |
+| all families | all should-pass | 348 (60) | 36 | 30 | 6 | 33 / 3 | 12.4% (7.2-18.3%) | 10.6% (5.8-16.2%) | 11.6% (6.4-17.3%) |
 
-- No label was contradicted; the 6 split items are in the owner's adjudication pool.
+- **Before adjudication** no label was contradicted, and the 6 split items went to the
+  adjudication pool.
+- **After adjudication** 33 are confirmed and 3 are label contradicted [ADJ, "What changed
+  against the K2 rerun"]. The 3 are all of task `5c1a6c3d`'s candidates; the adjudicator also
+  rejected that task's saved gold, so it is a gold-defect task (section 6.5), and the 3 are
+  reported as gold defects. The 3 newly confirmed candidates are on tasks `57667013`, `70bca0cc`
+  and `eb303e01`.
+- **The adjudicated reading leans on one model.** All 6 were rater splits: the 3 newly confirmed
+  had Claude accept and Qwen reject, the 3 contradicted had Claude reject and Qwen accept, and
+  the adjudicator, the same model as the Claude rater, sided with the Claude rater on all 6
+  [ADJ, "Answers"].
 - **Other families.** No other family has a false-negative candidate. `compare_table` has 0 in
   218 should-pass mutants on 30 tasks. No alternative solution (0 of 93) fails.
 
@@ -1084,8 +1174,8 @@ its checker still passes after a GUI-faithful LibreOffice save. Of 92 counted go
   gold of `3a7c8185`, `9ec204e4` and `b8adbc24` as still correct.
 - **The fourth is not a checker error.** Both raters reject the saved gold of `30e3e107`: the
   save changed its content.
-- **Standing.** These counts do not change with the owner's adjudication (no MUT-P1 flip is in
-  the pool), but their audit reading rests on model raters; the human spot check is pending.
+- **Standing.** Adjudication changed none of these counts (no MUT-P1 flip was in the pool), but
+  their audit reading rests on model raters; the human spot check is pending [ADJ].
 - **The measurement MUT-P1 replicates.** The earlier headless scoping round trip, a different
   save path, flipped 7 of 63 confirm golds and 1 of 26 reserve golds [MUT-REG section 4].
 
@@ -1102,8 +1192,11 @@ candidate share 5.9%, 0.8-12.3%) [MUT]:
 - **2 are confirmed** (both raters reject the end state): `drop_char_format` on
   `compare_pptx_files` (`70bca0cc`), and `text_edit` on `compare_docx_files` (`d53ff5ee`).
 - **3 had their violation label contradicted** by both raters (two on `358aa0a7`, one on
-  `a434992a`), pending the owner.
-- **Confirmed share:** 2.1% (0-5.4%).
+  `a434992a`). These concordant contradictions were in the adjudication pool, and the
+  adjudicator upheld the raters on all 3, so they stay label contradicted (adjudicated by an
+  isolated model on the owner's instruction (D80); not human-validated; the adjudicator is the
+  same model as the Claude rater) [ADJ, "What changed against the K2 rerun"].
+- **Confirmed share:** 2.1% (0-5.4%), unchanged by adjudication.
 
 **Probe-touched cells.** Before the freeze, exploratory scoping probes had already shown how some
 tasks' checkers treat some kinds of edit. Every (task, operator) cell such a probe touched is kept
@@ -1119,39 +1212,91 @@ are small.
 
 ### 6.5 How reliable the audit is
 
-[MUT, "Audit statistics"]
+**The two raters** [MUT, "Audit statistics"]:
 
 - **Agreement.** Cohen's κ on the 138 real items is 0.343 (raw agreement 82.6%), below 0.6.
   Adjudication cannot change κ.
 - **Sham accuracy.** Claude 36 of 40 (0.90); Qwen 39 of 40 (0.975).
-- **Unresolved items.** 24 of 138 real items (17.4%).
+- **Unresolved items.** 24 of 138 real items (17.4%) before adjudication.
 - **Gold shams.** Claude rejects all four split gold shams. They sit on tasks that also hold 3 of
   the 6 split equivalence candidates.
 
-These raters are model raters. The human spot check is pending, and the study claims no rate.
+**The adjudication.** *Adjudicated by an isolated model on the owner's instruction (D80); not
+human-validated.* The registered adjudicator was the owner. Under the owner's delegation of his
+pending research decisions, the 34-item adjudication pool (every real item the raters split on,
+every audited mutant both read against its label, and every gold sham they split on) and the
+25-item spot check, 52 distinct items, were answered by fresh, isolated `claude-opus-5-5`
+agents, one per item, blind to both raters and started with the raters' registered template
+[DEC D80, D81; ADJ]. This is a disclosed deviation from the registered plan [DEC D9]: the spot
+check was meant as a human validation of the model raters, and it is not human here. A first run
+was void, because its agents were not started with the registered template and all of them used
+a forbidden tool; none of its answers is used [DEC D81]. The record is the second run
+[ADJ; DEC D82]:
+
+- **Isolation.** All 52 transcripts passed the registered isolation audit, with 0 void.
+- **Answers.** The pool split 17 accept and 17 reject; the spot check 19 accept and 6 reject.
+- **Gold-defect tasks.** Of the 4 split gold shams, the adjudicator rejected 3: `5c1a6c3d`
+  (`compare_pptx_files`), and `881deb30` and `8e116af7` (both `compare_table`); it accepted
+  `035f41ba`. A task whose saved gold is rejected is a gold-defect task [DEC D34]. There were
+  none before adjudication, and their consequences are the main thing it changed (Table 9): the 3
+  reorder candidates of `5c1a6c3d` became label contradicted, and all 10 alternative solutions
+  on `881deb30` (6) and `8e116af7` (4) were rejected.
+- **A correlated judge.** The adjudicator is the same model as the Claude rater. On the 28 pool
+  splits it sided with Claude 17 times, including all 6 equivalence splits, and with Qwen 11
+  times. In the spot check it matched the Claude rater on all 25 items and the raters' consensus
+  on all 23 concordant ones, and it got all 5 shams right. A model spot check that agrees with
+  one rater on every item cannot validate that rater, so the human spot check [DEC D9] stays open
+  as the only independent validation. The three gold-defect calls rest on Claude-family
+  judgment, and the record cannot separate a gold defect from a shared Claude-family reading.
+- **Sensitivities fixed before any answer existed** [DEC D81]. `claude-fable-5-1`, a model that
+  is neither rater's, agreed with the record on 51 of 52 items (κ 0.96) and 27 of 28 splits. Its
+  one unsure, an equivalence split, would leave 32 confirmed false negatives. Under the strict
+  registered audit all 52 Fable answers are void, because every Fable transcript carries a
+  harness attachment type off the registered list (a fixed reminder to batch tool calls), so
+  this reading excepts that one type. Fable comes from the same provider, so it measures
+  stability across two Anthropic models, not independence from Anthropic. A second sensitivity
+  gave the 12 items whose packets show the differ's added-sheet marker one fixed sentence
+  explaining it; it changed no answer, and the analysis is byte-identical.
+
+Both raters and the adjudicator are models. Nothing in this section is human-validated, and the
+study claims no rate.
 
 ### 6.6 What the defects did to S1a
 
 *Registered secondary.* Offline rescoring of every S1a final state applied the corrected
 comparator to 72 episodes per main run. It changed no verdict on the base or the secondary set:
 0 flips, and 0 live-against-offline replay mismatches [S1A]. So for Qwen3.5-4B and 9B at 15
-steps, the reorder defect did not move any S1a outcome. Corrected verdicts stay secondary until
-the owner adjudicates [DEC D9].
+steps, the reorder defect did not move any S1a outcome. One of the three model-adjudicated
+gold-defect tasks, `5c1a6c3d`, is in S1a's libreoffice_impress extension set, and the other two,
+`881deb30` and `8e116af7`, are in its multi_apps extension set (Appendix B.2; none is in the
+base); S1a's readings are unchanged by them, because S1a reads raw verdicts, and any sensitivity
+to them belongs to successor E, whose registration in progress adds a sensitivity without the
+three gold-defect tasks (section 11) [DEC D80, D82]. Corrected verdicts stay secondary. The
+registration kept them secondary while the owner's adjudication and spot check were pending;
+the adjudication was then done by an isolated model, not the owner, and the human spot check is
+still pending; and here they equal the raw verdicts in any case [S1A-REG section 8; DEC D9,
+D82].
 
-### 6.7 What the owner's answers can change
+### 6.7 What the adjudication changed
 
-Table 9. Outputs before and after adjudication [MUT, "Pending for Kevin"; `summary.json`
-`pending_ranges`].
+Table 9. Outputs before and after the adjudication [ADJ, "What changed against the K2 rerun"
+and "What did not change"; ADJ `summary.json` `before_after`; ADJ-AN]. "Before" is the K2
+rerun, which differs from the first analysis only in its label [K2]. "After" is adjudicated by
+an isolated model on the owner's instruction (D80); not human-validated, and the adjudicator is
+the same model as the Claude rater (section 6.5).
 
-| Output | Now | After adjudication |
+| Output | Before | After |
 |---|---|---|
-| Confirmed false negatives | 30 | 30-36 |
-| Confirmed false positives | 2 | 2-5 |
-| Alternative solutions admitted to MUT-P2 | 72 | 72-93 (MUT-P2's events do not change) |
-| Gold-defect tasks | 0 | 0-4 |
-| Audit-confirmed shares (pooled 10.6%, `compare_pptx_files` 33.5%, reorder operator 77.1%, false positive 2.1%) | as stated | change with adjudication (rise as split or contradicted items are confirmed) |
-| K3 label errors (equivalence 0.167, violation 0.600) | as stated | fall as items are resolved, possibly to 0; K4 then fires only if both groups stay above 10% |
-| κ, MUT-P1, MUT-P3, MUT-P4, MUT-P5, the candidate shares | as stated | unchanged |
+| False-negative candidates (36) | 30 confirmed, 6 unresolved | 33 confirmed, 3 label contradicted (all on gold-defect task `5c1a6c3d`) |
+| Confirmed false-negative shares: pooled; `compare_pptx_files`; reorder operator | 10.6%; 33.5%; 77.1% | 11.6% (6.4-17.3%); 37.1% (28.3-44.6%); 85.4% (68.8-97.9%) |
+| Confirmed false positives | 2 (2.1%, 0-5.4%); 3 label contradicted | unchanged: the 3 contradictions were upheld |
+| Gold-defect tasks | 0 | 3 (`5c1a6c3d`, `881deb30`, `8e116af7`) |
+| Alternative solutions in MUT-P2's gate: accepted, rejected, unresolved | 72, 3, 18 | 82, 11, 0 (10 of the 11 rejects on the two `compare_table` gold-defect tasks; outside gold-defect tasks 82 of 83 accepted) |
+| MUT-P2 (exploratory) | 12.4% (7.2-18.3%) on 327 mutants | 12.4% (7.2-18.3%) on 337 mutants, the same events; without the gold-defect tasks' equivalence mutants 12.2% (6.7-18.1%; 323 mutants, 57 tasks) |
+| K3 label error, equivalence group | 0.167 (bound 0.314) | 0.000 (33 items on 15 tasks, exact upper bound 0.087); K3 still fires, through κ alone |
+| K3 label error, violation group | 0.600 (5 items, insufficiently audited) | unchanged; fires |
+| K4 | fires | does not fire |
+| κ, MUT-P1, MUT-P3 to MUT-P5, the candidate shares | as stated | unchanged |
 
 ## 7. What a comparison measures: implications and recommendations
 
@@ -1222,8 +1367,11 @@ agents cannot be read as an agent difference unless both ran interleaved in the 
    revisions without a config and checker diff.
 6. **Treat `compare_pptx_files` verdicts as suspect when shapes may be reordered**: use a
    z-order-invariant comparator such as `compare_pptx_files_zinv`, or report presentation tasks
-   separately, and check that reference golds still pass after the GUI save path (both pending
-   adjudication).
+   separately, and check that reference golds still pass after the GUI save path. The reorder
+   failures reproduced inside real VMs (K2). Neither finding's audit confirmation is human: the
+   gold-flip confirmation rests on the two model raters alone (no MUT-P1 flip was in the
+   adjudication pool), and only the reorder finding's confirmation involves the model
+   adjudicator.
 
 ## 8. Limitations and scope
 
@@ -1254,16 +1402,23 @@ This is the single consolidated list; sections 2.7 and 4.8 give the component-sp
    tasks differ from the public runs' revision [ANCHOR]. Whether those differences change verdicts
    was not tested.
 8. **Certification limits** are in section 2.7.
-9. **Model raters, offline scoring.** The checker audit used two model raters with κ = 0.343; the
-   human spot check and the adjudication are pending; scoring ran offline with VM fidelity
-   unverified; the study is descriptive. Corrected verdicts are not primary evidence.
+9. **Model raters, a correlated model adjudicator, offline scoring checked on a sample.** The
+   checker audit used two model raters with κ = 0.343. Its adjudication pool and spot check were
+   answered by an isolated model under the owner's delegation [DEC D80], the same model as the
+   Claude rater, which matched that rater on all 25 spot-check items; nothing is
+   human-validated, and the human spot check is pending. Scoring ran offline; K2 checked it
+   inside real VMs on 78 compared pairs and all 41 candidate events, not on all 1,300 scoring
+   jobs, and `compare_pptx_files_tolerant` has no K2 pair. The study is descriptive. Corrected
+   verdicts are not primary evidence.
 10. **Model-based design numbers.** Section 5's probabilities and shares are conditional on fitted
     calibrations, are not registered, and were chosen after S1a's data.
 11. **Derived numbers.** Section 7.2's table is arithmetic on the measured floor under stated
     assumptions.
 12. **Decisions taken on the owner's behalf.** Most program decisions cited here were taken by
     the program's agents on the owner's behalf and await the owner's review; only the two rulings
-    named in "Authorship and process" are the owner's own [DEC D55].
+    named in "Authorship and process" are the owner's own [DEC D55]. The delegation itself is the
+    owner's instruction, but the steps decided under it, the model adjudication among them, are
+    the agents' [DEC D80].
 
 ## 9. Reusing the instrument
 
@@ -1346,7 +1501,9 @@ Table 11. Released data.
 | `program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl` | one scored S1a episode | `task_id`, `size`, `harness`, `session`, `rerun`, `block`, `score`, `corrected_score`, `steps`, `tokens`, `ended`, `observations`, `uncertified_key_actions` | 1,808 | Tables 3-4, the secondary set, Figure 2, sections 4.5-4.6 (with the frozen plan) |
 | `program/evidence/2026-10-10/q2-stage1-analysis/merged-<job>.jsonl` | one episode of one main run, before concatenation | as above | 452 each (4 files) | `a1.jsonl` |
 | `program/evidence/2026-10-10/q2-stage1-analysis/report/report-guarded.json` | the registered report | every estimand, test, rule, prediction and sensitivity | 1 | every S1a number in this report |
-| `program/evidence/2026-10-08/q2-mutation-confirm/results/released/confirm-mutants-v1/outcomes.jsonl` | one mutant | `mutant_id`, `task_id`, `operator`, `label`, `checker_family`, `lock_status`, `lock_verdict`, `probe_touched`, `saved_via` | 1,289 | Tables 8-9 and section 6.4 (with `analysis.json` for audit decisions) |
+| `program/evidence/2026-10-08/q2-mutation-confirm/results/released/confirm-mutants-v1/outcomes.jsonl` | one mutant | `mutant_id`, `task_id`, `operator`, `label`, `checker_family`, `lock_status`, `lock_verdict`, `probe_touched`, `saved_via` | 1,289 | Tables 8-9 and section 6.4 (with the `analysis.json` files of [MUT], [K2] and [ADJ-AN] for audit decisions) |
+| `program/evidence/2026-10-11/q2-mutation-adjudication-v2/adjudications.jsonl`; `spot-check-answers.jsonl` | one adjudicated pool item; one spot-check item (adjudicated by an isolated model on the owner's instruction (D80); not human-validated) | `item_id`, `answer` | 34; 25 | Tables 8-9 and section 6.5 (with the frozen audit summary) |
+| `program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/report/k2-pairs.jsonl` | one K2 or K2-C pair | `pair`, `set`, `task_id`, `checker_family`, `offline_verdict`, `vm_verdicts`, `state` | 121 | section 6.1's K2 results |
 | `program/evidence/2026-10-08/q2-action-path-v2-acceptance/acceptance/*.json` | one criterion's verdict, campaigns or state report | `pass`, `cells`, bounds and counts | 1 per file (3-4 files per criterion) | Table 1 and section 2.4 |
 | `program/evidence/2026-10-10/q2-next-step-design-study/designs-*.json`; `fit-*.json` there and in `q2-design-study/` | one calibration's design results; one fit | per design and scenario probabilities; parameters and `prob_scale_components` | 4 design files; 7 fit files | Tables 5-6 |
 | `paper/q2-report/data/variance-shares.json` | probability-scale shares per calibration | `shares` | 1 | Table 6, Figure 3 |
@@ -1385,7 +1542,8 @@ row, hash prefix and freeze time. Each registration pins its code by digest.
   tooling in `ops/s1a-analysis/` (`RUNBOOK.md`).
 - **Design study:** `harness/q2_design/` (tests: `tests/test_q2_design.py`). `git diff d5f5798 --
   harness/q2_stage1` is empty for the design study [DS1].
-- **Checker study:** `harness/q2_mutation/`, `infra/q2-mutation/`.
+- **Checker study:** `harness/q2_mutation/`, `infra/q2-mutation/`, and the K2 executor
+  `harness/q2_mutation_k2/`.
 - **Holo3:** `scripts/run_holo3_rerun_audit_doctor.py`, `harness/holo3_v2.py`.
 
 ### 10.4 Compute
@@ -1396,7 +1554,7 @@ GPU-hours are physical, from the ledger in [STATE] (`gpu_hours_ledger`).
 |---|---:|---|
 | Action-path versions 1 and 2 (development, controls, acceptance) | 0 | version 2 used 109.12 VM-hours, CPU only [AP2]; the verifier notes this total mixes two span definitions [AP2-VB] |
 | S1a (two overlay image builds, a pre-freeze check on development tasks, a post-freeze overlay build, the four main runs) | 4.8444 (main runs 4.7169) | about 90.0 VM-h for the main runs [S1A] |
-| Checker study (unregistered rater development and the confirm audit) | 0.939 | the mutant campaign itself was CPU only [MUT] |
+| Checker study (unregistered rater development and the confirm audit) | 0.939 | the mutant campaign itself was CPU only [MUT]; the registered K2 job ran CPU only for 65 minutes [K2]; the adjudication used no GPU and no host job [ADJ] |
 | Serving probes versions 1 and 2 (version 1 also priced another question) | 1.1513 | [SP2] |
 | Holo3 audit | 0 | one CPU-only job [H3] |
 | Design study | 0 | no host job [DS2] |
@@ -1406,7 +1564,8 @@ GPU-hours are physical, from the ledger in [STATE] (`gpu_hours_ledger`).
 - **Raw records.** Raw run outputs stay on the host's persistent run root. Each run directory's
   `raw-sha256sums.txt` lists the SHA-256 of every raw file [AP2].
 - **Rater material.** The checker study's transcripts, per-item answers, packets and isolated
-  export are hashed, not committed [MUT].
+  export are hashed, not committed [MUT], and so are the adjudicators' transcripts and answer
+  reasons [ADJ].
 - **Holo3 data.** The trajectory feature file stays on the host [H3].
 - **Working files.** The design study's evaluator and attack drivers, and the S1a reviewers'
   working files, are in session scratch space, not committed [DS2; S1A].
@@ -1424,21 +1583,24 @@ GPU-hours are physical, from the ledger in [STATE] (`gpu_hours_ledger`).
 - **Observing the shell's side of a grabbed chord.** The tap records what the shell's grab held
   back, not what the shell received. **[PENDING: program owner]** Whether a later registration
   should observe the shell's side directly [DEC D43].
-- **A decisive harness reading.** One successor (design E, section 5.1) remains available as a
-  registration with a pre-freeze audit, if the owner wants a decisive harness reading at 4B and
-  9B. **[PENDING: program owner]**
+- **A decisive harness reading.** One successor, design E (section 5.1), was decided under the
+  owner's delegation, for a decisive harness reading at 4B and 9B: it is to be registered,
+  audited before its freeze, frozen and run, with no gauntlet because it only adds data to S1a's
+  design [DEC D80]. It is being registered; results are pending.
 
 ## 12. Pending human review
 
 The program owner has not reviewed this draft. Before publication the owner must decide on
 publication itself and on disclosing the candidate checker defects to the OSWorld maintainers,
-which must be settled first. Still open: the 34-item adjudication and the 25-item human spot check
-(section 6.7 lists exactly which outputs they can change); review of the program decisions taken
-on the owner's behalf; confirmation of the earlier release of the checker study's blind specs;
-and the three action-path items marked **[PENDING]** in sections 2.7 and 11. The registered
-action-path verdict and S1a's registered readings will not change. The candidate counts in
-section 6 do not change with adjudication; the audit-confirmed counts, the label-error estimates
-and the corrected verdicts' standing can. Also open without the owner: the S1a
+which must be settled first. Still open: the 25-item human spot check, the only independent
+validation of the checker audit (an isolated model answered the spot check and the 34-item
+adjudication pool [DEC D80-D82]; section 6.7 lists what that adjudication changed); review of
+the program decisions taken on the owner's behalf; confirmation of the earlier release of the
+checker study's blind specs; and the three action-path items marked **[PENDING]** in sections
+2.7 and 11. The registered action-path verdict and S1a's registered readings will not change.
+The candidate counts in section 6 do not depend on the audit; the audit-confirmed counts, the
+label-error estimates and the gold-defect calls rest on model judgment and could change under
+human review. Also open without the owner: the S1a
 runbook's step-12 verification record and a second check of the session-2 lane checks [S1A,
 disclosures 4-5].
 
@@ -1471,8 +1633,13 @@ External sources. Dates are publication dates, or fetch dates for repositories.
   <https://arxiv.org/abs/2610.01618> (2026-10-01).
 - Agent Evaluation Reliability (G-theory; repeated cells rare): <https://arxiv.org/abs/2610.00651>
   (2026-09-30).
+- Do Androids Dream of Breaking the Game? Systematically Auditing AI Agent Benchmarks with
+  BenchJack (reward-hacking audits of 10 agent benchmarks; no gold-state mutants):
+  <https://arxiv.org/abs/2605.12673> (2026-05-12).
 - Measuring the Checker (kernel-oracle mutation analysis): <https://arxiv.org/abs/2609.22220>
   (2026-09-02).
+- Finding Blind Spots in AppWorld and WorkArena Task Verifiers (mutation tests of task verifiers
+  on web and API suites): <https://arxiv.org/abs/2610.09142> (2026-10-06).
 - OSWorld-Verified leaderboard data: <https://github.com/OS-World/OS-World.github.io>, commit
   `62f8466`, `static/data/osworld_verified_results.xlsx` (read 2026-10-07).
 - OSWorld-Verified trajectories: <https://huggingface.co/datasets/xlangai/ubuntu_osworld_verified_trajs>,
@@ -1483,7 +1650,12 @@ External sources. Dates are publication dates, or fetch dates for repositories.
 The citation metadata above is inherited from the program's verified source lists
 (`program/proposals/2026-10-08-q2-stage1-rescoped.md`, sources X1-X15;
 `program/preregistrations/q2-stage1-rescoped-v1.md`, section 21;
-`program/questions/q2-calibrated-cua-instrument.md`). It was not re-fetched for this draft.
+`program/questions/q2-calibrated-cua-instrument.md`). It was not re-fetched for this draft. The
+entries for 2610.09142 and 2605.12673, added in revision 3, are taken from the checker-mutation
+note's sources. The program verified 2610.09142 at full text (claim c076 in
+`program/evidence/2026-10-11/question-renewal/claim-registry.json`); BenchJack's title and date
+come from the note's prior-art check K8, which read its abstract and took its first-version date
+from the arXiv export API [R03].
 
 ## Appendix A. Action-path objects
 
@@ -1634,6 +1806,7 @@ each have state 0 and follow a processed press in their own window [AP2-REG sect
 | `q2-evaluator-mutation-v1` | 11 | `dc39bfa2` | 2026-10-08 08:25 | [MUT], [MUT-CTL], `program/evidence/2026-10-08/q2-mutation-confirm/audit/` |
 | `q2-action-path-v2`, `-inputs`, `-executor` | 13-15 | `58da1bb6`, `603b2142`, `fde44535` | 2026-10-08 14:23 | [AP2]; campaigns ran from a read-only export of `bf99a64` |
 | `q2-stage1-rescoped-v1` (S1a) | 16 | `bc5e88a0` | 2026-10-09 22:11 | [S1A], [S1A-AN]; freeze commit `d5f5798` |
+| `q2-evaluator-mutation-v1-k2` (the K2 addendum) | 17 | `7d03d928` | 2026-10-11 15:51 | [K2], [K2-REG]; freeze commit `7d9c881a` |
 
 ### D.2 Decisions cited
 
@@ -1661,6 +1834,11 @@ agents on the owner's behalf.
 | D63, D64 | A reviewer GPU job ran in S1a's session-2 gap (disclosed); S1a's CPU analysis jobs do not block reviewer jobs |
 | D66, D69 | S1a's registered outcome and the commissioning of the design study; the scale question closed on the design study |
 | D71 | This report is drafted; publication stays the owner's |
+| D79 | K2 verified: the checker study's verdicts hold inside real VMs; the analysis label becomes "VM fidelity checked (K2)" |
+| D80 | The owner delegates his pending research decisions; under the delegation, isolated model adjudicators answer the checker study's adjudication pool and spot check (a disclosed deviation from D9), and outward actions stay the owner's |
+| D81 | The first adjudication run is void; the second run's rules and sensitivities are fixed before any of its answers exist |
+| D82 | The checker-study adjudication is complete, adjudicated by an isolated model on the owner's instruction (D80); not human-validated |
+| D83 | The checker-mutation note is drafted and verified, not published; the prior-art check K8 does not fire |
 
 ### D.3 Jobs cited
 
@@ -1674,6 +1852,7 @@ All Slurm jobs on the program's host.
 | Serving probe version 2 | 466 |
 | Holo3 audit | 438 |
 | S1a | pre-freeze overlay builds 1032 (failed) and 1033; pre-freeze check 1037/1039; post-freeze overlay 1044; main runs (VM/GPU) 1045/1047, 1048/1050, 1051/1053, 1062/1064; analysis 1065-1068, 1071-1075 |
+| Checker study K2 | registered job 1186 |
 | Other program lines | reviewer jobs 1061 (in S1a's session-2 gap) and 1070 (queued during rescoring) |
 
 ### D.4 S1a disclosures as recorded
@@ -1684,6 +1863,61 @@ verification record (item 5), host activity (item 6), the session-1 disclosures 
 reviewer job in the session-2 gap (item 9).
 
 ## Revision record
+
+Revision 3 (2026-10-11) brings the checker study up to date. Revision 2 predated the VM fidelity
+check K2 (D79), the model adjudication (D80-D82) and the checker-mutation note (D83). Revision 3
+uses the note's verified numbers and wording, puts the D80 label and the correlated-judge caveat
+wherever adjudicated numbers appear, and changes nothing else. Changed: the header's revision number
+and evidence commit; the status block; summary item 4; the novelty sentence of "Contributions";
+"Authorship and process"; the labels table, the evidence keys ([K2], [K2-REG], [ADJ], [ADJ-AN],
+[R03]) and four glossary entries; the closest priors of section 1, one reference and the note on its
+metadata; the `358aa0a7` sensitivity in section 4.3; section 6 (6.1's VM fidelity status and K2
+results and its K3 and K4 readings; Table 8 and its notes; the standing of 6.3 and 6.4; 6.5's
+adjudication; 6.6's standing of the corrected verdicts; and 6.7, whose table of pending ranges is
+now a before-and-after table citing the adjudication record instead of the results file's "Pending
+for Kevin" section); recommendation 6; limitations 9 and 12; section 10's released data, code,
+compute and uncommitted material; section 12; and Appendix D. Figure 1's checker number is a
+candidate count that K2 and D82 did not change; no generated figure or appendix table reads
+checker-study data, so none was regenerated. The report has no numbers check of its own; every
+number revision 3 adds was checked against its committed source. The internal cover note's
+checker-study sign-off rows and its discrepancy D3 were updated to match.
+
+A verifier then passed revision 3 with eight low-severity items, all fixed in revision 3 before
+any circulation:
+
+1. Decision, job and ledger identifiers that revision 3 had put into running text (about 23)
+   were moved into square-bracket citations or rephrased away. The Identifiers paragraph now
+   names the registered D80 label wording as its one exception. A scan of the body before
+   Appendix D, with bracketed citations and code spans removed, finds no identifier outside that
+   label.
+2. The header's commit-resolution note, and the evidence-keys paragraph, now name the references
+   absent at `360058d` that resolve at `08033ba7`: Appendix D.1's ledger row 17, section 10.3's
+   `harness/q2_mutation_k2/` and the references' `claim-registry.json`. The header's list of
+   files added on the report's branch now includes the cover note.
+3. This record's sentence on figures now says that Figure 1's checker number is a candidate
+   count, unchanged by K2 and the adjudication.
+4. The status block says that K2 checked a registered sample of 80 scoring jobs (78 compared)
+   plus the 41 candidate events, not all 1,300 scoring jobs.
+5. Recommendation 6 says that the gold-flip confirmation rests on the two model raters alone (no
+   MUT-P1 flip was in the adjudication pool), and that only the reorder finding's confirmation
+   involves the model adjudicator.
+6. Section 1's nearest work to the checker audit adds BenchJack (2605.12673), as the
+   checker-mutation note characterizes it, with a reference entry and a sentence in the
+   paragraph on the references' metadata.
+7. Section 11 no longer lists successor E as waiting on the owner: E was decided under the
+   owner's delegation, is being registered, and its results are pending. Section 5.2's pointer to
+   it and the cover note's successor-E row were updated to match.
+8. Section 6.6 says that the three model-adjudicated gold-defect tasks are all in S1a's
+   extension set and none in its base, that S1a's readings are unchanged because S1a reads raw
+   verdicts, and that any sensitivity belongs to successor E. The verifier named `5c1a6c3d`; the
+   frozen plan puts `881deb30` and `8e116af7` in the extension set too, so the sentence names all
+   three.
+
+Every number these fixes add was checked against its committed source: the K2 sample and pair
+counts against `k2-summary.json` and `k2-pairs.jsonl`, the 1,300 scoring jobs against the
+released `build-summary.json` and `verdicts-lock.jsonl`, the pool's lack of MUT-P1 flips against
+the adjudication README, BenchJack's description and date against the K8 record the note cites,
+and the gold-defect tasks' S1a membership against the frozen plan `plan-a0a.json`.
 
 Revision 2 (2026-10-11) answers two reviews of revision 1: a correctness review (26 problems)
 and an outside-reader review (29 problems). Every problem was addressed except where noted as

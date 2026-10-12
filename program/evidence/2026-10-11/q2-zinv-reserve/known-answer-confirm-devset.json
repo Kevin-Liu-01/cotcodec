@@ -1,0 +1,171 @@
+{
+ "acceptance": {
+  "exact_95": [
+   0.9097488990396656,
+   1.0
+  ],
+  "exact_one_sided_95_lower": 0.9260624110733134,
+  "share": 1.0,
+  "task_equal": {
+   "estimate": 1.0,
+   "high": 1.0,
+   "low": 1.0,
+   "method": "task-cluster percentile bootstrap, 10000 resamples, seed 42",
+   "n_clusters": 15,
+   "n_units": 39
+  },
+  "task_level_one_sided_95_lower": 0.8189637274779153,
+  "tasks_all_accepted": 15
+ },
+ "condition_a": {
+  "accepted": 39,
+  "held": true,
+  "n": 39,
+  "not_accepted": [],
+  "rule": "accepted * 100 >= 95 * n",
+  "tasks": 15
+ },
+ "condition_b": {
+  "held": true,
+  "n": 67,
+  "new_accepts": [],
+  "rule": "no violation mutant with an original fail and a zinv pass",
+  "tasks": 15,
+  "tested": true
+ },
+ "descriptive_floor": {
+  "min_mutants": 20,
+  "min_tasks": 8
+ },
+ "experiment_id": "q2-zinv-reserve-validation-v1",
+ "fail_reasons": [],
+ "license": "The registered rule passed at the registered size (at least 20 mutants on 8 tasks). It licenses 'the correction generalizes to held-out reserve documents at the observed rate', with the exact and task-level lower bounds stated; the rule is a point-estimate rule, so the population claim is the lower bound, not 95%.",
+ "original_on_z": {
+  "fails": 35,
+  "n": 39,
+  "task_equal": {
+   "estimate": 0.9111111111111111,
+   "high": 1.0,
+   "low": 0.8,
+   "method": "task-cluster percentile bootstrap, 10000 resamples, seed 42",
+   "n_clusters": 15,
+   "n_units": 39
+  }
+ },
+ "outcome": "PASS",
+ "reported": {
+  "by_kind": {
+   "gold": 21,
+   "initial": 21,
+   "mutant": 249
+  },
+  "extra_change_new_accepts": [],
+  "mutants_by_label": {
+   "should_fail_extra_change": 49,
+   "should_fail_violation": 67,
+   "should_pass_equiv": 133
+  },
+  "other_items": 252,
+  "other_items_changed": [],
+  "other_items_equal": 252,
+  "regressions_pass_to_not_pass": [],
+  "rows": 291,
+  "zinv_errors": [],
+  "zorder_other_labels": []
+ },
+ "source": "program/evidence/2026-10-08/q2-stage1-g0/zinv/zinv-validation-v3.json",
+ "source_sha256": "7bf653dfbccdb91f113d6ebc608792bb4538652171c2657f3140385404608f21",
+ "status": "registered_rule",
+ "validity": {
+  "invalid_decision_rows": [],
+  "invalid_rows": {},
+  "require_file_check": false
+ },
+ "violation_bounds": {
+  "mutant_one_sided_95_upper": 0.04372755478188946,
+  "original_passes": [
+   "358aa0a7-6677-453f-ae35-e440f004c31e__pptx.alt.textbox_for_placeholder__5bcfed500db3",
+   "358aa0a7-6677-453f-ae35-e440f004c31e__pptx.alt.textbox_for_placeholder__83f8eb664dd1",
+   "70bca0cc-c117-427e-b0be-4df7299ebeb6__pptx.viol.drop_char_format__9fecc87769bc"
+  ],
+  "task_one_sided_95_upper": 0.1810362725220847
+ },
+ "what": "The registered rule of q2-zinv-reserve-validation-v1 read on zinv's development data (S1a job 1000, confirm split). A known-answer check of rules.judge, not evidence: these 39 z-order mutants are the set zinv was developed on. The job-1000 rows carry no file digests, so the file check is off.",
+ "z_by_task": {
+  "04578141-1d42-4146-b9cf-6fab4ce5fd74": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 2
+  },
+  "08aced46-45a2-48d7-993b-ed3fb5b32302": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 3
+  },
+  "0a211154-fda0-48d0-9274-eaac4ce5486d": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 1
+  },
+  "358aa0a7-6677-453f-ae35-e440f004c31e": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 3
+  },
+  "550ce7e7-747b-495f-b122-acdc4d0b8e54": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 3
+  },
+  "57667013-ea97-417c-9dce-2713091e6e2a": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 3
+  },
+  "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 3
+  },
+  "70bca0cc-c117-427e-b0be-4df7299ebeb6": {
+   "accepted": 2,
+   "n": 2,
+   "original_fails": 2
+  },
+  "73c99fb9-f828-43ce-b87a-01dc07faa224": {
+   "accepted": 2,
+   "n": 2,
+   "original_fails": 2
+  },
+  "7ae48c60-f143-4119-b659-15b8f485eb9a": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 2
+  },
+  "9cf05d24-6bd9-4dae-8967-f67d88f5d38a": {
+   "accepted": 2,
+   "n": 2,
+   "original_fails": 2
+  },
+  "a53f80cd-4a90-4490-8310-097b011433f6": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 3
+  },
+  "af2d657a-e6b3-4c6a-9f67-9e3ed015974c": {
+   "accepted": 1,
+   "n": 1,
+   "original_fails": 1
+  },
+  "eb303e01-261e-4972-8c07-c9b4e7a4922a": {
+   "accepted": 2,
+   "n": 2,
+   "original_fails": 2
+  },
+  "edb61b14-a854-4bf5-a075-c8075c11293a": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 3
+  }
+ }
+}

@@ -4997,3 +4997,107 @@ they say so.)
   item, label or answer), that the frozen K3 reason string still reads "label
   error" although the cause is κ, and that (b)'s agreement figures except
   `batching_reminder_sent`. No answer, number or frozen output changed.
+
+## 2026-10-11 — Q2 successor E `q2-stage1-successor-e-v1` drafted (D80 iii; DRAFT, not frozen; branch `stage0/q2-successor-e`, not merged)
+
+- Single owner, CPU only, no host job. Registration
+  `program/preregistrations/q2-stage1-successor-e-v1.md`: S1a's design with more data, no
+  change to its estimands or rules. All 113 eligible pool tasks (no draw, no fill rule), 9B then
+  4B in every session, four new sessions per size (E1-E4) at least 12 h apart from the previous
+  session's later end, one episode per (size, task, harness, session); S1a's harnesses, engine,
+  prompts and pinned date, action path (D53), lane, records schema, D53 (iii) observation rule
+  and D56 carve-out; S1a's estimators, DR0-DR5 and P1-P5 (P1, D_w and rho not estimable at
+  R = 1). Primary set the 113 tasks; S1a's 32 base tasks a registered secondary. E is its own
+  sample; the joint reading with S1a is descriptive.
+- Caps by arithmetic at realized price x 1.2 x 1.05 on the design study's cost model: 52 min
+  per 9B job, 48 per 4B job, 3 + 3 for the overlay OE and its retry, 406 in all (6.77 GPU-h).
+  Cap check (`cap-sufficiency.json`): every slot ends before USR1 with probability 1.000 under
+  S1a's slots, 10% longer slots and 5% loss; 0.9215 for a 4B session 20% slower. Calendar about
+  41-42 h minimum (the design study's 37 h counted one session window).
+- Code: no S1a code-of-record file changes (the prereg test checks all 75 digests). New thin
+  layer `harness/q2_stage1e/` (plan, records, entry point, lane over S1a's `Lane`, analysis with
+  the D59/D61/D62 rules built in, section 15 items), `scripts/render_q2e_manifest.py`,
+  `infra/slurm/host-single-node/q2e-vm.sbatch` (S1a's with the lane module changed), the plan
+  file and the development smoke manifest. E's analysis reproduces S1a's committed readings on
+  S1a's records exactly and the design study's analysis on E-shaped data
+  (`analysis-identity.json`). The design study's E numbers are the registered power statement.
+- Tests: `tests/test_q2_stage1e.py`, `tests/test_q2_stage1e_prereg.py`; S1a's and the design
+  study's suites pass unchanged.
+- Open before the freeze: G-E4 (CPU development smoke of E's lane on the host), G-E5 (the GLMM
+  on E's shape in the pinned container), G-E6 (fresh pre-freeze audit) and the program's
+  sign-off decision.
+
+## 2026-10-11 — Q2 successor E `q2-stage1-successor-e-v1`: first pre-freeze audit's items fixed (DRAFT, not frozen; branch `stage0/q2-successor-e`, not merged)
+
+- Single owner, CPU only; host read-only (job 1200, R04, was running). `main` at `746d60d2`
+  (ledger row 18, D81, D82) merged into the branch first (`23f00f4c`; only `program/log.md`
+  conflicted). Fixes in `acb886c5`; evidence regenerated from it, clean.
+- B1: section 9 now states what D82 found: three gold-defect tasks in E's primary set
+  (`5c1a6c3d`, `881deb30`, `8e116af7`; none in S1a's base or flagged list) and three
+  label-contradicted z-order candidates, all on `5c1a6c3d`, that the corrected outcome scores
+  as passing. New D82 gold-defect sensitivity: every primary reading on the 110 other tasks,
+  raw and corrected (plan field `gold_defect_tasks_d82`; `analysis.report`). S1a's seven
+  flagged tasks stay the flagged set. No primary set, rule or DR changes. Section 21 item 14,
+  disclosure 11.
+- B2: section 25 step 1 merges `main` again after the sign-off decision and freezes on the
+  merged tree (E's row after `main`'s last, row 19 as of `746d60d2`). New prereg tests: the
+  section 21 id must be a decision heading naming the registration whose entry signs items
+  1-14; the ledger must hold R04's row and a frozen E row must follow it. Rehearsed on a
+  scratch export: the freeze is accepted as row 19 and passes with a valid id; a nonexistent id
+  (D83) and a freeze on the pre-merge 17-row ledger each fail their test. Real ledger untouched
+  (18 rows).
+- B3 open: G-E4 (CPU development smoke), G-E5 (GLMM on E's shape), G-E6 (a fresh audit that
+  finds nothing blocking) and the program's sign-off decision. G-E4 needs a quiet host (D80).
+- Non-blocking: the session gap is 12 h plus a 5-minute margin, and a GPU job with no final
+  Slurm state counts its start plus its limit as its end (`lane.job_end`), so both D57 (ii)
+  readings hold; G-E4's draft-only sentence dated, with a test refusing draft-only wording;
+  section 18 says incomplete readings are registered readings under the label, with no power
+  claimed; L = 113 s disclosed as an assumption, with the p99 margins; section 23 pins the GPU
+  container, overlay and analysis infrastructure, and a test checks E's import closure; the
+  `e` purpose's first host run (E-9B-E1) disclosed; section 11 states that the R = 1 label
+  permutation is the exact per-cell sign flip. The review log (section 25) records audit 1
+  with every item's disposition.
+- Plan re-rendered: `plan_sha256` `4e7298a7...`, file `12bded25...`; tasks, orders, caps and
+  engine unchanged. `cap-sufficiency.json` and `analysis-identity.json` regenerated at
+  `acb886c5`: identical to the first outputs but for provenance (and the plan digest input).
+- Tests: E 62 passed on the draft (`test_q2_stage1e.py` 46, `test_q2_stage1e_prereg.py` 16);
+  60 passed and 2 skipped on the frozen rehearsal tree. S1a's and the design study's suites
+  (15 files): 310 passed, 3 skipped. (The earlier report of 293 passed and 4 skipped for these
+  files was wrong; audit 1 found the same 310/3.)
+
+## 2026-10-11 — Q2 successor E `q2-stage1-successor-e-v1`: pre-freeze gates G-E4 and G-E5 passed (DRAFT, not frozen; branch `stage0/q2-successor-e`, not merged)
+
+- Single operator. CPU only: three Slurm jobs with no GRES, run from a read-only `git archive`
+  export of the draft commit `8a23a483` under `~/cotcodec-runs/stage0/q2-stage1e/` on the host
+  (its `harness/` tree digest equals the Mac's). Each job was submitted only when the whole
+  queue was empty, one at a time (polling `squeue` every 2 s in commands of at most about four
+  minutes). Other workstreams held the queue for about two hours first: S2 v4 1201 and 1207,
+  1202, 1209, and R04 1203 and 1204. No GPU, no model, no confirm task.
+- G-E4 **passed**. VM job 1206 ran the registered development smoke
+  (`lane submit experiments/manifests/q2-stage1e/dev-smoke-v1.json`) in 7 min 38 s. All 4
+  slots scored with session `E1`. E's `records.validate` accepts every record and S1a's
+  refuses every one. The lane receipt holds no error (lane exit 0, no container left), and the
+  lane's snapshots saw no foreign Slurm job. Offline rescoring (job 1208, `rescore.py capture`
+  in the metric image) matched the live score on 4 of 4, with the same state digests.
+- G-E5 **passed**. CPU job 1210 ran the unchanged `glmm.R` (200 refits, seed 42) in the
+  pinned image, in 14 min 41 s, on E-shaped synthetic rows: 1,808 rows, `glmm-synthetic`,
+  113 tasks, seed 42, the same bytes on the host's numpy 1.21.5 and the Mac's 2.5.2. Both fits
+  converged with positive-definite Hessians. Bootstrap: 200 refits used, 0 failed, 42 not
+  converged. Estimated variances: task 1.33 (generating 2.25), task:harness 0.97 (1.00),
+  task:session and task:harness:session about 0 (the latter is not identified at R = 1). LRT
+  of `(1|task:harness)`: chi-square 34.1.
+- Evidence: `program/evidence/2026-10-11/q2-stage1-successor-e/gates/` (README, the records
+  and receipts, the operator scripts, `check_gates.py` and its `gates-check.json`, which checks
+  every record with E's code). The registration's G-E4 and G-E5 result slots are filled;
+  nothing else in it changed. Its status paragraph, replaced whole at the freeze, still lists
+  them among the open slots.
+- `main` at `2b8fadc7` (D83, D84, the Q2 report revision; no ledger change) was merged into
+  the branch first (`2f278e81`). E's code equals the exported commit's. The real ledger is
+  untouched (18 rows).
+- `tests/test_q2_stage1e_prereg.py`: the open-slot test accepts a G-E4 or G-E5 slot that is
+  either `TBD` or holds a `**passed**`/`**failed**` verdict naming the gates' evidence. It
+  refuses a filled slot without either. Tests: E 62 passed (`test_q2_stage1e.py` 46,
+  `test_q2_stage1e_prereg.py` 16); S1a's and the design study's suites (15 files) 310 passed,
+  3 skipped.
+- Still open before the freeze: G-E6 (a fresh pre-freeze audit that finds nothing blocking)
+  and the program's sign-off decision (section 21), then section 25's steps.

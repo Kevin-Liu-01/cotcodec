@@ -1,0 +1,149 @@
+{
+ "design_study_analyse_at_S4_R1": {
+  "42": {
+   "DR2": [
+    "Near-equivalent",
+    "Near-equivalent"
+   ],
+   "DR5": [
+    "NO-GO",
+    "NO-GO"
+   ],
+   "equal": true,
+   "p_x": [
+    0.06919308069193081,
+    0.06919308069193081
+   ],
+   "pi_small_bounds": [
+    [
+     0.011905,
+     0.066092
+    ],
+    [
+     0.011905,
+     0.066092
+    ]
+   ]
+  },
+  "43": {
+   "DR2": [
+    "Present",
+    "Present"
+   ],
+   "DR5": [
+    "NO-GO",
+    "NO-GO"
+   ],
+   "equal": true,
+   "p_x": [
+    0.0008999100089991,
+    0.0008999100089991
+   ],
+   "pi_small_bounds": [
+    [
+     0.039928,
+     0.114946
+    ],
+    [
+     0.039928,
+     0.114946
+    ]
+   ]
+  },
+  "44": {
+   "DR2": [
+    "Present",
+    "Present"
+   ],
+   "DR5": [
+    "NO-GO",
+    "NO-GO"
+   ],
+   "equal": true,
+   "p_x": [
+    0.00019998000199980003,
+    0.00019998000199980003
+   ],
+   "pi_small_bounds": [
+    [
+     0.042657,
+     0.108013
+    ],
+    [
+     0.042657,
+     0.108013
+    ]
+   ]
+  }
+ },
+ "inputs": {
+  "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+  "program/evidence/2026-10-10/q2-stage1-analysis/report/report-guarded.json": "6bda751e55c049b9edbd3613d9004f8ab2285a43b2ca890274991c74de7ee655"
+ },
+ "method": "E's registered analysis is S1a's estimators and rules, and the design study's power path.\n\nCPU only, seeded, at the registered 10,000 resamples and 10,000 flips. Two checks:\n\n1. On S1a's own records (``a1.jsonl``), ``harness.q2_stage1e.analysis.analyse_array``\n   reproduces S1a's committed registered readings (``report-guarded.json``): the primary set\n   (32 base tasks) and the registered secondary set (113 tasks), every estimate S1a reports\n   that E's analysis also computes, the delta paired t, the X sign-flip and label-permutation\n   p-values, the session sign-flip test, DR2 and DR5.\n2. On simulated E data (S = 4, R = 1, both sizes, 113 tasks; seeds 42, 43, 44), it gives the\n   same p_X, pi_small bounds, delta, DR2 and DR5 as ``harness.q2_design.analyse.analyse``, the\n   function the design study's operating characteristics for E were computed with.\n\nUsage, from the repository root::\n\n    python program/evidence/2026-10-11/q2-stage1-successor-e/analysis_identity.py --out OUT.json\n",
+ "n_boot": 10000,
+ "n_randomization": 10000,
+ "provenance": {
+  "argv": [
+   "program/evidence/2026-10-11/q2-stage1-successor-e/analysis_identity.py",
+   "--out",
+   "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2e/analysis-identity.json"
+  ],
+  "git_head": "acb886c5374c5eb24b82448f58de48052fb6a769",
+  "numpy": "2.5.2",
+  "python": "3.13.14",
+  "tree_dirty": false
+ },
+ "s1a_committed_readings": {
+  "primary": {
+   "DR2_equal": true,
+   "DR5_equal": true,
+   "estimates_compared": 18,
+   "estimates_differing": [],
+   "readings": {
+    "DR2": "Inconclusive",
+    "DR5": "INCONCLUSIVE",
+    "p_x": 0.4587541245875412,
+    "pi_small_one_sided_95": [
+     0.0,
+     0.259909
+    ]
+   },
+   "tasks": 32,
+   "tests_equal": {
+    "DR1_drop_4B": true,
+    "delta_paired_t": true,
+    "delta_session_heterogeneity": true,
+    "session_signflip_p": true,
+    "success_by_size_harness": true,
+    "x_label_permutation_p_sensitivity": true,
+    "x_signflip_p": true
+   }
+  },
+  "secondary_base_plus_completed_extension": {
+   "DR2_equal": true,
+   "DR5_equal": true,
+   "estimates_compared": 18,
+   "estimates_differing": [],
+   "readings": {
+    "DR2": "Inconclusive",
+    "DR5": "INCONCLUSIVE",
+    "p_x": 0.15708429157084292,
+    "pi_small_one_sided_95": [
+     0.019608,
+     0.162165
+    ]
+   },
+   "tasks": 113,
+   "tests_equal": {
+    "DR1_drop_4B": true,
+    "delta_paired_t": true,
+    "delta_session_heterogeneity": true,
+    "session_signflip_p": true,
+    "success_by_size_harness": true,
+    "x_label_permutation_p_sensitivity": true,
+    "x_signflip_p": true
+   }
+  }
+ }
+}
