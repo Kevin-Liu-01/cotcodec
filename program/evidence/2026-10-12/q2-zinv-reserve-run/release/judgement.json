@@ -1,0 +1,134 @@
+{
+ "acceptance": {
+  "exact_95": [
+   0.752947361999529,
+   1.0
+  ],
+  "exact_one_sided_95_lower": 0.7941833348134493,
+  "share": 1.0,
+  "task_equal": {
+   "estimate": 1.0,
+   "high": 1.0,
+   "low": 1.0,
+   "method": "task-cluster percentile bootstrap, 10000 resamples, seed 42",
+   "n_clusters": 8,
+   "n_units": 13
+  },
+  "task_level_one_sided_95_lower": 0.6876560219336321,
+  "tasks_all_accepted": 8
+ },
+ "comparator_sha256": "64899d5056f4791008c2a10c38a7b0fbb94fbe912d20a702ec74851a0ca7f655",
+ "condition_a": {
+  "accepted": 13,
+  "held": true,
+  "n": 13,
+  "not_accepted": [],
+  "rule": "accepted * 100 >= 95 * n",
+  "tasks": 8
+ },
+ "condition_b": {
+  "held": true,
+  "n": 15,
+  "new_accepts": [],
+  "rule": "no violation mutant with an original fail and a zinv pass",
+  "tasks": 5,
+  "tested": true
+ },
+ "descriptive_floor": {
+  "min_mutants": 20,
+  "min_tasks": 8
+ },
+ "experiment_id": "q2-zinv-reserve-validation-v1",
+ "fail_reasons": [],
+ "license": "Descriptive: zinv accepted at least 95% of the held-out z-order mutants and newly accepted no violation mutant, on fewer than 20 mutants or 8 tasks. It licenses 'the correction held on reserve documents it was not developed on, at this size', with the exact lower bound stated; not a claim that zinv accepts 95% of z-order equivalents in general.",
+ "original_on_z": {
+  "fails": 13,
+  "n": 13,
+  "task_equal": {
+   "estimate": 1.0,
+   "high": 1.0,
+   "low": 1.0,
+   "method": "task-cluster percentile bootstrap, 10000 resamples, seed 42",
+   "n_clusters": 8,
+   "n_units": 13
+  }
+ },
+ "outcome": "PASS",
+ "reported": {
+  "by_kind": {
+   "gold": 8,
+   "initial": 9,
+   "mutant": 89
+  },
+  "extra_change_new_accepts": [],
+  "mutants_by_label": {
+   "should_fail_extra_change": 14,
+   "should_fail_violation": 15,
+   "should_pass_equiv": 60
+  },
+  "other_items": 93,
+  "other_items_changed": [],
+  "other_items_equal": 93,
+  "regressions_pass_to_not_pass": [],
+  "rows": 106,
+  "zinv_errors": [],
+  "zorder_other_labels": []
+ },
+ "rows_sha256": "90f1b8cf7c77c16d2cadfd45f741ae49ab29fff92ea7d19cb6e397fd7324e347",
+ "schema": "q2-zinv-reserve-judgement-v1",
+ "split": "reserve",
+ "status": "descriptive",
+ "validity": {
+  "invalid_decision_rows": [],
+  "invalid_rows": {},
+  "require_file_check": true
+ },
+ "violation_bounds": {
+  "mutant_one_sided_95_upper": 0.18103627252208465,
+  "original_passes": [],
+  "task_one_sided_95_upper": 0.4507197283469412
+ },
+ "warning": "Blind warning (D9, D82): this file names checker verdicts per mutant, as the checker-mutation study's released analysis does. The parent's human spot check (D9) is still pending: if you are doing it, answer from its blind packets before reading this file (program/evidence/2026-10-08/q2-mutation-confirm/results/README.md, 'Pending for Kevin'). No reserve mutant is in the spot check or the adjudication pool, and this addendum reads no audit, adjudication, spot-check or rater file.",
+ "z_by_task": {
+  "05dd4c1d-c489-4c85-8389-a7836c4f0567": {
+   "accepted": 3,
+   "n": 3,
+   "original_fails": 3
+  },
+  "39be0d19-634d-4475-8768-09c130f5425d": {
+   "accepted": 2,
+   "n": 2,
+   "original_fails": 2
+  },
+  "7dbc52a6-11e0-4c9a-a2cb-1e36cfda80d8": {
+   "accepted": 2,
+   "n": 2,
+   "original_fails": 2
+  },
+  "841b50aa-df53-47bd-a73a-22d3a9f73160": {
+   "accepted": 1,
+   "n": 1,
+   "original_fails": 1
+  },
+  "8979838c-54a5-4454-a2b8-3d135a1a5c8f": {
+   "accepted": 1,
+   "n": 1,
+   "original_fails": 1
+  },
+  "986fc832-6af2-417c-8845-9272b3a1528b": {
+   "accepted": 1,
+   "n": 1,
+   "original_fails": 1
+  },
+  "c82632a4-56b6-4db4-9dd1-3820ee3388e4": {
+   "accepted": 2,
+   "n": 2,
+   "original_fails": 2
+  },
+  "f23acfd2-c485-4b7c-a1e7-d4303ddfe864": {
+   "accepted": 1,
+   "n": 1,
+   "original_fails": 1
+  }
+ }
+}
