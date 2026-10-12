@@ -1,0 +1,32 @@
+Package: libreoffice-l10n-ar
+Source: libreoffice
+Version: 1:7.3.7-0ubuntu0.22.04.4
+Architecture: all
+Bugs: mailto:libreoffice@lists.launchpad.net
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Installed-Size: 3913
+Depends: libreoffice-common (>= 1:7.0.0~alpha~), locales | locales-all, ucf (>= 0.8)
+Recommends: fonts-hosny-amiri, fonts-kacst, fonts-sil-scheherazade, libreoffice-core (>> 1:7.3.7)
+Suggests: hunspell-dictionary-ar | myspell-dictionary-ar, hyphen-ar, libreoffice-grammarcheck-ar, libreoffice-help-ar, mythes-ar
+Provides: libreoffice-l10n (= 7.3)
+Section: localization
+Priority: optional
+Homepage: http://www.libreoffice.org
+Description: office productivity suite -- Arabic language package
+ LibreOffice is a full-featured office productivity suite that provides
+ a near drop-in replacement for Microsoft(R) Office.
+ .
+ This package contains the localization of LibreOffice in
+ Arabic.
+ It contains the user interface, the templates and the autotext features.
+ (please note that not all this is available for all possible languages).
+ You can switch user interface language using the locales system.
+ .
+ Spelling dictionaries, hyphenation patterns, thesauri and help are not
+ included in this package. There are some available in separate packages
+ (myspell-*, hyphen-*, mythes-*, libreoffice-help-*)
+ .
+ If you just want to be able to spellcheck etc. in other languages, you can
+ install extra dictionaries/hyphenation patterns/thesauri independently of
+ the language packs.
+Original-Maintainer: Debian LibreOffice Maintainers <debian-openoffice@lists.debian.org>

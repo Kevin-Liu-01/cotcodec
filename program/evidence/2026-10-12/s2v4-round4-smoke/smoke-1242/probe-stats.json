@@ -1,0 +1,139 @@
+{
+ "attempts_by_kind_status": {
+  "capture|infrastructure|guest_server_restart": 6,
+  "capture|infrastructure|runner_crash": 3,
+  "capture|probed|None": 240,
+  "gold|probed|None": 70
+ },
+ "capture_minutes_probed": {
+  "max": 4.74,
+  "median": 3.99
+ },
+ "capture_probed": 240,
+ "development_only": true,
+ "donothing_verdicts_by_cell": {
+  "AD|fail": 24,
+  "AR|fail": 24,
+  "A|fail": 24,
+  "ER|fail": 48,
+  "E|fail": 48,
+  "PD|error": 21,
+  "PD|fail": 3,
+  "PL|fail": 24,
+  "S|fail": 24
+ },
+ "host_snapshots": {
+  "max_loadavg_1min": 17.56,
+  "n": 14,
+  "with_foreign_slurm_jobs": 0
+ },
+ "keyboard_facts": {
+  "('us,us', \"['ibus-daemon']\", \"[('xkb', 'us')]\", 'xkb:us::eng')": 240
+ },
+ "pointer_wait_s": {
+  "max": 4.036,
+  "median": 4.0,
+  "min": 4.0,
+  "n": 240
+ },
+ "records": 319,
+ "requeued_slots": [
+  [
+   "01b269ae:PL:r1",
+   [
+    "infrastructure:guest_server_restart",
+    "probed:None"
+   ]
+  ],
+  [
+   "2b94c692:A:r1",
+   [
+    "infrastructure:runner_crash",
+    "probed:None"
+   ]
+  ],
+  [
+   "4ed5abd0:A:r1",
+   [
+    "infrastructure:guest_server_restart",
+    "probed:None"
+   ]
+  ],
+  [
+   "ac9bb6cb:A:r1",
+   [
+    "infrastructure:guest_server_restart",
+    "probed:None"
+   ]
+  ],
+  [
+   "ac9bb6cb:E:r1",
+   [
+    "infrastructure:runner_crash",
+    "probed:None"
+   ]
+  ],
+  [
+   "af23762e:PL:r2",
+   [
+    "infrastructure:guest_server_restart",
+    "probed:None"
+   ]
+  ],
+  [
+   "bf4e9888:PL:r1",
+   [
+    "infrastructure:runner_crash",
+    "probed:None"
+   ]
+  ],
+  [
+   "d681960f:E:r1",
+   [
+    "infrastructure:guest_server_restart",
+    "probed:None"
+   ]
+  ],
+  [
+   "d681960f:E:r2",
+   [
+    "infrastructure:guest_server_restart",
+    "probed:None"
+   ]
+  ]
+ ],
+ "schema": "s2v4-round4-probe-stats-v1",
+ "settle_after_reset_s": {
+  "max": 60.018,
+  "min": 60.0
+ },
+ "slots": 310,
+ "slots_final_status": {
+  "probed": 310
+ },
+ "warp": {
+  "after": {
+   "[995, 540]": 249
+  },
+  "before": {
+   "[1728, 972]": 249
+  },
+  "capture_attempts_with_warp": 249,
+  "moved": {
+   "True": 249
+  },
+  "seconds_in_guest": {
+   "max": 0.237,
+   "median": 0.224,
+   "min": 0.222
+  }
+ },
+ "warp_guest_time_minus_open_reply_s": {
+  "max": 61.031,
+  "median": 59.982,
+  "min": 59.042,
+  "n": 240,
+  "note": "pointer.guest_time minus the latest /setup/open_file reply time of the same attempt (guest clock against the episode container's clock, as in round 3's reading of smoke 1240: median 0.06 s, range -1.05 to +1.13 s)"
+ },
+ "what": "descriptive numbers read from smoke-1242/probes.jsonl (every attempt) and the lane receipt's host snapshots (removed from the committed receipt), by a scratch script on the Mac; nothing here enters D90's criterion, which dev-smoke-read.json and the oracle route read"
+}

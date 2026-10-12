@@ -1,0 +1,28 @@
+{
+ "container_environment": {
+  "numpy": "1.26.4",
+  "pillow": "11.0.0",
+  "python": "3.12.13",
+  "scipy": "1.17.1"
+ },
+ "development_only": true,
+ "instrument_checks_equal": true,
+ "k0_equal": true,
+ "mac_environment": {
+  "numpy": "2.5.2",
+  "pillow": "12.3.0",
+  "python": "3.13.14",
+  "scipy": "1.18.0"
+ },
+ "metrics_equal": true,
+ "per_task_differences": [
+  {
+   "container": 1134.4,
+   "mac": 1134.3,
+   "path": "2b94c692-6abb-48ae-ab0b-b3e8a19cb340/mirror_elements/mean_displacement_px"
+  }
+ ],
+ "schema": "s2v4-oracle-crosscheck-v1",
+ "tolerances_equal": true,
+ "what": "oracle_vm.py --k0 on the Mac (a copy of smoke 1240's capture records and renders, --workers 4) against the registered container route (Slurm 1241, --workers 16), same code (export 688b2880)"
+}

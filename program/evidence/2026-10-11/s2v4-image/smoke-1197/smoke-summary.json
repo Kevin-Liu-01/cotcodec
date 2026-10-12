@@ -1,0 +1,984 @@
+{
+ "development_only": true,
+ "donothing_verdicts": {
+  "12382c62": {
+   "A": "fail",
+   "AD": "fail",
+   "AR": "fail",
+   "E": "fail",
+   "ER": "fail",
+   "PL": "fail",
+   "S": "fail"
+  },
+  "2b94c692": {
+   "A": "fail",
+   "AD": "fail",
+   "AR": "fail",
+   "E": "fail",
+   "ER": "fail",
+   "PL": "fail",
+   "S": "fail"
+  },
+  "e528b65e": {
+   "A": "fail",
+   "AD": "fail",
+   "AR": "fail",
+   "E": "fail",
+   "ER": "fail",
+   "PL": "fail",
+   "S": "fail"
+  }
+ },
+ "lane_receipt": {
+  "bridge_dir": null,
+  "dispatched": [
+   "12382c62:S:r1#1",
+   "12382c62:E:r1#1",
+   "12382c62:E:r2#1",
+   "12382c62:A:r1#1",
+   "12382c62:ER:r1#1",
+   "12382c62:AR:r1#1",
+   "12382c62:PL:r1#1",
+   "12382c62:AD:r1#1",
+   "2b94c692:S:r1#1",
+   "2b94c692:E:r1#1",
+   "2b94c692:E:r2#1",
+   "2b94c692:A:r1#1",
+   "2b94c692:ER:r1#1",
+   "2b94c692:AR:r1#1",
+   "2b94c692:PL:r1#1",
+   "2b94c692:AD:r1#1",
+   "e528b65e:S:r1#1",
+   "e528b65e:E:r1#1",
+   "e528b65e:E:r2#1",
+   "e528b65e:A:r1#1",
+   "e528b65e:ER:r1#1",
+   "e528b65e:AR:r1#1",
+   "e528b65e:PL:r1#1",
+   "e528b65e:AD:r1#1"
+  ],
+  "engine_ready": null,
+  "executor_commit": "dd7ce25c17c9e65b2fb45d24c1135776174605eb",
+  "experiment_id": "s2-arabic-cua-locale-v4",
+  "fill": [],
+  "first_dispatch": 1791747294.523523,
+  "gpu_job": null,
+  "image_digests_verified": {
+   "A": "1d2bb7ad14148e40c4298dab04fe3cee5d53f65330da0d8e0fe82e1fcfa6eb3e",
+   "AD": "3d5141b647afc42cd4819f3058cd929cfff0391f423035c77fad50afef11fed7",
+   "AR": "1cf32571aa5c0fa98fa5c5387af2d56a155566467a36c70048844d54c00517d9",
+   "E": "19792fbcc7b3b9bbc18b45f95cb0b09c7064b5bd8e841f144d381e5c063ea856",
+   "ER": "f4db3bba67e4a4fd0e941385799c5569c6c49524bb44b7ce6e2a9724685df18c",
+   "PL": "d7402b1db5ff9072cc4e36fa4900bcba9966b593590fc0c3cd759f340e36a9e0",
+   "S": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313"
+  },
+  "job_id": "1197",
+  "name": "s2v4-dev-smoke-v1",
+  "purpose": "development",
+  "records": 24,
+  "schema": "s2v4-vm-lane-receipt-v1",
+  "source_tree_sha256": "96bba3226f368be67e1845d7f4eb8922e41a079a8e0013d4975ad59e522cf78e",
+  "statuses": {
+   "probed": 24
+  },
+  "stopped": false,
+  "t_end": 1791747669.560353,
+  "t_start": 1791747294.4817543,
+  "usr1_epoch": null
+ },
+ "masks": {
+  "caret": "pixels differing between the two shots",
+  "shell_rows": 32
+ },
+ "pixel_diffs": {
+  "12382c62": {
+   "AD_vs_AR": {
+    "bbox": null,
+    "diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "bbox": [
+     70,
+     67,
+     1910,
+     1077
+    ],
+    "diff_pixels": 231604,
+    "masked_pixels": 61440
+   },
+   "ER_vs_E": {
+    "bbox": [
+     70,
+     70,
+     1919,
+     1077
+    ],
+    "diff_pixels": 263700,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "bbox": [
+     110,
+     261,
+     110,
+     261
+    ],
+    "diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "bbox": [
+     1475,
+     130,
+     1537,
+     164
+    ],
+    "diff_pixels": 1398,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "bbox": [
+     74,
+     92,
+     1537,
+     261
+    ],
+    "diff_pixels": 45912,
+    "masked_pixels": 61440
+   }
+  },
+  "2b94c692": {
+   "AD_vs_AR": {
+    "bbox": null,
+    "diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "bbox": [
+     70,
+     67,
+     1910,
+     1077
+    ],
+    "diff_pixels": 128916,
+    "masked_pixels": 61440
+   },
+   "ER_vs_E": {
+    "bbox": [
+     70,
+     70,
+     1919,
+     1077
+    ],
+    "diff_pixels": 806538,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "bbox": [
+     313,
+     222,
+     313,
+     222
+    ],
+    "diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "bbox": [
+     313,
+     222,
+     313,
+     222
+    ],
+    "diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "bbox": [
+     74,
+     91,
+     1310,
+     164
+    ],
+    "diff_pixels": 26513,
+    "masked_pixels": 61440
+   }
+  },
+  "e528b65e": {
+   "AD_vs_AR": {
+    "bbox": null,
+    "diff_pixels": 0,
+    "masked_pixels": 61458
+   },
+   "A_vs_E": {
+    "bbox": [
+     70,
+     67,
+     1910,
+     1077
+    ],
+    "diff_pixels": 132108,
+    "masked_pixels": 61458
+   },
+   "ER_vs_E": {
+    "bbox": [
+     70,
+     70,
+     1919,
+     1077
+    ],
+    "diff_pixels": 328392,
+    "masked_pixels": 61458
+   },
+   "E_vs_E2": {
+    "bbox": null,
+    "diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "bbox": [
+     110,
+     130,
+     1569,
+     222
+    ],
+    "diff_pixels": 1399,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "bbox": [
+     74,
+     92,
+     1584,
+     222
+    ],
+    "diff_pixels": 50635,
+    "masked_pixels": 61458
+   }
+  }
+ },
+ "schema": "s2v4-smoke-summary-v1",
+ "slots": [
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.9541,
+   "boot_s": 19.837,
+   "cell": "A",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "ملف",
+   "menubar_order": "ltr",
+   "named_showing": 109,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 123.774,
+   "saves_rewritten": {
+    "/home/user/WeeklySales.xlsx": true
+   },
+   "setup_failures": 0,
+   "slot": "12382c62:A:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "12382c62",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.9541,
+   "boot_s": 19.88,
+   "cell": "AD",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "ملف",
+   "menubar_order": "rtl",
+   "named_showing": 109,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 124.102,
+   "saves_rewritten": {
+    "/home/user/WeeklySales.xlsx": true
+   },
+   "setup_failures": 0,
+   "slot": "12382c62:AD:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "12382c62",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.9541,
+   "boot_s": 20.038,
+   "cell": "AR",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "ملف",
+   "menubar_order": "rtl",
+   "named_showing": 109,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 123.542,
+   "saves_rewritten": {
+    "/home/user/WeeklySales.xlsx": true
+   },
+   "setup_failures": 0,
+   "slot": "12382c62:AR:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "12382c62",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 19.835,
+   "cell": "E",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 109,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 123.814,
+   "saves_rewritten": {
+    "/home/user/WeeklySales.xlsx": true
+   },
+   "setup_failures": 0,
+   "slot": "12382c62:E:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "12382c62",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 19.848,
+   "cell": "E",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 109,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 123.669,
+   "saves_rewritten": {
+    "/home/user/WeeklySales.xlsx": true
+   },
+   "setup_failures": 0,
+   "slot": "12382c62:E:r2",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "12382c62",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 19.797,
+   "cell": "ER",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "rtl",
+   "named_showing": 109,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 123.27,
+   "saves_rewritten": {
+    "/home/user/WeeklySales.xlsx": true
+   },
+   "setup_failures": 0,
+   "slot": "12382c62:ER:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "12382c62",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 19.802,
+   "cell": "PL",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 109,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 123.529,
+   "saves_rewritten": {
+    "/home/user/WeeklySales.xlsx": true
+   },
+   "setup_failures": 0,
+   "slot": "12382c62:PL:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "12382c62",
+   "toolbar_digest": "9ae45f95fef71b4f4b053f11ef2d45354603ddbb502c237e6d160583202cfcaf",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 0,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 19.85,
+   "cell": "S",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 107,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 123.828,
+   "saves_rewritten": {
+    "/home/user/WeeklySales.xlsx": true
+   },
+   "setup_failures": 0,
+   "slot": "12382c62:S:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "12382c62",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.9593,
+   "boot_s": 18.807,
+   "cell": "A",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "ملف",
+   "menubar_order": "ltr",
+   "named_showing": 123,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 121.189,
+   "saves_rewritten": {
+    "/home/user/Desktop/201_6.pptx": true
+   },
+   "setup_failures": 0,
+   "slot": "2b94c692:A:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "2b94c692",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.9593,
+   "boot_s": 18.675,
+   "cell": "AD",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "ملف",
+   "menubar_order": "rtl",
+   "named_showing": 123,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 120.953,
+   "saves_rewritten": {
+    "/home/user/Desktop/201_6.pptx": true
+   },
+   "setup_failures": 0,
+   "slot": "2b94c692:AD:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "2b94c692",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.9593,
+   "boot_s": 18.767,
+   "cell": "AR",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "ملف",
+   "menubar_order": "rtl",
+   "named_showing": 123,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 121.12,
+   "saves_rewritten": {
+    "/home/user/Desktop/201_6.pptx": true
+   },
+   "setup_failures": 0,
+   "slot": "2b94c692:AR:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "2b94c692",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 18.87,
+   "cell": "E",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 123,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 121.107,
+   "saves_rewritten": {
+    "/home/user/Desktop/201_6.pptx": true
+   },
+   "setup_failures": 0,
+   "slot": "2b94c692:E:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "2b94c692",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 18.808,
+   "cell": "E",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 123,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 121.084,
+   "saves_rewritten": {
+    "/home/user/Desktop/201_6.pptx": true
+   },
+   "setup_failures": 0,
+   "slot": "2b94c692:E:r2",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "2b94c692",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 18.806,
+   "cell": "ER",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "rtl",
+   "named_showing": 123,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 121.002,
+   "saves_rewritten": {
+    "/home/user/Desktop/201_6.pptx": true
+   },
+   "setup_failures": 0,
+   "slot": "2b94c692:ER:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "2b94c692",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 18.759,
+   "cell": "PL",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 123,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 121.098,
+   "saves_rewritten": {
+    "/home/user/Desktop/201_6.pptx": true
+   },
+   "setup_failures": 0,
+   "slot": "2b94c692:PL:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "2b94c692",
+   "toolbar_digest": "9ae45f95fef71b4f4b053f11ef2d45354603ddbb502c237e6d160583202cfcaf",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 0,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 18.84,
+   "cell": "S",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 123,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 121.15,
+   "saves_rewritten": {
+    "/home/user/Desktop/201_6.pptx": true
+   },
+   "setup_failures": 0,
+   "slot": "2b94c692:S:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "2b94c692",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.9794,
+   "boot_s": 18.69,
+   "cell": "A",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "ملف",
+   "menubar_order": "ltr",
+   "named_showing": 97,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 120.452,
+   "saves_rewritten": {
+    "/home/user/Desktop/Geography_And_Magical_Realism.docx": true
+   },
+   "setup_failures": 0,
+   "slot": "e528b65e:A:r1",
+   "stable_two_shots": false,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "e528b65e",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.9794,
+   "boot_s": 18.721,
+   "cell": "AD",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "ملف",
+   "menubar_order": "rtl",
+   "named_showing": 97,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 120.504,
+   "saves_rewritten": {
+    "/home/user/Desktop/Geography_And_Magical_Realism.docx": true
+   },
+   "setup_failures": 0,
+   "slot": "e528b65e:AD:r1",
+   "stable_two_shots": false,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "e528b65e",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.9794,
+   "boot_s": 18.659,
+   "cell": "AR",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "ملف",
+   "menubar_order": "rtl",
+   "named_showing": 97,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 119.836,
+   "saves_rewritten": {
+    "/home/user/Desktop/Geography_And_Magical_Realism.docx": true
+   },
+   "setup_failures": 0,
+   "slot": "e528b65e:AR:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "e528b65e",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 18.281,
+   "cell": "E",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 97,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 119.589,
+   "saves_rewritten": {
+    "/home/user/Desktop/Geography_And_Magical_Realism.docx": true
+   },
+   "setup_failures": 0,
+   "slot": "e528b65e:E:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "e528b65e",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 18.417,
+   "cell": "E",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 97,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 120.326,
+   "saves_rewritten": {
+    "/home/user/Desktop/Geography_And_Magical_Realism.docx": true
+   },
+   "setup_failures": 0,
+   "slot": "e528b65e:E:r2",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "e528b65e",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 18.663,
+   "cell": "ER",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "rtl",
+   "named_showing": 97,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 120.591,
+   "saves_rewritten": {
+    "/home/user/Desktop/Geography_And_Magical_Realism.docx": true
+   },
+   "setup_failures": 0,
+   "slot": "e528b65e:ER:r1",
+   "stable_two_shots": false,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "e528b65e",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 33,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 18.659,
+   "cell": "PL",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 97,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 119.928,
+   "saves_rewritten": {
+    "/home/user/Desktop/Geography_And_Magical_Realism.docx": true
+   },
+   "setup_failures": 0,
+   "slot": "e528b65e:PL:r1",
+   "stable_two_shots": false,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "e528b65e",
+   "toolbar_digest": "9ae45f95fef71b4f4b053f11ef2d45354603ddbb502c237e6d160583202cfcaf",
+   "verdict_donothing": "fail"
+  },
+  {
+   "ar_catalogs": 0,
+   "arabic_as_expected": true,
+   "arabic_share": 0.0,
+   "boot_s": 18.295,
+   "cell": "S",
+   "image_check_failed": false,
+   "infrastructure_type": null,
+   "input_methods": [
+    "ibus-daemon"
+   ],
+   "keyboard_layout": "us,us",
+   "menubar_first": "File",
+   "menubar_order": "ltr",
+   "named_showing": 95,
+   "order_as_expected": true,
+   "postconfig_failures": 0,
+   "run_s": 119.667,
+   "saves_rewritten": {
+    "/home/user/Desktop/Geography_And_Magical_Realism.docx": true
+   },
+   "setup_failures": 0,
+   "slot": "e528b65e:S:r1",
+   "stable_two_shots": true,
+   "status": "probed",
+   "strict_title_present": true,
+   "task": "e528b65e",
+   "toolbar_digest": "baa147d8e52392561c3471d4e404a823a7055f44da0fcab86acb806db9b76c0f",
+   "verdict_donothing": "fail"
+  }
+ ]
+}

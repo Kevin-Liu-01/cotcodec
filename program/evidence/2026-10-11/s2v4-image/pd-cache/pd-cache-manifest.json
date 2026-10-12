@@ -1,0 +1,182 @@
+{
+ "files": {
+  "libreoffice_calc/01b269ae-2111-4a07-81fd-3fcd711993b0/Student_Level_Fill_Blank.xlsx": "e38f6e22a154cde65a8c2f4492863eae4db0dcd204e3f5b590468c474bd47d71",
+  "libreoffice_calc/1e8df695-bd1b-45b3-b557-e7d599cf7597/WeeklySales.xlsx": "b7aac9214bc4cea1549f58082327dd6934c057c4960a6695b71df978dc34d479",
+  "libreoffice_calc/347ef137-7eeb-4c80-a3bb-0951f26a8aff/Create_column_charts_using_statistics.xlsx": "9f698563353467451c4ad9e15e809b7ce883f1026eed94c2190f42821986e5a5",
+  "libreoffice_calc/4172ea6e-6b77-4edb-a9cc-c0014bd1603b/MaturityDate.xlsx": "80cf2ec54ef8fe919732f5fab585ff528786117585b9d2b7ed0b11388bb0e1d2",
+  "libreoffice_calc/6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5/Keep_Two_decimal_points.xlsx": "50ce9443352e29b95ecfc392b055dfd46bf42665d4db9e751d9bc651bb2c452a",
+  "libreoffice_calc/d681960f-7bc3-4286-9913-a8812ba3261a/Student_Grades_and_Remarks.xlsx": "fcda6b842fb382af180877e20d463609e47b3af17fde391f44b38d54eb62e31e",
+  "libreoffice_impress/2b94c692-6abb-48ae-ab0b-b3e8a19cb340/201_6.pptx": "c253953b7f638a1731765c72d710efda473b33ebdd09d7216acdceae4d9b82b7",
+  "libreoffice_impress/4ed5abd0-8b5d-47bd-839f-cacfa15ca37a/4_1.pptx": "712828d37c9c19fe91eba09dad7fbfa497208c21e4b7bcd59da1a3413a13f9e0",
+  "libreoffice_impress/5cfb9197-e72b-454b-900e-c06b0c802b40/33_1.pptx": "52888ccafef3d3f6b46f90ca0a8b7e082ca178a6869863227d5b95884a0e6ecd",
+  "libreoffice_impress/ac9bb6cb-1888-43ab-81e4-a98a547918cd/saa-format-guide.pptx": "d26a5fe914384198fea9cae0727bdaf4691622e29988d2d6deb93f7c7762ae57",
+  "libreoffice_impress/af23762e-2bfd-4a1d-aada-20fa8de9ce07/Forests.pptx": "2d2993422af0f2dc2b9cfdef1e7c05bf576b3fe44cadcc61c9a7eaff10712c85",
+  "libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/4.3-Template_4.29.2016.pptx": "f8aafd10d06413f62c9b0a2cc9829311cad1bd7b532af6a95af3299ee754f206",
+  "libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic1.png": "74d65fc57740264c7490318e2e2696eb8f681645755169cd607e189a048bda71",
+  "libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic2.png": "5e51e20a87a96df79e767131cf3cd61e9cf79e8c327073bb7c06eb598e8db6c1",
+  "libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic3.png": "279df468773204169e12044d096a26f54b9cdf3c5c6e84c63176d5e32c2ffa88",
+  "libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic4.png": "154b9f093efdb1bdd11bb17b20e6608198b3350e2b2aace67d3cc80901eb9ee1",
+  "libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic5.png": "f158d4dbf9665b54203887b3b0a97d7fbfb2eebcffd078276223deb0170c9ec9",
+  "libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/pic6.png": "bb4728b23f6f5ca2a1e3c7eb46816ad9ba97be2f7f44aaa2a35d0b63db79dca1",
+  "libreoffice_impress/e4ef0baf-4b52-4590-a47e-d4d464cca2d7/42_2.pptx": "9c07aba6abed161b8574fd284cbe2e680590a0e8594721a9b75f5b63d7adf3b1",
+  "libreoffice_writer/0e47de2a-32e0-456c-a366-8c607ef7a9d2/LibreOffice_Open_Source_Word_Processing.docx": "e3a55172e9cc7a723318a884ab2964941b09d8cc1fcc357630848646eb3df1f7",
+  "libreoffice_writer/6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2/sample-recruitment-phone-script.odt": "ae3adb2972baffd738203385c56daa6055005e4200ae7eea0113edb5ac6fa37a",
+  "libreoffice_writer/936321ce-5236-426a-9a20-e0e3c5dc536f/Graphemes_Sound_Letter_Patterns.docx": "16e70e89a90ac050ea37dc3fc6f0b0828eec4fd3209b5548b8654ff7350f13e4",
+  "libreoffice_writer/e528b65e-1107-4b8c-8988-490e4fece599/Geography_And_Magical_Realism.docx": "5cd1b719959c22ec70f780c2402e67b1de2fe22fcb55f79126d624268bd25db6"
+ },
+ "files_sha256": "d51d66fa3d3a890c6a18ad231b926e3932881209ca91e467e8532319c549b46e",
+ "plants": [
+  {
+   "document": "libreoffice_calc/1e8df695-bd1b-45b3-b557-e7d599cf7597/WeeklySales.xlsx",
+   "member": "xl/sharedStrings.xml",
+   "old_len": 4,
+   "original_sha256": "5add57623a183f18267bd53129a9638ef30d5553665946395e8c5ee590e0ce51",
+   "planted": true,
+   "planted_sha256": "b7aac9214bc4cea1549f58082327dd6934c057c4960a6695b71df978dc34d479",
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+  },
+  {
+   "document": "libreoffice_calc/d681960f-7bc3-4286-9913-a8812ba3261a/Student_Grades_and_Remarks.xlsx",
+   "member": "xl/sharedStrings.xml",
+   "old_len": 5,
+   "original_sha256": "014f9f32109a44669ec3fb4bc7d4becf93ea5622cfe208100a2783851d887aa0",
+   "planted": true,
+   "planted_sha256": "fcda6b842fb382af180877e20d463609e47b3af17fde391f44b38d54eb62e31e",
+   "task_id": "d681960f-7bc3-4286-9913-a8812ba3261a"
+  },
+  {
+   "document": "libreoffice_calc/347ef137-7eeb-4c80-a3bb-0951f26a8aff/Create_column_charts_using_statistics.xlsx",
+   "member": "xl/sharedStrings.xml",
+   "old_len": 21,
+   "original_sha256": "2cb82453a684fcde57610987b4622949bdd34a01eabf218120e132493a906286",
+   "planted": true,
+   "planted_sha256": "9f698563353467451c4ad9e15e809b7ce883f1026eed94c2190f42821986e5a5",
+   "task_id": "347ef137-7eeb-4c80-a3bb-0951f26a8aff"
+  },
+  {
+   "document": "libreoffice_calc/01b269ae-2111-4a07-81fd-3fcd711993b0/Student_Level_Fill_Blank.xlsx",
+   "member": "xl/sharedStrings.xml",
+   "old_len": 5,
+   "original_sha256": "44a4981d2dd13a56f4a4b9d4dff4d51e1e36d057d5d08cd74961302bedaf8f70",
+   "planted": true,
+   "planted_sha256": "e38f6e22a154cde65a8c2f4492863eae4db0dcd204e3f5b590468c474bd47d71",
+   "task_id": "01b269ae-2111-4a07-81fd-3fcd711993b0"
+  },
+  {
+   "document": "libreoffice_calc/6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5/Keep_Two_decimal_points.xlsx",
+   "member": "xl/sharedStrings.xml",
+   "old_len": 7,
+   "original_sha256": "43bb72a4f7c89180081d2c2cb143115ccab77962c84eded9bf12774676f05e51",
+   "planted": true,
+   "planted_sha256": "50ce9443352e29b95ecfc392b055dfd46bf42665d4db9e751d9bc651bb2c452a",
+   "task_id": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5"
+  },
+  {
+   "document": "libreoffice_calc/4172ea6e-6b77-4edb-a9cc-c0014bd1603b/MaturityDate.xlsx",
+   "member": "xl/sharedStrings.xml",
+   "old_len": 15,
+   "original_sha256": "7e36c0099cf96f45ef92d59b6a8441541700d467e9af5fa7c33318df3e09ef83",
+   "planted": true,
+   "planted_sha256": "80cf2ec54ef8fe919732f5fab585ff528786117585b9d2b7ed0b11388bb0e1d2",
+   "task_id": "4172ea6e-6b77-4edb-a9cc-c0014bd1603b"
+  },
+  {
+   "document": "libreoffice_impress/af23762e-2bfd-4a1d-aada-20fa8de9ce07/Forests.pptx",
+   "member": "ppt/slides/slide1.xml",
+   "old_len": 7,
+   "original_sha256": "6e419bdad3125280c829383cce1da1fa248081f5f6ed6a18e1890a11d4b48e10",
+   "planted": true,
+   "planted_sha256": "2d2993422af0f2dc2b9cfdef1e7c05bf576b3fe44cadcc61c9a7eaff10712c85",
+   "task_id": "af23762e-2bfd-4a1d-aada-20fa8de9ce07"
+  },
+  {
+   "document": "libreoffice_impress/bf4e9888-f10f-47af-8dba-76413038b73c/4.3-Template_4.29.2016.pptx",
+   "original_sha256": "f8aafd10d06413f62c9b0a2cc9829311cad1bd7b532af6a95af3299ee754f206",
+   "planted": false,
+   "planted_sha256": "f8aafd10d06413f62c9b0a2cc9829311cad1bd7b532af6a95af3299ee754f206",
+   "reason": "no text run",
+   "task_id": "bf4e9888-f10f-47af-8dba-76413038b73c"
+  },
+  {
+   "document": "libreoffice_impress/ac9bb6cb-1888-43ab-81e4-a98a547918cd/saa-format-guide.pptx",
+   "member": "ppt/slides/slide1.xml",
+   "old_len": 16,
+   "original_sha256": "edd9fc166f619bc7534ea1a5f6d8d10c365015ea2a022c8259e11965212a729c",
+   "planted": true,
+   "planted_sha256": "d26a5fe914384198fea9cae0727bdaf4691622e29988d2d6deb93f7c7762ae57",
+   "task_id": "ac9bb6cb-1888-43ab-81e4-a98a547918cd"
+  },
+  {
+   "document": "libreoffice_impress/2b94c692-6abb-48ae-ab0b-b3e8a19cb340/201_6.pptx",
+   "original_sha256": "c253953b7f638a1731765c72d710efda473b33ebdd09d7216acdceae4d9b82b7",
+   "planted": false,
+   "planted_sha256": "c253953b7f638a1731765c72d710efda473b33ebdd09d7216acdceae4d9b82b7",
+   "reason": "no text run",
+   "task_id": "2b94c692-6abb-48ae-ab0b-b3e8a19cb340"
+  },
+  {
+   "document": "libreoffice_impress/5cfb9197-e72b-454b-900e-c06b0c802b40/33_1.pptx",
+   "member": "ppt/slides/slide1.xml",
+   "old_len": 12,
+   "original_sha256": "5c65149ef9a50d76862812b1b445c8923c92122bbf603afc854451ad07cf4c9c",
+   "planted": true,
+   "planted_sha256": "52888ccafef3d3f6b46f90ca0a8b7e082ca178a6869863227d5b95884a0e6ecd",
+   "task_id": "5cfb9197-e72b-454b-900e-c06b0c802b40"
+  },
+  {
+   "document": "libreoffice_impress/4ed5abd0-8b5d-47bd-839f-cacfa15ca37a/4_1.pptx",
+   "member": "ppt/slides/slide1.xml",
+   "old_len": 5,
+   "original_sha256": "06e8211fd5386b02c902c19657557e38b42fcc533619203b231cccb4bb8eceec",
+   "planted": true,
+   "planted_sha256": "712828d37c9c19fe91eba09dad7fbfa497208c21e4b7bcd59da1a3413a13f9e0",
+   "task_id": "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a"
+  },
+  {
+   "document": "libreoffice_impress/e4ef0baf-4b52-4590-a47e-d4d464cca2d7/42_2.pptx",
+   "member": "ppt/slides/slide1.xml",
+   "old_len": 7,
+   "original_sha256": "01c26359cd9c6eb7c23dea21b55fb9f1557da8b7d437c1c8ece74bab1e8da1e3",
+   "planted": true,
+   "planted_sha256": "9c07aba6abed161b8574fd284cbe2e680590a0e8594721a9b75f5b63d7adf3b1",
+   "task_id": "e4ef0baf-4b52-4590-a47e-d4d464cca2d7"
+  },
+  {
+   "document": "libreoffice_writer/0e47de2a-32e0-456c-a366-8c607ef7a9d2/LibreOffice_Open_Source_Word_Processing.docx",
+   "member": "word/document.xml",
+   "old_len": 41,
+   "original_sha256": "14bf1830fe564811f847eb688fc36ae5c64317481f7aaad7473965d035cd2b28",
+   "planted": true,
+   "planted_sha256": "e3a55172e9cc7a723318a884ab2964941b09d8cc1fcc357630848646eb3df1f7",
+   "task_id": "0e47de2a-32e0-456c-a366-8c607ef7a9d2"
+  },
+  {
+   "document": "libreoffice_writer/6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2/sample-recruitment-phone-script.odt",
+   "member": "content.xml",
+   "old_len": 31,
+   "original_sha256": "83c59a66298ef427ac33128b396ad56aea09a352be10e3b1bbbc7859597b43d3",
+   "planted": true,
+   "planted_sha256": "ae3adb2972baffd738203385c56daa6055005e4200ae7eea0113edb5ac6fa37a",
+   "task_id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2"
+  },
+  {
+   "document": "libreoffice_writer/936321ce-5236-426a-9a20-e0e3c5dc536f/Graphemes_Sound_Letter_Patterns.docx",
+   "member": "word/document.xml",
+   "old_len": 49,
+   "original_sha256": "c66b6d7bf814e71acd4777353b7be5eca1c9735dc9f510fa61993d78aef492ca",
+   "planted": true,
+   "planted_sha256": "16e70e89a90ac050ea37dc3fc6f0b0828eec4fd3209b5548b8654ff7350f13e4",
+   "task_id": "936321ce-5236-426a-9a20-e0e3c5dc536f"
+  },
+  {
+   "document": "libreoffice_writer/e528b65e-1107-4b8c-8988-490e4fece599/Geography_And_Magical_Realism.docx",
+   "member": "word/document.xml",
+   "old_len": 43,
+   "original_sha256": "b7a84074837e33be184bac095e0c6824bd818a79791c3358ef2cdcd352f046b4",
+   "planted": true,
+   "planted_sha256": "5cd1b719959c22ec70f780c2402e67b1de2fe22fcb55f79126d624268bd25db6",
+   "task_id": "e528b65e-1107-4b8c-8988-490e4fece599"
+  }
+ ],
+ "schema": "s2v4-pd-cache-v1"
+}

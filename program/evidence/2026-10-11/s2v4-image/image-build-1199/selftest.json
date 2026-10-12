@@ -1,0 +1,39 @@
+{
+ "base_diff_explained": true,
+ "baseline_has_the_planted_finding": true,
+ "cells": {
+  "ER": {
+   "counts": {
+    "block_bitmap": 1,
+    "directory": 1,
+    "file_data": 1,
+    "inode_bitmap": 1,
+    "inode_table": 1,
+    "sb_gdt": 2,
+    "unexplained": 0
+   },
+   "diff_ok": true,
+   "fsck": true,
+   "rewritten": 0,
+   "tamper_flagged": true
+  },
+  "PL": {
+   "counts": {
+    "block_bitmap": 1,
+    "directory": 1,
+    "file_data": 2,
+    "inode_bitmap": 1,
+    "inode_table": 2,
+    "sb_gdt": 2,
+    "unexplained": 0
+   },
+   "diff_ok": true,
+   "fsck": true,
+   "rewritten": 1
+  }
+ },
+ "fsck_base": true,
+ "ok": true,
+ "refuses_overwrite": true,
+ "refuses_through_symlink": true
+}

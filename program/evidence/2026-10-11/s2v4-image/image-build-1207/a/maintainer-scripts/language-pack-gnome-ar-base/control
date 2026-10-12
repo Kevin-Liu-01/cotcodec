@@ -1,0 +1,18 @@
+Package: language-pack-gnome-ar-base
+Version: 1:22.04+20230801
+Architecture: all
+Maintainer: Language pack maintainers <language-packs@ubuntu.com>
+Installed-Size: 4394
+Pre-Depends: dpkg (>= 1.16.1)
+Depends: locales (>= 2.3.6), language-pack-gnome-ar (>= 1:22.04+20230801)
+Conflicts: language-pack-gnome-ar (<< 1:22.04+20230801)
+Replaces: language-pack-ar (<< 1:22.04+20230801), language-pack-ar-base (<< 1:22.04+20230801), language-pack-gnome-ar (<< 1:22.04+20230801), language-pack-gnome-ar-base (<< 1:22.04+20230801), language-pack-kde-ar (<< 1:22.04+20230801), language-pack-kde-ar-base (<< 1:22.04+20230801)
+Section: translations
+Priority: optional
+Description: GNOME translations for language Arabic
+ Translation data for all supported GNOME packages for:
+ Arabic
+ .
+ This package provides the bulk of translation data and is updated
+ only seldom. language-pack-gnome-ar provides frequent
+ translation updates, so you should install this as well.
