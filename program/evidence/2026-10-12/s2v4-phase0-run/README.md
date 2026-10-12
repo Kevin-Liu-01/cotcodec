@@ -101,6 +101,7 @@ directories (E2's held only its staged configuration, no job).
 | 1261 | K1 C2 on PL | 362 | 19:58:51 | 19:58:51-20:09:03 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 | 1262 | K1 A6 on E (cross-app canary: Writer, Chrome, VS Code, GNOME Terminal; seed 43) | 222 | 20:10:20 | 20:10:20-20:59:56 (49.6 min) | COMPLETED 0:0 | A6 pass; the campaign counts |
 | 1263 | K1 A6 on A | 222 | 21:01:27 | 21:01:28-21:51:08 (49.7 min) | COMPLETED 0:0 | A6 pass; the campaign counts |
+| 1264 | K1 A6 on ER | 222 | 21:55:36 | 21:55:36-22:44:56 (49.3 min) | COMPLETED 0:0 | **A6 FAIL**: `writer:drag_select_word` fails 5 of 5; the campaign counts |
 
 Per job:
 - **1245 (C1, E).** Limit ends 17:19:33Z, before E2's earliest start 17:51:36Z. H-GA-buggy: 70
@@ -182,8 +183,54 @@ Per job:
   (`e-9b-e3`, `e-4b-e3`), no E job. Submitted by the previous operator instance; the orchestrating
   session then restarted, and this job was collected (never resubmitted) by the next instance
   (section "Operator restarts").
+- **1264 (A6, ER).** Limit ends 01:38:36Z on 2026-10-13, before E3's earliest start 07:17:50Z.
+  Submitted on an empty queue after 1263 had been collected and read (host snapshot: load 0.01,
+  queue empty, no labelled container; E's pair directories unchanged, E3 staged, no E job). One
+  canary campaign, screenshot setting: 5 sessions of 60 trials, **295 of 300 passed**; 59 entries
+  PASS and one **FAIL**: `writer:drag_select_word` failed in all 5 sessions, each time with the same
+  read-back, `Ykeep word keep` where the entry expects `keep Y keep` (the drag selected nothing and
+  `Y` was typed at the start of the line). Every other Writer entry and every Chrome, VS Code and
+  GNOME Terminal entry passed 5 of 5. 5 cold boots at most 17.3 s; step p95 1.83 s; 4 of 4 reset
+  sentinels pristine; 0 guest-server restarts; no trial with an infrastructure loss or error.
+  `ap_delta.verdict` on this job: A6 on ER **`pass` false**, problem "canary entries not PASS:
+  ['writer:drag_select_word']". The campaign counts under q2-action-path-v2 section 6.1 (driver exit
+  0, `infra_gates_pass` true, image unchanged, no labelled container left; no counting,
+  foreign-abort or snapshot problem; Slurm COMPLETED 0:0), so the section's one rerun of a campaign
+  that does not count does not apply, and nothing is rerun.
+  - Operator's reading of the cause (not a registered analysis; nothing was run to test it): the
+    canary's drag targets are frozen screen coordinates (`canary_targets.json`, Writer
+    `drag_select_word` from (680, 292) to (709, 292), 500 ms), measured on the certified disk's
+    left-to-right layout (`canary.yaml`: "measured during development on the frozen app
+    configuration"). ER mirrors LibreOffice's layout (`UIMirroring` true), which plausibly places
+    the line's text elsewhere on screen, so the drag would start and end outside the word (not
+    checked: no canary screenshot was read). The Writer window's geometry is the same in ER as in
+    E and A (`[70, 64, 1850, 1016]` in every trial of this entry), and A6 on E (1262) and on A
+    (1263), both left to right, passed this entry 5 of 5 with the expected read-back. AR is also
+    mirrored; A6 on AR was not run.
+
+## Stop: K1 fails as registered (operator's record, 22:45Z)
+
+- The registration's pass line (section "K1"): **K1 passes if every check passes on every image
+  named and the rung qualifies**; A6's line is "L0-fixed passes 100% of `canary.yaml` in Writer,
+  Chrome, VS Code and GNOME Terminal, 5 repetitions, screenshot setting", on each of E, A, ER, AR
+  and PL. A6 on ER is 59 of 60 entries (job 1264, a counting campaign). Kill criterion K1 ("Any
+  P0.6 check fails on any of the five images"): no Phase 1 on these images; "There is no repair
+  attempt within v4: a failed check is K1, and a repair is a new image and a new registration."
+- No rerun: the campaign counts, and the registration's only reruns (section 6.1's rerun of a
+  campaign that does not count, the rung's rerun after a foreign-load abort, the census's one
+  resume) do not apply.
+- The registered K1 verdict (`ap_delta.py verdict` over all 49 job directories) has not been run:
+  35 of the 49 K1 jobs have not run (A6 on AR and PL; A5 on all five images; C3's 15 parts, A1 and A2
+  on each image and A3's 3 parts). No K1 job can now make K1 pass.
+- The operator stopped here, as the brief requires when a registered stop rule fires: nothing was
+  submitted after 1264. At 22:59:49Z the queue was empty and no labelled container was running.
+  Whether to run the rest of K1, the census, the oracle and K0 as a record (K0's instrument
+  findings, P0.8's leaks, the census's admission counts) now that Phase 1 cannot follow on these
+  images is the program owner's decision.
 
 ## Schedule for the rest of K1 (the operator's plan; not a registered rule)
+
+Halted at 22:45Z by the stop above (A6 on ER fails); kept as the plan that was in force until then.
 
 - E's first gap (now to 17:51:36Z) is used up: after the rung (ended 15:29:10Z) no remaining K1
   job's limit fits before E2's earliest start (the shortest left is A5 at 192 minutes).
