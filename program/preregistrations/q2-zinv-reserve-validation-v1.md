@@ -1,10 +1,12 @@
 # q2-zinv-reserve-validation-v1: held-out test of the corrected z-order comparator on the reserve split
 
-**Status: DRAFT, not frozen (TBD: at the freeze this whole paragraph is replaced by the
-paragraph section 13 states under "At the freeze").** Drafted on 2026-10-11 by the single
-owner of R03 (b) on branch `stage0/r03-zinv-reserve` from main at `746d60d2` (main merged
-again at `08033ba7`, `2b8fadc7` and `f6144d6b`). No ledger row exists; nothing on the reserve split has run under this file. The freeze is the
-orchestrator's (D80), after a pre-freeze audit (section 13).
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the
+freeze time and `git_head_at_freeze`.** An addendum to `q2-evaluator-mutation-v1` for the
+dossier's R03 (b), frozen under program authority (D80) after its pre-freeze audit
+(section 13). The registered run (section 5) runs from an export of the freeze commit, the
+commit that adds this file's ledger row; the guard admits the reserve split only while this
+file's SHA-256 equals the row's and the staged code equals section 3's code table. A
+material change after the freeze is a new experiment id. Nothing in this file is a result.
 
 - Experiment id: `q2-zinv-reserve-validation-v1`, an addendum to `q2-evaluator-mutation-v1`
   (ledger row 11: file SHA-256
