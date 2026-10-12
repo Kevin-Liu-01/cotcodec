@@ -1683,3 +1683,36 @@ Basis for signing:
 E runs from its freeze commit with host jobs serialized. Other workstreams
 may use the host only in the gaps between E's sessions, never during an E
 job.
+
+**D86. R03 part (b), `q2-zinv-reserve-validation-v1`, runs under program
+authority (D80).** D80 does not name R03 (b). D83 said it was being scouted.
+The program adopts it now under D80's delegation ("whatever gains actual
+results"), because it produces one: the first held-out test of the corrected
+z-order comparator `zinv`.
+- Why a new registration was needed. The frozen parent registers no reserve
+  split test and no zinv. The reserve split has never been opened for mutants
+  of the frozen operators.
+- The test. On the 8 reserve pptx tasks, zinv must accept at least 95% of the
+  evaluable z-order equivalence mutants (A) and must accept no violation
+  mutant that the original comparator rejects (B). The reading is descriptive
+  below 20 mutants or 8 tasks.
+- What each outcome licenses. A FAIL is informative at any size. A PASS bounds
+  zinv's acceptance only from below (at most about 0.88), never at 95%.
+- Pre-freeze record:
+  - Audit 1 found one blocking defect (two tests failed at the fill commit),
+    since fixed.
+  - The full development rehearsal ran steps 1-4 (Slurm 1205, 1209, 1212 and
+    1213; exit 0; CPU only). Its outcomes match the parent's stored dev runs
+    as a multiset, and its release view is byte-identical to the host's.
+  - A second fresh audit found nothing blocking and rehearsed the whole freeze
+    on a scratch clone.
+  - Two outcome cases it found undefined are now defined in the text before
+    the freeze: a stop at the 4.0 lane-hour cap is INCOMPLETE, and an
+    unfinished run's records are committed by hand.
+- Staging note from the audit. The freeze export is staged with
+  `git archive | ssh host tar -x`. macOS bsdtar adds AppleDouble files, and the
+  guard then refuses every split.
+- Scheduling. The run is CPU only, at most 4.0 lane-hours, one job at a time
+  on an empty queue. It is never submitted while a successor E session is in
+  progress, that is, after the session's 9B pair and before its 4B pair has
+  ended. It runs in E's gaps.
