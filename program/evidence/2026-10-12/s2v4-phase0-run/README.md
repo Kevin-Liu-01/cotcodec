@@ -84,6 +84,7 @@ directories (E2's held only its staged configuration, no job).
 | 1247 | K1 C1 on ER | 154 | 14:58:54 | 14:58:55-15:05:21 (6.4 min) | COMPLETED 0:0 | C1 pass; both campaigns count |
 | 1248 | K1 C1 on AR | 154 | 15:06:02 | 15:06:02-15:12:30 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count |
 | 1249 | K1 C1 on PL | 154 | 15:13:00 | 15:13:00-15:19:28 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count |
+| 1250 | K1 V = 20 rung over E, A, ER, AR, PL (seed-43 order x 12; 40 sessions, 2,400 trials) | 110 | 15:20:07 | 15:20:07-15:29:10 (9.1 min) | COMPLETED 0:0 | Not aborted; 2,400 of 2,400 trials pass; every condition but the per-image step p95 met; the step condition waits for each image's A1 |
 
 Per job:
 - **1245 (C1, E).** Limit ends 17:19:33Z, before E2's earliest start 17:51:36Z. H-GA-buggy: 70
@@ -105,3 +106,17 @@ Per job:
   154-minute job could still end before 17:51:36Z). H-GA-buggy 70 trials, 20 passed; H-OSW-up 70,
   40 passed; boots at most 17.3 s; step p95 1.30 s and 1.22 s. C1 on PL `pass`. No problem of any
   kind. Host snapshot: load 0.82, queue empty. All five C1 jobs are done.
+- **1250 (the rung).** Limit ends 17:11:07Z. 90 CPUs and 142 GB allocated (20 VMs at 4 cores plus
+  10 runner CPUs). `run_rung` made `driver.main`'s pre-run checks before any session (Docker
+  28.3.1, runtime `runc`, cgroup v2; per image the pinned read-only file and `qemu-img info`;
+  dangling volumes 0 before and 0 after). Session i ran on image i mod 5 (8 sessions per image).
+  2,400 of 2,400 trials passed; 40 cold boots, boot p95 20.7 s (at most 20.8 s); 0 excused trials,
+  0 guest-server restarts over 1,556 accessibility calls; no foreign Slurm job in any host snapshot
+  (`aborted` false, no abort reason); every image hashed to its pin before and after
+  (`qcow2_unchanged` true); no labelled container left; no counting or snapshot problem. Step
+  p95 per image over its 8 sessions: E 3.053 s, A 3.087 s, ER 3.051 s, AR 3.091 s, PL 3.003 s. On
+  this job alone `ap_delta.verdict` lists only the per-image step condition as a problem, because
+  no A1 reference exists yet (`a1_step_p95_s` null): the rung's qualification is read in the K1
+  verdict against each image's own A1 at N = 1 (step p95 at most 2 x A1's). The rung did not abort,
+  so it is not rerun (registration section "K1"). Host snapshot before submission: load 0.57, queue
+  empty, no labelled container.

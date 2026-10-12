@@ -1,0 +1,5 @@
+job_id=1250
+manifest_sha256=cfe2b4d9ec80ebcfb1b88b2d76b90fb23112ce098217392f782dadc7edc1a704
+ap_delta=rung
+rung_cells=E+A+ER+AR+PL
+driver_exit=0 labelled_containers_left=0
