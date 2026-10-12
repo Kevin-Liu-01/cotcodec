@@ -423,9 +423,16 @@ node fault, a time-limit kill after USR1's 120 s), or one that failed its image 
 resumed like any other. TERM also reaches the lane as a stop, like USR1 (`vm_lane.stop_on_signals`):
 nothing new is dispatched, the slots in flight are cut, every slot never dispatched is recorded, and
 the receipt (which carries `t_start`, as the image-check receipt now does) is written, when the job
-has the time. A census job with zero records (its image check failed, or it was stopped before any
-slot ended; it may have no `probes.jsonl`) is resumed by the same rule: its first block holds a slot
-without a final record, so the one resume runs the whole census (and is never resumed itself). A
+has the time. After any S2 v4 job that ended by TERM, and before any further submission (its resume
+included), the operator removes every container whose label `cotcodec.slurm_job` is that job's id, and
+records how many were removed beside the job's records. The reason (round 4's review and audit): the
+host's Slurm sends SIGKILL 30 s after TERM (its KillWait), while a stopped lane may still be tearing
+down its slots in flight (in smoke 1242 a slot's teardown after its probe took a median of 5.2 s and
+at most 37.8 s), so the batch file's own cleanup may never run and that job's VMs may be left
+running; the records stay readable and resumable either way. A census job with zero records (its
+image check failed, or it was stopped before any slot ended; it may have no `probes.jsonl`) is
+resumed by the same rule: its first block holds a slot without a final record, so the one resume
+runs the whole census (and is never resumed itself). A
 run directory without `preflight.txt` (the batch file stopped before it could start the lane) holds no
 record and is not a job: `submit` does not count it, and the census job is submitted again. Which
 record counts: per slot the attempts of the first job (in job order) with a final record, and of
@@ -937,8 +944,9 @@ above, and the screenshots and trees stay on the host.
   - Zero deviations in 140 boots put the per-boot rate below about 2.1% (95%). At that rate each of
     I2, I5 and I6 loses an Impress task with probability at most about 0.04. With 40 Impress tasks
     among the 106, each check then holds with probability about 0.99.
-  - The smoke does not fire D90's stop rule. The rule's other branch, a fresh audit of round 4, is
-    still to come.
+  - The smoke does not fire D90's stop rule, and neither does the rule's other branch: the fresh
+    code review of round 4 found no blocking item, and the fresh audit found one, text only, which
+    needed no host smoke (section "Changes in round 4 (D90): review log").
 
 ## Phase 1 (admitted under D80 (iv) if K0 and K1 pass)
 
@@ -1196,16 +1204,26 @@ K0 passes (at least 62 admitted, instrument checks hold): 0.7. Its history:
   few times higher.
 - 0.7 after round 4's smoke 1242. I2, I5 and I6 were 17 of 17, and none of 140 Impress boots showed
   another status-bar value. That bounds the per-boot rate below about 2.1%, which leaves each of the
-  three at about 0.99.
+  three at about 0.99. The smoke's operator proposed this revision; the owner confirmed it after
+  round 4's review and audit.
 
 The remaining risk is I1-doc's 100% bar, which fails on a single task without a document region or
-on a lost ER or PD slot of a named dev task, and the bar of 62 admitted tasks.
+on a lost ER or PD slot of a named dev task, and the bar of 62 admitted tasks. The infrastructure-loss
+rate of the development smokes makes the lost-slot risk concrete. Smoke 1240 lost 4 of its 174
+capture attempts (2.3%) and smoke 1242 lost 9 of 249 (3.6%: 6 guest-server restarts and 3 guest
+transport failures at `evaluate`); every one was re-queued and probed on its second attempt, and
+no gold attempt was lost in either smoke. If attempts are lost independently at 3.6%, a slot is lost
+twice with probability about 0.13%, about one of the census's 882 capture slots, and one of the 30
+ER and PD slots of the 15 named dev tasks is lost twice, which fails I1-doc, with probability about
+4% (about 1.6% at smoke 1240's rate).
 
 Descriptors valid: 0.55. The O3 and O2 plants were detected on 16 and 16 of 17 tasks on smoke 1242's
 dev renders, 17 and 15 on 1240's, and 13 and 15 on 1214's: near the 90% bar.
 
-Phase 1 reached: about 0.5. This also requires that a fresh audit of round 4 finds no blocking item
-needing another host smoke (D90's stop rule). If it runs: D PRESENT_HARM 0.35, D SMALL 0.45, EXCESS_OVER_PLACEBO given D
+Phase 1 reached: about 0.55. K0 at 0.7 and K1 at 0.85 give about 0.6, less the Phase 1 executor
+addendum's own build, dry run, audit and freeze. After smoke 1242 its operator put this at about 0.5,
+while a fresh audit of round 4 could still end S2 v4 under D90's stop rule; that audit found no
+blocking item needing a host smoke. If it runs: D PRESENT_HARM 0.35, D SMALL 0.45, EXCESS_OVER_PLACEBO given D
 PRESENT_HARM 0.5, T PRESENT_HARM 0.45, T SMALL 0.35.
 
 ## Freeze procedure
@@ -1222,7 +1240,9 @@ PRESENT_HARM 0.5, T PRESENT_HARM 0.45, T SMALL 0.35.
    `t_start` in the image-check receipt and the zero-record census job, and the development smoke of
    D90's acceptance criterion.
 2. A fresh code review and a fresh agent's pre-freeze audit check this file against the images, the
-   code and the K0 commitment.
+   code and the K0 commitment. Done for round 4 (D90), at `24257614`: the review approved, and the
+   audit's one blocking item was text only, resolved before the status fill (section "Changes in
+   round 4 (D90): review log").
 3. Status fill, one commit: the status paragraph's first line becomes "**Status: frozen in
    `program/preregistrations/ledger.jsonl`; see the ledger row for the freeze time and
    `git_head_at_freeze`.**" (no "DRAFT" remains), and section "Code and inputs of record" is re-filled
@@ -1241,14 +1261,35 @@ PRESENT_HARM 0.5, T PRESENT_HARM 0.45, T SMALL 0.35.
 6. If K0 and K1 pass as registered: the Phase 1 executor addendum (section "Phase 1": built, dry-run on
    dev tasks only, audited, frozen as its own ledger row), then Phase 1 under D80 (iv) within its cap.
 
-Steps 3 and 4 and the admission of step 5's registered manifests were rehearsed on a scratch clone in the
-repair round (section "Changes in the repair round (D84): review log"), at `0a1d18e7`, and again by
-the third round's auditor at that round's head, with a stand-in resume run directory remapped in
-scratch (D90). A resume manifest is admitted only against the interrupted job's run directory, so a
-rehearsal of it needs a stand-in run directory, created only in a scratch clone, never under the
-host's registered run root (where `submit` would then refuse the real census job); the unit tests
-do that (`tests/test_s2v4_vm_lane.py`), and the rehearsal is repeated at the final head before the
-freeze.
+Steps 3 and 4 and the admission of step 5's registered manifests were rehearsed on a scratch clone
+three times: in the repair round at `0a1d18e7` (section "Changes in the repair round (D84): review
+log"); by the third round's auditor at that round's head, with a stand-in resume run directory
+remapped in scratch (D90); and by round 4's auditor at `24257614`
+(`program/evidence/2026-10-11/s2v4-image/freeze-rehearsal/rehearsal.json`, key `round4_audit`).
+Round 4's rehearsal ran on a `--shared` clone with its origin removed and its own ledger copy:
+- The status fill, with `pins_table --check` equal to the tree; `preregister.py freeze` (row 21);
+  `verify`; and `check-chain` (PASS, 21 rows). The freeze commit changed only the ledger, and its
+  only parent was the fill commit. Every S2 v4 test file gave 155 passed and 1 skipped, at the head
+  and at the freeze commit.
+- From the freeze commit's `git archive` export: the registered census rendered by `render-census
+  --freeze-commit` (1,322 slots) and validated; K1 manifests rendered and validated (C1 on E, C2 on
+  A, A1 and A2 on PL, A5 on ER, A6 on AR, C3 and A3 on AR in three parts each, and the rung); the
+  development manifests (`dev-smoke-v5.json`, `apdelta-dev-v1.json`), an edited census and
+  mislabelled or disk-swapped K1 manifests refused.
+- The resume cases of P0.7, with the run roots remapped in-process into scratch. A census job ended
+  by TERM with no receipt was resumed from its first block without a final record, the resume
+  admitted once, and a second census job, a second resume, a resume of the resume and hand edits
+  refused. A zero-record census and an image-check-failed census were resumed from their first
+  block. The oracle's two mounts were read in job order whatever their order.
+- The real ledgers were unchanged, and nothing was created on the host.
+
+A resume manifest is admitted only against the interrupted job's run directory, so a rehearsal of it
+needs a stand-in run directory, created only in a scratch clone, never under the host's registered
+run root (where `submit` would then refuse the real census job); the unit tests do that
+(`tests/test_s2v4_vm_lane.py`), and so did round 4's rehearsal. The commits after `24257614` change
+only this file's text and add development evidence, with no change to code, manifests or pinned
+inputs, so that rehearsal stands for the final head; there `tests/test_s2v4_registration.py` and
+`pins_table --check` are run again before the status fill.
 
 ## Code and inputs of record
 
@@ -1500,7 +1541,7 @@ Pre-freeze audit, not blocking:
 | Program records (decisions, state, handoff) | The orchestrator's; not edited in this round |
 
 Closing the round: `main` was merged in with every ledger row kept (rows 19 and 20 are other
-experiments'; this id still has none); the `ap_delta` development jobs' records were committed
+experiments'; this id then had none); the `ap_delta` development jobs' records were committed
 (`apdelta-dev/`, section "Development smoke"); the evidence README's statements about the superseded
 builds were corrected; and the scratch freeze rehearsal was repeated at the merged head
 (`freeze-rehearsal/rehearsal.json`). The round left one development finding unresolved: Impress's
@@ -1528,7 +1569,7 @@ Not blocking:
 
 | Item | Disposition |
 |---|---|
-| K0 byte-identical and `k0_v4.py` unchanged; the S2 v4 tests pass; the ledger equals main's | Confirmed: the K0 section hashes to `ed38b953...` (tested), `k0_v4.py` is unchanged since `ee0841b3`, and `main` was merged with every ledger row kept (rows 1-20; this id has none) |
+| K0 byte-identical and `k0_v4.py` unchanged; the S2 v4 tests pass; the ledger equals main's | Confirmed: the K0 section hashes to `ed38b953...` (tested), `k0_v4.py` is unchanged since `ee0841b3`, and `main` was merged with every ledger row kept (rows 1-20; this id then had none) |
 | Reproducibility from the double-build records; the K1 checks the owner's rehearsal skipped (C2, A5, A6, A1 and A2 on PL) admitted from a freeze export; no network inside measurement VMs; the postconfig rule implemented; the P0.10 reader matches the checkers | Confirmed by the review and the audit; nothing to change. A1 and A2 on PL fit one job with 46 and 96 minutes of headroom (noted) |
 | The code-and-inputs table omitted the shared code the lanes import | Fixed: the table lists the S2 v4 files, the shared code found by walking the imports of the lane, probe, gold slot, oracle, K0 reader, PD builder, image build and `ap_delta` (S1a's lane, driver and OSWorld adapter; harness/q2's VM modules; the K2 executor; the checker-mutation controls and offline evaluator), the guest scripts the lanes run in the VM (the guard, the K2 guest helper) and harness/q2's closed world (`pins_table.files`); a test checks that the table holds the whole import walk. `smoke_summary.py`, which the review listed, is a development summary that no registered job imports or runs, so it is not listed |
 | The registered oracle route never ran as registered; its image (the metric image, not v3's oracle image) and argv were not pinned | Fixed: P0.7 pins the image ID and the argv (`oracle_vm.ORACLE_IMAGE_ID`, `registered_argv`), and the output records the interpreter and the numpy, scipy and Pillow versions. The route ran once on the dev records as a CPU container job (Slurm 1241, on smoke 1240's run directory, 34 s; `oracle-route-1241/`), in Python 3.12.13 with numpy 1.26.4, scipy 1.17.1 and Pillow 11.0.0; a run of the same code on the Mac (numpy 2.5.2, scipy 1.18.0, Pillow 12.3.0) on a copy of the records gave the same metrics, tolerances, instrument checks and K0 output (one reported per-task mean displacement differs in its last digit; `mac-crosscheck.json`). It was not run on smoke 1214's records, so the Mac's earlier `oracle-dev.json` is not compared with the container directly; this cross-check on 1240 takes that place |
@@ -1548,8 +1589,8 @@ skipped (the e2fsprogs round trip, which runs only where e2fsprogs is installed;
 1207's self-test); ruff is clean on every file this round changed. The K0 section's SHA-256 is
 unchanged (`ed38b953...`), and `harness/s2_locale/k0_v4.py` is unchanged since `ee0841b3`.
 
-Closing the third round: `main` was merged in with every ledger row kept (rows 1-20; this id has
-none); one development smoke (Slurm 1240) and one run of the oracle's registered route (Slurm 1241)
+Closing the third round: `main` was merged in with every ledger row kept (rows 1-20; this id then
+had none); one development smoke (Slurm 1240) and one run of the oracle's registered route (Slurm 1241)
 ran on the dev tasks, each submitted on an empty queue with no other workstream's step pending and no
 E session in progress. Every non-blocking item was fixed, and B2 as described (with the gap above).
 B1 was reduced, not resolved: with the warp before the 60 s settle, the dev tasks still failed I2
@@ -1574,18 +1615,18 @@ Blocking:
 |---|---|
 | B1 (review and audit). The warp before the 60 s settle did not make Impress's pointer field the same in every boot: it landed within about a second of the task's open step, while the window was still being laid out; in smoke 1240 and on the oracle's registered route (1241) I2 was 16 of 17 (E against S 148 px on `ac9bb6cb`), ER against ER2 142 px on `af23762e`, and the variation moved into the left-to-right pairs | Fixed in the capture, as both proposed; K0 untouched. `vm_probe.Probe.run` now warps once after the 60 s settle and then waits a fixed `POINTER_WAIT_S` = 4 s before the two screenshots (chosen before the smoke: longer than VCL's quick-help and balloon tip delays of 0.5 s and 1.5 s); the same at every Phase 1 episode start. P0.7, Phase 1 and design decision 100 say so, and the ordering test (`test_probe_warps_the_pointer_after_the_settle_and_waits_before_the_screenshots`) requires warm-up, settle, warp, wait, screenshot, 1 s, screenshot, in that order. The pre-settle warp's added left-to-right variation and its timing are reported in section "Development smoke". Round 4's development smoke (`dev-smoke-v5.json`: 310 slots, 140 Impress capture boots) and its reading (`dev_smoke.py`) were fixed before it ran. Result: smoke 1242 and the oracle's registered route 1243 (`program/evidence/2026-10-12/s2v4-round4-smoke/`) meet D90's criterion. I2, I5 and I6 are each 17 of 17: E-E2 and ER-ER2 at most 1 px, AD-AR 0 px, and E-S at most 18 px, against tol6 = 50. In the 98 pairs over the 140 Impress boots, 0 status-bar pixels differ. Resolved on the dev tasks (section "Development smoke") |
 | B2 (review and audit). The job order came from `lane-receipt.json` alone: a census job ended by TERM wrote no receipt, and the image-check receipt had no `t_start`, so such a job could be neither read by the oracle nor resumed; the zero-record case was undefined | Fixed as both proposed. `k0_inputs.job_id`: the Slurm job id the batch file writes before the lane starts (`preflight.txt`'s `job_id`; on the host the run directory's name, which must equal it; in the oracle's container, `/ro/run1` and `/ro/run2`, `preflight.txt` alone); `run_order` orders by it, and a receipt, when present, must name the same job and its `t_start` must give the same order (a cross-check only). `vm_lane.interrupted_job` reads the job the same way and needs no receipt; a missing `probes.jsonl` is zero records. `vm_lane.main` handles TERM like USR1 (`stop_on_signals`: the lane's stop event), so a terminated lane records the slots never dispatched and writes its receipt when it has the time; the image-check receipt carries `t_start` (and `t_end`, the name and the purpose). The zero-record census job (failed image check, or stopped before any slot ended) is resumed by the general rule, from its first block, so the one resume runs the whole census; a run directory without `preflight.txt` is not a job (`check_once`). P0.7 states all of it. Tests: a census ended by TERM (no receipt) is read by `load_runs` and `render_index` and resumed through `render-census --resume-from-records` and `check_registered`; an image-check-failed census with no records is resumed from its first block and the resume admitted once; the registered route's two mounts (`registered_argv(2)`) are read in job order from `preflight.txt` whatever the mount order; a job id that disagrees between the name, `preflight.txt` and the receipt is refused; TERM sets the stop; a stopped lane records every slot as not final and writes its receipt (`tests/test_s2v4_k0.py`, `test_s2v4_oracle_vm.py`, `test_s2v4_vm_lane.py`) |
-| Audit 3. The text read as unfrozen: the review log and closing note said the package was not ready to freeze, the development smoke section said a further smoke was still to run, and the freeze procedure pointed to a rehearsal still to come | The passages that described round 3 are rewritten as its history (sections "Development smoke", "Phase 1", the forecast, the freeze procedure and the third round's review log). Round 4's result is now entered: section "Development smoke" (smoke 1242 and route 1243), the forecast and this log. The scratch freeze rehearsal at the final head and the status fill follow |
+| Audit 3. The text read as unfrozen: the review log and closing note said the package was not ready to freeze, the development smoke section said a further smoke was still to run, and the freeze procedure pointed to a rehearsal still to come | The passages that described round 3 are rewritten as its history (sections "Development smoke", "Phase 1", the forecast, the freeze procedure and the third round's review log). Round 4's result is now entered: section "Development smoke" (smoke 1242 and route 1243), the forecast and this log. Round 4's auditor then rehearsed the freeze at `24257614` (freeze procedure) and found passages of the same class in round 4's own text; they were rewritten after that audit (its blocking item R4-A1, below) |
 
 Not blocking:
 
 | Item | Disposition |
 |---|---|
-| Merge `main` before the freeze | Done: D88, D89 and D90 and the R03 (b) and R04 merges; the ledger is main's (rows 1-20; this id has none) |
+| Merge `main` before the freeze | Done: D88, D89 and D90 and the R03 (b) and R04 merges; the ledger was main's (rows 1-20; this id then had none) |
 | Cite D89 where the guest locale is held at `en_HK` and where A4(ii) is motivated | Done: P0.2, P0.5 and P0.9 (ii) cite R04's locale arm (under `ar_EG` three `compare_table` golds and `5c1a6c3d`'s `compare_pptx_files` gold flip) |
-| Repeat the scratch freeze rehearsal at the final head; a stand-in resume run directory only in scratch, never under the host's registered run root | Planned after round 4's smoke, at the final head, in a scratch clone (freeze procedure) |
-| `ap_delta.run_rung`'s restored pre-run checks are only unit-tested | Open: they need one host development rung before the freeze. The code step ran no host job, and the round's smoke (1242, 1243) did not exercise `run_rung` |
+| Repeat the scratch freeze rehearsal at the final head; a stand-in resume run directory only in scratch, never under the host's registered run root | Done by round 4's auditor at `24257614`, in a scratch clone with the run roots remapped into scratch and nothing created on the host (freeze procedure; `freeze-rehearsal/rehearsal.json`, key `round4_audit`). The later commits change only this file's text and add development evidence |
+| `ap_delta.run_rung`'s restored pre-run checks are only unit-tested | One host development rung from the export of the commit that resolved round 4's audit item, before the freeze; the code step ran no host job, and the round's smoke (1242, 1243) did not exercise `run_rung`. Its result is entered in section "Development smoke" |
 | `check_once` does not see a census job that is still pending | Unchanged: one job at a time, each submitted on an empty queue, covers it |
-| The forecast's K0 risk rested on a loosely bounded per-boot rate (2 of 70) | Revised with round 4's smoke, which showed no deviation in 140 Impress boots (a rate below about 2.1%, 95%): K0 0.7, descriptors valid 0.55, Phase 1 reached about 0.5 |
+| The forecast's K0 risk rested on a loosely bounded per-boot rate (2 of 70) | Revised with round 4's smoke, which showed no deviation in 140 Impress boots (a rate below about 2.1%, 95%): K0 0.7, descriptors valid 0.55, Phase 1 reached about 0.5, by the smoke's operator; the owner confirmed K0 and the descriptors after round 4's audit and put Phase 1 reached at about 0.55 (section "Owner's prior forecast") |
 | A1 and A2 on PL have 46 and 96 minutes of headroom under 1,440 | Noted, unchanged |
 | The third round's owner returned placeholder output; decisions, state and handoff; superseded images on the host | Disclosed (D90); the program records and the host images are the orchestrator's |
 
@@ -1613,9 +1654,36 @@ K0's instrument checks pass on the dev tasks, and the descriptor plants are 16 o
 This round also corrected the text's account of smoke 1240's PD verdicts. The `fail` verdicts were on
 `0e47de2a` and `ac9bb6cb`, not on the two tasks without a plant.
 
-Still open before the freeze:
-- the fresh audit of round 4: its blocking items, if any needs another host smoke, end S2 v4 under
-  D90's stop rule;
-- the scratch freeze rehearsal at the final head;
-- the host development rung for `run_rung`'s pre-run checks;
-- the status fill.
+Round 4's fresh code review and fresh pre-freeze audit. Both read the round's head `24257614`, whose
+code is byte-identical to the smoke's export `b8c815c8` (`24257614` adds only evidence and this
+file's text), against D84, D87, D89 and D90 and the third round's review and audit. The review
+approved, with no blocking item. The audit found one blocking item, text only, and said it needed no
+host smoke. So D90's stop rule did not fire: neither found a blocking item that needs another host
+smoke.
+
+Round-4 audit, blocking:
+
+| Item | Disposition |
+|---|---|
+| R4-A1. The text still read as before round 4's audit, the class of the third round's audit item 3, now in round 4's own passages: section "Development smoke" said a fresh audit of round 4 was "still to come"; the forecast required that audit's outcome; the freeze procedure said the rehearsal "is repeated at the final head" (`rehearsal.json` was still the repair round's); this log had the rows "Planned" and "Open" and a list "Still open before the freeze"; "this id has none" stood in the present tense, false once the row exists; and the forecast's revision was the smoke operator's, unconfirmed under the owner's heading. Freeze procedure step 3 changes only the status line and the pins table, and the registration test checks only those, so a freeze would have kept all of it | Fixed in one text-only commit before the status fill; no code changed, and the K0 section is byte-identical. (1) Every passage is rewritten to its resolved state, and this review's and audit's outcomes are entered (this section; section "Development smoke"). (2) The audit's scratch rehearsal at `24257614` is recorded in `freeze-rehearsal/rehearsal.json` (key `round4_audit`) and in the freeze procedure. (3) The `run_rung` row of this log's first table: one host development rung, run before the freeze (section "Development smoke"). (4) The forecast is the owner's: K0 0.7 and descriptors 0.55 confirmed, Phase 1 reached about 0.55. (5) "this id has none" is in the past tense. (6) The step for a job ended by TERM, which both recommended, is in P0.7 (row below). `tests/test_s2v4_registration.py` and `pins_table --check` pass at the new head |
+
+Round-4 review and audit, not blocking:
+
+| Item | Disposition |
+|---|---|
+| D90's criterion recomputed independently, read-only on the host (stdin scripts at nice 19) from smoke 1242's `probes.jsonl` (host copy equal to the committed one) and renders. Review: 154 pairs over the 140 Impress boots (every same-cell combination and the registered pairs), the largest K0 count 1 px, the status-bar rows 0 px in every pair even unmasked and unthresholded. Audit: one status-bar strip per (task, direction and language) group of the 140 boots, and no boot changing in the status bar between its own two screenshots. The check is not vacuous: on `ac9bb6cb` the field read 15.14 / 5.44 in both E and S, where smoke 1240's S read 4.91 | Confirmed; nothing to change |
+| Smoke 1242's records match the report (319 records, 310 of 310 slots, 9 first-attempt losses, the warp in all 249 capture attempts, the settle and the 4 s wait, the held-fixed facts, golds 65 of 70); route 1243 ran as registered (argv, image, batch, network none, 0 GPUs, read-only mount); `dev_smoke.py render` reproduces `dev-smoke-v5.json` byte for byte; `b8c815c8` was committed (11:50:58Z) before smoke 1242 was submitted (11:57:53Z) | Confirmed |
+| The third round's blocking items B1 and B2 are resolved, and the code of the D90 fixes is sound (the warp's seven-event order, the job id from `preflight.txt`, the receipt as a cross-check, the zero-record census, TERM handled). A `scancel` TERM that `docker run` proxies to the probe container does not misclassify slots in flight: Python runs as PID 1 there and ignores it, and the worker cuts the slot as `cap_truncated` | Confirmed |
+| K0 byte-identical: the section hashes to `ed38b953...` at `ee0841b3`, `c1a56989` and `24257614`; `k0_v4.py` has no commit since `ee0841b3`; `infra/` and the shared harness code are unchanged since `c1a56989`; the ledger was main's (20 rows) | Confirmed |
+| The scratch freeze rehearsal at `24257614` (audit) | Recorded: freeze procedure and `rehearsal.json` |
+| The TERM path (review and audit). With the host's 30 s KillWait, a stopped lane's teardown of up to 20 slots in flight (in smoke 1242 a median of 5.2 s per slot, p90 13.4 s, at most 37.8 s) can outlast it, so Slurm can SIGKILL the batch shell before its cleanup runs and leave that job's labelled VM containers running; round 3's lane died at once and the shell removed them. The records stay readable and resumable either way | Fixed by procedure, as both recommended: P0.7 now requires the operator to remove every container labelled with the job's id after a job ended by TERM, before any further submission, and to record it. The review's optional code change (skip `docker stop --time 10` once the stop is set) is not made: the audit advised against touching the lane after its smoke |
+| The infrastructure-loss rate (review and audit): 9 first-attempt losses in 249 capture attempts in smoke 1242 (3.6%; 6 of them on Impress tasks, all 3 `GET /terminal` failures among them) against 4 in 174 (2.3%) in smoke 1240; at 3.6% about one census slot is lost twice, and I1-doc fails with probability about 4% from a lost named dev ER or PD slot | Stated in the forecast |
+| `ap_delta.run_rung`'s restored pre-run checks (review and audit). They copy `driver.main`'s checks with harness/q2's own functions and messages and fail closed before any session; the remaining risk is a host-only mismatch that would stop the registered rung (no K1 pass) without corrupting data; a development rung like 1217 is cheap insurance, not a D90 repair smoke | Run: one host development rung (section "Development smoke") |
+| Low-probability gaps, noted: a torn last line in `probes.jsonl` (a SIGKILL or a full disk during a write) would make `run_records` and `interrupted_job` fail to parse the job; `load_runs` accepts a lone run directory that is itself a resume; a TERM arriving inside the USR1 handler's `Event.set()` could block until SIGKILL; if VCL's quick-help auto-hide (about 3 s, unverified) applies, a tip shown at 0.5 s hides before the first shot (a hide between the shots is in the caret mask; the dev tasks showed none); a taller Writer caret than `e528b65e`'s 18 px could exceed 50 px on E against S | Residual risks, unchanged: the code stays as smoke-tested; the freeze procedure names both run directories of a resumed census; I2 tolerates 5 failures, and the caret mask is K0's frozen design |
+| The owner's confirmation of the operator's forecast revision | Done (section "Owner's prior forecast") |
+| Hygiene and scheduling: the only IP in the changes is the VM-internal 20.20.20.21; both read the host only (no job submitted, no file created; squeue empty, nothing under the Phase 0 run root); E session 1's 4B pair ended at about 05:47Z and E2's directory was empty; both scratch directories were deleted | Noted |
+
+Closing round 4. Its one blocking audit item was text, resolved by this section's commit; the stop
+rule did not fire. What remains before the freeze is procedure: the host development rung of
+`run_rung` (section "Development smoke"), then the freeze procedure's steps 3 and 4 (the status fill
+and the freeze).
