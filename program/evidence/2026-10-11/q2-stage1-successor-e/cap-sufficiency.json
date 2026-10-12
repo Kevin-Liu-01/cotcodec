@@ -1,0 +1,148 @@
+{
+ "V": 20,
+ "draws": 10000,
+ "e_jobs": {
+  "4B/as_measured": {
+   "cap_min": 48,
+   "dispatch_budget_s": 2586.8,
+   "margin_s_p01": 395.7,
+   "p_complete_before_usr1": 1.0,
+   "span_s": {
+    "max": 2215.7,
+    "p50": 2064.4,
+    "p95": 2175.5,
+    "p99": 2191.1
+   }
+  },
+  "4B/five_pct_lost_and_requeued": {
+   "cap_min": 48,
+   "dispatch_budget_s": 2586.8,
+   "margin_s_p01": 239.4,
+   "p_complete_before_usr1": 1.0,
+   "span_s": {
+    "max": 2406.5,
+    "p50": 2143.0,
+    "p95": 2303.2,
+    "p99": 2347.4
+   }
+  },
+  "4B/slots_10pct_longer": {
+   "cap_min": 48,
+   "dispatch_budget_s": 2586.8,
+   "margin_s_p01": 175.8,
+   "p_complete_before_usr1": 1.0,
+   "span_s": {
+    "max": 2439.0,
+    "p50": 2271.8,
+    "p95": 2391.3,
+    "p99": 2411.1
+   }
+  },
+  "4B/slots_20pct_longer": {
+   "cap_min": 48,
+   "dispatch_budget_s": 2586.8,
+   "margin_s_p01": -43.4,
+   "p_complete_before_usr1": 0.9215,
+   "span_s": {
+    "max": 2657.2,
+    "p50": 2478.5,
+    "p95": 2609.7,
+    "p99": 2630.3
+   }
+  },
+  "9B/as_measured": {
+   "cap_min": 52,
+   "dispatch_budget_s": 2826.8,
+   "margin_s_p01": 520.8,
+   "p_complete_before_usr1": 1.0,
+   "span_s": {
+    "max": 2332.2,
+    "p50": 2228.0,
+    "p95": 2292.7,
+    "p99": 2306.0
+   }
+  },
+  "9B/five_pct_lost_and_requeued": {
+   "cap_min": 52,
+   "dispatch_budget_s": 2826.8,
+   "margin_s_p01": 323.6,
+   "p_complete_before_usr1": 1.0,
+   "span_s": {
+    "max": 2559.6,
+    "p50": 2295.4,
+    "p95": 2443.0,
+    "p99": 2503.2
+   }
+  },
+  "9B/slots_10pct_longer": {
+   "cap_min": 52,
+   "dispatch_budget_s": 2826.8,
+   "margin_s_p01": 289.4,
+   "p_complete_before_usr1": 1.0,
+   "span_s": {
+    "max": 2566.1,
+    "p50": 2451.7,
+    "p95": 2522.4,
+    "p99": 2537.4
+   }
+  },
+  "9B/slots_20pct_longer": {
+   "cap_min": 52,
+   "dispatch_budget_s": 2826.8,
+   "margin_s_p01": 60.8,
+   "p_complete_before_usr1": 1.0,
+   "span_s": {
+    "max": 2794.9,
+    "p50": 2673.5,
+    "p95": 2751.2,
+    "p99": 2766.0
+   }
+  }
+ },
+ "inputs": {
+  "program/evidence/2026-10-10/q2-design-study/cost-model.json": "36887d3c13b9f4b0809b27ae4f6b825cab80dd824be5f0621bd74156d22346a9",
+  "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+  "program/evidence/2026-10-11/q2-stage1-successor-e/plan/plan-e.json": "12bded251c08755a6b713e8f34f3f327b46e788d55904f2b7118b97675294de8"
+ },
+ "method": "Do E's per-job caps hold every slot before the GPU job's USR1? (CPU only, seeded.)\n\nDR0 fires when an E job ends without completing its slots, and every E job's slots are the\nwhole task set (no fill rule), so a cap that is too tight stops E. This check simulates the\nlane's continuous dispatch (S1a section 5.6: V = 20 workers, each takes the next queued slot\nas soon as its previous VM is gone; a slot lost to infrastructure on its first attempt is\nqueued once more) for each E job in its registered order (``plan-e.json``), with slot\noccupancies resampled from S1a's realized slots for the same (size, task, harness) (four\nper cell: two sessions x two reruns, ``a1.jsonl``). The job starts at the longest S1a\nstart-up (Slurm start to first dispatch) and must finish its last slot before its USR1\npoint, the cap minus 180 s. Scenarios: S1a's slots as measured; every slot 10% and 20%\nlonger; and 5% of each (size, harness) cell's first attempts lost at full length and\nre-queued (the most DR0 tolerates).\n\nThe dispatch model is checked first on S1a's own four A1 jobs: replaying each job's realized\ndispatch order with its realized slot occupancies must reproduce its realized span from the\nfirst dispatch to the last teardown.\n\nUsage, from the repository root::\n\n    python program/evidence/2026-10-11/q2-stage1-successor-e/cap_sufficiency.py --out OUT.json\n",
+ "provenance": {
+  "argv": [
+   "program/evidence/2026-10-11/q2-stage1-successor-e/cap_sufficiency.py",
+   "--out",
+   "/private/tmp/claude-501/-Users-kevinliu-repos-cotcodec/122e47b9-8f46-4266-97af-e75214712991/scratchpad/q2e/cap-sufficiency.json"
+  ],
+  "git_head": "acb886c5374c5eb24b82448f58de48052fb6a769",
+  "numpy": "2.5.2",
+  "python": "3.13.14",
+  "tree_dirty": false
+ },
+ "s1a_replay_check": {
+  "A1-4B-S1": {
+   "episodes": 452,
+   "realized_span_s": 4023.0,
+   "relative_error": -0.0,
+   "replayed_span_s": 4023.0
+  },
+  "A1-4B-S2": {
+   "episodes": 452,
+   "realized_span_s": 3958.8,
+   "relative_error": -0.0,
+   "replayed_span_s": 3958.6
+  },
+  "A1-9B-S1": {
+   "episodes": 452,
+   "realized_span_s": 4278.7,
+   "relative_error": -0.0,
+   "replayed_span_s": 4278.7
+  },
+  "A1-9B-S2": {
+   "episodes": 452,
+   "realized_span_s": 4281.8,
+   "relative_error": -0.0,
+   "replayed_span_s": 4281.7
+  }
+ },
+ "seed": 42,
+ "startup_s": 113.18587,
+ "usr1_lead_s": 180.0
+}
