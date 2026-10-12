@@ -1942,3 +1942,35 @@ Kevin's own (credentials, payment or human judgment):
 - Q1's untrusted GPU code on the R570 driver, which stays off until the
   driver is upgraded or he accepts that specific host-security risk in
   writing.
+
+**D93. S2 v4's K1 fails as registered; Phase 1 does not run on these images;
+the cause is diagnosed before any successor is considered.**
+- What ran. Phase 0 of `s2-arabic-cua-locale-v4` (row 21) ran K1 jobs
+  1245-1264 from the freeze export:
+  - C1 passed on all five images;
+  - the V = 20 rung was not aborted (2,400 of 2,400);
+  - C2 passed on all five images;
+  - A6 passed on E (300 of 300) and A (300 of 300).
+- The failure. A6 on ER, job 1264, was a counting campaign with no
+  infrastructure, counting or snapshot problem. It passed 295 of 300 trials,
+  but the canary entry `writer:drag_select_word` failed in all 5 sessions,
+  reading back "Ykeep word keep" where "keep Y keep" was expected.
+  `ap_delta.verdict` gives A6 on ER pass = false. K1 needs every check to pass
+  on every image, so **K1 fails**.
+- Kill criterion K1 applies: no Phase 1 on these images, and a repair is a new
+  image and a new registration. The operator stopped as briefed. The other 35
+  K1 jobs, the census, the oracle and K0 were not run. No job is rerun, and
+  nothing in v4 changes.
+- The cause, untested. The operator suspects the canary's frozen Writer drag
+  coordinates, which were measured on the left-to-right layout. ER mirrors
+  LibreOffice's layout, so a fixed-coordinate drag lands on different text. If
+  that holds, the failure is in the K1 instrument rather than in the action
+  path's delivery of drags.
+- Decision. The rest of v4's Phase 0 is not run as a record now. The census
+  (about 95 VM-h) would be repeated by any successor, and it cannot admit
+  Phase 1 under v4. A read-only diagnosis of job 1264 runs first:
+  - is the cause the canary's coordinates or the action path;
+  - does any other K1 check or canary target depend on the layout;
+  - what a successor would need.
+  Only then is a v5 (per-image canary targets fixed before its freeze, the
+  rest unchanged) or an honest exit for S2 decided.
