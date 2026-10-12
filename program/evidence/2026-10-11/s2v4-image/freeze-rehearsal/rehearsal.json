@@ -1,19 +1,29 @@
 {
  "apdelta_dev_refused": "DeltaError: s2-arabic-cua-locale-v4 is frozen: development no longer runs (D56)",
- "branch_head": "5d61a63a (the rehearsal clone's base)",
+ "branch_head": "0a1d18e7 (the rehearsal clone's base: the branch after the merge of main, ledger rows 1-20)",
  "census": "{\"slots\": 1322, \"capture\": 882, \"gold\": 440, \"out\": \"census.json\"}",
- "census_resume_validate": "{\"ok\": true, \"manifest_sha256\": \"f54e4c8876f7288760cf02d332656a7eecd161758891c8bc377f77e3a5d9136e\", \"slots\": 1122}",
- "census_validate": "{\"ok\": true, \"manifest_sha256\": \"6ad886b4bec5d30e427d050ed410b6fee96406764fc2cf34cf8e182a7a61d165\", \"slots\": 1322}",
+ "census_resume_validate": "{\"ok\": true, \"manifest_sha256\": \"ba819d32d3c3931ca5ed8acc691930b378e847f110157e316fee8703b3d0cf32\", \"slots\": 1122}",
+ "census_validate": "{\"ok\": true, \"manifest_sha256\": \"6164a98f49181b44a60e92bd775131e7268a23e129006b4f988165e7159e83a7\", \"slots\": 1322}",
  "dev_refused": "LaneError: s2-arabic-cua-locale-v4 is frozen: development no longer runs (D56)",
- "fill_commit": "ab538c414dbac9d073b05e2c71729ac937d9f309",
+ "earlier": {
+  "branch_head": "5d61a63a (the rehearsal clone's base)",
+  "fill_commit": "ab538c414dbac9d073b05e2c71729ac937d9f309",
+  "freeze_commit": "7920e02209f8efc883de47c99dc9e2fe290e645b",
+  "note": "the first rehearsal of the repair round, at 5d61a63a (before the merge of main), four S2 v4 test files",
+  "tests_at_freeze": "78 passed in 18.48s"
+ },
+ "fill_commit": "45585fef70734d3f4e05eb644b42af1c84012949",
  "freeze_changes": [
   "program/preregistrations/ledger.jsonl"
  ],
- "freeze_commit": "7920e02209f8efc883de47c99dc9e2fe290e645b",
+ "freeze_commit": "4ced9e4dd0e6133a0a38f1cb37408c85e543dd56",
  "k1_a3_ar": [
   "{\"check\": \"A3\", \"part\": {\"index\": 1, \"of\": 3}, \"out\": \"k1-a3-ar-p1.json\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1222, \"budget_minutes\": 1222}",
   "{\"check\": \"A3\", \"part\": {\"index\": 2, \"of\": 3}, \"out\": \"k1-a3-ar-p2.json\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1192, \"budget_minutes\": 1192}",
-  "{\"check\": \"A3\", \"part\": {\"index\": 3, \"of\": 3}, \"out\": \"k1-a3-ar-p3.json\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 982, \"budget_minutes\": 982}"
+  "{\"check\": \"A3\", \"part\": {\"index\": 3, \"of\": 3}, \"out\": \"k1-a3-ar-p3.json\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 982, \"budget_minutes\": 982}",
+  "{\"ok\": true, \"check\": \"A3\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1222, \"budget_minutes\": 1222}",
+  "{\"ok\": true, \"check\": \"A3\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1192, \"budget_minutes\": 1192}",
+  "{\"ok\": true, \"check\": \"A3\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 982, \"budget_minutes\": 982}"
  ],
  "k1_c1_e": [
   "{\"check\": \"C1\", \"part\": null, \"out\": \"k1-c1-e.json\", \"campaigns\": 2, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 154, \"budget_minutes\": 154}",
@@ -31,7 +41,9 @@
   "{\"check\": \"rung\", \"part\": null, \"out\": \"k1-rung.json\", \"campaigns\": 1, \"cpus\": 90, \"memory_gb\": 142, \"minutes\": 110, \"budget_minutes\": 110}",
   "{\"ok\": true, \"check\": \"rung\", \"campaigns\": 1, \"cpus\": 90, \"memory_gb\": 142, \"minutes\": 110, \"budget_minutes\": 110}"
  ],
+ "ledger_row_in_clone": 21,
  "real_ledger_unchanged": true,
- "tests_at_freeze": "78 passed in 18.48s",
- "what": "Scratch freeze rehearsal on a local clone of the branch head (origin removed; its own ledger): status fill, scripts/preregister.py freeze, verify and check-chain, the ledger row committed alone; the S2 v4 tests at the freeze commit; from an export of the freeze commit the registered census manifest (render-census --freeze-commit, checked with git) and a resumed census validated, K1 manifests rendered and validated (C1 on E, C3 and A3 on AR in parts, the rung), and development manifests of both lanes refused. The real ledger was not touched."
+ "tests_at_freeze": "129 passed, 1 skipped in 270.12s (0:04:30)",
+ "tests_at_freeze_files": "tests/test_s2v4_*.py (all S2 v4 test files)",
+ "what": "Scratch freeze rehearsal on a local clone of the branch head (origin removed; its own ledger): status fill, scripts/preregister.py freeze, verify and check-chain, the ledger row committed alone; every S2 v4 test file at the freeze commit; from an export of the freeze commit the registered census manifest (render-census --freeze-commit, checked with git) and a resumed census validated, K1 manifests rendered and validated (C1 on E, C3 and A3 on AR in parts, the rung), and development manifests of both lanes refused. The real ledger was not touched. A3's parts are validated as well as rendered."
 }

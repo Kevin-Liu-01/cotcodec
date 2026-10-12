@@ -223,12 +223,13 @@ records agree with 1217's.
 
 ## freeze-rehearsal/ (repair round)
 
-`rehearsal.json`: a scratch freeze of a local clone of the branch at `5d61a63a` (origin removed, its own
-ledger; the real ledger was not touched): the status fill, `scripts/preregister.py freeze`, `verify` and
-`check-chain`, the ledger row committed alone (the freeze commit changes only the ledger); four S2 v4 test files
-at the freeze commit (registration, lane, K0 and `ap_delta`: 78 passed, the status test reading the
-frozen wording against the row); from an
-export of the freeze commit, the registered census manifest (1,322 slots; `render-census
+`rehearsal.json`: a scratch freeze of a local clone of the branch at `0a1d18e7` (after the merge of
+`main`, whose ledger has rows 1-20; origin removed, its own ledger; the real ledger was not touched):
+the status fill, `scripts/preregister.py freeze` (row 21 in the clone), `verify` and `check-chain`, the
+ledger row committed alone (the freeze commit changes only the ledger); every S2 v4 test file at the
+freeze commit (129 passed, 1 skipped; the status test reading the frozen wording against the row);
+from an export of the freeze commit, the registered census manifest (1,322 slots; `render-census
 --freeze-commit`, the commit checked with git) and a census resumed from block `b010` validated, K1
 manifests rendered and validated (C1 on E; C3 on AR in three parts; A3 on AR in three parts; the rung,
-90 CPUs, 142 GB), and development manifests of both the lane and `ap_delta` refused.
+90 CPUs, 142 GB), and development manifests of both the lane and `ap_delta` refused. The first
+rehearsal of the round (at `5d61a63a`, four test files, 78 passed) is kept under `earlier`.
