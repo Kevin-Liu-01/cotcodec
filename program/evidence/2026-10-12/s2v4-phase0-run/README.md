@@ -100,6 +100,7 @@ directories (E2's held only its staged configuration, no job).
 | 1260 | K1 C2 on AR | 362 | 19:47:50 | 19:47:50-19:58:03 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 | 1261 | K1 C2 on PL | 362 | 19:58:51 | 19:58:51-20:09:03 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 | 1262 | K1 A6 on E (cross-app canary: Writer, Chrome, VS Code, GNOME Terminal; seed 43) | 222 | 20:10:20 | 20:10:20-20:59:56 (49.6 min) | COMPLETED 0:0 | A6 pass; the campaign counts |
+| 1263 | K1 A6 on A | 222 | 21:01:27 | 21:01:28-21:51:08 (49.7 min) | COMPLETED 0:0 | A6 pass; the campaign counts |
 
 Per job:
 - **1245 (C1, E).** Limit ends 17:19:33Z, before E2's earliest start 17:51:36Z. H-GA-buggy: 70
@@ -171,6 +172,16 @@ Per job:
   pristine; 0 guest-server restarts. A6 on E `pass`. Driver exit 0, `infra_gates_pass` true, image
   unchanged, no labelled container left; no counting, foreign-abort or snapshot problem. Host
   snapshot: load 0.29, queue empty, no labelled container.
+- **1263 (A6, A).** Limit ends 00:43:28Z on 2026-10-13. The canary under the Arabic interface
+  (LibreOffice Writer runs with the Arabic UI on image A; registration section "What the D53
+  certification covers for the cells"). 5 sessions of 60 trials, 300 of 300 passed, all 60 entries
+  PASS; 5 cold boots at most 17.9 s; step p95 1.84 s; 4 of 4 reset sentinels pristine; 0
+  guest-server restarts. A6 on A `pass`. Driver exit 0, `infra_gates_pass` true, image unchanged,
+  no labelled container left; no counting, foreign-abort or snapshot problem. Host snapshot: load
+  0.12, queue empty, no labelled container; E's pair directories held E3's staged configuration
+  (`e-9b-e3`, `e-4b-e3`), no E job. Submitted by the previous operator instance; the orchestrating
+  session then restarted, and this job was collected (never resubmitted) by the next instance
+  (section "Operator restarts").
 
 ## Schedule for the rest of K1 (the operator's plan; not a registered rule)
 
@@ -199,3 +210,18 @@ Per job:
   (epoch 1791875870), the deadline every job of this gap is checked against.
 - Order in this gap, longest limit first so that every job keeps the most slack: C2 on E, A, ER, AR
   and PL (362 minutes), then A6 (222), then A5 (192), each on an empty queue.
+
+## Operator restarts (operator's record)
+
+- 21:46Z: the orchestrating session restarted while job 1263 (A6 on A) was running. The new operator
+  instance found 1263 in the queue (RUNNING, 45 min), did not resubmit it, watched it to its end
+  (COMPLETED 0:0 at 21:51:08Z) and collected it with `ops/collect_k1.sh`. The Mac scratch copy
+  (`check_job.py`'s local export and the per-job host copies) was gone and was remade: the local
+  export from `git archive cf174050`, extracted with Python's `tarfile` (`filter="data"`), `.git_sha`
+  added; 7,910 files, no AppleDouble file, and the SHA-256 of its sorted per-file SHA-256 list
+  (`.git_sha` excluded, 7,909 files) is again `bd289bb8...`, the host export's (section "Staging").
+- `ops/watch_job.sh`: the previous instance had left one uncommitted edit, kept and committed with
+  1263's records. Before it, an `ssh` that failed or timed out (empty output) was read as the job
+  having left Slurm (`GONE`), which would end the watch early and lose the last `scontrol` record;
+  with it, an empty reply is logged as `no-reply` and the poll retries, and only a reply without
+  the job (Slurm no longer knows it) ends the watch as `GONE`.

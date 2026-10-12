@@ -8,6 +8,8 @@ for i in $(seq 1 2000); do
     st=$(echo "$out" | grep -oE 'JobState=[A-Z_]+' | head -1)
     echo "$(date -u +%FT%TZ) $st" >> "$D/watch-$J.log"
     case "$st" in JobState=COMPLETED|JobState=FAILED|JobState=CANCELLED|JobState=TIMEOUT|JobState=NODE_FAIL|JobState=OUT_OF_MEMORY) echo "ENDED $st"; exit 0;; esac
+  elif [ -z "$out" ]; then
+    echo "$(date -u +%FT%TZ) no-reply (ssh failed or timed out; retrying)" >> "$D/watch-$J.log"
   else
     echo "$(date -u +%FT%TZ) gone" >> "$D/watch-$J.log"; echo GONE; exit 0
   fi
