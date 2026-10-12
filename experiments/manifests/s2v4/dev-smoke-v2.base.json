@@ -1,0 +1,80 @@
+{
+ "engine": {
+  "kind": "none"
+ },
+ "episode_image_id": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230",
+ "episode_python": "/opt/venv-lock/bin/python",
+ "episode_timeout_s": 900,
+ "evaluate": true,
+ "experiment_id": "s2-arabic-cua-locale-v4",
+ "file_cache": {
+  "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/file_cache_1e112283/files"
+ },
+ "images": {
+  "A": {
+   "host_path": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-A.qcow2",
+   "sha256": "a76f935ed4dabc30b7f38b131988f95f2618ef8f020bb4dca5977f42a2de8ae4",
+   "size_bytes": 24459214848
+  },
+  "AD": {
+   "host_path": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-AD.qcow2",
+   "sha256": "9a532055ad8d8c50fb190d87f42b87b05586c8f7cd97af0187ec3b588be9b210",
+   "size_bytes": 24459214848
+  },
+  "AR": {
+   "host_path": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-AR.qcow2",
+   "sha256": "c952ac430b2ea79405d6b5de0977372953cd60d1e6beb790986096bfd6e25619",
+   "size_bytes": 24459214848
+  },
+  "E": {
+   "host_path": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-E.qcow2",
+   "sha256": "59e1a72cea23f50e188bea96864d76c72919c243cd45c184c3705cb56e8a5d1a",
+   "size_bytes": 24459214848
+  },
+  "ER": {
+   "host_path": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-ER.qcow2",
+   "sha256": "ca83bd163eafcbd4ebd64b8bb8263c4df396964220046c966dfb8173f3ee81cb",
+   "size_bytes": 24459214848
+  },
+  "PL": {
+   "host_path": "/home/kevin/cotcodec-runs/stage0/s2v4/image-build-v4/s2v4-cell-PL.qcow2",
+   "sha256": "5e6694a092cd47fae551bfa11ee0cba9322a026fe5b82b04ff035d4597676bf2",
+   "size_bytes": 24459214848
+  },
+  "S": {
+   "host_path": "/home/kevin/cotcodec-runs/stage0/q2-action-path/vm/Ubuntu.qcow2",
+   "sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+   "size_bytes": 24460197888
+  }
+ },
+ "mode": "s2v4-probe",
+ "name": "s2v4-dev-smoke-v2",
+ "note": "Development smoke v2: the rebuilt images (build 1199, the selector read last in its layer) on the same three dev-split tasks, cells and replicate as v1, plus gold slots (the K2 injection executor) for the two tasks with a gold in E, A, ER, AR and PL. Never evidence for K0 or K1.",
+ "osworld": {
+  "commit": "b138d348256078fa634fc3b73567a7337c793e6b",
+  "host_dir": "/home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs/OSWorld"
+ },
+ "purpose": "development",
+ "run_root": "/home/kevin/cotcodec-runs/stage0/s2v4/vm-runs",
+ "schema": "s2v4-vm-lane-v1",
+ "settle_after_reset_s": 60,
+ "settle_before_eval_s": 20,
+ "slurm": {
+  "cpus": 40,
+  "memory_gb": 64,
+  "minutes": 75
+ },
+ "vm": {
+  "concurrency": 8,
+  "cpu_cores": 4,
+  "disk_size": "32G",
+  "guest_ip": "20.20.20.21",
+  "hmp_port": 7100,
+  "image": "happysixd/osworld-docker@sha256:0e6497a9295647cf05bf2b2af522fdd79bdeba2737595259cab310a3bcf6baa9",
+  "image_id": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+  "memory_gb": 6,
+  "network": "none-netns",
+  "ram_size": "4G",
+  "server_port": 5000
+ }
+}

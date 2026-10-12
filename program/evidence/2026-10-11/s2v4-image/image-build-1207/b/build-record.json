@@ -1,0 +1,721 @@
+{
+ "cells": {
+  "A": {
+   "applied": {
+    "commands": 10,
+    "ops": 1,
+    "script_sha256": "44fcfd246279b0d2cf43d691b722ce2ad0107e13c8a8edf8dc132c3f0442c0f5"
+   },
+   "cell": "A",
+   "changed_blocks": {
+    "blocks": 8,
+    "counts": {
+     "block_bitmap": 1,
+     "directory": 1,
+     "file_data": 1,
+     "inode_bitmap": 1,
+     "inode_table": 1,
+     "sb_gdt": 3,
+     "unexplained": 0
+    },
+    "inode_slots_changed": 1,
+    "ok": true,
+    "unexplained": []
+   },
+   "fsck": {
+    "findings": [
+     "Inode 1214912 passes checks, but checksum does not match inode.  Fix? no"
+    ],
+    "returncode": 4,
+    "tail": [
+     "/out/b/work/cell-A.raw: ********** WARNING: Filesystem still has errors **********",
+     "",
+     "/out/b/work/cell-A.raw: 301269/1933312 files (0.3% non-contiguous), 5215620/7732224 blocks",
+     "e2fsck 1.46.5 (30-Dec-2021)"
+    ]
+   },
+   "image_checks": {
+    "outside_partition": {
+     "head": [],
+     "head_region_bytes": 540016640,
+     "ok": true,
+     "tail": [],
+     "tail_region_bytes": 21475885056
+    },
+    "s_wtime": 1754395037,
+    "s_wtime_is_fake_time": true,
+    "superblock": {
+     "changed": [
+      "Checksum",
+      "Free blocks",
+      "Free inodes"
+     ],
+     "ok": true,
+     "unexpected": [],
+     "unexpected_values": {}
+    }
+   },
+   "mtimes_read_back": 1,
+   "qcow2": {
+    "bytes": 24459214848,
+    "cluster_size": 65536,
+    "compare": "Images are identical.",
+    "format": "qcow2",
+    "path": "s2v4-cell-A.qcow2",
+    "sha256": "1250098963189effe71fd4e949407f8d8b94543fb192de472ae4572f09c10df2",
+    "virtual_size": 53687091200
+   },
+   "seconds": 173.0,
+   "selector_path": "/etc/libreoffice/registry/zz-s2v4-cell.xcd",
+   "selector_sha256": "081a34eb90c6d8f993ccdff478ca5337784b85c44b9f90977f42c0710f5a50cb",
+   "toolbar_files_rewritten": 0,
+   "verified_paths": 1
+  },
+  "AD": {
+   "applied": {
+    "commands": 10,
+    "ops": 1,
+    "script_sha256": "b249181a7548a874f61f2a3e0b5079a3b0041433247c728a6753a28e92bc9176"
+   },
+   "cell": "AD",
+   "changed_blocks": {
+    "blocks": 8,
+    "counts": {
+     "block_bitmap": 1,
+     "directory": 1,
+     "file_data": 1,
+     "inode_bitmap": 1,
+     "inode_table": 1,
+     "sb_gdt": 3,
+     "unexplained": 0
+    },
+    "inode_slots_changed": 1,
+    "ok": true,
+    "unexplained": []
+   },
+   "fsck": {
+    "findings": [
+     "Inode 1214912 passes checks, but checksum does not match inode.  Fix? no"
+    ],
+    "returncode": 4,
+    "tail": [
+     "/out/b/work/cell-AD.raw: ********** WARNING: Filesystem still has errors **********",
+     "",
+     "/out/b/work/cell-AD.raw: 301269/1933312 files (0.3% non-contiguous), 5215620/7732224 blocks",
+     "e2fsck 1.46.5 (30-Dec-2021)"
+    ]
+   },
+   "image_checks": {
+    "outside_partition": {
+     "head": [],
+     "head_region_bytes": 540016640,
+     "ok": true,
+     "tail": [],
+     "tail_region_bytes": 21475885056
+    },
+    "s_wtime": 1754395037,
+    "s_wtime_is_fake_time": true,
+    "superblock": {
+     "changed": [
+      "Checksum",
+      "Free blocks",
+      "Free inodes"
+     ],
+     "ok": true,
+     "unexpected": [],
+     "unexpected_values": {}
+    }
+   },
+   "mtimes_read_back": 1,
+   "qcow2": {
+    "bytes": 24459214848,
+    "cluster_size": 65536,
+    "compare": "Images are identical.",
+    "format": "qcow2",
+    "path": "s2v4-cell-AD.qcow2",
+    "sha256": "d1429751efca0fbbf959f7b2933feab4bc6d36c08e743bb0b4754ed2d562bef1",
+    "virtual_size": 53687091200
+   },
+   "seconds": 169.8,
+   "selector_path": "/etc/libreoffice/registry/zz-s2v4-cell.xcd",
+   "selector_sha256": "3d2b12f95537ee7df1502829d4631330d1682aeac3bf346531aeec1d933dc62c",
+   "toolbar_files_rewritten": 0,
+   "verified_paths": 1
+  },
+  "AR": {
+   "applied": {
+    "commands": 10,
+    "ops": 1,
+    "script_sha256": "9cc07d57ec8207a9ae40ffcca7ef2987c73e7d7486bb42f2a34ea2131c6e7642"
+   },
+   "cell": "AR",
+   "changed_blocks": {
+    "blocks": 8,
+    "counts": {
+     "block_bitmap": 1,
+     "directory": 1,
+     "file_data": 1,
+     "inode_bitmap": 1,
+     "inode_table": 1,
+     "sb_gdt": 3,
+     "unexplained": 0
+    },
+    "inode_slots_changed": 1,
+    "ok": true,
+    "unexplained": []
+   },
+   "fsck": {
+    "findings": [
+     "Inode 1214912 passes checks, but checksum does not match inode.  Fix? no"
+    ],
+    "returncode": 4,
+    "tail": [
+     "/out/b/work/cell-AR.raw: ********** WARNING: Filesystem still has errors **********",
+     "",
+     "/out/b/work/cell-AR.raw: 301269/1933312 files (0.3% non-contiguous), 5215620/7732224 blocks",
+     "e2fsck 1.46.5 (30-Dec-2021)"
+    ]
+   },
+   "image_checks": {
+    "outside_partition": {
+     "head": [],
+     "head_region_bytes": 540016640,
+     "ok": true,
+     "tail": [],
+     "tail_region_bytes": 21475885056
+    },
+    "s_wtime": 1754395037,
+    "s_wtime_is_fake_time": true,
+    "superblock": {
+     "changed": [
+      "Checksum",
+      "Free blocks",
+      "Free inodes"
+     ],
+     "ok": true,
+     "unexpected": [],
+     "unexpected_values": {}
+    }
+   },
+   "mtimes_read_back": 1,
+   "qcow2": {
+    "bytes": 24459214848,
+    "cluster_size": 65536,
+    "compare": "Images are identical.",
+    "format": "qcow2",
+    "path": "s2v4-cell-AR.qcow2",
+    "sha256": "77cd9a2ab6aa37ef6c7d80ff27486b63e2f2e8a417c46d2768c1d8020cc6311f",
+    "virtual_size": 53687091200
+   },
+   "seconds": 153.2,
+   "selector_path": "/etc/libreoffice/registry/zz-s2v4-cell.xcd",
+   "selector_sha256": "89b110b48f9e5afeb98eb31d33a73bd24e7b6e85c712a23418f1cdca953736c2",
+   "toolbar_files_rewritten": 0,
+   "verified_paths": 1
+  },
+  "E": {
+   "applied": {
+    "commands": 10,
+    "ops": 1,
+    "script_sha256": "c80197198c648f96c2d9d76a2c3d008394d1942ca6a89c104929fa246b60ed3e"
+   },
+   "cell": "E",
+   "changed_blocks": {
+    "blocks": 8,
+    "counts": {
+     "block_bitmap": 1,
+     "directory": 1,
+     "file_data": 1,
+     "inode_bitmap": 1,
+     "inode_table": 1,
+     "sb_gdt": 3,
+     "unexplained": 0
+    },
+    "inode_slots_changed": 1,
+    "ok": true,
+    "unexplained": []
+   },
+   "fsck": {
+    "findings": [
+     "Inode 1214912 passes checks, but checksum does not match inode.  Fix? no"
+    ],
+    "returncode": 4,
+    "tail": [
+     "/out/b/work/cell-E.raw: ********** WARNING: Filesystem still has errors **********",
+     "",
+     "/out/b/work/cell-E.raw: 301269/1933312 files (0.3% non-contiguous), 5215620/7732224 blocks",
+     "e2fsck 1.46.5 (30-Dec-2021)"
+    ]
+   },
+   "image_checks": {
+    "outside_partition": {
+     "head": [],
+     "head_region_bytes": 540016640,
+     "ok": true,
+     "tail": [],
+     "tail_region_bytes": 21475885056
+    },
+    "s_wtime": 1754395037,
+    "s_wtime_is_fake_time": true,
+    "superblock": {
+     "changed": [
+      "Checksum",
+      "Free blocks",
+      "Free inodes"
+     ],
+     "ok": true,
+     "unexpected": [],
+     "unexpected_values": {}
+    }
+   },
+   "mtimes_read_back": 1,
+   "qcow2": {
+    "bytes": 24459214848,
+    "cluster_size": 65536,
+    "compare": "Images are identical.",
+    "format": "qcow2",
+    "path": "s2v4-cell-E.qcow2",
+    "sha256": "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42",
+    "virtual_size": 53687091200
+   },
+   "seconds": 169.5,
+   "selector_path": "/etc/libreoffice/registry/zz-s2v4-cell.xcd",
+   "selector_sha256": "62d176fa8135d59af44ce79ef0f51e386f3fe8d2040d4089ceef64d0b60a4fa1",
+   "toolbar_files_rewritten": 0,
+   "verified_paths": 1
+  },
+  "ER": {
+   "applied": {
+    "commands": 10,
+    "ops": 1,
+    "script_sha256": "c4f7739ab1fcc198d630a95ced154f305cafdfedbacbe2902d7305172334e2f9"
+   },
+   "cell": "ER",
+   "changed_blocks": {
+    "blocks": 8,
+    "counts": {
+     "block_bitmap": 1,
+     "directory": 1,
+     "file_data": 1,
+     "inode_bitmap": 1,
+     "inode_table": 1,
+     "sb_gdt": 3,
+     "unexplained": 0
+    },
+    "inode_slots_changed": 1,
+    "ok": true,
+    "unexplained": []
+   },
+   "fsck": {
+    "findings": [
+     "Inode 1214912 passes checks, but checksum does not match inode.  Fix? no"
+    ],
+    "returncode": 4,
+    "tail": [
+     "/out/b/work/cell-ER.raw: ********** WARNING: Filesystem still has errors **********",
+     "",
+     "/out/b/work/cell-ER.raw: 301269/1933312 files (0.3% non-contiguous), 5215620/7732224 blocks",
+     "e2fsck 1.46.5 (30-Dec-2021)"
+    ]
+   },
+   "image_checks": {
+    "outside_partition": {
+     "head": [],
+     "head_region_bytes": 540016640,
+     "ok": true,
+     "tail": [],
+     "tail_region_bytes": 21475885056
+    },
+    "s_wtime": 1754395037,
+    "s_wtime_is_fake_time": true,
+    "superblock": {
+     "changed": [
+      "Checksum",
+      "Free blocks",
+      "Free inodes"
+     ],
+     "ok": true,
+     "unexpected": [],
+     "unexpected_values": {}
+    }
+   },
+   "mtimes_read_back": 1,
+   "qcow2": {
+    "bytes": 24459214848,
+    "cluster_size": 65536,
+    "compare": "Images are identical.",
+    "format": "qcow2",
+    "path": "s2v4-cell-ER.qcow2",
+    "sha256": "262fe7093d5fbdce466eb9bf15229706a5131d76cb8d7e145f7262eb5096b607",
+    "virtual_size": 53687091200
+   },
+   "seconds": 172.9,
+   "selector_path": "/etc/libreoffice/registry/zz-s2v4-cell.xcd",
+   "selector_sha256": "d7a7c43f2af3f292580371e0db5ca8699ea2dede6d85d6c1b9662d5cd043cebc",
+   "toolbar_files_rewritten": 0,
+   "verified_paths": 1
+  },
+  "PL": {
+   "applied": {
+    "commands": 4069,
+    "ops": 739,
+    "script_sha256": "91c9627fcdbc481357ad2e0584e04c0a7ef2b9217d2fa0d777932cfc7db386fc"
+   },
+   "cell": "PL",
+   "changed_blocks": {
+    "blocks": 466,
+    "counts": {
+     "block_bitmap": 9,
+     "directory": 10,
+     "file_data": 390,
+     "inode_bitmap": 5,
+     "inode_table": 47,
+     "sb_gdt": 5,
+     "unexplained": 0
+    },
+    "inode_slots_changed": 495,
+    "ok": true,
+    "unexplained": []
+   },
+   "fsck": {
+    "findings": [
+     "Inode 1214912 passes checks, but checksum does not match inode.  Fix? no"
+    ],
+    "returncode": 4,
+    "tail": [
+     "/out/b/work/cell-PL.raw: ********** WARNING: Filesystem still has errors **********",
+     "",
+     "/out/b/work/cell-PL.raw: 301269/1933312 files (0.3% non-contiguous), 5215620/7732224 blocks",
+     "e2fsck 1.46.5 (30-Dec-2021)"
+    ]
+   },
+   "image_checks": {
+    "outside_partition": {
+     "head": [],
+     "head_region_bytes": 540016640,
+     "ok": true,
+     "tail": [],
+     "tail_region_bytes": 21475885056
+    },
+    "s_wtime": 1754395037,
+    "s_wtime_is_fake_time": true,
+    "superblock": {
+     "changed": [
+      "Checksum",
+      "Free blocks",
+      "Free inodes"
+     ],
+     "ok": true,
+     "unexpected": [],
+     "unexpected_values": {}
+    }
+   },
+   "mtimes_read_back": 370,
+   "qcow2": {
+    "bytes": 24459214848,
+    "cluster_size": 65536,
+    "compare": "Images are identical.",
+    "format": "qcow2",
+    "path": "s2v4-cell-PL.qcow2",
+    "sha256": "5a4102eefbbaf9e4ad78d499267270c4fdb4671ccff4d6dba777196817aa6ed2",
+    "virtual_size": 53687091200
+   },
+   "seconds": 171.5,
+   "selector_path": "/etc/libreoffice/registry/zz-s2v4-cell.xcd",
+   "selector_sha256": "62d176fa8135d59af44ce79ef0f51e386f3fe8d2040d4089ceef64d0b60a4fa1",
+   "toolbar_files_rewritten": 369,
+   "verified_paths": 370
+  }
+ },
+ "certified": {
+  "bytes": 24460197888,
+  "hash_checked": true,
+  "sha256": "6bf667a852b3c307f61d9f09c42559351f45e0607e428b4997becf534cf4d313",
+  "virtual_size": 53687091200
+ },
+ "debs": [
+  {
+   "bytes": 663804,
+   "control_files": {
+    "control": {
+     "bytes": 1602,
+     "sha256": "d70e827c65aaf814c5caf7f89f8b5ea8716439ad4e5e15a3d6c0fdb337a92af1"
+    },
+    "postinst": {
+     "bytes": 1616,
+     "sha256": "e5f0010a6efd19731f7a06a96e67e4de31f4066644ae20135e0709ba6d16986b"
+    },
+    "postrm": {
+     "bytes": 2052,
+     "sha256": "b77780c0d35c36cce1e24e032f7d9ce9c6219a9eb48c118d5508d67a1aa95b44"
+    },
+    "preinst": {
+     "bytes": 244,
+     "sha256": "0456842dd37bbf90e916de8a0323659a4efc38d2543b1cf40e9e43d8546a06eb"
+    },
+    "prerm": {
+     "bytes": 244,
+     "sha256": "0456842dd37bbf90e916de8a0323659a4efc38d2543b1cf40e9e43d8546a06eb"
+    }
+   },
+   "filename": "libreoffice-l10n-ar_7.3.7-0ubuntu0.22.04.4_all.deb",
+   "files": 42,
+   "members": 62,
+   "package": "libreoffice-l10n-ar",
+   "postinst_not_run": true,
+   "postinst_sha256": "e5f0010a6efd19731f7a06a96e67e4de31f4066644ae20135e0709ba6d16986b",
+   "sha256": "765339432f140aede4af39c8cb2b2ab87077abccba768a14cb9da387a2b6a9cd",
+   "ucf_pairs": [
+    [
+     "/usr/lib/libreoffice/share/.registry/Langpack-ar.xcd",
+     "/etc/libreoffice/registry/Langpack-ar.xcd"
+    ],
+    [
+     "/usr/lib/libreoffice/share/.registry/res/fcfg_langpack_ar.xcd",
+     "/etc/libreoffice/registry/res/fcfg_langpack_ar.xcd"
+    ],
+    [
+     "/usr/lib/libreoffice/share/.registry/res/registry_ar.xcd",
+     "/etc/libreoffice/registry/res/registry_ar.xcd"
+    ],
+    [
+     "/usr/lib/libreoffice/share/.registry/ctl_ar.xcd",
+     "/etc/libreoffice/registry/ctl_ar.xcd"
+    ]
+   ]
+  },
+  {
+   "bytes": 151600,
+   "control_files": {
+    "control": {
+     "bytes": 915,
+     "sha256": "b17133f7d62f19d0d6864bb61161b5fbe6ccbc8735361f92b3a05f2e80e278ef"
+    },
+    "postinst": {
+     "bytes": 125,
+     "sha256": "ba5310f256fd4fb1572170255b089c4d2818a42d7198fd00edc02368305c828c"
+    },
+    "postrm": {
+     "bytes": 121,
+     "sha256": "f360e7275cf0f32e40f37743a4edd1ff1e6f05ae4c26cd85e84911d32c99b77c"
+    }
+   },
+   "filename": "language-pack-ar-base_22.04+20230801_all.deb",
+   "files": 67,
+   "members": 78,
+   "package": "language-pack-ar-base",
+   "postinst_not_run": true,
+   "postinst_sha256": "ba5310f256fd4fb1572170255b089c4d2818a42d7198fd00edc02368305c828c",
+   "sha256": "d6503a116a4a73d7a6fecac635f50efce962b3a05ec1f2312db6c28bab9cf057",
+   "ucf_pairs": []
+  },
+  {
+   "bytes": 930704,
+   "control_files": {
+    "control": {
+     "bytes": 952,
+     "sha256": "3361ae46d5cb0c32839b52808c1343ff67452c005c3d1a9c010c92fd5995f570"
+    },
+    "postinst": {
+     "bytes": 130,
+     "sha256": "d472ff45064693ddd7f45f6de4fe135b1321d44a3efb59599e613423b9ced812"
+    },
+    "postrm": {
+     "bytes": 126,
+     "sha256": "310a874f96fc3e50c94cb98e733d05b3b76c8274dda28b35e16568c13958fa63"
+    }
+   },
+   "filename": "language-pack-gnome-ar-base_22.04+20230801_all.deb",
+   "files": 272,
+   "members": 288,
+   "package": "language-pack-gnome-ar-base",
+   "postinst_not_run": true,
+   "postinst_sha256": "d472ff45064693ddd7f45f6de4fe135b1321d44a3efb59599e613423b9ced812",
+   "sha256": "13e8cd8a3dbd3bd3069b76f5f245c7d9f536c9011b58af099cb4966ac0c45f15",
+   "ucf_pairs": []
+  }
+ ],
+ "derived_base": {
+  "bytes": 24459214848,
+  "cluster_size": 65536,
+  "compare": "Images are identical.",
+  "format": "qcow2",
+  "path": "s2v4-derived-base.qcow2",
+  "sha256": "d186f41ef5cec71ef2f961c6eb0151481012388825654a847bd58da6937def1a",
+  "virtual_size": 53687091200
+ },
+ "executor_commit": "c7a2b1d00a325f7264316316b3ca62926bd55db3",
+ "fake_time": {
+  "E2FSPROGS_FAKE_TIME": 1754395037,
+  "source": "s_wtime of the certified root filesystem",
+  "utc": "2025-08-05T11:57:17Z"
+ },
+ "filesystem": {
+  "features": [
+   "has_journal",
+   "ext_attr",
+   "resize_inode",
+   "dir_index",
+   "filetype",
+   "extent",
+   "64bit",
+   "flex_bg",
+   "sparse_super",
+   "large_file",
+   "huge_file",
+   "dir_nlink",
+   "extra_isize",
+   "metadata_csum"
+  ],
+  "state": "clean"
+ },
+ "fsck_certified": {
+  "findings": [
+   "Inode 1214912 passes checks, but checksum does not match inode.  Fix? no"
+  ],
+  "returncode": 4,
+  "tail": [
+   "/out/b/work/certified.raw: ********** WARNING: Filesystem still has errors **********",
+   "",
+   "/out/b/work/certified.raw: 300864/1933312 files (0.3% non-contiguous), 5212944/7732224 blocks",
+   "e2fsck 1.46.5 (30-Dec-2021)"
+  ]
+ },
+ "fsck_derived": {
+  "findings": [
+   "Inode 1214912 passes checks, but checksum does not match inode.  Fix? no"
+  ],
+  "returncode": 4,
+  "tail": [
+   "/out/b/work/base.raw: ********** WARNING: Filesystem still has errors **********",
+   "",
+   "/out/b/work/base.raw: 301268/1933312 files (0.3% non-contiguous), 5215619/7732224 blocks",
+   "e2fsck 1.46.5 (30-Dec-2021)"
+  ]
+ },
+ "install": {
+  "applied": {
+   "commands": 4001,
+   "ops": 404,
+   "script_sha256": "6dc1e950a05d4d986a4e42fbea68900af8f36b530a48cca3f76c18b5ccb4f433"
+  },
+  "by_kind": {
+   "mkdir": 18,
+   "symlink": 1,
+   "write": 385
+  },
+  "changed_blocks": {
+   "blocks": 2790,
+   "counts": {
+    "block_bitmap": 7,
+    "directory": 14,
+    "file_data": 2675,
+    "inode_bitmap": 6,
+    "inode_table": 83,
+    "sb_gdt": 5,
+    "unexplained": 0
+   },
+   "inode_slots_changed": 411,
+   "ok": true,
+   "unexplained": []
+  },
+  "image_checks": {
+   "outside_partition": {
+    "head": [],
+    "head_region_bytes": 540016640,
+    "ok": true,
+    "tail": [],
+    "tail_region_bytes": 21475885056
+   },
+   "s_wtime": 1754395037,
+   "s_wtime_is_fake_time": true,
+   "superblock": {
+    "changed": [
+     "Checksum",
+     "Free blocks",
+     "Free inodes"
+    ],
+    "ok": true,
+    "unexpected": [],
+    "unexpected_values": {}
+   }
+  },
+  "manifest_sha256": "a02596baf6d42faf0e560917f974d94bee12702e5133bde87081b6bea58b7f65",
+  "mtimes_read_back": 404,
+  "ops": 404,
+  "shared_dirs": [
+   "/usr/share/locale-langpack/ar",
+   "/usr/share/locale-langpack/ar/LC_MESSAGES"
+  ],
+  "skipped_existing_dirs": [
+   "/usr",
+   "/usr/lib",
+   "/usr/lib/libreoffice",
+   "/usr/lib/libreoffice/program",
+   "/usr/lib/libreoffice/program/resource",
+   "/usr/lib/libreoffice/share",
+   "/usr/lib/libreoffice/share/.registry",
+   "/usr/lib/libreoffice/share/.registry/res",
+   "/usr/lib/libreoffice/share/autotext",
+   "/usr/lib/libreoffice/share/wordbook",
+   "/usr/share",
+   "/usr/share/bug",
+   "/usr/share/doc",
+   "/usr",
+   "/usr/share",
+   "/usr/share/doc",
+   "/usr/share/locale-langpack",
+   "/var",
+   "/var/lib",
+   "/var/lib/locales",
+   "/var/lib/locales/supported.d",
+   "/usr",
+   "/usr/share",
+   "/usr/share/doc",
+   "/usr/share/help-langpack",
+   "/usr/share/locale-langpack"
+  ],
+  "verified_paths": 404
+ },
+ "layer_files": {
+  "missing": [],
+  "ok": true,
+  "unlisted": [],
+  "xcd_files": [
+   "Langpack-ar",
+   "Langpack-en-US",
+   "calc",
+   "ctl_ar",
+   "draw",
+   "gnome",
+   "graphicfilter",
+   "impress",
+   "lingucomponent",
+   "main",
+   "math",
+   "ogltrans",
+   "pdfimport",
+   "pyuno",
+   "writer",
+   "xsltfilter"
+  ]
+ },
+ "ok": true,
+ "root_partition": {
+  "offset": 540016640,
+  "sectors": 61857792,
+  "start_sector": 1054720
+ },
+ "schema": "s2v4-image-build-v1",
+ "seconds": 464.3,
+ "t_start": 1791760954.8964686,
+ "toolbar_definitions": 386,
+ "tools": {
+  "debugfs": "debugfs 1.46.5 (30-Dec-2021)",
+  "dpkg-deb": "Debian 'dpkg-deb' package archive backend version 1.21.1 (amd64).",
+  "python": "Python 3.10.12",
+  "qemu-img": "qemu-img version 6.2.0 (Debian 1:6.2+dfsg-2ubuntu6.31)",
+  "sfdisk": "sfdisk from util-linux 2.37.2",
+  "vmprobe_packages": "e2fsprogs\t1.46.5-2ubuntu1.2\nfdisk\t2.37.2-4ubuntu3.6\npython3\t3.10.6-1~22.04.1\nqemu-utils\t1:6.2+dfsg-2ubuntu6.31"
+ }
+}

@@ -1,0 +1,231 @@
+{
+ "architecture": "amd64",
+ "component": "main",
+ "decision": "D80 (iv)",
+ "executor_commit": "f1cff92345d13c43d2d413be79bb9e0b7503c4ea",
+ "files": [
+  {
+   "filename": "InRelease",
+   "kind": "InRelease",
+   "local": "meta/jammy-updates/InRelease",
+   "sha256": "764c270330bdcc948bcb1216853e901be03bcdcb57175cb07407c33245137400",
+   "size": 118761,
+   "url": "https://snapshot.ubuntu.com/ubuntu/20240110T000000Z/dists/jammy-updates/InRelease"
+  },
+  {
+   "filename": "InRelease.signed.txt",
+   "kind": "InRelease signed text (gpgv --output)",
+   "local": "meta/jammy-updates/InRelease.signed.txt",
+   "sha256": "c52386b72d420bf5ddd9a0fdff6177c75c84627dde57373b6a301cdb5ea4653a",
+   "size": 117879
+  },
+  {
+   "filename": "Packages.xz",
+   "kind": "Packages.xz",
+   "local": "meta/jammy-updates/Packages.xz",
+   "sha256": "7a20811ae8371893345c1c5a1fe2ae58d6d2eb4ee6657a2033b5bc846f1f47f7",
+   "signed_sha256_matches": true,
+   "size": 1277024,
+   "url": "https://snapshot.ubuntu.com/ubuntu/20240110T000000Z/dists/jammy-updates/main/binary-amd64/Packages.xz"
+  },
+  {
+   "filename": "libreoffice-l10n-ar_7.3.7-0ubuntu0.22.04.4_all.deb",
+   "index_sha256_matches": true,
+   "kind": "deb",
+   "local": "debs/libreoffice-l10n-ar_7.3.7-0ubuntu0.22.04.4_all.deb",
+   "sha256": "765339432f140aede4af39c8cb2b2ab87077abccba768a14cb9da387a2b6a9cd",
+   "size": 663804,
+   "url": "https://snapshot.ubuntu.com/ubuntu/20240110T000000Z/pool/main/libr/libreoffice/libreoffice-l10n-ar_7.3.7-0ubuntu0.22.04.4_all.deb"
+  },
+  {
+   "filename": "language-pack-ar-base_22.04+20230801_all.deb",
+   "index_sha256_matches": true,
+   "kind": "deb",
+   "local": "debs/language-pack-ar-base_22.04+20230801_all.deb",
+   "sha256": "d6503a116a4a73d7a6fecac635f50efce962b3a05ec1f2312db6c28bab9cf057",
+   "size": 151600,
+   "url": "https://snapshot.ubuntu.com/ubuntu/20240110T000000Z/pool/main/l/language-pack-ar-base/language-pack-ar-base_22.04+20230801_all.deb"
+  },
+  {
+   "filename": "language-pack-gnome-ar-base_22.04+20230801_all.deb",
+   "index_sha256_matches": true,
+   "kind": "deb",
+   "local": "debs/language-pack-gnome-ar-base_22.04+20230801_all.deb",
+   "sha256": "13e8cd8a3dbd3bd3069b76f5f245c7d9f536c9011b58af099cb4966ac0c45f15",
+   "size": 930704,
+   "url": "https://snapshot.ubuntu.com/ubuntu/20240110T000000Z/pool/main/l/language-pack-gnome-ar-base/language-pack-gnome-ar-base_22.04+20230801_all.deb"
+  }
+ ],
+ "guest_libreoffice": {
+  "in_index": true,
+  "package": "libreoffice-core",
+  "version": "1:7.3.7-0ubuntu0.22.04.4"
+ },
+ "index_stanzas": 6520,
+ "keyring": {
+  "path": "/usr/share/keyrings/ubuntu-archive-keyring.gpg",
+  "sha256": "1a4dd63e5c76728960a2edddae22e2e0fc53df8e8b87806deb971030ac704eb0"
+ },
+ "ok": true,
+ "packages": [
+  {
+   "filename": "libreoffice-l10n-ar_7.3.7-0ubuntu0.22.04.4_all.deb",
+   "launchpad": {
+    "date_published": "2023-12-14T14:19:31.553250+00:00",
+    "date_superseded": "2024-05-28T13:46:59.181600+00:00",
+    "librarian_url": "https://launchpad.net/ubuntu/+archive/primary/+files/libreoffice-l10n-ar_7.3.7-0ubuntu0.22.04.4_all.deb",
+    "pocket": "Updates",
+    "publication": "https://api.launchpad.net/devel/ubuntu/+archive/primary/+binarypub/201876740",
+    "sha1": "7d966d0df24d8849715d74f1c99b198add6fa26b",
+    "sha256": "765339432f140aede4af39c8cb2b2ab87077abccba768a14cb9da387a2b6a9cd",
+    "size": 663804
+   },
+   "launchpad_matches": true,
+   "md5": "85f85fd39c58e972d84dd79f61fb19dc",
+   "package": "libreoffice-l10n-ar",
+   "sha1": "7d966d0df24d8849715d74f1c99b198add6fa26b",
+   "sha256": "765339432f140aede4af39c8cb2b2ab87077abccba768a14cb9da387a2b6a9cd",
+   "size": 663804,
+   "stanza": {
+    "Architecture": "all",
+    "Bugs": "https://bugs.launchpad.net/ubuntu/+filebug",
+    "Depends": "libreoffice-common (>= 1:7.0.0~alpha~), locales | locales-all, ucf (>= 0.8)",
+    "Description": "office productivity suite -- Arabic language package",
+    "Filename": "pool/main/libr/libreoffice/libreoffice-l10n-ar_7.3.7-0ubuntu0.22.04.4_all.deb",
+    "Homepage": "http://www.libreoffice.org",
+    "Installed-Size": "3913",
+    "MD5sum": "85f85fd39c58e972d84dd79f61fb19dc",
+    "Maintainer": "Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>",
+    "Origin": "Ubuntu",
+    "Original-Maintainer": "Debian LibreOffice Maintainers <debian-openoffice@lists.debian.org>",
+    "Package": "libreoffice-l10n-ar",
+    "Priority": "optional",
+    "Provides": "libreoffice-l10n (= 7.3)",
+    "Recommends": "fonts-hosny-amiri, fonts-kacst, fonts-sil-scheherazade, libreoffice-core (>> 1:7.3.7)",
+    "SHA1": "7d966d0df24d8849715d74f1c99b198add6fa26b",
+    "SHA256": "765339432f140aede4af39c8cb2b2ab87077abccba768a14cb9da387a2b6a9cd",
+    "SHA512": "896dde04a1678be64df927bb8e095baafde9b1548bf70c708842fdec7428a58da63b2c0836114b38b6d0fa4d92e24c298f092c5936befaa9ecc6cd472a2dc661",
+    "Section": "localization",
+    "Size": "663804",
+    "Source": "libreoffice",
+    "Suggests": "hunspell-dictionary-ar | myspell-dictionary-ar, hyphen-ar, libreoffice-grammarcheck-ar, libreoffice-help-ar, mythes-ar",
+    "Version": "1:7.3.7-0ubuntu0.22.04.4"
+   },
+   "url": "https://snapshot.ubuntu.com/ubuntu/20240110T000000Z/pool/main/libr/libreoffice/libreoffice-l10n-ar_7.3.7-0ubuntu0.22.04.4_all.deb",
+   "version": "1:7.3.7-0ubuntu0.22.04.4"
+  },
+  {
+   "filename": "language-pack-ar-base_22.04+20230801_all.deb",
+   "launchpad": {
+    "date_published": "2023-08-06T07:53:32.534655+00:00",
+    "date_superseded": "2024-02-15T18:30:06.099477+00:00",
+    "librarian_url": "https://launchpad.net/ubuntu/+archive/primary/+files/language-pack-ar-base_22.04+20230801_all.deb",
+    "pocket": "Updates",
+    "publication": "https://api.launchpad.net/devel/ubuntu/+archive/primary/+binarypub/195659999",
+    "sha1": "1cba5a35802fa32c9b0150e105856bdef3cb11e5",
+    "sha256": "d6503a116a4a73d7a6fecac635f50efce962b3a05ec1f2312db6c28bab9cf057",
+    "size": 151600
+   },
+   "launchpad_matches": true,
+   "md5": "293ddff1dc4b8c1de099aca5b5cf74ca",
+   "package": "language-pack-ar-base",
+   "sha1": "1cba5a35802fa32c9b0150e105856bdef3cb11e5",
+   "sha256": "d6503a116a4a73d7a6fecac635f50efce962b3a05ec1f2312db6c28bab9cf057",
+   "size": 151600,
+   "stanza": {
+    "Architecture": "all",
+    "Bugs": "https://bugs.launchpad.net/ubuntu/+filebug",
+    "Conflicts": "language-pack-ar (<< 1:22.04+20230801)",
+    "Depends": "locales (>= 2.3.6), language-pack-ar (>= 1:22.04+20230801)",
+    "Description": "translations for language Arabic",
+    "Filename": "pool/main/l/language-pack-ar-base/language-pack-ar-base_22.04+20230801_all.deb",
+    "Installed-Size": "635",
+    "MD5sum": "293ddff1dc4b8c1de099aca5b5cf74ca",
+    "Maintainer": "Language pack maintainers <language-packs@ubuntu.com>",
+    "Origin": "Ubuntu",
+    "Package": "language-pack-ar-base",
+    "Pre-Depends": "dpkg (>= 1.16.1)",
+    "Priority": "optional",
+    "Replaces": "language-pack-ar (<< 1:22.04+20230801), language-pack-ar-base (<< 1:22.04+20230801), language-pack-gnome-ar (<< 1:22.04+20230801), language-pack-gnome-ar-base (<< 1:22.04+20230801), language-pack-kde-ar (<< 1:22.04+20230801), language-pack-kde-ar-base (<< 1:22.04+20230801)",
+    "SHA1": "1cba5a35802fa32c9b0150e105856bdef3cb11e5",
+    "SHA256": "d6503a116a4a73d7a6fecac635f50efce962b3a05ec1f2312db6c28bab9cf057",
+    "SHA512": "2e4624ce22cc6ed258f8c112bdfc1c66d6f6d7ee7095cc8432d8a10ed3dd337d91e5b50a34b046cc881a7fe72b5f272a32d07599e86ccf8f7f11f6b42ab91e39",
+    "Section": "translations",
+    "Size": "151600",
+    "Version": "1:22.04+20230801"
+   },
+   "url": "https://snapshot.ubuntu.com/ubuntu/20240110T000000Z/pool/main/l/language-pack-ar-base/language-pack-ar-base_22.04+20230801_all.deb",
+   "version": "1:22.04+20230801"
+  },
+  {
+   "filename": "language-pack-gnome-ar-base_22.04+20230801_all.deb",
+   "launchpad": {
+    "date_published": "2023-08-06T07:53:32.534655+00:00",
+    "date_superseded": "2024-02-15T18:30:06.099477+00:00",
+    "librarian_url": "https://launchpad.net/ubuntu/+archive/primary/+files/language-pack-gnome-ar-base_22.04+20230801_all.deb",
+    "pocket": "Updates",
+    "publication": "https://api.launchpad.net/devel/ubuntu/+archive/primary/+binarypub/195659537",
+    "sha1": "8b7781ef76967652d4d6e6e92fcbf7c18539caf9",
+    "sha256": "13e8cd8a3dbd3bd3069b76f5f245c7d9f536c9011b58af099cb4966ac0c45f15",
+    "size": 930704
+   },
+   "launchpad_matches": true,
+   "md5": "b959d47ee687e4b0c0ebbc078653cf74",
+   "package": "language-pack-gnome-ar-base",
+   "sha1": "8b7781ef76967652d4d6e6e92fcbf7c18539caf9",
+   "sha256": "13e8cd8a3dbd3bd3069b76f5f245c7d9f536c9011b58af099cb4966ac0c45f15",
+   "size": 930704,
+   "stanza": {
+    "Architecture": "all",
+    "Bugs": "https://bugs.launchpad.net/ubuntu/+filebug",
+    "Conflicts": "language-pack-gnome-ar (<< 1:22.04+20230801)",
+    "Depends": "locales (>= 2.3.6), language-pack-gnome-ar (>= 1:22.04+20230801)",
+    "Description": "GNOME translations for language Arabic",
+    "Filename": "pool/main/l/language-pack-gnome-ar-base/language-pack-gnome-ar-base_22.04+20230801_all.deb",
+    "Installed-Size": "4394",
+    "MD5sum": "b959d47ee687e4b0c0ebbc078653cf74",
+    "Maintainer": "Language pack maintainers <language-packs@ubuntu.com>",
+    "Origin": "Ubuntu",
+    "Package": "language-pack-gnome-ar-base",
+    "Pre-Depends": "dpkg (>= 1.16.1)",
+    "Priority": "optional",
+    "Replaces": "language-pack-ar (<< 1:22.04+20230801), language-pack-ar-base (<< 1:22.04+20230801), language-pack-gnome-ar (<< 1:22.04+20230801), language-pack-gnome-ar-base (<< 1:22.04+20230801), language-pack-kde-ar (<< 1:22.04+20230801), language-pack-kde-ar-base (<< 1:22.04+20230801)",
+    "SHA1": "8b7781ef76967652d4d6e6e92fcbf7c18539caf9",
+    "SHA256": "13e8cd8a3dbd3bd3069b76f5f245c7d9f536c9011b58af099cb4966ac0c45f15",
+    "SHA512": "ff140a58b5ac545dd6202af596a3cc912404ca11a2c8428b5f17f3f929b4dad0a1228b0a43b343a81313bb0bd0e5246e591e23fea45b8a8927443fa4633b73a0",
+    "Section": "translations",
+    "Size": "930704",
+    "Version": "1:22.04+20230801"
+   },
+   "url": "https://snapshot.ubuntu.com/ubuntu/20240110T000000Z/pool/main/l/language-pack-gnome-ar-base/language-pack-gnome-ar-base_22.04+20230801_all.deb",
+   "version": "1:22.04+20230801"
+  }
+ ],
+ "release_date": "Tue, 09 Jan 2024 23:44:55 UTC",
+ "schema": "s2v4-langpack-provenance-v1",
+ "signature": {
+  "ok": true,
+  "returncode": 0,
+  "status": [
+   "[GNUPG:] PLAINTEXT 74 0 ",
+   "[GNUPG:] NEWSIG",
+   "[GNUPG:] KEY_CONSIDERED F6ECB3762474EDA9D21B7022871920D1991BC93C 0",
+   "[GNUPG:] SIG_ID BBihyGaHcn9uCqbjvTxFlpFX6O0 2024-01-09 1704843944",
+   "[GNUPG:] GOODSIG 871920D1991BC93C Ubuntu Archive Automatic Signing Key (2018) <ftpmaster@ubuntu.com>",
+   "[GNUPG:] VALIDSIG F6ECB3762474EDA9D21B7022871920D1991BC93C 2024-01-09 1704843944 0 4 0 1 10 01 F6ECB3762474EDA9D21B7022871920D1991BC93C",
+   "[GNUPG:] VERIFICATION_COMPLIANCE_MODE 23"
+  ],
+  "stderr": [
+   "gpgv: Signature made Tue Jan  9 23:45:44 2024 UTC",
+   "gpgv:                using RSA key F6ECB3762474EDA9D21B7022871920D1991BC93C",
+   "gpgv: Good signature from \"Ubuntu Archive Automatic Signing Key (2018) <ftpmaster@ubuntu.com>\""
+  ],
+  "validsig_fingerprints": [
+   "F6ECB3762474EDA9D21B7022871920D1991BC93C"
+  ]
+ },
+ "snapshot": "20240110T000000Z",
+ "suite": "jammy-updates",
+ "t_end_utc": "2026-10-11T18:23:21Z",
+ "t_start_utc": "2026-10-11T18:23:04Z"
+}

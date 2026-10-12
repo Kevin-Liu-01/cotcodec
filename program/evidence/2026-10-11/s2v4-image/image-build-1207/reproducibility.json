@@ -1,0 +1,52 @@
+{
+ "builds": {
+  "a": {
+   "digests": {
+    "cell_A": "1250098963189effe71fd4e949407f8d8b94543fb192de472ae4572f09c10df2",
+    "cell_AD": "d1429751efca0fbbf959f7b2933feab4bc6d36c08e743bb0b4754ed2d562bef1",
+    "cell_AR": "77cd9a2ab6aa37ef6c7d80ff27486b63e2f2e8a417c46d2768c1d8020cc6311f",
+    "cell_E": "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42",
+    "cell_ER": "262fe7093d5fbdce466eb9bf15229706a5131d76cb8d7e145f7262eb5096b607",
+    "cell_PL": "5a4102eefbbaf9e4ad78d499267270c4fdb4671ccff4d6dba777196817aa6ed2",
+    "cell_manifests": "134aa33d662fcd37ebed307638f790bd37ae9bb111d8926d07d2fb50e856285f",
+    "derived_base": "d186f41ef5cec71ef2f961c6eb0151481012388825654a847bd58da6937def1a",
+    "image_manifest": "a02596baf6d42faf0e560917f974d94bee12702e5133bde87081b6bea58b7f65"
+   },
+   "dir": "a",
+   "fake_time": 1754395037,
+   "seconds": 465.9
+  },
+  "b": {
+   "digests": {
+    "cell_A": "1250098963189effe71fd4e949407f8d8b94543fb192de472ae4572f09c10df2",
+    "cell_AD": "d1429751efca0fbbf959f7b2933feab4bc6d36c08e743bb0b4754ed2d562bef1",
+    "cell_AR": "77cd9a2ab6aa37ef6c7d80ff27486b63e2f2e8a417c46d2768c1d8020cc6311f",
+    "cell_E": "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42",
+    "cell_ER": "262fe7093d5fbdce466eb9bf15229706a5131d76cb8d7e145f7262eb5096b607",
+    "cell_PL": "5a4102eefbbaf9e4ad78d499267270c4fdb4671ccff4d6dba777196817aa6ed2",
+    "cell_manifests": "134aa33d662fcd37ebed307638f790bd37ae9bb111d8926d07d2fb50e856285f",
+    "derived_base": "d186f41ef5cec71ef2f961c6eb0151481012388825654a847bd58da6937def1a",
+    "image_manifest": "a02596baf6d42faf0e560917f974d94bee12702e5133bde87081b6bea58b7f65"
+   },
+   "dir": "b",
+   "fake_time": 1754395037,
+   "seconds": 464.3
+  }
+ },
+ "differing": [],
+ "earlier_build": {
+  "blocks_differing": 1,
+  "new": "s2v4-derived-base.qcow2",
+  "old": "/ro/old/s2v4-derived-base.qcow2",
+  "only_superblock_copies_differ": true,
+  "other": [],
+  "outside_partition_identical": true,
+  "sb_gdt": 1,
+  "superblock_fields_differing": [
+   "Checksum",
+   "Last write time"
+  ]
+ },
+ "reproducible": true,
+ "schema": "s2v4-image-reproducibility-v1"
+}

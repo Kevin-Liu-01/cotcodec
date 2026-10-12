@@ -1,0 +1,20 @@
+[
+ {
+  "setting": "screenshot",
+  "index": 0,
+  "trials": [
+   [
+    0,
+    "key_enter"
+   ],
+   [
+    1,
+    "click_left_center"
+   ],
+   [
+    2,
+    "type_plain"
+   ]
+  ]
+ }
+]

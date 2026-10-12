@@ -1,0 +1,112 @@
+{
+ "apdelta_dev_refused": "DeltaError: s2-arabic-cua-locale-v4 is frozen: development no longer runs (D56)",
+ "branch_head": "0a1d18e7 (the rehearsal clone's base: the branch after the merge of main, ledger rows 1-20)",
+ "census": "{\"slots\": 1322, \"capture\": 882, \"gold\": 440, \"out\": \"census.json\"}",
+ "census_resume_validate": "{\"ok\": true, \"manifest_sha256\": \"ba819d32d3c3931ca5ed8acc691930b378e847f110157e316fee8703b3d0cf32\", \"slots\": 1122}",
+ "census_validate": "{\"ok\": true, \"manifest_sha256\": \"6164a98f49181b44a60e92bd775131e7268a23e129006b4f988165e7159e83a7\", \"slots\": 1322}",
+ "dev_refused": "LaneError: s2-arabic-cua-locale-v4 is frozen: development no longer runs (D56)",
+ "earlier": {
+  "branch_head": "5d61a63a (the rehearsal clone's base)",
+  "fill_commit": "ab538c414dbac9d073b05e2c71729ac937d9f309",
+  "freeze_commit": "7920e02209f8efc883de47c99dc9e2fe290e645b",
+  "note": "the first rehearsal of the repair round, at 5d61a63a (before the merge of main), four S2 v4 test files",
+  "tests_at_freeze": "78 passed in 18.48s"
+ },
+ "fill_commit": "45585fef70734d3f4e05eb644b42af1c84012949",
+ "freeze_changes": [
+  "program/preregistrations/ledger.jsonl"
+ ],
+ "freeze_commit": "4ced9e4dd0e6133a0a38f1cb37408c85e543dd56",
+ "k1_a3_ar": [
+  "{\"check\": \"A3\", \"part\": {\"index\": 1, \"of\": 3}, \"out\": \"k1-a3-ar-p1.json\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1222, \"budget_minutes\": 1222}",
+  "{\"check\": \"A3\", \"part\": {\"index\": 2, \"of\": 3}, \"out\": \"k1-a3-ar-p2.json\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1192, \"budget_minutes\": 1192}",
+  "{\"check\": \"A3\", \"part\": {\"index\": 3, \"of\": 3}, \"out\": \"k1-a3-ar-p3.json\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 982, \"budget_minutes\": 982}",
+  "{\"ok\": true, \"check\": \"A3\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1222, \"budget_minutes\": 1222}",
+  "{\"ok\": true, \"check\": \"A3\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1192, \"budget_minutes\": 1192}",
+  "{\"ok\": true, \"check\": \"A3\", \"campaigns\": 1, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 982, \"budget_minutes\": 982}"
+ ],
+ "k1_c1_e": [
+  "{\"check\": \"C1\", \"part\": null, \"out\": \"k1-c1-e.json\", \"campaigns\": 2, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 154, \"budget_minutes\": 154}",
+  "{\"ok\": true, \"check\": \"C1\", \"campaigns\": 2, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 154, \"budget_minutes\": 154}"
+ ],
+ "k1_c3_ar": [
+  "{\"check\": \"C3\", \"part\": {\"index\": 1, \"of\": 3}, \"out\": \"k1-c3-ar-p1.json\", \"campaigns\": 17, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1404, \"budget_minutes\": 1404}",
+  "{\"check\": \"C3\", \"part\": {\"index\": 2, \"of\": 3}, \"out\": \"k1-c3-ar-p2.json\", \"campaigns\": 17, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1404, \"budget_minutes\": 1404}",
+  "{\"check\": \"C3\", \"part\": {\"index\": 3, \"of\": 3}, \"out\": \"k1-c3-ar-p3.json\", \"campaigns\": 13, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1076, \"budget_minutes\": 1076}",
+  "{\"ok\": true, \"check\": \"C3\", \"campaigns\": 17, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1404, \"budget_minutes\": 1404}",
+  "{\"ok\": true, \"check\": \"C3\", \"campaigns\": 17, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1404, \"budget_minutes\": 1404}",
+  "{\"ok\": true, \"check\": \"C3\", \"campaigns\": 13, \"cpus\": 5, \"memory_gb\": 12, \"minutes\": 1076, \"budget_minutes\": 1076}"
+ ],
+ "k1_rung": [
+  "{\"check\": \"rung\", \"part\": null, \"out\": \"k1-rung.json\", \"campaigns\": 1, \"cpus\": 90, \"memory_gb\": 142, \"minutes\": 110, \"budget_minutes\": 110}",
+  "{\"ok\": true, \"check\": \"rung\", \"campaigns\": 1, \"cpus\": 90, \"memory_gb\": 142, \"minutes\": 110, \"budget_minutes\": 110}"
+ ],
+ "ledger_row_in_clone": 21,
+ "real_ledger_unchanged": true,
+ "records": "Three scratch freeze rehearsals are recorded here. The top-level keys: the repair round's, at 0a1d18e7. 'earlier': the first, at 5d61a63a. 'round4_audit': the latest, by the fresh pre-freeze audit of round 4 (D90) at 24257614. The third round's auditor also rehearsed the freeze at that round's head (c1a56989); its audit reported it (D90) and it is not recorded here.",
+ "round4_audit": {
+  "branch_head": "24257614dad3e4ec8b039da33de4672cca585f30",
+  "census": "from the git-archive export of the freeze commit, render-census --freeze-commit (checked with git) reproduced the committed census slots: 1,322 slots (882 capture, 440 gold); the manifest validated with 81 CPUs, 126 GB and 364 minutes (hash 6 + slots 348 + 10)",
+  "census_refused": [
+   "dev-smoke-v5.json",
+   "an edited census"
+  ],
+  "clone": "a --shared clone of 24257614, origin removed, with its own ledger copy",
+  "code_head": "b8c815c89771183f22114df83a08b2b46c8d4461 (24257614's code is byte-identical to it: git diff over harness, infra, tests, experiments and scripts is empty)",
+  "fill_commit": "4c4a23b6 (status fill; pins_table --check matched the tree)",
+  "freeze": "scripts/preregister.py freeze gave ledger row 21; verify printed the row; check-chain PASS with 21 rows",
+  "freeze_changes": [
+   "program/preregistrations/ledger.jsonl"
+  ],
+  "freeze_commit": "6f3244cb",
+  "freeze_parent": "the fill commit 4c4a23b6 only (git_head_at_freeze)",
+  "k1_refused": [
+   "A3/PL",
+   "C1/AD",
+   "apdelta-dev-v1 (frozen, D56)",
+   "a C1 manifest relabelled to A",
+   "a manifest with A's qcow2 swapped in"
+  ],
+  "k1_rendered_and_validated": {
+   "A1/PL": 1394,
+   "A2/PL": 1344,
+   "A3/AR": [
+    1222,
+    1192,
+    982
+   ],
+   "A5/ER": 192,
+   "A6/AR": 222,
+   "C1/E": 154,
+   "C2/A": 362,
+   "C3/AR": [
+    1404,
+    1404,
+    1076
+   ],
+   "rung": "90 CPUs, 142 GB, 110 minutes",
+   "unit": "Slurm minutes per manifest (per part for C3 and A3)"
+  },
+  "ledger_row_in_clone": 21,
+  "real_ledger_sha256_prefix": "6641e72a (20 rows, none for this id; both real checkouts)",
+  "real_ledger_unchanged": true,
+  "resume_rehearsal": [
+   "RUN_ROOT and PHASE0_RUN_ROOT remapped in-process into scratch; nothing created on the host",
+   "receipt-less census job 7001 (stopped by TERM; a cut re-queue in b004; nothing after b009): --resume-from-records rendered resume_from_block b004 (1,242 slots) and the resume validated; check_once admitted the resume once and refused a second census job and a second resume; hand edits of the block, records_sha256, the job id and the slots were refused; a resume of the resume was refused",
+   "load_runs gave the same order (7001, 7002) and the same counted records whichever order the directories were named in; the cut slot counted from the resume",
+   "oracle mounts: /ro/run1 = the resume and /ro/run2 = the census (reverse order) read in job order from preflight.txt with identical counted records; render_index over the two mounts gave 882 renders; registered_argv(2) correct; s2v4-cpu.sbatch mounts several read-only directories (Q2M_EXTRA_RO)",
+   "a zero-record census (no probes.jsonl, no receipt) resumed from b000 with all 1,322 slots, records_sha256 the empty-file hash; the resume validated and was admitted",
+   "an image-check-failed census (receipt with t_start) resumed from b000; a t_start that disagrees with the job order was refused",
+   "a directory without preflight.txt is not counted as a job; mismatches between the directory name and preflight.txt, or preflight.txt and the receipt, were refused; two census jobs, and three jobs, were refused"
+  ],
+  "scratch": "the audit's scratch directory (both clones, the export and the rehearsal files) was deleted",
+  "source": "the round-4 audit's report (non-blocking items 5 and 6); recorded by the round-4 owner",
+  "tests_at_freeze": "155 passed, 1 skipped",
+  "tests_at_freeze_files": "tests/test_s2v4_*.py: registration 9, k0 22, oracle_vm 12, vm_lane 52, ap_delta 12, dev_smoke 5, fetch_langpacks 10, image_build 33 and 1 skipped (the e2fsprogs round trip)",
+  "tests_at_head": "155 passed, 1 skipped",
+  "who": "the fresh pre-freeze audit of round 4 (D90)"
+ },
+ "tests_at_freeze": "129 passed, 1 skipped in 270.12s (0:04:30)",
+ "tests_at_freeze_files": "tests/test_s2v4_*.py (all S2 v4 test files)",
+ "what": "Scratch freeze rehearsal on a local clone of the branch head (origin removed; its own ledger): status fill, scripts/preregister.py freeze, verify and check-chain, the ledger row committed alone; every S2 v4 test file at the freeze commit; from an export of the freeze commit the registered census manifest (render-census --freeze-commit, checked with git) and a resumed census validated, K1 manifests rendered and validated (C1 on E, C3 and A3 on AR in parts, the rung), and development manifests of both lanes refused. The real ledger was not touched. A3's parts are validated as well as rendered."
+}

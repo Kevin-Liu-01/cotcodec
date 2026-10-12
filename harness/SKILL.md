@@ -68,6 +68,11 @@ attestation helpers. It starts small after the 2026-10-06 restart.
   (addendum `q2-evaluator-mutation-v1-k2`, draft): candidate injection into
   the certified VM through the frozen plan, the K2 lane (S1a's lane with K2
   slots), the classification rules and the K2 report.
+- `s2_locale/` is S2 (Arabic interface text against mirrored layout): the S2 v3
+  pilot's container capture and render oracle, and S2 v4's language-pack fetch
+  (`fetch_langpacks.py`), offline image surgery (`image_build.py`), the
+  per-slot cell-image VM lane and probe (`vm_lane.py`, `vm_probe.py`) and the
+  committed K0 rule (`k0_v4.py`). Map: `s2_locale/SKILL.md`.
 - `q1/` is Q1's Stage 0 gate stack: shared `schema.py`, gates (a)-(c), the
   independent audit, runner/worker/journal, analysis, the mutator (`q1/mutate/`)
   and the substrate builders (`q1/substrates/`). `q1/README.md` maps it;

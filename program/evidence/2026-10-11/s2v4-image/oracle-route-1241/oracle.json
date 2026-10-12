@@ -1,0 +1,4377 @@
+{
+ "dev_tasks": [
+  "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371",
+  "d681960f-7bc3-4286-9913-a8812ba3261a",
+  "347ef137-7eeb-4c80-a3bb-0951f26a8aff",
+  "01b269ae-2111-4a07-81fd-3fcd711993b0",
+  "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5",
+  "4172ea6e-6b77-4edb-a9cc-c0014bd1603b",
+  "af23762e-2bfd-4a1d-aada-20fa8de9ce07",
+  "bf4e9888-f10f-47af-8dba-76413038b73c",
+  "ac9bb6cb-1888-43ab-81e4-a98a547918cd",
+  "2b94c692-6abb-48ae-ab0b-b3e8a19cb340",
+  "5cfb9197-e72b-454b-900e-c06b0c802b40",
+  "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a",
+  "e4ef0baf-4b52-4590-a47e-d4d464cca2d7",
+  "0e47de2a-32e0-456c-a366-8c607ef7a9d2",
+  "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+  "936321ce-5236-426a-9a20-e0e3c5dc536f",
+  "e528b65e-1107-4b8c-8988-490e4fece599"
+ ],
+ "environment": {
+  "numpy": "1.26.4",
+  "pillow": "11.0.0",
+  "python": "3.12.13",
+  "scipy": "1.17.1"
+ },
+ "instrument_checks": {
+  "I1_doc": {
+   "o5_block": {
+    "k": 17,
+    "n": 17,
+    "pass": true
+   },
+   "pass": true,
+   "pd": {
+    "01b269ae": true,
+    "0e47de2a": true,
+    "12382c62": true,
+    "347ef137": true,
+    "4172ea6e": true,
+    "4ed5abd0": true,
+    "5cfb9197": true,
+    "6a33f9b9": true,
+    "6e99a1ad": true,
+    "936321ce": true,
+    "ac9bb6cb": true,
+    "af23762e": true,
+    "d681960f": true,
+    "e4ef0baf": true,
+    "e528b65e": true
+   }
+  },
+  "I2_e_vs_s": {
+   "k": 16,
+   "n": 17,
+   "pass": false,
+   "share": 0.9411764705882353
+  },
+  "I3_o1_text_pairs": {
+   "k": 34,
+   "n": 34,
+   "pass": true,
+   "share": 1.0
+  },
+  "I4_o4_order": {
+   "k": 148,
+   "n": 148,
+   "pass": true,
+   "share": 1.0
+  },
+  "I5_ad_vs_ar": {
+   "k": 17,
+   "n": 17,
+   "pass": true,
+   "share": 1.0
+  },
+  "I6_e_vs_e2": {
+   "k": 17,
+   "n": 17,
+   "pass": true,
+   "share": 1.0
+  },
+  "descriptors": {
+   "o2_swap": {
+    "k": 15,
+    "n": 17,
+    "pass": false,
+    "share": 0.8823529411764706
+   },
+   "o3_shift": {
+    "k": 17,
+    "n": 17,
+    "pass": true,
+    "share": 1.0
+   },
+   "valid": false
+  },
+  "gating": [
+   "I1_doc",
+   "I2_e_vs_s",
+   "I5_ad_vs_ar",
+   "I6_e_vs_e2"
+  ],
+  "pass": false,
+  "reported": [
+   "I3_o1_text_pairs",
+   "I4_o4_order"
+  ],
+  "tol6": 50
+ },
+ "metrics": {
+  "aa_dev": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   1,
+   0
+  ],
+  "ad_vs_ar": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "e_vs_e2": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   1,
+   0
+  ],
+  "e_vs_s": [
+   0,
+   1,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   1,
+   148,
+   0,
+   0,
+   0,
+   1,
+   0
+  ],
+  "o1_text_pairs": [
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "o2_swap_detected": [
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   false,
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "o3_shift_detected": [
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "o4_parents": [
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "o5_block_detected": [
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "pd_detected": {
+   "01b269ae": true,
+   "0e47de2a": true,
+   "12382c62": true,
+   "2b94c692": false,
+   "347ef137": true,
+   "4172ea6e": true,
+   "4ed5abd0": true,
+   "5cfb9197": true,
+   "6a33f9b9": true,
+   "6e99a1ad": true,
+   "936321ce": true,
+   "ac9bb6cb": true,
+   "af23762e": true,
+   "bf4e9888": false,
+   "d681960f": true,
+   "e4ef0baf": true,
+   "e528b65e": true
+  }
+ },
+ "per_task": [
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 201366,
+    "exact_diff_pixels": 218306,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 23956,
+    "exact_diff_pixels": 42930,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    115,
+    310,
+    1730,
+    708
+   ],
+   "er_doc_box": [
+    86,
+    310,
+    1730,
+    708
+   ],
+   "mirror_elements": {
+    "at_expected": 99,
+    "by_role": {
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      8,
+      4,
+      5,
+      0
+     ],
+     "menu": [
+      22,
+      17,
+      19,
+      0
+     ],
+     "page tab": [
+      1,
+      0,
+      1,
+      0
+     ],
+     "push button": [
+      67,
+      58,
+      65,
+      0
+     ],
+     "text": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "toggle button": [
+      15,
+      15,
+      15,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 110,
+    "mean_displacement_px": 923.6,
+    "missing": 8,
+    "n": 118,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.839,
+    "text_runs": 25,
+    "text_runs_identical": 16,
+    "text_runs_intact": 21,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Sheet",
+      "size"
+     ],
+     [
+      "menu",
+      "Window",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      0.064
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 1165,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 97,
+    "AR": 262,
+    "E2": 0,
+    "ER": 262,
+    "PD": 1427,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "01b269ae-2111-4a07-81fd-3fcd711993b0"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 63764,
+    "exact_diff_pixels": 92791,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61488
+   },
+   "E_vs_S": {
+    "diff_pixels": 1,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 24625,
+    "exact_diff_pixels": 49604,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    74,
+    275,
+    1771,
+    780
+   ],
+   "er_doc_box": [
+    74,
+    275,
+    1771,
+    780
+   ],
+   "mirror_elements": {
+    "at_expected": 88,
+    "by_role": {
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      9,
+      3,
+      4,
+      0
+     ],
+     "menu": [
+      22,
+      15,
+      18,
+      0
+     ],
+     "push button": [
+      45,
+      42,
+      44,
+      0
+     ],
+     "text": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "toggle button": [
+      25,
+      23,
+      25,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 96,
+    "mean_displacement_px": 978.8,
+    "missing": 10,
+    "n": 106,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.8302,
+    "text_runs": 24,
+    "text_runs_identical": 14,
+    "text_runs_intact": 17,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Table",
+      "size"
+     ],
+     [
+      "menu",
+      "Tools",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      0.076
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "pass",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 108412,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 48,
+    "AR": 130,
+    "E2": 0,
+    "ER": 124,
+    "PD": 106025,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "0e47de2a-32e0-456c-a366-8c607ef7a9d2"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 215155,
+    "exact_diff_pixels": 229775,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 24107,
+    "exact_diff_pixels": 43635,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    115,
+    310,
+    1730,
+    708
+   ],
+   "er_doc_box": [
+    86,
+    310,
+    1730,
+    708
+   ],
+   "mirror_elements": {
+    "at_expected": 99,
+    "by_role": {
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      8,
+      4,
+      5,
+      0
+     ],
+     "menu": [
+      22,
+      17,
+      19,
+      0
+     ],
+     "page tab": [
+      1,
+      0,
+      1,
+      0
+     ],
+     "push button": [
+      67,
+      58,
+      65,
+      0
+     ],
+     "text": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "toggle button": [
+      15,
+      15,
+      15,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 110,
+    "mean_displacement_px": 923.6,
+    "missing": 8,
+    "n": 118,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.839,
+    "text_runs": 25,
+    "text_runs_identical": 16,
+    "text_runs_intact": 21,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Sheet",
+      "size"
+     ],
+     [
+      "menu",
+      "Window",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      0.064
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 508,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 96,
+    "AR": 15750,
+    "E2": 0,
+    "ER": 262,
+    "PD": 749,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "12382c62-0cd1-4bf2-bdc8-1d20bf9b2371"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 96561,
+    "exact_diff_pixels": 128966,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 2,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 1,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 20222,
+    "exact_diff_pixels": 26514,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    277,
+    226,
+    1217,
+    791
+   ],
+   "er_doc_box": [
+    289,
+    251,
+    1217,
+    791
+   ],
+   "mirror_elements": {
+    "at_expected": 97,
+    "by_role": {
+     "check box": [
+      2,
+      0,
+      1,
+      0
+     ],
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      9,
+      6,
+      9,
+      0
+     ],
+     "list item": [
+      12,
+      12,
+      12,
+      0
+     ],
+     "menu": [
+      20,
+      20,
+      20,
+      0
+     ],
+     "push button": [
+      57,
+      43,
+      54,
+      0
+     ],
+     "toggle button": [
+      20,
+      14,
+      19,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 117,
+    "mean_displacement_px": 1134.4,
+    "missing": 5,
+    "n": 122,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.7951,
+    "text_runs": 41,
+    "text_runs_identical": 39,
+    "text_runs_intact": 41,
+    "text_runs_not_identical": [
+     [
+      "label",
+      "",
+      "size"
+     ],
+     [
+      "list item",
+      "Blank Slide",
+      "size"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 276,
+     "n_b": 276,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 276,
+     "n_b": 276,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 276,
+     "n_b": 276,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 276,
+     "n_b": 276,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "pass",
+   "o5_PD_vs_ER_pixels": 0,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 38632,
+    "AR": 38985,
+    "E2": 0,
+    "ER": 5644,
+    "PD": 5644,
+    "PL": 0
+   },
+   "pd_detected": false,
+   "task_id": "2b94c692-6abb-48ae-ab0b-b3e8a19cb340"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 283312,
+    "exact_diff_pixels": 327989,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 2,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 25141,
+    "exact_diff_pixels": 43162,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    115,
+    310,
+    1730,
+    708
+   ],
+   "er_doc_box": [
+    86,
+    310,
+    1730,
+    708
+   ],
+   "mirror_elements": {
+    "at_expected": 99,
+    "by_role": {
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      8,
+      4,
+      5,
+      0
+     ],
+     "menu": [
+      22,
+      17,
+      19,
+      0
+     ],
+     "page tab": [
+      1,
+      0,
+      1,
+      0
+     ],
+     "push button": [
+      67,
+      58,
+      65,
+      0
+     ],
+     "text": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "toggle button": [
+      15,
+      15,
+      15,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 110,
+    "mean_displacement_px": 923.6,
+    "missing": 8,
+    "n": 118,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.839,
+    "text_runs": 25,
+    "text_runs_identical": 16,
+    "text_runs_intact": 21,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Sheet",
+      "size"
+     ],
+     [
+      "menu",
+      "Window",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      0.064
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 1911,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 95,
+    "AR": 271,
+    "E2": 0,
+    "ER": 268,
+    "PD": 2156,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "347ef137-7eeb-4c80-a3bb-0951f26a8aff"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 209906,
+    "exact_diff_pixels": 223853,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 24107,
+    "exact_diff_pixels": 43636,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    115,
+    310,
+    1730,
+    708
+   ],
+   "er_doc_box": [
+    86,
+    310,
+    1730,
+    708
+   ],
+   "mirror_elements": {
+    "at_expected": 99,
+    "by_role": {
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      8,
+      4,
+      5,
+      0
+     ],
+     "menu": [
+      22,
+      17,
+      19,
+      0
+     ],
+     "page tab": [
+      1,
+      0,
+      1,
+      0
+     ],
+     "push button": [
+      67,
+      58,
+      65,
+      0
+     ],
+     "text": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "toggle button": [
+      15,
+      15,
+      15,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 110,
+    "mean_displacement_px": 923.6,
+    "missing": 8,
+    "n": 118,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.839,
+    "text_runs": 25,
+    "text_runs_identical": 16,
+    "text_runs_intact": 21,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Sheet",
+      "size"
+     ],
+     [
+      "menu",
+      "Window",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      0.064
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 1083,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 97,
+    "AR": 13656,
+    "E2": 0,
+    "ER": 261,
+    "PD": 1320,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "4172ea6e-6b77-4edb-a9cc-c0014bd1603b"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 121600,
+    "exact_diff_pixels": 298966,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 20222,
+    "exact_diff_pixels": 26513,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    277,
+    251,
+    1217,
+    791
+   ],
+   "er_doc_box": [
+    289,
+    251,
+    1217,
+    791
+   ],
+   "mirror_elements": {
+    "at_expected": 110,
+    "by_role": {
+     "check box": [
+      2,
+      0,
+      1,
+      0
+     ],
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      13,
+      7,
+      8,
+      0
+     ],
+     "list item": [
+      12,
+      12,
+      12,
+      0
+     ],
+     "menu": [
+      20,
+      14,
+      16,
+      0
+     ],
+     "push button": [
+      62,
+      58,
+      60,
+      0
+     ],
+     "toggle button": [
+      22,
+      17,
+      19,
+      0
+     ]
+    },
+    "clipped": 1,
+    "intact": 118,
+    "mean_displacement_px": 1101.7,
+    "missing": 14,
+    "n": 133,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.8271,
+    "text_runs": 37,
+    "text_runs_identical": 29,
+    "text_runs_intact": 32,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Tools",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "list item",
+      "Title, Content",
+      0.0468
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": false,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 33192,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 56,
+    "AR": 330,
+    "E2": 0,
+    "ER": 330,
+    "PD": 42551,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "4ed5abd0-8b5d-47bd-839f-cacfa15ca37a"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 121030,
+    "exact_diff_pixels": 201996,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 2,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 20222,
+    "exact_diff_pixels": 26514,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    277,
+    251,
+    1217,
+    791
+   ],
+   "er_doc_box": [
+    289,
+    251,
+    1217,
+    791
+   ],
+   "mirror_elements": {
+    "at_expected": 110,
+    "by_role": {
+     "check box": [
+      2,
+      0,
+      1,
+      0
+     ],
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      13,
+      7,
+      8,
+      0
+     ],
+     "list item": [
+      12,
+      12,
+      12,
+      0
+     ],
+     "menu": [
+      20,
+      14,
+      16,
+      0
+     ],
+     "push button": [
+      62,
+      58,
+      60,
+      0
+     ],
+     "toggle button": [
+      22,
+      17,
+      19,
+      0
+     ]
+    },
+    "clipped": 1,
+    "intact": 118,
+    "mean_displacement_px": 1101.7,
+    "missing": 14,
+    "n": 133,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.8271,
+    "text_runs": 37,
+    "text_runs_identical": 29,
+    "text_runs_intact": 32,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Tools",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "list item",
+      "Blank Slide",
+      "size"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 42065,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 160,
+    "AR": 480,
+    "E2": 0,
+    "ER": 480,
+    "PD": 42545,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "5cfb9197-e72b-454b-900e-c06b0c802b40"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61467
+   },
+   "A_vs_E": {
+    "diff_pixels": 116627,
+    "exact_diff_pixels": 147980,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 2,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 25327,
+    "exact_diff_pixels": 48971,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    74,
+    275,
+    1771,
+    780
+   ],
+   "er_doc_box": [
+    74,
+    275,
+    1771,
+    780
+   ],
+   "mirror_elements": {
+    "at_expected": 89,
+    "by_role": {
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      9,
+      2,
+      3,
+      0
+     ],
+     "menu": [
+      22,
+      15,
+      18,
+      0
+     ],
+     "push button": [
+      45,
+      42,
+      44,
+      0
+     ],
+     "text": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "toggle button": [
+      25,
+      25,
+      25,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 95,
+    "mean_displacement_px": 972.0,
+    "missing": 11,
+    "n": 106,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.8396,
+    "text_runs": 24,
+    "text_runs_identical": 14,
+    "text_runs_intact": 16,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Table",
+      "size"
+     ],
+     [
+      "menu",
+      "Tools",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "pass",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 5740,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 50,
+    "AR": 128,
+    "E2": 0,
+    "ER": 129,
+    "PD": 5869,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 195858,
+    "exact_diff_pixels": 210403,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 1,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 26517,
+    "exact_diff_pixels": 45176,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    115,
+    310,
+    1730,
+    708
+   ],
+   "er_doc_box": [
+    86,
+    310,
+    1730,
+    708
+   ],
+   "mirror_elements": {
+    "at_expected": 99,
+    "by_role": {
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      8,
+      4,
+      5,
+      0
+     ],
+     "menu": [
+      22,
+      17,
+      19,
+      0
+     ],
+     "page tab": [
+      1,
+      0,
+      1,
+      0
+     ],
+     "push button": [
+      67,
+      58,
+      65,
+      0
+     ],
+     "text": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "toggle button": [
+      15,
+      15,
+      15,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 110,
+    "mean_displacement_px": 923.6,
+    "missing": 8,
+    "n": 118,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.839,
+    "text_runs": 25,
+    "text_runs_identical": 16,
+    "text_runs_intact": 21,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Sheet",
+      "size"
+     ],
+     [
+      "menu",
+      "Window",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      0.064
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 811,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 97,
+    "AR": 262,
+    "E2": 0,
+    "ER": 262,
+    "PD": 1059,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61453
+   },
+   "A_vs_E": {
+    "diff_pixels": 112726,
+    "exact_diff_pixels": 151222,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61453
+   },
+   "E_vs_E2": {
+    "diff_pixels": 1,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 1,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 23155,
+    "exact_diff_pixels": 48860,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    74,
+    275,
+    1771,
+    780
+   ],
+   "er_doc_box": [
+    74,
+    275,
+    1771,
+    780
+   ],
+   "mirror_elements": {
+    "at_expected": 88,
+    "by_role": {
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      9,
+      3,
+      4,
+      0
+     ],
+     "menu": [
+      22,
+      15,
+      18,
+      0
+     ],
+     "push button": [
+      45,
+      42,
+      44,
+      0
+     ],
+     "text": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "toggle button": [
+      25,
+      23,
+      25,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 96,
+    "mean_displacement_px": 978.7,
+    "missing": 10,
+    "n": 106,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.8302,
+    "text_runs": 24,
+    "text_runs_identical": 14,
+    "text_runs_intact": 17,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Table",
+      "size"
+     ],
+     [
+      "menu",
+      "Tools",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      0.072
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "pass",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 1837,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 48,
+    "AR": 124,
+    "E2": 0,
+    "ER": 124,
+    "PD": 1961,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "936321ce-5236-426a-9a20-e0e3c5dc536f"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 83932,
+    "exact_diff_pixels": 112959,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 148,
+    "exact_diff_pixels": 169,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 20222,
+    "exact_diff_pixels": 26513,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    277,
+    226,
+    1217,
+    791
+   ],
+   "er_doc_box": [
+    289,
+    251,
+    1217,
+    791
+   ],
+   "mirror_elements": {
+    "at_expected": 98,
+    "by_role": {
+     "check box": [
+      2,
+      0,
+      1,
+      0
+     ],
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      10,
+      6,
+      10,
+      0
+     ],
+     "list item": [
+      12,
+      12,
+      12,
+      0
+     ],
+     "menu": [
+      20,
+      20,
+      20,
+      0
+     ],
+     "push button": [
+      57,
+      43,
+      54,
+      0
+     ],
+     "toggle button": [
+      20,
+      15,
+      19,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 118,
+    "mean_displacement_px": 1140.1,
+    "missing": 5,
+    "n": 123,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.7967,
+    "text_runs": 41,
+    "text_runs_identical": 40,
+    "text_runs_intact": 41,
+    "text_runs_not_identical": [
+     [
+      "list item",
+      "Title, Content",
+      0.0468
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": false,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 12672,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 5420,
+    "AR": 7632,
+    "E2": 0,
+    "ER": 5630,
+    "PD": 18302,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "ac9bb6cb-1888-43ab-81e4-a98a547918cd"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 187721,
+    "exact_diff_pixels": 327827,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 142,
+    "exact_diff_pixels": 174,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 20222,
+    "exact_diff_pixels": 26514,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    277,
+    251,
+    1217,
+    791
+   ],
+   "er_doc_box": [
+    289,
+    226,
+    1217,
+    791
+   ],
+   "mirror_elements": {
+    "at_expected": 111,
+    "by_role": {
+     "check box": [
+      2,
+      0,
+      1,
+      0
+     ],
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      13,
+      8,
+      9,
+      0
+     ],
+     "list item": [
+      12,
+      12,
+      12,
+      0
+     ],
+     "menu": [
+      20,
+      14,
+      16,
+      0
+     ],
+     "push button": [
+      62,
+      58,
+      60,
+      0
+     ],
+     "toggle button": [
+      21,
+      17,
+      20,
+      0
+     ]
+    },
+    "clipped": 1,
+    "intact": 120,
+    "mean_displacement_px": 1109.9,
+    "missing": 11,
+    "n": 132,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.8409,
+    "text_runs": 37,
+    "text_runs_identical": 29,
+    "text_runs_intact": 33,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Tools",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      0.064
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "list item",
+      "Title Slide",
+      0.0486
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 41524,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 178,
+    "AR": 392,
+    "E2": 0,
+    "ER": 392,
+    "PD": 41916,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "af23762e-2bfd-4a1d-aada-20fa8de9ce07"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 71304,
+    "exact_diff_pixels": 90190,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 2,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 20581,
+    "exact_diff_pixels": 26650,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    277,
+    226,
+    1217,
+    791
+   ],
+   "er_doc_box": [
+    289,
+    251,
+    1217,
+    791
+   ],
+   "mirror_elements": {
+    "at_expected": 96,
+    "by_role": {
+     "check box": [
+      2,
+      0,
+      1,
+      0
+     ],
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      9,
+      6,
+      9,
+      0
+     ],
+     "list item": [
+      12,
+      12,
+      12,
+      0
+     ],
+     "menu": [
+      20,
+      20,
+      20,
+      0
+     ],
+     "push button": [
+      57,
+      43,
+      54,
+      0
+     ],
+     "toggle button": [
+      20,
+      13,
+      18,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 116,
+    "mean_displacement_px": 1129.0,
+    "missing": 6,
+    "n": 122,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.7869,
+    "text_runs": 41,
+    "text_runs_identical": 40,
+    "text_runs_intact": 41,
+    "text_runs_not_identical": [
+     [
+      "list item",
+      "Title, Content",
+      0.0468
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 276,
+     "n_b": 276,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 276,
+     "n_b": 276,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 276,
+     "n_b": 276,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 276,
+     "n_b": 276,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "pass",
+   "o5_PD_vs_ER_pixels": 0,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 14816,
+    "AR": 17042,
+    "E2": 0,
+    "ER": 5644,
+    "PD": 5644,
+    "PL": 0
+   },
+   "pd_detected": false,
+   "task_id": "bf4e9888-f10f-47af-8dba-76413038b73c"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 220463,
+    "exact_diff_pixels": 234400,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 24362,
+    "exact_diff_pixels": 43115,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    115,
+    310,
+    1730,
+    708
+   ],
+   "er_doc_box": [
+    86,
+    310,
+    1730,
+    708
+   ],
+   "mirror_elements": {
+    "at_expected": 99,
+    "by_role": {
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      8,
+      4,
+      5,
+      0
+     ],
+     "menu": [
+      22,
+      17,
+      19,
+      0
+     ],
+     "page tab": [
+      1,
+      0,
+      1,
+      0
+     ],
+     "push button": [
+      67,
+      58,
+      65,
+      0
+     ],
+     "text": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "toggle button": [
+      15,
+      15,
+      15,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 110,
+    "mean_displacement_px": 923.7,
+    "missing": 8,
+    "n": 118,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.839,
+    "text_runs": 25,
+    "text_runs_identical": 16,
+    "text_runs_intact": 21,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Sheet",
+      "size"
+     ],
+     [
+      "menu",
+      "Window",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      0.064
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 260,
+     "n_b": 260,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 974,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 96,
+    "AR": 264,
+    "E2": 0,
+    "ER": 258,
+    "PD": 1232,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "d681960f-7bc3-4286-9913-a8812ba3261a"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61440
+   },
+   "A_vs_E": {
+    "diff_pixels": 120406,
+    "exact_diff_pixels": 483505,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 1,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 1,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 20223,
+    "exact_diff_pixels": 26514,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    277,
+    251,
+    1217,
+    791
+   ],
+   "er_doc_box": [
+    289,
+    251,
+    1217,
+    791
+   ],
+   "mirror_elements": {
+    "at_expected": 110,
+    "by_role": {
+     "check box": [
+      2,
+      0,
+      1,
+      0
+     ],
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      13,
+      7,
+      8,
+      0
+     ],
+     "list item": [
+      12,
+      12,
+      12,
+      0
+     ],
+     "menu": [
+      20,
+      14,
+      16,
+      0
+     ],
+     "push button": [
+      62,
+      58,
+      60,
+      0
+     ],
+     "toggle button": [
+      22,
+      17,
+      20,
+      0
+     ]
+    },
+    "clipped": 1,
+    "intact": 119,
+    "mean_displacement_px": 1105.1,
+    "missing": 13,
+    "n": 133,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.8271,
+    "text_runs": 37,
+    "text_runs_identical": 29,
+    "text_runs_intact": 32,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Tools",
+      "size"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "list item",
+      "Blank Slide",
+      "size"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 277,
+     "n_b": 277,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "fail_changed",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 12658,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 160,
+    "AR": 468,
+    "E2": 0,
+    "ER": 467,
+    "PD": 13125,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "e4ef0baf-4b52-4590-a47e-d4d464cca2d7"
+  },
+  {
+   "AD_vs_AR": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 0,
+    "masked_pixels": 61458
+   },
+   "A_vs_E": {
+    "diff_pixels": 103446,
+    "exact_diff_pixels": 130252,
+    "masked_pixels": 61440
+   },
+   "ER_vs_ER2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 2,
+    "masked_pixels": 61440
+   },
+   "E_vs_E2": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "E_vs_S": {
+    "diff_pixels": 0,
+    "exact_diff_pixels": 1,
+    "masked_pixels": 61440
+   },
+   "PL_vs_E": {
+    "diff_pixels": 23701,
+    "exact_diff_pixels": 48904,
+    "masked_pixels": 61440
+   },
+   "cells": [
+    "A",
+    "AD",
+    "AR",
+    "E",
+    "E2",
+    "ER",
+    "ER2",
+    "PD",
+    "PL",
+    "S"
+   ],
+   "doc_box": [
+    74,
+    275,
+    1771,
+    780
+   ],
+   "er_doc_box": [
+    74,
+    275,
+    1771,
+    780
+   ],
+   "mirror_elements": {
+    "at_expected": 88,
+    "by_role": {
+     "icon": [
+      2,
+      2,
+      2,
+      0
+     ],
+     "label": [
+      9,
+      3,
+      4,
+      0
+     ],
+     "menu": [
+      22,
+      15,
+      18,
+      0
+     ],
+     "push button": [
+      45,
+      42,
+      44,
+      0
+     ],
+     "text": [
+      3,
+      3,
+      3,
+      0
+     ],
+     "toggle button": [
+      25,
+      23,
+      25,
+      0
+     ]
+    },
+    "clipped": 0,
+    "intact": 96,
+    "mean_displacement_px": 978.7,
+    "missing": 10,
+    "n": 106,
+    "not_in_other_tree": 0,
+    "share_at_expected": 0.8302,
+    "text_runs": 24,
+    "text_runs_identical": 14,
+    "text_runs_intact": 17,
+    "text_runs_not_identical": [
+     [
+      "menu",
+      "File",
+      "not located"
+     ],
+     [
+      "menu",
+      "Edit",
+      "size"
+     ],
+     [
+      "menu",
+      "Table",
+      "size"
+     ],
+     [
+      "menu",
+      "Tools",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ],
+     [
+      "label",
+      "",
+      0.076
+     ],
+     [
+      "label",
+      "",
+      "not located"
+     ]
+    ],
+    "unmoved": 0
+   },
+   "o1": {
+    "A-AR": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-A": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "E-ER": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    },
+    "ER-AR": {
+     "identical": true,
+     "n_a": 221,
+     "n_b": 221,
+     "only_a": 0,
+     "only_a_roles": {},
+     "only_b": 0,
+     "only_b_roles": {}
+    }
+   },
+   "o2_swap_detected": true,
+   "o3_shift_detected": true,
+   "o4_parents": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "o5": {
+    "A": "pass",
+    "AR": "fail_changed",
+    "E2": "pass",
+    "ER": "fail_changed",
+    "PD": "fail_changed",
+    "PL": "pass"
+   },
+   "o5_PD_vs_E": "fail_changed",
+   "o5_PD_vs_ER": "fail_changed",
+   "o5_PD_vs_ER_pixels": 2445,
+   "o5_block_detected": true,
+   "o5_block_vs_E": "fail_changed",
+   "o5_block_vs_ER": "fail_changed",
+   "o5_diff_pixels": {
+    "A": 49,
+    "AR": 148,
+    "E2": 0,
+    "ER": 148,
+    "PD": 2593,
+    "PL": 0
+   },
+   "pd_detected": true,
+   "task_id": "e528b65e-1107-4b8c-8988-490e4fece599"
+  }
+ ],
+ "runs": [
+  "/ro/run1"
+ ],
+ "schema": "s2v4-oracle-vm-v1",
+ "tasks": 17,
+ "tolerances": {
+  "aa_dev": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   1,
+   0
+  ],
+  "aa_elements": 2030,
+  "aa_worst_element_mismatch": 0.0,
+  "dy_by_dev_task": [
+   29,
+   29,
+   29,
+   29,
+   29,
+   29,
+   37,
+   27,
+   27,
+   27,
+   37,
+   37,
+   37,
+   40,
+   32,
+   40,
+   32
+  ],
+  "dy_estimate_v31": 29,
+  "dy_vcl": 0,
+  "reflection_dx_elements": 1765,
+  "tol2": 0.0202,
+  "tol3": 18,
+  "tol5": 50,
+  "tol6": 50,
+  "translation_elements": 940,
+  "translation_p95_mismatch": 0.0202
+ }
+}

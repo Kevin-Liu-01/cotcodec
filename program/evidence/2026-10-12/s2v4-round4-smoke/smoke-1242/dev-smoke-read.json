@@ -1,0 +1,1086 @@
+{
+ "dev_tasks": 17,
+ "development_only": true,
+ "field_px": 10,
+ "impress_boots_read": 140,
+ "impress_status_bar_deviations": [],
+ "pass": true,
+ "per_task": {
+  "01b269ae": {
+   "boots": 10,
+   "impress": false,
+   "pairs": {
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "0e47de2a": {
+   "boots": 10,
+   "impress": false,
+   "pairs": {
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61488,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61488,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "12382c62": {
+   "boots": 10,
+   "impress": false,
+   "pairs": {
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "2b94c692": {
+   "boots": 20,
+   "impress": true,
+   "pairs": {
+    "AD_vs_AD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AR_vs_AR2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "A_vs_A2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER3": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E3": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PD_vs_PD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PL_vs_PL2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "S_vs_S2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "347ef137": {
+   "boots": 10,
+   "impress": false,
+   "pairs": {
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 2,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "4172ea6e": {
+   "boots": 10,
+   "impress": false,
+   "pairs": {
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "4ed5abd0": {
+   "boots": 20,
+   "impress": true,
+   "pairs": {
+    "AD_vs_AD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AR_vs_AR2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "A_vs_A2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER3": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E3": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PD_vs_PD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PL_vs_PL2": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "S_vs_S2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "5cfb9197": {
+   "boots": 20,
+   "impress": true,
+   "pairs": {
+    "AD_vs_AD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AR_vs_AR2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "A_vs_A2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 2,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER3": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 2,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 2,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E3": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PD_vs_PD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PL_vs_PL2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "S_vs_S2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "6a33f9b9": {
+   "boots": 10,
+   "impress": false,
+   "pairs": {
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61467,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61467,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "6e99a1ad": {
+   "boots": 10,
+   "impress": false,
+   "pairs": {
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "936321ce": {
+   "boots": 10,
+   "impress": false,
+   "pairs": {
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61453,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61453,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61453,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "ac9bb6cb": {
+   "boots": 20,
+   "impress": true,
+   "pairs": {
+    "AD_vs_AD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AR_vs_AR2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "A_vs_A2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER3": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E3": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PD_vs_PD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PL_vs_PL2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "S_vs_S2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "af23762e": {
+   "boots": 20,
+   "impress": true,
+   "pairs": {
+    "AD_vs_AD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AR_vs_AR2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "A_vs_A2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER3": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E3": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E4": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PD_vs_PD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PL_vs_PL2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "S_vs_S2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "bf4e9888": {
+   "boots": 20,
+   "impress": true,
+   "pairs": {
+    "AD_vs_AD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AR_vs_AR2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "A_vs_A2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 2,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER3": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 2,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E3": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PD_vs_PD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PL_vs_PL2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "S_vs_S2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "d681960f": {
+   "boots": 10,
+   "impress": false,
+   "pairs": {
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "e4ef0baf": {
+   "boots": 20,
+   "impress": true,
+   "pairs": {
+    "AD_vs_AD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "AR_vs_AR2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "A_vs_A2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 2,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER3": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 2,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E3": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E4": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PD_vs_PD2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "PL_vs_PL2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "S_vs_S2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  },
+  "e528b65e": {
+   "boots": 10,
+   "impress": false,
+   "pairs": {
+    "AD_vs_AR": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 0,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "ER_vs_ER2": {
+     "diff_pixels": 0,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_E2": {
+     "diff_pixels": 1,
+     "exact_diff_pixels": 1,
+     "masked_pixels": 61458,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    },
+    "E_vs_S": {
+     "diff_pixels": 18,
+     "exact_diff_pixels": 19,
+     "masked_pixels": 61440,
+     "status_bar_exact": 0,
+     "status_bar_pixels": 0
+    }
+   }
+  }
+ },
+ "registered_pairs_missing": [],
+ "registered_pairs_over_tol6": [],
+ "schema": "s2v4-dev-smoke-round4-v1",
+ "status_bar_rows": [
+  1060,
+  1080
+ ],
+ "tol6": 50
+}
