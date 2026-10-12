@@ -32,9 +32,11 @@ for whatever gains actual results"; D80). Under that delegation:
 - Successor E is frozen (row 19; sign-off D85; freeze `f6144d6b`). Its four
   sessions (about 42 h, 6.77 cap-GPU-h) are running on `ops/q2-successor-e`.
   Other host work runs only in its gaps.
-- S2 v4: the images are built and reproducible. Round 3 of repairs is in
-  progress before the freeze (D84, D87; `stage0/s2-v4`). It covers the
-  pointer readout and the resume ordering.
+- S2 v4: the images are built and reproducible. Round 3 did not clear the
+  pointer readout or the resume dead end (D90). Round 4 is the last round,
+  with its acceptance criterion and stop rule fixed in D90. If it misses, S2
+  v4 ends at an honest exit (`stage0/s2-v4`).
+- The R03 note and the Q2 report (revision 5) now include R03 (b) and R04.
 Still closed: Q1 (D46) and Q3 (D54). Still Kevin's: the outward actions, Q1's
 R570 GPU code and C5 Phase 1 (D80), and an optional human spot check (D9).
 See `pending_decisions_for_kevin` in `program/state.json`.
@@ -44,7 +46,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 20 rows). Decisions taken
-on Kevin's behalf are D1-D89 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D90 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
