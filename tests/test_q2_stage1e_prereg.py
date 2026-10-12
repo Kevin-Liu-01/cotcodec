@@ -57,6 +57,9 @@ INFRA_FILES = (
 INFRA_MARK = "**Infrastructure E runs that neither table above pins.**"
 # The two pre-freeze gate result slots (section 4.1): "TBD" while open, then the gate's verdict.
 GATE_SLOTS = {"G-E4": "disclosure 10). Result: ", "G-E5": "before the freeze. Result: "}
+# G-E4 must pass before the freeze; G-E5 may fail, and a failed fit is disclosed in its slot.
+GATE_VERDICTS = {"G-E4": "passed", "G-E5": "passed|failed"}
+AUDIT_SLOT = "Audit record: "  # G-E6 (section 4.1): "TBD" while open, then the audit's verdict
 GATES_EVIDENCE = "program/evidence/2026-10-11/q2-stage1-successor-e/gates/"
 
 
@@ -275,17 +278,24 @@ def test_open_slots_and_the_frozen_status_wording():
     status = text.split("\n\n", 2)[1]
     assert status.startswith("**Status: DRAFT.") and "no ledger row" in status
     open_gates = [gate for gate, prefix in GATE_SLOTS.items() if f"{prefix}TBD" in joined]
-    assert text.count("TBD") == 3 + len(open_gates)
-    for slot in ("Audit record: TBD", "(decision id): TBD"):
-        assert slot in joined, slot
+    audit_open = f"{AUDIT_SLOT}TBD" in joined
+    assert text.count("TBD") == 2 + audit_open + len(open_gates)
+    assert "(decision id): TBD" in joined
     for gate, prefix in GATE_SLOTS.items():
         if gate in open_gates:
             continue
         # A filled gate slot states its verdict and points at the gates' evidence bundle.
-        filled = re.search(re.escape(prefix) + r"\*\*(passed|failed)\*\*(.*?)(?= - \*\*G-E|$)",
+        verdict = GATE_VERDICTS[gate]
+        filled = re.search(re.escape(prefix) + rf"\*\*({verdict})\*\*(.*?)(?= - \*\*G-E|$)",
                            joined)  # fmt: skip
-        assert filled, f"{gate}'s slot holds neither TBD nor a verdict"
+        assert filled, f"{gate}'s slot holds neither TBD nor the verdict {verdict}"
         assert GATES_EVIDENCE in filled.group(2), f"{gate}'s result names no evidence"
+    if not audit_open:
+        # A filled G-E6 slot states the verdict ready and names an audit the review log holds.
+        audit = re.search(re.escape(AUDIT_SLOT) + r"\*\*ready\*\* \((audit \d+),", joined)
+        assert audit, "G-E6's slot holds neither TBD nor the verdict ready"
+        log = _section(text, "25. Pre-freeze review log and the freeze")
+        assert f"**{audit.group(1).capitalize()}**" in log, "G-E6 names an audit the log lacks"
     frozen = _section(text, "25. Pre-freeze review log and the freeze").split("> ", 1)[1]
     assert "**Status: frozen in `program/preregistrations/ledger.jsonl`" in frozen
 

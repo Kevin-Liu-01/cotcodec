@@ -2,8 +2,7 @@
 
 **Status: DRAFT. Not frozen, no ledger row; no E episode and no E GPU job may run under it.
 Open slots: TBD** (the status paragraph, which the freeze replaces whole with the wording of
-section 25; the development smoke of G-E4; the GLMM shape run of G-E5; the pre-freeze audit of
-G-E6; the program's sign-off of section 21).
+section 25; the program's sign-off of section 21; G-E4's, G-E5's and G-E6's slots are filled).
 
 - Drafted 2026-10-11 on branch `stage0/q2-successor-e` from `main` at `c0971a77`, by the
   single owner of successor E under decision D80 (iii) ("registered, audited before the freeze,
@@ -153,7 +152,13 @@ E is S1a's design with more data. The table is the whole of the difference.
   `program/evidence/2026-10-11/q2-stage1-successor-e/gates/` (`gates-check.json`)
 - **G-E6. A fresh, independent pre-freeze audit** that finds nothing blocking (earlier rounds
   and their dispositions are in section 25's review log), then the freeze
-  (`scripts/preregister.py freeze`, section 25's steps). Audit record: TBD
+  (`scripts/preregister.py freeze`, section 25's steps). Audit record: **ready** (audit 2, a
+  fresh, independent audit on 2026-10-11/12 of the draft at `d6293900`, with `main` at
+  `2b8fadc7` merged; no blocking items; its items and their dispositions are audit 2's rows in
+  section 25's review log). Its freeze rehearsal, on a scratch clone with a copy of the ledger:
+  `scripts/preregister.py freeze` accepted E as row 19, after R04's row (hash `f7b350a3...`);
+  `check-chain` (19 rows) and `verify` passed; on the frozen tree E's suites gave 60 passed and
+  2 skipped (the two draft-only tests) and the full suite 2,864 passed and 71 skipped
 - **G-E7. The overlay OE** is built from E's freeze commit (S1a section 5.5, "Overlay for the
   A1 GPU halves", with `selected_ref: HEAD`); every E GPU half runs on it and its container
   refuses an overlay whose `git_sha` or `source_sha256` differ from its manifest's.
@@ -206,7 +211,7 @@ dispatch otherwise, section 6.3). Both harnesses use greedy decoding at 2,048 ou
   later so that two readings held, the gap from the lane and GPU ends and the gap from the end
   of the later Slurm job. E's VM batch job ends after its lane, by the lane's wait for the GPU
   job's final state (at most 180 s) and the container cleanup (seconds), so the 5 minutes make
-  the 12 hours hold under both readings by construction.
+  the 12 hours hold under both readings with a margin.
 - **Enforcement by the lane** (section 6.3): each E manifest names every earlier E job's lane
   record file and receipt by SHA-256, and the lane refuses the job if one is missing or changed,
   or if any earlier job fired DR0; a job of E2-E4 is submitted with Slurm `--begin` at its
@@ -710,8 +715,8 @@ D62 (edge cases ratified while blind). E registers those rules up front, in its 
 S1a section 15, for E:
 
 - every estimand of section 10 with its interval, on the primary set and on S1a's 32 base
-  tasks, raw and corrected, per size and pooled, per domain descriptively; δ per session and the
-  pairwise session shifts;
+  tasks: raw on both sets; checker-corrected on the primary set and the D82 110-task set; per
+  size and pooled, per domain descriptively; δ per session and the pairwise session shifts;
 - DR0-DR5, DR-A and P1-P5 (P1 as not estimable);
 - infrastructure losses by type and cell; `IRError` and metric-exception counts; restarts per
   episode; observations delivered on retry, slower than 30 s or undelivered, per episode and per
@@ -921,7 +926,7 @@ Python 3.10.12).
 |---|---|---|---|
 | B1 | Section 9's sentence on the D80 (ii) adjudication predates D81 and D82, which found three gold-defect tasks in E's primary set (`5c1a6c3d`, `881deb30`, `8e116af7`) and three label-contradicted z-order candidates on `5c1a6c3d` that the corrected outcome scores as passing; no sensitivity covered them | Fixed: `main` at `746d60d2` merged; section 9 states what D82 found; the D82 gold-defect sensitivity (raw and corrected, on the 110 other tasks) is registered (plan field `gold_defect_tasks_d82`, `analysis.report`); S1a's flagged list stays the flagged set; a test checks the three tasks against D82's `summary.json`. No primary set, rule or DR changes | 5.6, 9, 19, 21 (item 14), 22 (disclosure 11) |
 | B2 | The freeze steps ignored the current `main` (ledger row 18, R04), so freezing on the branch would fork the hash chain; nothing checked the sign-off decision id (a rehearsal froze with a nonexistent id and every test passed) | Fixed: `main` merged now; step 1 below merges `main` again, after the sign-off decision is on it, and the freeze runs on the merged tree, so E's row follows `main`'s last row (row 19 as of `746d60d2`). The prereg test refuses a sign-off id that is not a decision heading naming `q2-stage1-successor-e-v1` whose entry signs items 1-14, and, once frozen, an E row that does not follow R04's row | 21, 25 |
-| B3 | G-E4, G-E5, G-E6 and the sign-off had not run; E's lane and entry point have never run on the host, which held job 1200 (R04) | Open: they are step 2 below. Job 1200 (R04) was still running at 20:31 UTC on 2026-10-11, and this round had read-only host access; G-E4 waits for a quiet host (D80) | 4.1, 25 |
+| B3 | G-E4, G-E5, G-E6 and the sign-off had not run; E's lane and entry point have never run on the host, which held job 1200 (R04) | Open at audit 1: they are step 2 below. Job 1200 (R04) was still running at 20:31 UTC on 2026-10-11, and this round had read-only host access; G-E4 waits for a quiet host (D80). Closed before audit 2: G-E4 passed (VM job 1206, offline rescoring job 1208) and G-E5 passed (CPU job 1210), each on a quiet host from the export of the draft commit `8a23a483`; evidence in `program/evidence/2026-10-11/q2-stage1-successor-e/gates/`. G-E6 is audit 2 below; the sign-off fills section 21's slot at the freeze (step 2) | 4.1, 25 |
 | N1 | E only adds data: estimands, thresholds and rules are S1a's; the differences are disclosed and listed for sign-off | No action | 3, 21 |
 | N2 | Independent recomputation reproduced the cap check, the analysis identity and section 12 | No action; both outputs were regenerated after this round's plan change (README of E's evidence) | 7.3, 10 |
 | N3 | The freeze rehearsal passed on a scratch clone with `main` merged | No action; the rehearsal is step 3 below | 25 |
@@ -935,11 +940,37 @@ Python 3.10.12).
 | N11 | The development smoke never runs the `e` purpose's checks, so E-9B-E1 is their first host run | Disclosed | 4.1 (G-E4), 22 (disclosure 10) |
 | N12 | The X test is conservative at S = 4; optionally report the exact per-cell flip | Fixed in the text: the registered label-permutation sensitivity is, at R = 1, the exact per-cell sign flip, and section 11 now says so; no code change | 11 |
 
+**Audit 2** (2026-10-11/12; G-E6: a fresh, independent auditor on the draft at `d6293900`,
+with `main` at `2b8fadc7` already merged; verdict: ready to freeze, no blocking items). Its
+checks are in its rows: an independent recomputation of the committed evidence and of the X
+test's null size, the gate records against their host originals, tampered manifests against
+the lane, and a freeze rehearsal on a scratch clone. It read the host without writing to it,
+except for item A2-N14, and committed nothing; the real ledger stayed at 18 rows.
+
+| Item | Finding | Disposition | Sections |
+|---|---|---|---|
+| A2-N1 | Scope: `main` (`2b8fadc7`) is an ancestor of the draft; the ledger has 18 rows and is untouched. Three things remain before the real freeze: audit 2's rows in this log, G-E6's slot naming this audit, and the section 21 sign-off committed on `main` (its heading names `q2-stage1-successor-e-v1` and its entry signs items 1-14), then `main` merged again | The first two are done (this table; G-E6's slot); the sign-off and the merge are steps 1 and 2 below | 4.1, 21, 25 |
+| A2-N2 | E only adds data: estimands, thresholds, DR0-DR5, P1-P5, M and the frozen estimators are S1a's; every file of S1a section 20 keeps its SHA-256, and section 23's 11 E files and 8 infrastructure files match the tree; the differences (the 113-task primary set, four sessions at R = 1, caps by arithmetic, the D82 sensitivity) are disclosed and listed for sign-off. Recomputed: `analysis-identity.json` and `cap-sufficiency.json` equal the committed files byte for byte but for provenance; no harness code changed since `acb886c5`. Section 11's conservative X test, checked independently: the frozen `x_signflip_p` at S = 4, R = 1, K = 113 with no harness effect (2,000 data sets x 2,000 flips) had size 0.0175, 0.0145 and 0.010 at α = 0.025 (task success 0.5, U(0.2, 0.8) and Beta(0.3, 0.6)) | No action | 3, 10, 11, 21, 23 |
+| A2-N3 | The gate records are genuine and E's lane and entry point ran: every committed file under `gates/ge4`, `gates/ge5` and `gates/scripts` equals its host original by SHA-256; the host export equals `git archive 8a23a483` file for file (7,567 files); the preflight names `q2e-vm.sbatch` (`2d27bbe5`) and no GRES; the manifest's schema is E's, which S1a's lane refuses; the four scored `E1` records could only come from E's driver; 1208 and 1210 ran with no network and no GPU; the GLMM output matches G-E5's slot; `check_gates.py` reproduces `gates-check.json` but for `checked_at_commit`; the lane's snapshots saw no foreign Slurm job, and R04's job 1211 was submitted one second after 1210 ended | No action | 4.1 (G-E4, G-E5) |
+| A2-N4 | Caps and session timing are enforced: on the frozen rehearsal tree the rendered E-9B-E1 manifest validates (226 slots, GPU cap 52, VM limit 62 minutes, 90 CPUs) and the development manifest is refused; the lane refused all 12 tampered variants tried (a swapped task or harness, 4B labels at a 9B cap, E2 with no prior jobs, rerun 2, step cap 20, settle 30 s, cap 53, V = 21, setup-only mode, an extension block, a fake engine), and `check_slurm` refused three more; code review confirms the `e` purpose's frozen-registration, prior-job, gap, engine and Slurm-limit checks, and that E's gap check is the only one | No action | 5.3, 6.2, 6.3 |
+| A2-N5 | Freeze rehearsal on a scratch clone of `d6293900` (merging `main` was a no-op): the status paragraph replaced by the quoted paragraph below, G-E6 and the sign-off filled (a rehearsal decision D999 appended to `decisions.md`); `freeze` accepted as row 19 after R04's row (hash `f7b350a3...`); `check-chain` (19 rows) and `verify` passed; on the frozen tree E's suites gave 60 passed and 2 skipped, the full suite 2,864 passed and 71 skipped. The same freeze with sign-off id D82 fails the sign-off test. On the draft tree E's suites gave 62 passed, S1a's and the design study's 310 passed and 3 skipped; ruff passes | No action; step 3 below repeats the rehearsal on the tree that holds the sign-off | 21, 25 |
+| A2-N6 | Exactly three placeholders remained (the status paragraph, G-E6's record, section 21's id), each one the freeze fills; the guard refuses to freeze while any remains | No action; G-E6's is now filled, so two remain | 4.1, 21, 25 |
+| A2-N7 | "At the freeze" said the freeze edits five slots that each hold the placeholder (audit 1's N6 put it so too); since `d6293900` G-E4 and G-E5 hold their results. The sentence survives the freeze (D32 class) | Fixed: it says the freeze fills the three slots that still held the placeholder and that G-E4's and G-E5's results were filled from their records before it (step 2) | 25 |
+| A2-N8 | B3 read "Open" and would be frozen so; this audit's items were not in the log | Fixed: B3 is closed above (G-E4: jobs 1206 and 1208; G-E5: job 1210; evidence in `gates/`); this table | 25 |
+| A2-N9 | Section 19 promised every estimand on S1a's 32 base tasks raw and corrected, but `analysis.report` computes `secondary_s1a_base` on raw verdicts only and `section15.py` adds nothing for it (the gap S1a covered with an operator step under D59 (iii)); reporting only, no rule reads it | Fixed in the text: section 19 says raw on both sets, checker-corrected on the primary set and the D82 110-task set; `analysis.py` is unchanged (its section 23 digest stands) | 19 |
+| A2-N10 | Cosmetic: the draft status paragraph still listed G-E4 and G-E5 as open; the evidence README said no host job ran for its bundle while `gates/` holds jobs 1206, 1208 and 1210 | Fixed: the status paragraph lists only the open slots (the freeze still replaces it whole); the README points to `gates/README.md` | status paragraph; E's evidence README |
+| A2-N11 | Optional test hardening: the open-slot test accepted **failed** for G-E4, a gate that must pass (G-E5 may fail and be disclosed) | Fixed: `test_open_slots_and_the_frozen_status_wording` requires G-E4's slot to read **passed** (G-E5's may read passed or failed), and accepts G-E6's slot filled only with the verdict ready and an audit this log holds | 4.1 |
+| A2-N12 | Optional wording: section 5.3 said the 5-minute margin makes the 12 hours hold at the VM batch job's end "by construction", but the lane does not observe the batch end; the margin covers the lane's GPU-end wait (up to 180 s plus a 5 s poll) and the cleanup | Fixed: "with a margin" | 5.3 |
+| A2-N13 | Optional hardening, as in S1a: nothing in the lane refuses a second run of the same E job (E-9B-E1's prior-job list is empty); "no job is rerun to improve an outcome" (sections 7.2 and 17) rests on operator discipline and the Slurm job ids in the receipts | Reporting only; no code change. As in S1a, it rests on operator discipline, and the receipts' job ids show any rerun | 7.2, 17 |
+| A2-N14 | The auditor's own deviation from read-only host access: it copied a 1 KB helper script to the host's `/tmp` to hash the export tree, ran it and deleted it (confirmed gone); nothing in the repository checkout, the run root or Slurm was touched, and later reads piped the script over stdin | Recorded; no action | — |
+
 ### At the freeze
 
-The freeze edits only the five slots (each holds the guard's placeholder in the draft):
-G-E4's result, G-E5's result, G-E6's audit record, section 21's decision id, and the status
-paragraph. Audit rounds after audit 1 add their rows to the review log above before the freeze.
+The freeze fills the three slots that still held the guard's placeholder once G-E4 and G-E5
+had run: G-E6's audit record (filled from audit 2's record in the last pre-freeze edit),
+section 21's decision id, and the status paragraph. G-E4's and G-E5's results were filled from
+their records before it (step 2). Audit rounds after audit 1 add their rows to the review log
+above before the freeze.
 The freeze replaces the whole status paragraph at the top of this file, from its first line to
 the line before the first bullet, with the paragraph below, word for word (its line breaks may
 differ). Nothing else in that paragraph survives.

@@ -1,6 +1,7 @@
 # Q2 successor E (`q2-stage1-successor-e-v1`, DRAFT): pre-registration evidence
 
-CPU only. No host job of any kind ran for this bundle, and no E episode exists. Everything
+CPU only. The pre-freeze gates G-E4 and G-E5 ran as CPU-only host jobs 1206, 1208 and 1210;
+their records are in `gates/` (see `gates/README.md`). No E episode exists. Everything else
 here was computed on the development Mac from committed files. Seeds: 42 (plus 43 and 44 for
 the simulated identity checks). Branch `stage0/q2-successor-e`, not pushed.
 
