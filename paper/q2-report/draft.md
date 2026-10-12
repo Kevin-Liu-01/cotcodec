@@ -1,6 +1,6 @@
 # What an open computer-use benchmark comparison measures: a certified action path, a rerun noise floor and candidate checker defects on OSWorld
 
-Technical report, draft of 2026-10-12 (revision 4). CoTCodec research program, question Q2, "a
+Technical report, draft of 2026-10-12 (revision 5). CoTCodec research program, question Q2, "a
 calibrated computer-use instrument" (`program/questions/q2-calibrated-cua-instrument.md`).
 Program owner and author of record: Kevin Liu. The section "Authorship and process" says which
 steps AI agents carried out and what a human has and has not reviewed.
@@ -19,7 +19,12 @@ adds the held-out test of the corrected comparator on the reserve split (the dos
 (b)). Its evidence ([ZR], [ZR-REG], [DEC D86, D88], [LEDGER row 20], the code path
 `harness/q2_zinv_reserve/` in sections 10.1 and 10.3 and its tests
 `tests/test_q2_zinv_reserve.py` in section 10.3) resolves at `b880275c` on `main`, the base of
-the revision's branch `stage0/r03-partb-text`.
+the revision's branch `stage0/r03-partb-text`. Revision 5 adds the registered nuisance-invariance
+study of the checkers (the dossier's item R04). Its evidence ([NUI], [NUI-REG], [DEC D89],
+[LEDGER row 18], and the paths it adds in sections 10.1 and 10.3: the study's score rows, its
+code `harness/r04_nuisance/` and `infra/r04-nuisance/`, and the tests
+`tests/test_r04_nuisance.py` and `tests/test_r04_evidence.py`) resolves at `9d320c6e` on `main`,
+the base of the revision's branch `stage0/r04-text`.
 
 > **Status: DRAFT. Not published, not for circulation.**
 >
@@ -33,7 +38,9 @@ the revision's branch `stage0/r03-partb-text`.
 >   (K2)**: a registered rerun inside real VMs agreed with the offline verdicts. K2 checked a
 >   registered sample of 80 scoring jobs (78 compared) plus the 41 candidate events, not all
 >   1,300 scoring jobs. The one exception to that label is the held-out test of the corrected
->   comparator in section 6.2: it ran offline on the reserve split, outside K2's sample. Every
+>   comparator in section 6.2: it ran offline on the reserve split, outside K2's sample. The
+>   nuisance-invariance study of section 6.8 also ran offline; its analysis carries the K2 label,
+>   which there means only that each configuration's paired control is VM-checked. Every
 >   audit-dependent number after the adjudication is **adjudicated by an isolated model on the
 >   owner's instruction (D80); not human-validated**. The adjudicator is the same model as one of
 >   the two raters, and the human spot check is still pending.
@@ -102,7 +109,11 @@ summarises and its main evidence keys.
    the offline verdicts [K2]. On held-out decks never used to find the defect or to build the
    fix, `compare_pptx_files` failed all 13 such swaps, and the corrected comparator accepted all
    13 while newly accepting none of 15 violations: a pass at descriptive status, which bounds its
-   acceptance below at 0.794, not a 95% acceptance rate [ZR].
+   acceptance below at 0.794, not a 95% acceptance rate [ZR]. A registered follow-up re-saved the
+   92 golds and 461 end states of S1a's agents under other LibreOffice builds, locales and save
+   routes. Builds 25.8 and 26.2 flip 18 and 20 gold verdicts, the de_DE, ar_EG and tr_TR locales
+   3, 4 and 3; builds up to 24.8, ja_JP and a Save As flip none. Every flip reproduced in two
+   confirmation rounds, and none is adjudicated [NUI].
 5. **The public Holo3-35B-A3B pair differs by more than rerun noise, for reasons the
    trajectories do not show** (section 3). Two same-day maintainer runs of one agent score 82.56
    and 78.15 on the OSWorld-Verified leaderboard, a 4.4-point gap. Per task they are not
@@ -129,8 +140,9 @@ these agents, are these. The executor path costs at most about 1.5 pp per 20-act
 About 11-13% of rerun pairs disagree. In the model-based split under the calibrations that
 pass the design study's check, task sampling explains about 70-75% of outcome variance, reruns
 about 21-27%, and harness-by-task at most about 4%. One checker family fails about 90% of
-equivalent shape reorders. A public same-agent rerun pair differs by 4.4 points, more than
-rerun noise predicts. Section 7 turns these into practices for anyone running an OSWorld
+equivalent shape reorders, and two LibreOffice builds newer than the image's flip about a fifth
+of the 92 reference golds' verdicts. A public same-agent rerun pair differs by 4.4 points, more
+than rerun noise predicts. Section 7 turns these into practices for anyone running an OSWorld
 comparison. Against the closest prior (cua-speedrun; section 1), the between-session floor
 with a registered within-against-between contrast, the task-by-harness share and the checker
 audit on the same certified stack are new as far as we know. The harness study's blind
@@ -205,7 +217,10 @@ the citations [DEC D79-D83] and [LEDGER row 17], and the other paths it adds (se
 `harness/q2_mutation_k2/` and the references' `claim-registry.json`) resolve at `08033ba7`. The
 keys revision 4 adds ([ZR], [ZR-REG]), the citations [DEC D86, D88] and [LEDGER row 20], and
 sections 10.1 and 10.3's `harness/q2_zinv_reserve/` and section 10.3's
-`tests/test_q2_zinv_reserve.py` resolve at `b880275c`:
+`tests/test_q2_zinv_reserve.py` resolve at `b880275c`. The keys revision 5 adds ([NUI],
+[NUI-REG]), the citations [DEC D89] and [LEDGER row 18], and the paths it adds in sections 10.1
+and 10.3 (the study's score rows, `harness/r04_nuisance/`, `infra/r04-nuisance/`,
+`tests/test_r04_nuisance.py` and `tests/test_r04_evidence.py`) resolve at `9d320c6e`:
 
 | Key | Path |
 |---|---|
@@ -232,6 +247,8 @@ sections 10.1 and 10.3's `harness/q2_zinv_reserve/` and section 10.3's
 | [ZINV] | `harness/q2_stage1/zinv.py` (module docstring) |
 | [ZR-REG] | `program/preregistrations/q2-zinv-reserve-validation-v1.md`, the held-out test of the corrected comparator on the reserve split (section numbers given) |
 | [ZR] | `program/evidence/2026-10-12/q2-zinv-reserve-run/README.md` (with `release/judgement.json` and `release/zinv-rows.json`, which carry a blind warning; section 12) |
+| [NUI-REG] | `program/preregistrations/r04-checker-nuisance-invariance-v1.md`, the nuisance-invariance study of the checkers (section numbers given) |
+| [NUI] | `program/evidence/2026-10-12/r04-nuisance-confirm/README.md` (with `r04-registered-v1/analysis.json`, `analysis-k2.json` and the score rows, which carry a blind warning; section 12) |
 | [H3] | `program/evidence/2026-10-07/holo3-v2/RESULTS.md` and its receipts |
 | [H3-REG] | `program/preregistrations/q2-holo3-rerun-audit-v2.md` (and the v1 post hoc record beside it) |
 | [SP2] | `program/evidence/2026-10-07/serving-throughput-probe-v2/README.md` |
@@ -282,6 +299,7 @@ sections 10.1 and 10.3's `harness/q2_zinv_reserve/` and section 10.3's
 | adjudication pool; spot check | the 34 audit items the raters split on or both read against the label, gold shams included; a stratified 25-item sample set aside for a human check | 6.5 |
 | gold-defect task | a task whose saved gold the audit rejects; its mutants are judged against a reference the audit does not accept | 6.5 |
 | zinv | `compare_pptx_files_zinv`, the corrected comparator | 6.2 |
+| nuisance factor; INVARIANT, MINOR, DRIFT | a change to the environment that should not matter to a task (LibreOffice build, system locale, save route); the nuisance study's per-cell readings: no reproducible verdict flip, one or two flipped golds or S1a tasks, at least three | 6.8 |
 | clean task; net flips | (Holo3 audit) a task scored in both runs with no infrastructure flag; run-1-only passes minus run-2-only passes among clean tasks | 3 |
 
 ## 1. Motivation
@@ -1057,12 +1075,13 @@ whereas π divides only by the within-task part (harness plus rerun).
 
 ## 6. Component 3: candidate checker defects (checker-mutation study)
 
-*Descriptive.* No number in this section is confirmatory. Every number that depends on the
-adjudication is **adjudicated by an isolated model on the owner's instruction (D80); not
-human-validated**, and that adjudicator is the same model as the Claude rater (section 6.5).
-**[PENDING: program owner]** The human spot check of 25 items, which stays open as the only
-independent validation of the model audit [DEC D9, D82]. The checker-mutation note expands this
-section, and its verified numbers are the ones used here [R03].
+*Descriptive*, apart from section 6.8, whose readings are *registered*. No number in this
+section is confirmatory. Every number that depends on the adjudication is **adjudicated by an
+isolated model on the owner's instruction (D80); not human-validated**, and that adjudicator is
+the same model as the Claude rater (section 6.5). **[PENDING: program owner]** The human spot
+check of 25 items, which stays open as the only independent validation of the model audit [DEC
+D9, D82]. The checker-mutation note expands this section, and its verified numbers are the ones
+used here [R03].
 
 ### 6.1 Design and how it became descriptive
 
@@ -1348,6 +1367,31 @@ the same model as the Claude rater (section 6.5).
 | K4 | fires | does not fire |
 | κ, MUT-P1, MUT-P3 to MUT-P5, the candidate shares | as stated | unchanged |
 
+### 6.8 Verdicts under another LibreOffice build, locale or save route
+
+*Registered.* Sections 6.1-6.7 hold fixed the image's LibreOffice build (7.3.7.2), its en_US
+locale and the GUI save; a re-hosted image or a localized desktop changes them. A registered
+nuisance-invariance study re-saved the 92 golds of section 6.3 and 461 end states that S1a's
+agents saved, changing one of these at a time, and paired each verdict with a control that
+reproduces the checker study's save; a flip counts only if two confirmation rounds reproduce it
+[NUI-REG sections 1, 4-9; LEDGER row 18]. Both validity gates passed and every flip reproduced
+[NUI; DEC D89]. TDF builds 25.8 and 26.2 flip 18 and 20 of the 92 gold verdicts (19.6%, exact
+95% 12.0-29.1%; 21.7%, 13.8-31.6%), mostly `compare_pptx_files` golds going from pass to fail,
+and 6 of the 32 S1a tasks with a passing state; the builds up to 24.8 flip none. The de_DE,
+ar_EG and tr_TR locales flip 3, 4 and 3 golds, the same three `compare_table` golds in each, and
+ja_JP none. A Save As flips none, and a headless conversion one gold. So the build and locale
+arms read DRIFT and the route arm MINOR; the corrected comparator reads the same in every cell,
+and a level with no flip bounds its gold flip rate below 3.20% (exact one-sided 95%). From 7.6
+on, LibreOffice also titles its windows differently, so the task postconfig's window activation
+fails as written; the study's save retried with the new title [NUI-REG section 4.4]. What this
+licenses: an OSWorld image moved to LibreOffice 25.8 or 26.2, or to one of those three locales,
+cannot keep OSWorld's checkers as they are without accepting these flips [NUI-REG section 9]. It
+does not say which flips are checker defects, because none is adjudicated. One of ar_EG's is the
+gold of `5c1a6c3d`, which the adjudicator had already rejected (section 6.5; adjudicated by an
+isolated model on the owner's instruction (D80); not human-validated). The scoring ran offline,
+with K2 covering only its control configuration, and the study's per-item verdicts carry a blind
+warning for the pending human spot check (section 12).
+
 ## 7. What a comparison measures: implications and recommendations
 
 ### 7.1 The answer, for this stack
@@ -1363,10 +1407,12 @@ split. The harness-by-task interaction, which a harness comparison hopes to read
 about 4% of outcome variance on these two closely related harnesses. Checkers add their own
 candidate errors, concentrated in specific families: one presentation comparator fails about 90%
 of equivalent shape reorders. And a score is tied to the benchmark revision it was taken at: 110
-of 116 tasks differ in config or in the code of a checker they reach between two revisions. The
-action-path bound, the checker counts and the revision drift are properties of this stack; the
-noise, variance-split and harness numbers are estimates for Qwen3.5-4B and 9B at 15 steps, not
-externally anchored.
+of 116 tasks differ in config or in the code of a checker they reach between two revisions. It is
+tied to the image's LibreOffice build and locale too: two newer builds flip about a fifth of the
+reference golds' verdicts, and three of four other locales flip three or four (section 6.8). The
+action-path bound, the checker counts, the build and locale flips and the revision drift are
+properties of this stack; the noise, variance-split and harness numbers are estimates for
+Qwen3.5-4B and 9B at 15 steps, not externally anchored.
 
 ### 7.2 Implications for comparisons (derived)
 
@@ -1424,6 +1470,17 @@ agents cannot be read as an agent difference unless both ran interleaved in the 
    gold-flip confirmation rests on the two model raters alone (no MUT-P1 flip was in the
    adjudication pool), and only the reorder finding's confirmation involves the model
    adjudicator.
+7. **Pin and report the image's LibreOffice build and system locale, and re-check the checkers
+   after re-hosting or localizing.** Under LibreOffice 25.8 and 26.2, and under the de_DE,
+   ar_EG and tr_TR locales, some golds that pass on the original image fail (section 6.8). Run
+   every task's gold through its checker in the new configuration before scoring agents, and
+   exclude or report separately the tasks whose gold verdict changes. A gold that keeps its
+   verdict does not show that the task's other end states keep theirs: in the
+   nuisance-invariance study, failing agent end states of tasks whose gold still passed turned
+   to pass under de_DE, tr_TR and the headless conversion [NUI]. From LibreOffice 7.6 on, also
+   check that each task's postconfig still runs: in that study's Ctrl+S and Save As saves under
+   those builds, the postconfig's window activation failed as written for every item [NUI-REG
+   section 4.4; NUI].
 
 ## 8. Limitations and scope
 
@@ -1431,7 +1488,9 @@ This is the single consolidated list; sections 2.7 and 4.8 give the component-sp
 
 1. **One host, one image, one lane.** Every result is for one 8 x H100 host as configured: the
    pinned VM image and guest disk, OSWorld `b138d348`, CPU-only VM jobs, at most 32 concurrent VMs
-   (S1a ran 20). The inotify limit that set V* = 32 is a host setting.
+   (S1a ran 20). The inotify limit that set V* = 32 is a host setting. The checker study's
+   verdicts are for the image's LibreOffice 7.3.7.2 under en_US; other builds and locales change
+   some of them (section 6.8).
 2. **Two sizes, two closely related harnesses.** Qwen3.5-4B and 9B only. H-OSW-fixed and H-GA
    share their history layout, thinking pass-back and Qwen3.5 lineage. A null harness contrast
    between them says little about harness pairs that differ more, such as the coding harnesses of
@@ -1465,7 +1524,9 @@ This is the single consolidated list; sections 2.7 and 4.8 give the component-sp
    reorder mutants on 8 tasks), offline and based on the operators' labels; it bounds the
    comparator's acceptance below at 0.794, not at 95%; it checks the comparator's implementation,
    not the swap rule it shares with the mutation operator (section 6.2); and the study has no
-   unseen presentation target left for another [ZR; ZR-REG sections 1 and 7].
+   unseen presentation target left for another [ZR; ZR-REG sections 1 and 7]. The
+   nuisance-invariance study's flips are listed, not adjudicated, so it does not say which are
+   checker defects; it scored offline, with K2 covering its control configuration only [NUI].
 10. **Model-based design numbers.** Section 5's probabilities and shares are conditional on fitted
     calibrations, are not registered, and were chosen after S1a's data.
 11. **Derived numbers.** Section 7.2's table is arithmetic on the measured floor under stated
@@ -1564,6 +1625,7 @@ Table 11. Released data.
 | `program/evidence/2026-10-11/q2-mutation-adjudication-v2/adjudications.jsonl`; `spot-check-answers.jsonl` | one adjudicated pool item; one spot-check item (adjudicated by an isolated model on the owner's instruction (D80); not human-validated) | `item_id`, `answer` | 34; 25 | Tables 8-9 and section 6.5 (with the frozen audit summary) |
 | `program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/report/k2-pairs.jsonl` | one K2 or K2-C pair | `pair`, `set`, `task_id`, `checker_family`, `offline_verdict`, `vm_verdicts`, `state` | 121 | section 6.1's K2 results |
 | `program/evidence/2026-10-12/q2-zinv-reserve-run/release/zinv-rows.json` (`rows`) | one rescored reserve item: a mutant, a saved gold or a saved do-nothing state (carries a blind warning; section 12) | `id`, `task_id`, `kind`, `label`, `operator`, `stored`, `raw`, `zinv`, `files_unchanged` | 106 | section 6.2's held-out test, through `harness/q2_zinv_reserve/run.py judge` (gives `release/judgement.json`) |
+| `program/evidence/2026-10-12/r04-nuisance-confirm/r04-registered-v1/main/scores/*/scores-<cell>.jsonl` (and the rounds' `round-1/`, `round-2/`) | one item saved and scored in one cell (carries a blind warning; section 12) | `item_id`, `task_id`, `population`, `cell`, `pinned`, `zinv`, `save`, `save_status` | 553 per main-run cell; 15,864 in all | section 6.8, through `python -m harness.r04_nuisance.analysis --run` (gives `analysis.json`) |
 | `program/evidence/2026-10-08/q2-action-path-v2-acceptance/acceptance/*.json` | one criterion's verdict, campaigns or state report | `pass`, `cells`, bounds and counts | 1 per file (3-4 files per criterion) | Table 1 and section 2.4 |
 | `program/evidence/2026-10-10/q2-next-step-design-study/designs-*.json`; `fit-*.json` there and in `q2-design-study/` | one calibration's design results; one fit | per design and scenario probabilities; parameters and `prob_scale_components` | 4 design files; 7 fit files | Tables 5-6 |
 | `paper/q2-report/data/variance-shares.json` | probability-scale shares per calibration | `shares` | 1 | Table 6, Figure 3 |
@@ -1605,6 +1667,9 @@ row, hash prefix and freeze time. Each registration pins its code by digest.
 - **Checker study:** `harness/q2_mutation/`, `infra/q2-mutation/`, the K2 executor
   `harness/q2_mutation_k2/`, and the corrected comparator's held-out test
   `harness/q2_zinv_reserve/` (tests: `tests/test_q2_zinv_reserve.py`).
+- **Nuisance-invariance study:** `harness/r04_nuisance/` and `infra/r04-nuisance/` (tests:
+  `tests/test_r04_nuisance.py`; `tests/test_r04_evidence.py` checks that the committed
+  `analysis.json` reproduces from the evidence copy).
 - **Holo3:** `scripts/run_holo3_rerun_audit_doctor.py`, `harness/holo3_v2.py`.
 
 ### 10.4 Compute
@@ -1616,6 +1681,7 @@ GPU-hours are physical, from the ledger in [STATE] (`gpu_hours_ledger`).
 | Action-path versions 1 and 2 (development, controls, acceptance) | 0 | version 2 used 109.12 VM-hours, CPU only [AP2]; the verifier notes this total mixes two span definitions [AP2-VB] |
 | S1a (two overlay image builds, a pre-freeze check on development tasks, a post-freeze overlay build, the four main runs) | 4.8444 (main runs 4.7169) | about 90.0 VM-h for the main runs [S1A] |
 | Checker study (unregistered rater development and the confirm audit) | 0.939 | the mutant campaign itself was CPU only [MUT]; the registered K2 job ran CPU only for 65 minutes [K2]; the adjudication used no GPU and no host job [ADJ]; the held-out test of the corrected comparator ran CPU only, 0.221 lane-hours [ZR] |
+| Nuisance-invariance study | 0 | 24 CPU-only jobs, 10.27 lane-hours, 328.6 allocated CPU-h [NUI] |
 | Serving probes versions 1 and 2 (version 1 also priced another question) | 1.1513 | [SP2] |
 | Holo3 audit | 0 | one CPU-only job [H3] |
 | Design study | 0 | no host job [DS2] |
@@ -1640,7 +1706,9 @@ GPU-hours are physical, from the ledger in [STATE] (`gpu_hours_ledger`).
   heterogeneity needs about 100-115 distinct tasks at 8 episodes per task-arm. With 18 templates,
   power stays at 0.23-0.49 across heterogeneity scenarios (0.24-0.26 at S1a-like heterogeneity),
   whatever the reruns. Every arm must be interleaved within each serving session, because S1a's 9B
-  session shift (+5.5 pp) is as large as the effect sought [DS2 section 7].
+  session shift (+5.5 pp) is as large as the effect sought [DS2 section 7]. The checkers would
+  also have to be re-checked under every condition: the nuisance-invariance study found that
+  three of four system locales flip gold verdicts (section 6.8) [NUI].
 - **Observing the shell's side of a grabbed chord.** The tap records what the shell's grab held
   back, not what the shell received. **[PENDING: program owner]** Whether a later registration
   should observe the shell's side directly [DEC D43].
@@ -1659,11 +1727,14 @@ adjudication pool [DEC D80-D82]; section 6.7 lists what that adjudication change
 warning: the released files of the corrected comparator's held-out test name the checker's
 verdict for every reserve mutant, so whoever answers the spot check should do so from its blind
 packets before reading them; no reserve mutant is in the spot check or the adjudication pool
-[ZR; DEC D88]. Also still open: review of the program decisions taken on the owner's behalf;
-confirmation of the earlier release of the checker study's blind specs; and the three
-action-path items marked **[PENDING]** in sections 2.7 and 11. The registered action-path
+[ZR; DEC D88]. The nuisance-invariance study's analysis files and score rows name the checker's
+verdict per gold task and per S1a end state, and section 6.8 names one flipped gold, so the same
+order applies to them [NUI]. Also still open: review of the program decisions taken on the
+owner's behalf; confirmation of the earlier release of the checker study's blind specs; and the
+three action-path items marked **[PENDING]** in sections 2.7 and 11. The registered action-path
 verdict and S1a's registered readings will not change. The candidate counts in section 6 do not
-depend on the audit, and neither does the held-out test, which reads the operators' labels; the
+depend on the audit, and neither does the held-out test, which reads the operators' labels, nor
+the nuisance-invariance study's readings, whose flips no rater, model or person has judged; the
 audit-confirmed counts, the label-error estimates and the gold-defect calls rest on model
 judgment and could change under human review. Also open without the owner: the S1a
 runbook's step-12 verification record and a second check of the session-2 lane checks [S1A,
@@ -1872,6 +1943,7 @@ each have state 0 and follow a processed press in their own window [AP2-REG sect
 | `q2-action-path-v2`, `-inputs`, `-executor` | 13-15 | `58da1bb6`, `603b2142`, `fde44535` | 2026-10-08 14:23 | [AP2]; campaigns ran from a read-only export of `bf99a64` |
 | `q2-stage1-rescoped-v1` (S1a) | 16 | `bc5e88a0` | 2026-10-09 22:11 | [S1A], [S1A-AN]; freeze commit `d5f5798` |
 | `q2-evaluator-mutation-v1-k2` (the K2 addendum) | 17 | `7d03d928` | 2026-10-11 15:51 | [K2], [K2-REG]; freeze commit `7d9c881a` |
+| `r04-checker-nuisance-invariance-v1` (the nuisance-invariance study) | 18 | `f7b350a3` | 2026-10-11 18:27 | [NUI], [NUI-REG]; freeze commit `e312e996` |
 | `q2-zinv-reserve-validation-v1` (the corrected comparator's held-out test) | 20 | `57cf8861` | 2026-10-12 01:32 | [ZR], [ZR-REG]; freeze commit `ff802ca5` |
 
 ### D.2 Decisions cited
@@ -1907,6 +1979,7 @@ agents on the owner's behalf.
 | D83 | The checker-mutation note is drafted and verified, not published; the prior-art check K8 does not fire |
 | D86 | The held-out test of the corrected comparator on the reserve split (the dossier's R03 part (b)) is adopted under the owner's delegation and runs CPU only, in successor E's gaps |
 | D88 | That test passes at descriptive status (13 of 13 reorder mutants accepted, no violation newly accepted), and the original comparator's reorder defect replicates on the held-out tasks |
+| D89 | The nuisance-invariance study's result: the build and locale arms read DRIFT (LibreOffice 25.8 and 26.2; de_DE, ar_EG and tr_TR) and the route arm MINOR, under both checkers; no flip is adjudicated |
 
 ### D.3 Jobs cited
 
@@ -1922,6 +1995,7 @@ All Slurm jobs on the program's host.
 | S1a | pre-freeze overlay builds 1032 (failed) and 1033; pre-freeze check 1037/1039; post-freeze overlay 1044; main runs (VM/GPU) 1045/1047, 1048/1050, 1051/1053, 1062/1064; analysis 1065-1068, 1071-1075 |
 | Checker study K2 | registered job 1186 |
 | Corrected comparator's held-out test | registered jobs 1226 (targets), 1227 (build), 1228 (score), 1229 (rescore with the corrected comparator), CPU only |
+| Nuisance-invariance study | registered jobs 1187 (items); 1188, 1190, 1191, 1193, 1194, 1196 and 1198 (saves); 1200, 1203, 1204, 1211, 1216 and 1225 (scores); 1230-1239 (the two confirmation rounds), CPU only |
 | Other program lines | reviewer jobs 1061 (in S1a's session-2 gap) and 1070 (queued during rescoring) |
 
 ### D.4 S1a disclosures as recorded
@@ -1932,6 +2006,30 @@ verification record (item 5), host activity (item 6), the session-1 disclosures 
 reviewer job in the session-2 gap (item 9).
 
 ## Revision record
+
+Revision 5 (2026-10-12) adds the registered nuisance-invariance study of the checkers (the
+question-renewal dossier's item R04, `r04-checker-nuisance-invariance-v1`), which ran after
+revision 4 (D89). It reports the registered readings (build and locale arms DRIFT, route arm
+MINOR, the same under the corrected comparator), the flip counts with exact intervals, what the
+registration's section 9 licenses for a re-hosted or localized image and what it does not, that
+none of the flips is adjudicated, that one of ar_EG's flipped golds belongs to the
+model-adjudicated gold-defect task `5c1a6c3d`, and the blind warning, and changes nothing else.
+Changed: the header's revision number and evidence commit; the status block (the study ran
+offline, and its K2 label covers its control configuration only); summary item 4; the
+magnitudes in "Contributions"; the evidence keys ([NUI], [NUI-REG]) and one glossary entry;
+section 6's lead (section 6.8 is registered, not descriptive) and the new section 6.8; section
+7.1; recommendation 7, which is new; limitations 1 and 9; section 10's released data, code and
+compute; section 11's locale study; section 12 (the blind warning, and that the study's readings
+do not depend on the audit); Appendix D.1-D.3; and this record. No figure or appendix table
+reads the study's data, so none was regenerated. Every number revision 5 shares with the
+checker-mutation note (its new section 3.9 and summary) is mapped in the note's
+`data/claims.json` to the study's `analysis.json`, its README or its registration, and the
+note's `scripts/check_claims.py` passes with every number covered. The others (the allocated
+CPU-hours, the score-row counts, the ledger row's hash and freeze time and the job numbers) were
+checked against the run README, the score files, the ledger and the run's `plan.json`. The
+registered analysis was also rerun from the evidence copy
+(`python -m harness.r04_nuisance.analysis --run`) and gave the committed `analysis.json`
+exactly, apart from input paths.
 
 Revision 4 (2026-10-12) adds the held-out test of the corrected comparator on the reserve split
 (the dossier's R03 part (b)), which ran after revision 3 (D86, D88). It reports the registered
