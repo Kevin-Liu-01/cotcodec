@@ -1,0 +1,15 @@
+{
+  "job_id": "1194",
+  "mode": "run",
+  "image_id": "sha256:728aaa69a5ea8484895f0678f5e0ba45ac92ab6f4485ccc9fb8700abffe87ce9",
+  "argv_json_hex_sha256": "ca77696aa19b142bb27e2589db42b21eebe2824dc49bfa6b739200f76bb0a27b",
+  "argv_json_hex": "5b227368222c20222f7372632f696e6672612f7230342d6e756973616e63652f72756e2f7265736176652e7368222c20222f726f2f6974656d732f6974656d732e6a736f6e6c222c20222f6f7574222c20223136222c20222d222c202242332e6374726c5f732e4c30222c202242332e73746f72655f61732e4c30222c202242332e686561646c6573735f636f6e766572742e4c30225d",
+  "mounts": "/home/kevin/cotcodec-runs/stage0/r04-nuisance/src/e312e996fe7d3d032016bc1f6195cc3b7449af68:/src:ro /home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/r04-registered-v1/main/saves/B3:/out:rw /home/kevin/cotcodec-runs/stage0/q2-evaluator-mutation/inputs:/inputs:ro /home/kevin/cotcodec-runs/stage0/r04-nuisance/runs/r04-registered-v1/items:/ro/items:ro /home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1045:/ro/s1a-1045:ro /home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1048:/ro/s1a-1048:ro /home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1051:/ro/s1a-1051:ro /home/kevin/cotcodec-runs/stage0/q2-stage1/runs/1062:/ro/s1a-1062:ro",
+  "network": "none",
+  "gpus_requested": 0,
+  "container_dev_nvidia": [],
+  "batch_sha256": "f97d3af96418fb4fa806f39456e4117f306cbf04b14e08533d77a95349b37443",
+  "exit_status": 0,
+  "started_at": "2026-10-11T19:09:31Z",
+  "finished_at": "2026-10-11T19:17:32Z"
+}
