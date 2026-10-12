@@ -1875,3 +1875,40 @@ committed now.**
   record. No round 5 follows.
 - Host scheduling. S2 v4 submits nothing during a successor E session. E2
   starts no earlier than about 17:51Z on 2026-10-12.
+
+**D91. S2 v4 (`s2-arabic-cua-locale-v4`) is signed off for the freeze.**
+Under D80 (iv), the program freezes S2 v4 after its fourth and final repair
+round, which met D90's acceptance criterion fixed in advance:
+- The development smoke (Slurm 1242, with the oracle's registered route 1243)
+  covered 140 Impress capture boots, and none showed a deviating status-bar
+  field.
+- I2, I5 and I6 were each 17 of 17, I1-doc held, the descriptors were valid,
+  and K0 on the development tasks admitted 13 tasks, with 4 runnable.
+- The fresh code review approved the round. The fresh audit's one blocking
+  item was text only, so D90's stop rule did not fire.
+Closing record:
+- The `ap_delta` development rung (Slurm 1244) ran every restored pre-run
+  check on the host, and all passed.
+- A further fresh audit at `875f63ec` found the code unchanged since the smoke
+  export, K0 byte-identical (`ed38b953...`, `k0_v4.py` unchanged since
+  `ee0841b3`), the freeze and resume rehearsals passing, and one blocking
+  sentence. That sentence would have been false once frozen ("What remains is
+  the freeze procedure's steps 3 and 4"). The orchestrator fixed it, with the
+  rehearsal count, in one text-only commit (`59310051`); the registration test
+  and `pins_table --check` pass.
+Known risks are disclosed in the registration and accepted:
+- the TERM path relies on an operator step;
+- a torn last line in `probes.jsonl`;
+- VCL's quick-help auto-hide is unverified;
+- a taller Writer caret than 18 px;
+- I1-doc fails with probability about 4% if a named ER or PD slot is lost
+  twice;
+- the infrastructure-loss rate was 2.3-3.6% per capture attempt in the
+  development smokes.
+After the freeze:
+- P0.6 (K1, about 44 VM-h) runs from the freeze commit's export, and so does
+  the Phase 0 census (1,322 slots, about 4.9 h and 95 VM-h). Each is one VM-lane
+  campaign at a time, CPU only, never during a successor E session.
+- Then the oracle and K0 run.
+- Phase 1 needs its own executor addendum, frozen as its own ledger row, and
+  runs only if K0 and K1 pass (D80 (iv)).
