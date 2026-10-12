@@ -37,6 +37,15 @@ exceed a 12 h 5 min gap (C3's parts, A1, A2, A3's parts) wait until E4 has ended
   per-file SHA-256 list, `.git_sha` excluded, is `bd289bb8...` on both), no AppleDouble file, and
   harness/q2's `source_tree_sha256` over `harness/` is `6c1037c9...`, the digest every rendered
   manifest names (and the development jobs' since round 4: the code is unchanged since `b8c815c8`).
+- Correction (16:51Z, read-only on the host): the host export holds 7,914 files, the 7,910
+  of the archive plus 4 Python bytecode caches (`harness/__pycache__/__init__`,
+  `harness/q2/__pycache__/__init__`, `harness/q2/vm/__pycache__/__init__` and `.../manifest`,
+  `cpython-310.pyc`) written at 14:43:17Z, during staging and before the tree was made read-only,
+  so before the first job (14:44:33Z): every K1 job sees the same tree. The archive's own files are
+  unchanged (the per-file SHA-256 list without `.git_sha` and `__pycache__` is again `bd289bb8...`,
+  7,909 files, equal to the Mac export's), and harness/q2's `source_tree_sha256` and closed-world
+  walk skip `__pycache__` and `.pyc` files (`harness/q2/vm/manifest.py`). The caches are left in
+  place so that the remaining jobs run on the same tree.
 - K1 manifests: `ap_delta.py render CHECK --cell CELL` (and `render rung`) on the Mac from the local
   export, `--git-sha cf17405026ca...` (which checks with git that the commit's only parent is the
   row's `git_head_at_freeze` and that it changes only the ledger), `--images-root
