@@ -18,13 +18,19 @@ for whatever gains actual results"; D80). Under that delegation:
   R03, the checker-mutation note, can now be finished.
 - R03, the checker-mutation note, is drafted and verified, and not published
   (D83; `paper/checker-mutation-note/`). The Q2 report is synced to revision 3.
-- R03 part (b), zinv on the held-out reserve split, is frozen (row 20; D86).
-  Its CPU run (`reserve-v1`) is in progress on `ops/r03-zinv-reserve`.
+- R03 part (b) is done (row 20; D86, D88). On the held-out reserve split,
+  zinv's result is PASS, descriptive: it accepts 13 of 13 z-order equivalence
+  mutants on 8 tasks and newly accepts none of 15 violation mutants. The
+  original `compare_pptx_files` rejects all 13, so the defect replicates on
+  held-out tasks. Evidence: `program/evidence/2026-10-12/q2-zinv-reserve-run/`.
+- Successor E session E1 is done (jobs 1219/1221 and 1222/1224, ending
+  05:46Z on 2026-10-12). E2 starts no earlier than about 17:51Z.
 - Successor E is frozen (row 19; sign-off D85; freeze `f6144d6b`). Its four
   sessions (about 42 h, 6.77 cap-GPU-h) are running on `ops/q2-successor-e`.
   Other host work runs only in its gaps.
-- S2 v4: the images are built; a repair round is in progress before the freeze
-  (D84; `stage0/s2-v4`).
+- S2 v4: the images are built and reproducible. Round 3 of repairs is in
+  progress before the freeze (D84, D87; `stage0/s2-v4`). It covers the
+  pointer readout and the resume ordering.
 Still closed: Q1 (D46) and Q3 (D54). Still Kevin's: the outward actions, Q1's
 R570 GPU code and C5 Phase 1 (D80), and an optional human spot check (D9).
 See `pending_decisions_for_kevin` in `program/state.json`.
@@ -34,7 +40,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 20 rows). Decisions taken
-on Kevin's behalf are D1-D86 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D88 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |

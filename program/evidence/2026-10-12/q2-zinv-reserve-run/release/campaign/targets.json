@@ -1,0 +1,159 @@
+{
+ "skipped": {
+  "no complete gold": 21,
+  "no operator family for this file type": 7
+ },
+ "skipped_detail": [
+  {
+   "reason": "no complete gold",
+   "task_id": "0e763496-b6bb-4508-a427-fad0b6c3e195",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "215dfd39-f493-4bc3-a027-8a97d72c61bf",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "21760ecb-8f62-40d2-8d85-0cee5725cb72",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "2373b66a-092d-44cb-bfd7-82e86e7a3b4d",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "357ef137-7eeb-4c80-a3bb-0951f26a8aff",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "386dbd0e-0241-4a0a-b6a2-6704fba26b1c",
+   "vm_path": null
+  },
+  {
+   "reason": "no operator family for this file type",
+   "task_id": "4bcb1253-a636-4df4-8cb0-a35c04dfef31",
+   "vm_path": "/home/user/Desktop/View_Person_Organizational_Summary.pdf"
+  },
+  {
+   "reason": "no operator family for this file type",
+   "task_id": "4bcb1253-a636-4df4-8cb0-a35c04dfef31",
+   "vm_path": "/home/user/Documents/View_Person_Organizational_Summary.pdf"
+  },
+  {
+   "reason": "no operator family for this file type",
+   "task_id": "4bcb1253-a636-4df4-8cb0-a35c04dfef31",
+   "vm_path": "/home/user/Downloads/View_Person_Organizational_Summary.pdf"
+  },
+  {
+   "reason": "no operator family for this file type",
+   "task_id": "4bcb1253-a636-4df4-8cb0-a35c04dfef31",
+   "vm_path": "/home/user/View_Person_Organizational_Summary.pdf"
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "5d901039-a89c-4bfb-967b-bf66f4df075e",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "734d6579-c07d-47a8-9ae2-13339795476b",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "7767eef2-56a3-4cea-8c9f-48c070c7d65b",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "7f35355e-02a6-45b5-b140-f0be698bcf85",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "82e3c869-49f6-4305-a7ce-f3e64a0618e7",
+   "vm_path": null
+  },
+  {
+   "reason": "no operator family for this file type",
+   "task_id": "8f080098-ddb1-424c-b438-4e96e5e4786e",
+   "vm_path": "/home/user/Desktop/Baby Justin Bieber.mp3"
+  },
+  {
+   "reason": "no operator family for this file type",
+   "task_id": "91190194-f406-4cd6-b3f9-c43fac942b22",
+   "vm_path": "/home/user/Desktop/cropped.png"
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "9439a27b-18ae-42d8-9778-5f68f891805e",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "a097acff-6266-4291-9fbd-137af7ecd439",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "a10b69e1-6034-4a2b-93e1-571d45194f75",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "c6bf789c-ba3a-4209-971d-b63abf0ab733",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "ce88f674-ab7a-43da-9201-468d38539e4a",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "d16c99dc-2a1e-46f2-b350-d97c86c85c15",
+   "vm_path": null
+  },
+  {
+   "reason": "no operator family for this file type",
+   "task_id": "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+   "vm_path": "/home/user/Desktop/rearranged.png"
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "dd84e895-72fd-4023-a336-97689ded257c",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "ea98c5d7-3cf9-4f9b-8ad3-366b58e0fcae",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "f201fbc3-44e6-46fc-bcaa-432f9815454c",
+   "vm_path": null
+  },
+  {
+   "reason": "no complete gold",
+   "task_id": "f723c744-e62c-4ae6-98d1-750d3cd7d79d",
+   "vm_path": null
+  }
+ ],
+ "split": "reserve",
+ "targets": 28,
+ "targets_by_family": {
+  "docx": 5,
+  "pptx": 8,
+  "text": 3,
+  "xlsx": 12
+ },
+ "targets_without_initial": 5,
+ "tasks": 53,
+ "tasks_with_target": 28
+}

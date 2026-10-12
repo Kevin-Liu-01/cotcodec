@@ -1,6 +1,6 @@
 # What an open computer-use benchmark comparison measures: a certified action path, a rerun noise floor and candidate checker defects on OSWorld
 
-Technical report, draft of 2026-10-11 (revision 3). CoTCodec research program, question Q2, "a
+Technical report, draft of 2026-10-12 (revision 4). CoTCodec research program, question Q2, "a
 calibrated computer-use instrument" (`program/questions/q2-calibrated-cua-instrument.md`).
 Program owner and author of record: Kevin Liu. The section "Authorship and process" says which
 steps AI agents carried out and what a human has and has not reviewed.
@@ -14,7 +14,12 @@ adjudication. The evidence it adds ([K2], [K2-REG], [ADJ], [ADJ-AN], [R03] and [
 and three other references absent at `360058d` (the K2 addendum's row in Appendix D.1 and
 section 6.1 [LEDGER row 17], the K2 executor `harness/q2_mutation_k2/` in section 10.3, and
 `program/evidence/2026-10-11/question-renewal/claim-registry.json` in the references), resolve
-at `08033ba7` on `main`, the base of the revision's branch `stage0/q2-report-sync`.
+at `08033ba7` on `main`, the base of the revision's branch `stage0/q2-report-sync`. Revision 4
+adds the held-out test of the corrected comparator on the reserve split (the dossier's R03 part
+(b)). Its evidence ([ZR], [ZR-REG], [DEC D86, D88], [LEDGER row 20], the code path
+`harness/q2_zinv_reserve/` in sections 10.1 and 10.3 and its tests
+`tests/test_q2_zinv_reserve.py` in section 10.3) resolves at `b880275c` on `main`, the base of
+the revision's branch `stage0/r03-partb-text`.
 
 > **Status: DRAFT. Not published, not for circulation.**
 >
@@ -27,7 +32,8 @@ at `08033ba7` on `main`, the base of the revision's branch `stage0/q2-report-syn
 > - Every checker-study number (section 6) carries the analysis label **VM fidelity checked
 >   (K2)**: a registered rerun inside real VMs agreed with the offline verdicts. K2 checked a
 >   registered sample of 80 scoring jobs (78 compared) plus the 41 candidate events, not all
->   1,300 scoring jobs. Every
+>   1,300 scoring jobs. The one exception to that label is the held-out test of the corrected
+>   comparator in section 6.2: it ran offline on the reserve split, outside K2's sample. Every
 >   audit-dependent number after the adjudication is **adjudicated by an isolated model on the
 >   owner's instruction (D80); not human-validated**. The adjudicator is the same model as one of
 >   the two raters, and the human spot check is still pending.
@@ -93,7 +99,10 @@ summarises and its main evidence keys.
    the 92 reference end states ("golds") through LibreOffice's GUI save path flips 4 of them from
    pass to fail; in 3 of the 4, both raters accept the saved gold as still correct [MUT]. Rerun
    inside real VMs on a registered sample, all 78 compared pairs and all 41 candidate events gave
-   the offline verdicts [K2].
+   the offline verdicts [K2]. On held-out decks never used to find the defect or to build the
+   fix, `compare_pptx_files` failed all 13 such swaps, and the corrected comparator accepted all
+   13 while newly accepting none of 15 violations: a pass at descriptive status, which bounds its
+   acceptance below at 0.794, not a 95% acceptance rate [ZR].
 5. **The public Holo3-35B-A3B pair differs by more than rerun noise, for reasons the
    trajectories do not show** (section 3). Two same-day maintainer runs of one agent score 82.56
    and 78.15 on the OSWorld-Verified leaderboard, a 4.4-point gap. Per task they are not
@@ -115,16 +124,17 @@ regression cells, four validity controls, seven criteria and independent re-veri
 two-session, two-rerun noise-floor protocol with registered estimators and analysis code; a
 checker-mutation harness with blind requirement specs and a model-rater audit protocol; and a
 corrected comparator, `compare_pptx_files_zinv`, that ignores stacking-order swaps of shapes that
-cannot overlap. The magnitudes, on this host with these agents, are these. The executor path
-costs at most about 1.5 pp per 20-action episode. About 11-13% of rerun pairs disagree. In the
-model-based split under the calibrations that pass the design study's check, task sampling
-explains about 70-75% of outcome variance, reruns about 21-27%, and harness-by-task at most about
-4%. One checker family fails about 90% of equivalent shape reorders. A public same-agent rerun
-pair differs by 4.4 points, more than rerun noise predicts. Section 7 turns these into practices
-for anyone running an OSWorld comparison. Against the closest prior (cua-speedrun; section 1),
-the between-session floor with a registered within-against-between contrast, the task-by-harness
-share and the checker audit on the same certified stack are new as far as we know. The harness
-study's blind closest-prior check did not run, so this is not a verified novelty claim
+cannot overlap and passed a small held-out test (section 6.2). The magnitudes, on this host with
+these agents, are these. The executor path costs at most about 1.5 pp per 20-action episode.
+About 11-13% of rerun pairs disagree. In the model-based split under the calibrations that
+pass the design study's check, task sampling explains about 70-75% of outcome variance, reruns
+about 21-27%, and harness-by-task at most about 4%. One checker family fails about 90% of
+equivalent shape reorders. A public same-agent rerun pair differs by 4.4 points, more than
+rerun noise predicts. Section 7 turns these into practices for anyone running an OSWorld
+comparison. Against the closest prior (cua-speedrun; section 1), the between-session floor
+with a registered within-against-between contrast, the task-by-harness share and the checker
+audit on the same certified stack are new as far as we know. The harness study's blind
+closest-prior check did not run, so this is not a verified novelty claim
 (`program/proposals/2026-10-08-q2-stage1-rescoped.md`, wave 0). For the checker audit, the
 registered prior-art check K8 ran on 2026-10-11, after the checker-mutation note's first draft
 rather than before drafting as registered, and found no mutation audit of desktop computer-use
@@ -192,7 +202,10 @@ H-GA) are defined in the glossary, section 4.2 and Table 1.
 sentence or in the caption or lead-in of its table or list. Keys map to paths in the repository
 above, at commit `360058d`. The keys revision 3 adds ([K2], [K2-REG], [ADJ], [ADJ-AN], [R03]),
 the citations [DEC D79-D83] and [LEDGER row 17], and the other paths it adds (section 10.3's
-`harness/q2_mutation_k2/` and the references' `claim-registry.json`) resolve at `08033ba7`:
+`harness/q2_mutation_k2/` and the references' `claim-registry.json`) resolve at `08033ba7`. The
+keys revision 4 adds ([ZR], [ZR-REG]), the citations [DEC D86, D88] and [LEDGER row 20], and
+sections 10.1 and 10.3's `harness/q2_zinv_reserve/` and section 10.3's
+`tests/test_q2_zinv_reserve.py` resolve at `b880275c`:
 
 | Key | Path |
 |---|---|
@@ -217,6 +230,8 @@ the citations [DEC D79-D83] and [LEDGER row 17], and the other paths it adds (se
 | [ADJ-AN] | the same directory, `analysis/analysis.json` (the parent analysis rerun with the adjudications and the K2 report) |
 | [R03] | `paper/checker-mutation-note/draft.md`, the checker-mutation note (a draft; `data/claims.json` maps each of its numbers to a committed source) |
 | [ZINV] | `harness/q2_stage1/zinv.py` (module docstring) |
+| [ZR-REG] | `program/preregistrations/q2-zinv-reserve-validation-v1.md`, the held-out test of the corrected comparator on the reserve split (section numbers given) |
+| [ZR] | `program/evidence/2026-10-12/q2-zinv-reserve-run/README.md` (with `release/judgement.json` and `release/zinv-rows.json`, which carry a blind warning; section 12) |
 | [H3] | `program/evidence/2026-10-07/holo3-v2/RESULTS.md` and its receipts |
 | [H3-REG] | `program/preregistrations/q2-holo3-rerun-audit-v2.md` (and the v1 post hoc record beside it) |
 | [SP2] | `program/evidence/2026-10-07/serving-throughput-probe-v2/README.md` |
@@ -1162,7 +1177,42 @@ rater; "contradicted" means label contradicted.
 **Correction.** S1a's checker-corrected outcome replaces `compare_pptx_files` with
 `compare_pptx_files_zinv`. That comparator realigns the agent deck's shapes to the reference
 order only where the swapped shapes are apart, keeps every other attribute comparison of the
-original comparator, and still fails a visible stacking change [ZINV; S1A-REG section 8].
+original comparator, and still fails a visible stacking change [ZINV; S1A-REG section 8]. It was
+validated on the stored confirm campaign, whose confirmed reorder failures also drove its fixes,
+so that check is a development set as much as a validation [S1A-REG section 3.1; R03, section
+3.7].
+
+**Held-out test.** *Registered, at descriptive status.* A frozen addendum tested the corrected
+comparator on the reserve split's 8 presentation tasks, on which no mutant of the frozen
+operators had been built. It asks that the corrected comparator accept at least 95% of the
+evaluable reorder mutants and newly accept no violation mutant that the original fails; below
+20 reorder mutants or 8 tasks the reading is descriptive [ZR-REG sections 1 and 6;
+LEDGER row 20]. The registered run, CPU only, gave PASS at descriptive status, because its 13
+reorder mutants fall short of 20 (the 8 tasks meet their floor) [ZR, jobs 1226-1229; DEC D88]:
+
+- The corrected comparator accepted 13 of 13 reorder mutants, on all 8 tasks (exact one-sided
+  95% lower bound 0.794 per mutant, 0.688 per task).
+- It newly accepted none of 15 violation mutants, all failed by the original (exact one-sided
+  95% upper bound 0.181 per mutant).
+- `compare_pptx_files` failed all 13 reorder mutants: a held-out replication of the defect, on
+  tasks and documents never used to find it or to build the fix.
+- The other 93 rescored items kept their verdict, and none of the 106 rows was invalid.
+
+This licenses saying that the correction held on reserve documents it was not developed on, at
+this size. It does not show that the corrected comparator accepts 95% of reorders: a pass bounds
+acceptance only from below [ZR-REG section 7]. Nor does it test the idea behind the correction,
+whether the operator's rule for an invisible swap picks out exactly the reorders a viewer cannot
+see. The addendum says why [ZR-REG section 1]: the corrected comparator moves a shape only past
+shapes that are apart by the mutation operator's own rule, the rule that also decides which
+swaps the operator builds, so on a correct implementation every operator-built reorder mutant
+whose deck is otherwise unchanged passes by construction. What the reorder half of the test
+checks is the implementation's pairing of shapes on documents it was not developed on; the
+violation half checks that the realignment never hides a real violation.
+
+The test ran offline (K2 covered the confirm sample only) and rests on the operators' labels,
+since no rater or adjudicator read a reserve mutant. The reserve decks come from the same
+OSWorld pool as the confirm decks. The run's per-mutant verdicts carry a blind warning for the
+pending human spot check (section 12) [ZR].
 
 ### 6.3 A GUI-faithful save flips reference golds (MUT-P1)
 
@@ -1368,7 +1418,9 @@ agents cannot be read as an agent difference unless both ran interleaved in the 
 6. **Treat `compare_pptx_files` verdicts as suspect when shapes may be reordered**: use a
    z-order-invariant comparator such as `compare_pptx_files_zinv`, or report presentation tasks
    separately, and check that reference golds still pass after the GUI save path. The reorder
-   failures reproduced inside real VMs (K2). Neither finding's audit confirmation is human: the
+   failures reproduced inside real VMs (K2) and on held-out decks, where
+   `compare_pptx_files_zinv` accepted all 13 reorders and newly accepted no violation (at
+   descriptive status; section 6.2). Neither finding's audit confirmation is human: the
    gold-flip confirmation rests on the two model raters alone (no MUT-P1 flip was in the
    adjudication pool), and only the reorder finding's confirmation involves the model
    adjudicator.
@@ -1409,7 +1461,11 @@ This is the single consolidated list; sections 2.7 and 4.8 give the component-sp
    human-validated, and the human spot check is pending. Scoring ran offline; K2 checked it
    inside real VMs on 78 compared pairs and all 41 candidate events, not on all 1,300 scoring
    jobs, and `compare_pptx_files_tolerant` has no K2 pair. The study is descriptive. Corrected
-   verdicts are not primary evidence.
+   verdicts are not primary evidence. The corrected comparator's one held-out test is small (13
+   reorder mutants on 8 tasks), offline and based on the operators' labels; it bounds the
+   comparator's acceptance below at 0.794, not at 95%; it checks the comparator's implementation,
+   not the swap rule it shares with the mutation operator (section 6.2); and the study has no
+   unseen presentation target left for another [ZR; ZR-REG sections 1 and 7].
 10. **Model-based design numbers.** Section 5's probabilities and shares are conditional on fitted
     calibrations, are not registered, and were chosen after S1a's data.
 11. **Derived numbers.** Section 7.2's table is arithmetic on the measured floor under stated
@@ -1473,7 +1529,10 @@ hours on this host [AP2, second stage].
 OSWorld checkout at call time. `zinv.install(metrics_module)` replaces `compare_pptx_files` in
 OSWorld's `desktop_env.evaluators.metrics` namespace, which `DesktopEnv` resolves by name, and
 returns the original. `compare_pptx_files_tolerant` calls the slides module's own function and is
-not corrected [ZINV].
+not corrected [ZINV]. The comparator was developed on the confirm split's reorder mutants and
+passed a held-out test on the reserve split's 8 presentation tasks at descriptive status (13 of
+13 reorders accepted, no violation newly accepted; section 6.2) [ZR]. That sample bounds its
+acceptance below at 0.794 (exact, one-sided 95%); it does not measure a rate on other decks.
 
 ### 9.4 Running the noise-floor protocol
 
@@ -1504,6 +1563,7 @@ Table 11. Released data.
 | `program/evidence/2026-10-08/q2-mutation-confirm/results/released/confirm-mutants-v1/outcomes.jsonl` | one mutant | `mutant_id`, `task_id`, `operator`, `label`, `checker_family`, `lock_status`, `lock_verdict`, `probe_touched`, `saved_via` | 1,289 | Tables 8-9 and section 6.4 (with the `analysis.json` files of [MUT], [K2] and [ADJ-AN] for audit decisions) |
 | `program/evidence/2026-10-11/q2-mutation-adjudication-v2/adjudications.jsonl`; `spot-check-answers.jsonl` | one adjudicated pool item; one spot-check item (adjudicated by an isolated model on the owner's instruction (D80); not human-validated) | `item_id`, `answer` | 34; 25 | Tables 8-9 and section 6.5 (with the frozen audit summary) |
 | `program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/report/k2-pairs.jsonl` | one K2 or K2-C pair | `pair`, `set`, `task_id`, `checker_family`, `offline_verdict`, `vm_verdicts`, `state` | 121 | section 6.1's K2 results |
+| `program/evidence/2026-10-12/q2-zinv-reserve-run/release/zinv-rows.json` (`rows`) | one rescored reserve item: a mutant, a saved gold or a saved do-nothing state (carries a blind warning; section 12) | `id`, `task_id`, `kind`, `label`, `operator`, `stored`, `raw`, `zinv`, `files_unchanged` | 106 | section 6.2's held-out test, through `harness/q2_zinv_reserve/run.py judge` (gives `release/judgement.json`) |
 | `program/evidence/2026-10-08/q2-action-path-v2-acceptance/acceptance/*.json` | one criterion's verdict, campaigns or state report | `pass`, `cells`, bounds and counts | 1 per file (3-4 files per criterion) | Table 1 and section 2.4 |
 | `program/evidence/2026-10-10/q2-next-step-design-study/designs-*.json`; `fit-*.json` there and in `q2-design-study/` | one calibration's design results; one fit | per design and scenario probabilities; parameters and `prob_scale_components` | 4 design files; 7 fit files | Tables 5-6 |
 | `paper/q2-report/data/variance-shares.json` | probability-scale shares per calibration | `shares` | 1 | Table 6, Figure 3 |
@@ -1542,8 +1602,9 @@ row, hash prefix and freeze time. Each registration pins its code by digest.
   tooling in `ops/s1a-analysis/` (`RUNBOOK.md`).
 - **Design study:** `harness/q2_design/` (tests: `tests/test_q2_design.py`). `git diff d5f5798 --
   harness/q2_stage1` is empty for the design study [DS1].
-- **Checker study:** `harness/q2_mutation/`, `infra/q2-mutation/`, and the K2 executor
-  `harness/q2_mutation_k2/`.
+- **Checker study:** `harness/q2_mutation/`, `infra/q2-mutation/`, the K2 executor
+  `harness/q2_mutation_k2/`, and the corrected comparator's held-out test
+  `harness/q2_zinv_reserve/` (tests: `tests/test_q2_zinv_reserve.py`).
 - **Holo3:** `scripts/run_holo3_rerun_audit_doctor.py`, `harness/holo3_v2.py`.
 
 ### 10.4 Compute
@@ -1554,7 +1615,7 @@ GPU-hours are physical, from the ledger in [STATE] (`gpu_hours_ledger`).
 |---|---:|---|
 | Action-path versions 1 and 2 (development, controls, acceptance) | 0 | version 2 used 109.12 VM-hours, CPU only [AP2]; the verifier notes this total mixes two span definitions [AP2-VB] |
 | S1a (two overlay image builds, a pre-freeze check on development tasks, a post-freeze overlay build, the four main runs) | 4.8444 (main runs 4.7169) | about 90.0 VM-h for the main runs [S1A] |
-| Checker study (unregistered rater development and the confirm audit) | 0.939 | the mutant campaign itself was CPU only [MUT]; the registered K2 job ran CPU only for 65 minutes [K2]; the adjudication used no GPU and no host job [ADJ] |
+| Checker study (unregistered rater development and the confirm audit) | 0.939 | the mutant campaign itself was CPU only [MUT]; the registered K2 job ran CPU only for 65 minutes [K2]; the adjudication used no GPU and no host job [ADJ]; the held-out test of the corrected comparator ran CPU only, 0.221 lane-hours [ZR] |
 | Serving probes versions 1 and 2 (version 1 also priced another question) | 1.1513 | [SP2] |
 | Holo3 audit | 0 | one CPU-only job [H3] |
 | Design study | 0 | no host job [DS2] |
@@ -1594,13 +1655,17 @@ The program owner has not reviewed this draft. Before publication the owner must
 publication itself and on disclosing the candidate checker defects to the OSWorld maintainers,
 which must be settled first. Still open: the 25-item human spot check, the only independent
 validation of the checker audit (an isolated model answered the spot check and the 34-item
-adjudication pool [DEC D80-D82]; section 6.7 lists what that adjudication changed); review of
-the program decisions taken on the owner's behalf; confirmation of the earlier release of the
-checker study's blind specs; and the three action-path items marked **[PENDING]** in sections
-2.7 and 11. The registered action-path verdict and S1a's registered readings will not change.
-The candidate counts in section 6 do not depend on the audit; the audit-confirmed counts, the
-label-error estimates and the gold-defect calls rest on model judgment and could change under
-human review. Also open without the owner: the S1a
+adjudication pool [DEC D80-D82]; section 6.7 lists what that adjudication changed). Blind
+warning: the released files of the corrected comparator's held-out test name the checker's
+verdict for every reserve mutant, so whoever answers the spot check should do so from its blind
+packets before reading them; no reserve mutant is in the spot check or the adjudication pool
+[ZR; DEC D88]. Also still open: review of the program decisions taken on the owner's behalf;
+confirmation of the earlier release of the checker study's blind specs; and the three
+action-path items marked **[PENDING]** in sections 2.7 and 11. The registered action-path
+verdict and S1a's registered readings will not change. The candidate counts in section 6 do not
+depend on the audit, and neither does the held-out test, which reads the operators' labels; the
+audit-confirmed counts, the label-error estimates and the gold-defect calls rest on model
+judgment and could change under human review. Also open without the owner: the S1a
 runbook's step-12 verification record and a second check of the session-2 lane checks [S1A,
 disclosures 4-5].
 
@@ -1807,6 +1872,7 @@ each have state 0 and follow a processed press in their own window [AP2-REG sect
 | `q2-action-path-v2`, `-inputs`, `-executor` | 13-15 | `58da1bb6`, `603b2142`, `fde44535` | 2026-10-08 14:23 | [AP2]; campaigns ran from a read-only export of `bf99a64` |
 | `q2-stage1-rescoped-v1` (S1a) | 16 | `bc5e88a0` | 2026-10-09 22:11 | [S1A], [S1A-AN]; freeze commit `d5f5798` |
 | `q2-evaluator-mutation-v1-k2` (the K2 addendum) | 17 | `7d03d928` | 2026-10-11 15:51 | [K2], [K2-REG]; freeze commit `7d9c881a` |
+| `q2-zinv-reserve-validation-v1` (the corrected comparator's held-out test) | 20 | `57cf8861` | 2026-10-12 01:32 | [ZR], [ZR-REG]; freeze commit `ff802ca5` |
 
 ### D.2 Decisions cited
 
@@ -1839,6 +1905,8 @@ agents on the owner's behalf.
 | D81 | The first adjudication run is void; the second run's rules and sensitivities are fixed before any of its answers exist |
 | D82 | The checker-study adjudication is complete, adjudicated by an isolated model on the owner's instruction (D80); not human-validated |
 | D83 | The checker-mutation note is drafted and verified, not published; the prior-art check K8 does not fire |
+| D86 | The held-out test of the corrected comparator on the reserve split (the dossier's R03 part (b)) is adopted under the owner's delegation and runs CPU only, in successor E's gaps |
+| D88 | That test passes at descriptive status (13 of 13 reorder mutants accepted, no violation newly accepted), and the original comparator's reorder defect replicates on the held-out tasks |
 
 ### D.3 Jobs cited
 
@@ -1853,6 +1921,7 @@ All Slurm jobs on the program's host.
 | Holo3 audit | 438 |
 | S1a | pre-freeze overlay builds 1032 (failed) and 1033; pre-freeze check 1037/1039; post-freeze overlay 1044; main runs (VM/GPU) 1045/1047, 1048/1050, 1051/1053, 1062/1064; analysis 1065-1068, 1071-1075 |
 | Checker study K2 | registered job 1186 |
+| Corrected comparator's held-out test | registered jobs 1226 (targets), 1227 (build), 1228 (score), 1229 (rescore with the corrected comparator), CPU only |
 | Other program lines | reviewer jobs 1061 (in S1a's session-2 gap) and 1070 (queued during rescoring) |
 
 ### D.4 S1a disclosures as recorded
@@ -1863,6 +1932,49 @@ verification record (item 5), host activity (item 6), the session-1 disclosures 
 reviewer job in the session-2 gap (item 9).
 
 ## Revision record
+
+Revision 4 (2026-10-12) adds the held-out test of the corrected comparator on the reserve split
+(the dossier's R03 part (b)), which ran after revision 3 (D86, D88). It reports the registered
+outcome (PASS, at descriptive status, because 13 reorder mutants fall short of the registered
+20), the bounds, the held-out replication of the reorder defect, what the addendum's section 7
+licenses (the correction held on reserve documents it was not developed on, at this size; not a
+95% acceptance rate) and the blind warning, and changes nothing else. Changed: the header's
+date, revision number and evidence commit; the status block, where the held-out test is the one
+section 6 result outside K2's label; summary item 4; the corrected comparator's clause in
+"Contributions"; the evidence keys ([ZR], [ZR-REG]); section 6.2 (a sentence on the comparator's
+development check and a paragraph on the held-out test); recommendation 6; limitation 9;
+section 9.3; section 10's released data, code and compute; section 12 (the blind warning, and
+that the held-out test does not depend on the audit); Appendix D.1-D.3; and this record. No
+figure or appendix table reads the test's data, so none was regenerated. Every number revision
+4 adds also appears in the checker-mutation note, whose `data/claims.json` maps it to the run's
+`release/judgement.json`, its README or the addendum, and whose `scripts/check_claims.py`
+passes with every number covered. The lane-hours and job numbers, which the note does not
+state, were checked against the run README. The judgement was also recomputed from the released
+rows with the frozen rule (`harness/q2_zinv_reserve/run.py judge`) and matched the committed
+file apart from the last digit of one float, as the run README records.
+
+A verifier then passed revision 4, read together with the checker-mutation note's part (b) text,
+with three low-severity items and two informational ones, all fixed in revision 4 before any
+circulation:
+
+1. Section 6.2 now gives the caveat that the addendum itself states about what the test can show
+   [ZR-REG section 1]: the corrected comparator moves a shape only past shapes that are apart by
+   the mutation operator's own rule, so on a correct implementation every operator-built reorder
+   mutant passes by construction, and the test checks the implementation's pairing of shapes on
+   documents it was not developed on, not that rule. Limitation 9 says the same in one clause;
+   the note's section 3.7 and its limitations carry it too.
+2. The header's commit-resolution note and the evidence-keys paragraph now name section 10.3's
+   `tests/test_q2_zinv_reserve.py`, which is absent at `08033ba7` and resolves at `b880275c`,
+   and say that `harness/q2_zinv_reserve/` is cited in section 10.1 as well as 10.3.
+3. The note's section 3.7 heading and its summary bullet now carry the descriptive qualifier.
+   This report's summary item 4, section 6.2 and section 9.3 already did, so nothing here
+   changed for it.
+4. A prose line of "Contributions" that revision 4 had left at 137 characters was rewrapped, as
+   was a short line in the note's section 1. Neither changed a word.
+5. The note's `data/claims.json` field `base_commit` now reads `b880275c`, a commit at which
+   every source it lists resolves; seven of them (the note's derived table, the K8 record and
+   the four part (b) files) are absent at the earlier value. Its `scripts/check_claims.py`,
+   which does not read the field, still passes with every number covered.
 
 Revision 3 (2026-10-11) brings the checker study up to date. Revision 2 predated the VM fidelity
 check K2 (D79), the model adjudication (D80-D82) and the checker-mutation note (D83). Revision 3

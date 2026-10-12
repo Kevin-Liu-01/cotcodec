@@ -1716,3 +1716,76 @@ z-order comparator `zinv`.
   on an empty queue. It is never submitted while a successor E session is in
   progress, that is, after the session's 9B pair and before its 4B pair has
   ended. It runs in E's gaps.
+
+**D87. S2 v4 after its repair round: two blocking items remain; a third round
+follows.**
+- What the repair round did:
+  - built and development-tested the five Phase 0 components;
+  - defined Phase 1's step-0 mask, its keyboard check against stock cell S,
+    and its executor addendum, frozen as its own ledger row;
+  - adopted the full K1 qualification rule at N = 20;
+  - unified the postconfig server-error rule;
+  - made the image build reproducible: the two builds of Slurm 1207 have
+    identical digests, and the images are re-pinned to them;
+  - disclosed D84's scope reading.
+  K0 stays byte-identical (`ed38b953...`).
+- Two blocking items. A fresh code review and a fresh pre-freeze audit both
+  found them:
+  - (1) Impress's status-bar pointer readout changes from boot to boot in the
+    mirrored cells. That puts I5 (gating) and Phase 1's step-0/K3 exemption at
+    risk, and the registration reported only part of the evidence. The fix
+    goes in the capture, not in K0: one fixed pointer warp before the settle,
+    in Phase 0 and at each Phase 1 episode start, followed by a development
+    smoke.
+  - (2) Which records count after a resumed Phase 0 job depends on the order
+    of the arguments. The fix orders them by job, with a stricter resume check
+    and a defined handling of a cut re-queue.
+- Development numbers the registration must state plainly. The descriptor
+  plants are detected on 13 and 15 of 17 development tasks, below the 90% bar
+  that would keep O2, O3 and O8. I5 is 16 of 17 before the fix.
+- Disclosure (quiet host). The development jobs 1217 and 1218 were submitted
+  between steps of R04's CPU campaign. 1217 went in about 2 s after R04's job
+  1216 ended, both times on an empty queue, so neither overlapped an R04 job.
+  The S2 v4 evidence README is to say so. R04's report records any effect on
+  its timing.
+- Scheduling. From now on, no S2 v4 job is submitted during a successor E
+  session (after its 9B pair starts and before its 4B pair ends). Between
+  another workstream's campaign steps, a job goes in only when that
+  workstream's own driver is not about to submit.
+
+**D88. R03 part (b) result: `zinv` passes the held-out reserve test
+(descriptive), and the original comparator's z-order defect replicates on
+held-out tasks.**
+- The run. `q2-zinv-reserve-validation-v1` (row 20) ran plan `reserve-v1`
+  from its freeze commit `ff802ca5`: Slurm 1226-1229, CPU only, all exit 0,
+  0.221 of 4.0 lane-hours, 0 GPU-h. Of 106 rows, none was invalid.
+- Registered outcome: **PASS, status descriptive**, because n_Z = 13 < 20
+  while t_Z = 8 meets its floor.
+  - Condition A: `zinv` accepted 13 of 13 z-order equivalence mutants on the 8
+    reserve pptx tasks. The exact one-sided 95% lower bound is 0.794 per
+    mutant and 0.688 per task.
+  - Condition B: of 15 violation mutants on 5 tasks, `zinv` newly accepted 0.
+    The one-sided 95% upper bound is 0.181 per mutant.
+  - 93 of 93 other items kept their verdict, and `zinv` raised no errors.
+- Replication of the defect. The original `compare_pptx_files` rejected 13 of
+  13 of the same held-out z-order equivalence mutants. That replicates the
+  defect on tasks and documents that were never used to find it or to build
+  the fix.
+- What this licenses (section 7). The correction held on reserve documents it
+  was not developed on, at this size. It is not an estimate of a 95% rate. The
+  blind warning stays on the per-mutant verdicts, because D9's human spot
+  check is pending.
+- Verification. A fresh verifier reproduced the outcome:
+  - every receipt's argv and image, against the staged tree;
+  - that tree, against `ff802ca5`, by blob id;
+  - the release, against the host, byte for byte;
+  - the judgement, by the frozen `rules.judge` and by an independent
+    re-implementation of section 6.
+  It found only information-level items:
+  - the run continued a plan staged by an earlier operator session that never
+    submitted a step;
+  - steps 2-4 went in with no separate E check, though none could reach E2's
+    earliest start;
+  - one float differs in its last digit.
+- Next. Add the result to the R03 note, and to the Q2 report where it
+  discusses `zinv`.

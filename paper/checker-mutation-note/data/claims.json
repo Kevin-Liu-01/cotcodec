@@ -1,8 +1,8 @@
 {
  "schema": "checker-mutation-note-claims-v1",
  "note": "paper/checker-mutation-note/draft.md",
- "description": "Every number in the note's text, with the committed file and key it comes from. A JSON evidence item gives 'key' (keys and indexes) and 'fmt'; its value rendered with 'fmt' must equal 'expect'. A text evidence item gives 'match', a substring of the committed file. 'expect' must occur in the claim's 'text'. Formats: int, comma (thousands separator), len (length of a list or object), raw (str of the value), pct1/pct2 (value x 100, half-up), pct1z (as pct1 but 0 and 1 render as '0' and '100'), round1/round2/round3 (half-up). 'structural' lists phrases whose digits are references, not quantities. Checked by scripts/check_claims.py.",
- "base_commit": "746d60d2",
+ "description": "Every number in the note's text, with the committed file and key it comes from. A JSON evidence item gives 'key' (keys and indexes) and 'fmt'; its value rendered with 'fmt' must equal 'expect'. A text evidence item gives 'match', a substring of the committed file. 'expect' must occur in the claim's 'text'. Formats: int, comma (thousands separator), len (length of a list or object), raw (str of the value), pct1/pct2 (value x 100, half-up), pct1z (as pct1 but 0 and 1 render as '0' and '100'), round1/round2/round3 (half-up). 'structural' lists phrases whose digits are references, not quantities. 'base_commit' is a commit on main at which every file in 'sources' resolves; the script does not read it. Checked by scripts/check_claims.py.",
+ "base_commit": "b880275c",
  "sources": {
   "ADJ_AN": "program/evidence/2026-10-11/q2-mutation-adjudication-v2/analysis/analysis.json",
   "ADJ_SUM": "program/evidence/2026-10-11/q2-mutation-adjudication-v2/summary.json",
@@ -31,7 +31,11 @@
   "VERIF": "program/evidence/2026-10-11/question-renewal/verification.json",
   "PROV": "program/evidence/q2-mutation/integration/blind-spec-provenance.json",
   "K8_README": "program/evidence/2026-10-11/q2-mutation-k8-prior-art/README.md",
-  "K8_REC": "program/evidence/2026-10-11/q2-mutation-k8-prior-art/k8-record.json"
+  "K8_REC": "program/evidence/2026-10-11/q2-mutation-k8-prior-art/k8-record.json",
+  "ZR_REG": "program/preregistrations/q2-zinv-reserve-validation-v1.md",
+  "ZR_README": "program/evidence/2026-10-12/q2-zinv-reserve-run/README.md",
+  "ZR_JUDGE": "program/evidence/2026-10-12/q2-zinv-reserve-run/release/judgement.json",
+  "ZR_ROWS": "program/evidence/2026-10-12/q2-zinv-reserve-run/release/zinv-rows.json"
  },
  "claims": [
   {
@@ -4674,16 +4678,28 @@
   },
   {
    "id": "reserve-targets",
-   "text": "The reserve split has 28 targets, 8 of them pptx",
+   "text": "The reserve split has 28 targets, 8 of them pptx; they sit on 8 tasks",
    "evidence": [
     {
      "file": "MUT_REG",
-     "match": "| reserve | 53 | 28 | 28 (12 / 8 / 5 / 3) |"
+     "match": "| reserve | 53 | 28 | 28 (12 / 8 / 5 / 3) |",
+     "expect": "28"
+    },
+    {
+     "file": "ZR_README",
+     "match": "of the split's 28 targets (12 xlsx, 8 pptx",
+     "expect": "28"
     },
     {
      "file": "DOSSIER",
      "match": "8 of them pptx",
      "expect": "8 of them pptx"
+    },
+    {
+     "file": "ZR_README",
+     "match": "the 8 registered pptx targets on the 8 registered tasks",
+     "expect": "8 registered tasks",
+     "shown": "8 tasks"
     }
    ]
   },
@@ -6079,6 +6095,736 @@
      "expect": "41(5), 2015"
     }
    ]
+  },
+  {
+   "id": "zr-status-box",
+   "text": "descriptive**, on 13 z-order mutants, fewer than the registered 20",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "status"
+     ],
+     "fmt": "raw",
+     "expect": "descriptive"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "descriptive_floor",
+      "min_mutants"
+     ],
+     "fmt": "int",
+     "expect": "20"
+    }
+   ]
+  },
+  {
+   "id": "zr-status-box-95",
+   "text": "claim that `zinv` accepts 95% of z-order equivalents",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "match": "not a claim that zinv accepts 95% of z-order equivalents in general",
+     "expect": "95%"
+    }
+   ]
+  },
+  {
+   "id": "zr-summary-tasks",
+   "text": "split's 8 pptx tasks, never used to find the defect",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "8"
+    },
+    {
+     "file": "ZR_README",
+     "match": "all 8 registered reserve pptx tasks",
+     "expect": "8"
+    }
+   ]
+  },
+  {
+   "id": "zr-summary-13",
+   "text": "failed 13 of 13 z-order equivalence mutants. The corrected\n  comparator `zinv` accepted all 13",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "original_on_z",
+      "fails"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "original_on_z",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "accepted"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    }
+   ]
+  },
+  {
+   "id": "zr-summary-bound",
+   "text": "(exact one-sided 95% lower bound 0.794) and newly accepted\n  none of 15 violation mutants",
+   "evidence": [
+    {
+     "file": "ZR_README",
+     "match": "one-sided 95% lower bound on acceptance is 0.794",
+     "expect": "95%"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "acceptance",
+      "exact_one_sided_95_lower"
+     ],
+     "fmt": "round3",
+     "expect": "0.794"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_b",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "15"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_b",
+      "new_accepts"
+     ],
+     "fmt": "len",
+     "expect": "0",
+     "shown": "none"
+    }
+   ]
+  },
+  {
+   "id": "zr-summary-floor",
+   "text": "PASS, descriptive, below the registered 20\n  mutants",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "outcome"
+     ],
+     "fmt": "raw",
+     "expect": "PASS"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "status"
+     ],
+     "fmt": "raw",
+     "expect": "descriptive"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "descriptive_floor",
+      "min_mutants"
+     ],
+     "fmt": "int",
+     "expect": "20"
+    }
+   ]
+  },
+  {
+   "id": "zr-summary-95",
+   "text": "this is not\n  a 95% acceptance rate",
+   "evidence": [
+    {
+     "file": "ZR_REG",
+     "match": "not an estimate of a 95% rate",
+     "expect": "95%"
+    }
+   ]
+  },
+  {
+   "id": "zr-cond-a-rule",
+   "text": "Condition A asks that `zinv` accept at least 95% of the",
+   "evidence": [
+    {
+     "file": "ZR_REG",
+     "match": "zinv passes at least 95% of Z",
+     "expect": "95%"
+    }
+   ]
+  },
+  {
+   "id": "zr-desc-rule",
+   "text": "The reading is descriptive below 20 mutants or 8 tasks",
+   "evidence": [
+    {
+     "file": "ZR_REG",
+     "match": "`descriptive` when `n_Z` < 20 or `t_Z` < 8",
+     "expect": "20"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "descriptive_floor",
+      "min_mutants"
+     ],
+     "fmt": "int",
+     "expect": "20"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "descriptive_floor",
+      "min_tasks"
+     ],
+     "fmt": "int",
+     "expect": "8"
+    }
+   ]
+  },
+  {
+   "id": "zr-a-13",
+   "text": "`zinv` accepted 13 of 13 evaluable z-order equivalence mutants, on all",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "accepted"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    }
+   ]
+  },
+  {
+   "id": "zr-a-bound",
+   "text": "8 tasks. The exact one-sided 95% lower bound on its acceptance is 0.794 per mutant",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "8"
+    },
+    {
+     "file": "ZR_README",
+     "match": "one-sided 95% lower bound on acceptance is 0.794",
+     "expect": "95%"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "acceptance",
+      "exact_one_sided_95_lower"
+     ],
+     "fmt": "round3",
+     "expect": "0.794"
+    }
+   ]
+  },
+  {
+   "id": "zr-a-interval",
+   "text": "two-sided interval 0.753-1.000) and 0.688 per task (8 of 8 tasks with every z-order mutant",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "acceptance",
+      "exact_95",
+      0
+     ],
+     "fmt": "round3",
+     "expect": "0.753"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "acceptance",
+      "exact_95",
+      1
+     ],
+     "fmt": "round3",
+     "expect": "1.000"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "acceptance",
+      "task_level_one_sided_95_lower"
+     ],
+     "fmt": "round3",
+     "expect": "0.688"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "acceptance",
+      "tasks_all_accepted"
+     ],
+     "fmt": "int",
+     "expect": "8",
+     "shown": "8 of 8"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "8",
+     "shown": "8 of 8"
+    }
+   ]
+  },
+  {
+   "id": "zr-b",
+   "text": "Of 15 violation mutants on 5 of the tasks, `zinv` newly accepted 0.",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_b",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "15"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_b",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "5"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_b",
+      "new_accepts"
+     ],
+     "fmt": "len",
+     "expect": "0"
+    }
+   ]
+  },
+  {
+   "id": "zr-b-bound",
+   "text": "exact one-sided 95% upper bound on the new-accept rate is 0.181 per mutant and 0.451 per task.",
+   "evidence": [
+    {
+     "file": "ZR_README",
+     "match": "V, exact one-sided 95% upper bound of the new-accept rate",
+     "expect": "95%"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "violation_bounds",
+      "mutant_one_sided_95_upper"
+     ],
+     "fmt": "round3",
+     "expect": "0.181"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "violation_bounds",
+      "task_one_sided_95_upper"
+     ],
+     "fmt": "round3",
+     "expect": "0.451"
+    }
+   ]
+  },
+  {
+   "id": "zr-b-original",
+   "text": "The original failed all 15, and so did `zinv`.",
+   "evidence": [
+    {
+     "file": "ZR_README",
+     "match": "The original failed all 15, and so did zinv.",
+     "expect": "15"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_b",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "15"
+    }
+   ]
+  },
+  {
+   "id": "zr-why",
+   "text": "The 13 z-order mutants are fewer than the registered 20; the 8 tasks meet",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "descriptive_floor",
+      "min_mutants"
+     ],
+     "fmt": "int",
+     "expect": "20"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "tasks"
+     ],
+     "fmt": "int",
+     "expect": "8"
+    }
+   ]
+  },
+  {
+   "id": "zr-floor-mean",
+   "text": "their floor of 8. The registration expected a mean of 19.5",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "descriptive_floor",
+      "min_tasks"
+     ],
+     "fmt": "int",
+     "expect": "8"
+    },
+    {
+     "file": "ZR_README",
+     "match": "expected a mean `n_Z` of 19.5",
+     "expect": "19.5"
+    }
+   ]
+  },
+  {
+   "id": "zr-planned",
+   "text": "operators planned 13 z-order mutants on these targets, and all 13 were evaluable",
+   "evidence": [
+    {
+     "file": "ZR_README",
+     "match": "operators planned 13 z-order mutants on these 8 targets",
+     "expect": "13"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    }
+   ]
+  },
+  {
+   "id": "zr-original-z",
+   "text": "The original `compare_pptx_files` failed 13 of 13 of the same",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "original_on_z",
+      "fails"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "original_on_z",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    }
+   ]
+  },
+  {
+   "id": "zr-others",
+   "text": "The 93 other items (the other equivalence, extra-change and violation",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "reported",
+      "other_items"
+     ],
+     "fmt": "int",
+     "expect": "93"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "reported",
+      "other_items_equal"
+     ],
+     "fmt": "int",
+     "expect": "93"
+    }
+   ]
+  },
+  {
+   "id": "zr-controls",
+   "text": "mutants, 8 saved golds and 9 saved do-nothing states)",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "reported",
+      "by_kind",
+      "gold"
+     ],
+     "fmt": "int",
+     "expect": "8"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "reported",
+      "by_kind",
+      "initial"
+     ],
+     "fmt": "int",
+     "expect": "9"
+    }
+   ]
+  },
+  {
+   "id": "zr-rows",
+   "text": "None of the 106 rows was invalid",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "reported",
+      "rows"
+     ],
+     "fmt": "int",
+     "expect": "106"
+    },
+    {
+     "file": "ZR_ROWS",
+     "key": [
+      "rows"
+     ],
+     "fmt": "len",
+     "expect": "106"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "validity",
+      "invalid_rows"
+     ],
+     "fmt": "len",
+     "expect": "0",
+     "shown": "None"
+    }
+   ]
+  },
+  {
+   "id": "zr-license-95",
+   "text": "It is not a claim that `zinv` accepts at least 95% of",
+   "evidence": [
+    {
+     "file": "ZR_README",
+     "match": "\"zinv accepts at least 95% of z-order equivalents\"",
+     "expect": "95%"
+    }
+   ]
+  },
+  {
+   "id": "zr-license-bound",
+   "text": "a PASS bounds acceptance only from below, here at 0.794 per",
+   "evidence": [
+    {
+     "file": "ZR_README",
+     "match": "A PASS bounds acceptance from below only."
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "acceptance",
+      "exact_one_sided_95_lower"
+     ],
+     "fmt": "round3",
+     "expect": "0.794"
+    }
+   ]
+  },
+  {
+   "id": "zr-narrow",
+   "text": "part (b)'s check of `zinv` on its 8 pptx targets",
+   "evidence": [
+    {
+     "file": "ZR_README",
+     "match": "the 8 registered pptx targets",
+     "expect": "8"
+    }
+   ]
+  },
+  {
+   "id": "zr-limitation-1",
+   "text": "accepted 13 of 13 z-order mutants and newly accepted 0 of 15 violation mutants, a descriptive",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "accepted"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_a",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "13"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_b",
+      "new_accepts"
+     ],
+     "fmt": "len",
+     "expect": "0"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "condition_b",
+      "n"
+     ],
+     "fmt": "int",
+     "expect": "15"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "status"
+     ],
+     "fmt": "raw",
+     "expect": "descriptive"
+    }
+   ]
+  },
+  {
+   "id": "zr-limitation-2",
+   "text": "PASS below the registered 20 mutants. That bounds its acceptance below at 0.794 per mutant and",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "outcome"
+     ],
+     "fmt": "raw",
+     "expect": "PASS"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "descriptive_floor",
+      "min_mutants"
+     ],
+     "fmt": "int",
+     "expect": "20"
+    },
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "acceptance",
+      "exact_one_sided_95_lower"
+     ],
+     "fmt": "round3",
+     "expect": "0.794"
+    }
+   ]
+  },
+  {
+   "id": "zr-limitation-3",
+   "text": "0.688 per task, not at 95%.",
+   "evidence": [
+    {
+     "file": "ZR_JUDGE",
+     "key": [
+      "acceptance",
+      "task_level_one_sided_95_lower"
+     ],
+     "fmt": "round3",
+     "expect": "0.688"
+    },
+    {
+     "file": "ZR_REG",
+     "match": "not an estimate of a 95% rate",
+     "expect": "95%"
+    }
+   ]
   }
  ],
  "structural": [
@@ -6116,6 +6862,10 @@
   "ICLR 2027",
   "SLATE\nsection 1",
   "item 8",
-  "run 1"
+  "run 1",
+  "ledger row 20",
+  "section 5",
+  "revision 3",
+  "revision 4"
  ]
 }
