@@ -1474,8 +1474,13 @@ agents cannot be read as an agent difference unless both ran interleaved in the 
    after re-hosting or localizing.** Under LibreOffice 25.8 and 26.2, and under the de_DE,
    ar_EG and tr_TR locales, some golds that pass on the original image fail (section 6.8). Run
    every task's gold through its checker in the new configuration before scoring agents, and
-   exclude or report separately the tasks whose gold no longer passes. From LibreOffice 7.6 on,
-   also check that each task's postconfig still runs: its window activation fails as written.
+   exclude or report separately the tasks whose gold verdict changes. A gold that keeps its
+   verdict does not show that the task's other end states keep theirs: in the
+   nuisance-invariance study, failing agent end states of tasks whose gold still passed turned
+   to pass under de_DE, tr_TR and the headless conversion [NUI]. From LibreOffice 7.6 on, also
+   check that each task's postconfig still runs: in that study's Ctrl+S and Save As saves under
+   those builds, the postconfig's window activation failed as written for every item [NUI-REG
+   section 4.4; NUI].
 
 ## 8. Limitations and scope
 

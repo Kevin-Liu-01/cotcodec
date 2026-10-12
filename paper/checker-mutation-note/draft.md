@@ -638,13 +638,13 @@ flip is adjudicated.
   `4f07fbe9`, `7e287123`) and five pass states of task `4f07fbe9`, and turn one failing state of
   task `a01fbce3` to pass. ar_EG flips those three golds and five states, plus the
   `compare_pptx_files` gold of `5c1a6c3d` and one pass state of that task. ja_JP flips nothing.
-  Each of the three `compare_table` golds places a CSV export of its sheet beside the workbook.
-  The save leaves that CSV byte for byte as placed under the control and ja_JP, and rewrites it
-  with other bytes under de_DE, ar_EG and tr_TR (score rows, `save.outputs`; read for this
-  note). A conversion is where the registration expected any locale flip [NUI-REG section 16],
-  and its dev smoke traced a de_DE flip to decimal commas in such an export [NUI-REG
-  section 15]. R04 keeps digests, not documents, so this locates the change without explaining
-  it.
+  Each of the three `compare_table` golds, and each of the five states of `4f07fbe9`, holds a
+  CSV export of its sheet beside the workbook. The save leaves that CSV byte for byte as it was
+  under the control and ja_JP and rewrites it under de_DE, ar_EG and tr_TR, while it rewrites
+  the workbook with other bytes in every cell, the control included (score rows,
+  `save.outputs`; read for this note). Saves are not byte-deterministic [NUI-REG section 4.4]
+  and R04 keeps digests, not documents, so these digests do not show which file changes the
+  verdict, or why.
 - **Routes.** The Save As changes nothing. The headless conversion flips one gold (`4188d3a4`,
   `compare_table`, pass to fail) and seven pass states of that task, and turns three failing
   states of task `1334ca3e` to pass.
@@ -658,11 +658,11 @@ flip is adjudicated.
   only, so on every other cell the label means that the cell's paired control is VM-checked,
   not the cell itself [NUI-REG section 2.1; NUI `analysis-k2.json`].
 
-**The gold-defect task.** ar_EG flips the gold of `5c1a6c3d`, the task whose saved gold the
-model adjudicator rejected (section 3.3; adjudicated by an isolated model on the owner's
-instruction (D80); not human-validated). Builds 25.8 and 26.2 flip that gold too. A flip of a
-gold the audit does not accept says little about the checker; ar_EG's three other flipped golds
-alone meet the DRIFT threshold, so its reading does not rest on this task.
+**The gold-defect task.** ar_EG flips the gold of `5c1a6c3d`, one of the three tasks whose
+saved gold the model adjudicator rejected (section 3.3; adjudicated by an isolated model on the
+owner's instruction (D80); not human-validated). Builds 25.8 and 26.2 flip that gold too. A
+flip of a gold the audit does not accept says little about the checker; ar_EG's three other
+flipped golds alone meet the DRIFT threshold, so its reading does not rest on this task.
 
 **What the readings license** [NUI-REG section 9; D89]. DRIFT names, for 25.8, 26.2, de_DE,
 ar_EG and tr_TR, at least three golds or three S1a tasks whose verdict the level changes
@@ -681,8 +681,10 @@ headless conversion's one gold and one task.
   keyboard layout stayed US, and no agent ran.
 - Builds, locales or routes other than the registered ones, Windows or macOS LibreOffice, or
   another OSWorld revision.
-- Derived files on S1a's end states: R04 re-saved the documents the checker reads directly, so
-  a postconfig export such as a CSV is tested on the golds only.
+- S1a end states whose checker read only a file derived from a document (a CSV, text or PDF
+  file): they were not items, having no document to re-save [NUI-REG section 5]. A state whose
+  capture holds such a file beside the document, as the five pass states of task `4f07fbe9`
+  do, was an item.
 - What a re-hosted VM would do as written. The readings for builds from 7.6 on rest on the
   em-dash retry, without which OSWorld's postconfig fails to activate the window.
 - An in-VM reading: the scoring ran offline, and K2 covers the control configuration only.
@@ -760,8 +762,8 @@ These bound every result above, and they are stated as plainly as the results.
   against a paired control. Nobody has read a flipped file or adjudicated a flip, so R04 does not
   say which flips are checker defects and which are real changes in the document. It scored
   offline (K2 covers its control configuration only), tested only the registered levels, kept
-  the interface language en-US, and re-saved only the documents the checker reads directly on
-  S1a's end states (section 3.9).
+  the interface language en-US, and left out the S1a end states whose checker read only a
+  derived file such as a CSV (section 3.9).
 - **A narrow population.** The population is 444 synthetic mutants on 60 confirm tasks, mostly
   LibreOffice spreadsheets, documents and decks. Not covered: 43 confirm tasks without a
   complete gold, 10 whose complete gold has no file an operator handles, 7 target tasks whose
@@ -852,8 +854,10 @@ equivalent shape reorders by the pptx comparators, the most frequent candidate e
 catalog outside probe-touched cells; gold files that are not a fixed point of the pipeline's
 own save; a VM fidelity check of the offline harness; a corrected comparator with a held-out
 check; a zero on-policy consequence for two small policies; and a registered test of whether
-checker verdicts survive a change of LibreOffice build, locale or save route, for which R04's
-registration records no prior in the renewal sweep's searches [NUI-REG section 18].
+checker verdicts survive a change of LibreOffice build, locale or save route. For builds and
+locales, R04's registration records no prior in the renewal sweep's searches; for save routes,
+its priors include the earlier headless round trip of the golds (section 3.4) [NUI-REG
+section 18].
 
 ## 7. Reproducing this note
 

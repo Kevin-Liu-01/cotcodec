@@ -8940,7 +8940,7 @@
   },
   {
    "id": "nui-gold-defect",
-   "text": "ar_EG flips the gold of `5c1a6c3d`, the task whose saved gold the\nmodel adjudicator rejected (section 3.3; adjudicated by an isolated model on the owner's\ninstruction (D80); not human-validated). Builds 25.8 and 26.2 flip that gold too.",
+   "text": "ar_EG flips the gold of `5c1a6c3d`, one of the three tasks whose\nsaved gold the model adjudicator rejected (section 3.3; adjudicated by an isolated model on the\nowner's instruction (D80); not human-validated). Builds 25.8 and 26.2 flip that gold too.",
    "evidence": [
     {
      "file": "NUI_AN",
@@ -8983,6 +8983,18 @@
      "fmt": "raw",
      "expect": "5c1a6c3d-c1b3-47cb-9b01-8d1b7544ffa1",
      "shown": "5c1a6c3d"
+    },
+    {
+     "file": "ADJ_SUM",
+     "key": [
+      "before_after",
+      "after_a",
+      "audit",
+      "gold_defect_tasks"
+     ],
+     "fmt": "len",
+     "expect": "3",
+     "shown": "three"
     },
     {
      "file": "DEC",
