@@ -4,13 +4,20 @@ Pre-freeze record of the draft addendum
 `program/preregistrations/q2-zinv-reserve-validation-v1.md` (R03 (b): does the corrected
 z-order comparator `zinv` accept at least 95% of held-out z-order equivalence mutants on the
 reserve split while accepting no violation mutant the original rejects?). Branch
-`stage0/r03-zinv-reserve`. No reserve mutant exists and none was built; the real ledger was
-not written.
+`stage0/r03-zinv-reserve`. No mutant of the frozen operators exists on the reserve split and
+none was built; the real ledger was not written.
+
+> Blind warning (D9, D82): `dev-zinv-v2/` and `dev-rehearsal-v2/` name checker verdicts per
+> mutant (dev split). The parent's human spot check (D9) is still pending: if you are doing
+> it, answer from its blind packets before reading them. No dev or reserve mutant of these
+> files is in the spot check or the adjudication pool.
 
 | File | What |
 |---|---|
 | `known-answer-confirm-devset.json` | The registered rule (`rules.judge`) read on S1a job 1000's committed rows (`program/evidence/2026-10-08/q2-stage1-g0/zinv/zinv-validation-v3.json`): PASS at `registered_rule` status, 39 of 39 z-order mutants on 15 tasks accepted, 0 of 67 violation mutants newly accepted, 35 of 39 failed by the original. This is zinv's development set, so it checks the rule's code, not zinv |
 | `design-table.json` | `rules.design_table()`: the detection probabilities, lower bounds and expected-size simulation quoted in section 4 |
+| `dev-zinv-v2/` | Step 4 alone on the parent's stored dev run (Slurm 1202; below) |
+| `dev-rehearsal-v2/` | The full dev rehearsal of steps 1-4 and its release view, exactly as `zr_host.py export` wrote it (Slurm 1205, 1209, 1212, 1213; below) |
 
 ## What the frozen parent says (summary of section 2)
 
@@ -93,7 +100,62 @@ network none. In the container both guards passed (this addendum's, then the par
 - Files: `zinv-rows.json` (SHA-256 `d8c77b28...`), `judgement.json` (`54f56a73...`),
   `receipt-1202.json`, `plan.json`. They hold ids, labels, scores and digests only.
 
-Not rehearsed on the host: steps 1-3 (the parent's frozen mutation jobs, which made
-`dev-mutants-v9` and the confirm run) behind this addendum's guard and target filter; their
-commands are checked against `submit_mutants.sh` by the tests and rendered by
-`next --dry-run` (plan `dev-rehearsal-v1`).
+Steps 1-3 were not rehearsed then; `dev-rehearsal-v2` below does.
+
+## Pre-freeze audit 1 fixes (`046f82e7`)
+
+The audit's blocking item (two tests failed at the fill commit) and its cheap non-blocking
+items were fixed before any further host job; the dispositions are in the registration's
+section 13. New behaviour that the rehearsal below exercises: `zr_host.py export` (the
+release view in the parent's layout), the reserve plan name (`reserve-v1` only), and the
+blind warning in the rows, the judgement and the release.
+
+## Full dev rehearsal of steps 1-4 (`dev-rehearsal-v2/`; exploratory, dev split)
+
+From the staged export of `046f82e7` (`git archive`, `.git_sha`; its code equals the
+registration's code table), on the host's Python 3.10.12: `plan --split reserve --name
+reserve-v1` refused ("runs only after q2-zinv-reserve-validation-v1 is frozen"), then
+`plan --split dev --controls-run dev-controls-v9 --name dev-rehearsal-v2` and `next` until
+`complete`, each step submitted by `next` only when `squeue` showed no job (R04, Successor
+E and S2 v4 ran between them). Four CPU jobs through the unchanged lane, GPU-less
+(`gpus_requested` 0, no `/dev/nvidia*`), network none, every receipt exit status 0:
+
+| Step | Slurm | Image | Wall time (UTC) | What it did |
+|---|---|---|---|---|
+| `targets` | 1205 | metric | 23:06:57-23:06:59 | both guards (dev), the parent's job 1 (51 control jobs, 17 targets), `select-targets`: 5 pptx targets kept (dropped 4 docx, 1 text, 7 xlsx) |
+| `build` | 1209 | LO-VM | 23:33:24-23:35:10 | the parent's job 2: 5 targets planned, 97 mutants planned, applied and admitted (42 equivalence, 19 violation, 15 extra change, 21 ambiguous), 0 duplicates, 102 scoring jobs saved |
+| `score` | 1212 | metric | 00:59:37-01:04:46 | both guards, the parent's job 3: K2 sample "not drawn: K2 needs at least 3 domains, found 1"; 102 jobs merged, 0 excluded; both venvs scored 102 jobs; 0 S1 candidates; recheck 97 (96 admitted after the save); lock-exact status 57 evaluable, 11 ambiguous, 1 normalized, 28 null-not-pass (scoping identical) |
+| `zinv` | 1213 | metric | 01:04:47-01:07:25 | both guards, `campaign guard` (447 file-cache files, OSWorld `4153c686...`, VM baseline `f3253818...`), `run rescore` (48 rows), `run judge` |
+
+Lane time 0.16 h of the 4.0 cap (the time between steps was other programs' jobs).
+
+Checks of the outputs:
+
+- The 97 outcomes have exactly the same multiset of (task, operator, label, lock-exact and
+  scoping status and verdict, probe flag) as the parent's stored `dev-mutants-v9` (Slurm
+  714-716) on the same 5 tasks. The mutant ids differ: each carries a digest of the
+  recipe, whose `input_sha256` is the LibreOffice-saved base, and those bytes differ
+  between runs. So the target filter changed no plan, as section 3 states.
+- Step 4's 48 rows (39 evaluable mutants on the 3 tasks checked by `compare_pptx_files`
+  alone; 4 saved golds and 5 saved do-nothing states from `dev-controls-v9`) form the same
+  multiset of (task, kind, operator, label, registered, fresh original and zinv verdict,
+  file check) as `dev-zinv-v2`, and the 9 control rows are identical, digests included.
+  Every row valid (fresh original verdict equal to the registered one on 48 of 48, files
+  unchanged on 48 of 48, no timeout, no scoring error). The 28 null-not-pass mutants are
+  all on the fourth `compare_pptx_files` task, so none is evaluable.
+- The rule's reading (dev, exploratory, not evidence): PASS, descriptive; zinv accepted 6 of
+  6 z-order mutants on 2 tasks (all 6 failed by the original); none of 6 violation mutants
+  newly accepted; 42 of 42 other items unchanged. Same as `dev-zinv-v2`.
+- `zr_host.py export --name dev-rehearsal-v2` (host, Python 3.10.12) wrote `release/`
+  (23 files): `view/` linked `prep`, `build`, `score` and `zinv` to the finished attempts and
+  its `submitted.json` named jobs 1205, 1209, 1212 and 1213; the parent's `campaign export`
+  read it unmodified (12 files and its manifest under `campaign/`, `slurm_jobs` the four
+  jobs, `receipts.json` the four receipts, all exit 0). The released `zinv-rows.json` is
+  byte-identical to the host's (no checker message over 80 characters). The directory
+  `dev-rehearsal-v2/` here is that `release/` copied unchanged (568 KB; the only
+  dotted-quad strings in it are the LibreOffice version `7.3.7.2`).
+
+No defect was found, so no fix and no second rehearsal were needed. Left on the host:
+staged sources `9b364be1`, `317e89c1`, `bc14599e`, `046f82e7`; plans `dev-rehearsal-v1` and
+`dev-zinv-v1` (never submitted), `dev-zinv-v2` and `dev-rehearsal-v2` (complete). No
+reserve plan exists.

@@ -3,7 +3,7 @@
 **Status: DRAFT, not frozen (TBD: at the freeze this whole paragraph is replaced by the
 paragraph section 13 states under "At the freeze").** Drafted on 2026-10-11 by the single
 owner of R03 (b) on branch `stage0/r03-zinv-reserve` from main at `746d60d2` (main merged
-again at `08033ba7`). No ledger row exists; nothing on the reserve split has run under this file. The freeze is the
+again at `08033ba7` and `2b8fadc7`). No ledger row exists; nothing on the reserve split has run under this file. The freeze is the
 orchestrator's (D80), after a pre-freeze audit (section 13).
 
 - Experiment id: `q2-zinv-reserve-validation-v1`, an addendum to `q2-evaluator-mutation-v1`
@@ -381,9 +381,27 @@ parent-format files carry none of their own. No outward action.
   accepted none of 6 violation mutants and changed no other verdict (PASS, descriptive;
   exploratory). Before it, inspection of the released confirm verdicts showed that the
   parent's `scored_sha256` cannot be compared across scorings, and the validity rule was
-  changed to the file digest of section 6 (the earlier plan was never submitted). Steps 1-3
-  were not run on the host before the freeze: they are the parent's frozen jobs, checked
-  against `submit_mutants.sh` by the tests.
+  changed to the file digest of section 6 (the earlier plan was never submitted).
+- Full dev rehearsal of steps 1-4 and the release view (`dev-rehearsal-v2`, from the staged
+  export of `046f82e7`, whose code equals section 3's code table; Slurm 1205, 1209, 1212 and
+  1213, each submitted on an empty queue, all exit 0; 0.16 lane-hours; GPU-less, network
+  none). Step 1 kept the dev split's 5 pptx targets of 17; step 2 planned and admitted 97
+  mutants (0 duplicates, 102 scoring jobs); step 3 recorded K2 "not drawn" (one domain) and
+  scored all 102 jobs under both venvs (lock-exact: 57 evaluable, 11 ambiguous, 1 normalized,
+  28 whose null mutant fails). The 97 outcomes have the same (task, operator, label, statuses,
+  verdicts, probe flag) multiset as the parent's stored `dev-mutants-v9` on the same 5 tasks
+  (mutant ids differ because they carry a digest of the LibreOffice-saved base, whose bytes
+  differ between runs), so the target filter changed no plan. Step 4: 48 rows, all valid,
+  the same multiset as `dev-zinv-v2` with identical control rows; PASS, descriptive (6 of 6
+  z-order mutants on 2 tasks, none of 6 violation mutants newly accepted, 42 of 42 other
+  items unchanged). `zr_host.py export` then wrote the release view of section 10 (the
+  parent's `campaign export` of `view/` with jobs 1205, 1209, 1212 and 1213 and all four
+  receipts, plus this addendum's files). Exploratory; record and files:
+  `program/evidence/2026-10-11/q2-zinv-reserve/` (`dev-rehearsal-v2/`).
+- Scratch freeze rehearsal of this file as committed (scratch clone, `main` merged, its own
+  ledger copy): the suite passes at the merge (draft), at the fill commit and at the scratch
+  freeze commit; the freeze export admits the reserve split only with `Q2ZR_PREREG_FROZEN`
+  set, and the fill export refuses it. Record: the evidence README.
 
 ## 12. Limitations
 
@@ -396,12 +414,39 @@ parent-format files carry none of their own. No outward action.
 ## 13. Freeze checklist
 
 - A pre-freeze audit by a reviewer who did not draft this file, of this file and the code of
-  section 3, including a rehearsal on a scratch clone with its own copy of the ledger.
+  section 3, including a rehearsal on a scratch clone with its own copy of the ledger (audit
+  1 done; its dispositions follow; whether the fixes need a second audit is the
+  orchestrator's call).
+- A decisions entry recording that R03 (b) runs under program authority (D80), before the
+  freeze.
 - The code table refreshed, `uv run pytest -q tests/test_q2_zinv_reserve.py` passing before
   the freeze and at the freeze commit.
 - The branch merged to `main` first, so the row joins `main`'s linear ledger.
 - Kevin's items unchanged: the outward actions (the xlang-ai disclosure), D9's optional human
   spot check, and adopting R03 as a program question (D73).
+
+### Pre-freeze audit 1 (2026-10-11): dispositions
+
+The first pre-freeze audit (a reviewer who did not draft this file; scratch clone with main
+merged at `08033ba7`, fill commit and scratch freeze, row 19 in a ledger copy) found one
+blocking item and judged the file not ready. Each item and what was done (commit `046f82e7`
+unless named):
+
+| # | Audit item | Disposition |
+|---|---|---|
+| B1 (blocking) | Two tests chose the draft or frozen branch by the status paragraph, so they failed at the fill commit (filled, no row yet), which step 1 below requires to pass | Fixed: both branch on `guard.frozen_row(ROOT) is None`. The suite passes at the draft, the fill commit and the scratch freeze commit (section 11) |
+| N1 | The reading of the frozen parent (section 2) is correct line by line | No change |
+| N2 | "No reserve mutant exists" is too broad: the scoping probe edited all 8 tasks, and the S2 v3 pilot saved and scored their golds and do-nothing states | Fixed: section 2 says no mutant of the frozen operators exists and names both uses (neither used zinv or a frozen operator) |
+| N3 | Steps 1-3 never ran in a container, not even on dev | Done: the full dev rehearsal of steps 1-4 and the release view (`dev-rehearsal-v2`, section 11) |
+| N4 | The promised `campaign export` release view cannot run on the host tool's layout (no `submitted.json`, reruns in `.a2`) | Fixed: `zr_host.py export` writes `view/` in the parent's layout and runs the parent's own `campaign export` on it (section 10); tested and rehearsed on dev |
+| N5 | `rules.LICENSES['PASS']['registered_rule']` claimed generalization "at the observed rate", beyond section 7 | Fixed: aligned with section 7 (the lower bound, not 95%); tested |
+| N6 | Invalid rows trigger no rerun; INCOMPLETE takes precedence over FAIL in `rules.judge` but was not stated | Fixed: stated in sections 5 and 6 and in the INCOMPLETE license text; tested |
+| N7 | Main moved to `08033ba7`; the merge is conflict-free | Merged (`08033ba7`, then `2b8fadc7`; no ledger, harness or registration file changed), every ledger row kept (18) |
+| N8 | Design numbers, yields, known answer and the rejudged dev step-4 rows reproduce | No change |
+| N9 | Host: the pinned reserve control files and both images match | No change |
+| N10 | Section 4 was silent on probe-touched z-order cells | Fixed: none on the 8 tasks (section 4); tested |
+| N11 | A second reserve plan under another name would be accepted | Fixed: only `reserve-v1` is evidence (section 5); the host tool refuses any other reserve plan name; tested |
+| N12 | A decisions entry should record running R03 (b) under program authority (D80 does not name it; D83 says it was being scouted); optionally the parent's blind warning on released per-mutant verdicts | The decisions entry is the orchestrator's, before the freeze, and stays open here. The blind warning is added (`rules.BLIND_WARNING`, section 10) |
 
 ### At the freeze
 
