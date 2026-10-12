@@ -1,0 +1,12 @@
+[
+  "python",
+  "-m",
+  "harness.q2_stage1.bridge",
+  "serve",
+  "--size",
+  "4B",
+  "--bridge-dir",
+  "/outputs/bridge",
+  "--health-timeout-s",
+  "900"
+]

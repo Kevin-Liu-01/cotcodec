@@ -1,0 +1,88 @@
+2026-10-12T02:02:50Z preregister verify and check-chain PASS in /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66
+2026-10-12T02:02:51Z lane validate: {"ok": true, "manifest_sha256": "85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881", "slots": 226}
+2026-10-12T02:02:51Z lane submit --dry-run: 85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881 sbatch --parsable --cpus-per-task=90 --mem=126G --time=01:02:00 --job-name=q2e-e-9b-e1 /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66/infra/slurm/host-single-node/q2e-vm.sbatch
+2026-10-12T02:02:51Z GPU half with a placeholder VM id passed the submitter's --dry-run
+2026-10-12T02:05:52Z squeue-before-e-9b-e1-VM: [1216|kevin|r04-main-score-secondary-store_as|RUNNING|3:20|32|N/A;]
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+2026-10-12T02:05:52Z queue not empty; nothing submitted
+2026-10-12T02:05:58Z preregister verify and check-chain PASS in /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66
+2026-10-12T02:05:58Z lane validate: {"ok": true, "manifest_sha256": "85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881", "slots": 226}
+2026-10-12T02:05:59Z lane submit --dry-run: 85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881 sbatch --parsable --cpus-per-task=90 --mem=126G --time=01:02:00 --job-name=q2e-e-9b-e1 /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66/infra/slurm/host-single-node/q2e-vm.sbatch
+2026-10-12T02:05:59Z GPU half with a placeholder VM id passed the submitter's --dry-run
+2026-10-12T02:09:00Z squeue-before-e-9b-e1-VM: [1216|kevin|r04-main-score-secondary-store_as|RUNNING|6:28|32|N/A;]
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+2026-10-12T02:09:00Z queue not empty; nothing submitted
+2026-10-12T02:09:06Z preregister verify and check-chain PASS in /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66
+2026-10-12T02:09:06Z lane validate: {"ok": true, "manifest_sha256": "85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881", "slots": 226}
+2026-10-12T02:09:06Z lane submit --dry-run: 85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881 sbatch --parsable --cpus-per-task=90 --mem=126G --time=01:02:00 --job-name=q2e-e-9b-e1 /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66/infra/slurm/host-single-node/q2e-vm.sbatch
+2026-10-12T02:09:06Z GPU half with a placeholder VM id passed the submitter's --dry-run
+2026-10-12T02:12:07Z squeue-before-e-9b-e1-VM: [1216|kevin|r04-main-score-secondary-store_as|RUNNING|9:35|32|N/A;]
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+2026-10-12T02:12:07Z queue not empty; nothing submitted
+2026-10-12T02:12:26Z preregister verify and check-chain PASS in /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66
+2026-10-12T02:12:26Z lane validate: {"ok": true, "manifest_sha256": "85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881", "slots": 226}
+2026-10-12T02:12:26Z lane submit --dry-run: 85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881 sbatch --parsable --cpus-per-task=90 --mem=126G --time=01:02:00 --job-name=q2e-e-9b-e1 /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66/infra/slurm/host-single-node/q2e-vm.sbatch
+2026-10-12T02:12:27Z GPU half with a placeholder VM id passed the submitter's --dry-run
+2026-10-12T02:15:27Z squeue-before-e-9b-e1-VM: [1216|kevin|r04-main-score-secondary-store_as|RUNNING|12:55|32|N/A;]
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+2026-10-12T02:15:27Z queue not empty; nothing submitted
+2026-10-12T02:15:34Z preregister verify and check-chain PASS in /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66
+2026-10-12T02:15:34Z lane validate: {"ok": true, "manifest_sha256": "85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881", "slots": 226}
+2026-10-12T02:15:34Z lane submit --dry-run: 85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881 sbatch --parsable --cpus-per-task=90 --mem=126G --time=01:02:00 --job-name=q2e-e-9b-e1 /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66/infra/slurm/host-single-node/q2e-vm.sbatch
+2026-10-12T02:15:34Z GPU half with a placeholder VM id passed the submitter's --dry-run
+2026-10-12T02:18:35Z squeue-before-e-9b-e1-VM: [1216|kevin|r04-main-score-secondary-store_as|RUNNING|16:03|32|N/A;]
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+2026-10-12T02:18:35Z queue not empty; nothing submitted
+2026-10-12T04:28:38Z preregister verify and check-chain PASS in /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66
+2026-10-12T04:28:38Z lane validate: {"ok": true, "manifest_sha256": "85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881", "slots": 226}
+2026-10-12T04:28:38Z lane submit --dry-run: 85e71881f68fd947d87af6f6eed47367cc662474601a2b45a51b468dca4fd881 sbatch --parsable --cpus-per-task=90 --mem=126G --time=01:02:00 --job-name=q2e-e-9b-e1 /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66/infra/slurm/host-single-node/q2e-vm.sbatch
+2026-10-12T04:28:38Z GPU half with a placeholder VM id passed the submitter's --dry-run
+2026-10-12T04:28:38Z squeue-before-e-9b-e1-VM: []
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+2026-10-12T04:28:39Z e-9b-e1 VM job submitted: 1219
+2026-10-12T04:28:39Z GPU half --test-only exit 0: sbatch: Job 1220 to start at 2026-10-12T04:28:39 using 32 processors on nodes fal-h100-01 in partition research exit=0 
+2026-10-12T04:28:39Z squeue-before-e-9b-e1-GPU (foreign): []
+2026-10-12T04:28:39Z e-9b-e1 GPU job submitted: 1221 (after:1219)
+2026-10-12T04:28:39Z watchers started for 1219 and 1221

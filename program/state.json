@@ -480,7 +480,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "R04 (r04-checker-nuisance-invariance-v1, 0 GPU-h CPU study; D73, D77, D78): verified ready to freeze. Its freeze is yours, with the three items it reserves: whether it runs on its own or as S2 v3's Phase 0, review of the two section 4.4 adaptations, and the CPU cap."
   ],
-  "gpu_hours_spent_this_program": 10.5507,
+  "gpu_hours_spent_this_program": 11.8254,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1046,6 +1046,26 @@
       ],
       "outcome": "overlay sha256:5d1d4d8f1ff4a92cc607704b5e8e9adaa0269b8fa27757d6fe51616e438584ef from source archive 6ad9ad67... (7,602 files, tree b8d37e7f, selected_ref HEAD in a clean clone at f6144d6b, pre-validated on CPU with the pinned extractor); provenance PASS; the OE retry stays unspent; submitted 02:01:28 UTC 2026-10-12 on an empty queue, ran 02:01:30-02:02:27 UTC, no other job while it ran",
       "basis": "physical (scontrol RunTime 00:00:57 on 1 H100); charged under D22 at its 3-minute cap (0.0500 GPU-h), within E's 406 minutes"
+    },
+    {
+      "experiment": "q2-stage1-successor-e-v1 E-9B-E1 (session E1, Qwen3.5-9B, 226 episodes; registered job 1 of 8)",
+      "gpu_hours": 0.6644,
+      "jobs": [
+        "1219 VM lane (CPU only, 90 CPUs, no GRES; COMPLETED 0:0, 00:39:55)",
+        "1221 engine and bridge (1 H100; COMPLETED 0:0, 00:39:52)"
+      ],
+      "outcome": "per-job checks only: 226 of 226 slots scored, no infrastructure loss, no re-queue, no cap truncation; DR0 does not fire; provenance PASS (f6144d6b, overlay 5d1d4d8f); engine argv equals S1a's plan.engine_argv for 9B; Slurm limit 52 = cap; submitted 04:28:39 UTC 2026-10-12 on an empty queue, ran 04:28:39-05:08:31 (GPU) / 05:08:34 (VM); no foreign Slurm job while it ran; no outcome read",
+      "basis": "physical (scontrol RunTime 00:39:52 on 1 H100); charged under D22 at its 52-minute cap (0.8667 GPU-h), within E's 406 minutes"
+    },
+    {
+      "experiment": "q2-stage1-successor-e-v1 E-4B-E1 (session E1, Qwen3.5-4B, 226 episodes; registered job 2 of 8)",
+      "gpu_hours": 0.6103,
+      "jobs": [
+        "1222 VM lane (CPU only, 90 CPUs, no GRES; COMPLETED 0:0, 00:36:41)",
+        "1224 engine and bridge (1 H100; COMPLETED 0:0, 00:36:37)"
+      ],
+      "outcome": "per-job checks only: 226 of 226 slots scored, no infrastructure loss, no re-queue, no cap truncation; DR0 does not fire; manifest named E-9B-E1's records and receipt by SHA-256; provenance PASS; engine argv equals S1a's plan.engine_argv for 4B; Slurm limit 48 = cap; submitted 05:09:55 UTC 2026-10-12 on an empty queue, ran 05:09:56-05:46:33 (GPU) / 05:46:36 (VM); session E1's later end 05:46:33 UTC (lane.job_end), so E2 not before 17:51:33 UTC; no foreign Slurm job while it ran; no outcome read",
+      "basis": "physical (scontrol RunTime 00:36:37 on 1 H100); charged under D22 at its 48-minute cap (0.8000 GPU-h), within E's 406 minutes"
     }
   ],
   "results": [
