@@ -1716,3 +1716,39 @@ z-order comparator `zinv`.
   on an empty queue. It is never submitted while a successor E session is in
   progress, that is, after the session's 9B pair and before its 4B pair has
   ended. It runs in E's gaps.
+
+**D87. S2 v4 after its repair round: two blocking items remain; a third round
+follows.**
+- What the repair round did:
+  - built and development-tested the five Phase 0 components;
+  - defined Phase 1's step-0 mask, its keyboard check against stock cell S,
+    and its executor addendum, frozen as its own ledger row;
+  - adopted the full K1 qualification rule at N = 20;
+  - unified the postconfig server-error rule;
+  - made the image build reproducible: the two builds of Slurm 1207 have
+    identical digests, and the images are re-pinned to them;
+  - disclosed D84's scope reading.
+  K0 stays byte-identical (`ed38b953...`).
+- Two blocking items. A fresh code review and a fresh pre-freeze audit both
+  found them:
+  - (1) Impress's status-bar pointer readout changes from boot to boot in the
+    mirrored cells. That puts I5 (gating) and Phase 1's step-0/K3 exemption at
+    risk, and the registration reported only part of the evidence. The fix
+    goes in the capture, not in K0: one fixed pointer warp before the settle,
+    in Phase 0 and at each Phase 1 episode start, followed by a development
+    smoke.
+  - (2) Which records count after a resumed Phase 0 job depends on the order
+    of the arguments. The fix orders them by job, with a stricter resume check
+    and a defined handling of a cut re-queue.
+- Development numbers the registration must state plainly. The descriptor
+  plants are detected on 13 and 15 of 17 development tasks, below the 90% bar
+  that would keep O2, O3 and O8. I5 is 16 of 17 before the fix.
+- Disclosure (quiet host). The development jobs 1217 and 1218 were submitted
+  between steps of R04's CPU campaign. 1217 went in about 2 s after R04's job
+  1216 ended, both times on an empty queue, so neither overlapped an R04 job.
+  The S2 v4 evidence README is to say so. R04's report records any effect on
+  its timing.
+- Scheduling. From now on, no S2 v4 job is submitted during a successor E
+  session (after its 9B pair starts and before its 4B pair ends). Between
+  another workstream's campaign steps, a job goes in only when that
+  workstream's own driver is not about to submit.
