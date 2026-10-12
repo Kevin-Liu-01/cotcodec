@@ -1,6 +1,7 @@
 # S2 v4: Arabic interface text versus mirrored layout on the certified OSWorld stack, with the shipped Arabic language packs, a fixed Phase 0 admission rule and a registered delta certification of the action path (s2-arabic-cua-locale-v4)
 
-**Status: DRAFT, not frozen; no ledger row.** Written on 2026-10-11 by the single owner of the S2
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the freeze time and
+`git_head_at_freeze`.** Written on 2026-10-11 by the single owner of the S2
 v4 run (decision D80 (iv)) on branch `stage0/s2-v4`, and repaired in three rounds, under D84, D87
 and D90 (sections "Changes in the repair round (D84): review log", "Changes in the third round
 (D87): review log" and "Changes in round 4 (D90): review log" list every review and audit item and
