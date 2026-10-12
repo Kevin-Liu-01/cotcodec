@@ -217,7 +217,7 @@ its reference outside the root partition; of the superblock fields only the chec
 block and inode counts changed against the certified disk; the system layer is `LAYER_FILES` plus
 `main`. Against build 1199's derived base (the earlier pins) one 4 KiB block differs, the primary
 superblock (its checksum and write time; `only_superblock_copies_differ` true): the file contents
-are the same, so development smoke 1201's findings carry over, and smoke @@SMOKEJOB@@ repeated them
+are the same, so development smoke 1201's findings carry over, and smoke 1214 repeated them
 on these images. Earlier builds: jobs 1189 and 1192 stopped at their own checks before writing any
 image (the certified disk's pre-existing `e2fsck` finding; a directory both language packs carry,
 planned twice); job 1195 built images whose selector was read before the pack's `ctl_ar.xcd`
@@ -237,7 +237,7 @@ superseded).
 The stock cell S is the certified `Ubuntu.qcow2` (`6bf667a8...`). Images stay read-only on the host
 under the run root; `harness/s2_locale/images.json` pins them, and `tests/test_s2v4_image_build.py`
 checks that it is the pin set the committed build record gives. The lane's image check (job
-@@SMOKEJOB@@) re-hashed every cell image and S on the host before dispatching.
+1214) re-hashed every cell image and S on the host before dispatching.
 
 ### P0.3 Cells and the per-slot image
 
@@ -609,19 +609,46 @@ restart checks); the concurrency Phase 1 uses (the V = 20 rung).
 ## Development smoke (dev split only; not Phase 0, not evidence for K0 or K1)
 
 Before the freeze, the derived images are smoke-tested in the VM lane on dev tasks only (purpose
-`development`, which `vm_lane.py` refuses once this id is frozen): one Calc, one Impress and one Writer
-task (`12382c62`, `2b94c692`, `e528b65e`) in S, E, A, ER, AR, PL and AD, plus a second E boot, through
-`vm_probe.py` with `evaluate` on; the second run adds gold slots (`vm_gold.py`) for the two tasks with a
-gold in the five admission cells. It checks that every image boots in the certified runtime, carries its
-selector, sets the task up, renders the cell as specified (Arabic chrome share near 1 in A, AR and AD and
-0 in the English cells; the menu bar's order right to left in ER, AR and AD), keeps the stock keyboard
-map, saves through the task's own postconfig, and (gold slots) saves and scores the gold. Its records
-are under `program/evidence/2026-10-11/s2v4-image/smoke-*/`; it decides nothing registered and changes
-no rule above. The first run (Slurm 1197, images of build 1195) found that the language pack's
-`ctl_ar.xcd` overrode the CTL pin (section P0.3); the images were rebuilt (build 1199) and the smoke
-repeated on them (Slurm 1201): 34 of 34 slots probed; masked E against S 0, 1 and 1 px, AD against AR 0
-px, E against E2 0-1 px; Arabic chrome share 0.95-0.98 in A, AR and AD and 0 elsewhere; the menu bar
-right to left exactly in ER, AR and AD; the two tasks' golds pass in all five admission cells.
+`development`, which `vm_lane.py` refuses once this id is frozen). Records:
+`program/evidence/2026-10-11/s2v4-image/smoke-*/`; they decide nothing registered and change no rule
+above, and the screenshots and trees stay on the host.
+
+- Smoke 1197 (images of build 1195) and smoke 1201 (build 1199): three dev tasks (`12382c62`,
+  `2b94c692`, `e528b65e`) in S, E, A, ER, AR, PL and AD plus a second E boot, and (1201) gold slots for
+  the two tasks with a gold. 1197 found that the language pack's `ctl_ar.xcd` overrode the CTL pin
+  (section P0.3); on the rebuilt images 1201 probed 34 of 34 slots, masked E against S 0, 1 and 1 px,
+  AD against AR 0 px, E against E2 0-1 px, the Arabic chrome share 0.95-0.98 in A, AR and AD and 0
+  elsewhere, the menu bar right to left exactly in ER, AR and AD, and both golds passing in all five
+  admission cells.
+- Smoke 1214 (repair round; the pinned images of build 1207): the dev part of the census exactly as
+  `vm_lane.census_slots` renders it for the 17 dev tasks (`experiments/manifests/s2v4/dev-smoke-v3.json`;
+  170 capture slots in S, E, E2, A, ER, AR, PL, AD, ER2 and PD, and 70 gold slots for the 14 dev tasks
+  with a gold), one job at V = 20 (81 CPUs, 126 GB), the lane's image check first. All 240 slots ended
+  probed; 7 were re-queued once after an infrastructure loss (6 guest-server restarts, found by
+  the end-of-slot restart check, and 1 undelivered accessibility tree) and probed on the second attempt.
+  Every slot, S included, recorded `setxkbmap` layout `us,us`, `ibus-daemon`, GNOME input sources
+  `[('xkb', 'us')]`, IBus engine `xkb:us::eng`, and the guest server's and every LibreOffice process's
+  `LANG=en_HK.UTF-8`, `LANGUAGE=en_HK:en` (so GTK cannot select the GNOME pack's Arabic catalogs from
+  LibreOffice's initial environment); `fc-match :lang=ar` DejaVu Sans with 20 Arabic-capable families;
+  `fonts-kacst` and `fonts-kacst-one` installed, and `fonts-hosny-amiri`, `fonts-sil-scheherazade`,
+  `language-pack-ar` and `language-pack-gnome-ar` unknown to dpkg; the P0.10 reader's values equal in
+  every slot (`EnablePresenterScreen` `true`, the other two keys absent); no setup failure, no
+  postconfig failure, every postconfig save rewrote its file, and the do-nothing verdict `fail` in every
+  slot of S and of the derived cells (the checker raises on PD's planted documents). The Arabic chrome share was 0.95-0.98 in A, AR and AD and 0 elsewhere; the
+  menu bar ran right to left in ER, AR, AD and PD. Golds: 13 of the 14 pass in all five admission cells;
+  `af23762e`'s fails in all five, E included (no passing-side control).
+- The oracle's development run on smoke 1214 (`oracle_vm.py --k0`, on copies of the renders;
+  `smoke-1214/oracle-dev.json`, `k0-dev.json`): tol6 = tol5 = 50 (the dev tasks' masked E-vs-E2 counts
+  are 0 or 1 px); I1-doc's synthetic plant detected on 17 of 17 tasks, and PD detected on all 15 named
+  tasks (and, correctly, not on `2b94c692` and `bf4e9888`, which have no plant), so the off-screen rule
+  of P0.3 did not fire; I2 17 of 17; I6 17 of 17; I5 16 of 17: on the Impress task `ac9bb6cb` AD
+  differs from AR by 513 px, all in the status bar's pointer-position readout (the pointer's position on
+  the slide differs between the two boots); I3 and I4 at 100%; the O3 and O2 descriptor plants detected
+  on 13 and 15 of 17 tasks (below the 90% descriptor bar on the dev tasks). On the dev tasks K0's
+  admission gives 13 admitted and 4 runnable. These are development numbers: K0 reads Phase 0 proper
+  over the 106 tasks. They show one risk to I5 that K0's fixed masks cannot remove (a status-bar
+  readout that follows the pointer can differ between boots on Impress tasks), recorded here before
+  the freeze.
 
 ## Phase 1 (admitted under D80 (iv) if K0 and K1 pass)
 
@@ -841,9 +868,10 @@ host. No personal data; the VMs are offline.
 
 ## Owner's prior forecast (not a decision input)
 
-K1 passes on the five images: 0.85. K0 passes (at least 62 admitted, instrument checks hold): 0.75 (the
-pilot had 83 of 105 tasks with a passing gold; VM renders add boot-to-boot variation the container did not
-have). Descriptors valid: 0.6. Phase 1 reached: about 0.6. If it runs: D PRESENT_HARM 0.35, D SMALL 0.45,
+K1 passes on the five images: 0.85. K0 passes (at least 62 admitted, instrument checks hold): 0.65
+(revised from 0.75 in the repair round, before the freeze: the pilot had 83 of 105 tasks with a passing
+gold, and on the dev tasks 13 of 17 are admitted, but smoke 1214 showed an Impress status-bar readout
+that can make AD differ from AR, a risk to I5's 95% bar). Descriptors valid: 0.6. Phase 1 reached: about 0.6. If it runs: D PRESENT_HARM 0.35, D SMALL 0.45,
 EXCESS_OVER_PLACEBO given D PRESENT_HARM 0.5, T PRESENT_HARM 0.45, T SMALL 0.35.
 
 ## Freeze procedure

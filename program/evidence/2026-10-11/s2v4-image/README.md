@@ -162,3 +162,33 @@ setups download (23 files), each task's first supported document planted by `cap
 on their first slide), with each file's SHA-256 and the plants. `files_sha256`
 `d51d66fa3d3a890c6a18ad231b926e3932881209ca91e467e8532319c549b46e` is pinned in
 `vm_lane.PD_CACHE_FILES_SHA256`; the lane re-checks the host directory against the manifest at submit.
+
+## smoke-1214/ (development, dev split only; the pinned images of build 1207; repair round)
+
+Slurm 1214 (CPU only, `s2v4-vm.sbatch`, export of `4a4ae0c5`, manifest
+`experiments/manifests/s2v4/dev-smoke-v3.json`, 81 CPUs and 126 GB at V = 20): the dev part of the
+census as `vm_lane.census_slots` renders it for the 17 dev tasks: 170 capture slots (S, E, E2, A, ER,
+AR, PL, AD, ER2, PD) and 70 gold slots (the 14 dev tasks with a gold, in E, A, ER, AR and PL). The lane
+hashed all seven images (and the PD variant at submit) before dispatching. `probes.jsonl` (every
+attempt), `smoke-summary.json`, `lane-receipt.json` (host snapshots removed), `preflight.txt`,
+`oracle-dev.json` and `k0-dev.json`.
+
+- 240 of 240 slots probed; 7 re-queued once after an infrastructure loss (6 guest-server restarts found
+  by the end-of-slot check, 1 undelivered accessibility tree) and probed on the second attempt.
+- Held fixed, in every slot, S included: `setxkbmap` `us,us`; `ibus-daemon`; GNOME input sources
+  `[('xkb', 'us')]`; IBus engine `xkb:us::eng`; `LANG=en_HK.UTF-8`, `LANGUAGE=en_HK:en` for the guest
+  server and for every LibreOffice process (initial environment). Fonts and packages (end facts):
+  `fc-match :lang=ar` DejaVu Sans, 20 Arabic-capable families; `fonts-kacst`, `fonts-kacst-one`,
+  `locales`, `ucf`, `libreoffice-common` installed; `fonts-hosny-amiri`, `fonts-sil-scheherazade`,
+  `language-pack-ar`, `language-pack-gnome-ar` unknown to dpkg.
+- P0.10's reader: the same three values in every slot (`EnablePresenterScreen` `true`; the auto-save
+  interval and Writer's default font absent).
+- Interface: Arabic chrome share 0.952-0.979 in A, AR and AD, 0 elsewhere; menu bar right to left in
+  ER, AR, AD and PD. Every postconfig save rewrote its file; the do-nothing verdict is `fail` in every
+  slot of S and of every derived cell; on PD's 15 planted documents the checker raises (`error`).
+- Golds: 13 of 14 pass in all five admission cells; `af23762e`'s fails in all five.
+- Oracle (development run on the Mac, on copies of the renders, `oracle_vm.py --k0 --workers 6`): tol6 =
+  50; synthetic document plant detected 17/17; PD detected on all 15 named tasks (not on the two without
+  a plant); E-S 17/17 and E-E2 17/17 within tol6; AD-AR 16/17 (`ac9bb6cb`: 513 px in Impress's status-bar
+  pointer-position readout); O1 text pairs and O4 order 100%; descriptor plants O3 13/17, O2 15/17.
+  `k0-dev.json` (development; 89 pool tasks have no record here): 13 dev tasks admitted, 4 runnable.
