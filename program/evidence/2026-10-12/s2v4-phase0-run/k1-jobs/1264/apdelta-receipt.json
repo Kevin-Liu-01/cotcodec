@@ -1,0 +1,19 @@
+{
+ "campaigns": [
+  {
+   "campaign_id": "s2v4-k1-er-a6-43",
+   "cells": [
+    "ER"
+   ],
+   "dir": "00-s2v4-k1-er-a6-43",
+   "driver_exit": 0
+  }
+ ],
+ "check": "A6",
+ "executor_commit": "cf17405026ca2aa20f528b39bdaaff3b257a6610",
+ "job_id": "1264",
+ "purpose": "k1",
+ "schema": "s2v4-apdelta-receipt-v1",
+ "t_end": 1791845096.4783535,
+ "t_start": 1791842137.2081642
+}

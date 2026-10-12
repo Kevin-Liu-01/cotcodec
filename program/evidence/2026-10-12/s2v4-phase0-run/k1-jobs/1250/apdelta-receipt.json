@@ -1,0 +1,23 @@
+{
+ "campaigns": [
+  {
+   "campaign_id": "s2v4-k1-e-ladder-l0-fixed-43",
+   "cells": [
+    "E",
+    "A",
+    "ER",
+    "AR",
+    "PL"
+   ],
+   "dir": "00-s2v4-k1-e-ladder-l0-fixed-43",
+   "driver_exit": 0
+  }
+ ],
+ "check": "rung",
+ "executor_commit": "cf17405026ca2aa20f528b39bdaaff3b257a6610",
+ "job_id": "1250",
+ "purpose": "k1",
+ "schema": "s2v4-apdelta-receipt-v1",
+ "t_end": 1791818949.9010067,
+ "t_start": 1791818408.0641408
+}
