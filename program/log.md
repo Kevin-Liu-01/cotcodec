@@ -5101,3 +5101,23 @@ they say so.)
   3 skipped.
 - Still open before the freeze: G-E6 (a fresh pre-freeze audit that finds nothing blocking)
   and the program's sign-off decision (section 21), then section 25's steps.
+
+## 2026-10-12 — Q2 successor E `q2-stage1-successor-e-v1` (frozen, ledger row 19): OE built the overlay from the freeze commit (branch `ops/q2-successor-e`, not merged)
+
+- E was frozen as ledger row 19 at `f6144d6b` (2026-10-12T01:02:32Z; file SHA-256
+  `47e65877...`). Everything below runs from that commit, never its parent `7fcf0a4a`.
+- The host export `~/cotcodec-runs/stage0/q2-stage1e/src/f6144d6b.../` is `git archive
+  f6144d6b` plus `.git_sha`, read-only; its file list and contents equal a clean clone of the
+  commit. `preregister.py verify` and `check-chain` pass in both (row 19, 19 rows). Section
+  23's 19 digests match in the export.
+- OE: the discovery source archive `6ad9ad67...` (7,602 files, `selected_ref: HEAD`, clean
+  clone at `f6144d6b`) was validated on CPU with the pinned extractor first. Job 1215 (one
+  H100, 3-minute cap) was submitted on an empty queue at 02:01:28 UTC and **COMPLETED 0:0 in
+  57 s**: provenance PASS, overlay
+  `sha256:5d1d4d8f1ff4a92cc607704b5e8e9adaa0269b8fa27757d6fe51616e438584ef`. No retry. Physical
+  0.0158 GPU-h (`program/state.json`); charged 3 minutes under D22.
+- Before OE the queue held other workstreams' jobs (R03 part (b)'s 1213, S2 v4's 1214, about
+  55 minutes). R04's job 1216 started five seconds after OE ended, so E-9B-E1 waits for a quiet
+  host (section 6.4); its VM manifest is rendered and validated (226 slots, cap 52, VM limit
+  62 minutes, 90 CPUs).
+- Evidence: `program/evidence/2026-10-12/q2-stage1-successor-e-run/` (README, `oe/`, `ops/`).
