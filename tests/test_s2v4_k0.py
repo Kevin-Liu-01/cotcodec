@@ -174,27 +174,86 @@ def test_a_cut_requeue_is_not_final_and_the_resumed_job_reruns_the_slot():
     assert I.counted([lost, twice, rerun])["t-1:E:r1"] == [lost, twice]
 
 
-def test_run_order_follows_the_lane_receipts(tmp_path):
+def _lane_run(root, name, job, start=None, resumes=None, records=True, receipt=True):
+    """A lane run directory as ``s2v4-vm.sbatch`` and the lane leave it: ``preflight.txt`` (the
+    batch file's, before the lane starts), ``manifest.json``, and, when the lane got that far,
+    ``probes.jsonl`` and ``lane-receipt.json``."""
     import json
 
+    d = root / name
+    d.mkdir(parents=True)
+    (d / "preflight.txt").write_text(f"job_id={job}\nbatch_sha256={'0' * 64}\n")
+    (d / "manifest.json").write_text(json.dumps({"resumes": {"job_id": resumes}}))
+    if records:
+        (d / "probes.jsonl").write_text(json.dumps({"slot": "t-1:E:r1", "status": "probed"}))
+    if receipt:
+        body = {"job_id": job} if start is None else {"job_id": job, "t_start": start}
+        (d / "lane-receipt.json").write_text(json.dumps(body))
+    return d
+
+
+def test_run_order_follows_the_slurm_job_ids_the_batch_file_wrote(tmp_path):
     from harness.s2_locale import k0_inputs as I
 
-    def run(job, start, resumes=None):
-        d = tmp_path / job
-        d.mkdir()
-        (d / "lane-receipt.json").write_text(json.dumps({"job_id": job, "t_start": start}))
-        (d / "probes.jsonl").write_text(json.dumps({"slot": "t-1:E:r1", "status": "probed"}))
-        (d / "manifest.json").write_text(json.dumps({"resumes": {"job_id": resumes}}))
-        return d
-
-    a, b = run("1300", 1.0), run("1301", 2.0, resumes="1300")
+    a, b = _lane_run(tmp_path, "1300", "1300", 1.0), _lane_run(tmp_path, "1301", "1301", 2.0,
+                                                              resumes="1300")
     assert I.run_order([b, a]) == [a, b]
     ordered, records = I.load_runs([b, a])
     assert ordered == [a, b] and [r["_run"] for r in records] == [0, 1]
     with pytest.raises(I.RunOrderError, match="named twice"):
         I.run_order([a, a])
     with pytest.raises(I.RunOrderError, match="at most once"):
-        I.load_runs([a, b, run("1302", 3.0, resumes="1301")])
+        I.load_runs([a, b, _lane_run(tmp_path, "1302", "1302", 3.0, resumes="1301")])
+
+
+def test_run_order_needs_no_lane_receipt(tmp_path):
+    """Round 4 (D90): a job ended by TERM (no receipt), one whose image check failed (a receipt,
+    no records) and one with an old receipt without ``t_start`` are all read; the receipt is a
+    cross-check only."""
+    from harness.s2_locale import k0_inputs as I
+
+    termed = _lane_run(tmp_path / "x", "1300", "1300", receipt=False)
+    resume = _lane_run(tmp_path / "x", "1301", "1301", 5.0, resumes="1300")
+    assert I.load_runs([resume, termed])[0] == [termed, resume]
+    no_slot = _lane_run(tmp_path / "y", "1400", "1400", 1.0, records=False)
+    resume2 = _lane_run(tmp_path / "y", "1401", "1401", resumes="1400")  # receipt without t_start
+    ordered, records = I.load_runs([resume2, no_slot])
+    assert ordered == [no_slot, resume2] and [r["_run"] for r in records] == [1]
+    assert I.load_runs([no_slot]) == ([no_slot], [])  # zero records
+
+
+def test_run_order_reads_the_oracle_mounts_by_their_preflight(tmp_path):
+    """Inside the oracle's container the run directories are ``/ro/run1`` and ``/ro/run2``: the
+    job order comes from ``preflight.txt``, whatever the mount names and the argument order."""
+    from harness.s2_locale import k0_inputs as I
+
+    census = _lane_run(tmp_path, "run2", "1300", receipt=False)  # mounted in the "wrong" order
+    resume = _lane_run(tmp_path, "run1", "1301", 2.0, resumes="1300")
+    assert I.run_order([resume, census]) == [census, resume]
+    assert I.job_id(census) == 1300
+
+
+def test_run_order_refusals(tmp_path):
+    from harness.s2_locale import k0_inputs as I
+
+    a = _lane_run(tmp_path, "1300", "1300", 20.0)
+    later = _lane_run(tmp_path, "1301", "1301", 10.0, resumes="1300")  # a later id started earlier
+    with pytest.raises(I.RunOrderError, match="different orders"):
+        I.run_order([a, later])
+    misnamed = _lane_run(tmp_path, "1302", "1303")
+    with pytest.raises(I.RunOrderError, match="names job 1303"):
+        I.run_order([misnamed])
+    other = _lane_run(tmp_path, "1304", "1304", receipt=False)
+    (other / "lane-receipt.json").write_text('{"job_id": "999", "t_start": 1.0}')
+    with pytest.raises(I.RunOrderError, match="receipt names job"):
+        I.run_order([other])
+    bare = tmp_path / "1305"
+    bare.mkdir()
+    with pytest.raises(I.RunOrderError, match="no preflight.txt"):
+        I.run_order([bare])
+    (bare / "preflight.txt").write_text("job_id=\n")
+    with pytest.raises(I.RunOrderError, match="no single Slurm job id"):
+        I.run_order([bare])
 
 
 def test_admission_inputs_setup_failure_and_gold():

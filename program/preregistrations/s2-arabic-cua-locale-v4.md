@@ -1,9 +1,10 @@
 # S2 v4: Arabic interface text versus mirrored layout on the certified OSWorld stack, with the shipped Arabic language packs, a fixed Phase 0 admission rule and a registered delta certification of the action path (s2-arabic-cua-locale-v4)
 
 **Status: DRAFT, not frozen; no ledger row.** Written on 2026-10-11 by the single owner of the S2
-v4 run (decision D80 (iv)) on branch `stage0/s2-v4`, and repaired in two rounds, under D84 and D87
-(sections "Changes in the repair round (D84): review log" and "Changes in the third round (D87):
-review log" list every review and audit item and its disposition). It is a new experiment id:
+v4 run (decision D80 (iv)) on branch `stage0/s2-v4`, and repaired in three rounds, under D84, D87
+and D90 (sections "Changes in the repair round (D84): review log", "Changes in the third round
+(D87): review log" and "Changes in round 4 (D90): review log" list every review and audit item and
+its disposition). It is a new experiment id:
 `s2-arabic-cua-locale-v3` and `v3.1` (the package that
 scored 60 and 65, D74 and D76) are left unedited, and this file carries v3.1's design with the
 changes listed below. D80 (iv) approved, on Kevin's delegation: fetching the official LibreOffice
@@ -44,8 +45,8 @@ after any Phase 0 result has been read voids the commitment (a new experiment id
 | Images built once, digests of one build's files | Reproducible build: every `debugfs -w` session runs at the certified disk's own last write time (`E2FSPROGS_FAKE_TIME`), one job builds twice and requires identical digests, and the images are re-pinned (section "Images built") | Repair round (review blocking item 1) |
 | Phase 0 and K1 code "built before the freeze" | Built and dev-tested: the oracle's VM adapter (`oracle_vm.py`), the PD file-cache variant (`pd_cache.py`), the P0.10 reader, the census renderer and the registered `phase0` purpose of `vm_lane.py`, `ap_delta.py` with its plan and batch file; registered jobs run only from the freeze commit's export | Repair round (audit blocking item 1) |
 | Phase 1 rules written, no executor | Phase 1's step-0 mask, keyboard check, image check and infrastructure rule defined here; its runner and analysis code are a Phase 1 executor addendum, dry-run on dev tasks, audited and frozen as its own ledger row before any Phase 1 episode | Repair round (audit blocking item 2) |
-| The pointer left where the boot put it | One warp of the pointer to the screen point (995, 540) after the warm-up and before the 60 s settle, in every Phase 0 capture slot and at every Phase 1 episode start (P0.7, Phase 1) | Third round (D87): in smoke 1214 Impress's status-bar pointer readout changed from boot to boot in the mirrored cells |
-| A resumed Phase 0 job's records counted in the order the run directories were named | Counted in job order (the lane receipts' job ids and start times); a first-attempt loss whose re-queue was cut is rerun by the resume; the resume manifest is computed from the interrupted job's records and checked against them; at most one resume (P0.7) | Third round (D87) |
+| The pointer left where the boot put it | One warp of the pointer to the screen point (995, 540) after the 60 s settle, then a fixed 4 s wait before the first screenshot, in every Phase 0 capture slot and at every Phase 1 episode start (P0.7, Phase 1) | Third round (D87): in smoke 1214 Impress's status-bar pointer readout changed from boot to boot in the mirrored cells. Round 4 (D90): the third round's warp before the settle still left it varying in 2 of 70 Impress boots (smoke 1240) |
+| A resumed Phase 0 job's records counted in the order the run directories were named | Counted in job order, by the Slurm job id the batch file writes before the lane starts (a lane receipt is a cross-check only); a first-attempt loss whose re-queue was cut is rerun by the resume; the resume manifest is computed from the interrupted job's records and checked against them; at most one resume; TERM stops the lane like USR1; a census job with zero records uses the one resume (P0.7) | Third round (D87). Round 4 (D90): the third round read the job order from the lane receipt alone, so a job ended by TERM or by a failed image check could be neither read nor resumed |
 
 ## Question
 
@@ -156,8 +157,11 @@ do three things that are not done: the two language packs' postinst runs
 upgrade helper with nothing to do on a fresh install). So no Arabic system locale exists in any
 cell, and the guest's
 stock locale (`LANG=en_HK.UTF-8`, `LANGUAGE=en_HK:en`, as every slot of the development smokes records
-for the guest server, S included) is held fixed. LibreOffice's interface language is set by the
-selector, not by the locale. Under `LANGUAGE=en_HK:en` GTK's gettext may never select the GNOME pack's
+for the guest server, S included) is held fixed. That matters for the checkers: R04 (D89) found
+OSWorld's office checkers not invariant to the system locale (under `ar_EG` three `compare_table`
+golds and the `compare_pptx_files` gold of `5c1a6c3d` flip), so an Arabic system locale would change
+verdicts by itself (P0.5). LibreOffice's interface language is set by the selector, not by the
+locale. Under `LANGUAGE=en_HK:en` GTK's gettext may never select the GNOME pack's
 Arabic catalogs, so that pack is possibly inert: the probe records each LibreOffice process's initial
 locale variables (`/proc/PID/environ`), and v4 claims nothing about GTK's own strings.
 
@@ -304,7 +308,10 @@ As v3.1, with the guest's own values: task instructions, documents and checker i
 to right); the system shell (English, left to right; the GNOME top bar is masked in every pixel
 comparison); the guest's stock locale `LANG=en_HK.UTF-8`, `LANGUAGE=en_HK:en` (number, date and paper
 defaults; as every slot of the development smokes records for the guest server, S included; v3's
-container forced `en_US.UTF-8`, which the VM does not use); the document default language; the
+container forced `en_US.UTF-8`, which the VM does not use; R04, D89, found that a `de_DE`, `ar_EG` or
+`tr_TR` system locale flips OSWorld checker verdicts, three `compare_table` golds in each and, under
+`ar_EG`, also `5c1a6c3d`'s `compare_pptx_files` gold, so v4 switches LibreOffice's interface language
+and never the system locale); the document default language; the
 SheetPrefix, CTLFont and English-function-name pins; autocorrect and spelling languages; the
 pointer's position at the capture and at each episode start (the warp of P0.7); the stock
 keyboard: `setxkbmap -query` layout `us,us`, the stock input-method process (`ibus-daemon`, running in
@@ -323,28 +330,35 @@ See section "K1: the registered deviation of q2-action-path-v2".
 One slot is one fresh VM boot on one cell image, running `vm_probe.py` in the episode container:
 S1a's boot wait; the image check (the guest's selector SHA-256 equals the cell's; none in S); the task's
 own setup offline from the pinned file cache (the PD variant for PD slots; S1a's unmodified call); the
-guard's keyboard warm-up; the pointer warp (below); the 60 s settle; two screenshots 1 s apart; the
-accessibility tree; window titles, `setxkbmap -query`, the input-method processes, GNOME's input
-sources, IBus's engine and each
+guard's keyboard warm-up; the 60 s settle; the pointer warp and its fixed 4 s wait (below); two
+screenshots 1 s apart; the accessibility tree; window titles, `setxkbmap -query`, the input-method
+processes, GNOME's input sources, IBus's engine and each
 LibreOffice process's initial locale variables; the 20 s settle; the SHA-256 and mtime of every file
 the checker reads; the pinned `DesktopEnv.evaluate()` with `DONE` (the task's own postconfig and its
 checker, on the do-nothing state); the guest-server restart check; the files' SHA-256 and mtime again;
 P0.10's reader; a last screenshot; the end facts (fonts; `dpkg-query` status of the packs' unmet
 dependencies and recommendations). Screenshots and trees stay on the host; records are committed.
 
-Pointer warp (third round, D87). After the warm-up and before the 60 s settle, the probe moves the
-pointer once to the screen point (995, 540) (`vm_probe.POINTER_TARGET`): the guest helper's `pointer`
-mode (`guest/s2_guest.py`, called by `vm_probe.warp_pointer`) sends one absolute XTest motion to that
-point (python-xlib's `xtest.fake_input(MotionNotify, x=995, y=540)` and `XSync`, the call the
+Pointer warp (third round, D87; after the settle since round 4, D90). After the 60 s settle, the
+probe moves the pointer once to the screen point (995, 540) (`vm_probe.POINTER_TARGET`) and then waits
+a fixed 4 s (`vm_probe.POINTER_WAIT_S`) before the first screenshot. The warp is the guest helper's
+`pointer` mode (`guest/s2_guest.py`, called by `vm_probe.warp_pointer`): one absolute XTest motion to
+that point (python-xlib's `xtest.fake_input(MotionNotify, x=995, y=540)` and `XSync`, the call the
 certified guard makes to park the pointer, through the input path D53 certified), so the pointer
-jumps there with no intermediate position, and then reads the position back (the record keeps it
-before and after). Why: until then the pointer rests where the boot left it ((1728, 972), as the warp
-reads it in smoke 1240; every one of smoke 1214's 177 capture renders shows the cursor there), and LibreOffice's last motion event is whatever the window received
-while it was being laid out. Impress shows that event's position in its status bar, and in the
-mirrored cells it changed from boot to boot (section "Development smoke"). After the warp, the last
-motion event is at one fixed point of the window, computed under the window's layout at that moment;
-smoke 1240 found that in 2 of 70 Impress boots the layout still changed after the warp, so the field
-took another value there (section "Development smoke"). The point was chosen on smoke 1214's dev
+jumps there with no intermediate position; the mode then reads the position back (the record
+keeps it before and after). Why: until then the pointer rests where the boot left it ((1728, 972),
+as the warp reads it in smoke 1240; every one of smoke 1214's 177 capture renders shows the cursor
+there), and LibreOffice's last motion event is whatever the window received while it was being
+laid out. Impress shows that event's position in its status bar, and in the mirrored cells it
+changed from boot to boot (smoke 1214). The third round warped before the settle; the warp then landed within about a
+second of the guest server's reply to the task's open step, while the window could still be laid
+out, and in 2 of smoke 1240's 70 Impress boots the field took another value (section "Development
+smoke"). After the 60 s settle the window is expected to have its final layout, so that the warp's
+motion event is handled under that layout in every boot (round 4's development smoke tests this). The
+4 s wait was chosen before round 4's development smoke:
+it is longer than LibreOffice's help-tip delays (VCL shows a quick-help tip 0.5 s and a balloon tip
+1.5 s after the pointer comes to rest), so whatever the pointer's arrival shows has shown, and
+LibreOffice has handled the motion, before the screenshots. The point was chosen on smoke 1214's dev
 renders: it lies inside the document region of Calc, Writer and Impress in every cell (Impress's
 slide editing window spans about x 275-1510 left to right and x 480-1720 mirrored, y 250-1045; Calc's
 grid x 82-1820, y 281-997; Writer's document x 70-1849, y 246-1034); it lies on the LibreOffice
@@ -377,26 +391,43 @@ and the registered `phase0` job runs exactly these slots: one CPU job at V = 20 
 root (81 CPUs requested, which Slurm rounds to 82 as it did for smoke 1214; 126 GB; ceil(6 + 1.5 x 1,322
 x 3.5 / 20 + 10) = 364 minutes requested, from a 3.5-minute slot estimate with a 1.5 margin). Smoke
 1214's capture slots took 4.3 minutes per attempt at the median (247 attempts, re-queues included, in
-53 minutes at V = 20), so the census's about 1,360 attempts need about 4.9 hours and about 95 VM-hours;
+53 minutes at V = 20), so the census's about 1,360 attempts need about 4.9 hours and about 95 VM-hours
+(round 4's 4 s wait after the warp adds under 2% to a capture attempt);
 the request covers that with about 20% to spare, and an overrun is the resume rule's case.
 
-Resume (third round, D87; `k0_inputs`, `vm_lane`). A slot's records in one job are final when an
-attempt ended `probed` or the slot was lost to infrastructure on its second attempt (lost twice:
-unobserved). A first-attempt loss whose re-queue the job did not finish (cut at the stop signal, never
-dispatched, or without a record) is not final, nor is a `cap_truncated` record: such a slot has not had
-its registered second attempt, so the resumed job runs it afresh (its attempts there count, with the
-lane's one re-queue; the interrupted job's loss is reported, not counted). A `phase0` job that ends
-before every slot has a final record is resumed once: `vm_lane.py render-census --freeze-commit ...
---resume-from-records RUN_DIR/probes.jsonl` renders the census from the first block (in census order)
-holding a slot without a final record (`resume_from_block`), naming the interrupted job (`resumes`: its
-Slurm job id, its run directory under the registered run root and the SHA-256 of its `probes.jsonl`);
-the lane recomputes all of this from that run directory and admits the resume manifest only if it is
-exactly that rendering; the interrupted job must be the census job itself (a resumed job is never
-resumed), and `submit` refuses a second census job and a second resume. Which record counts: the jobs
-are taken in job order, read from each run directory's lane receipt (the Slurm job id, which must give
-the same order as the receipt's `t_start`; a directory without a receipt is refused), never in the
-order the directories are named; per slot the attempts of the first job with a final record count, and
-of those the last (`k0_inputs.load_runs`, `counted`; `oracle_vm.py` reads its renders the same way).
+Resume (third round, D87, and round 4, D90; `k0_inputs`, `vm_lane`). A slot's records in one job are
+final when an attempt ended `probed` or the slot was lost to infrastructure on its second attempt
+(lost twice: unobserved). A first-attempt loss whose re-queue the job did not finish (cut at the stop
+signal, never dispatched, or without a record) is not final, nor is a `cap_truncated` record: such a
+slot has not had its registered second attempt, so the resumed job runs it afresh (its attempts there
+count, with the lane's one re-queue; the interrupted job's loss is reported, not counted). A `phase0`
+job that ends before every slot has a final record is resumed once: `vm_lane.py render-census
+--freeze-commit ... --resume-from-records RUN_DIR/probes.jsonl` renders the census from the first block
+(in census order) holding a slot without a final record (`resume_from_block`), naming the interrupted
+job (`resumes`: its Slurm job id, its run directory under the registered run root and the SHA-256 of
+its `probes.jsonl`); the lane recomputes all of this from that run directory and admits the resume
+manifest only if it is exactly that rendering; the interrupted job must be the census job itself (a
+resumed job is never resumed), and `submit` refuses a second census job and a second resume.
+
+Which job a run directory is, and in which order jobs are taken (round 4, D90): by the Slurm job id
+the batch file (`s2v4-vm.sbatch`) writes before the lane starts, never by anything the lane writes. On
+the host the run directory is named by it (`RUN_ROOT/SLURM_JOB_ID`) and `preflight.txt`'s `job_id`
+must be the same id; inside the oracle's container, where the directories are mounted at `/ro/run1`
+and `/ro/run2`, `preflight.txt` names the job (`k0_inputs.job_id`). Jobs are taken in ascending job id
+(as Slurm assigns them), never in the order the directories are named. A lane receipt is a
+cross-check only: when a job wrote one, it must name the same job id, and the receipts' `t_start`
+must give the same order. So a job that a TERM ended before its receipt was written (`scancel`, a
+node fault, a time-limit kill after USR1's 120 s), or one that failed its image check, is read and
+resumed like any other. TERM also reaches the lane as a stop, like USR1 (`vm_lane.stop_on_signals`):
+nothing new is dispatched, the slots in flight are cut, every slot never dispatched is recorded, and
+the receipt (which carries `t_start`, as the image-check receipt now does) is written, when the job
+has the time. A census job with zero records (its image check failed, or it was stopped before any
+slot ended; it may have no `probes.jsonl`) is resumed by the same rule: its first block holds a slot
+without a final record, so the one resume runs the whole census (and is never resumed itself). A
+run directory without `preflight.txt` (the batch file stopped before it could start the lane) holds no
+record and is not a job: `submit` does not count it, and the census job is submitted again. Which
+record counts: per slot the attempts of the first job (in job order) with a final record, and of
+those the last (`k0_inputs.load_runs`, `counted`; `oracle_vm.py` reads its renders the same way).
 
 The oracle's registered route: one CPU container job through `infra/slurm/host-single-node/s2v4-cpu.sbatch`
 (run mode, no GRES, `--network=none`, read-only root, no capabilities) in the checker-mutation metric
@@ -406,7 +437,8 @@ directory (and its resume's, if any) mounted read-only at `/ro/run1` (`/ro/run2`
 `oracle_vm.registered_argv`: `/opt/venv-lock/bin/python -m harness.s2_locale.oracle_vm --runs /ro/run1
 [/ro/run2] --pool program/proposals/evidence/2026-10-11-s2v3-arabic-cua-locale-pilot/compute/pool/pool-v3.json
 --out /out/oracle.json --k0 /out/k0.json --workers 16` (the result does not depend on the number of
-workers). Its output records the interpreter and the numpy, scipy and Pillow versions it ran with; the
+workers, nor on which directory is mounted first: the job order comes from `preflight.txt`, above).
+Its output records the interpreter and the numpy, scipy and Pillow versions it ran with; the
 development run of this route is in section "Development smoke".
 
 Oracle (`harness/s2_locale/oracle_vm.py`: v3's `oracle.py` and `phase0.py` plants on the VM's renders and
@@ -459,7 +491,12 @@ a `cloud_file` expected file of the cache, complete, and not byte-identical to t
 88 of the 106 pool tasks (`experiments/manifests/s2v4/golds-v4.jsonl`, SHA-256
 `4ac326bd10dbda9ef1e266ffe247cd25f5a2e602e582404a798fadf4908dc71a`; the K2 executor's candidate digest
 is the first file's in VM-path order); the other 18 have no passing-side control (K0: runnable at
-best), among them the three C1 tasks.
+best), among them the three C1 tasks. Why A4(ii) is needed on this stack: R04 (D89) found OSWorld's
+office checkers not invariant to the LibreOffice build (25.8 and later) or to the system locale
+(`de_DE`, `ar_EG` and `tr_TR` flip three `compare_table` golds, and `ar_EG` also `5c1a6c3d`'s
+`compare_pptx_files` gold). R04 did not vary LibreOffice's interface language, v4's treatment; a
+cell that changes what a checker reads could flip a gold the same way, and A4(ii) checks in every
+admission cell that the gold still passes.
 
 ### P0.10 Config invariance (C1 tasks)
 
@@ -731,10 +768,11 @@ above, and the screenshots and trees stay on the host.
   AD-AR rate (1 in 7 Impress tasks) and about 0.01 at the pooled mirrored boot-pair rate (4 in 14), and
   a failed I5 is an infrastructure exit after about 126 VM-hours. In Phase 1 the step-0 check compares
   each ER and AR episode with one Phase 0 boot, and the A/A-unstable exemption read only E against E2,
-  so these tasks would have failed step-0 at random. The third round removes the cause in the capture
-  (the pointer warp, P0.7, in Phase 0 and Phase 1) and masks the status bar in step-0 (Phase 1); K0 is
-  unchanged. Smoke 1240 below measured the warp on the dev tasks: these four differences were gone,
-  but the field still took another value in 2 of 70 Impress boots.
+  so these tasks would have failed step-0 at random. The third round addressed the cause in the
+  capture (a pointer warp before the 60 s settle, in Phase 0 and Phase 1) and masked the status bar in
+  step-0 (Phase 1); K0 is unchanged. Smoke 1240 below measured that warp on the dev tasks: these four
+  differences were gone, but the field still took another value in 2 of 70 Impress boots, so round 4
+  (D90) moved the warp after the settle (P0.7).
 
   The other development numbers of this run, stated plainly: I1-doc's synthetic plant was detected on
   17 of 17 tasks and PD on all 15 named tasks (correctly not on `2b94c692` and `bf4e9888`, which have no
@@ -795,22 +833,55 @@ above, and the screenshots and trees stay on the host.
   directions. On `ac9bb6cb`, E, E2 and PL read 15.14 / 5.44 and S read 15.14 / 4.91; on `af23762e`, ER2
   and PD read 6.95 / 10.44 and ER read 7.57 / 10.44 (the Arabic cells read 15.14 / 5.46 and 6.92 /
   10.41 in their own layout); in every other Impress task each direction's cells read one value. So the
-  warp gives the field one value in most boots, but in 2 of the 70 Impress capture boots it took
+  warp gave the field one value in most boots, but in 2 of the 70 Impress capture boots it took
   another: in those boots the window's layout still changed after the warp (the field keeps the
   position of the warp's motion event, computed under the layout of that moment), which a warp before
-  the 60 s settle cannot exclude. The other checks: I1-doc held (synthetic plant 17 of 17, PD on all
-  15 named tasks); I3 and I4 100%; descriptor plants O3 17 of 17 and O2 15 of 17 (O2 still below 90%,
-  so the descriptors would be invalid); K0's admission on the dev tasks 13 admitted and 4 runnable, as
-  in 1214. On the dev tasks K0's instrument checks fail on I2. If each Impress boot takes another value
+  the 60 s settle cannot exclude. The warp before the settle also moved the variation into a
+  left-to-right pair: E against S, at most 1 px on the Impress dev tasks in smoke 1214 (at most 19 px on
+  any dev task), was 148 px on `ac9bb6cb`. In smoke 1240's probe records the warp's guest time lies
+  within about 1.1 s of the guest server's reply to the task's open step in all 170 capture records
+  (median 0.06 s; the reading mixes the guest's clock with the episode container's), so the warp
+  landed while the window was still being laid out. The other checks: I1-doc held (synthetic plant 17
+  of 17, PD on all 15 named tasks); I3 and I4 100%; descriptor plants O3 17 of 17 and O2 15 of 17
+  (O2 still below 90%, so the descriptors would be invalid); K0's admission on the dev tasks 13
+  admitted and 4 runnable, as in 1214. On smoke 1240's dev tasks K0's instrument checks failed on I2.
+  If each Impress boot takes another value
   with probability about 2 in 70, each of I2, I5 and I6 loses an Impress task with probability about
   0.056, and with 40 Impress tasks in the pool (at most 5 failures allowed among 106) each holds with
   probability about 0.98 (about 0.93 for all three); at 0.05 per boot each holds with about 0.81 (0.53
   for all three), and at 0.1 per boot with about 0.2. Two boots in 70 bound that rate only loosely, so
-  the risk to K0 is smaller than before the warp but not removed. A warp after the 60 s settle, once the
-  window has stopped changing, followed by a short wait before the screenshots, would put the motion
-  event under the final layout in every boot; that is a further change to P0.7's capture (not to K0)
-  and needs another development smoke, which this round did not run (one smoke was the round's
-  budget). In Phase 1 the field lies inside step-0's status-bar mask either way.
+  after the third round the risk to K0 was smaller than before the warp but not removed. The third
+  round proposed a warp after the 60 s settle, once the window has stopped changing, followed by a
+  fixed wait before the screenshots, so that the motion event is handled under the final layout in
+  every boot: a change to P0.7's capture, not to K0, which needed another development smoke beyond
+  that round's one. D90 adopted it as round 4 (below). In Phase 1 the field lies inside step-0's
+  status-bar mask either way.
+- Round 4's development smoke (D90; planned with this text, before it runs). The capture of P0.7 as
+  now registered (the warp after the 60 s settle, then the 4 s wait), from the export of round 4's
+  head, one job at V = 20 on an empty queue and outside every successor E session:
+  `experiments/manifests/s2v4/dev-smoke-v5.json`, smoke 1240's 240 slots plus a second boot of every
+  capture slot of the 7 Impress dev tasks (S, A, AR, PL, AD and PD at rep 2; E and ER, which already
+  have two boots, at reps 3 and 4), each placed right after the slot it repeats, in the same block: 310 slots
+  (240 capture, 70 gold), 140 Impress capture boots, 98 minutes requested
+  (`harness/s2_locale/dev_smoke.py render`). Then the oracle's registered route on its run directory.
+  D90's acceptance criterion, fixed before the smoke: (a) on all 17 dev tasks every masked boot pair
+  E-E2, ER-ER2, AD-AR and E-S is observed and at most tol6 (the route's tolerance on this run), so I2,
+  I5 and I6 are 17 of 17; (b) no Impress boot shows a deviating status-bar field. Its reading, fixed
+  now (`dev_smoke.py read`, development only): every pair is counted with K0's rule (a channel
+  differing by more than 20, outside the top bar and both renders' caret masks), on the whole screen
+  and in LibreOffice's status bar (rows 1060-1079); (a) reads the four registered pairs; (b) reads, on
+  the Impress dev tasks, the registered pairs and every further boot of a cell against that cell's
+  first boot (S-S2, E-E3, E-E4, A-A2, ER-ER3, ER-ER4, AR-AR2, PL-PL2, AD-AD2, PD-PD2), so every Impress
+  boot is in at least one pair, and a pair shows a deviating field when more than 10 pixels differ in
+  the status-bar rows (a changed digit of the field changes whole glyphs: three changed digits gave
+  148 and 142 px in smoke 1240, while its registered boot pairs differed by at most 1 px anywhere
+  else). Zero
+  deviations in about 140 Impress boots bound the per-boot rate near 2% (95%). D90's stop rule, fixed
+  with it: if the smoke misses the criterion, or a fresh audit of round 4 finds a blocking item that
+  needs another host smoke, S2 v4 ends at an honest exit, and its instrument findings (the shipped
+  catalogs, the reproducible images, the pointer-field instability) are reported as a record; no round
+  5 follows. The smoke's result is entered here, in the round-4 review log and in the forecast when it
+  has run.
 
 ## Phase 1 (admitted under D80 (iv) if K0 and K1 pass)
 
@@ -821,15 +892,18 @@ above, and the screenshots and trees stay on the host.
 - Order: one serving session (one GPU job and its CPU VM job). Task blocks in a seeded order (PCG64 seed
   42); within a block the 18 episodes in a seeded interleave; cells assigned to VM slots at random within
   each batch of 20, slot and batch recorded.
-- Pointer warp, at every episode start: after the guard's warm-up and before the 60 s settle, the
-  pointer is moved once to (995, 540) exactly as in P0.7 (`vm_probe.warp_pointer`: one absolute XTest
-  motion, read back); a failed warp is an infrastructure loss. So the agent's first screenshot shows
-  the cursor at (995, 540), over the document region, not where the boot leaves it ((1728, 972) in
-  every capture slot of smokes 1214 and 1240). S1a's episodes started from the boot's resting point, so this
-  is a difference from S1a that K5's comparison of the en cell with S1a's English success carries
-  (disclosed).
-- Step-0 check: each episode's first screenshot (after S1a's setup, the warm-up, the pointer warp and
-  the 60 s settle, as the Phase 0 capture slot's first screenshot) against the first screenshot of the
+- Pointer warp, at every episode start (round 4, D90: after the settle): after the guard's warm-up
+  and the 60 s settle, the pointer is moved once to (995, 540) exactly as in P0.7
+  (`vm_probe.warp_pointer`: one absolute XTest motion, read back), and the episode waits the same fixed
+  4 s (`vm_probe.POINTER_WAIT_S`) before the agent's first screenshot; a failed warp is an
+  infrastructure loss. So the agent's first screenshot shows the cursor at (995, 540), over the
+  document region, not where the boot leaves it ((1728, 972) in every capture slot of smokes 1214 and
+  1240). S1a's episodes started from the boot's resting point, so this is a difference from S1a (and
+  the 4 s wait adds 4 s before the first step) that K5's comparison of the en cell with S1a's English
+  success carries (disclosed).
+- Step-0 check: each episode's first screenshot (after S1a's setup, the warm-up, the 60 s settle, the
+  pointer warp and its 4 s wait, as the Phase 0 capture slot's first screenshot) against the first
+  screenshot of the
   Phase 0 render of its (task, cell) from the same lane and image, counted as P0.7 counts (a channel
   differing by more than 20), outside the mask: the GNOME top bar (rows 0-31); LibreOffice's status
   bar (rows 1060-1079, below its top border at row 1059 in every dev render of Calc, Writer and Impress
@@ -849,10 +923,12 @@ above, and the screenshots and trees stay on the host.
   touched: this reads its I6 per task. The census has a second boot of the mirrored layout (ER2) only
   for the 17 dev tasks, so the A/A reading per task is E against E2 in every cell. The mirrored-layout
   variation smoke 1214 found (Impress's status-bar pointer field: above tol6 between ER and ER2 on 3 of
-  the 7 Impress dev tasks and between AD and AR on 1, never between E and E2) is reduced by the pointer
-  warp (smoke 1240: those four pairs at 0 px, but the field took another value in 2 of 70 Impress boots,
-  one of them in a left-to-right cell) and lies inside step-0's status-bar mask in any case. A variation
-  elsewhere on the screen would still count against K3, and is reported per cell.
+  the 7 Impress dev tasks and between AD and AR on 1, never between E and E2) was reduced by the third
+  round's warp before the settle (smoke 1240: those four pairs at 0 px, but the field took another
+  value in 2 of 70 Impress boots, one of them in a left-to-right cell); round 4 warps after the settle
+  (P0.7; its development smoke is in section "Development smoke"), and the field lies inside step-0's
+  status-bar mask in any case. A variation elsewhere on the screen would still count against K3, and
+  is reported per cell.
 - Keyboard check, at every episode start: the guest's `setxkbmap -query` layout, its set of running
   input-method processes and GNOME's configured input sources (`gsettings get
   org.gnome.desktop.input-sources sources`) each equal the stock cell S's record of the same task in
@@ -1052,12 +1128,14 @@ host. No personal data; the VMs are offline.
 ## Owner's prior forecast (not a decision input)
 
 K1 passes on the five images: 0.85. K0 passes (at least 62 admitted, instrument checks hold): 0.55
-(0.75 at the start of the repair round; 0.65 after smoke 1214, which showed only the AD-AR case; now
-0.55, before the freeze, with every number of smokes 1214 and 1240 in hand: the pilot had 83 of 105
-tasks with a passing gold and 13 of 17 dev tasks are admitted, but with the warp as registered the
-Impress pointer field still took another value in 2 of 70 boots, which puts I2, I5 and I6 each at risk
-(about 0.98 each at that rate, much less if the true rate is a few times higher), and I1-doc's 100% bar
-fails on a single task without a document region or a lost ER or PD slot of a named dev task).
+(0.75 at the start of the repair round; 0.65 after smoke 1214, which showed only the AD-AR case; 0.55
+after the third round, with every number of smokes 1214 and 1240 in hand: the pilot had 83 of 105
+tasks with a passing gold and 13 of 17 dev tasks are admitted, but with the third round's warp before
+the settle the Impress pointer field still took another value in 2 of 70 boots, which puts I2, I5 and
+I6 each at risk (about 0.98 each at that rate, much less if the true rate is a few times higher), and
+I1-doc's 100% bar fails on a single task without a document region or a lost ER or PD slot of a named
+dev task). Round 4 moves the warp after the settle; this forecast is revised with its development
+smoke's result.
 Descriptors valid: 0.5 (O3 17 of 17 and O2 15 of 17 on smoke 1240's dev renders, 13 and 15 on 1214's).
 Phase 1 reached: about 0.45. If it runs: D PRESENT_HARM 0.35, D SMALL 0.45, EXCESS_OVER_PLACEBO given D
 PRESENT_HARM 0.5, T PRESENT_HARM 0.45, T SMALL 0.35.
@@ -1071,7 +1149,10 @@ PRESENT_HARM 0.5, T PRESENT_HARM 0.45, T SMALL 0.35.
    its K1 plan, verdict and batch file. Third round (D87): the pointer warp in the capture, the resume
    counted in job order with its manifest computed and checked from the interrupted job's records,
    `run_rung`'s pre-run checks, the oracle's registered route (development runs: section "Development
-   smoke").
+   smoke"). Round 4 (D90): the warp after the 60 s settle with the fixed 4 s wait, the job order from
+   the Slurm job id the batch file writes (the lane receipt a cross-check), TERM handled in the lane,
+   `t_start` in the image-check receipt and the zero-record census job, and the development smoke of
+   D90's acceptance criterion.
 2. A fresh code review and a fresh agent's pre-freeze audit check this file against the images, the
    code and the K0 commitment.
 3. Status fill, one commit: the status paragraph's first line becomes "**Status: frozen in
@@ -1093,10 +1174,13 @@ PRESENT_HARM 0.5, T PRESENT_HARM 0.45, T SMALL 0.35.
    dev tasks only, audited, frozen as its own ledger row), then Phase 1 under D80 (iv) within its cap.
 
 Steps 3 and 4 and the admission of step 5's registered manifests were rehearsed on a scratch clone in the
-repair round (section "Changes in the repair round (D84): review log"), at `0a1d18e7`, before the third
-round. A resume manifest is now admitted only against the interrupted job's run directory, so a
-rehearsal of it needs a stand-in run directory; the unit tests do that
-(`tests/test_s2v4_vm_lane.py`), and the next rehearsal repeats the rest at the third round's head.
+repair round (section "Changes in the repair round (D84): review log"), at `0a1d18e7`, and again by
+the third round's auditor at that round's head, with a stand-in resume run directory remapped in
+scratch (D90). A resume manifest is admitted only against the interrupted job's run directory, so a
+rehearsal of it needs a stand-in run directory, created only in a scratch clone, never under the
+host's registered run root (where `submit` would then refuse the real census job); the unit tests
+do that (`tests/test_s2v4_vm_lane.py`), and the rehearsal is repeated at the final head before the
+freeze.
 
 ## Code and inputs of record
 
@@ -1118,14 +1202,14 @@ import walk.
 | File | SHA-256 |
 |---|---|
 | `harness/s2_locale/k0_v4.py` | `d76ad39b8bb6da7e96e8afd3a43de2f8b9a90050bc509cb555f192a233712081` |
-| `harness/s2_locale/k0_inputs.py` | `20378c65aa66658351e22be27b0b0bd1057a4d3fbc4e5a65f3e6f972334f0e34` |
+| `harness/s2_locale/k0_inputs.py` | `847cf15a7564aba407cfd0afe86d6ed39920a9eef6633f2ae1a9e9223590cb21` |
 | `harness/s2_locale/oracle.py` | `c43c731daaf2319a3fb3f7a17b3104e5e1c4e73ba0c84802c2a8a3884d139798` |
-| `harness/s2_locale/oracle_vm.py` | `566445789199000ecc18460c9f03ff9252ca891c2549468c992115a965603b07` |
+| `harness/s2_locale/oracle_vm.py` | `b264df26070dfe3e8687e897dff57ce4a0229ea698580057cae44c5ca5e5056e` |
 | `harness/s2_locale/phase0.py` | `a15d8caffa16d953c5800e3e251f8d0c8d11d344937110897de0f61b6319c85e` |
 | `harness/s2_locale/capture.py` | `6781c860f0ef0e8ff5a21e7f045f36ea47da19f575519be217bca52ca2614f7c` |
 | `harness/s2_locale/catalog.py` | `9b95de047690570766e458fccce16ba90a8d0123b13cf3dc99d1f9e37fce57bf` |
-| `harness/s2_locale/vm_lane.py` | `5ce51aee378123adb77a1ecd9b857d0ba525ec1960f893c87a3e716f202a115f` |
-| `harness/s2_locale/vm_probe.py` | `18845601bda6418b18d7fe04ef961356b0b6a282ab523e49b9d8cf7b044051e4` |
+| `harness/s2_locale/vm_lane.py` | `c36ff20025db2f3817e317737cccc6bb6c508f595d8f9223bf4b1f44bd20e588` |
+| `harness/s2_locale/vm_probe.py` | `68a4d430e890a3a30206675dff12fde9237403290bc0cb5d66b6e5b3f196ae17` |
 | `harness/s2_locale/vm_gold.py` | `20ccb99a03ed311a7db15a81da19d8d6a3e4aa150636b9bb53aa957e6821a27f` |
 | `harness/s2_locale/guest/s2_guest.py` | `891170d8265665b0cbccca18bc6f7470ae1fcbc6f0cad5b514bf13e43b5bb94b` |
 | `harness/s2_locale/golds.py` | `0d8fad9fde736ee3fcd80492b5c905d7d6a35e690f9cf66559cf42ff87c25f9e` |
@@ -1277,11 +1361,15 @@ Added in the repair round (D84):
 
 Added in the third round (D87):
 
-100. One warp of the pointer to (995, 540) after the warm-up and before the 60 s settle, in every Phase
-     0 capture slot and at every Phase 1 episode start (P0.7, Phase 1).
-101. Phase 0's records counted in job order (the lane receipts), a cut re-queue rerun by the resume, the
-     resume manifest computed from and checked against the interrupted job's records, at most one resume
-     (P0.7).
+100. One warp of the pointer to (995, 540) after the 60 s settle, then a fixed 4 s wait before the
+     first screenshot, in every Phase 0 capture slot and at every Phase 1 episode start (P0.7, Phase 1;
+     round 4, D90, moved the third round's warp from before the settle to after it and added the
+     wait).
+101. Phase 0's records counted in job order, by the Slurm job id the batch file writes before the lane
+     starts (round 4, D90: the lane receipt is a cross-check only), a cut re-queue rerun by the resume,
+     the resume manifest computed from and checked against the interrupted job's records, at most one
+     resume, TERM stopping the lane like USR1, and a census job with zero records resumed from its
+     first block (P0.7).
 102. Step-0's own mask adds LibreOffice's status bar (rows 1060-1079); K0's masks are unchanged (Phase 1).
 103. The oracle's registered route: the metric image and the argv pinned, its environment recorded
      (P0.7).
@@ -1335,7 +1423,7 @@ Pre-freeze audit, not blocking:
 | K0 committed before any Phase 0 result; `k0_v4.py` implements it | Confirmed; the K0 section is byte-identical (`ed38b953...`, tested) and `k0_v4.py` is unchanged |
 | Wave 2 defect 4: state the K8 consequence at the p95 slot price | Fixed: Phase 1's cap paragraph states it (7.70 GPU-h needed, 6.83 admitted, K8 at the last complete block) |
 | K1 takes about 40 hours of serial jobs and image hashing | Budgeted: each `ap_delta` job's minutes include the image checks; one job at a time on an empty queue |
-| I6 lets 5% of tasks fail A/A while K3 allows 2% step-0 failures | Not fixed in this round (corrected in the third round): A/A-unstable tasks (E against E2 above tol6) take no step-0 check and are outside K3's base, and every estimand is also reported without them, but that rule reads only E against E2, and smoke 1214 had already shown boot-to-boot differences in the mirrored cells that it does not cover (ER against ER2 above tol6 on 3 Impress dev tasks, AD against AR on 1). The third round reduces them (the pointer warp; smoke 1240 still saw the field vary in 2 of 70 Impress boots) and masks the status bar in step-0, which covers that field for Phase 1 (section "Changes in the third round (D87): review log") |
+| I6 lets 5% of tasks fail A/A while K3 allows 2% step-0 failures | Not fixed in this round (corrected in the third round): A/A-unstable tasks (E against E2 above tol6) take no step-0 check and are outside K3's base, and every estimand is also reported without them, but that rule reads only E against E2, and smoke 1214 had already shown boot-to-boot differences in the mirrored cells that it does not cover (ER against ER2 above tol6 on 3 Impress dev tasks, AD against AR on 1). The third round reduced them (the pointer warp before the settle; smoke 1240 still saw the field vary in 2 of 70 Impress boots) and masked the status bar in step-0, which covers that field for Phase 1 (section "Changes in the third round (D87): review log"); round 4 moves the warp after the settle (D90) |
 | PD rested on container renders | Fixed: dev-tested in the VM on all named tasks, with a rule for an off-screen plant fixed before the freeze |
 | Pin `k0_inputs.py` and `k0_v4.py`; `k0_inputs` drops tasks with no records | Fixed: both are in section "Code and inputs of record"; `k0_inputs.admission` lists every pool task (unobserved tasks are excluded, not dropped) |
 | "The freeze commit or its successor" is vague | Fixed: D56's words in section "Identity", enforced by the lane and `ap_delta` |
@@ -1350,8 +1438,8 @@ builds were corrected; and the scratch freeze rehearsal was repeated at the merg
 (`freeze-rehearsal/rehearsal.json`). The round left one development finding unresolved: Impress's
 status-bar pointer-position field varied between boots in the mirrored cells (smoke 1214, section
 "Development smoke"), and this log reported only its AD-against-AR case. The fresh review and audit
-found the rest and made it blocking (D87); the third round addresses it, and its development smoke
-shows it reduced but not removed (next section).
+found the rest and made it blocking (D87); the third round addressed it, and its development smoke
+showed it reduced but not removed (next section); round 4 (D90) moves the warp after the settle.
 
 
 ## Changes in the third round (D87): review log
@@ -1365,8 +1453,8 @@ Blocking (the review and the audit found both):
 
 | Item | Disposition |
 |---|---|
-| B1. Impress's status-bar pointer-position field changes from boot to boot in the mirrored cells: in smoke 1214, ER against ER2 above tol6 on 3 of the 7 Impress dev tasks (293, 148 and 139 px) and AD against AR on 1 (513 px), E against E2 never. I5 is 16 of 17 on the dev tasks, and P(I5 holds) is about 0.48 to 0.01; Phase 1's A/A exemption read only E against E2; the registration reported only the AD-AR case, called the I6/K3 fix "Fixed" and left an open item "recorded for the next review" | Partly fixed, as proposed; not resolved, so the package is not ready to freeze. K0 untouched. (a) The pointer warp: one absolute XTest motion to (995, 540) after the warm-up and before the 60 s settle, read back, through the guest helper (`s2_guest.py` mode `pointer`, `vm_probe.warp_pointer`), in every Phase 0 capture slot (P0.7) and at every Phase 1 episode start (Phase 1); P0.7 states the point, the mechanism and the reason; a failed warp is an infrastructure loss. Tests: the probe warps once, after the warm-up and before the settle; a pointer read back elsewhere is a loss; the guest mode sends one MotionNotify at the target (`tests/test_s2v4_vm_lane.py`). (b) Phase 1's A/A rule matched to the layout through step-0's own mask of LibreOffice's status bar (rows 1060-1079; the audit's second option); the A/A-unstable reading stays E against E2, since the census has ER2 only for the dev tasks (stated in Phase 1). (c) Every boot-to-boot pair of smoke 1214 is reported (section "Development smoke"), the repair-round log's I6/K3 disposition is corrected, and its closing note's open item is replaced. (d) Smoke 1240, smoke 1214's shape on the dev tasks with the warp, read by the registered oracle route (Slurm 1241): AD against AR 0 px on all 17 tasks (I5 17 of 17), E against E2 at most 1 px (I6 17 of 17), and the three ER-ER2 tasks of 1214 at 0 px; but the field took another value in 2 of the 70 Impress capture boots, so ER against ER2 is 142 px on `af23762e` and E against S 148 px on `ac9bb6cb` (I2 16 of 17: on the dev tasks K0's instrument checks still fail). The layout still changed after the warp in those boots. Proposed next change (not made: it needs another development smoke, beyond this round's one): warp after the 60 s settle, once the window has stopped changing, then a short wait before the screenshots, in P0.7 and in Phase 1; a change to the capture, not to K0. (e) The forecast is revised |
-| B2. Which records count after a resumed Phase 0 job depended on the order of `--runs`; a first-attempt loss whose re-queue the interruption cut counted as final (unobserved after one loss); the resume manifest was checked only loosely (any later block, any 64-hex string, any number of resumes), and nothing rendered it | Fixed. `k0_inputs.run_order` and `load_runs` put the run directories in job order by the lane receipt's job id, which must agree with its `t_start` (refused otherwise; at most two jobs, the second the resume of the first), and `oracle_vm` reads its renders through them. `final_in_job`: probed, or lost on the second attempt; a cut re-queue is not final and the resumed job reruns the slot (chosen over "counts as unobserved"; P0.7). `vm_lane.py render-census --resume-from-records RUN_DIR/probes.jsonl` computes `resume_from_block` and `resumes` (job id, run directory, records SHA-256) from the interrupted job's run directory, and `check_registered` recomputes them and admits only that rendering; a resumed job is not resumed again, `submit` refuses a second census job and a second resume (`check_once`), and `phase0` is pinned to its run root. Tests: the order of the arguments does not matter; directories without a job order are refused; a cut re-queue is rerun; the rendered resume is admitted and every edit of it refused; one census job and one resume (`tests/test_s2v4_k0.py`, `test_s2v4_oracle_vm.py`, `test_s2v4_vm_lane.py`) |
+| B1. Impress's status-bar pointer-position field changes from boot to boot in the mirrored cells: in smoke 1214, ER against ER2 above tol6 on 3 of the 7 Impress dev tasks (293, 148 and 139 px) and AD against AR on 1 (513 px), E against E2 never. I5 is 16 of 17 on the dev tasks, and P(I5 holds) is about 0.48 to 0.01; Phase 1's A/A exemption read only E against E2; the registration reported only the AD-AR case, called the I6/K3 fix "Fixed" and left an open item "recorded for the next review" | Partly fixed in the third round, as proposed, and not resolved there: the fresh review and audit of the third round's head kept it blocking (D90), and round 4 made the change proposed in (d) (section "Changes in round 4 (D90): review log"). K0 untouched. (a) The pointer warp: one absolute XTest motion to (995, 540) after the warm-up and before the 60 s settle, read back, through the guest helper (`s2_guest.py` mode `pointer`, `vm_probe.warp_pointer`), in every Phase 0 capture slot (P0.7) and at every Phase 1 episode start (Phase 1); P0.7 states the point, the mechanism and the reason; a failed warp is an infrastructure loss. Tests: the probe warps once, after the warm-up and before the settle; a pointer read back elsewhere is a loss; the guest mode sends one MotionNotify at the target (`tests/test_s2v4_vm_lane.py`). (b) Phase 1's A/A rule matched to the layout through step-0's own mask of LibreOffice's status bar (rows 1060-1079; the audit's second option); the A/A-unstable reading stays E against E2, since the census has ER2 only for the dev tasks (stated in Phase 1). (c) Every boot-to-boot pair of smoke 1214 is reported (section "Development smoke"), the repair-round log's I6/K3 disposition is corrected, and its closing note's open item is replaced. (d) Smoke 1240, smoke 1214's shape on the dev tasks with the warp, read by the registered oracle route (Slurm 1241): AD against AR 0 px on all 17 tasks (I5 17 of 17), E against E2 at most 1 px (I6 17 of 17), and the three ER-ER2 tasks of 1214 at 0 px; but the field took another value in 2 of the 70 Impress capture boots, so ER against ER2 is 142 px on `af23762e` and E against S 148 px on `ac9bb6cb` (I2 16 of 17: on the dev tasks K0's instrument checks still fail). The layout still changed after the warp in those boots. The change proposed then (not made in the third round: it needed another development smoke, beyond that round's one): warp after the 60 s settle, once the window has stopped changing, then a short wait before the screenshots, in P0.7 and in Phase 1; a change to the capture, not to K0. Round 4 made it (D90). (e) The forecast is revised |
+| B2. Which records count after a resumed Phase 0 job depended on the order of `--runs`; a first-attempt loss whose re-queue the interruption cut counted as final (unobserved after one loss); the resume manifest was checked only loosely (any later block, any 64-hex string, any number of resumes), and nothing rendered it | Fixed as described here, with one gap the fresh review and audit of the third round found (D90): the job order came from the lane receipt alone, so a job ended by TERM (no receipt) or by a failed image check (a receipt without `t_start`) could be neither read nor resumed. Round 4 takes the job order from the Slurm job id the batch file writes (section "Changes in round 4 (D90): review log"). What the third round did: `k0_inputs.run_order` and `load_runs` put the run directories in job order by the lane receipt's job id, which must agree with its `t_start` (refused otherwise; at most two jobs, the second the resume of the first), and `oracle_vm` reads its renders through them. `final_in_job`: probed, or lost on the second attempt; a cut re-queue is not final and the resumed job reruns the slot (chosen over "counts as unobserved"; P0.7). `vm_lane.py render-census --resume-from-records RUN_DIR/probes.jsonl` computes `resume_from_block` and `resumes` (job id, run directory, records SHA-256) from the interrupted job's run directory, and `check_registered` recomputes them and admits only that rendering; a resumed job is not resumed again, `submit` refuses a second census job and a second resume (`check_once`), and `phase0` is pinned to its run root. Tests: the order of the arguments does not matter; directories without a job order are refused; a cut re-queue is rerun; the rendered resume is admitted and every edit of it refused; one census job and one resume (`tests/test_s2v4_k0.py`, `test_s2v4_oracle_vm.py`, `test_s2v4_vm_lane.py`) |
 
 Not blocking:
 
@@ -1392,11 +1480,50 @@ skipped (the e2fsprogs round trip, which runs only where e2fsprogs is installed;
 1207's self-test); ruff is clean on every file this round changed. The K0 section's SHA-256 is
 unchanged (`ed38b953...`), and `harness/s2_locale/k0_v4.py` is unchanged since `ee0841b3`.
 
-Closing the round: `main` was merged in with every ledger row kept (rows 1-20; this id has none); one
-development smoke (Slurm 1240) and one run of the oracle's registered route (Slurm 1241) ran on the dev
-tasks, each submitted on an empty queue with no other workstream's step pending and no E session in
-progress. B2 and every non-blocking item are fixed. B1 is reduced, not resolved: with the warp before
-the 60 s settle, the dev tasks still fail I2 (`ac9bb6cb`, 148 px in Impress's pointer field), so the
-package is not ready to freeze. The proposed next change, a warp after the 60 s settle followed by a
-short wait before the screenshots, needs another development smoke and is left for the program's
-decision.
+Closing the third round: `main` was merged in with every ledger row kept (rows 1-20; this id has
+none); one development smoke (Slurm 1240) and one run of the oracle's registered route (Slurm 1241)
+ran on the dev tasks, each submitted on an empty queue with no other workstream's step pending and no
+E session in progress. Every non-blocking item was fixed, and B2 as described (with the gap above).
+B1 was reduced, not resolved: with the warp before the 60 s settle, the dev tasks still failed I2
+(`ac9bb6cb`, 148 px in Impress's pointer field). The round's owner agent returned no report (its
+output was placeholders); the fresh review and audit read the branch head directly. The program
+decided one final repair round, with its acceptance criterion and stop rule fixed in advance (D90;
+next section).
+
+## Changes in round 4 (D90): review log
+
+A fresh code review and a fresh pre-freeze audit of the third round's head (`c1a56989`) found two
+blocking items that round's fixes had not cleared, and the audit a third (D90). D90 made round 4 the
+last repair round for S2 v4, adopted the fixes both reviewers proposed, and fixed in advance the
+round's acceptance criterion (section "Development smoke", round 4's smoke) and its stop rule: if the
+smoke misses the criterion, or a fresh audit of round 4 finds a blocking item that needs another host
+smoke, S2 v4 ends at an honest exit, its instrument findings reported as a record, and no round 5
+follows. K0 stays byte-identical (`ed38b953...`), and `harness/s2_locale/k0_v4.py` is unchanged.
+
+Blocking:
+
+| Item | Disposition |
+|---|---|
+| B1 (review and audit). The warp before the 60 s settle did not make Impress's pointer field the same in every boot: it landed within about a second of the task's open step, while the window was still being laid out; in smoke 1240 and on the oracle's registered route (1241) I2 was 16 of 17 (E against S 148 px on `ac9bb6cb`), ER against ER2 142 px on `af23762e`, and the variation moved into the left-to-right pairs | Fixed in the capture, as both proposed; K0 untouched. `vm_probe.Probe.run` now warps once after the 60 s settle and then waits a fixed `POINTER_WAIT_S` = 4 s before the two screenshots (chosen before the smoke: longer than VCL's quick-help and balloon tip delays of 0.5 s and 1.5 s); the same at every Phase 1 episode start. P0.7, Phase 1 and design decision 100 say so, and the ordering test (`test_probe_warps_the_pointer_after_the_settle_and_waits_before_the_screenshots`) requires warm-up, settle, warp, wait, screenshot, 1 s, screenshot, in that order. The pre-settle warp's added left-to-right variation and its timing are reported in section "Development smoke". Round 4's development smoke (`dev-smoke-v5.json`: 310 slots, 140 Impress capture boots) and its reading (`dev_smoke.py`) are fixed before it runs; its result is entered here when it has run |
+| B2 (review and audit). The job order came from `lane-receipt.json` alone: a census job ended by TERM wrote no receipt, and the image-check receipt had no `t_start`, so such a job could be neither read by the oracle nor resumed; the zero-record case was undefined | Fixed as both proposed. `k0_inputs.job_id`: the Slurm job id the batch file writes before the lane starts (`preflight.txt`'s `job_id`; on the host the run directory's name, which must equal it; in the oracle's container, `/ro/run1` and `/ro/run2`, `preflight.txt` alone); `run_order` orders by it, and a receipt, when present, must name the same job and its `t_start` must give the same order (a cross-check only). `vm_lane.interrupted_job` reads the job the same way and needs no receipt; a missing `probes.jsonl` is zero records. `vm_lane.main` handles TERM like USR1 (`stop_on_signals`: the lane's stop event), so a terminated lane records the slots never dispatched and writes its receipt when it has the time; the image-check receipt carries `t_start` (and `t_end`, the name and the purpose). The zero-record census job (failed image check, or stopped before any slot ended) is resumed by the general rule, from its first block, so the one resume runs the whole census; a run directory without `preflight.txt` is not a job (`check_once`). P0.7 states all of it. Tests: a census ended by TERM (no receipt) is read by `load_runs` and `render_index` and resumed through `render-census --resume-from-records` and `check_registered`; an image-check-failed census with no records is resumed from its first block and the resume admitted once; the registered route's two mounts (`registered_argv(2)`) are read in job order from `preflight.txt` whatever the mount order; a job id that disagrees between the name, `preflight.txt` and the receipt is refused; TERM sets the stop; a stopped lane records every slot as not final and writes its receipt (`tests/test_s2v4_k0.py`, `test_s2v4_oracle_vm.py`, `test_s2v4_vm_lane.py`) |
+| Audit 3. The text read as unfrozen: the review log and closing note said the package was not ready to freeze, the development smoke section said a further smoke was still to run, and the freeze procedure pointed to a rehearsal still to come | The passages that described round 3 are rewritten as its history (sections "Development smoke", "Phase 1", the forecast, the freeze procedure and the third round's review log). Round 4's own result, the scratch freeze rehearsal at the final head and the status fill follow its development smoke |
+
+Not blocking:
+
+| Item | Disposition |
+|---|---|
+| Merge `main` before the freeze | Done: D88, D89 and D90 and the R03 (b) and R04 merges; the ledger is main's (rows 1-20; this id has none) |
+| Cite D89 where the guest locale is held at `en_HK` and where A4(ii) is motivated | Done: P0.2, P0.5 and P0.9 (ii) cite R04's locale arm (under `ar_EG` three `compare_table` golds and `5c1a6c3d`'s `compare_pptx_files` gold flip) |
+| Repeat the scratch freeze rehearsal at the final head; a stand-in resume run directory only in scratch, never under the host's registered run root | Planned after round 4's smoke, at the final head, in a scratch clone (freeze procedure) |
+| `ap_delta.run_rung`'s restored pre-run checks are only unit-tested | Open: they need one host development rung before the freeze, which this code step did not run (no host job); recorded for the round's host steps |
+| `check_once` does not see a census job that is still pending | Unchanged: one job at a time, each submitted on an empty queue, covers it |
+| The forecast's K0 risk rested on a loosely bounded per-boot rate (2 of 70) | The forecast is revised with round 4's smoke (about 140 Impress boots) |
+| A1 and A2 on PL have 46 and 96 minutes of headroom under 1,440 | Noted, unchanged |
+| The third round's owner returned placeholder output; decisions, state and handoff; superseded images on the host | Disclosed (D90); the program records and the host images are the orchestrator's |
+
+Tests at this round's code head: every S2 v4 test file (`tests/test_s2v4_*.py`, with the new
+`tests/test_s2v4_dev_smoke.py` for the round-4 manifest and its reading) gives 155 passed and 1
+skipped (registration 9, k0 22, oracle_vm 12, vm_lane 52, ap_delta 12, image_build 33 and the skipped
+e2fsprogs round trip, which runs only where e2fsprogs is installed, fetch_langpacks 10, dev_smoke 5);
+`ruff check` is clean on every file this round changed. The K0 section's SHA-256 is unchanged
+(`ed38b953...`), and so are `harness/s2_locale/k0_v4.py` and the batch files.

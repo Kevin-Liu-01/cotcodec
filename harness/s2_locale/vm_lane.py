@@ -30,8 +30,18 @@ the census from the first block holding a slot without a final record (``resume_
 naming the interrupted job (``resumes``: its job id, run directory and the SHA-256 of its records),
 and ``check_registered`` recomputes all of it from that run directory, so the resume manifest must
 be exactly that rendering; a resumed job is never resumed again, and ``submit`` refuses a second
-census job or a second resume (``check_once``). Once the id is frozen, ``development`` is refused
+census job or a second resume (``check_once``). The interrupted job is named by the Slurm job id
+the batch file writes before the lane starts (the run directory's name and ``preflight.txt``'s
+``job_id``; ``k0_inputs.job_id``), never by its lane receipt, so a job ended by TERM, or one that
+failed its image check, can be resumed (round 4, D90). A census job with zero records (no slot
+ended: a failed image check, or a stop before any slot) is resumed the same way, from its first
+block: the one resume then runs the whole census. Once the id is frozen, ``development`` is refused
 (D56).
+
+Stopping: USR1 (Slurm's warning before the time limit) and TERM (``scancel``, the batch file's
+own TERM trap, a time-limit kill) both set the lane's stop event (``stop_on_signals``): nothing
+new is dispatched, the slots in flight are cut (``cap_truncated``), every slot never dispatched is
+recorded, and the receipt is written, when the job has the time.
 
 PD slots (the planted-document control) run on the ER image with the planted-document file-cache
 variant (``pd_cache.py``) mounted instead of the pinned file cache; the variant is pinned by its
@@ -359,16 +369,25 @@ def validate_manifest(raw: Mapping[str, Any], source_dir: Path) -> dict[str, Any
 
 
 def interrupted_job(run_dir: Path) -> dict[str, Any]:
-    """An interrupted ``phase0`` job's run directory: its job id (``lane-receipt.json``), its
-    manifest (``manifest.json``, written by the batch file) and its records (``probes.jsonl``)."""
+    """An interrupted ``phase0`` job's run directory: its Slurm job id (the directory's name, which
+    must equal ``preflight.txt``'s ``job_id``, both written by the batch file before the lane
+    starts; ``k0_inputs.job_id``), its manifest (``manifest.json``, written by the batch file) and
+    its records (``probes.jsonl``; none when no slot ended). The lane receipt is not needed: a job
+    ended by TERM may not have written one. When it exists it must name the same job."""
+    from harness.s2_locale.k0_inputs import RunOrderError, job_id, receipt_start
+
     run_dir = Path(run_dir)
-    for name in ("lane-receipt.json", "manifest.json", "probes.jsonl"):
+    for name in ("manifest.json", "preflight.txt"):
         _require((run_dir / name).is_file(), f"{run_dir}: {name} is missing")
-    receipt = json.loads((run_dir / "lane-receipt.json").read_text(encoding="utf-8"))
-    job = str(receipt.get("job_id", ""))
-    _require(job.isdigit() and run_dir.name == job,
-             f"{run_dir}: the run directory is not named by its lane receipt's job id")  # fmt: skip
-    data = (run_dir / "probes.jsonl").read_bytes()
+    _require(run_dir.name.isdigit(),
+             f"{run_dir}: the run directory is not named by its Slurm job id")  # fmt: skip
+    try:
+        job = str(job_id(run_dir))
+        receipt_start(run_dir, int(job))
+    except RunOrderError as exc:
+        raise LaneError(str(exc)) from exc
+    path = run_dir / "probes.jsonl"
+    data = path.read_bytes() if path.is_file() else b""
     records = [json.loads(x) for x in data.decode("utf-8").splitlines() if x.strip()]
     return {"job_id": job, "run_dir": str(run_dir), "records": records,
             "records_sha256": hashlib.sha256(data).hexdigest(),
@@ -452,13 +471,16 @@ def check_registered(m: Mapping[str, Any], source_dir: Path) -> None:
 
 def check_once(m: Mapping[str, Any]) -> None:
     """At submission: the census job runs once and is resumed at most once. Refuses a census job
-    when the run root already holds a ``phase0`` job, and a resume when it already holds one."""
+    when the run root already holds a ``phase0`` job, and a resume when it already holds one. A
+    job is a run directory named by its job id with ``manifest.json`` and ``preflight.txt``, which
+    the batch file writes before it starts the lane; a directory without ``preflight.txt`` (the
+    batch file stopped before starting the lane) holds no record and is not a job."""
     if m.get("purpose") not in REGISTERED_PURPOSES:
         return
     root = Path(m["run_root"])
     prior = []
     for path in sorted(root.glob("*/manifest.json")) if root.is_dir() else []:
-        if path.parent.name.isdigit():
+        if path.parent.name.isdigit() and (path.parent / "preflight.txt").is_file():
             data = json.loads(path.read_text(encoding="utf-8"))
             if data.get("purpose") == "phase0":
                 prior.append((path.parent.name, data.get("resume_from_block") is not None))
@@ -687,10 +709,13 @@ class S2Lane(s1a.Lane):
 
     def run(self) -> dict[str, Any]:
         if self.verify:
+            started = self.clock()
             try:
                 self.image_digests = verify_images(self.m)
             except Exception as exc:  # noqa: BLE001 - nothing dispatches on a wrong image
                 receipt = {"schema": "s2v4-vm-lane-receipt-v1", "job_id": self.cfg.job_id,
+                           "name": self.m["name"], "purpose": self.m["purpose"],
+                           "t_start": started, "t_end": self.clock(),
                            "error": f"image check: {exc}"[:500], "records": 0, "statuses": {},
                            "stopped": True}  # fmt: skip
                 self.write_receipt(receipt)
@@ -706,6 +731,16 @@ class S2Lane(s1a.Lane):
         out["executor_commit"] = sha.read_text(encoding="utf-8").strip() if sha.is_file() else None
         out["source_tree_sha256"] = s1a.tree_sha256(self.cfg.source_dir)
         super().write_receipt(out)
+
+
+STOP_SIGNALS = (signal.SIGUSR1, signal.SIGTERM)
+
+
+def stop_on_signals(lane: Any, signals: Sequence[int] = STOP_SIGNALS) -> None:
+    """USR1 and TERM set the lane's stop event (round 4, D90: Python's default TERM ended the lane
+    at once, with no receipt and no record of the slots never dispatched)."""
+    for sig in signals:
+        signal.signal(sig, lambda *_: lane.stop.set())
 
 
 def canonical(manifest: Mapping[str, Any]) -> str:
@@ -956,7 +991,7 @@ def main(argv: list[str] | None = None) -> int:
                                manifest["vm"]["cpu_cores"])  # fmt: skip
     lane = S2Lane(s1a.LaneConfig(manifest, args.job_id, args.run_dir, args.source_dir),
                   cpusets=cpusets, snapshot=snapshot_host)  # fmt: skip
-    signal.signal(signal.SIGUSR1, lambda *_: lane.stop.set())
+    stop_on_signals(lane)
     receipt = lane.run()
     print(json.dumps({k: receipt.get(k) for k in ("records", "statuses", "stopped")}))
     return 0 if "error" not in receipt else 3

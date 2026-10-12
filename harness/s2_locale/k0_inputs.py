@@ -20,10 +20,13 @@ cell:
 A pool task with no record at all is still listed (every cell unobserved, so excluded), so the
 census report covers all 106. Which records count (registration P0.7):
 
-* the jobs are taken in job order, read from each run directory's ``lane-receipt.json`` (its
-  Slurm job id, which must agree with its ``t_start``; ``run_order`` refuses a directory without
-  one), never in the order the directories are named; at most two jobs: the census job and its
-  one resume, whose manifest names the first job (``load_runs``);
+* the jobs are taken in job order, by the Slurm job id the batch file writes before the lane
+  starts (``job_id``: ``preflight.txt``'s ``job_id``, and on the host the run directory's own name,
+  ``RUN_ROOT/SLURM_JOB_ID``, which must agree with it), never in the order the directories are
+  named; a lane receipt, when the job wrote one, is a cross-check only (its job id must be the same,
+  and its ``t_start`` must give the same order), so a job ended by TERM or by a failed image check
+  is read like any other (round 4, D90); a job with no ``probes.jsonl`` has zero records; at most
+  two jobs: the census job and its one resume, whose manifest names the first job (``load_runs``);
 * one job's records of a slot are final (``final_in_job``) when an attempt ended ``probed`` or the
   slot was lost to infrastructure on its second attempt (lost twice: unobserved). A first-attempt
   infrastructure loss whose re-queue the job did not finish (cut at the stop signal, never
@@ -38,6 +41,7 @@ The instrument checks need the oracle's per-task metrics (``oracle_vm.py``).
 from __future__ import annotations
 
 import json
+import re
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
@@ -48,6 +52,7 @@ from harness.s2_locale import k0_v4
 SETUP_FAILURE = "probe:reset_task"
 FINAL = ("probed", "infrastructure")  # the statuses a counted attempt can have
 MAX_RUNS = 2  # the census job and at most one resume (P0.7)
+JOB_ID = re.compile(r"^[1-9][0-9]{0,19}$")  # a Slurm job id, as the batch file checks it
 
 
 class RunOrderError(ValueError):
@@ -66,30 +71,66 @@ def load_records(paths: Iterable[Path]) -> list[dict[str, Any]]:
     return out
 
 
-def _receipt(run_dir: Path) -> tuple[int, float]:
+def job_id(run_dir: Path) -> int:
+    """The Slurm job id of a lane run directory, from what the batch file (``s2v4-vm.sbatch``)
+    writes before the lane starts: the ``job_id=`` line of ``preflight.txt`` and, on the host, the
+    directory's own name (``RUN_ROOT/SLURM_JOB_ID``), which must be the same id. Inside the oracle's
+    container the directories are mounted at ``/ro/run1`` and ``/ro/run2``, so a directory whose
+    name is not a number is named by ``preflight.txt`` alone. Never read from the lane receipt,
+    which a job ended by TERM may not have written."""
+    run_dir = Path(run_dir)
+    path = run_dir / "preflight.txt"
+    if not path.is_file():
+        raise RunOrderError(f"{run_dir}: no preflight.txt, so its Slurm job id cannot be read")
+    ids = [line.split("=", 1)[1].strip()
+           for line in path.read_text(encoding="utf-8").splitlines()
+           if line.startswith("job_id=")]  # fmt: skip
+    if len(ids) != 1 or not JOB_ID.fullmatch(ids[0]):
+        raise RunOrderError(f"{run_dir}: preflight.txt names no single Slurm job id")
+    if run_dir.name.isdigit() and run_dir.name != ids[0]:
+        raise RunOrderError(f"{run_dir}: the directory is named {run_dir.name}, but preflight.txt "
+                            f"names job {ids[0]}")  # fmt: skip
+    return int(ids[0])
+
+
+def receipt_start(run_dir: Path, job: int) -> float | None:
+    """The lane receipt's ``t_start`` (a cross-check of the job order), or None when the job wrote
+    no receipt or the receipt has no start time. A receipt that names another job is refused."""
     path = Path(run_dir) / "lane-receipt.json"
     if not path.is_file():
-        raise RunOrderError(f"{run_dir}: no lane-receipt.json, so its job order cannot be read")
+        return None
     receipt = json.loads(path.read_text(encoding="utf-8"))
-    job, start = str(receipt.get("job_id", "")), receipt.get("t_start")
-    if not job.isdigit() or not isinstance(start, int | float) or isinstance(start, bool):
-        raise RunOrderError(f"{run_dir}: the lane receipt has no numeric job_id and t_start")
-    return int(job), float(start)
+    if str(receipt.get("job_id", "")) != str(job):
+        raise RunOrderError(f"{run_dir}: the lane receipt names job {receipt.get('job_id')!r}, "
+                            f"not {job}")  # fmt: skip
+    start = receipt.get("t_start")
+    if isinstance(start, bool) or not isinstance(start, int | float):
+        return None
+    return float(start)
 
 
 def run_order(run_dirs: Sequence[Path]) -> list[Path]:
-    """The run directories in job order: by the lane receipt's Slurm job id (ascending as Slurm
-    assigns them), which must give the same order as the receipts' ``t_start``. Refuses a
-    directory without a receipt, a repeated job id and job ids and start times that disagree.
-    The order in which the directories are named never matters."""
-    rows = sorted((*_receipt(d), Path(d)) for d in run_dirs)
-    jobs = [job for job, _, _ in rows]
+    """The run directories in job order: by Slurm job id (``job_id``; ascending, as Slurm assigns
+    them). The receipts' ``t_start``, where present, must give the same order. Refuses a directory
+    without a job id, a repeated job id and job ids and start times that disagree. The order in
+    which the directories are named never matters."""
+    rows = sorted((job_id(d), Path(d)) for d in run_dirs)
+    jobs = [job for job, _ in rows]
     if len(set(jobs)) != len(jobs):
         raise RunOrderError(f"a job is named twice: {jobs}")
-    starts = [start for _, start, _ in rows]
-    if any(b <= a for a, b in zip(starts, starts[1:], strict=False)):
+    starts = [(job, s) for job, d in rows if (s := receipt_start(d, job)) is not None]
+    if any(b <= a for (_, a), (_, b) in zip(starts, starts[1:], strict=False)):
         raise RunOrderError(f"job ids {jobs} and start times {starts} give different orders")
-    return [d for _, _, d in rows]
+    return [d for _, d in rows]
+
+
+def run_records(run_dir: Path) -> list[dict[str, Any]]:
+    """One run directory's records (``probes.jsonl``); a job that wrote none (it failed its image
+    check, or was stopped before any slot ended) has zero records."""
+    path = Path(run_dir) / "probes.jsonl"
+    if not path.is_file():
+        return []
+    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
 
 def load_runs(run_dirs: Sequence[Path]) -> tuple[list[Path], list[dict[str, Any]]]:
@@ -101,11 +142,12 @@ def load_runs(run_dirs: Sequence[Path]) -> tuple[list[Path], list[dict[str, Any]
     if len(ordered) > MAX_RUNS:
         raise RunOrderError(f"{len(ordered)} jobs: the census job is resumed at most once")
     if len(ordered) == 2:
-        first = str(_receipt(ordered[0])[0])
+        first = str(job_id(ordered[0]))
         manifest = json.loads((ordered[1] / "manifest.json").read_text(encoding="utf-8"))
         if (manifest.get("resumes") or {}).get("job_id") != first:
             raise RunOrderError(f"{ordered[1]} is not the resume of job {first}")
-    return ordered, load_records([d / "probes.jsonl" for d in ordered])
+    records = [{**r, "_run": run} for run, d in enumerate(ordered) for r in run_records(d)]
+    return ordered, records
 
 
 def final_in_job(rows: Iterable[Mapping[str, Any]]) -> bool:

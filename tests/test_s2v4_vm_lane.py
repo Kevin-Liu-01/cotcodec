@@ -184,13 +184,20 @@ def test_phase0_admitted_only_from_the_freeze_export(tmp_path, monkeypatch):
         L.validate_manifest(m, src)
 
 
-def _interrupted(root: Path, job: str, m: dict, records: list) -> Path:
-    """An interrupted census job's run directory as the lane and the batch file leave it."""
+def _interrupted(root: Path, job: str, m: dict, records: list | None,
+                 receipt: bool = True) -> Path:
+    """An interrupted census job's run directory as the batch file and the lane leave it: the
+    batch file's ``manifest.json`` and ``preflight.txt`` (written before the lane starts); the
+    lane's ``probes.jsonl`` (None: no slot ended) and, unless the job was ended by TERM,
+    ``lane-receipt.json``."""
     run = root / job
     run.mkdir(parents=True)
     (run / "manifest.json").write_text(json.dumps(m, indent=2, sort_keys=True))
-    (run / "lane-receipt.json").write_text(json.dumps({"job_id": job, "t_start": 1.0}))
-    (run / "probes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in records))
+    (run / "preflight.txt").write_text(f"job_id={job}\nbatch_sha256={'0' * 64}\n")
+    if receipt:
+        (run / "lane-receipt.json").write_text(json.dumps({"job_id": job, "t_start": 1.0}))
+    if records is not None:
+        (run / "probes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in records))
     return run
 
 
@@ -274,11 +281,91 @@ def test_render_census_resume_from_records_is_what_validation_requires(tmp_path,
     assert L.validate_manifest(resumed, src)
 
 
+def _resume_setup(tmp_path, monkeypatch):
+    src = _source(tmp_path)
+    row = _freeze(src)
+    base = _manifest(src)
+    slots = _census(src, monkeypatch, base)
+    monkeypatch.setattr(L, "CAPTURE_CELLS", ("S", "E", "AR"))
+    monkeypatch.setattr(L, "IMAGE_OF", {})
+    root = _phase0_root(tmp_path, monkeypatch)
+    return src, slots, root, _registered(src, row, base)
+
+
+def _render_resume(tmp_path, monkeypatch, m: dict, slots: list, run: Path) -> dict:
+    """``render-census --resume-from-records RUN_DIR/probes.jsonl`` (the path, whether or not the
+    interrupted job wrote the file)."""
+    monkeypatch.setattr(L, "census_slots", lambda tasks, golds: slots)
+    monkeypatch.setattr("harness.s2_locale.golds.pool_tasks", lambda pool: [])
+    base_path = tmp_path / "base.json"
+    base_path.write_text(json.dumps({k: v for k, v in m.items() if k != "slots"}))
+    (tmp_path / "pool.json").write_text("{}")
+    (tmp_path / "golds.jsonl").write_text("")
+    out = tmp_path / "resume.json"
+    assert L.main(["render-census", "--base", str(base_path), "--pool",
+                   str(tmp_path / "pool.json"), "--golds", str(tmp_path / "golds.jsonl"),
+                   "--resume-from-records", str(run / "probes.jsonl"), "--out", str(out)]) == 0
+    return json.loads(out.read_text())
+
+
+def test_a_census_job_ended_by_term_is_resumable_without_a_receipt(tmp_path, monkeypatch):
+    """Round 4 (D90): the job id comes from the run directory's name and ``preflight.txt`` (the
+    batch file's), so a census job the TERM ended before the lane wrote its receipt is resumed
+    from its records, and the resume is admitted."""
+    src, slots, root, m = _resume_setup(tmp_path, monkeypatch)
+    records = [{"slot": s["slot"], "status": "probed", "attempt": 1} for s in slots[:3]]
+    run = _interrupted(root, "1300", m, records, receipt=False)
+    assert L.interrupted_job(run)["job_id"] == "1300"
+    resumed = _render_resume(tmp_path, monkeypatch, m, slots, run)
+    assert resumed["resume_from_block"] == "t001" and resumed["slots"] == slots[3:]
+    assert resumed["resumes"]["job_id"] == "1300"
+    assert L.validate_manifest(resumed, src)  # check_registered recomputes it from the run dir
+
+
+def test_a_census_job_with_zero_records_is_resumed_from_its_first_block(tmp_path, monkeypatch):
+    """P0.7's zero-record case: a census job whose image check failed (its receipt carries
+    ``t_start`` and no records; no ``probes.jsonl``) uses the one resume, which runs the whole
+    census."""
+    src, slots, root, m = _resume_setup(tmp_path, monkeypatch)
+    run = _interrupted(root, "1300", m, None)
+    (run / "lane-receipt.json").write_text(json.dumps(
+        {"job_id": "1300", "t_start": 1.0, "error": "image check: E differs", "records": 0}))
+    job = L.interrupted_job(run)
+    assert job["records"] == [] and job["records_sha256"] == L.hashlib.sha256(b"").hexdigest()
+    resumed = _render_resume(tmp_path, monkeypatch, m, slots, run)
+    assert resumed["resume_from_block"] == slots[0]["block"] and resumed["slots"] == slots
+    assert L.validate_manifest(resumed, src)
+    L.check_once(resumed)  # the one resume is still available
+    _interrupted(root, "1301", resumed, [])
+    with pytest.raises(L.LaneError, match="resumed already"):
+        L.check_once(resumed)
+
+
+def test_interrupted_job_refusals(tmp_path, monkeypatch):
+    root = _phase0_root(tmp_path, monkeypatch)
+    m = {"purpose": "phase0"}
+    run = _interrupted(root, "1300", m, [])
+    (run / "preflight.txt").write_text("job_id=1299\n")
+    with pytest.raises(L.LaneError, match="names job 1299"):
+        L.interrupted_job(run)
+    (run / "preflight.txt").unlink()
+    with pytest.raises(L.LaneError, match="preflight.txt is missing"):
+        L.interrupted_job(run)
+    other = _interrupted(root, "1301", m, [])
+    (other / "lane-receipt.json").write_text(json.dumps({"job_id": "77", "t_start": 1.0}))
+    with pytest.raises(L.LaneError, match="receipt names job"):
+        L.interrupted_job(other)
+
+
 def test_submission_runs_the_census_once_and_resumes_it_at_most_once(tmp_path, monkeypatch):
     root = _phase0_root(tmp_path, monkeypatch)
     census = {"purpose": "phase0", "run_root": str(root)}
     resume = {**census, "resume_from_block": "b010"}
     L.check_once(census)  # nothing has run
+    never = root / "1299"  # the batch file stopped before preflight.txt: the lane never started
+    never.mkdir(parents=True)
+    (never / "manifest.json").write_text(json.dumps(census))
+    L.check_once(census)
     _interrupted(root, "1300", census, [])
     with pytest.raises(L.LaneError, match="has run already"):
         L.check_once(census)
@@ -411,9 +498,49 @@ def test_lane_refuses_to_dispatch_on_a_wrong_image(tmp_path, monkeypatch):
     m = L.validate_manifest(_manifest(src), src)
     monkeypatch.setattr(s1a, "sha256_file", lambda p: "0" * 64)
     docker = FakeDocker([])
-    lane = L.S2Lane(s1a.LaneConfig(m, "778", tmp_path / "run", src), docker=docker)
+    lane = L.S2Lane(s1a.LaneConfig(m, "778", tmp_path / "run", src), docker=docker,
+                    clock=iter([100.0, 107.0]).__next__)
     receipt = lane.run()
     assert "image check" in receipt["error"] and not docker.started
+    written = json.loads((tmp_path / "run/lane-receipt.json").read_text())
+    assert written["t_start"] == 100.0 and written["t_end"] == 107.0  # round 4 (D90)
+    assert written["job_id"] == "778" and written["records"] == 0
+
+
+def test_term_and_usr1_set_the_lane_stop(monkeypatch):
+    """Round 4 (D90): TERM, like USR1, sets the lane's stop event (Python's default TERM ended
+    the lane at once, with no receipt)."""
+    import signal
+    import threading
+    import types
+
+    handlers = {}
+    monkeypatch.setattr(L.signal, "signal", lambda sig, fn: handlers.__setitem__(sig, fn))
+    lane = types.SimpleNamespace(stop=threading.Event())
+    L.stop_on_signals(lane)
+    assert set(handlers) == {signal.SIGUSR1, signal.SIGTERM}
+    handlers[signal.SIGTERM](signal.SIGTERM, None)
+    assert lane.stop.is_set()
+
+
+def test_a_stopped_lane_records_every_slot_and_writes_its_receipt(tmp_path):
+    """What a TERM leaves when the lane has the time: no slot dispatched, every slot recorded
+    ``cap_truncated`` (never dispatched, so not final), and the receipt with ``t_start``."""
+    from harness.s2_locale import k0_inputs as I
+
+    src = _source(tmp_path)
+    m = L.validate_manifest(_manifest(src), src)
+    docker = FakeDocker([])
+    lane = L.S2Lane(s1a.LaneConfig(m, "779", tmp_path / "run", src), docker=docker,
+                    verify=False, certified=[])
+    lane.stop.set()
+    receipt = lane.run()
+    assert not docker.started and receipt["stopped"] is True
+    rows = [json.loads(x) for x in (tmp_path / "run/probes.jsonl").read_text().splitlines()]
+    assert len(rows) == len(m["slots"]) and {r["status"] for r in rows} == {"cap_truncated"}
+    assert not any(I.final_in_job([r]) for r in rows)
+    assert isinstance(json.loads((tmp_path / "run/lane-receipt.json").read_text())["t_start"],
+                      float)
 
 
 A11Y = """<desktop-frame xmlns:st="https://accessibility.ubuntu.example.org/ns/state"
@@ -474,6 +601,7 @@ class FakeGuest:
         return {"selector_sha256": self.selector, "keyboard_layout": "us", "window_titles": []}
 
     def screenshot(self, timeout=10.0):
+        self.events.append("screenshot")
         return 200, b"\x89PNG\r\n\x1a\n" + b"0" * 100, 0.01
 
     def _request(self, method, path, timeout=None, **kw):
@@ -512,13 +640,20 @@ def _probe(tmp_path, selector_in_guest, expected, replies=None, task_id=None, gu
     return probe.run()
 
 
-def test_probe_warps_the_pointer_after_the_warm_up_and_before_the_settle(tmp_path):
+def test_probe_warps_the_pointer_after_the_settle_and_waits_before_the_screenshots(tmp_path):
+    """P0.7 (round 4, D90): warm-up, the 60 s settle, one warp, the fixed wait, then the two
+    screenshots 1 s apart; nothing else happens in the guest between the warp and the first
+    screenshot."""
     events: list = []
     rec = _probe(tmp_path, SEL["E"], SEL["E"], events=events)
     assert rec["status"] == "probed"
     start = events.index("warm_up")
-    assert events[start:start + 3] == ["warm_up", "pointer", ("sleep", 60.0)]
+    assert events[start:start + 7] == ["warm_up", ("sleep", 60.0), "pointer",
+                                       ("sleep", P.POINTER_WAIT_S), "screenshot", ("sleep", 1.0),
+                                       "screenshot"]
     assert events.count("pointer") == 1  # once per boot
+    assert P.POINTER_WAIT_S == 4.0  # chosen before the round-4 smoke; above VCL's 1.5 s tip delay
+    assert "pointer_wait_s" in rec["timings"]
     assert rec["pointer"] == {"target": list(P.POINTER_TARGET), "before": [1728, 972],
                               "after": list(P.POINTER_TARGET), "moved": True}
 

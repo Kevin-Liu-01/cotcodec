@@ -12,8 +12,9 @@ VM container mounts the slot's cell image (the certified disk for the stock cell
    always names the image it ran on (``guest/s2_guest.py`` ``facts``);
 3. ``reset_task``: the task's own setup, offline from the pinned file cache
    (``osworld_live.LiveTask.setup``, S1a's unmodified call of the pinned code);
-4. the guard's keyboard warm-up; the pointer warp (``warp_pointer``: one absolute XTest motion
-   to ``POINTER_TARGET``, read back; P0.7); OSWorld's 60 s settle (S1a section 7.1 step 4);
+4. the guard's keyboard warm-up; OSWorld's 60 s settle (S1a section 7.1 step 4); the pointer
+   warp (``warp_pointer``: one absolute XTest motion to ``POINTER_TARGET``, read back; P0.7),
+   then the fixed wait ``POINTER_WAIT_S``;
 5. the post-setup observation: two screenshots 1 s apart (kept on the host, never committed),
    the accessibility tree (kept on the host; its summary is recorded: named showing nodes, the
    share in Arabic script, the menu bar's left-to-right order), the window titles, the keyboard
@@ -69,8 +70,10 @@ P010_KEYS: dict[str, tuple[tuple[str, str], ...]] = {
 }
 # Every other task reads all three (the reader is exercised on every slot, dev tasks included).
 P010_ALL = tuple(k for keys in P010_KEYS.values() for k in keys)
-# P0.7 and Phase 1: the screen point the pointer is warped to once per boot, after the warm-up and
-# before the 60 s settle. Chosen on smoke 1214's dev renders: inside the document region of Calc,
+# P0.7 and Phase 1: the screen point the pointer is warped to once per boot, after the 60 s settle
+# (round 4, D90; round 3 warped before the settle, while the window could still be laid out, and
+# smoke 1240 found the status-bar pointer field still varying). Chosen on smoke 1214's dev renders
+# (and unchanged in round 4): inside the document region of Calc,
 # Writer and Impress in every cell (Impress's slide editing window spans about x 275-1510 and
 # y 250-1045 left to right, x 480-1720 mirrored; Calc's grid x 82-1820, y 281-997; Writer's
 # document x 70-1849, y 246-1034); on the LibreOffice window's mirror axis (the window spans
@@ -80,6 +83,11 @@ P010_ALL = tuple(k for keys in P010_KEYS.values() for k in keys)
 # warp reads it in every slot of smoke 1240 (the screenshots of smoke 1214 show the cursor there in
 # all 177 capture renders), so the warp always moves it.
 POINTER_TARGET = (995, 540)
+# P0.7 and Phase 1: the fixed wait after the warp and before the first screenshot, chosen before the
+# round-4 development smoke: longer than LibreOffice's help-tip delay (VCL shows a quick-help tip
+# 0.5 s and a balloon tip 1.5 s after the pointer comes to rest), so whatever the pointer's arrival
+# shows has shown before the screenshots, and LibreOffice has handled the motion event.
+POINTER_WAIT_S = 4.0
 
 
 def p010_keys(task_id: str) -> tuple[tuple[str, str], ...]:
@@ -389,11 +397,16 @@ class Probe:
                 raise ProbeFailure("reset_task", f"failed in the guest: {setup['failures'][0]}")
             self.progress("warm_up")
             self._runner.warm_up()
-            self.progress("pointer")
-            self.record["pointer"] = warp_pointer(self.guest)
             t = self.clock()
             self.sleep(self.cfg.settle_after_reset_s)
             self.timings["settle_after_reset_s"] = round(self.clock() - t, 3)
+            # P0.7 (round 4, D90): the warp after the settle, once the window has its final
+            # layout, then the fixed wait before the screenshots.
+            self.progress("pointer")
+            self.record["pointer"] = warp_pointer(self.guest)
+            t = self.clock()
+            self.sleep(POINTER_WAIT_S)
+            self.timings["pointer_wait_s"] = round(self.clock() - t, 3)
             self.progress("observe")
             obs: dict[str, Any] = {"shot_1": self.screenshot("post_setup-1")}
             self.sleep(1.0)

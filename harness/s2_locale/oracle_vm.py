@@ -53,8 +53,10 @@ The registered route (P0.7, freeze procedure step 5): one CPU container job thro
 ``infra/slurm/host-single-node/s2v4-cpu.sbatch`` (run mode) in ``ORACLE_IMAGE_ID`` (the
 checker-mutation metric image, the lane's episode image) with ``registered_argv``'s argv, the
 export of the freeze commit at ``/src`` and each run directory mounted read-only at
-``/ro/run<i>``. The output records the interpreter and the numpy, scipy and Pillow versions
-(``environment``).
+``/ro/run<i>``. There the job order comes from each directory's ``preflight.txt`` (the Slurm job
+id the batch file wrote before the lane started; ``k0_inputs.job_id``), not from the mount names
+or the order of ``--runs``. The output records the interpreter and the numpy, scipy and Pillow
+versions (``environment``).
 """
 
 from __future__ import annotations

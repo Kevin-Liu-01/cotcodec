@@ -119,6 +119,7 @@ def test_render_index_takes_the_counted_probed_attempt(tmp_path):
     ]
     run.mkdir()
     (run / "probes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    (run / "preflight.txt").write_text("job_id=1300\n")
     (run / "lane-receipt.json").write_text(json.dumps({"job_id": "1300", "t_start": 1.0}))
     index = V.render_index([run])
     assert index[("aaaaaaaa-1", "E", 1)] == run / "slots" / "aaaaaaaa_E_r1.a2"
@@ -132,11 +133,18 @@ def test_detected_verdicts(verdict):
     assert V.detected(verdict)
 
 
-def _run(root: Path, job: str, t_start: float, rows: list, resumes: str | None = None) -> Path:
-    run = root / job
+def _run(root: Path, job: str, t_start: float | None, rows: list | None,
+         resumes: str | None = None, name: str | None = None) -> Path:
+    """A lane run directory: ``preflight.txt`` and ``manifest.json`` (the batch file's, before the
+    lane starts); ``probes.jsonl`` unless ``rows`` is None (no slot ended); ``lane-receipt.json``
+    unless ``t_start`` is None (a job ended by TERM). ``name``: the mount name (default the id)."""
+    run = root / (name or job)
     run.mkdir(parents=True)
-    (run / "probes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
-    (run / "lane-receipt.json").write_text(json.dumps({"job_id": job, "t_start": t_start}))
+    (run / "preflight.txt").write_text(f"job_id={job}\nbatch_sha256={'0' * 64}\n")
+    if rows is not None:
+        (run / "probes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    if t_start is not None:
+        (run / "lane-receipt.json").write_text(json.dumps({"job_id": job, "t_start": t_start}))
     manifest = {"purpose": "phase0"}
     if resumes:
         manifest.update(resume_from_block="b001", resumes={"job_id": resumes})
@@ -172,12 +180,38 @@ def test_render_index_refuses_runs_without_a_job_order(tmp_path):
     b = _run(tmp_path, "1301", 10.0, [row], resumes="1300")  # a later id that started earlier
     with pytest.raises(k0_inputs.RunOrderError, match="different orders"):
         V.render_index([a, b])
-    (b / "lane-receipt.json").unlink()
-    with pytest.raises(k0_inputs.RunOrderError, match="no lane-receipt"):
+    (b / "preflight.txt").unlink()
+    with pytest.raises(k0_inputs.RunOrderError, match="no preflight.txt"):
         V.render_index([a, b])
     c = _run(tmp_path, "1302", 30.0, [row], resumes="1299")
     with pytest.raises(k0_inputs.RunOrderError, match="not the resume"):
         V.render_index([a, c])
+
+
+def test_registered_route_reads_a_receipt_less_census_and_its_resume(tmp_path):
+    """Round 4 (D90): the registered route (``registered_argv(2)``: ``/ro/run1``, ``/ro/run2``)
+    reads a census job ended by TERM (records, no receipt) and its resume, in job order from
+    ``preflight.txt``, and an image-check-failed census (no records) and its resume."""
+    def rec(status, attempt=1, task="aaaaaaaa"):
+        return {"slot": f"{task}:E:r1", "task_id": f"{task}-1", "cell": "E", "attempt": attempt,
+                "status": status}
+
+    mounts = [Path(x).name for x in V.registered_argv(2)[4:6]]
+    assert mounts == ["run1", "run2"]
+    ro = tmp_path / "ro"
+    census = _run(ro, "1300", None, [rec("probed"), rec("infrastructure", task="bbbbbbbb"),
+                                     rec("cap_truncated", 2, task="bbbbbbbb")], name="run1")
+    resume = _run(ro, "1301", 50.0, [rec("probed", task="bbbbbbbb")], resumes="1300",
+                  name="run2")
+    for order in ([census, resume], [resume, census]):
+        index = V.render_index(order)
+        assert index[("aaaaaaaa-1", "E", 1)] == census / "slots" / "aaaaaaaa_E_r1.a1"
+        assert index[("bbbbbbbb-1", "E", 1)] == resume / "slots" / "bbbbbbbb_E_r1.a1"
+    ro2 = tmp_path / "ro2"
+    failed = _run(ro2, "1400", 5.0, None, name="run1")  # image check failed: receipt, no records
+    rerun = _run(ro2, "1401", 60.0, [rec("probed")], resumes="1400", name="run2")
+    index = V.render_index([failed, rerun])
+    assert index == {("aaaaaaaa-1", "E", 1): rerun / "slots" / "aaaaaaaa_E_r1.a1"}
 
 
 def test_registered_oracle_route_is_pinned():
