@@ -440,8 +440,9 @@ is in Arabic script, among those with Arabic or Latin letters (`vm_probe.a11y_su
 
 1. The freeze (section "Freeze procedure"), after the Phase 0 code is built and tested on dev tasks
    (done in the repair round) and a fresh audit.
-2. P0.6 (K1), about 46 VM-hours (section "K1"), one `ap_delta` job at a time: about 37 jobs (C3 and A3
-   in parts), most at N = 1, so about 40 hours of wall clock in serial jobs plus queue waits.
+2. P0.6 (K1), about 46 VM-hours (section "K1"), one `ap_delta` job at a time: 49 jobs (per image C1,
+   C2, A1, A2, A5, A6 and C3 in three parts; A3 in three parts; the rung), most at N = 1, so about 45
+   hours of wall clock in serial jobs plus queue waits.
 3. The capture and gold sweep: 1,322 slots (882 capture, 440 gold), about 80 VM-hours (about 3.5
    minutes per slot); one CPU job at V = 20, about 4 hours plus the image check, on an empty queue.
 4. The oracle (one CPU container job, `oracle_vm.py --k0`) and `k0_v4.decide`: K0.
