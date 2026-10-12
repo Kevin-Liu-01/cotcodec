@@ -94,6 +94,7 @@ directories (E2's held only its staged configuration, no job).
 | 1248 | K1 C1 on AR | 154 | 15:06:02 | 15:06:02-15:12:30 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count |
 | 1249 | K1 C1 on PL | 154 | 15:13:00 | 15:13:00-15:19:28 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count |
 | 1250 | K1 V = 20 rung over E, A, ER, AR, PL (seed-43 order x 12; 40 sessions, 2,400 trials) | 110 | 15:20:07 | 15:20:07-15:29:10 (9.1 min) | COMPLETED 0:0 | Not aborted; 2,400 of 2,400 trials pass; every condition but the per-image step p95 met; the step condition waits for each image's A1 |
+| 1257 | K1 C2 on E (L0-raw, seed 45) | 362 | 19:13:59 | 19:14:00-19:24:12 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 
 Per job:
 - **1245 (C1, E).** Limit ends 17:19:33Z, before E2's earliest start 17:51:36Z. H-GA-buggy: 70
@@ -129,6 +130,18 @@ Per job:
   verdict against each image's own A1 at N = 1 (step p95 at most 2 x A1's). The rung did not abort,
   so it is not rerun (registration section "K1"). Host snapshot before submission: load 0.57, queue
   empty, no labelled container.
+- **1257 (C2, E).** The first job of the E2-E3 gap (section "E2 and the E2-E3 gap" below). Limit
+  ends 01:16:59Z on 2026-10-13, before E3's earliest start 07:17:50Z. One L0-raw campaign (seed 45):
+  9 cycles, 500 trials, 451 passed. C2's own reading (`acceptance.c2`, each trial read by
+  `c2_trial_pass`): the entries that are not PASS 5 of 5 are exactly
+  `l0_raw_prediction_v2.yaml`'s 8 (`click_button_back`, `click_button_forward`, `key_kp_enter`,
+  `type_combining`, `type_emoji`, `type_emoji_zwj`, `type_rtl`, `type_unicode_bmp`); the section-5
+  reading it reports beside them (`strict_entries`, not C2's criterion) also has
+  `seq_type_chord_type`, `type_mixed_case`, `type_shell_hostile` and `type_symbols_shifted` FLAKY.
+  9 cold boots at most 17.3 s; step p95 1.19 s; 8 of 8 reset sentinels pristine. `ap_delta.verdict` on this job: C2
+  on E `pass`, no problem. Driver exit 0, `infra_gates_pass` true, image unchanged, no labelled
+  container left; no counting, foreign-abort or snapshot problem. Host snapshot: load 0.91, queue
+  empty, no labelled container; E's pair directories held E2's two collected pairs.
 
 ## Schedule for the rest of K1 (the operator's plan; not a registered rule)
 
@@ -146,3 +159,14 @@ Per job:
   `ap_delta.py verdict` over all 49 job directories (K1), then the census (`render-census
   --freeze-commit`, `submit`; 364-minute limit), its one resume if interrupted, the oracle's
   registered container job and `k0_v4.decide` (K0).
+
+## E2 and the E2-E3 gap (operator's record)
+
+- E2's 9B pair (VM job 1251, GPU job 1253) ran 17:53-18:33:52Z and its 4B pair (VM job 1254, GPU job
+  1256) 18:36:41-19:12:50Z, both submitted by E's operator; no S2 v4 job was submitted from E2's
+  earliest start (17:51:36Z) until the 4B pair had ended. E's `scontrol` records
+  (`pairs/e-4b-e2/scontrol-1254.last.txt`, `scontrol-1256.last.txt`) give the later end
+  2026-10-12T19:12:50Z (1254, COMPLETED), so E3 starts no earlier than 2026-10-13T07:17:50Z
+  (epoch 1791875870), the deadline every job of this gap is checked against.
+- Order in this gap, longest limit first so that every job keeps the most slack: C2 on E, A, ER, AR
+  and PL (362 minutes), then A6 (222), then A5 (192), each on an empty queue.
