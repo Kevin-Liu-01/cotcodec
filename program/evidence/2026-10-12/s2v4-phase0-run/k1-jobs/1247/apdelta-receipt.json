@@ -1,0 +1,27 @@
+{
+ "campaigns": [
+  {
+   "campaign_id": "s2v4-k1-er-c1-h-ga-buggy-42",
+   "cells": [
+    "ER"
+   ],
+   "dir": "00-s2v4-k1-er-c1-h-ga-buggy-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v4-k1-er-c1-h-osw-up-42",
+   "cells": [
+    "ER"
+   ],
+   "dir": "01-s2v4-k1-er-c1-h-osw-up-42",
+   "driver_exit": 0
+  }
+ ],
+ "check": "C1",
+ "executor_commit": "cf17405026ca2aa20f528b39bdaaff3b257a6610",
+ "job_id": "1247",
+ "purpose": "k1",
+ "schema": "s2v4-apdelta-receipt-v1",
+ "t_end": 1791817521.4745119,
+ "t_start": 1791817135.800204
+}
