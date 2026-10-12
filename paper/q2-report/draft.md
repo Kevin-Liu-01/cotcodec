@@ -16,9 +16,10 @@ section 6.1 [LEDGER row 17], the K2 executor `harness/q2_mutation_k2/` in sectio
 `program/evidence/2026-10-11/question-renewal/claim-registry.json` in the references), resolve
 at `08033ba7` on `main`, the base of the revision's branch `stage0/q2-report-sync`. Revision 4
 adds the held-out test of the corrected comparator on the reserve split (the dossier's R03 part
-(b)). Its evidence ([ZR], [ZR-REG], [DEC D86, D88], [LEDGER row 20] and the code path
-`harness/q2_zinv_reserve/` in section 10.3) resolves at `b880275c` on `main`, the base of the
-revision's branch `stage0/r03-partb-text`.
+(b)). Its evidence ([ZR], [ZR-REG], [DEC D86, D88], [LEDGER row 20], the code path
+`harness/q2_zinv_reserve/` in sections 10.1 and 10.3 and its tests
+`tests/test_q2_zinv_reserve.py` in section 10.3) resolves at `b880275c` on `main`, the base of
+the revision's branch `stage0/r03-partb-text`.
 
 > **Status: DRAFT. Not published, not for circulation.**
 >
@@ -124,15 +125,16 @@ two-session, two-rerun noise-floor protocol with registered estimators and analy
 checker-mutation harness with blind requirement specs and a model-rater audit protocol; and a
 corrected comparator, `compare_pptx_files_zinv`, that ignores stacking-order swaps of shapes that
 cannot overlap and passed a small held-out test (section 6.2). The magnitudes, on this host with
-these agents, are these. The executor path costs at most about 1.5 pp per 20-action episode. About 11-13% of rerun pairs disagree. In the
-model-based split under the calibrations that pass the design study's check, task sampling
-explains about 70-75% of outcome variance, reruns about 21-27%, and harness-by-task at most about
-4%. One checker family fails about 90% of equivalent shape reorders. A public same-agent rerun
-pair differs by 4.4 points, more than rerun noise predicts. Section 7 turns these into practices
-for anyone running an OSWorld comparison. Against the closest prior (cua-speedrun; section 1),
-the between-session floor with a registered within-against-between contrast, the task-by-harness
-share and the checker audit on the same certified stack are new as far as we know. The harness
-study's blind closest-prior check did not run, so this is not a verified novelty claim
+these agents, are these. The executor path costs at most about 1.5 pp per 20-action episode.
+About 11-13% of rerun pairs disagree. In the model-based split under the calibrations that
+pass the design study's check, task sampling explains about 70-75% of outcome variance, reruns
+about 21-27%, and harness-by-task at most about 4%. One checker family fails about 90% of
+equivalent shape reorders. A public same-agent rerun pair differs by 4.4 points, more than
+rerun noise predicts. Section 7 turns these into practices for anyone running an OSWorld
+comparison. Against the closest prior (cua-speedrun; section 1), the between-session floor
+with a registered within-against-between contrast, the task-by-harness share and the checker
+audit on the same certified stack are new as far as we know. The harness study's blind
+closest-prior check did not run, so this is not a verified novelty claim
 (`program/proposals/2026-10-08-q2-stage1-rescoped.md`, wave 0). For the checker audit, the
 registered prior-art check K8 ran on 2026-10-11, after the checker-mutation note's first draft
 rather than before drafting as registered, and found no mutation audit of desktop computer-use
@@ -202,7 +204,8 @@ above, at commit `360058d`. The keys revision 3 adds ([K2], [K2-REG], [ADJ], [AD
 the citations [DEC D79-D83] and [LEDGER row 17], and the other paths it adds (section 10.3's
 `harness/q2_mutation_k2/` and the references' `claim-registry.json`) resolve at `08033ba7`. The
 keys revision 4 adds ([ZR], [ZR-REG]), the citations [DEC D86, D88] and [LEDGER row 20], and
-section 10.3's `harness/q2_zinv_reserve/` resolve at `b880275c`:
+sections 10.1 and 10.3's `harness/q2_zinv_reserve/` and section 10.3's
+`tests/test_q2_zinv_reserve.py` resolve at `b880275c`:
 
 | Key | Path |
 |---|---|
@@ -1196,12 +1199,20 @@ reorder mutants fall short of 20 (the 8 tasks meet their floor) [ZR, jobs 1226-1
 - The other 93 rescored items kept their verdict, and none of the 106 rows was invalid.
 
 This licenses saying that the correction held on reserve documents it was not developed on, at
-this size. It does not show that the corrected comparator accepts 95% of reorders: a pass
-bounds acceptance only from below [ZR-REG section 7]. The test ran offline (K2 covered the
-confirm sample only) and rests on the operators' labels, since no rater or adjudicator read a
-reserve mutant. The reserve decks come from the same OSWorld pool as the confirm decks. The
-run's per-mutant verdicts carry a blind warning for the pending human spot check (section 12)
-[ZR].
+this size. It does not show that the corrected comparator accepts 95% of reorders: a pass bounds
+acceptance only from below [ZR-REG section 7]. Nor does it test the idea behind the correction,
+whether the operator's rule for an invisible swap picks out exactly the reorders a viewer cannot
+see. The addendum says why [ZR-REG section 1]: the corrected comparator moves a shape only past
+shapes that are apart by the mutation operator's own rule, the rule that also decides which
+swaps the operator builds, so on a correct implementation every operator-built reorder mutant
+whose deck is otherwise unchanged passes by construction. What the reorder half of the test
+checks is the implementation's pairing of shapes on documents it was not developed on; the
+violation half checks that the realignment never hides a real violation.
+
+The test ran offline (K2 covered the confirm sample only) and rests on the operators' labels,
+since no rater or adjudicator read a reserve mutant. The reserve decks come from the same
+OSWorld pool as the confirm decks. The run's per-mutant verdicts carry a blind warning for the
+pending human spot check (section 12) [ZR].
 
 ### 6.3 A GUI-faithful save flips reference golds (MUT-P1)
 
@@ -1452,8 +1463,9 @@ This is the single consolidated list; sections 2.7 and 4.8 give the component-sp
    jobs, and `compare_pptx_files_tolerant` has no K2 pair. The study is descriptive. Corrected
    verdicts are not primary evidence. The corrected comparator's one held-out test is small (13
    reorder mutants on 8 tasks), offline and based on the operators' labels; it bounds the
-   comparator's acceptance below at 0.794, not at 95%, and the study has no unseen presentation
-   target left for another [ZR; ZR-REG section 7].
+   comparator's acceptance below at 0.794, not at 95%; it checks the comparator's implementation,
+   not the swap rule it shares with the mutation operator (section 6.2); and the study has no
+   unseen presentation target left for another [ZR; ZR-REG sections 1 and 7].
 10. **Model-based design numbers.** Section 5's probabilities and shares are conditional on fitted
     calibrations, are not registered, and were chosen after S1a's data.
 11. **Derived numbers.** Section 7.2's table is arithmetic on the measured floor under stated
@@ -1940,6 +1952,29 @@ passes with every number covered. The lane-hours and job numbers, which the note
 state, were checked against the run README. The judgement was also recomputed from the released
 rows with the frozen rule (`harness/q2_zinv_reserve/run.py judge`) and matched the committed
 file apart from the last digit of one float, as the run README records.
+
+A verifier then passed revision 4, read together with the checker-mutation note's part (b) text,
+with three low-severity items and two informational ones, all fixed in revision 4 before any
+circulation:
+
+1. Section 6.2 now gives the caveat that the addendum itself states about what the test can show
+   [ZR-REG section 1]: the corrected comparator moves a shape only past shapes that are apart by
+   the mutation operator's own rule, so on a correct implementation every operator-built reorder
+   mutant passes by construction, and the test checks the implementation's pairing of shapes on
+   documents it was not developed on, not that rule. Limitation 9 says the same in one clause;
+   the note's section 3.7 and its limitations carry it too.
+2. The header's commit-resolution note and the evidence-keys paragraph now name section 10.3's
+   `tests/test_q2_zinv_reserve.py`, which is absent at `08033ba7` and resolves at `b880275c`,
+   and say that `harness/q2_zinv_reserve/` is cited in section 10.1 as well as 10.3.
+3. The note's section 3.7 heading and its summary bullet now carry the descriptive qualifier.
+   This report's summary item 4, section 6.2 and section 9.3 already did, so nothing here
+   changed for it.
+4. A prose line of "Contributions" that revision 4 had left at 137 characters was rewrapped, as
+   was a short line in the note's section 1. Neither changed a word.
+5. The note's `data/claims.json` field `base_commit` now reads `b880275c`, a commit at which
+   every source it lists resolves; seven of them (the note's derived table, the K8 record and
+   the four part (b) files) are absent at the earlier value. Its `scripts/check_claims.py`,
+   which does not read the field, still passes with every number covered.
 
 Revision 3 (2026-10-11) brings the checker study up to date. Revision 2 predated the VM fidelity
 check K2 (D79), the model adjudication (D80-D82) and the checker-mutation note (D83). Revision 3

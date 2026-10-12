@@ -77,12 +77,13 @@ both read against the label.
   are audit-confirmed checker errors (3.26%, 0.68-9.23%).
 - **The result holds inside the VM.** On the registered K2 sample, 78 of 78 compared pairs give
   the offline verdict in both runs, and all 41 candidate events reproduce.
-- **The defect replicates on held-out decks, and the correction holds there.** On the reserve
-  split's 8 pptx tasks, never used to find the defect or to build the fix, `compare_pptx_files`
-  failed 13 of 13 z-order equivalence mutants. The corrected comparator `zinv` accepted all 13
-  (exact one-sided 95% lower bound 0.794) and newly accepted none of 15 violation mutants (R03
-  part (b): PASS, descriptive, below the registered 20 mutants). The correction held on
-  documents it was not developed on, at this size; this is not a 95% acceptance rate.
+- **The defect replicates on held-out decks, and the correction held there in a small,
+  descriptive test.** On the reserve split's 8 pptx tasks, never used to find the defect or to
+  build the fix, `compare_pptx_files` failed 13 of 13 z-order equivalence mutants. The corrected
+  comparator `zinv` accepted all 13 (exact one-sided 95% lower bound 0.794) and newly accepted
+  none of 15 violation mutants (R03 part (b): PASS, descriptive, below the registered 20
+  mutants). The correction held on documents it was not developed on, at this size; this is not
+  a 95% acceptance rate.
 - **No on-policy consequence is shown.** A corrected comparator changed 0 of 1,808 verdicts of
   two Qwen3.5 policies in the program's S1a run.
 - **The audit rests on correlated models.** The two raters agree at Cohen's κ 0.343; the
@@ -111,10 +112,9 @@ This note completes R03 of the question-renewal dossier, whose corrected questio
 parts [DOSSIER, section 3]. Part (a), whether mutants saved inside the certified VM get the
 offline verdict, is answered by K2 (section 3.6). Part (b), whether the corrected comparator
 `zinv` holds on the held-out reserve split, ran under its own frozen addendum and passed,
-descriptively (section 3.7). Part (c), operator
-families for the pool's non-office checkers, would need a new registration and has not been
-written. The adjudication the dossier left to the owner was done by an isolated model under
-D80 (section 2.5).
+descriptively (section 3.7). Part (c), operator families for the pool's non-office checkers,
+would need a new registration and has not been written. The adjudication the dossier left to
+the owner was done by an isolated model under D80 (section 2.5).
 
 ## 2. Method
 
@@ -459,7 +459,7 @@ Table 4. K2 pairs compared per checker family [K2 `k2-summary.json`].
 With K2's report, the analysis label became "VM fidelity checked (K2)"; nothing else in the
 analysis changed.
 
-### 3.7 A corrected comparator, validated where it was built and on held-out decks
+### 3.7 A corrected comparator, validated where it was built and checked on held-out decks (descriptive)
 
 `compare_pptx_files_zinv` realigns the agent deck's shapes to the reference order only where
 the swapped shapes are apart by the operator's own rule, then runs the original comparator with
@@ -518,6 +518,16 @@ OSWorld pool as the confirm decks. The result is offline (K2 covered the confirm
 and it rests on the operators' labels: no rater, model or person read a reserve mutant.
 `compare_pptx_files_tolerant` has no reserve task and is still not corrected
 [ZR-REG section 12].
+
+The addendum also states what the test can and cannot show [ZR-REG section 1]. `zinv` moves a
+shape only past shapes that are apart by the operator's own rule, the rule that also decides
+which swaps the operator builds. On a correct implementation, every operator-built z-order
+mutant whose deck is otherwise unchanged therefore passes by construction. What condition A
+tests is the implementation's pairing of shapes on documents it was not developed on (its
+development fixes were for LibreOffice's save rounding, empty text runs and identical
+pictures); condition B tests that the realignment never hides a real violation. A PASS
+therefore does not test the idea behind the correction, whether the shared rule picks out
+exactly the reorders a viewer cannot see.
 
 **Blind warning (D9, D82).** The run's released files (`release/zinv-rows.json`,
 `judgement.json` and the campaign's verdict files) name the checker's verdict for every reserve
@@ -627,7 +637,9 @@ These bound every result above, and they are stated as plainly as the results.
   confirm campaign's own z-order mutants. On the held-out reserve split (R03 part (b)) it
   accepted 13 of 13 z-order mutants and newly accepted 0 of 15 violation mutants, a descriptive
   PASS below the registered 20 mutants. That bounds its acceptance below at 0.794 per mutant and
-  0.688 per task, not at 95%. The check is offline and rests on the operators' labels, the
+  0.688 per task, not at 95%. It checks `zinv`'s implementation on unseen decks, not the rule it
+  shares with the operator, under which a correct implementation passes every operator-built
+  z-order mutant by construction (section 3.7). The check is offline and rests on the operators' labels, the
   reserve decks come from the same OSWorld pool, and the study has no unseen pptx target left
   for another held-out test.
 - **No on-policy consequence shown.** The corrected comparator flipped 0 of 1,808 S1a verdicts

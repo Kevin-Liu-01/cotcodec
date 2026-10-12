@@ -1,8 +1,8 @@
 {
  "schema": "checker-mutation-note-claims-v1",
  "note": "paper/checker-mutation-note/draft.md",
- "description": "Every number in the note's text, with the committed file and key it comes from. A JSON evidence item gives 'key' (keys and indexes) and 'fmt'; its value rendered with 'fmt' must equal 'expect'. A text evidence item gives 'match', a substring of the committed file. 'expect' must occur in the claim's 'text'. Formats: int, comma (thousands separator), len (length of a list or object), raw (str of the value), pct1/pct2 (value x 100, half-up), pct1z (as pct1 but 0 and 1 render as '0' and '100'), round1/round2/round3 (half-up). 'structural' lists phrases whose digits are references, not quantities. Checked by scripts/check_claims.py.",
- "base_commit": "746d60d2",
+ "description": "Every number in the note's text, with the committed file and key it comes from. A JSON evidence item gives 'key' (keys and indexes) and 'fmt'; its value rendered with 'fmt' must equal 'expect'. A text evidence item gives 'match', a substring of the committed file. 'expect' must occur in the claim's 'text'. Formats: int, comma (thousands separator), len (length of a list or object), raw (str of the value), pct1/pct2 (value x 100, half-up), pct1z (as pct1 but 0 and 1 render as '0' and '100'), round1/round2/round3 (half-up). 'structural' lists phrases whose digits are references, not quantities. 'base_commit' is a commit on main at which every file in 'sources' resolves; the script does not read it. Checked by scripts/check_claims.py.",
+ "base_commit": "b880275c",
  "sources": {
   "ADJ_AN": "program/evidence/2026-10-11/q2-mutation-adjudication-v2/analysis/analysis.json",
   "ADJ_SUM": "program/evidence/2026-10-11/q2-mutation-adjudication-v2/summary.json",
@@ -6161,7 +6161,7 @@
   },
   {
    "id": "zr-summary-13",
-   "text": "failed 13 of 13 z-order equivalence mutants. The corrected comparator `zinv` accepted all 13",
+   "text": "failed 13 of 13 z-order equivalence mutants. The corrected\n  comparator `zinv` accepted all 13",
    "evidence": [
     {
      "file": "ZR_JUDGE",
@@ -6194,7 +6194,7 @@
   },
   {
    "id": "zr-summary-bound",
-   "text": "(exact one-sided 95% lower bound 0.794) and newly accepted none of 15 violation mutants",
+   "text": "(exact one-sided 95% lower bound 0.794) and newly accepted\n  none of 15 violation mutants",
    "evidence": [
     {
      "file": "ZR_README",
@@ -6233,7 +6233,7 @@
   },
   {
    "id": "zr-summary-floor",
-   "text": "PASS, descriptive, below the registered 20 mutants",
+   "text": "PASS, descriptive, below the registered 20\n  mutants",
    "evidence": [
     {
      "file": "ZR_JUDGE",
@@ -6264,7 +6264,7 @@
   },
   {
    "id": "zr-summary-95",
-   "text": "this is not a 95% acceptance rate",
+   "text": "this is not\n  a 95% acceptance rate",
    "evidence": [
     {
      "file": "ZR_REG",
