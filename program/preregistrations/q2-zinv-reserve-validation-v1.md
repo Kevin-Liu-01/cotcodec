@@ -243,7 +243,8 @@ in full in a fresh directory (`.a2`), and later steps read the attempt that fini
 second failure ends the run (`failed_final`), and the outcome is INCOMPLETE. Invalid rows
 are final: step 4 exits 0 once it has written its rows, whatever their validity, so an
 invalid row triggers no rerun (section 6). No job is submitted once the lane hours used
-(receipt start to finish) reach 4.0. Projected wall time:
+(receipt start to finish) reach 4.0; a run that stops there (`cap_reached`) before step 4
+has written its rows is INCOMPLETE (section 6). Projected wall time:
 about 30 minutes in all (the confirm run's 68 targets took 12 minutes to build and save and
 60 minutes to score 1,300 jobs; this run has 8 targets and about 170 jobs; job 1000 rescored
 291 items in 15 minutes). GPU: 0.
@@ -264,7 +265,8 @@ Computed by `harness/q2_zinv_reserve/rules.py` (`judge`) over the rescored rows;
   went missing between the digest taken before the two scorings and the one taken after.
 - **Outcome.**
   - INCOMPLETE: a step ended `failed_final` after the one rerun of section 5 (no rows
-    exist), or any row of Z or V is invalid. Invalid rows are final (no rerun), and
+    exist), the run stopped at the lane-hour cap (`cap_reached`) before step 4 wrote its
+    rows, or any row of Z or V is invalid. Invalid rows are final (no rerun), and
     INCOMPLETE takes precedence over FAIL: a run with an invalid row in Z or V is INCOMPLETE
     even if a condition fails on its valid rows, and both conditions are still reported.
   - FAIL: B fails (whatever `n_Z`), or `n_Z` is at least 1 and A fails; the failed
@@ -355,6 +357,11 @@ section 16). Released after the run, written by `zr_host.py export --name reserv
   characters, as the parent's release cuts them), `judgement.json`,
   `targets-selection.json`, every receipt of every attempt, the plan, and `manifest.json`
   with each file's SHA-256.
+
+If the run ends INCOMPLETE before step 4 (`failed_final` or `cap_reached`), `zr_host.py
+export` refuses the unfinished plan; the plan, every receipt of every attempt and the
+step logs are then committed by hand with their SHA-256 and the blind warning, and no
+release view is claimed.
 
 Blind warning: D9's human spot check is still pending, so every released file that names
 verdicts per mutant carries the parent's blind warning (`rules.BLIND_WARNING`): a field of
