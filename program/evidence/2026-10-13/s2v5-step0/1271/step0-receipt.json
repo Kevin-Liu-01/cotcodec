@@ -1,0 +1,51 @@
+{
+ "campaigns": [
+  {
+   "campaign_id": "s2v5-step0-e",
+   "cells": [
+    "E"
+   ],
+   "dir": "00-s2v5-step0-e",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-step0-a",
+   "cells": [
+    "A"
+   ],
+   "dir": "01-s2v5-step0-a",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-step0-er",
+   "cells": [
+    "ER"
+   ],
+   "dir": "02-s2v5-step0-er",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-step0-ar",
+   "cells": [
+    "AR"
+   ],
+   "dir": "03-s2v5-step0-ar",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-step0-pl",
+   "cells": [
+    "PL"
+   ],
+   "dir": "04-s2v5-step0-pl",
+   "driver_exit": 0
+  }
+ ],
+ "check": "step0",
+ "executor_commit": "31854bc67596046c1412de1024b98a70a199baad",
+ "job_id": "1271",
+ "purpose": "development",
+ "schema": "s2v5-step0-receipt-v1",
+ "t_end": 1791883186.8356676,
+ "t_start": 1791880638.16017
+}

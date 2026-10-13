@@ -1,0 +1,6002 @@
+[
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "783510c7c99a340e45f991ead3d6587454e07ff85afda1bd41bc1c87fce7a5af"
+ },
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "a0506400841053546a0e23149fe81399266854ac90ad4ad9771ca89a551ff4ba"
+ },
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-001-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "706b21818e06593d61b0e9e41c066b94a9555a3e7e1c03c079ad413853aaa2e7",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "77a9020f71be4b1425d14e12c8ab719b35286f20c5c377fbe6e2a9326f75266b"
+ },
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-001-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "344738a6e4da71a68f41e2d0a2b5c984b4e9a5f8464cf1a7640c046be8eeb44e",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-001-writer-drag_select_word.png",
+  "screenshot_sha256": "2d7d7210d031d03f7cc74c7ffd2424ea58a0046e469508d994880f4bbdd1baea"
+ },
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "490b9e17fe22390139d707b6a99139e8fa5de0ab92cb1513dc4df68cc3f1bb21"
+ },
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "7d28dfbe0cbdc491ccd62ca6dd167d1a76786e56e8124fe48ba78fcba00a45ad",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "e049702c0d27d13ab388e6ce24296ec8f199a63150ef6cd3c25a45c53de1a8fb"
+ },
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "b7326bc5abff396925c014e2d4b827762f09ee92a48b89b5099a3f1734fd680e"
+ },
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "4cdcea67fe11730ad7192728d333fa6b8c8b31135c1d392e14761fd82befb630"
+ },
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-004-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "c277dd9efdd88b1b8cec760f43eff0279e2cf2a319b75b2638e29f8f0c3ee0ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-004-after-triple_click_line.png",
+  "screenshot_sha256": "2353b0b99ab0aa77b2a78ba0679d85cadc43c9b701ddb75e6ab4e68ac6d68b95"
+ },
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-004-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "2934c7b5bfafa04304a0729ab2738e44f40af75c9eb07fe0cd3dfc2785df8035",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-004-writer-triple_click_line.png",
+  "screenshot_sha256": "170eede9fd6e20b0a773045f792ad05fdf425e95b4e82322e7cca9d9c943eca7"
+ },
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-005-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "ec2456a98ab72e3ae9a02e1e10b5318db9c9294b61114871b8fb5ecaef5177a4"
+ },
+ {
+  "boot": 0,
+  "cell": "E",
+  "crop": "E/boot-00/canary-005-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "56c8323e503475b6f024a83878745941635f3b6e65f2bb54383a45996eefe28f",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-00/canary-005-vscode-drag_select_word.png",
+  "screenshot_sha256": "544ec184197dae6971a920e68ad5c4f18606e14523e7766ecadcd66e25cc6e6c"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "cdbb95d79093330d9e82df0b9b8e5279397ab0095515e1e34cf5d8e83acaaf5c"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "5182671d8ac0e4a60d18330de06b30dc6c6d305fedadf5cf43ded6dd65ee1183",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "d5da7acdbe0d7b3c03891e27ab13f1c8afd8bb580d01d7a5e700a9340453eb61"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-001-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "c277dd9efdd88b1b8cec760f43eff0279e2cf2a319b75b2638e29f8f0c3ee0ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-001-after-triple_click_line.png",
+  "screenshot_sha256": "eb78cef1ef80cb134e891a7d68df66c9c573a1a6a2ac37c173c01555b2cf5805"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-001-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "2934c7b5bfafa04304a0729ab2738e44f40af75c9eb07fe0cd3dfc2785df8035",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-001-writer-triple_click_line.png",
+  "screenshot_sha256": "1a2e3a0689f2e7fac80f666cb0bdfb8b3b87dc2f92163b4cd2c30140231b354a"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "dd03dd38486622aab4af11ff7a247a71fe0721e6310d810004d31a581c61cc71"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "7d28dfbe0cbdc491ccd62ca6dd167d1a76786e56e8124fe48ba78fcba00a45ad",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "93b6dcd39858ec8d1fcf5d6547069bc9b7871a6c23f6b19afff7f339c9f459a6"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "1e34c65d574a201e2703d3549eebf2fc7c5f7a0b2c0635fbc49aa981fe6a05f5"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "cffd378b49d49e964898917fe8f1703156413b67ae2b31093f734799b7a11c4c"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "922e413f906365f7329b4e9668cb5901d11fd8259dfcd1f9b700a4b56676815a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "975832479c2795383f83cf7cca89a7973a64511dca7968dff1e8f80fc1e52fe9"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "f8a4c00695f4a794bb4786174613f9d5a96cc848963ab606e117ad91f8c658cb"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-005-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "706b21818e06593d61b0e9e41c066b94a9555a3e7e1c03c079ad413853aaa2e7",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "f8d18f6e1cb1d667bf02ab720121beaa09ecbb1ed8730da67e3676335362c046"
+ },
+ {
+  "boot": 1,
+  "cell": "E",
+  "crop": "E/boot-01/canary-005-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "344738a6e4da71a68f41e2d0a2b5c984b4e9a5f8464cf1a7640c046be8eeb44e",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-01/canary-005-writer-drag_select_word.png",
+  "screenshot_sha256": "0cd158f9bdf99d5b530b4601e79e5e4a610959d56d80a17b98912373d4a796c7"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "6bdb336d2aa07a540f5b1723c9da2fcb4d75c77a397ecc3529f8091b2b1c6597"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "7ffd10134f6a114d013482b54cd1cd8f615f9cbbea3f32a9dc6c93fa4f4f105d"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-001-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "706b21818e06593d61b0e9e41c066b94a9555a3e7e1c03c079ad413853aaa2e7",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "f4126b0c5cd49c7e93e4a1edfd6eb1f0595de75200c3e5d5b5a9820ba4be14c3"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-001-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "344738a6e4da71a68f41e2d0a2b5c984b4e9a5f8464cf1a7640c046be8eeb44e",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-001-writer-drag_select_word.png",
+  "screenshot_sha256": "52d56db7c4aec54958e366174ad97c38f0cf8fe0a846413f54f06a3dd6d2d20d"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "5e430f13d23da151c41c4a6bb201eb7e8573ae048a824b919cd67845dd7f3b9e"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "7d28dfbe0cbdc491ccd62ca6dd167d1a76786e56e8124fe48ba78fcba00a45ad",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "3b9695bf1e408bb8d737d419f81a434919c3185a2c1c256afd67df878339f7a5"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-003-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "c277dd9efdd88b1b8cec760f43eff0279e2cf2a319b75b2638e29f8f0c3ee0ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "5de83b2ad0185cde665ae1aef5faab1f2eed4e65319f06122645df7d808926e6"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-003-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "2934c7b5bfafa04304a0729ab2738e44f40af75c9eb07fe0cd3dfc2785df8035",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-003-writer-triple_click_line.png",
+  "screenshot_sha256": "fa06b1247a96f93e1852a24c73443aae3cf162ba14006c538c3166bf1ac68bbd"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-004-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-004-after-triple_click_line.png",
+  "screenshot_sha256": "be995849a76b6b35dfa7733422b9f9335a7dc9d441d967b463696c29b395680b"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-004-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-004-vscode-triple_click_line.png",
+  "screenshot_sha256": "887648dba562e3da5affc29d2a8e43065100937f3c2c2587b868e3ab2c52cb2a"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-005-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "922e413f906365f7329b4e9668cb5901d11fd8259dfcd1f9b700a4b56676815a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "2a624ce34a3a4fe322b27bbac7b4731ed52191b8430c949f8da68e6cba40daff"
+ },
+ {
+  "boot": 2,
+  "cell": "E",
+  "crop": "E/boot-02/canary-005-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "56c8323e503475b6f024a83878745941635f3b6e65f2bb54383a45996eefe28f",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-02/canary-005-vscode-drag_select_word.png",
+  "screenshot_sha256": "6f2ac7b7494c4000cef2fa339692112dfd77508ba4456a8da9ec321e471a59a3"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-000-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "706b21818e06593d61b0e9e41c066b94a9555a3e7e1c03c079ad413853aaa2e7",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "017d47ae28df6286c5e39b0e36eb39f3874a303e81defa2071d813f1ea52fa6d"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-000-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "344738a6e4da71a68f41e2d0a2b5c984b4e9a5f8464cf1a7640c046be8eeb44e",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-000-writer-drag_select_word.png",
+  "screenshot_sha256": "417167224e4fc09af1b6613143378650a3ab7d76d3254abae9081eb5af08019b"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-001-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-001-after-triple_click_line.png",
+  "screenshot_sha256": "278455b0d80037328c90659cb715e069f445bee083118b6ca25195fec4e2d773"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-001-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-001-chrome-triple_click_line.png",
+  "screenshot_sha256": "7d78aec08a1b9a2203400492785d6cb6eb212bbe086460223cb0e0c4a7900d7a"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-002-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-002-after-drag_select_word.png",
+  "screenshot_sha256": "8672c926dda9aafd35743f84b8c148c82ad6d19988b1c7036268ffc30b5297fc"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-002-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "5182671d8ac0e4a60d18330de06b30dc6c6d305fedadf5cf43ded6dd65ee1183",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-002-chrome-drag_select_word.png",
+  "screenshot_sha256": "8e482c078f1d7367d61f44227d884c423f757ba95aeefe2e871b030201cb7183"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "0cafc5bc0a97eaf43a1f23f2324e0747bfb6a49c9b0f9efbd929cd52821df9af"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "31b2a87d18045d93134ce779833efd3a0a1cc852dd18709ee1a13ad3f9c2c62f"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "eae8d2fe34301dd245708c43f3486c82161c8162f4da04e242f44f4a87fccef0"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "9278098f0866560fca7867059f34f514be861137a44b2e6921de4b053240b1a6"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-005-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "c277dd9efdd88b1b8cec760f43eff0279e2cf2a319b75b2638e29f8f0c3ee0ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-005-after-triple_click_line.png",
+  "screenshot_sha256": "f6aa2b3a134cfb77bf76d70d7b8aa10221737c726c32263ed60c4d18e0affa0f"
+ },
+ {
+  "boot": 3,
+  "cell": "E",
+  "crop": "E/boot-03/canary-005-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "2934c7b5bfafa04304a0729ab2738e44f40af75c9eb07fe0cd3dfc2785df8035",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-03/canary-005-writer-triple_click_line.png",
+  "screenshot_sha256": "9dcea2ab3964bc0443d7c725da54b60c613dab9b86d9b5d096ff6562bb5003a8"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-000-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "706b21818e06593d61b0e9e41c066b94a9555a3e7e1c03c079ad413853aaa2e7",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "d89391317ea0755af409ad52a2a0e07e1abeda5066b5d288c33c9518844a3734"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-000-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "344738a6e4da71a68f41e2d0a2b5c984b4e9a5f8464cf1a7640c046be8eeb44e",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-000-writer-drag_select_word.png",
+  "screenshot_sha256": "573e909be509a27b58ecf8a67b811443d895cb99d64ca9a30d525ebd70052200"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-001-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "b166e3904deafc745b40cb03b2eb03a5696c10102579478445a522d8a3ffdf79"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-001-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-001-chrome-drag_select_word.png",
+  "screenshot_sha256": "c003ff8499be7882605c940758d93ef33ea9964ed14926ff49555a133cf7d1a4"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "6637f93cd7928becf76208624e2ba21ca7fccbeb4eccb31cbc44d0d1429a1487"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "63f7a066ee031fb2a0e2b353dc965b924b3776e1e1a88069c5f387db493beb1f"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-003-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "c277dd9efdd88b1b8cec760f43eff0279e2cf2a319b75b2638e29f8f0c3ee0ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "e4696b6603a82dba73d81e57eb026d431fc1a12f1e19fd12b50ed30c5c7a148c"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-003-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "15732c7afce7d6b4565921ae20359be663769bb1a1a0c0406f34dffba00c4596",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-003-writer-triple_click_line.png",
+  "screenshot_sha256": "0eedc0b76d218d18cd1267a86a3526ab7de9a88f39129f993249e6d200bc12e5"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "18ddec3ecf30fcaef16f1f2db91c303973ab60cbcf3e0a5ae077123105ab6147"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "6a2bf55ee71918ab34e3880cf186f356ba1e1331d5394b2499ed07d2299aee72"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-005-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-005-after-triple_click_line.png",
+  "screenshot_sha256": "1e9727568559b68b4e2b86b0e179bbe0347e90e5bdb9257d1c041a05b09f37a8"
+ },
+ {
+  "boot": 4,
+  "cell": "E",
+  "crop": "E/boot-04/canary-005-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "00-s2v5-step0-e/cycles/shots-04/canary-005-vscode-triple_click_line.png",
+  "screenshot_sha256": "40b2e05fd4f853c865459e5ee92296b9bc49661c5bc4e663125e4c150b029bf5"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "a7415fd1ee9a1da8e05447fdd03e20b16e45f2377b781f2b99ab10e729f7a706"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "f7d59af9a9c5b62a19f077c2e89fd857d174693fe78dd5df34cec0f1650aee61"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-001-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "9681647967e866b9c4523b93bfaf370203360b1a035a3f14d27a7ee831b353f5",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "7eec07c445304400d31811a68bb458033132430e57d653bb0aa9d82f77d6420f"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-001-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "130dc7014a347b4a85182c26110b579a0a9d4bec8d905da33a2bc15c45d7aa83",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-001-writer-drag_select_word.png",
+  "screenshot_sha256": "796f02327554ec2afdd60109798d2116c269f4ada0ee912ab16818e3d3012b37"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "e5d5c2f537aa886983f8202e8ea640e3ae8ed7d9b3ffebcd3f34e43cb0dbecd8"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "ed79f067f9eaaf4dcf614ee71bbd6b25bb23a42736a482b1ed2695401d357d8e"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "0d39f92484bf1f2e32a54bad4469d71451930948c6593c2a22313fdedb28d326"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "9ed53d0e3ec83b713d1f9e56ddd0079210b410ef4c00ed9ecbac8bc77f6ac3a4"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-004-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "cf4e74e81d3fd969ff8ca7abdef654aad56e8e12dd5c9f31b44437acd4046298",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-004-after-triple_click_line.png",
+  "screenshot_sha256": "24be5421e2155499dbe1e45ada5e66d40214879c4f8758938067fe4c5c98107b"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-004-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "0524bede15416e115b9757a6e945a8960ddb06e0ef3eb1d530e8543969a4dfe2",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-004-writer-triple_click_line.png",
+  "screenshot_sha256": "322341a4a6f5d05f58b75ae7275105d7654483dd7790068dca33c87fbdb2d9a3"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-005-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "dbe0f2aaa0602b8ffa7b70ee18ba522fe227be4d956733e4e2223c2f52f09328"
+ },
+ {
+  "boot": 0,
+  "cell": "A",
+  "crop": "A/boot-00/canary-005-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-00/canary-005-vscode-drag_select_word.png",
+  "screenshot_sha256": "4ee94e1f7e3cd4034007b347ecd8d7bddb8dd8d2411967540eacc891996700e9"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "ed18cc673ab3fcd7aea14e7dea26e245971483616ab56c6020513f86b92487b9"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "f82e8a29fa3474567dd3e3a1e8b8c3f0f32ccca54999f391fb22d0bf443b0e1e"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-001-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "cf4e74e81d3fd969ff8ca7abdef654aad56e8e12dd5c9f31b44437acd4046298",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-001-after-triple_click_line.png",
+  "screenshot_sha256": "f83d86e64dea4d1ded5357ba53a1436a306a04c66e277995c4aa15cd255d5fa4"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-001-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "0524bede15416e115b9757a6e945a8960ddb06e0ef3eb1d530e8543969a4dfe2",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-001-writer-triple_click_line.png",
+  "screenshot_sha256": "b6796c4ffd1a24ffb70e307d95f2134bfd534d05c6fdd810baf022ec00b9c5a2"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "08ca6061a098b43a2690908b81c3c7400656b7870a6dd9f2ede01ba13d111151"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "7d28dfbe0cbdc491ccd62ca6dd167d1a76786e56e8124fe48ba78fcba00a45ad",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "5fdad5e020e33c75dac5810a346624c6d5be44d183194efb6c320da3e38e229c"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "ccbed90227b4ea0a12c599612cc554f9ba2079b3625f3790f078fdf96fc4a0b7"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "9e8d4d56cae6d62e6dafd327a24e54e85bbec084b320180bc4fe59a2fe56c452"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "c0c09e42b8005bd91bc561bff63bdb87e2fa7ed5e8d3a95fdb860bc5bea31a84"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "56c8323e503475b6f024a83878745941635f3b6e65f2bb54383a45996eefe28f",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "3da1143c211f16547c81a0d9d1d1f0b55a8b13c471bbce4d055fe90d0a4f2ea8"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-005-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "9681647967e866b9c4523b93bfaf370203360b1a035a3f14d27a7ee831b353f5",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "8a4a17d9a52122643a27e822c1ffd438d4d6f551820fbe25bf69cf6d49bd2ad1"
+ },
+ {
+  "boot": 1,
+  "cell": "A",
+  "crop": "A/boot-01/canary-005-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "130dc7014a347b4a85182c26110b579a0a9d4bec8d905da33a2bc15c45d7aa83",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-01/canary-005-writer-drag_select_word.png",
+  "screenshot_sha256": "1824ac597662e2a517fa53840c601fa3c250fceed6c5710aa3dcb75235282fff"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "f96b3eef9bfb0258bef66886ac46e48bc829374a4493a7a639d4ab74b239d577"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "5182671d8ac0e4a60d18330de06b30dc6c6d305fedadf5cf43ded6dd65ee1183",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "cb59469552c7f560ddea5f0ec074f20e47830c1f58d7ce7e2e348ce8c4bfb4b3"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-001-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "9681647967e866b9c4523b93bfaf370203360b1a035a3f14d27a7ee831b353f5",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "e26f11e016bd72fe4cee07c5ca3a72686bac7ae86b0fe19906165e8c87b74f1e"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-001-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "130dc7014a347b4a85182c26110b579a0a9d4bec8d905da33a2bc15c45d7aa83",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-001-writer-drag_select_word.png",
+  "screenshot_sha256": "39bedf9f8a5193af1737e5f6e774cbe7071330174a3b0a6328767dd4bb5ec941"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "03b8fa42a6b78b2cfc606268bb33cd14afb35e8e3562aacf20c28b1602999f98"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "1099c7e2e51ea850e70052d46259c852885f4fa867c4eaac7566b3c1a97352ed"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-003-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "cf4e74e81d3fd969ff8ca7abdef654aad56e8e12dd5c9f31b44437acd4046298",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "24b1255e9e289785ba811e2fe29b27619e4e8b506e246f79c6b5fd14201ff940"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-003-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "0524bede15416e115b9757a6e945a8960ddb06e0ef3eb1d530e8543969a4dfe2",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-003-writer-triple_click_line.png",
+  "screenshot_sha256": "8a84fdcd509b8a1256577ba03d8afd201b4dc558656f94280ad5c3dd04396fa5"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-004-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "7c74883f0e1f3773bdf908331568d7019fdfeac1ade91cfc4131340b3b472c6a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-004-after-triple_click_line.png",
+  "screenshot_sha256": "b2bd4789b3adb8ab081fd1ae1fce24b4e589f88cbb57707ec9e95a9426ccd1a1"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-004-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-004-vscode-triple_click_line.png",
+  "screenshot_sha256": "4e4e560cad3c64810f18d48d3b2bb54ddca223ae2fba3ea12e948ace8375ba35"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-005-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "922e413f906365f7329b4e9668cb5901d11fd8259dfcd1f9b700a4b56676815a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "3fb5238a334df0708f429db8be0678abff7bdfaa3df0b6410cf7efa932adb198"
+ },
+ {
+  "boot": 2,
+  "cell": "A",
+  "crop": "A/boot-02/canary-005-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-02/canary-005-vscode-drag_select_word.png",
+  "screenshot_sha256": "b12a3e6e3ff864f64110e89e4d1f3fd9a77cac9ccf56455277fdec193c4b152b"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-000-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "9681647967e866b9c4523b93bfaf370203360b1a035a3f14d27a7ee831b353f5",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "76e4e81d5fb5e5b788c7f3491d931074b7b4ff107fa8e75db38b7400c88ea211"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-000-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "130dc7014a347b4a85182c26110b579a0a9d4bec8d905da33a2bc15c45d7aa83",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-000-writer-drag_select_word.png",
+  "screenshot_sha256": "8d8a7dfc8523191f8de94e2a8f9189594cae7d8aec8b180eda5636778493b00f"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-001-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-001-after-triple_click_line.png",
+  "screenshot_sha256": "45b176d98ac1d2f35dc1ede23b10f3455abed80a62027e8de269b8a98efcdaf5"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-001-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-001-chrome-triple_click_line.png",
+  "screenshot_sha256": "3b1c073be3f3fd3c8741e32ed6c09c365f84f372c715791a4201502f83139fab"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-002-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-002-after-drag_select_word.png",
+  "screenshot_sha256": "e5ada876a437e3f3bb19dfd5b889aa27067e535f97c54eea8116e01457ddde7d"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-002-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-002-chrome-drag_select_word.png",
+  "screenshot_sha256": "b00dc9a57c332d1caf625c9089b485c78c918d5ccbeb91ac51b5116a92709356"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "65eda1c6a5de128073a9bd91861ba2d41b2de08a647300167eafeb8497d0c14a"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "4e2aa75379b8c5cd6110269d2165adeef2748b3b122f6afa74a0633c0baa25e1"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "c55c811ef0f799e86948d14ac117ff4b2eb5ddbb771545961f63a669c3c4b3d2"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "56c8323e503475b6f024a83878745941635f3b6e65f2bb54383a45996eefe28f",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "8896bfd799192674948a6ab1a9ad7e6f932122a1bc9727157f667f44237ea4ce"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-005-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "cf4e74e81d3fd969ff8ca7abdef654aad56e8e12dd5c9f31b44437acd4046298",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-005-after-triple_click_line.png",
+  "screenshot_sha256": "09ac1cd6a9543ea95f8dbf5ad0dcb03dcd316ecf9bf093396bc212640b1ab5a9"
+ },
+ {
+  "boot": 3,
+  "cell": "A",
+  "crop": "A/boot-03/canary-005-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "ec151988fd3f1627c4343b0eb7c5131bfa44601f7f93f4fc4fee45a1654a22f8",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-03/canary-005-writer-triple_click_line.png",
+  "screenshot_sha256": "246a0d5e861d25f8de2ecc9bacbbcfca867ad81e4c84cfb79c138090d468cc19"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-000-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "9681647967e866b9c4523b93bfaf370203360b1a035a3f14d27a7ee831b353f5",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "90aee72c573776372bb0a16136626d462d8f3df7b9727c06a1e888eeeed142e6"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-000-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "130dc7014a347b4a85182c26110b579a0a9d4bec8d905da33a2bc15c45d7aa83",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-000-writer-drag_select_word.png",
+  "screenshot_sha256": "bb1df2a470c0162a293c7820b07b65ed834bf5f3da339aaf8441bc552dbf2ccc"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-001-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "21b6da421e590beb1f1701f44afa3499c62a6578e6c2e7c3d6f2cb407e625bda"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-001-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-001-chrome-drag_select_word.png",
+  "screenshot_sha256": "470ea5c6cf89cb3e53dc69b277835a4bb5ea0f077d3744bc179420af149ccb3c"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "1ae01d3e06bcb9f35566d3832bdd46c12ea50d6b87f9fddf5e18000ad2a7ce25"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "a512ac5858220af2c7c3d15e94da231c191a6dcbd70b1e3510e092d14b8eee92"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-003-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "cf4e74e81d3fd969ff8ca7abdef654aad56e8e12dd5c9f31b44437acd4046298",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "5ccb322fc2034175da63fa1f82d3f3ad48513f0b9b9a5c8e3a0e1e31c0c6aa8c"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-003-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "0524bede15416e115b9757a6e945a8960ddb06e0ef3eb1d530e8543969a4dfe2",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-003-writer-triple_click_line.png",
+  "screenshot_sha256": "54eee14c8f49779746a8028d2417657c3c443bb71b00fd3edcd1c3adcfab8fdd"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "564a7e157842116064d601a1da22d8720c948ea982cf29d7f0b004378b1732bd"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "56c8323e503475b6f024a83878745941635f3b6e65f2bb54383a45996eefe28f",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "aa2890342c32888dcb92b2da7f8ee6535d26727ced8a3addaa11dc43c2705a84"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-005-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-005-after-triple_click_line.png",
+  "screenshot_sha256": "08f0c574e815ccfd8ce97bdb93f4d1e3e4ea16d78d3829c85154f8b2e31637f5"
+ },
+ {
+  "boot": 4,
+  "cell": "A",
+  "crop": "A/boot-04/canary-005-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "01-s2v5-step0-a/cycles/shots-04/canary-005-vscode-triple_click_line.png",
+  "screenshot_sha256": "f0ce4c075d2142cb1af921d61a44cf5446e50f11f435d6e5d65a88533070c4e3"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "105aea90f74c4bd84a0b40dd250299a7fe3965260c50ddd9890df6f04747cb8d"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "5182671d8ac0e4a60d18330de06b30dc6c6d305fedadf5cf43ded6dd65ee1183",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "8cbf8460edfd0c150a975dc2d56073e9065f375825c17d8474a29a22f07beec3"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-001-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "e8e3ab37dd786fd40610e8b4d0f00912965e7a644eddc19ef31dac783c288849",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "591c23796c1575ddfb421e368fdcec6d2627da7851b525bf81bdbbce65b59ced"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-001-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "c95e86b771f0fc9a8b2efc2747217ff385a6b37af0c7ad6bfa6dbcf7587b17ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-001-writer-drag_select_word.png",
+  "screenshot_sha256": "c3b6661c2981f4ea5c2599add0dcf34090d4a50947b9dfb35fb47aca9a1e9587"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "3a48808a464e4daeb02941bc2d0a65c960963dc097841df9e8e87e84140a3e2f"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "bdbf08f1cfad73deda31d1ad311d12d851e24b86946caf2757a8057fd3873040"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "845618a8d7598d0c32f24ce98e8666b235b803b338212aeb0d90e5b5c0a41e7e"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "0b066516e59014d68095e698982902c3cbaec4ad37911ad7e0c77bf3e8bf11b6"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-004-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "060383e44e1483b4413777f577e97900d386c04d54b3a639d4c977384bc78471",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-004-after-triple_click_line.png",
+  "screenshot_sha256": "e5eef579e4e764614aeeddecca569b54fbd8f15a081047e4e36fe17be5001810"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-004-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "e8456ff84c4b80ab0da4726443c57c676390a642b5eea4bdca22ab6014e6a805",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-004-writer-triple_click_line.png",
+  "screenshot_sha256": "49298081acc7c470e1f27b187018c3e73e571a2416459b2359687cdc43ede866"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-005-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "7c1cefbd1aed29a119c180ba5519f64ceeb660db7acd634c9853ceee3579a2fb"
+ },
+ {
+  "boot": 0,
+  "cell": "ER",
+  "crop": "ER/boot-00/canary-005-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "56c8323e503475b6f024a83878745941635f3b6e65f2bb54383a45996eefe28f",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-00/canary-005-vscode-drag_select_word.png",
+  "screenshot_sha256": "ae0fdcce8c2fa070000a7493d586db2b9c488dc62e7d79b956388ebec0f9f26a"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "167ea8e2a9e5a11ee7091708316731f611b4fe6bff5532d42acfbb7e4fe7d261"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "a53817650ccd52ddb4bfcad69e1a0db42d128304aea05b991a7a8e087770a256"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-001-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "060383e44e1483b4413777f577e97900d386c04d54b3a639d4c977384bc78471",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-001-after-triple_click_line.png",
+  "screenshot_sha256": "12f9b26dd542bff94cc1dbc39a7e0ddb9d4f8bfe859cef018a6128ca3a95cd22"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-001-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "e8456ff84c4b80ab0da4726443c57c676390a642b5eea4bdca22ab6014e6a805",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-001-writer-triple_click_line.png",
+  "screenshot_sha256": "2a211c3258364c2efc0b92635c7a55f097a6f6ffbf1892d8c7cd8f2ce8803968"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "7b2c4c889ce934a74fa0e82b95c4d15f8af093400de3eb81556903b08b44fe14"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "7d28dfbe0cbdc491ccd62ca6dd167d1a76786e56e8124fe48ba78fcba00a45ad",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "2817da8a44139ee21fba43c2c6cfa0d98edd8cd33e4d3eb44e2a7766ce35fae1"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "26f071ef18939d7c2710f388ff584ec5dfd447a98d5a803757634ebc6bda834b"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "c74420274647b99d6654b9b81783bb8210a16b58060f0e8cd0892831322aa15a"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "922e413f906365f7329b4e9668cb5901d11fd8259dfcd1f9b700a4b56676815a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "e2351202612005bc4e04632effbb97dc25a82f17717e091115b87267caadae3c"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "ae9b65e819829fe8bb22e7b675be938149019970432c1fc26f54c98c795d9671"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-005-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "e8e3ab37dd786fd40610e8b4d0f00912965e7a644eddc19ef31dac783c288849",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "f34484c1126ef78c229132f8e5524e34347557e4a4ce1886695ca2420e819714"
+ },
+ {
+  "boot": 1,
+  "cell": "ER",
+  "crop": "ER/boot-01/canary-005-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "c95e86b771f0fc9a8b2efc2747217ff385a6b37af0c7ad6bfa6dbcf7587b17ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-01/canary-005-writer-drag_select_word.png",
+  "screenshot_sha256": "53604abb15a94ab489c45b956b40987fc7d607ac4bf2668c0f725c7923e393c5"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "daa50e21b270763feb346443a2dc7714172d8688c5bfac5cd5def73f8fd647c2"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "5182671d8ac0e4a60d18330de06b30dc6c6d305fedadf5cf43ded6dd65ee1183",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "1b257377eb09f165350ea400ab7176d89e62a781236da0f4d8300808e4458470"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-001-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "e8e3ab37dd786fd40610e8b4d0f00912965e7a644eddc19ef31dac783c288849",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "2e13c85f0a66b4d2018ae8c5efd3c899feb3037a156d6910b3bb2548a102674d"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-001-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "c95e86b771f0fc9a8b2efc2747217ff385a6b37af0c7ad6bfa6dbcf7587b17ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-001-writer-drag_select_word.png",
+  "screenshot_sha256": "68d9f6d8f40212d7d6b30d077c2582c6c6943fac675e3977865396c527a1ba8e"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "6cc3f10797cb8f41e395369480efb4630074e707fb352cc20635e078e9c4b85b"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "5ffa16ead11097cfc84c07ade04c5c43b33716764bb23da391389885a8b77eb5"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-003-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "060383e44e1483b4413777f577e97900d386c04d54b3a639d4c977384bc78471",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "dcab4f615225d68825404701b72a5f50800ac6a6235cfe6e8c3a53cc3a44f5fc"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-003-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "e8456ff84c4b80ab0da4726443c57c676390a642b5eea4bdca22ab6014e6a805",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-003-writer-triple_click_line.png",
+  "screenshot_sha256": "74ba8cd21559a008c8464257ca364b8f149b56bb4793c2a9730310590777908e"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-004-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-004-after-triple_click_line.png",
+  "screenshot_sha256": "1e508f9f0ef6253c77e8083a89cfe5518a799cdbc764778180a009fc036f28de"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-004-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-004-vscode-triple_click_line.png",
+  "screenshot_sha256": "a6548e158f66d60a3652446846b02efb417f7e79ba462754b83f92b5cdb8de6d"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-005-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "96c34fdffb9b571425481fd238e469fff2392d95e06790d9ee740451b601050e"
+ },
+ {
+  "boot": 2,
+  "cell": "ER",
+  "crop": "ER/boot-02/canary-005-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-02/canary-005-vscode-drag_select_word.png",
+  "screenshot_sha256": "6698b04bb7d7cf8dfa9ce5794fd9fc4b7aeb65fb4483a85d316d91cff2366273"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-000-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "e8e3ab37dd786fd40610e8b4d0f00912965e7a644eddc19ef31dac783c288849",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "14ae53d97a807101ec5599f9d36ac7f505aa6f406ce4719ddacea55466ba113f"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-000-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "c95e86b771f0fc9a8b2efc2747217ff385a6b37af0c7ad6bfa6dbcf7587b17ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-000-writer-drag_select_word.png",
+  "screenshot_sha256": "85ce25862a1561b25a27107598b8d40bbebd99abdbba5ae77da9672fa7aada1b"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-001-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-001-after-triple_click_line.png",
+  "screenshot_sha256": "ef4d022a2b7ad4dffe21aef6e98367e7524847d57b540cc9861d77aed7919b48"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-001-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "7d28dfbe0cbdc491ccd62ca6dd167d1a76786e56e8124fe48ba78fcba00a45ad",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-001-chrome-triple_click_line.png",
+  "screenshot_sha256": "dcfd57a23cf30b4459e67856e8d85dc007a2bf7006f92239afc800a13243c29c"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-002-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-002-after-drag_select_word.png",
+  "screenshot_sha256": "8c8ab57042afc962d6f3fc47cf10bd157490c1f9ef5c9ab7fa14649bd2faa9f6"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-002-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "5182671d8ac0e4a60d18330de06b30dc6c6d305fedadf5cf43ded6dd65ee1183",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-002-chrome-drag_select_word.png",
+  "screenshot_sha256": "8f2519d383ca1d96bef9fb86200b58e29f93cac4c6048571ca76cf9c2104daad"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "814b132af1c937b6e9533cef51488a4d94ee5dc7b2e713526ce837fe218223f8"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "bb9dc13bdee932bb99f55a7b5d47df20e2c1c8435df5678b2d4e1f6879098e1f"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "922e413f906365f7329b4e9668cb5901d11fd8259dfcd1f9b700a4b56676815a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "cd432f66a1801ca891910d1b7cab3b74fccc52d4466b3c0521ba35e3533622dd"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "943c1f398d3bb2a5281677971c010359fdb41c277624a3b7df2e8335c4cc7749"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-005-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "060383e44e1483b4413777f577e97900d386c04d54b3a639d4c977384bc78471",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-005-after-triple_click_line.png",
+  "screenshot_sha256": "8f238caa31b2c7cda777b175a1e6d6937b9592c0bb76bbfaa6e72a255a20c627"
+ },
+ {
+  "boot": 3,
+  "cell": "ER",
+  "crop": "ER/boot-03/canary-005-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "ac71be02e93b61c852fff55c8725332f1d3c49e093d296c8ca3f3b809bbb1fe0",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-03/canary-005-writer-triple_click_line.png",
+  "screenshot_sha256": "1991c1fb4cf7dd9894b75e25839586f79cbe322187f63fcff567839f37e1399b"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-000-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "e8e3ab37dd786fd40610e8b4d0f00912965e7a644eddc19ef31dac783c288849",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "aaf1a5ac4ae590d13b4ad5c3b0318b820d728870dcc24c8f3b3165bbee83db0a"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-000-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "c95e86b771f0fc9a8b2efc2747217ff385a6b37af0c7ad6bfa6dbcf7587b17ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-000-writer-drag_select_word.png",
+  "screenshot_sha256": "ce88fca1f17990d9f478a5f36c91b7bce22e1b908970e02b40bb6f226a5e1c20"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-001-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "8667c79956701107df5daf1c648d270dd09a13088bf8278db18274f918379418"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-001-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-001-chrome-drag_select_word.png",
+  "screenshot_sha256": "4780ddd30364d36759bbfbf45642df95c2acd55652b1108597e94decd6686e7d"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "224b5d8e361ce7783b1ccc25f2d0c29163ce5234437c17b8322dacdd2ece4c95"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "7d28dfbe0cbdc491ccd62ca6dd167d1a76786e56e8124fe48ba78fcba00a45ad",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "250e3b24f8da4b483c04ad79e7e27ef26417605d5e0b0834b6f1558fac310d9d"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-003-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "060383e44e1483b4413777f577e97900d386c04d54b3a639d4c977384bc78471",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "475f2e9b7ba8f59ba1be801666a7bed4b99ef6f2e896bac9347a40b8744bc741"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-003-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "ac71be02e93b61c852fff55c8725332f1d3c49e093d296c8ca3f3b809bbb1fe0",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-003-writer-triple_click_line.png",
+  "screenshot_sha256": "27bb83478e0016a8eb16d6aebc32870a93f0db82659050912ec05dd8e2535f6e"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "922e413f906365f7329b4e9668cb5901d11fd8259dfcd1f9b700a4b56676815a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "75d90245a24e20441b67802aa2d66c9e71ac84f282fc84a633e43333c0e9163e"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "40636d0815fbf90fa1a85fc6028e84c2f236082a5fc1a0da221ce903bad46b20"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-005-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "7c74883f0e1f3773bdf908331568d7019fdfeac1ade91cfc4131340b3b472c6a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-005-after-triple_click_line.png",
+  "screenshot_sha256": "4ad27ff6616b0d8421d9bf9eef1d7b14eabb26a67125b2c83fb7d8d78d6651f2"
+ },
+ {
+  "boot": 4,
+  "cell": "ER",
+  "crop": "ER/boot-04/canary-005-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "02-s2v5-step0-er/cycles/shots-04/canary-005-vscode-triple_click_line.png",
+  "screenshot_sha256": "9d09856874fcf046b0c49a76a43017ba3e4699ceee9bd9fc87663e8e03b39cc5"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "008c71421290237a15a9361dbdc161f1c40ffedb16c7f4c95e4cf0b64f7c7a91"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "5182671d8ac0e4a60d18330de06b30dc6c6d305fedadf5cf43ded6dd65ee1183",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "73fc2e6ac3cae7fe417f1c98d78386b48145ae63626cafb573e62ee4c67c9542"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-001-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "6a6cead8876d6d09c8232faebe72751418355fbf9b6bf6c37dd904d7123cedd2",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "080a5ca7b929230c1c12905081ad1202c00d20a243fa679caf8741be43456b73"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-001-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "3c2c4bc69ee936ec98555760d978a9ea11153a5e3aaa5bc782285c58edc5b1d5",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-001-writer-drag_select_word.png",
+  "screenshot_sha256": "28e43887ae0c448ab323cb6f1e251894a73fc4f0ed1de7630069a038a74c942e"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "af8ec456fb57d284bd5cfa97410a602371d697a1226889ef1a3b6fe9bea923f4"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "5ce36abba008c585ce90185cbf179e41df8e12a46604bcfcf2223a3f6f8b23d3"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "5dd43ef9c3fa0b9ca4107dd72f819770b830f7c600ac707e0192053644e1b2bf"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "907a5ca97433c24b694257c4c4027725d129e7527719c351dc570b413fbb9848"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-004-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "3acd8ef469f4701bcb10b2a88d08156f6e6bbc1c0d791482dbc6ebf362130caa",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-004-after-triple_click_line.png",
+  "screenshot_sha256": "2ddd3a73ba84902333697f120ffbf0a46d7993f409c5a8094c57ef731eaf0a18"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-004-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "16a9ba6e370ec8a31986422cc3150a974736e48e995cb50a298c63e5517e9891",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-004-writer-triple_click_line.png",
+  "screenshot_sha256": "bd8bb6f6a6320f8f72239afd2b83de1ad4c8eced78bcc4639572a62f08ea86e7"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-005-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "848a7bd593a6b98af177999296ad82cc17e6b2b3caae4d82b8da48d2b5ac9df9"
+ },
+ {
+  "boot": 0,
+  "cell": "AR",
+  "crop": "AR/boot-00/canary-005-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "56c8323e503475b6f024a83878745941635f3b6e65f2bb54383a45996eefe28f",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-00/canary-005-vscode-drag_select_word.png",
+  "screenshot_sha256": "6732cc9a2261afb9b1cc50495b8655d82c720f45546d71252ccd2759039dff7a"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "34f54368cc002638c99a7f11e14c55fdaf1012ed9b30a0773ea483c683596e59"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "7222888dc422d81ca34cbf29ff0ecc6b07f5400b86ec2da4e86999cc18107622"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-001-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "3acd8ef469f4701bcb10b2a88d08156f6e6bbc1c0d791482dbc6ebf362130caa",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-001-after-triple_click_line.png",
+  "screenshot_sha256": "ca5b057f1e3ff1456713c56dfcde6c602b292a5400ce4005aa1ea581b9a965d3"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-001-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "16a9ba6e370ec8a31986422cc3150a974736e48e995cb50a298c63e5517e9891",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-001-writer-triple_click_line.png",
+  "screenshot_sha256": "fa7c86edd3008e4d888f24c88a4a83028c53c2c5664df54499b6a723c34da027"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "0a76b45ef26c46f255db6cf3a935f77aafce68c03849ffc648e68fa6288f5707"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "7d28dfbe0cbdc491ccd62ca6dd167d1a76786e56e8124fe48ba78fcba00a45ad",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "b2f9500fdddf60ccea81f983c77b4ca920d60c83c0abff7ec9351f32f931cdfe"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "7c74883f0e1f3773bdf908331568d7019fdfeac1ade91cfc4131340b3b472c6a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "ffe0516f6eac48e4a434169d608ff58aeb54c31f03e84b6408fab2eb860df2b7"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "38334c9b21f18cc5ad108550fd314e945deb40cea4d101964bef1f2f21b0e796"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "3e3e1fd0009faeac1bd6cbc9d8a215b57fce7d0c80f2bcc4f98a05bc88aa9acd"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "7bea3fd6f7696cf4b92c3d96ade4af3b6354e4bf3b45436175a1c0e1bcb058b3"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-005-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "6a6cead8876d6d09c8232faebe72751418355fbf9b6bf6c37dd904d7123cedd2",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "94e8fa9d5433e05e913f591bcc85c3951c0aa4259f237b67f443603b3081875a"
+ },
+ {
+  "boot": 1,
+  "cell": "AR",
+  "crop": "AR/boot-01/canary-005-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "3c2c4bc69ee936ec98555760d978a9ea11153a5e3aaa5bc782285c58edc5b1d5",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-01/canary-005-writer-drag_select_word.png",
+  "screenshot_sha256": "b4c5a4bb9dd3c01cf5c0e083c4c5771c925af9dae3d25c1a6611489616de72dc"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "aab68962665851197a2c77cdc488b8076b163720d7141e40bb3d56af62458db6"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "5182671d8ac0e4a60d18330de06b30dc6c6d305fedadf5cf43ded6dd65ee1183",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "b96405612a0ecede327c8d3a3c461977b5b234b711fe5a2058fc37d1943c2592"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-001-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "6a6cead8876d6d09c8232faebe72751418355fbf9b6bf6c37dd904d7123cedd2",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "c333a33f50989f5c3370870bb4ae570e99f0c67031530c30bdc58b0b5e4368e4"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-001-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "3c2c4bc69ee936ec98555760d978a9ea11153a5e3aaa5bc782285c58edc5b1d5",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-001-writer-drag_select_word.png",
+  "screenshot_sha256": "5768f6b58a0694362784af2356938aca307b01b1dd8feb4e3b8551f80a9dbc76"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "b36f85f1beb01c8de5875d619551c67a758dac3ae998e0c92a662c4b0c7e9169"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "e564e5aa6140bd8762f24cb0a74ac469c80b8f5c34992872d401cbc37fe11741"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-003-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "3acd8ef469f4701bcb10b2a88d08156f6e6bbc1c0d791482dbc6ebf362130caa",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "af6f7ef25ccf4fdfa264f5e732baec8a3fc88d7b3222148691232192eba440d0"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-003-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "16a9ba6e370ec8a31986422cc3150a974736e48e995cb50a298c63e5517e9891",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-003-writer-triple_click_line.png",
+  "screenshot_sha256": "c9cb219e4e1fa2fb0679d6df43ed02b600ad52708d069ec95b58d8e459511177"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-004-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-004-after-triple_click_line.png",
+  "screenshot_sha256": "49f8138f88b818189354dba02fd518cd4319dbc52d27b1ff5d0a3f01c95d31e3"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-004-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-004-vscode-triple_click_line.png",
+  "screenshot_sha256": "2fbd6160e14846f79b1310c5c67c033c9c4845a782e5a304c16c8465d5b719c7"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-005-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "031a195d506fad857d6186d9ae7688485099aa89a50b20959ede2447efb9e5b7"
+ },
+ {
+  "boot": 2,
+  "cell": "AR",
+  "crop": "AR/boot-02/canary-005-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "56c8323e503475b6f024a83878745941635f3b6e65f2bb54383a45996eefe28f",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-02/canary-005-vscode-drag_select_word.png",
+  "screenshot_sha256": "35051608fa0b5304f13dc2f2c554c9d2d13a5b70bcbdeda233f5f1d95ef61b49"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-000-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "6a6cead8876d6d09c8232faebe72751418355fbf9b6bf6c37dd904d7123cedd2",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "c2eac0dcfd8d004c33df006814d558e46a9c473829bb052c9bbd5d984b8d0474"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-000-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "3c2c4bc69ee936ec98555760d978a9ea11153a5e3aaa5bc782285c58edc5b1d5",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-000-writer-drag_select_word.png",
+  "screenshot_sha256": "0488a3a6a5203a9a496fd86c5586b07cdf01cfa4c6ebfee4a1f4fe41bef6bf8e"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-001-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-001-after-triple_click_line.png",
+  "screenshot_sha256": "3e2a37a3642929af145ec050515e25ee05cf32e8d1a8461be6cf506d083f989a"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-001-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-001-chrome-triple_click_line.png",
+  "screenshot_sha256": "6fd383ffca5078e7b900d8c7dcaa05042e6e721b8e9f4a7b50c782b529b930fd"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-002-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-002-after-drag_select_word.png",
+  "screenshot_sha256": "1ae995ea73179d2e25af28aaf2e899876ab5f3eebebdf0844026140e94df4ef6"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-002-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "5182671d8ac0e4a60d18330de06b30dc6c6d305fedadf5cf43ded6dd65ee1183",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-002-chrome-drag_select_word.png",
+  "screenshot_sha256": "28c9e6e78965495cdec58f77f9c14f0d2ae76fccb2fbfcf2fdb59b20db71ff1e"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "c55749d1bd1c7323ad47aaf5cc7d9b14d838d3c1a64bbb586e3978bc33df3e24"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "f51fa7ccfad509a358254878ceeb94eb94c68818aeb7cc5dda1e959f6a4d66cd"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "0966e7c1ac8c9bf8a77725a51f7b11e234757c62f85eae880c03dd9128973fc6"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "497a9272fd5b9f04aacd9018dbb0ec17a000ad0a51caeece449570be469c8ed1"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-005-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "3acd8ef469f4701bcb10b2a88d08156f6e6bbc1c0d791482dbc6ebf362130caa",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-005-after-triple_click_line.png",
+  "screenshot_sha256": "a6f9adc4c7c38f1765b00e9943fbe4beca1f65e331f065957e33ba7deb29d505"
+ },
+ {
+  "boot": 3,
+  "cell": "AR",
+  "crop": "AR/boot-03/canary-005-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "16a9ba6e370ec8a31986422cc3150a974736e48e995cb50a298c63e5517e9891",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-03/canary-005-writer-triple_click_line.png",
+  "screenshot_sha256": "a57d5a26aea4996fe84ae9e2c746aac0813586f01d1b8f751b049d271f10af77"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-000-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "6a6cead8876d6d09c8232faebe72751418355fbf9b6bf6c37dd904d7123cedd2",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "9750ddffe8550af89e6d9e1e38e2617ffee862f070150ff0e02db9a1a4f5f2dd"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-000-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "3c2c4bc69ee936ec98555760d978a9ea11153a5e3aaa5bc782285c58edc5b1d5",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-000-writer-drag_select_word.png",
+  "screenshot_sha256": "308a9202cfd1b012ecca50a0afa19ce77f77b0a6a56879672aefefcc77355d86"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-001-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "79e4a63775a91cea754f197e39cabbbb02c4006986bf60b25803dd6db8b0fe1f"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-001-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-001-chrome-drag_select_word.png",
+  "screenshot_sha256": "c165104f23fee9533f4253e2fc095ae107b2ad81b02d117ee3cbdd53ab8e4525"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "5c60039d41fd01036f25ad0c0960b9c0cee547f3f53d6221fd7201f46b4ea00b"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "7d28dfbe0cbdc491ccd62ca6dd167d1a76786e56e8124fe48ba78fcba00a45ad",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "ddfecc0335c46fac873758c99c5d0fb863b12bc257e44e52f15aa341079343e6"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-003-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "3acd8ef469f4701bcb10b2a88d08156f6e6bbc1c0d791482dbc6ebf362130caa",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "7a3f6157b5f164d79eec666eba9a1fb0d5058493b6f36ccfe71acf14a342029a"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-003-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "e9b5243c40d02b23cc07e20ca501b4fabe1df4e18ef5aa92e6c8683f5ff86722",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-003-writer-triple_click_line.png",
+  "screenshot_sha256": "a1d38b425ff937dd36bef65a23ac013d866cdb9236ea558c18437db18eed033e"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "922e413f906365f7329b4e9668cb5901d11fd8259dfcd1f9b700a4b56676815a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "5a53c52dfd4c218d32c305ba6a650812fc8f24571ffd122d63a11553eac72c83"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "f2ddd397c24adcccf89cd011cf9aa39d54c009d020cff3506f318261a60d4c21"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-005-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-005-after-triple_click_line.png",
+  "screenshot_sha256": "f478e0fe0ab167b70db5f2156d1f2d5b3c1f8abaf042dcd598b6d6eaadeb41db"
+ },
+ {
+  "boot": 4,
+  "cell": "AR",
+  "crop": "AR/boot-04/canary-005-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "03-s2v5-step0-ar/cycles/shots-04/canary-005-vscode-triple_click_line.png",
+  "screenshot_sha256": "3ecc2325a87042d2abb9b3f7eae099d4a1d22822f8268a41955bfb5948e12ede"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "d32b81c877cecadda187878491cc5d5f073d5959d0bf573185a37f43f2ad5a1c"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "5182671d8ac0e4a60d18330de06b30dc6c6d305fedadf5cf43ded6dd65ee1183",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "83aca7710784d8ccd00dc1d63d97b64fd655d912c8c5b4adc8a8bbae88fcdadd"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-001-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "706b21818e06593d61b0e9e41c066b94a9555a3e7e1c03c079ad413853aaa2e7",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "fdc06443465280a6075c068e465e8e7cc38b7eea7e0c5706356dd3e24001ec09"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-001-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "344738a6e4da71a68f41e2d0a2b5c984b4e9a5f8464cf1a7640c046be8eeb44e",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-001-writer-drag_select_word.png",
+  "screenshot_sha256": "01019cd63b91157a1674bb45d73215bcabe614687e41567fae90c29b0fe72f7b"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "f876e97e041e3cb164d9d678396c20ed28daeb0343526e4c402d578c8a996974"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "58c202ec91b7f71f9e73a6aff08938ca127bd25ebda2b1febaf813bbe387e875"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "9d11cc1f7314d05c72e667512ea699edec951a56c3f161f19d40bfa82ea47ed8"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "eb3d766e90b79296bb876a6df9f1a0d5472d85026ef7f47dab0e24a15eff28bf"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-004-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "c277dd9efdd88b1b8cec760f43eff0279e2cf2a319b75b2638e29f8f0c3ee0ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-004-after-triple_click_line.png",
+  "screenshot_sha256": "4ebd89b402afeb9c94a6fb1032dbafe5d6848d56d0d7517ce82c355dd8ccdc27"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-004-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "2934c7b5bfafa04304a0729ab2738e44f40af75c9eb07fe0cd3dfc2785df8035",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-004-writer-triple_click_line.png",
+  "screenshot_sha256": "2b4ec90462f79eef133a85e2143b78de936c878f85fc6a741ef02fef56d3f506"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-005-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "922e413f906365f7329b4e9668cb5901d11fd8259dfcd1f9b700a4b56676815a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "722478b344e47462d5282c9d4efa1c735649cb6d09c768958211948fc1ef5f38"
+ },
+ {
+  "boot": 0,
+  "cell": "PL",
+  "crop": "PL/boot-00/canary-005-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-00/canary-005-vscode-drag_select_word.png",
+  "screenshot_sha256": "142678179f4c526b9ce2fde88daa8c03dbb2a10ad27b6fef8fbc4dc53962c263"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "6194f7416ef6bb577b97bea8d353a180d924d57bde2df0bd90db3f04b0f517cb"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "756dd915c8f6e4278b1b85b5fc9c6d5946242e5e492ea415bb98a6b3d59a6815"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-001-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "c277dd9efdd88b1b8cec760f43eff0279e2cf2a319b75b2638e29f8f0c3ee0ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-001-after-triple_click_line.png",
+  "screenshot_sha256": "e3926a8ca686ca4debda89eee9216de7df5dde690809dc4a9ec9652e538bbc76"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-001-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "2934c7b5bfafa04304a0729ab2738e44f40af75c9eb07fe0cd3dfc2785df8035",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-001-writer-triple_click_line.png",
+  "screenshot_sha256": "2267b946472a1c49458fe899c5f302f5d03018fe7f4de0d44d6583d5c4594216"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "3b6b230d172763a1d1da9102aecbc1be4eeaf5e427746615258c5337efa2a4a0"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "6ba488382114b8bcc7cb38a7083762a1dcdd2d9598692e63ee48191de8a09e1b"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "1a9672411161dc075488163f3e4c1e09a3df5dacd7faa9c4e38db787837fec5b"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "225bc6d2c48da1c83d51feebe014f6f59594e3e146c608bcfd8ba762d69d06bc"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "5c1b8a07969bb092c69bc96a536f811f358e722b6303523126eff6c61fef11ca"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "1bd1196a2ea0ed623dcf660fd7016cfa8f8c76f785893316483d787095feff6f"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-005-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "706b21818e06593d61b0e9e41c066b94a9555a3e7e1c03c079ad413853aaa2e7",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "8b3c8de2741bd7e960fa9919a9c37a9226ca5c3ae6acb3e993e0d51b761815d5"
+ },
+ {
+  "boot": 1,
+  "cell": "PL",
+  "crop": "PL/boot-01/canary-005-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "344738a6e4da71a68f41e2d0a2b5c984b4e9a5f8464cf1a7640c046be8eeb44e",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-01/canary-005-writer-drag_select_word.png",
+  "screenshot_sha256": "e804bece1f58e3195bedf591e9b5366d08a146a476004cf3dbb79327dfb07332"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-000-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "d4fc8b1a5a47999dcafa1e0a573517e8d72472479b102490380f0acc78096a79"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-000-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-000-chrome-drag_select_word.png",
+  "screenshot_sha256": "4603507f89a22ab2596429da5ef01805fe1800442b98077498aa4caac6ef4851"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-001-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "706b21818e06593d61b0e9e41c066b94a9555a3e7e1c03c079ad413853aaa2e7",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "e7ad32cf40d21a1ddd9f6f02ac737d0d9337a74a7e421702c9a9999d2da1fd44"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-001-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "344738a6e4da71a68f41e2d0a2b5c984b4e9a5f8464cf1a7640c046be8eeb44e",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-001-writer-drag_select_word.png",
+  "screenshot_sha256": "44c47e9ad89279080d04e9249afd639ebd0ad740485b1212d35061d7ab7404e4"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "ae11455f5175fd413545fc93a9f95da9dcd32aaa14c63996a306dff5f3de3255"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "393304c220f4e972a0bf64647245de713069c7d837340de65e316f0a9d3c7a11",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "31e12a68bbe81dbcf750bdeabbea37f1bef68a67ce562fdb74a2adcaeddeb259"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-003-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "c277dd9efdd88b1b8cec760f43eff0279e2cf2a319b75b2638e29f8f0c3ee0ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "a8a74cd624d0b310fc63b54ca6162bbd945f33f6cf12adb13fc6c57a137c5589"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-003-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "2934c7b5bfafa04304a0729ab2738e44f40af75c9eb07fe0cd3dfc2785df8035",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-003-writer-triple_click_line.png",
+  "screenshot_sha256": "afb3320ecdf4ca0d0ac6ec04d8d1575a640235f1258dc8e55afb7c72707cae82"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-004-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "7c74883f0e1f3773bdf908331568d7019fdfeac1ade91cfc4131340b3b472c6a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-004-after-triple_click_line.png",
+  "screenshot_sha256": "555951b99fc340469c28434d5d700edb8c0ac92c9abefd8886c9fa84191fd9b7"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-004-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "84c105d1f0928bade0665fe40883879a88dc1eebc90dfdcbb4ef4ffa1e3b6934",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-004-vscode-triple_click_line.png",
+  "screenshot_sha256": "f519accc4e5fd393c963736b4c66c6719d5a2838ea5af2c505ae21777ea34272"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-005-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-005-after-drag_select_word.png",
+  "screenshot_sha256": "4c2c305bf9a6286a53a4032a9bb27075650f4cd8f2de02332541ebe0d9199c24"
+ },
+ {
+  "boot": 2,
+  "cell": "PL",
+  "crop": "PL/boot-02/canary-005-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "56c8323e503475b6f024a83878745941635f3b6e65f2bb54383a45996eefe28f",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-02/canary-005-vscode-drag_select_word.png",
+  "screenshot_sha256": "a7b05083b8cf634e97d3cff693dda84becc97be7463e3f954f81ee646d8dbb5d"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-000-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "706b21818e06593d61b0e9e41c066b94a9555a3e7e1c03c079ad413853aaa2e7",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "a8c20d85c848cc1a64e8e00c35285d89a82ab23eb73f463758ef541b3a32e288"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-000-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "344738a6e4da71a68f41e2d0a2b5c984b4e9a5f8464cf1a7640c046be8eeb44e",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-000-writer-drag_select_word.png",
+  "screenshot_sha256": "1ca9a6f7ac4f9ff30c744b4b785cedb6dd645ab7d6ab5558634273b4da2f982a"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-001-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-001-after-triple_click_line.png",
+  "screenshot_sha256": "80e1a8899128f273eaca7ced0decd084906ce13caaa7267c1bbf018af8e779a7"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-001-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "7d28dfbe0cbdc491ccd62ca6dd167d1a76786e56e8124fe48ba78fcba00a45ad",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-001-chrome-triple_click_line.png",
+  "screenshot_sha256": "cfe65fcb4fffd20fab398789a8abbb7bd7855823a5e045649735c33845707ada"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-002-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-002-after-drag_select_word.png",
+  "screenshot_sha256": "cd3f19700c8db8e11b08e14df63a5dd45d8c084020be30afcac400e4c20ac67d"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-002-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "5182671d8ac0e4a60d18330de06b30dc6c6d305fedadf5cf43ded6dd65ee1183",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-002-chrome-drag_select_word.png",
+  "screenshot_sha256": "881cbe81d2088144473ff0f3b8edc74ae9a1a7a9bae1e1dddd4db9093ac7fded"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-003-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "3745ff60cc99576d6d278068cbc3b9035016eb93ad0a48b53eb14cd54cd4ccf5"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-003-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-003-vscode-triple_click_line.png",
+  "screenshot_sha256": "f819d71a80691f61849b861ebaf79632649bdfb84a27bde644456c756ff791ec"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "922e413f906365f7329b4e9668cb5901d11fd8259dfcd1f9b700a4b56676815a",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "8d7292d2adf45af9e3664bb712ca17ee66d53b8511e4dc7ec20332c8629f9488"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "85b6ab7eec4844f782d510d62cb6254564826e88513842620230c259664d6f79"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-005-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "c277dd9efdd88b1b8cec760f43eff0279e2cf2a319b75b2638e29f8f0c3ee0ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-005-after-triple_click_line.png",
+  "screenshot_sha256": "58ad9bae6739c3dcdd3c003e5c277531b761bfec6857cfc5b011ec109de867f8"
+ },
+ {
+  "boot": 3,
+  "cell": "PL",
+  "crop": "PL/boot-03/canary-005-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "15732c7afce7d6b4565921ae20359be663769bb1a1a0c0406f34dffba00c4596",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-03/canary-005-writer-triple_click_line.png",
+  "screenshot_sha256": "1d21c188ac081598028211f4d6c95bb5e5767d893050012bc89dd564aec48034"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-000-after-drag_select_word-roi-writer.png",
+  "crop_sha256": "706b21818e06593d61b0e9e41c066b94a9555a3e7e1c03c079ad413853aaa2e7",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-000-after-drag_select_word.png",
+  "screenshot_sha256": "9b8747b5439f73bce10fac6a60f9432e3b5a53adad5823f5d3bac6c2b9021a11"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-000-writer-drag_select_word-roi-writer.png",
+  "crop_sha256": "344738a6e4da71a68f41e2d0a2b5c984b4e9a5f8464cf1a7640c046be8eeb44e",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-000-writer-drag_select_word.png",
+  "screenshot_sha256": "3562e77a9aab72e1b2669c3c0321879abc8867a8293b14d347e28f34dd8e7ae2"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-001-after-drag_select_word-roi-chrome.png",
+  "crop_sha256": "3c327aca0f3fe5155f9705ea518765ac1b39d7fe9ddbc10c07169ec8d592c866",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-001-after-drag_select_word.png",
+  "screenshot_sha256": "c03bc290033cbf675f3ef3596d8822552fad3914e917b82579c8d4585fbf400a"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-001-chrome-drag_select_word-roi-chrome.png",
+  "crop_sha256": "904ddd46eb3e057eca91bad718e43dff7dcedb510b7a847ed28c36cc073c2e2c",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-001-chrome-drag_select_word.png",
+  "screenshot_sha256": "7506ee4534437567b5e2e81a14c4c7e15d60ed9a1befabf2c87f83cdfa8b6d65"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-002-after-triple_click_line-roi-chrome.png",
+  "crop_sha256": "6063e621b93ea87d3747caa590f1f5b1433fc6c8045a7208d9520d2b47ed0738",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-002-after-triple_click_line.png",
+  "screenshot_sha256": "573e0dc974406a8b8e6e2b8c3892ce38d3b3254413d5e2e0de2ef5c19a6b5131"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-002-chrome-triple_click_line-roi-chrome.png",
+  "crop_sha256": "7d28dfbe0cbdc491ccd62ca6dd167d1a76786e56e8124fe48ba78fcba00a45ad",
+  "luminance_equal": true,
+  "roi": [
+   99,
+   136,
+   960,
+   230
+  ],
+  "roi_app": "chrome",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-002-chrome-triple_click_line.png",
+  "screenshot_sha256": "fddee3e2b49e1eb339ec5b450ffbfe603376c9a57e78e09724d2fd368bac4090"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-003-after-triple_click_line-roi-writer.png",
+  "crop_sha256": "c277dd9efdd88b1b8cec760f43eff0279e2cf2a319b75b2638e29f8f0c3ee0ed",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-003-after-triple_click_line.png",
+  "screenshot_sha256": "baa5bcd2a4cc2e66ca654e8f4dfd25f93db2b88e7cbdac7c078dff3a91af3ba0"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-003-writer-triple_click_line-roi-writer.png",
+  "crop_sha256": "2934c7b5bfafa04304a0729ab2738e44f40af75c9eb07fe0cd3dfc2785df8035",
+  "luminance_equal": true,
+  "roi": [
+   400,
+   230,
+   1600,
+   360
+  ],
+  "roi_app": "writer",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-003-writer-triple_click_line.png",
+  "screenshot_sha256": "be86a9bac32c41fa489d7d085a4bb30ff97e31b582b75dd6523a00ad3235eb16"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-004-after-drag_select_word-roi-vscode.png",
+  "crop_sha256": "68a32644ea6e0ec91169dc05ffa3a02eec64d71c6fec26c912a5941ca21117f8",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-004-after-drag_select_word.png",
+  "screenshot_sha256": "f63bddfe0a6a40510f9d5cd174b7ee4368e2ddab3c54b6d686e26802cf878fd5"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-004-vscode-drag_select_word-roi-vscode.png",
+  "crop_sha256": "2ca142da08c44e5c923f7816c80800c28106c9953d23f9b09d4f811606c57517",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-004-vscode-drag_select_word.png",
+  "screenshot_sha256": "ef763976c599ba5ce0c600fe5a2a54e1bea222f844054cf83c365fad01b9b8f2"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-005-after-triple_click_line-roi-vscode.png",
+  "crop_sha256": "255e3e93a7581d35d90caf4818357c27ccf94002528570801f75b51198981387",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-005-after-triple_click_line.png",
+  "screenshot_sha256": "ee4b495da1a05b44315f70fbd2798e64ba27c8979cea22df4dd193bff1a5c493"
+ },
+ {
+  "boot": 4,
+  "cell": "PL",
+  "crop": "PL/boot-04/canary-005-vscode-triple_click_line-roi-vscode.png",
+  "crop_sha256": "16a3a817f7cf6f37a093ce737a2501622f087b92a828ee0d71cf947ac8b13a7d",
+  "luminance_equal": true,
+  "roi": [
+   548,
+   271,
+   1350,
+   330
+  ],
+  "roi_app": "vscode",
+  "screen": [
+   1920,
+   1080
+  ],
+  "screenshot": "04-s2v5-step0-pl/cycles/shots-04/canary-005-vscode-triple_click_line.png",
+  "screenshot_sha256": "286709467768c39f9dc91ad86586c53be75b2c825f0409c729105df288c221fe"
+ }
+]

@@ -1,0 +1,7 @@
+2026-10-13T08:37:17Z pre-submit squeue: []
+E3 jobs: 1265 end 07:56:56, 1267 end 07:56:53, 1268 end 08:36:10, 1270 end 08:36:07 (scontrol); E3 later end 2026-10-13T08:36:10Z; E4 earliest 2026-10-13T20:41:10Z
+rc=0
+2026-10-13T08:37:17Z submitted
+2026-10-13T09:22:14Z analyze start
+2026-10-13T09:23:08Z analyze done: {"reading": "(a)", "decision": "PROCEED to the v5 draft (D94)", "exit_labels": []}
+2026-10-13T09:23:27Z crop start
