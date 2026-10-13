@@ -1482,9 +1482,10 @@ v5's own:
   of the unedited probe and gold code, which run in the episode container outside `lane_v5`'s binding.
   The census manifest, the lane's own records (losses, cut slots) and its receipt carry v5's id, and
   the run root is v5's. No reader decides anything on the field (`k0_inputs`, `oracle_vm`).
-- `s2v5-vm.sbatch` reads the manifest from `vm_lane.submit`'s `COTCODEC_S2V4_*` variables; the
-  oracle's registered route is v4's unchanged (`s2v4-cpu.sbatch`, which writes its receipts under
-  `~/cotcodec-runs/stage0/s2v4/receipts`).
+- `s2v5-vm.sbatch` reads the manifest from `vm_lane.submit`'s `COTCODEC_S2V4_*` variables, and
+  `vm_lane.submit` names the census's Slurm job `s2v4-` plus the manifest's name (`s2v4-s2v5-phase0`);
+  the oracle's registered route is v4's unchanged (`s2v4-cpu.sbatch`, which writes its receipts
+  under `~/cotcodec-runs/stage0/s2v4/receipts`).
 - The override sets one module constant of harness/q2's driver (`driver.CELLS`) in the process that
   runs that driver; no harness/q2 file changes. harness/q2's closed-world check covers only
   harness/q2, so the v5 cells files are pinned by v5's table of record, by `ap_delta_v5.CELLS_SHA256`
@@ -1531,8 +1532,9 @@ K1 failed (D93).
    under v5's id, the confirmation's manifests and reading), the two v5 cells files
    (`harness/s2_locale/canary_v5/`), `harness/s2_locale/lane_v5.py` (the census gate), the batch files
    `s2v5-apdelta.sbatch` and `s2v5-vm.sbatch`, and `harness/s2_locale/pins_table_v5.py`; tests
-   `tests/test_s2v5_ap_delta.py`, `tests/test_s2v5_lane.py` and `tests/test_s2v5_registration.py`.
-   v4's code, harness/q2, the images and the census are unchanged.
+   `tests/test_s2v5_ap_delta.py`, `tests/test_s2v5_lane.py` and `tests/test_s2v5_registration.py`,
+   and the test hook `tests/conftest.py` (below). v4's code, harness/q2, the images and the census
+   are unchanged.
 2. The development confirmation, a pre-freeze gate (section "v5 development"): both manifests,
    rendered from the `git archive` export of the commit named in them, which is staged read-only on
    the host with its `.git_sha` under `~/cotcodec-runs/stage0/s2v5/confirm/src/`; each submitted
@@ -1576,11 +1578,36 @@ K1 failed (D93).
    (section "Phase 1": built, dry-run on dev tasks only, audited, frozen as its own ledger row), then
    Phase 1 under D80 (iv) within its cap.
 
-This draft's tests: `tests/test_s2v5_ap_delta.py`, `tests/test_s2v5_lane.py` and
-`tests/test_s2v5_registration.py` pass, and so do v4's `tests/test_s2v4_registration.py`,
-`tests/test_s2v4_ap_delta.py` and step 0's `tests/test_s2v5_step0.py` and
-`tests/test_s2v5_canary_targets.py` (v4's and step 0's files are unchanged). Only these targeted files
-were run.
+Steps 5-7 were rehearsed by this draft's owner on a scratch clone at `5316cd5a`
+(`program/evidence/2026-10-13/s2v5-draft/freeze-rehearsal.json`). The clone shared the repository's
+objects, had its origin removed, froze into its own ledger and was deleted afterwards.
+- The status fill, with `pins_table_v5 --check` equal to the tree; `preregister.py freeze`, `verify`
+  and `check-chain` (PASS, 22 rows). The freeze commit changed only the ledger, and its only parent
+  was the fill commit.
+- From the freeze commit's export: 12 K1 manifests rendered by `ap_delta_v5.py render` (A6 on ER,
+  AR and E, C1 on PL, A5 on A, C3 on ER in three parts, A3 on AR in three parts, and the rung), with
+  v4's Slurm limits (222, 154, 192, 1,404, 1,404, 1,076, 1,222, 1,192, 982 and 110 minutes). Each
+  equals v4's rendered manifest of the same check and image (`program/evidence/2026-10-12/s2v4-phase0-run/k1-manifests/`)
+  except in the id-level fields and, for A6 on ER and AR only, the cells file and its digest; each is
+  admitted by `ap_delta_v5.py validate`.
+- The census rendered by `lane_v5.py render-census --freeze-commit`: v5's id, name and run root, and
+  exactly the 1,322 slots of v4's committed census; admitted by `lane_v5.py validate`.
+- Refused from the frozen export: the confirmation's manifests (development after the freeze), v4's K1
+  manifests (by `ap_delta.py`: not this export's freeze commit; by `ap_delta_v5.py`: not v5's schema),
+  v5's census by `vm_lane.py` unbound, and a census naming v4's Phase 0 run root.
+- At the freeze commit, v5's three test files and v4's two passed (78 tests). Found there: 19 tests
+  of step 0's `tests/test_s2v5_step0.py` fail once v5 is frozen, because step 0's renderer then
+  refuses, as development must after a freeze (D56). That file is pinned by `step0-rule.json` and is
+  not edited. The hook `tests/conftest.py`, written after the rehearsed commit and copied into the
+  clone for this run, reports exactly that refusal, in that file and only while v5's ledger row
+  exists, as a skip with its reason: step 0's two test files then gave 42 passed and 19 skipped.
+- The real ledgers were unchanged, and nothing was submitted to, staged on or created on the host.
+
+This draft's tests, run as targeted files only: `tests/test_s2v5_ap_delta.py` 37 passed,
+`tests/test_s2v5_lane.py` 6, `tests/test_s2v5_registration.py` 14; v4's
+`tests/test_s2v4_registration.py` 9 and `tests/test_s2v4_ap_delta.py` 12; step 0's
+`tests/test_s2v5_step0.py` 22 and `tests/test_s2v5_canary_targets.py` 39. v4's and step 0's files
+are unchanged, and `ruff check` is clean on every new Python file.
 
 ## Code and inputs of record
 

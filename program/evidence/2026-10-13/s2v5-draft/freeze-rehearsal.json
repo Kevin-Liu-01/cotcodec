@@ -1,0 +1,68 @@
+{
+ "schema": "s2v5-freeze-rehearsal-v1",
+ "experiment_id": "s2-arabic-cua-locale-v5",
+ "date": "2026-10-13",
+ "by": "the v5 draft's owner (development; not the pre-freeze audit's rehearsal, which the freeze procedure's step 3 still requires)",
+ "rehearsed_commit": "5316cd5a",
+ "clone": "git clone --shared --branch stage0/s2-v5 of the repository into scratch, origin removed; its own ledger file (the clone's program/preregistrations/ledger.jsonl); deleted after the rehearsal",
+ "steps": {
+  "status_fill": {
+   "commit_in_clone": "18f4f50f3ec5e3ce1704c139eb5f7ef312bb7f0c",
+   "edit": "the status line's bold part replaced by the frozen wording",
+   "pins_table_v5_check": "pins table matches the tree",
+   "tests": "tests/test_s2v5_registration.py: 14 passed"
+  },
+  "freeze": {
+   "command": "scripts/preregister.py freeze s2-arabic-cua-locale-v5 program/preregistrations/s2-arabic-cua-locale-v5.md; verify; check-chain",
+   "commit_in_clone": "f3dc15b3ef53c2f1202935a9210ee51f43974226",
+   "freeze_commit_parent_is_fill_commit": true,
+   "freeze_commit_changes": ["program/preregistrations/ledger.jsonl"],
+   "row": {"rows": 22, "check_chain": "PASS", "git_head_at_freeze": "18f4f50f3ec5e3ce1704c139eb5f7ef312bb7f0c", "registration_sha256": "564095803d5c067adcd469740ec257f0f7ddda17e98c4ae80e1d14ea2b49b2dd", "hash": "ebaa35937f9ee8b4bb5ff969d8f7e2d3e732fba1e37c6bda4a870a9529909c3a"},
+   "tests_at_freeze_commit": "test_s2v5_ap_delta, test_s2v5_lane, test_s2v5_registration, test_s2v4_registration, test_s2v4_ap_delta: 78 passed; test_s2v5_step0 and test_s2v5_canary_targets with tests/conftest.py copied in: 42 passed, 19 skipped (step 0's renderer refuses once v5 is frozen, D56; without the hook those 19 fail)"
+  },
+  "k1_from_the_freeze_export": {
+   "export": "git archive of the freeze commit, .git_sha written",
+   "rendered": {
+    "k1-A6-ER.json": {"minutes": 222, "sha256": "7ad848486033778bbe1de8f2ad91a8d72713ee356d3800fde00d6fe57fd84e37"},
+    "k1-A6-AR.json": {"minutes": 222, "sha256": "84daeb52993b72844c2ce83140afddf0f6c90c0152a7b358c931aeacd0f96760"},
+    "k1-A6-E.json": {"minutes": 222, "sha256": "0bf82fdadc97bd3ac3e06b96871dd8cee8d272d862e67f5438c8ab73566d3ff2"},
+    "k1-C1-PL.json": {"minutes": 154, "sha256": "0b837d001c1c74435389fe395cc01b1575a3d1594ef8b4d56b71dadb9ad01de9"},
+    "k1-A5-A.json": {"minutes": 192, "sha256": "d7320de25039bb00f731d6df344dc08172f9275d11399e89aee8535d23d585a3"},
+    "k1-C3-ER-p1.json": {"minutes": 1404, "sha256": "cb0024a43ba22fb485ec5f5cde37dedbb9feb067b7b1cfea3f644dafcfb88a90"},
+    "k1-C3-ER-p2.json": {"minutes": 1404, "sha256": "0773d9789f68d510978ba743aaf6de21e5e5a67bf67af6a675df3663c58c93d9"},
+    "k1-C3-ER-p3.json": {"minutes": 1076, "sha256": "cb752181e825d66b56aad8464f64eda5a04f105894e56aade49e56595d0d9654"},
+    "k1-A3-AR-p1.json": {"minutes": 1222, "sha256": "d65ffe2639325bcd6d6f24f8536fc4bac82936956ef199c391930f630ba003ef"},
+    "k1-A3-AR-p2.json": {"minutes": 1192, "sha256": "55593b81719e97750a9174f930d11fa01fed555be41d4a62f13d6532505150fe"},
+    "k1-A3-AR-p3.json": {"minutes": 982, "sha256": "9362bd6e0cd2890b43de5c930185ece4e575202db40cdb842e85ac5d59b9fa5c"},
+    "k1-rung.json": {"minutes": 110, "sha256": "24ed5728b78ca95d0fbcfebc14414b9b5f729c29c3e441af8f67b661c2c6b6ab"}
+   },
+   "against_v4s_k1_manifests": "each compared field by field with v4's rendered manifest of the same check and image (program/evidence/2026-10-12/s2v4-phase0-run/k1-manifests/): the only differing fields are the id-level ones (schema, experiment_id, run_root, freeze, and per campaign campaign_id, name, git_sha, run_root, source.host_dir, source.tree_sha256), plus, for A6 on ER and AR only, cells_file and workload.cells_sha256 (the v5 cells file); the workloads, seeds, plan counts, images, Slurm requests and addenda are v4's",
+   "validated_from_the_export": "ap_delta_v5.py validate: all 12 admitted",
+   "submit_dry_run": "k1-A6-ER.json: --time=03:42:00, s2v5-apdelta.sbatch, no GPU",
+   "refused": {
+    "confirm-a6-v1-p1.json (development) from the frozen export": "s2-arabic-cua-locale-v5 is frozen: development no longer runs (D56)",
+    "v4's k1-a6-er.json by ap_delta.py from v5's export": "the export's .git_sha is not the manifest's freeze commit",
+    "v4's k1-a6-er.json by ap_delta_v5.py": "schema must be s2v5-apdelta-v1"
+   }
+  },
+  "census_from_the_freeze_export": {
+   "command": "lane_v5.py render-census --freeze-commit FREEZE --repo CLONE --source-dir EXPORT --pool pool-v3.json --golds golds-v4.jsonl",
+   "manifest_sha256": "f512e39e7237b13c6985852f690ee2322dd6e71f1520f60773c342a1a0ef8662",
+   "canonical_digest": "bc35927454f3020d704a0b725d6de11acc24190b83f4353e8103f6138f84668b",
+   "experiment_id": "s2-arabic-cua-locale-v5",
+   "name": "s2v5-phase0",
+   "run_root": "~/cotcodec-runs/stage0/s2v5/phase0-runs",
+   "slots": 1322,
+   "slots_equal_v4s_committed_census": true,
+   "slurm": {"cpus": 81, "memory_gb": 126, "minutes": 364},
+   "validated": "lane_v5.py validate: admitted",
+   "refused": {
+    "the v5 census by vm_lane.py (v4's gate)": "experiment_id must be s2-arabic-cua-locale-v4",
+    "the v5 census with v4's Phase 0 run root, by lane_v5.py": "phase0 runs into ~/cotcodec-runs/stage0/s2v5/phase0-runs"
+   },
+   "not_rehearsed": "lane_v5.py submit (vm_lane.submit checks the host's inputs before it can dry-run)"
+  }
+ },
+ "real_ledgers_unchanged": {"before_and_after_sha256": "8bd365be8a060771930fe1bb025ff53e9d50dd40c0ae4a61d07ef40773a72fe0"},
+ "host": "nothing submitted, staged or created on the host"
+}
