@@ -1974,3 +1974,55 @@ the cause is diagnosed before any successor is considered.**
   - what a successor would need.
   Only then is a v5 (per-image canary targets fixed before its freeze, the
   rest unchanged) or an honest exit for S2 decided.
+
+**D94. S2 v4's K1 failure is an instrument defect; a conditional v5 is
+gated by a pre-committed step 0.**
+- The diagnosis was read-only: three lenses, a refute-first critic and a
+  synthesis. Three independent host measurements on smoke 1242's captures
+  agree.
+- The finding. A6's frozen Writer targets were measured once, on the certified
+  left-to-right disk, on 2026-10-07: a drag from (680,292) to (709,292) and a
+  triple-click at (718,292). They were never re-measured on v4's cell images,
+  against the canary's own targeting clause ("measured during development on
+  the frozen app configuration").
+- The shift. Mirroring draws Writer's document area as a pure shift: ER at
+  (+71, 0), AR at (+71, +1), A at (0, +1), PL and E at (0, 0). On ER the drag
+  lies wholly in the left margin, and nothing is selected. That is exactly
+  the read-back "Ykeep word keep", 5 of 5. The triple-click still passes,
+  because its read-back cannot detect an x error.
+- Delivery works on ER. In the same sessions, Chrome's and VS Code's drags
+  passed 5 of 5. No other K1 element depends on the layout: the probe checks
+  run in a full-screen window.
+- Confidence. The synthesis puts it at about 0.85 that the shift alone caused
+  the failure. No canary screenshot exists on ER, so a drag dropped under
+  mirroring is not yet excluded by direct observation.
+- Process gap, recorded. A layout hazard documented in one S2 instrument (the
+  oracle's unmirrored accessibility extents) was not checked against the
+  other fixed-coordinate instrument (A6) before v4's freeze.
+Decided:
+- v4 stands as recorded (D93), and its rest is not run.
+- A v5 is considered only through step 0, with these rules committed and
+  SHA-pinned on a v5 draft branch before step 0 runs:
+  - Targets come from screenshots only: glyph boxes of the canary fixture
+    line. The drag runs from the left edge of "w" plus 1 px to the right edge
+    of "d" minus 1 px, the triple-click hits the middle of "this", and y is
+    the centre of the glyph rows. AT-SPI extents get no gating role.
+  - Numeric predictions: on ER and AR the fixture shifted by (+71 ± 2, 0 or
+    +1) px; on E, A and PL, q2's targets reproduced within 2 px.
+  - Stop rule: reading (b), glyphs under the v4 targets yet no selection;
+    reading (c), boot-to-boot drift above 1 px; or a failed calibration
+    on E or A each means an honest exit for S2. No second measurement and no
+    coordinate search.
+- Step 0 is one CPU-only canary-development job, about 1.1 VM-h, 5 boots on
+  each of the five images, in a successor E gap.
+- If step 0 shows reading (a), v5 changes only A6's targets per image (Writer
+  on ER and AR is expected to change). It keeps everything else byte-identical
+  to v4: images, harness/q2, K0 (`ed38b953...`, still unread), census and
+  Phase 1. It sets aside v4's wording "a repair is a new image": the images are
+  sound, and only the instrument's targets were wrong. It reruns all K1 jobs
+  under v5 and first passes one development confirmation, every A6 entry 5 of
+  5 on ER, AR and PL. It is S2's last registration: any further failure is an
+  honest exit.
+- The synthesis estimates about 0.3 that v5 yields an interpretable D and T.
+  It is pursued because the defect is narrow and the cost is about 1 VM-h
+  before the decision point.
