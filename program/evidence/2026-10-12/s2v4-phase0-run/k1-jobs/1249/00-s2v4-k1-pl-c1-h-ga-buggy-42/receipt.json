@@ -1,0 +1,220 @@
+{
+  "campaign_id": "s2v4-k1-pl-c1-h-ga-buggy-42",
+  "cpusets": {
+    "allocated": "0-5",
+    "runner": "4",
+    "vm": "0-3",
+    "vm_mems": "0",
+    "vm_numa_nodes": [
+      0
+    ]
+  },
+  "dangling_volumes_after": 0,
+  "dangling_volumes_before": 0,
+  "docker": {
+    "cgroup_version": "2",
+    "default_runtime": "runc",
+    "runtimes": [
+      "io.containerd.runc.v2",
+      "runc"
+    ],
+    "server_version": "28.3.1"
+  },
+  "driver_python": "3.10.12",
+  "finished_at": 1791818167.1160166,
+  "git_sha": "cf17405026ca2aa20f528b39bdaaff3b257a6610",
+  "host_end": {
+    "containers_ours": 0,
+    "containers_running_total": 1,
+    "loadavg": [
+      "1.26",
+      "1.22",
+      "1.03"
+    ],
+    "squeue_foreign": [],
+    "t": 1791818167.09158
+  },
+  "host_start": {
+    "containers_ours": 0,
+    "containers_running_total": 1,
+    "loadavg": [
+      "0.86",
+      "1.07",
+      "0.94"
+    ],
+    "squeue_foreign": [],
+    "t": 1791817997.5701308
+  },
+  "job_id": "1249",
+  "labelled_containers_left": [],
+  "manifest_sha256": "0a99adf04ed61e426beee735df3d3a6b4c919b58356c569e1bb827844e0dd581",
+  "qcow2_info": {
+    "actual-size": 24461426688,
+    "format": "qcow2",
+    "virtual-size": 53687091200
+  },
+  "qcow2_sha256_after": "5a4102eefbbaf9e4ad78d499267270c4fdb4671ccff4d6dba777196817aa6ed2",
+  "qcow2_sha256_before": "5a4102eefbbaf9e4ad78d499267270c4fdb4671ccff4d6dba777196817aa6ed2",
+  "qcow2_unchanged": true,
+  "schema": "cotcodec-vm-campaign-receipt-v1",
+  "session_plan_sha256": "35f06d88188788dd0d81d3101275676a29627a4b6213c39b525b89e57bea4740",
+  "source_tree_sha256": "6c1037c9df9320d443a4c4805258da8247c70eb70113e15c3eb5aa49c19737f9",
+  "started_at": 1791817980.6766536,
+  "summary": {
+    "boot_s": {
+      "max": 17.292,
+      "n": 2,
+      "p50": 17.197,
+      "p95": 17.292
+    },
+    "boots_ok": 2,
+    "containers_removed_all": true,
+    "cycles": 2,
+    "distinct_boot_ids": 2,
+    "errors": [],
+    "hmp_cycles_all_ok": 0,
+    "hmp_step_pass_counts": {},
+    "infra_gates_pass": true,
+    "latency_s": {
+      "accessibility_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "execute_noop_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "screenshot_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      }
+    },
+    "leaked_volumes": [],
+    "nat_modes": [
+      "nat"
+    ],
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "sentinel_pristine": 1,
+    "sentinel_readback_dconf": 0,
+    "sentinel_readback_file": 0,
+    "sentinel_readback_gsettings": 0,
+    "sentinel_reset_checks": 1,
+    "sessions": {
+      "accessibility_calls": 0,
+      "cell_counts": {
+        "FAIL": 10,
+        "FLAKY": 0,
+        "PASS": 4
+      },
+      "cells": {
+        "screenshot|R01": "FAIL",
+        "screenshot|R02": "FAIL",
+        "screenshot|R03": "FAIL",
+        "screenshot|R04": "FAIL",
+        "screenshot|R05": "FAIL",
+        "screenshot|R06": "FAIL",
+        "screenshot|R07": "FAIL",
+        "screenshot|R08": "PASS",
+        "screenshot|R09": "FAIL",
+        "screenshot|R10": "FAIL",
+        "screenshot|R11": "PASS",
+        "screenshot|R12": "PASS",
+        "screenshot|R13": "PASS",
+        "screenshot|R14": "FAIL"
+      },
+      "guest_server_restarts": 0,
+      "infra_failures": {},
+      "observation_retries": {},
+      "runner_errors": [],
+      "sessions": [
+        {
+          "accessibility_calls": 0,
+          "cycle": 0,
+          "guest_server_restarts": 0,
+          "passed": 11,
+          "probe_relaunches": 0,
+          "setting": "screenshot",
+          "tap_relaunches": 0,
+          "trials": 35,
+          "wall_s": 79.48
+        },
+        {
+          "accessibility_calls": 0,
+          "cycle": 1,
+          "guest_server_restarts": 0,
+          "passed": 9,
+          "probe_relaunches": 0,
+          "setting": "screenshot",
+          "tap_relaunches": 0,
+          "trials": 35,
+          "wall_s": 71.88
+        }
+      ],
+      "step_s": {
+        "n": 130,
+        "p50": 0.5734,
+        "p95": 1.3032
+      },
+      "trial_s": {
+        "n": 70,
+        "p50": 0.898,
+        "p95": 5.4396,
+        "sum": 108.07
+      }
+    },
+    "settled_s": {
+      "n": 2,
+      "p50": 20.306,
+      "p95": 20.438
+    },
+    "tap_selftest_ok": 0
+  },
+  "verdicts": [
+    {
+      "boot_id": "b98d49c0-2668-46cc-85bc-b852d8fec67b",
+      "boot_s": 17.292,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 0,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 20.438,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "06443edd-ebff-4c9e-af5e-59f315e5249d",
+      "boot_s": 17.197,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 1,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 20.306,
+      "tap_selftest_ok": null
+    }
+  ]
+}

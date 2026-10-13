@@ -5277,3 +5277,36 @@ they say so.)
   while it waited (nothing of E's pending or running). No deviation from the registration.
 - Evidence: `program/evidence/2026-10-12/q2-stage1-successor-e-run/` (README section "Session
   E2", `e-9b-e2/`, `e-4b-e2/`).
+
+## 2026-10-12 — S2 v4 `s2-arabic-cua-locale-v4` Phase 0 run: K1 fails as registered (A6 on ER), the operator stops (branch `ops/s2-v4`, not merged)
+
+- Frozen in ledger row 21 (status fill `d27331d4`, freeze commit `cf174050`). Every job ran
+  from the host's `git archive` export of `cf174050` (`.git_sha` `cf174050...`; file digest
+  `bd289bb8...`, equal to a Mac export), CPU only, no GRES, one job at a time, each on an empty
+  queue and only when its Slurm limit ended before successor E's next earliest session start
+  (D85, D87, D90, D91); no S2 v4 job ran during an E session (E2 17:53-19:12:50Z; E3 not before
+  2026-10-13T07:17:50Z).
+- K1 (P0.6), 14 of its 49 `ap_delta` jobs, Slurm 1245-1250 and 1257-1264, every one COMPLETED 0:0
+  with every campaign counting (driver exit 0, `infra_gates_pass`, image unchanged, no labelled
+  container): C1 pass on E, A, ER, AR and PL; the V = 20 rung not aborted, 2,400 of 2,400 trials
+  (its per-image step condition waits for each image's A1); C2 pass on all five; A6 pass on E
+  (1262) and A (1263), 300 of 300 each.
+- **A6 on ER (Slurm 1264) fails:** 295 of 300 trials, 59 of 60 canary entries PASS;
+  `writer:drag_select_word` failed in all 5 sessions with the same read-back (`Ykeep word keep`
+  for `keep Y keep`). `ap_delta.verdict` on the job: A6 on ER `pass` false. The campaign counts,
+  so no registered rerun applies. Operator's untested reading: the canary's frozen drag
+  coordinates were measured on the left-to-right layout, and ER mirrors LibreOffice's layout.
+- By the registration's pass line (every check on every image) and kill criterion K1, **K1
+  fails**: no Phase 1 on these images; a repair is a new image and a new registration. The
+  registered `ap_delta.py verdict` over all 49 jobs has not run (35 jobs not run); none of them
+  can make K1 pass.
+- The operator stopped at 22:45Z, as its brief requires when a registered stop rule fires:
+  nothing submitted after 1264, the queue empty and no labelled container at 22:59:49Z. Not run:
+  A6 on AR and PL, A5 on all five, the 28 long K1 jobs, the census, the oracle and K0. Whether to
+  run any of them as a record is the program owner's decision.
+- The orchestrating session restarted once (21:46Z) while 1263 ran; the new operator collected
+  it without resubmitting and kept the previous instance's `watch_job.sh` fix (a failed `ssh` is
+  retried, not read as the job gone).
+- Evidence: `program/evidence/2026-10-12/s2v4-phase0-run/` (README with per-job records and the
+  stop record; per job its submission snapshot, `scontrol`, batch output, receipts, manifests
+  and `check-JOB.json`). Cycle records and VM logs stay on the host.
