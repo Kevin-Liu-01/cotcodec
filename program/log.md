@@ -5310,3 +5310,51 @@ they say so.)
 - Evidence: `program/evidence/2026-10-12/s2v4-phase0-run/` (README with per-job records and the
   stop record; per job its submission snapshot, `scontrol`, batch output, receipts, manifests
   and `check-JOB.json`). Cycle records and VM logs stay on the host.
+
+## 2026-10-13 — Q2 successor E `q2-stage1-successor-e-v1`: session E3 ran (E-9B-E3, E-4B-E3); DR0 does not fire (branch `ops/q2-successor-e`, not merged)
+
+- The orchestrating session restarted twice after session E2 (the operator's Mac crashed). The
+  E3 operator started at 00:06 UTC and checked the host first: queue empty, no E3 run
+  directory, no submission file in either E3 pair directory and no operator process, so
+  nothing of E3 had been submitted. An earlier E3 instance had prepared both pair directories
+  and E-9B-E3's VM manifest at 19:23 UTC on 2026-10-12; this operator re-rendered the manifest
+  from the export (byte-identical) and found the operator scripts on the host equal to the
+  committed ones. `main` (D93, S2 v4's K1 jobs 1245-1264) was merged into the branch, every
+  ledger row kept (21 rows). The queue was empty at every poll from 00:07 to 07:15 UTC (about
+  every 4 minutes); at 06:39 the export was re-checked against `git archive f6144d6b` (7,602
+  files, 27 symlinks, `.git_sha`, nothing writable).
+- **E-9B-E3**: VM job 1265 and GPU job 1267 (`--dependency=after:1265`), submitted 07:18:02 UTC
+  on an empty queue, after both readings of the gap (07:17:47 by `lane.job_end`, 07:17:50 by
+  E-4B-E2's VM batch end); verify and `check-chain` PASS in the export; `lane validate` 226
+  slots; `--test-only` exit 0, id 1266. Both COMPLETED 0:0; GPU 07:18:02-07:56:53 (00:38:51,
+  0.6475 GPU-h physical, 52 minutes charged). 226 of 226 slots scored, no infrastructure loss,
+  no re-queue, no cap truncation, no restart, no slow or undelivered observation, no
+  postconfig failure; DR0 exit 0, does not fire. The manifest named E1's and E2's four jobs by
+  records and receipt; the session gap held; provenance PASS (`f6144d6b`, overlay
+  `5d1d4d8f...`), engine argv equal to S1a's for 9B, Slurm limit 52 equal to the cap; first
+  dispatch 113.7 s after the Slurm start (the caps assume L = 113.19 s); lane end 10.2 minutes
+  before the USR1 point.
+- **E-4B-E3**: its manifest was rendered after E-9B-E3's DR0 and names the five earlier jobs
+  (E-9B-E3's records `d2fb985b...`, receipt `bc30d8e2...`). VM job 1268 and GPU job 1270,
+  submitted 07:58:41-07:58:42 on an empty queue (`--test-only` id 1269). Both COMPLETED 0:0;
+  GPU 07:58:45-08:36:07 (00:37:22, 0.6228 GPU-h physical, 48 minutes charged). 226 of 226
+  scored, no loss, no re-queue, no truncation; two postconfig replies at HTTP 200 with a
+  non-zero return code, in two episodes (recorded, not losses, not server errors under D56;
+  every postconfig reply of both E3 jobs was HTTP 200); DR0 exit 0, does not fire.
+  Provenance, engine argv (4B) and Slurm limit 48 checks pass; first dispatch 105.4 s after
+  the start; lane end 7.7 minutes before USR1.
+- Quiet host: no foreign Slurm job in any lane snapshot or 15-second queue sample while either
+  job ran; nothing else was submitted between the pairs. S2 v5's job 1271 was submitted at
+  08:37:17, after E-4B-E3's VM batch job had ended (08:36:10).
+- **Session E3's later end: 2026-10-13T08:36:07Z** (E-4B-E3 by `lane.job_end`; VM batch end
+  08:36:10). **E4 may not start before 2026-10-13T20:41:07Z** (20:41:10Z by the VM batch
+  end). Other workstreams may use the host until then and must have ended before E-9B-E4 is
+  submitted.
+- GPU-h: physical 1.2703 for the session (ledger rows in `program/state.json`; program total
+  14.3746); charged under D22 303 of E's 406 cap-minutes so far (OE 3, E1 100, E2 100, E3
+  100). No outcome was read; the registered analysis runs after the last E job.
+- Disclosures: the operator handover across the restarts (above); E-9B-E3's `--test-only`
+  printed a start estimate of 08:20:02 while the GPU job started at 07:18:02. No deviation
+  from the registration.
+- Evidence: `program/evidence/2026-10-12/q2-stage1-successor-e-run/` (README section "Session
+  E3", `e-9b-e3/`, `e-4b-e3/`).
