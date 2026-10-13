@@ -926,13 +926,20 @@ The development confirmation (D96: a pre-freeze gate; it runs before the freeze,
 - Why these images: the full A6 has never run on AR or PL (v4's K1 stopped after ER, D93); ER and AR
   carry the new targets; PL draws Writer as E does (step 0: pixel-identical); E and A run q2's
   targets, A at the 2 px limit.
-- Manifests (development): `experiments/manifests/s2v5/confirm-a6-v1-p1.json` (ER and AR) and
-  `confirm-a6-v1-p2.json` (PL, E and A), rendered by `ap_delta_v5.py render-confirm` from a
-  `git archive` export of the commit that adds this draft and the v5 code, into the host root
-  `~/cotcodec-runs/stage0/s2v5/confirm`. Slurm limits: 434 and 366 minutes (harness/q2's worst-case
-  budgets plus the image checks), each within a 12 h 5 min gap between successor E sessions. Expected
-  use: about 50 minutes per full A6 campaign (v4's A6 jobs 1262-1264 took 49.3-49.7 minutes) and about
-  8 per composite campaign, about 2.8 VM-h in all.
+- Manifests (development): `experiments/manifests/s2v5/confirm-a6-v1-p1.json` (ER and AR; SHA-256
+  `c2ee961423cc6faf921e9cfa0e51a7e08e032764ba56069b0a87e16daf0ce3c6`, canonical digest
+  `1d7289f1...`) and `confirm-a6-v1-p2.json` (PL, E and A;
+  `3bf042124833b1f6e18f00cc4a75232e444ba5bac1921085644846cc5deff313`, canonical `3e75de8c...`),
+  rendered by `ap_delta_v5.py render-confirm` from a `git archive` export of
+  `f24557aa555987157b5b75049ec1cb1b8e0a81a2`, the commit that adds this draft and the v5 code. They
+  name that commit (`git_sha`), its export on the host
+  (`~/cotcodec-runs/stage0/s2v5/confirm/src/f24557aa.../`, staged read-only with its `.git_sha`
+  before the first job), the harness tree digest `896c46a8...` and the host root
+  `~/cotcodec-runs/stage0/s2v5/confirm`, and both pass `ap_delta_v5.py validate` (harness/q2's
+  validator included) against that export. Slurm limits: 434 and 366 minutes (harness/q2's
+  worst-case budgets plus the image checks), each within a 12 h 5 min gap between successor E
+  sessions. Expected use: about 50 minutes per full A6 campaign (v4's A6 jobs 1262-1264 took
+  49.3-49.7 minutes) and about 8 per composite campaign, about 2.8 VM-h in all.
 - Scheduling (D85, D87, D94): one job at a time, each submitted through `ap_delta_v5.py submit` on an
   empty queue (it refuses a non-empty one), never during a successor E session and with no file staged
   on the host during one, and only if its limit ends before the next E session's earliest start
