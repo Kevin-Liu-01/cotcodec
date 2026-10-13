@@ -2036,3 +2036,51 @@ drafts' reviewer found this. The three records are corrected here. The
 outward drafts disclose it: the licence request says so plainly, and the
 history-purge plan lists the blob as a purge candidate. No other record
 claims otherwise.
+
+**D96. Kevin's choices on the outward items; S2 v5 step 0 reads (a); v5
+proceeds as S2's last registration.**
+- Outward items (2026-10-13). Kevin chose:
+  - the sender is `kevin@generaltranslation.com`;
+  - an agent sends, once he approves an item;
+  - the history purge runs as option (a+), after successor E's last session
+    and analysis, before any publication or S2 v5 freeze, with agents
+    paused.
+  On which items may go out, he wrote "await my decision". So nothing is sent
+  until he names the items.
+- Step 0, Slurm 1271. The rule was committed and pinned at `31854bc6` before
+  the job was submitted at 08:37:17Z. The job ran CPU only, in E's E3-E4 gap,
+  for about 0.7 VM-h, and is complete at 150 of 150.
+- Step 0's reading is **(a)**, exactly as the committed rule and stop rule
+  define it:
+  - boot-to-boot spread is 0 px everywhere;
+  - Writer's fixture is shifted (+71, 0) on ER and (+71, +1) on AR;
+  - E and PL are within 1 px of q2's Writer targets, and A within 2 px (y 294
+    against 292);
+  - at q2's frozen targets, the read-back is "Ykeep word keep" in 10 of 10 on
+    ER and AR, as predicted;
+  - Chrome and VS Code are unchanged on all images.
+  The cause in D94 is therefore confirmed by observation.
+- A fresh checker reproduced the reading and found two minor items:
+  - (1) The Chrome and VS Code calibration is scored against the rule's own
+    reading of q2's development screenshots (run 515), not against q2's
+    frozen numbers. q2's Chrome drag end is an accessibility cell edge, 3 px
+    beyond the ink. The owner fixed and disclosed this reading in the rule
+    commit, before any step-0 data. Under D94's literal wording, calibration
+    would fail on E and A. The pre-committed reading is accepted: it was set
+    before the data, and v5 keeps q2's Chrome and VS Code targets unchanged in
+    any case.
+  - (2) The step-0 source export was written to the host during E3's 9B pair.
+    That was file staging, not a job, but D85 allows other workstreams on the
+    host only in E's gaps, so it is disclosed.
+  Also: one ssh timeout printed the host address to an operator's terminal.
+  It is in no file, and the commits are clean.
+- v5 (`s2-arabic-cua-locale-v5`) is drafted under D94:
+  - the only change is A6's Writer targets on ER, a drag from (751,293) to
+    (779,293) and a click at (789,293), and on AR, a drag from (751,294) to
+    (779,294) and a click at (789,294);
+  - everything else is byte-identical to v4, and K0 stays unread;
+  - before the freeze, one development confirmation (full A6 on ER, AR and
+    PL, plus the composites on E and A, every entry 5 of 5) must exercise the
+    shifted targets;
+  - then a pre-freeze audit, the freeze, and all K1 jobs again.
+  It is S2's last registration, and any failure is an honest exit.
