@@ -13,7 +13,8 @@ session's later end.
 This README is extended per session. It reads infrastructure fields only (statuses, losses,
 re-queues, completeness, observation and restart counts, Slurm and engine records): **no
 score, success rate or harness comparison is computed here**. The registered analysis
-(section 18) runs after the last E job.
+(section 18) runs after the last E job. All eight E jobs have run (sessions E1-E4, the last
+ending at 21:58:03 UTC on 2026-10-13), and none fired DR0.
 
 ## Jobs
 
@@ -38,7 +39,13 @@ score, success rate or harness comparison is computed here**. The registered ana
 | 1268 | E-4B-E3 VM lane | 90 CPUs, 126 GB, 58 min, no GRES, `--begin=2026-10-13T07:17:47` (already past) | COMPLETED 0:0 in 00:37:28 (07:58:42-08:36:10) | 0 | - |
 | 1269 | E-4B-E3 GPU half, `sbatch --test-only` | - | never ran | 0 | - |
 | 1270 | E-4B-E3 engine and bridge (Qwen3.5-4B) | 1 H100, 32 CPUs, 160 GB, 48 min, `--dependency=after:1268` | COMPLETED 0:0 in 00:37:22 (07:58:45-08:36:07) | 0.6228 | 48 min |
-| | **Total so far** | | | **3.8397** | **303 of 406 min** |
+| 1272 | E-9B-E4 VM lane | 90 CPUs, 126 GB, 62 min, no GRES, `--begin=2026-10-13T20:41:07` (already past at submission) | COMPLETED 0:0 in 00:38:49 (20:41:28-21:20:17 UTC, 2026-10-13) | 0 | - |
+| 1273 | E-9B-E4 GPU half, `sbatch --test-only` | - | never ran | 0 | - |
+| 1274 | E-9B-E4 engine and bridge (Qwen3.5-9B) | 1 H100, 32 CPUs, 160 GB, 52 min, `--dependency=after:1272` | COMPLETED 0:0 in 00:38:46 (20:41:28-21:20:14) | 0.6461 | 52 min |
+| 1275 | E-4B-E4 VM lane | 90 CPUs, 126 GB, 58 min, no GRES, `--begin=2026-10-13T20:41:07` (already past) | COMPLETED 0:0 in 00:36:21 (21:21:45-21:58:06) | 0 | - |
+| 1276 | E-4B-E4 GPU half, `sbatch --test-only` | - | never ran | 0 | - |
+| 1277 | E-4B-E4 engine and bridge (Qwen3.5-4B) | 1 H100, 32 CPUs, 160 GB, 48 min, `--dependency=after:1275` | COMPLETED 0:0 in 00:36:18 (21:21:45-21:58:03) | 0.6050 | 48 min |
+| | **Total (all eight E jobs and OE)** | | | **5.0908** | **403 of 406 min** |
 
 Job ids 1213, 1214 and 1216 are other workstreams' (R03 part (b)'s rehearsal 1213, S2 v4's
 development smoke 1214, R04's score job 1216); none was in the queue when OE was submitted or
@@ -54,9 +61,12 @@ had ended (19:12:50). Job ids 1257-1264 are S2 v4's K1 jobs, all in the gap betw
 and E3 (D93); none was in the queue at any poll this operator took from 00:06 UTC on
 2026-10-13, at either E3 submission or in any queue sample taken while an E3 job ran. 1266 and
 1269 are E3's `--test-only` ids. Job 1271 (S2 v5's `s2v5-step0-canary-v1`, 6 CPUs, no GRES)
-was submitted at 08:37:17 UTC, after E-4B-E3's VM batch job had ended (08:36:10). Charged under
-D22: OE's 3 minutes and 52 + 48 for each of sessions E1, E2 and E3, 303 of E's 406
-cap-minutes; the OE retry's 3 minutes stay unspent.
+was submitted at 08:37:17 UTC, after E-4B-E3's VM batch job had ended (08:36:10), and had left
+the queue by 09:21 UTC, in the gap between sessions E3 and E4 (D94, D96); it was in no queue
+sample taken at either E4 submission or while an E4 job ran. 1273 and 1276 are E4's
+`--test-only` ids. The next job on the host, S2 v5's 1278 (6 CPUs, no GRES), was submitted at
+22:00:32 UTC, after E-4B-E4's VM batch job had ended (21:58:06). Charged under D22: OE's 3 minutes and 52 + 48 for each of sessions E1, E2,
+E3 and E4, 403 of E's 406 cap-minutes; the OE retry's 3 minutes stay unspent.
 
 ## Source and the frozen registration
 
@@ -545,10 +555,169 @@ Tars: E-9B-E3 `0c2ac0cc...`, E-4B-E3 `afb4b470...`, unpacked here unchanged; the
 replies, captures and engine logs stay on the host (section 20); the committed files hold no
 host address.
 
-Next: session E4 (E-9B-E4, then E-4B-E4), each pair submitted only on an empty queue and no
-earlier than 2026-10-13T20:41:10Z (20:41:07Z by `lane.job_end`; the lane passes `--begin` and
-refuses an earlier start). Other workstreams may use the host until then, and must have ended
-before E-9B-E4 is submitted (section 6.4, D85).
+Session E4 followed (below), each pair submitted only on an empty queue and after 20:41:10 UTC
+on 2026-10-13; S2 v5's step 0 (job 1271, CPU only) used the host in the gap (section 6.4, D85,
+D94, D96).
+
+## Session E4 (2026-10-13; `e-9b-e4/`, `e-4b-e4/`)
+
+**Result, registered per-job checks only.** Both jobs of session E4 scored 226 of 226
+episodes, with no infrastructure loss, no re-queue and no cap truncation, and **DR0 does not
+fire for either** (`python -m harness.q2_stage1e.analysis dr0`, exit 0, `fires: false`, no
+reasons). The lane's frozen-registration, prior-job, session-gap, engine-argv and Slurm-limit
+checks passed for both, and no foreign Slurm job ran while either job ran. **No outcome was
+read or summarized**: this section reads infrastructure fields only. Session E4 was E's last;
+all eight registered E jobs have now run, and none fired DR0.
+
+**Session E4's later end: 2026-10-13T21:58:03Z** (epoch 1791928683), E-4B-E4's end by
+`lane.job_end`: the later of its lane's `t_end` (21:58:01.58) and its GPU job's recorded Slurm
+EndTime (21:58:03). E-9B-E4 ended at 21:20:14 by the same rule. VM batch job 1275 ended at
+21:58:06, 3 s after the GPU job, inside the 5-minute margin (section 5.3).
+
+### Waiting for the gap and a quiet host
+
+The orchestrating session had restarted twice before session E3 (the operator's Mac crashed);
+the E3 operator's report was the handover. This operator started at 08:41 UTC on 2026-10-13,
+after session E3 had ended, and checked the host first: S2 v5's step-0 job 1271 (CPU only, no
+GRES) running, no E4 pair or run directory, no operator process; the five operator scripts on
+the host equal to the committed ones by SHA-256; the six earlier E jobs' records and receipts
+at the digests their DR0 reads and E-4B-E3's manifest name. At 08:43 UTC it prepared E-9B-E4
+without touching Slurm: both pair directories with `host.json` and `gpu-values.json` (E3's,
+with only `gpu_job_id_file` and `FILL_JOB` changed) and E-9B-E4's VM manifest, rendered from
+the export with `--prior-run-dirs` naming runs 1219, 1222, 1251, 1254, 1265 and 1268
+(`pair/e-9b-e4-vm.json`, SHA-256 `c181d0aa...`; canonical form `72a0f39a...`); `lane validate`
+accepted it (226 slots) and `lane submit --dry-run` gave `--begin=2026-10-13T20:41:07`, the
+lane's own earliest start. Nothing was queued ahead.
+
+It then polled the host's queue about every 4 minutes from 08:47 to 20:41 UTC, 189 polls logged
+on the host (one more, at about 09:15, failed on an ssh connection timeout). Job 1271 was
+running at the nine polls up to 09:17 and had left the queue by 09:21; the queue was empty at
+all 180 polls from 09:21 UTC on. `main` (D96: S2 v5's step 0 read (a)) was merged into the
+branch at 17:43 UTC, every ledger row kept (21 rows). At 19:33 UTC it re-checked the export
+against `git archive f6144d6b`, taken from the OE clone (detached at `f6144d6b`, tree
+`b8d37e7f...`, `git status` empty): every regular file's SHA-256 equal (7,602 files), the 27
+symlinks and their targets equal, `.git_sha` naming `f6144d6b...`, no writable file or directory
+but the symlinks.
+
+### E-9B-E4 (`e-9b-e4/`: VM job 1272, GPU job 1274)
+
+- **Host before submission** (`pair/pre-submit-snapshot.txt`, 20:41:26 UTC, after both
+  readings of the gap had passed, 20:41:07 by `lane.job_end` and 20:41:10 by E-4B-E3's VM
+  batch end): `squeue -a` empty, load 0.03, one container (the local registry), every GPU at
+  0 MiB.
+- **Submission** (`wait-then-submit-pair-e.sh e-9b-e4` under `nohup setsid` on the host, as in
+  sessions E1-E3, started by a guard that refused to run before 20:41:10 UTC, with an earlier
+  submission file present, with an operator process running or with a non-empty queue;
+  `pair/submit-run.out`, `pair/ops.log`): verify and `check-chain` PASS in the export (row 19,
+  file SHA-256 `47e65877...`, 19 rows; `pair/preregister-verify.txt`); `lane validate` ok (226
+  slots); `lane submit --dry-run` (`--time=01:02:00 --begin=2026-10-13T20:41:07`); a
+  placeholder GPU half through the submitter's `--dry-run`; queue empty; VM job 1272 at
+  20:41:27, its `--begin` already past; the GPU half rendered from the validated VM manifest
+  (`pair/e-9b-e4-gpu.yaml`, `b7daa8e6...`: 9B, 52 minutes, the OE overlay, the freeze commit,
+  OE's archive, the 9B receipt `0a9e052d...` and artifact root `9845026d...`, as in E-9B-E1 to
+  E-9B-E3); dry run `--time=00:52:00 --signal=B:USR1@180 --dependency=after:1272`, 0.8667
+  GPU-h budget; `--test-only` exit 0 (id 1273; `sbatch` estimated a start at 21:43:28, the VM
+  job's limit, an estimate only, as for E-9B-E3); no foreign job; GPU job 1274 at 20:41:28,
+  which started at once with the VM job.
+- **The lane's checks** (`pair/job-checks.json`, from `ops/job_checks_e.py`):
+  - manifest: purpose `e`, plan `4e7298a7...`, 226 slots equal to `plan.slots(9B, E4)`, V 20,
+    GPU cap 52, VM limit 62 minutes, 90 CPUs; `e.prior_jobs` names E-9B-E1, E-4B-E1, E-9B-E2,
+    E-4B-E2, E-9B-E3 and E-4B-E3 by records and receipt (E-4B-E3's `2af9f2be...` and
+    `d80eaa91...`), which the lane accepted at submission and at job start, DR0 included;
+  - session gap: the lane's earliest start 20:41:07 (E3's later end 08:36:07 plus 12 h 5 min);
+    the VM job started at 20:41:28 and the engine wait after it;
+  - preflight (`vm-1272/preflight.txt`): batch `2d27bbe5...` (`q2e-vm.sbatch`), manifest
+    `72a0f39a...`, source git SHA `f6144d6b...`, TRES `cpu=90,mem=126G` with no GRES, lane
+    exit 0, no labelled container left;
+  - provenance: `gpu-1274/provenance-verification.txt` PASS, `git_sha` `f6144d6b...` and
+    `source_sha256` `6ad9ad67...` equal to the GPU manifest's; image the OE overlay
+    `5d1d4d8f...`; model verification: `qwen3.5-9b` at `c2022362...`, root `9845026d...`;
+  - engine argv: `ready.json`'s argv equals S1a's `plan.engine_argv` for 9B (SHA-256
+    `9b307cdc...`); the bridge started 15.6 s after the Slurm start and the engine was ready
+    97.1 s later;
+  - Slurm limit: the lane read TimeLimit 52 minutes, equal to the cap; USR1 point = Slurm start
+    (20:41:28) + 52 min - 180 s (21:30:28);
+  - receipt: no error, not stopped; first dispatch 113.0 s after the GPU job's Slurm start
+    (within the L = 113.19 s the caps assume, section 7.1); lane end 10.3 minutes before the
+    USR1 point; the engine stopped on `vm_done`, return code 0; termination `completed`, no
+    container killed.
+- **Counts**: 226 slots dispatched, 226 records, every one `scored`, every one attempt 1 (113
+  per harness); no infrastructure loss, no `cap_truncated`; 226 of 226 plan cells final; no
+  guest-server restart; no context fallback; observations: 2,924 agent screenshot calls and
+  630 checker reads, none retried, slower than 30 s or undelivered; no setup failure, no
+  postconfig failure (all 376 postconfig replies at HTTP 200); no GPU device seen in an
+  episode container; every container gone at teardown, no leaked volume.
+- **DR0** (`pair/dr0.json`, exit 0): `fires: false`, `base_complete: true`, 0 of 113
+  first-attempt episodes lost in each (9B, harness) cell; records `014b4689...`, receipt
+  `79a11458...`, manifest `186245a9...`.
+- **Host while it ran**: the lane's three snapshots (start, block `e1`, end) list no foreign
+  job (load at most 1.69); the 15-second queue watcher's 156 samples (20:41:28-21:20:16, then
+  one empty sample at 21:20:31) hold only 1272 and 1274.
+
+### E-4B-E4 (`e-4b-e4/`: VM job 1275, GPU job 1277)
+
+- **Manifest** (rendered at 21:21 UTC, after E-9B-E4 left the queue and its DR0 was read):
+  `render_q2e_manifest.py vm --host pair/host.json --size 4B --session E4 --prior-run-dirs
+  runs/1219 runs/1222 runs/1251 runs/1254 runs/1265 runs/1268 runs/1272` from the export
+  (`pair/e-4b-e4-vm.json`, SHA-256 `999407e5...`; canonical form `75c20528...`): 226 slots, V 20,
+  GPU cap 48, VM limit 58 minutes, 90 CPUs, prompt date 2026-10-08, plan `4e7298a7...`;
+  `e.prior_jobs` names the seven earlier E jobs by records and receipt (E-9B-E4's
+  `014b4689...` and `79a11458...`, the digests DR0 had just read). `lane validate` ok.
+- **Host before submission** (`pair/pre-submit-snapshot.txt`, 21:21:43 UTC): `squeue -a`
+  empty, load 0.56 (falling after E-9B-E4), one container (the local registry), every GPU at
+  0 MiB.
+- **Submission** (the same guard and script, 21:21:43-21:21:45; `pair/submit-run.out`): verify
+  and `check-chain` PASS; `lane submit --dry-run` (`--time=00:58:00
+  --begin=2026-10-13T20:41:07`); VM job 1275 at 21:21:45; GPU half `pair/e-4b-e4-gpu.yaml`
+  (`de458508...`: 4B, 48 minutes, the OE overlay, the 4B receipt `75ebfc53...` and artifact
+  root `3b8a0751...`, as in E-4B-E1 to E-4B-E3, D57 (i)); dry run `--time=00:48:00
+  --signal=B:USR1@180 --dependency=after:1275`, 0.8 GPU-h budget; `--test-only` exit 0 (id
+  1276); no foreign job; GPU job 1277 at 21:21:45.
+- **The lane's checks** (`pair/job-checks.json`):
+  - manifest: 226 slots equal to `plan.slots(4B, E4)`; the seven prior jobs by both digests,
+    which the lane accepted at submission and at job start;
+  - preflight: batch `2d27bbe5...`, manifest `75c20528...`, source `f6144d6b...`, no GRES,
+    lane exit 0, no labelled container left;
+  - provenance PASS (`f6144d6b...`, `6ad9ad67...`, equal to the GPU manifest's); model
+    verification: `qwen3.5-4b` at `851bf6e8...`, root `3b8a0751...`;
+  - engine argv equals S1a's `plan.engine_argv` for 4B (SHA-256 `1c4cffba...`); the bridge
+    started 8.7 s after the Slurm start and the engine was ready 97.1 s later;
+  - Slurm limit: TimeLimit 48 minutes, equal to the cap; USR1 point = 21:21:45 + 48 min - 180 s
+    (22:06:45);
+  - receipt: no error, not stopped; first dispatch 105.9 s after the Slurm start; lane end 8.7
+    minutes before the USR1 point; engine stopped on `vm_done`, return code 0; termination
+    `completed`, no container killed.
+- **Counts**: 226 records, all `scored`, all attempt 1 (113 per harness); no infrastructure
+  loss, no `cap_truncated`; 226 of 226 plan cells final; no guest-server restart, no context
+  fallback; 3,091 agent screenshot calls and 627 checker reads, none retried, slow or
+  undelivered; no setup failure; **two postconfig failures**, in two episodes, each a
+  postconfig command reply at HTTP 200 with a non-zero return code during evaluation, which is
+  recorded and is not a loss (section 8; D56: a non-zero `returncode` under HTTP 200 is the
+  agent's state, not a server error), the same kind as E-4B-E1's to E-4B-E3's; all 376
+  postconfig replies of each E4 job were HTTP 200, so none was at HTTP 500 or above or without
+  a reply; no GPU device seen; teardown clean.
+- **DR0** (`pair/dr0.json`, exit 0): `fires: false`, `base_complete: true`, 0 of 113
+  first-attempt episodes lost in each (4B, harness) cell; records `36aaccee...`, receipt
+  `11a59b7e...`, manifest `45c0882d...`.
+- **Host while it ran**: the lane's three snapshots list no foreign job (load at most 2.63);
+  the queue watcher's 146 samples (21:21:45-21:58:03, then one empty sample at 21:58:19) hold
+  only 1275 and 1277. Nothing else was submitted to the host by this operator after the pair.
+
+### Collection
+
+As in sessions E1-E3: after each pair left the queue its end states were recorded
+(`pair/slurm-state/`), then, from the export, `job_checks_e.py NAME VM GPU >
+pair/job-checks.json` and `collect-pair-e.sh NAME VM GPU > pairs/NAME-collect.tar` (the
+registered DR0 command, raw SHA-256 listings of both run directories, the evidence subset).
+Tars: E-9B-E4 `9209328c...`, E-4B-E4 `e0d4ee7e...`, unpacked here unchanged; the pair's
+`wait.log`, `pre-submit-snapshot.txt` and `submit-run.out` were added from the host. Step logs,
+replies, captures and engine logs stay on the host (section 20); the committed files hold no
+host address.
+
+Next: E's registered analysis (section 18 (iii)), on the records of all eight E jobs: offline
+rescoring (one CPU job per E job), the cost card, the report, the section 15 items, the GLMM,
+the joint reading and the provenance record, then a fresh verifier before RESULTS. Every E job
+has run and none fired DR0.
 
 ## Operator scripts (`ops/`)
 
@@ -589,5 +758,12 @@ equal the committed files'.
 - **E-9B-E3's `--test-only` estimate.** `sbatch --test-only` for the GPU half (id 1266)
   printed a start estimate of 08:20:02, the VM job's limit, where E1's and E2's printed the
   submission time; the GPU job itself (1267) started at 07:18:02 with its VM job. The estimate
-  changes nothing the registration fixes.
-- **Deviations from the registration:** none so far (OE and sessions E1, E2 and E3).
+  changes nothing the registration fixes. E-9B-E4's (id 1273) printed 21:43:28, again the VM
+  job's limit; its GPU job (1274) started at 20:41:28 with its VM job. E-4B-E3's and E-4B-E4's
+  printed the submission time.
+- **Session E4's operator.** It started from the E3 operator's report, after session E3 had
+  ended, found no E4 pair, run directory, job or operator process, and submitted each E4 pair
+  once, after the gap, on an empty queue. One of its queue polls (about 09:15 UTC) failed on an
+  ssh connection timeout while job 1271, another workstream's, was running and nothing of E's
+  was pending; the next poll succeeded. No job was resubmitted.
+- **Deviations from the registration:** none (OE and sessions E1, E2, E3 and E4).

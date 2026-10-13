@@ -5359,3 +5359,50 @@ they say so.)
   from the registration.
 - Evidence: `program/evidence/2026-10-12/q2-stage1-successor-e-run/` (README section "Session
   E3", `e-9b-e3/`, `e-4b-e3/`).
+
+## 2026-10-13 — Q2 successor E `q2-stage1-successor-e-v1`: session E4 ran (E-9B-E4, E-4B-E4); DR0 does not fire; all eight E jobs have run (branch `ops/q2-successor-e`, not merged)
+
+- The E4 operator started at 08:41 UTC from the E3 operator's report and checked the host
+  first: S2 v5's step-0 job 1271 (CPU only) running, no E4 pair or run directory, no E4 job
+  and no operator process; the operator scripts on the host equal to the committed ones; the
+  six earlier E jobs' records and receipts at their DR0 digests. At 08:43 it prepared both E4
+  pair directories and rendered E-9B-E4's VM manifest from the export (`c181d0aa...`,
+  canonical `72a0f39a...`; `lane validate` 226 slots; `--begin=2026-10-13T20:41:07`), without
+  touching Slurm. It polled the queue about every 4 minutes from 08:47 to 20:41 (189 polls;
+  one more failed on an ssh connection timeout at about 09:15); job 1271 had left the queue by
+  09:21 and the queue was empty at every later poll. `main` (D96) was merged into the branch
+  at 17:43, every ledger row kept (21 rows). At 19:33 the export was re-checked against `git
+  archive f6144d6b` (7,602 files, 27 symlinks, `.git_sha`, nothing writable).
+- **E-9B-E4**: VM job 1272 and GPU job 1274 (`--dependency=after:1272`), submitted
+  20:41:27-20:41:28 UTC on an empty queue, after both readings of the gap (20:41:07 by
+  `lane.job_end`, 20:41:10 by E-4B-E3's VM batch end); verify and `check-chain` PASS in the
+  export; `lane validate` 226 slots; `--test-only` exit 0, id 1273. Both COMPLETED 0:0; GPU
+  20:41:28-21:20:14 (00:38:46, 0.6461 GPU-h physical, 52 minutes charged). 226 of 226 slots
+  scored, no infrastructure loss, no re-queue, no cap truncation, no restart, no slow or
+  undelivered observation, no postconfig failure (376 replies, all HTTP 200); DR0 exit 0,
+  does not fire. The manifest named the six E1-E3 jobs by records and receipt; the session gap
+  held; provenance PASS (`f6144d6b`, overlay `5d1d4d8f...`), engine argv equal to S1a's for
+  9B, Slurm limit 52 equal to the cap; first dispatch 113.0 s after the Slurm start; lane end
+  10.3 minutes before the USR1 point.
+- **E-4B-E4**: its manifest was rendered after E-9B-E4's DR0 and names the seven earlier jobs
+  (E-9B-E4's records `014b4689...`, receipt `79a11458...`). VM job 1275 and GPU job 1277,
+  submitted 21:21:45 on an empty queue (`--test-only` id 1276). Both COMPLETED 0:0; GPU
+  21:21:45-21:58:03 (00:36:18, 0.6050 GPU-h physical, 48 minutes charged). 226 of 226 scored,
+  no loss, no re-queue, no truncation; two postconfig replies at HTTP 200 with a non-zero
+  return code, in two episodes (recorded, not losses, not server errors under D56; all 376
+  postconfig replies HTTP 200); DR0 exit 0, does not fire. Provenance, engine argv (4B) and
+  Slurm limit 48 checks pass; first dispatch 105.9 s after the start; lane end 8.7 minutes
+  before USR1.
+- Quiet host: no foreign Slurm job in any lane snapshot or 15-second queue sample while either
+  job ran; nothing else was submitted between or after the pairs.
+- **Session E4's later end: 2026-10-13T21:58:03Z** (E-4B-E4 by `lane.job_end`; VM batch end
+  21:58:06). Session E4 was E's last: all eight registered E jobs have run and none fired
+  DR0. The registered analysis (section 18 (iii)) is next; other workstreams may use the host.
+- GPU-h: physical 1.2511 for the session (ledger rows in `program/state.json`; program total
+  15.6257); E's physical total 5.0908 with OE. Charged under D22: 403 of E's 406 cap-minutes
+  (OE 3, E1-E4 100 each). No outcome was read.
+- Disclosures: one failed queue poll (ssh timeout) during the wait; E-9B-E4's `--test-only`
+  printed a start estimate of 21:43:28 (the VM job's limit) while the GPU job started at
+  20:41:28, as for E-9B-E3. No deviation from the registration.
+- Evidence: `program/evidence/2026-10-12/q2-stage1-successor-e-run/` (README section "Session
+  E4", `e-9b-e4/`, `e-4b-e4/`).
