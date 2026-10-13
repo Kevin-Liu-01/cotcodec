@@ -245,7 +245,8 @@ Append-only. Newest entries at the bottom.
   (audit-hole replay, calibration driver, weighting, breakdowns, c-lite, cost,
   FRR over independent units).
 - `gate_b.py` was rewritten from the spec after the review found it
-  transliterated parts of unlicensed KernelGYM code (never pushed). b1 and b2
+  transliterated parts of unlicensed KernelGYM code (correction, 2026-10-13, D95: that
+  version was pushed and is in public history as blob `63770654`, commit `b3e16d41`). b1 and b2
   now replay b0's five calls first, as released.
 - Infrastructure validation only: 280 Q1 tests in a GPU-less container, 669
   passed and 8 skipped on the host, CPU doctor PASS (195 items). Evidence:
