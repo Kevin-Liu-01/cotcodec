@@ -190,7 +190,8 @@ evaluation never calls; the stand-ins contain only `read_file` and
   statement (kernel-name resolution, the capture record, the `__getitem__`
   wrapper, the grid-attribute and resolver lists): token similarity of
   `kernel_name` to `_get_kernel_name` was 0.84 raw and 0.96 with identifiers
-  normalised, with 7 shared string literals. That version was never pushed.
+  normalised, with 7 shared string literals. That version was pushed: it is in public history
+  (blob `63770654`, commit `b3e16d41`; correction of 2026-10-13, D95).
   In the fix pass `gates/gate_b.py` was rewritten from `KERNELGYM_SPEC.md` by
   an agent that had read neither the KernelGYM source nor the earlier hook
   code. Where the spec was silent (which object a capture names; the

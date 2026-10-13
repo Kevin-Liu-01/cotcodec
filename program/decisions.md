@@ -2026,3 +2026,13 @@ Decided:
 - The synthesis estimates about 0.3 that v5 yields an interpretable D and T.
   It is pursued because the defect is narrow and the cost is about 1 VM-h
   before the decision point.
+
+**D95. Correction: the early `gate_b.py` that transliterated KernelGYM code
+is in public history.** Three records said it was "never pushed":
+`harness/q1/README.md`, `program/state.json` and `program/log.md`. In fact
+the early file (blob `63770654`) was added in `b3e16d41` and replaced in
+`c6ef3a94`, and both commits are on public `main`. The licence-request
+drafts' reviewer found this. The three records are corrected here. The
+outward drafts disclose it: the licence request says so plainly, and the
+history-purge plan lists the blob as a purge candidate. No other record
+claims otherwise.
