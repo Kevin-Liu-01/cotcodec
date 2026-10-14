@@ -158,7 +158,11 @@ def test_pack_and_analyze(tmp_path: Path) -> None:
     assert math.isclose(blocks["r1_vs_r4"]["mean_abs"], 0.002, rel_tol=1e-2)
     assert "r1_vs_r4" not in result["models"]["qwen3.5-4b"]["subsets"]["seed_43"]
     assert blocks["dec_vs_r1"]["k3"] > 0
+    assert math.isclose(blocks["dec_vs_r3"]["mean_abs"], blocks["dec_vs_r1"]["mean_abs"], rel_tol=0.5)
     assert "## qwen3.5-4b" in analysis.markdown_tables(result)
+    assert analysis.contrast_table(result, "qwen3.5-4b", "qwen3-8b") == ""
+    both = analysis.analyze({"qwen3.5-4b": packed, "qwen3-8b": packed}, settings)
+    assert "| 0 |" in analysis.contrast_table(both, "qwen3.5-4b", "qwen3-8b")
 
 
 def test_pack_refuses_token_mismatch(tmp_path: Path) -> None:

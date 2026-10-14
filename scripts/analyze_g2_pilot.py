@@ -47,6 +47,7 @@ PATH_KEYS = {
 }
 COMPARISONS = [
     ("dec", "r1"),
+    ("dec", "r3"),
     ("dec", "r4"),
     ("r1", "r4"),
     ("pre", "r4"),
@@ -437,7 +438,8 @@ def markdown_tables(result: dict[str, Any]) -> str:
                 )
             lines.append("")
             if subset in ("all_seeds", "seed_42"):
-                for name in ("dec_vs_r1", "dec_vs_r4", "r1_vs_r4", "dec_vs_pre", "r1_vs_r3"):
+                for name in ("dec_vs_r1", "dec_vs_r3", "dec_vs_r4", "r1_vs_r4", "dec_vs_pre",
+                             "r1_vs_r3"):  # fmt: skip
                     block = blocks.get(name)
                     if block is None:
                         continue
@@ -460,6 +462,34 @@ def markdown_tables(result: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def contrast_table(result: dict[str, Any], hybrid: str, dense: str) -> str:
+    """Kill-criterion-1 readout (exploratory): hybrid vs dense rollout-vs-trainer mismatch per
+    1K bin, on each model's first-seed rollouts (the dense control has only that seed)."""
+
+    models = result["models"]
+    if hybrid not in models or dense not in models:
+        return ""
+    h = {r["bin"]: r for r in models[hybrid]["subsets"]["seed_42"]["dec_vs_r1"]["by_position"]}
+    d = {r["bin"]: r for r in models[dense]["subsets"]["seed_42"]["dec_vs_r1"]["by_position"]}
+    lines = [
+        f"## {hybrid} vs {dense}: dec_vs_r1 per 1K bin, seed-42 rollouts",
+        "",
+        "| bin start | hybrid seqs | hybrid mean abs | dense seqs | dense mean abs | "
+        "mean ratio | hybrid p99 | dense p99 | p99 ratio |",
+        "|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    for index in sorted(set(h) | set(d)):
+        a, b = h.get(index), d.get(index)
+        if a is None or b is None:
+            continue
+        lines.append(
+            f"| {a['start']} | {a['sequences']} | {fmt(a['mean_abs'])} | {b['sequences']} | "
+            f"{fmt(b['mean_abs'])} | {a['mean_abs'] / b['mean_abs']:.2f} | {fmt(a['p99_abs'])} | "
+            f"{fmt(b['p99_abs'])} | {a['p99_abs'] / b['p99_abs']:.2f} |"
+        )
+    return "\n".join(lines) + "\n"
+
+
 def plot(result: dict[str, Any], output: Path) -> None:
     import matplotlib
 
@@ -468,6 +498,7 @@ def plot(result: dict[str, Any], output: Path) -> None:
 
     colors = {
         "dec_vs_r1": "#1f77b4",
+        "dec_vs_r3": "#17becf",
         "dec_vs_r4": "#d62728",
         "r1_vs_r4": "#2ca02c",
         "dec_vs_pre": "#9467bd",
@@ -532,7 +563,10 @@ def analyze_main(args: argparse.Namespace) -> int:
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
     g2.write_json(out / "analysis.json", result)
-    (out / "tables.md").write_text(markdown_tables(result), encoding="utf-8")
+    (out / "tables.md").write_text(
+        markdown_tables(result) + "\n" + contrast_table(result, "qwen3.5-4b", "qwen3-8b"),
+        encoding="utf-8",
+    )
     plot(result, out / "mismatch-by-position.png")
     print(json.dumps({"written": ["analysis.json", "tables.md", "mismatch-by-position.png"]}))
     return 0
