@@ -507,8 +507,11 @@ def plot(result: dict[str, Any], output: Path) -> None:
         "r1_vs_r3": "#7f7f7f",
     }
     models = list(result["models"])
-    fig, axes = plt.subplots(1, len(models) + 1, figsize=(6 * (len(models) + 1), 4.6))
-    axes = np.atleast_1d(axes)
+    fig, axes = plt.subplots(
+        2, 2, figsize=(13, 9.5), gridspec_kw={"hspace": 0.32, "wspace": 0.22}
+    )
+    axes = axes.ravel()
+    position_axes = [axes[0], axes[1], axes[2]]
 
     def draw(ax: Any, block: dict[str, Any], label: str, color: str, style: str = "-") -> None:
         rows = [r for r in block["by_position"] if r["tokens"] >= 200]
@@ -519,7 +522,7 @@ def plot(result: dict[str, Any], output: Path) -> None:
         ax.plot(x, y, style, color=color, label=label, marker="o", markersize=3)
         ax.fill_between(x, lo, hi, color=color, alpha=0.15, linewidth=0)
 
-    for ax, model_id in zip(axes, models, strict=False):
+    for ax, model_id in zip(position_axes[:2], models, strict=False):
         blocks = result["models"][model_id]["subsets"].get("seed_42", {})
         for name, color in colors.items():
             if name in blocks:
@@ -531,7 +534,7 @@ def plot(result: dict[str, Any], output: Path) -> None:
         ax.set_ylabel("mean |Δ log p| per token")
         ax.grid(True, which="both", alpha=0.3)
         ax.legend(fontsize=7)
-    ax = axes[-1]
+    ax = position_axes[2]
     for model_id, style in zip(models, ["-", "--"], strict=False):
         model = result["models"][model_id]
         for subset, blocks in model["subsets"].items():
@@ -548,10 +551,29 @@ def plot(result: dict[str, Any], output: Path) -> None:
     ax.set_ylabel("mean |Δ log p| per token")
     ax.grid(True, which="both", alpha=0.3)
     ax.legend(fontsize=7)
+    shared = [a.get_ylim() for a in position_axes]
+    for a in position_axes:
+        a.set_ylim(min(lo for lo, _ in shared), max(hi for _, hi in shared))
+    # Entropy panel: rollout vs trainer by r1-entropy bin, each model's seed-42 rollouts.
+    ax = axes[3]
+    for model_id, color in zip(models, ["#1f77b4", "#d62728"], strict=False):
+        block = result["models"][model_id]["subsets"].get("seed_42", {}).get("dec_vs_r1")
+        if block is None:
+            continue
+        rows = block["by_entropy"]
+        labels = [f"[{r['entropy_lo']:g}, {min(r['entropy_hi'], 99):g})" for r in rows]
+        ax.plot(range(len(rows)), [r["mean_abs"] for r in rows], "-o", color=color,
+                label=f"{model_id}", markersize=4)  # fmt: skip
+        ax.set_xticks(range(len(rows)), labels, fontsize=7)
+    ax.set_yscale("log")
+    ax.set_title("rollout vs trainer (dec vs r1) by token entropy, seed 42")
+    ax.set_xlabel("entropy of the r1 distribution (nats), bins")
+    ax.set_ylabel("mean |Δ log p| per token")
+    ax.grid(True, which="both", alpha=0.3)
+    ax.legend(fontsize=7)
     fig.suptitle("G2 pilot (EXPLORATORY): per-token log-prob mismatch by position; bands: 95% "
                  "bootstrap over sequences", fontsize=10)  # fmt: skip
-    fig.tight_layout()
-    fig.savefig(output, dpi=130)
+    fig.savefig(output, dpi=130, bbox_inches="tight")
     plt.close(fig)
 
 
