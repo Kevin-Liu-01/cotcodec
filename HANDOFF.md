@@ -49,8 +49,10 @@ for whatever gains actual results"; D80). Under that delegation:
     See `program/evidence/2026-10-14/g2-pilot/README.md`.
   - **AM1** is the memory lead: exact credit tables for agent memory on
     LongMemEval.
-  - An exploratory inference baseline on the H100s is running
-    (`stage0/inference-baseline`).
+  - The exploratory inference baseline is done (D105). Dense models are
+    KV-starved, and the hybrids' fp32 GDN state caps concurrency.
+  - G2b is running (`stage0/g2b-state-dtype`): the bf16 GDN state as a
+    concurrency lever, its mismatch cost, and the packed trainer path.
 - The public-history purge ran (D99). Old commit ids resolve through
   `program/history-rewrite-2026-10-14/` (the map plus an 11-row supplement,
   D100). No GitHub Support request (D101).
@@ -66,7 +68,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 22 rows). Decisions taken
-on Kevin's behalf are D1-D104 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D106 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
