@@ -999,7 +999,87 @@ def analyze_run(
         "cost": cost,
     }  # fmt: skip
     lane.write_json(out_dir / "headline.json", headline)
-    return {"headline": headline, "identity": identity, "throughput": throughput, "demo": demo}
+    result = {"headline": headline, "identity": identity, "throughput": throughput, "demo": demo}
+    (out_dir / "tables.md").write_text(render_tables(result, cost), encoding="utf-8")
+    return result
+
+
+def _fmt(value: Any, digits: int = 4) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, float):
+        return f"{value:.{digits}f}"
+    return str(value)
+
+
+def render_tables(result: dict[str, Any], cost: dict[str, Any]) -> str:
+    """Markdown tables of the identity comparisons, throughput, cost and demo tables."""
+
+    lines = ["# AM1 Step 0 analysis tables (exploratory)", "", "## A/A identity", "",
+             "| Mode | Sampling | Reference | Other | Compared | Identical tokens | Rate "
+             "[95% CP] | Identical tokens and log-prob bits | Clusters all identical |",
+             "|---|---|---|---|---:|---:|---|---:|---:|"]  # fmt: skip
+    for r in result["identity"]:
+        ci = r.get("ci95_tokens") or [None, None]
+        rate = (f"{_fmt(r.get('rate_tokens'), 5)} [{_fmt(ci[0], 5)}, {_fmt(ci[1], 5)}]"
+                if r.get("n_common") else "")  # fmt: skip
+        lines.append(
+            f"| {r['mode']} | {r['sampling']} | {'/'.join(r['ref'])} | {'/'.join(r['other'])} "
+            f"| {r['n_common']} | {r['identical_tokens']} | {rate} "
+            f"| {r['identical_tokens_and_logprob_bits']} "
+            f"| {r['clusters_all_identical']} of {r['clusters']} |"
+        )
+    lines += ["", "## Throughput by pass", "",
+              "| Session | Pass | BI | Status | Requests | Wall s | Req/s | Computed prompt tok/s "
+              "| Output tok/s | Cached share |",
+              "|---|---|---|---|---:|---:|---:|---:|---:|---:|"]  # fmt: skip
+    for r in result["throughput"]["passes"]:
+        share = r["cached_tokens"] / r["prompt_tokens"] if r["prompt_tokens"] else None
+        lines.append(
+            f"| {r['session']} | {r['pass']} | {r['batch_invariant']} | {r['status']} "
+            f"| {r['finished']} of {r['requests']} | {_fmt(r['wall_s'], 1)} "
+            f"| {_fmt(r['requests_per_s'], 1)} | {_fmt(r['computed_prompt_tokens_per_s'], 0)} "
+            f"| {_fmt(r['output_tokens_per_s'], 0)} | {_fmt(share, 3)} |"
+        )
+    lines += ["", "## Batch-invariant over default wall time (matched passes)", "",
+              "| BI session | Default session | Pass | BI wall s | Default wall s | Ratio |",
+              "|---|---|---|---:|---:|---:|"]  # fmt: skip
+    for r in result["throughput"]["pairs"]:
+        lines.append(
+            f"| {r['bi']} | {r['default']} | {r['pass']} | {_fmt(r['bi_wall_s'], 1)} "
+            f"| {_fmt(r['default_wall_s'], 1)} | {_fmt(r['wall_ratio_bi_over_default'], 3)} |"
+        )
+    init = result["throughput"]["engine_init_s"]
+    lines += ["", "Engine start (s): " + ", ".join(f"{k} {v}" for k, v in init.items()), "",
+              "## Cost of the 256-subset tables (greedy-all-canonical passes)", "",
+              "| Session | BI | Wall s | GPU-s per question (2 arms) | GPU-s per table "
+              "| 200-question study, GPU-h |", "|---|---|---:|---:|---:|---:|"]  # fmt: skip
+    for session, r in cost.items():
+        lines.append(
+            f"| {session} | {r['batch_invariant']} | {_fmt(r['wall_s'], 1)} "
+            f"| {_fmt(r['gpu_s_per_question_both_arms'], 2)} | {_fmt(r['gpu_s_per_table'], 2)} "
+            f"| {_fmt(r['full_study_gpu_h_both_arms'], 3)} |"
+        )
+    lines += ["", "## Demo tables (batch-invariant reference pass; crude containment utility)",
+              "", "| Question | Type | Arm | Gold in pool | Distinct replies | Mean u | u(full) "
+              "| u(empty) | Constant | Order>=2 share | AND/OR baseline | LOO regret min/mean/max "
+              "| Shapley regret min/mean/max |", "|---|---|---|---:|---:|---:|---:|---:|---|---:|"
+              "---:|---|---|"]  # fmt: skip
+    for t in result["demo"]["tables"]:
+
+        def regret(key: str, t: dict[str, Any] = t) -> str:
+            r = t.get(key)
+            return "" if not r else f"{r['min']:.0f}/{r['mean']:.2f}/{r['max']:.0f} ({r['sets']})"
+
+        lines.append(
+            f"| {t['question_id']} | {t['question_type']} | {t['arm']} | {t['gold_in_pool']} "
+            f"| {t['distinct_replies']} | {_fmt(t['utility_mean'], 3)} | {t['utility_full']} "
+            f"| {t['utility_empty']} | {t['utility_constant']} "
+            f"| {_fmt(t.get('fourier_share_order_2_plus'), 3)} "
+            f"| {_fmt(t.get('and_or_baseline'), 3)} | {regret('loo_regret')} "
+            f"| {regret('shapley_regret')} |"
+        )
+    return "\n".join(lines) + "\n"
 
 
 def analyze_main(args: argparse.Namespace) -> int:
