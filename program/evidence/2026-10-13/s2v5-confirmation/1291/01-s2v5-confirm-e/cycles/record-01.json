@@ -1,0 +1,387 @@
+{
+  "cycle": 1,
+  "host_after": {
+    "containers_ours": 0,
+    "containers_running_total": 1,
+    "loadavg": [
+      "1.44",
+      "1.14",
+      "1.16"
+    ],
+    "squeue_foreign": [],
+    "t": 1791944183.2714396
+  },
+  "host_before": {
+    "containers_ours": 0,
+    "containers_running_total": 1,
+    "loadavg": [
+      "1.28",
+      "1.06",
+      "1.14"
+    ],
+    "squeue_foreign": [],
+    "t": 1791944140.6524565
+  },
+  "nat_mode": "nat",
+  "prev_token": "q2ap-1291-c00",
+  "qemu_kvm_in_log": false,
+  "runner_rc": 0,
+  "runner_result": {
+    "boot": {
+      "polls": 12,
+      "screenshot_size": [
+        1920,
+        1080
+      ],
+      "t_screenshot_200": 16.906,
+      "t_tcp_open": 16.332
+    },
+    "cycle": 1,
+    "facts": {
+      "_elapsed_s": 0.02809967566281557,
+      "boot_id": "bc720fd6-4037-4760-adfc-de405a27e052",
+      "dbus_session_present": true,
+      "env": {
+        "DISPLAY": ":0",
+        "LANG": "en_HK.UTF-8",
+        "USER": "user",
+        "WAYLAND_DISPLAY": null,
+        "XAUTHORITY": null,
+        "XDG_SESSION_TYPE": null
+      },
+      "server": {
+        "cmdline": "/usr/bin/python /home/user/server/main.py",
+        "cwd": "/home/user",
+        "main_py": "/home/user/server/main.py",
+        "main_py_sha256": "41376a5c4f0b68ed7bbbbcc73ece60427f4a58dd8bd4710176f9911de726339e",
+        "pid": 1824
+      },
+      "uptime_s": 16.84
+    },
+    "kind": "canary-development",
+    "layer": null,
+    "runner": {
+      "cuda_visible_devices": "",
+      "net_interfaces": [
+        "dockerbridge",
+        "lo",
+        "qemu"
+      ],
+      "nvidia_devices": [],
+      "ok": true,
+      "proc_status": {
+        "CapBnd": "0000000000000000",
+        "CapEff": "0000000000000000",
+        "NoNewPrivs": "1",
+        "Seccomp": "2",
+        "Seccomp_filters": "1"
+      },
+      "uid": 1004
+    },
+    "runner_finished_at": 1791944182.9766483,
+    "session_wall_s": 41.99,
+    "setting": "screenshot",
+    "settle": {
+      "shots": 3,
+      "t_settled": 22.578
+    },
+    "token": "q2ap-1291-c01",
+    "trials": [
+      {
+        "app": "writer",
+        "cell": "writer:drag_select_word",
+        "close": {
+          "_elapsed_s": 0.5378904333338141,
+          "_wall_s": 0.5382,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            1931
+          ]
+        },
+        "entry": "drag_select_word",
+        "errors": [],
+        "expect": "keep Y keep",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/0 --norestore --nologo --writer /home/user/canary/fixture-0.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.028358707204461098,
+          "_wall_s": 0.0286,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/0",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-0.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/0",
+          "file": "/home/user/canary/fixture-0.txt",
+          "fixture_mtime_ns": 1791944163672000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.9604643657803535,
+          "_wall_s": 0.9609,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "keep Y keep"
+        },
+        "seq": 0,
+        "steps": [
+          {
+            "infra": [],
+            "op": "drag",
+            "timing_s": {
+              "execute": 1.0634,
+              "screenshot": 0.0698,
+              "total": 1.1332
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.8409,
+              "screenshot": 0.0703,
+              "total": 0.9112
+            }
+          }
+        ],
+        "text": "keep Y keep",
+        "timing_s": 10.036,
+        "trial": 0,
+        "wait": {
+          "_elapsed_s": 5.956657335162163,
+          "_wall_s": 5.9569,
+          "a11y_ready": true,
+          "elapsed_s": 5.905,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.009,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 60817525,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:triple_click_line",
+        "close": {
+          "_elapsed_s": 0.540701849386096,
+          "_wall_s": 0.541,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            2047
+          ]
+        },
+        "entry": "triple_click_line",
+        "errors": [],
+        "expect": "X",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/1 --norestore --nologo --writer /home/user/canary/fixture-1.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027399146929383278,
+          "_wall_s": 0.0276,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/1",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-1.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/1",
+          "file": "/home/user/canary/fixture-1.txt",
+          "fixture_mtime_ns": 1791944173708000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.9594886805862188,
+          "_wall_s": 0.9598,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "X"
+        },
+        "seq": 1,
+        "steps": [
+          {
+            "infra": [],
+            "op": "click",
+            "timing_s": {
+              "execute": 1.2252,
+              "screenshot": 0.0744,
+              "total": 1.2996
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.8043,
+              "screenshot": 0.07,
+              "total": 0.8743
+            }
+          }
+        ],
+        "text": "X",
+        "timing_s": 9.528,
+        "trial": 1,
+        "wait": {
+          "_elapsed_s": 5.320660967379808,
+          "_wall_s": 5.3209,
+          "a11y_ready": true,
+          "elapsed_s": 5.273,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.009,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 60817525,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      }
+    ],
+    "warmup": {
+      "_elapsed_s": 0.12396306544542313,
+      "check": null,
+      "elapsed_s": 0.0963,
+      "keycode": 248,
+      "mode": "warmup",
+      "server_pid": 1824,
+      "shell": {
+        "idle": true,
+        "replies": [
+          [
+            0.0439,
+            true
+          ],
+          [
+            0.0047,
+            true
+          ]
+        ]
+      }
+    }
+  },
+  "runner_stderr_tail": "",
+  "t0": 1791944140.6769485,
+  "teardown": {
+    "anonymous_volumes": 1,
+    "container_gone": true,
+    "leaked_volumes": [],
+    "rm_rc": 0,
+    "stop_rc": 0
+  },
+  "token": "q2ap-1291-c01",
+  "vm_inspect": {
+    "cap_add": [
+      "CAP_NET_ADMIN"
+    ],
+    "cpuset_cpus": "0-3",
+    "cpuset_mems": "0",
+    "device_requests": null,
+    "devices": [
+      "/dev/kvm"
+    ],
+    "has_bridge_address": false,
+    "image": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+    "labels": {
+      "cotcodec.campaign": "s2v5-confirm-e",
+      "cotcodec.cycle": "1",
+      "cotcodec.q2": "1",
+      "cotcodec.role": "vm",
+      "cotcodec.slurm_job": "1291"
+    },
+    "memory": 6442450944,
+    "mounts": [
+      {
+        "destination": "/System.qcow2",
+        "name": null,
+        "rw": false,
+        "type": "bind"
+      },
+      {
+        "destination": "/storage",
+        "name": "e4553cf38be455c410504acfd31e602b7e30e0f7c753bfde3b4bc5998b34004e",
+        "rw": true,
+        "type": "volume"
+      }
+    ],
+    "network_mode": "none",
+    "networks": [
+      "none"
+    ],
+    "port_bindings": {},
+    "privileged": false,
+    "publish_all_ports": false,
+    "runtime": "runc",
+    "started_at": "2026-10-14T02:15:40.712886351Z"
+  },
+  "vm_measurements": {
+    "nat_rules": 2,
+    "nvidia": 0,
+    "overlay_alloc": 68820992,
+    "overlay_bytes": 68878336,
+    "rc": 0,
+    "storage_alloc": 7315456
+  }
+}

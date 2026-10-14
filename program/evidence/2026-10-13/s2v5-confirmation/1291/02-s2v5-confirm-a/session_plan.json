@@ -1,0 +1,72 @@
+[
+ {
+  "setting": "screenshot",
+  "index": 0,
+  "trials": [
+   [
+    0,
+    "writer:drag_select_word"
+   ],
+   [
+    1,
+    "writer:triple_click_line"
+   ]
+  ]
+ },
+ {
+  "setting": "screenshot",
+  "index": 1,
+  "trials": [
+   [
+    0,
+    "writer:drag_select_word"
+   ],
+   [
+    1,
+    "writer:triple_click_line"
+   ]
+  ]
+ },
+ {
+  "setting": "screenshot",
+  "index": 2,
+  "trials": [
+   [
+    0,
+    "writer:triple_click_line"
+   ],
+   [
+    1,
+    "writer:drag_select_word"
+   ]
+  ]
+ },
+ {
+  "setting": "screenshot",
+  "index": 3,
+  "trials": [
+   [
+    0,
+    "writer:drag_select_word"
+   ],
+   [
+    1,
+    "writer:triple_click_line"
+   ]
+  ]
+ },
+ {
+  "setting": "screenshot",
+  "index": 4,
+  "trials": [
+   [
+    0,
+    "writer:drag_select_word"
+   ],
+   [
+    1,
+    "writer:triple_click_line"
+   ]
+  ]
+ }
+]

@@ -1,0 +1,6 @@
+{
+ "cell": "AR",
+ "cells": "harness/s2_locale/canary_v5/suite_cells-AR.json",
+ "replaces": "harness/q2/action_path/suite_cells.json",
+ "sha256": "b81b63c6973fd21598965c1fd06247401c63e8c6bf979c2fc15e74ac3dfa4726"
+}

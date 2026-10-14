@@ -1,0 +1,5 @@
+job_id=1278
+manifest_sha256=c199a2e1cc5e7aa0faef48015fe3b6c815d85350017ea143e45598f37843e460
+ap_delta=1
+cells=harness/s2_locale/canary_v5/suite_cells-ER.json
+driver_exit=0 labelled_containers_left=0

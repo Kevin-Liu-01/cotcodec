@@ -1,0 +1,34 @@
+{
+ "campaigns": [
+  {
+   "campaign_id": "s2v5-confirm-er",
+   "cells": [
+    "ER"
+   ],
+   "cells_file": "harness/s2_locale/canary_v5/suite_cells-ER.json",
+   "dir": "00-s2v5-confirm-er",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-confirm-ar",
+   "cells": [
+    "AR"
+   ],
+   "cells_file": "harness/s2_locale/canary_v5/suite_cells-AR.json",
+   "dir": "01-s2v5-confirm-ar",
+   "driver_exit": 0
+  }
+ ],
+ "check": "confirm",
+ "executor_commit": "f24557aa555987157b5b75049ec1cb1b8e0a81a2",
+ "experiment_id": "s2-arabic-cua-locale-v5",
+ "job_id": "1278",
+ "part": {
+  "index": 1,
+  "of": 2
+ },
+ "purpose": "development",
+ "schema": "s2v5-apdelta-receipt-v1",
+ "t_end": 1791934805.509476,
+ "t_start": 1791928834.2624168
+}

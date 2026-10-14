@@ -1,0 +1,69 @@
+{
+ "decision": "PROCEED to the pre-freeze audit (D96)",
+ "experiment_id": "s2-arabic-cua-locale-v5",
+ "pass": true,
+ "per_cell": {
+  "A": {
+   "cells_file": "harness/q2/action_path/suite_cells.json",
+   "dir": "02-s2v5-confirm-a",
+   "entries": 2,
+   "job": "1291",
+   "not_pass": {},
+   "pass": true,
+   "passed": 10,
+   "problems": [],
+   "ran": true,
+   "trials": 10
+  },
+  "AR": {
+   "cells_file": "harness/s2_locale/canary_v5/suite_cells-AR.json",
+   "dir": "01-s2v5-confirm-ar",
+   "entries": 60,
+   "job": "1278",
+   "not_pass": {},
+   "pass": true,
+   "passed": 300,
+   "problems": [],
+   "ran": true,
+   "trials": 300
+  },
+  "E": {
+   "cells_file": "harness/q2/action_path/suite_cells.json",
+   "dir": "01-s2v5-confirm-e",
+   "entries": 2,
+   "job": "1291",
+   "not_pass": {},
+   "pass": true,
+   "passed": 10,
+   "problems": [],
+   "ran": true,
+   "trials": 10
+  },
+  "ER": {
+   "cells_file": "harness/s2_locale/canary_v5/suite_cells-ER.json",
+   "dir": "00-s2v5-confirm-er",
+   "entries": 60,
+   "job": "1278",
+   "not_pass": {},
+   "pass": true,
+   "passed": 300,
+   "problems": [],
+   "ran": true,
+   "trials": 300
+  },
+  "PL": {
+   "cells_file": "harness/q2/action_path/suite_cells.json",
+   "dir": "00-s2v5-confirm-pl",
+   "entries": 60,
+   "job": "1291",
+   "not_pass": {},
+   "pass": true,
+   "passed": 300,
+   "problems": [],
+   "ran": true,
+   "trials": 300
+  }
+ },
+ "problems": [],
+ "schema": "s2v5-confirm-reading-v1"
+}

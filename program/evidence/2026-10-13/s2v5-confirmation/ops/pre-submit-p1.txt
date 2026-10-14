@@ -1,0 +1,14 @@
+snapshot_utc=2026-10-13T22:00:32Z
+loadavg=0.34 4.85 8.48 1/2541 3363516
+nproc=208
+mem_avail_kb=1818293432
+squeue_all=[]
+docker_running=1
+docker_labelled_cotcodec=0
+e_pairs=e-4b-e1 e-4b-e1-collect.tar e-4b-e2 e-4b-e2-collect.tar e-4b-e3 e-4b-e3-collect.tar e-4b-e4 e-4b-e4-collect.tar e-9b-e1 e-9b-e1-collect.tar e-9b-e2 e-9b-e2-collect.tar e-9b-e3 e-9b-e3-collect.tar e-9b-e4 e-9b-e4-collect.tar 
+e4_end e-9b-e4/scontrol-1272.last.txt: JobId=1272 JobState=COMPLETED StartTime=2026-10-13T20:41:28 EndTime=2026-10-13T21:20:17 
+e4_end e-9b-e4/scontrol-1274.last.txt: JobId=1274 JobState=COMPLETED StartTime=2026-10-13T20:41:28 EndTime=2026-10-13T21:20:14 
+e4_end e-4b-e4/scontrol-1275.last.txt: JobId=1275 JobState=COMPLETED StartTime=2026-10-13T21:21:45 EndTime=2026-10-13T21:58:06 
+e4_end e-4b-e4/scontrol-1277.last.txt: JobId=1277 JobState=COMPLETED StartTime=2026-10-13T21:21:45 EndTime=2026-10-13T21:58:03 
+manifest_file_sha256=c2ee961423cc6faf921e9cfa0e51a7e08e032764ba56069b0a87e16daf0ce3c6
+source_git_sha=f24557aa555987157b5b75049ec1cb1b8e0a81a2

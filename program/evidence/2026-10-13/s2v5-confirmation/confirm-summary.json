@@ -1,0 +1,674 @@
+{
+ "campaigns": [
+  {
+   "cell": "ER",
+   "cells_file": "harness/s2_locale/canary_v5/suite_cells-ER.json",
+   "dir": "00-s2v5-confirm-er",
+   "entries": 60,
+   "job": "1278",
+   "not_5_of_5": {},
+   "passed": 300,
+   "session_cells_paths": [
+    "/src/harness/s2_locale/canary_v5/suite_cells-ER.json"
+   ],
+   "trials": 300,
+   "writer_targets_in_cells_file": {
+    "harness/s2_locale/canary_v5/suite_cells-ER.json": {
+     "drag_select_word": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       293
+      ],
+      "to": [
+       779,
+       293
+      ]
+     },
+     "triple_click_line": {
+      "x": 789,
+      "y": 293
+     }
+    }
+   },
+   "writer_trials": [
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 40,
+     "session": 0,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 53,
+     "session": 0,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 35,
+     "session": 1,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 47,
+     "session": 1,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 19,
+     "session": 2,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 49,
+     "session": 2,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 27,
+     "session": 3,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 34,
+     "session": 3,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 29,
+     "session": 4,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 59,
+     "session": 4,
+     "text": "X"
+    }
+   ]
+  },
+  {
+   "cell": "AR",
+   "cells_file": "harness/s2_locale/canary_v5/suite_cells-AR.json",
+   "dir": "01-s2v5-confirm-ar",
+   "entries": 60,
+   "job": "1278",
+   "not_5_of_5": {},
+   "passed": 300,
+   "session_cells_paths": [
+    "/src/harness/s2_locale/canary_v5/suite_cells-AR.json"
+   ],
+   "trials": 300,
+   "writer_targets_in_cells_file": {
+    "harness/s2_locale/canary_v5/suite_cells-AR.json": {
+     "drag_select_word": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       294
+      ],
+      "to": [
+       779,
+       294
+      ]
+     },
+     "triple_click_line": {
+      "x": 789,
+      "y": 294
+     }
+    }
+   },
+   "writer_trials": [
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 40,
+     "session": 0,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 53,
+     "session": 0,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 35,
+     "session": 1,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 47,
+     "session": 1,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 19,
+     "session": 2,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 49,
+     "session": 2,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 27,
+     "session": 3,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 34,
+     "session": 3,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 29,
+     "session": 4,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 59,
+     "session": 4,
+     "text": "X"
+    }
+   ]
+  },
+  {
+   "cell": "PL",
+   "cells_file": null,
+   "dir": "00-s2v5-confirm-pl",
+   "entries": 60,
+   "job": "1291",
+   "not_5_of_5": {},
+   "passed": 300,
+   "session_cells_paths": [
+    "/src/harness/q2/action_path/suite_cells.json"
+   ],
+   "trials": 300,
+   "writer_targets_in_cells_file": {
+    "harness/q2/action_path/suite_cells.json": {
+     "drag_select_word": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       292
+      ],
+      "to": [
+       709,
+       292
+      ]
+     },
+     "triple_click_line": {
+      "x": 718,
+      "y": 292
+     }
+    }
+   },
+   "writer_trials": [
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 40,
+     "session": 0,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 53,
+     "session": 0,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 35,
+     "session": 1,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 47,
+     "session": 1,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 19,
+     "session": 2,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 49,
+     "session": 2,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 27,
+     "session": 3,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 34,
+     "session": 3,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 29,
+     "session": 4,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 59,
+     "session": 4,
+     "text": "X"
+    }
+   ]
+  },
+  {
+   "cell": "E",
+   "cells_file": null,
+   "dir": "01-s2v5-confirm-e",
+   "entries": 2,
+   "job": "1291",
+   "not_5_of_5": {},
+   "passed": 10,
+   "session_cells_paths": [
+    "/src/harness/q2/action_path/suite_cells.json"
+   ],
+   "trials": 10,
+   "writer_targets_in_cells_file": {
+    "harness/q2/action_path/suite_cells.json": {
+     "drag_select_word": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       292
+      ],
+      "to": [
+       709,
+       292
+      ]
+     },
+     "triple_click_line": {
+      "x": 718,
+      "y": 292
+     }
+    }
+   },
+   "writer_trials": [
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 0,
+     "session": 0,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 1,
+     "session": 0,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 0,
+     "session": 1,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 1,
+     "session": 1,
+     "text": "X"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 0,
+     "session": 2,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 1,
+     "session": 2,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 0,
+     "session": 3,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 1,
+     "session": 3,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 0,
+     "session": 4,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 1,
+     "session": 4,
+     "text": "X"
+    }
+   ]
+  },
+  {
+   "cell": "A",
+   "cells_file": null,
+   "dir": "02-s2v5-confirm-a",
+   "entries": 2,
+   "job": "1291",
+   "not_5_of_5": {},
+   "passed": 10,
+   "session_cells_paths": [
+    "/src/harness/q2/action_path/suite_cells.json"
+   ],
+   "trials": 10,
+   "writer_targets_in_cells_file": {
+    "harness/q2/action_path/suite_cells.json": {
+     "drag_select_word": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       292
+      ],
+      "to": [
+       709,
+       292
+      ]
+     },
+     "triple_click_line": {
+      "x": 718,
+      "y": 292
+     }
+    }
+   },
+   "writer_trials": [
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 0,
+     "session": 0,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 1,
+     "session": 0,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 0,
+     "session": 1,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 1,
+     "session": 1,
+     "text": "X"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 0,
+     "session": 2,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 1,
+     "session": 2,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 0,
+     "session": 3,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 1,
+     "session": 3,
+     "text": "X"
+    },
+    {
+     "cell": "writer:drag_select_word",
+     "errors": [],
+     "expect": "keep Y keep",
+     "infra": [],
+     "pass": true,
+     "seq": 0,
+     "session": 4,
+     "text": "keep Y keep"
+    },
+    {
+     "cell": "writer:triple_click_line",
+     "errors": [],
+     "expect": "X",
+     "infra": [],
+     "pass": true,
+     "seq": 1,
+     "session": 4,
+     "text": "X"
+    }
+   ]
+  }
+ ]
+}

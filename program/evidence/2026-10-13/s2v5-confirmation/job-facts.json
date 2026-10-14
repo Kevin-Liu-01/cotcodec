@@ -1,0 +1,352 @@
+[
+ {
+  "batch_end": [
+   "lane_exit=0 labelled_containers_left=0"
+  ],
+  "campaigns": [
+   {
+    "batch_end": [
+     "driver_exit=0 labelled_containers_left=0"
+    ],
+    "boot_s": {
+     "max": 17.939,
+     "n": 5,
+     "p50": 17.124,
+     "p95": 17.939
+    },
+    "boots_ok": 5,
+    "cell_counts": {
+     "FAIL": 0,
+     "FLAKY": 0,
+     "PASS": 60
+    },
+    "cells": [
+     "ER"
+    ],
+    "cells_file": "harness/s2_locale/canary_v5/suite_cells-ER.json",
+    "containers_removed_all": true,
+    "cycles": 5,
+    "dangling_volumes": [
+     0,
+     0
+    ],
+    "dir": "00-s2v5-confirm-er",
+    "driver_exit": 0,
+    "errors": [],
+    "finished_at": "2026-10-13T22:50:08Z",
+    "git_sha": "f24557aa555987157b5b75049ec1cb1b8e0a81a2",
+    "guest_server_restarts": 0,
+    "infra_failures": {},
+    "infra_gates_pass": true,
+    "labelled_containers_left": [],
+    "leaked_volumes": [],
+    "manifest_sha256": "c199a2e1cc5e7aa0faef48015fe3b6c815d85350017ea143e45598f37843e460",
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "qcow2_sha256": [
+     "262fe7093d5fbdce466eb9bf15229706a5131d76cb8d7e145f7262eb5096b607",
+     "262fe7093d5fbdce466eb9bf15229706a5131d76cb8d7e145f7262eb5096b607"
+    ],
+    "qcow2_unchanged": true,
+    "runner_errors": [],
+    "session_plan_sha256": "af5194ccfe40a71acda0371459cad0a5ed6ea013fd92b534c054bd8b270a785a",
+    "session_wall_s": [
+     592.55,
+     588.82,
+     582.41,
+     593.85,
+     578.85
+    ],
+    "source_tree_sha256": "896c46a886a6d1ea8489ae3b2d52f2cb922bee9b5900b4b49ca44462cfe0fa85",
+    "started_at": "2026-10-13T22:00:34Z",
+    "trial_s": {
+     "n": 300,
+     "p50": 8.057,
+     "p95": 16.661,
+     "sum": 2835.34
+    }
+   },
+   {
+    "batch_end": [
+     "driver_exit=0 labelled_containers_left=0"
+    ],
+    "boot_s": {
+     "max": 17.273,
+     "n": 5,
+     "p50": 17.213,
+     "p95": 17.273
+    },
+    "boots_ok": 5,
+    "cell_counts": {
+     "FAIL": 0,
+     "FLAKY": 0,
+     "PASS": 60
+    },
+    "cells": [
+     "AR"
+    ],
+    "cells_file": "harness/s2_locale/canary_v5/suite_cells-AR.json",
+    "containers_removed_all": true,
+    "cycles": 5,
+    "dangling_volumes": [
+     0,
+     0
+    ],
+    "dir": "01-s2v5-confirm-ar",
+    "driver_exit": 0,
+    "errors": [],
+    "finished_at": "2026-10-13T23:40:05Z",
+    "git_sha": "f24557aa555987157b5b75049ec1cb1b8e0a81a2",
+    "guest_server_restarts": 0,
+    "infra_failures": {},
+    "infra_gates_pass": true,
+    "labelled_containers_left": [],
+    "leaked_volumes": [],
+    "manifest_sha256": "22c076cc67a08aa93ab6ba77f5c34e30ebe95c59af326ecab9d9ceb2b2665c3c",
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "qcow2_sha256": [
+     "77cd9a2ab6aa37ef6c7d80ff27486b63e2f2e8a417c46d2768c1d8020cc6311f",
+     "77cd9a2ab6aa37ef6c7d80ff27486b63e2f2e8a417c46d2768c1d8020cc6311f"
+    ],
+    "qcow2_unchanged": true,
+    "runner_errors": [],
+    "session_plan_sha256": "af5194ccfe40a71acda0371459cad0a5ed6ea013fd92b534c054bd8b270a785a",
+    "session_wall_s": [
+     589.98,
+     596.95,
+     597.09,
+     588.75,
+     585.69
+    ],
+    "source_tree_sha256": "896c46a886a6d1ea8489ae3b2d52f2cb922bee9b5900b4b49ca44462cfe0fa85",
+    "started_at": "2026-10-13T22:50:09Z",
+    "trial_s": {
+     "n": 300,
+     "p50": 8.253,
+     "p95": 17.075,
+     "sum": 2857.71
+    }
+   }
+  ],
+  "executor_commit": "f24557aa555987157b5b75049ec1cb1b8e0a81a2",
+  "job": "1278",
+  "slurm": {
+   "EndTime": "2026-10-13T23:40:05",
+   "ExitCode": "0:0",
+   "JobState": "COMPLETED",
+   "RunTime": "01:39:32",
+   "StartTime": "2026-10-13T22:00:33",
+   "SubmitTime": "2026-10-13T22:00:32",
+   "TRES": "cpu=6,mem=9G,node=1,billing=6"
+  },
+  "t_end": "2026-10-13T23:40:05Z",
+  "t_start": "2026-10-13T22:00:34Z"
+ },
+ {
+  "batch_end": [
+   "lane_exit=0 labelled_containers_left=0"
+  ],
+  "campaigns": [
+   {
+    "batch_end": [
+     "driver_exit=0 labelled_containers_left=0"
+    ],
+    "boot_s": {
+     "max": 17.299,
+     "n": 5,
+     "p50": 17.056,
+     "p95": 17.299
+    },
+    "boots_ok": 5,
+    "cell_counts": {
+     "FAIL": 0,
+     "FLAKY": 0,
+     "PASS": 60
+    },
+    "cells": [
+     "PL"
+    ],
+    "cells_file": null,
+    "containers_removed_all": true,
+    "cycles": 5,
+    "dangling_volumes": [
+     0,
+     0
+    ],
+    "dir": "00-s2v5-confirm-pl",
+    "driver_exit": 0,
+    "errors": [],
+    "finished_at": "2026-10-14T02:14:43Z",
+    "git_sha": "f24557aa555987157b5b75049ec1cb1b8e0a81a2",
+    "guest_server_restarts": 0,
+    "infra_failures": {},
+    "infra_gates_pass": true,
+    "labelled_containers_left": [],
+    "leaked_volumes": [],
+    "manifest_sha256": "865a01c2309ef78c08d2c1a5477ae64a7cc565983d487fb911917bea559f003a",
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "qcow2_sha256": [
+     "5a4102eefbbaf9e4ad78d499267270c4fdb4671ccff4d6dba777196817aa6ed2",
+     "5a4102eefbbaf9e4ad78d499267270c4fdb4671ccff4d6dba777196817aa6ed2"
+    ],
+    "qcow2_unchanged": true,
+    "runner_errors": [],
+    "session_plan_sha256": "af5194ccfe40a71acda0371459cad0a5ed6ea013fd92b534c054bd8b270a785a",
+    "session_wall_s": [
+     592.44,
+     589.54,
+     589.34,
+     591.9,
+     589.31
+    ],
+    "source_tree_sha256": "896c46a886a6d1ea8489ae3b2d52f2cb922bee9b5900b4b49ca44462cfe0fa85",
+    "started_at": "2026-10-14T01:24:53Z",
+    "trial_s": {
+     "n": 300,
+     "p50": 8.077,
+     "p95": 16.891,
+     "sum": 2852.04
+    }
+   },
+   {
+    "batch_end": [
+     "driver_exit=0 labelled_containers_left=0"
+    ],
+    "boot_s": {
+     "max": 17.936,
+     "n": 5,
+     "p50": 17.14,
+     "p95": 17.936
+    },
+    "boots_ok": 5,
+    "cell_counts": {
+     "FAIL": 0,
+     "FLAKY": 0,
+     "PASS": 2
+    },
+    "cells": [
+     "E"
+    ],
+    "cells_file": null,
+    "containers_removed_all": true,
+    "cycles": 5,
+    "dangling_volumes": [
+     0,
+     0
+    ],
+    "dir": "01-s2v5-confirm-e",
+    "driver_exit": 0,
+    "errors": [],
+    "finished_at": "2026-10-14T02:18:41Z",
+    "git_sha": "f24557aa555987157b5b75049ec1cb1b8e0a81a2",
+    "guest_server_restarts": 0,
+    "infra_failures": {},
+    "infra_gates_pass": true,
+    "labelled_containers_left": [],
+    "leaked_volumes": [],
+    "manifest_sha256": "7f384e7d33bae091775d9baa99dfddb56793c1ae4bb11ca28f1913b1e073159b",
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "qcow2_sha256": [
+     "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42",
+     "51e47abbeed62176aa8d6a60db12c873f4b6c63a90f1e4f3a30514f0d58fdf42"
+    ],
+    "qcow2_unchanged": true,
+    "runner_errors": [],
+    "session_plan_sha256": "6fca02da6794de6ebd04160c97d1770e8ab91e137614b52d774a14c01079d7e8",
+    "session_wall_s": [
+     39.58,
+     41.99,
+     40.57,
+     39.71,
+     39.72
+    ],
+    "source_tree_sha256": "896c46a886a6d1ea8489ae3b2d52f2cb922bee9b5900b4b49ca44462cfe0fa85",
+    "started_at": "2026-10-14T02:14:43Z",
+    "trial_s": {
+     "n": 10,
+     "p50": 9.648,
+     "p95": 10.257,
+     "sum": 97.87
+    }
+   },
+   {
+    "batch_end": [
+     "driver_exit=0 labelled_containers_left=0"
+    ],
+    "boot_s": {
+     "max": 17.284,
+     "n": 5,
+     "p50": 17.226,
+     "p95": 17.284
+    },
+    "boots_ok": 5,
+    "cell_counts": {
+     "FAIL": 0,
+     "FLAKY": 0,
+     "PASS": 2
+    },
+    "cells": [
+     "A"
+    ],
+    "cells_file": null,
+    "containers_removed_all": true,
+    "cycles": 5,
+    "dangling_volumes": [
+     0,
+     0
+    ],
+    "dir": "02-s2v5-confirm-a",
+    "driver_exit": 0,
+    "errors": [],
+    "finished_at": "2026-10-14T02:22:42Z",
+    "git_sha": "f24557aa555987157b5b75049ec1cb1b8e0a81a2",
+    "guest_server_restarts": 0,
+    "infra_failures": {},
+    "infra_gates_pass": true,
+    "labelled_containers_left": [],
+    "leaked_volumes": [],
+    "manifest_sha256": "7ccee621ed7d6245e2da2008f0f6bc5f23c61222902c9725ad545b26fe6d5f80",
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "qcow2_sha256": [
+     "1250098963189effe71fd4e949407f8d8b94543fb192de472ae4572f09c10df2",
+     "1250098963189effe71fd4e949407f8d8b94543fb192de472ae4572f09c10df2"
+    ],
+    "qcow2_unchanged": true,
+    "runner_errors": [],
+    "session_plan_sha256": "6fca02da6794de6ebd04160c97d1770e8ab91e137614b52d774a14c01079d7e8",
+    "session_wall_s": [
+     40.4,
+     40.2,
+     39.98,
+     39.92,
+     42.47
+    ],
+    "source_tree_sha256": "896c46a886a6d1ea8489ae3b2d52f2cb922bee9b5900b4b49ca44462cfe0fa85",
+    "started_at": "2026-10-14T02:18:42Z",
+    "trial_s": {
+     "n": 10,
+     "p50": 9.749,
+     "p95": 10.643,
+     "sum": 99.85
+    }
+   }
+  ],
+  "executor_commit": "f24557aa555987157b5b75049ec1cb1b8e0a81a2",
+  "job": "1291",
+  "slurm": {
+   "EndTime": "2026-10-14T02:22:42",
+   "ExitCode": "0:0",
+   "JobState": "COMPLETED",
+   "RunTime": "00:57:50",
+   "StartTime": "2026-10-14T01:24:52",
+   "SubmitTime": "2026-10-14T01:24:52",
+   "TRES": "cpu=6,mem=9G,node=1,billing=6"
+  },
+  "t_end": "2026-10-14T02:22:42Z",
+  "t_start": "2026-10-14T01:24:53Z"
+ }
+]
