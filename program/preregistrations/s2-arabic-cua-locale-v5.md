@@ -957,6 +957,36 @@ The development confirmation (D96: a pre-freeze gate; it runs before the freeze,
   no target is changed after either job. v5 is then not frozen, and the confirmation's records are
   reported with step 0's and v4's.
 
+The confirmation's result (Slurm 1278 and 1291; records and README
+`program/evidence/2026-10-13/s2v5-confirmation/`): **the reading passes**, on the one attempt.
+- `ap_delta_v5.py confirm-read` over both job directories, run on the host from the export of
+  `f24557aa`, returned "PROCEED to the pre-freeze audit (D96)" with no problem
+  (`confirm-reading.json`). The same command on the Mac, over the committed copies, gave the same
+  output.
+- ER and AR (job 1278, 22:00:33Z to 23:40:05Z on 2026-10-13): each 300 of 300 trials, every one of
+  the 60 entries 5 of 5. Each campaign read its pinned v5 cells file, with its override record.
+  - On ER, `writer:drag_select_word` from (751, 293) to (779, 293) read back "keep Y keep" on 5 of 5
+    cold boots.
+  - On AR, the drag from (751, 294) to (779, 294) read back "keep Y keep" on 5 of 5.
+  - `writer:triple_click_line` at (789, 293) and at (789, 294) read back "X", 5 of 5 each.
+- PL (job 1291, 01:24:52Z to 02:22:42Z on 2026-10-14): 300 of 300, every entry 5 of 5, on q2's cells
+  file. E and A: Writer's two pointer composites at q2's targets, 10 of 10 each.
+- Every campaign counts under q2's section 6.1:
+  - Slurm COMPLETED 0:0, recorded by harness/q2's own end-state watcher;
+  - the batch's end line `driver_exit=0 labelled_containers_left=0`;
+  - the infrastructure gates pass;
+  - the image hashed to its pin before and after;
+  - no guest-server restart and no infrastructure loss.
+  All 50 host snapshots saw no foreign Slurm job. The jobs used about 2.6 VM-h, one VM at a time and
+  CPU only.
+- Scheduling. Both jobs went in on an empty queue after successor E's last session: E4's 4B pair
+  ended at 21:58:06Z. Both used `--no-e-deadline`. Part 2 waited until E's analysis jobs had ended.
+- What it shows:
+  - A drag at the shifted target selects "word" on ER and AR. Step 0 could not make that
+    observation, because it ran q2's targets only.
+  - The full A6 passes on AR and PL, where it had never run before.
+- By the stop rule, the draft goes next to a fresh code review and a fresh pre-freeze audit.
+
 ## Development smoke (dev split only; not Phase 0, not evidence for K0 or K1)
 
 Before the freeze, the derived images are smoke-tested in the VM lane on dev tasks only (purpose
