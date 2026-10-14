@@ -2402,3 +2402,32 @@ the new direction).**
 - These measurements bear directly on G2 and on G1, the alternate on
   hybrid-rollout memory levers. A low-precision recurrent state is a lever to
   test, and it is also a mismatch source to measure.
+
+**D106. G2 pilot (exploratory): the GDN hybrid's train-inference mismatch is
+small, sits at the bf16 noise floor, and does not grow with position at fixed
+entropy.**
+- What ran. Exploratory, 0.44 physical GPU-h. Qwen3.5-4B, a GDN hybrid,
+  generated 72 long reasoning rollouts in vLLM 0.31.0 (MATH-500 level 5,
+  seeds 42-44, up to about 11.5K tokens). They were teacher-forced through an
+  unpacked HF+FLA forward, FLA's recurrent kernel and an fp32 reference.
+  Qwen3-8B was a non-matched dense control. A fresh checker found an
+  entropy-binning bug (a string YAML edge) and several overreaches, all fixed
+  and rerun on the host (`7c4375a7`).
+- Findings:
+  - The rollout-vs-trainer mismatch is small: mean |Δlogp| 0.0076, p99 0.11,
+    k3 2.7e-4, and 0.03% of ratios outside [0.8, 1.25].
+  - Raw mismatch rises about 12% over the first 3K positions, as token
+    entropy rises.
+  - Held at a fixed entropy it falls slightly, by −5.2e-5 per 1K (95% CI
+    [−6.8e-5, −3.5e-5]), robust to finer bins. Within sequences the raw slope
+    includes 0.
+  - vLLM decode and the trainer sit about equally far from fp32.
+  - Every bf16 pair, chunk vs recurrent GDN included, differs by about 0.0075.
+    The design cannot see below that bf16 noise floor, so it does not show
+    that the kernel has no effect.
+  - The dense control cannot carry a hybrid-vs-dense comparison.
+- Reading. Up to 11.5K tokens, the unpacked path shows no
+  position-accumulating drift for the GDN hybrid. Not measured here: the
+  packed varlen trainer path, vLLM prefill, the 9B model and longer contexts.
+  Those, and the GDN state-dtype lever (D105), are the exploratory G2b
+  measurement now running.
