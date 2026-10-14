@@ -191,3 +191,29 @@ def test_entry_points_avoid_archived_names() -> None:
 
     for name in ("run_g2_rollouts", "run_g2_teacher_force", "analyze_g2_pilot"):
         assert submitter.archived_memory_reference(f"scripts/{name}.py") is None
+
+
+def test_merge_tf_inputs() -> None:
+    a = {"experiment_id": "g2-pilot-v1", "git_sha": "a" * 40, "sequences": [{"sequence_id": "x"}]}
+    b = {"experiment_id": "g2-pilot-v1", "git_sha": "b" * 40, "sequences": [{"sequence_id": "y"}]}
+    merged = rollouts.merge_tf_inputs([a, b], "g2-pilot-v1")
+    assert [s["sequence_id"] for s in merged["sequences"]] == ["x", "y"]
+    assert [s["git_sha"] for s in merged["sources"]] == ["a" * 40, "b" * 40]
+    with pytest.raises(g2.G2ConfigError):
+        rollouts.merge_tf_inputs([a, a], "g2-pilot-v1")
+    with pytest.raises(g2.G2ConfigError):
+        rollouts.merge_tf_inputs([dict(a, experiment_id="other")], "g2-pilot-v1")
+
+
+def test_delta_logprobs_and_prompt_subset() -> None:
+    values, missing = rollouts.delta_logprobs([5, 7], [{5: _Lp(-0.5)}, {7: _Lp(-1.0)}])
+    assert values == [-0.5, -1.0] and missing == 0
+    values, missing = rollouts.delta_logprobs([5, 7], [{5: _Lp(-0.5)}])
+    assert missing == 2 and all(math.isnan(v) for v in values)
+    assert rollouts.delta_logprobs([], None) == ([], 0)
+    prompts = g2.load_prompts(g2.load_config())
+    subset = g2.prompt_subset(prompts, 24)
+    assert len(subset) == 24
+    assert [r["prompt_index"] for r in subset] == sorted(r["prompt_index"] for r in subset)
+    assert subset == g2.prompt_subset(prompts, 24)
+    assert g2.prompt_subset(prompts, 64) == prompts

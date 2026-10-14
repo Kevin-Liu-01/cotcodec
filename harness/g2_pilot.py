@@ -88,6 +88,17 @@ def sequence_id(model_id: str, prompt_index: int, seed: int) -> str:
     return f"{model_id}/p{prompt_index:03d}/s{seed}"
 
 
+def prompt_subset(prompts: Sequence[dict[str, Any]], count: int) -> list[dict[str, Any]]:
+    """The first-seed subset of ``count`` prompts: random.Random(42).sample, in index order."""
+
+    import random
+
+    if count >= len(prompts):
+        return list(prompts)
+    chosen = sorted(random.Random(42).sample(range(len(prompts)), count))
+    return [prompts[i] for i in chosen]
+
+
 def rollout_plan(config: dict[str, Any], prompts: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
     """Every (model, seed, prompt) request in submission order: model, then seed, then prompt."""
 
@@ -163,6 +174,11 @@ def verify_model(model_id: str, receipt_root: str) -> dict[str, Any]:
         record[key] = data.get(key)
     if data.get("mode") != "full":
         raise G2ConfigError(f"{model_id}: receipt is not a full snapshot")
+    if model_id == os.environ.get("COTCODEC_MODEL_ID") and receipt_root == "cotcodec-receipts":
+        # The lane verified every file of its primary model before the workload started.
+        record["verified_by"] = "lane (model-verification.txt)"
+        return record
+    record["verified_by"] = "scripts/fetch_open_model.py verify"
     started = time.time()
     result = subprocess.run(
         [

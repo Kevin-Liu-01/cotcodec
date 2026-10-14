@@ -27,6 +27,7 @@ log-prob vLLM sampled it with, and the prefill-time log-prob of the same token.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import gzip
 import json
 import os
@@ -160,73 +161,87 @@ class StopFlag:
         self.event.set()
 
 
-def resolve_request_id(output_id: str, by_engine_id: dict[str, str]) -> str | None:
-    """Map an output's request id to ours (exact, else an engine id with a suffix)."""
+def delta_logprobs(token_ids: list[int], logprobs: Any) -> tuple[list[float], int]:
+    """Sampled-token log-probs of a streamed delta; NaN (counted) where vLLM gave none."""
 
-    if output_id in by_engine_id:
-        return by_engine_id[output_id]
-    for engine_id, ours in by_engine_id.items():
-        if output_id.startswith(engine_id + "-"):
-            return ours
-    return None
+    if not token_ids:
+        return [], 0
+    if logprobs is None or len(logprobs) != len(token_ids):
+        return [float("nan")] * len(token_ids), len(token_ids)
+    values, missing = [], 0
+    for position, token in enumerate(token_ids):
+        entry = logprobs[position].get(token) if logprobs[position] is not None else None
+        if entry is None:
+            values.append(float("nan"))
+            missing += 1
+        else:
+            values.append(float(entry.logprob))
+    return values, missing
 
 
-def drive_engine(
-    llm: Any, items: list[tuple[str, Any, Any]], stop_at: float, flag: StopFlag
-) -> tuple[dict[str, Any], dict[str, Any]]:
-    """Enqueue every request (LLM.enqueue), step the engine until done, the deadline or a
-    signal, and abort what is left. Finished outputs are keyed by our sequence ids."""
+def stream_requests(
+    llm: Any, items: list[tuple[str, Any, Any]], stop_at: float, flag: StopFlag, delta: bool
+) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    """Add every request under our own id (LLMEngine.add_request), step the engine until done,
+    the stop time or a signal, then abort what is left. With ``delta`` the engine streams each
+    step's new tokens and log-probs, so a request cut at the stop time keeps what it sampled."""
 
-    engine_ids = llm.enqueue(
-        [prompt for _, prompt, _ in items], [params for _, _, params in items], use_tqdm=False
-    )
-    if len(engine_ids) != len(items):
-        raise RuntimeError("enqueue returned a different number of request ids")
-    by_engine_id = {str(eid): ours for eid, (ours, _, _) in zip(engine_ids, items, strict=True)}
+    from vllm.sampling_params import RequestOutputKind
+
     engine = llm.llm_engine
-    finished: dict[str, Any] = {}
+    state: dict[str, dict[str, Any]] = {}
+    for ours, prompt, params in items:
+        params.output_kind = RequestOutputKind.DELTA if delta else RequestOutputKind.FINAL_ONLY
+        engine.add_request(ours, prompt, params)
+        state[ours] = {
+            "token_ids": [],
+            "logp": [],
+            "text": [],
+            "finish_reason": None,
+            "stop_reason": None,
+            "finished": False,
+            "prompt_logprobs": None,
+            "missing_logprobs": 0,
+        }
     info: dict[str, Any] = {"aborted": 0, "steps": 0, "stopped_by": None, "unmatched": 0}
     started = time.time()
     while engine.has_unfinished_requests():
         if time.time() >= stop_at or flag.event.is_set():
-            info["stopped_by"] = flag.reason or "deadline"
-            left = [eid for eid, ours in by_engine_id.items() if ours not in finished]
+            info["stopped_by"] = flag.reason or "time budget"
+            left = [ours for ours, st in state.items() if not st["finished"]]
             info["aborted"] = len(left)
             try:
-                engine.abort_request(left)
-            except Exception as exc:  # noqa: BLE001 - recorded; the worker exits anyway
+                engine.abort_request(left, internal=False)
+            except Exception as exc:  # noqa: BLE001 - recorded; the worker saves and exits
                 info["abort_error"] = repr(exc)
             break
         for output in engine.step():
-            if not getattr(output, "finished", False):
-                continue
-            ours = resolve_request_id(str(output.request_id), by_engine_id)
-            if ours is None:
+            st = state.get(str(output.request_id))
+            if st is None:
                 info["unmatched"] += 1
                 continue
-            finished[ours] = output
+            if output.prompt_logprobs is not None and st["prompt_logprobs"] is None:
+                st["prompt_logprobs"] = output.prompt_logprobs
+            if output.outputs:
+                completion = output.outputs[0]
+                ids = [int(t) for t in completion.token_ids]
+                if delta:
+                    values, missing = delta_logprobs(ids, completion.logprobs)
+                    st["token_ids"].extend(ids)
+                    st["logp"].extend(values)
+                    st["missing_logprobs"] += missing
+                    st["text"].append(completion.text or "")
+                else:
+                    st["token_ids"] = ids
+                if output.finished:
+                    st["finish_reason"] = completion.finish_reason
+                    st["stop_reason"] = completion.stop_reason
+            if output.finished:
+                st["finished"] = True
         info["steps"] += 1
     info["wall_s"] = round(time.time() - started, 2)
-    return finished, info
-
-
-def run_requests(
-    llm: Any, items: list[tuple[str, Any, Any]], stop_at: float, flag: StopFlag, log: Any
-) -> tuple[dict[str, Any], dict[str, Any]]:
-    """drive_engine, or LLM.generate when the engine loop fails before any request is queued."""
-
-    try:
-        return drive_engine(llm, items, stop_at, flag)
-    except Exception as exc:  # noqa: BLE001 - fall back only from an empty engine
-        log("engine-loop-error", error=repr(exc))
-        if llm.llm_engine.has_unfinished_requests():
-            raise
-    started = time.time()
-    outputs = llm.generate(
-        [prompt for _, prompt, _ in items], [params for _, _, params in items], use_tqdm=False
-    )
-    finished = {ours: out for (ours, _, _), out in zip(items, outputs, strict=True)}
-    return finished, {"fallback": "LLM.generate", "wall_s": round(time.time() - started, 2)}
+    info["finished"] = sum(1 for st in state.values() if st["finished"])
+    return state, info
 
 
 def worker_main(args: argparse.Namespace) -> int:
@@ -271,8 +286,9 @@ def worker_main(args: argparse.Namespace) -> int:
     sampling = config["sampling"]
     items = []
     meta: dict[str, dict[str, Any]] = {}
+    subset = g2.prompt_subset(prompts, args.prompt_count)
     for seed in model["rollout_seeds"]:
-        for row in prompts:
+        for row in subset:
             seq_id = g2.sequence_id(model_id, row["prompt_index"], seed)
             params = SamplingParams(
                 n=1,
@@ -288,57 +304,58 @@ def worker_main(args: argparse.Namespace) -> int:
                 (seq_id, TokensPrompt(prompt_token_ids=prompt_ids[row["prompt_index"]]), params)
             )
             meta[seq_id] = {"prompt_index": row["prompt_index"], "seed": seed}
-    log("rollouts-start", requests=len(items))
-    finished, info = run_requests(llm, items, args.deadline, flag, log)
-    log("rollouts-done", finished=len(finished), **info)
+    log("rollouts-start", requests=len(items), gen_seconds=args.gen_seconds)
+    gen_stop = min(args.deadline, time.time() + args.gen_seconds)
+    state, info = stream_requests(llm, items, gen_stop, flag, delta=True)
+    log("rollouts-done", **info)
 
     sequences = []
     for seq_id, _, _ in items:
-        output = finished.get(seq_id)
-        if output is None:
+        st = state[seq_id]
+        if not st["token_ids"]:
             continue
-        completion = output.outputs[0]
-        token_ids = [int(t) for t in completion.token_ids]
-        record = {
-            "sequence_id": seq_id,
-            **meta[seq_id],
-            "prompt_ids": prompt_ids[meta[seq_id]["prompt_index"]],
-            "completion_ids": token_ids,
-            "logp_decode": sampled_logprobs(token_ids, completion.logprobs),
-            "finish_reason": completion.finish_reason,
-            "stop_reason": completion.stop_reason,
-            "cumulative_logprob": completion.cumulative_logprob,
-            "text": completion.text,
-        }
-        sequences.append(record)
+        sequences.append(
+            {
+                "sequence_id": seq_id,
+                **meta[seq_id],
+                "prompt_ids": prompt_ids[meta[seq_id]["prompt_index"]],
+                "completion_ids": st["token_ids"],
+                "logp_decode": st["logp"],
+                "finish_reason": st["finish_reason"] if st["finished"] else "cut_at_time_budget",
+                "stop_reason": st["stop_reason"],
+                "missing_logprobs": st["missing_logprobs"],
+                "text": "".join(st["text"]),
+            }
+        )
 
-    # R5: prefill recompute of every finished sequence, deadline permitting.
+    # R5: prefill recompute of every saved sequence, unless skipped or out of time.
     prefill: dict[str, list[float]] = {}
     remaining = args.deadline - time.time()
-    if sequences and remaining > args.prefill_reserve_s and not flag.event.is_set():
-        pre_params = SamplingParams(
-            max_tokens=1,
-            temperature=sampling["temperature"],
-            prompt_logprobs=config["prefill_arm"]["prompt_logprobs"],
-            seed=config["seeds"][0],
-            detokenize=False,
-        )
+    if args.skip_prefill:
+        log("prefill-skipped", reason="--skip-prefill")
+    elif sequences and remaining > args.prefill_reserve_s and not flag.event.is_set():
         pre_items = [
             (
                 "prefill/" + s["sequence_id"],
                 TokensPrompt(prompt_token_ids=s["prompt_ids"] + s["completion_ids"]),
-                pre_params,
+                SamplingParams(
+                    max_tokens=1,
+                    temperature=sampling["temperature"],
+                    prompt_logprobs=config["prefill_arm"]["prompt_logprobs"],
+                    seed=config["seeds"][0],
+                    detokenize=False,
+                ),
             )
             for s in sequences
         ]
         log("prefill-start", requests=len(pre_items))
-        pre_finished, pre_info = run_requests(llm, pre_items, args.deadline, flag, log)
-        log("prefill-done", finished=len(pre_finished), **pre_info)
+        pre_state, pre_info = stream_requests(llm, pre_items, args.deadline, flag, delta=False)
+        log("prefill-done", **pre_info)
         for s in sequences:
-            output = pre_finished.get("prefill/" + s["sequence_id"])
-            if output is not None:
+            pst = pre_state["prefill/" + s["sequence_id"]]
+            if pst["finished"] and pst["prompt_logprobs"] is not None:
                 prefill[s["sequence_id"]] = prefill_logprobs(
-                    len(s["prompt_ids"]), s["completion_ids"], output.prompt_logprobs
+                    len(s["prompt_ids"]), s["completion_ids"], pst["prompt_logprobs"]
                 )
     else:
         log("prefill-skipped", remaining_s=round(remaining, 1), signal=flag.reason)
@@ -383,7 +400,7 @@ def worker_main(args: argparse.Namespace) -> int:
                         "seed",
                         "finish_reason",
                         "stop_reason",
-                        "cumulative_logprob",
+                        "missing_logprobs",
                     )
                 }
                 | {
@@ -413,7 +430,15 @@ def worker_main(args: argparse.Namespace) -> int:
         ],
     )
     log("saved", sequences=len(sequences), prefilled=len(prefill), tokens=offsets[-1])
-    return 0 if len(sequences) == len(items) else 3
+    code = 0 if len(sequences) == len(items) else 3
+    g2.write_json(out / "done.json", {"exit": code, "utc": g2.utc_now()})
+    # vLLM's exit can hang (job 1337): shut the engine core down with a bounded wait, then
+    # leave without interpreter teardown. The driver also kills the process group if needed.
+    closer = threading.Thread(target=lambda: llm.llm_engine.engine_core.shutdown(), daemon=True)
+    closer.start()
+    closer.join(timeout=15)
+    sys.stdout.flush()
+    os._exit(code)
 
 
 # --------------------------------------------------------------------------- driver
@@ -490,18 +515,41 @@ def run_main(args: argparse.Namespace) -> int:
     }
     g2.write_json(out / "summary.json", summary)
     record_environment(out)
-    state = {"child": None, "signal": None}
+    state: dict[str, Any] = {"child": None, "signal": None, "signal_at": None}
 
     def on_signal(signum: int, _frame: Any) -> None:
         state["signal"] = signal.Signals(signum).name
+        state["signal_at"] = time.time()
         child = state["child"]
         if child is not None and child.poll() is None:
-            child.send_signal(signal.SIGTERM)
+            with contextlib.suppress(ProcessLookupError):
+                os.killpg(child.pid, signal.SIGTERM)
 
     signal.signal(signal.SIGUSR1, on_signal)
     signal.signal(signal.SIGTERM, on_signal)
 
-    for index, model_id in enumerate(config["models"]):
+    selected = list(args.models or config["models"])
+    unknown = sorted(set(selected) - set(config["models"]))
+    if unknown:
+        raise g2.G2ConfigError(f"--models names models outside the config: {unknown}")
+    summary["selected_models"] = selected
+    summary["prompt_count"] = args.prompt_count
+    summary["gen_seconds"] = args.gen_seconds
+    summary["skip_prefill"] = args.skip_prefill
+    verifications: dict[str, Any] = {}
+
+    def verify(model_id: str) -> None:
+        try:
+            verifications[model_id] = g2.verify_model(
+                model_id, config["models"][model_id]["receipt_root"]
+            )
+        except Exception as exc:  # noqa: BLE001 - recorded, the model is skipped
+            verifications[model_id] = {"error": repr(exc)}
+
+    threads = {m: threading.Thread(target=verify, args=(m,), daemon=True) for m in selected}
+    for thread in threads.values():
+        thread.start()
+    for index, model_id in enumerate(selected):
         record: dict[str, Any] = {}
         summary["models"][model_id] = record
         remaining = stop_at - time.time()
@@ -510,13 +558,10 @@ def run_main(args: argparse.Namespace) -> int:
             record["status"] = "skipped"
             record["reason"] = state["signal"] or f"remaining {remaining:.0f} s < {minimum:.0f} s"
             continue
-        try:
-            record["verification"] = g2.verify_model(
-                model_id, config["models"][model_id]["receipt_root"]
-            )
-        except Exception as exc:  # noqa: BLE001 - recorded, the model is skipped
+        threads[model_id].join()
+        record["verification"] = verifications.get(model_id)
+        if "error" in (record["verification"] or {"error": "missing"}):
             record["status"] = "verification-failed"
-            record["error"] = repr(exc)
             continue
         argv = [
             sys.executable,
@@ -528,21 +573,49 @@ def run_main(args: argparse.Namespace) -> int:
             str(out),
             "--deadline",
             f"{stop_at:.3f}",
+            "--gen-seconds",
+            f"{args.gen_seconds:.0f}",
+            "--prompt-count",
+            str(args.prompt_count),
         ]
+        if args.skip_prefill:
+            argv.append("--skip-prefill")
         record["argv"] = argv
         record["started_at"] = g2.utc_now()
         started = time.time()
         with (out / f"worker-{model_id}.log").open("w", encoding="utf-8") as logfile:
-            child = subprocess.Popen(argv, env=env, stdout=logfile, stderr=subprocess.STDOUT)
+            child = subprocess.Popen(
+                argv, env=env, stdout=logfile, stderr=subprocess.STDOUT, start_new_session=True
+            )
             state["child"] = child
+            done_marker = out / model_id / "done.json"
+            done_seen: float | None = None
             while child.poll() is None:
-                if time.time() > stop_at + 90:
-                    child.kill()
+                now = time.time()
+                if done_seen is None and done_marker.is_file():
+                    done_seen = now
+                hung = done_seen is not None and now - done_seen > 25
+                late = now > stop_at + 90
+                after_signal = state["signal_at"] is not None and now - state["signal_at"] > 40
+                if hung or late or after_signal:
+                    record["killed"] = "hung after done" if hung else "late" if late else "signal"
+                    with contextlib.suppress(ProcessLookupError):
+                        os.killpg(child.pid, signal.SIGKILL)
+                    child.wait(timeout=30)
+                    break
                 time.sleep(1.0)
             state["child"] = None
+            # Leftover engine processes of the worker's session, if any.
+            with contextlib.suppress(ProcessLookupError, PermissionError):
+                os.killpg(child.pid, signal.SIGKILL)
         record["exit"] = child.returncode
         record["wall_s"] = round(time.time() - started, 1)
-        record["status"] = {0: "complete", 3: "partial"}.get(child.returncode, "failed")
+        done = out / model_id / "done.json"
+        saved = json.loads(done.read_text()) if done.is_file() else None
+        record["worker_done"] = saved
+        record["status"] = (
+            "failed" if saved is None else {0: "complete", 3: "partial"}.get(saved["exit"], "failed")
+        )
         release_until = time.time() + 120
         while time.time() < release_until:
             used = gpu_memory_used_mib()
@@ -554,7 +627,7 @@ def run_main(args: argparse.Namespace) -> int:
 
     # The teacher-forcing input: every saved sequence of every model, in model order.
     merged = []
-    for model_id in config["models"]:
+    for model_id in selected:
         path = out / model_id / "tf-sequences.json"
         if path.is_file():
             merged.extend(json.loads(path.read_text(encoding="utf-8")))
@@ -576,6 +649,45 @@ def run_main(args: argparse.Namespace) -> int:
         )
     statuses = [m.get("status") for m in summary["models"].values()]
     return 0 if all(s == "complete" for s in statuses) else 3
+
+
+def merge_tf_inputs(parts: list[dict[str, Any]], experiment_id: str) -> dict[str, Any]:
+    """One teacher-forcing input from several rollout jobs' tf-input.json files (CPU)."""
+
+    sequences: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    sources = []
+    for part in parts:
+        if part.get("experiment_id") != experiment_id:
+            raise g2.G2ConfigError("a tf-input belongs to another experiment")
+        for seq in part["sequences"]:
+            if seq["sequence_id"] in seen:
+                raise g2.G2ConfigError(f"duplicate sequence {seq['sequence_id']}")
+            seen.add(seq["sequence_id"])
+            sequences.append(seq)
+        sources.append({"git_sha": part.get("git_sha"), "sequences": len(part["sequences"])})
+    return {"experiment_id": experiment_id, "git_sha": sources[0]["git_sha"], "sources": sources,
+            "sequences": sequences}  # fmt: skip
+
+
+def merge_main(args: argparse.Namespace) -> int:
+    config = g2.load_config()
+    parts = []
+    for path in args.inputs:
+        raw = Path(path).read_bytes()
+        part = json.loads(raw)
+        part["_sha256"] = g2.sha256_bytes(raw)
+        parts.append(part)
+    merged = merge_tf_inputs(parts, config["experiment_id"])
+    for source, part in zip(merged["sources"], parts, strict=True):
+        source["sha256"] = part["_sha256"]
+    out = Path(args.output)
+    if out.exists():
+        raise g2.G2ConfigError("refusing to overwrite the merged tf-input")
+    g2.write_json(out, merged)
+    print(json.dumps({"sequences": len(merged["sequences"]), "sha256": g2.sha256_file(out),
+                      "sources": merged["sources"]}, sort_keys=True))  # fmt: skip
+    return 0
 
 
 # --------------------------------------------------------------------------- selftest
@@ -634,11 +746,21 @@ def main() -> int:
     run.add_argument("--output-dir", required=True)
     run.add_argument("--allocation-minutes", type=float, required=True)
     run.add_argument("--min-model-s", type=float, default=240.0)
+    run.add_argument("--models", nargs="+", default=None)
+    run.add_argument("--prompt-count", type=int, default=64)
+    run.add_argument("--gen-seconds", type=float, default=1e9)
+    run.add_argument("--skip-prefill", action="store_true")
+    merge = sub.add_parser("merge", allow_abbrev=False)
+    merge.add_argument("--inputs", nargs="+", required=True)
+    merge.add_argument("--output", required=True)
     worker = sub.add_parser("worker", allow_abbrev=False)
     worker.add_argument("--model", required=True)
     worker.add_argument("--output-dir", required=True)
     worker.add_argument("--deadline", type=float, required=True)
     worker.add_argument("--prefill-reserve-s", type=float, default=60.0)
+    worker.add_argument("--gen-seconds", type=float, default=1e9)
+    worker.add_argument("--prompt-count", type=int, default=64)
+    worker.add_argument("--skip-prefill", action="store_true")
     args = parser.parse_args()
     if args.command == "plan":
         print(json.dumps(build_plan(g2.load_config()), indent=2, sort_keys=True))
@@ -647,6 +769,8 @@ def main() -> int:
         return selftest_main(args)
     if args.command == "run":
         return run_main(args)
+    if args.command == "merge":
+        return merge_main(args)
     return worker_main(args)
 
 

@@ -85,6 +85,19 @@ teacher_force:
   lm_head_chunk: 2048
   # Entropy is computed from each path's full-vocabulary distribution in fp32.
 
+# Scope actually run (set by the job argv, recorded in each job's summary). Rollout job 1337
+# (all 64 prompts, no time budget) returned no data: every finished output was dropped by a
+# request-id mismatch and the worker hung at exit; it used 0.2114 GPU-h. What was left of the
+# 0.5 GPU-h cap fits a reduced second attempt: 24 of the 64 prompts (g2.prompt_subset:
+# random.Random(42).sample, in index order), a 120 s generation budget per model (requests
+# still running are kept, cut at the budget, from vLLM's streamed deltas), and no prefill arm
+# (R5); R3 (FLA fused_recurrent) is the attribution arm, on the first seed's rollouts.
+pilot_run:
+  prompt_count: 24
+  gen_seconds: 120
+  skip_prefill: true
+  r3_rollout_seeds: [42]
+
 # Slurm limits (minutes, 1 H100 each). The drivers stop starting work before the limit.
 budget:
   total_physical_gpu_hours: 0.5

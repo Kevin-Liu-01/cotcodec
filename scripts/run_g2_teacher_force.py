@@ -302,7 +302,16 @@ def run_main(args: argparse.Namespace) -> int:
     verifier.start()
     device = "cuda"
     exit_code = 0
-    for model_id, model_cfg in config["models"].items():
+    selected = list(args.models or config["models"])
+    if set(selected) - set(config["models"]):
+        raise g2.G2ConfigError("--models names models outside the config")
+    path_seeds = {"r4_torch_fp32": fp32_seeds}
+    if args.r3_rollout_seeds:
+        path_seeds["r3_fla_recurrent_bf16"] = set(args.r3_rollout_seeds)
+    summary["selected_models"] = selected
+    summary["path_seeds"] = {k: sorted(v) for k, v in path_seeds.items()}
+    for model_id in selected:
+        model_cfg = config["models"][model_id]
         sequences = [s for s in tf_input["sequences"] if s["model_id"] == model_id]
         record: dict[str, Any] = {"sequences": len(sequences), "paths": {}}
         summary["models"][model_id] = record
@@ -342,7 +351,7 @@ def run_main(args: argparse.Namespace) -> int:
             p0 = time.time()
             status = "complete"
             for index, seq in enumerate(sequences):
-                if path == "r4_torch_fp32" and seq["seed"] not in fp32_seeds:
+                if path in path_seeds and seq["seed"] not in path_seeds[path]:
                     continue
                 if stop.event.is_set() or time.time() > stop_at:
                     status = "stopped: " + (stop.reason or "deadline")
@@ -494,6 +503,8 @@ def main() -> int:
     run.add_argument("--expected-evidence-sha256", required=True)
     run.add_argument("--output-dir", required=True)
     run.add_argument("--allocation-minutes", type=float, required=True)
+    run.add_argument("--models", nargs="+", default=None)
+    run.add_argument("--r3-rollout-seeds", type=int, nargs="+", default=None)
     args = parser.parse_args()
     if args.command == "plan":
         config = g2.load_config()
