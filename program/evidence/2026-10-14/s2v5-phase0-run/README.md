@@ -130,6 +130,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1299 | K1 A5 on E (boot reset and hygiene: 21 cold boots) | 192 | 10:46:09 | 10:46:09-11:03:24 (17.3 min) | COMPLETED 0:0 | A5 pass; the campaign counts |
 | 1300 | K1 A6 on E (cross-app canary: Writer, Chrome, VS Code, GNOME Terminal; seed 43; q2's targets) | 222 | 11:04:39 | 11:04:39-11:54:25 (49.8 min) | COMPLETED 0:0 | A6 pass (300 of 300, all 60 entries 5 of 5); the campaign counts |
 | 1301 | K1 C1 on A (H-GA-buggy, H-OSW-up; seed 42) | 154 | 11:55:21 | 11:55:21-12:01:48 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count |
+| 1302 | K1 C2 on A (L0-raw, seed 45) | 362 | 12:02:39 | 12:02:39-12:12:50 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -224,6 +225,16 @@ and the last `scontrol` record):
   boots at most 17.3 s; step p95 1.39 s and 1.22 s. `ap_delta_v5.verdict` on this job: C1 on A
   `pass`, no problem. Both campaigns count (driver exit 0, `infra_gates_pass`, image unchanged, no
   labelled container; no foreign-abort or snapshot problem).
+- **1302 (C2, A).** Host snapshot: load 0.58, queue empty, 0 labelled containers. One L0-raw
+  campaign (seed 45): 9 sessions, 500 trials, 454 passed, as on E. `ap_delta_v5.verdict` on this
+  job (C2's own reading, `acceptance.c2`): C2 on A `pass`, no problem, so the entries that are not
+  PASS 5 of 5 are exactly `l0_raw_prediction_v2.yaml`'s 8. By the trials' plain `pass` field
+  (`summary-1302.jsonl`, not C2's criterion): those 8 entries 0 of 5, and `seq_type_chord_type` 1
+  of 5, `type_shell_hostile` and `type_symbols_shifted` 4 of 5; 20 trials, all on the four
+  window-manager chords (`chord_alt_tab`, `chord_alt_f4`, `chord_super_d`,
+  `chord_ctrl_alt_shift_r`, 5 each), carry a state-not-observed mark; 0 guest-server restarts.
+  Cold boots at most 17.3 s; step p95 1.19 s. Driver exit 0, `infra_gates_pass` true, image
+  unchanged, no labelled container left; no counting, foreign-abort or snapshot problem.
 
 ## Stint 1 stop (operator's record, 10:44Z on 2026-10-14)
 
