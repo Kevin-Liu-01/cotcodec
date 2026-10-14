@@ -1,0 +1,28 @@
+JobId=1354 JobName=g2b-srccheck-cpu
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900406 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:17 TimeLimit=00:08:00 TimeMin=N/A
+   SubmitTime=2026-10-14T21:58:45 EligibleTime=2026-10-14T21:58:45
+   AccrueTime=2026-10-14T21:58:45
+   StartTime=2026-10-14T21:58:46 EndTime=2026-10-14T21:59:03 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-14T21:58:46 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:792790
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=4 NumTasks=1 CPUs/Task=4 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=4,mem=16G,node=1,billing=4
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=4 MinMemoryNode=16G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/g2b-state-dtype/ops/srccheck-cpu.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/stage0/g2b-state-dtype
+   StdErr=/home/kevin/cotcodec-runs/stage0/g2b-state-dtype/source-check/slurm-1354.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/g2b-state-dtype/source-check/slurm-1354.out
+   Power=
+   
+

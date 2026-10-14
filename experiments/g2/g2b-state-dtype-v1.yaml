@@ -1,0 +1,170 @@
+# G2b (EXPLORATORY): does a bfloat16 gated-DeltaNet (GDN) recurrent state in vLLM 0.31.0
+# (a) raise maximum concurrency and throughput for hybrid rollouts on one H100, and (b) change
+# the per-token log-prob mismatch against the HF+FLA trainer, by token position up to 16-32K?
+#
+# EXPLORATORY. Not a registered experiment: no preregistration, no decision rule, no
+# confirmatory claim. It follows D105 (inference-baseline-v1: vLLM keeps the GDN state in the
+# checkpoint's float32 mamba_ssm_dtype, 49-61 MiB per sequence) and the G2 pilot (D104).
+# Cap: 3.0 physical GPU-h in all, image builds and smoke runs included.
+#
+# The setting (vLLM 0.31.0, read-only source check, program/evidence/2026-10-15/
+# g2b-state-dtype/source-check/): CacheConfig.mamba_ssm_cache_dtype, MambaDType = Literal["auto",
+# "float32", "float16", "bfloat16"] (config/cache.py:61, :186), CLI --mamba-ssm-cache-dtype
+# (engine/arg_utils.py:1365). "auto" copies the checkpoint's mamba_ssm_dtype (float32 for all
+# three models; models/config.py:829-832). The convolution state stays in the model dtype (bf16).
+#
+# Jobs (docker-research lane, one H100 each):
+#   R+S   scripts/run_g2b_rollouts.py run, vLLM overlay, one per model x state dtype:
+#         phase R, long reasoning rollouts with streamed sampled-token log-probs and engine stats;
+#         phase S, fixed-length saturation waves (one per seed) for concurrency and throughput.
+#   P     scripts/run_g2b_rollouts.py prefill, vLLM overlay, one per model: both state dtypes
+#         recompute every rollout of both arms with prompt_logprobs (paired).
+#   TF    scripts/run_g2b_teacher_force.py run, research overlay, one per model: HF+FLA unpacked
+#         (r1), packed varlen cu_seqlens (r2) and an fp32 reference (r4) on the same tokens.
+# scripts/analyze_g2b_state_dtype.py (CPU) joins them.
+schema_version: 1
+experiment_id: g2b-state-dtype-v1
+claim_level: exploratory
+
+# Declared before the run. Phase R samples every prompt once per seed (per-request vLLM seed =
+# the seed); phase S runs one wave per seed. The engine seed is the first one.
+seeds: [42, 43, 44]
+
+# The G2 pilot's prompt file (64 MATH-500 level-5 problems, MIT), unchanged.
+prompts:
+  file: experiments/g2/prompts-math500-l5-64.jsonl
+  sha256: "2492b1c0147b118e8644e2e2581211169b18875ced290a149b24f9acc4ea4dd7"
+  count: 64
+  source:
+    dataset: HuggingFaceH4/MATH-500
+    file: test.jsonl
+    revision: "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be"
+    sha256: "35dc41080a3680858b27fa7e0533d2d547825316fc5dafe5d316f4ccc5a06132"
+    bytes: 446564
+    license: MIT
+    selection: "level 5 only (134), sorted by unique_id, random.Random(42).sample(range(134), 64), re-sorted"
+  user_suffix: "\nPlease reason step by step, and put your final answer within \\boxed{}."
+  enable_thinking: true
+
+models:
+  qwen3.5-4b:
+    family: gdn-attention-hybrid
+    revision: "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+    receipt_root: cotcodec-receipts
+    hf_class: Qwen3_5ForConditionalGeneration
+    gdn_layers: 24
+    attention_layers: 8
+    arms: [mismatch, concurrency]
+  qwen3.5-9b:
+    family: gdn-attention-hybrid
+    revision: "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+    receipt_root: cotcodec-receipts
+    hf_class: Qwen3_5ForConditionalGeneration
+    gdn_layers: 24
+    attention_layers: 8
+    arms: [mismatch, concurrency]
+  qwen3.6-35b-a3b:
+    family: gdn-attention-hybrid-moe
+    revision: "995ad96eacd98c81ed38be0c5b274b04031597b0"
+    receipt_root: cotcodec-receipts
+    hf_class: Qwen3_5MoeForConditionalGeneration
+    gdn_layers: 30
+    attention_layers: 10
+    arms: [concurrency]
+
+# The two arms. "auto" is vLLM's default, which resolves to the checkpoint's float32.
+state_dtypes:
+  fp32: auto
+  bf16: bfloat16
+
+# GDN state geometry (config.json of all three checkpoints): 32 value heads x 128 x 128 recurrent
+# state per layer, convolution state (2 x 16 x 128 + 32 x 128) x 3 in bf16.
+gdn_state:
+  num_v_heads: 32
+  head_k_dim: 128
+  head_v_dim: 128
+  conv_dim: 8192
+  conv_width_minus_1: 3
+
+# Rollout engines (phases R and S), as in inference-baseline-v1 where it applies.
+engine:
+  dtype: bfloat16
+  max_model_len: 33536
+  gpu_memory_utilization: 0.90
+  max_num_seqs: 512
+  max_num_batched_tokens: 8192
+  enable_prefix_caching: false
+  logprobs_mode: raw_logprobs
+  limit_mm_per_prompt: {image: 0, video: 0}
+  disable_log_stats: false
+# The one-GPU MoE: inference-baseline-v1 job e refused max_num_seqs 256 with a float32 state
+# (181 GDN-state blocks); job h ran with 128. Both arms use 128.
+engine_overrides:
+  qwen3.6-35b-a3b:
+    max_num_seqs: 128
+
+# Phase R: long reasoning rollouts, all requests submitted at once.
+rollouts:
+  prompt_count: 24  # g2.prompt_subset: the G2 pilot's 24 prompts
+  sampling:
+    temperature: 1.0
+    top_p: 1.0
+    top_k: 0
+    max_tokens: 32768
+    logprobs: 0
+  gen_seconds:
+    qwen3.5-4b: 450
+    qwen3.5-9b: 570
+    qwen3.6-35b-a3b: 180
+  # The MoE runs phase R on the first seed only, with more prompts and a shorter cap: it is a
+  # concurrency measurement on a tiny block pool, not a mismatch arm.
+  moe_prompt_count: 64
+  moe_seeds: [42]
+  moe_max_tokens: 16384
+  stats_interval_s: 0.5
+
+# Phase S: one saturation wave per seed: every prompt x requests_per_prompt, fixed output length
+# (ignore_eos), so both arms do identical work. Request seed = seed * 1e6 + prompt_index * 100 + j.
+saturation:
+  requests_per_prompt:
+    qwen3.5-4b: 8
+    qwen3.5-9b: 8
+    qwen3.6-35b-a3b: 2
+  output_tokens:
+    qwen3.5-4b: 2048
+    qwen3.5-9b: 2048
+    qwen3.6-35b-a3b: 1024
+  temperature: 1.0
+  logprobs: 0
+  wave_timeout_s: 240
+
+# Phase P (prefill job): every rollout of both arms as a prompt, max_tokens 1, prompt_logprobs 0,
+# once per state dtype. Smaller batches and more headroom for the prompt log-prob tensors.
+prefill:
+  prompt_logprobs: 0
+  engine_overrides:
+    gpu_memory_utilization: 0.80
+    max_num_batched_tokens: 4096
+    max_num_seqs: 16
+
+teacher_force:
+  lm_head_chunk: 2048
+  # r2 (packed varlen) on the first seed's rollouts of both arms; packs of at most pack_tokens,
+  # filled greedily in sequence order. r4 (fp32) on the first seed and the first r4_prompts
+  # prompts of the subset, both arms.
+  r2_seeds: [42]
+  pack_tokens: 65536
+  r4_seeds: [42]
+  r4_prompts: 16
+
+analysis:
+  position_bin: 1024
+  # Write exponents with a sign (1.0e+9): YAML 1.1 reads 1.0e9 as a string (G2 pilot fix).
+  entropy_edges: [0.0, 0.01, 0.1, 0.5, 1.0, 2.0, 1.0e+9]
+  ratio_band: [0.8, 1.25]
+  bootstrap_reps: 2000
+  bootstrap_seed: 42
+  concurrency_lengths: [1024, 2048, 4096, 8192, 16384, 32768]
+
+budget:
+  total_physical_gpu_hours: 3.0
