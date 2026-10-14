@@ -40,8 +40,14 @@ for whatever gains actual results"; D80). Under that delegation:
 - S2 is given up (D103): v5 (row 22) was stopped during Phase 0 K1 by Kevin's
   decision, with no result. L1 (D102) was dropped during discovery.
 - **New directions (D103):** agent-memory causality, and GPU memory and
-  acceleration for inference and RL. A question sweep is running, and the top
-  candidates then go through the gauntlet.
+  acceleration for inference and RL.
+  - The sweep (D104) picked **G2** as the lead: the train-inference mismatch
+    of GDN hybrids (Qwen3.5) by token position, vLLM vs HF+FLA, about 3 GPU-h.
+    Its exploratory pilot is running (`stage0/g2-pilot`).
+  - **AM1** is the memory lead: exact credit tables for agent memory on
+    LongMemEval.
+  - An exploratory inference baseline on the H100s is running
+    (`stage0/inference-baseline`).
 - The public-history purge ran (D99). Old commit ids resolve through
   `program/history-rewrite-2026-10-14/` (the map plus an 11-row supplement,
   D100). No GitHub Support request (D101).
@@ -57,7 +63,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 22 rows). Decisions taken
-on Kevin's behalf are D1-D103 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D104 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
