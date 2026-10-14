@@ -344,3 +344,7 @@ and the last `scontrol` record):
   `k0_v4.decide` (K0).
 - Observed durations on A, as on E: C1 6.5 min, C2 10.2 min, C3 parts 56.6, 56.6 and 43.4 min,
   A1 87.2 min; on E, A5 17.3 min and A6 49.8 min.
+
+## Stopped by the program owner (2026-10-14, D103)
+
+At 18:41Z on 2026-10-14 Kevin decided to give S2 up: "if its unlikely to result in anything meaningful, give up". K1 job 1309 (A6 on A) was running. It was cancelled with `scancel` at about 18:41Z. The lane stopped on TERM and removed its own containers: 0 labelled containers were left, and the queue was empty afterwards. Job 1309 is not counted and was not collected. The K1 jobs completed and collected before the stop are recorded above. No K1 verdict, census, oracle or K0 was run. S2 v5 ends here with no result (D103).
