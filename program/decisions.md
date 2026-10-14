@@ -2342,3 +2342,34 @@ acceleration for inference/rl".
   the research gauntlet. Everything runs one agent at a time (Kevin's Mac),
   and the H100 node is used for real measurements as early as the gauntlet
   allows.
+
+**D104. Question sweep result: G2 is the overall and GPU lead, AM1 the memory
+lead.** The D103 sweep (`program/evidence/2026-10-14/question-sweep-memory-gpu/dossier.md`,
+`ranking.json`) ran one agent at a time: a context reader, a memory scout and
+a GPU scout (14 candidates), a kill-shot verifier, three independent judges,
+and a synthesis using the 2026-10-11 renewal gates.
+- Verifier verdicts. Occupied: AM5, AM7, G3 and G6. Narrowed: AM1, AM2, AM6
+  and G4. Still open: AM3, AM4, G1, G2 and G5. AM3, G4 and G5 fail the
+  correctness gate.
+- **G2, the lead**, ranked 1. It measures the train-inference mismatch of
+  Gated-DeltaNet hybrids by token position:
+  - per-token log-prob mismatch between vLLM rollouts and the HF+FLA trainer,
+    for Qwen3.5-4B and 9B against dense controls, up to 16K tokens;
+  - the cause attributed by teacher forcing: chunk vs recurrent GDN, packing,
+    an fp32 reference, and vLLM prefill;
+  - stock libraries and models already on the host, about 3 GPU-h (cap 4).
+  It matters because train-inference mismatch drives RL instability, GDN
+  hybrids are the open RL model class, and the mismatch studies found so far
+  used dense or MoE models.
+- **AM1, the memory lead**, ranked 3. It builds exact subset outcome tables
+  for agent-memory credit on LongMemEval-S, with a bit-exact Qwen3-8B reader,
+  and folds in AM2's placebo arms and AM6's internal signals. It needs a D1
+  fetch and 2-3 days of harness work.
+- G1 is the GPU alternate: memory levers for hybrid-model rollouts, which
+  absorbs G4's quantized-KV arms.
+- Process. G2 runs an exploratory pilot of about 0.5 GPU-h now. That pilot is
+  the gauntlet's executable pilot. Its GPU jobs are submitted only when the
+  exploratory inference baseline has no job running, so they do not perturb
+  its timings. A compact gauntlet wave on G2 follows with the pilot in hand,
+  then G2's registered measurement. AM1 starts after G2's pilot, one agent at
+  a time.
