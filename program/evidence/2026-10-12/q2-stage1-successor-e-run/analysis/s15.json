@@ -1,0 +1,1142 @@
+{
+ "cost_card_prices": {
+  "by_size": {
+   "4B": {
+    "episodes": 904,
+    "gpu_h_per_episode": 0.002698,
+    "jobs": [
+     "E-4B-E1",
+     "E-4B-E2",
+     "E-4B-E3",
+     "E-4B-E4"
+    ],
+    "vm_h_per_episode": 0.048888
+   },
+   "9B": {
+    "episodes": 904,
+    "gpu_h_per_episode": 0.002916,
+    "jobs": [
+     "E-9B-E1",
+     "E-9B-E2",
+     "E-9B-E3",
+     "E-9B-E4"
+    ],
+    "vm_h_per_episode": 0.05223
+   }
+  },
+  "jobs": {
+   "E-4B-E1": {
+    "V": 20,
+    "gpu_h_per_episode": 0.0027,
+    "price_central": 0.00902,
+    "price_high": 0.011274,
+    "ratio_to_central": 0.2993,
+    "ratio_to_high": 0.2395,
+    "vm_h_per_episode": 0.049015
+   },
+   "E-4B-E2": {
+    "V": 20,
+    "gpu_h_per_episode": 0.002659,
+    "price_central": 0.00902,
+    "price_high": 0.011274,
+    "ratio_to_central": 0.2948,
+    "ratio_to_high": 0.2359,
+    "vm_h_per_episode": 0.048665
+   },
+   "E-4B-E3": {
+    "V": 20,
+    "gpu_h_per_episode": 0.002756,
+    "price_central": 0.00902,
+    "price_high": 0.011274,
+    "ratio_to_central": 0.3055,
+    "ratio_to_high": 0.2445,
+    "vm_h_per_episode": 0.048977
+   },
+   "E-4B-E4": {
+    "V": 20,
+    "gpu_h_per_episode": 0.002677,
+    "price_central": 0.00902,
+    "price_high": 0.011274,
+    "ratio_to_central": 0.2968,
+    "ratio_to_high": 0.2374,
+    "vm_h_per_episode": 0.048894
+   },
+   "E-9B-E1": {
+    "V": 20,
+    "gpu_h_per_episode": 0.00294,
+    "price_central": 0.00902,
+    "price_high": 0.011274,
+    "ratio_to_central": 0.3259,
+    "ratio_to_high": 0.2608,
+    "vm_h_per_episode": 0.052433
+   },
+   "E-9B-E2": {
+    "V": 20,
+    "gpu_h_per_episode": 0.003,
+    "price_central": 0.00902,
+    "price_high": 0.011274,
+    "ratio_to_central": 0.3326,
+    "ratio_to_high": 0.2661,
+    "vm_h_per_episode": 0.052331
+   },
+   "E-9B-E3": {
+    "V": 20,
+    "gpu_h_per_episode": 0.002865,
+    "price_central": 0.00902,
+    "price_high": 0.011274,
+    "ratio_to_central": 0.3176,
+    "ratio_to_high": 0.2541,
+    "vm_h_per_episode": 0.052496
+   },
+   "E-9B-E4": {
+    "V": 20,
+    "gpu_h_per_episode": 0.002859,
+    "price_central": 0.00902,
+    "price_high": 0.011274,
+    "ratio_to_central": 0.317,
+    "ratio_to_high": 0.2536,
+    "vm_h_per_episode": 0.051661
+   }
+  }
+ },
+ "first_divergence": {
+  "first_divergence": {
+   "between": {
+    "environment": 2712
+   },
+   "within": {}
+  },
+  "first_divergence_by_size": {
+   "4B": {
+    "between": {
+     "environment": 1356
+    },
+    "within": {}
+   },
+   "9B": {
+    "between": {
+     "environment": 1356
+    },
+    "within": {}
+   }
+  },
+  "note": "descriptive: the guest's top-bar clock is on every screenshot, so nearly every pair parts at step 1 as 'environment' (S1a section 9 item 11)",
+  "set": "E's tasks; scored final records; the final attempt's steps.jsonl in its own job's run directory; every pair is between sessions (one episode per session)",
+  "step_logs_missing": 0,
+  "step_logs_missing_slots": [],
+  "step_logs_read": 1808
+ },
+ "host_snapshots": {
+  "E-4B-E1": {
+   "snapshots": [
+    {
+     "block": "start",
+     "containers_running_total": 1,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "0.68",
+      "5.09",
+      "7.78"
+     ],
+     "t": 1791781796.3933873
+    },
+    {
+     "block": "e1",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "2.10",
+      "4.40",
+      "7.25"
+     ],
+     "t": 1791781901.5557926
+    },
+    {
+     "block": "end",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "2.55",
+      "7.94",
+      "10.26"
+     ],
+     "t": 1791783991.0557942
+    }
+   ],
+   "snapshots_with_foreign_running_job": 0
+  },
+  "E-4B-E2": {
+   "snapshots": [
+    {
+     "block": "start",
+     "containers_running_total": 1,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "0.23",
+      "2.90",
+      "6.51"
+     ],
+     "t": 1791830201.846085
+    },
+    {
+     "block": "e1",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "1.00",
+      "2.40",
+      "5.94"
+     ],
+     "t": 1791830308.5068595
+    },
+    {
+     "block": "end",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "3.11",
+      "8.35",
+      "9.84"
+     ],
+     "t": 1791832365.1418335
+    }
+   ],
+   "snapshots_with_foreign_running_job": 0
+  },
+  "E-4B-E3": {
+   "snapshots": [
+    {
+     "block": "start",
+     "containers_running_total": 1,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "5.71",
+      "6.57",
+      "8.66"
+     ],
+     "t": 1791878322.7765052
+    },
+    {
+     "block": "e1",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "2.02",
+      "5.01",
+      "7.87"
+     ],
+     "t": 1791878430.4422472
+    },
+    {
+     "block": "end",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "1.10",
+      "7.04",
+      "9.97"
+     ],
+     "t": 1791880564.998654
+    }
+   ],
+   "snapshots_with_foreign_running_job": 0
+  },
+  "E-4B-E4": {
+   "snapshots": [
+    {
+     "block": "start",
+     "containers_running_total": 1,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "0.75",
+      "4.76",
+      "7.59"
+     ],
+     "t": 1791926506.1914945
+    },
+    {
+     "block": "e1",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "1.11",
+      "3.73",
+      "6.91"
+     ],
+     "t": 1791926610.854304
+    },
+    {
+     "block": "end",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "2.63",
+      "7.95",
+      "9.96"
+     ],
+     "t": 1791928681.5500314
+    }
+   ],
+   "snapshots_with_foreign_running_job": 0
+  },
+  "E-9B-E1": {
+   "snapshots": [
+    {
+     "block": "start",
+     "containers_running_total": 1,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "0.06",
+      "0.04",
+      "0.42"
+     ],
+     "t": 1791779320.011209
+    },
+    {
+     "block": "e1",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "1.02",
+      "0.43",
+      "0.52"
+     ],
+     "t": 1791779432.1818616
+    },
+    {
+     "block": "end",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "1.54",
+      "6.67",
+      "8.50"
+     ],
+     "t": 1791781709.116212
+    }
+   ],
+   "snapshots_with_foreign_running_job": 0
+  },
+  "E-9B-E2": {
+   "snapshots": [
+    {
+     "block": "start",
+     "containers_running_total": 1,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "0.01",
+      "0.02",
+      "0.00"
+     ],
+     "t": 1791827588.1546
+    },
+    {
+     "block": "e1",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "1.08",
+      "0.45",
+      "0.16"
+     ],
+     "t": 1791827702.3250635
+    },
+    {
+     "block": "end",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "0.50",
+      "5.11",
+      "7.84"
+     ],
+     "t": 1791830026.948433
+    }
+   ],
+   "snapshots_with_foreign_running_job": 0
+  },
+  "E-9B-E3": {
+   "snapshots": [
+    {
+     "block": "start",
+     "containers_running_total": 1,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "0.01",
+      "0.01",
+      "0.00"
+     ],
+     "t": 1791875883.5020056
+    },
+    {
+     "block": "e1",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "1.85",
+      "0.82",
+      "0.31"
+     ],
+     "t": 1791875995.6746325
+    },
+    {
+     "block": "end",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "2.53",
+      "7.87",
+      "9.34"
+     ],
+     "t": 1791878211.7045915
+    }
+   ],
+   "snapshots_with_foreign_running_job": 0
+  },
+  "E-9B-E4": {
+   "snapshots": [
+    {
+     "block": "start",
+     "containers_running_total": 1,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "0.03",
+      "0.03",
+      "0.00"
+     ],
+     "t": 1791924088.8700085
+    },
+    {
+     "block": "e1",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "1.22",
+      "0.49",
+      "0.18"
+     ],
+     "t": 1791924201.0438097
+    },
+    {
+     "block": "end",
+     "containers_running_total": 2,
+     "foreign_jobs": 0,
+     "foreign_running": 0,
+     "loadavg": [
+      "1.69",
+      "6.42",
+      "8.37"
+     ],
+     "t": 1791926411.927455
+    }
+   ],
+   "snapshots_with_foreign_running_job": 0
+  }
+ },
+ "labels": {
+  "external_anchor": "not externally anchored",
+  "incomplete": null,
+  "incomplete_reasons": []
+ },
+ "losses_by_task": {},
+ "offline_setup_exclusions": {
+  "26150609-0da3-4a7d-8868-0faf9c5f01bb": [
+   "(a) setup step 2: pip install pygame",
+   "(b) setup step 2 (command): /setup/execute HTTP 500 rc=None Command '['pip', 'install', 'pygame']' timed out after 120 seconds"
+  ],
+  "982d12a5-beab-424f-8d38-d2a48429e511": [
+   "(b) setup step 1 (command): /setup/execute HTTP 200 rc=127 /bin/sh: 1: jq: not found"
+  ],
+  "e2b5e914-ffe1-44d2-8e92-58f8c5d92bb2": [
+   "(a) setup step 1: code install ms-python.python",
+   "(b) setup step 1 (command): /setup/execute HTTP 200 rc=1 Error while installing extensions: getaddrinfo EAI_AGAIN marketplace.visualstudio.com\ngetaddrinfo EAI_AGAIN marketplace.visualstudio.com",
+   "(b) diagnostic code --list-extensions --show-versions lacks (?im)^ms-python\\.python@"
+  ]
+ },
+ "output_tokens": {
+  "4B/H-GA": {
+   "completion": {
+    "max": 14058.0,
+    "mean": 4753.095,
+    "median": 5250.0,
+    "n": 452,
+    "p90": 6172.6,
+    "total": 2148399.0
+   },
+   "completion_per_step": 372.598,
+   "episodes": 452,
+   "episodes_with_tokens": 452,
+   "prompt": {
+    "max": 368670.0,
+    "mean": 238013.334,
+    "median": 300262.0,
+    "n": 452,
+    "p90": 306656.9,
+    "total": 107582027.0
+   }
+  },
+  "4B/H-OSW-fixed": {
+   "completion": {
+    "max": 28992.0,
+    "mean": 4849.575,
+    "median": 5305.5,
+    "n": 452,
+    "p90": 6314.5,
+    "total": 2192008.0
+   },
+   "completion_per_step": 386.257,
+   "episodes": 452,
+   "episodes_with_tokens": 452,
+   "prompt": {
+    "max": 459831.0,
+    "mean": 236136.509,
+    "median": 303472.5,
+    "n": 452,
+    "p90": 309504.3,
+    "total": 106733702.0
+   }
+  },
+  "9B/H-GA": {
+   "completion": {
+    "max": 27153.0,
+    "mean": 4207.232,
+    "median": 4728.0,
+    "n": 452,
+    "p90": 5900.7,
+    "total": 1901669.0
+   },
+   "completion_per_step": 351.51,
+   "episodes": 452,
+   "episodes_with_tokens": 452,
+   "prompt": {
+    "max": 433632.0,
+    "mean": 216670.19,
+    "median": 295565.0,
+    "n": 452,
+    "p90": 305196.9,
+    "total": 97934926.0
+   }
+  },
+  "9B/H-OSW-fixed": {
+   "completion": {
+    "max": 24002.0,
+    "mean": 4689.931,
+    "median": 5298.0,
+    "n": 452,
+    "p90": 6309.9,
+    "total": 2119849.0
+   },
+   "completion_per_step": 384.518,
+   "episodes": 452,
+   "episodes_with_tokens": 452,
+   "prompt": {
+    "max": 399738.0,
+    "mean": 226788.119,
+    "median": 303666.0,
+    "n": 452,
+    "p90": 310300.0,
+    "total": 102508230.0
+   }
+  }
+ },
+ "output_tokens_by_job": {
+  "E-4B-E1": {
+   "completion": {
+    "max": 27528.0,
+    "mean": 4881.637,
+    "median": 5310.0,
+    "n": 226,
+    "p90": 6345.0,
+    "total": 1103250.0
+   },
+   "completion_per_step": 385.617,
+   "episodes": 226,
+   "episodes_with_tokens": 226,
+   "prompt": {
+    "max": 451729.0,
+    "mean": 237662.319,
+    "median": 301880.0,
+    "n": 226,
+    "p90": 309148.5,
+    "total": 53711684.0
+   }
+  },
+  "E-4B-E2": {
+   "completion": {
+    "max": 12485.0,
+    "mean": 4769.841,
+    "median": 5256.0,
+    "n": 226,
+    "p90": 6407.0,
+    "total": 1077984.0
+   },
+   "completion_per_step": 373.911,
+   "episodes": 226,
+   "episodes_with_tokens": 226,
+   "prompt": {
+    "max": 329958.0,
+    "mean": 239307.761,
+    "median": 301986.5,
+    "n": 226,
+    "p90": 308963.5,
+    "total": 54083554.0
+   }
+  },
+  "E-4B-E3": {
+   "completion": {
+    "max": 28992.0,
+    "mean": 4831.593,
+    "median": 5283.0,
+    "n": 226,
+    "p90": 6301.0,
+    "total": 1091940.0
+   },
+   "completion_per_step": 385.708,
+   "episodes": 226,
+   "episodes_with_tokens": 226,
+   "prompt": {
+    "max": 459831.0,
+    "mean": 234021.978,
+    "median": 300881.0,
+    "n": 226,
+    "p90": 308979.0,
+    "total": 52888967.0
+   }
+  },
+  "E-4B-E4": {
+   "completion": {
+    "max": 26096.0,
+    "mean": 4722.27,
+    "median": 5276.0,
+    "n": 226,
+    "p90": 6044.5,
+    "total": 1067233.0
+   },
+   "completion_per_step": 372.377,
+   "episodes": 226,
+   "episodes_with_tokens": 226,
+   "prompt": {
+    "max": 425850.0,
+    "mean": 237307.628,
+    "median": 302034.0,
+    "n": 226,
+    "p90": 307799.0,
+    "total": 53631524.0
+   }
+  },
+  "E-9B-E1": {
+   "completion": {
+    "max": 27153.0,
+    "mean": 4419.836,
+    "median": 4947.0,
+    "n": 226,
+    "p90": 6098.5,
+    "total": 998883.0
+   },
+   "completion_per_step": 364.955,
+   "episodes": 226,
+   "episodes_with_tokens": 226,
+   "prompt": {
+    "max": 433632.0,
+    "mean": 222210.212,
+    "median": 298083.5,
+    "n": 226,
+    "p90": 308450.5,
+    "total": 50219508.0
+   }
+  },
+  "E-9B-E2": {
+   "completion": {
+    "max": 24002.0,
+    "mean": 4451.022,
+    "median": 4972.5,
+    "n": 226,
+    "p90": 6143.0,
+    "total": 1005931.0
+   },
+   "completion_per_step": 369.42,
+   "episodes": 226,
+   "episodes_with_tokens": 226,
+   "prompt": {
+    "max": 399738.0,
+    "mean": 220191.146,
+    "median": 297359.5,
+    "n": 226,
+    "p90": 309023.5,
+    "total": 49763199.0
+   }
+  },
+  "E-9B-E3": {
+   "completion": {
+    "max": 22292.0,
+    "mean": 4528.987,
+    "median": 5193.0,
+    "n": 226,
+    "p90": 6140.5,
+    "total": 1023551.0
+   },
+   "completion_per_step": 367.919,
+   "episodes": 226,
+   "episodes_with_tokens": 226,
+   "prompt": {
+    "max": 382472.0,
+    "mean": 228123.084,
+    "median": 300293.5,
+    "n": 226,
+    "p90": 309213.0,
+    "total": 51555817.0
+   }
+  },
+  "E-9B-E4": {
+   "completion": {
+    "max": 22152.0,
+    "mean": 4394.482,
+    "median": 4897.5,
+    "n": 226,
+    "p90": 6174.5,
+    "total": 993153.0
+   },
+   "completion_per_step": 370.441,
+   "episodes": 226,
+   "episodes_with_tokens": 226,
+   "prompt": {
+    "max": 380970.0,
+    "mean": 216392.177,
+    "median": 297211.5,
+    "n": 226,
+    "p90": 309352.0,
+    "total": 48904632.0
+   }
+  }
+ },
+ "per_episode": {
+  "attempts": {
+   "4B/H-GA": {
+    "episodes": 452,
+    "episodes_with_agent_retried": 0,
+    "episodes_with_agent_slow": 0,
+    "episodes_with_agent_undelivered": 0,
+    "episodes_with_checker_retried": 0,
+    "episodes_with_checker_slow": 0,
+    "episodes_with_checker_undelivered": 0,
+    "episodes_with_restart": 0,
+    "restarts": 0
+   },
+   "4B/H-OSW-fixed": {
+    "episodes": 452,
+    "episodes_with_agent_retried": 0,
+    "episodes_with_agent_slow": 0,
+    "episodes_with_agent_undelivered": 0,
+    "episodes_with_checker_retried": 0,
+    "episodes_with_checker_slow": 0,
+    "episodes_with_checker_undelivered": 0,
+    "episodes_with_restart": 0,
+    "restarts": 0
+   },
+   "9B/H-GA": {
+    "episodes": 452,
+    "episodes_with_agent_retried": 0,
+    "episodes_with_agent_slow": 0,
+    "episodes_with_agent_undelivered": 0,
+    "episodes_with_checker_retried": 0,
+    "episodes_with_checker_slow": 0,
+    "episodes_with_checker_undelivered": 0,
+    "episodes_with_restart": 0,
+    "restarts": 0
+   },
+   "9B/H-OSW-fixed": {
+    "episodes": 452,
+    "episodes_with_agent_retried": 0,
+    "episodes_with_agent_slow": 0,
+    "episodes_with_agent_undelivered": 0,
+    "episodes_with_checker_retried": 0,
+    "episodes_with_checker_slow": 0,
+    "episodes_with_checker_undelivered": 0,
+    "episodes_with_restart": 0,
+    "restarts": 0
+   }
+  },
+  "final_records": {
+   "4B/H-GA": {
+    "episodes": 452,
+    "episodes_with_agent_retried": 0,
+    "episodes_with_agent_slow": 0,
+    "episodes_with_agent_undelivered": 0,
+    "episodes_with_checker_retried": 0,
+    "episodes_with_checker_slow": 0,
+    "episodes_with_checker_undelivered": 0,
+    "episodes_with_restart": 0,
+    "restarts": 0
+   },
+   "4B/H-OSW-fixed": {
+    "episodes": 452,
+    "episodes_with_agent_retried": 0,
+    "episodes_with_agent_slow": 0,
+    "episodes_with_agent_undelivered": 0,
+    "episodes_with_checker_retried": 0,
+    "episodes_with_checker_slow": 0,
+    "episodes_with_checker_undelivered": 0,
+    "episodes_with_restart": 0,
+    "restarts": 0
+   },
+   "9B/H-GA": {
+    "episodes": 452,
+    "episodes_with_agent_retried": 0,
+    "episodes_with_agent_slow": 0,
+    "episodes_with_agent_undelivered": 0,
+    "episodes_with_checker_retried": 0,
+    "episodes_with_checker_slow": 0,
+    "episodes_with_checker_undelivered": 0,
+    "episodes_with_restart": 0,
+    "restarts": 0
+   },
+   "9B/H-OSW-fixed": {
+    "episodes": 452,
+    "episodes_with_agent_retried": 0,
+    "episodes_with_agent_slow": 0,
+    "episodes_with_agent_undelivered": 0,
+    "episodes_with_checker_retried": 0,
+    "episodes_with_checker_slow": 0,
+    "episodes_with_checker_undelivered": 0,
+    "episodes_with_restart": 0,
+    "restarts": 0
+   }
+  }
+ },
+ "setup_and_postconfig_failures": {
+  "attempts": {
+   "4B/H-GA": {
+    "episodes": 452,
+    "infra_task_setup": 0,
+    "postconfig_failed_by_class": {
+     "http_200_nonzero_returncode": 3
+    },
+    "postconfig_failed_by_type": {
+     "command": 3
+    },
+    "postconfig_replies": 752,
+    "postconfig_replies_failed": 3,
+    "setup_failed_by_class": {},
+    "setup_replies_failed": 0
+   },
+   "4B/H-OSW-fixed": {
+    "episodes": 452,
+    "infra_task_setup": 0,
+    "postconfig_failed_by_class": {
+     "http_200_nonzero_returncode": 3
+    },
+    "postconfig_failed_by_type": {
+     "command": 3
+    },
+    "postconfig_replies": 752,
+    "postconfig_replies_failed": 3,
+    "setup_failed_by_class": {},
+    "setup_replies_failed": 0
+   },
+   "9B/H-GA": {
+    "episodes": 452,
+    "infra_task_setup": 0,
+    "postconfig_failed_by_class": {},
+    "postconfig_failed_by_type": {},
+    "postconfig_replies": 752,
+    "postconfig_replies_failed": 0,
+    "setup_failed_by_class": {},
+    "setup_replies_failed": 0
+   },
+   "9B/H-OSW-fixed": {
+    "episodes": 452,
+    "infra_task_setup": 0,
+    "postconfig_failed_by_class": {},
+    "postconfig_failed_by_type": {},
+    "postconfig_replies": 752,
+    "postconfig_replies_failed": 0,
+    "setup_failed_by_class": {},
+    "setup_replies_failed": 0
+   }
+  },
+  "final_records": {
+   "4B/H-GA": {
+    "episodes": 452,
+    "infra_task_setup": 0,
+    "postconfig_failed_by_class": {
+     "http_200_nonzero_returncode": 3
+    },
+    "postconfig_failed_by_type": {
+     "command": 3
+    },
+    "postconfig_replies": 752,
+    "postconfig_replies_failed": 3,
+    "setup_failed_by_class": {},
+    "setup_replies_failed": 0
+   },
+   "4B/H-OSW-fixed": {
+    "episodes": 452,
+    "infra_task_setup": 0,
+    "postconfig_failed_by_class": {
+     "http_200_nonzero_returncode": 3
+    },
+    "postconfig_failed_by_type": {
+     "command": 3
+    },
+    "postconfig_replies": 752,
+    "postconfig_replies_failed": 3,
+    "setup_failed_by_class": {},
+    "setup_replies_failed": 0
+   },
+   "9B/H-GA": {
+    "episodes": 452,
+    "infra_task_setup": 0,
+    "postconfig_failed_by_class": {},
+    "postconfig_failed_by_type": {},
+    "postconfig_replies": 752,
+    "postconfig_replies_failed": 0,
+    "setup_failed_by_class": {},
+    "setup_replies_failed": 0
+   },
+   "9B/H-OSW-fixed": {
+    "episodes": 452,
+    "infra_task_setup": 0,
+    "postconfig_failed_by_class": {},
+    "postconfig_failed_by_type": {},
+    "postconfig_replies": 752,
+    "postconfig_replies_failed": 0,
+    "setup_failed_by_class": {},
+    "setup_replies_failed": 0
+   }
+  }
+ },
+ "steps": {
+  "4B/H-GA": {
+   "episodes": 452,
+   "step_of_success": {
+    "04": 8,
+    "05": 11,
+    "06": 20,
+    "07": 18,
+    "08": 15,
+    "09": 7,
+    "10": 5,
+    "11": 4,
+    "12": 7,
+    "13": 5,
+    "14": 2,
+    "15": 2,
+    "censored_at_15": 15
+   },
+   "step_of_termination": {
+    "04": 10,
+    "05": 13,
+    "06": 24,
+    "07": 18,
+    "08": 22,
+    "09": 13,
+    "10": 10,
+    "11": 11,
+    "12": 18,
+    "13": 12,
+    "14": 10,
+    "15": 9,
+    "censored_at_15": 282
+   },
+   "steps": {
+    "04": 10,
+    "05": 13,
+    "06": 24,
+    "07": 18,
+    "08": 22,
+    "09": 13,
+    "10": 10,
+    "11": 11,
+    "12": 18,
+    "13": 12,
+    "14": 10,
+    "15": 291
+   },
+   "successes": 119
+  },
+  "4B/H-OSW-fixed": {
+   "episodes": 452,
+   "step_of_success": {
+    "02": 2,
+    "03": 3,
+    "04": 10,
+    "05": 14,
+    "06": 13,
+    "07": 14,
+    "08": 14,
+    "09": 7,
+    "10": 7,
+    "11": 9,
+    "12": 3,
+    "13": 6,
+    "14": 3,
+    "15": 2,
+    "censored_at_15": 16
+   },
+   "step_of_termination": {
+    "02": 2,
+    "03": 4,
+    "04": 10,
+    "05": 18,
+    "06": 17,
+    "07": 16,
+    "08": 23,
+    "09": 16,
+    "10": 15,
+    "11": 18,
+    "12": 11,
+    "13": 8,
+    "14": 7,
+    "15": 11,
+    "censored_at_15": 276
+   },
+   "steps": {
+    "02": 2,
+    "03": 4,
+    "04": 10,
+    "05": 18,
+    "06": 17,
+    "07": 16,
+    "08": 23,
+    "09": 16,
+    "10": 15,
+    "11": 18,
+    "12": 11,
+    "13": 8,
+    "14": 7,
+    "15": 287
+   },
+   "successes": 123
+  },
+  "9B/H-GA": {
+   "episodes": 452,
+   "step_of_success": {
+    "02": 1,
+    "03": 4,
+    "04": 13,
+    "05": 25,
+    "06": 24,
+    "07": 14,
+    "08": 11,
+    "09": 8,
+    "10": 4,
+    "11": 5,
+    "12": 7,
+    "13": 7,
+    "14": 5,
+    "15": 4,
+    "censored_at_15": 12
+   },
+   "step_of_termination": {
+    "02": 1,
+    "03": 6,
+    "04": 17,
+    "05": 31,
+    "06": 25,
+    "07": 22,
+    "08": 18,
+    "09": 14,
+    "10": 9,
+    "11": 14,
+    "12": 17,
+    "13": 10,
+    "14": 5,
+    "15": 8,
+    "censored_at_15": 255
+   },
+   "steps": {
+    "02": 1,
+    "03": 6,
+    "04": 17,
+    "05": 31,
+    "06": 25,
+    "07": 22,
+    "08": 18,
+    "09": 14,
+    "10": 9,
+    "11": 14,
+    "12": 17,
+    "13": 10,
+    "14": 5,
+    "15": 263
+   },
+   "successes": 144
+  },
+  "9B/H-OSW-fixed": {
+   "episodes": 452,
+   "step_of_success": {
+    "03": 4,
+    "04": 15,
+    "05": 23,
+    "06": 20,
+    "07": 10,
+    "08": 8,
+    "09": 11,
+    "10": 6,
+    "11": 1,
+    "12": 6,
+    "13": 10,
+    "14": 6,
+    "15": 5,
+    "censored_at_15": 15
+   },
+   "step_of_termination": {
+    "01": 1,
+    "03": 4,
+    "04": 15,
+    "05": 26,
+    "06": 26,
+    "07": 15,
+    "08": 18,
+    "09": 23,
+    "10": 9,
+    "11": 8,
+    "12": 12,
+    "13": 19,
+    "14": 11,
+    "15": 12,
+    "censored_at_15": 253
+   },
+   "steps": {
+    "01": 1,
+    "03": 4,
+    "04": 15,
+    "05": 26,
+    "06": 26,
+    "07": 15,
+    "08": 18,
+    "09": 23,
+    "10": 9,
+    "11": 8,
+    "12": 12,
+    "13": 19,
+    "14": 11,
+    "15": 265
+   },
+   "successes": 140
+  }
+ }
+}

@@ -13,7 +13,8 @@ session's later end.
 This README is extended per session. It reads infrastructure fields only (statuses, losses,
 re-queues, completeness, observation and restart counts, Slurm and engine records): **no
 score, success rate or harness comparison is computed here**. The registered analysis
-(section 18) runs after the last E job. All eight E jobs have run (sessions E1-E4, the last
+(section 18) ran after the last E job; its readings are in `RESULTS.md` and its steps in
+`analysis/`. All eight E jobs have run (sessions E1-E4, the last
 ending at 21:58:03 UTC on 2026-10-13), and none fired DR0.
 
 ## Jobs
@@ -718,6 +719,11 @@ Next: E's registered analysis (section 18 (iii)), on the records of all eight E 
 rescoring (one CPU job per E job), the cost card, the report, the section 15 items, the GLMM,
 the joint reading and the provenance record, then a fresh verifier before RESULTS. Every E job
 has run and none fired DR0.
+
+The analysis ran on 2026-10-13/14 UTC (CPU jobs 1279-1290; `analysis/README.md`); its
+readings are in `RESULTS.md`: DR2 Near-equivalent, DR5 NO-GO, DR1 and DR4 do not fire, P2-P5
+not falsified, P1 not estimable. The fresh verifier had not run when `RESULTS.md` was written
+(its deviation 1).
 
 ## Operator scripts (`ops/`)
 

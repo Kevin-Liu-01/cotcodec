@@ -5406,3 +5406,36 @@ they say so.)
   20:41:28, as for E-9B-E3. No deviation from the registration.
 - Evidence: `program/evidence/2026-10-12/q2-stage1-successor-e-run/` (README section "Session
   E4", `e-9b-e4/`, `e-4b-e4/`).
+
+## 2026-10-14 — Q2 successor E `q2-stage1-successor-e-v1`: the registered analysis ran; DR2 Near-equivalent, DR5 NO-GO (branch `ops/q2-successor-e`, not merged)
+
+- Started 22:03 UTC on 2026-10-13 after the orchestrator's restarts, from the host's state: no
+  analysis directory or analysis job existed. Every step ran on the host from the read-only
+  export of the freeze commit `f6144d6b`, with the registered commands of section 18 (iii)
+  unchanged and `ops/q2e-analysis/e_ops.py` (`fb4458a6`) around them. Provenance passed at
+  both ends (ledger row 19 `verify` and `check-chain`; plan `4e7298a7...`; every file of E's
+  section 23 and S1a's section 20 at its digest). The eight run directories' records matched
+  their DR0 digests; the re-run DR0 files are byte-identical to the per-job ones.
+- CPU-only Slurm jobs, all exit 0: GLMM 1279 and rescoring 1280-1287, submitted together at
+  23:40:14 on an empty queue (after S2 v5's development job 1278 left it); report 1288,
+  section 15 items 1289, joint reading 1290 (01:20-01:22 on 2026-10-14). No GPU.
+- Complete data, not externally anchored: 1,808 episodes, 0 infrastructure losses. Success:
+  4B 27.21% (H-OSW-fixed) / 26.33% (H-GA), 9B 30.97% / 31.86%.
+- **DR2 Near-equivalent**: δ (H-GA − H-OSW-fixed) 0.00 pp, 90% t [−2.44, +2.44] (p 1.000);
+  X sign flip p 0.093; π_small one-sided upper bound 0.1187 < 0.12. **DR5 NO-GO**: π_small
+  0.055, one-sided [0.010, 0.119] < M 0.13; S1b stays closed (D69), nothing starts. DR1 does
+  not fire; DR4 does not fire (0.0027-0.0030 GPU-h per episode, 24-27% of the high price). P1
+  not estimable; P2 (D_b 10.69% [8.00, 13.53]), P3, P4, P5 not falsified. No session pair's
+  shift test rejects after Holm.
+- Sensitivities change no rule: corrected verdicts 0 flips (16 live fallbacks on `53ad5833`),
+  no metric exception, 0 postconfig server errors, flagged tasks excluded and the D82 110-task
+  set both Near-equivalent / NO-GO. Registered secondary (S1a's 32 base tasks): Inconclusive /
+  NO-GO as a description (π_small upper bound 0.121). GLMM: the full fit did not converge (no
+  positive-definite Hessian); the task:harness test is not computed. The descriptive joint
+  reading with S1a: every E − S1a interval covers 0.
+- Deviation: the fresh verifier of section 18 had not run when RESULTS was written; the
+  analyst's self-check (`ops/q2e-analysis/selfcheck.py`, independent code) reproduced every
+  primary point estimate, the t test, DR2 and DR5. RESULTS is provisional until a fresh
+  verifier's record is committed.
+- Evidence: `program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md` and
+  `analysis/`.

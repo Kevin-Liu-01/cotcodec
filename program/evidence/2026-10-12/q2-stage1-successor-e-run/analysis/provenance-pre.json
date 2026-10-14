@@ -1,0 +1,95 @@
+{
+ "at": "2026-10-13T22:10:57Z",
+ "code_of_record": {
+  "changed": {},
+  "e_files": 11,
+  "infra_files": 8,
+  "s1a_section20_files": 75
+ },
+ "export": {
+  "git_sha": "f6144d6bf745d944cb016cfc2b9894e1dbf7eb66",
+  "path": "/home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66"
+ },
+ "images": {
+  "glmm": "sha256:b15584f3954f1c83fc3e5067e29c57c5c55e3b2a50ef28e4e68a394e595aabed",
+  "metric": "sha256:2006c1a9247e4911a82508cd22e9d9a7efc5c13e35a20e8a03baac7112876230"
+ },
+ "inputs_and_outputs": {
+  "E-4B-E1": {
+   "episodes.jsonl": "0db38f8e2f2c61c2c6ab7fcb444bcd63b269235f0b43bc2fd905f33e2f1ad3a3",
+   "lane-receipt.json": "9fc15cfb2954b36256ce4b9429ac03cbf3f049b23ad6cf97e73b2ed9401af7f9",
+   "manifest.json": "47aa3a2a822c1b7c6b7689fb1b3fae125d872c85f32d860745a37b2b3ec9de8d"
+  },
+  "E-4B-E2": {
+   "episodes.jsonl": "09de5e821081f9a4fefb6eca3e529b7406ea66e15ff53311b92ff289a75cf4e6",
+   "lane-receipt.json": "5f27ccd6f047575abc1a47a045f7b888f121b34ba74541d054e722c4abf722ec",
+   "manifest.json": "7ae67edacb1c9c2246b1fe76d5727082285020ae74456ae858598cc89de42ef7"
+  },
+  "E-4B-E3": {
+   "episodes.jsonl": "2af9f2be2dbf1de73edc7bba16d02efc67c1b9dff13138e10ce9661b7abcb84b",
+   "lane-receipt.json": "d80eaa91ee74a7c1b37d1d6361f94c11dbc6b1e4ea8a65900fb5b4cea3c9504d",
+   "manifest.json": "4729afd09d1a9376651a7604afbd9617dca63ea1e3627e3da69a7e8feaa1ae0c"
+  },
+  "E-4B-E4": {
+   "episodes.jsonl": "36aaccee8a31a987f078a72dda0bbc27962c65aa5075a80b73fbff804103b305",
+   "lane-receipt.json": "11a59b7ea39d5051ecded06fd29a60495f2d8d9993572c9f828e7f3413eb49d1",
+   "manifest.json": "45c0882d8e4074e5b9419859b595f2652daa399eed7fc02436b1feb8376adbef"
+  },
+  "E-9B-E1": {
+   "episodes.jsonl": "278e8112ef74a007e7d87b9791ecbf300949df6470ea05c501738c27eb5fe50c",
+   "lane-receipt.json": "32a4a1f7ec7fc29f65072720056b33de5f5a94b2230af4d04ef47918452a6465",
+   "manifest.json": "d7ed851d7db38281e1ab5adfaad723048e3ab1054cfd775810cd9957e9b3f0ce"
+  },
+  "E-9B-E2": {
+   "episodes.jsonl": "e8755336e8ea01d988f7226c2394eae786bcdb7c10387aebe40d360bf0e8b3ef",
+   "lane-receipt.json": "e1664285dd9a31fe05a89226622edc0533bba9350c1eb0820920078c281d5baf",
+   "manifest.json": "ce4a0d8656310f5b7adb1d00771a57c2e60c7a7b0154a9c5dfb66d9bc96e8055"
+  },
+  "E-9B-E3": {
+   "episodes.jsonl": "d2fb985bb061de331a8060c8c799622d1e979ffec410d73e81b524d8ab5b5297",
+   "lane-receipt.json": "bc30d8e26a79dcc3792f0c14e4e5a8e8003ba1d5482eec9c7ffb3cb9bb45c9cd",
+   "manifest.json": "7ab8f0fa46d9906935ef922cd3abe6da92b712648ea1b974303f2ff3b74f5619"
+  },
+  "E-9B-E4": {
+   "episodes.jsonl": "014b4689d6647a6fa8a796be4473b4e594aeaf136320d109fe5e596a888431ae",
+   "lane-receipt.json": "79a11458183ae398a23568f4612629585950ab8cc48352560acca0a963f61522",
+   "manifest.json": "186245a942ed461c42c80c3614258606c803a3f6313263feea189827631f36c1"
+  }
+ },
+ "interpreter": {
+  "executable": "/usr/bin/python3",
+  "flags": "-E -s -B",
+  "numpy": "1.21.5",
+  "platform": "Linux-6.8.0-60-generic-x86_64-with-glibc2.35",
+  "python": "3.10.12 (main, May 27 2025, 17:12:29) [GCC 11.4.0]"
+ },
+ "ops_script_sha256": "118d3629aae1e2bbce2c8c072fc1eb1b4c718f0b4175cd1b6810a8615adf5b31",
+ "pass": true,
+ "plan": {
+  "file_sha256": "12bded251c08755a6b713e8f34f3f327b46e788d55904f2b7118b97675294de8",
+  "match": true,
+  "plan_sha256": "4e7298a77670a1e77d1b7c4435722364799f70ea0b6cb093739fa876b25e474d",
+  "registered_plan_sha256": "4e7298a77670a1e77d1b7c4435722364799f70ea0b6cb093739fa876b25e474d"
+ },
+ "registration": {
+  "ledger": {
+   "check-chain": {
+    "rc": 0,
+    "stdout": "{\"rows\": 19, \"status\": \"PASS\"}"
+   },
+   "verify q2-stage1-successor-e-v1": {
+    "rc": 0,
+    "stdout": "{\n  \"experiment_id\": \"q2-stage1-successor-e-v1\",\n  \"frozen_at\": \"2026-10-12T01:02:32.422073+00:00\",\n  \"git_head_at_freeze\": \"7fcf0a4ac672919228e79ca9bdccc1e60c31f9c2\",\n  \"hash\": \"0da0a6825c8aad1b0db085f13adef5febb2661bced7e676156c88e009d521ba2\",\n  \"path\": \"program/preregistrations/q2-stage1-successor-e-v1.md\",\n  \"previous_hash\": \"f7b350a330b79c6a08eca3ead97aa191a125c9696f72ca96f92cb94669bfac8d\",\n  \"sha256\": \"47e65877aed069fe919d1a2976345b3d5755e4323a71b47f99ece61c6e2ae98b\"\n}"
+   }
+  },
+  "path": "program/preregistrations/q2-stage1-successor-e-v1.md",
+  "registered": "47e65877aed069fe919d1a2976345b3d5755e4323a71b47f99ece61c6e2ae98b",
+  "sha256": "47e65877aed069fe919d1a2976345b3d5755e4323a71b47f99ece61c6e2ae98b"
+ },
+ "s1a_records": {
+  "path": "program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+  "registered": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0",
+  "sha256": "4af798f5908e48aaf84d116682c813311b5ae48096e3b7ed2299c1530c08c6c0"
+ },
+ "stage": "pre"
+}
