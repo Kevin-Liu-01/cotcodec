@@ -25,3 +25,5 @@
 2026-10-14T22:57:22Z preliminary CPU analysis (4B only) submitted: 1392 (no GRES)
 2026-10-14T23:02:37Z CPU analysis (both models, git 79c3cbc1) submitted: 1398 (no GRES)
 2026-10-14T23:12:43Z CPU analysis (both models, git 5be81bf5) submitted: 1399 (no GRES)
+2026-10-14T23:14:57Z CPU reproduction from the seed-42 subsets submitted: 1400 (no GRES)
+2026-10-14T23:20:25Z CPU checks at 5a523852 submitted: 1401 (no GRES)

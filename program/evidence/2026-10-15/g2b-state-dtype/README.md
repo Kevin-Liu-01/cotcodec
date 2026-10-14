@@ -122,6 +122,8 @@ wherever both exist.
 | 1385, 1389 | paired prefill 4B / 9B: both dtypes re-score both arms | vLLM `ef7ee50c` | 00:04:32, 00:05:32 | 0.1678 | COMPLETED 0:0 |
 | 1387, 1391 | teacher forcing 4B / 9B: r1, r2, r4 | research `4555c647` | 00:10:30, 00:12:28 | 0.3828 | COMPLETED 0:0 |
 | 1392, 1398, 1399 | CPU: analysis (1392 preliminary, 4B only; 1398 at `79c3cbc1`; 1399 final at `5be81bf5`, adding the tail check; identical per-token files) | host checkout | ~1 min each | 0 | done |
+| 1400 | CPU: the README's reproduction command on the committed seed-42 subsets | host checkout `5be81bf5` | ~1 min | 0 | seed-42 means, p99s, termination and saturation tables equal the full analysis |
+| 1401 | CPU: lint of the new files, 30 tests (g2b and G2 pilot), architecture and provider validators | host checkout `5a523852` | ~1 min | 0 | all pass |
 | | **Total** | | 6,619 GPU-s | **1.8386** | |
 
 The six rollout jobs ran at the same time on six GPUs, with disjoint CPU sets of 16 cores each.
