@@ -134,6 +134,8 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1303 | K1 C3 on A, part 1 of 3 (17 mutant campaigns, M01-M11; seed 42) | 1,404 | 12:13:43 | 12:13:43-13:10:16 (56.6 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell; C3 is read once part 3 (the references) has run |
 | 1304 | K1 C3 on A, part 2 of 3 (17 mutant campaigns, M11-M21) | 1,404 | 13:11:18 | 13:11:19-14:07:52 (56.6 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell |
 | 1305 | K1 C3 on A, part 3 of 3 (10 mutant campaigns, M22-M28, and the 3 unmutated references) | 1,076 | 14:08:30 | 14:08:31-14:51:53 (43.4 min) | COMPLETED 0:0 | All 13 campaigns count. **C3 on A pass** over parts 1-3 (1303-1305): 42 mutants killed, 2 equivalent, 0 survived |
+| 1306 | K1 A1 on A (L0-fixed at N = 1, seeds 43 and 44, both observation settings) | 1,394 | 14:53:01 | 14:53:02-16:20:12 (87.2 min) | COMPLETED 0:0 | A1 pass and C4 pass; both campaigns count; 2,000 of 2,000 trials |
+| 1307 | K1 A2 on A (H-OSW-fixed and H-GA, seed 43, both observation settings) | 1,344 | 16:20:55 | 16:20:55- (running at the stint-2 stop) | | Not yet collected (stint 3) |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -261,6 +263,19 @@ and the last `scontrol` record):
     problem. Of the 44 scored (mutant, layer) pairs, 42 killed and 2 equivalent
     (`M12-triple-to-double` and `M13-hscroll-to-vscroll` on H-OSW-fixed), 0 survived; no
     state-not-observed trial among 4,617. The same outcome as C3 on E.
+- **1306 (A1, A).** Host snapshot: load 0.34, queue empty, 0 labelled containers. Two L0-fixed
+  campaigns at N = 1 (seed-43 and seed-44 shuffles, 5 repetitions, screenshot and accessibility
+  settings): 18 sessions and 1,000 trials each, 2,000 of 2,000 passed, every one of the 100
+  entries in every trial (`summary-1306.jsonl`); 0 guest-server restarts over 649 accessibility
+  calls in each campaign, 0 excused trials; 17 of 17 reset sentinels pristine in each; no
+  state-not-observed trial. Cold boots at most 17.4 s; step p95 2.67 s and 2.68 s, 2.68 s pooled
+  over both shuffles (2,560 steps; the reference for the rung's step condition on A: the rung's A
+  sessions must have step p95 at most 2 x A1's). `ap_delta_v5.verdict` on this job: A1 on A `pass`
+  and C4 on A `pass`, no problem. Both campaigns count (driver exit 0, `infra_gates_pass`, image
+  unchanged, no labelled container; no foreign-abort or snapshot problem).
+- **1307 (A2, A).** Submitted at 16:20:55Z on an empty queue (host snapshot: load 0.73, 0 labelled
+  containers, K1 runs 1292-1306). Running at the stint-2 stop; its watch, collection and check
+  are stint 3's (`ops/watch_job.sh 1307`, then `ops/collect_k1.sh 1307`).
 
 ## Stint 1 stop (operator's record, 10:44Z on 2026-10-14)
 
@@ -280,3 +295,29 @@ and the last `scontrol` record):
 - Observed durations on E, for planning: C1 6.5 min, C2 10.2 min, C3 parts 56, 56 and 43 min,
   A1 87 min, A2 92 min (v4: A5 about 20 min, A6 about 50 min). At that pace the remaining 42 jobs
   need about 33 hours of serial wall clock (about 7 hours per image, and A3 and the rung).
+
+## Stint 2 (operator's record, 10:45-16:25Z on 2026-10-14)
+
+- Before submitting (10:45:52Z): the queue was empty, `ops.log` listed jobs 1292-1298 only, the K1
+  run directory held 1292-1298 only and no labelled cotcodec container existed; no job was
+  resubmitted. `main` did not move during the stint (`bddf4b38`, already merged).
+- Done in stint 2, in the K1 plan's order, each on an empty queue through `ops/submit_k1.sh`:
+  1299 A5 on E, 1300 A6 on E, then image A: 1301 C1, 1302 C2, 1303-1305 C3 parts 1-3, 1306 A1.
+  Every job COMPLETED 0:0, every campaign counts, and every check read so far passes (interim,
+  job by job; C3 on A read over its three parts with `c3_parts.py`). E's eight checks have all
+  run and pass (C1, C2, C3, C4, A1, A2, A5, A6). No K1 check has failed; nothing was rerun or
+  resubmitted. Operator aids added: `campaign_summary.py` (per-entry pass counts,
+  `summary-JOB.jsonl`) and `c3_parts.py` (C3 on one image over its three parts); both decide
+  nothing.
+- Stop point: job 1307 (A2 on A, submitted 16:20:55Z, limit 1,344 minutes, expected about
+  92 minutes from E's A2) is running; at 16:21:29Z it was the only job in the queue and the only
+  labelled containers on the host were its own. Its collection is stint 3's. A background
+  watcher (`ops/watch_job.sh 1307`) was left running on the Mac to keep its last `scontrol`
+  record; if it is gone, start another before the job ends.
+- Next, in the plan's order after 1307: A5 on A (`k1-a5-a.json`), A6 on A (`k1-a6-a.json`), then
+  ER, AR and PL (C1, C2, C3 parts 1-3, A1, A2, A5, A6 each), then A3 on AR (parts 1-3), then the
+  rung: 27 jobs after 1307. Then `ap_delta_v5.py verdict` over all 49 K1 job directories (K1),
+  then the census, its one resume if interrupted, the oracle's registered container job and
+  `k0_v4.decide` (K0).
+- Observed durations on A, as on E: C1 6.5 min, C2 10.2 min, C3 parts 56.6, 56.6 and 43.4 min,
+  A1 87.2 min; on E, A5 17.3 min and A6 49.8 min.

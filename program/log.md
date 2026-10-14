@@ -5483,3 +5483,25 @@ they say so.)
 - Evidence: `program/evidence/2026-10-14/s2v5-phase0-run/` (README with per-job records; per job
   its submission snapshot, `scontrol`, batch output, receipts, manifests and `check-JOB.json`;
   the census dry-run; the 49 K1 manifests). Cycle records and VM logs stay on the host.
+
+## 2026-10-14 — S2 v5 `s2-arabic-cua-locale-v5` Phase 0 run, stint 2: K1 on E completed, image A through A1 (branch `ops/s2-v5`, not merged)
+
+- Checked the host before submitting: queue empty, `ops.log` and the K1 run directory held jobs
+  1292-1298 only, no labelled container. No job was resubmitted.
+- K1, in the plan's order, one CPU-only job at a time, each on an empty queue through the
+  guarded helper (`--no-e-deadline`). Every job COMPLETED 0:0 and every campaign counts; every
+  check read so far passes (interim, job by job):
+  - 1299 A5 on E: pass (20 of 20 reset sentinels pristine; HMP `sendkey menu` 0 of 21, reported
+    and not judged, as in q2's jobs 374 and 964).
+  - 1300 A6 on E: pass (300 of 300, every entry 5 of 5, q2's cells file).
+  - 1301 C1 on A: pass. 1302 C2 on A: pass.
+  - 1303, 1304, 1305 C3 on A (parts 1-3): pass over the three parts, 42 killed and 2 equivalent
+    (M12 and M13 on H-OSW-fixed), as on E.
+  - 1306 A1 on A: pass, 2,000 of 2,000, 0 restarts; C4 on A pass; pooled step p95 2.68 s.
+- All eight checks on E have now run and pass. No K1 check has failed, and nothing was rerun.
+- The stint stopped at about 16:25Z with job 1307 (A2 on A, submitted 16:20:55Z) running; its
+  collection is the next stint's. 27 K1 jobs follow it, then the K1 verdict, the census, the
+  oracle and K0.
+- Evidence: `program/evidence/2026-10-14/s2v5-phase0-run/` (README rows and notes for 1299-1307,
+  `k1-jobs/1299`-`1306`, `k1-jobs/1307/submit-1307.txt`, `k1-jobs/c3-a-interim-1303-1305.json`,
+  operator aids `campaign_summary.py` and `c3_parts.py`).
