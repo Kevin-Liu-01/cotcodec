@@ -159,6 +159,16 @@ provenance.
   meta-device memory table (`harness/q1/memory_table.json`).
   `q1_pilot_records.py` binds the pilot's run directories by hash and lists the
   pilot-exposed kernels (`harness/q1/data/pilot_exposed.json`).
+- AM1 Step 0 (`experiments/am1/memcredit-step0-v1.yaml`, exploratory):
+  `memcredit_fetch_dataset.py` fetches one pinned public HF dataset file with a
+  receipt (D1); `memcredit_prepare.py` builds the demo's LongMemEval-S pools
+  (BM25 over user turns, retrieved and gold-augmented arms) as a hash-bound
+  study artifact plus a text-free summary; `memcredit_census.py` counts gold
+  turns and BM25 top-8 recall over all questions; `memcredit_step0.py`
+  (`plan|selftest|run|worker|analyze`) runs the batch-invariant and default vLLM
+  sessions, the A/A identity comparisons, the throughput pairs and the
+  256-subset demo tables. AM1 entry points use `memcredit_*` names: the lanes
+  refuse the archived memory names (`run_memory_*`, `*memory_model*`, ...).
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

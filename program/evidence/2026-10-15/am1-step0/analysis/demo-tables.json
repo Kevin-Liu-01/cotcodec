@@ -1,0 +1,1020 @@
+[
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "retrieved",
+    "best_keep_sets": 2,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 15,
+    "fourier_share_order_2_plus": 0.9367588932806324,
+    "fourier_shares": [
+      0.06324110671936758,
+      0.1422924901185771,
+      0.18972332015810275,
+      0.1976284584980237,
+      0.18972332015810275,
+      0.1422924901185771,
+      0.06324110671936758,
+      0.011857707509881422
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "loo_regret": {
+      "max": 1.0,
+      "mean": 0.9714285714285714,
+      "min": 0.0,
+      "sets": 70
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      0,
+      1,
+      6,
+      15,
+      20,
+      15,
+      6,
+      1
+    ],
+    "question_id": "6e984301",
+    "question_type": "temporal-reasoning",
+    "shapley_credit": [
+      -0.005952380952380952,
+      0.025,
+      -0.005952380952380952,
+      -0.013095238095238096,
+      -0.013095238095238096,
+      0.0011904761904761906,
+      0.025,
+      -0.013095238095238096
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 2
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 0,
+    "utility_mean": 0.01171875
+  },
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "gold",
+    "best_keep_sets": 70,
+    "best_keep_value": 0.0,
+    "complete": true,
+    "distinct_replies": 9,
+    "fourier_share_order_2_plus": 0.9686274509803922,
+    "fourier_shares": [
+      0.03137254901960784,
+      0.10980392156862745,
+      0.2196078431372549,
+      0.27450980392156865,
+      0.2196078431372549,
+      0.10980392156862745,
+      0.03137254901960784,
+      0.00392156862745098
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "loo_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 70
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      0,
+      0,
+      1,
+      5,
+      10,
+      10,
+      5,
+      1
+    ],
+    "question_id": "6e984301",
+    "question_type": "temporal-reasoning",
+    "shapley_credit": [
+      -0.0035714285714285713,
+      -0.0035714285714285713,
+      -0.0035714285714285713,
+      -0.0035714285714285713,
+      0.005952380952380952,
+      0.005952380952380952,
+      0.005952380952380952,
+      -0.0035714285714285713
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 5
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 0,
+    "utility_mean": 0.00390625
+  },
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "retrieved",
+    "best_keep_sets": 3,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 27,
+    "fourier_share_order_2_plus": 0.8429752066115702,
+    "fourier_shares": [
+      0.15702479338842976,
+      0.19008264462809918,
+      0.20425029515938606,
+      0.22077922077922077,
+      0.15938606847697756,
+      0.0602125147579693,
+      0.008264462809917356,
+      0.0
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "loo_regret": {
+      "max": 1.0,
+      "mean": 0.9142857142857143,
+      "min": 0.0,
+      "sets": 35
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      0,
+      1,
+      7,
+      20,
+      26,
+      16,
+      4,
+      0
+    ],
+    "question_id": "gpt4_70e84552",
+    "question_type": "temporal-reasoning",
+    "shapley_credit": [
+      -0.03333333333333333,
+      0.02857142857142857,
+      0.05,
+      0.04285714285714286,
+      -0.22380952380952382,
+      0.016666666666666666,
+      0.04285714285714286,
+      0.0761904761904762
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 1
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 0,
+    "utility_mean": 0.0546875
+  },
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "gold",
+    "best_keep_sets": 7,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 26,
+    "fourier_share_order_2_plus": 0.8791916500111037,
+    "fourier_shares": [
+      0.1208083499888963,
+      0.1696646679991117,
+      0.22385076615589608,
+      0.2180768376637797,
+      0.17055296469020653,
+      0.07017543859649122,
+      0.02487230735065512,
+      0.001998667554963358
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "loo_regret": {
+      "max": 1.0,
+      "mean": 0.9,
+      "min": 0.0,
+      "sets": 70
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      0,
+      3,
+      16,
+      30,
+      30,
+      18,
+      7,
+      1
+    ],
+    "question_id": "gpt4_70e84552",
+    "question_type": "temporal-reasoning",
+    "shapley_credit": [
+      -0.010714285714285714,
+      -0.055952380952380955,
+      0.12023809523809524,
+      -0.05357142857142857,
+      -0.034523809523809526,
+      0.013095238095238096,
+      0.015476190476190477,
+      0.005952380952380952
+    ],
+    "shapley_regret": {
+      "max": 1.0,
+      "mean": 1.0,
+      "min": 1.0,
+      "sets": 1
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 0,
+    "utility_mean": 0.07421875
+  },
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "retrieved",
+    "best_keep_sets": 31,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 38,
+    "fourier_share_order_2_plus": 0.1746031746031746,
+    "fourier_shares": [
+      0.8253968253968254,
+      0.09523809523809523,
+      0.06349206349206349,
+      0.015873015873015872,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    "loo_regret": {
+      "max": 1.0,
+      "mean": 0.11428571428571428,
+      "min": 0.0,
+      "sets": 35
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      0,
+      3,
+      3,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "question_id": "09ba9854",
+    "question_type": "multi-session",
+    "shapley_credit": [
+      0.0,
+      0.0,
+      0.08333333333333333,
+      0.08333333333333333,
+      0.08333333333333333,
+      0.0,
+      0.75,
+      0.0
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 1
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 1,
+    "utility_mean": 0.4375
+  },
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "gold",
+    "best_keep_sets": 15,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 40,
+    "fourier_share_order_2_plus": 0.3333333333333333,
+    "fourier_shares": [
+      0.6666666666666666,
+      0.3333333333333333,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    "loo_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 15
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "question_id": "09ba9854",
+    "question_type": "multi-session",
+    "shapley_credit": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      0.0,
+      0.5,
+      0.0
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 15
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 1,
+    "utility_mean": 0.25
+  },
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "retrieved",
+    "best_keep_sets": 32,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 13,
+    "fourier_share_order_2_plus": 0.16669750231267344,
+    "fourier_shares": [
+      0.8333024976873266,
+      0.03527597903176072,
+      0.03996299722479186,
+      0.04181313598519889,
+      0.029108849830403946,
+      0.013567684242984891,
+      0.005427073697193956,
+      0.001541782300339192
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "loo_regret": {
+      "max": 1.0,
+      "mean": 0.08571428571428572,
+      "min": 0.0,
+      "sets": 35
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      1,
+      1,
+      6,
+      19,
+      28,
+      20,
+      7,
+      1
+    ],
+    "question_id": "e6041065",
+    "question_type": "multi-session",
+    "shapley_credit": [
+      0.9202380952380952,
+      0.015476190476190477,
+      -0.0011904761904761906,
+      -0.034523809523809526,
+      0.017857142857142856,
+      0.05119047619047619,
+      0.02261904761904762,
+      0.008333333333333333
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 1
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 1,
+    "utility_mean": 0.44921875
+  },
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "gold",
+    "best_keep_sets": 30,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 13,
+    "fourier_share_order_2_plus": 0.1902281746031746,
+    "fourier_shares": [
+      0.8097718253968254,
+      0.05530753968253968,
+      0.044890873015873016,
+      0.04439484126984127,
+      0.03249007936507937,
+      0.011160714285714286,
+      0.001736111111111111,
+      0.000248015873015873
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "loo_regret": {
+      "max": 1.0,
+      "mean": 0.14285714285714285,
+      "min": 0.0,
+      "sets": 35
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      1,
+      2,
+      8,
+      16,
+      17,
+      10,
+      4,
+      1
+    ],
+    "question_id": "e6041065",
+    "question_type": "multi-session",
+    "shapley_credit": [
+      0.03571428571428571,
+      0.9,
+      -0.023809523809523808,
+      -0.05,
+      0.03333333333333333,
+      0.03333333333333333,
+      0.06904761904761905,
+      0.002380952380952381
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 2
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 1,
+    "utility_mean": 0.4375
+  },
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "retrieved",
+    "best_keep_sets": 34,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 8,
+    "fourier_share_order_2_plus": 0.1416097890918035,
+    "fourier_shares": [
+      0.8583902109081966,
+      0.0346799483490131,
+      0.036893562073418186,
+      0.03431101272827892,
+      0.023119965566008732,
+      0.010084240300067639,
+      0.002459570804894546,
+      6.148927012236365e-05
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      0.0,
+      1.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    "loo_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 5
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      1,
+      0,
+      2,
+      8,
+      14,
+      11,
+      3,
+      1
+    ],
+    "question_id": "618f13b2",
+    "question_type": "knowledge-update",
+    "shapley_credit": [
+      -0.03214285714285714,
+      0.12023809523809524,
+      -0.04880952380952381,
+      0.9178571428571428,
+      -0.02023809523809524,
+      -0.06547619047619048,
+      0.2011904761904762,
+      -0.07261904761904762
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 1
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 1,
+    "utility_mean": 0.45703125
+  },
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "gold",
+    "best_keep_sets": 35,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 5,
+    "fourier_share_order_2_plus": 0.0,
+    "fourier_shares": [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "loo_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 35
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "question_id": "618f13b2",
+    "question_type": "knowledge-update",
+    "shapley_credit": [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 35
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 1,
+    "utility_mean": 0.5
+  },
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "retrieved",
+    "best_keep_sets": 35,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 7,
+    "fourier_share_order_2_plus": 0.015076603796618446,
+    "fourier_shares": [
+      0.9849233962033815,
+      0.0017090886894952084,
+      0.003418177378990417,
+      0.004272721723738021,
+      0.003418177378990417,
+      0.0017090886894952084,
+      0.0004883110541414881,
+      6.103888176768602e-05
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "loo_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 35
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      1,
+      0,
+      1,
+      5,
+      10,
+      10,
+      5,
+      1
+    ],
+    "question_id": "6aeb4375",
+    "question_type": "knowledge-update",
+    "shapley_credit": [
+      0.0035714285714285713,
+      0.0035714285714285713,
+      0.0035714285714285713,
+      0.0035714285714285713,
+      0.0035714285714285713,
+      -0.005952380952380952,
+      -0.005952380952380952,
+      0.9940476190476191
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 10
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 1,
+    "utility_mean": 0.49609375
+  },
+  {
+    "and_or_baseline": 0.33333333333333337,
+    "arm": "gold",
+    "best_keep_sets": 33,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 7,
+    "fourier_share_order_2_plus": 0.08049914362613164,
+    "fourier_shares": [
+      0.9195008563738684,
+      0.023489111817959384,
+      0.025935894298996818,
+      0.01712747736726205,
+      0.008319060435527282,
+      0.003914851969659897,
+      0.0014680694886224615,
+      0.00024467824810374357
+    ],
+    "gold_in_pool": 2,
+    "loo_credit": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "loo_regret": {
+      "max": 1.0,
+      "mean": 0.05714285714285714,
+      "min": 0.0,
+      "sets": 35
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      1,
+      0,
+      1,
+      3,
+      3,
+      3,
+      3,
+      1
+    ],
+    "question_id": "6aeb4375",
+    "question_type": "knowledge-update",
+    "shapley_credit": [
+      0.02857142857142857,
+      0.05238095238095238,
+      0.02857142857142857,
+      -0.02857142857142857,
+      -0.02857142857142857,
+      -0.011904761904761904,
+      -0.011904761904761904,
+      0.9714285714285714
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 1
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 1,
+    "utility_mean": 0.4765625
+  },
+  {
+    "and_or_baseline": null,
+    "arm": "retrieved",
+    "complete": true,
+    "distinct_replies": 1,
+    "fourier_share_order_2_plus": null,
+    "fourier_shares": null,
+    "gold_in_pool": 0,
+    "moebius_nonzero_by_order": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "question_id": "25e5aa4f",
+    "question_type": "single-session-user",
+    "utility_constant": true,
+    "utility_empty": 0,
+    "utility_full": 0,
+    "utility_mean": 0.0
+  },
+  {
+    "and_or_baseline": 0.0,
+    "arm": "gold",
+    "complete": true,
+    "distinct_replies": 2,
+    "fourier_share_order_2_plus": null,
+    "fourier_shares": null,
+    "gold_in_pool": 1,
+    "moebius_nonzero_by_order": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "question_id": "25e5aa4f",
+    "question_type": "single-session-user",
+    "utility_constant": true,
+    "utility_empty": 0,
+    "utility_full": 0,
+    "utility_mean": 0.0
+  },
+  {
+    "and_or_baseline": 0.0,
+    "arm": "retrieved",
+    "best_keep_sets": 35,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 3,
+    "fourier_share_order_2_plus": 0.0,
+    "fourier_shares": [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "gold_in_pool": 1,
+    "loo_credit": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "loo_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 35
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "question_id": "3d86fd0a",
+    "question_type": "single-session-user",
+    "shapley_credit": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 35
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 1,
+    "utility_mean": 0.5
+  },
+  {
+    "and_or_baseline": 0.0,
+    "arm": "gold",
+    "best_keep_sets": 35,
+    "best_keep_value": 1.0,
+    "complete": true,
+    "distinct_replies": 2,
+    "fourier_share_order_2_plus": 0.0,
+    "fourier_shares": [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "gold_in_pool": 1,
+    "loo_credit": [
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "loo_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 35
+    },
+    "moebius_nonzero_by_order": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "question_id": "3d86fd0a",
+    "question_type": "single-session-user",
+    "shapley_credit": [
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "shapley_regret": {
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "sets": 35
+    },
+    "utility_constant": false,
+    "utility_empty": 0,
+    "utility_full": 1,
+    "utility_mean": 0.5
+  }
+]

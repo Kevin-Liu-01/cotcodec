@@ -1,0 +1,343 @@
+{
+  "claim_level": "exploratory",
+  "experiment_id": "memcredit-step0-v1",
+  "requests_in_table": 4096,
+  "sampling": {
+    "greedy": {
+      "logprobs": 0,
+      "max_tokens": 64,
+      "temperature": 0.0
+    },
+    "sampled": {
+      "logprobs": 0,
+      "max_tokens": 64,
+      "seed": 44,
+      "temperature": 1.0,
+      "top_k": 0,
+      "top_p": 1.0
+    }
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "sessions": [
+    {
+      "batch_invariant": true,
+      "engine_kwargs": {
+        "dtype": "bfloat16",
+        "enable_prefix_caching": true,
+        "gpu_memory_utilization": 0.85,
+        "logprobs_mode": "raw_logprobs",
+        "max_model_len": 4096,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 256,
+        "model": "/model-cache/cotcodec-models/qwen3-8b",
+        "seed": 42,
+        "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+        "trust_remote_code": false
+      },
+      "id": "bi-a",
+      "passes": [
+        {
+          "max_inflight": null,
+          "max_s": 120,
+          "name": "smoke",
+          "order": "canonical",
+          "requests": 16,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 720,
+          "name": "greedy-all-canonical",
+          "order": "canonical",
+          "requests": 4096,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 720,
+          "name": "greedy-all-shuffled",
+          "order": "shuffled",
+          "requests": 4096,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 300,
+          "name": "sampled-canonical",
+          "order": "canonical",
+          "requests": 1024,
+          "reset_prefix_cache": true,
+          "sampling": "sampled"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 300,
+          "name": "sampled-shuffled",
+          "order": "shuffled",
+          "requests": 1024,
+          "reset_prefix_cache": true,
+          "sampling": "sampled"
+        },
+        {
+          "max_inflight": 8,
+          "max_s": 240,
+          "name": "greedy-throttled-c8",
+          "order": "shuffled",
+          "requests": 512,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": 1,
+          "max_s": 180,
+          "name": "greedy-single",
+          "order": "shuffled",
+          "requests": 96,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 180,
+          "name": "greedy-warm-cold",
+          "order": "canonical",
+          "requests": 512,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 180,
+          "name": "greedy-warm-hit",
+          "order": "canonical",
+          "requests": 512,
+          "reset_prefix_cache": false,
+          "sampling": "greedy"
+        }
+      ],
+      "requests": 11888
+    },
+    {
+      "batch_invariant": false,
+      "engine_kwargs": {
+        "dtype": "bfloat16",
+        "enable_prefix_caching": true,
+        "gpu_memory_utilization": 0.85,
+        "logprobs_mode": "raw_logprobs",
+        "max_model_len": 4096,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 256,
+        "model": "/model-cache/cotcodec-models/qwen3-8b",
+        "seed": 42,
+        "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+        "trust_remote_code": false
+      },
+      "id": "default-a",
+      "passes": [
+        {
+          "max_inflight": null,
+          "max_s": 120,
+          "name": "smoke",
+          "order": "canonical",
+          "requests": 16,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 600,
+          "name": "greedy-all-canonical",
+          "order": "canonical",
+          "requests": 4096,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 600,
+          "name": "greedy-all-shuffled",
+          "order": "shuffled",
+          "requests": 4096,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 300,
+          "name": "sampled-canonical",
+          "order": "canonical",
+          "requests": 1024,
+          "reset_prefix_cache": true,
+          "sampling": "sampled"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 300,
+          "name": "sampled-shuffled",
+          "order": "shuffled",
+          "requests": 1024,
+          "reset_prefix_cache": true,
+          "sampling": "sampled"
+        },
+        {
+          "max_inflight": 8,
+          "max_s": 240,
+          "name": "greedy-throttled-c8",
+          "order": "shuffled",
+          "requests": 512,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": 1,
+          "max_s": 180,
+          "name": "greedy-single",
+          "order": "shuffled",
+          "requests": 96,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        }
+      ],
+      "requests": 10864
+    },
+    {
+      "batch_invariant": true,
+      "engine_kwargs": {
+        "dtype": "bfloat16",
+        "enable_prefix_caching": true,
+        "gpu_memory_utilization": 0.85,
+        "logprobs_mode": "raw_logprobs",
+        "max_model_len": 4096,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 256,
+        "model": "/model-cache/cotcodec-models/qwen3-8b",
+        "seed": 42,
+        "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+        "trust_remote_code": false
+      },
+      "id": "bi-b",
+      "passes": [
+        {
+          "max_inflight": null,
+          "max_s": 120,
+          "name": "smoke",
+          "order": "canonical",
+          "requests": 16,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 720,
+          "name": "greedy-all-canonical",
+          "order": "canonical",
+          "requests": 4096,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 300,
+          "name": "sampled-canonical",
+          "order": "canonical",
+          "requests": 1024,
+          "reset_prefix_cache": true,
+          "sampling": "sampled"
+        }
+      ],
+      "requests": 5136
+    },
+    {
+      "batch_invariant": false,
+      "engine_kwargs": {
+        "dtype": "bfloat16",
+        "enable_prefix_caching": true,
+        "gpu_memory_utilization": 0.85,
+        "logprobs_mode": "raw_logprobs",
+        "max_model_len": 4096,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 256,
+        "model": "/model-cache/cotcodec-models/qwen3-8b",
+        "seed": 42,
+        "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+        "trust_remote_code": false
+      },
+      "id": "default-b",
+      "passes": [
+        {
+          "max_inflight": null,
+          "max_s": 120,
+          "name": "smoke",
+          "order": "canonical",
+          "requests": 16,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 600,
+          "name": "greedy-all-canonical",
+          "order": "canonical",
+          "requests": 4096,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 300,
+          "name": "sampled-canonical",
+          "order": "canonical",
+          "requests": 1024,
+          "reset_prefix_cache": true,
+          "sampling": "sampled"
+        }
+      ],
+      "requests": 5136
+    },
+    {
+      "batch_invariant": true,
+      "engine_kwargs": {
+        "dtype": "bfloat16",
+        "enable_prefix_caching": false,
+        "gpu_memory_utilization": 0.85,
+        "logprobs_mode": "raw_logprobs",
+        "max_model_len": 4096,
+        "max_num_batched_tokens": 2048,
+        "max_num_seqs": 64,
+        "model": "/model-cache/cotcodec-models/qwen3-8b",
+        "seed": 42,
+        "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+        "trust_remote_code": false
+      },
+      "id": "bi-c",
+      "passes": [
+        {
+          "max_inflight": null,
+          "max_s": 120,
+          "name": "smoke",
+          "order": "canonical",
+          "requests": 16,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        },
+        {
+          "max_inflight": null,
+          "max_s": 900,
+          "name": "greedy-all-canonical",
+          "order": "canonical",
+          "requests": 4096,
+          "reset_prefix_cache": true,
+          "sampling": "greedy"
+        }
+      ],
+      "requests": 4112
+    }
+  ]
+}

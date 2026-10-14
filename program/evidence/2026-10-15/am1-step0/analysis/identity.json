@@ -1,0 +1,850 @@
+[
+  {
+    "ci95_bits": [
+      0.9990998000877902,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9990998000877902,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 4096,
+    "identical_tokens_and_logprob_bits": 4096,
+    "mode": "batch_invariant",
+    "n_common": 4096,
+    "other": [
+      "bi-a",
+      "greedy-all-shuffled"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.9623030783764124,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9623030783764124,
+      1.0
+    ],
+    "clusters": 15,
+    "clusters_all_identical": 15,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 96,
+    "identical_tokens_and_logprob_bits": 96,
+    "mode": "batch_invariant",
+    "n_common": 96,
+    "other": [
+      "bi-a",
+      "greedy-single"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.9928210499737404,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9928210499737404,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 512,
+    "identical_tokens_and_logprob_bits": 512,
+    "mode": "batch_invariant",
+    "n_common": 512,
+    "other": [
+      "bi-a",
+      "greedy-throttled-c8"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.9928210499737404,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9928210499737404,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 512,
+    "identical_tokens_and_logprob_bits": 512,
+    "mode": "batch_invariant",
+    "n_common": 512,
+    "other": [
+      "bi-a",
+      "greedy-warm-cold"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.9928210499737404,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9928210499737404,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 512,
+    "identical_tokens_and_logprob_bits": 512,
+    "mode": "batch_invariant",
+    "n_common": 512,
+    "other": [
+      "bi-a",
+      "greedy-warm-hit"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.7940927857921771,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.7940927857921771,
+      1.0
+    ],
+    "clusters": 9,
+    "clusters_all_identical": 9,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 16,
+    "identical_tokens_and_logprob_bits": 16,
+    "mode": "batch_invariant",
+    "n_common": 16,
+    "other": [
+      "bi-a",
+      "smoke"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.9990998000877902,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9990998000877902,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 4096,
+    "identical_tokens_and_logprob_bits": 4096,
+    "mode": "batch_invariant",
+    "n_common": 4096,
+    "other": [
+      "bi-b",
+      "greedy-all-canonical"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.7940927857921771,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.7940927857921771,
+      1.0
+    ],
+    "clusters": 9,
+    "clusters_all_identical": 9,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 16,
+    "identical_tokens_and_logprob_bits": 16,
+    "mode": "batch_invariant",
+    "n_common": 16,
+    "other": [
+      "bi-b",
+      "smoke"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.9990998000877902,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9990998000877902,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 4096,
+    "identical_tokens_and_logprob_bits": 4096,
+    "mode": "batch_invariant",
+    "n_common": 4096,
+    "other": [
+      "bi-c",
+      "greedy-all-canonical"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.7940927857921771,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.7940927857921771,
+      1.0
+    ],
+    "clusters": 9,
+    "clusters_all_identical": 9,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 16,
+    "identical_tokens_and_logprob_bits": 16,
+    "mode": "batch_invariant",
+    "n_common": 16,
+    "other": [
+      "bi-c",
+      "smoke"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.9964040595931656,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9964040595931656,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 1024,
+    "identical_tokens_and_logprob_bits": 1024,
+    "mode": "batch_invariant",
+    "n_common": 1024,
+    "other": [
+      "bi-a",
+      "sampled-shuffled"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "sampled-canonical"
+    ],
+    "sampling": "sampled",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.9964040595931656,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9964040595931656,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 1024,
+    "identical_tokens_and_logprob_bits": 1024,
+    "mode": "batch_invariant",
+    "n_common": 1024,
+    "other": [
+      "bi-b",
+      "sampled-canonical"
+    ],
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "sampled-canonical"
+    ],
+    "sampling": "sampled",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.9836611483213633,
+      0.990715616303133
+    ],
+    "ci95_tokens": [
+      0.9978610589126173,
+      0.9998489315250336
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 13,
+    "differing_examples": [
+      {
+        "first_diff": 9,
+        "other_len": 24,
+        "ref_len": 24,
+        "request_index": 510,
+        "text_differs": true
+      },
+      {
+        "first_diff": 20,
+        "other_len": 38,
+        "ref_len": 45,
+        "request_index": 1119,
+        "text_differs": true
+      },
+      {
+        "first_diff": 8,
+        "other_len": 12,
+        "ref_len": 17,
+        "request_index": 2075,
+        "text_differs": true
+      }
+    ],
+    "differing_total": 3,
+    "identical_tokens": 4093,
+    "identical_tokens_and_logprob_bits": 4045,
+    "mode": "default",
+    "n_common": 4096,
+    "other": [
+      "default-a",
+      "greedy-all-shuffled"
+    ],
+    "rate_bits": 0.987548828125,
+    "rate_tokens": 0.999267578125,
+    "ref": [
+      "default-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 3
+  },
+  {
+    "ci95_bits": [
+      0.16721166395879744,
+      0.34877141127670963
+    ],
+    "ci95_tokens": [
+      0.9113819003384389,
+      0.9935085452301338
+    ],
+    "clusters": 15,
+    "clusters_all_identical": 13,
+    "differing_examples": [
+      {
+        "first_diff": 1,
+        "other_len": 32,
+        "ref_len": 11,
+        "request_index": 844,
+        "text_differs": true
+      },
+      {
+        "first_diff": 11,
+        "other_len": 30,
+        "ref_len": 38,
+        "request_index": 892,
+        "text_differs": true
+      },
+      {
+        "first_diff": 21,
+        "other_len": 41,
+        "ref_len": 46,
+        "request_index": 1179,
+        "text_differs": true
+      }
+    ],
+    "differing_total": 3,
+    "identical_tokens": 93,
+    "identical_tokens_and_logprob_bits": 24,
+    "mode": "default",
+    "n_common": 96,
+    "other": [
+      "default-a",
+      "greedy-single"
+    ],
+    "rate_bits": 0.25,
+    "rate_tokens": 0.96875,
+    "ref": [
+      "default-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 3
+  },
+  {
+    "ci95_bits": [
+      0.12588300503156802,
+      0.19064907525587704
+    ],
+    "ci95_tokens": [
+      0.954547089012544,
+      0.9849720307843559
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 9,
+    "differing_examples": [
+      {
+        "first_diff": 9,
+        "other_len": 24,
+        "ref_len": 24,
+        "request_index": 237,
+        "text_differs": true
+      },
+      {
+        "first_diff": 8,
+        "other_len": 24,
+        "ref_len": 25,
+        "request_index": 241,
+        "text_differs": true
+      },
+      {
+        "first_diff": 0,
+        "other_len": 14,
+        "ref_len": 10,
+        "request_index": 541,
+        "text_differs": true
+      },
+      {
+        "first_diff": 8,
+        "other_len": 10,
+        "ref_len": 28,
+        "request_index": 634,
+        "text_differs": true
+      },
+      {
+        "first_diff": 1,
+        "other_len": 14,
+        "ref_len": 26,
+        "request_index": 644,
+        "text_differs": true
+      },
+      {
+        "first_diff": 19,
+        "other_len": 26,
+        "ref_len": 32,
+        "request_index": 646,
+        "text_differs": true
+      },
+      {
+        "first_diff": 10,
+        "other_len": 33,
+        "ref_len": 36,
+        "request_index": 669,
+        "text_differs": true
+      },
+      {
+        "first_diff": 6,
+        "other_len": 18,
+        "ref_len": 30,
+        "request_index": 751,
+        "text_differs": true
+      },
+      {
+        "first_diff": 14,
+        "other_len": 21,
+        "ref_len": 32,
+        "request_index": 814,
+        "text_differs": true
+      },
+      {
+        "first_diff": 10,
+        "other_len": 28,
+        "ref_len": 28,
+        "request_index": 1023,
+        "text_differs": true
+      },
+      {
+        "first_diff": 4,
+        "other_len": 24,
+        "ref_len": 18,
+        "request_index": 1393,
+        "text_differs": true
+      },
+      {
+        "first_diff": 0,
+        "other_len": 17,
+        "ref_len": 16,
+        "request_index": 1653,
+        "text_differs": true
+      },
+      {
+        "first_diff": 0,
+        "other_len": 17,
+        "ref_len": 17,
+        "request_index": 2214,
+        "text_differs": true
+      },
+      {
+        "first_diff": 4,
+        "other_len": 12,
+        "ref_len": 11,
+        "request_index": 2988,
+        "text_differs": true
+      }
+    ],
+    "differing_total": 14,
+    "identical_tokens": 498,
+    "identical_tokens_and_logprob_bits": 80,
+    "mode": "default",
+    "n_common": 512,
+    "other": [
+      "default-a",
+      "greedy-throttled-c8"
+    ],
+    "rate_bits": 0.15625,
+    "rate_tokens": 0.97265625,
+    "ref": [
+      "default-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 14
+  },
+  {
+    "ci95_bits": [
+      0.0726620382528822,
+      0.5237708198961277
+    ],
+    "ci95_tokens": [
+      0.6165237631507365,
+      0.984486396184586
+    ],
+    "clusters": 9,
+    "clusters_all_identical": 7,
+    "differing_examples": [
+      {
+        "first_diff": 10,
+        "other_len": 24,
+        "ref_len": 25,
+        "request_index": 204,
+        "text_differs": true
+      },
+      {
+        "first_diff": 8,
+        "other_len": 30,
+        "ref_len": 10,
+        "request_index": 839,
+        "text_differs": true
+      }
+    ],
+    "differing_total": 2,
+    "identical_tokens": 14,
+    "identical_tokens_and_logprob_bits": 4,
+    "mode": "default",
+    "n_common": 16,
+    "other": [
+      "default-a",
+      "smoke"
+    ],
+    "rate_bits": 0.25,
+    "rate_tokens": 0.875,
+    "ref": [
+      "default-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 2
+  },
+  {
+    "ci95_bits": [
+      0.9986404943693132,
+      0.9999938189136381
+    ],
+    "ci95_tokens": [
+      0.9990998000877902,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 4096,
+    "identical_tokens_and_logprob_bits": 4095,
+    "mode": "default",
+    "n_common": 4096,
+    "other": [
+      "default-b",
+      "greedy-all-canonical"
+    ],
+    "rate_bits": 0.999755859375,
+    "rate_tokens": 1.0,
+    "ref": [
+      "default-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.0726620382528822,
+      0.5237708198961277
+    ],
+    "ci95_tokens": [
+      0.6165237631507365,
+      0.984486396184586
+    ],
+    "clusters": 9,
+    "clusters_all_identical": 7,
+    "differing_examples": [
+      {
+        "first_diff": 10,
+        "other_len": 24,
+        "ref_len": 25,
+        "request_index": 204,
+        "text_differs": true
+      },
+      {
+        "first_diff": 8,
+        "other_len": 30,
+        "ref_len": 10,
+        "request_index": 839,
+        "text_differs": true
+      }
+    ],
+    "differing_total": 2,
+    "identical_tokens": 14,
+    "identical_tokens_and_logprob_bits": 4,
+    "mode": "default",
+    "n_common": 16,
+    "other": [
+      "default-b",
+      "smoke"
+    ],
+    "rate_bits": 0.25,
+    "rate_tokens": 0.875,
+    "ref": [
+      "default-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 2
+  },
+  {
+    "ci95_bits": [
+      0.8552558229904896,
+      0.896454994957159
+    ],
+    "ci95_tokens": [
+      0.9929626170738208,
+      0.999763379919046
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 15,
+    "differing_examples": [
+      {
+        "first_diff": 45,
+        "other_len": 49,
+        "ref_len": 49,
+        "request_index": 1427,
+        "text_differs": true
+      },
+      {
+        "first_diff": 33,
+        "other_len": 47,
+        "ref_len": 46,
+        "request_index": 1435,
+        "text_differs": true
+      }
+    ],
+    "differing_total": 2,
+    "identical_tokens": 1022,
+    "identical_tokens_and_logprob_bits": 898,
+    "mode": "default",
+    "n_common": 1024,
+    "other": [
+      "default-a",
+      "sampled-shuffled"
+    ],
+    "rate_bits": 0.876953125,
+    "rate_tokens": 0.998046875,
+    "ref": [
+      "default-a",
+      "sampled-canonical"
+    ],
+    "sampling": "sampled",
+    "text_differs_total": 2
+  },
+  {
+    "ci95_bits": [
+      0.9505375380996772,
+      0.974433992365892
+    ],
+    "ci95_tokens": [
+      0.9964040595931656,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 1024,
+    "identical_tokens_and_logprob_bits": 987,
+    "mode": "default",
+    "n_common": 1024,
+    "other": [
+      "default-b",
+      "sampled-canonical"
+    ],
+    "rate_bits": 0.9638671875,
+    "rate_tokens": 1.0,
+    "ref": [
+      "default-a",
+      "sampled-canonical"
+    ],
+    "sampling": "sampled",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.9982372848193617,
+      0.999940861404355
+    ],
+    "ci95_tokens": [
+      0.9990998000877902,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 4096,
+    "identical_tokens_and_logprob_bits": 4094,
+    "mode": "cross-mode",
+    "n_common": 4096,
+    "other": [
+      "default-a",
+      "greedy-all-canonical"
+    ],
+    "rate_bits": 0.99951171875,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "greedy-all-canonical"
+    ],
+    "sampling": "greedy",
+    "text_differs_total": 0
+  },
+  {
+    "ci95_bits": [
+      0.9483008183356156,
+      0.9727795703369648
+    ],
+    "ci95_tokens": [
+      0.9964040595931656,
+      1.0
+    ],
+    "clusters": 16,
+    "clusters_all_identical": 16,
+    "differing_examples": [],
+    "differing_total": 0,
+    "identical_tokens": 1024,
+    "identical_tokens_and_logprob_bits": 985,
+    "mode": "cross-mode",
+    "n_common": 1024,
+    "other": [
+      "default-a",
+      "sampled-canonical"
+    ],
+    "rate_bits": 0.9619140625,
+    "rate_tokens": 1.0,
+    "ref": [
+      "bi-a",
+      "sampled-canonical"
+    ],
+    "sampling": "sampled",
+    "text_differs_total": 0
+  }
+]

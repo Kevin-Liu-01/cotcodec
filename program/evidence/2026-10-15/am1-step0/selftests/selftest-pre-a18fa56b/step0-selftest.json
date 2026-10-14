@@ -1,0 +1,371 @@
+{
+  "analysis_selftest": "ok",
+  "ok": true,
+  "parsers": "ok",
+  "plan": {
+    "claim_level": "exploratory",
+    "experiment_id": "memcredit-step0-v1",
+    "requests_in_table": 4096,
+    "sampling": {
+      "greedy": {
+        "logprobs": 0,
+        "max_tokens": 64,
+        "temperature": 0.0
+      },
+      "sampled": {
+        "logprobs": 0,
+        "max_tokens": 64,
+        "seed": 44,
+        "temperature": 1.0,
+        "top_k": 0,
+        "top_p": 1.0
+      }
+    },
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "sessions": [
+      {
+        "batch_invariant": true,
+        "engine_kwargs": {
+          "dtype": "bfloat16",
+          "enable_prefix_caching": true,
+          "gpu_memory_utilization": 0.85,
+          "logprobs_mode": "raw_logprobs",
+          "max_model_len": 4096,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 256,
+          "model": "/model-cache/cotcodec-models/qwen3-8b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+          "trust_remote_code": false
+        },
+        "id": "bi-a",
+        "passes": [
+          {
+            "max_inflight": null,
+            "max_s": 120,
+            "name": "smoke",
+            "order": "canonical",
+            "requests": 16,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 720,
+            "name": "greedy-all-canonical",
+            "order": "canonical",
+            "requests": 4096,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 720,
+            "name": "greedy-all-shuffled",
+            "order": "shuffled",
+            "requests": 4096,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 300,
+            "name": "sampled-canonical",
+            "order": "canonical",
+            "requests": 1024,
+            "reset_prefix_cache": true,
+            "sampling": "sampled"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 300,
+            "name": "sampled-shuffled",
+            "order": "shuffled",
+            "requests": 1024,
+            "reset_prefix_cache": true,
+            "sampling": "sampled"
+          },
+          {
+            "max_inflight": 8,
+            "max_s": 240,
+            "name": "greedy-throttled-c8",
+            "order": "shuffled",
+            "requests": 512,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": 1,
+            "max_s": 180,
+            "name": "greedy-single",
+            "order": "shuffled",
+            "requests": 96,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 180,
+            "name": "greedy-warm-cold",
+            "order": "canonical",
+            "requests": 512,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 180,
+            "name": "greedy-warm-hit",
+            "order": "canonical",
+            "requests": 512,
+            "reset_prefix_cache": false,
+            "sampling": "greedy"
+          }
+        ],
+        "requests": 11888
+      },
+      {
+        "batch_invariant": false,
+        "engine_kwargs": {
+          "dtype": "bfloat16",
+          "enable_prefix_caching": true,
+          "gpu_memory_utilization": 0.85,
+          "logprobs_mode": "raw_logprobs",
+          "max_model_len": 4096,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 256,
+          "model": "/model-cache/cotcodec-models/qwen3-8b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+          "trust_remote_code": false
+        },
+        "id": "default-a",
+        "passes": [
+          {
+            "max_inflight": null,
+            "max_s": 120,
+            "name": "smoke",
+            "order": "canonical",
+            "requests": 16,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 600,
+            "name": "greedy-all-canonical",
+            "order": "canonical",
+            "requests": 4096,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 600,
+            "name": "greedy-all-shuffled",
+            "order": "shuffled",
+            "requests": 4096,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 300,
+            "name": "sampled-canonical",
+            "order": "canonical",
+            "requests": 1024,
+            "reset_prefix_cache": true,
+            "sampling": "sampled"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 300,
+            "name": "sampled-shuffled",
+            "order": "shuffled",
+            "requests": 1024,
+            "reset_prefix_cache": true,
+            "sampling": "sampled"
+          },
+          {
+            "max_inflight": 8,
+            "max_s": 240,
+            "name": "greedy-throttled-c8",
+            "order": "shuffled",
+            "requests": 512,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": 1,
+            "max_s": 180,
+            "name": "greedy-single",
+            "order": "shuffled",
+            "requests": 96,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          }
+        ],
+        "requests": 10864
+      },
+      {
+        "batch_invariant": true,
+        "engine_kwargs": {
+          "dtype": "bfloat16",
+          "enable_prefix_caching": true,
+          "gpu_memory_utilization": 0.85,
+          "logprobs_mode": "raw_logprobs",
+          "max_model_len": 4096,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 256,
+          "model": "/model-cache/cotcodec-models/qwen3-8b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+          "trust_remote_code": false
+        },
+        "id": "bi-b",
+        "passes": [
+          {
+            "max_inflight": null,
+            "max_s": 120,
+            "name": "smoke",
+            "order": "canonical",
+            "requests": 16,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 720,
+            "name": "greedy-all-canonical",
+            "order": "canonical",
+            "requests": 4096,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 300,
+            "name": "sampled-canonical",
+            "order": "canonical",
+            "requests": 1024,
+            "reset_prefix_cache": true,
+            "sampling": "sampled"
+          }
+        ],
+        "requests": 5136
+      },
+      {
+        "batch_invariant": false,
+        "engine_kwargs": {
+          "dtype": "bfloat16",
+          "enable_prefix_caching": true,
+          "gpu_memory_utilization": 0.85,
+          "logprobs_mode": "raw_logprobs",
+          "max_model_len": 4096,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 256,
+          "model": "/model-cache/cotcodec-models/qwen3-8b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+          "trust_remote_code": false
+        },
+        "id": "default-b",
+        "passes": [
+          {
+            "max_inflight": null,
+            "max_s": 120,
+            "name": "smoke",
+            "order": "canonical",
+            "requests": 16,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 600,
+            "name": "greedy-all-canonical",
+            "order": "canonical",
+            "requests": 4096,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 300,
+            "name": "sampled-canonical",
+            "order": "canonical",
+            "requests": 1024,
+            "reset_prefix_cache": true,
+            "sampling": "sampled"
+          }
+        ],
+        "requests": 5136
+      },
+      {
+        "batch_invariant": true,
+        "engine_kwargs": {
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.85,
+          "logprobs_mode": "raw_logprobs",
+          "max_model_len": 4096,
+          "max_num_batched_tokens": 2048,
+          "max_num_seqs": 64,
+          "model": "/model-cache/cotcodec-models/qwen3-8b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+          "trust_remote_code": false
+        },
+        "id": "bi-c",
+        "passes": [
+          {
+            "max_inflight": null,
+            "max_s": 120,
+            "name": "smoke",
+            "order": "canonical",
+            "requests": 16,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          },
+          {
+            "max_inflight": null,
+            "max_s": 900,
+            "name": "greedy-all-canonical",
+            "order": "canonical",
+            "requests": 4096,
+            "reset_prefix_cache": true,
+            "sampling": "greedy"
+          }
+        ],
+        "requests": 4112
+      }
+    ]
+  },
+  "prompts": {
+    "end_of_turn_id": 151645,
+    "fits": true,
+    "last_prompt_tail": "'t know\".<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+    "len_max": 940,
+    "len_mean": 404.5703125,
+    "len_min": 108,
+    "requests": 4096,
+    "thinking_disabled": true,
+    "tokens_total": 1657120
+  },
+  "vllm_cited_files_sha256": {
+    "config/vllm.py": "057b0a7f80db28522ee46b41f9ae5bd7a0c1998a08e111c5a6ddcb8c08f07f8d",
+    "engine/arg_utils.py": "95be1adb96f55933f6a52260c8cb2181d04707401ca21d97c33108c5ab58f3ac",
+    "envs.py": "1d7101800f67b803a700fbf7489292cf1f0022b570085166ad407e6b1513dc15",
+    "model_executor/determinism/batch_invariant.py": "fd39330e48f8b209def7378b1b83fa009534617e8fc41230dc4f40a528309993",
+    "model_executor/determinism/batch_invariant_configs.py": "9fef5b173374b7fe01f199332bea7477fde6384f63d62bc5662722e55f0bdaa4",
+    "model_executor/layers/attention/attention.py": "bde77677fd0e95ea09c6a580dfaf09b57741e8183e00cb106e2d1cc64d8e03f2",
+    "sampling_params.py": "3c37c655a0a60851e3d96d946eb10d1cbb347dee6cd143f38a7fc18c6f66dd8b",
+    "v1/attention/backends/flash_attn.py": "ea53fb41165323f13094604051c73d44a579994fe5a427243aa9faafc280b1c2",
+    "v1/worker/gpu_worker.py": "43bd01925cd84f7d8a1d4a2ec30e289014a485fe4492a5343cbc893e8ed2f518"
+  },
+  "vllm_version": "0.31.0"
+}

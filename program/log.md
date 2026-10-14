@@ -5661,3 +5661,44 @@ they say so.)
   (numeric bins, within-sequence slopes, entropy-standardized curve, by-entropy tables),
   `harness/g2_pilot.py`, `experiments/g2/g2-pilot-v1.yaml`, `tests/test_g2_pilot.py`,
   `program/evidence/2026-10-14/g2-pilot/corrections/robustness_checks.py`.
+
+## 2026-10-15 — AM1 Step 0 (exploratory): exact replay of the Qwen3-8B reader and the cost of exact subset tables (branch `stage0/am1-step0`, not merged)
+
+- What ran. EXPLORATORY Step 0 of AM1 (D104; dossier entry 3), 0.1978 physical GPU-h of the 1.5
+  cap: one cotcodec-vllm overlay build (job 1393, `b95ac22c`, image `sha256:51540dd5`) and one main
+  job (1397, 00:10:48 on 1 H100, 2026-10-14 23:01-23:12Z) with five vLLM 0.31.0 engine sessions
+  (batch-invariant `bi-a`, `bi-b` restart, `bi-c` reconfigured; default `default-a`, `default-b`
+  restart), 24 passes and 37,136 requests. CPU-only: LongMemEval-S fetch 1362, selftests 1383
+  and 1394. Both GPU jobs were submitted with no G2b job in the queue; two CPU jobs ran beside
+  G2b GPU jobs and G2b's CPU job 1398 ran beside the main job (README, Problems).
+- How batch invariance is enabled in v0.31.0 (read-only at `db9527a4`, line-pinned in the README):
+  `VLLM_BATCH_INVARIANT=1`, applied by the worker at start-up; on an H100 it routes every bf16
+  linear layer and the LM head through a Triton persistent matmul, sets FlashAttention
+  `num_splits=1`, overrides softmax/log-softmax/bmm/mean, keeps prefix caching with FLASH_ATTN,
+  and (no tuned Qwen3-8B tiles on Hopper) stays on torch.compile with CUDA graphs. The nine cited
+  files hash the same in the image as at the tag.
+- LongMemEval-S under D1: `xiaowu0162/longmemeval-cleaned` @ `98d7416c`,
+  `longmemeval_s_cleaned.json`, 277,383,467 bytes, SHA-256 `d6f21ea9...` (equal to the Hub's LFS
+  oid), MIT; on the host only.
+- Readings (exploratory): in batch-invariant mode every A/A comparison was identical in tokens
+  and log-prob bits (4,096 of 4,096 greedy requests under a shuffled order, a restart and a
+  reconfigured engine, each 95% CP [0.9991, 1]; 512 at concurrency 8, 96 one at a time, 512 from
+  a warm prefix cache; 1,024 of 1,024 seeded samples shuffled and restarted). The default mode
+  repeated all 4,096 replies on a same-schedule restart but changed 3 of 4,096 under a shuffled
+  order, 14 of 512 at concurrency 8 and 3 of 96 one at a time. Batch invariance cost 1.32-1.38x
+  wall time on batched passes and 2.5-3.1x at concurrency 8 or 1 (both modes power-capped at
+  700 W when batched). The 256-subset tables cost 2.8 GPU-s per question for both arms
+  (4,096 requests in 22.6 s; 405-token prompts, 64.5% prefix-cache hits): about 0.16 GPU-h per
+  pass for 200 questions, against the dossier's 4-6 GPU-h per arm. The demo's crude containment
+  utility cannot score the tables (a judge is required); a CPU census finds 416 of 500 questions
+  usable with user-turn memories, 84% of them with one or two required memories, and BM25 top-8
+  recall of gold turns 0.74.
+- Feasibility: AM1's full study is feasible on this node and GPU is not its constraint (about
+  1-2 GPU-h for the folded reader work at these memory units); the open work is the judge, the
+  estimators, the placebo arms, a cross-GPU A/A, and pools that produce mixed interaction
+  structures so that H2 can fire.
+- Evidence: `program/evidence/2026-10-15/am1-step0/` (README with "Main takeaways", identity,
+  throughput, cost, demo and census tables; fetch receipt; pools summary; lane records; every
+  pass's tokens and log-probs; host analysis rerun byte-identical to the in-job analysis). Raw
+  outputs, the study artifact and the dataset stay on the host under
+  `~/cotcodec-runs/stage0/am1-step0/`.

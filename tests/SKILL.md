@@ -54,6 +54,10 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
 - `test_open_weight_review.py` runs the reviewer on a scripted fake engine
   (retry, replicates, signals, receipts) and the vLLM adapter and doctor on
   fake `vllm`, `transformers` and `torch` modules; no GPU or vLLM needed.
+- `test_memcredit.py` covers AM1 Step 0: config and plan, pools, prompts,
+  Clopper-Pearson, the AND/OR spectra, LOO/Shapley regret, the analysis on a
+  synthetic run, the request loop on a fake engine, and the lane's admission
+  of the `memcredit_step0.py` command; no GPU or vLLM needed.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->
