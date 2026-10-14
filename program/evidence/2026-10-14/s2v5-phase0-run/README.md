@@ -123,6 +123,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1292 | K1 C1 on E (H-GA-buggy, H-OSW-up; seed 42) | 154 | 04:44:31 | 04:44:32-04:50:59 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count (driver exit 0, no labelled container, `infra_gates_pass`, image unchanged) |
 | 1293 | K1 C2 on E (L0-raw, seed 45) | 362 | 04:51:57 | 04:51:58-05:02:12 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 | 1294 | K1 C3 on E, part 1 of 3 (17 mutant campaigns, M01-M11; seed 42) | 1,404 | 05:03:14 | 05:03:15-05:59:31 (56.3 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell; C3 is read once part 3 (the references) has run |
+| 1295 | K1 C3 on E, part 2 of 3 (17 mutant campaigns, M11-M21) | 1,404 | 06:00:54 | 06:00:55-06:57:16 (56.4 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -155,3 +156,8 @@ and the last `scontrol` record):
   (`c3_interim.py`, `c3-interim-1294.json`; decides nothing): every one of the 17 mutant runs
   failed at least one cell (1 to 45 cells), none with an infrastructure failure. C3 on E is read
   from all three parts.
+- **1295 (C3, E, part 2).** Host snapshot: load 0.26, queue empty, 0 labelled containers. 17
+  campaigns (M11 on L0-fixed to M21), 1,667 trials; every campaign counts; cold boots at most
+  17.9 s; step p95 at most 1.37 s. As for part 1, the job-alone verdict cannot read C3 (no
+  reference yet). Interim summary (`c3-interim-1295.json`): every mutant run failed at least one
+  cell (1 to 18 cells), none with an infrastructure failure.
