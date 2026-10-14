@@ -1,0 +1,199 @@
+# AM1 Step 0 (D104; dossier entry 3 of program/evidence/2026-10-14/question-sweep-memory-gpu/
+# dossier.md): exact subset tables for agent-memory credit, Step 0 only.
+#
+# EXPLORATORY. Not a registered experiment: no preregistration, no decision rule, no
+# confirmatory claim. Cap: 1.5 physical GPU-h in all, image build included.
+#
+# It measures three things in one GPU job (scripts/memcredit_step0.py in the cotcodec-vllm cu129
+# overlay, vLLM 0.31.0):
+#   1. the A/A identity rate of the Qwen3-8B reader in vLLM's batch-invariant mode
+#      (VLLM_BATCH_INVARIANT=1) against the default mode: the same requests (same prompt, same
+#      request seed) under different orders, batch compositions, concurrency caps, prefix-cache
+#      states and engine restarts, greedy and sampled; and the mode's throughput cost;
+#   2. (fetched separately, CPU) LongMemEval-S under D1;
+#   3. a demo of the exact 2^8-subset outcome table on 8 questions x 2 pool arms, which is also
+#      the A/A request set, to measure the cost per question and to check bit-exact replay.
+# scripts/memcredit_prepare.py (CPU) builds the pools; scripts/memcredit_step0.py analyze (CPU)
+# reads the job's outputs.
+schema_version: 1
+experiment_id: memcredit-step0-v1
+claim_level: exploratory
+
+# Declared before the run. 42: question selection, the gold arm's distractors, the engine seed,
+# the smoke and throttled request subsets; 43: the shuffled pass order and the batch-1 subset;
+# 44: the sampled arm's per-request seed and the sampled and warm-cache subsets.
+seeds: [42, 43, 44]
+
+source:
+  dataset: xiaowu0162/longmemeval-cleaned
+  file: longmemeval_s_cleaned.json
+  revision: "98d7416c24c778c2fee6e6f3006e7a073259d48f"
+  sha256: "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+  size_bytes: 277383467
+  license: MIT
+
+# The demo: 8 questions, 2 per stratum. Single-session-assistant (gold in assistant turns) and
+# single-session-preference (rubric answers that a containment check cannot score) are left
+# out of the demo, as are abstention questions. The full study's strata are its own decision.
+selection:
+  seed: 42
+  types:
+    temporal-reasoning: 2
+    multi-session: 2
+    knowledge-update: 2
+    single-session-user: 2
+  exclude_abstention: true
+  gold_roles: [user]
+  max_gold_turns: 6
+  pool_size: 8
+
+# Memory unit: one user turn (96% of LongMemEval-S gold turns are user turns), with its
+# session date. BM25 stands in for the dossier's MiniLM retriever in this demo.
+retriever:
+  name: bm25-okapi-lucene-idf
+  unit: user-turn
+  k1: 1.5
+  b: 0.75
+
+# retrieved: the BM25 top 8 user turns. gold: every gold user turn plus distractors drawn
+# uniformly (seed 42, per question) from the question's other user turns.
+pools:
+  size: 8
+  arms: [retrieved, gold]
+  max_memory_chars: 1500
+  distractor_seed: 42
+
+prompt:
+  enable_thinking: false
+  no_memories: "(none)"
+  user: |-
+    Below are memories from your earlier conversations with the user. Each memory is something the user said, with the date of that conversation. Some memories may be irrelevant.
+
+    Memories:
+    {memories}
+
+    Current date: {question_date}
+    Question: {question}
+
+    Answer the question in one short sentence using the memories. If they do not contain the answer, say "I don't know".
+
+model:
+  id: qwen3-8b
+  revision: "b968826d9c46dd6066d109eabc6255188de91218"
+  receipt_root: cotcodec-receipts-cpu-lane
+
+engine:
+  dtype: bfloat16
+  max_model_len: 4096
+  gpu_memory_utilization: 0.85
+  logprobs_mode: raw_logprobs
+
+sampling:
+  greedy:
+    temperature: 0.0
+    max_tokens: 64
+    logprobs: 0
+  sampled:
+    temperature: 1.0
+    top_p: 1.0
+    top_k: 0
+    max_tokens: 64
+    logprobs: 0
+    seed: 44
+
+shuffle_seed: 43
+
+# Request sets, as indices into the canonical request table (question, arm, mask).
+request_sets:
+  smoke: {size: 16, seed: 42}
+  all: {size: null, seed: null}
+  sampled: {size: 1024, seed: 44}
+  throttled: {size: 512, seed: 42}
+  single: {size: 96, seed: 43}
+  warm: {size: 512, seed: 44}
+
+# Engine sessions in run order (one vLLM engine each; a new session is an engine restart).
+# Each pass resets the prefix cache first unless reset_prefix_cache is false. max_s bounds a
+# pass; a session starts only with min_start_s left before the job's deadline.
+sessions:
+  - id: bi-a
+    batch_invariant: true
+    prefix_caching: true
+    max_num_seqs: 256
+    max_num_batched_tokens: 8192
+    min_start_s: 300
+    passes:
+      - {name: smoke, set: smoke, sampling: greedy, order: canonical, smoke: true, max_s: 120}
+      - {name: greedy-all-canonical, set: all, sampling: greedy, order: canonical, max_s: 720}
+      - {name: greedy-all-shuffled, set: all, sampling: greedy, order: shuffled, max_s: 720}
+      - {name: sampled-canonical, set: sampled, sampling: sampled, order: canonical, max_s: 300}
+      - {name: sampled-shuffled, set: sampled, sampling: sampled, order: shuffled, max_s: 300}
+      - {name: greedy-throttled-c8, set: throttled, sampling: greedy, order: shuffled, max_inflight: 8, max_s: 240}
+      - {name: greedy-single, set: single, sampling: greedy, order: shuffled, max_inflight: 1, max_s: 180}
+      - {name: greedy-warm-cold, set: warm, sampling: greedy, order: canonical, max_s: 180}
+      - {name: greedy-warm-hit, set: warm, sampling: greedy, order: canonical, reset_prefix_cache: false, max_s: 180}
+  - id: default-a
+    batch_invariant: false
+    prefix_caching: true
+    max_num_seqs: 256
+    max_num_batched_tokens: 8192
+    min_start_s: 300
+    passes:
+      - {name: smoke, set: smoke, sampling: greedy, order: canonical, smoke: true, max_s: 120}
+      - {name: greedy-all-canonical, set: all, sampling: greedy, order: canonical, max_s: 600}
+      - {name: greedy-all-shuffled, set: all, sampling: greedy, order: shuffled, max_s: 600}
+      - {name: sampled-canonical, set: sampled, sampling: sampled, order: canonical, max_s: 300}
+      - {name: sampled-shuffled, set: sampled, sampling: sampled, order: shuffled, max_s: 300}
+      - {name: greedy-throttled-c8, set: throttled, sampling: greedy, order: shuffled, max_inflight: 8, max_s: 240}
+      - {name: greedy-single, set: single, sampling: greedy, order: shuffled, max_inflight: 1, max_s: 180}
+  - id: bi-b
+    batch_invariant: true
+    prefix_caching: true
+    max_num_seqs: 256
+    max_num_batched_tokens: 8192
+    min_start_s: 300
+    passes:
+      - {name: smoke, set: smoke, sampling: greedy, order: canonical, smoke: true, max_s: 120}
+      - {name: greedy-all-canonical, set: all, sampling: greedy, order: canonical, max_s: 720}
+      - {name: sampled-canonical, set: sampled, sampling: sampled, order: canonical, max_s: 300}
+  - id: default-b
+    batch_invariant: false
+    prefix_caching: true
+    max_num_seqs: 256
+    max_num_batched_tokens: 8192
+    min_start_s: 240
+    passes:
+      - {name: smoke, set: smoke, sampling: greedy, order: canonical, smoke: true, max_s: 120}
+      - {name: greedy-all-canonical, set: all, sampling: greedy, order: canonical, max_s: 600}
+      - {name: sampled-canonical, set: sampled, sampling: sampled, order: canonical, max_s: 300}
+  # A differently configured batch-invariant engine: no prefix caching, 2,048-token prefill
+  # chunks, at most 64 sequences. A difference here could come from any of the three.
+  - id: bi-c
+    batch_invariant: true
+    prefix_caching: false
+    max_num_seqs: 64
+    max_num_batched_tokens: 2048
+    min_start_s: 300
+    passes:
+      - {name: smoke, set: smoke, sampling: greedy, order: canonical, smoke: true, max_s: 120}
+      - {name: greedy-all-canonical, set: all, sampling: greedy, order: canonical, max_s: 900}
+
+analysis:
+  # Every pass of a mode is compared with that mode's reference pass for the same sampling.
+  references:
+    batch_invariant: bi-a
+    default: default-a
+  reference_pass:
+    greedy: greedy-all-canonical
+    sampled: sampled-canonical
+  # Matched passes for the throughput cost (batch-invariant / default wall time).
+  throughput_pairs:
+    - [bi-a, default-a]
+    - [bi-b, default-b]
+  keep_budget: 4
+  # The full study's size, for the cost extrapolation (dossier Step 1).
+  full_study_questions: 200
+
+budget:
+  total_physical_gpu_hours: 1.5
+  job_minutes: 75
