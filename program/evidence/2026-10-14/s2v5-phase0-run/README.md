@@ -128,6 +128,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1297 | K1 A1 on E (L0-fixed at N = 1, seeds 43 and 44, both observation settings) | 1,394 | 07:42:30 | 07:42:30-09:09:50 (87.3 min) | COMPLETED 0:0 | A1 pass and C4 pass; both campaigns count; 2,000 of 2,000 trials |
 | 1298 | K1 A2 on E (H-OSW-fixed and H-GA, seed 43, both observation settings) | 1,344 | 09:11:16 | 09:11:17-10:43:02 (91.8 min) | COMPLETED 0:0 | A2 pass; both campaigns count |
 | 1299 | K1 A5 on E (boot reset and hygiene: 21 cold boots) | 192 | 10:46:09 | 10:46:09-11:03:24 (17.3 min) | COMPLETED 0:0 | A5 pass; the campaign counts |
+| 1300 | K1 A6 on E (cross-app canary: Writer, Chrome, VS Code, GNOME Terminal; seed 43; q2's targets) | 222 | 11:04:39 | 11:04:39-11:54:25 (49.8 min) | COMPLETED 0:0 | A6 pass (300 of 300, all 60 entries 5 of 5); the campaign counts |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -207,6 +208,15 @@ and the last `scontrol` record):
   infrastructure gates pass. `ap_delta_v5.verdict` on this job: A5 on E `pass`, no problem. The
   campaign counts (driver exit 0, `infra_gates_pass`, image unchanged, no labelled container; no
   foreign-abort or snapshot problem).
+- **1300 (A6, E).** Host snapshot: load 0.30, queue empty, 0 labelled containers. One canary
+  campaign, screenshot setting, seed-43 order, 5 cold boots of 60 entries (Writer 16, Chrome 16, VS
+  Code 16, GNOME Terminal 12) at q2's targets, read from q2's `suite_cells.json` (E keeps q2's
+  targets): 300 of 300 trials passed, every entry 5 of 5 (`campaign_summary.py`,
+  `summary-1300.jsonl`); 4 of 4 reset sentinels pristine; 0 guest-server restarts; no
+  state-not-observed, infrastructure or retried trial. Cold boots at most 17.9 s; step p95 1.81 s.
+  `ap_delta_v5.verdict` on this job: A6 on E `pass`, no problem, and its cells-file check `pass`
+  (the campaign read q2's file, as E must). The campaign counts (driver exit 0, `infra_gates_pass`,
+  image unchanged, no labelled container; no foreign-abort or snapshot problem). As v4's job 1262.
 
 ## Stint 1 stop (operator's record, 10:44Z on 2026-10-14)
 
