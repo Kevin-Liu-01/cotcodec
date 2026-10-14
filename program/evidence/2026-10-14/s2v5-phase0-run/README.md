@@ -127,6 +127,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1296 | K1 C3 on E, part 3 of 3 (10 mutant campaigns, M22-M28, and the 3 unmutated references) | 1,076 | 06:58:15 | 06:58:16-07:41:25 (43.2 min) | COMPLETED 0:0 | All 13 campaigns count. **C3 on E pass** over parts 1-3 (1294-1296): 42 mutants killed, 2 equivalent, 0 survived |
 | 1297 | K1 A1 on E (L0-fixed at N = 1, seeds 43 and 44, both observation settings) | 1,394 | 07:42:30 | 07:42:30-09:09:50 (87.3 min) | COMPLETED 0:0 | A1 pass and C4 pass; both campaigns count; 2,000 of 2,000 trials |
 | 1298 | K1 A2 on E (H-OSW-fixed and H-GA, seed 43, both observation settings) | 1,344 | 09:11:16 | 09:11:17-10:43:02 (91.8 min) | COMPLETED 0:0 | A2 pass; both campaigns count |
+| 1299 | K1 A5 on E (boot reset and hygiene: 21 cold boots) | 192 | 10:46:09 | 10:46:09-11:03:24 (17.3 min) | COMPLETED 0:0 | A5 pass; the campaign counts |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -196,6 +197,16 @@ and the last `scontrol` record):
   trials. Cold boots at most 17.9 s; step p95 2.57 s and 2.63 s. `ap_delta_v5.verdict` on this
   job: A2 on E `pass`, no problem. Both campaigns count (driver exit 0, `infra_gates_pass`, image
   unchanged, no labelled container; no foreign-abort or snapshot problem).
+- **1299 (A5, E; stint 2).** Host snapshot: load 0.08, queue empty, 0 labelled containers; K1 runs
+  1292-1298 only and `ops.log` listing 1292-1298 only (checked at 10:45:52Z before submitting). One
+  boot-reset campaign: 21 cold boots, each after the first checking that the previous boot's
+  sentinel (a file, a dconf key and a gsettings key) was gone: 20 of 20 pristine; every boot read
+  back its own sentinel (21 of 21 in each store). Boots p50 17.2 s, at most 17.9 s. Reported, not
+  judged (as q2-action-path-v2's jobs 374 and 964): HMP `sendkey menu` reached X in 0 of 21 boots,
+  every other HMP step in 21 of 21, so the receipt's `hmp_cycles_all_ok` is 0 and its
+  infrastructure gates pass. `ap_delta_v5.verdict` on this job: A5 on E `pass`, no problem. The
+  campaign counts (driver exit 0, `infra_gates_pass`, image unchanged, no labelled container; no
+  foreign-abort or snapshot problem).
 
 ## Stint 1 stop (operator's record, 10:44Z on 2026-10-14)
 
