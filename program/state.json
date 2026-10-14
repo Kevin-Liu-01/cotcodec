@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 20.8436,
+  "gpu_hours_spent_this_program": 20.8466,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1222,12 +1222,12 @@
     },
     {
       "experiment": "g2-pilot-v1 rollouts, attempt 1 (EXPLORATORY G2 pilot, D104): Qwen3.5-4B 64 prompts x 3 seeds, no time budget",
-      "gpu_hours": 0.2114,
+      "gpu_hours": 0.2144,
       "jobs": [
-        "1337 rollouts (1 H100; cancelled by the operator, ExitCode 137, 00:12:41, reason=signal_TERM_checkpoint_timeout)"
+        "1337 rollouts (1 H100; cancelled by the operator, ExitCode 137, container 20:43:37Z-20:56:29Z by the lane's records, reason=signal_TERM_checkpoint_timeout)"
       ],
       "outcome": "no data: LLM.enqueue returns internal request ids while outputs carry external ones, so all 192 finished rollouts were dropped as unmatched; the worker then hung at exit; fixed in a97c41e9 (program/evidence/2026-10-14/g2-pilot/README.md, Problems)",
-      "basis": "physical (RunTime 00:12:41 on 1 H100)"
+      "basis": "physical (00:12:52 on 1 H100 by the lane's records: job.env started_at 20:43:37Z, termination.env finished_at 20:56:29Z; first entered as 0.2114 from an scontrol RunTime of 00:12:41 that is not committed, Slurm accounting being off; corrected 2026-10-14 after the independent check)"
     },
     {
       "experiment": "g2-pilot-v1 rollouts attempt 2 and teacher forcing (EXPLORATORY G2 pilot, D104): Qwen3.5-4B 24 prompts x seeds 42/43/44 and Qwen3-8B 24 x seed 42, 120 s generation each; HF+FLA chunk and fused_recurrent bf16 and an fp32 reference",
@@ -1236,8 +1236,8 @@
         "1342 vLLM rollouts (1 H100; COMPLETED 0:0, 00:06:45)",
         "1352 HF+FLA teacher forcing (1 H100; COMPLETED 0:0, 00:04:14)"
       ],
-      "outcome": "96 rollouts, 847,038 completion tokens; Qwen3.5-4B rollout vs trainer mean |dlogp| 0.0076, k3 2.7e-4, flat in position within entropy bins up to 11.5K; Qwen3-8B 0.0123; chunk vs fused_recurrent changes the mismatch by under 1% (exploratory; program/evidence/2026-10-14/g2-pilot/README.md)",
-      "basis": "physical (RunTime 00:06:45 and 00:04:14 on 1 H100 each); pilot total with builds and attempt 1: 0.4372 of the 0.5 cap"
+      "outcome": "96 rollouts, 847,038 completion tokens; Qwen3.5-4B rollout vs trainer mean |dlogp| 0.0076, k3 2.7e-4, up about 12% over the first 3K positions as token entropy rises, and falling with position within entropy bins (-5.2e-5 per 1K, CI excludes 0; corrected 2026-10-14 from a string-binned 'flat'); Qwen3-8B 0.0123 (not size-matched, different text); chunk vs fused_recurrent changes the mismatch by under 1% (exploratory; program/evidence/2026-10-14/g2-pilot/README.md)",
+      "basis": "physical (RunTime 00:06:45 and 00:04:14 on 1 H100 each); pilot total with builds and attempt 1: 0.4402 of the 0.5 cap (0.4372 before attempt 1 was corrected)"
     }
   ],
   "results": [
