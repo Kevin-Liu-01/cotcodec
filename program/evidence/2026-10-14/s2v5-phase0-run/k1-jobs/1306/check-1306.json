@@ -1,0 +1,115 @@
+{
+ "campaigns": [
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.397,
+   "campaign_id": "s2v5-k1-a-a1-l0-fixed-43",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "00-s2v5-k1-a-a1-l0-fixed-43",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "A1",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": null,
+    "seed": 43
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 18,
+   "snapshot_problems": [],
+   "step_p95_s": 2.6655,
+   "trials": 1000,
+   "trials_passed": 1000
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.39,
+   "campaign_id": "s2v5-k1-a-a1-l0-fixed-44",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "01-s2v5-k1-a-a1-l0-fixed-44",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "A1",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": null,
+    "seed": 44
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 18,
+   "snapshot_problems": [],
+   "step_p95_s": 2.6816,
+   "trials": 1000,
+   "trials_passed": 1000
+  }
+ ],
+ "cells": "A",
+ "check": "A1",
+ "executor_commit": "7c963f51ad5a634c74c7ac2dff43f75a502656de",
+ "job_id": "1306",
+ "job_preflight": [
+  "job_id=1306",
+  "batch_sha256=df6b936db2291864884bbb2f1a028c4cf12bf417ebd608b367ce2c2fbd918bb7",
+  "manifest_sha256=3c672f9d2ac3a0b0799bb1a7403b5918e1274f84beee77e8c13a85913c425582",
+  "source_tree_sha256=896c46a886a6d1ea8489ae3b2d52f2cb922bee9b5900b4b49ca44462cfe0fa85",
+  "source_git_sha=7c963f51ad5a634c74c7ac2dff43f75a502656de",
+  "docker_default_runtime=runc",
+  "job_tres=TRES=cpu=6,mem=12G,node=1,billing=6 ",
+  "lane_exit=0 labelled_containers_left=0"
+ ],
+ "note": "interim, one job; the registered K1 verdict is ap_delta_v5.verdict over every K1 job",
+ "own_check_on_this_job": {
+  "A1": {
+   "pass": true,
+   "problems": []
+  },
+  "C4": {
+   "pass": true,
+   "problems": []
+  }
+ },
+ "part": null,
+ "receipt_campaigns": [
+  {
+   "campaign_id": "s2v5-k1-a-a1-l0-fixed-43",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "00-s2v5-k1-a-a1-l0-fixed-43",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-a1-l0-fixed-44",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "01-s2v5-k1-a-a1-l0-fixed-44",
+   "driver_exit": 0
+  }
+ ],
+ "schema": "s2v5-k1-job-check-v1",
+ "t_end": 1791994812.5281358,
+ "t_start": 1791989582.5934443
+}

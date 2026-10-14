@@ -1,0 +1,762 @@
+{
+ "campaigns": [
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 16.917,
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m01-modifier-released-early-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "00-s2v5-k1-a-c3-h-osw-fixed-m01-modifier-released-early-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "H-OSW-fixed",
+    "mutant": "M01-modifier-released-early",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.1222,
+   "trials": 99,
+   "trials_passed": 91
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.23,
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m01-modifier-released-early-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "01-s2v5-k1-a-c3-l0-fixed-m01-modifier-released-early-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": "M01-modifier-released-early",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.2403,
+   "trials": 100,
+   "trials_passed": 91
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.313,
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m02-button-swap-left-right-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "02-s2v5-k1-a-c3-l0-fixed-m02-button-swap-left-right-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": "M02-button-swap-left-right",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.2904,
+   "trials": 100,
+   "trials_passed": 71
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.322,
+   "campaign_id": "s2v5-k1-a-c3-h-ga-m03-middle-click-noop-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "03-s2v5-k1-a-c3-h-ga-m03-middle-click-noop-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "H-GA",
+    "mutant": "M03-middle-click-noop",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.182,
+   "trials": 93,
+   "trials_passed": 87
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.263,
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m03-middle-click-noop-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "04-s2v5-k1-a-c3-h-osw-fixed-m03-middle-click-noop-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "H-OSW-fixed",
+    "mutant": "M03-middle-click-noop",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.1079,
+   "trials": 99,
+   "trials_passed": 95
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.921,
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m03-middle-click-noop-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "05-s2v5-k1-a-c3-l0-fixed-m03-middle-click-noop-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": "M03-middle-click-noop",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.3786,
+   "trials": 100,
+   "trials_passed": 99
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.222,
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m04-coordinate-shift-5px-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "06-s2v5-k1-a-c3-l0-fixed-m04-coordinate-shift-5px-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": "M04-coordinate-shift-5px",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.2858,
+   "trials": 100,
+   "trials_passed": 55
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.355,
+   "campaign_id": "s2v5-k1-a-c3-h-ga-m05-scroll-sign-flip-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "07-s2v5-k1-a-c3-h-ga-m05-scroll-sign-flip-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "H-GA",
+    "mutant": "M05-scroll-sign-flip",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.1378,
+   "trials": 93,
+   "trials_passed": 80
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.274,
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m05-scroll-sign-flip-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "08-s2v5-k1-a-c3-h-osw-fixed-m05-scroll-sign-flip-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "H-OSW-fixed",
+    "mutant": "M05-scroll-sign-flip",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.1305,
+   "trials": 99,
+   "trials_passed": 85
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.409,
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m05-scroll-sign-flip-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "09-s2v5-k1-a-c3-l0-fixed-m05-scroll-sign-flip-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": "M05-scroll-sign-flip",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.3072,
+   "trials": 100,
+   "trials_passed": 89
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.33,
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m06-scroll-ticks-doubled-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "10-s2v5-k1-a-c3-l0-fixed-m06-scroll-ticks-doubled-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": "M06-scroll-ticks-doubled",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.4013,
+   "trials": 100,
+   "trials_passed": 87
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.265,
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m07-text-drop-last-char-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "11-s2v5-k1-a-c3-l0-fixed-m07-text-drop-last-char-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": "M07-text-drop-last-char",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.2562,
+   "trials": 100,
+   "trials_passed": 80
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.221,
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m08-text-nfc-normalize-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "12-s2v5-k1-a-c3-l0-fixed-m08-text-nfc-normalize-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": "M08-text-nfc-normalize",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.3249,
+   "trials": 100,
+   "trials_passed": 99
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.253,
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m09-text-drop-non-ascii-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "13-s2v5-k1-a-c3-l0-fixed-m09-text-drop-non-ascii-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": "M09-text-drop-non-ascii",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.1763,
+   "trials": 100,
+   "trials_passed": 95
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.104,
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m10-less-to-greater-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "14-s2v5-k1-a-c3-l0-fixed-m10-less-to-greater-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "L0-fixed",
+    "mutant": "M10-less-to-greater",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.3076,
+   "trials": 100,
+   "trials_passed": 97
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.198,
+   "campaign_id": "s2v5-k1-a-c3-h-ga-m11-unknown-key-dropped-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "15-s2v5-k1-a-c3-h-ga-m11-unknown-key-dropped-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "H-GA",
+    "mutant": "M11-unknown-key-dropped",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.135,
+   "trials": 93,
+   "trials_passed": 83
+  },
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.26,
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m11-unknown-key-dropped-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "16-s2v5-k1-a-c3-h-osw-fixed-m11-unknown-key-dropped-42",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C3",
+    "kind": "suite-acceptance",
+    "layer": "H-OSW-fixed",
+    "mutant": "M11-unknown-key-dropped",
+    "seed": 42
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 2,
+   "snapshot_problems": [],
+   "step_p95_s": 1.1238,
+   "trials": 99,
+   "trials_passed": 91
+  }
+ ],
+ "cells": "A",
+ "check": "C3",
+ "executor_commit": "7c963f51ad5a634c74c7ac2dff43f75a502656de",
+ "job_id": "1303",
+ "job_preflight": [
+  "job_id=1303",
+  "batch_sha256=df6b936db2291864884bbb2f1a028c4cf12bf417ebd608b367ce2c2fbd918bb7",
+  "manifest_sha256=1d38aada441b2f0ad58ca9aadd0036f420b22ab809eea01910bfcbaaf48a636d",
+  "source_tree_sha256=896c46a886a6d1ea8489ae3b2d52f2cb922bee9b5900b4b49ca44462cfe0fa85",
+  "source_git_sha=7c963f51ad5a634c74c7ac2dff43f75a502656de",
+  "docker_default_runtime=runc",
+  "job_tres=TRES=cpu=6,mem=12G,node=1,billing=6 ",
+  "lane_exit=0 labelled_containers_left=0"
+ ],
+ "note": "interim, one job; the registered K1 verdict is ap_delta_v5.verdict over every K1 job",
+ "own_check_on_this_job": {
+  "C3": {
+   "pass": false,
+   "problems": [
+    "no unmutated reference run on L0-fixed",
+    "no unmutated reference run on H-OSW-fixed",
+    "no unmutated reference run on H-GA",
+    "M01-modifier-released-early on L0-fixed survived and is not equivalent",
+    "M01-modifier-released-early on H-OSW-fixed survived and is not equivalent",
+    "M02-button-swap-left-right on L0-fixed survived and is not equivalent",
+    "M03-middle-click-noop on L0-fixed survived and is not equivalent",
+    "M03-middle-click-noop on H-OSW-fixed survived and is not equivalent",
+    "M03-middle-click-noop on H-GA survived and is not equivalent",
+    "M04-coordinate-shift-5px on L0-fixed survived and is not equivalent",
+    "M05-scroll-sign-flip on L0-fixed survived and is not equivalent",
+    "M05-scroll-sign-flip on H-OSW-fixed survived and is not equivalent",
+    "M05-scroll-sign-flip on H-GA survived and is not equivalent",
+    "M06-scroll-ticks-doubled on L0-fixed survived and is not equivalent",
+    "M07-text-drop-last-char on L0-fixed survived and is not equivalent",
+    "M08-text-nfc-normalize on L0-fixed survived and is not equivalent",
+    "M09-text-drop-non-ascii on L0-fixed survived and is not equivalent",
+    "M10-less-to-greater on L0-fixed survived and is not equivalent",
+    "M11-unknown-key-dropped on L0-fixed: no run",
+    "M11-unknown-key-dropped on H-OSW-fixed survived and is not equivalent",
+    "M11-unknown-key-dropped on H-GA survived and is not equivalent",
+    "M12-triple-to-double on L0-fixed: no run",
+    "M12-triple-to-double on H-OSW-fixed: no run",
+    "M12-triple-to-double on H-GA: no run",
+    "M13-hscroll-to-vscroll on L0-fixed: no run",
+    "M13-hscroll-to-vscroll on H-OSW-fixed: no run",
+    "M14-chord-release-order on L0-fixed: no run",
+    "M15-duplicate-click on L0-fixed: no run",
+    "M16-double-click-interval-600ms on L0-fixed: no run",
+    "M17-drag-teleport on L0-fixed: no run",
+    "M18-first-tool-call-only on H-OSW-fixed: no run",
+    "M18-first-tool-call-only on H-GA: no run",
+    "M19-last-tool-call-only on H-OSW-fixed: no run",
+    "M19-last-tool-call-only on H-GA: no run",
+    "M20-terminate-failure-to-done on H-OSW-fixed: no run",
+    "M20-terminate-failure-to-done on H-GA: no run",
+    "M21-hold-not-released on L0-fixed: no run",
+    "M22-keypad-to-main on L0-fixed: no run",
+    "M22-keypad-to-main on H-OSW-fixed: no run",
+    "M22-keypad-to-main on H-GA: no run",
+    "M23-caps-lock-dropped on L0-fixed: no run",
+    "M24-grid-1000-instead-of-999 on H-OSW-fixed: no run",
+    "M24-grid-1000-instead-of-999 on H-GA: no run",
+    "M25-shell-expansion on L0-fixed: no run",
+    "M26-newline-dropped on L0-fixed: no run",
+    "M27-extra-buttons-dropped on L0-fixed: no run",
+    "M28-modifier-text-ignored on H-OSW-fixed: no run"
+   ]
+  }
+ },
+ "part": {
+  "index": 1,
+  "of": 3
+ },
+ "receipt_campaigns": [
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m01-modifier-released-early-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "00-s2v5-k1-a-c3-h-osw-fixed-m01-modifier-released-early-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m01-modifier-released-early-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "01-s2v5-k1-a-c3-l0-fixed-m01-modifier-released-early-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m02-button-swap-left-right-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "02-s2v5-k1-a-c3-l0-fixed-m02-button-swap-left-right-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-ga-m03-middle-click-noop-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "03-s2v5-k1-a-c3-h-ga-m03-middle-click-noop-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m03-middle-click-noop-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "04-s2v5-k1-a-c3-h-osw-fixed-m03-middle-click-noop-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m03-middle-click-noop-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "05-s2v5-k1-a-c3-l0-fixed-m03-middle-click-noop-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m04-coordinate-shift-5px-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "06-s2v5-k1-a-c3-l0-fixed-m04-coordinate-shift-5px-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-ga-m05-scroll-sign-flip-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "07-s2v5-k1-a-c3-h-ga-m05-scroll-sign-flip-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m05-scroll-sign-flip-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "08-s2v5-k1-a-c3-h-osw-fixed-m05-scroll-sign-flip-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m05-scroll-sign-flip-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "09-s2v5-k1-a-c3-l0-fixed-m05-scroll-sign-flip-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m06-scroll-ticks-doubled-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "10-s2v5-k1-a-c3-l0-fixed-m06-scroll-ticks-doubled-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m07-text-drop-last-char-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "11-s2v5-k1-a-c3-l0-fixed-m07-text-drop-last-char-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m08-text-nfc-normalize-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "12-s2v5-k1-a-c3-l0-fixed-m08-text-nfc-normalize-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m09-text-drop-non-ascii-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "13-s2v5-k1-a-c3-l0-fixed-m09-text-drop-non-ascii-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m10-less-to-greater-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "14-s2v5-k1-a-c3-l0-fixed-m10-less-to-greater-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-ga-m11-unknown-key-dropped-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "15-s2v5-k1-a-c3-h-ga-m11-unknown-key-dropped-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m11-unknown-key-dropped-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "16-s2v5-k1-a-c3-h-osw-fixed-m11-unknown-key-dropped-42",
+   "driver_exit": 0
+  }
+ ],
+ "schema": "s2v5-k1-job-check-v1",
+ "t_end": 1791983416.0232434,
+ "t_start": 1791980024.3372738
+}

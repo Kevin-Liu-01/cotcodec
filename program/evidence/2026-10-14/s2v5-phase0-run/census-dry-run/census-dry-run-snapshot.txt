@@ -1,0 +1,6 @@
+snapshot_utc=2026-10-14T04:37:03Z
+loadavg=0.08 0.05 0.05 1/2499 3783826
+squeue_all=[]
+docker_running=1
+docker_labelled_cotcodec=0
+phase0_runs: ls: cannot access '/home/kevin/cotcodec-runs/stage0/s2v5/phase0-runs': No such file or directory

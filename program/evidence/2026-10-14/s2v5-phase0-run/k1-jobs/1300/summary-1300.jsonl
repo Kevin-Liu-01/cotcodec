@@ -1,0 +1,1 @@
+{"accessibility_calls": 0, "dir": "00-s2v5-k1-e-a6-43", "entries": 60, "entries_not_all_pass": {}, "entries_per_app": {"chrome": 16, "terminal": 12, "vscode": 16, "writer": 16}, "infra_trials": 0, "restarts": 0, "retried_trials": 0, "sessions": 5, "state_not_observed_trials": 0, "trials": 300, "trials_passed": 300}

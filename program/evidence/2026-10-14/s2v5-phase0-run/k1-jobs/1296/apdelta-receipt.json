@@ -1,0 +1,133 @@
+{
+ "campaigns": [
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-ga-m22-keypad-to-main-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "00-s2v5-k1-e-c3-h-ga-m22-keypad-to-main-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-osw-fixed-m22-keypad-to-main-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "01-s2v5-k1-e-c3-h-osw-fixed-m22-keypad-to-main-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m22-keypad-to-main-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "02-s2v5-k1-e-c3-l0-fixed-m22-keypad-to-main-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m23-caps-lock-dropped-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "03-s2v5-k1-e-c3-l0-fixed-m23-caps-lock-dropped-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-ga-m24-grid-1000-instead-of-999-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "04-s2v5-k1-e-c3-h-ga-m24-grid-1000-instead-of-999-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-osw-fixed-m24-grid-1000-instead-of-999-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "05-s2v5-k1-e-c3-h-osw-fixed-m24-grid-1000-instead-of-999-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m25-shell-expansion-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "06-s2v5-k1-e-c3-l0-fixed-m25-shell-expansion-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m26-newline-dropped-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "07-s2v5-k1-e-c3-l0-fixed-m26-newline-dropped-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m27-extra-buttons-dropped-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "08-s2v5-k1-e-c3-l0-fixed-m27-extra-buttons-dropped-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-osw-fixed-m28-modifier-text-ignored-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "09-s2v5-k1-e-c3-h-osw-fixed-m28-modifier-text-ignored-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-none-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "10-s2v5-k1-e-c3-l0-fixed-none-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-osw-fixed-none-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "11-s2v5-k1-e-c3-h-osw-fixed-none-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-ga-none-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "12-s2v5-k1-e-c3-h-ga-none-42",
+   "driver_exit": 0
+  }
+ ],
+ "check": "C3",
+ "executor_commit": "7c963f51ad5a634c74c7ac2dff43f75a502656de",
+ "experiment_id": "s2-arabic-cua-locale-v5",
+ "job_id": "1296",
+ "part": {
+  "index": 3,
+  "of": 3
+ },
+ "purpose": "k1",
+ "schema": "s2v5-apdelta-receipt-v1",
+ "t_end": 1791963685.1162887,
+ "t_start": 1791961096.9547527
+}

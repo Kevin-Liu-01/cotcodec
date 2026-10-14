@@ -1,0 +1,31 @@
+{
+ "campaigns": [
+  {
+   "campaign_id": "s2v5-k1-e-a1-l0-fixed-43",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "00-s2v5-k1-e-a1-l0-fixed-43",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-a1-l0-fixed-44",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "01-s2v5-k1-e-a1-l0-fixed-44",
+   "driver_exit": 0
+  }
+ ],
+ "check": "A1",
+ "executor_commit": "7c963f51ad5a634c74c7ac2dff43f75a502656de",
+ "experiment_id": "s2-arabic-cua-locale-v5",
+ "job_id": "1297",
+ "part": null,
+ "purpose": "k1",
+ "schema": "s2v5-apdelta-receipt-v1",
+ "t_end": 1791968990.508681,
+ "t_start": 1791963751.1192195
+}

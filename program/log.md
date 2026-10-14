@@ -5450,3 +5450,58 @@ they say so.)
   `gate_b.py`); `main`'s tree unchanged; all 21 ledger rows map as the plan predicted.
 - The early `gate_b.py` was in public history from 2026-10-07 (D95) until this rewrite; GitHub
   may serve cached views of old commits until Support removes them.
+
+## 2026-10-14 — S2 v5 `s2-arabic-cua-locale-v5` Phase 0 run, stint 1: staging, the registered census dry-run, and K1 on E (branch `ops/s2-v5`, not merged)
+
+- Frozen in ledger row 22 (status fill `cecd06d8`, freeze commit `7c963f51`). Worktree
+  `cotcodec-wt-ops-s2v5`, branch `ops/s2-v5` from `7c963f51`; `main` (`bddf4b38`, a handoff
+  update) merged with all 22 ledger rows.
+- Staging: `git archive 7c963f51 | ssh fal-h100-01 tar -x` (GNU tar) into
+  `~/cotcodec-runs/stage0/s2v5/k1/src/7c963f51.../`, `.git_sha` written, made read-only; 9,308
+  files, per-file digest `9a8d7141...`, equal to a Mac export.
+- The registered pre-census check ran first: `lane_v5.py submit CENSUS --source-dir EXPORT
+  --dry-run` on the host from the freeze export passed (`vm_lane.check_host`'s image, Docker,
+  OSWorld, file-cache and PD-cache checks; `check_once`), writing only the stored manifest
+  (`efdb8832...`) under `phase0-runs/manifests/`. The census manifest (1,322 slots, rendered by
+  `lane_v5.py render-census --freeze-commit`) is committed with it. No census job was submitted.
+- K1: 49 manifests rendered by `ap_delta_v5.py render` from the freeze export, equal to v4's
+  apart from id fields and A6's cells file on ER and AR. Run in the K1 plan's order, one CPU-only
+  job at a time, each on an empty queue through the guarded helper (`--no-e-deadline`; successor
+  E is finished). Every job COMPLETED 0:0, every campaign counts (driver exit 0,
+  `infra_gates_pass`, image unchanged, no labelled container, no foreign-abort or snapshot
+  problem), and every check read so far passes (interim, job by job):
+  - 1292 C1 on E: pass.
+  - 1293 C2 on E: pass (exactly the predicted 8 L0-raw entries fail).
+  - 1294, 1295, 1296 C3 on E (parts 1-3): pass over the three parts, 42 mutants killed and 2
+    equivalent (M12 and M13 on H-OSW-fixed), as q2-action-path-v2's attempt 1.
+  - 1297 A1 on E: pass, 2,000 of 2,000, 0 restarts; C4 on E pass; pooled step p95 2.69 s.
+  - 1298 A2 on E: pass (failures only on cells outside each layer's spec, 0 restarts).
+- No K1 check has failed, and nothing was rerun or resubmitted. The stint stopped at 10:44Z at a
+  clean point: no job of this workstream running, the queue empty, no labelled container. 42 K1
+  jobs remain (A5 and A6 on E, then A, ER, AR and PL, A3 on AR, the rung; about 33 hours of
+  serial wall clock at E's pace), then the K1 verdict, the census, the oracle and K0.
+- Evidence: `program/evidence/2026-10-14/s2v5-phase0-run/` (README with per-job records; per job
+  its submission snapshot, `scontrol`, batch output, receipts, manifests and `check-JOB.json`;
+  the census dry-run; the 49 K1 manifests). Cycle records and VM logs stay on the host.
+
+## 2026-10-14 — S2 v5 `s2-arabic-cua-locale-v5` Phase 0 run, stint 2: K1 on E completed, image A through A1 (branch `ops/s2-v5`, not merged)
+
+- Checked the host before submitting: queue empty, `ops.log` and the K1 run directory held jobs
+  1292-1298 only, no labelled container. No job was resubmitted.
+- K1, in the plan's order, one CPU-only job at a time, each on an empty queue through the
+  guarded helper (`--no-e-deadline`). Every job COMPLETED 0:0 and every campaign counts; every
+  check read so far passes (interim, job by job):
+  - 1299 A5 on E: pass (20 of 20 reset sentinels pristine; HMP `sendkey menu` 0 of 21, reported
+    and not judged, as in q2's jobs 374 and 964).
+  - 1300 A6 on E: pass (300 of 300, every entry 5 of 5, q2's cells file).
+  - 1301 C1 on A: pass. 1302 C2 on A: pass.
+  - 1303, 1304, 1305 C3 on A (parts 1-3): pass over the three parts, 42 killed and 2 equivalent
+    (M12 and M13 on H-OSW-fixed), as on E.
+  - 1306 A1 on A: pass, 2,000 of 2,000, 0 restarts; C4 on A pass; pooled step p95 2.68 s.
+- All eight checks on E have now run and pass. No K1 check has failed, and nothing was rerun.
+- The stint stopped at about 16:25Z with job 1307 (A2 on A, submitted 16:20:55Z) running; its
+  collection is the next stint's. 27 K1 jobs follow it, then the K1 verdict, the census, the
+  oracle and K0.
+- Evidence: `program/evidence/2026-10-14/s2v5-phase0-run/` (README rows and notes for 1299-1307,
+  `k1-jobs/1299`-`1306`, `k1-jobs/1307/submit-1307.txt`, `k1-jobs/c3-a-interim-1303-1305.json`,
+  operator aids `campaign_summary.py` and `c3_parts.py`).

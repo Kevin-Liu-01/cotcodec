@@ -1,0 +1,4 @@
+job_id=1305
+manifest_sha256=821d0ee3d8a61fdb0e911f671ef5b1a4c4b2d7ef2e0e2ce509364bfb6babae95
+ap_delta=1
+driver_exit=0 labelled_containers_left=0

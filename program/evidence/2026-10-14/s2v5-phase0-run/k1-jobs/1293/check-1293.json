@@ -1,0 +1,71 @@
+{
+ "campaigns": [
+  {
+   "batch_end": {
+    "driver_exit": 0,
+    "labelled_containers_left": 0
+   },
+   "boot_s_max": 17.901,
+   "campaign_id": "s2v5-k1-e-c2-l0-raw-45",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "counting_problems": [],
+   "dir": "00-s2v5-k1-e-c2-l0-raw-45",
+   "foreign_abort": [],
+   "infra_gates_pass": true,
+   "key": {
+    "concurrency": 1,
+    "criterion": "C2",
+    "kind": "suite-acceptance",
+    "layer": "L0-raw",
+    "mutant": null,
+    "seed": 45
+   },
+   "labelled_containers_left": [],
+   "qcow2_unchanged": true,
+   "sessions": 9,
+   "snapshot_problems": [],
+   "step_p95_s": 1.1896,
+   "trials": 500,
+   "trials_passed": 454
+  }
+ ],
+ "cells": "E",
+ "check": "C2",
+ "executor_commit": "7c963f51ad5a634c74c7ac2dff43f75a502656de",
+ "job_id": "1293",
+ "job_preflight": [
+  "job_id=1293",
+  "batch_sha256=df6b936db2291864884bbb2f1a028c4cf12bf417ebd608b367ce2c2fbd918bb7",
+  "manifest_sha256=b4271c2451868c96cc0782968444384bba7a2a8e6a9e7506b44646d2ee987ad5",
+  "source_tree_sha256=896c46a886a6d1ea8489ae3b2d52f2cb922bee9b5900b4b49ca44462cfe0fa85",
+  "source_git_sha=7c963f51ad5a634c74c7ac2dff43f75a502656de",
+  "docker_default_runtime=runc",
+  "job_tres=TRES=cpu=6,mem=12G,node=1,billing=6 ",
+  "lane_exit=0 labelled_containers_left=0"
+ ],
+ "note": "interim, one job; the registered K1 verdict is ap_delta_v5.verdict over every K1 job",
+ "own_check_on_this_job": {
+  "C2": {
+   "pass": true,
+   "problems": []
+  }
+ },
+ "part": null,
+ "receipt_campaigns": [
+  {
+   "campaign_id": "s2v5-k1-e-c2-l0-raw-45",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "00-s2v5-k1-e-c2-l0-raw-45",
+   "driver_exit": 0
+  }
+ ],
+ "schema": "s2v5-k1-job-check-v1",
+ "t_end": 1791954132.057577,
+ "t_start": 1791953518.479421
+}
