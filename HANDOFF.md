@@ -37,12 +37,15 @@ for whatever gains actual results"; D80). Under that delegation:
 - Successor E is frozen (row 19; sign-off D85; freeze `f6144d6b`). Its four
   sessions (about 42 h, 6.77 cap-GPU-h) are running on `ops/q2-successor-e`.
   Other host work runs only in its gaps.
-- S2 v4 (row 21) failed K1 as registered (D93). The cause is confirmed as an
-  instrument defect (D94, D96): A6's Writer targets were measured only on the
-  left-to-right disk, and the mirrored images shift Writer by +71 px. Step 0
-  (job 1271) matched every prediction to the pixel. S2 v5, its last
-  registration, changes only those targets. It is drafted, confirmed in
-  development and audited before its freeze (`stage0/s2-v5`).
+- S2 v4 (row 21) failed K1 as registered (D93), because of an instrument
+  defect (D94, D96). S2 v5 changes only A6's Writer targets on the mirrored
+  images. Its development confirmation passed (D98). It is **frozen as row 22**
+  (D100; freeze `7c963f51`), and Phase 0 is running on `ops/s2-v5`: K1's 49
+  jobs, then the census, the oracle and K0. It is S2's last registration: any
+  failure is an honest exit.
+- The public-history purge ran (D99). Old commit ids resolve through
+  `program/history-rewrite-2026-10-14/` (the map plus an 11-row supplement,
+  D100). Kevin still has to file the GitHub Support request.
 - Outward items are drafted and reviewed
   (`~/repos/cotcodec-private/outward-2026-10-12/INDEX.md`). Kevin chose the
   sender (his work address), an agent to send, and the purge after E (D96).
@@ -56,8 +59,8 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
-`uv run python scripts/preregister.py check-chain`, 21 rows). Decisions taken
-on Kevin's behalf are D1-D99 in `program/decisions.md`. GPU-hours are in
+`uv run python scripts/preregister.py check-chain`, 22 rows). Decisions taken
+on Kevin's behalf are D1-D100 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
