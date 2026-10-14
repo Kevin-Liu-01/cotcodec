@@ -1,0 +1,202 @@
+[
+ {
+  "dir": "00-s2v5-k1-a-c3-h-ga-m22-keypad-to-main-42",
+  "layer": "H-GA",
+  "mutant": "M22-keypad-to-main",
+  "trials": 93,
+  "failed_cells": [
+   "R02",
+   "R04",
+   "R06",
+   "R10",
+   "R13",
+   "key_kp_add",
+   "key_kp_enter"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "01-s2v5-k1-a-c3-h-osw-fixed-m22-keypad-to-main-42",
+  "layer": "H-OSW-fixed",
+  "mutant": "M22-keypad-to-main",
+  "trials": 99,
+  "failed_cells": [
+   "R03",
+   "R09",
+   "R13",
+   "key_kp_add",
+   "key_kp_enter"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "02-s2v5-k1-a-c3-l0-fixed-m22-keypad-to-main-42",
+  "layer": "L0-fixed",
+  "mutant": "M22-keypad-to-main",
+  "trials": 100,
+  "failed_cells": [
+   "key_kp_add",
+   "key_kp_enter"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "03-s2v5-k1-a-c3-l0-fixed-m23-caps-lock-dropped-42",
+  "layer": "L0-fixed",
+  "mutant": "M23-caps-lock-dropped",
+  "trials": 100,
+  "failed_cells": [
+   "caps_lock_roundtrip"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "04-s2v5-k1-a-c3-h-ga-m24-grid-1000-instead-of-999-42",
+  "layer": "H-GA",
+  "mutant": "M24-grid-1000-instead-of-999",
+  "trials": 93,
+  "failed_cells": [
+   "R02",
+   "R04",
+   "R06",
+   "R10",
+   "R14",
+   "click_corner_bottomright",
+   "click_two_positions_ordered",
+   "drag_to_corner",
+   "drag_vertical",
+   "move_only",
+   "seq_long_mixed"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "05-s2v5-k1-a-c3-h-osw-fixed-m24-grid-1000-instead-of-999-42",
+  "layer": "H-OSW-fixed",
+  "mutant": "M24-grid-1000-instead-of-999",
+  "trials": 99,
+  "failed_cells": [
+   "R03",
+   "R09",
+   "R14",
+   "click_alt_left",
+   "click_corner_bottomright",
+   "click_two_positions_ordered",
+   "drag_to_corner",
+   "drag_vertical",
+   "move_only",
+   "seq_long_mixed"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "06-s2v5-k1-a-c3-l0-fixed-m25-shell-expansion-42",
+  "layer": "L0-fixed",
+  "mutant": "M25-shell-expansion",
+  "trials": 100,
+  "failed_cells": [
+   "click_then_type",
+   "seq_long_mixed",
+   "type_combining",
+   "type_digits",
+   "type_emoji",
+   "type_emoji_zwj",
+   "type_long_200",
+   "type_long_500",
+   "type_mixed_case",
+   "type_multiline_tabs",
+   "type_plain",
+   "type_repeated_chars",
+   "type_rtl",
+   "type_shell_hostile",
+   "type_spaces",
+   "type_symbols_shifted",
+   "type_unicode_bmp",
+   "type_with_correction"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "07-s2v5-k1-a-c3-l0-fixed-m26-newline-dropped-42",
+  "layer": "L0-fixed",
+  "mutant": "M26-newline-dropped",
+  "trials": 100,
+  "failed_cells": [
+   "type_multiline_tabs"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "08-s2v5-k1-a-c3-l0-fixed-m27-extra-buttons-dropped-42",
+  "layer": "L0-fixed",
+  "mutant": "M27-extra-buttons-dropped",
+  "trials": 100,
+  "failed_cells": [
+   "click_button_back",
+   "click_button_forward"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "09-s2v5-k1-a-c3-h-osw-fixed-m28-modifier-text-ignored-42",
+  "layer": "H-OSW-fixed",
+  "mutant": "M28-modifier-text-ignored",
+  "trials": 99,
+  "failed_cells": [
+   "R02",
+   "R03",
+   "R04",
+   "R09",
+   "click_alt_left",
+   "click_ctrl_left",
+   "click_ctrl_shift_right",
+   "click_shift_left"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "10-s2v5-k1-a-c3-l0-fixed-none-42",
+  "layer": "L0-fixed",
+  "mutant": "none",
+  "trials": 100,
+  "failed_cells": [],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "11-s2v5-k1-a-c3-h-osw-fixed-none-42",
+  "layer": "H-OSW-fixed",
+  "mutant": "none",
+  "trials": 99,
+  "failed_cells": [
+   "R03",
+   "R09"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "12-s2v5-k1-a-c3-h-ga-none-42",
+  "layer": "H-GA",
+  "mutant": "none",
+  "trials": 93,
+  "failed_cells": [
+   "R02",
+   "R04",
+   "R06",
+   "R10"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ }
+]

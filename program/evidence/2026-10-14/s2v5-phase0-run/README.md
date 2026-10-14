@@ -133,6 +133,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1302 | K1 C2 on A (L0-raw, seed 45) | 362 | 12:02:39 | 12:02:39-12:12:50 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 | 1303 | K1 C3 on A, part 1 of 3 (17 mutant campaigns, M01-M11; seed 42) | 1,404 | 12:13:43 | 12:13:43-13:10:16 (56.6 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell; C3 is read once part 3 (the references) has run |
 | 1304 | K1 C3 on A, part 2 of 3 (17 mutant campaigns, M11-M21) | 1,404 | 13:11:18 | 13:11:19-14:07:52 (56.6 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell |
+| 1305 | K1 C3 on A, part 3 of 3 (10 mutant campaigns, M22-M28, and the 3 unmutated references) | 1,076 | 14:08:30 | 14:08:31-14:51:53 (43.4 min) | COMPLETED 0:0 | All 13 campaigns count. **C3 on A pass** over parts 1-3 (1303-1305): 42 mutants killed, 2 equivalent, 0 survived |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -249,6 +250,17 @@ and the last `scontrol` record):
   17.9 s; step p95 at most 1.40 s. As for part 1, the job-alone verdict cannot read C3. Interim
   summary (`c3-interim-1304.json`): every mutant run failed at least one cell (1 to 18 cells), none
   with an infrastructure failure.
+- **1305 (C3, A, part 3).** Host snapshot: load 0.49, queue empty, 0 labelled containers. 13
+  campaigns (M22-M28 on their layers, then the unmutated references on L0-fixed, H-OSW-fixed and
+  H-GA), 1,275 trials; every campaign counts; cold boots at most 17.4 s; step p95 at most 1.36 s.
+  References: L0-fixed 100 of 100 trials passed, H-OSW-fixed 97 of 99 (R03, R09 failed), H-GA 89
+  of 93 (R02, R04, R06, R10 failed), as on E. Interim summary (`c3-interim-1305.json`): every
+  mutant run failed at least one cell, none with an infrastructure failure.
+  - **C3 on A over all three parts** (`c3_parts.py`: `ap_delta_v5.verdict` over 1303, 1304 and
+    1305, only its C3-on-A entry read; `k1-jobs/c3-a-interim-1303-1305.json`): **pass**, no
+    problem. Of the 44 scored (mutant, layer) pairs, 42 killed and 2 equivalent
+    (`M12-triple-to-double` and `M13-hscroll-to-vscroll` on H-OSW-fixed), 0 survived; no
+    state-not-observed trial among 4,617. The same outcome as C3 on E.
 
 ## Stint 1 stop (operator's record, 10:44Z on 2026-10-14)
 

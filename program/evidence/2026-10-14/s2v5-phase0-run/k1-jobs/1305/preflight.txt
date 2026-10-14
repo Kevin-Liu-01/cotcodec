@@ -1,0 +1,8 @@
+job_id=1305
+batch_sha256=df6b936db2291864884bbb2f1a028c4cf12bf417ebd608b367ce2c2fbd918bb7
+manifest_sha256=bf54cec361e7e0b7e4e87e60b5c5d9c3bd190a63cfc4cafeebcded13627b7454
+source_tree_sha256=896c46a886a6d1ea8489ae3b2d52f2cb922bee9b5900b4b49ca44462cfe0fa85
+source_git_sha=7c963f51ad5a634c74c7ac2dff43f75a502656de
+docker_default_runtime=runc
+job_tres=TRES=cpu=6,mem=12G,node=1,billing=6 
+lane_exit=0 labelled_containers_left=0
