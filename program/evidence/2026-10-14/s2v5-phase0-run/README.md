@@ -120,3 +120,26 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 
 | Job | What | Limit (min) | Submitted (UTC) | Ran | Slurm end | Outcome (interim, this job alone) |
 |---:|---|---:|---|---|---|---|
+| 1292 | K1 C1 on E (H-GA-buggy, H-OSW-up; seed 42) | 154 | 04:44:31 | 04:44:32-04:50:59 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count (driver exit 0, no labelled container, `infra_gates_pass`, image unchanged) |
+| 1293 | K1 C2 on E (L0-raw, seed 45) | 362 | 04:51:57 | 04:51:58-05:02:12 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
+
+Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
+and the last `scontrol` record):
+- **1292 (C1, E).** Host snapshot: load 0.02, queue empty, 1 running container (the host's
+  long-running local image registry, not a cotcodec container), 0 labelled cotcodec containers,
+  no K1 run directory yet. H-GA-buggy: 70 trials (2 sessions), 20 passed; H-OSW-up: 70 trials, 40
+  passed (C1 requires the known-defect cells to fail: H-GA-buggy R01, R02, R05, R06, R07 and
+  H-OSW-up R08-R11, each 5 of 5). Cold boots at most 17.4 s; step p95 1.36 s and 1.20 s.
+  `ap_delta_v5.verdict` on this job: C1 on E `pass`, no problem. No counting, foreign-abort or
+  snapshot problem; batch end line `lane_exit=0 labelled_containers_left=0`; 0 labelled
+  containers on the host after the job. As v4's job 1245.
+- **1293 (C2, E).** Host snapshot: load 0.33, queue empty, 0 labelled containers. One L0-raw
+  campaign (seed 45): 9 sessions, 500 trials, 454 passed. C2's own reading (`acceptance.c2`,
+  each trial read by `c2_trial_pass`): the entries that are not PASS 5 of 5 are exactly
+  `l0_raw_prediction_v2.yaml`'s 8 (`click_button_back`, `click_button_forward`, `key_kp_enter`,
+  `type_combining`, `type_emoji`, `type_emoji_zwj`, `type_rtl`, `type_unicode_bmp`); the
+  section-5 reading reported beside them (`strict_entries`, not C2's criterion) also has
+  `seq_type_chord_type`, `type_long_500` and `type_shell_hostile` FLAKY. Cold boots at most
+  17.9 s; step p95 1.19 s; 8 of 8 reset sentinels pristine. C2 on E `pass`, no problem. Driver
+  exit 0, `infra_gates_pass` true, image unchanged, no labelled container left; no counting,
+  foreign-abort or snapshot problem.
