@@ -223,18 +223,73 @@ def within_bin_slope(
     return point, float(np.percentile(slopes, 2.5)), float(np.percentile(slopes, 97.5))
 
 
+def within_sequence_slope(
+    seq: np.ndarray, cells: np.ndarray | None, x: np.ndarray, y: np.ndarray, n_seq: int,
+    reps: int, seed: int,
+) -> tuple[float, float, float]:  # fmt: skip
+    """OLS slope of y on x with sequence fixed effects; 95% CI by resampling sequences.
+
+    With ``cells`` (for example entropy bins) the fixed effects are sequence-by-cell, so the
+    slope compares positions only within one sequence and one cell. Each sequence's centred
+    cross-products are summed, so a resampled sequence keeps its own means.
+    """
+
+    n_cells = int(cells.max()) + 1 if cells is not None and len(cells) else 1
+    key = seq.astype(np.int64) * n_cells + (cells if cells is not None else 0)
+    size = n_seq * n_cells
+    n = np.bincount(key, minlength=size).astype(float)
+    sx = np.bincount(key, weights=x, minlength=size)
+    sy = np.bincount(key, weights=y, minlength=size)
+    sxy = np.bincount(key, weights=x * y, minlength=size)
+    sxx = np.bincount(key, weights=x * x, minlength=size)
+    safe = np.where(n > 0, n, 1.0)
+    cxy = np.where(n > 0, sxy - sx * sy / safe, 0.0).reshape(n_seq, n_cells).sum(1)
+    cxx = np.where(n > 0, sxx - sx * sx / safe, 0.0).reshape(n_seq, n_cells).sum(1)
+    present = n.reshape(n_seq, n_cells).sum(1) > 0
+    cxy, cxx = cxy[present], cxx[present]
+    point = float(cxy.sum() / cxx.sum()) if cxx.sum() > 0 else float("nan")
+    if len(cxy) < 3:
+        return point, float("nan"), float("nan")
+    rng = np.random.default_rng(seed)
+    draws = rng.integers(0, len(cxy), size=(reps, len(cxy)))
+    with np.errstate(divide="ignore", invalid="ignore"):
+        slopes = cxy[draws].sum(1) / cxx[draws].sum(1)
+    slopes = slopes[np.isfinite(slopes)]
+    return point, float(np.percentile(slopes, 2.5)), float(np.percentile(slopes, 97.5))
+
+
+def entropy_groups(entropy: np.ndarray, edges: Any) -> np.ndarray:
+    """Index of each entropy's bin [edges[i], edges[i+1]); the last bin is open above."""
+
+    bounds = np.asarray(g2.numeric_edges(list(edges), "entropy_edges"), dtype=np.float64)
+    return np.clip(np.searchsorted(bounds, entropy, side="right") - 1, 0, len(bounds) - 2)
+
+
 def bin_table(
     position: np.ndarray, seq: np.ndarray, a: np.ndarray, b: np.ndarray, width: int,
-    band: tuple[float, float], with_decode: bool,
+    band: tuple[float, float], with_decode: bool, entropy: np.ndarray, groups: np.ndarray,
 ) -> list[dict[str, Any]]:  # fmt: skip
-    """Per-position-bin mismatch rows for d = a - b."""
+    """Per-position-bin mismatch rows for d = a - b.
+
+    ``mean_abs_entropy_standardized`` reweights the bin's per-entropy-bin means to the
+    entropy-bin shares of all the comparison's tokens (shares renormalised over the entropy
+    bins present in the position bin), so it removes the change in entropy mix with position.
+    """
 
     d = a - b
     absd = np.abs(d)
     bins = position // width
+    n_groups = int(groups.max()) + 1 if len(groups) else 0
+    shares = np.bincount(groups, minlength=n_groups) / max(len(groups), 1)
     rows = []
     for index in np.unique(bins):
         mask = bins == index
+        g_n = np.bincount(groups[mask], minlength=n_groups)
+        g_s = np.bincount(groups[mask], weights=absd[mask], minlength=n_groups)
+        present = g_n > 0
+        standardized = float(
+            np.sum(shares[present] * g_s[present] / g_n[present]) / shares[present].sum()
+        )
         row: dict[str, Any] = {
             "bin": int(index),
             "start": int(index * width),
@@ -243,6 +298,8 @@ def bin_table(
             "mean_abs": float(absd[mask].mean()),
             "p99_abs": float(np.percentile(absd[mask], 99)),
             "mean_signed": float(d[mask].mean()),
+            "mean_entropy_r1": float(entropy[mask].mean()),
+            "mean_abs_entropy_standardized": standardized,
         }
         if with_decode:
             log_ratio = b[mask] - a[mask]  # log p_B - log p_dec
@@ -301,16 +358,20 @@ def comparison_block(
     reps = settings["bootstrap_reps"]
     seed = settings["bootstrap_seed"]
     with_decode = a_key == "dec"
-    rows = bin_table(position, seq, av, bv, width, tuple(settings["ratio_band"]), with_decode)
+    entropy = data["ent_r1"].astype(np.float64)[valid]
+    edges = g2.numeric_edges(settings["entropy_edges"], "entropy_edges")
+    groups = entropy_groups(entropy, edges)
+    rows = bin_table(
+        position, seq, av, bv, width, tuple(settings["ratio_band"]), with_decode, entropy, groups
+    )
     ci = curve_ci(position, seq, absd, n_seq, width, reps, seed)
     for row in rows:
         row["mean_abs_ci95"] = list(ci[row["bin"]])
     x = position / 1000.0
     slope, lo, hi = bootstrap_slope(seq_stats(seq, x, absd, n_seq), reps, seed)
-    entropy = data["ent_r1"].astype(np.float64)[valid]
-    edges = np.asarray(settings["entropy_edges"])
-    groups = np.clip(np.searchsorted(edges, entropy, side="right") - 1, 0, len(edges) - 2)
     fe_slope, fe_lo, fe_hi = within_bin_slope(seq, groups, x, absd, n_seq, reps, seed)
+    sq_slope, sq_lo, sq_hi = within_sequence_slope(seq, None, x, absd, n_seq, reps, seed)
+    se_slope, se_lo, se_hi = within_sequence_slope(seq, groups, x, absd, n_seq, reps, seed)
     by_entropy = []
     for group in range(len(edges) - 1):
         gmask = groups == group
@@ -325,6 +386,8 @@ def comparison_block(
                 "entropy_hi": float(edges[group + 1]),
                 "tokens": int(gmask.sum()),
                 "mean_abs": float(absd[gmask].mean()),
+                "p99_abs": float(np.percentile(absd[gmask], 99)),
+                "sequences": int(len(np.unique(seq[gmask]))),
                 "slope_per_1k": s,
                 "slope_ci95": [slo, shi],
                 "mean_position": float(position[gmask].mean()),
@@ -346,6 +409,11 @@ def comparison_block(
         "slope_ci95": [lo, hi],
         "slope_within_entropy_bins_per_1k": fe_slope,
         "slope_within_entropy_bins_ci95": [fe_lo, fe_hi],
+        "slope_within_sequences_per_1k": sq_slope,
+        "slope_within_sequences_ci95": [sq_lo, sq_hi],
+        "slope_within_sequence_entropy_cells_per_1k": se_slope,
+        "slope_within_sequence_entropy_cells_ci95": [se_lo, se_hi],
+        "mean_entropy_r1": float(entropy.mean()),
         "by_position": rows,
         "by_entropy": by_entropy,
         "per_sequence_mean_abs": {
@@ -405,8 +473,31 @@ def fmt(value: float, digits: int = 4) -> str:
     return f"{value:.{digits}f}"
 
 
+def entropy_label(lo: float, hi: float) -> str:
+    return f"[{lo:g}, {'inf' if hi >= 1e6 else format(hi, 'g')})"
+
+
+def sci(value: float) -> str:
+    if value is None or not math.isfinite(value):
+        return "n/a"
+    return f"{value:+.2e}"
+
+
+def slope_cell(block: dict[str, Any], key: str) -> str:
+    lo, hi = block[f"{key}_ci95"]
+    return f"{sci(block[f'{key}_per_1k'])} [{sci(lo)}, {sci(hi)}]"
+
+
 def markdown_tables(result: dict[str, Any]) -> str:
-    lines = ["# G2 pilot tables (EXPLORATORY)", ""]
+    lines = [
+        "# G2 pilot tables (EXPLORATORY)",
+        "",
+        "Slopes are of |d| on absolute position, per 1,000 tokens, with 95% bootstrap intervals "
+        "over sequences: pooled OLS; with entropy-bin fixed effects (pooled across sequences); "
+        "with sequence fixed effects (within sequences); with sequence-by-entropy-bin fixed "
+        "effects. Entropy is that of the r1 distribution, in nats.",
+        "",
+    ]
     for model_id, model in result["models"].items():
         lines.append(f"## {model_id}")
         lines.append("")
@@ -420,21 +511,21 @@ def markdown_tables(result: dict[str, Any]) -> str:
             lines.append(f"### {model_id}, {subset}: summary")
             lines.append("")
             lines.append(
-                "| comparison | tokens | seqs | mean abs | p99 abs | slope per 1K [95% CI] | "
-                "slope within entropy bins [95% CI] | k3 | share ratio outside band |"
+                "| comparison | tokens | seqs | mean abs | p99 abs | k3 | share ratio outside "
+                "band | slope per 1K, pooled | within entropy bins | within sequences | "
+                "within sequence x entropy bin |"
             )
-            lines.append("|---|---:|---:|---:|---:|---|---|---:|---:|")
+            lines.append("|---|---:|---:|---:|---:|---:|---:|---|---|---|---|")
             for name, block in blocks.items():
                 lines.append(
                     f"| {name} | {block['tokens']} | {block['sequences']} | "
                     f"{fmt(block['mean_abs'])} | {fmt(block['p99_abs'])} | "
-                    f"{fmt(block['slope_per_1k'], 5)} [{fmt(block['slope_ci95'][0], 5)}, "
-                    f"{fmt(block['slope_ci95'][1], 5)}] | "
-                    f"{fmt(block['slope_within_entropy_bins_per_1k'], 5)} "
-                    f"[{fmt(block['slope_within_entropy_bins_ci95'][0], 5)}, "
-                    f"{fmt(block['slope_within_entropy_bins_ci95'][1], 5)}] | "
                     f"{fmt(block.get('k3', float('nan')), 6)} | "
-                    f"{fmt(block.get('share_ratio_outside_band', float('nan')), 5)} |"
+                    f"{fmt(block.get('share_ratio_outside_band', float('nan')), 5)} | "
+                    f"{slope_cell(block, 'slope')} | "
+                    f"{slope_cell(block, 'slope_within_entropy_bins')} | "
+                    f"{slope_cell(block, 'slope_within_sequences')} | "
+                    f"{slope_cell(block, 'slope_within_sequence_entropy_cells')} |"
                 )
             lines.append("")
             if subset in ("all_seeds", "seed_42"):
@@ -447,24 +538,47 @@ def markdown_tables(result: dict[str, Any]) -> str:
                     lines.append("")
                     lines.append(
                         "| bin start | tokens | seqs | mean abs [95% CI] | p99 abs | k3 | "
-                        "share outside band |"
+                        "share outside band | mean r1 entropy | entropy-standardized mean abs |"
                     )
-                    lines.append("|---:|---:|---:|---|---:|---:|---:|")
+                    lines.append("|---:|---:|---:|---|---:|---:|---:|---:|---:|")
                     for row in block["by_position"]:
                         ci = row["mean_abs_ci95"]
                         lines.append(
                             f"| {row['start']} | {row['tokens']} | {row['sequences']} | "
                             f"{fmt(row['mean_abs'])} [{fmt(ci[0])}, {fmt(ci[1])}] | "
                             f"{fmt(row['p99_abs'])} | {fmt(row.get('k3', float('nan')), 6)} | "
-                            f"{fmt(row.get('share_ratio_outside_band', float('nan')), 5)} |"
+                            f"{fmt(row.get('share_ratio_outside_band', float('nan')), 5)} | "
+                            f"{fmt(row['mean_entropy_r1'], 3)} | "
+                            f"{fmt(row['mean_abs_entropy_standardized'])} |"
+                        )
+                    lines.append("")
+                    lines.append(f"#### {model_id}, {subset}, {name}: by r1 entropy")
+                    lines.append("")
+                    lines.append(
+                        "| entropy bin (nats) | tokens | seqs | mean abs | p99 abs | "
+                        "mean position | slope per 1K [95% CI] |"
+                    )
+                    lines.append("|---|---:|---:|---:|---:|---:|---|")
+                    for row in block["by_entropy"]:
+                        lines.append(
+                            f"| {entropy_label(row['entropy_lo'], row['entropy_hi'])} | "
+                            f"{row['tokens']} | "
+                            f"{row['sequences']} | {fmt(row['mean_abs'], 5)} | "
+                            f"{fmt(row['p99_abs'])} | {row['mean_position']:.0f} | "
+                            f"{sci(row['slope_per_1k'])} [{sci(row['slope_ci95'][0])}, "
+                            f"{sci(row['slope_ci95'][1])}] |"
                         )
                     lines.append("")
     return "\n".join(lines) + "\n"
 
 
 def contrast_table(result: dict[str, Any], hybrid: str, dense: str) -> str:
-    """Kill-criterion-1 readout (exploratory): hybrid vs dense rollout-vs-trainer mismatch per
-    1K bin, on each model's first-seed rollouts (the dense control has only that seed)."""
+    """Hybrid and dense rollout-vs-trainer mismatch side by side, per 1K bin and per entropy
+    bin, on each model's seed-42 rollouts (the dense control has only that seed).
+
+    Descriptive only: in this pilot the dense control (Qwen3-8B) is not size-matched to the
+    hybrid (Qwen3.5-4B) and generated different text, so the ratios carry no hybrid-vs-dense
+    comparison (README)."""
 
     models = result["models"]
     if hybrid not in models or dense not in models:
@@ -486,6 +600,24 @@ def contrast_table(result: dict[str, Any], hybrid: str, dense: str) -> str:
             f"| {a['start']} | {a['sequences']} | {fmt(a['mean_abs'])} | {b['sequences']} | "
             f"{fmt(b['mean_abs'])} | {a['mean_abs'] / b['mean_abs']:.2f} | {fmt(a['p99_abs'])} | "
             f"{fmt(b['p99_abs'])} | {a['p99_abs'] / b['p99_abs']:.2f} |"
+        )
+    he = models[hybrid]["subsets"]["seed_42"]["dec_vs_r1"]["by_entropy"]
+    de = models[dense]["subsets"]["seed_42"]["dec_vs_r1"]["by_entropy"]
+    he = {(r["entropy_lo"], r["entropy_hi"]): r for r in he}
+    de = {(r["entropy_lo"], r["entropy_hi"]): r for r in de}
+    lines += [
+        "",
+        f"## {hybrid} vs {dense}: dec_vs_r1 per r1-entropy bin, seed-42 rollouts",
+        "",
+        "| entropy bin (nats) | hybrid tokens | hybrid mean abs | dense tokens | dense mean abs | "
+        "mean ratio |",
+        "|---|---:|---:|---:|---:|---:|",
+    ]
+    for key in sorted(set(he) & set(de)):
+        a, b = he[key], de[key]
+        lines.append(
+            f"| {entropy_label(*key)} | {a['tokens']} | {fmt(a['mean_abs'], 5)} | {b['tokens']} | "
+            f"{fmt(b['mean_abs'], 5)} | {a['mean_abs'] / b['mean_abs']:.2f} |"
         )
     return "\n".join(lines) + "\n"
 
@@ -543,6 +675,14 @@ def plot(result: dict[str, Any], output: Path) -> None:
             if model_id != models[0]:
                 color = "#d62728"
             draw(ax, blocks["dec_vs_r1"], f"{model_id} seed {seed}", color, style)
+    hybrid_all = result["models"][models[0]]["subsets"]["all_seeds"].get("dec_vs_r1")
+    if hybrid_all is not None:
+        rows = [r for r in hybrid_all["by_position"] if r["tokens"] >= 200]
+        x = [r["start"] / 1000 + 0.5 for r in rows]
+        ax.plot(x, [r["mean_abs"] for r in rows], "-", color="#000000", linewidth=1.6,
+                label=f"{models[0]} all seeds")  # fmt: skip
+        ax.plot(x, [r["mean_abs_entropy_standardized"] for r in rows], ":", color="#000000",
+                linewidth=1.6, label=f"{models[0]} all seeds, entropy-standardized")  # fmt: skip
     ax.set_yscale("log")
     ax.set_title("rollout vs trainer (dec vs r1), per seed")
     ax.set_xlabel("absolute token position (K), 1K bins")
@@ -559,7 +699,7 @@ def plot(result: dict[str, Any], output: Path) -> None:
         if block is None:
             continue
         rows = block["by_entropy"]
-        labels = [f"[{r['entropy_lo']:g}, {min(r['entropy_hi'], 99):g})" for r in rows]
+        labels = [entropy_label(r["entropy_lo"], r["entropy_hi"]) for r in rows]
         ax.plot(range(len(rows)), [r["mean_abs"] for r in rows], "-o", color=color,
                 label=f"{model_id}", markersize=4)  # fmt: skip
         ax.set_xticks(range(len(rows)), labels, fontsize=7)

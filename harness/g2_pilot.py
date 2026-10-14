@@ -65,7 +65,31 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
             raise G2ConfigError(f"{model_id}: rollout seeds outside the declared seeds")
         if not set(config["teacher_force"]["fp32_seeds"]) <= set(model["rollout_seeds"]):
             raise G2ConfigError(f"{model_id}: fp32 seeds must be rollout seeds")
+    analysis = config.get("analysis", {})
+    analysis["entropy_edges"] = numeric_edges(analysis.get("entropy_edges"), "entropy_edges")
     return config
+
+
+def numeric_edges(values: Any, name: str = "edges") -> list[float]:
+    """Bin edges as floats, strictly increasing; anything that is not a number is refused.
+
+    YAML 1.1 (PyYAML) reads an exponent without a sign, such as ``1.0e9``, as a string, and
+    numpy then compares values with the edges as text. The g2-pilot-v1 analysis first ran
+    with such an edge and misbinned about a quarter of the hybrid's tokens.
+    """
+
+    if not isinstance(values, (list, tuple)) or len(values) < 2:
+        raise G2ConfigError(f"{name}: need a list of at least two edges, got {values!r}")
+    edges: list[float] = []
+    for value in values:
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise G2ConfigError(f"{name}: edge {value!r} is a {type(value).__name__}, not a number")
+        if math.isnan(value):
+            raise G2ConfigError(f"{name}: edge is NaN")
+        edges.append(float(value))
+    if any(b <= a for a, b in zip(edges, edges[1:], strict=False)):
+        raise G2ConfigError(f"{name}: edges must increase strictly, got {edges}")
+    return edges
 
 
 def load_prompts(config: dict[str, Any]) -> list[dict[str, Any]]:

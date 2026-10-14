@@ -10,6 +10,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -100,6 +101,62 @@ def test_within_bin_slope_removes_group_confound() -> None:
     assert abs(within) < 0.002
 
 
+def test_entropy_edges_are_numbers_in_the_config_file() -> None:
+    # YAML 1.1 reads 1.0e9 (no exponent sign) as a string; the first analysis then binned
+    # entropies as text. Read the file directly, not through load_config's validation.
+    raw = yaml.safe_load(g2.CONFIG_PATH.read_text(encoding="utf-8"))
+    edges = raw["analysis"]["entropy_edges"]
+    assert all(isinstance(e, float) and not isinstance(e, bool) for e in edges), edges
+    assert edges == sorted(edges) and len(set(edges)) == len(edges)
+    assert g2.load_config()["analysis"]["entropy_edges"] == edges
+
+
+def test_entropy_bins_are_numeric() -> None:
+    edges = g2.load_config()["analysis"]["entropy_edges"]
+    entropy = np.asarray([0.0, 3.05e-5, 0.009, 0.05, 0.3, 0.7, 1.05, 1.2, 1.99, 2.0, 10.5])
+    groups = analysis.entropy_groups(entropy, edges)
+    assert groups.tolist() == [0, 0, 0, 1, 2, 3, 4, 4, 4, 5, 5]
+
+
+def test_string_edges_are_refused(tmp_path: Path) -> None:
+    assert yaml.safe_load("[2.0, 1.0e9]")[1] == "1.0e9"  # the YAML 1.1 behaviour itself
+    with pytest.raises(g2.G2ConfigError):
+        g2.numeric_edges([0.0, 2.0, "1.0e9"], "entropy_edges")
+    with pytest.raises(g2.G2ConfigError):
+        analysis.entropy_groups(np.asarray([1.0]), [0.0, 2.0, "1.0e9"])
+    with pytest.raises(g2.G2ConfigError):
+        g2.numeric_edges([0.0, 2.0, 1.0], "entropy_edges")
+    text = g2.CONFIG_PATH.read_text(encoding="utf-8").replace("2.0, 1.0e+9]", "2.0, 1.0e9]")
+    assert "2.0, 1.0e9]" in text
+    bad = tmp_path / "g2-pilot-v1.yaml"
+    bad.write_text(text, encoding="utf-8")
+    with pytest.raises(g2.G2ConfigError):
+        g2.load_config(bad)
+
+
+def test_within_sequence_slope_removes_between_sequence_confound() -> None:
+    rng = np.random.default_rng(2)
+    seqs, xs, ys = [], [], []
+    for s in range(30):
+        length = int(rng.integers(200, 2000))
+        level = 0.001 * length / 200  # longer sequences sit higher: a between-sequence effect
+        x = np.arange(length) / 100.0
+        seqs.append(np.full(length, s))
+        xs.append(x)
+        ys.append(level + rng.normal(0, 0.001, length))
+    seq, x, y = np.concatenate(seqs), np.concatenate(xs), np.concatenate(ys)
+    pooled = analysis.ols_slope(analysis.seq_stats(seq, x, y, 30).sum(0))
+    within, lo, hi = analysis.within_sequence_slope(seq, None, x, y, 30, 300, 42)
+    assert pooled > 1e-4
+    assert abs(within) < 2e-5 and lo < 0 < hi
+    one = seq == 0
+    single = analysis.within_sequence_slope(seq[one] * 0, None, x[one], y[one], 1, 10, 42)[0]
+    assert math.isclose(single, np.polyfit(x[one], y[one], 1)[0], rel_tol=1e-9)
+    cells = (x > 5).astype(int)
+    by_cell = analysis.within_sequence_slope(seq, cells, x, y, 30, 300, 42)
+    assert abs(by_cell[0]) < 5e-5
+
+
 def _fake_jobs(tmp: Path) -> tuple[Path, Path]:
     roll = tmp / "roll"
     tf = tmp / "tf"
@@ -158,6 +215,10 @@ def test_pack_and_analyze(tmp_path: Path) -> None:
     assert math.isclose(blocks["r1_vs_r4"]["mean_abs"], 0.002, rel_tol=1e-2)
     assert "r1_vs_r4" not in result["models"]["qwen3.5-4b"]["subsets"]["seed_43"]
     assert blocks["dec_vs_r1"]["k3"] > 0
+    for key in ("slope_within_sequences", "slope_within_sequence_entropy_cells"):
+        assert math.isfinite(blocks["dec_vs_r1"][f"{key}_per_1k"])
+    row = blocks["dec_vs_r1"]["by_position"][0]
+    assert 0 < row["mean_entropy_r1"] < 3 and row["mean_abs_entropy_standardized"] > 0
     assert math.isclose(
         blocks["dec_vs_r3"]["mean_abs"], blocks["dec_vs_r1"]["mean_abs"], rel_tol=0.5
     )
