@@ -1,8 +1,9 @@
 # S2 v5: Arabic interface text versus mirrored layout on the certified OSWorld stack, v4 with A6's canary targets measured on each cell image (s2-arabic-cua-locale-v5)
 
-**Status: DRAFT, not frozen; no ledger row.** Written on 2026-10-13 by the single owner of the S2 v5
-draft (decisions D94 and D96) on branch `stage0/s2-v5`. It is a new experiment id.
-`s2-arabic-cua-locale-v4` (ledger row 21, freeze commit `cf174050`) stands as recorded (D93, D94)
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the freeze time and
+`git_head_at_freeze`.** Written on 2026-10-13 by the single owner of the S2 v5 draft (decisions D94
+and D96) on branch `stage0/s2-v5`. It is a new experiment id.
+`s2-arabic-cua-locale-v4` (ledger row 21, freeze commit `38ffaf22`) stands as recorded (D93, D94)
 and is not edited. This file is v4's frozen registration, copied whole, with one change to the
 measurement (D96), with D94's consequence for K1. The change: A6's Writer targets per image (section
 "K1", subsection "A6's targets per image"). The consequence: a failed K1 ends S2 at an honest exit,
@@ -14,8 +15,15 @@ byte. v5 is S2's last registration: any failure, from the development confirmati
 exit for S2 (D94, D96). The development confirmation (a pre-freeze gate, section "v5 development:
 step 0 and the confirmation") passed on its one attempt (Slurm 1278 and 1291; D98). The fresh code
 review and pre-freeze audit that followed found one blocking item, text only, fixed before the
-status fill (section "v5's review log"). Next, in D98's order: the history purge D96 places before
-any S2 v5 freeze, then the freeze procedure. Phase 0 is CPU only. Evidence: v4's, as its sections
+status fill (section "v5's review log"). Then, in D98's order, the history purge that D96 placed
+before any S2 v5 freeze ran on 2026-10-14 (D99) and rewrote this branch's commit ids with `main`'s;
+`main` was merged into this branch with its 21 ledger rows; the pins table was re-filled unchanged,
+with harness/'s tree digest still `896c46a8...`, the tree the confirmation ran; and v5 was frozen
+(section "Freeze procedure"). The sections copied from v4 are v4's frozen text byte for byte, with
+v4's commit ids as frozen: pre-purge ids, which `program/history-rewrite-2026-10-14/commit-map.tsv`
+maps to their new ids (D99). The text v5 adds or replaces cites this repository's commits by their
+post-purge ids; the records it cites (the ledger, step 0's record, the manifests and the evidence)
+keep the ids they recorded at the time, which are pre-purge ids. Phase 0 is CPU only. Evidence: v4's, as its sections
 below cite it; `program/evidence/2026-10-13/s2v5-step0/` (step 0, Slurm 1271); and
 `program/evidence/2026-10-13/s2v5-confirmation/` (the development confirmation, Slurm 1278 and
 1291).
@@ -24,7 +32,7 @@ The K0 rule (section "K0: Phase 0 admission rule") and its code (`harness/s2_loc
 `tests/test_s2v4_k0.py`) were committed in the first commit that carried v4's file, before any
 render, save or verdict of the derived images existed. v5 copies the section byte for byte:
 `tests/test_s2v5_registration.py` pins the same SHA-256 (`ed38b953...`) and checks that it is v4's
-frozen text, and `harness/s2_locale/k0_v4.py` is unchanged since `ee0841b3`. No Phase 0 result that
+frozen text, and `harness/s2_locale/k0_v4.py` is unchanged since `e5a1afd9`. No Phase 0 result that
 K0 reads exists: v4's Phase 0 ran only K1 jobs 1245-1264, and the census, the oracle and K0 never
 ran (D93), so K0 is still unread. An edit of that section after any Phase 0 result has been read
 voids the commitment (a new experiment id is then needed).
@@ -821,7 +829,7 @@ q2's Chrome targets: a drag from (172, 150) to (228, 150) and a triple-click at 
 
 Where the targets come from. Step 0 (record
 `program/preregistrations/s2-arabic-cua-locale-v5-step0.md`; its rule, predictions and stop rule
-committed and SHA-pinned in `31854bc6` before Slurm 1271 was submitted) measured the canary's
+committed and SHA-pinned in `dd139475` before Slurm 1271 was submitted) measured the canary's
 fixture line in the screenshot before each pointer composite, on 5 cold boots of each image: the
 drag from the left edge of "w" plus 1 px to the right edge of "d" minus 1 px of the word "word", the
 triple-click at the middle of "this", y at the centre of the glyph rows, from screenshots only. The
@@ -904,7 +912,7 @@ smoke" after this one is v4's record, carried over unchanged.
 Step 0 (done; D94, D96; record `program/preregistrations/s2-arabic-cua-locale-v5-step0.md`, evidence
 `program/evidence/2026-10-13/s2v5-step0/`):
 - The rule (targets from screenshots only), its numeric predictions and its stop rule were committed
-  in `31854bc6` and pinned by `experiments/manifests/s2v5/step0-rule.json` before the job was
+  in `dd139475` and pinned by `experiments/manifests/s2v5/step0-rule.json` before the job was
   submitted; `canary_targets_v5.analyze` verified the 15 pinned files before it read anything.
 - One CPU-only canary-development job, Slurm 1271: submitted at 08:37:17Z on 2026-10-13 on an empty
   queue in E's E3-E4 gap, 42.5 minutes, about 0.7 VM-h; 5 cold boots on each of E, A, ER, AR and PL,
@@ -916,10 +924,10 @@ Step 0 (done; D94, D96; record `program/preregistrations/s2-arabic-cua-locale-v5
   back "Ykeep word keep" on 10 of 10 boots of ER and AR, as job 1264 did. Its `v5_targets` are the
   targets of subsection "A6's targets per image".
 - What step 0 did not observe: a drag at the shifted target selecting "word". It ran q2's targets
-  only. That is the confirmation's job.
+  only. That was the confirmation's job, and it made that observation (below).
 
-The development confirmation (D96: a pre-freeze gate; it runs before the freeze, once):
-- What runs: five q2 `canary-development` campaigns (purpose `development` under this unfrozen id;
+The development confirmation (D96: a pre-freeze gate; it ran before the freeze, once):
+- What ran: five q2 `canary-development` campaigns (purpose `development` under this id unfrozen;
   `ap_delta_v5.py`, check `confirm`; refused once v5 is frozen, and before v4's freeze), one VM at a
   time, CPU only:
   - ER, AR and PL: the full A6, all four applications and all 60 entries, 5 repetitions, seed 42:
@@ -932,18 +940,18 @@ The development confirmation (D96: a pre-freeze gate; it runs before the freeze,
   budget, no target measurement (`measure_targets` false), one VM at a time. Not as K1's A6: the
   order is seed 42's (development; harness/q2 reserves seeds 43-45 for scored campaigns), the kind is
   `canary-development`, and E and A run only the two composites.
-- Why these images: the full A6 has never run on AR or PL (v4's K1 stopped after ER, D93); ER and AR
+- Why these images: the full A6 had never run on AR or PL (v4's K1 stopped after ER, D93); ER and AR
   carry the new targets; PL draws Writer as E does (step 0: pixel-identical); E and A run q2's
   targets, A at the 2 px limit.
 - Manifests (development): `experiments/manifests/s2v5/confirm-a6-v1-p1.json` (ER and AR; SHA-256
   `c2ee961423cc6faf921e9cfa0e51a7e08e032764ba56069b0a87e16daf0ce3c6`, canonical digest
   `1d7289f1...`) and `confirm-a6-v1-p2.json` (PL, E and A;
   `3bf042124833b1f6e18f00cc4a75232e444ba5bac1921085644846cc5deff313`, canonical `3e75de8c...`),
-  rendered by `ap_delta_v5.py render-confirm` from a `git archive` export of
-  `f24557aa555987157b5b75049ec1cb1b8e0a81a2`, the commit that adds this draft and the v5 code. They
-  name that commit (`git_sha`), its export on the host
-  (`~/cotcodec-runs/stage0/s2v5/confirm/src/f24557aa.../`, staged read-only with its `.git_sha`
-  before the first job), the harness tree digest `896c46a8...` and the host root
+  rendered by `ap_delta_v5.py render-confirm` from a `git archive` export of the commit that adds
+  this draft and the v5 code, `a8da27c20c49b380a88f0c7a053b0cb2684f2262` after the history purge
+  (D99). They name that commit by its pre-purge id (`git_sha`), its export on the host (a directory
+  of `~/cotcodec-runs/stage0/s2v5/confirm/src/` named by the same id, staged read-only with its
+  `.git_sha` before the first job), the harness tree digest `896c46a8...` and the host root
   `~/cotcodec-runs/stage0/s2v5/confirm`, and both pass `ap_delta_v5.py validate` (harness/q2's
   validator included) against that export. Slurm limits: 434 and 366 minutes (harness/q2's
   worst-case budgets plus the image checks), each within a 12 h 5 min gap between successor E
@@ -953,23 +961,24 @@ The development confirmation (D96: a pre-freeze gate; it runs before the freeze,
   empty queue (it refuses a non-empty one), never during a successor E session and with no file staged
   on the host during one, and only if its limit ends before the next E session's earliest start
   (`--must-end-before`), or once E's last session has ended (`--no-e-deadline`).
-- Reading, fixed now (`ap_delta_v5.confirm_read`, over both jobs' directories): each of the five
-  campaigns ran exactly once; it counts under q2's section 6.1 (`acceptance.counting_problems`: the
-  batch's end line `driver_exit=0 labelled_containers_left=0`, the infrastructure gates, the image
-  unchanged, no unreadable run file, and the Slurm end state where recorded); its trials are its plan
-  (the realized order equals the plan from its cells file); it read its image's cells file (ER and AR
-  the pinned v5 file, with the override record; E, A and PL q2's); and every entry passed 5 of 5.
-- Stop rule, fixed now (D94, D96): if the reading passes, the draft goes to a fresh code review and a
-  fresh pre-freeze audit (section "Freeze procedure"). Anything else is an honest exit for S2: any
-  entry below 5 of 5, for any reason, an infrastructure loss included; a campaign that does not
-  count; a missing campaign; a second attempt. One attempt: neither job is rerun, for any reason, and
-  no target is changed after either job. v5 is then not frozen, and the confirmation's records are
-  reported with step 0's and v4's.
+- Reading, fixed before either job ran (`ap_delta_v5.confirm_read`, over both jobs' directories):
+  each of the five campaigns ran exactly once; it counts under q2's section 6.1
+  (`acceptance.counting_problems`: the batch's end line `driver_exit=0 labelled_containers_left=0`,
+  the infrastructure gates, the image unchanged, no unreadable run file, and the Slurm end state
+  where recorded); its trials are its plan (the realized order equals the plan from its cells file);
+  it read its image's cells file (ER and AR the pinned v5 file, with the override record; E, A and PL
+  q2's); and every entry passed 5 of 5.
+- Stop rule, fixed before either job ran (D94, D96): if the reading passes, the draft goes to a
+  fresh code review and a fresh pre-freeze audit (section "Freeze procedure"). Anything else is an
+  honest exit for S2: any entry below 5 of 5, for any reason, an infrastructure loss included; a
+  campaign that does not count; a missing campaign; a second attempt. One attempt: neither job is
+  rerun, for any reason, and no target is changed after either job. v5 is then not frozen, and the
+  confirmation's records are reported with step 0's and v4's.
 
 The confirmation's result (Slurm 1278 and 1291; D98; records and README
 `program/evidence/2026-10-13/s2v5-confirmation/`): **the reading passes**, on the one attempt.
-- `ap_delta_v5.py confirm-read` over both job directories, run on the host from the export of
-  `f24557aa`, returned "PROCEED to the pre-freeze audit (D96)" with no problem
+- `ap_delta_v5.py confirm-read` over both job directories, run on the host from the jobs' export
+  (`a8da27c2`), returned "PROCEED to the pre-freeze audit (D96)" with no problem
   (`confirm-reading.json`). The same command on the Mac, over the committed copies, gave the same
   output.
 - ER and AR (job 1278, 22:00:33Z to 23:40:05Z on 2026-10-13): each 300 of 300 trials, every one of
@@ -994,9 +1003,11 @@ The confirmation's result (Slurm 1278 and 1291; D98; records and README
   - A drag at the shifted target selects "word" on ER and AR. Step 0 could not make that
     observation, because it ran q2's targets only.
   - The full A6 passes on AR and PL, where it had never run before.
-- By the stop rule, the draft goes next to a fresh code review and a fresh pre-freeze audit. They
-  found one blocking item, text only, and required no change to code the confirmation ran (section
-  "v5's review log"; D98). The confirmation's deviations are in section "Disclosures (v5)".
+- By the stop rule, the draft went next to a fresh code review and a fresh pre-freeze audit. They
+  found one blocking item, text only, fixed before the status fill, and required no change to code
+  the confirmation ran (section "v5's review log"; D98). The confirmation's deviations are in
+  section "Disclosures (v5)". Then the history purge ran (D99), `main` was merged, the pins table
+  was re-filled unchanged, and v5 was frozen (section "Freeze procedure", steps 4-6).
 
 ## Development smoke (dev split only; not Phase 0, not evidence for K0 or K1)
 
@@ -1512,21 +1523,21 @@ disclosed", and its evidence README):
   trials.
 - The rounding convention (`(a + b) // 2`) and the thresholds were set while looking at q2's
   development screenshots of S; A's predicted y sat at the 2 px limit, as disclosed before the job.
-- The manifest was taken from `76698aa8`'s archive and the source tree from `31854bc6`'s export
-  (`76698aa8` adds only the manifest); the analysis command line included `--out`, which the record's
+- The manifest was taken from `b82144f7`'s archive and the source tree from `dd139475`'s export
+  (`b82144f7` adds only the manifest); the analysis command line included `--out`, which the record's
   text omitted; the job used about 0.7 VM-h against an estimate of 1.1-1.5.
 - The accessibility extents, recorded for disclosure only: Writer's on ER and AR at unmirrored
   coordinates, 71 px left of the pixels, and on every image 25-26 px above the glyph-row centre.
 
 The development confirmation's (Slurm 1278 and 1291; its evidence README, section "Disclosures";
 D98):
-- The jobs ran from a `git archive` export of `f24557aa`, the commit their manifests name
-  (`git_sha`, `source.host_dir`), as freeze procedure step 2 requires. The manifests were read from
-  an export of `26a9477c`, the draft's head, staged beside it. The two commits differ only in the two
-  manifests, this file, the freeze-rehearsal record and `tests/conftest.py`: harness/ (tree digest
-  `896c46a8...`) and infra/ (`88954410...`) are byte-identical in both exports, so the code that ran
-  is the code at `26a9477c`. Step 0 set the precedent: the manifest from the later commit, the source
-  from the commit it names.
+- The jobs ran from a `git archive` export of `a8da27c2`, the commit their manifests name by its
+  pre-purge id (`git_sha`, `source.host_dir`), as freeze procedure step 2 requires. The manifests
+  were read from an export of `342e00cd`, the draft's head then, staged beside it. The two commits
+  differ only in the two manifests, this file, the freeze-rehearsal record and `tests/conftest.py`:
+  harness/ (tree digest `896c46a8...`) and infra/ (`88954410...`) are byte-identical in both
+  exports, so the code that ran is the code at `342e00cd`. Step 0 set the precedent: the manifest
+  from the later commit, the source from the commit it names.
 - harness/q2's end-state watcher, `scripts/record_slurm_end_states.sh`, run from the export, wrote
   `slurm-state/JOB.txt` inside each job's run directory. That is where `acceptance.load` reads it, so
   the reading includes the Slurm end state. It is one file the batch file did not write.
@@ -1569,6 +1580,13 @@ v5's own:
   scrolls and button presses; `xdotool`). No postconfig step has one; the setups of `66399b0d` and
   `6ada715d` scroll at the pointer (section "Fixed screen coordinates").
 - v4's K1 jobs 1245-1264 ran under v4 and count for nothing in v5 (D93, D94).
+- The history purge (D99) ran after step 0 and the confirmation. It gave a new id to each of the 11
+  commits this branch held apart from `main` before freeze procedure step 4's merge (step 0's three,
+  the draft's six and two merges of `main`). Step 0's and the confirmation's manifests, records
+  and evidence, step 0's record and the freeze-rehearsal record name them by their pre-purge ids,
+  as recorded at the time; this file cites the same commits by their post-purge ids. The purge
+  changed none of the 11 but its parent ids: each, rebuilt from its post-purge commit with the
+  parents mapped back, hashes to its pre-purge id.
 
 ## Owner's prior forecast (not a decision input)
 
@@ -1594,11 +1612,12 @@ v5's owner, on 2026-10-13, after step 0 and before the confirmation:
 v4's forecast, for the record: K1 0.85, K0 0.7, descriptors valid 0.55, Phase 1 reached about 0.55.
 K1 failed (D93).
 
-The outcome so far: v5's development confirmation passed (D98).
+The outcome at the freeze: v5's development confirmation passed (D98); K1, K0 and Phase 1 have not
+run under v5.
 
 ## Freeze procedure
 
-1. Build and test v5's code on development data only. Done in this draft: `harness/s2_locale/ap_delta_v5.py`
+1. Build and test v5's code on development data only. Done: `harness/s2_locale/ap_delta_v5.py`
    (A6's targets per image, the cells-file override, K1's manifests, admission, run and verdict
    under v5's id, the confirmation's manifests and reading), the two v5 cells files
    (`harness/s2_locale/canary_v5/`), `harness/s2_locale/lane_v5.py` (the census gate), the batch files
@@ -1620,19 +1639,21 @@ The outcome so far: v5's development confirmation passed (D98).
    fill. A change to code the confirmation exercised (`ap_delta_v5.py`'s run path and override, the
    v5 cells files, `s2v5-apdelta.sbatch`, or anything in harness/ the confirmation ran) would leave
    the code to be frozen untested by the one confirmation; it is not made, and if it is needed, S2
-   ends at an honest exit (D94, D96). Done at `0b98c7c1`: one blocking item, text only, fixed before
+   ends at an honest exit (D94, D96). Done at `c6173b83`: one blocking item, text only, fixed before
    the status fill, and no change to code the confirmation ran (section "v5's review log"; D98).
-4. Before the status fill, in this order (D98):
-   - The history purge that D96 places before any S2 v5 freeze (option (a+), after successor E's
-     last session and its analysis, with every agent paused) runs, once Kevin has confirmed its exact
-     commands (D96, D98). It runs before the freeze and rewrites this branch's commit ids, as it
-     rewrites `main`'s. Until the status fill, every commit id of this repository that this file
-     cites is a pre-purge id.
-   - `main` is merged into this branch with every ledger row kept.
-   - After the purge and the merge of `main`, the pins table is re-filled and checked: `python -m
-     harness.s2_locale.pins_table_v5` prints "unchanged", `--check` passes, and harness/'s tree
-     digest (harness/q2's `source_tree_sha256`) is still `896c46a8...`, the tree the confirmation's
-     jobs ran. A difference in either means code changed after the confirmation, and step 3 applies.
+4. Before the status fill, in this order (D98). Done:
+   - The history purge that D96 placed before any S2 v5 freeze (option (a+), after successor E's
+     last session and its analysis, with every agent paused) ran on 2026-10-14, once Kevin had
+     confirmed its exact commands (D96, D98, D99). It ran before the freeze and rewrote this
+     branch's commit ids, as it rewrote `main`'s; the text v5 adds or replaces cites post-purge ids
+     (step 5).
+   - `main` (`3c1b9d22`, D99) was merged into this branch at `8f6d4386` with every ledger row kept:
+     main's 21 rows, none for this id.
+   - After the purge and the merge of `main`, the pins table was re-filled and checked: `python -m
+     harness.s2_locale.pins_table_v5` printed "unchanged", `--check` passed, harness/'s tree digest
+     (harness/q2's `source_tree_sha256`) is still `896c46a8...`, the tree the confirmation's jobs
+     ran, and `test_v5s_own_files_are_the_files_the_confirmation_ran` passed. A difference in either
+     would have meant that code changed after the confirmation, and step 3 would have applied.
 5. Status fill, one commit: the status paragraph's first line becomes "**Status: frozen in
    `program/preregistrations/ledger.jsonl`; see the ledger row for the freeze time and
    `git_head_at_freeze`.**" (no "DRAFT" remains); every sentence that speaks of the draft as still to
@@ -1666,7 +1687,7 @@ The outcome so far: v5's development confirmation passed (D98).
    (section "Phase 1": built, dry-run on dev tasks only, audited, frozen as its own ledger row), then
    Phase 1 under D80 (iv) within its cap.
 
-Steps 5-7 were rehearsed by this draft's owner on a scratch clone at `5316cd5a`
+Steps 5-7 were rehearsed by this draft's owner on a scratch clone at `53ab030e`
 (`program/evidence/2026-10-13/s2v5-draft/freeze-rehearsal.json`). The clone shared the repository's
 objects, had its origin removed, froze into its own ledger and was deleted afterwards.
 - The status fill, with `pins_table_v5 --check` equal to the tree; `preregister.py freeze`, `verify`
@@ -1691,7 +1712,7 @@ objects, had its origin removed, froze into its own ledger and was deleted after
   exists, as a skip with its reason: step 0's two test files then gave 42 passed and 19 skipped.
 - The real ledgers were unchanged, and nothing was submitted to, staged on or created on the host.
 
-The round's pre-freeze audit rehearsed steps 5-7 again at `0b98c7c1`, after the confirmation, on a
+The round's pre-freeze audit rehearsed steps 5-7 again at `c6173b83`, after the confirmation, on a
 scratch clone with its own ledger: all 49 K1 manifests and the census rendered from the freeze
 export and were admitted, and the real ledgers were unchanged (section "v5's review log").
 
@@ -1923,7 +1944,7 @@ Added in v5 (D94, D96):
 
 ## v5's review log
 
-Freeze procedure step 3's fresh code review and fresh pre-freeze audit read the draft at `0b98c7c1`,
+Freeze procedure step 3's fresh code review and fresh pre-freeze audit read the draft at `c6173b83`,
 after the development confirmation had passed (D98). They checked it against v4's frozen file, D94,
 D96, step 0's record, the code, the tests and the confirmation's records, and gave their findings in
 one report. The package was not ready to freeze on one blocking item, text only, which needs no host
@@ -1942,13 +1963,13 @@ Not blocking:
 
 | Item | Disposition |
 |---|---|
-| v5 against v4. v4's file is unchanged (SHA-256 `aa348c4a...`, as ledger row 21 has it). Every file in v4's pins table is unchanged from `cf174050` to `0b98c7c1`, and both `pins_table --check` runs match the tree. The K0 section is `ed38b953...`, v4's. K0 is unread: a read-only host check found no `phase0-runs` directory under s2v4 or s2v5, and the queue was empty. The 21 copied sections are byte-identical, and section "Kill criteria" differs only in the K1 row. harness/, infra/ and scripts/ have no diff from `f24557aa` to `0b98c7c1`. The branch's ledger is main's 21 rows | Confirmed; nothing to change |
+| v5 against v4. v4's file is unchanged (SHA-256 `aa348c4a...`, as ledger row 21 has it). Every file in v4's pins table is unchanged from `38ffaf22` to `c6173b83`, and both `pins_table --check` runs match the tree. The K0 section is `ed38b953...`, v4's. K0 is unread: a read-only host check found no `phase0-runs` directory under s2v4 or s2v5, and the queue was empty. The 21 copied sections are byte-identical, and section "Kill criteria" differs only in the K1 row. harness/, infra/ and scripts/ have no diff from `a8da27c2` to `c6173b83`. The branch's ledger is main's 21 rows | Confirmed; nothing to change |
 | The targets. `ap_delta_v5.WRITER_TARGETS`, both v5 cells files and the K1 targets table equal step 0's `v5_targets` (`step0-result.json`, `18d8b910...`). E, A, PL and every Chrome and VS Code target are q2's. The v5 cells files differ from q2's `suite_cells.json` (`a79073a2...`) only at `canary.apps.writer.targets`, and both re-render byte for byte. The 15 files step 0's rule pins are unchanged | Confirmed |
-| The confirmation ran the shifted targets. `confirm-read`, run again on the Mac over the committed job directories, reproduces `confirm-reading.json` (`bb2adbe7...`) byte for byte. The committed manifests equal the jobs' (canonical `1d7289f1...` and `3e75de8c...`). Every ER and AR session config names its v5 cells file, and each override record and `workload.cells_sha256` names the pinned file. The drag read back "keep Y keep" 5 of 5 on ER and on AR. All 920 trials passed, and every image hashed the same before and after. The host export of `f24557aa` is read-only, and its cells files, `ap_delta_v5.py` (`fee65229...`) and harness/q2's `driver.py` (`06f3a29f...`) match the pins. E4's lanes ended (21:58:01Z) before 1278 started (22:00:33Z) | Confirmed |
-| The audit's scratch freeze rehearsal at `0b98c7c1`, to be recorded here. It used a shared clone with its origin removed. The status fill left the pins table unchanged, and `pins_table_v5 --check` matched. `preregister.py freeze`, `verify` and `check-chain` passed into the clone's own ledger (22 rows); the freeze commit changed only the ledger, and its only parent was the fill commit. From the freeze export, all 49 K1 manifests rendered, and all 49 passed `ap_delta_v5.py validate` (harness/q2's validator, with the ledger and the closed world). Each equals v4's committed K1 manifest of the same check and image except in the id-level fields and, for A6 on ER and AR only, `cells_file` and `cells_sha256`. A dry-run submit gave CPU-only `sbatch` lines (A6 on ER: 5 CPUs and 222 minutes; the rung: 90 CPUs and 110 minutes). The census rendered by `lane_v5.py render-census --freeze-commit` has 1,322 slots, equal to `phase0-census.json`, and its base equals v4's registered base except in id, name, run root and freeze; `lane_v5` admitted it and `vm_lane` refused it. Also refused: the confirmation's manifests (development after the freeze), v4's `ap_delta.py` on v5's manifests, and every wrong cells-file pairing tried. Tests at the freeze commit, as targeted files: v5 registration, v5 lane and v4 registration, 29 passed; v5 and v4 `ap_delta`, 49 passed; step 0 and `canary_targets`, 42 passed and 19 skipped (the `tests/conftest.py` hook); v4 `vm_lane`, v4 `k0` and v5 lane, 80 passed. The real ledgers were unchanged, and the scratch clone was deleted | Recorded here; the freeze procedure points to it |
+| The confirmation ran the shifted targets. `confirm-read`, run again on the Mac over the committed job directories, reproduces `confirm-reading.json` (`bb2adbe7...`) byte for byte. The committed manifests equal the jobs' (canonical `1d7289f1...` and `3e75de8c...`). Every ER and AR session config names its v5 cells file, and each override record and `workload.cells_sha256` names the pinned file. The drag read back "keep Y keep" 5 of 5 on ER and on AR. All 920 trials passed, and every image hashed the same before and after. The jobs' host export (of `a8da27c2`) is read-only, and its cells files, `ap_delta_v5.py` (`fee65229...`) and harness/q2's `driver.py` (`06f3a29f...`) match the pins. E4's lanes ended (21:58:01Z) before 1278 started (22:00:33Z) | Confirmed |
+| The audit's scratch freeze rehearsal at `c6173b83`, to be recorded here. It used a shared clone with its origin removed. The status fill left the pins table unchanged, and `pins_table_v5 --check` matched. `preregister.py freeze`, `verify` and `check-chain` passed into the clone's own ledger (22 rows); the freeze commit changed only the ledger, and its only parent was the fill commit. From the freeze export, all 49 K1 manifests rendered, and all 49 passed `ap_delta_v5.py validate` (harness/q2's validator, with the ledger and the closed world). Each equals v4's committed K1 manifest of the same check and image except in the id-level fields and, for A6 on ER and AR only, `cells_file` and `cells_sha256`. A dry-run submit gave CPU-only `sbatch` lines (A6 on ER: 5 CPUs and 222 minutes; the rung: 90 CPUs and 110 minutes). The census rendered by `lane_v5.py render-census --freeze-commit` has 1,322 slots, equal to `phase0-census.json`, and its base equals v4's registered base except in id, name, run root and freeze; `lane_v5` admitted it and `vm_lane` refused it. Also refused: the confirmation's manifests (development after the freeze), v4's `ap_delta.py` on v5's manifests, and every wrong cells-file pairing tried. Tests at the freeze commit, as targeted files: v5 registration, v5 lane and v4 registration, 29 passed; v5 and v4 `ap_delta`, 49 passed; step 0 and `canary_targets`, 42 passed and 19 skipped (the `tests/conftest.py` hook); v4 `vm_lane`, v4 `k0` and v5 lane, 80 passed. The real ledgers were unchanged, and the scratch clone was deleted | Recorded here; the freeze procedure points to it |
 | A section "v5's review log" (freeze procedure step 3) would fail `test_v5_is_v4_with_exactly_the_listed_sections_changed`, which allows only v4's sections and v5's four | Fixed in the test: the section is in its `ADDED` list (`tests/test_s2v5_registration.py`, a test file, not code of record) |
-| The history purge, option (a+) (D96), rewrites the repository's commit ids, this branch's included, and its plan removes this branch's linked worktree first. The text cites pre-purge ids. The purge needs Kevin's explicit yes (D92, D96), so the freeze waits on him | Freeze procedure steps 4 and 5: the purge runs before the freeze, once Kevin has confirmed its exact commands, and rewrites this branch's commit ids; at the status fill, the text v5 adds or replaces cites post-purge ids or none |
-| v5's own files of record (`ap_delta_v5.py`, both cells files, `lane_v5.py`, the two s2v5 batch files and `step0-result.json`) are not protected. The test fixes v4's pinned files, but a re-fill of the table would absorb a change to v5's | Fixed in the test: `test_v5s_own_files_are_the_files_the_confirmation_ran` fixes each to the digest the confirmation ran (step 0's result to its pinned digest), in the tree and in the table. Freeze procedure step 4: after the purge and the merge of `main`, the table is re-filled and checked; `pins_table_v5` must print "unchanged", and harness/'s tree digest must still be `896c46a8...`. A difference means code changed after the confirmation, and step 3 applies |
+| The history purge, option (a+) (D96), rewrites the repository's commit ids, this branch's included, and its plan removes this branch's linked worktree first. The text cites pre-purge ids. The purge needs Kevin's explicit yes (D92, D96), so the freeze waits on him | Freeze procedure steps 4 and 5: the purge runs before the freeze, once Kevin has confirmed its exact commands, and rewrites this branch's commit ids; at the status fill, the text v5 adds or replaces cites post-purge ids or none. Done: Kevin confirmed the commands, the purge ran on 2026-10-14 (D99), and this text cites post-purge ids |
+| v5's own files of record (`ap_delta_v5.py`, both cells files, `lane_v5.py`, the two s2v5 batch files and `step0-result.json`) are not protected. The test fixes v4's pinned files, but a re-fill of the table would absorb a change to v5's | Fixed in the test: `test_v5s_own_files_are_the_files_the_confirmation_ran` fixes each to the digest the confirmation ran (step 0's result to its pinned digest), in the tree and in the table. Freeze procedure step 4: after the purge and the merge of `main`, the table is re-filled and checked; `pins_table_v5` must print "unchanged", and harness/'s tree digest must still be `896c46a8...`. A difference means code changed after the confirmation, and step 3 applies. Done after the merge of `main`: "unchanged", and the tree digest is `896c46a8...` |
 | The confirmation's deviations were in its evidence README, not in section "Disclosures (v5)", and the status paragraph's evidence list lacked the confirmation | Done: section "Disclosures (v5)", and the status paragraph names `program/evidence/2026-10-13/s2v5-confirmation/` |
 | The status paragraph said "exactly one change of substance, D96's", but K1's consequence (an honest exit, setting aside "a repair is a new image") is also a change of substance, set by D94 | Reworded as "one change to the measurement (D96), with D94's consequence for K1", in the status paragraph and in section "What changed from v4, and why" |
 | `lane_v5.py submit` has not run on the host, and `vm_lane.check_host` reads the host's images, Docker images, the OSWorld checkout, the file cache and the PD cache | Freeze procedure step 7: before the census, `lane_v5.py submit --dry-run` runs from the freeze export on the host. It writes only the stored manifest under `phase0-runs/manifests/`, which `check_once` ignores |
@@ -1956,18 +1977,18 @@ Not blocking:
 | `harness/s2_locale/SKILL.md` still says "DRAFT" | Not changed, and noted. The file is under harness/, so it is part of harness/'s tree digest (`896c46a8...`), which the confirmation's manifests name and its batch file checked. Editing it would make the tree to be frozen differ from the tree the confirmation ran. No S2 code or test reads it |
 | The census's Slurm job will be named `s2v4-s2v5-phase0` | Already disclosed (section "Disclosures (v5)") |
 | `tests/conftest.py` acts only on the exact refusal string, only in `tests/test_s2v5_step0.py`, and only once v5 has a ledger row. The coordinate inventory looks complete: the code of record holds only inventoried constants, canary sessions do not park the pointer, and in pool-v3 only `66399b0d` and `6ada715d` (both Writer confirm tasks) have setup execute steps | Confirmed |
-| The program records had no entry for the v5 draft or its confirmation | D98 records the confirmation, this audit and the order (text fix, purge, freeze). It reaches this branch with the merge of `main` (freeze procedure step 4). The evidence is clean: its only IP address is the VM-internal 20.20.20.21 |
+| The program records had no entry for the v5 draft or its confirmation | D98 records the confirmation, this audit and the order (text fix, purge, freeze). It reached this branch with the merge of `main` (freeze procedure step 4). The evidence is clean: its only IP address is the VM-internal 20.20.20.21 |
 
 The confirmation's report, deviations (its evidence README, section "Disclosures"):
 
 | Item | Disposition |
 |---|---|
-| The jobs ran from the export of `f24557aa`, and the manifests were read from the export of `26a9477c`; harness/ and infra/ are byte-identical in both | Disclosed (section "Disclosures (v5)") |
+| The jobs ran from the export of `a8da27c2`, and the manifests were read from the export of `342e00cd`; harness/ and infra/ are byte-identical in both | Disclosed (section "Disclosures (v5)") |
 | harness/q2's watcher wrote `slurm-state/JOB.txt` in each job directory | Disclosed |
 | Both exports were staged at 18:05Z in the E3-E4 gap, and only read-only polls ran during E4 | Disclosed |
 | Part 1 delayed E's analysis jobs by up to about 1 h 40 min | Disclosed |
 | A digest typo in the draft owner's report (part 2's canonical digest) | Disclosed; this file gives the correct prefix |
-| The result was added only to section "v5 development". The status paragraph, the forecast and freeze steps 1-4 still read as draft, and the program records were not edited | The status paragraph, the forecast and freeze steps 2 and 3 now record the outcome. The rest of the rewrite is the status fill's (step 5). D98 is the decision entry, on `main` |
+| The result was added only to section "v5 development". The status paragraph, the forecast and freeze steps 1-4 still read as draft, and the program records were not edited | The status paragraph, the forecast and freeze steps 2 and 3 now record the outcome. The status fill (step 5) made the rest of the rewrite. D98 is the decision entry, on `main` |
 | The session configs carry the VM-internal guest address 20.20.20.21 | Disclosed; no other address appears |
 
 Tests at the commit that records this log, run as targeted files only:
