@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 15.6257,
+  "gpu_hours_spent_this_program": 20.4064,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1117,6 +1117,96 @@
       ],
       "outcome": "per-job checks only: 226 of 226 slots scored, no infrastructure loss, no re-queue, no cap truncation; DR0 does not fire; manifest named the seven earlier E jobs' records and receipts by SHA-256; provenance PASS; engine argv equals S1a's plan.engine_argv for 4B; Slurm limit 48 = cap; submitted 21:21:45 UTC 2026-10-13 on an empty queue, ran 21:21:45-21:58:03 (GPU) / 21:58:06 (VM); session E4's later end 2026-10-13T21:58:03Z (lane.job_end); all eight registered E jobs have run and none fired DR0; no foreign Slurm job while it ran; no outcome read",
       "basis": "physical (scontrol RunTime 00:36:18 on 1 H100); charged under D22 at its 48-minute cap (0.8000 GPU-h), within E's 406 minutes (403 charged with OE)"
+    },
+    {
+      "experiment": "inference-baseline-v1 (exploratory, not registered; D103 area 2) overlay build 1 (git f6eaf1b2)",
+      "gpu_hours": 0.0239,
+      "jobs": [
+        "1311 cu129 vLLM overlay build (1 H100; COMPLETED 0:0, 00:01:26; image sha256:16bea3e4...)"
+      ],
+      "outcome": "provenance PASS; builder aa43283e, extractor 9b4d21a8",
+      "basis": "physical (scontrol RunTime 00:01:26 on 1 H100); Slurm limit 5 min"
+    },
+    {
+      "experiment": "inference-baseline-v1 (exploratory, not registered; D103 area 2) job a: Qwen3.5-4B, Qwen3-1.7B-Base (prefix on/off), Qwen3-0.6B-Base",
+      "gpu_hours": 0.6056,
+      "jobs": [
+        "1314 (1 H100; COMPLETED 0:0, 00:36:20)"
+      ],
+      "outcome": "98 measured serving runs ok (plus 8 warm-ups), 18 offline runs; exploratory",
+      "basis": "physical (scontrol RunTime 00:36:20 on 1 H100); Slurm limit 55 min"
+    },
+    {
+      "experiment": "inference-baseline-v1 (exploratory, not registered; D103 area 2) job b: Qwen3.5-9B (prefix on/off, FP8 KV)",
+      "gpu_hours": 0.4556,
+      "jobs": [
+        "1320 (1 H100; COMPLETED 0:0, 00:27:20)"
+      ],
+      "outcome": "46 measured serving runs ok (plus 6 warm-ups), 6 offline runs; exploratory",
+      "basis": "physical (scontrol RunTime 00:27:20 on 1 H100); Slurm limit 42 min"
+    },
+    {
+      "experiment": "inference-baseline-v1 (exploratory, not registered; D103 area 2) job c: Qwen3.6-35B-A3B TP 2",
+      "gpu_hours": 0.5889,
+      "jobs": [
+        "1321 (2 H100; COMPLETED 0:0, 00:17:40)"
+      ],
+      "outcome": "30 measured serving runs ok (plus 2 warm-ups), 6 offline runs; exploratory",
+      "basis": "physical (scontrol RunTime 00:17:40 on 2 H100); Slurm limit 28 min"
+    },
+    {
+      "experiment": "inference-baseline-v1 (exploratory, not registered; D103 area 2) job d: Qwen3-32B TP 2",
+      "gpu_hours": 1.15,
+      "jobs": [
+        "1322 (2 H100; COMPLETED 0:0, 00:34:30)"
+      ],
+      "outcome": "30 measured serving runs ok (plus 2 warm-ups), 6 offline runs; exploratory",
+      "basis": "physical (scontrol RunTime 00:34:30 on 2 H100); Slurm limit 40 min"
+    },
+    {
+      "experiment": "inference-baseline-v1 (exploratory, not registered; D103 area 2) job e: Qwen3-32B TP 1 (BF16 and FP8 KV); Qwen3.6-35B-A3B TP 1 (refused at start-up)",
+      "gpu_hours": 0.5361,
+      "jobs": [
+        "1323 (1 H100; COMPLETED 0:0, 00:32:10)"
+      ],
+      "outcome": "30 measured serving runs ok (plus 4 warm-ups); MoE TP 1 engine refused at start-up (max_num_seqs 256 > 181 GDN state blocks); exploratory",
+      "basis": "physical (scontrol RunTime 00:32:10 on 1 H100); Slurm limit 44 min"
+    },
+    {
+      "experiment": "inference-baseline-v1 (exploratory, not registered; D103 area 2) job f: Qwen3-32B TP 4",
+      "gpu_hours": 0.7478,
+      "jobs": [
+        "1324 (4 H100; COMPLETED 0:0, 00:11:13)"
+      ],
+      "outcome": "14 measured serving runs ok (plus 2 warm-ups); two second repeats skipped before the limit (rerun in job g); exploratory",
+      "basis": "physical (scontrol RunTime 00:11:13 on 4 H100); Slurm limit 15 min"
+    },
+    {
+      "experiment": "inference-baseline-v1 (exploratory, not registered; D103 area 2) overlay build 2 (git 3343668a)",
+      "gpu_hours": 0.0172,
+      "jobs": [
+        "1325 cu129 vLLM overlay build (1 H100; COMPLETED 0:0, 00:01:02; image sha256:9e411974...)"
+      ],
+      "outcome": "provenance PASS; same builder and extractor",
+      "basis": "physical (scontrol RunTime 00:01:02 on 1 H100); Slurm limit 5 min"
+    },
+    {
+      "experiment": "inference-baseline-v1 (exploratory, not registered; D103 area 2) job g: Qwen3-32B TP 4 rerun of in32k-c32 and longout-c128",
+      "gpu_hours": 0.5756,
+      "jobs": [
+        "1329 (4 H100; COMPLETED 0:0, 00:08:38)"
+      ],
+      "outcome": "4 measured serving runs ok (plus 2 warm-ups); exploratory",
+      "basis": "physical (scontrol RunTime 00:08:38 on 4 H100); Slurm limit 15 min"
+    },
+    {
+      "experiment": "inference-baseline-v1 (exploratory, not registered; D103 area 2) job h: Qwen3.6-35B-A3B TP 1, max_num_seqs 128",
+      "gpu_hours": 0.08,
+      "jobs": [
+        "1330 (1 H100; COMPLETED 0:0, 00:04:48)"
+      ],
+      "outcome": "6 measured serving runs ok (plus 2 warm-ups); KV 178,499 tokens; exploratory",
+      "basis": "physical (scontrol RunTime 00:04:48 on 1 H100); Slurm limit 12 min"
     }
   ],
   "results": [

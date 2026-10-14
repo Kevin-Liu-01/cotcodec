@@ -1,0 +1,29 @@
+JobId=1321 JobName=ib-v1-c
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900439 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:17:40 TimeLimit=00:28:00 TimeMin=N/A
+   SubmitTime=2026-10-14T19:51:18 EligibleTime=2026-10-14T19:51:18
+   AccrueTime=2026-10-14T19:51:18
+   StartTime=2026-10-14T19:51:19 EndTime=2026-10-14T20:08:59 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-14T19:51:19 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:621106
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=24 NumTasks=1 CPUs/Task=24 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=24,mem=192G,node=1,billing=24
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=24 MinMemoryNode=192G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/inference-baseline/checkout-f6eaf1b2/infra/slurm/host-single-node/docker-research.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/stage0/inference-baseline/checkout-f6eaf1b2
+   StdErr=/home/kevin/cotcodec-runs/stage0/inference-baseline/runs/c/slurm-1321.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/inference-baseline/runs/c/slurm-1321.out
+   Power=
+   TresPerNode=gres:gpu:h100:2
+   
+

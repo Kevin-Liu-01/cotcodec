@@ -1,0 +1,30 @@
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.8.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+WARNING: The NVIDIA Driver was not detected.  GPU functionality will not be available.
+   Use the NVIDIA Container Toolkit to start this container with GPU support; see
+   https://docs.nvidia.com/datacenter/cloud-native/ .
+
+Fetching 27 files:   0%|          | 0/27 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 27 files:  15%|█▍        | 4/27 [00:00<00:00, 33.15it/s]Fetching 27 files:  22%|██▏       | 6/27 [00:20<00:00, 33.15it/s]Fetching 27 files:  26%|██▌       | 7/27 [02:01<06:57, 20.87s/it]Fetching 27 files:  30%|██▉       | 8/27 [02:04<05:32, 17.51s/it]Fetching 27 files:  37%|███▋      | 10/27 [02:05<03:10, 11.22s/it]Fetching 27 files:  44%|████▍     | 12/27 [02:05<01:52,  7.49s/it]Fetching 27 files:  48%|████▊     | 13/27 [02:05<01:24,  6.06s/it]Fetching 27 files:  52%|█████▏    | 14/27 [02:06<01:02,  4.83s/it]Fetching 27 files:  56%|█████▌    | 15/27 [04:13<06:46, 33.90s/it]Fetching 27 files:  59%|█████▉    | 16/27 [04:13<04:39, 25.44s/it]Fetching 27 files:  67%|██████▋   | 18/27 [04:14<02:14, 14.94s/it]Fetching 27 files:  74%|███████▍  | 20/27 [04:14<01:05,  9.37s/it]Fetching 27 files:  78%|███████▊  | 21/27 [04:16<00:45,  7.64s/it]Fetching 27 files:  81%|████████▏ | 22/27 [04:16<00:29,  5.92s/it]Fetching 27 files:  85%|████████▌ | 23/27 [04:16<00:18,  4.52s/it]Fetching 27 files:  89%|████████▉ | 24/27 [04:20<00:12,  4.24s/it]Fetching 27 files:  93%|█████████▎| 25/27 [04:20<00:06,  3.13s/it]Fetching 27 files:  96%|█████████▋| 26/27 [04:22<00:02,  2.89s/it]Fetching 27 files: 100%|██████████| 27/27 [04:33<00:00,  5.14s/it]Fetching 27 files: 100%|██████████| 27/27 [04:33<00:00, 10.12s/it]
+{
+  "artifact_root_sha256": "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714",
+  "backend": "huggingface",
+  "mode": "full",
+  "model_id": "qwen3-32b",
+  "publication_eligible": true,
+  "revision": "9216db5781bf21249d130ec9da846c4624c16137",
+  "total_bytes": 65540298478
+}

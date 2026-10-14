@@ -1,0 +1,84 @@
+{
+  "claim_level": "exploratory",
+  "engines": [
+    {
+      "cells": [
+        {
+          "cell_id": "in32k-c32",
+          "concurrency": 32,
+          "input_len": 32000,
+          "num_prompts": 32,
+          "output_len": 256,
+          "shape": "in32k"
+        },
+        {
+          "cell_id": "longout-c128",
+          "concurrency": 128,
+          "input_len": 512,
+          "num_prompts": 128,
+          "output_len": 4096,
+          "shape": "longout"
+        }
+      ],
+      "dtype": "bfloat16",
+      "family": "dense-transformer",
+      "gpu_memory_utilization": 0.9,
+      "grid": "tp4_completion",
+      "id": "qwen3-32b-tp4-rerun",
+      "kv_cache_dtype": "auto",
+      "max_model_len": 32768,
+      "max_num_batched_tokens": 8192,
+      "max_num_seqs": 256,
+      "model": "qwen3-32b",
+      "model_dir": "/model-cache/cotcodec-models/qwen3-32b",
+      "offline": false,
+      "offline_cells": [],
+      "offline_scale": 1.0,
+      "prefix_caching": true,
+      "serve_argv": [
+        "vllm",
+        "serve",
+        "/model-cache/cotcodec-models/qwen3-32b",
+        "--served-model-name",
+        "ib",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000",
+        "--disable-uvicorn-access-log",
+        "--tensor-parallel-size",
+        "4",
+        "--dtype",
+        "bfloat16",
+        "--seed",
+        "42",
+        "--max-model-len",
+        "32768",
+        "--gpu-memory-utilization",
+        "0.9",
+        "--max-num-seqs",
+        "256",
+        "--max-num-batched-tokens",
+        "8192",
+        "--enable-prefix-caching",
+        "--kv-cache-dtype",
+        "auto",
+        "--generation-config",
+        "vllm",
+        "--load-format",
+        "auto"
+      ],
+      "text_only_flags": [],
+      "tp": 4
+    }
+  ],
+  "experiment_id": "inference-baseline-v1",
+  "gpus": 4,
+  "job": "g",
+  "models": [
+    "qwen3-32b"
+  ],
+  "primary_model": "qwen3-32b",
+  "repeats": 2,
+  "seed": 42
+}

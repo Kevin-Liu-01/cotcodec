@@ -1,0 +1,21 @@
+{
+  "cell_id": "offline-chat",
+  "elapsed_s": 7.06788391713053,
+  "end_t": 1792008493.3055403,
+  "engine_id": "qwen3.6-35b-a3b-tp2",
+  "input_len": 512,
+  "model": "qwen3.6-35b-a3b",
+  "num_prompts": 256,
+  "output_len": 256,
+  "output_tokens_per_s": 9272.365076789034,
+  "repeat": 2,
+  "requests_per_s": 36.220176081207164,
+  "sampling": "vllm bench throughput default: temperature 1.0, top_p 1.0, ignore_eos",
+  "shape": "chat",
+  "start_t": 1792008486.2313614,
+  "tool": "vllm.benchmarks.throughput._run_vllm_requests (vLLM 0.31.0)",
+  "total_output_tokens": 65536,
+  "total_prompt_tokens": 131072,
+  "total_tokens_per_s": 27817.0952303671,
+  "tp": 2
+}

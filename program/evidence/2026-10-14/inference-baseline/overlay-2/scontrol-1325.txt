@@ -1,0 +1,29 @@
+JobId=1325 JobName=ib-overlay-2
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900435 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:01:02 TimeLimit=00:05:00 TimeMin=N/A
+   SubmitTime=2026-10-14T20:31:43 EligibleTime=2026-10-14T20:31:43
+   AccrueTime=2026-10-14T20:31:43
+   StartTime=2026-10-14T20:31:44 EndTime=2026-10-14T20:32:46 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-14T20:31:44 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:674390
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=8 NumTasks=1 CPUs/Task=8 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=8,mem=32G,node=1,billing=8
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=8 MinMemoryNode=32G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/inference-baseline/checkout-3343668a/scripts/build_vllm_overlay_on_h100.sh
+   WorkDir=/home/kevin/cotcodec-runs/stage0/inference-baseline/checkout-3343668a
+   StdErr=/home/kevin/cotcodec-runs/stage0/inference-baseline/slurm-overlay-1325.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/inference-baseline/slurm-overlay-1325.out
+   Power=
+   TresPerNode=gres:gpu:h100:1
+   
+
