@@ -32,6 +32,7 @@ import json
 import math
 import re
 import sys
+import zlib
 from pathlib import Path
 from typing import Any
 
@@ -647,6 +648,7 @@ def rollout_records(worker: Path, answers: dict[int, str]) -> list[dict[str, Any
         match = None
         if boxed is not None:
             match = normalize_answer(boxed) == normalize_answer(answers.get(s["prompt_index"]))
+        tail = text[-4000:].encode()
         out.append(
             {
                 "prompt_index": s["prompt_index"],
@@ -654,6 +656,9 @@ def rollout_records(worker: Path, answers: dict[int, str]) -> list[dict[str, Any
                 "completion_len": s["completion_len"],
                 "finish_reason": s["finish_reason"],
                 "boxed_matches_reference": match,
+                # zlib ratio of the last 4,000 characters: a crude loop check (a looping tail
+                # compresses far below ordinary text)
+                "tail_compress_ratio": len(zlib.compress(tail)) / len(tail) if tail else None,
             }
         )
     return out
@@ -688,6 +693,9 @@ def termination_table(jobs: list[dict[str, Any]], lengths: list[int]) -> dict[st
         model: dict[str, Any] = {}
         for arm, recs in arms.items():
             vals = list(recs.values())
+            tails = [
+                r["tail_compress_ratio"] for r in vals if r.get("tail_compress_ratio") is not None
+            ]
             model[arm] = {
                 "rollouts": len(vals),
                 "ended_eos": sum(r["finish_reason"] == "stop" for r in vals),
@@ -701,6 +709,9 @@ def termination_table(jobs: list[dict[str, Any]], lengths: list[int]) -> dict[st
                     for n in lengths
                 },
                 "boxed_matches_reference": sum(bool(r["boxed_matches_reference"]) for r in vals),
+                "tail_compress_median": float(np.median(tails)) if tails else None,
+                "tail_compress_min": float(min(tails)) if tails else None,
+                "tails_below_0_15": sum(t < 0.15 for t in tails),
             }
         shared = sorted(set(arms["fp32"]) & set(arms["bf16"]))
         bf16_longer = fp32_longer = 0
@@ -972,9 +983,10 @@ def markdown(result: dict[str, Any]) -> str:
         lines.append("")
         lines.append(
             "| model | arm | rollouts | ended (EOS) | hit 32K cap | cut by time | "
-            "ended before 8K / 16K / 24K / 28K | boxed answer = reference |"
+            "ended before 8K / 16K / 24K / 28K | boxed answer = reference | tail zlib ratio "
+            "median (min) |"
         )
-        lines.append("|---|---|---:|---:|---:|---:|---|---:|")
+        lines.append("|---|---|---:|---:|---:|---:|---|---:|---|")
         for model_id, model in term.items():
             for arm in ARMS:
                 a = model[arm]
@@ -982,7 +994,8 @@ def markdown(result: dict[str, Any]) -> str:
                 ended = " / ".join(str(a["ended_before"][k]) for k in keys)
                 lines.append(
                     f"| {model_id} | {arm} | {a['rollouts']} | {a['ended_eos']} | {a['hit_cap']} | "
-                    f"{a['cut_at_time_budget']} | {ended} | {a['boxed_matches_reference']} |"
+                    f"{a['cut_at_time_budget']} | {ended} | {a['boxed_matches_reference']} | "
+                    f"{fmt(a.get('tail_compress_median'), 3)} ({fmt(a.get('tail_compress_min'), 3)}) |"  # noqa: E501
                 )
         lines.append("")
         for model_id, model in term.items():
