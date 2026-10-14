@@ -14,6 +14,9 @@ For the rollout-vs-trainer comparison (dec vs r1), all seeds, per model:
   and how many sequences reach each 1K bin (composition with position).
 * ``calibration``: mean -log p_dec of the sampled tokens against the mean r1 entropy. For
   untruncated T = 1 sampling the two should agree.
+* ``string_edge_misbinning``: the share of tokens whose entropy bin differs between the
+  first analysis's edges (the top edge read as the string "1.0e9", so numpy compared the
+  entropies as text) and the corrected numeric edges, with the old bin counts.
 
 Run from the repository root:
 
@@ -32,6 +35,8 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[5]
+#: The entropy edges as the first analysis loaded them from YAML (PyYAML, YAML 1.1).
+OLD_EDGES: list[float | str] = [0.0, 0.01, 0.1, 0.5, 1.0, 2.0, "1.0e9"]
 
 
 def per_seq_mean(seq: np.ndarray, mask: np.ndarray, values: np.ndarray, n_seq: int) -> np.ndarray:
@@ -68,6 +73,9 @@ def main() -> int:
                 "within_entropy_bins": [float(v) for v in pooled],
                 "within_sequence_x_entropy_bin": [float(v) for v in within],
             }
+        numeric = an.entropy_groups(entropy, OLD_EDGES[:-1] + [1.0e9])
+        as_text = np.asarray(OLD_EDGES)  # what the first analysis built: a '<U32' array
+        old = np.clip(np.searchsorted(as_text, entropy, side="right") - 1, 0, len(OLD_EDGES) - 2)
         bins = position // 1024
         d0, d2 = (per_seq_mean(seq, bins == b, absd, n_seq) for b in (0, 2))
         e0, e2 = (per_seq_mean(seq, bins == b, entropy, n_seq) for b in (0, 2))
@@ -83,6 +91,12 @@ def main() -> int:
                 "sequences_per_1k_bin": [
                     int(len(np.unique(seq[bins == b]))) for b in range(int(bins.max()) + 1)
                 ],
+            },
+            "string_edge_misbinning": {
+                "edge_array_dtype": str(as_text.dtype),
+                "share_of_tokens_misbinned": float(np.mean(old != numeric)),
+                "tokens_per_bin_text_edges": np.bincount(old, minlength=6).tolist(),
+                "tokens_per_bin_numeric_edges": np.bincount(numeric, minlength=6).tolist(),
             },
             "calibration": {
                 "mean_neg_logp_decode": float(-dec.mean()),
