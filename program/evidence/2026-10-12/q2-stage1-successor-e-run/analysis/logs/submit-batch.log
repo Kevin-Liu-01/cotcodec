@@ -1,0 +1,10 @@
+glmm: rc 0 slurm 1279
+E-9B-E1: rc 0 slurm 1280
+E-4B-E1: rc 0 slurm 1281
+E-9B-E2: rc 0 slurm 1282
+E-4B-E2: rc 0 slurm 1283
+E-9B-E3: rc 0 slurm 1284
+E-4B-E3: rc 0 slurm 1285
+E-9B-E4: rc 0 slurm 1286
+E-4B-E4: rc 0 slurm 1287
+exit=0

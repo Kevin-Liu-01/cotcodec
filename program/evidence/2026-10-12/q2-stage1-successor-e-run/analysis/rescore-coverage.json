@@ -1,0 +1,306 @@
+{
+ "jobs": {
+  "E-4B-E1": {
+   "corrected_applies": 36,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 2,
+    "raw_state_error": 2
+   },
+   "live_offline_match": {
+    "None": 2,
+    "True": 224
+   },
+   "receipts": {
+    "receipt-1281.json": {
+     "exit_status": 0,
+     "finished_at": "2026-10-14T01:18:35Z",
+     "started_at": "2026-10-13T23:40:15Z"
+    }
+   },
+   "rescored_sha256": "7185452aa43296ed01aaee07705303952febef30b551bf3a9a615e85f6b1e9bb",
+   "rows": 226,
+   "rows_corrected_null": 2,
+   "rows_matched_to_scored_attempts": 226,
+   "rows_raw_null": 2,
+   "rows_unmatched": 0,
+   "rows_with_error": 2,
+   "rows_with_error_by_task": {
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb": 2
+   },
+   "scored_attempts": 226,
+   "scored_attempts_with_capture": 226,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1222"
+  },
+  "E-4B-E2": {
+   "corrected_applies": 36,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 2,
+    "raw_state_error": 2
+   },
+   "live_offline_match": {
+    "None": 2,
+    "True": 224
+   },
+   "receipts": {
+    "receipt-1283.json": {
+     "exit_status": 0,
+     "finished_at": "2026-10-14T01:18:37Z",
+     "started_at": "2026-10-13T23:40:15Z"
+    }
+   },
+   "rescored_sha256": "7de5713678867af8b2af0cef361d4c1369796842f5886ccf3131711c61ccaf3e",
+   "rows": 226,
+   "rows_corrected_null": 2,
+   "rows_matched_to_scored_attempts": 226,
+   "rows_raw_null": 2,
+   "rows_unmatched": 0,
+   "rows_with_error": 2,
+   "rows_with_error_by_task": {
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb": 2
+   },
+   "scored_attempts": 226,
+   "scored_attempts_with_capture": 226,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1254"
+  },
+  "E-4B-E3": {
+   "corrected_applies": 36,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 2,
+    "raw_state_error": 2
+   },
+   "live_offline_match": {
+    "None": 2,
+    "True": 224
+   },
+   "receipts": {
+    "receipt-1285.json": {
+     "exit_status": 0,
+     "finished_at": "2026-10-14T01:18:32Z",
+     "started_at": "2026-10-13T23:40:15Z"
+    }
+   },
+   "rescored_sha256": "b584561f0b7b2873d423b935cc8e933df3ce73ef55ce4fadd8de84da63f6a911",
+   "rows": 226,
+   "rows_corrected_null": 2,
+   "rows_matched_to_scored_attempts": 226,
+   "rows_raw_null": 2,
+   "rows_unmatched": 0,
+   "rows_with_error": 2,
+   "rows_with_error_by_task": {
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb": 2
+   },
+   "scored_attempts": 226,
+   "scored_attempts_with_capture": 226,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1268"
+  },
+  "E-4B-E4": {
+   "corrected_applies": 36,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 2,
+    "raw_state_error": 2
+   },
+   "live_offline_match": {
+    "None": 2,
+    "True": 224
+   },
+   "receipts": {
+    "receipt-1287.json": {
+     "exit_status": 0,
+     "finished_at": "2026-10-14T01:18:47Z",
+     "started_at": "2026-10-13T23:40:15Z"
+    }
+   },
+   "rescored_sha256": "52a716f9f73af0e988664d38bcde6b91f74ccf06b5c8bc0ceacd913a6f1468cb",
+   "rows": 226,
+   "rows_corrected_null": 2,
+   "rows_matched_to_scored_attempts": 226,
+   "rows_raw_null": 2,
+   "rows_unmatched": 0,
+   "rows_with_error": 2,
+   "rows_with_error_by_task": {
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb": 2
+   },
+   "scored_attempts": 226,
+   "scored_attempts_with_capture": 226,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1275"
+  },
+  "E-9B-E1": {
+   "corrected_applies": 36,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 2,
+    "raw_state_error": 2
+   },
+   "live_offline_match": {
+    "None": 2,
+    "True": 224
+   },
+   "receipts": {
+    "receipt-1280.json": {
+     "exit_status": 0,
+     "finished_at": "2026-10-14T01:18:39Z",
+     "started_at": "2026-10-13T23:40:15Z"
+    }
+   },
+   "rescored_sha256": "ac362bf155c7a5f3e31bbc4404dcc4565e15060a589d8dba37dc18b27a6b4421",
+   "rows": 226,
+   "rows_corrected_null": 2,
+   "rows_matched_to_scored_attempts": 226,
+   "rows_raw_null": 2,
+   "rows_unmatched": 0,
+   "rows_with_error": 2,
+   "rows_with_error_by_task": {
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb": 2
+   },
+   "scored_attempts": 226,
+   "scored_attempts_with_capture": 226,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1219"
+  },
+  "E-9B-E2": {
+   "corrected_applies": 36,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 2,
+    "raw_state_error": 2
+   },
+   "live_offline_match": {
+    "None": 2,
+    "True": 224
+   },
+   "receipts": {
+    "receipt-1282.json": {
+     "exit_status": 0,
+     "finished_at": "2026-10-14T01:18:41Z",
+     "started_at": "2026-10-13T23:40:15Z"
+    }
+   },
+   "rescored_sha256": "765d408e967d98f7138129bde6febba4bdba1dcd7208bf1d47f8c044cfd6dd0a",
+   "rows": 226,
+   "rows_corrected_null": 2,
+   "rows_matched_to_scored_attempts": 226,
+   "rows_raw_null": 2,
+   "rows_unmatched": 0,
+   "rows_with_error": 2,
+   "rows_with_error_by_task": {
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb": 2
+   },
+   "scored_attempts": 226,
+   "scored_attempts_with_capture": 226,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1251"
+  },
+  "E-9B-E3": {
+   "corrected_applies": 36,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 2,
+    "raw_state_error": 2
+   },
+   "live_offline_match": {
+    "None": 2,
+    "True": 224
+   },
+   "receipts": {
+    "receipt-1284.json": {
+     "exit_status": 0,
+     "finished_at": "2026-10-14T01:18:40Z",
+     "started_at": "2026-10-13T23:40:15Z"
+    }
+   },
+   "rescored_sha256": "e4521f7e690abdb0ec6b1ceca1d1e044a9f4cd4f9da2eb16d2204108945eac89",
+   "rows": 226,
+   "rows_corrected_null": 2,
+   "rows_matched_to_scored_attempts": 226,
+   "rows_raw_null": 2,
+   "rows_unmatched": 0,
+   "rows_with_error": 2,
+   "rows_with_error_by_task": {
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb": 2
+   },
+   "scored_attempts": 226,
+   "scored_attempts_with_capture": 226,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1265"
+  },
+  "E-9B-E4": {
+   "corrected_applies": 36,
+   "duplicate_rows": 0,
+   "errors_by_field": {
+    "raw_error": 2,
+    "raw_state_error": 2
+   },
+   "live_offline_match": {
+    "None": 2,
+    "True": 224
+   },
+   "receipts": {
+    "receipt-1286.json": {
+     "exit_status": 0,
+     "finished_at": "2026-10-14T01:18:35Z",
+     "started_at": "2026-10-13T23:40:15Z"
+    }
+   },
+   "rescored_sha256": "de458eaa86db5d061ce64a6028cd7f0428ca75df7a5eb60c7ddc5426b5227800",
+   "rows": 226,
+   "rows_corrected_null": 2,
+   "rows_matched_to_scored_attempts": 226,
+   "rows_raw_null": 2,
+   "rows_unmatched": 0,
+   "rows_with_error": 2,
+   "rows_with_error_by_task": {
+    "53ad5833-3455-407b-bbc6-45b4c79ab8fb": 2
+   },
+   "scored_attempts": 226,
+   "scored_attempts_with_capture": 226,
+   "scored_attempts_without_row": 0,
+   "vm_job": "1272"
+  }
+ },
+ "labels": {
+  "external_anchor": "not externally anchored",
+  "incomplete": null,
+  "incomplete_reasons": []
+ },
+ "note": "records.outcome_array(value='corrected') reads the live score where corrected_score is missing or null (registered behaviour); a flip on a task without a checker correction (corrected_applies false) is a live-versus-offline replay mismatch",
+ "verdict_sources": {
+  "d82_110": {
+   "corrected_from_offline_rescoring": 1744,
+   "fell_back_to_live_score": 16,
+   "flips_by_task": {},
+   "flips_total": {},
+   "flips_unknown_kind": 0,
+   "metric_exception_scored_0_by_merge_rule": 0,
+   "raw_replay_differs_from_live": 0,
+   "scored_final_records": 1760
+  },
+  "primary_113": {
+   "corrected_from_offline_rescoring": 1792,
+   "fell_back_to_live_score": 16,
+   "flips_by_task": {},
+   "flips_total": {},
+   "flips_unknown_kind": 0,
+   "metric_exception_scored_0_by_merge_rule": 0,
+   "raw_replay_differs_from_live": 0,
+   "scored_final_records": 1808
+  },
+  "secondary_s1a_base_32": {
+   "corrected_from_offline_rescoring": 512,
+   "fell_back_to_live_score": 0,
+   "flips_by_task": {},
+   "flips_total": {},
+   "flips_unknown_kind": 0,
+   "metric_exception_scored_0_by_merge_rule": 0,
+   "raw_replay_differs_from_live": 0,
+   "scored_final_records": 512
+  }
+ }
+}

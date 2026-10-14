@@ -1,0 +1,14 @@
+== /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66 (2026-10-13T07:18:00Z)
+$ python3.12 -E -s -B scripts/preregister.py verify q2-stage1-successor-e-v1
+{
+  "experiment_id": "q2-stage1-successor-e-v1",
+  "frozen_at": "2026-10-12T01:02:32.422073+00:00",
+  "git_head_at_freeze": "7fcf0a4ac672919228e79ca9bdccc1e60c31f9c2",
+  "hash": "0da0a6825c8aad1b0db085f13adef5febb2661bced7e676156c88e009d521ba2",
+  "path": "program/preregistrations/q2-stage1-successor-e-v1.md",
+  "previous_hash": "f7b350a330b79c6a08eca3ead97aa191a125c9696f72ca96f92cb94669bfac8d",
+  "sha256": "47e65877aed069fe919d1a2976345b3d5755e4323a71b47f99ece61c6e2ae98b"
+}
+$ python3.12 -E -s -B scripts/preregister.py check-chain
+{"rows": 19, "status": "PASS"}
+sha256 registration: 47e65877aed069fe919d1a2976345b3d5755e4323a71b47f99ece61c6e2ae98b

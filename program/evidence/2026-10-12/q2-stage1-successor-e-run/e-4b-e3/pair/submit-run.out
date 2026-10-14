@@ -1,0 +1,11 @@
+2026-10-13T07:58:40Z preregister verify and check-chain PASS in /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66
+2026-10-13T07:58:41Z lane validate: {"ok": true, "manifest_sha256": "bd61a4840b053057e7c430e1dee26f96ade4cb28ded489e43c5591125e172fcc", "slots": 226}
+2026-10-13T07:58:41Z lane submit --dry-run: bd61a4840b053057e7c430e1dee26f96ade4cb28ded489e43c5591125e172fcc sbatch --parsable --cpus-per-task=90 --mem=126G --time=00:58:00 --job-name=q2e-e-4b-e3 --begin=2026-10-13T07:17:47 /home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66/infra/slurm/host-single-node/q2e-vm.sbatch
+2026-10-13T07:58:41Z GPU half with a placeholder VM id passed the submitter's --dry-run
+2026-10-13T07:58:41Z squeue-before-e-4b-e3-VM: []
+2026-10-13T07:58:41Z e-4b-e3 VM job submitted: 1268
+2026-10-13T07:58:42Z GPU half --test-only exit 0: sbatch: Job 1269 to start at 2026-10-13T07:58:42 using 32 processors on nodes fal-h100-01 in partition research exit=0 
+2026-10-13T07:58:42Z squeue-before-e-4b-e3-GPU (foreign): []
+2026-10-13T07:58:42Z e-4b-e3 GPU job submitted: 1270 (after:1268)
+2026-10-13T07:58:42Z watchers started for 1268 and 1270
+VM=1268 GPU=1270

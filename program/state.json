@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-11",
+  "updated": "2026-10-14",
   "program": "Checker adequacy and calibrated measurement for verifiable machine work",
   "program_doc": "program/PROGRAM.md",
   "stage": "stage-0",
@@ -269,7 +269,7 @@
       "doc": "program/questions/q2-calibrated-cua-instrument.md",
       "dossier_key": "S1-calibrated-cua-instrument",
       "status": "stage-0-running",
-      "next_action": "S1a's registered analysis ran (2026-10-10; RESULTS: program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md; evidence: program/evidence/2026-10-10/q2-stage1-analysis/; every output 'not externally anchored'; data complete). DR0 does not fire; DR1 does not fire (4B 28.9%/26.6%); DR2 Inconclusive (delta -3.1 pp, 90% t [-8.9, 2.7], p 0.37; X sign flip p 0.46; pi_small UB 0.26); DR4 does not fire (0.0025-0.0027 GPU-h/episode vs 0.011274); DR5 INCONCLUSIVE (pi_small 0.055, one-sided 95% [0.000, 0.260] vs M 0.13), so S1b does not go to the gauntlet (D47). P1 falsified (excess UB 0.78 pp < 1 pp); P2-P5 stand. Next: the runbook's independent verification of the analysis (step 12) and of the session-2 per-job checks; then Kevin's choice whether to propose more sessions at 4B and 9B (the registered pointer after INCONCLUSIVE; a new proposal with its own gauntlet). The checker-mutation study waits on Kevin's adjudication (34 items) and spot check (25 items); its K2 VM-fidelity addendum (ledger row 17) ran as job 1186 with outcome VERIFIED (D78), and the parent analysis carries 'VM fidelity checked (K2)'.",
+      "next_action": "Successor E (q2-stage1-successor-e-v1) ran complete and its registered analysis ran (2026-10-13/14; RESULTS: program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md; every output 'not externally anchored'; 1,808 episodes, 0 infrastructure losses, DR0 never fired). For E's four sessions per size on all 113 tasks: DR2 Near-equivalent (delta 0.00 pp, 90% t [-2.44, 2.44], p 1.000; X sign flip p 0.093; pi_small UB 0.1187 < 0.12); DR5 NO-GO (pi_small 0.055, one-sided [0.010, 0.119] < M 0.13), so S1b stays closed (D69) and nothing starts; DR1 and DR4 do not fire; P1 not estimable, P2-P5 not falsified. The section 18 fresh verifier ran after RESULTS was first written (RESULTS deviation 1): it reproduced every registered output byte for byte and every outcome with its own code, and RESULTS was corrected for its wording and disclosure items (analysis/verification/; pi_small's upper bound clears 0.12 by about its Monte Carlo error, disclosure 6). Next: the branch ops/q2-successor-e is merged. A NO-GO points to an observation-factor study, which would be a new proposal with its own gauntlet (the program owner's choice). Before E, S1a's registered outcome (2026-10-10): DR2 Inconclusive, DR5 INCONCLUSIVE (program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md).",
       "first_gpu_experiment": {
         "name": "Qwen3.5 ladder (as dossier-designed)",
         "measured_projection_gpu_hours": 431.5,
@@ -476,10 +476,10 @@
     "Q2 action path: q2-action-path-v2 is ACCEPTED on attempt 1 (D53; N* = 32). Still open for you: whether a later registration should observe the shell's side of a grabbed chord directly; the job 851 unprovoked guest-server restart beside the D30 development rate; and the disclosed deviation that A4 and A7 ran before the rung-40 choice was recorded (D51 ratified it after the fact; no verdict changes)",
     "Q3 (D54): K1 v3 ended at an honest exit (gauntlet 45, 51, 55, 56); Q3 rests on the dense pre-check v2 (NEGATIVE_CAPABLE_V3). Yours only if you want K1 reopened: admitting a screen above 8 GPU-h (D24) for more seeds or evidence, plus a new design with a same-language zero-overlap leg. Package: program/preregistrations/q3-k1-localization-screen-v3.md (draft), program/proposals/2026-10-08-q3-k1-v3-qwen35-4b.md, program/gauntlet/2026-10-08-q3-k1-v3-qwen35-4b.jsonl",
     "Host limit (needs the host administrator): fs.inotify.max_user_instances is 128 on fal-h100-01, so the action-path ladder's 40-VM rung could not boot 10 of 80 VMs (dnsmasq 'failed to create inotify: Too many open files'). N* is therefore 32, and the registered program kill criterion (N* below 40: cut the Stage-1 task count before adding GPUs) applies. Ask the administrator to raise the limit if 40 concurrent VMs are wanted; attempt 1's rung-40 rerun is not used (D51); running above 32 VMs after a host change needs a registered deviation or a new registration with its own ladder (D53 ii) (evidence: program/evidence/2026-10-08/q2-action-path-v2-acceptance/)",
-    "Q2 after S1a (D66, D69): S1b and the harness-scale question are closed on the design study. Successor E (all 113 tasks, both sizes, 4 sessions, 1 rerun; 6.77 cap-GPU-h) was decided under your delegation (D80 (iii)); its registration is in pre-freeze gates on stage0/q2-successor-e. Nothing here is yours unless you want to stop it",
+    "Q2 after S1a (D66, D69): S1b and the harness-scale question are closed on the design study. Successor E (decided under your delegation, D80 (iii)) ran and was analysed: DR2 Near-equivalent, DR5 NO-GO (RESULTS pending a fresh verifier). Nothing here is yours unless you want an observation-factor study proposed",
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands"
   ],
-  "gpu_hours_spent_this_program": 10.5349,
+  "gpu_hours_spent_this_program": 15.6257,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1039,6 +1039,95 @@
       ],
       "outcome": "VERIFIED: 242 slots, 246 attempts (238 scored, 8 infrastructure on task 51f5801c); gate 2/80 K2 pairs excluded (cause 4); 78/78 compared K2 pairs agree with the offline verdicts in both runs; K2-C 41/41 reproduced; no family dropped; parent analysis rerun with --k2-report changes only the K2 label; submitted 15:56:19 UTC 2026-10-11 on an empty queue, ran 15:56:20-17:01:17 UTC, no other Slurm job in any host snapshot",
       "basis": "physical: CPU-only Slurm job through q2m-k2-vm.sbatch (no --gres; preflight TRES=cpu=40,mem=64G,node=1; GPU variables refused by the batch file); no GPU requested"
+    },
+    {
+      "experiment": "q2-stage1-successor-e-v1 OE (cu129 vLLM overlay from the freeze commit f6144d6b; post-freeze, section 7.2)",
+      "gpu_hours": 0.0158,
+      "jobs": [
+        "1215 overlay build (COMPLETED 0:0, 57 s; no retry needed)"
+      ],
+      "outcome": "overlay sha256:5d1d4d8f1ff4a92cc607704b5e8e9adaa0269b8fa27757d6fe51616e438584ef from source archive 6ad9ad67... (7,602 files, tree b8d37e7f, selected_ref HEAD in a clean clone at f6144d6b, pre-validated on CPU with the pinned extractor); provenance PASS; the OE retry stays unspent; submitted 02:01:28 UTC 2026-10-12 on an empty queue, ran 02:01:30-02:02:27 UTC, no other job while it ran",
+      "basis": "physical (scontrol RunTime 00:00:57 on 1 H100); charged under D22 at its 3-minute cap (0.0500 GPU-h), within E's 406 minutes"
+    },
+    {
+      "experiment": "q2-stage1-successor-e-v1 E-9B-E1 (session E1, Qwen3.5-9B, 226 episodes; registered job 1 of 8)",
+      "gpu_hours": 0.6644,
+      "jobs": [
+        "1219 VM lane (CPU only, 90 CPUs, no GRES; COMPLETED 0:0, 00:39:55)",
+        "1221 engine and bridge (1 H100; COMPLETED 0:0, 00:39:52)"
+      ],
+      "outcome": "per-job checks only: 226 of 226 slots scored, no infrastructure loss, no re-queue, no cap truncation; DR0 does not fire; provenance PASS (f6144d6b, overlay 5d1d4d8f); engine argv equals S1a's plan.engine_argv for 9B; Slurm limit 52 = cap; submitted 04:28:39 UTC 2026-10-12 on an empty queue, ran 04:28:39-05:08:31 (GPU) / 05:08:34 (VM); no foreign Slurm job while it ran; no outcome read",
+      "basis": "physical (scontrol RunTime 00:39:52 on 1 H100); charged under D22 at its 52-minute cap (0.8667 GPU-h), within E's 406 minutes"
+    },
+    {
+      "experiment": "q2-stage1-successor-e-v1 E-4B-E1 (session E1, Qwen3.5-4B, 226 episodes; registered job 2 of 8)",
+      "gpu_hours": 0.6103,
+      "jobs": [
+        "1222 VM lane (CPU only, 90 CPUs, no GRES; COMPLETED 0:0, 00:36:41)",
+        "1224 engine and bridge (1 H100; COMPLETED 0:0, 00:36:37)"
+      ],
+      "outcome": "per-job checks only: 226 of 226 slots scored, no infrastructure loss, no re-queue, no cap truncation; DR0 does not fire; manifest named E-9B-E1's records and receipt by SHA-256; provenance PASS; engine argv equals S1a's plan.engine_argv for 4B; Slurm limit 48 = cap; submitted 05:09:55 UTC 2026-10-12 on an empty queue, ran 05:09:56-05:46:33 (GPU) / 05:46:36 (VM); session E1's later end 05:46:33 UTC (lane.job_end), so E2 not before 17:51:33 UTC; no foreign Slurm job while it ran; no outcome read",
+      "basis": "physical (scontrol RunTime 00:36:37 on 1 H100); charged under D22 at its 48-minute cap (0.8000 GPU-h), within E's 406 minutes"
+    },
+    {
+      "experiment": "q2-stage1-successor-e-v1 E-9B-E2 (session E2, Qwen3.5-9B, 226 episodes; registered job 3 of 8)",
+      "gpu_hours": 0.6781,
+      "jobs": [
+        "1251 VM lane (CPU only, 90 CPUs, no GRES; COMPLETED 0:0, 00:40:45)",
+        "1253 engine and bridge (1 H100; COMPLETED 0:0, 00:40:41)"
+      ],
+      "outcome": "per-job checks only: 226 of 226 slots scored, no infrastructure loss, no re-queue, no cap truncation; DR0 does not fire; manifest named E-9B-E1's and E-4B-E1's records and receipts by SHA-256; session gap passed (earliest start 17:51:33 UTC); provenance PASS (f6144d6b, overlay 5d1d4d8f); engine argv equals S1a's plan.engine_argv for 9B; Slurm limit 52 = cap; submitted 17:53:07 UTC 2026-10-12 on an empty queue, ran 17:53:08-18:33:49 (GPU) / 18:33:52 (VM); no foreign Slurm job while it ran; no outcome read",
+      "basis": "physical (scontrol RunTime 00:40:41 on 1 H100); charged under D22 at its 52-minute cap (0.8667 GPU-h), within E's 406 minutes"
+    },
+    {
+      "experiment": "q2-stage1-successor-e-v1 E-4B-E2 (session E2, Qwen3.5-4B, 226 episodes; registered job 4 of 8)",
+      "gpu_hours": 0.6008,
+      "jobs": [
+        "1254 VM lane (CPU only, 90 CPUs, no GRES; COMPLETED 0:0, 00:36:09)",
+        "1256 engine and bridge (1 H100; COMPLETED 0:0, 00:36:03)"
+      ],
+      "outcome": "per-job checks only: 226 of 226 slots scored, no infrastructure loss, no re-queue, no cap truncation; DR0 does not fire; manifest named the three earlier E jobs' records and receipts by SHA-256; provenance PASS; engine argv equals S1a's plan.engine_argv for 4B; Slurm limit 48 = cap; submitted 18:36:41 UTC 2026-10-12 on an empty queue, ran 18:36:44-19:12:47 (GPU) / 19:12:50 (VM); session E2's later end 19:12:47 UTC (lane.job_end), so E3 not before 2026-10-13T07:17:47Z; no foreign Slurm job while it ran; no outcome read",
+      "basis": "physical (scontrol RunTime 00:36:03 on 1 H100); charged under D22 at its 48-minute cap (0.8000 GPU-h), within E's 406 minutes"
+    },
+    {
+      "experiment": "q2-stage1-successor-e-v1 E-9B-E3 (session E3, Qwen3.5-9B, 226 episodes; registered job 5 of 8)",
+      "gpu_hours": 0.6475,
+      "jobs": [
+        "1265 VM lane (CPU only, 90 CPUs, no GRES; COMPLETED 0:0, 00:38:54)",
+        "1267 engine and bridge (1 H100; COMPLETED 0:0, 00:38:51)"
+      ],
+      "outcome": "per-job checks only: 226 of 226 slots scored, no infrastructure loss, no re-queue, no cap truncation; DR0 does not fire; manifest named the four E1 and E2 jobs' records and receipts by SHA-256; session gap passed (earliest start 2026-10-13T07:17:47Z by the lane, 07:17:50Z by E-4B-E2's VM batch end); provenance PASS (f6144d6b, overlay 5d1d4d8f); engine argv equals S1a's plan.engine_argv for 9B; Slurm limit 52 = cap; submitted 07:18:02 UTC 2026-10-13 on an empty queue, ran 07:18:02-07:56:53 (GPU) / 07:56:56 (VM); no foreign Slurm job while it ran; no outcome read",
+      "basis": "physical (scontrol RunTime 00:38:51 on 1 H100); charged under D22 at its 52-minute cap (0.8667 GPU-h), within E's 406 minutes"
+    },
+    {
+      "experiment": "q2-stage1-successor-e-v1 E-4B-E3 (session E3, Qwen3.5-4B, 226 episodes; registered job 6 of 8)",
+      "gpu_hours": 0.6228,
+      "jobs": [
+        "1268 VM lane (CPU only, 90 CPUs, no GRES; COMPLETED 0:0, 00:37:28)",
+        "1270 engine and bridge (1 H100; COMPLETED 0:0, 00:37:22)"
+      ],
+      "outcome": "per-job checks only: 226 of 226 slots scored, no infrastructure loss, no re-queue, no cap truncation; DR0 does not fire; manifest named the five earlier E jobs' records and receipts by SHA-256; provenance PASS; engine argv equals S1a's plan.engine_argv for 4B; Slurm limit 48 = cap; submitted 07:58:42 UTC 2026-10-13 on an empty queue, ran 07:58:45-08:36:07 (GPU) / 08:36:10 (VM); session E3's later end 2026-10-13T08:36:07Z (lane.job_end), so E4 not before 2026-10-13T20:41:07Z (20:41:10Z by the VM batch end); no foreign Slurm job while it ran; no outcome read",
+      "basis": "physical (scontrol RunTime 00:37:22 on 1 H100); charged under D22 at its 48-minute cap (0.8000 GPU-h), within E's 406 minutes"
+    },
+    {
+      "experiment": "q2-stage1-successor-e-v1 E-9B-E4 (session E4, Qwen3.5-9B, 226 episodes; registered job 7 of 8)",
+      "gpu_hours": 0.6461,
+      "jobs": [
+        "1272 VM lane (CPU only, 90 CPUs, no GRES; COMPLETED 0:0, 00:38:49)",
+        "1274 engine and bridge (1 H100; COMPLETED 0:0, 00:38:46)"
+      ],
+      "outcome": "per-job checks only: 226 of 226 slots scored, no infrastructure loss, no re-queue, no cap truncation; DR0 does not fire; manifest named the six E1-E3 jobs' records and receipts by SHA-256; session gap passed (earliest start 2026-10-13T20:41:07Z by the lane, 20:41:10Z by E-4B-E3's VM batch end); provenance PASS (f6144d6b, overlay 5d1d4d8f); engine argv equals S1a's plan.engine_argv for 9B; Slurm limit 52 = cap; submitted 20:41:27 UTC 2026-10-13 on an empty queue, ran 20:41:28-21:20:14 (GPU) / 21:20:17 (VM); no foreign Slurm job while it ran; no outcome read",
+      "basis": "physical (scontrol RunTime 00:38:46 on 1 H100); charged under D22 at its 52-minute cap (0.8667 GPU-h), within E's 406 minutes"
+    },
+    {
+      "experiment": "q2-stage1-successor-e-v1 E-4B-E4 (session E4, Qwen3.5-4B, 226 episodes; registered job 8 of 8)",
+      "gpu_hours": 0.605,
+      "jobs": [
+        "1275 VM lane (CPU only, 90 CPUs, no GRES; COMPLETED 0:0, 00:36:21)",
+        "1277 engine and bridge (1 H100; COMPLETED 0:0, 00:36:18)"
+      ],
+      "outcome": "per-job checks only: 226 of 226 slots scored, no infrastructure loss, no re-queue, no cap truncation; DR0 does not fire; manifest named the seven earlier E jobs' records and receipts by SHA-256; provenance PASS; engine argv equals S1a's plan.engine_argv for 4B; Slurm limit 48 = cap; submitted 21:21:45 UTC 2026-10-13 on an empty queue, ran 21:21:45-21:58:03 (GPU) / 21:58:06 (VM); session E4's later end 2026-10-13T21:58:03Z (lane.job_end); all eight registered E jobs have run and none fired DR0; no foreign Slurm job while it ran; no outcome read",
+      "basis": "physical (scontrol RunTime 00:36:18 on 1 H100); charged under D22 at its 48-minute cap (0.8000 GPU-h), within E's 406 minutes (403 charged with OE)"
     }
   ],
   "results": [
@@ -1103,6 +1192,13 @@
       "label": "VERIFIED (K2 VM fidelity checked; blind warning: answer the adjudication before reading the K2 outputs)",
       "outcome": "Registered k2 job 1186 from the freeze commit 7d9c881a: fitness gate passes (2 of 80 K2 pairs excluded, cause 4, both on task 51f5801c: LibreOffice did not quit on Ctrl+Q and the reopen of the Writer target timed out); 78 compared K2 pairs agree with the offline lock-exact verdicts in both runs, none differs, no family dropped (compare_pptx_files_tolerant not covered by K2, descriptive); K2-C 41/41 candidate events reproduced in both runs (descriptive); the parent analysis rerun with --k2-report replaces the label 'offline harness, VM fidelity unverified' with 'VM fidelity checked (K2)' and changes nothing else",
       "evidence": "program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/README.md"
+    },
+    {
+      "registration": "q2-stage1-successor-e-v1",
+      "date": "2026-10-14",
+      "label": "COMPLETE, VERIFIED (not externally anchored; the fresh verifier ran after RESULTS, deviation 1): DR2 Near-equivalent, DR5 NO-GO; S1b stays closed",
+      "outcome": "113 tasks, 4 sessions x 1 episode per size: delta (H-GA minus H-OSW-fixed) 0.00 pp, 90% t [-2.44, 2.44] (p 1.000); X sign flip p 0.093 (label permutation 0.047, sensitivity); D_b 10.7% [8.0, 13.5]; pi_small 0.055, one-sided [0.010, 0.119] vs 0.12 (DR2) and M 0.13 (DR5); 4B 27.2%/26.3% (DR1 no); 0.0027-0.0030 GPU-h per episode (DR4 no); 0 infrastructure losses in 1,808 episodes; checker correction 0 flips; GLMM full fit did not converge; S1a's 32 base tasks (secondary): Inconclusive/NO-GO as a description",
+      "evidence": "program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md"
     }
   ]
 }

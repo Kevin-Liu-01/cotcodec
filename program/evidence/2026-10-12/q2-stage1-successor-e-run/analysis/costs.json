@@ -1,0 +1,202 @@
+{
+ "E-4B-E1": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002696,
+    "gpu_h_share": 0.499251,
+    "vm_h_per_episode": 0.048942
+   },
+   "H-OSW-fixed": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002704,
+    "gpu_h_share": 0.500749,
+    "vm_h_per_episode": 0.049089
+   }
+  },
+  "episodes": 226,
+  "gpu_elapsed_s": 2197.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 0.610278,
+  "gpu_h_per_episode": 0.0027,
+  "job": "E-4B-E1",
+  "size": "4B",
+  "vm_h_per_episode": 0.049015
+ },
+ "E-4B-E2": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002684,
+    "gpu_h_share": 0.504701,
+    "vm_h_per_episode": 0.049122
+   },
+   "H-OSW-fixed": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002634,
+    "gpu_h_share": 0.495299,
+    "vm_h_per_episode": 0.048207
+   }
+  },
+  "episodes": 226,
+  "gpu_elapsed_s": 2163.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 0.600833,
+  "gpu_h_per_episode": 0.002659,
+  "job": "E-4B-E2",
+  "size": "4B",
+  "vm_h_per_episode": 0.048665
+ },
+ "E-4B-E3": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002759,
+    "gpu_h_share": 0.500592,
+    "vm_h_per_episode": 0.049035
+   },
+   "H-OSW-fixed": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002752,
+    "gpu_h_share": 0.499408,
+    "vm_h_per_episode": 0.048919
+   }
+  },
+  "episodes": 226,
+  "gpu_elapsed_s": 2242.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 0.622778,
+  "gpu_h_per_episode": 0.002756,
+  "job": "E-4B-E3",
+  "size": "4B",
+  "vm_h_per_episode": 0.048977
+ },
+ "E-4B-E4": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.00268,
+    "gpu_h_share": 0.500502,
+    "vm_h_per_episode": 0.048943
+   },
+   "H-OSW-fixed": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002674,
+    "gpu_h_share": 0.499498,
+    "vm_h_per_episode": 0.048845
+   }
+  },
+  "episodes": 226,
+  "gpu_elapsed_s": 2178.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 0.605,
+  "gpu_h_per_episode": 0.002677,
+  "job": "E-4B-E4",
+  "size": "4B",
+  "vm_h_per_episode": 0.048894
+ },
+ "E-9B-E1": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002873,
+    "gpu_h_share": 0.488641,
+    "vm_h_per_episode": 0.051242
+   },
+   "H-OSW-fixed": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.003007,
+    "gpu_h_share": 0.511359,
+    "vm_h_per_episode": 0.053625
+   }
+  },
+  "episodes": 226,
+  "gpu_elapsed_s": 2392.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 0.664444,
+  "gpu_h_per_episode": 0.00294,
+  "job": "E-9B-E1",
+  "size": "9B",
+  "vm_h_per_episode": 0.052433
+ },
+ "E-9B-E2": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002997,
+    "gpu_h_share": 0.499539,
+    "vm_h_per_episode": 0.052283
+   },
+   "H-OSW-fixed": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.003003,
+    "gpu_h_share": 0.500461,
+    "vm_h_per_episode": 0.052379
+   }
+  },
+  "episodes": 226,
+  "gpu_elapsed_s": 2441.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 0.678056,
+  "gpu_h_per_episode": 0.003,
+  "job": "E-9B-E2",
+  "size": "9B",
+  "vm_h_per_episode": 0.052331
+ },
+ "E-9B-E3": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002848,
+    "gpu_h_share": 0.497033,
+    "vm_h_per_episode": 0.052184
+   },
+   "H-OSW-fixed": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002882,
+    "gpu_h_share": 0.502967,
+    "vm_h_per_episode": 0.052807
+   }
+  },
+  "episodes": 226,
+  "gpu_elapsed_s": 2331.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 0.6475,
+  "gpu_h_per_episode": 0.002865,
+  "job": "E-9B-E3",
+  "size": "9B",
+  "vm_h_per_episode": 0.052496
+ },
+ "E-9B-E4": {
+  "V": 20,
+  "by_harness": {
+   "H-GA": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002812,
+    "gpu_h_share": 0.491759,
+    "vm_h_per_episode": 0.05081
+   },
+   "H-OSW-fixed": {
+    "episodes": 113,
+    "gpu_h_per_episode": 0.002906,
+    "gpu_h_share": 0.508241,
+    "vm_h_per_episode": 0.052513
+   }
+  },
+  "episodes": 226,
+  "gpu_elapsed_s": 2326.0,
+  "gpu_elapsed_source": "scontrol EndTime",
+  "gpu_h": 0.646111,
+  "gpu_h_per_episode": 0.002859,
+  "job": "E-9B-E4",
+  "size": "9B",
+  "vm_h_per_episode": 0.051661
+ }
+}

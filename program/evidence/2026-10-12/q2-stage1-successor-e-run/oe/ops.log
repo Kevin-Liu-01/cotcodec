@@ -1,0 +1,11 @@
+2026-10-12T02:01:28Z squeue-before-oe: []
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+2026-10-12T02:01:28Z oe submitted job 1215 rc=0 git=f6144d6bf745 archive=6ad9ad67 tree=b8d37e7f build_root=/home/kevin/cotcodec-runs/stage0/q2-stage1e/oe/build-f6144d6bf745
+2026-10-12T02:02:50Z job 1215 COMPLETED 0:0 RunTime 00:00:57; overlay sha256:5d1d4d8f1ff4a92cc607704b5e8e9adaa0269b8fa27757d6fe51616e438584ef (OE retry not needed)

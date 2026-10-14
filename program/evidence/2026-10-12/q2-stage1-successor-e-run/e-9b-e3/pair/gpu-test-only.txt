@@ -1,0 +1,2 @@
+sbatch: Job 1266 to start at 2026-10-13T08:20:02 using 32 processors on nodes fal-h100-01 in partition research
+exit=0

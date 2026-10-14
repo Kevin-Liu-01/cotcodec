@@ -1,0 +1,83 @@
+{
+ "argv": [
+  "sh",
+  "-c",
+  "cp /opt/q2/r-packages.json /opt/q2/r-packages.sha256 /out/ || exit 90; Rscript /src/harness/q2_stage1/glmm.R /inputs/e-primary.csv /out/glmm-e-primary.json 200 42 >/out/glmm.log 2>&1; rc=$?; echo $rc >/out/glmm.exit; exit $rc"
+ ],
+ "exit_code": "0",
+ "fit": {
+  "R_version": "R version 4.4.2 (2024-10-31)",
+  "TMB_version": "1.9.16",
+  "full": {
+   "df": 12,
+   "logLik": null,
+   "ok": false,
+   "optimizer_convergence": 0,
+   "optimizer_message": "relative convergence (4)",
+   "pdHess": false
+  },
+  "glmmTMB_version": "1.1.10",
+  "lrt_task_harness": {
+   "both_converged": false,
+   "df": 1,
+   "p_value": null,
+   "p_value_boundary_corrected": null,
+   "statistic": null
+  },
+  "n_boot": 200,
+  "n_episodes": 1808,
+  "n_tasks": 113,
+  "reduced": {
+   "df": 11,
+   "logLik": -496.285004990591,
+   "ok": true,
+   "optimizer_convergence": 0,
+   "optimizer_message": "relative convergence (4)",
+   "pdHess": true
+  },
+  "seed": 42,
+  "variance_components": {
+   "harness:session": 2.51851644006671e-19,
+   "session": 1.36852139268739e-12,
+   "task": 72.4063054030853,
+   "task:harness": 4.35658472929897e-17,
+   "task:harness:session": 1.06499263512112e-07,
+   "task:session": 2.65766122549192e-19,
+   "task:size": 2.70831278720254,
+   "task:size:harness": 1.01800509016241
+  }
+ },
+ "fit_sha256": "45162b7ce1a72d5b648b689c2de350a99aac9381989f93af7b3ef5db7c6811d8",
+ "image": "sha256:b15584f3954f1c83fc3e5067e29c57c5c55e3b2a50ef28e4e68a394e595aabed",
+ "input": {
+  "file": "e-primary.csv",
+  "sha256": "ab6abee72abc87f39e5578cdeedcecdb18f8385d4320e0d16fb1f48d2ea27df5"
+ },
+ "labels": {
+  "external_anchor": "not externally anchored",
+  "incomplete": null,
+  "incomplete_reasons": []
+ },
+ "note": "with one Bernoulli episode per (task, harness, session) the (1|task:harness:session) term is not identified apart from the Bernoulli variance (registration section 11); the fit is reported as glmm.R wrote it",
+ "r_packages_match": true,
+ "r_packages_registered": "abb8871de4549732cd396dc60fc1f2aec78bf1fffad788cb841e8bf61668bfc7",
+ "r_packages_sha256": "abb8871de4549732cd396dc60fc1f2aec78bf1fffad788cb841e8bf61668bfc7",
+ "receipts": {
+  "receipt-1279.json": {
+   "argv_json_hex": "5b227368222c20222d63222c20226370202f6f70742f71322f722d7061636b616765732e6a736f6e202f6f70742f71322f722d7061636b616765732e736861323536202f6f75742f207c7c20657869742039303b2052736372697074202f7372632f6861726e6573732f71325f7374616765312f676c6d6d2e52202f696e707574732f652d7072696d6172792e637376202f6f75742f676c6d6d2d652d7072696d6172792e6a736f6e20323030203432203e2f6f75742f676c6d6d2e6c6f6720323e26313b2072633d243f3b206563686f20247263203e2f6f75742f676c6d6d2e657869743b206578697420247263225d",
+   "argv_json_hex_sha256": "c42646495e1d5487bfb2c99c442a82786885e73246feae37f0fa80cfb66bcec1",
+   "batch_sha256": "3880d337ad5bb0dc3c0edfc39f41811028118ef574c75efb08faa023dc6dee33",
+   "container_dev_nvidia": [],
+   "exit_status": 0,
+   "finished_at": "2026-10-14T00:03:26Z",
+   "gpus_requested": 0,
+   "image_id": "sha256:b15584f3954f1c83fc3e5067e29c57c5c55e3b2a50ef28e4e68a394e595aabed",
+   "job_id": "1279",
+   "lane": "s1a-cpu",
+   "mode": "run",
+   "mounts": "/home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66:/src:ro /home/kevin/cotcodec-runs/stage0/q2-stage1e/analysis/e-v1/glmm-out:/out:rw /home/kevin/cotcodec-runs/stage0/q2-stage1e/analysis/e-v1/glmm-inputs:/inputs:ro",
+   "network": "none",
+   "started_at": "2026-10-13T23:40:15Z"
+  }
+ }
+}
