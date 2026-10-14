@@ -1,0 +1,181 @@
+{
+  "argv": [
+    "vllm",
+    "serve",
+    "/model-cache/cotcodec-models/qwen3.5-4b",
+    "--served-model-name",
+    "ib",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8000",
+    "--disable-uvicorn-access-log",
+    "--tensor-parallel-size",
+    "1",
+    "--dtype",
+    "bfloat16",
+    "--seed",
+    "42",
+    "--max-model-len",
+    "32768",
+    "--gpu-memory-utilization",
+    "0.9",
+    "--max-num-seqs",
+    "256",
+    "--max-num-batched-tokens",
+    "8192",
+    "--enable-prefix-caching",
+    "--kv-cache-dtype",
+    "auto",
+    "--generation-config",
+    "vllm",
+    "--load-format",
+    "auto",
+    "--limit-mm-per-prompt",
+    "{\"image\":0,\"video\":0}"
+  ],
+  "cache_config_info": {
+    "_block_size_resolved": "True",
+    "block_size": "528",
+    "cache_dtype": "auto",
+    "effective_attention_block_size": "528",
+    "enable_mamba_shared_prefix_checkpoint": "False",
+    "enable_prefix_caching": "True",
+    "engine": "0",
+    "gpu_memory_utilization": "0.9",
+    "is_attention_free": "False",
+    "kv_cache_dtype_skip_layers": "[]",
+    "kv_cache_layout": "None",
+    "kv_cache_max_concurrency": "54.594202898550726",
+    "kv_cache_memory_bytes": "None",
+    "kv_cache_size_tokens": "1788942",
+    "kv_offloading_backend": "native",
+    "kv_offloading_size": "None",
+    "kv_sharing_fast_prefill": "False",
+    "mamba_block_size": "528",
+    "mamba_cache_dtype": "auto",
+    "mamba_cache_mode": "align",
+    "mamba_page_size_padded": "None",
+    "mamba_ssm_cache_dtype": "float32",
+    "num_cpu_blocks": "None",
+    "num_gpu_blocks": "3767",
+    "num_gpu_blocks_override": "None",
+    "prefix_cache_retention_interval": "0",
+    "prefix_caching_hash_algo": "sha256",
+    "prefix_match_unit": "None",
+    "replayssm_buffer_len": "16",
+    "skip_page_size_padded": "None",
+    "sliding_window": "None",
+    "swa_bounded_replay": "True",
+    "use_kda_recoverssm": "False",
+    "use_replayssm": "False",
+    "user_specified_block_size": "False",
+    "user_specified_mamba_block_size": "False"
+  },
+  "engine_id": "qwen3.5-4b-tp1",
+  "exit_code": 0,
+  "exit_code_at_ready": null,
+  "final_metrics": [
+    {
+      "vllm:generation_tokens_total": 1691264.0,
+      "vllm:kv_cache_usage_perc": 0.0,
+      "vllm:num_preemptions_total": 0.0,
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0,
+      "vllm:prefix_cache_hits_total": 0.0,
+      "vllm:prefix_cache_queries_total": 6771200.0,
+      "vllm:prompt_tokens_total": 6771200.0
+    },
+    {
+      "_block_size_resolved": "True",
+      "block_size": "528",
+      "cache_dtype": "auto",
+      "effective_attention_block_size": "528",
+      "enable_mamba_shared_prefix_checkpoint": "False",
+      "enable_prefix_caching": "True",
+      "engine": "0",
+      "gpu_memory_utilization": "0.9",
+      "is_attention_free": "False",
+      "kv_cache_dtype_skip_layers": "[]",
+      "kv_cache_layout": "None",
+      "kv_cache_max_concurrency": "54.594202898550726",
+      "kv_cache_memory_bytes": "None",
+      "kv_cache_size_tokens": "1788942",
+      "kv_offloading_backend": "native",
+      "kv_offloading_size": "None",
+      "kv_sharing_fast_prefill": "False",
+      "mamba_block_size": "528",
+      "mamba_cache_dtype": "auto",
+      "mamba_cache_mode": "align",
+      "mamba_page_size_padded": "None",
+      "mamba_ssm_cache_dtype": "float32",
+      "num_cpu_blocks": "None",
+      "num_gpu_blocks": "3767",
+      "num_gpu_blocks_override": "None",
+      "prefix_cache_retention_interval": "0",
+      "prefix_caching_hash_algo": "sha256",
+      "prefix_match_unit": "None",
+      "replayssm_buffer_len": "16",
+      "skip_page_size_padded": "None",
+      "sliding_window": "None",
+      "swa_bounded_replay": "True",
+      "use_kda_recoverssm": "False",
+      "use_replayssm": "False",
+      "user_specified_block_size": "False",
+      "user_specified_mamba_block_size": "False"
+    }
+  ],
+  "gpu_memory_after_mib": [
+    469
+  ],
+  "gpu_memory_before_mib": [
+    469
+  ],
+  "gpu_memory_ready_mib": [
+    72668
+  ],
+  "log_parse": {
+    "actual_usage_gib_per_rank": [
+      {
+        "cuda_graph": 0.42,
+        "peak_activation": 2.06,
+        "weights_plus_non_torch": 8.51
+      }
+    ],
+    "architecture": "Qwen3_5ForConditionalGeneration",
+    "attention_backends": [
+      "FLASH_ATTN"
+    ],
+    "compilation_s": 16.02,
+    "cuda_graph_capture": [
+      {
+        "gib": 0.63,
+        "seconds": 9.0
+      },
+      {
+        "gib": 0.42,
+        "seconds": 6.0
+      }
+    ],
+    "init_engine_s": 45.75,
+    "kv_cache_gib_per_rank": [
+      60.7
+    ],
+    "kv_cache_tokens": 1788942,
+    "max_concurrency_at_len": {
+      "len": 32768,
+      "x": 54.59
+    },
+    "torch_compile_s": 16.02,
+    "weights_gib_per_rank": [
+      7.99
+    ],
+    "weights_load_s": 5.991737
+  },
+  "ready": true,
+  "ready_s": 84.0,
+  "ready_t": 1792007432.6689289,
+  "start_t": 1792007348.6283484,
+  "status": "ready",
+  "stop_t": 1792007989.6057646
+}

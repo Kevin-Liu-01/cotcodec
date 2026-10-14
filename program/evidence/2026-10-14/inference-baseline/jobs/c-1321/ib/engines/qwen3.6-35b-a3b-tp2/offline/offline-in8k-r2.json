@@ -1,0 +1,21 @@
+{
+  "cell_id": "offline-in8k",
+  "elapsed_s": 5.980940692126751,
+  "end_t": 1792008500.9313276,
+  "engine_id": "qwen3.6-35b-a3b-tp2",
+  "input_len": 8192,
+  "model": "qwen3.6-35b-a3b",
+  "num_prompts": 32,
+  "output_len": 256,
+  "output_tokens_per_s": 1369.6842054936048,
+  "repeat": 2,
+  "requests_per_s": 5.350328927709394,
+  "sampling": "vllm bench throughput default: temperature 1.0, top_p 1.0, ignore_eos",
+  "shape": "in8k",
+  "start_t": 1792008494.9460182,
+  "tool": "vllm.benchmarks.throughput._run_vllm_requests (vLLM 0.31.0)",
+  "total_output_tokens": 8192,
+  "total_prompt_tokens": 262144,
+  "total_tokens_per_s": 45199.57878128896,
+  "tp": 2
+}

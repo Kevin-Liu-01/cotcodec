@@ -1,0 +1,4 @@
+t,vllm:kv_cache_usage_perc,vllm:num_requests_running,vllm:num_requests_waiting,vllm:num_preemptions_total,vllm:prefix_cache_queries_total,vllm:prefix_cache_hits_total,vllm:prompt_tokens_total,vllm:generation_tokens_total
+1792009197.969,0.0,0.0,0.0,2.0,3399936.0,0.0,3399936.0,847744.0
+1792009198.475,0.00754136588028087,8.0,0.0,2.0,3404032.0,0.0,3404032.0,848454.0
+1792009198.982,0.00793827987397977,8.0,0.0,2.0,3408128.0,0.0,3408128.0,850775.0

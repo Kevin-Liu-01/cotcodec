@@ -1,0 +1,25 @@
+inference-baseline-v1 analysis rerun after the GDN state dtype correction (no GPU job)
+host: fal-h100-01, dir ~/cotcodec-runs/stage0/inference-baseline/analysis-fix, 2026-10-14T21:25:21Z
+python: Python 3.10.12
+input: git archive of commit 1c9e1153, path program/evidence/2026-10-14/inference-baseline (committed raw jobs/ and analysis/)
+
+1. scripts/analyze_inference_baseline.py at 1c9e1153 on the committed jobs/ reproduces the committed analysis/:
+   engines.csv identical
+   offline_runs.csv identical
+   serve_cells.csv identical
+   serve_runs.csv identical
+   summary.json identical
+   tables.md identical
+
+2. corrected script and its output (now analysis/):
+a99d1cf346004c30f33efb41dc5f88a771042b0eb747cd12a2c03e22cffcac26  analyze_inference_baseline.py
+b33bb85746903743a46ce993fdc5cd759f50f5192e5fc24acdf9f92de51ec56d  analysis/engines.csv
+66ae31dddd355ce666084538c21cdb569873b49c4b935c7e6899216eb76b404d  analysis/offline_runs.csv
+97634eedcf0c2b836413a521cb648936843192405beee92505382eec445851e5  analysis/serve_cells.csv
+e8d1651169ce0c07efec3c019f8f34de17d72266f71d83c0c8dc1488f27bdcb5  analysis/serve_runs.csv
+861983a97ff44b6538eb4a7fbb72ee8effe78034377cffcd8f52bd69f266449c  analysis/summary.json
+efba3d501af56fc2efeefd2fd9f1880a0bb0ce7ba056978a63276dc9d6c60a35  analysis/tables.md
+
+3. corrections/derive_corrections.py <evidence> out-fix <evidence>/analysis (old) > corrections.json:
+718b439a46d0fa3d4bd8b43daaf4a979e100248e1763567e537f08544ca28415  derive_corrections.py
+10e1942d6619e7eb405020e136752c5271b5ab33dbd9cdb0324d6f8481daef43  corrections.json

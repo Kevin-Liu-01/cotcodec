@@ -1,0 +1,15 @@
+2026-10-14T19:44:32Z fetch job 1310 submitted (qwen3-32b, receipt dir cotcodec-receipts, source f6eaf1b2)
+2026-10-14T19:44:56Z overlay build job 1311 submitted (git f6eaf1b2, archive 97301983, 1 H100, limit 5 min)
+2026-10-14T19:47:44Z job 1311 COMPLETED 0:0 RunTime 00:01:26; overlay sha256:16bea3e4af794246e3dd8a6e1f6866987bc795857b7ab3f0095c2767b6c8e961
+2026-10-14T19:47:44Z CPU selftest job 1312 submitted (no GRES)
+2026-10-14T19:48:46Z job a submitted: 1314
+2026-10-14T19:51:15Z job b submitted (exit 0): 1320
+2026-10-14T19:51:18Z job c submitted (exit 0): 1321
+2026-10-14T19:51:20Z job d submitted (exit 0): 1322
+2026-10-14T19:51:23Z job e submitted (exit 0): 1323
+2026-10-14T19:51:25Z job f submitted (exit 0): 1324
+2026-10-14T20:31:43Z overlay build 2 job 1325 submitted (git 3343668a, archive e7909353, 1 H100, limit 5 min)
+2026-10-14T20:32:52Z job 1325 JobState=COMPLETED RunTime=00:01:02; overlay sha256:9e411974772f044300795537d6f11aff553a0c6ebd82165d674950985282a6d8
+2026-10-14T20:33:01Z CPU selftest 2 job 1326 submitted (no GRES)
+2026-10-14T20:33:21Z job g submitted (exit 0): 1329
+2026-10-14T20:33:23Z job h submitted (exit 0): 1330

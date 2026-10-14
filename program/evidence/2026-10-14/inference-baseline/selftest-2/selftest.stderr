@@ -1,0 +1,4 @@
+Failed to import from vllm._C: ModuleNotFoundError("No module named 'vllm._C'")
+W1014 20:33:08.079000 1 torch/utils/cpp_extension.py:178] No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda'
+/workspace/cotcodec/scripts/run_inference_baseline.py:1455: UserWarning: Both --prefix-len and --random-prefix-len are specified. The random version (--random-prefix-len) will be preferred in this run.
+  bench_throughput.validate_args(args)

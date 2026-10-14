@@ -1,0 +1,37 @@
+{
+  "batch_script_sha256": "2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec",
+  "command": [
+    "python",
+    "scripts/run_inference_baseline.py",
+    "run",
+    "--job",
+    "f",
+    "--output-dir",
+    "/outputs/ib",
+    "--allocation-minutes",
+    "15"
+  ],
+  "container_profile": "vllm",
+  "cpus": 32,
+  "git_sha": "f6eaf1b22f45e1f09b4a3ad844ad6a3f39988135",
+  "gpu_type": "h100",
+  "gpus": 4,
+  "image_id": "sha256:16bea3e4af794246e3dd8a6e1f6866987bc795857b7ab3f0095c2767b6c8e961",
+  "max_gpu_hours": 1.0001,
+  "memory_gb": 192,
+  "minutes": 15,
+  "model": {
+    "artifact_root_sha256": "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3-32b",
+    "receipt_sha256": "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1",
+    "revision": "9216db5781bf21249d130ec9da846c4624c16137"
+  },
+  "name": "ib-v1-f",
+  "randomness_contract": "deterministic",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/inference-baseline/runs/f",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seeds": [],
+  "source_sha256": "97301983bda277977928e124ab9c535d4d14908d647bc8323e8403c47c35e616"
+}

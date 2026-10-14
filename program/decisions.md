@@ -2373,3 +2373,32 @@ and a synthesis using the 2026-10-11 renewal gates.
   its timings. A compact gauntlet wave on G2 follows with the pilot in hand,
   then G2's registered measurement. AM1 starts after G2's pilot, one agent at
   a time.
+
+**D105. Exploratory inference baseline (the first real H100 measurements of
+the new direction).**
+- What ran. Ten jobs, 4.8 physical GPU-h, using vLLM 0.31.0 in pinned images
+  on six models (0.6B-35B, dense, GDN hybrid and hybrid MoE), each cell
+  repeated twice. Qwen3-32B was fetched under D1. A fresh checker found two
+  medium errors and several small ones, all corrected in `eb154e9d`, and the
+  analysis was rerun on the host from the committed raw records.
+- Exploratory takeaways (no registered claim):
+  - (a) Batch-1 decode of the 9B and 32B models is weight streaming, at an
+    estimated 73-83% of HBM bandwidth. The small models and the 3B-active MoE
+    are overhead-bound, at 26-62%.
+  - (b) The dense 32B on one GPU is KV-starved: 28K tokens, about 80
+    preemptions per run at chat-128. FP8 KV doubles capacity, giving 1.3-1.5x
+    where KV binds. Raising `gpu_memory_utilization` is the cheapest lever
+    and was not tried.
+  - (c) The hybrids keep their GDN recurrent state in float32 (vLLM
+    allocates the checkpoint's `mamba_ssm_dtype`): 49 MiB per sequence for
+    Qwen3.5-4B and 9B and 61 MiB for Qwen3.6-35B-A3B. This state:
+    - capped the one-GPU MoE at 51 concurrent chat sequences, which vLLM's
+      start-up check does not reveal;
+    - is a third of the bytes a 9B decode step moves at 128 concurrent long
+      outputs.
+  - (d) Heavy decode runs against the 700 W power cap.
+  - (e) Fresh engine instances can change tail latency several-fold at equal
+    throughput.
+- These measurements bear directly on G2 and on G1, the alternate on
+  hybrid-rollout memory levers. A low-precision recurrent state is a lever to
+  test, and it is also a mismatch source to measure.

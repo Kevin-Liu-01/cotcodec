@@ -1,0 +1,1 @@
+{"job_id": "1310", "model_id": "qwen3-32b", "exit_status": 0, "receipt": "cotcodec-receipts/qwen3-32b.json", "receipt_sha256": "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1", "remote_code_files": [], "started_at": "2026-10-14T19:44:33Z", "finished_at": "2026-10-14T19:49:56Z"}

@@ -1,0 +1,38 @@
+{"allocation_start_source": "job.env started_at", "deadline_in_s": 2151, "event": "job-start", "job": "d", "t": 1792007531.33, "utc": "2026-10-14T19:52:11Z"}
+{"event": "model-verified", "exit": 0, "model": "qwen3-32b", "t": 1792007534.152, "utc": "2026-10-14T19:52:14Z", "verified_by": "lane (model-verification.txt)"}
+{"argv": ["vllm", "serve", "/model-cache/cotcodec-models/qwen3-32b", "--served-model-name", "ib", "--host", "127.0.0.1", "--port", "8000", "--disable-uvicorn-access-log", "--tensor-parallel-size", "2", "--dtype", "bfloat16", "--seed", "42", "--max-model-len", "32768", "--gpu-memory-utilization", "0.9", "--max-num-seqs", "256", "--max-num-batched-tokens", "8192", "--enable-prefix-caching", "--kv-cache-dtype", "auto", "--generation-config", "vllm", "--load-format", "auto"], "engine": "qwen3-32b-tp2", "event": "engine-start", "t": 1792007534.153, "utc": "2026-10-14T19:52:14Z"}
+{"engine": "qwen3-32b-tp2", "event": "engine-ready", "parse": {"actual_usage_gib_per_rank": [{"cuda_graph": 0.56, "peak_activation": 1.92, "weights_plus_non_torch": 31.32}, {"cuda_graph": 0.56, "peak_activation": 1.92, "weights_plus_non_torch": 31.32}], "architecture": "Qwen3ForCausalLM", "attention_backends": ["FLASH_ATTN"], "compilation_s": 43.43, "cuda_graph_capture": [{"gib": 0.96, "seconds": 62.0}, {"gib": 0.96, "seconds": 62.0}, {"gib": 0.56, "seconds": 12.0}, {"gib": 0.56, "seconds": 12.0}], "init_engine_s": 127.39, "kv_cache_gib_per_rank": [38.03], "kv_cache_tokens": 311552, "max_concurrency_at_len": {"len": 32768, "x": 9.51}, "torch_compile_s": 43.43, "weights_gib_per_rank": [30.59, 30.59], "weights_load_s": 8.206639}, "ready_s": 180.1, "t": 1792007714.262, "utc": "2026-10-14T19:55:14Z"}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "warmup-w0", "status": "ok", "t": 1792007727.358, "utc": "2026-10-14T19:55:27Z", "wall_s": 11.08}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "warmup-w1", "status": "ok", "t": 1792007733.825, "utc": "2026-10-14T19:55:33Z", "wall_s": 4.453}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "chat-c1-r1", "status": "ok", "t": 1792007750.055, "utc": "2026-10-14T19:55:50Z", "wall_s": 14.217}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "chat-c8-r1", "status": "ok", "t": 1792007760.101, "utc": "2026-10-14T19:56:00Z", "wall_s": 8.03}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "chat-c32-r1", "status": "ok", "t": 1792007772.229, "utc": "2026-10-14T19:56:12Z", "wall_s": 10.114}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "chat-c128-r1", "status": "ok", "t": 1792007793.201, "utc": "2026-10-14T19:56:33Z", "wall_s": 18.956}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in8k-c1-r1", "status": "ok", "t": 1792007811.968, "utc": "2026-10-14T19:56:51Z", "wall_s": 16.751}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in8k-c8-r1", "status": "ok", "t": 1792007831.624, "utc": "2026-10-14T19:57:11Z", "wall_s": 17.638}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in8k-c32-r1", "status": "ok", "t": 1792007882.706, "utc": "2026-10-14T19:58:02Z", "wall_s": 49.066}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in8k-c128-r1", "status": "ok", "t": 1792007984.09, "utc": "2026-10-14T19:59:44Z", "wall_s": 99.368}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in32k-c1-r1", "status": "ok", "t": 1792008006.688, "utc": "2026-10-14T20:00:06Z", "wall_s": 20.581}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in32k-c8-r1", "status": "ok", "t": 1792008038.26, "utc": "2026-10-14T20:00:38Z", "wall_s": 29.558}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in32k-c32-r1", "status": "ok", "t": 1792008157.929, "utc": "2026-10-14T20:02:37Z", "wall_s": 117.653}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "longout-c1-r1", "status": "ok", "t": 1792008214.316, "utc": "2026-10-14T20:03:34Z", "wall_s": 54.37}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "longout-c8-r1", "status": "ok", "t": 1792008275.012, "utc": "2026-10-14T20:04:35Z", "wall_s": 58.681}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "longout-c32-r1", "status": "ok", "t": 1792008348.904, "utc": "2026-10-14T20:05:48Z", "wall_s": 71.878}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "longout-c128-r1", "status": "ok", "t": 1792008520.933, "utc": "2026-10-14T20:08:40Z", "wall_s": 170.012}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "chat-c1-r2", "status": "ok", "t": 1792008536.869, "utc": "2026-10-14T20:08:56Z", "wall_s": 13.917}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "chat-c8-r2", "status": "ok", "t": 1792008546.694, "utc": "2026-10-14T20:09:06Z", "wall_s": 7.811}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "chat-c32-r2", "status": "ok", "t": 1792008558.572, "utc": "2026-10-14T20:09:18Z", "wall_s": 9.864}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "chat-c128-r2", "status": "ok", "t": 1792008579.122, "utc": "2026-10-14T20:09:39Z", "wall_s": 18.536}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in8k-c1-r2", "status": "ok", "t": 1792008597.553, "utc": "2026-10-14T20:09:57Z", "wall_s": 16.416}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in8k-c8-r2", "status": "ok", "t": 1792008617.113, "utc": "2026-10-14T20:10:17Z", "wall_s": 17.547}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in8k-c32-r2", "status": "ok", "t": 1792008667.419, "utc": "2026-10-14T20:11:07Z", "wall_s": 48.29}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in8k-c128-r2", "status": "ok", "t": 1792008767.792, "utc": "2026-10-14T20:12:47Z", "wall_s": 98.356}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in32k-c1-r2", "status": "ok", "t": 1792008790.111, "utc": "2026-10-14T20:13:10Z", "wall_s": 20.303}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in32k-c8-r2", "status": "ok", "t": 1792008821.512, "utc": "2026-10-14T20:13:41Z", "wall_s": 29.386}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "in32k-c32-r2", "status": "ok", "t": 1792008940.785, "utc": "2026-10-14T20:15:40Z", "wall_s": 117.257}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "longout-c1-r2", "status": "ok", "t": 1792008997.184, "utc": "2026-10-14T20:16:37Z", "wall_s": 54.382}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "longout-c8-r2", "status": "ok", "t": 1792009057.841, "utc": "2026-10-14T20:17:37Z", "wall_s": 58.642}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "longout-c32-r2", "status": "ok", "t": 1792009131.854, "utc": "2026-10-14T20:18:51Z", "wall_s": 71.998}
+{"engine": "qwen3-32b-tp2", "event": "run-done", "hit_rate": 0.0, "run": "longout-c128-r2", "status": "ok", "t": 1792009303.894, "utc": "2026-10-14T20:21:43Z", "wall_s": 170.023}
+{"engine": "qwen3-32b-tp2", "event": "offline-done", "exit": 0, "results": 6, "t": 1792009551.087, "utc": "2026-10-14T20:25:51Z", "wall_s": 246.0}
+{"event": "job-end", "stop_reason": null, "t": 1792009551.318, "utc": "2026-10-14T20:25:51Z"}

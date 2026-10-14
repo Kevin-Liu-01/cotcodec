@@ -1,0 +1,707 @@
+{
+  "claim_level": "exploratory",
+  "engines": [
+    {
+      "cells": [
+        {
+          "cell_id": "chat-c1",
+          "concurrency": 1,
+          "input_len": 512,
+          "num_prompts": 4,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "chat-c8",
+          "concurrency": 8,
+          "input_len": 512,
+          "num_prompts": 16,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "chat-c32",
+          "concurrency": 32,
+          "input_len": 512,
+          "num_prompts": 64,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "chat-c128",
+          "concurrency": 128,
+          "input_len": 512,
+          "num_prompts": 256,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "in8k-c1",
+          "concurrency": 1,
+          "input_len": 8192,
+          "num_prompts": 4,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in8k-c8",
+          "concurrency": 8,
+          "input_len": 8192,
+          "num_prompts": 16,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in8k-c32",
+          "concurrency": 32,
+          "input_len": 8192,
+          "num_prompts": 64,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in8k-c128",
+          "concurrency": 128,
+          "input_len": 8192,
+          "num_prompts": 128,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in32k-c1",
+          "concurrency": 1,
+          "input_len": 32000,
+          "num_prompts": 3,
+          "output_len": 256,
+          "shape": "in32k"
+        },
+        {
+          "cell_id": "in32k-c8",
+          "concurrency": 8,
+          "input_len": 32000,
+          "num_prompts": 8,
+          "output_len": 256,
+          "shape": "in32k"
+        },
+        {
+          "cell_id": "in32k-c32",
+          "concurrency": 32,
+          "input_len": 32000,
+          "num_prompts": 32,
+          "output_len": 256,
+          "shape": "in32k"
+        },
+        {
+          "cell_id": "longout-c1",
+          "concurrency": 1,
+          "input_len": 512,
+          "num_prompts": 1,
+          "output_len": 4096,
+          "shape": "longout"
+        },
+        {
+          "cell_id": "longout-c8",
+          "concurrency": 8,
+          "input_len": 512,
+          "num_prompts": 8,
+          "output_len": 4096,
+          "shape": "longout"
+        },
+        {
+          "cell_id": "longout-c32",
+          "concurrency": 32,
+          "input_len": 512,
+          "num_prompts": 32,
+          "output_len": 4096,
+          "shape": "longout"
+        },
+        {
+          "cell_id": "longout-c128",
+          "concurrency": 128,
+          "input_len": 512,
+          "num_prompts": 128,
+          "output_len": 4096,
+          "shape": "longout"
+        }
+      ],
+      "dtype": "bfloat16",
+      "family": "gdn-attention-hybrid",
+      "gpu_memory_utilization": 0.9,
+      "grid": "core",
+      "id": "qwen3.5-4b-tp1",
+      "kv_cache_dtype": "auto",
+      "max_model_len": 32768,
+      "max_num_batched_tokens": 8192,
+      "max_num_seqs": 256,
+      "model": "qwen3.5-4b",
+      "model_dir": "/model-cache/cotcodec-models/qwen3.5-4b",
+      "offline": true,
+      "offline_cells": [
+        {
+          "cell_id": "offline-chat",
+          "input_len": 512,
+          "num_prompts": 512,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "offline-in8k",
+          "input_len": 8192,
+          "num_prompts": 64,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "offline-decode",
+          "input_len": 512,
+          "num_prompts": 128,
+          "output_len": 2048,
+          "shape": "decode"
+        }
+      ],
+      "offline_scale": 1.0,
+      "prefix_caching": true,
+      "serve_argv": [
+        "vllm",
+        "serve",
+        "/model-cache/cotcodec-models/qwen3.5-4b",
+        "--served-model-name",
+        "ib",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000",
+        "--disable-uvicorn-access-log",
+        "--tensor-parallel-size",
+        "1",
+        "--dtype",
+        "bfloat16",
+        "--seed",
+        "42",
+        "--max-model-len",
+        "32768",
+        "--gpu-memory-utilization",
+        "0.9",
+        "--max-num-seqs",
+        "256",
+        "--max-num-batched-tokens",
+        "8192",
+        "--enable-prefix-caching",
+        "--kv-cache-dtype",
+        "auto",
+        "--generation-config",
+        "vllm",
+        "--load-format",
+        "auto",
+        "--limit-mm-per-prompt",
+        "{\"image\":0,\"video\":0}"
+      ],
+      "text_only_flags": [
+        "--limit-mm-per-prompt",
+        "{\"image\":0,\"video\":0}"
+      ],
+      "tp": 1
+    },
+    {
+      "cells": [
+        {
+          "cell_id": "chat-c1",
+          "concurrency": 1,
+          "input_len": 512,
+          "num_prompts": 4,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "chat-c8",
+          "concurrency": 8,
+          "input_len": 512,
+          "num_prompts": 16,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "chat-c32",
+          "concurrency": 32,
+          "input_len": 512,
+          "num_prompts": 64,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "chat-c128",
+          "concurrency": 128,
+          "input_len": 512,
+          "num_prompts": 256,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "in8k-c1",
+          "concurrency": 1,
+          "input_len": 8192,
+          "num_prompts": 4,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in8k-c8",
+          "concurrency": 8,
+          "input_len": 8192,
+          "num_prompts": 16,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in8k-c32",
+          "concurrency": 32,
+          "input_len": 8192,
+          "num_prompts": 64,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in8k-c128",
+          "concurrency": 128,
+          "input_len": 8192,
+          "num_prompts": 128,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in32k-c1",
+          "concurrency": 1,
+          "input_len": 32000,
+          "num_prompts": 3,
+          "output_len": 256,
+          "shape": "in32k"
+        },
+        {
+          "cell_id": "in32k-c8",
+          "concurrency": 8,
+          "input_len": 32000,
+          "num_prompts": 8,
+          "output_len": 256,
+          "shape": "in32k"
+        },
+        {
+          "cell_id": "in32k-c32",
+          "concurrency": 32,
+          "input_len": 32000,
+          "num_prompts": 32,
+          "output_len": 256,
+          "shape": "in32k"
+        },
+        {
+          "cell_id": "longout-c1",
+          "concurrency": 1,
+          "input_len": 512,
+          "num_prompts": 1,
+          "output_len": 4096,
+          "shape": "longout"
+        },
+        {
+          "cell_id": "longout-c8",
+          "concurrency": 8,
+          "input_len": 512,
+          "num_prompts": 8,
+          "output_len": 4096,
+          "shape": "longout"
+        },
+        {
+          "cell_id": "longout-c32",
+          "concurrency": 32,
+          "input_len": 512,
+          "num_prompts": 32,
+          "output_len": 4096,
+          "shape": "longout"
+        },
+        {
+          "cell_id": "longout-c128",
+          "concurrency": 128,
+          "input_len": 512,
+          "num_prompts": 128,
+          "output_len": 4096,
+          "shape": "longout"
+        },
+        {
+          "cell_id": "prefix-c8",
+          "concurrency": 8,
+          "input_len": 4352,
+          "num_prefixes": 8,
+          "num_prompts": 64,
+          "output_len": 128,
+          "prefix_len": 4096,
+          "shape": "prefix",
+          "suffix_len": 256
+        },
+        {
+          "cell_id": "prefix-c32",
+          "concurrency": 32,
+          "input_len": 4352,
+          "num_prefixes": 8,
+          "num_prompts": 128,
+          "output_len": 128,
+          "prefix_len": 4096,
+          "shape": "prefix",
+          "suffix_len": 256
+        }
+      ],
+      "dtype": "bfloat16",
+      "family": "dense-transformer",
+      "gpu_memory_utilization": 0.9,
+      "grid": "core_and_prefix",
+      "id": "qwen3-1.7b-tp1",
+      "kv_cache_dtype": "auto",
+      "max_model_len": 32768,
+      "max_num_batched_tokens": 8192,
+      "max_num_seqs": 256,
+      "model": "qwen3-1.7b-base",
+      "model_dir": "/model-cache/cotcodec-models/qwen3-1.7b-base",
+      "offline": true,
+      "offline_cells": [
+        {
+          "cell_id": "offline-chat",
+          "input_len": 512,
+          "num_prompts": 512,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "offline-in8k",
+          "input_len": 8192,
+          "num_prompts": 64,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "offline-decode",
+          "input_len": 512,
+          "num_prompts": 128,
+          "output_len": 2048,
+          "shape": "decode"
+        }
+      ],
+      "offline_scale": 1.0,
+      "prefix_caching": true,
+      "serve_argv": [
+        "vllm",
+        "serve",
+        "/model-cache/cotcodec-models/qwen3-1.7b-base",
+        "--served-model-name",
+        "ib",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000",
+        "--disable-uvicorn-access-log",
+        "--tensor-parallel-size",
+        "1",
+        "--dtype",
+        "bfloat16",
+        "--seed",
+        "42",
+        "--max-model-len",
+        "32768",
+        "--gpu-memory-utilization",
+        "0.9",
+        "--max-num-seqs",
+        "256",
+        "--max-num-batched-tokens",
+        "8192",
+        "--enable-prefix-caching",
+        "--kv-cache-dtype",
+        "auto",
+        "--generation-config",
+        "vllm",
+        "--load-format",
+        "auto"
+      ],
+      "text_only_flags": [],
+      "tp": 1
+    },
+    {
+      "cells": [
+        {
+          "cell_id": "prefix-c8",
+          "concurrency": 8,
+          "input_len": 4352,
+          "num_prefixes": 8,
+          "num_prompts": 64,
+          "output_len": 128,
+          "prefix_len": 4096,
+          "shape": "prefix",
+          "suffix_len": 256
+        },
+        {
+          "cell_id": "prefix-c32",
+          "concurrency": 32,
+          "input_len": 4352,
+          "num_prefixes": 8,
+          "num_prompts": 128,
+          "output_len": 128,
+          "prefix_len": 4096,
+          "shape": "prefix",
+          "suffix_len": 256
+        }
+      ],
+      "dtype": "bfloat16",
+      "family": "dense-transformer",
+      "gpu_memory_utilization": 0.9,
+      "grid": "prefix",
+      "id": "qwen3-1.7b-tp1-nopc",
+      "kv_cache_dtype": "auto",
+      "max_model_len": 32768,
+      "max_num_batched_tokens": 8192,
+      "max_num_seqs": 256,
+      "model": "qwen3-1.7b-base",
+      "model_dir": "/model-cache/cotcodec-models/qwen3-1.7b-base",
+      "offline": false,
+      "offline_cells": [],
+      "offline_scale": 1.0,
+      "prefix_caching": false,
+      "serve_argv": [
+        "vllm",
+        "serve",
+        "/model-cache/cotcodec-models/qwen3-1.7b-base",
+        "--served-model-name",
+        "ib",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000",
+        "--disable-uvicorn-access-log",
+        "--tensor-parallel-size",
+        "1",
+        "--dtype",
+        "bfloat16",
+        "--seed",
+        "42",
+        "--max-model-len",
+        "32768",
+        "--gpu-memory-utilization",
+        "0.9",
+        "--max-num-seqs",
+        "256",
+        "--max-num-batched-tokens",
+        "8192",
+        "--no-enable-prefix-caching",
+        "--kv-cache-dtype",
+        "auto",
+        "--generation-config",
+        "vllm",
+        "--load-format",
+        "auto"
+      ],
+      "text_only_flags": [],
+      "tp": 1
+    },
+    {
+      "cells": [
+        {
+          "cell_id": "chat-c1",
+          "concurrency": 1,
+          "input_len": 512,
+          "num_prompts": 4,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "chat-c8",
+          "concurrency": 8,
+          "input_len": 512,
+          "num_prompts": 16,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "chat-c32",
+          "concurrency": 32,
+          "input_len": 512,
+          "num_prompts": 64,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "chat-c128",
+          "concurrency": 128,
+          "input_len": 512,
+          "num_prompts": 256,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "in8k-c1",
+          "concurrency": 1,
+          "input_len": 8192,
+          "num_prompts": 4,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in8k-c8",
+          "concurrency": 8,
+          "input_len": 8192,
+          "num_prompts": 16,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in8k-c32",
+          "concurrency": 32,
+          "input_len": 8192,
+          "num_prompts": 64,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in8k-c128",
+          "concurrency": 128,
+          "input_len": 8192,
+          "num_prompts": 128,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "in32k-c1",
+          "concurrency": 1,
+          "input_len": 32000,
+          "num_prompts": 3,
+          "output_len": 256,
+          "shape": "in32k"
+        },
+        {
+          "cell_id": "in32k-c8",
+          "concurrency": 8,
+          "input_len": 32000,
+          "num_prompts": 8,
+          "output_len": 256,
+          "shape": "in32k"
+        },
+        {
+          "cell_id": "in32k-c32",
+          "concurrency": 32,
+          "input_len": 32000,
+          "num_prompts": 32,
+          "output_len": 256,
+          "shape": "in32k"
+        },
+        {
+          "cell_id": "longout-c1",
+          "concurrency": 1,
+          "input_len": 512,
+          "num_prompts": 1,
+          "output_len": 4096,
+          "shape": "longout"
+        },
+        {
+          "cell_id": "longout-c8",
+          "concurrency": 8,
+          "input_len": 512,
+          "num_prompts": 8,
+          "output_len": 4096,
+          "shape": "longout"
+        },
+        {
+          "cell_id": "longout-c32",
+          "concurrency": 32,
+          "input_len": 512,
+          "num_prompts": 32,
+          "output_len": 4096,
+          "shape": "longout"
+        },
+        {
+          "cell_id": "longout-c128",
+          "concurrency": 128,
+          "input_len": 512,
+          "num_prompts": 128,
+          "output_len": 4096,
+          "shape": "longout"
+        }
+      ],
+      "dtype": "bfloat16",
+      "family": "dense-transformer",
+      "gpu_memory_utilization": 0.9,
+      "grid": "core",
+      "id": "qwen3-0.6b-tp1",
+      "kv_cache_dtype": "auto",
+      "max_model_len": 32768,
+      "max_num_batched_tokens": 8192,
+      "max_num_seqs": 256,
+      "model": "qwen3-0.6b-base",
+      "model_dir": "/model-cache/cotcodec-models/qwen3-0.6b-base",
+      "offline": true,
+      "offline_cells": [
+        {
+          "cell_id": "offline-chat",
+          "input_len": 512,
+          "num_prompts": 512,
+          "output_len": 256,
+          "shape": "chat"
+        },
+        {
+          "cell_id": "offline-in8k",
+          "input_len": 8192,
+          "num_prompts": 64,
+          "output_len": 256,
+          "shape": "in8k"
+        },
+        {
+          "cell_id": "offline-decode",
+          "input_len": 512,
+          "num_prompts": 128,
+          "output_len": 2048,
+          "shape": "decode"
+        }
+      ],
+      "offline_scale": 1.0,
+      "prefix_caching": true,
+      "serve_argv": [
+        "vllm",
+        "serve",
+        "/model-cache/cotcodec-models/qwen3-0.6b-base",
+        "--served-model-name",
+        "ib",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000",
+        "--disable-uvicorn-access-log",
+        "--tensor-parallel-size",
+        "1",
+        "--dtype",
+        "bfloat16",
+        "--seed",
+        "42",
+        "--max-model-len",
+        "32768",
+        "--gpu-memory-utilization",
+        "0.9",
+        "--max-num-seqs",
+        "256",
+        "--max-num-batched-tokens",
+        "8192",
+        "--enable-prefix-caching",
+        "--kv-cache-dtype",
+        "auto",
+        "--generation-config",
+        "vllm",
+        "--load-format",
+        "auto"
+      ],
+      "text_only_flags": [],
+      "tp": 1
+    }
+  ],
+  "experiment_id": "inference-baseline-v1",
+  "gpus": 1,
+  "job": "a",
+  "models": [
+    "qwen3.5-4b",
+    "qwen3-1.7b-base",
+    "qwen3-0.6b-base"
+  ],
+  "primary_model": "qwen3.5-4b",
+  "repeats": 2,
+  "seed": 42
+}

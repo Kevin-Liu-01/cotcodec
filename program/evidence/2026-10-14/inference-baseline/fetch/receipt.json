@@ -1,0 +1,18 @@
+{
+  "job_id": "1310",
+  "lane": "fetch-model-cpu",
+  "batch_sha256": "22685e5e4dc9f88cd9d6ba7aec7189a89500a4f80d2464b8df86e08e76e33c6d",
+  "image_id": "sha256:ba360ea13ea50e77e4900cb258c4dc73156060295abd381899f90f9991cedd10",
+  "source_dir": "/home/kevin/cotcodec-runs/stage0/inference-baseline/src/f6eaf1b2",
+  "source_git_sha": "f6eaf1b22f45e1f09b4a3ad844ad6a3f39988135",
+  "fetch_script_sha256": "d995b59ece3c809edd70d6c60a78628ae5cb1ccc0ce8350cc455084d3787d29f",
+  "registry_sha256": "374968eaa0663042cfd994ab414e375812d46f5305b03fc164f35d63cfaa176e",
+  "model_ids": "qwen3-32b",
+  "receipt_dir": "cotcodec-receipts",
+  "gres_requested": "none",
+  "job_tres": "TRES=cpu=8,mem=16G,node=1,billing=8 ",
+  "docker_default_runtime": "runc",
+  "container_dev_nvidia": [],
+  "network": "host (download only)",
+  "finished_at": "2026-10-14T19:49:56Z"
+}

@@ -1,0 +1,179 @@
+{
+  "argv": [
+    "vllm",
+    "serve",
+    "/model-cache/cotcodec-models/qwen3-32b",
+    "--served-model-name",
+    "ib",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8000",
+    "--disable-uvicorn-access-log",
+    "--tensor-parallel-size",
+    "1",
+    "--dtype",
+    "bfloat16",
+    "--seed",
+    "42",
+    "--max-model-len",
+    "32768",
+    "--gpu-memory-utilization",
+    "0.9",
+    "--max-num-seqs",
+    "256",
+    "--max-num-batched-tokens",
+    "8192",
+    "--enable-prefix-caching",
+    "--kv-cache-dtype",
+    "fp8",
+    "--generation-config",
+    "vllm",
+    "--load-format",
+    "auto"
+  ],
+  "cache_config_info": {
+    "_block_size_resolved": "True",
+    "block_size": "16",
+    "cache_dtype": "fp8",
+    "effective_attention_block_size": "16",
+    "enable_mamba_shared_prefix_checkpoint": "False",
+    "enable_prefix_caching": "True",
+    "engine": "0",
+    "gpu_memory_utilization": "0.9",
+    "is_attention_free": "False",
+    "kv_cache_dtype_skip_layers": "[]",
+    "kv_cache_layout": "None",
+    "kv_cache_max_concurrency": "1.72119140625",
+    "kv_cache_memory_bytes": "None",
+    "kv_cache_size_tokens": "56400",
+    "kv_offloading_backend": "native",
+    "kv_offloading_size": "None",
+    "kv_sharing_fast_prefill": "False",
+    "mamba_block_size": "None",
+    "mamba_cache_dtype": "auto",
+    "mamba_cache_mode": "none",
+    "mamba_page_size_padded": "None",
+    "mamba_ssm_cache_dtype": "auto",
+    "num_cpu_blocks": "None",
+    "num_gpu_blocks": "3525",
+    "num_gpu_blocks_override": "None",
+    "prefix_cache_retention_interval": "0",
+    "prefix_caching_hash_algo": "sha256",
+    "prefix_match_unit": "None",
+    "replayssm_buffer_len": "16",
+    "skip_page_size_padded": "None",
+    "sliding_window": "None",
+    "swa_bounded_replay": "True",
+    "use_kda_recoverssm": "False",
+    "use_replayssm": "False",
+    "user_specified_block_size": "False",
+    "user_specified_mamba_block_size": "False"
+  },
+  "engine_id": "qwen3-32b-tp1-kvfp8",
+  "exit_code": 0,
+  "exit_code_at_ready": null,
+  "final_metrics": [
+    {
+      "vllm:generation_tokens_total": 251520.0,
+      "vllm:kv_cache_usage_perc": 0.0,
+      "vllm:num_preemptions_total": 141.0,
+      "vllm:num_requests_running": 0.0,
+      "vllm:num_requests_waiting": 0.0,
+      "vllm:prefix_cache_hits_total": 0.0,
+      "vllm:prefix_cache_queries_total": 896512.0,
+      "vllm:prompt_tokens_total": 896512.0
+    },
+    {
+      "_block_size_resolved": "True",
+      "block_size": "16",
+      "cache_dtype": "fp8",
+      "effective_attention_block_size": "16",
+      "enable_mamba_shared_prefix_checkpoint": "False",
+      "enable_prefix_caching": "True",
+      "engine": "0",
+      "gpu_memory_utilization": "0.9",
+      "is_attention_free": "False",
+      "kv_cache_dtype_skip_layers": "[]",
+      "kv_cache_layout": "None",
+      "kv_cache_max_concurrency": "1.72119140625",
+      "kv_cache_memory_bytes": "None",
+      "kv_cache_size_tokens": "56400",
+      "kv_offloading_backend": "native",
+      "kv_offloading_size": "None",
+      "kv_sharing_fast_prefill": "False",
+      "mamba_block_size": "None",
+      "mamba_cache_dtype": "auto",
+      "mamba_cache_mode": "none",
+      "mamba_page_size_padded": "None",
+      "mamba_ssm_cache_dtype": "auto",
+      "num_cpu_blocks": "None",
+      "num_gpu_blocks": "3525",
+      "num_gpu_blocks_override": "None",
+      "prefix_cache_retention_interval": "0",
+      "prefix_caching_hash_algo": "sha256",
+      "prefix_match_unit": "None",
+      "replayssm_buffer_len": "16",
+      "skip_page_size_padded": "None",
+      "sliding_window": "None",
+      "swa_bounded_replay": "True",
+      "use_kda_recoverssm": "False",
+      "use_replayssm": "False",
+      "user_specified_block_size": "False",
+      "user_specified_mamba_block_size": "False"
+    }
+  ],
+  "gpu_memory_after_mib": [
+    469
+  ],
+  "gpu_memory_before_mib": [
+    469
+  ],
+  "gpu_memory_ready_mib": [
+    72348
+  ],
+  "log_parse": {
+    "actual_usage_gib_per_rank": [
+      {
+        "cuda_graph": 0.7,
+        "peak_activation": 2.94,
+        "weights_plus_non_torch": 61.45
+      }
+    ],
+    "architecture": "Qwen3ForCausalLM",
+    "attention_backends": [
+      "FLASH_ATTN"
+    ],
+    "compilation_s": 34.33,
+    "cuda_graph_capture": [
+      {
+        "gib": 1.09,
+        "seconds": 9.0
+      },
+      {
+        "gib": 0.7,
+        "seconds": 10.0
+      }
+    ],
+    "init_engine_s": 60.12,
+    "kv_cache_gib_per_rank": [
+      6.89
+    ],
+    "kv_cache_tokens": 56400,
+    "max_concurrency_at_len": {
+      "len": 32768,
+      "x": 1.72
+    },
+    "torch_compile_s": 34.33,
+    "weights_gib_per_rank": [
+      61.03
+    ],
+    "weights_load_s": 14.669747
+  },
+  "ready": true,
+  "ready_s": 96.0,
+  "ready_t": 1792008710.5463018,
+  "start_t": 1792008614.51999,
+  "status": "ready",
+  "stop_t": 1792009302.8153012
+}
