@@ -1,0 +1,169 @@
+{
+ "campaigns": [
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-osw-fixed-m01-modifier-released-early-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "00-s2v5-k1-e-c3-h-osw-fixed-m01-modifier-released-early-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m01-modifier-released-early-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "01-s2v5-k1-e-c3-l0-fixed-m01-modifier-released-early-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m02-button-swap-left-right-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "02-s2v5-k1-e-c3-l0-fixed-m02-button-swap-left-right-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-ga-m03-middle-click-noop-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "03-s2v5-k1-e-c3-h-ga-m03-middle-click-noop-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-osw-fixed-m03-middle-click-noop-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "04-s2v5-k1-e-c3-h-osw-fixed-m03-middle-click-noop-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m03-middle-click-noop-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "05-s2v5-k1-e-c3-l0-fixed-m03-middle-click-noop-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m04-coordinate-shift-5px-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "06-s2v5-k1-e-c3-l0-fixed-m04-coordinate-shift-5px-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-ga-m05-scroll-sign-flip-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "07-s2v5-k1-e-c3-h-ga-m05-scroll-sign-flip-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-osw-fixed-m05-scroll-sign-flip-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "08-s2v5-k1-e-c3-h-osw-fixed-m05-scroll-sign-flip-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m05-scroll-sign-flip-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "09-s2v5-k1-e-c3-l0-fixed-m05-scroll-sign-flip-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m06-scroll-ticks-doubled-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "10-s2v5-k1-e-c3-l0-fixed-m06-scroll-ticks-doubled-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m07-text-drop-last-char-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "11-s2v5-k1-e-c3-l0-fixed-m07-text-drop-last-char-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m08-text-nfc-normalize-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "12-s2v5-k1-e-c3-l0-fixed-m08-text-nfc-normalize-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m09-text-drop-non-ascii-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "13-s2v5-k1-e-c3-l0-fixed-m09-text-drop-non-ascii-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-l0-fixed-m10-less-to-greater-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "14-s2v5-k1-e-c3-l0-fixed-m10-less-to-greater-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-ga-m11-unknown-key-dropped-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "15-s2v5-k1-e-c3-h-ga-m11-unknown-key-dropped-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-e-c3-h-osw-fixed-m11-unknown-key-dropped-42",
+   "cells": [
+    "E"
+   ],
+   "cells_file": null,
+   "dir": "16-s2v5-k1-e-c3-h-osw-fixed-m11-unknown-key-dropped-42",
+   "driver_exit": 0
+  }
+ ],
+ "check": "C3",
+ "executor_commit": "7c963f51ad5a634c74c7ac2dff43f75a502656de",
+ "experiment_id": "s2-arabic-cua-locale-v5",
+ "job_id": "1294",
+ "part": {
+  "index": 1,
+  "of": 3
+ },
+ "purpose": "k1",
+ "schema": "s2v5-apdelta-receipt-v1",
+ "t_end": 1791957571.536588,
+ "t_start": 1791954196.2245631
+}

@@ -122,6 +122,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 |---:|---|---:|---|---|---|---|
 | 1292 | K1 C1 on E (H-GA-buggy, H-OSW-up; seed 42) | 154 | 04:44:31 | 04:44:32-04:50:59 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count (driver exit 0, no labelled container, `infra_gates_pass`, image unchanged) |
 | 1293 | K1 C2 on E (L0-raw, seed 45) | 362 | 04:51:57 | 04:51:58-05:02:12 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
+| 1294 | K1 C3 on E, part 1 of 3 (17 mutant campaigns, M01-M11; seed 42) | 1,404 | 05:03:14 | 05:03:15-05:59:31 (56.3 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell; C3 is read once part 3 (the references) has run |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -143,3 +144,14 @@ and the last `scontrol` record):
   17.9 s; step p95 1.19 s; 8 of 8 reset sentinels pristine. C2 on E `pass`, no problem. Driver
   exit 0, `infra_gates_pass` true, image unchanged, no labelled container left; no counting,
   foreign-abort or snapshot problem.
+- **1294 (C3, E, part 1).** Host snapshot: load 0.48, queue empty, 0 labelled containers. 17
+  campaigns of the plan's 47 C3 campaigns on E (M01-M11 on their layers), 1,675 trials, one VM at a
+  time; every campaign counts (driver exit 0, `infra_gates_pass`, image unchanged, no labelled
+  container; no foreign-abort or snapshot problem); cold boots at most 17.9 s; step p95 at most
+  1.43 s. `ap_delta_v5.verdict` on this job alone lists C3 on E as not passing, as it must: the
+  three unmutated reference runs (L0-fixed, H-OSW-fixed, H-GA) are in part 3, and a cell kills a
+  mutant only when the reference passed it cleanly, so every mutant reads "survived" and the
+  campaigns of parts 2 and 3 read "no run". The operator's interim summary
+  (`c3_interim.py`, `c3-interim-1294.json`; decides nothing): every one of the 17 mutant runs
+  failed at least one cell (1 to 45 cells), none with an infrastructure failure. C3 on E is read
+  from all three parts.
