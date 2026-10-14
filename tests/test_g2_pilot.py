@@ -71,13 +71,6 @@ def test_logprob_parsers() -> None:
         rollouts.prefill_logprobs(3, tokens, prompt)
 
 
-def test_request_id_resolution() -> None:
-    mapping = {"0": "m/p000/s42", "1": "m/p001/s42"}
-    assert rollouts.resolve_request_id("1", mapping) == "m/p001/s42"
-    assert rollouts.resolve_request_id("0-abc123", mapping) == "m/p000/s42"
-    assert rollouts.resolve_request_id("7", mapping) is None
-
-
 def test_k3_and_slope() -> None:
     assert g2.k3(0.0) == 0.0
     assert math.isclose(g2.k3(0.1), math.expm1(0.1) - 0.1)

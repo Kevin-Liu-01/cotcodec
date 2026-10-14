@@ -613,9 +613,8 @@ def run_main(args: argparse.Namespace) -> int:
         done = out / model_id / "done.json"
         saved = json.loads(done.read_text()) if done.is_file() else None
         record["worker_done"] = saved
-        record["status"] = (
-            "failed" if saved is None else {0: "complete", 3: "partial"}.get(saved["exit"], "failed")
-        )
+        outcome = {0: "complete", 3: "partial"}
+        record["status"] = "failed" if saved is None else outcome.get(saved["exit"], "failed")
         release_until = time.time() + 120
         while time.time() < release_until:
             used = gpu_memory_used_mib()
