@@ -45,11 +45,9 @@ for whatever gains actual results"; D80). Under that delegation:
   failure is an honest exit.
 - The public-history purge ran (D99). Old commit ids resolve through
   `program/history-rewrite-2026-10-14/` (the map plus an 11-row supplement,
-  D100). Kevin still has to file the GitHub Support request.
-- Outward items are drafted and reviewed
-  (`~/repos/cotcodec-private/outward-2026-10-12/INDEX.md`). Kevin chose the
-  sender (his work address), an agent to send, and the purge after E (D96).
-  He has not yet approved any item to go out.
+  D100). No GitHub Support request (D101).
+- Outward items (disclosures, licence, host admin, publication) are shelved
+  by Kevin (D101). They do not gate research and are not raised again.
 - The R03 note and the Q2 report (revision 5) now include R03 (b) and R04.
 Still closed: Q1 (D46) and Q3 (D54). Still Kevin's: the outward actions, Q1's
 R570 GPU code and C5 Phase 1 (D80), and an optional human spot check (D9).
@@ -60,7 +58,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 22 rows). Decisions taken
-on Kevin's behalf are D1-D100 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D101 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |

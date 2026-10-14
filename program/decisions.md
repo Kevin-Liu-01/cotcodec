@@ -2266,3 +2266,21 @@ signed off for the freeze.**
     before the census; K1's 49 jobs; the census; the oracle and K0; then
     Phase 1's executor addendum only if K0 and K1 pass.
   - v5 is S2's last registration, and any failure is an honest exit.
+
+**D101. No GitHub Support request; the outward items are shelved; the
+program focuses on research.** On 2026-10-14 Kevin wrote: "dont contact
+github support and wth is the outward semds, these shouldnt actually affect
+research".
+- No GitHub Support request is filed. D99's purge stands as done. GitHub may
+  keep serving the old commits by id until its own garbage collection runs.
+  That is accepted.
+- The drafted outward items are shelved:
+  - the OSWorld key report and the xlang-ai issue;
+  - the Letta disclosure;
+  - the licence request;
+  - the host-administrator request;
+  - publication.
+  They stay in the private archive (`outward-2026-10-12/`). Nothing is sent,
+  and they are not raised again unless Kevin asks.
+- None of them gates any experiment. The papers keep their "not disclosed,
+  not published" status lines.
