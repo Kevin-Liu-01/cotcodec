@@ -2084,3 +2084,46 @@ proceeds as S2's last registration.**
     shifted targets;
   - then a pre-freeze audit, the freeze, and all K1 jobs again.
   It is S2's last registration, and any failure is an honest exit.
+
+**D97. Successor E result: DR2 Near-equivalent, DR5 NO-GO; Q2's harness
+question is answered at this design's resolution.**
+- What ran. `q2-stage1-successor-e-v1` (row 19) ran all four sessions per
+  size from its freeze commit `f6144d6b`:
+  - 8 job pairs, 1,808 episodes, 0 infrastructure losses, DR0 never fired;
+  - gaps of at least 12 h 5 min held;
+  - the analysis ran on the host from the freeze export, as registered.
+  Two fresh verifiers reproduced every registered number and outcome, and
+  their wording items were fixed (`fddff98e`).
+- Outcome (not externally anchored).
+  - On all 113 tasks, H-GA and H-OSW-fixed each succeeded in 263 of 904
+    episodes: δ = 0.00 pp, 90% t interval [−2.44, +2.44], paired t p = 1.000.
+    The X sign-flip test gave p = 0.093.
+  - **DR2 classifies the pair Near-equivalent.** The interval lies within
+    ±7.5 pp, and π_small's one-sided 95% upper bound is 0.1187, below 0.12.
+    That margin, 0.0013, is about the bootstrap's Monte Carlo error. Other
+    seeds of the frozen code cross 0.12 about 10% of the time, which is
+    disclosed. A test that does not reject does not exclude an effect.
+    Near-equivalent is the registered bounded-difference class, not a claim of
+    no difference.
+  - **DR5 is NO-GO.** π_small is 0.055, with one-sided bounds [0.010, 0.119]
+    below M = 0.13, so S1b stays closed, as D69 forecast. π_9B alone is not
+    shown below 0.13 (upper bound 0.177).
+  - DR1 and DR4 do not fire.
+  - The between-session rerun floor D_b is 10.7% (8.0-13.5%).
+  - P1 is not estimable, and P2-P5 stand.
+- Cost. 6.77 GPU-h by caps, about 5.1 physical. The program total is in
+  `program/state.json`.
+- What it licenses. For these two model sizes and two certified harnesses,
+  under S1a's configuration, the harness changes success by no more than about
+  2.4 points either way at 90%. Harness choice is a small factor next to
+  rerun noise at this resolution. It licenses nothing about other models,
+  harnesses or configurations.
+- Disclosures, all in RESULTS:
+  - the orchestrator restarted twice after the Mac crashed, and no job was
+    rerun or resubmitted;
+  - S2 v5's step-0 files were staged on the host during E3's 9B pair, a
+    departure from D85's host-use condition (file staging, not a job);
+  - the analyst's operator script had no separate review.
+- Q2 next. With the harness effect bounded, the checker results (R03, R04,
+  R03 (b)) and the noise floor are Q2's findings. A further Q2 step would have
+  to show that the checker defects change real agent scores.

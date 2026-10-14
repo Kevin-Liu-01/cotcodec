@@ -1,0 +1,129 @@
+{
+ "experiment_id": "q2-stage1-successor-e-v1",
+ "what": "The section 18 fresh verification of RESULTS.md, as two independent verifier records relayed by the orchestrating workflow (RECOMPUTE: the registered report recomputed from the SHA-checked raw records, plus an independent implementation; CLAIMS: RESULTS read against the registration and the outputs). Transcribed unchanged, except that two local path prefixes are shortened (the worktree root and the orchestrator's scratch directory).",
+ "results_commit_read": "af837178",
+ "both_reproduced": true,
+ "recompute_disagreement": false,
+ "blocking_problems": 0,
+ "records": [
+  {
+   "lens": "RECOMPUTE: I rebuilt the merged records from SHA-checked copies of all eight jobs' raw records and reran the registered report, joint reading, section 15 items, costs, DR0 and GLMM input with the frozen code (an export of f6144d6b on the host). I also wrote my own implementation from the raw per-episode records, importing no harness module. It covers success by size and harness, δ with its 90% t interval, X_z with the sign-flip and per-cell flip tests, D_b, X_c, π_z, π_small with its task-cluster bootstrap bounds, DR1, DR2, DR5, the D82 and flagged-task sensitivities, the S1a-base secondary set, δ per session and the pairwise session shifts. Separately I checked DR0, DR4, the realized session gaps, the caps and the GLMM job. Everything ran on the host by stdin pipe, read-only. The local scratch directory verify-q2e-0 has been deleted.",
+   "reproduced": true,
+   "problems": [
+    {
+     "issue": "DR2's Near-equivalent rests on π_small's one-sided 95% upper bound, 0.118719, from the registered seed 42 at 10,000 resamples. At that resample count the seed alone moves the bound across 0.12 about 10% of the time. RESULTS disclosure 6 states the 0.0013 margin but not this dependence on the Monte Carlo seed.",
+     "evidence": "My own estimator code on the registered seed-42 resample indices reproduces 0.118719 and every other bound to within 5e-7. Across 20 independent seeds (1000-1019) at B = 10,000 the bound ranges from 0.1169 to 0.1211 (mean 0.1186, sd 0.0011), and 2 of the 20 are at or above 0.12, which would read Inconclusive. At B = 200,000 (seed 424242) the bound is 0.1191 and the lower bound 0.0099; 4.79% of the draws are at or above 0.12. So the registered reading is correct as registered, and the large-resample bootstrap also gives Near-equivalent. In a separate run with an independent seed, the identical corrected-verdict array gave 0.1206 (Inconclusive). DR5 NO-GO holds under every seed tried (upper bound at most 0.1211, below 0.13).",
+     "severity": "minor",
+     "fix": "Add one sentence to RESULTS disclosure 6 (and the 'does not license' list): at the registered 10,000 resamples the bound's Monte Carlo sd is about 0.001, so another seed would read Inconclusive about 10% of the time; at 200,000 resamples the bound is 0.1191, below 0.12. No rule or outcome changes."
+    },
+    {
+     "issue": "The secondary S1a-base reading (32 tasks; no rule reads it) also depends on the seed. Its registered π_small upper bound is 0.121 (Inconclusive), and an independent seed gave 0.118 (Near-equivalent).",
+     "evidence": "report.json secondary_s1a_base π_small one_sided_95 [0.0, 0.12097]; my independent-seed bootstrap gave [0.0, 0.11818]. The point estimate, the t test (p 0.895246, 90% CI [-4.60, 5.38] pp) and X p ≈ 0.37 agree.",
+     "severity": "info",
+     "fix": "Optionally note in RESULTS that the description 'Inconclusive on the 32 base tasks' is within Monte Carlo error of the line, like the primary bound."
+    },
+    {
+     "issue": "Section 18's fresh-verifier step ran after RESULTS was written (the analyst's deviation 1). This recomputation agrees with every registered number and outcome, but RESULTS stays labelled provisional until a verifier record is committed beside it.",
+     "evidence": "RESULTS.md lines 6-9 and deviation 1; head af837178.",
+     "severity": "info",
+     "fix": "The orchestrator commits this verifier's record (no recompute disagreement) and removes the provisional label, keeping deviation 1 as a dated process deviation."
+    },
+    {
+     "issue": "The GLMM fit itself was not re-run; only its input, digests, receipt and convergence fields were checked. Re-running glmm.R needs a container job on Slurm, which a read-only verification cannot submit.",
+     "evidence": "The GLMM input regenerated from e.jsonl by the frozen glmm_rows/write_csv is ab6abee7 (1,808 rows), equal to the committed copy and to the host's glmm-inputs-check copy. glmm-e-primary.json is 45162b7c on both host and repo. Receipt 1279: exit 0, gpus_requested 0, network none, pinned image b15584f3, R lock abb8871d matched. Full fit ok=false (pdHess false, logLik null); reduced fit ok=true (logLik -496.285); LRT null; 105 of 200 refits did not converge. glmm.R in the export is e3ea337c, as in S1a section 20. RESULTS reports all of this correctly.",
+     "severity": "info",
+     "fix": "None needed. A later verifier could rerun glmm.R in the pinned image on ab6abee7 on a quiet host if byte-reproduction of the fit is wanted."
+    }
+   ],
+   "checks_run": [
+    "Export integrity: every file of the host export of f6144d6b has the same git blob SHA-1 as git ls-tree f6144d6b (7,602 files). The export lacks only the 27 .agents/skills symlinks and adds .git_sha.",
+    "Raw records: the host runs/<vm>/episodes.jsonl, lane-receipt.json and manifest.json for all eight jobs (1219, 1222, 1251, 1254, 1265, 1268, 1272, 1275) equal the digests in each job's pair/dr0.json, which was committed at session time (752d9551, df5e21f4, 37dc13c6, 44d6b754), and equal the committed vm-*/episodes.jsonl copies. All 30 committed analysis files I compared (including report.json, e.jsonl, costs.json and the GLMM input) equal their host originals by SHA-256.",
+    "Merge: the frozen rescore.merge of the raw records and rescored.jsonl gives byte-identical merged-<vm>.jsonl (as in merge.txt) and e.jsonl 4e3fc281.",
+    "DR0: the frozen run_dir_dr0 recomputed from the run directories is byte-identical to analysis/dr0-*.json and pair/dr0.json, and fires for no job. My own check: 226 records per job, all scored, attempt 1 only, labels correct, 0 infrastructure losses, 0 metric exceptions, 0 restarts, every (task, harness) cell covered, no missing slot. No lane receipt holds an error.",
+    "Report: the frozen analysis.report on the rebuilt e.jsonl, with costs.json and the eight DR0 files, is byte-identical to report.json (sha a31ae8dc, 36.8 s on the host). costs.json, s15.json, joint.json (with S1a a1.jsonl 4af798f5) and glmm-inputs/e-primary.csv also reproduce byte-identically.",
+    "Independent implementation of the primary set, raw: success 4B 27.212% / 26.327% (123 and 119 of 452), 9B 30.973% / 31.858% (140 and 144); δ 0.000, paired t p 1.000, 90% t CI [-2.4449, +2.4449] pp; δ_4B -0.885, δ_9B +0.885 pp (per-size t p 0.6297 and 0.6645); X_4B 0.0059, X_9B 0.0192, X_c 0.0061 and 0.0193; D_b 10.69% (4B 11.06, 9B 10.32); π_4B 0.026, π_9B 0.085, π_small 0.05547. Every point estimate matches the report within 5e-7.",
+    "X tests with my own RNG at 100,000 flips: sign flip p 0.0918 (registered 0.0927; 30 tasks have a non-zero q_t); exact per-cell flip 0.0448 (registered label permutation 0.0468). Both are above 0.025, so the pair is not Present.",
+    "Bootstrap: on the seed-42 resample indices, my code reproduces every registered interval and bound to within 5e-7 (π_small one-sided [0.01013, 0.11872]). At B = 200,000 the bounds are [0.0099, 0.1191]. Over 20 seeds at B = 10,000 the upper bound is 0.1169-0.1211.",
+    "Rules recomputed by my code: DR1 does not fire; DR2 Near-equivalent (min p 0.093 > 0.025; 90% CI inside ±7.5 pp; upper bound 0.1187 < 0.12); DR5 NO-GO (upper bound < 0.13; lower bound 0.010 is not > 0.13). P2 holds (D_b 95% interval [8.00, 13.53]), and P3, P4 and P5 hold.",
+    "Sensitivities, by my own code: flagged tasks excluded (106 tasks: δ 90% CI [-2.09, 3.03] pp, p_X ≈ 0.123, upper bound ≈ 0.119) gives Near-equivalent / NO-GO. D82 raw (110 tasks without 5c1a6c3d, 881deb30 and 8e116af7: CI ±2.51 pp, p_X ≈ 0.09, upper bound ≈ 0.118-0.119) gives Near-equivalent / NO-GO. D82 corrected is identical to D82 raw. The S1a base point estimates and t test match.",
+    "Checker-corrected verdicts, from the raw records and rescored.jsonl: 1,808 rescoring rows; 16 live-score fallbacks, all on task 53ad5833; 0 flips. 33 fractional-score episodes.",
+    "δ per session and success by session match RESULTS. All six session-pair shifts, their sign-flip p-values (my RNG, within Monte Carlo error) and the per-pair harness effects with SEs match. Holm over each size's six tests rejects in neither size. 54 tasks never succeed and 13 always do (67 with the same outcome in all 16 episodes).",
+    "Infrastructure counts from the raw records: IRError 4B/OSW 10, 9B/OSW 18, GA 0; 6 postconfig failures as listed; 3,008 postconfig replies with 0 at HTTP ≥ 500 or with no reply; 24,326 agent and 5,024 checker observations, 0 retried, slow or undelivered.",
+    "DR4 and costs, from the committed scontrol snapshots and receipts: GPU elapsed / 3600 / 226 per job is 0.002659-0.003000 GPU-h per episode, matching costs.json, against a high price of 0.011274 at V = 20 (ratio 0.24-0.27). E's total is 5.0750 GPU-h, and 5.0908 with OE (57 s). VM-h about 91.4.",
+    "Caps: each GPU TimeLimit is 52 min (9B) or 48 min (4B), and each VM limit is the cap plus 10 (62 and 58). The plan's caps are E-9B 52, E-4B 48, OE 3, OE retry 3, 406 in all; 403 were charged. Every job COMPLETED with exit 0:0 and dispatched 226 slots; none was stopped.",
+    "Session gaps by lane.job_end (the later of lane t_end and GPU EndTime; each receipt's gpu_job_end equals the scontrol EndTime). E1's later end 05:46:33 → E2 VM start 17:53:07 (12.109 h). E2's 19:12:47 → E3 07:18:02 (12.088 h; not-before 07:17:47). E3's 08:36:07 → E4 20:41:28 (12.089 h). From the VM batch ends the margins over 12 h are 6.5, 5.2 and 5.3 min, so both readings hold. In every session 4B started after 9B ended.",
+    "GLMM job 1279: input ab6abee7 regenerated identically; output, receipt, R lock (abb8871d), image (b15584f3), CPU only and no network all checked; full fit not converged, LRT not computed, as RESULTS reports. Rescoring receipts 1280-1287: exit 0, no GPU, no network, metric image 2006c1a9 (as in S1a section 4). The host holds one analysis directory (e-v1), so the analysis was not rerun.",
+    "RESULTS transcription: the primary estimands table, tests, DR table, per-size table, pairwise table, sensitivity table, joint table, cost card, truncation, per-domain and infrastructure counts all match report.json, joint.json and costs.json to the stated rounding.",
+    "Hygiene: no files written on the host (stdin scripts, python -B, read-only export); no Slurm submission; Slurm queue at check time held only S2 v5's job 1291; local scratch verify-q2e-0 deleted; worktree clean."
+   ]
+  },
+  {
+   "lens": "CLAIMS: RESULTS.md (af837178, program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md) read against the frozen registration q2-stage1-successor-e-v1 (sections 1-25), report.json, s15.json, joint.json, glmm-summary.json/glmm-out, costs.json, rescore-coverage.json, selfcheck.json, the run README, the E2 operator report, and D66/D69/D72/D85/D96. Verdict: every decision rule is applied as written. Every number checked matches the registered outputs. Non-estimables are reported as such. The joint reading is descriptive with no p-value. Deviation 1 (no fresh verifier before RESULTS) is disclosed. Nothing blocking was found: only wording overreach and two disclosure-accuracy items.",
+   "reproduced": true,
+   "problems": [
+    {
+     "issue": "The 'What the result licenses' section overstates DR2 Near-equivalent. It says 'The two certified harnesses' success rates do not differ' and 'Present is excluded by both registered tests'. The outcome paragraph says 'so no harness effect is Present'. Near-equivalent is a bounded-difference class (δ's 90% t interval within ±7.5 pp and π_small's upper bound below 0.12). A test that does not reject does not exclude an effect.",
+     "evidence": "RESULTS.md lines 422-425 and line 26. Registration section 13, DR2: 'Present if Holm ... rejects ...; Near-equivalent if not present, the 90% t interval ... within ±7.5 pp and the one-sided 95% upper bound of π_small is below 0.12'. RESULTS' own 'does not license' section (lines 439-444) and the label-permutation p = 0.047 show the qualification is needed.",
+     "severity": "minor",
+     "fix": "Reword to: 'DR2 does not classify the pair Present (δ p = 1.000, X sign flip p = 0.093), and the difference lies within the registered margin: δ 0.00 pp, 90% t ±2.44 pp; π_small upper bound 0.1187 < 0.12.'"
+    },
+    {
+     "issue": "The DR5 NO-GO gloss 'the harness share of within-task outcome variance is small for these sizes' can be read as holding for each size. DR5 reads π_small, the mean of the two sizes. π_9B on its own has a one-sided 95% upper bound of 0.177, above M = 0.13.",
+     "evidence": "RESULTS.md lines 426-428. report.json primary.estimates.pi_9B.one_sided_95 = [0.0, 0.177146]; pi_small one_sided_95 = [0.010135, 0.118719]. Registration section 13, DR5: M = 0.13 for π_small.",
+     "severity": "minor",
+     "fix": "Say 'the mean of the two sizes' harness shares (π_small) is below M = 0.13'. Add that π_9B alone is not shown below 0.13 (upper bound 0.177)."
+    },
+    {
+     "issue": "Disclosure 2 says 'The E2 operator's report file did not survive' (the run README says the same). The file exists at the scratchpad path the orchestrator names. Its mtime is 2026-10-13T00:07Z, before E3 was submitted, and it sits next to recovered-results.json (00:06Z). So it was recovered, not lost. Its content (session end 19:12:47Z, no deviations, the same disclosures) agrees with the README, and no result is affected.",
+     "evidence": "<orchestrator scratch>/e2-report.json: 5,504 bytes, mtime Oct 12 17:07 PDT, keys head_sha df5e21f4, session E2, session_end_utc 2026-10-12T19:12:47Z. RESULTS.md lines 358-362; run README line 755.",
+     "severity": "minor",
+     "fix": "Reword: 'the E2 operator's report was lost in the crash and recovered from the workflow's results at 00:07Z on 2026-10-13; the README and the host directories were also the record'."
+    },
+    {
+     "issue": "Disclosure 8 lists the S2 v5 step-0 source export staged on the host during E3's 9B pair under 'None is a deviation'. D85, E's sign-off, says other workstreams may use the host 'only in the gaps between E's sessions, never during an E job'. D96 (2) discloses the staging on exactly that ground. It is not a Slurm job, so the registration's section 6.4 text arguably permits it, but RESULTS' classification needs to state the D85 condition.",
+     "evidence": "RESULTS.md lines 403-407. decisions.md D85: 'Other workstreams may use the host only in the gaps between E's sessions, never during an E job.' D96 (2): 'The step-0 source export was written to the host during E3's 9B pair. That was file staging, not a job, but D85 allows other workstreams on the host only in E's gaps, so it is disclosed.'",
+     "severity": "minor",
+     "fix": "State it as a departure from D85's host-use condition: file staging, not a Slurm job, no E record touched. Do not count it under 'None is a deviation'."
+    },
+    {
+     "issue": "Two 9B jobs' engine start-up exceeded the cap assumption L = 113.19 s, which section 22 disclosure 6 names as an assumption. E-9B-E2 took 114.3 s and E-9B-E3 113.7 s. RESULTS does not mention it; the per-job README does.",
+     "evidence": "Run README lines 327-328 and 483-484. E2 report disclosure: 'first dispatch came 114.3 s after its Slurm start, 1.1 s more than the L = 113.19 s'. Registration section 7.1 and section 22 disclosure 6.",
+     "severity": "info",
+     "fix": "Add one line under Cost card or Disclosures: start-up exceeded L in two 9B jobs by 0.5-1.1 s; every job still ended 7-9 min before USR1, and no rule reads it."
+    },
+    {
+     "issue": "Descriptive outputs are framed as licensed or inferential in a few places. 'What it licenses' lists 'no session pair differing detectably (12 pairwise tests, Holm: none)', which section 10 makes descriptive. The joint paragraph says the six-session X_9B and π_9B intervals 'exclude 0' (a quasi-inferential pooled remark, though labelled descriptive). It also cites S1a's one-sided π_9B lower bound of 0.038 next to a table showing S1a's joint 95% interval [0.010, 0.333]. 'E confirms that forecast with data' slightly overstates a NO-GO that is consistent with D69.",
+     "evidence": "RESULTS.md lines 339-342, 428-430. Registration section 10: 'They are descriptive; no rule or prediction reads them'. Section 15: no p-value, enters no rule. joint.json s1a.pi_9B.ci95 = [0.010101, 0.333333]. S1a RESULTS line 192: π_9B one-sided [0.038, 0.304].",
+     "severity": "info",
+     "fix": "Move the session-pair statement out of 'licenses' or mark it descriptive. Name the interval type when citing 0.038. Use 'is consistent with' in place of 'confirms'."
+    },
+    {
+     "issue": "Section 19 and section 15 list items that RESULTS shows only in part; the rest are in the committed JSON. For the S1a 32-base secondary set it shows δ, D_b, π and the X p but not X_4B/X_9B/X_c or the scale screens. Its joint table omits D_b per size and X pooled. Per-domain rows give success and δ only. The cost-card heading cites 'section 9 item 10', which is S1a's numbering (E's section 9 is outcomes).",
+     "evidence": "report.json secondary_s1a_base.estimates and joint.json e/s1a/e_minus_s1a/six_sessions hold the omitted values. RESULTS.md lines 194-200, 326-336, 253.",
+     "severity": "info",
+     "fix": "Point explicitly to report.json secondary_s1a_base and joint.json for the full estimand lists. Write 'S1a section 9 item 10'."
+    }
+   ],
+   "checks_run": [
+    "Read the frozen registration in full (1,008 lines), RESULTS.md (473 lines), analysis/README.md, the run README (disclosures, job table, sessions E3-E4), harness/q2_stage1e/SKILL.md, and D59, D66, D69, D72, D85 and D96 (relevant parts)",
+    "DR0: the eight analysis/dr0-*.json are byte-identical to e-*/pair/dr0.json (cmp); all exit 0; report.completeness shows no fire, incomplete false, four sessions per size",
+    "DR1: 4B success 27.21%/26.33% > 10% from report.primary.success_by_size_harness; does not fire",
+    "DR2: Holm min(p_delta 1.0, p_X 0.0927) > 0.025, so not Present; 90% t [-2.4449, +2.4449] within ±7.5 pp; pi_small one-sided UB 0.118719 < 0.12; Near-equivalent is correct as registered",
+    "DR4: max GPU-h per episode 0.003000 < 0.011274; does not fire. Per-job GPU-h/226 recomputed; total 5.0750 GPU-h and 403 of 406 cap-minutes (D22) recomputed",
+    "DR5: pi_small one-sided UB 0.1187 < M 0.13; NO-GO is correct; M is 0.13 because DR1 does not drop 4B",
+    "P1 not estimable; P2 [8.00, 13.53] not wholly outside [6, 20]; P3/P4/P5 read from DR2/DR1/DR4; all match report.predictions",
+    "Every primary estimate, 95% and one-sided interval in RESULTS' table matches report.primary.estimates after rounding; per-session δ, session shifts with p-values and harness-effect-by-session SEs match",
+    "Sensitivities: corrected (113) estimates and tests equal primary exactly; D82-corrected equals D82 raw; metric-exception and postconfig (0 dropped) equal primary; flagged (106) and D82 (110) values and X p-values match; S1a base set Inconclusive/NO-GO with UB 0.120968",
+    "Infrastructure counts (24,326 screenshots, 5,024 checker reads, 3,008 postconfig replies, 6 failures by session, IRError by cell and session, 33 fractional, 468 uncertified actions, 71/42 tasks, truncation shares, steps, 15-step censoring, tokens, max load 5.71 over 24 snapshots) match report.json and s15.json",
+    "Rescoring coverage (226 rows per job, 16 live fallbacks on 53ad5833, 36 corrected applies per job, 0 mismatches, 290 discordant pairs with 0 identical checker inputs) matches rescore-coverage.json and report.checker_noise",
+    "GLMM table matches glmm-out/glmm-e-primary.json: full fit pdHess false and ok false; reduced fit logLik -496.285; LRT null; 105 of 200 refits not converged; R lock abb8871d matched",
+    "Joint reading: every RESULTS value matches joint.json; every E-S1a interval covers 0; E estimates lie inside S1a's intervals; no p-value; labelled descriptive; placed last",
+    "Recomputed from committed e.jsonl: 263/263 successes per harness, 54 never-succeed plus 13 always-succeed = 67 constant tasks, 30 tasks with non-zero q_t",
+    "Verified S1a cross-references (9B session shift +5.5 pp, p 0.016; π_9B one-sided [0.038, 0.304]; S1a cost 0.002701/0.002517 GPU-h) against S1a RESULTS and costs.json",
+    "41 committed analysis files match provenance-post.json digests; host (read-only ssh) digests of report.json, joint.json, s15.json, e.jsonl and the GLMM fit equal the committed copies",
+    "Checked the E2 operator report at the scratchpad path (exists; content consistent) and the D85/D96 host-use condition against disclosure 8",
+    "Read-only throughout; the scratch dir verify-q2e-1 was created and deleted; nothing was submitted to the host; the worktree is unchanged"
+   ]
+  }
+ ]
+}

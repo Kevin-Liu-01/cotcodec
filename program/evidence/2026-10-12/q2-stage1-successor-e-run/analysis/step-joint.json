@@ -1,0 +1,30 @@
+{
+ "command": [
+  "sbatch",
+  "--parsable",
+  "--job-name=q2e-joint",
+  "--time=02:00:00",
+  "--output=/home/kevin/cotcodec-runs/stage0/q2-stage1e/analysis/e-v1/logs/%x-%j.out",
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66/ops/s1a-analysis/cpu-step.sbatch",
+  "-m",
+  "harness.q2_stage1e.analysis",
+  "joint",
+  "--records",
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1e/analysis/e-v1/e.jsonl",
+  "--s1a-records",
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66/program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl",
+  "--plan",
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66/program/evidence/2026-10-11/q2-stage1-successor-e/plan/plan-e.json",
+  "--out",
+  "/home/kevin/cotcodec-runs/stage0/q2-stage1e/analysis/e-v1/joint.json"
+ ],
+ "cwd": "/home/kevin/cotcodec-runs/stage0/q2-stage1e/src/f6144d6bf745d944cb016cfc2b9894e1dbf7eb66",
+ "queue_at_submission": [
+  "1289 q2e-s15 PENDING kevin",
+  "1290 q2e-joint PENDING kevin"
+ ],
+ "rc": 0,
+ "slurm_job": "1290",
+ "stderr": "",
+ "submitted_at": "2026-10-14T01:21:39Z"
+}

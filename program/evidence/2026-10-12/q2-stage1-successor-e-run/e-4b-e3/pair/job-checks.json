@@ -1,0 +1,145 @@
+{
+ "counts": {
+  "attempt_2": 0,
+  "cap_truncated": 0,
+  "context_fallbacks": 0,
+  "first_attempts_ran_to_an_end_by_harness": {
+   "H-GA": 113,
+   "H-OSW-fixed": 113
+  },
+  "gpu_devices_seen": 0,
+  "guest_server_restarts": 0,
+  "infrastructure_by_harness_and_type": {},
+  "observations": {
+   "agent.calls": 3115,
+   "agent.retried": 0,
+   "agent.slow": 0,
+   "agent.undelivered": 0,
+   "checker.calls": 627,
+   "checker.retried": 0,
+   "checker.slow": 0,
+   "checker.undelivered": 0
+  },
+  "plan_cells": 226,
+  "plan_cells_final": 226,
+  "postconfig_failures": 2,
+  "records": 226,
+  "setup_failures": 0,
+  "slot_occupancy_s_sum": 39847.8,
+  "status": {
+   "scored": 226
+  },
+  "teardown_container_not_gone": 0,
+  "teardown_leaked_volumes": 0
+ },
+ "engine_argv": {
+  "engine_argv_sha256": "1c4cffbaafa72526722d7b7fe2c7a5ea6f105e2abea36f9bdeacbd0209b74358",
+  "equals_plan_engine_argv": true,
+  "model_dir": "/model-cache/cotcodec-models/qwen3.5-4b"
+ },
+ "gpu_job": "1270",
+ "gpu_physical": {
+  "end": "2026-10-13T08:36:07",
+  "exit_code": "0:0",
+  "gpu_h_per_episode": 0.002756,
+  "gpu_hours": 0.6228,
+  "run_time_s": 2242,
+  "start": "2026-10-13T07:58:45",
+  "state": "COMPLETED",
+  "time_limit": "00:48:00"
+ },
+ "gpu_scontrol_source": "1270.txt",
+ "job": "E-4B-E3",
+ "manifest": {
+  "concurrency": 20,
+  "gpu_cap_min": 48,
+  "plan_sha256": "4e7298a77670a1e77d1b7c4435722364799f70ea0b6cb093739fa876b25e474d",
+  "prior_jobs": [
+   {
+    "job": "E-9B-E1",
+    "receipt_sha256": "32a4a1f7ec7fc29f65072720056b33de5f5a94b2230af4d04ef47918452a6465",
+    "records_sha256": "278e8112ef74a007e7d87b9791ecbf300949df6470ea05c501738c27eb5fe50c"
+   },
+   {
+    "job": "E-4B-E1",
+    "receipt_sha256": "9fc15cfb2954b36256ce4b9429ac03cbf3f049b23ad6cf97e73b2ed9401af7f9",
+    "records_sha256": "0db38f8e2f2c61c2c6ab7fcb444bcd63b269235f0b43bc2fd905f33e2f1ad3a3"
+   },
+   {
+    "job": "E-9B-E2",
+    "receipt_sha256": "e1664285dd9a31fe05a89226622edc0533bba9350c1eb0820920078c281d5baf",
+    "records_sha256": "e8755336e8ea01d988f7226c2394eae786bcdb7c10387aebe40d360bf0e8b3ef"
+   },
+   {
+    "job": "E-4B-E2",
+    "receipt_sha256": "5f27ccd6f047575abc1a47a045f7b888f121b34ba74541d054e722c4abf722ec",
+    "records_sha256": "09de5e821081f9a4fefb6eca3e529b7406ea66e15ff53311b92ff289a75cf4e6"
+   },
+   {
+    "job": "E-9B-E3",
+    "receipt_sha256": "bc30d8e26a79dcc3792f0c14e4e5a8e8003ba1d5482eec9c7ffb3cb9bb45c9cd",
+    "records_sha256": "d2fb985bb061de331a8060c8c799622d1e979ffec410d73e81b524d8ab5b5297"
+   }
+  ],
+  "purpose": "e",
+  "slots": 226,
+  "slots_equal_plan": true,
+  "slurm": {
+   "cpus": 90,
+   "memory_gb": 126,
+   "minutes": 58
+  }
+ },
+ "model_verification": "{\n  \"artifact_root_sha256\": \"3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e\",\n  \"backend\": \"huggingface\",\n  \"mode\": \"full\",\n  \"model_id\": \"qwen3.5-4b\",\n  \"publication_eligible\": true,\n  \"revision\": \"851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a\",\n  \"total_bytes\": 9342907469\n}",
+ "provenance": {
+  "equals_gpu_manifest": true,
+  "git_sha": "f6144d6bf745d944cb016cfc2b9894e1dbf7eb66",
+  "gpu_manifest_image_id": "sha256:5d1d4d8f1ff4a92cc607704b5e8e9adaa0269b8fa27757d6fe51616e438584ef",
+  "source_sha256": "6ad9ad67e825dbc99f4c0fbb7fab25d19caee25a8f17ec7ab8495695f63e2a4f",
+  "status": "PASS"
+ },
+ "receipt": {
+  "dispatched": 226,
+  "engine_returncode": 0,
+  "engine_stop_reason": "vm_done",
+  "error": null,
+  "first_dispatch_after_gpu_start_s": 105.4,
+  "gpu_job_end": {
+   "end_epoch": 1791880567.0,
+   "end_time": "2026-10-13T08:36:07",
+   "job_id": "1270",
+   "start_epoch": 1791878325.0,
+   "start_time": "2026-10-13T07:58:45",
+   "state": "COMPLETED",
+   "time_limit_min": 48
+  },
+  "lane_end_minutes_before_usr1": 7.7,
+  "records": 226,
+  "snapshot_foreign_jobs": [],
+  "snapshot_max_loadavg_1m": 5.71,
+  "snapshots": 3,
+  "statuses": {
+   "scored": 226
+  },
+  "stopped": false,
+  "t_end": 1791880565.031833
+ },
+ "session_end_epoch": 1791880567.0,
+ "slurm_limit": {
+  "equal": true,
+  "gpu_start": "2026-10-13T07:58:45",
+  "registered_cap_min": 48,
+  "time_limit_min_read_by_lane": 48,
+  "usr1_epoch": 1791881025.0,
+  "usr1_epoch_equals_start_plus_cap_minus_180": true
+ },
+ "vm_job": "1268",
+ "vm_physical": {
+  "end": "2026-10-13T08:36:10",
+  "exit_code": "0:0",
+  "run_time_s": 2248,
+  "start": "2026-10-13T07:58:42",
+  "state": "COMPLETED",
+  "time_limit": "00:58:00"
+ }
+}

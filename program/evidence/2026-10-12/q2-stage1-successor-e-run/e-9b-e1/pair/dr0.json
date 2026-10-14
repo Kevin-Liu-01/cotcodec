@@ -1,0 +1,21 @@
+{
+ "base_complete": true,
+ "cell_losses": {
+  "9B/H-GA": {
+   "first_attempts": 113,
+   "infrastructure": 0
+  },
+  "9B/H-OSW-fixed": {
+   "first_attempts": 113,
+   "infrastructure": 0
+  }
+ },
+ "files": {
+  "episodes.jsonl": "278e8112ef74a007e7d87b9791ecbf300949df6470ea05c501738c27eb5fe50c",
+  "lane-receipt.json": "32a4a1f7ec7fc29f65072720056b33de5f5a94b2230af4d04ef47918452a6465",
+  "manifest.json": "d7ed851d7db38281e1ab5adfaad723048e3ab1054cfd775810cd9957e9b3f0ce"
+ },
+ "fires": false,
+ "job": "E-9B-E1",
+ "reasons": []
+}
