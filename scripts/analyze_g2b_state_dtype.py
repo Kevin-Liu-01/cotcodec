@@ -163,8 +163,6 @@ def pack_model(
         seq_prompt[i] = parts["prompt_index"]
         finished[i] = 1 if arm["meta"][seq_id]["finish_reason"] == "stop" else 0
     r1 = tf["logp_r1"].astype(np.float64)
-    within = np.arange(total) - np.repeat(offsets[:-1], np.diff(offsets))
-    position = (np.repeat(tf["prompt_len"], np.diff(offsets)) + within).astype(np.int32)
     out: dict[str, np.ndarray] = {
         "offsets": offsets,
         "prompt_len": tf["prompt_len"],
@@ -174,8 +172,6 @@ def pack_model(
         "finished": finished,
         "pack_id": tf["pack_id"],
         "pack_slot": tf["pack_slot"],
-        "position": position,
-        "logp_r1": r1.astype(np.float32),
         "ent_r1": tf["ent_r1"].astype(np.float16),
         "ent_r4": tf["ent_r4"].astype(np.float16)
         if "ent_r4" in tf
@@ -228,10 +224,19 @@ def pack_main(args: argparse.Namespace) -> int:
     return 0
 
 
+def token_positions(offsets: np.ndarray, prompt_len: np.ndarray) -> np.ndarray:
+    """Absolute position of every completion token (prompt length plus index in completion)."""
+
+    within = np.arange(int(offsets[-1])) - np.repeat(offsets[:-1], np.diff(offsets))
+    return (np.repeat(prompt_len, np.diff(offsets)) + within).astype(np.int32)
+
+
 def load_per_token(path: Path) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
     raw = np.load(path)
     meta = json.loads(bytes(raw["meta_json"]).decode())
-    return meta, {k: raw[k] for k in raw.files if k != "meta_json"}
+    data = {k: raw[k] for k in raw.files if k != "meta_json"}
+    data["position"] = token_positions(data["offsets"], data["prompt_len"])
+    return meta, data
 
 
 # --------------------------------------------------------------------------- statistics
@@ -417,6 +422,8 @@ def position_contrast(
 
 
 def analyze_model(raw: dict[str, np.ndarray], settings: dict[str, Any]) -> dict[str, Any]:
+    if "position" not in raw:
+        raw = dict(raw, position=token_positions(raw["offsets"], raw["prompt_len"]))
     data = analysis_data(raw)
     edges = g2.numeric_edges(settings["entropy_edges"], "entropy_edges")
     reps, seed = int(settings["bootstrap_reps"]), int(settings["bootstrap_seed"])
