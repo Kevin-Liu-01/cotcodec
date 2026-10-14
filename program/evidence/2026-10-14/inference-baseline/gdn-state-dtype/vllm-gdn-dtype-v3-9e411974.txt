@@ -1,0 +1,175 @@
+image sha256:9e411974772f044300795537d6f11aff553a0c6ebd82165d674950985282a6d8
+== vllm '0.31.0'
+03bec47631bfd2b70614bfec2b208d87cbcc3ee2a785656e3723574c51f96d03  model_executor/models/config.py
+360351d07155f0527abbdde69671e3c4ef6928e4a0d4c89fd9f732e87ba926ff  model_executor/layers/mamba/mamba_utils.py
+d261726aae3ce5d52c37b868c317d9377d5e1d7c344961707acc07785a4ec4ab  model_executor/models/qwen3_5.py
+6f5f0f7f304a3899c50a3a558eecd07f66675910befbfa251bc9779ee05a7775  platforms/interface.py
+99ca1d725c949b216d6911fb846c6f3333873fe79852c579a8505fdfcd447e47  v1/kv_cache_interface.py
+== model_executor/models/config.py: MODELS_CONFIG_MAP entries for Qwen3_5
+1059:    "Qwen3_5ForCausalLM": Qwen3_5ForCausalLMConfig,
+1060:    "Qwen3_5ForConditionalGeneration": Qwen3_5ForConditionalGenerationConfig,
+1061:    "Qwen3_5MoeForCausalLM": Qwen3_5ForCausalLMConfig,
+1062:    "Qwen3_5MoeForConditionalGeneration": Qwen3_5ForConditionalGenerationConfig,
+== model_executor/models/config.py:819-845
+   819	class Qwen3_5ForConditionalGenerationConfig(VerifyAndUpdateConfig):
+   820	    @staticmethod
+   821	    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+   822	        """Update mamba_ssm_cache_dtype for Qwen3.5 models when set to 'auto'
+   823	        (or not explicitly set), to the value specified in the HF config's
+   824	        mamba_ssm_dtype field. Warn if the user explicitly overrides it to a
+   825	        different value.
+   826	        """
+   827	        cache_config = vllm_config.cache_config
+   828	        hf_text_config = vllm_config.model_config.hf_text_config
+   829	        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+   830	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   831	            if mamba_ssm_dtype is not None:
+   832	                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+   833	        elif (
+   834	            mamba_ssm_dtype is not None
+   835	            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+   836	        ):
+   837	            logger.warning(
+   838	                "Qwen3.5 model specifies mamba_ssm_dtype='%s' in its config, "
+   839	                "but --mamba-ssm-cache-dtype='%s' was passed. "
+   840	                "Using the user-specified value.",
+   841	                mamba_ssm_dtype,
+   842	                cache_config.mamba_ssm_cache_dtype,
+   843	            )
+   844	
+   845	
+== model_executor/layers/mamba/mamba_utils.py:96-131
+    96	
+    97	    @classmethod
+    98	    def _mamba_state_dtype(
+    99	        cls,
+   100	        model_dtype: ModelDType | torch.dtype,
+   101	        mamba_cache_dtype: MambaDType,
+   102	        mamba_ssm_cache_dtype: MambaDType,
+   103	    ) -> tuple[torch.dtype, ...]:
+   104	        conv_state_dtype = get_kv_cache_torch_dtype(mamba_cache_dtype, model_dtype)
+   105	        if mamba_ssm_cache_dtype == "auto":
+   106	            temporal_state_dtype = conv_state_dtype
+   107	        else:
+   108	            temporal_state_dtype = STR_DTYPE_TO_TORCH_DTYPE[mamba_ssm_cache_dtype]
+   109	
+   110	        return (conv_state_dtype, temporal_state_dtype)
+   111	
+   112	    @classmethod
+   113	    def short_conv_state_dtype(
+   114	        cls,
+   115	        model_dtype: ModelDType | torch.dtype,
+   116	        mamba_cache_dtype: MambaDType,
+   117	    ) -> tuple[torch.dtype, ...]:
+   118	        conv_state_dtype = get_kv_cache_torch_dtype(mamba_cache_dtype, model_dtype)
+   119	        return (conv_state_dtype,)
+   120	
+   121	    @classmethod
+   122	    def gated_delta_net_state_dtype(
+   123	        cls,
+   124	        model_dtype: ModelDType | torch.dtype,
+   125	        mamba_cache_dtype: MambaDType,
+   126	        mamba_ssm_cache_dtype: MambaDType = "auto",
+   127	    ) -> tuple[torch.dtype, torch.dtype]:
+   128	        return cls._mamba_state_dtype(
+   129	            model_dtype, mamba_cache_dtype, mamba_ssm_cache_dtype
+   130	        )
+   131	
+== model_executor/layers/mamba/mamba_utils.py:278-300
+   278	    @classmethod
+   279	    def gated_delta_net_state_shape(
+   280	        cls,
+   281	        tp_world_size: int,
+   282	        num_k_heads: int,
+   283	        num_v_heads: int,
+   284	        head_k_dim: int,
+   285	        head_v_dim: int,
+   286	        conv_kernel_size: int,
+   287	        num_spec: int = 0,
+   288	    ):
+   289	        conv_dim = head_k_dim * num_k_heads * 2 + head_v_dim * num_v_heads
+   290	        conv_state_shape = cls._orient_conv_shape(
+   291	            divide(conv_dim, tp_world_size),
+   292	            conv_kernel_size - 1 + num_spec,
+   293	        )
+   294	
+   295	        temporal_state_shape = (
+   296	            divide(num_v_heads, tp_world_size),
+   297	            head_v_dim,
+   298	            head_k_dim,
+   299	        )
+   300	        return conv_state_shape, temporal_state_shape
+== model_executor/models/qwen3_5.py: classes that define get_mamba_state_dtype_from_config
+294: class Qwen3_5ForCausalLMBase(  ->  line 390
+475: class Qwen3_5ForConditionalGeneration(Qwen3VLForConditionalGeneration, IsHybrid):  ->  line 610
+== platforms/interface.py:987-1018
+   987	        if cache_config.block_size < attn_block_size:
+   988	            cache_config.block_size = attn_block_size
+   989	            logger.info(
+   990	                "Setting attention block size to %d tokens "
+   991	                "to ensure that attention page size is >= mamba page size.",
+   992	                attn_block_size,
+   993	            )
+   994	
+   995	        if cache_config.mamba_cache_mode == "align":
+   996	            cache_config.mamba_block_size = cache_config.block_size
+   997	
+   998	        # Pad mamba page size to exactly match attention page size
+   999	        attn_page_size = cache_config.block_size * attn_page_size_1_token
+  1000	        assert attn_page_size >= mamba_page_size
+  1001	
+  1002	        if attn_page_size == mamba_page_size:
+  1003	            return
+  1004	
+  1005	        if (
+  1006	            cache_config.mamba_page_size_padded is None
+  1007	            or cache_config.mamba_page_size_padded != attn_page_size
+  1008	        ):
+  1009	            cache_config.mamba_page_size_padded = attn_page_size
+  1010	            mamba_padding_pct = (
+  1011	                100 * (attn_page_size - mamba_page_size) / mamba_page_size
+  1012	            )
+  1013	            logger.info(
+  1014	                "Padding mamba page size by %.2f%% to ensure "
+  1015	                "that mamba page size and attention page size are "
+  1016	                "exactly equal.",
+  1017	                mamba_padding_pct,
+  1018	            )
+== v1/kv_cache_interface.py:1042-1078
+  1042	class MambaSpec(KVCacheSpec):
+  1043	    shapes: tuple[tuple[int, ...], ...]
+  1044	    dtypes: tuple[torch.dtype, ...]
+  1045	    page_size_padded: int | None = None
+  1046	    mamba_type: MambaAttentionBackendEnum = MambaAttentionBackendEnum.MAMBA2
+  1047	    mamba_cache_mode: str = "none"
+  1048	    num_speculative_blocks: int = 0
+  1049	    num_prefill_checkpoint_blocks: int = 0
+  1050	    prefill_checkpoint_alignment: int | None = None
+  1051	    num_heads: int = 1
+  1052	    tokens_per_state: int = -1
+  1053	    # False: the state is sharded across TP ranks (e.g. GDN). True: every TP
+  1054	    # rank holds the full state (e.g. the replicated PLE conv state).
+  1055	    tp_replicated: bool = False
+  1056	
+  1057	    @property
+  1058	    def state_content_size_bytes(self) -> int:
+  1059	        return sum(
+  1060	            prod(shape) * get_dtype_size(dtype)
+  1061	            for (shape, dtype) in zip(self.shapes, self.dtypes)
+  1062	        )
+  1063	
+  1064	    @property
+  1065	    def real_page_size_bytes(self) -> int:
+  1066	        return self.state_content_size_bytes
+  1067	
+  1068	    @property
+  1069	    def page_size_bytes(self) -> int:
+  1070	        page_size = sum(
+  1071	            prod(shape) * get_dtype_size(dtype)
+  1072	            for (shape, dtype) in zip(self.shapes, self.dtypes)
+  1073	        )
+  1074	        if self.page_size_padded is not None:
+  1075	            assert self.page_size_padded >= page_size
+  1076	            return self.page_size_padded
+  1077	        return page_size
+  1078	

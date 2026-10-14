@@ -1,0 +1,865 @@
+image sha256:9e411974772f044300795537d6f11aff553a0c6ebd82165d674950985282a6d8
+== vllm package
+/usr/local/lib/python3.12/dist-packages/vllm
+14:version: str
+15:__version__: str
+16:__version_tuple__: tuple[int | str, ...]
+17:version_tuple: tuple[int | str, ...]
+18:commit_id: str | None
+21:__version__ = version = '0.31.0'
+22:__version_tuple__ = version_tuple = (0, 31, 0)
+== files that mention mamba_ssm_dtype or mamba_ssm_cache_dtype
+/usr/local/lib/python3.12/dist-packages/vllm/config/cache.py
+/usr/local/lib/python3.12/dist-packages/vllm/config/vllm.py
+/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/base.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_mixer.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_mixer2.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/falcon_h1.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/granitemoehybrid.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/jamba.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/mamba.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/mamba2.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/minicpmv4_6.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/nemotron_h.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/olmo_hybrid.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/qwen3_5.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/qwen3_next.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/zamba2.py
+/usr/local/lib/python3.12/dist-packages/vllm/models/kimi_k3/nvidia/kda.py
+/usr/local/lib/python3.12/dist-packages/vllm/models/kimi_k3/nvidia/model.py
+/usr/local/lib/python3.12/dist-packages/vllm/models/qwen4_exp/amd/model.py
+/usr/local/lib/python3.12/dist-packages/vllm/models/qwen4_exp/nvidia/model.py
+/usr/local/lib/python3.12/dist-packages/vllm/platforms/cpu.py
+== every line
+/usr/local/lib/python3.12/dist-packages/vllm/config/cache.py:186:    mamba_ssm_cache_dtype: MambaDType = "auto"
+/usr/local/lib/python3.12/dist-packages/vllm/config/vllm.py:1488:            and self.cache_config.mamba_ssm_cache_dtype != "float16"
+/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py:1365:            "--mamba-ssm-cache-dtype", **cache_kwargs["mamba_ssm_cache_dtype"]
+/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py:2223:            mamba_ssm_cache_dtype=self.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py:784:    mamba_ssm_cache_dtype: MambaDType = CacheConfig.mamba_ssm_cache_dtype
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/base.py:57:            self.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_mixer.py:467:            self.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_mixer2.py:1160:            self.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:102:        mamba_ssm_cache_dtype: MambaDType,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:105:        if mamba_ssm_cache_dtype == "auto":
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:108:            temporal_state_dtype = STR_DTYPE_TO_TORCH_DTYPE[mamba_ssm_cache_dtype]
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:126:        mamba_ssm_cache_dtype: MambaDType = "auto",
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:129:            model_dtype, mamba_cache_dtype, mamba_ssm_cache_dtype
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:137:        mamba_ssm_cache_dtype: MambaDType = "auto",
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:140:        if mamba_ssm_cache_dtype == "auto":
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:142:        elif mamba_ssm_cache_dtype in ("float32", "bfloat16"):
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:143:            recurrent_state_dtype = STR_DTYPE_TO_TORCH_DTYPE[mamba_ssm_cache_dtype]
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:147:                f"got {mamba_ssm_cache_dtype}"
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:68:        mamba_ssm_cache_dtype: MambaDType,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:71:            model_dtype, mamba_cache_dtype, mamba_ssm_cache_dtype
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:79:        mamba_ssm_cache_dtype: MambaDType,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py:82:            model_dtype, mamba_cache_dtype, mamba_ssm_cache_dtype
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:683:    def update_mamba_ssm_cache_dtype(
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:686:        """Update mamba_ssm_cache_dtype for NemotronH models when set to 'auto'
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:690:        if cache_config.mamba_ssm_cache_dtype == "auto":
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:691:            mamba_ssm_cache_dtype: MambaDType = getattr(
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:692:                hf_config, "mamba_ssm_cache_dtype", cls.DEFAULT_MAMBA_SSM_CACHE_DTYPE
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:695:                "Updating mamba_ssm_cache_dtype to '%s' for NemotronH model",
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:696:                mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:698:            cache_config.mamba_ssm_cache_dtype = mamba_ssm_cache_dtype
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:702:        cls.update_mamba_ssm_cache_dtype(
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:711:        NemotronHForCausalLMConfig.update_mamba_ssm_cache_dtype(
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:822:        """Update mamba_ssm_cache_dtype for Qwen3.5 models when set to 'auto'
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:824:        mamba_ssm_dtype field. Warn if the user explicitly overrides it to a
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:829:        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:830:        if cache_config.mamba_ssm_cache_dtype == "auto":
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:831:            if mamba_ssm_dtype is not None:
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:832:                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:834:            mamba_ssm_dtype is not None
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:835:            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:838:                "Qwen3.5 model specifies mamba_ssm_dtype='%s' in its config, "
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:841:                mamba_ssm_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py:842:                cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/falcon_h1.py:536:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/granitemoehybrid.py:619:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/jamba.py:468:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/mamba.py:230:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/mamba2.py:183:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/minicpmv4_6.py:1317:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/nemotron_h.py:770:            cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/olmo_hybrid.py:449:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/qwen3_5.py:397:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/qwen3_5.py:617:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/qwen3_next.py:886:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/zamba2.py:863:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/models/kimi_k3/nvidia/kda.py:487:            self.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/models/kimi_k3/nvidia/model.py:1638:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/models/qwen4_exp/amd/model.py:726:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/models/qwen4_exp/nvidia/model.py:767:            vllm_config.cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/platforms/cpu.py:287:            and cache_config.mamba_ssm_cache_dtype != "float32"
+/usr/local/lib/python3.12/dist-packages/vllm/platforms/cpu.py:291:                cache_config.mamba_ssm_cache_dtype in ("float16", "bfloat16")
+/usr/local/lib/python3.12/dist-packages/vllm/platforms/cpu.py:296:                    cache_config.mamba_ssm_cache_dtype,
+/usr/local/lib/python3.12/dist-packages/vllm/platforms/cpu.py:299:                cache_config.mamba_ssm_cache_dtype = "float32"
+/usr/local/lib/python3.12/dist-packages/vllm/platforms/cpu.py:76:    if vllm_config.cache_config.mamba_ssm_cache_dtype == "float16":
+/usr/local/lib/python3.12/dist-packages/vllm/platforms/cpu.py:78:    elif vllm_config.cache_config.mamba_ssm_cache_dtype == "bfloat16":
+== sha256
+360351d07155f0527abbdde69671e3c4ef6928e4a0d4c89fd9f732e87ba926ff  /usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py
+03bec47631bfd2b70614bfec2b208d87cbcc3ee2a785656e3723574c51f96d03  /usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py
+a9b2a804c9c353e7bded64081bf920c79432d4e44ca180c05e275c69e642a280  /usr/local/lib/python3.12/dist-packages/vllm/config/cache.py
+5b5ec10a81777057f9bc8160df99b1b77e17813647cf90d2cd69966e6201c99c  /usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/qwen3_next.py
+d261726aae3ce5d52c37b868c317d9377d5e1d7c344961707acc07785a4ec4ab  /usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/qwen3_5.py
+== /usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py: gated_delta_net_state_dtype
+122:    def gated_delta_net_state_dtype(
+123-        cls,
+124-        model_dtype: ModelDType | torch.dtype,
+125-        mamba_cache_dtype: MambaDType,
+126-        mamba_ssm_cache_dtype: MambaDType = "auto",
+127-    ) -> tuple[torch.dtype, torch.dtype]:
+128-        return cls._mamba_state_dtype(
+129-            model_dtype, mamba_cache_dtype, mamba_ssm_cache_dtype
+130-        )
+131-
+132-    @classmethod
+133-    def kda_state_dtype(
+134-        cls,
+135-        model_dtype: ModelDType | torch.dtype,
+136-        mamba_cache_dtype: MambaDType,
+137-        mamba_ssm_cache_dtype: MambaDType = "auto",
+138-    ) -> tuple[torch.dtype, torch.dtype]:
+139-        conv_state_dtype = get_kv_cache_torch_dtype(mamba_cache_dtype, model_dtype)
+140-        if mamba_ssm_cache_dtype == "auto":
+141-            recurrent_state_dtype = torch.float32
+142-        elif mamba_ssm_cache_dtype in ("float32", "bfloat16"):
+143-            recurrent_state_dtype = STR_DTYPE_TO_TORCH_DTYPE[mamba_ssm_cache_dtype]
+144-        else:
+145-            raise ValueError(
+146-                "KDA recurrent state supports only auto, float32, and bfloat16; "
+== /usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py: _mamba_state_dtype
+98:    def _mamba_state_dtype(
+99-        cls,
+100-        model_dtype: ModelDType | torch.dtype,
+101-        mamba_cache_dtype: MambaDType,
+102-        mamba_ssm_cache_dtype: MambaDType,
+103-    ) -> tuple[torch.dtype, ...]:
+104-        conv_state_dtype = get_kv_cache_torch_dtype(mamba_cache_dtype, model_dtype)
+105-        if mamba_ssm_cache_dtype == "auto":
+106-            temporal_state_dtype = conv_state_dtype
+107-        else:
+108-            temporal_state_dtype = STR_DTYPE_TO_TORCH_DTYPE[mamba_ssm_cache_dtype]
+109-
+110-        return (conv_state_dtype, temporal_state_dtype)
+111-
+112-    @classmethod
+113-    def short_conv_state_dtype(
+114-        cls,
+115-        model_dtype: ModelDType | torch.dtype,
+116-        mamba_cache_dtype: MambaDType,
+117-    ) -> tuple[torch.dtype, ...]:
+118-        conv_state_dtype = get_kv_cache_torch_dtype(mamba_cache_dtype, model_dtype)
+== /usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_utils.py: gated_delta_net_state_shape
+279:    def gated_delta_net_state_shape(
+280-        cls,
+281-        tp_world_size: int,
+282-        num_k_heads: int,
+283-        num_v_heads: int,
+284-        head_k_dim: int,
+285-        head_v_dim: int,
+286-        conv_kernel_size: int,
+287-        num_spec: int = 0,
+288-    ):
+289-        conv_dim = head_k_dim * num_k_heads * 2 + head_v_dim * num_v_heads
+290-        conv_state_shape = cls._orient_conv_shape(
+291-            divide(conv_dim, tp_world_size),
+292-            conv_kernel_size - 1 + num_spec,
+293-        )
+294-
+295-        temporal_state_shape = (
+296-            divide(num_v_heads, tp_world_size),
+297-            head_v_dim,
+298-            head_k_dim,
+299-        )
+300-        return conv_state_shape, temporal_state_shape
+301-
+302-    @classmethod
+303-    def kda_state_shape(
+304-        cls,
+305-        tp_world_size: int,
+306-        num_heads: int,
+307-        head_dim: int,
+== models/qwen3_next.py: get_mamba_state_dtype_from_config / shape
+879:    def get_mamba_state_dtype_from_config(
+880-        cls,
+881-        vllm_config: "VllmConfig",
+882-    ) -> tuple[torch.dtype, torch.dtype]:
+883-        return MambaStateDtypeCalculator.gated_delta_net_state_dtype(
+884-            vllm_config.model_config.dtype,
+885-            vllm_config.cache_config.mamba_cache_dtype,
+886-            vllm_config.cache_config.mamba_ssm_cache_dtype,
+887-        )
+888-
+889-    @classmethod
+890:    def get_mamba_state_shape_from_config(
+891-        cls, vllm_config: "VllmConfig"
+892-    ) -> tuple[tuple[int, int], tuple[int, int]]:
+893-        parallel_config = vllm_config.parallel_config
+894-        hf_config = vllm_config.model_config.hf_text_config
+895-        tp_size = parallel_config.tensor_parallel_size
+896-        num_spec = (
+897-            vllm_config.speculative_config.num_speculative_tokens
+898-            if vllm_config.speculative_config
+899-            else 0
+900-        )
+901-        return MambaStateShapeCalculator.gated_delta_net_state_shape(
+902-            tp_size,
+903-            hf_config.linear_num_key_heads,
+904-            hf_config.linear_num_value_heads,
+905-            hf_config.linear_key_head_dim,
+906-            hf_config.linear_value_head_dim,
+== models/qwen3_5.py: get_mamba_state_dtype_from_config / shape
+390:    def get_mamba_state_dtype_from_config(
+391-        cls,
+392-        vllm_config: "VllmConfig",
+393-    ) -> tuple[torch.dtype, torch.dtype]:
+394-        return MambaStateDtypeCalculator.gated_delta_net_state_dtype(
+395-            vllm_config.model_config.dtype,
+396-            vllm_config.cache_config.mamba_cache_dtype,
+397-            vllm_config.cache_config.mamba_ssm_cache_dtype,
+398-        )
+399-
+400-    @classmethod
+401:    def get_mamba_state_shape_from_config(
+402-        cls, vllm_config: "VllmConfig"
+403-    ) -> tuple[tuple[int, int], tuple[int, int]]:
+404-        parallel_config = vllm_config.parallel_config
+405-        hf_config = vllm_config.model_config.hf_text_config
+406-        tp_size = parallel_config.tensor_parallel_size
+407-        num_spec = (
+408-            vllm_config.speculative_config.num_speculative_tokens
+409-            if vllm_config.speculative_config
+410-            else 0
+411-        )
+412-        return MambaStateShapeCalculator.gated_delta_net_state_shape(
+413-            tp_size,
+414-            hf_config.linear_num_key_heads,
+415-            hf_config.linear_num_value_heads,
+416-            hf_config.linear_key_head_dim,
+417-            hf_config.linear_value_head_dim,
+--
+610:    def get_mamba_state_dtype_from_config(
+611-        cls,
+612-        vllm_config: "VllmConfig",
+613-    ) -> tuple[torch.dtype, torch.dtype]:
+614-        return MambaStateDtypeCalculator.gated_delta_net_state_dtype(
+615-            vllm_config.model_config.dtype,
+616-            vllm_config.cache_config.mamba_cache_dtype,
+617-            vllm_config.cache_config.mamba_ssm_cache_dtype,
+618-        )
+619-
+620-    @classmethod
+621:    def get_mamba_state_shape_from_config(
+622-        cls, vllm_config: "VllmConfig"
+623-    ) -> tuple[tuple[int, int], tuple[int, int]]:
+624-        parallel_config = vllm_config.parallel_config
+625-        hf_config = vllm_config.model_config.hf_text_config
+626-        tp_size = parallel_config.tensor_parallel_size
+627-        num_spec = (
+628-            vllm_config.speculative_config.num_speculative_tokens
+629-            if vllm_config.speculative_config
+630-            else 0
+631-        )
+632-        return MambaStateShapeCalculator.gated_delta_net_state_shape(
+633-            tp_size,
+634-            hf_config.linear_num_key_heads,
+635-            hf_config.linear_num_value_heads,
+636-            hf_config.linear_key_head_dim,
+637-            hf_config.linear_value_head_dim,
+== models/config.py: context of mamba_ssm lines
+-- line 683
+   671	                logger.warning(
+   672	                    "Mamba cache mode is set to 'none' when prefix caching is disabled"
+   673	                )
+   674	            if cache_config.mamba_block_size is None:
+   675	                cache_config.mamba_block_size = model_config.max_model_len
+   676	
+   677	
+   678	class NemotronHForCausalLMConfig(VerifyAndUpdateConfig):
+   679	    DEFAULT_MAMBA_SSM_CACHE_DTYPE: "MambaDType" = "float32"
+   680	    """Only `float32` is known to have no accuracy issues by default."""
+   681	
+   682	    @classmethod
+   683	    def update_mamba_ssm_cache_dtype(
+   684	        cls, *, cache_config: "CacheConfig", hf_config: "PreTrainedConfig"
+   685	    ) -> None:
+   686	        """Update mamba_ssm_cache_dtype for NemotronH models when set to 'auto'
+   687	        (or not explicitly set), to the value specified in the HF config, or to
+   688	        `float32` if not specified.
+   689	        """
+-- line 686
+   674	            if cache_config.mamba_block_size is None:
+   675	                cache_config.mamba_block_size = model_config.max_model_len
+   676	
+   677	
+   678	class NemotronHForCausalLMConfig(VerifyAndUpdateConfig):
+   679	    DEFAULT_MAMBA_SSM_CACHE_DTYPE: "MambaDType" = "float32"
+   680	    """Only `float32` is known to have no accuracy issues by default."""
+   681	
+   682	    @classmethod
+   683	    def update_mamba_ssm_cache_dtype(
+   684	        cls, *, cache_config: "CacheConfig", hf_config: "PreTrainedConfig"
+   685	    ) -> None:
+   686	        """Update mamba_ssm_cache_dtype for NemotronH models when set to 'auto'
+   687	        (or not explicitly set), to the value specified in the HF config, or to
+   688	        `float32` if not specified.
+   689	        """
+   690	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   691	            mamba_ssm_cache_dtype: MambaDType = getattr(
+   692	                hf_config, "mamba_ssm_cache_dtype", cls.DEFAULT_MAMBA_SSM_CACHE_DTYPE
+-- line 690
+   678	class NemotronHForCausalLMConfig(VerifyAndUpdateConfig):
+   679	    DEFAULT_MAMBA_SSM_CACHE_DTYPE: "MambaDType" = "float32"
+   680	    """Only `float32` is known to have no accuracy issues by default."""
+   681	
+   682	    @classmethod
+   683	    def update_mamba_ssm_cache_dtype(
+   684	        cls, *, cache_config: "CacheConfig", hf_config: "PreTrainedConfig"
+   685	    ) -> None:
+   686	        """Update mamba_ssm_cache_dtype for NemotronH models when set to 'auto'
+   687	        (or not explicitly set), to the value specified in the HF config, or to
+   688	        `float32` if not specified.
+   689	        """
+   690	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   691	            mamba_ssm_cache_dtype: MambaDType = getattr(
+   692	                hf_config, "mamba_ssm_cache_dtype", cls.DEFAULT_MAMBA_SSM_CACHE_DTYPE
+   693	            )
+   694	            logger.info(
+   695	                "Updating mamba_ssm_cache_dtype to '%s' for NemotronH model",
+   696	                mamba_ssm_cache_dtype,
+-- line 691
+   679	    DEFAULT_MAMBA_SSM_CACHE_DTYPE: "MambaDType" = "float32"
+   680	    """Only `float32` is known to have no accuracy issues by default."""
+   681	
+   682	    @classmethod
+   683	    def update_mamba_ssm_cache_dtype(
+   684	        cls, *, cache_config: "CacheConfig", hf_config: "PreTrainedConfig"
+   685	    ) -> None:
+   686	        """Update mamba_ssm_cache_dtype for NemotronH models when set to 'auto'
+   687	        (or not explicitly set), to the value specified in the HF config, or to
+   688	        `float32` if not specified.
+   689	        """
+   690	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   691	            mamba_ssm_cache_dtype: MambaDType = getattr(
+   692	                hf_config, "mamba_ssm_cache_dtype", cls.DEFAULT_MAMBA_SSM_CACHE_DTYPE
+   693	            )
+   694	            logger.info(
+   695	                "Updating mamba_ssm_cache_dtype to '%s' for NemotronH model",
+   696	                mamba_ssm_cache_dtype,
+   697	            )
+-- line 692
+   680	    """Only `float32` is known to have no accuracy issues by default."""
+   681	
+   682	    @classmethod
+   683	    def update_mamba_ssm_cache_dtype(
+   684	        cls, *, cache_config: "CacheConfig", hf_config: "PreTrainedConfig"
+   685	    ) -> None:
+   686	        """Update mamba_ssm_cache_dtype for NemotronH models when set to 'auto'
+   687	        (or not explicitly set), to the value specified in the HF config, or to
+   688	        `float32` if not specified.
+   689	        """
+   690	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   691	            mamba_ssm_cache_dtype: MambaDType = getattr(
+   692	                hf_config, "mamba_ssm_cache_dtype", cls.DEFAULT_MAMBA_SSM_CACHE_DTYPE
+   693	            )
+   694	            logger.info(
+   695	                "Updating mamba_ssm_cache_dtype to '%s' for NemotronH model",
+   696	                mamba_ssm_cache_dtype,
+   697	            )
+   698	            cache_config.mamba_ssm_cache_dtype = mamba_ssm_cache_dtype
+-- line 695
+   683	    def update_mamba_ssm_cache_dtype(
+   684	        cls, *, cache_config: "CacheConfig", hf_config: "PreTrainedConfig"
+   685	    ) -> None:
+   686	        """Update mamba_ssm_cache_dtype for NemotronH models when set to 'auto'
+   687	        (or not explicitly set), to the value specified in the HF config, or to
+   688	        `float32` if not specified.
+   689	        """
+   690	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   691	            mamba_ssm_cache_dtype: MambaDType = getattr(
+   692	                hf_config, "mamba_ssm_cache_dtype", cls.DEFAULT_MAMBA_SSM_CACHE_DTYPE
+   693	            )
+   694	            logger.info(
+   695	                "Updating mamba_ssm_cache_dtype to '%s' for NemotronH model",
+   696	                mamba_ssm_cache_dtype,
+   697	            )
+   698	            cache_config.mamba_ssm_cache_dtype = mamba_ssm_cache_dtype
+   699	
+   700	    @classmethod
+   701	    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+-- line 696
+   684	        cls, *, cache_config: "CacheConfig", hf_config: "PreTrainedConfig"
+   685	    ) -> None:
+   686	        """Update mamba_ssm_cache_dtype for NemotronH models when set to 'auto'
+   687	        (or not explicitly set), to the value specified in the HF config, or to
+   688	        `float32` if not specified.
+   689	        """
+   690	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   691	            mamba_ssm_cache_dtype: MambaDType = getattr(
+   692	                hf_config, "mamba_ssm_cache_dtype", cls.DEFAULT_MAMBA_SSM_CACHE_DTYPE
+   693	            )
+   694	            logger.info(
+   695	                "Updating mamba_ssm_cache_dtype to '%s' for NemotronH model",
+   696	                mamba_ssm_cache_dtype,
+   697	            )
+   698	            cache_config.mamba_ssm_cache_dtype = mamba_ssm_cache_dtype
+   699	
+   700	    @classmethod
+   701	    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+   702	        cls.update_mamba_ssm_cache_dtype(
+-- line 698
+   686	        """Update mamba_ssm_cache_dtype for NemotronH models when set to 'auto'
+   687	        (or not explicitly set), to the value specified in the HF config, or to
+   688	        `float32` if not specified.
+   689	        """
+   690	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   691	            mamba_ssm_cache_dtype: MambaDType = getattr(
+   692	                hf_config, "mamba_ssm_cache_dtype", cls.DEFAULT_MAMBA_SSM_CACHE_DTYPE
+   693	            )
+   694	            logger.info(
+   695	                "Updating mamba_ssm_cache_dtype to '%s' for NemotronH model",
+   696	                mamba_ssm_cache_dtype,
+   697	            )
+   698	            cache_config.mamba_ssm_cache_dtype = mamba_ssm_cache_dtype
+   699	
+   700	    @classmethod
+   701	    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+   702	        cls.update_mamba_ssm_cache_dtype(
+   703	            cache_config=vllm_config.cache_config,
+   704	            hf_config=vllm_config.model_config.hf_config,
+-- line 702
+   690	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   691	            mamba_ssm_cache_dtype: MambaDType = getattr(
+   692	                hf_config, "mamba_ssm_cache_dtype", cls.DEFAULT_MAMBA_SSM_CACHE_DTYPE
+   693	            )
+   694	            logger.info(
+   695	                "Updating mamba_ssm_cache_dtype to '%s' for NemotronH model",
+   696	                mamba_ssm_cache_dtype,
+   697	            )
+   698	            cache_config.mamba_ssm_cache_dtype = mamba_ssm_cache_dtype
+   699	
+   700	    @classmethod
+   701	    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+   702	        cls.update_mamba_ssm_cache_dtype(
+   703	            cache_config=vllm_config.cache_config,
+   704	            hf_config=vllm_config.model_config.hf_config,
+   705	        )
+   706	
+   707	
+   708	class NemotronHNanoVLV2Config(VerifyAndUpdateConfig):
+-- line 711
+   699	
+   700	    @classmethod
+   701	    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+   702	        cls.update_mamba_ssm_cache_dtype(
+   703	            cache_config=vllm_config.cache_config,
+   704	            hf_config=vllm_config.model_config.hf_config,
+   705	        )
+   706	
+   707	
+   708	class NemotronHNanoVLV2Config(VerifyAndUpdateConfig):
+   709	    @classmethod
+   710	    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+   711	        NemotronHForCausalLMConfig.update_mamba_ssm_cache_dtype(
+   712	            cache_config=vllm_config.cache_config,
+   713	            hf_config=vllm_config.model_config.hf_config.text_config,
+   714	        )
+   715	
+   716	    @staticmethod
+   717	    def verify_and_update_model_config(model_config: "ModelConfig") -> None:
+-- line 822
+   810	        text_config = config.get_text_config()
+   811	        text_config.method = "from_2_way_softmax"
+   812	        text_config.classifier_from_token = tokens
+   813	
+   814	
+   815	class Qwen3VLForSequenceClassificationConfig(Qwen3ForSequenceClassificationConfig):
+   816	    pass
+   817	
+   818	
+   819	class Qwen3_5ForConditionalGenerationConfig(VerifyAndUpdateConfig):
+   820	    @staticmethod
+   821	    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+   822	        """Update mamba_ssm_cache_dtype for Qwen3.5 models when set to 'auto'
+   823	        (or not explicitly set), to the value specified in the HF config's
+   824	        mamba_ssm_dtype field. Warn if the user explicitly overrides it to a
+   825	        different value.
+   826	        """
+   827	        cache_config = vllm_config.cache_config
+   828	        hf_text_config = vllm_config.model_config.hf_text_config
+-- line 824
+   812	        text_config.classifier_from_token = tokens
+   813	
+   814	
+   815	class Qwen3VLForSequenceClassificationConfig(Qwen3ForSequenceClassificationConfig):
+   816	    pass
+   817	
+   818	
+   819	class Qwen3_5ForConditionalGenerationConfig(VerifyAndUpdateConfig):
+   820	    @staticmethod
+   821	    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+   822	        """Update mamba_ssm_cache_dtype for Qwen3.5 models when set to 'auto'
+   823	        (or not explicitly set), to the value specified in the HF config's
+   824	        mamba_ssm_dtype field. Warn if the user explicitly overrides it to a
+   825	        different value.
+   826	        """
+   827	        cache_config = vllm_config.cache_config
+   828	        hf_text_config = vllm_config.model_config.hf_text_config
+   829	        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+   830	        if cache_config.mamba_ssm_cache_dtype == "auto":
+-- line 829
+   817	
+   818	
+   819	class Qwen3_5ForConditionalGenerationConfig(VerifyAndUpdateConfig):
+   820	    @staticmethod
+   821	    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+   822	        """Update mamba_ssm_cache_dtype for Qwen3.5 models when set to 'auto'
+   823	        (or not explicitly set), to the value specified in the HF config's
+   824	        mamba_ssm_dtype field. Warn if the user explicitly overrides it to a
+   825	        different value.
+   826	        """
+   827	        cache_config = vllm_config.cache_config
+   828	        hf_text_config = vllm_config.model_config.hf_text_config
+   829	        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+   830	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   831	            if mamba_ssm_dtype is not None:
+   832	                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+   833	        elif (
+   834	            mamba_ssm_dtype is not None
+   835	            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+-- line 830
+   818	
+   819	class Qwen3_5ForConditionalGenerationConfig(VerifyAndUpdateConfig):
+   820	    @staticmethod
+   821	    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+   822	        """Update mamba_ssm_cache_dtype for Qwen3.5 models when set to 'auto'
+   823	        (or not explicitly set), to the value specified in the HF config's
+   824	        mamba_ssm_dtype field. Warn if the user explicitly overrides it to a
+   825	        different value.
+   826	        """
+   827	        cache_config = vllm_config.cache_config
+   828	        hf_text_config = vllm_config.model_config.hf_text_config
+   829	        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+   830	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   831	            if mamba_ssm_dtype is not None:
+   832	                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+   833	        elif (
+   834	            mamba_ssm_dtype is not None
+   835	            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+   836	        ):
+-- line 831
+   819	class Qwen3_5ForConditionalGenerationConfig(VerifyAndUpdateConfig):
+   820	    @staticmethod
+   821	    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+   822	        """Update mamba_ssm_cache_dtype for Qwen3.5 models when set to 'auto'
+   823	        (or not explicitly set), to the value specified in the HF config's
+   824	        mamba_ssm_dtype field. Warn if the user explicitly overrides it to a
+   825	        different value.
+   826	        """
+   827	        cache_config = vllm_config.cache_config
+   828	        hf_text_config = vllm_config.model_config.hf_text_config
+   829	        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+   830	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   831	            if mamba_ssm_dtype is not None:
+   832	                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+   833	        elif (
+   834	            mamba_ssm_dtype is not None
+   835	            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+   836	        ):
+   837	            logger.warning(
+-- line 832
+   820	    @staticmethod
+   821	    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+   822	        """Update mamba_ssm_cache_dtype for Qwen3.5 models when set to 'auto'
+   823	        (or not explicitly set), to the value specified in the HF config's
+   824	        mamba_ssm_dtype field. Warn if the user explicitly overrides it to a
+   825	        different value.
+   826	        """
+   827	        cache_config = vllm_config.cache_config
+   828	        hf_text_config = vllm_config.model_config.hf_text_config
+   829	        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+   830	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   831	            if mamba_ssm_dtype is not None:
+   832	                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+   833	        elif (
+   834	            mamba_ssm_dtype is not None
+   835	            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+   836	        ):
+   837	            logger.warning(
+   838	                "Qwen3.5 model specifies mamba_ssm_dtype='%s' in its config, "
+-- line 834
+   822	        """Update mamba_ssm_cache_dtype for Qwen3.5 models when set to 'auto'
+   823	        (or not explicitly set), to the value specified in the HF config's
+   824	        mamba_ssm_dtype field. Warn if the user explicitly overrides it to a
+   825	        different value.
+   826	        """
+   827	        cache_config = vllm_config.cache_config
+   828	        hf_text_config = vllm_config.model_config.hf_text_config
+   829	        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+   830	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   831	            if mamba_ssm_dtype is not None:
+   832	                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+   833	        elif (
+   834	            mamba_ssm_dtype is not None
+   835	            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+   836	        ):
+   837	            logger.warning(
+   838	                "Qwen3.5 model specifies mamba_ssm_dtype='%s' in its config, "
+   839	                "but --mamba-ssm-cache-dtype='%s' was passed. "
+   840	                "Using the user-specified value.",
+-- line 835
+   823	        (or not explicitly set), to the value specified in the HF config's
+   824	        mamba_ssm_dtype field. Warn if the user explicitly overrides it to a
+   825	        different value.
+   826	        """
+   827	        cache_config = vllm_config.cache_config
+   828	        hf_text_config = vllm_config.model_config.hf_text_config
+   829	        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+   830	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   831	            if mamba_ssm_dtype is not None:
+   832	                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+   833	        elif (
+   834	            mamba_ssm_dtype is not None
+   835	            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+   836	        ):
+   837	            logger.warning(
+   838	                "Qwen3.5 model specifies mamba_ssm_dtype='%s' in its config, "
+   839	                "but --mamba-ssm-cache-dtype='%s' was passed. "
+   840	                "Using the user-specified value.",
+   841	                mamba_ssm_dtype,
+-- line 838
+   826	        """
+   827	        cache_config = vllm_config.cache_config
+   828	        hf_text_config = vllm_config.model_config.hf_text_config
+   829	        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+   830	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   831	            if mamba_ssm_dtype is not None:
+   832	                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+   833	        elif (
+   834	            mamba_ssm_dtype is not None
+   835	            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+   836	        ):
+   837	            logger.warning(
+   838	                "Qwen3.5 model specifies mamba_ssm_dtype='%s' in its config, "
+   839	                "but --mamba-ssm-cache-dtype='%s' was passed. "
+   840	                "Using the user-specified value.",
+   841	                mamba_ssm_dtype,
+   842	                cache_config.mamba_ssm_cache_dtype,
+   843	            )
+   844	
+-- line 841
+   829	        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+   830	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   831	            if mamba_ssm_dtype is not None:
+   832	                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+   833	        elif (
+   834	            mamba_ssm_dtype is not None
+   835	            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+   836	        ):
+   837	            logger.warning(
+   838	                "Qwen3.5 model specifies mamba_ssm_dtype='%s' in its config, "
+   839	                "but --mamba-ssm-cache-dtype='%s' was passed. "
+   840	                "Using the user-specified value.",
+   841	                mamba_ssm_dtype,
+   842	                cache_config.mamba_ssm_cache_dtype,
+   843	            )
+   844	
+   845	
+   846	class Qwen3_5ForCausalLMConfig(Qwen3_5ForConditionalGenerationConfig):
+   847	    @staticmethod
+-- line 842
+   830	        if cache_config.mamba_ssm_cache_dtype == "auto":
+   831	            if mamba_ssm_dtype is not None:
+   832	                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+   833	        elif (
+   834	            mamba_ssm_dtype is not None
+   835	            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+   836	        ):
+   837	            logger.warning(
+   838	                "Qwen3.5 model specifies mamba_ssm_dtype='%s' in its config, "
+   839	                "but --mamba-ssm-cache-dtype='%s' was passed. "
+   840	                "Using the user-specified value.",
+   841	                mamba_ssm_dtype,
+   842	                cache_config.mamba_ssm_cache_dtype,
+   843	            )
+   844	
+   845	
+   846	class Qwen3_5ForCausalLMConfig(Qwen3_5ForConditionalGenerationConfig):
+   847	    @staticmethod
+   848	    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+== models/config.py lines 625-660
+   625	
+   626	
+   627	class MambaModelConfig(VerifyAndUpdateConfig):
+   628	    @classmethod
+   629	    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+   630	        """Enable FULL_AND_PIECEWISE cuda graph mode by default (required
+   631	        to get good performance for mamba layers in V1).
+   632	
+   633	        Args:
+   634	            vllm_config: vLLM Config
+   635	
+   636	        """
+   637	        model_config = vllm_config.model_config
+   638	        cache_config = vllm_config.cache_config
+   639	
+   640	        if cache_config.enable_prefix_caching:
+   641	            if cache_config.mamba_cache_mode == "none":
+   642	                cache_config.mamba_cache_mode = "align"
+   643	                logger.info(
+   644	                    "Mamba cache mode is set to '%s' for %s by default "
+   645	                    "when prefix caching is enabled",
+   646	                    cache_config.mamba_cache_mode,
+   647	                    model_config.architecture,
+   648	                )
+   649	            if (
+   650	                cache_config.mamba_cache_mode == "all"
+   651	                and not model_config.supports_mamba_prefix_caching
+   652	            ):
+   653	                cache_config.mamba_cache_mode = "align"
+   654	                logger.warning(
+   655	                    "Hybrid or mamba-based model detected without support "
+   656	                    "for prefix caching with Mamba cache 'all' mode: "
+   657	                    "falling back to 'align' mode."
+   658	                )
+   659	            if cache_config.mamba_cache_mode == "align":
+   660	                assert vllm_config.scheduler_config.enable_chunked_prefill, (
+== config/cache.py: mamba_ssm_cache_dtype
+184-    ssm state). If set to 'auto', the data type will be inferred from the model
+185-    config."""
+186:    mamba_ssm_cache_dtype: MambaDType = "auto"
+187-    """The data type to use for the Mamba cache (ssm state only, conv state will
+188-    still be controlled by mamba_cache_dtype). If set to 'auto', the data type
+189-    for the ssm state will be determined by mamba_cache_dtype."""
+190-    mamba_cache_mode: MambaCacheMode = "none"
+191-    """The cache strategy for Mamba layers:
+192-
+193-    - "none": set when prefix caching is disabled.
+194-    - "all": cache the mamba state of all tokens at position i * block_size.
+== page-size padding code
+/usr/local/lib/python3.12/dist-packages/vllm/platforms/interface.py:1014:                "Padding mamba page size by %.2f%% to ensure "
+/usr/local/lib/python3.12/dist-packages/vllm/platforms/interface.py:991:                "to ensure that attention page size is >= mamba page size.",
+-- /usr/local/lib/python3.12/dist-packages/vllm/platforms/interface.py lines 946-1021
+   946	            else None
+   947	        )
+   948	
+   949	        # Get kernel block alignment from the backend's supported sizes
+   950	        with set_current_vllm_config(vllm_config):
+   951	            kernel_block_alignment_size = max(
+   952	                min(
+   953	                    s.base if isinstance(s, MultipleOf) else s
+   954	                    for s in backend_cls.get_supported_kernel_block_sizes()
+   955	                ),
+   956	                cache_config.block_size,
+   957	            )
+   958	            if model_config.use_mla:
+   959	                # TRTLLM/FlashInfer MLA decode kernels require the physical
+   960	                # number of kernel blocks to be aligned to 128 / kernel_block_size.
+   961	                # For hybrid MLA/Mamba models, make the manager block size a
+   962	                # multiple of 128 so split kernel blocks keep that invariant.
+   963	                kernel_block_alignment_size = max(kernel_block_alignment_size, 128)
+   964	
+   965	        if cache_config.mamba_cache_mode == "all":
+   966	            # With prefix caching, align to mamba chunk size for kernel perf
+   967	            # TODO(tdoublep): this constraint can be relaxed fairly
+   968	            # easily by changing the way we layout chunks in the
+   969	            # mamba2 kernels.
+   970	            base_chunk_size = mamba_block_size or model_config.get_mamba_chunk_size()
+   971	            assert base_chunk_size is not None
+   972	            attn_tokens_per_mamba_state = cdiv(mamba_page_size, attn_page_size_1_token)
+   973	            chunk_size = lcm(base_chunk_size, kernel_block_alignment_size)
+   974	            attn_block_size = chunk_size * cdiv(attn_tokens_per_mamba_state, chunk_size)
+   975	            cache_config.mamba_block_size = attn_block_size
+   976	        else:
+   977	            # Without prefix caching, use minimum block size that satisfies
+   978	            # both backend alignment and mamba page size compatibility
+   979	            attn_block_size = kernel_block_alignment_size * cdiv(
+   980	                mamba_page_size,
+   981	                kernel_block_alignment_size * attn_page_size_1_token,
+   982	            )
+   983	            indexer_align = cls._get_indexer_block_alignment(vllm_config)
+   984	            if indexer_align:
+   985	                attn_block_size = indexer_align * cdiv(attn_block_size, indexer_align)
+   986	
+   987	        if cache_config.block_size < attn_block_size:
+   988	            cache_config.block_size = attn_block_size
+   989	            logger.info(
+   990	                "Setting attention block size to %d tokens "
+   991	                "to ensure that attention page size is >= mamba page size.",
+   992	                attn_block_size,
+   993	            )
+   994	
+   995	        if cache_config.mamba_cache_mode == "align":
+   996	            cache_config.mamba_block_size = cache_config.block_size
+   997	
+   998	        # Pad mamba page size to exactly match attention page size
+   999	        attn_page_size = cache_config.block_size * attn_page_size_1_token
+  1000	        assert attn_page_size >= mamba_page_size
+  1001	
+  1002	        if attn_page_size == mamba_page_size:
+  1003	            return
+  1004	
+  1005	        if (
+  1006	            cache_config.mamba_page_size_padded is None
+  1007	            or cache_config.mamba_page_size_padded != attn_page_size
+  1008	        ):
+  1009	            cache_config.mamba_page_size_padded = attn_page_size
+  1010	            mamba_padding_pct = (
+  1011	                100 * (attn_page_size - mamba_page_size) / mamba_page_size
+  1012	            )
+  1013	            logger.info(
+  1014	                "Padding mamba page size by %.2f%% to ensure "
+  1015	                "that mamba page size and attention page size are "
+  1016	                "exactly equal.",
+  1017	                mamba_padding_pct,
+  1018	            )
+  1019	
+  1020	    @classmethod
+  1021	    def register_custom_kv_cache_specs(cls, vllm_config: "VllmConfig") -> None:
+== MambaSpec page_size_bytes
+/usr/local/lib/python3.12/dist-packages/vllm/v1/kv_cache_interface.py
+  1042	class MambaSpec(KVCacheSpec):
+  1043	    shapes: tuple[tuple[int, ...], ...]
+  1044	    dtypes: tuple[torch.dtype, ...]
+  1045	    page_size_padded: int | None = None
+  1046	    mamba_type: MambaAttentionBackendEnum = MambaAttentionBackendEnum.MAMBA2
+  1047	    mamba_cache_mode: str = "none"
+  1048	    num_speculative_blocks: int = 0
+  1049	    num_prefill_checkpoint_blocks: int = 0
+  1050	    prefill_checkpoint_alignment: int | None = None
+  1051	    num_heads: int = 1
+  1052	    tokens_per_state: int = -1
+  1053	    # False: the state is sharded across TP ranks (e.g. GDN). True: every TP
+  1054	    # rank holds the full state (e.g. the replicated PLE conv state).
+  1055	    tp_replicated: bool = False
+  1056	
+  1057	    @property
+  1058	    def state_content_size_bytes(self) -> int:
+  1059	        return sum(
+  1060	            prod(shape) * get_dtype_size(dtype)
+  1061	            for (shape, dtype) in zip(self.shapes, self.dtypes)
+  1062	        )
+  1063	
+  1064	    @property
+  1065	    def real_page_size_bytes(self) -> int:
+  1066	        return self.state_content_size_bytes
+  1067	
+  1068	    @property
+  1069	    def page_size_bytes(self) -> int:
+  1070	        page_size = sum(
+  1071	            prod(shape) * get_dtype_size(dtype)
+  1072	            for (shape, dtype) in zip(self.shapes, self.dtypes)
+  1073	        )
+  1074	        if self.page_size_padded is not None:
+  1075	            assert self.page_size_padded >= page_size
+  1076	            return self.page_size_padded
+  1077	        return page_size
+  1078	
+  1079	    @property
+  1080	    def block_table_token_alignment(self) -> int | None:
+  1081	        return None
+  1082	

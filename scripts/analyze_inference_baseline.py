@@ -7,7 +7,8 @@ tables plus a JSON summary. Standard library only. Every number it writes is exp
 The decode-bandwidth column is an analytical estimate, not a hardware counter (DCGM profiling
 and NVML GPM are admin-only on this host): bytes a decode step must read (weights a token
 touches, the KV cache of every running sequence, and for the gated-DeltaNet hybrids the
-recurrent state read and written) divided by the measured median inter-token latency.
+recurrent state read and written, its SSM part in float32 as vLLM allocates it) divided by the
+measured median inter-token latency.
 """
 
 from __future__ import annotations
@@ -22,7 +23,29 @@ from pathlib import Path
 from typing import Any
 
 H100_HBM_TB_S = 3.35
-GDN_STATE_BYTES = 2  # vLLM 0.31.0 keeps the GDN state in the model dtype (bf16) by default
+DTYPE_BYTES = {"float32": 4, "bfloat16": 2, "float16": 2}
+# Every engine ran --dtype bfloat16, and none set --mamba-cache-dtype, so the GDN conv state is
+# bf16. The GDN recurrent (SSM) state is not: in vLLM 0.31.0 (both overlay images),
+# Qwen3_5ForConditionalGenerationConfig, which MODELS_CONFIG_MAP also uses for
+# Qwen3_5MoeForConditionalGeneration (model_executor/models/config.py:1060-1062), copies the HF
+# text config's mamba_ssm_dtype into cache_config.mamba_ssm_cache_dtype when that is "auto"
+# (config.py:829-832), and MambaStateDtypeCalculator._mamba_state_dtype gives the temporal state
+# that dtype (model_executor/layers/mamba/mamba_utils.py:104-110). All three hybrid checkpoints
+# set mamba_ssm_dtype "float32", and every hybrid engine's own cache_config_info metric reports
+# mamba_ssm_cache_dtype "float32". The analysis takes the dtype from that engine record when it
+# names one, else from the checkpoint. Source record:
+# program/evidence/2026-10-14/inference-baseline/gdn-state-dtype/.
+GDN_CONV_STATE_BYTES = DTYPE_BYTES["bfloat16"]
+GDN_SSM_STATE_DEFAULT_DTYPE = "bfloat16"  # vLLM's "auto": the conv-state dtype
+
+
+def gdn_ssm_dtype(cfg: dict[str, Any], engine_value: str | None = None) -> str:
+    """The GDN recurrent-state dtype: the engine's recorded value, else the checkpoint's."""
+    if engine_value in DTYPE_BYTES:
+        return str(engine_value)
+    if engine_value == "auto":
+        return GDN_SSM_STATE_DEFAULT_DTYPE
+    return str(cfg.get("mamba_ssm_dtype") or GDN_SSM_STATE_DEFAULT_DTYPE)
 
 
 # --------------------------------------------------------------------------- loading
@@ -104,7 +127,7 @@ def text_config(config: dict[str, Any]) -> dict[str, Any]:
     return config.get("text_config", config)
 
 
-def geometry(model_record: dict[str, Any]) -> dict[str, Any]:
+def geometry(model_record: dict[str, Any], engine_ssm_dtype: str | None = None) -> dict[str, Any]:
     """Per-token KV bytes, recurrent-state bytes and weight bytes a decode step reads."""
     cfg = text_config(model_record["config"])
     layers = int(cfg["num_hidden_layers"])
@@ -122,13 +145,19 @@ def geometry(model_record: dict[str, Any]) -> dict[str, Any]:
     )
     kv_heads = int(cfg["num_key_value_heads"])
     kv_elems_per_token = full * 2 * kv_heads * head_dim
-    state_elems = 0
+    ssm_elems = conv_elems = 0
+    ssm_dtype = None
     if linear:
         nk, nv = int(cfg["linear_num_key_heads"]), int(cfg["linear_num_value_heads"])
         dk, dv = int(cfg["linear_key_head_dim"]), int(cfg["linear_value_head_dim"])
         kernel = int(cfg.get("linear_conv_kernel_dim", 4))
         conv_dim = 2 * nk * dk + nv * dv
-        state_elems = linear * (nv * dk * dv + conv_dim * (kernel - 1))
+        ssm_elems = linear * nv * dk * dv
+        conv_elems = linear * conv_dim * (kernel - 1)
+        ssm_dtype = gdn_ssm_dtype(cfg, engine_ssm_dtype)
+    state_bytes = (
+        ssm_elems * DTYPE_BYTES[ssm_dtype] + conv_elems * GDN_CONV_STATE_BYTES if linear else 0
+    )
     cats = model_record.get("safetensors", {}).get("bytes_by_category", {})
     always = sum(
         cats.get(k, 0)
@@ -147,7 +176,10 @@ def geometry(model_record: dict[str, Any]) -> dict[str, Any]:
         "full_attention_layers": full,
         "linear_attention_layers": linear,
         "kv_elems_per_token": kv_elems_per_token,
-        "state_elems_per_seq": state_elems,
+        "state_ssm_elems_per_seq": ssm_elems,
+        "state_ssm_dtype": ssm_dtype,
+        "state_conv_elems_per_seq": conv_elems,
+        "state_bytes_per_seq": state_bytes,
         "weights_always_bytes": always + lm_head,
         "routed_expert_bytes": cats.get("routed_experts", 0),
         "num_experts": int(cfg.get("num_experts") or 0),
@@ -167,7 +199,7 @@ def decode_bytes_per_step(geo: dict[str, Any], batch: float, context: float, kv_
         weights += geo["routed_expert_bytes"]
     kv_bytes = 1 if kv_dtype.startswith("fp8") else 2
     kv = batch * context * geo["kv_elems_per_token"] * kv_bytes
-    state = batch * geo["state_elems_per_seq"] * GDN_STATE_BYTES * 2  # read and write
+    state = batch * geo["state_bytes_per_seq"] * 2  # read and write
     return {"weights": weights, "kv": kv, "state": state, "total": weights + kv + state}
 
 
@@ -220,7 +252,7 @@ def serve_rows(job: Path, nvml: dict, models: dict, engines: dict) -> list[dict[
             )
         record = models.get(meta.get("model"))
         if record and row.get("median_itl_ms") and row["shape"] != "prefix":
-            geo = geometry(record)
+            geo = geometry(record, engine.get("cache_config_info", {}).get("mamba_ssm_cache_dtype"))
             batch = row.get("mean_num_requests_running") or row["concurrency"]
             batch = min(float(batch), float(row["concurrency"]))
             if row["concurrency"] == 1:
@@ -230,6 +262,7 @@ def serve_rows(job: Path, nvml: dict, models: dict, engines: dict) -> list[dict[
             step_s = row["median_itl_ms"] / 1000.0
             per_gpu = moved["total"] / max(1, int(row["tp"])) / step_s
             row["est_decode_batch"] = round(batch, 1)
+            row["est_gdn_ssm_state_dtype"] = geo["state_ssm_dtype"]
             row["est_bytes_per_step_gb"] = round(moved["total"] / 1e9, 3)
             row["est_weight_gb"] = round(moved["weights"] / 1e9, 3)
             row["est_kv_gb"] = round(moved["kv"] / 1e9, 3)
@@ -287,6 +320,9 @@ def engine_rows(job: Path, models: dict) -> tuple[list[dict[str, Any]], dict[str
             "num_gpu_blocks": cache.get("num_gpu_blocks"),
             "block_size": cache.get("block_size"),
             "cache_dtype": cache.get("cache_dtype"),
+            "mamba_ssm_cache_dtype": cache.get("mamba_ssm_cache_dtype"),
+            "mamba_cache_dtype": cache.get("mamba_cache_dtype"),
+            "mamba_cache_mode": cache.get("mamba_cache_mode"),
             "gpu_memory_ready_mib": json.dumps(engine.get("gpu_memory_ready_mib")),
             "init_engine_s": parse.get("init_engine_s"),
             "torch_compile_s": parse.get("torch_compile_s"),
@@ -318,8 +354,9 @@ def aggregate(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         for key in (
             "output_throughput", "total_token_throughput", "request_throughput",
             "median_ttft_ms", "p99_ttft_ms", "median_tpot_ms", "median_itl_ms", "p99_itl_ms",
-            "peak_kv_cache_usage_perc", "peak_num_requests_running",
-            "delta_num_preemptions_total", "prefix_cache_hit_rate", "peak_hbm_used_gib_max_gpu",
+            "peak_kv_cache_usage_perc", "peak_num_requests_running", "mean_num_requests_running",
+            "peak_num_requests_waiting", "delta_num_preemptions_total", "prefix_cache_hit_rate",
+            "peak_hbm_used_gib_max_gpu",
             "mean_power_w_per_gpu", "joules_per_output_token", "mean_sm_clock_mhz",
             "power_capped_frac",
             "est_hbm_tb_s_per_gpu", "est_frac_of_3_35_tb_s", "est_bytes_per_step_gb",
@@ -385,7 +422,13 @@ def pct(value: Any) -> str:
     return "-" if value is None else f"{100 * float(value):.0f}%"
 
 
-def markdown(cells: list[dict], engines: list[dict], offline: list[dict], serve: list[dict]) -> str:
+def markdown(
+    cells: list[dict],
+    engines: list[dict],
+    offline: list[dict],
+    serve: list[dict],
+    models: dict[str, dict] | None = None,
+) -> str:
     out = ["<!-- generated by scripts/analyze_inference_baseline.py; exploratory -->\n"]
     by = {(c["engine_id"], c["cell_id"]): c for c in cells}
     engine_ids: list[str] = []
@@ -425,6 +468,28 @@ def markdown(cells: list[dict], engines: list[dict], offline: list[dict], serve:
             ],
         )
     )
+
+    hybrids = {k: v for k, v in sorted((models or {}).items()) if v.get("state_bytes_per_seq")}
+    if hybrids:
+        out.append("\n### GDN recurrent state per sequence (all layers, all TP ranks)\n")
+        mib = 1024 * 1024
+        out.append(
+            md_table(
+                ["model", "GDN layers", "SSM state dtype", "SSM state MiB", "conv state MiB (bf16)",
+                 "total MiB per sequence"],
+                [
+                    [
+                        k,
+                        v["linear_attention_layers"],
+                        v["state_ssm_dtype"],
+                        v["state_ssm_elems_per_seq"] * DTYPE_BYTES[v["state_ssm_dtype"]] / mib,
+                        v["state_conv_elems_per_seq"] * GDN_CONV_STATE_BYTES / mib,
+                        v["state_bytes_per_seq"] / mib,
+                    ]
+                    for k, v in hybrids.items()
+                ],
+            )
+        )  # fmt: skip
 
     out.append("\n### Single-stream decode (concurrency 1; mean of repeats)\n")
     rows = []
@@ -488,6 +553,8 @@ def markdown(cells: list[dict], engines: list[dict], offline: list[dict], serve:
                         c.get("median_tpot_ms"),
                         c.get("p99_itl_ms"),
                         pct(c.get("peak_kv_cache_usage_perc")),
+                        c.get("peak_num_requests_running"),
+                        c.get("peak_num_requests_waiting"),
                         c.get("delta_num_preemptions_total"),
                         pct(c.get("est_frac_of_3_35_tb_s")),
                         c.get("mean_power_w_per_gpu"),
@@ -510,6 +577,8 @@ def markdown(cells: list[dict], engines: list[dict], offline: list[dict], serve:
                 "TPOT p50 ms",
                 "ITL p99 ms",
                 "peak KV",
+                "peak running",
+                "peak waiting",
                 "preempt",
                 "est % BW",
                 "W/GPU",
@@ -772,7 +841,7 @@ def main() -> int:
     write_csv(args.out / "serve_cells.csv", cells)
     write_csv(args.out / "offline_runs.csv", offline)
     write_csv(args.out / "engines.csv", engines_table)
-    (args.out / "tables.md").write_text(markdown(cells, engines_table, offline, serve))
+    (args.out / "tables.md").write_text(markdown(cells, engines_table, offline, serve, models_out))
     summary = {
         "claim_level": "exploratory",
         "serve_runs": len(serve),
@@ -788,7 +857,9 @@ def main() -> int:
         "bandwidth_model": (
             "bytes per decode step = weights a token touches (all text tensors except the "
             "input embedding; MoE routed experts scaled by 1-(1-k/E)^B for B running sequences) "
-            "+ B x (input + output/2) x KV bytes per token + B x GDN state x 2 (read+write), "
+            "+ B x (input + output/2) x KV bytes per token + B x GDN state x 2 (read+write; "
+            "SSM state in the checkpoint's mamba_ssm_dtype, float32 for all three hybrids, and "
+            "conv state in bf16, as vLLM 0.31.0 allocates them), "
             "divided by TP and by the median ITL; compared with 3.35 TB/s per H100"
         ),
     }

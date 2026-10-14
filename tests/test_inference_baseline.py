@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts import analyze_inference_baseline as an
 from scripts import run_inference_baseline as ib
 
 ENGINE_LOG = """\
@@ -170,3 +171,30 @@ def test_safetensors_breakdown(tmp_path: Path) -> None:
 def test_unknown_job_is_refused(config: dict) -> None:
     with pytest.raises(ib.PlanError):
         ib.resolve_plan(config, "z")
+
+
+def test_gdn_state_bytes_match_vllm_page_padding() -> None:
+    """Qwen3.5-9B geometry: the fp32 SSM state reproduces vLLM's logged 528-token block and 0.76%."""
+    text = {
+        "num_hidden_layers": 32, "full_attention_interval": 4, "hidden_size": 4096,
+        "num_attention_heads": 16, "num_key_value_heads": 4, "head_dim": 256,
+        "linear_num_key_heads": 16, "linear_num_value_heads": 32, "linear_key_head_dim": 128,
+        "linear_value_head_dim": 128, "linear_conv_kernel_dim": 4, "mamba_ssm_dtype": "float32",
+    }  # fmt: skip
+    geo = an.geometry({"config": {"text_config": text}})
+    per_layer = 32 * 128 * 128 * 4 + (2 * 16 * 128 + 32 * 128) * 3 * 2
+    assert per_layer == 2_146_304
+    assert geo["linear_attention_layers"] == 24
+    assert geo["state_ssm_dtype"] == "float32"
+    assert geo["state_bytes_per_seq"] == 24 * per_layer
+    attn_page = 528 * 2 * 4 * 256 * 2  # block size x K and V x KV heads x head dim x bf16
+    assert round(100 * (attn_page - per_layer) / per_layer, 2) == 0.76
+    bf16 = an.geometry({"config": {"text_config": {**text, "mamba_ssm_dtype": "bfloat16"}}})
+    assert bf16["state_bytes_per_seq"] == 24 * 1_097_728
+    moved = an.decode_bytes_per_step(geo, batch=2.0, context=0.0, kv_dtype="auto")
+    assert moved["state"] == 2 * 2 * 24 * per_layer  # batch x read and write x state
+    # The engine's recorded mamba_ssm_cache_dtype wins over the checkpoint; "auto" means bf16.
+    bare = {k: v for k, v in text.items() if k != "mamba_ssm_dtype"}
+    assert an.geometry({"config": bare}, "float32")["state_bytes_per_seq"] == 24 * per_layer
+    assert an.geometry({"config": {"text_config": text}}, "auto")["state_ssm_dtype"] == "bfloat16"
+    assert an.geometry({"config": bare})["state_ssm_dtype"] == "bfloat16"

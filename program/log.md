@@ -5526,14 +5526,17 @@ they say so.)
   1326 were CPU-only.
 - Deviations:
   - Job e's one-GPU MoE engine was refused, because `max_num_seqs` 256 exceeds the 181 GDN-state
-    blocks that fit. Job h reran it with 128.
+    blocks that fit. Job h reran it with 128. (Corrected 2026-10-14: vLLM's check counts one
+    block per sequence, but each running sequence took four, so job h ran at most 51 chat
+    sequences.)
   - Job f's limit cut two TP 4 second repeats. Job g reran both cells twice on a fresh engine.
 - Exploratory reading (details and caveats in the README):
   - Single-stream decode on the 9B and 32B streams weights at about 73-83% of 3.35 TB/s (an
     analytical estimate) at TP 1-2. The small models and the 3B-active MoE are overhead-bound,
-    at 25-61%.
-  - KV capacity ranges from 28k tokens (32B TP 1) to 3.1M tokens (MoE TP 2), and binds only for
-    the dense models. FP8 KV doubles it and gives 1.3-1.5x where it binds.
+    at 26-62% (corrected 2026-10-14 from 25-61% for the float32 GDN state).
+  - KV capacity ranges from 28k tokens (32B TP 1) to 3.1M tokens (MoE TP 2). It bound the dense
+    models, and the GDN state bound the one-GPU MoE (corrected 2026-10-14; first written as
+    "binds only for the dense models"). FP8 KV doubles it and gives 1.3-1.5x where it binds.
   - Prefix sharing gives about 2x throughput.
   - Heavy cells often run at the 700 W power cap.
   - Run-to-run spread: a median of about 1% (p90 4-5%) for throughput and TPOT.
@@ -5541,3 +5544,38 @@ they say so.)
   lane receipts; manifests; overlay, fetch and selftest records; `analysis/`). Code:
   `scripts/run_inference_baseline.py`, `scripts/analyze_inference_baseline.py`,
   `experiments/serving/inference-baseline-v1.yaml`, `tests/test_inference_baseline.py`.
+
+## 2026-10-14 — `inference-baseline-v1` corrected after an independent check (branch `stage0/inference-baseline`, not merged; exploratory)
+
+- An independent checker reproduced the analysis byte for byte from the committed records and
+  found two medium and three low problems. All are fixed in the README, `analysis/` and the
+  entry above. Raw records are unchanged and no GPU job ran. The analysis reran on the host from
+  the committed job records (`corrections/analysis-rerun.txt`).
+- GDN state dtype (medium). vLLM 0.31.0 keeps the hybrids' gated-DeltaNet recurrent state in
+  float32, as the checkpoints' `mamba_ssm_dtype` asks, not in bf16 as the analysis assumed.
+  - Three CPU-only, read-only source checks (1346, 1348 failed on a `grep`, 1350) printed the
+    lines from both overlay images: `model_executor/models/config.py:829-832` and
+    `:1060-1062`, `layers/mamba/mamba_utils.py:104-110`. Every hybrid engine's
+    `cache_config_info` also records `mamba_ssm_cache_dtype` float32.
+  - Per-sequence state is 49.1 MiB for Qwen3.5-4B and 9B and 61.4 MiB for the MoE (first
+    25.1 and 31.4). At long-output-128 the 9B's state is 12.7 GB of 38.8 GB per step (first
+    6.5 GB, 20%), and its estimated bandwidth use 76% (first 64%). Batch-1 estimates moved by
+    at most 0.4 points.
+- One-GPU MoE (medium). Job h ran at most 51 sequences at chat-128, because each held one
+  attention block and three GDN-state blocks of its 207. 77-79 requests waited and the median
+  TTFT was 5.7 s. The state, not KV, was its binding limit.
+- Low items:
+  - `gpu_memory_utilization` 0.90 sets Qwen3-32B TP 1's KV. vLLM's log says 13.44 GiB (55,067
+    tokens) would fit instead of 6.89 GiB: the cheapest untried lever.
+  - TP 4 32k-32 differs between engine instances: median ITL 129.5 against 29.4 and 35.9 ms,
+    p99 1.41 against 0.48 and 0.49 s, with equal throughput.
+  - Block alignment does not fully explain the 9B's prefix hit rates (predicted 74.3% and
+    79.6%, measured 63.7% and 74.3%).
+  - Smaller mismatches fixed: the spread cells, c=1 power, 130 cells, peak GiB and start-up
+    overlap. The thin records are stated: empty `scontrol` files, the in-image pytest that
+    never ran, `selftest.json` with vLLM's stdout notices, and 56 host files not committed.
+- The README now opens with "Main takeaways (corrected)". The analysis script takes the GDN
+  dtype from the engine record, and a new test checks it against vLLM's logged page padding
+  (`tests/test_inference_baseline.py`: 10 passed).
+- Evidence: `program/evidence/2026-10-14/inference-baseline/` (`gdn-state-dtype/`,
+  `corrections/`, regenerated `analysis/`, README).
