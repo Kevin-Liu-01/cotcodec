@@ -126,6 +126,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1295 | K1 C3 on E, part 2 of 3 (17 mutant campaigns, M11-M21) | 1,404 | 06:00:54 | 06:00:55-06:57:16 (56.4 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell |
 | 1296 | K1 C3 on E, part 3 of 3 (10 mutant campaigns, M22-M28, and the 3 unmutated references) | 1,076 | 06:58:15 | 06:58:16-07:41:25 (43.2 min) | COMPLETED 0:0 | All 13 campaigns count. **C3 on E pass** over parts 1-3 (1294-1296): 42 mutants killed, 2 equivalent, 0 survived |
 | 1297 | K1 A1 on E (L0-fixed at N = 1, seeds 43 and 44, both observation settings) | 1,394 | 07:42:30 | 07:42:30-09:09:50 (87.3 min) | COMPLETED 0:0 | A1 pass and C4 pass; both campaigns count; 2,000 of 2,000 trials |
+| 1298 | K1 A2 on E (H-OSW-fixed and H-GA, seed 43, both observation settings) | 1,344 | 09:11:16 | 09:11:17-10:43:02 (91.8 min) | COMPLETED 0:0 | A2 pass; both campaigns count |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -187,3 +188,30 @@ and the last `scontrol` record):
   agreement, from A1's trials) `pass`, no problem. Every campaign counts (driver exit 0,
   `infra_gates_pass`, image unchanged, no labelled container; no foreign-abort or snapshot
   problem).
+- **1298 (A2, E).** Host snapshot: load 0.35, queue empty, 0 labelled containers. H-OSW-fixed: 18
+  sessions, 990 trials, 970 passed; H-GA: 16 sessions, 930 trials, 890 passed. Every failed trial
+  is on a cell outside its layer's spec (H-OSW-fixed R03 and R09; H-GA R02, R04, R06 and R10),
+  which A2 does not score; A2 judges the gating and declared cells, 5 repetitions in both
+  settings. 0 guest-server restarts over 759 and 693 counting accessibility calls, 0 excused
+  trials. Cold boots at most 17.9 s; step p95 2.57 s and 2.63 s. `ap_delta_v5.verdict` on this
+  job: A2 on E `pass`, no problem. Both campaigns count (driver exit 0, `infra_gates_pass`, image
+  unchanged, no labelled container; no foreign-abort or snapshot problem).
+
+## Stint 1 stop (operator's record, 10:44Z on 2026-10-14)
+
+- Done in stint 1 (04:33-10:44Z): the worktree and branch; the staged freeze export; the
+  registered pre-census `lane_v5.py submit --dry-run` (passed); the 49 K1 manifests; and K1 jobs
+  1292-1298 in the plan's order, all on E: C1, C2, C3 parts 1-3, A1 and A2. Every job COMPLETED
+  0:0, every campaign counts, and every check read so far passes (interim, job by job; C3 on E
+  read over its three parts). No K1 check has failed; nothing was rerun or resubmitted.
+- Clean point: no job of this workstream is running. At 10:44:23Z the queue was empty and no
+  labelled cotcodec container was running on the host.
+- Next, in the plan's order: A5 on E (`k1-a5-e.json`), A6 on E (`k1-a6-e.json`), then image A
+  (C1, C2, C3 parts 1-3, A1, A2, A5, A6), ER, AR, PL, then A3 on AR (parts 1-3), then the rung;
+  42 K1 jobs remain. Then `ap_delta_v5.py verdict` over all 49 K1 job directories (K1), then the
+  census (`lane_v5.py submit` of `census-dry-run/s2v5-phase0-census.json`, already rendered and
+  dry-run), its one resume if interrupted, the oracle's registered container job and
+  `k0_v4.decide` (K0).
+- Observed durations on E, for planning: C1 6.5 min, C2 10.2 min, C3 parts 56, 56 and 43 min,
+  A1 87 min, A2 92 min (v4: A5 about 20 min, A6 about 50 min). At that pace the remaining 42 jobs
+  need about 33 hours of serial wall clock (about 7 hours per image, and A3 and the rung).
