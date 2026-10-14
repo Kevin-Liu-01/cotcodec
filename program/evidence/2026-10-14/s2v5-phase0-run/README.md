@@ -125,6 +125,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1294 | K1 C3 on E, part 1 of 3 (17 mutant campaigns, M01-M11; seed 42) | 1,404 | 05:03:14 | 05:03:15-05:59:31 (56.3 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell; C3 is read once part 3 (the references) has run |
 | 1295 | K1 C3 on E, part 2 of 3 (17 mutant campaigns, M11-M21) | 1,404 | 06:00:54 | 06:00:55-06:57:16 (56.4 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell |
 | 1296 | K1 C3 on E, part 3 of 3 (10 mutant campaigns, M22-M28, and the 3 unmutated references) | 1,076 | 06:58:15 | 06:58:16-07:41:25 (43.2 min) | COMPLETED 0:0 | All 13 campaigns count. **C3 on E pass** over parts 1-3 (1294-1296): 42 mutants killed, 2 equivalent, 0 survived |
+| 1297 | K1 A1 on E (L0-fixed at N = 1, seeds 43 and 44, both observation settings) | 1,394 | 07:42:30 | 07:42:30-09:09:50 (87.3 min) | COMPLETED 0:0 | A1 pass and C4 pass; both campaigns count; 2,000 of 2,000 trials |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -175,3 +176,14 @@ and the last `scontrol` record):
     survived; no state-not-observed trial among 4,617. The same 42 killed and the same 2
     equivalent as q2-action-path-v2's attempt 1 on the certified disk
     (`program/evidence/2026-10-08/q2-action-path-v2-acceptance/acceptance/c3-verdict.json`).
+- **1297 (A1, E).** Host snapshot: load 0.40, queue empty, 0 labelled containers. Two L0-fixed
+  campaigns at N = 1 (seed-43 and seed-44 shuffles, 5 repetitions, screenshot and accessibility
+  settings): 18 sessions and 1,000 trials each, 2,000 of 2,000 passed; 0 guest-server restarts
+  over 649 counting accessibility calls in the seed-43 campaign (and none in the seed-44 one), 0
+  excused trials (D33); 17 of 17 reset sentinels pristine in each; no state-not-observed trial.
+  Cold boots at most 17.9 s; step p95 2.68 s and 2.71 s, 2.69 s pooled over both shuffles (the
+  reference for the rung's per-image step condition on E: the rung's E sessions must have step
+  p95 at most 2 x A1's). `ap_delta_v5.verdict` on this job: A1 on E `pass` and C4 on E (R-dev
+  agreement, from A1's trials) `pass`, no problem. Every campaign counts (driver exit 0,
+  `infra_gates_pass`, image unchanged, no labelled container; no foreign-abort or snapshot
+  problem).
