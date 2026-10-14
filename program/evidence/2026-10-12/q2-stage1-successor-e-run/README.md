@@ -722,8 +722,10 @@ has run and none fired DR0.
 
 The analysis ran on 2026-10-13/14 UTC (CPU jobs 1279-1290; `analysis/README.md`); its
 readings are in `RESULTS.md`: DR2 Near-equivalent, DR5 NO-GO, DR1 and DR4 do not fire, P2-P5
-not falsified, P1 not estimable. The fresh verifier had not run when `RESULTS.md` was written
-(its deviation 1).
+not falsified, P1 not estimable. The fresh verifier had not run when `RESULTS.md` was first
+written (its deviation 1). It ran afterwards and reproduced every registered output and
+outcome (`analysis/verification/verifier-record.json`), and `RESULTS.md` was corrected for
+the wording and disclosure items it raised.
 
 ## Operator scripts (`ops/`)
 
@@ -754,9 +756,12 @@ equal the committed files'.
   poll until the submission. Both E2 VM jobs carried `--begin=2026-10-12T17:51:33` from the
   lane, already past when each was submitted, so each started at submission.
 - **Session E3's operator handover.** The orchestrating session restarted twice after session
-  E2 (the operator's Mac crashed). The E2 operator's report file did not survive in the
-  orchestrator's scratch directory; this README's session E2 section and the host's run and
-  pair directories were the record. An earlier E3 operator instance had prepared the E3 pair
+  E2 (the operator's Mac crashed). This README's session E2 section and the host's run and
+  pair directories were the record. (Correction, 2026-10-14: this item first said that the
+  E2 operator's report file did not survive. That was wrong. A copy is in the orchestrator's
+  scratch directory, written at 00:07 UTC on 2026-10-13, after the restarts and before E3
+  was submitted. Its content agrees with the session E2 section above: session end
+  19:12:47Z, DR0 not fired, no deviation, and the same disclosures.) An earlier E3 operator instance had prepared the E3 pair
   directories and E-9B-E3's VM manifest at 19:23 UTC on 2026-10-12 and submitted nothing; this
   operator found no E3 job, run directory or submission file, re-rendered that manifest
   (byte-identical) and submitted each pair once, after the gap, on an empty queue. No job was
@@ -772,4 +777,11 @@ equal the committed files'.
   once, after the gap, on an empty queue. One of its queue polls (about 09:15 UTC) failed on an
   ssh connection timeout while job 1271, another workstream's, was running and nothing of E's
   was pending; the next poll succeeded. No job was resubmitted.
-- **Deviations from the registration:** none (OE and sessions E1, E2, E3 and E4).
+- **S2 v5's step-0 export during E-9B-E3 (D96 item (2)).** S2 v5's step-0 source export was
+  staged on the host while E3's 9B pair ran. It was file staging, not a Slurm job, so
+  section 6.4 does not count it. D85, E's sign-off, allows other workstreams on the host only
+  in the gaps between E's sessions, never during an E job, so the staging departed from
+  D85's host-use condition. It touched no E record, and E-9B-E3's lane snapshots and queue
+  watcher show no foreign Slurm job. (Added 2026-10-14; `RESULTS.md` disclosure 8.)
+- **Deviations from the registration:** none (OE and sessions E1, E2, E3 and E4). The
+  departure from D85's condition above is disclosed separately.

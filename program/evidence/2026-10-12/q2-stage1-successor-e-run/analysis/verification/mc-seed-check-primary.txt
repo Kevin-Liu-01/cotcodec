@@ -1,0 +1,24 @@
+primary seed 42 B 10000 lb 0.010135 ub 0.118719
+primary seed 1000 B 10000 lb 0.009934 ub 0.116884
+primary seed 1001 B 10000 lb 0.009035 ub 0.118619
+primary seed 1002 B 10000 lb 0.011167 ub 0.121127
+primary seed 1003 B 10000 lb 0.010345 ub 0.118556
+primary seed 1004 B 10000 lb 0.010135 ub 0.117242
+primary seed 1005 B 10000 lb 0.010204 ub 0.117627
+primary seed 1006 B 10000 lb 0.010000 ub 0.117529
+primary seed 1007 B 10000 lb 0.009677 ub 0.118796
+primary seed 1008 B 10000 lb 0.010274 ub 0.118773
+primary seed 1009 B 10000 lb 0.009317 ub 0.118115
+primary seed 1010 B 10000 lb 0.011111 ub 0.119536
+primary seed 1011 B 10000 lb 0.011064 ub 0.118942
+primary seed 1012 B 10000 lb 0.008621 ub 0.117037
+primary seed 1013 B 10000 lb 0.010204 ub 0.120138
+primary seed 1014 B 10000 lb 0.009707 ub 0.119570
+primary seed 1015 B 10000 lb 0.010204 ub 0.118753
+primary seed 1016 B 10000 lb 0.009374 ub 0.119066
+primary seed 1017 B 10000 lb 0.009737 ub 0.119005
+primary seed 1018 B 10000 lb 0.010298 ub 0.118408
+primary seed 1019 B 10000 lb 0.009740 ub 0.117464
+primary 20 seeds: min 0.1169 max 0.1211 mean 0.1186 sd 0.0011 n>=0.12 2
+primary seed 424242 B 200000 lb 0.009934 ub 0.119055 share>=0.12 0.0479
+secs 26.2

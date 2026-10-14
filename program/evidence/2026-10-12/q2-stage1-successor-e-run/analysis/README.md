@@ -70,6 +70,13 @@ workstream's job was in the queue at any poll this analyst took from 23:43 to 01
   `provenance-post.json` lists the digest of every input and output here but `logs/`; every
   committed copy here matches it.
 - **Self-check** (`selfcheck.json`; not the fresh verifier): see `../RESULTS.md`, disclosure 4.
+- **Fresh verifier** (`verification/`; added on 2026-10-14 after `RESULTS.md` was first
+  written, so it is not in `provenance-post.json`). `verifier-record.json` holds the section 18
+  verifier's records: the frozen code rerun on the SHA-checked raw records, byte-identical
+  outputs, and an independent re-implementation that agrees. `mc-seed-check.py` and its
+  outputs are the frozen bootstrap of π_small at 20 other seeds and at 200,000 resamples, run
+  read-only on the host by stdin pipe. They are descriptive and not registered (`../RESULTS.md`
+  deviation 1, disclosure 6).
 
 ## Files here
 
@@ -78,7 +85,8 @@ workstream's job was in the queue at any poll this analyst took from 23:43 to 01
 `receipt-<slurm>.json`; `merge.txt`; `e.jsonl` (the merged records of all eight jobs, the
 report's input; `4e3fc281...`); `report.json` (`step-report.json`); `rescore-coverage.json`;
 `s15.json` (`step-s15.json`); `joint.json` (`step-joint.json`); `glmm-out/` and
-`glmm-summary.json`; `selfcheck.json`; `provenance-pre.json`, `provenance-post.json`; `logs/`
+`glmm-summary.json`; `selfcheck.json`; `provenance-pre.json`, `provenance-post.json`;
+`verification/` (the fresh verifier's records and the seed check, added later); `logs/`
 (the report, section 15 and joint job outputs, the GLMM job output, which is empty, and
 `submit-batch.log`). The eight rescoring job outputs (about 210 KB each of checker warnings
 and debug prints) stay on the host, with their SHA-256 in `logs/rescore-logs.sha256`;

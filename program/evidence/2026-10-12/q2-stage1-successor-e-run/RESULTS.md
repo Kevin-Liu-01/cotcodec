@@ -3,10 +3,14 @@
 **Not externally anchored.** The OpenCUA-7B anchor is unavailable, as in S1a (DR-A:
 ANCHOR-UNAVAILABLE). Every number below carries this label. **The data are complete:** all
 eight E jobs ran, DR0 fired for none, and each size holds four sessions of scored records
-(`report.json` `labels`: `incomplete` null). **Verification status:** the analyst's
-self-check reproduced the primary reading (disclosure 4), but the fresh verifier that section
-18 requires before RESULTS is written has not yet run (deviation 1). Read this file as
-pending that verification.
+(`report.json` `labels`: `incomplete` null). **Verification status:** the fresh verifier
+that section 18 requires ran after this file's first version (commit `af837178`) was written
+(deviation 1). Rerunning the frozen code on the SHA-checked raw records, it reproduced
+`report.json`, `s15.json`, `joint.json`, `costs.json` and the DR0 files byte for byte, and
+its own implementation, which imports no harness module, agrees with every registered number
+and outcome. A second verifier read this file against the registration and the outputs. No
+recomputation disagreed and no item was blocking. This version corrects the wording and
+disclosure items they raised (`analysis/verification/verifier-record.json`).
 
 Frozen registration `q2-stage1-successor-e-v1` (ledger row 19; file SHA-256 `47e65877...`;
 freeze commit `f6144d6b`; plan `4e7298a7...`). The analysis ran on 2026-10-13/14 UTC on the
@@ -23,11 +27,14 @@ For E's four new serving sessions per size, on all 113 eligible pool tasks, one 
 2,048-token thinking budget, screenshots only), the two certified harnesses succeeded equally
 often: H-GA and H-OSW-fixed each succeeded in 263 of 904 episodes, so δ (H-GA minus
 H-OSW-fixed) is exactly 0.00 pp, with a 90% t interval of −2.44 to +2.44 pp (paired t
-p = 1.000). The X sign-flip test gave p = 0.093, so no harness effect is Present. The 90%
-interval lies within ±7.5 pp and the one-sided 95% upper bound of π_small is 0.1187, below
-0.12, so **DR2 classifies the pair Near-equivalent**. π_small is 0.055 with one-sided 95%
-bounds [0.010, 0.119], wholly below M = 0.13, so **DR5 is NO-GO**: S1b stays closed, as D69
-forecast, and nothing starts. 4B is not at the floor (**DR1 does not fire**; 27.2% and
+p = 1.000). The X sign-flip test gave p = 0.093, so neither registered test rejects and DR2
+does not classify the pair Present (a test that does not reject does not exclude an effect).
+The 90% interval lies within ±7.5 pp, and the one-sided 95% upper bound of π_small is 0.1187,
+below 0.12 by 0.0013, which is about the Monte Carlo error of the registered bootstrap
+(disclosure 6). So **DR2 classifies the pair Near-equivalent**. π_small, the mean of the two
+sizes' harness shares, is 0.055 with one-sided 95% bounds [0.010, 0.119], wholly below
+M = 0.13, so **DR5 is NO-GO**: S1b stays closed, as D69 forecast, and nothing starts. 4B is
+not at the floor (**DR1 does not fire**; 27.2% and
 26.3%). The between-session rerun floor D_b is 10.7% (95% interval 8.0-13.5%). P1 is not
 estimable at one episode per session; **P2-P5 are not falsified** (P3, forecast to fall with
 probability 0.52-0.73, stands). Realized cost was 0.0027-0.0030 GPU-h per episode, 24-27% of
@@ -92,7 +99,7 @@ exited 0.
 | **DR0** validity | **does not fire** for any job | Every job ended with all 226 slots scored; 0 of 113 first attempts lost in every (size, harness) cell of every job; no lane error. Re-run by the registered CLI (`analysis/dr0-*.json`, byte-identical to each job's `pair/dr0.json`) and recomputed from the records by the report (`completeness`) |
 | **DR-A** anchor | **ANCHOR-UNAVAILABLE** | As in S1a (S1a G0 item 9.6). Label: "not externally anchored" |
 | **DR1** 4B floor | **does not fire** (4B stays) | 4B pooled success: H-OSW-fixed 27.21%, H-GA 26.33%, both above 10%. π_small is the mean of π_4B and π_9B |
-| **DR2** harness pair | **Near-equivalent** | Not Present: Holm over δ (paired t p = 1.000) and X (sign flip p = 0.0927) needs min p ≤ 0.025. Near-equivalent: δ's 90% t interval [−2.44, +2.44] pp lies within ±7.5 pp, and π_small's one-sided 95% upper bound, 0.1187, is below 0.12 |
+| **DR2** harness pair | **Near-equivalent** | Not Present: Holm over δ (paired t p = 1.000) and X (sign flip p = 0.0927) needs min p ≤ 0.025. Near-equivalent: δ's 90% t interval [−2.44, +2.44] pp lies within ±7.5 pp, and π_small's one-sided 95% upper bound, 0.1187, is below 0.12 (by about the bootstrap's Monte Carlo error: disclosure 6) |
 | **DR3** components | reported, no decision | Per-size table below |
 | **DR4** cost | **does not fire** | Highest realized GPU-h per episode 0.003000 (E-9B-E2) against the high price at V = 20 of 0.011274 (ratio 0.27) |
 | **DR5** S1b admission | **NO-GO** | π_small = 0.055, one-sided 95% bounds [0.010, 0.119], M = 0.13: the upper bound is below M. GO would need a lower bound above 0.13 |
@@ -175,8 +182,9 @@ two-sided sign-flip p:
 | E3-E4 | −2.65 (0.239) | +2.65 (0.356) | −1.77 (4.87) | −1.77 (5.03) |
 
 Holm over each size's six session tests: no rejection in either size. In S1a's primary reading
-the 9B session test rejected for its two sessions (+5.5 pp, p = 0.016, on its 32 base tasks);
-no E session pair differs detectably.
+the 9B session test rejected for its two sessions (+5.5 pp, p = 0.016, on its 32 base tasks).
+No E session pair's shift test rejects after Holm. Like every quantity in this table, that is
+descriptive (section 10).
 
 ## Sensitivities and the registered secondary set (none changes a decision rule)
 
@@ -195,9 +203,16 @@ no E session pair differs detectably.
 
 The D82 sensitivity carries D80's label: "adjudicated by an isolated model on the owner's
 instruction (D80); not human-validated". On the 32 base tasks DR2 would read Inconclusive,
-because π_small's upper bound (0.121) is not below 0.12; no rule reads that set. There, D_b is
+because π_small's upper bound (0.121) is not below 0.12; no rule reads that set. That bound,
+like the primary one, is within Monte Carlo error of the line. With the frozen bootstrap at
+20 other seeds and the registered 10,000 resamples, it ranged from 0.1170 to 0.1214, and 7
+of the 20 were at or above 0.12 (`analysis/verification/`). So "Inconclusive on the 32 base
+tasks" is seed 42's reading, not a contrast with the primary set. On that set, D_b is
 13.9% (4B 14.8%, 9B 13.0%), π_9B 0.091 (one-sided [0.000, 0.227]) and π_4B 0.000; no session
-pair's shift test rejects after Holm.
+pair's shift test rejects after Holm. This table shows only part of section 19's list for the
+secondary set. Every section 10 estimand on it, with its intervals (X_4B, X_9B, X_c, the
+scale screens, δ per session and the session pairs), is in `report.json`
+`secondary_s1a_base`.
 
 ## GLMM (secondary model, section 11; registered container `b15584f3...`, R package lock `abb8871d...` matched)
 
@@ -250,7 +265,7 @@ every attempt: `analysis/report.json` (`cells`, `cells_by_size_session`,
 `cells_by_size_harness_session`, `attempts`). Per-episode counts: `analysis/s15.json`
 (`per_episode`, `losses_by_task` (empty), `setup_and_postconfig_failures`).
 
-## Cost card (section 9 item 10) and DR4
+## Cost card (section 19; S1a section 9 item 10) and DR4
 
 | | GPU-h per episode (H-OSW-fixed, H-GA) | of central 0.009020 | of high 0.011274 | VM-h per episode |
 |---|---:|---:|---:|---:|
@@ -274,6 +289,12 @@ the 15-step cap without `terminate`: 282, 276, 255 and 253 of 452. Output tokens
 mean: 4B/H-GA 4,753, 4B/H-OSW-fixed 4,850, 9B/H-GA 4,207, 9B/H-OSW-fixed 4,690 (352-386 per
 step); per job, 9B 4,394-4,529 and 4B 4,722-4,882. Distributions censored at 15 steps:
 `analysis/s15.json` (`steps`, `output_tokens`, `cost_card_prices`).
+
+Engine start-up, from the GPU job's Slurm start to the first dispatch, was 104.5-105.9 s at
+4B and 113.0-114.3 s at 9B. In two 9B jobs it exceeded L = 113.19 s, the start-up the caps
+assume (section 7.1, an assumption under section 22 disclosure 6): E-9B-E2 by 1.1 s (114.3 s)
+and E-9B-E3 by 0.5 s (113.7 s). Every job's lane still ended 7.7-10.3 minutes before its USR1
+point, and no rule reads the start-up time (`README.md`, each job's receipt).
 
 ## Truncation (section 19)
 
@@ -314,7 +335,9 @@ are far below the 20% line, so **neither size's δ is labelled truncation-confou
 | vlc | 6 | 29.2% / 29.2% | 41.7% / 37.5% | −2.08 |
 | vs_code | 5 | 40.0% / 30.0% | 40.0% / 40.0% | −5.00 |
 
-Five to 28 tasks per domain: descriptions, not estimates. No interval is computed per domain.
+Five to 28 tasks per domain: descriptions, not estimates. The frozen `analysis.per_domain`
+computes success by size and harness and δ per domain, and this table shows all of it
+(`report.json` `per_domain`). No other estimand and no interval is computed per domain.
 
 ## The joint reading with S1a (section 15; descriptive)
 
@@ -336,29 +359,52 @@ resample the tasks jointly for both samples (seed 42). No p-value is reported.
 | mean of π_4B and π_9B | 0.084 [0.005, 0.180] | 0.055 [0.003, 0.130] | −0.029 [−0.107, 0.051] | 0.085 [0.029, 0.151] |
 
 As a description: on the same 113 tasks, E's estimates sit inside S1a's intervals, and every
-E − S1a interval covers 0. The task-specific 9B signal that S1a's secondary set showed (X_9B
-0.038, π_9B lower bound 0.038) is about half as large in E (X_9B 0.019, interval covering 0).
-Across the six sessions together, X_9B's and π_9B's intervals exclude 0. None of this is a
-registered reading, and none of it changes DR2 or DR5.
+E − S1a interval covers 0. S1a's secondary set showed a task-specific 9B signal: X_9B 0.038,
+and π_9B 0.168, whose one-sided 95% lower bound in S1a's own report was 0.038 (S1a
+`RESULTS.md`; the joint bootstrap's two-sided 95% interval in the table is [0.010, 0.333]).
+That signal is about half as large in E (X_9B 0.019, interval covering 0). Over the six
+sessions together, the descriptive intervals of X_9B and π_9B lie above 0 ([0.0074, 0.0565]
+and [0.038, 0.237]). They pool two samples of different design, E's chosen after S1a's
+readings, and they carry no test. None of this is a registered reading, and none of it
+changes DR2 or DR5. The table shows only part of section 15's list. Every listed quantity
+(including D_b per size and X pooled) for E, S1a, E − S1a and the six sessions is in
+`analysis/joint.json`.
 
 ## Deviations and disclosures
 
 **Deviation from the registration:**
 
-1. **The fresh verifier had not run when this file was written.** Section 18 says "a fresh
-   verifier recomputes the report from the SHA-checked raw records before RESULTS is
-   written". The analysis was run by a single analyst with no means to start an independent
-   agent, so this RESULTS precedes that verification. Until a fresh verifier's record is
-   committed beside it, this file is provisional; if the verifier disagrees, the verifier's
-   recomputation governs and this file is corrected. The analyst's own self-check
-   (disclosure 4) is not that verification.
+1. **The fresh verifier ran after RESULTS was first written (a process deviation, dated).**
+   Section 18 says "a fresh verifier recomputes the report from the SHA-checked raw records
+   before RESULTS is written". A single analyst ran the analysis with no means to start an
+   independent agent. The first version of this file (commit `af837178`, 2026-10-14 01:31
+   UTC) therefore preceded that verification and was labelled provisional. The fresh verifier
+   ran afterwards on 2026-10-14 UTC, from a host export of `f6144d6b` checked file by file
+   against the commit. It rebuilt the merged records from SHA-checked copies of all eight
+   jobs' raw records and reran the registered report, section 15, the joint reading, the
+   costs, DR0 and the GLMM input with the frozen code: every output was byte-identical. Its
+   own implementation, which imports no harness module, reproduced every point estimate, and
+   every bootstrap interval and bound on the registered (seed 42) resample indices, to within
+   5e-7. Its randomization p-values agree within Monte Carlo error, and it reached the same
+   outcome for every rule, prediction and sensitivity. It did not refit the GLMM (that needs
+   a Slurm job), but it checked the fit's input, outputs, receipt and convergence fields. A
+   second verifier checked this file's claims against the registration and the outputs.
+   Neither found a recomputation disagreement or a blocking item. Their records are committed
+   in `analysis/verification/verifier-record.json`, and the wording and disclosure items they
+   raised are corrected in this version. The provisional label is removed. The analyst's own
+   self-check (disclosure 4) was not that verification.
 
 **Disclosures:**
 
 2. **Orchestrator restarts.** The orchestrating session restarted twice after session E2
-   (the operator's Mac crashed). The E2 operator's report file did not survive; the E3 and
-   E4 operators resumed from the host's run and pair directories and the per-job README, and
-   no job was resubmitted (`README.md` disclosures). This analysis started after a further
+   (the operator's Mac crashed). The E3 and E4 operators resumed from the host's run and pair
+   directories and the per-job README, and no job was resubmitted (`README.md` disclosures).
+   The first version of this file and of `README.md` said that the E2 operator's report did
+   not survive. That was wrong. A copy is in the orchestrator's scratch directory, written at
+   00:07 UTC on 2026-10-13, after the restarts and before E3 was submitted. Its content
+   agrees with the README's session E2 section: session end 19:12:47Z, DR0 not fired, no
+   deviation, and the same disclosures. No result depends on it. This analysis started after
+   a further
    resume, at 22:03 UTC on 2026-10-13, from the host's state: no analysis directory and no
    analysis job existed, so every analysis step ran once, and no Slurm job of the analysis was
    resubmitted. To spare the Mac's memory, every computation ran on the host;
@@ -393,18 +439,32 @@ registered reading, and none of it changes DR2 or DR5.
 6. **The π_small bound is close to the near-equivalence line.** DR2 reads Near-equivalent
    because π_small's one-sided 95% upper bound, 0.1187, is below 0.12 by 0.0013 (the
    self-check's independent bootstrap: 0.1189). The flagged-task (0.1188) and D82 (0.1190)
-   sensitivities keep it below 0.12; on S1a's 32 base tasks it is 0.121. The registered
-   reading is the primary set's, and it is Near-equivalent; the margin is stated so the
-   reading is not overstated.
+   sensitivities keep it below 0.12; on S1a's 32 base tasks it is 0.121. The margin is about
+   the Monte Carlo error of the registered bootstrap. At 10,000 resamples the bound's Monte
+   Carlo sd is about 0.001. Over 20 other seeds (1000-1019) it ranged from 0.1169 to 0.1211,
+   and 2 of the 20 were at or above 0.12, which would read Inconclusive. So another seed could
+   have read Inconclusive: 2 of 20 did here, and from the Monte Carlo sd, roughly 10-20% of
+   seeds would. At 200,000 resamples (seed 424242) the bound is 0.1191 (lower bound 0.0099),
+   below 0.12. The fresh verifier found this with its own code,
+   and the frozen code gives the same values (`analysis/verification/mc-seed-check-*.txt`).
+   DR5's NO-GO holds at every seed tried: the highest upper bound, 0.1211, is below 0.13. The
+   registered reading is the primary set's at seed 42, and it is Near-equivalent. No rule or
+   outcome changes. The margin and its Monte Carlo error are stated so that the reading is not
+   overstated.
 7. **Rescoring.** As in S1a, task `53ad5833`'s checker needs live state, so its 16 episodes
    keep their live verdicts in the corrected outcome (`rescore-coverage.json`). The rescoring
    job outputs (checker warnings and debug prints, about 210 KB each) stay on the host, with
    their SHA-256 in `analysis/logs/rescore-logs.sha256`.
 8. **Session-run disclosures** (`README.md`): operator handovers in sessions E1, E3 and E4; the
    E2 operator's network loss while it waited for the gap; failed queue polls on ssh timeouts;
-   the `--test-only` start estimates of E-9B-E3 and E-9B-E4; the S2 v5 step-0 export staged on
-   the host during E3's 9B pair (D96 item (2): file staging, not a job). None is a deviation,
-   and none touches an E record.
+   the `--test-only` start estimates of E-9B-E3 and E-9B-E4; the engine start-up beyond L in
+   two 9B jobs (cost card). None is a deviation, and none touches an E record.
+   **Departure from D85's host-use condition.** S2 v5's step-0 source export was staged on the
+   host during E3's 9B pair (D96 item (2)). D85, E's sign-off, allows other workstreams on the
+   host only in the gaps between E's sessions, never during an E job. The staging was file
+   staging, not a Slurm job. Section 6.4 counts Slurm jobs, so it is not a deviation from the
+   registration's text, but it departed from D85's condition. It touched no E record.
+   E-9B-E3's lane snapshots and its queue watcher's 156 samples show no foreign Slurm job.
 9. **No job was rerun to improve an outcome**, no E job was resubmitted, and no frozen file
    changed: provenance checked every file of E's section 23 and S1a's section 20 in the
    export at both ends of the analysis (`analysis/provenance-pre.json`, `-post.json`, `pass`
@@ -419,15 +479,20 @@ configuration (greedy decoding, 15 steps, 2,048 output tokens with thinking, the
 settle, V = 20 on vLLM v0.31.0, offline VMs), on this host, VM image and lane as configured
 (the scope of D53's action-path certification), all labelled "not externally anchored":
 
-- **DR2 Near-equivalent.** The two certified harnesses' success rates do not differ: δ =
-  0.00 pp with a 90% t interval of ±2.44 pp, and the harness share's one-sided upper bound,
-  0.119, is below the registered 0.12. Present is excluded by both registered tests (δ
-  p = 1.000, X p = 0.093). This is DR2's decisive reading that S1a could not reach.
-- **DR5 NO-GO.** π_small = 0.055 with one-sided bounds [0.010, 0.119] below M = 0.13: the
-  harness share of within-task outcome variance is small for these sizes. S1b stays closed,
-  as D69 decided on the design study's forecast; E confirms that forecast with data.
-- **The between-session rerun floor**: D_b = 10.7% [8.0, 13.5] (4B 11.1%, 9B 10.3%), with no
-  session pair differing detectably (12 pairwise tests, Holm: none).
+- **DR2 Near-equivalent.** DR2 does not classify the pair Present: neither registered test
+  rejects (δ paired t p = 1.000, X sign flip p = 0.093). The difference lies within the
+  registered margins: δ = 0.00 pp with a 90% t interval of ±2.44 pp, inside ±7.5 pp, and
+  π_small's one-sided 95% upper bound, 0.1187, is below 0.12. That bound clears 0.12 by about
+  its Monte Carlo error (disclosure 6). This is the decisive DR2 reading that S1a could not
+  reach. It is a bounded-difference class, not evidence that the harnesses' effects are
+  zero.
+- **DR5 NO-GO.** π_small, the mean of the two sizes' harness shares, is 0.055 with one-sided
+  bounds [0.010, 0.119], below M = 0.13. DR5 reads that mean. π_9B on its own (0.085,
+  one-sided upper bound 0.177) is not shown to be below 0.13. S1b stays closed, as D69
+  decided on the design study's forecast, and E's NO-GO is consistent with that forecast.
+- **The between-session rerun floor**: D_b = 10.7% [8.0, 13.5] (4B 11.1%, 9B 10.3%); P2 is
+  not falsified. (Descriptive, not licensed: none of the 12 pairwise session-shift tests
+  rejects after Holm, and section 10 gives those tests no rule.)
 - **4B is not at the floor** (27.2% and 26.3%).
 - **The cost card**: 0.0027-0.0030 GPU-h and 0.049-0.052 VM-h per episode, 24-27% of the
   card's high price.
@@ -437,8 +502,14 @@ settle, V = 20 on vLLM v0.31.0, offline VMs), on this host, VM image and lane as
 ## What it does not license
 
 - Equivalence in any wider sense. Near-equivalent is DR2's registered class, with a ±7.5 pp
-  margin on δ and a 0.12 bound on π_small, for these sessions; the π_small bound cleared 0.12
-  by 0.0013 (disclosure 6), and on S1a's 32 base tasks it does not.
+  margin on δ and a 0.12 bound on π_small, for these sessions. The π_small bound cleared 0.12
+  by 0.0013, which is about the bootstrap's Monte Carlo error. At the registered 10,000
+  resamples its Monte Carlo sd is about 0.001, and another seed could have read Inconclusive
+  (2 of 20 other seeds did). At 200,000 resamples it is 0.1191, below 0.12 (disclosure 6). On
+  S1a's 32 base tasks it is 0.121 at seed 42, which is also within Monte Carlo error of the
+  line.
+- A per-size DR5 reading. NO-GO reads π_small, the mean of the two sizes. π_9B's one-sided
+  upper bound, 0.177, is above 0.13.
 - The absence of task-specific harness effects. X_9B is 0.019 with an interval reaching 0.046;
   the label-permutation sensitivity gives p = 0.047; the frozen X test is conservative at
   S = 4. A small share is not a zero share.
@@ -470,4 +541,7 @@ settle, V = 20 on vLLM v0.31.0, offline VMs), on this host, VM image and lane as
 - `analysis/costs.json`, `analysis/dr0-*.json`, `analysis/e.jsonl` (the merged records, the
   report's input), `analysis/selfcheck.json`, `analysis/provenance-*.json`;
   `analysis/README.md`: steps, commands, jobs and digests.
+- `analysis/verification/`: the fresh verifier's records (`verifier-record.json`) and the
+  Monte Carlo seed check of π_small's bounds by the frozen code (`mc-seed-check.py`,
+  `mc-seed-check-primary.txt`, `mc-seed-check-base.txt`; descriptive, not registered).
 - `README.md` (this directory): OE and the eight E jobs.
