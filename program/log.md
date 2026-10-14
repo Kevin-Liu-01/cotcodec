@@ -5668,7 +5668,7 @@ they say so.)
   cap: one cotcodec-vllm overlay build (job 1393, `b95ac22c`, image `sha256:51540dd5`) and one main
   job (1397, 00:10:48 on 1 H100, 2026-10-14 23:01-23:12Z) with five vLLM 0.31.0 engine sessions
   (batch-invariant `bi-a`, `bi-b` restart, `bi-c` reconfigured; default `default-a`, `default-b`
-  restart), 25 passes and 37,136 requests. CPU-only: LongMemEval-S fetch 1362, selftests 1383
+  restart), 24 passes and 37,136 requests. CPU-only: LongMemEval-S fetch 1362, selftests 1383
   and 1394. Both GPU jobs were submitted with no G2b job in the queue; two CPU jobs ran beside
   G2b GPU jobs and G2b's CPU job 1398 ran beside the main job (README, Problems).
 - How batch invariance is enabled in v0.31.0 (read-only at `db9527a4`, line-pinned in the README):

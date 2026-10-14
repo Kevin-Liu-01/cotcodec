@@ -1252,7 +1252,7 @@
       "experiment": "memcredit-step0-v1 main job (EXPLORATORY AM1 Step 0, D104): Qwen3-8B reader in vLLM 0.31.0, batch-invariant vs default A/A replay, throughput cost, 256-subset demo tables on 8 LongMemEval-S questions x 2 pool arms",
       "gpu_hours": 0.18,
       "jobs": [
-        "1397 five engine sessions, 25 passes, 37,136 requests (1 H100; COMPLETED 0:0, 00:10:48)"
+        "1397 five engine sessions, 24 passes, 37,136 requests (1 H100; COMPLETED 0:0, 00:10:48)"
       ],
       "outcome": "batch-invariant mode: every A/A comparison identical in tokens and log-prob bits (4,096 of 4,096 greedy under a shuffled order, a restart and a reconfigured engine, 95% CP [0.9991, 1]; concurrency 8, batch 1, warm cache; 1,024 of 1,024 sampled shuffled and restarted); default mode changes 0.07% (shuffled) to 2.7-3.1% (concurrency 8, batch 1) of greedy replies; batch-invariant costs 1.32-1.38x wall time batched, 2.5-3.1x at concurrency <= 8; 2.8 GPU-s per question for both arms' 256-subset tables (exploratory; program/evidence/2026-10-15/am1-step0/README.md)",
       "basis": "physical (scontrol RunTime 00:10:48 on 1 H100; the lane's records 23:01:40Z-23:12:27Z); Slurm limit 75 min (1.25 GPU-h cap); Step 0 total with the build 0.1978 of the 1.5 cap"

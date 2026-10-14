@@ -51,8 +51,9 @@ below describes these requests, on one H100 of this node, with this software sta
    Git LFS oid), MIT. It stays out of the repository; only ids, counts, ranks and hashes are here.
 6. **The demo exercises the pipeline but says nothing about credit-rule regret.** The crude
    containment utility used here is not usable (it scores "UCLA" wrong against "University of
-   California, Los Angeles (UCLA)" and counts a stray "3" as the answer "3"); the reader got the
-   temporal-reasoning questions wrong on full pools; and the scorable tables have the pure
+   California, Los Angeles (UCLA)", and it scores "I don't know" replies that mention "fixing the
+   fence" as right); the reader got the temporal-reasoning questions wrong on full pools; and the
+   scorable tables have the pure
    structures under which, by the dossier's O5, LOO and Shapley already pick the optimal keep set
    (a knowledge-update gold arm determined by one memory, a multi-session gold arm that is exactly
    the AND of its two gold turns, single-memory single-session-user tables). A CPU census of all
@@ -74,7 +75,7 @@ below describes these requests, on one H100 of this node, with this software sta
 | 1383 | pre-image CPU selftest: source `a18fa56b` mounted into the G2 overlay `sha256:fabad633` | 0 | about 1 min | 0 | pass: 4,096 prompts rendered (108-940 tokens), thinking off, parsers and analysis ok |
 | 1393 | cotcodec-vllm cu129 overlay build, commit `b95ac22c` | 1 | 00:01:04 | 0.0178 | COMPLETED, `sha256:51540dd50e0ec28c2cb4a77b51a70ba4767d58edf0fc6673ff1c81678210c2a3` |
 | 1394 | post-build CPU selftest of the baked `b95ac22c` code | 0 | about 1 min | 0 | pass |
-| 1397 | main job: five engine sessions, 25 passes, 37,136 requests, analysis | 1 | 00:10:48 | 0.1800 | COMPLETED 0:0, `reason=completed`, every session and pass complete |
+| 1397 | main job: five engine sessions, 24 passes, 37,136 requests, analysis | 1 | 00:10:48 | 0.1800 | COMPLETED 0:0, `reason=completed`, every session and pass complete |
 | | **total** | | | **0.1978** | |
 
 Run times are `scontrol` RunTime; for job 1397 the lane's records agree (`job.env` started_at
@@ -140,7 +141,8 @@ the image as at the tag (`selftests/*/step0-selftest.json`, `vllm_cited_files_sh
     piecewise and full CUDA graphs, which the engine log shows.
 - **Sampling**: vLLM warns that sampling at T > 0 without a per-request seed "may not be batch
   invariant" (sampling_params.py L538-L546). Every sampled request here carried seed 44; the one
-  warning in each log came from the engine's own warm-up, before any request.
+  such warning in each batch-invariant session's log came from the engine's own warm-up, before
+  the engine was ready and before any request.
 
 ## Design
 
@@ -149,8 +151,8 @@ multi-session, knowledge-update, single-session-user; abstention, single-session
 single-session-preference questions are left out of the demo), two pool arms each, all 256 subsets
 of each 8-memory pool: 4,096 requests (`prepare/pools-summary.json`).
 
-- Memory unit: one user turn with its session date (96% of the dataset's gold turns are user
-  turns); 1,500 characters at most (one memory of 128 truncated).
+- Memory unit: one user turn with its session date (842 of LongMemEval-S's 896 gold turns, 94%,
+  are user turns); 1,500 characters at most (one memory of 128 truncated).
 - Arm `retrieved`: the BM25 top 8 user turns for the question (Okapi, k1 1.5, b 0.75; it stands in
   for the dossier's MiniLM retriever). It held every gold turn for 7 of the 8 questions and none
   for one.
@@ -289,14 +291,17 @@ below illustrate the pipeline only (`analysis/demo-tables.json`, `analysis/table
   shop in the city" in exactly the 128 subsets that keep the gold turn, "I don't know" in the other
   128 (3d86fd0a, gold arm). The multi-session gold arm 09ba9854 is exactly the AND of its two gold
   turns (mean 0.25, order >= 2 share 1/3, the O5 value); the knowledge-update gold arm 618f13b2 is
-  determined by one memory, the newer one: with only the older turn the reader gives the stale
-  count ("four times" for "six").
+  exactly the indicator of one of its two gold turns (the one that gives "six"); with only the
+  other gold turn the reader answers "four times", which by the session timestamps is the later
+  statement.
 - 25e5aa4f's gold arm answers "You completed your Bachelor's degree in Computer Science from UCLA"
   whenever the gold turn is kept, and the containment check scores it 0 against "University of
   California, Los Angeles (UCLA)". The temporal-reasoning tables are near 0 because the reader
-  answers them wrongly (6, 10 or 2 weeks where the answer is 3; "the goats' hooves first" where it
-  is the fence); their high order >= 2 shares and nonzero LOO regrets come from replies that
-  happen to contain the answer string. A judge is required.
+  answers them wrongly on almost every subset, the full pools included: 6, 10 or 2 weeks where
+  the answer is 3 weeks (it says "3 weeks" in 4 of 512 subsets), and "the goats' hooves first"
+  where it is the fence. gpt4_70e84552's ones are replies that mention "fixing the fence" while
+  answering otherwise or not at all. So these tables' high order >= 2 shares and nonzero LOO
+  regrets describe a few scattered ones, not memory interactions. A judge is required.
 - 216 distinct replies over the 16 tables (1-40 per table): at that rate the judge sees about 5,400
   distinct answers for 200 questions and both arms.
 

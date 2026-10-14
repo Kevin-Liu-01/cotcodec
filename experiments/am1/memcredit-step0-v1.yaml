@@ -47,7 +47,7 @@ selection:
   max_gold_turns: 6
   pool_size: 8
 
-# Memory unit: one user turn (96% of LongMemEval-S gold turns are user turns), with its
+# Memory unit: one user turn (842 of LongMemEval-S's 896 gold turns are user turns), with its
 # session date. BM25 stands in for the dossier's MiniLM retriever in this demo.
 retriever:
   name: bm25-okapi-lucene-idf
