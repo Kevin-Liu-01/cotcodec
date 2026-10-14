@@ -1,0 +1,168 @@
+{
+  "claim_level": "exploratory",
+  "deadline_source": "job.env started_at",
+  "deadline_utc": "2026-10-14T21:15:15Z",
+  "evidence_sha256": "e50934f2b43e24e5cda7c063c732903e94bdd5f3d9f7567ce423671b8d9cea75",
+  "experiment_id": "g2-pilot-v1",
+  "finished_at": "2026-10-14T21:13:57Z",
+  "job": "teacher-force",
+  "lane": {
+    "COTCODEC_GIT_SHA": "307fa7ed2734847091e34e76f50332aa4c7b3982",
+    "COTCODEC_MODEL_ID": "qwen3.5-4b",
+    "COTCODEC_SOURCE_SHA256": "6c93dc462b4fd7e107b028c5f0b79a6e9977e8beb7dd72de921260cd41e141a2"
+  },
+  "models": {
+    "qwen3-8b": {
+      "load_s": 3.4,
+      "paths": {
+        "r1_fla_chunk_bf16": {
+          "gdn_impl": null,
+          "param_dtype": "torch.bfloat16",
+          "precision": {
+            "allow_tf32": false,
+            "float32_matmul_precision": "highest",
+            "sdpa_backends": [
+              "FLASH_ATTENTION",
+              "EFFICIENT_ATTENTION"
+            ],
+            "sdpa_gqa_flag": "stock"
+          },
+          "sdpa_unrestricted_fallbacks": 0,
+          "sequences_scored": 24,
+          "status": "complete",
+          "wall_s": 7.4
+        },
+        "r4_torch_fp32": {
+          "gdn_impl": null,
+          "param_dtype": "torch.float32",
+          "precision": {
+            "allow_tf32": false,
+            "float32_matmul_precision": "highest",
+            "sdpa_backends": [
+              "EFFICIENT_ATTENTION"
+            ],
+            "sdpa_gqa_flag": "off (repeat_kv)"
+          },
+          "sdpa_unrestricted_fallbacks": 0,
+          "sequences_scored": 24,
+          "status": "complete",
+          "wall_s": 63.3
+        }
+      },
+      "sequences": 24,
+      "verification": {
+        "artifact_root_sha256": "325ab760530dfa4eb0529cc56f17b5042326d1bcc8fddf902b10fde325ff6281",
+        "mode": "full",
+        "model_id": "qwen3-8b",
+        "receipt": "/model-cache/cotcodec-receipts-cpu-lane/qwen3-8b.json",
+        "receipt_sha256": "b9e3a74d42882abe218e77d6023010543dd98278dedcc9180dd7089d336287fa",
+        "repo_id": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "total_bytes": 16397461266,
+        "verified_by": "scripts/fetch_open_model.py verify",
+        "verify_exit": 0,
+        "verify_s": 12.3,
+        "verify_stderr": "",
+        "verify_stdout": "{\n  \"artifact_root_sha256\": \"325ab760530dfa4eb0529cc56f17b5042326d1bcc8fddf902b10fde325ff6281\",\n  \"backend\": \"huggingface\",\n  \"mode\": \"full\",\n  \"model_id\": \"qwen3-8b\",\n  \"publication_eligible\": true,\n  \"revision\": \"b968826d9c46dd6066d109eabc6255188de91218\",\n  \"total_bytes\": 16397461266\n}\n"
+      }
+    },
+    "qwen3.5-4b": {
+      "gdn": {
+        "original": "transformers.models.qwen3_5.modeling_qwen3_5.torch_chunk_gated_delta_rule",
+        "stock_resolution": "fla.ops.gated_delta_rule.chunk.chunk_gated_delta_rule",
+        "torch_chunk": "transformers.models.qwen3_5.modeling_qwen3_5.torch_chunk_gated_delta_rule"
+      },
+      "gdn_layers": 24,
+      "load_s": 2.3,
+      "paths": {
+        "r1_fla_chunk_bf16": {
+          "gdn_impl": "fla_chunk",
+          "param_dtype": "torch.bfloat16",
+          "precision": {
+            "allow_tf32": false,
+            "float32_matmul_precision": "highest",
+            "sdpa_backends": [
+              "FLASH_ATTENTION",
+              "EFFICIENT_ATTENTION"
+            ],
+            "sdpa_gqa_flag": "stock"
+          },
+          "sdpa_unrestricted_fallbacks": 0,
+          "sequences_scored": 72,
+          "status": "complete",
+          "wall_s": 76.8
+        },
+        "r3_fla_recurrent_bf16": {
+          "gdn_impl": "fla_fused_recurrent",
+          "param_dtype": "torch.bfloat16",
+          "precision": {
+            "allow_tf32": false,
+            "float32_matmul_precision": "highest",
+            "sdpa_backends": [
+              "FLASH_ATTENTION",
+              "EFFICIENT_ATTENTION"
+            ],
+            "sdpa_gqa_flag": "stock"
+          },
+          "sdpa_unrestricted_fallbacks": 0,
+          "sequences_scored": 24,
+          "status": "complete",
+          "wall_s": 14.7
+        },
+        "r4_torch_fp32": {
+          "gdn_impl": "torch_chunk_fp32",
+          "param_dtype": "torch.float32",
+          "precision": {
+            "allow_tf32": false,
+            "float32_matmul_precision": "highest",
+            "sdpa_backends": [
+              "EFFICIENT_ATTENTION"
+            ],
+            "sdpa_gqa_flag": "off (repeat_kv)"
+          },
+          "sdpa_unrestricted_fallbacks": 0,
+          "sequences_scored": 24,
+          "status": "complete",
+          "wall_s": 64.1
+        }
+      },
+      "sequences": 72,
+      "verification": {
+        "artifact_root_sha256": "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e",
+        "mode": "full",
+        "model_id": "qwen3.5-4b",
+        "receipt": "/model-cache/cotcodec-receipts/qwen3.5-4b.json",
+        "receipt_sha256": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+        "repo_id": "Qwen/Qwen3.5-4B",
+        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "total_bytes": 9342907469,
+        "verified_by": "lane (model-verification.txt)"
+      }
+    }
+  },
+  "path_seeds": {
+    "r3_fla_recurrent_bf16": [
+      42
+    ],
+    "r4_torch_fp32": [
+      42
+    ]
+  },
+  "rollout_git_sha": "307fa7ed2734847091e34e76f50332aa4c7b3982",
+  "selected_models": [
+    "qwen3.5-4b",
+    "qwen3-8b"
+  ],
+  "signal": null,
+  "started_at": "2026-10-14T21:10:03Z",
+  "versions": {
+    "causal_conv1d_installed": false,
+    "fla": "0.5.2",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "kernels_installed": false,
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "torch": "2.11.0+cu128",
+    "torch_cuda": "12.8",
+    "transformers": "5.15.0"
+  }
+}

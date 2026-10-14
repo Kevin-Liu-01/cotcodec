@@ -168,6 +168,7 @@ models:
     publication_eligible: true
     roles:
     - q1-throughput-stand-in
+    - g2-dense-control
     metadata_files:
     - LICENSE
     - README.md
@@ -185,10 +186,18 @@ models:
     source_url: https://huggingface.co/Qwen/Qwen3-8B
     registered_at: '2026-10-07'
     registered_for: serving-throughput-probe-v1 job B (metadata only; vLLM dummy weights)
-    blocker: >-
-      Registered for its config and tokenizer only. It has Dr. Kernel-8B's layer shapes
-      (decision D5), so its dummy-weight throughput stands in for the unlicensed Q1 policy.
-      No weight download is planned.
+    note: >-
+      First registered for its config and tokenizer only (serving-throughput-probe-v1). It
+      has Dr. Kernel-8B's layer shapes (decision D5), so its dummy-weight throughput stands in
+      for the unlicensed Q1 policy. Since 2026-10-14 its full weights are fetched (below), so
+      it is no longer metadata-only.
+    weights_fetch: >-
+      2026-10-14: full BF16 weights fetched under D1 by the GPU-less fetch lane as the dense
+      control of the G2 pilot (D104; experiments/g2/g2-pilot-v1.yaml) and the dense control
+      D104 names for G2 and AM1 (size-matched to Qwen3.5-9B; the pilot paired it with the 4B,
+      so there it is not size-matched). The full-snapshot receipt is written to the
+      lane's own receipt root (cotcodec-receipts-cpu-lane), so the earlier metadata receipt
+      is not overwritten.
   qwen3-32b:
     backend: huggingface
     repo_id: Qwen/Qwen3-32B

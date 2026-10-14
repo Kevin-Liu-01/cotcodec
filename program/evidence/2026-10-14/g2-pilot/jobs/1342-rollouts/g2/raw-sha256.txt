@@ -1,0 +1,7 @@
+e50934f2b43e24e5cda7c063c732903e94bdd5f3d9f7567ce423671b8d9cea75  runs/rollouts-v2/1342/g2/tf-input.json
+b22d5033e9b6cf1d3e9ddbc58218cc827950cf98cb11c789974e5f47248a45a8  runs/rollouts-v2/1342/g2/qwen3-8b/tokens.npz
+66d7fd30485f841a20e5aa6535c1dc5b3b714fafd8b0143b0a19241723c88ecd  runs/rollouts-v2/1342/g2/qwen3.5-4b/tokens.npz
+05d4a4dd0a2e6e5623b1062519f6768e38960ac3800ed4ba9c715cac33dbb996  runs/rollouts-v2/1342/g2/qwen3-8b/tf-sequences.json
+13dc9cfb415e43fd84ffa536d01069fbb666636d1df2361eff3dd1540191f899  runs/rollouts-v2/1342/g2/qwen3.5-4b/tf-sequences.json
+8f6be420706794d6bc2973b75d34588efcda91cc052fa15a414e0b713429c7dd  runs/rollouts-v2/1342/g2/qwen3-8b/texts.jsonl.gz
+c8841558d2c823cf0853fbff23779c6811e2ab7f71bd6295f23b99baf688256c  runs/rollouts-v2/1342/g2/qwen3.5-4b/texts.jsonl.gz

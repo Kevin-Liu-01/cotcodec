@@ -1,0 +1,20 @@
+[
+  "python",
+  "scripts/run_g2_rollouts.py",
+  "run",
+  "--seeds",
+  "42",
+  "43",
+  "44",
+  "--output-dir",
+  "/outputs/g2",
+  "--allocation-minutes",
+  "12",
+  "--prompt-count",
+  "24",
+  "--gen-seconds",
+  "120",
+  "--skip-prefill",
+  "--min-model-s",
+  "150"
+]

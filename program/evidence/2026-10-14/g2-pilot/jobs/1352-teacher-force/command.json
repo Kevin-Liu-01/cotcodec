@@ -1,0 +1,15 @@
+[
+  "python",
+  "scripts/run_g2_teacher_force.py",
+  "run",
+  "--evidence",
+  "/inputs/study-artifact.json",
+  "--expected-evidence-sha256",
+  "e50934f2b43e24e5cda7c063c732903e94bdd5f3d9f7567ce423671b8d9cea75",
+  "--output-dir",
+  "/outputs/g2tf",
+  "--allocation-minutes",
+  "9",
+  "--r3-rollout-seeds",
+  "42"
+]

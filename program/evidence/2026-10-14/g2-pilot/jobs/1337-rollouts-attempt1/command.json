@@ -1,0 +1,13 @@
+[
+  "python",
+  "scripts/run_g2_rollouts.py",
+  "run",
+  "--seeds",
+  "42",
+  "43",
+  "44",
+  "--output-dir",
+  "/outputs/g2",
+  "--allocation-minutes",
+  "14"
+]

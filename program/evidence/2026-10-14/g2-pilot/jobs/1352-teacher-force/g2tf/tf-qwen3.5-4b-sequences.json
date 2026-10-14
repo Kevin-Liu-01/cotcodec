@@ -1,0 +1,362 @@
+[
+  {
+    "prompt_index": 1,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p001/s42"
+  },
+  {
+    "prompt_index": 2,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p002/s42"
+  },
+  {
+    "prompt_index": 5,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p005/s42"
+  },
+  {
+    "prompt_index": 6,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p006/s42"
+  },
+  {
+    "prompt_index": 8,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p008/s42"
+  },
+  {
+    "prompt_index": 13,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p013/s42"
+  },
+  {
+    "prompt_index": 14,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p014/s42"
+  },
+  {
+    "prompt_index": 15,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p015/s42"
+  },
+  {
+    "prompt_index": 17,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p017/s42"
+  },
+  {
+    "prompt_index": 27,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p027/s42"
+  },
+  {
+    "prompt_index": 32,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p032/s42"
+  },
+  {
+    "prompt_index": 34,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p034/s42"
+  },
+  {
+    "prompt_index": 35,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p035/s42"
+  },
+  {
+    "prompt_index": 37,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p037/s42"
+  },
+  {
+    "prompt_index": 38,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p038/s42"
+  },
+  {
+    "prompt_index": 43,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p043/s42"
+  },
+  {
+    "prompt_index": 47,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p047/s42"
+  },
+  {
+    "prompt_index": 51,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p051/s42"
+  },
+  {
+    "prompt_index": 53,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p053/s42"
+  },
+  {
+    "prompt_index": 56,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p056/s42"
+  },
+  {
+    "prompt_index": 58,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p058/s42"
+  },
+  {
+    "prompt_index": 61,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p061/s42"
+  },
+  {
+    "prompt_index": 62,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p062/s42"
+  },
+  {
+    "prompt_index": 63,
+    "seed": 42,
+    "sequence_id": "qwen3.5-4b/p063/s42"
+  },
+  {
+    "prompt_index": 1,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p001/s43"
+  },
+  {
+    "prompt_index": 2,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p002/s43"
+  },
+  {
+    "prompt_index": 5,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p005/s43"
+  },
+  {
+    "prompt_index": 6,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p006/s43"
+  },
+  {
+    "prompt_index": 8,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p008/s43"
+  },
+  {
+    "prompt_index": 13,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p013/s43"
+  },
+  {
+    "prompt_index": 14,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p014/s43"
+  },
+  {
+    "prompt_index": 15,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p015/s43"
+  },
+  {
+    "prompt_index": 17,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p017/s43"
+  },
+  {
+    "prompt_index": 27,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p027/s43"
+  },
+  {
+    "prompt_index": 32,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p032/s43"
+  },
+  {
+    "prompt_index": 34,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p034/s43"
+  },
+  {
+    "prompt_index": 35,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p035/s43"
+  },
+  {
+    "prompt_index": 37,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p037/s43"
+  },
+  {
+    "prompt_index": 38,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p038/s43"
+  },
+  {
+    "prompt_index": 43,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p043/s43"
+  },
+  {
+    "prompt_index": 47,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p047/s43"
+  },
+  {
+    "prompt_index": 51,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p051/s43"
+  },
+  {
+    "prompt_index": 53,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p053/s43"
+  },
+  {
+    "prompt_index": 56,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p056/s43"
+  },
+  {
+    "prompt_index": 58,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p058/s43"
+  },
+  {
+    "prompt_index": 61,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p061/s43"
+  },
+  {
+    "prompt_index": 62,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p062/s43"
+  },
+  {
+    "prompt_index": 63,
+    "seed": 43,
+    "sequence_id": "qwen3.5-4b/p063/s43"
+  },
+  {
+    "prompt_index": 1,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p001/s44"
+  },
+  {
+    "prompt_index": 2,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p002/s44"
+  },
+  {
+    "prompt_index": 5,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p005/s44"
+  },
+  {
+    "prompt_index": 6,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p006/s44"
+  },
+  {
+    "prompt_index": 8,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p008/s44"
+  },
+  {
+    "prompt_index": 13,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p013/s44"
+  },
+  {
+    "prompt_index": 14,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p014/s44"
+  },
+  {
+    "prompt_index": 15,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p015/s44"
+  },
+  {
+    "prompt_index": 17,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p017/s44"
+  },
+  {
+    "prompt_index": 27,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p027/s44"
+  },
+  {
+    "prompt_index": 32,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p032/s44"
+  },
+  {
+    "prompt_index": 34,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p034/s44"
+  },
+  {
+    "prompt_index": 35,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p035/s44"
+  },
+  {
+    "prompt_index": 37,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p037/s44"
+  },
+  {
+    "prompt_index": 38,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p038/s44"
+  },
+  {
+    "prompt_index": 43,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p043/s44"
+  },
+  {
+    "prompt_index": 47,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p047/s44"
+  },
+  {
+    "prompt_index": 51,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p051/s44"
+  },
+  {
+    "prompt_index": 53,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p053/s44"
+  },
+  {
+    "prompt_index": 56,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p056/s44"
+  },
+  {
+    "prompt_index": 58,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p058/s44"
+  },
+  {
+    "prompt_index": 61,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p061/s44"
+  },
+  {
+    "prompt_index": 62,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p062/s44"
+  },
+  {
+    "prompt_index": 63,
+    "seed": 44,
+    "sequence_id": "qwen3.5-4b/p063/s44"
+  }
+]

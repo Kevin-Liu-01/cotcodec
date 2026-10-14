@@ -1,0 +1,6 @@
+{"end_of_turn_id": 151645, "engine_kwargs": {"dtype": "bfloat16", "enable_prefix_caching": false, "gpu_memory_utilization": 0.8, "logprobs_mode": "raw_logprobs", "max_model_len": 17408, "max_num_batched_tokens": 4096, "max_num_seqs": 192, "model": "/model-cache/cotcodec-models/qwen3-8b", "seed": 42, "tokenizer": "/model-cache/cotcodec-models/qwen3-8b", "trust_remote_code": false}, "event": "engine-start", "model": "qwen3-8b", "utc": "2026-10-14T21:05:54Z"}
+{"event": "engine-ready", "init_s": 59.5, "model": "qwen3-8b", "utc": "2026-10-14T21:06:53Z"}
+{"event": "rollouts-start", "gen_seconds": 120.0, "model": "qwen3-8b", "requests": 24, "utc": "2026-10-14T21:06:53Z"}
+{"aborted": 6, "event": "rollouts-done", "finished": 18, "model": "qwen3-8b", "steps": 11742, "stopped_by": "time budget", "unmatched": 0, "utc": "2026-10-14T21:08:53Z", "wall_s": 120.03}
+{"event": "prefill-skipped", "model": "qwen3-8b", "reason": "--skip-prefill", "utc": "2026-10-14T21:08:53Z"}
+{"event": "saved", "model": "qwen3-8b", "prefilled": 0, "sequences": 24, "tokens": 167450, "utc": "2026-10-14T21:08:53Z"}

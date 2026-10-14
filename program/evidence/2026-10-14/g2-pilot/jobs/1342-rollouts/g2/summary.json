@@ -1,0 +1,172 @@
+{
+  "allocation_minutes": 12.0,
+  "claim_level": "exploratory",
+  "deadline_source": "job.env started_at",
+  "deadline_utc": "2026-10-14T21:10:43Z",
+  "experiment_id": "g2-pilot-v1",
+  "finished_at": "2026-10-14T21:08:57Z",
+  "gen_seconds": 120.0,
+  "job": "rollouts",
+  "models": {
+    "qwen3-8b": {
+      "argv": [
+        "/usr/local/bin/python",
+        "/workspace/cotcodec/scripts/run_g2_rollouts.py",
+        "worker",
+        "--model",
+        "qwen3-8b",
+        "--output-dir",
+        "/outputs/g2",
+        "--deadline",
+        "1792012243.000",
+        "--gen-seconds",
+        "120",
+        "--prompt-count",
+        "24",
+        "--skip-prefill"
+      ],
+      "exit": 0,
+      "gpu_memory_after_mib": [
+        0
+      ],
+      "started_at": "2026-10-14T21:05:47Z",
+      "status": "complete",
+      "verification": {
+        "artifact_root_sha256": "325ab760530dfa4eb0529cc56f17b5042326d1bcc8fddf902b10fde325ff6281",
+        "mode": "full",
+        "model_id": "qwen3-8b",
+        "receipt": "/model-cache/cotcodec-receipts-cpu-lane/qwen3-8b.json",
+        "receipt_sha256": "b9e3a74d42882abe218e77d6023010543dd98278dedcc9180dd7089d336287fa",
+        "repo_id": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "total_bytes": 16397461266,
+        "verified_by": "scripts/fetch_open_model.py verify",
+        "verify_exit": 0,
+        "verify_s": 12.2,
+        "verify_stderr": "",
+        "verify_stdout": "{\n  \"artifact_root_sha256\": \"325ab760530dfa4eb0529cc56f17b5042326d1bcc8fddf902b10fde325ff6281\",\n  \"backend\": \"huggingface\",\n  \"mode\": \"full\",\n  \"model_id\": \"qwen3-8b\",\n  \"publication_eligible\": true,\n  \"revision\": \"b968826d9c46dd6066d109eabc6255188de91218\",\n  \"total_bytes\": 16397461266\n}\n"
+      },
+      "wall_s": 189.0,
+      "worker_done": {
+        "exit": 0,
+        "utc": "2026-10-14T21:08:53Z"
+      }
+    },
+    "qwen3.5-4b": {
+      "argv": [
+        "/usr/local/bin/python",
+        "/workspace/cotcodec/scripts/run_g2_rollouts.py",
+        "worker",
+        "--model",
+        "qwen3.5-4b",
+        "--output-dir",
+        "/outputs/g2",
+        "--deadline",
+        "1792012243.000",
+        "--gen-seconds",
+        "120",
+        "--prompt-count",
+        "24",
+        "--skip-prefill"
+      ],
+      "exit": 0,
+      "gpu_memory_after_mib": [
+        0
+      ],
+      "started_at": "2026-10-14T21:02:24Z",
+      "status": "complete",
+      "verification": {
+        "artifact_root_sha256": "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e",
+        "mode": "full",
+        "model_id": "qwen3.5-4b",
+        "receipt": "/model-cache/cotcodec-receipts/qwen3.5-4b.json",
+        "receipt_sha256": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+        "repo_id": "Qwen/Qwen3.5-4B",
+        "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "total_bytes": 9342907469,
+        "verified_by": "lane (model-verification.txt)"
+      },
+      "wall_s": 203.0,
+      "worker_done": {
+        "exit": 0,
+        "utc": "2026-10-14T21:05:44Z"
+      }
+    }
+  },
+  "plan": {
+    "claim_level": "exploratory",
+    "experiment_id": "g2-pilot-v1",
+    "models": {
+      "qwen3-8b": {
+        "engine_kwargs": {
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.8,
+          "logprobs_mode": "raw_logprobs",
+          "max_model_len": 17408,
+          "max_num_batched_tokens": 4096,
+          "max_num_seqs": 192,
+          "model": "/model-cache/cotcodec-models/qwen3-8b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+          "trust_remote_code": false
+        },
+        "requests": 64,
+        "rollout_seeds": [
+          42
+        ]
+      },
+      "qwen3.5-4b": {
+        "engine_kwargs": {
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.8,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "max_model_len": 17408,
+          "max_num_batched_tokens": 4096,
+          "max_num_seqs": 192,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        },
+        "requests": 192,
+        "rollout_seeds": [
+          42,
+          43,
+          44
+        ]
+      }
+    },
+    "prefill_arm": {
+      "prompt_logprobs": 0
+    },
+    "requests": 256,
+    "sampling": {
+      "logprobs": 0,
+      "max_tokens": 16384,
+      "temperature": 1.0,
+      "top_k": 0,
+      "top_p": 1.0
+    },
+    "seeds": [
+      42,
+      43,
+      44
+    ]
+  },
+  "prompt_count": 24,
+  "selected_models": [
+    "qwen3.5-4b",
+    "qwen3-8b"
+  ],
+  "signal": null,
+  "skip_prefill": true,
+  "started_at": "2026-10-14T21:02:21Z",
+  "tf_input_sequences": 96,
+  "tf_input_sha256": "e50934f2b43e24e5cda7c063c732903e94bdd5f3d9f7567ce423671b8d9cea75"
+}
