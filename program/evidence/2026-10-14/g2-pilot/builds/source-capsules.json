@@ -1,0 +1,40 @@
+{
+  "307fa7ed": {
+    "archive": "/home/kevin/cotcodec-runs/stage0/g2-pilot/capsule/source-307fa7ed.tar.gz",
+    "archive_format": "normalized-worktree-tar+gzip-mtime-zero",
+    "archive_sha256": "6c93dc462b4fd7e107b028c5f0b79a6e9977e8beb7dd72de921260cd41e141a2",
+    "archive_sha256_recomputed": "6c93dc462b4fd7e107b028c5f0b79a6e9977e8beb7dd72de921260cd41e141a2",
+    "data_excluded": true,
+    "file_count": 10090,
+    "file_manifest_sha256": "a8234f05ba4da5dbf04412bfa50ace435c07762dc99a23721fca8afed4a1b698",
+    "git_sha": "307fa7ed2734847091e34e76f50332aa4c7b3982",
+    "git_tree": "05355240863fc503196cc56946874955085d6d86",
+    "metadata_normalized": true,
+    "mode": "discovery",
+    "omitted_symlinks_sha256": "083d40f19e2e1aa87c37fc80cf422ceb7e9b7761cf452663d8080d9fa72f5a52",
+    "receipt_sha256": "033627f862c72c5bfbd1ca5d0589dc509e1132edf6777cfb27c366e681334895",
+    "schema_version": 3,
+    "selected_ref": "HEAD",
+    "uv_lock_sha256": "4721104d055ec9d7488f82831c24b7e080124f27e9b850abd51c91024629b60f",
+    "worktree_clean": true
+  },
+  "cd1692c5": {
+    "archive": "/home/kevin/cotcodec-runs/stage0/g2-pilot/capsule/source-cd1692c5.tar.gz",
+    "archive_format": "normalized-worktree-tar+gzip-mtime-zero",
+    "archive_sha256": "c3b4e6dcb619e5a925dcc76a3c9500df828be98138ec9d7f8d53298aebfc24d4",
+    "archive_sha256_recomputed": "c3b4e6dcb619e5a925dcc76a3c9500df828be98138ec9d7f8d53298aebfc24d4",
+    "data_excluded": true,
+    "file_count": 10090,
+    "file_manifest_sha256": "a8234f05ba4da5dbf04412bfa50ace435c07762dc99a23721fca8afed4a1b698",
+    "git_sha": "cd1692c5206bbe34f7130bc544ba0628bb5db7a0",
+    "git_tree": "40ba1be00d34ea0f85d17f20e004ef3628c0dbf7",
+    "metadata_normalized": true,
+    "mode": "discovery",
+    "omitted_symlinks_sha256": "083d40f19e2e1aa87c37fc80cf422ceb7e9b7761cf452663d8080d9fa72f5a52",
+    "receipt_sha256": "3f179ac4f355357221bb47372dca67c1e5dea0ecd99894955b7d8e2d686fa966",
+    "schema_version": 3,
+    "selected_ref": "HEAD",
+    "uv_lock_sha256": "4721104d055ec9d7488f82831c24b7e080124f27e9b850abd51c91024629b60f",
+    "worktree_clean": true
+  }
+}

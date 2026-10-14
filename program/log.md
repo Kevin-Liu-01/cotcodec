@@ -5505,3 +5505,38 @@ they say so.)
 - Evidence: `program/evidence/2026-10-14/s2v5-phase0-run/` (README rows and notes for 1299-1307,
   `k1-jobs/1299`-`1306`, `k1-jobs/1307/submit-1307.txt`, `k1-jobs/c3-a-interim-1303-1305.json`,
   operator aids `campaign_summary.py` and `c3_parts.py`).
+
+## 2026-10-14 — G2 exploratory pilot: GDN-hybrid train-inference mismatch by position (branch `stage0/g2-pilot`, not merged)
+
+- EXPLORATORY executable pilot of G2 (D104), the gauntlet's pilot; no preregistration, no
+  confirmatory claim. Config `experiments/g2/g2-pilot-v1.yaml`; new entry points
+  `scripts/run_g2_rollouts.py` (cotcodec-vllm cu129 overlay, vLLM 0.31.0),
+  `scripts/run_g2_teacher_force.py` (research source overlay: torch 2.11, transformers 5.15,
+  FLA 0.5.2) and `scripts/analyze_g2_pilot.py` (CPU), with `harness/g2_pilot.py` and
+  `tests/test_g2_pilot.py`.
+- Dense control: Qwen3-8B (`b968826d`, Apache-2.0) fetched in full under D1 by the GPU-less
+  lane (job 1333, 16.4 GB, artifact root `325ab760...`), its receipt in the lane's own
+  receipt root so the earlier metadata receipt stands. Prompts: 64 MATH-500 level-5 problems
+  (MIT, `6e4ed1a2`), seeded selection.
+- GPU jobs, each on a queue with no inference-baseline job: builds 1334, 1335, 1339, 1340;
+  rollouts 1337 (attempt 1, no data: `LLM.enqueue` returns internal request ids, outputs carry
+  external ones, so all 192 finished rollouts were dropped; the worker then hung at exit;
+  cancelled after 00:12:41) and 1342 (attempt 2, fixed: own ids via `LLMEngine.add_request`,
+  DELTA streaming, bounded exit); teacher forcing 1352. **0.4372 physical GPU-h of the 0.5
+  cap.** CPU: selftests 1331, 1332, 1338, 1343; fetch 1333.
+- Scope run, cut by attempt 1's cost: 24 prompts; Qwen3.5-4B x seeds 42/43/44 (72 rollouts),
+  Qwen3-8B x seed 42 (24); 120 s of generation per model (41 of 72 hybrid rollouts cut at
+  about 11.5K tokens); R1 (HF+FLA chunk bf16) on all, R3 (FLA fused_recurrent) and R4 (fp32
+  reference) on seed 42; R2 (packing), R5 (vLLM prefill) and the common-text arm not run.
+- Readings (exploratory): Qwen3.5-4B rollout vs trainer mean |dlogp| 0.0076, p99 0.11, k3
+  2.7e-4, 0.03% of ratios outside [0.8, 1.25]; up about 12% over the first 3K positions, then
+  flat to 11.5K; position slope with entropy-bin fixed effects +1.3e-5 per 1K [-2.3e-5,
+  +4.9e-5]. vLLM decode and the trainer sit equally far from fp32 (0.0073, 0.0076); swapping
+  chunk for fused_recurrent GDN changes the mismatch by under 1%. Qwen3-8B (not size-matched,
+  different text): 0.0123, p99 0.19, 1.2-1.9x the hybrid in every bin, falling with position.
+  On the dossier's kill criterion 1 this reads as the null; the p99 tail is nearly constant
+  across bins (an untested bf16-logit explanation; an fp32 LM-head arm would test it).
+- Evidence: `program/evidence/2026-10-14/g2-pilot/` (README with tables, figure and a "what
+  it says and does not" section; per-token data, lane records, build and fetch receipts,
+  manifests, operator log). Raw outputs stay on the host under
+  `~/cotcodec-runs/stage0/g2-pilot/` with SHA-256 in the README.

@@ -1,0 +1,3 @@
+0a085688c434fab6db01be9a5bafef1174201b9cf39b20fa4aee03f1fb011748  runs/teacher-force/1352/g2tf/tf-qwen3-8b.npz
+191009560c257e68c78a328c4a0ef96fc0a751e6c887fe891a51fbf38d1123e6  runs/teacher-force/1352/g2tf/tf-qwen3.5-4b.npz
+e50934f2b43e24e5cda7c063c732903e94bdd5f3d9f7567ce423671b8d9cea75  runs/teacher-force/1352/study-artifact.json

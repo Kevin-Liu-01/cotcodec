@@ -1,0 +1,50 @@
+# G2 pilot (EXPLORATORY), rollout job, attempt 2 (attempt 1, job 1337, returned no data).
+# experiments/g2/g2-pilot-v1.yaml (pilot_run); scripts/run_g2_rollouts.py in the cotcodec-vllm
+# cu129 overlay built from the same commit (build job 1339). 24 prompts x seeds 42/43/44 for
+# Qwen3.5-4B (lane-verified primary model) and 24 x seed 42 for Qwen3-8B (re-verified by the
+# driver against cotcodec-receipts-cpu-lane, fetch job 1333); 120 s generation per model;
+# no prefill arm. Slurm limit 12 min x 1 H100 = 0.2 GPU-h cap (planned use about 7.5 min).
+runtime: docker-single-node-discovery-v1
+name: g2-pilot-rollouts-v2
+image_id: sha256:fabad63386d3c39b296e037491d6a6a3b5457c3af31e57764c80ca33c4dec011
+git_sha: "307fa7ed2734847091e34e76f50332aa4c7b3982"
+source_sha256: "6c93dc462b4fd7e107b028c5f0b79a6e9977e8beb7dd72de921260cd41e141a2"
+run_root: /home/kevin/cotcodec-runs/stage0/g2-pilot/runs/rollouts-v2
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 12
+budget:
+  max_gpu_hours: 0.2
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-4b
+  revision: "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+  receipt_sha256: "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082"
+  artifact_root_sha256: "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e"
+command:
+  - python
+  - scripts/run_g2_rollouts.py
+  - run
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--output-dir"
+  - /outputs/g2
+  - "--allocation-minutes"
+  - "12"
+  - "--prompt-count"
+  - "24"
+  - "--gen-seconds"
+  - "120"
+  - "--skip-prefill"
+  - "--min-model-s"
+  - "150"

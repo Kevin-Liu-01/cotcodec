@@ -507,9 +507,7 @@ def plot(result: dict[str, Any], output: Path) -> None:
         "r1_vs_r3": "#7f7f7f",
     }
     models = list(result["models"])
-    fig, axes = plt.subplots(
-        2, 2, figsize=(13, 9.5), gridspec_kw={"hspace": 0.32, "wspace": 0.22}
-    )
+    fig, axes = plt.subplots(2, 2, figsize=(13, 9.5), gridspec_kw={"hspace": 0.32, "wspace": 0.22})
     axes = axes.ravel()
     position_axes = [axes[0], axes[1], axes[2]]
 

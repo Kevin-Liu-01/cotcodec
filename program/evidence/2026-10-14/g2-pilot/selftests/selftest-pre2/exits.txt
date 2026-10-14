@@ -1,0 +1,2 @@
+rollouts selftest exit 0
+teacher-force selftest exit 0

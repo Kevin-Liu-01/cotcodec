@@ -1,0 +1,49 @@
+# G2 pilot (EXPLORATORY), teacher-forcing job. scripts/run_g2_teacher_force.py in the research
+# source overlay (torch 2.11, transformers 5.15, FLA 0.5.2) built from the same commit as the
+# rollout image (build job 1340). Input: the tf-input.json of rollout job 1342, hash-bound as
+# the study artifact. Paths per experiments/g2/g2-pilot-v1.yaml; R3 on seed-42 rollouts only.
+# Slurm limit 9 min x 1 H100 = 0.15 GPU-h cap; the driver stops starting work 210 s before it.
+runtime: docker-single-node-discovery-v1
+name: g2-pilot-teacher-force
+image_id: sha256:95bb9a2d6602f743be1f0556e0aa3283de28a3330991f6996a9d66ffc35c080a
+git_sha: "307fa7ed2734847091e34e76f50332aa4c7b3982"
+source_sha256: "6c93dc462b4fd7e107b028c5f0b79a6e9977e8beb7dd72de921260cd41e141a2"
+run_root: /home/kevin/cotcodec-runs/stage0/g2-pilot/runs/teacher-force
+container_profile: default
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 96
+  minutes: 9
+budget:
+  max_gpu_hours: 0.15
+randomness_contract: deterministic
+seeds: []
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-4b
+  revision: "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+  receipt_sha256: "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082"
+  artifact_root_sha256: "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e"
+study_artifact:
+  source_id: g2-pilot-tf-input
+  revision: "307fa7ed2734847091e34e76f50332aa4c7b3982"
+  license: MIT
+  host_path: /home/kevin/cotcodec-runs/stage0/g2-pilot/runs/rollouts-v2/1342/g2/tf-input.json
+  sha256: "e50934f2b43e24e5cda7c063c732903e94bdd5f3d9f7567ce423671b8d9cea75"
+  size_bytes: 11214502
+command:
+  - python
+  - scripts/run_g2_teacher_force.py
+  - run
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - "e50934f2b43e24e5cda7c063c732903e94bdd5f3d9f7567ce423671b8d9cea75"
+  - "--output-dir"
+  - /outputs/g2tf
+  - "--allocation-minutes"
+  - "9"
+  - "--r3-rollout-seeds"
+  - "42"

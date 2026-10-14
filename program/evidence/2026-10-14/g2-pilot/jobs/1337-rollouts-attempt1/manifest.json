@@ -1,0 +1,46 @@
+{
+  "batch_script_sha256": "2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec",
+  "command": [
+    "python",
+    "scripts/run_g2_rollouts.py",
+    "run",
+    "--seeds",
+    "42",
+    "43",
+    "44",
+    "--output-dir",
+    "/outputs/g2",
+    "--allocation-minutes",
+    "14"
+  ],
+  "container_profile": "vllm",
+  "cpus": 16,
+  "git_sha": "cd1692c5206bbe34f7130bc544ba0628bb5db7a0",
+  "gpu_type": "h100",
+  "gpus": 1,
+  "image_id": "sha256:8608bc525a5e36b1e456bdfdb0ef34a9e0bf3cb33195525604167ca82ceaa87d",
+  "max_gpu_hours": 0.2334,
+  "memory_gb": 128,
+  "minutes": 14,
+  "model": {
+    "artifact_root_sha256": "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3.5-4b",
+    "receipt_sha256": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+  },
+  "name": "g2-pilot-rollouts",
+  "randomness_contract": "assignment-seed-matrix",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/g2-pilot/runs/rollouts",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seed_binding": {
+    "flag": "--seeds"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_sha256": "c3b4e6dcb619e5a925dcc76a3c9500df828be98138ec9d7f8d53298aebfc24d4"
+}
