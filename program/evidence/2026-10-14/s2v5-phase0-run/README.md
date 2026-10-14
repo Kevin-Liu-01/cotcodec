@@ -309,6 +309,11 @@ and the last `scontrol` record):
   resubmitted. Operator aids added: `campaign_summary.py` (per-entry pass counts,
   `summary-JOB.jsonl`) and `c3_parts.py` (C3 on one image over its three parts); both decide
   nothing.
+- Stint 2's operator conveniences, in `ops/` (Mac side; they decide nothing): `post_submit.sh JOB
+  MANIFEST` (starts the watcher and records `submit-JOB.txt`), `wait_job.sh JOB` (a bounded poll
+  of the watcher, at most 3.5 minutes per call), `collect_and_read.sh JOB` (Headroom check,
+  `collect_k1.sh`, `campaign_summary.py`, and a compact print of `check-JOB.json`) and
+  `readme_append.py` (adds a jobs-table row and a per-job note here).
 - Stop point: job 1307 (A2 on A, submitted 16:20:55Z, limit 1,344 minutes, expected about
   92 minutes from E's A2) is running; at 16:21:29Z it was the only job in the queue and the only
   labelled containers on the host were its own. Its collection is stint 3's. A background
