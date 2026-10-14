@@ -51,10 +51,30 @@ packages inside real VMs.
   `verdict` (acceptance's own functions, the rung's step p95 per image).
 - `pins_table.py`: the registration's "Code and inputs of record" table (re-filled at the status fill).
 
+## v5 (`s2-arabic-cua-locale-v5`, DRAFT; D94, D96)
+
+v4 is frozen (ledger row 21) and its K1 failed on an instrument defect (D93, D94); v5 is v4's
+registration with A6's Writer targets per image, and S2's last registration.
+- Step 0 (development, done): `canary_targets_v5.py` (the screenshot-only target rule, pinned by
+  `experiments/manifests/s2v5/step0-rule.json`) and `ap_delta_step0.py` + `s2v5-step0.sbatch`
+  (Slurm 1271). Evidence: `program/evidence/2026-10-13/s2v5-step0/` (`step0-result.json`'s
+  `v5_targets`). Do not edit the files `step0-rule.json` pins.
+- `ap_delta_v5.py` + `infra/slurm/host-single-node/s2v5-apdelta.sbatch`: K1 under v5 (v4's
+  `ap_delta.py` functions, unedited) and the development confirmation (`render-confirm`,
+  `confirm-read`). A6 on ER and AR reads `canary_v5/suite_cells-{ER,AR}.json` (q2's
+  `suite_cells.json` with only Writer's targets replaced; `render-cells`) through `q2-driver`,
+  which sets harness/q2's `driver.CELLS` before `driver.main`; harness/q2 stays byte-identical.
+- `lane_v5.py` + `s2v5-vm.sbatch`: the census under v5's id (`vm_lane.main` with its id,
+  registration, Phase 0 run root and batch file bound to v5's).
+- `pins_table_v5.py`: v5's "Code and inputs of record" (v4's files plus v5's).
+
 ## Patterns to follow / invariants
 
 - Never edit `harness/q2/`, `harness/q2_stage1/`, `harness/q2_mutation/` or `harness/q2_mutation_k2/`
   (frozen by other registrations); S2 code imports them.
+- Never edit a file v4's frozen registration pins (its "Code and inputs of record" table:
+  `ap_delta.py`, `vm_lane.py`, `vm_probe.py`, `k0_v4.py`, ...): v4 is frozen, and v5 extends them
+  from new modules.
 - Before v4 is frozen only `development` lane jobs on dev-split tasks run; Phase 0 proper runs from the
   freeze commit's export.
 - Screenshots, accessibility trees and images stay on the host; commit records and hashes only.

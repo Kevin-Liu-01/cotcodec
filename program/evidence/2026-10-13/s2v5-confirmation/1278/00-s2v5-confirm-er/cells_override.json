@@ -1,0 +1,6 @@
+{
+ "cell": "ER",
+ "cells": "harness/s2_locale/canary_v5/suite_cells-ER.json",
+ "replaces": "harness/q2/action_path/suite_cells.json",
+ "sha256": "464c9ab2aecf11c5e6405afac3a3f5ef8d5fa6f33b286bfcbd960624f049f070"
+}

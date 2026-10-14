@@ -1,0 +1,6981 @@
+{
+  "cycle": 2,
+  "host_after": {
+    "containers_ours": 0,
+    "containers_running_total": 1,
+    "loadavg": [
+      "1.06",
+      "1.14",
+      "2.12"
+    ],
+    "squeue_foreign": [],
+    "t": 1791930617.6152585
+  },
+  "host_before": {
+    "containers_ours": 0,
+    "containers_running_total": 1,
+    "loadavg": [
+      "0.93",
+      "1.00",
+      "2.98"
+    ],
+    "squeue_foreign": [],
+    "t": 1791930034.4267628
+  },
+  "nat_mode": "nat",
+  "prev_token": "q2ap-1278-c01",
+  "qemu_kvm_in_log": false,
+  "runner_rc": 0,
+  "runner_result": {
+    "boot": {
+      "polls": 12,
+      "screenshot_size": [
+        1920,
+        1080
+      ],
+      "t_screenshot_200": 17.201,
+      "t_tcp_open": 16.369
+    },
+    "cycle": 2,
+    "facts": {
+      "_elapsed_s": 0.02836791705340147,
+      "boot_id": "9c8d82d0-8e6b-426d-aca6-8e2b19155158",
+      "dbus_session_present": true,
+      "env": {
+        "DISPLAY": ":0",
+        "LANG": "en_HK.UTF-8",
+        "USER": "user",
+        "WAYLAND_DISPLAY": null,
+        "XAUTHORITY": null,
+        "XDG_SESSION_TYPE": null
+      },
+      "server": {
+        "cmdline": "/usr/bin/python /home/user/server/main.py",
+        "cwd": "/home/user",
+        "main_py": "/home/user/server/main.py",
+        "main_py_sha256": "41376a5c4f0b68ed7bbbbcc73ece60427f4a58dd8bd4710176f9911de726339e",
+        "pid": 1818
+      },
+      "uptime_s": 14.25
+    },
+    "kind": "canary-development",
+    "layer": null,
+    "runner": {
+      "cuda_visible_devices": "",
+      "net_interfaces": [
+        "dockerbridge",
+        "lo",
+        "qemu"
+      ],
+      "nvidia_devices": [],
+      "ok": true,
+      "proc_status": {
+        "CapBnd": "0000000000000000",
+        "CapEff": "0000000000000000",
+        "NoNewPrivs": "1",
+        "Seccomp": "2",
+        "Seccomp_filters": "1"
+      },
+      "uid": 1004
+    },
+    "runner_finished_at": 1791930617.2111783,
+    "session_wall_s": 582.41,
+    "setting": "screenshot",
+    "settle": {
+      "shots": 2,
+      "t_settled": 20.349
+    },
+    "token": "q2ap-1278-c02",
+    "trials": [
+      {
+        "app": "vscode",
+        "cell": "vscode:key_kp_enter",
+        "close": {
+          "_elapsed_s": 5.632983970455825,
+          "_wall_s": 5.6333,
+          "killed": [
+            1896,
+            2100,
+            2101
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            1896,
+            1916,
+            1937,
+            1960,
+            1970,
+            1996,
+            1997,
+            1998
+          ]
+        },
+        "entry": "key_kp_enter",
+        "errors": [],
+        "expect": "\n",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/0/data --extensions-dir /tmp/q2ap_canary/0/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-0.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027122926898300648,
+          "_wall_s": 0.0274,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/0/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/0/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-0.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/0",
+          "file": "/home/user/canary/fixture-0.txt",
+          "fixture_mtime_ns": 1791930054032000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.22828129306435585,
+          "_wall_s": 0.2286,
+          "bytes": 1,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "\n"
+        },
+        "seq": 0,
+        "steps": [
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6362,
+              "screenshot": 0.34,
+              "total": 0.9762
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.994,
+              "screenshot": 0.3647,
+              "total": 1.3587
+            }
+          }
+        ],
+        "text": "\n",
+        "timing_s": 16.458,
+        "trial": 0,
+        "wait": {
+          "_elapsed_s": 7.724085410125554,
+          "_wall_s": 7.7243,
+          "editor_ready": true,
+          "elapsed_s": 7.672,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 4.549,
+            "windows": [
+              [
+                8,
+                1
+              ],
+              [
+                8,
+                16
+              ],
+              [
+                8,
+                2
+              ],
+              [
+                8,
+                16
+              ],
+              [
+                8,
+                0
+              ],
+              [
+                8,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 58720259,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:type_spaces",
+        "close": {
+          "_elapsed_s": 0.5431867511942983,
+          "_wall_s": 0.5434,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "type_spaces",
+        "errors": [],
+        "expect": "  two  spaces   three   ",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027606518007814884,
+          "_wall_s": 0.0278,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/1",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.030753282830119133,
+          "_wall_s": 0.0311,
+          "bytes": 24,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "  two  spaces   three   "
+        },
+        "seq": 1,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6004,
+              "screenshot": 0.4621,
+              "total": 1.0625
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5567,
+              "screenshot": 0.4609,
+              "total": 1.0176
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5491,
+              "screenshot": 0.5533,
+              "total": 1.1024
+            }
+          }
+        ],
+        "text": "  two  spaces   three   ",
+        "timing_s": 5.612,
+        "trial": 1,
+        "wait": {
+          "_elapsed_s": 1.3236590065062046,
+          "_wall_s": 1.3239,
+          "elapsed_s": 1.265,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 60817418,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:type_unicode_bmp",
+        "close": {
+          "_elapsed_s": 0.7476605409756303,
+          "_wall_s": 0.7479,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            2217,
+            2235,
+            2236,
+            2238,
+            2265,
+            2273,
+            2300,
+            2322,
+            2350,
+            2374,
+            2465
+          ]
+        },
+        "entry": "type_unicode_bmp",
+        "errors": [],
+        "expect": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/2/profile file:///home/u"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027217302471399307,
+          "_wall_s": 0.0274,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/2/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/2",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930076104000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5593424709513783,
+          "_wall_s": 0.5597,
+          "mode": "readback",
+          "ok": true,
+          "text": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e"
+        },
+        "seq": 2,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 1.8329,
+              "screenshot": 0.3336,
+              "total": 2.1665
+            }
+          }
+        ],
+        "text": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e",
+        "timing_s": 7.103,
+        "trial": 2,
+        "wait": {
+          "_elapsed_s": 3.0987793151289225,
+          "_wall_s": 3.099,
+          "elapsed_s": 3.043,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.01,
+            "windows": [
+              [
+                11,
+                2
+              ],
+              [
+                11,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 65011716,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/2/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:type_with_correction",
+        "close": {
+          "_elapsed_s": 0.5386765152215958,
+          "_wall_s": 0.5389,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "type_with_correction",
+        "errors": [],
+        "expect": "hello world",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02731374930590391,
+          "_wall_s": 0.0276,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/3",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.03060921188443899,
+          "_wall_s": 0.031,
+          "bytes": 11,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "hello world"
+        },
+        "seq": 3,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.5384,
+              "screenshot": 0.4646,
+              "total": 1.003
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5101,
+              "screenshot": 0.4697,
+              "total": 0.9798
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.4521,
+              "screenshot": 0.4665,
+              "total": 0.9186
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.553,
+              "screenshot": 0.4631,
+              "total": 1.0162
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5281,
+              "screenshot": 0.549,
+              "total": 1.0771
+            }
+          }
+        ],
+        "text": "hello world",
+        "timing_s": 7.408,
+        "trial": 3,
+        "wait": {
+          "_elapsed_s": 1.3120816070586443,
+          "_wall_s": 1.3123,
+          "elapsed_s": 1.269,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 69206026,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:type_multiline_tabs",
+        "close": {
+          "_elapsed_s": 0.5417147362604737,
+          "_wall_s": 0.542,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            2676
+          ]
+        },
+        "entry": "type_multiline_tabs",
+        "errors": [],
+        "expect": "line one\n\tindented\nline three",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/4 --norestore --nologo --writer /home/user/canary/fixture-4.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.03002051915973425,
+          "_wall_s": 0.0302,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/4",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-4.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/4",
+          "file": "/home/user/canary/fixture-4.txt",
+          "fixture_mtime_ns": 1791930090616000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.9893885608762503,
+          "_wall_s": 0.9898,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 3,
+          "text": "line one\n\tindented\nline three"
+        },
+        "seq": 4,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6703,
+              "screenshot": 0.0646,
+              "total": 0.7348
+            }
+          }
+        ],
+        "text": "line one\n\tindented\nline three",
+        "timing_s": 8.495,
+        "trial": 4,
+        "wait": {
+          "_elapsed_s": 5.690400302410126,
+          "_wall_s": 5.6906,
+          "a11y_ready": true,
+          "elapsed_s": 5.635,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 77594741,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:type_emoji",
+        "close": {
+          "_elapsed_s": 0.7445451486855745,
+          "_wall_s": 0.7448,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            2729,
+            2746,
+            2747,
+            2750,
+            2776,
+            2777,
+            2812,
+            2838,
+            2860,
+            2871,
+            2958
+          ]
+        },
+        "entry": "type_emoji",
+        "errors": [],
+        "expect": "ok \ud83d\ude80 done \ud83c\udf89",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/5/profile file:///home/u"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027368949726223946,
+          "_wall_s": 0.0276,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/5/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/5",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930099112000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5572906611487269,
+          "_wall_s": 0.5577,
+          "mode": "readback",
+          "ok": true,
+          "text": "ok \ud83d\ude80 done \ud83c\udf89"
+        },
+        "seq": 5,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.8432,
+              "screenshot": 0.3297,
+              "total": 1.1729
+            }
+          }
+        ],
+        "text": "ok \ud83d\ude80 done \ud83c\udf89",
+        "timing_s": 5.602,
+        "trial": 5,
+        "wait": {
+          "_elapsed_s": 2.5960046174004674,
+          "_wall_s": 2.5962,
+          "elapsed_s": 2.542,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.012,
+            "windows": [
+              [
+                11,
+                4
+              ],
+              [
+                11,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 79691780,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/5/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:type_multiline_tabs",
+        "close": {
+          "_elapsed_s": 0.7467786502093077,
+          "_wall_s": 0.7471,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            3006,
+            3023,
+            3024,
+            3027,
+            3055,
+            3056,
+            3079,
+            3114,
+            3125,
+            3150,
+            3234
+          ]
+        },
+        "entry": "type_multiline_tabs",
+        "errors": [],
+        "expect": "line one\n\tindented\nline three",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/6/profile file:///home/u"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027799347415566444,
+          "_wall_s": 0.028,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/6/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/6",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930104712000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5618642838671803,
+          "_wall_s": 0.5623,
+          "mode": "readback",
+          "ok": true,
+          "text": "line one\n\tindented\nline three"
+        },
+        "seq": 6,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6245,
+              "screenshot": 0.3328,
+              "total": 0.9573
+            }
+          }
+        ],
+        "text": "line one\n\tindented\nline three",
+        "timing_s": 5.628,
+        "trial": 6,
+        "wait": {
+          "_elapsed_s": 2.830150393769145,
+          "_wall_s": 2.8304,
+          "elapsed_s": 2.784,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.01,
+            "windows": [
+              [
+                11,
+                1
+              ],
+              [
+                11,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 81788932,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/6/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:type_with_correction",
+        "close": {
+          "_elapsed_s": 5.627048273570836,
+          "_wall_s": 5.6273,
+          "killed": [
+            3298,
+            3541,
+            3543
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            3298,
+            3337,
+            3373,
+            3407,
+            3424,
+            3425,
+            3426
+          ]
+        },
+        "entry": "type_with_correction",
+        "errors": [],
+        "expect": "hello world",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/7/data --extensions-dir /tmp/q2ap_canary/7/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-7.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.028395860455930233,
+          "_wall_s": 0.0287,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/7/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/7/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-7.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/7",
+          "file": "/home/user/canary/fixture-7.txt",
+          "fixture_mtime_ns": 1791930110344000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.2288026139140129,
+          "_wall_s": 0.2292,
+          "bytes": 11,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "hello world"
+        },
+        "seq": 7,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.5554,
+              "screenshot": 0.3371,
+              "total": 0.8925
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5243,
+              "screenshot": 0.3284,
+              "total": 0.8528
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.4699,
+              "screenshot": 0.3347,
+              "total": 0.8046
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.71,
+              "screenshot": 0.3298,
+              "total": 1.0398
+            }
+          }
+        ],
+        "text": "hello world",
+        "timing_s": 15.153,
+        "trial": 7,
+        "wait": {
+          "_elapsed_s": 5.174381988123059,
+          "_wall_s": 5.1746,
+          "editor_ready": true,
+          "elapsed_s": 5.128,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 2.023,
+            "windows": [
+              [
+                7,
+                161
+              ],
+              [
+                7,
+                82
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                7,
+                2
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 83886083,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:key_kp_enter",
+        "close": {
+          "_elapsed_s": 0.537621021270752,
+          "_wall_s": 0.5379,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            3615
+          ]
+        },
+        "entry": "key_kp_enter",
+        "errors": [],
+        "expect": "\n",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/8 --norestore --nologo --writer /home/user/canary/fixture-8.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027847283519804478,
+          "_wall_s": 0.0281,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/8",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-8.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/8",
+          "file": "/home/user/canary/fixture-8.txt",
+          "fixture_mtime_ns": 1791930125496000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.982300566509366,
+          "_wall_s": 0.9827,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 2,
+          "text": "\n"
+        },
+        "seq": 8,
+        "steps": [
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.7904,
+              "screenshot": 0.065,
+              "total": 0.8553
+            }
+          }
+        ],
+        "text": "\n",
+        "timing_s": 7.901,
+        "trial": 8,
+        "wait": {
+          "_elapsed_s": 4.993945914320648,
+          "_wall_s": 4.9942,
+          "a11y_ready": true,
+          "elapsed_s": 4.945,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.009,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 85983349,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:type_combining",
+        "close": {
+          "_elapsed_s": 0.5392136471346021,
+          "_wall_s": 0.5394,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "type_combining",
+        "errors": [],
+        "expect": "e\u0301 a\u0308 n\u0303",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027700357139110565,
+          "_wall_s": 0.0279,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/9",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.033186545595526695,
+          "_wall_s": 0.0335,
+          "bytes": 11,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "e\u0301 a\u0308 n\u0303"
+        },
+        "seq": 9,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.756,
+              "screenshot": 0.4662,
+              "total": 1.2222
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5651,
+              "screenshot": 0.4649,
+              "total": 1.03
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5305,
+              "screenshot": 0.5484,
+              "total": 1.0788
+            }
+          }
+        ],
+        "text": "e\u0301 a\u0308 n\u0303",
+        "timing_s": 5.759,
+        "trial": 9,
+        "wait": {
+          "_elapsed_s": 1.3232211843132973,
+          "_wall_s": 1.3234,
+          "elapsed_s": 1.265,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 90177546,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:type_symbols_shifted",
+        "close": {
+          "_elapsed_s": 0.5395541563630104,
+          "_wall_s": 0.5398,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            3801
+          ]
+        },
+        "entry": "type_symbols_shifted",
+        "errors": [],
+        "expect": "<>?:\"{}|~!@#$%^&*()_+",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/10 --norestore --nologo --writer /home/user/canary/fixture-10.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.025617610663175583,
+          "_wall_s": 0.0258,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/10",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-10.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/10",
+          "file": "/home/user/canary/fixture-10.txt",
+          "fixture_mtime_ns": 1791930139152000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.9943759003654122,
+          "_wall_s": 0.9947,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "<>?:\"{}|~!@#$%^&*()_+"
+        },
+        "seq": 10,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.7929,
+              "screenshot": 0.0666,
+              "total": 0.8595
+            }
+          }
+        ],
+        "text": "<>?:\"{}|~!@#$%^&*()_+",
+        "timing_s": 8.191,
+        "trial": 10,
+        "wait": {
+          "_elapsed_s": 5.2686496283859015,
+          "_wall_s": 5.2689,
+          "a11y_ready": true,
+          "elapsed_s": 5.222,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 92274805,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:type_digits",
+        "close": {
+          "_elapsed_s": 0.7448599142953753,
+          "_wall_s": 0.7451,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            3852,
+            3869,
+            3870,
+            3873,
+            3899,
+            3901,
+            3926,
+            3962,
+            3984,
+            3995,
+            4081
+          ]
+        },
+        "entry": "type_digits",
+        "errors": [],
+        "expect": "0123456789 9876543210",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/11/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.028133944608271122,
+          "_wall_s": 0.0284,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/11/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/11",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930147348000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5609927205368876,
+          "_wall_s": 0.5613,
+          "mode": "readback",
+          "ok": true,
+          "text": "0123456789 9876543210"
+        },
+        "seq": 11,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.7343,
+              "screenshot": 0.3305,
+              "total": 1.0648
+            }
+          }
+        ],
+        "text": "0123456789 9876543210",
+        "timing_s": 5.49,
+        "trial": 11,
+        "wait": {
+          "_elapsed_s": 2.5879230862483382,
+          "_wall_s": 2.5882,
+          "elapsed_s": 2.535,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.014,
+            "windows": [
+              [
+                11,
+                4
+              ],
+              [
+                11,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 96468996,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/11/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:type_unicode_bmp",
+        "close": {
+          "_elapsed_s": 0.5398865798488259,
+          "_wall_s": 0.5402,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            4159
+          ]
+        },
+        "entry": "type_unicode_bmp",
+        "errors": [],
+        "expect": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/12 --norestore --nologo --writer /home/user/canary/fixture-12.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027327341958880424,
+          "_wall_s": 0.0276,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/12",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-12.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/12",
+          "file": "/home/user/canary/fixture-12.txt",
+          "fixture_mtime_ns": 1791930152836000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.983236076310277,
+          "_wall_s": 0.9836,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e"
+        },
+        "seq": 12,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 1.9255,
+              "screenshot": 0.0645,
+              "total": 1.99
+            }
+          }
+        ],
+        "text": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e",
+        "timing_s": 9.028,
+        "trial": 12,
+        "wait": {
+          "_elapsed_s": 4.983220529742539,
+          "_wall_s": 4.9834,
+          "a11y_ready": true,
+          "elapsed_s": 4.935,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.009,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 96469109,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:select_all_copy_end_paste",
+        "close": {
+          "_elapsed_s": 0.5380906099453568,
+          "_wall_s": 0.5384,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            4263
+          ]
+        },
+        "entry": "select_all_copy_end_paste",
+        "errors": [],
+        "expect": "copy mecopy me",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/13 --norestore --nologo --writer /home/user/canary/fixture-13.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.026843729428946972,
+          "_wall_s": 0.0271,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/13",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-13.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/13",
+          "file": "/home/user/canary/fixture-13.txt",
+          "fixture_mtime_ns": 1791930161864000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 1.009251993149519,
+          "_wall_s": 1.0096,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "copy mecopy me"
+        },
+        "seq": 13,
+        "steps": [
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 1.0265,
+              "screenshot": 0.0665,
+              "total": 1.093
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 1.0607,
+              "screenshot": 0.0684,
+              "total": 1.1291
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 1.0212,
+              "screenshot": 0.0648,
+              "total": 1.0861
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.8501,
+              "screenshot": 0.0689,
+              "total": 0.919
+            }
+          }
+        ],
+        "text": "copy mecopy me",
+        "timing_s": 11.706,
+        "trial": 13,
+        "wait": {
+          "_elapsed_s": 5.4004717925563455,
+          "_wall_s": 5.4007,
+          "a11y_ready": true,
+          "elapsed_s": 5.35,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.009,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 96469109,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:ctrl_home_insert",
+        "close": {
+          "_elapsed_s": 0.5386523101478815,
+          "_wall_s": 0.539,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            4408
+          ]
+        },
+        "entry": "ctrl_home_insert",
+        "errors": [],
+        "expect": "Zline a\nline b",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/14 --norestore --nologo --writer /home/user/canary/fixture-14.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027144409716129303,
+          "_wall_s": 0.0274,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/14",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-14.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/14",
+          "file": "/home/user/canary/fixture-14.txt",
+          "fixture_mtime_ns": 1791930173572000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 1.0223225364461541,
+          "_wall_s": 1.0227,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 2,
+          "text": "Zline a\nline b"
+        },
+        "seq": 14,
+        "steps": [
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6257,
+              "screenshot": 0.0659,
+              "total": 0.6916
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.7728,
+              "screenshot": 0.0643,
+              "total": 0.8372
+            }
+          }
+        ],
+        "text": "Zline a\nline b",
+        "timing_s": 9.0,
+        "trial": 14,
+        "wait": {
+          "_elapsed_s": 5.3783260537311435,
+          "_wall_s": 5.3786,
+          "a11y_ready": true,
+          "elapsed_s": 5.331,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.009,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 96469109,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:type_emoji",
+        "close": {
+          "_elapsed_s": 0.5385523196309805,
+          "_wall_s": 0.5388,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "type_emoji",
+        "errors": [],
+        "expect": "ok \ud83d\ude80 done \ud83c\udf89",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027493341825902462,
+          "_wall_s": 0.0277,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/15",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.03132000006735325,
+          "_wall_s": 0.0317,
+          "bytes": 17,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "ok \ud83d\ude80 done \ud83c\udf89"
+        },
+        "seq": 15,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.7732,
+              "screenshot": 0.4615,
+              "total": 1.2347
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5417,
+              "screenshot": 0.4673,
+              "total": 1.009
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5446,
+              "screenshot": 0.6422,
+              "total": 1.1868
+            }
+          }
+        ],
+        "text": "ok \ud83d\ude80 done \ud83c\udf89",
+        "timing_s": 5.86,
+        "trial": 15,
+        "wait": {
+          "_elapsed_s": 1.3277983302250504,
+          "_wall_s": 1.3281,
+          "elapsed_s": 1.268,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 121634826,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:drag_select_word",
+        "close": {
+          "_elapsed_s": 5.6268417071551085,
+          "_wall_s": 5.6271,
+          "killed": [
+            4611,
+            4839,
+            4841
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            4611,
+            4648,
+            4686,
+            4719,
+            4737,
+            4738,
+            4739
+          ]
+        },
+        "entry": "drag_select_word",
+        "errors": [],
+        "expect": "keep Y keep",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/16/data --extensions-dir /tmp/q2ap_canary/16/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-16.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.025763624347746372,
+          "_wall_s": 0.026,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/16/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/16/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-16.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/16",
+          "file": "/home/user/canary/fixture-16.txt",
+          "fixture_mtime_ns": 1791930188432000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.2278654146939516,
+          "_wall_s": 0.2282,
+          "bytes": 11,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "keep Y keep"
+        },
+        "seq": 16,
+        "steps": [
+          {
+            "infra": [],
+            "op": "drag",
+            "timing_s": {
+              "execute": 1.476,
+              "screenshot": 0.3321,
+              "total": 1.808
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.9555,
+              "screenshot": 0.3378,
+              "total": 1.2933
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.7053,
+              "screenshot": 0.3338,
+              "total": 1.0391
+            }
+          }
+        ],
+        "text": "keep Y keep",
+        "timing_s": 15.704,
+        "trial": 16,
+        "wait": {
+          "_elapsed_s": 5.177964231930673,
+          "_wall_s": 5.1782,
+          "editor_ready": true,
+          "elapsed_s": 5.13,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 2.024,
+            "windows": [
+              [
+                7,
+                157
+              ],
+              [
+                7,
+                82
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                7,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 125829123,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:type_symbols_shifted",
+        "close": {
+          "_elapsed_s": 0.5394912101328373,
+          "_wall_s": 0.5397,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "type_symbols_shifted",
+        "errors": [],
+        "expect": "<>?:\"{}|~!@#$%^&*()_+",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027730497531592846,
+          "_wall_s": 0.028,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/17",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.030833974480628967,
+          "_wall_s": 0.0312,
+          "bytes": 21,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "<>?:\"{}|~!@#$%^&*()_+"
+        },
+        "seq": 17,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6115,
+              "screenshot": 0.4654,
+              "total": 1.0769
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6271,
+              "screenshot": 0.4641,
+              "total": 1.0911
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5731,
+              "screenshot": 0.5496,
+              "total": 1.1227
+            }
+          }
+        ],
+        "text": "<>?:\"{}|~!@#$%^&*()_+",
+        "timing_s": 5.706,
+        "trial": 17,
+        "wait": {
+          "_elapsed_s": 1.3127491800114512,
+          "_wall_s": 1.313,
+          "elapsed_s": 1.269,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 130023434,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:triple_click_line",
+        "close": {
+          "_elapsed_s": 5.628707103431225,
+          "_wall_s": 5.629,
+          "killed": [
+            4974,
+            5244,
+            5246
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            4974,
+            5011,
+            5052,
+            5086,
+            5103,
+            5104,
+            5124
+          ]
+        },
+        "entry": "triple_click_line",
+        "errors": [],
+        "expect": "X",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/18/data --extensions-dir /tmp/q2ap_canary/18/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-18.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.025939200073480606,
+          "_wall_s": 0.0261,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/18/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/18/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-18.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/18",
+          "file": "/home/user/canary/fixture-18.txt",
+          "fixture_mtime_ns": 1791930209844000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.2574008936062455,
+          "_wall_s": 0.2579,
+          "bytes": 1,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "X"
+        },
+        "seq": 18,
+        "steps": [
+          {
+            "infra": [],
+            "op": "click",
+            "timing_s": {
+              "execute": 0.6218,
+              "screenshot": 0.3329,
+              "total": 0.9547
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.5166,
+              "screenshot": 0.3574,
+              "total": 0.874
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6184,
+              "screenshot": 0.3449,
+              "total": 0.9633
+            }
+          }
+        ],
+        "text": "X",
+        "timing_s": 16.417,
+        "trial": 18,
+        "wait": {
+          "_elapsed_s": 7.208638846874237,
+          "_wall_s": 7.2089,
+          "editor_ready": true,
+          "elapsed_s": 7.151,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 4.041,
+            "windows": [
+              [
+                7,
+                1
+              ],
+              [
+                7,
+                10
+              ],
+              [
+                7,
+                7
+              ],
+              [
+                7,
+                16
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                7,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 134217731,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:triple_click_line",
+        "close": {
+          "_elapsed_s": 0.5399847347289324,
+          "_wall_s": 0.5402,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            5316
+          ]
+        },
+        "entry": "triple_click_line",
+        "errors": [],
+        "expect": "X",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/19 --norestore --nologo --writer /home/user/canary/fixture-19.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027935554273426533,
+          "_wall_s": 0.0282,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/19",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-19.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/19",
+          "file": "/home/user/canary/fixture-19.txt",
+          "fixture_mtime_ns": 1791930226264000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.9947698134928942,
+          "_wall_s": 0.9951,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "X"
+        },
+        "seq": 19,
+        "steps": [
+          {
+            "infra": [],
+            "op": "click",
+            "timing_s": {
+              "execute": 1.2753,
+              "screenshot": 0.065,
+              "total": 1.3404
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.8566,
+              "screenshot": 0.0689,
+              "total": 0.9255
+            }
+          }
+        ],
+        "text": "X",
+        "timing_s": 9.677,
+        "trial": 19,
+        "wait": {
+          "_elapsed_s": 5.344511315226555,
+          "_wall_s": 5.3447,
+          "a11y_ready": true,
+          "elapsed_s": 5.298,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 134217845,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:type_digits",
+        "close": {
+          "_elapsed_s": 5.625881172716618,
+          "_wall_s": 5.6261,
+          "killed": [
+            5401,
+            5625,
+            5627
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            5401,
+            5438,
+            5475,
+            5491,
+            5509,
+            5510,
+            5511
+          ]
+        },
+        "entry": "type_digits",
+        "errors": [],
+        "expect": "0123456789 9876543210",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/20/data --extensions-dir /tmp/q2ap_canary/20/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-20.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027897008694708347,
+          "_wall_s": 0.0281,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/20/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/20/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-20.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/20",
+          "file": "/home/user/canary/fixture-20.txt",
+          "fixture_mtime_ns": 1791930235940000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.22788063623011112,
+          "_wall_s": 0.2283,
+          "bytes": 21,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "0123456789 9876543210"
+        },
+        "seq": 20,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.623,
+              "screenshot": 0.3347,
+              "total": 0.9578
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5532,
+              "screenshot": 0.3306,
+              "total": 0.8838
+            }
+          }
+        ],
+        "text": "0123456789 9876543210",
+        "timing_s": 15.426,
+        "trial": 20,
+        "wait": {
+          "_elapsed_s": 7.19897675793618,
+          "_wall_s": 7.1992,
+          "editor_ready": true,
+          "elapsed_s": 7.139,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 5.57,
+            "windows": [
+              [
+                7,
+                28
+              ],
+              [
+                7,
+                17
+              ],
+              [
+                7,
+                5
+              ],
+              [
+                7,
+                14
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                7,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 8136,
+          "window": 144703491,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:select_all_copy_end_paste",
+        "close": {
+          "_elapsed_s": 0.7438566833734512,
+          "_wall_s": 0.7441,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            5659,
+            5676,
+            5677,
+            5680,
+            5706,
+            5707,
+            5733,
+            5769,
+            5780,
+            5805,
+            5885
+          ]
+        },
+        "entry": "select_all_copy_end_paste",
+        "errors": [],
+        "expect": "copy mecopy me",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/21/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02785324677824974,
+          "_wall_s": 0.0281,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/21/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/21",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930251368000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5563449636101723,
+          "_wall_s": 0.5568,
+          "mode": "readback",
+          "ok": true,
+          "text": "copy mecopy me"
+        },
+        "seq": 21,
+        "steps": [
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6251,
+              "screenshot": 0.3321,
+              "total": 0.9572
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6304,
+              "screenshot": 0.3366,
+              "total": 0.967
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5964,
+              "screenshot": 0.331,
+              "total": 0.9274
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.7144,
+              "screenshot": 0.3331,
+              "total": 1.0474
+            }
+          }
+        ],
+        "text": "copy mecopy me",
+        "timing_s": 8.57,
+        "trial": 21,
+        "wait": {
+          "_elapsed_s": 2.8385538095608354,
+          "_wall_s": 2.8388,
+          "elapsed_s": 2.781,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.01,
+            "windows": [
+              [
+                11,
+                1
+              ],
+              [
+                11,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 146800644,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/21/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:type_spaces",
+        "close": {
+          "_elapsed_s": 5.627663307823241,
+          "_wall_s": 5.628,
+          "killed": [
+            5987,
+            6204,
+            6205
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            5987,
+            6025,
+            6063,
+            6096,
+            6116,
+            6117,
+            6137
+          ]
+        },
+        "entry": "type_spaces",
+        "errors": [],
+        "expect": "  two  spaces   three   ",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/22/data --extensions-dir /tmp/q2ap_canary/22/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-22.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027386450208723545,
+          "_wall_s": 0.0276,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/22/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/22/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-22.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/22",
+          "file": "/home/user/canary/fixture-22.txt",
+          "fixture_mtime_ns": 1791930259936000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.22740770131349564,
+          "_wall_s": 0.2278,
+          "bytes": 24,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "  two  spaces   three   "
+        },
+        "seq": 22,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6179,
+              "screenshot": 0.3312,
+              "total": 0.9491
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.7321,
+              "screenshot": 0.3337,
+              "total": 1.0659
+            }
+          }
+        ],
+        "text": "  two  spaces   three   ",
+        "timing_s": 13.592,
+        "trial": 22,
+        "wait": {
+          "_elapsed_s": 5.1899188458919525,
+          "_wall_s": 5.1901,
+          "editor_ready": true,
+          "elapsed_s": 5.145,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 2.025,
+            "windows": [
+              [
+                7,
+                158
+              ],
+              [
+                7,
+                76
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                7,
+                2
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 148897795,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:type_combining",
+        "close": {
+          "_elapsed_s": 0.7454775124788284,
+          "_wall_s": 0.7457,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            6239,
+            6256,
+            6257,
+            6260,
+            6285,
+            6287,
+            6313,
+            6348,
+            6367,
+            6379,
+            6464
+          ]
+        },
+        "entry": "type_combining",
+        "errors": [],
+        "expect": "e\u0301 a\u0308 n\u0303",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/23/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02851875312626362,
+          "_wall_s": 0.0288,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/23/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/23",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930273532000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5615149922668934,
+          "_wall_s": 0.5619,
+          "mode": "readback",
+          "ok": true,
+          "text": "e\u0301 a\u0308 n\u0303"
+        },
+        "seq": 23,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.8695,
+              "screenshot": 0.3317,
+              "total": 1.2011
+            }
+          }
+        ],
+        "text": "e\u0301 a\u0308 n\u0303",
+        "timing_s": 5.863,
+        "trial": 23,
+        "wait": {
+          "_elapsed_s": 2.8225600328296423,
+          "_wall_s": 2.8228,
+          "elapsed_s": 2.776,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.009,
+            "windows": [
+              [
+                11,
+                1
+              ],
+              [
+                11,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 150994948,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/23/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:type_plain",
+        "close": {
+          "_elapsed_s": 0.5398170202970505,
+          "_wall_s": 0.54,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "type_plain",
+        "errors": [],
+        "expect": "plain text check",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.028689765371382236,
+          "_wall_s": 0.0289,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/24",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.0313902972266078,
+          "_wall_s": 0.0318,
+          "bytes": 16,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "plain text check"
+        },
+        "seq": 24,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6217,
+              "screenshot": 0.4645,
+              "total": 1.0862
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5477,
+              "screenshot": 0.4608,
+              "total": 1.0085
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5236,
+              "screenshot": 0.5536,
+              "total": 1.0772
+            }
+          }
+        ],
+        "text": "plain text check",
+        "timing_s": 5.582,
+        "trial": 24,
+        "wait": {
+          "_elapsed_s": 1.3060974646359682,
+          "_wall_s": 1.3063,
+          "elapsed_s": 1.264,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 159383562,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:type_digits",
+        "close": {
+          "_elapsed_s": 0.539142481982708,
+          "_wall_s": 0.5394,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "type_digits",
+        "errors": [],
+        "expect": "0123456789 9876543210",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.026398018933832645,
+          "_wall_s": 0.0266,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/25",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.03197012469172478,
+          "_wall_s": 0.0324,
+          "bytes": 21,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "0123456789 9876543210"
+        },
+        "seq": 25,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.5048,
+              "screenshot": 0.462,
+              "total": 0.9668
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6071,
+              "screenshot": 0.4632,
+              "total": 1.0703
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5332,
+              "screenshot": 0.554,
+              "total": 1.0873
+            }
+          }
+        ],
+        "text": "0123456789 9876543210",
+        "timing_s": 5.533,
+        "trial": 25,
+        "wait": {
+          "_elapsed_s": 1.3066210066899657,
+          "_wall_s": 1.3068,
+          "elapsed_s": 1.264,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 174063626,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:type_symbols_shifted",
+        "close": {
+          "_elapsed_s": 0.7437996687367558,
+          "_wall_s": 0.7441,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            6681,
+            6698,
+            6699,
+            6702,
+            6729,
+            6730,
+            6764,
+            6790,
+            6800,
+            6826,
+            6912
+          ]
+        },
+        "entry": "type_symbols_shifted",
+        "errors": [],
+        "expect": "<>?:\"{}|~!@#$%^&*()_+",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/26/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027136179618537426,
+          "_wall_s": 0.0273,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/26/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/26",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930290508000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5575737971812487,
+          "_wall_s": 0.558,
+          "mode": "readback",
+          "ok": true,
+          "text": "<>?:\"{}|~!@#$%^&*()_+"
+        },
+        "seq": 26,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.7137,
+              "screenshot": 0.3313,
+              "total": 1.045
+            }
+          }
+        ],
+        "text": "<>?:\"{}|~!@#$%^&*()_+",
+        "timing_s": 5.467,
+        "trial": 26,
+        "wait": {
+          "_elapsed_s": 2.5895397821441293,
+          "_wall_s": 2.5898,
+          "elapsed_s": 2.531,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.014,
+            "windows": [
+              [
+                11,
+                4
+              ],
+              [
+                11,
+                2
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 180355076,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/26/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:drag_select_word",
+        "close": {
+          "_elapsed_s": 0.7445093607529998,
+          "_wall_s": 0.7449,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            6953,
+            6970,
+            6971,
+            6974,
+            7003,
+            7004,
+            7027,
+            7063,
+            7073,
+            7099,
+            7178
+          ]
+        },
+        "entry": "drag_select_word",
+        "errors": [],
+        "expect": "keep Y keep",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/27/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.028119342401623726,
+          "_wall_s": 0.0284,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/27/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/27",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930295976000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5573106491938233,
+          "_wall_s": 0.5577,
+          "mode": "readback",
+          "ok": true,
+          "text": "keep Y keep"
+        },
+        "seq": 27,
+        "steps": [
+          {
+            "infra": [],
+            "op": "drag",
+            "timing_s": {
+              "execute": 1.0398,
+              "screenshot": 0.3335,
+              "total": 1.3733
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6985,
+              "screenshot": 0.3309,
+              "total": 1.0294
+            }
+          }
+        ],
+        "text": "keep Y keep",
+        "timing_s": 7.08,
+        "trial": 27,
+        "wait": {
+          "_elapsed_s": 2.8425647504627705,
+          "_wall_s": 2.8428,
+          "elapsed_s": 2.796,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.009,
+            "windows": [
+              [
+                11,
+                0
+              ],
+              [
+                11,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 182452228,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/27/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:select_all_copy_end_paste",
+        "close": {
+          "_elapsed_s": 5.62723339907825,
+          "_wall_s": 5.6275,
+          "killed": [
+            7254,
+            7509,
+            7511
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            7254,
+            7291,
+            7330,
+            7361,
+            7380,
+            7381,
+            7382
+          ]
+        },
+        "entry": "select_all_copy_end_paste",
+        "errors": [],
+        "expect": "copy mecopy me",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/28/data --extensions-dir /tmp/q2ap_canary/28/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-28.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.028179160319268703,
+          "_wall_s": 0.0284,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/28/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/28/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-28.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/28",
+          "file": "/home/user/canary/fixture-28.txt",
+          "fixture_mtime_ns": 1791930303056000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.2278226064518094,
+          "_wall_s": 0.2282,
+          "bytes": 14,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "copy mecopy me"
+        },
+        "seq": 28,
+        "steps": [
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5477,
+              "screenshot": 0.3303,
+              "total": 0.878
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5724,
+              "screenshot": 0.3378,
+              "total": 0.9102
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.9854,
+              "screenshot": 0.3296,
+              "total": 1.3149
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5679,
+              "screenshot": 0.3332,
+              "total": 0.9012
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6082,
+              "screenshot": 0.3377,
+              "total": 0.9459
+            }
+          }
+        ],
+        "text": "copy mecopy me",
+        "timing_s": 16.508,
+        "trial": 28,
+        "wait": {
+          "_elapsed_s": 5.169463848695159,
+          "_wall_s": 5.1697,
+          "editor_ready": true,
+          "elapsed_s": 5.124,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 2.023,
+            "windows": [
+              [
+                7,
+                156
+              ],
+              [
+                7,
+                86
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                7,
+                1
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 184549379,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:type_unicode_bmp",
+        "close": {
+          "_elapsed_s": 0.5403813915327191,
+          "_wall_s": 0.5406,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "type_unicode_bmp",
+        "errors": [],
+        "expect": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.03741531539708376,
+          "_wall_s": 0.0377,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/29",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.031067445874214172,
+          "_wall_s": 0.0314,
+          "bytes": 53,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e"
+        },
+        "seq": 29,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 1.8022,
+              "screenshot": 0.4603,
+              "total": 2.2625
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6297,
+              "screenshot": 0.4633,
+              "total": 1.093
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5566,
+              "screenshot": 0.5555,
+              "total": 1.1121
+            }
+          }
+        ],
+        "text": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e",
+        "timing_s": 6.891,
+        "trial": 29,
+        "wait": {
+          "_elapsed_s": 1.3103415500372648,
+          "_wall_s": 1.3106,
+          "elapsed_s": 1.267,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 188743690,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:type_rtl",
+        "close": {
+          "_elapsed_s": 0.7498476188629866,
+          "_wall_s": 0.7501,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            7643,
+            7660,
+            7661,
+            7664,
+            7691,
+            7692,
+            7726,
+            7753,
+            7772,
+            7784,
+            7869
+          ]
+        },
+        "entry": "type_rtl",
+        "errors": [],
+        "expect": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/30/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02626747637987137,
+          "_wall_s": 0.0265,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/30/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/30",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930326456000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5595648176968098,
+          "_wall_s": 0.5599,
+          "mode": "readback",
+          "ok": true,
+          "text": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627"
+        },
+        "seq": 30,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 1.4241,
+              "screenshot": 0.334,
+              "total": 1.7581
+            }
+          }
+        ],
+        "text": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627",
+        "timing_s": 6.432,
+        "trial": 30,
+        "wait": {
+          "_elapsed_s": 2.8341312669217587,
+          "_wall_s": 2.8344,
+          "elapsed_s": 2.784,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.011,
+            "windows": [
+              [
+                11,
+                1
+              ],
+              [
+                11,
+                2
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 192937988,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/30/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:type_plain",
+        "close": {
+          "_elapsed_s": 0.5384236946702003,
+          "_wall_s": 0.5387,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            7969
+          ]
+        },
+        "entry": "type_plain",
+        "errors": [],
+        "expect": "plain text check",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/31 --norestore --nologo --writer /home/user/canary/fixture-31.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02884483803063631,
+          "_wall_s": 0.0291,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/31",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-31.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/31",
+          "file": "/home/user/canary/fixture-31.txt",
+          "fixture_mtime_ns": 1791930332888000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 1.0066916551440954,
+          "_wall_s": 1.0071,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "plain text check"
+        },
+        "seq": 31,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.84,
+              "screenshot": 0.0662,
+              "total": 0.9063
+            }
+          }
+        ],
+        "text": "plain text check",
+        "timing_s": 8.607,
+        "trial": 31,
+        "wait": {
+          "_elapsed_s": 5.623012291267514,
+          "_wall_s": 5.6232,
+          "a11y_ready": true,
+          "elapsed_s": 5.562,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 192938116,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:type_long_200",
+        "close": {
+          "_elapsed_s": 0.538902685046196,
+          "_wall_s": 0.5391,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "type_long_200",
+        "errors": [],
+        "expect": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027771517634391785,
+          "_wall_s": 0.028,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/32",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.03101210854947567,
+          "_wall_s": 0.0314,
+          "bytes": 200,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123"
+        },
+        "seq": 32,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 1.4411,
+              "screenshot": 0.4618,
+              "total": 1.903
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5295,
+              "screenshot": 0.4972,
+              "total": 1.0267
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5434,
+              "screenshot": 0.5541,
+              "total": 1.0974
+            }
+          }
+        ],
+        "text": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123",
+        "timing_s": 6.442,
+        "trial": 32,
+        "wait": {
+          "_elapsed_s": 1.3127906722947955,
+          "_wall_s": 1.313,
+          "elapsed_s": 1.269,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 209715210,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:type_symbols_shifted",
+        "close": {
+          "_elapsed_s": 5.620992826297879,
+          "_wall_s": 5.6213,
+          "killed": [
+            8176,
+            8393,
+            8394
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            8176,
+            8214,
+            8250,
+            8283,
+            8301,
+            8302,
+            8303
+          ]
+        },
+        "entry": "type_symbols_shifted",
+        "errors": [],
+        "expect": "<>?:\"{}|~!@#$%^&*()_+",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/33/data --extensions-dir /tmp/q2ap_canary/33/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-33.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02664987836033106,
+          "_wall_s": 0.0269,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/33/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/33/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-33.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/33",
+          "file": "/home/user/canary/fixture-33.txt",
+          "fixture_mtime_ns": 1791930347940000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.22930536046624184,
+          "_wall_s": 0.2297,
+          "bytes": 21,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "<>?:\"{}|~!@#$%^&*()_+"
+        },
+        "seq": 33,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 1.1047,
+              "screenshot": 0.3434,
+              "total": 1.448
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.7023,
+              "screenshot": 0.3309,
+              "total": 1.0332
+            }
+          }
+        ],
+        "text": "<>?:\"{}|~!@#$%^&*()_+",
+        "timing_s": 16.025,
+        "trial": 33,
+        "wait": {
+          "_elapsed_s": 7.162830851972103,
+          "_wall_s": 7.163,
+          "editor_ready": true,
+          "elapsed_s": 7.117,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 5.562,
+            "windows": [
+              [
+                7,
+                13
+              ],
+              [
+                7,
+                12
+              ],
+              [
+                7,
+                5
+              ],
+              [
+                7,
+                15
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                7,
+                1
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 8136,
+          "window": 213909507,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:triple_click_line",
+        "close": {
+          "_elapsed_s": 0.744803037494421,
+          "_wall_s": 0.745,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            8428,
+            8445,
+            8446,
+            8449,
+            8475,
+            8476,
+            8510,
+            8537,
+            8547,
+            8573,
+            8651
+          ]
+        },
+        "entry": "triple_click_line",
+        "errors": [],
+        "expect": "X",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/34/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02797402534633875,
+          "_wall_s": 0.0282,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/34/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/34",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930363964000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5571984089910984,
+          "_wall_s": 0.5575,
+          "mode": "readback",
+          "ok": true,
+          "text": "X"
+        },
+        "seq": 34,
+        "steps": [
+          {
+            "infra": [],
+            "op": "click",
+            "timing_s": {
+              "execute": 0.6041,
+              "screenshot": 0.3347,
+              "total": 0.9389
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6851,
+              "screenshot": 0.3321,
+              "total": 1.0172
+            }
+          }
+        ],
+        "text": "X",
+        "timing_s": 6.622,
+        "trial": 34,
+        "wait": {
+          "_elapsed_s": 2.8322622049599886,
+          "_wall_s": 2.8325,
+          "elapsed_s": 2.783,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.01,
+            "windows": [
+              [
+                11,
+                2
+              ],
+              [
+                11,
+                1
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 216006660,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/34/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:type_combining",
+        "close": {
+          "_elapsed_s": 5.61646831408143,
+          "_wall_s": 5.6167,
+          "killed": [
+            8727,
+            8956,
+            8958
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            8727,
+            8765,
+            8802,
+            8835,
+            8854,
+            8855,
+            8861
+          ]
+        },
+        "entry": "type_combining",
+        "errors": [],
+        "expect": "e\u0301 a\u0308 n\u0303",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/35/data --extensions-dir /tmp/q2ap_canary/35/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-35.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02858646586537361,
+          "_wall_s": 0.0288,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/35/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/35/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-35.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/35",
+          "file": "/home/user/canary/fixture-35.txt",
+          "fixture_mtime_ns": 1791930370588000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.22841865569353104,
+          "_wall_s": 0.2288,
+          "bytes": 11,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "e\u0301 a\u0308 n\u0303"
+        },
+        "seq": 35,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.8392,
+              "screenshot": 0.3298,
+              "total": 1.169
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5617,
+              "screenshot": 0.3395,
+              "total": 0.9011
+            }
+          }
+        ],
+        "text": "e\u0301 a\u0308 n\u0303",
+        "timing_s": 15.66,
+        "trial": 35,
+        "wait": {
+          "_elapsed_s": 7.21239960193634,
+          "_wall_s": 7.2126,
+          "editor_ready": true,
+          "elapsed_s": 7.159,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 4.039,
+            "windows": [
+              [
+                7,
+                1
+              ],
+              [
+                7,
+                14
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                7,
+                15
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                7,
+                2
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 218103811,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:type_long_200",
+        "close": {
+          "_elapsed_s": 0.7439389796927571,
+          "_wall_s": 0.7443,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            8993,
+            9010,
+            9011,
+            9014,
+            9040,
+            9041,
+            9076,
+            9103,
+            9122,
+            9139,
+            9223
+          ]
+        },
+        "entry": "type_long_200",
+        "errors": [],
+        "expect": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/36/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027328845113515854,
+          "_wall_s": 0.0276,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/36/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/36",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930386248000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5602544574066997,
+          "_wall_s": 0.5606,
+          "mode": "readback",
+          "ok": true,
+          "text": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123"
+        },
+        "seq": 36,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 1.5246,
+              "screenshot": 0.3353,
+              "total": 1.86
+            }
+          }
+        ],
+        "text": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123",
+        "timing_s": 6.317,
+        "trial": 36,
+        "wait": {
+          "_elapsed_s": 2.6212347084656358,
+          "_wall_s": 2.6215,
+          "elapsed_s": 2.56,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.01,
+            "windows": [
+              [
+                11,
+                3
+              ],
+              [
+                11,
+                1
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 220200964,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/36/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:type_combining",
+        "close": {
+          "_elapsed_s": 0.5383272636681795,
+          "_wall_s": 0.5386,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            9299
+          ]
+        },
+        "entry": "type_combining",
+        "errors": [],
+        "expect": "e\u0301 a\u0308 n\u0303",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/37 --norestore --nologo --writer /home/user/canary/fixture-37.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027579575777053833,
+          "_wall_s": 0.0278,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/37",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-37.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/37",
+          "file": "/home/user/canary/fixture-37.txt",
+          "fixture_mtime_ns": 1791930392568000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.9976767497137189,
+          "_wall_s": 0.998,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "e\u0301 a\u0308 n\u0303"
+        },
+        "seq": 37,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.7877,
+              "screenshot": 0.0652,
+              "total": 0.8529
+            }
+          }
+        ],
+        "text": "e\u0301 a\u0308 n\u0303",
+        "timing_s": 7.942,
+        "trial": 37,
+        "wait": {
+          "_elapsed_s": 5.0219348687678576,
+          "_wall_s": 5.0222,
+          "a11y_ready": true,
+          "elapsed_s": 4.969,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 222298229,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:type_multiline_tabs",
+        "close": {
+          "_elapsed_s": 5.618174945935607,
+          "_wall_s": 5.6185,
+          "killed": [
+            9371,
+            9585,
+            9586
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            9371,
+            9410,
+            9445,
+            9478,
+            9495,
+            9496,
+            9506
+          ]
+        },
+        "entry": "type_multiline_tabs",
+        "errors": [],
+        "expect": "line one\n\tindented\nline three",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/38/data --extensions-dir /tmp/q2ap_canary/38/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-38.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027773980051279068,
+          "_wall_s": 0.0281,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/38/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/38/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-38.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/38",
+          "file": "/home/user/canary/fixture-38.txt",
+          "fixture_mtime_ns": 1791930400508000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.22758161462843418,
+          "_wall_s": 0.228,
+          "bytes": 29,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "line one\n\tindented\nline three"
+        },
+        "seq": 38,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6612,
+              "screenshot": 0.3453,
+              "total": 1.0065
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 1.0822,
+              "screenshot": 0.3351,
+              "total": 1.4173
+            }
+          }
+        ],
+        "text": "line one\n\tindented\nline three",
+        "timing_s": 13.983,
+        "trial": 38,
+        "wait": {
+          "_elapsed_s": 5.180196571163833,
+          "_wall_s": 5.1804,
+          "editor_ready": true,
+          "elapsed_s": 5.128,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 2.021,
+            "windows": [
+              [
+                7,
+                159
+              ],
+              [
+                7,
+                82
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                7,
+                2
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 224395267,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:type_rtl",
+        "close": {
+          "_elapsed_s": 0.5379462903365493,
+          "_wall_s": 0.5382,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "type_rtl",
+        "errors": [],
+        "expect": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027936154045164585,
+          "_wall_s": 0.0282,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/39",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.03036797232925892,
+          "_wall_s": 0.0307,
+          "bytes": 28,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627"
+        },
+        "seq": 39,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.572,
+              "screenshot": 0.4696,
+              "total": 1.0416
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5655,
+              "screenshot": 0.465,
+              "total": 1.0305
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5339,
+              "screenshot": 0.553,
+              "total": 1.0869
+            }
+          }
+        ],
+        "text": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627",
+        "timing_s": 5.567,
+        "trial": 39,
+        "wait": {
+          "_elapsed_s": 1.3072978500276804,
+          "_wall_s": 1.3075,
+          "elapsed_s": 1.264,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 232783882,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:type_digits",
+        "close": {
+          "_elapsed_s": 0.539491169154644,
+          "_wall_s": 0.5398,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            9751
+          ]
+        },
+        "entry": "type_digits",
+        "errors": [],
+        "expect": "0123456789 9876543210",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/40 --norestore --nologo --writer /home/user/canary/fixture-40.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.026831536553800106,
+          "_wall_s": 0.027,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/40",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-40.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/40",
+          "file": "/home/user/canary/fixture-40.txt",
+          "fixture_mtime_ns": 1791930420060000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 1.004771526902914,
+          "_wall_s": 1.0052,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "0123456789 9876543210"
+        },
+        "seq": 40,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.8277,
+              "screenshot": 0.0692,
+              "total": 0.8969
+            }
+          }
+        ],
+        "text": "0123456789 9876543210",
+        "timing_s": 7.971,
+        "trial": 40,
+        "wait": {
+          "_elapsed_s": 4.999650637619197,
+          "_wall_s": 4.9999,
+          "a11y_ready": true,
+          "elapsed_s": 4.952,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 234881141,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:type_long_200",
+        "close": {
+          "_elapsed_s": 5.6167100835591555,
+          "_wall_s": 5.6169,
+          "killed": [
+            9822,
+            10038,
+            10039
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            9822,
+            9860,
+            9897,
+            9930,
+            9947,
+            9948,
+            9949
+          ]
+        },
+        "entry": "type_long_200",
+        "errors": [],
+        "expect": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/41/data --extensions-dir /tmp/q2ap_canary/41/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-41.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02861984446644783,
+          "_wall_s": 0.0289,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/41/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/41/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-41.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/41",
+          "file": "/home/user/canary/fixture-41.txt",
+          "fixture_mtime_ns": 1791930428032000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.22819467540830374,
+          "_wall_s": 0.2286,
+          "bytes": 200,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123"
+        },
+        "seq": 41,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 1.5233,
+              "screenshot": 0.3429,
+              "total": 1.8662
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 1.1049,
+              "screenshot": 0.333,
+              "total": 1.438
+            }
+          }
+        ],
+        "text": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123",
+        "timing_s": 14.852,
+        "trial": 41,
+        "wait": {
+          "_elapsed_s": 5.169960344210267,
+          "_wall_s": 5.1702,
+          "editor_ready": true,
+          "elapsed_s": 5.122,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 2.02,
+            "windows": [
+              [
+                7,
+                161
+              ],
+              [
+                7,
+                71
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                7,
+                4
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 241172483,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:type_spaces",
+        "close": {
+          "_elapsed_s": 0.5391102340072393,
+          "_wall_s": 0.5394,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            10114
+          ]
+        },
+        "entry": "type_spaces",
+        "errors": [],
+        "expect": "  two  spaces   three   ",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/42 --norestore --nologo --writer /home/user/canary/fixture-42.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.028662140481173992,
+          "_wall_s": 0.0289,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/42",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-42.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/42",
+          "file": "/home/user/canary/fixture-42.txt",
+          "fixture_mtime_ns": 1791930442884000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.9618870550766587,
+          "_wall_s": 0.9622,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "  two  spaces   three   "
+        },
+        "seq": 42,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.7886,
+              "screenshot": 0.0661,
+              "total": 0.8547
+            }
+          }
+        ],
+        "text": "  two  spaces   three   ",
+        "timing_s": 8.269,
+        "trial": 42,
+        "wait": {
+          "_elapsed_s": 5.3811508333310485,
+          "_wall_s": 5.3814,
+          "a11y_ready": true,
+          "elapsed_s": 5.331,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 241172597,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:type_with_correction",
+        "close": {
+          "_elapsed_s": 0.5398118812590837,
+          "_wall_s": 0.5401,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            10206
+          ]
+        },
+        "entry": "type_with_correction",
+        "errors": [],
+        "expect": "hello world",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/43 --norestore --nologo --writer /home/user/canary/fixture-43.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.028025167994201183,
+          "_wall_s": 0.0282,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/43",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-43.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/43",
+          "file": "/home/user/canary/fixture-43.txt",
+          "fixture_mtime_ns": 1791930451156000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.9661572650074959,
+          "_wall_s": 0.9665,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "hello world"
+        },
+        "seq": 43,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.7811,
+              "screenshot": 0.0667,
+              "total": 0.8478
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5438,
+              "screenshot": 0.0709,
+              "total": 0.6147
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.8217,
+              "screenshot": 0.0657,
+              "total": 0.8874
+            }
+          }
+        ],
+        "text": "hello world",
+        "timing_s": 9.402,
+        "trial": 43,
+        "wait": {
+          "_elapsed_s": 5.013626570813358,
+          "_wall_s": 5.0139,
+          "a11y_ready": true,
+          "elapsed_s": 4.952,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 241172597,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:type_emoji",
+        "close": {
+          "_elapsed_s": 0.5403083190321922,
+          "_wall_s": 0.5406,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            10324
+          ]
+        },
+        "entry": "type_emoji",
+        "errors": [],
+        "expect": "ok \ud83d\ude80 done \ud83c\udf89",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/44 --norestore --nologo --writer /home/user/canary/fixture-44.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027257894165813923,
+          "_wall_s": 0.0275,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/44",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-44.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/44",
+          "file": "/home/user/canary/fixture-44.txt",
+          "fixture_mtime_ns": 1791930460556000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.9891291344538331,
+          "_wall_s": 0.9895,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "ok \ud83d\ude80 done \ud83c\udf89"
+        },
+        "seq": 44,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.9581,
+              "screenshot": 0.0719,
+              "total": 1.0299
+            }
+          }
+        ],
+        "text": "ok \ud83d\ude80 done \ud83c\udf89",
+        "timing_s": 8.082,
+        "trial": 44,
+        "wait": {
+          "_elapsed_s": 4.990939575247467,
+          "_wall_s": 4.9912,
+          "a11y_ready": true,
+          "elapsed_s": 4.943,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 241172597,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:type_rtl",
+        "close": {
+          "_elapsed_s": 0.537067724391818,
+          "_wall_s": 0.5374,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            10428
+          ]
+        },
+        "entry": "type_rtl",
+        "errors": [],
+        "expect": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/45 --norestore --nologo --writer /home/user/canary/fixture-45.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.028220292180776596,
+          "_wall_s": 0.0284,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/45",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-45.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/45",
+          "file": "/home/user/canary/fixture-45.txt",
+          "fixture_mtime_ns": 1791930468640000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.9366297805681825,
+          "_wall_s": 0.937,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627"
+        },
+        "seq": 45,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.7915,
+              "screenshot": 0.0669,
+              "total": 0.8584
+            }
+          }
+        ],
+        "text": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627",
+        "timing_s": 8.297,
+        "trial": 45,
+        "wait": {
+          "_elapsed_s": 5.432382399216294,
+          "_wall_s": 5.4326,
+          "a11y_ready": true,
+          "elapsed_s": 5.384,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 241172597,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:ctrl_home_insert",
+        "close": {
+          "_elapsed_s": 0.7439430253580213,
+          "_wall_s": 0.7442,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            10479,
+            10496,
+            10497,
+            10500,
+            10528,
+            10529,
+            10566,
+            10587,
+            10597,
+            10623,
+            10702
+          ]
+        },
+        "entry": "ctrl_home_insert",
+        "errors": [],
+        "expect": "Zline a\nline b",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/46/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.028032522648572922,
+          "_wall_s": 0.0283,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/46/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/46",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930476936000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5578596973791718,
+          "_wall_s": 0.5582,
+          "mode": "readback",
+          "ok": true,
+          "text": "Zline a\nline b"
+        },
+        "seq": 46,
+        "steps": [
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6283,
+              "screenshot": 0.3318,
+              "total": 0.9601
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6836,
+              "screenshot": 0.3348,
+              "total": 1.0184
+            }
+          }
+        ],
+        "text": "Zline a\nline b",
+        "timing_s": 6.903,
+        "trial": 46,
+        "wait": {
+          "_elapsed_s": 3.0900609586387873,
+          "_wall_s": 3.0903,
+          "elapsed_s": 3.042,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.515,
+            "windows": [
+              [
+                11,
+                5
+              ],
+              [
+                11,
+                0
+              ],
+              [
+                11,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 260046852,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/46/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:type_plain",
+        "close": {
+          "_elapsed_s": 5.617390542291105,
+          "_wall_s": 5.6176,
+          "killed": [
+            10779,
+            10994,
+            10996
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            10779,
+            10816,
+            10852,
+            10886,
+            10904,
+            10905,
+            10906
+          ]
+        },
+        "entry": "type_plain",
+        "errors": [],
+        "expect": "plain text check",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/47/data --extensions-dir /tmp/q2ap_canary/47/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-47.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02983889076858759,
+          "_wall_s": 0.0301,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/47/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/47/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-47.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/47",
+          "file": "/home/user/canary/fixture-47.txt",
+          "fixture_mtime_ns": 1791930483840000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.22757519595324993,
+          "_wall_s": 0.2279,
+          "bytes": 16,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "plain text check"
+        },
+        "seq": 47,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.5829,
+              "screenshot": 0.3361,
+              "total": 0.919
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6851,
+              "screenshot": 0.3305,
+              "total": 1.0156
+            }
+          }
+        ],
+        "text": "plain text check",
+        "timing_s": 15.513,
+        "trial": 47,
+        "wait": {
+          "_elapsed_s": 7.1991281025111675,
+          "_wall_s": 7.1994,
+          "editor_ready": true,
+          "elapsed_s": 7.14,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 4.04,
+            "windows": [
+              [
+                7,
+                10
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                7,
+                16
+              ],
+              [
+                7,
+                13
+              ],
+              [
+                7,
+                2
+              ],
+              [
+                7,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 262144003,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:type_long_200",
+        "close": {
+          "_elapsed_s": 0.539164561778307,
+          "_wall_s": 0.5394,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            11069
+          ]
+        },
+        "entry": "type_long_200",
+        "errors": [],
+        "expect": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/48 --norestore --nologo --writer /home/user/canary/fixture-48.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02796607557684183,
+          "_wall_s": 0.0282,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/48",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-48.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/48",
+          "file": "/home/user/canary/fixture-48.txt",
+          "fixture_mtime_ns": 1791930499352000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.9931666161864996,
+          "_wall_s": 0.9935,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123"
+        },
+        "seq": 48,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 1.6377,
+              "screenshot": 0.0681,
+              "total": 1.7058
+            }
+          }
+        ],
+        "text": "Action path check 01: the quick probe records every key; commas, periods; numbers 0123456789 and CAPS stay exact. Action path check 01: the quick probe records every key; commas, periods; numbers 0123",
+        "timing_s": 9.112,
+        "trial": 48,
+        "wait": {
+          "_elapsed_s": 5.341237193904817,
+          "_wall_s": 5.3415,
+          "a11y_ready": true,
+          "elapsed_s": 5.295,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 262144117,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "writer",
+        "cell": "writer:drag_select_word",
+        "close": {
+          "_elapsed_s": 0.5394339403137565,
+          "_wall_s": 0.5398,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            11160
+          ]
+        },
+        "entry": "drag_select_word",
+        "errors": [],
+        "expect": "keep Y keep",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "soffice -env:UserInstallation=file:///tmp/q2ap_canary/49 --norestore --nologo --writer /home/user/canary/fixture-49.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027624301612377167,
+          "_wall_s": 0.0278,
+          "app": "writer",
+          "argv": [
+            "soffice",
+            "-env:UserInstallation=file:///tmp/q2ap_canary/49",
+            "--norestore",
+            "--nologo",
+            "--writer",
+            "/home/user/canary/fixture-49.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/49",
+          "file": "/home/user/canary/fixture-49.txt",
+          "fixture_mtime_ns": 1791930508464000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 1.0161333521828055,
+          "_wall_s": 1.0165,
+          "mode": "readback",
+          "ok": true,
+          "paragraphs": 1,
+          "text": "keep Y keep"
+        },
+        "seq": 49,
+        "steps": [
+          {
+            "infra": [],
+            "op": "drag",
+            "timing_s": {
+              "execute": 1.6452,
+              "screenshot": 0.0679,
+              "total": 1.7131
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.8595,
+              "screenshot": 0.0656,
+              "total": 0.9251
+            }
+          }
+        ],
+        "text": "keep Y keep",
+        "timing_s": 10.013,
+        "trial": 49,
+        "wait": {
+          "_elapsed_s": 5.287257225252688,
+          "_wall_s": 5.2875,
+          "a11y_ready": true,
+          "elapsed_s": 5.24,
+          "geometry": [
+            70,
+            64,
+            1850,
+            1016
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.008,
+            "windows": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "window": 262144117,
+          "wm_class": [
+            "libreoffice",
+            "libreoffice-writer"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:type_with_correction",
+        "close": {
+          "_elapsed_s": 0.7425261242315173,
+          "_wall_s": 0.7428,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            11226,
+            11243,
+            11244,
+            11247,
+            11274,
+            11275,
+            11309,
+            11335,
+            11345,
+            11371,
+            11450
+          ]
+        },
+        "entry": "type_with_correction",
+        "errors": [],
+        "expect": "hello world",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/50/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02796286903321743,
+          "_wall_s": 0.0283,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/50/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/50",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930518480000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5573710687458515,
+          "_wall_s": 0.5577,
+          "mode": "readback",
+          "ok": true,
+          "text": "hello world"
+        },
+        "seq": 50,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6875,
+              "screenshot": 0.3397,
+              "total": 1.0272
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6879,
+              "screenshot": 0.3352,
+              "total": 1.0231
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6279,
+              "screenshot": 0.3346,
+              "total": 0.9625
+            }
+          }
+        ],
+        "text": "hello world",
+        "timing_s": 7.674,
+        "trial": 50,
+        "wait": {
+          "_elapsed_s": 2.8285168670117855,
+          "_wall_s": 2.8287,
+          "elapsed_s": 2.776,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.009,
+            "windows": [
+              [
+                11,
+                1
+              ],
+              [
+                11,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 270532612,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/50/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:type_spaces",
+        "close": {
+          "_elapsed_s": 0.743431675247848,
+          "_wall_s": 0.7437,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            11519,
+            11536,
+            11537,
+            11540,
+            11568,
+            11569,
+            11593,
+            11629,
+            11639,
+            11665,
+            11745
+          ]
+        },
+        "entry": "type_spaces",
+        "errors": [],
+        "expect": "  two  spaces   three   ",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/51/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02875750232487917,
+          "_wall_s": 0.029,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/51/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/51",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930526152000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5590036641806364,
+          "_wall_s": 0.5594,
+          "mode": "readback",
+          "ok": true,
+          "text": "  two  spaces   three   "
+        },
+        "seq": 51,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.7278,
+              "screenshot": 0.3529,
+              "total": 1.0806
+            }
+          }
+        ],
+        "text": "  two  spaces   three   ",
+        "timing_s": 5.74,
+        "trial": 51,
+        "wait": {
+          "_elapsed_s": 2.824101848527789,
+          "_wall_s": 2.8243,
+          "elapsed_s": 2.777,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.01,
+            "windows": [
+              [
+                11,
+                1
+              ],
+              [
+                11,
+                1
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 274726916,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/51/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:type_multiline_tabs",
+        "close": {
+          "_elapsed_s": 0.5387085163965821,
+          "_wall_s": 0.5389,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "type_multiline_tabs",
+        "errors": [],
+        "expect": "line one\n\tindented\nline three",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027693962678313255,
+          "_wall_s": 0.0279,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/52",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.03088183794170618,
+          "_wall_s": 0.0312,
+          "bytes": 29,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "line one\n\tindented\nline three"
+        },
+        "seq": 52,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6557,
+              "screenshot": 0.4623,
+              "total": 1.118
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5624,
+              "screenshot": 0.4922,
+              "total": 1.0545
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5591,
+              "screenshot": 0.5578,
+              "total": 1.1169
+            }
+          }
+        ],
+        "text": "line one\n\tindented\nline three",
+        "timing_s": 5.714,
+        "trial": 52,
+        "wait": {
+          "_elapsed_s": 1.3227102514356375,
+          "_wall_s": 1.3229,
+          "elapsed_s": 1.264,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 281018378,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:key_kp_enter",
+        "close": {
+          "_elapsed_s": 0.7447869805619121,
+          "_wall_s": 0.745,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            11872,
+            11889,
+            11890,
+            11893,
+            11920,
+            11921,
+            11958,
+            11979,
+            11989,
+            12014,
+            12092
+          ]
+        },
+        "entry": "key_kp_enter",
+        "errors": [],
+        "expect": "\n",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/53/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.026322172954678535,
+          "_wall_s": 0.0265,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/53/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/53",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930537604000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5575821530073881,
+          "_wall_s": 0.5579,
+          "mode": "readback",
+          "ok": true,
+          "text": "\n"
+        },
+        "seq": 53,
+        "steps": [
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6243,
+              "screenshot": 0.3319,
+              "total": 0.9562
+            }
+          }
+        ],
+        "text": "\n",
+        "timing_s": 5.618,
+        "trial": 53,
+        "wait": {
+          "_elapsed_s": 2.828711382113397,
+          "_wall_s": 2.8289,
+          "elapsed_s": 2.783,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.009,
+            "windows": [
+              [
+                11,
+                1
+              ],
+              [
+                11,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 285212676,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/53/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:type_rtl",
+        "close": {
+          "_elapsed_s": 5.621414052322507,
+          "_wall_s": 5.6217,
+          "killed": [
+            12159,
+            12375,
+            12376
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            12159,
+            12197,
+            12234,
+            12267,
+            12284,
+            12285,
+            12305
+          ]
+        },
+        "entry": "type_rtl",
+        "errors": [],
+        "expect": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/54/data --extensions-dir /tmp/q2ap_canary/54/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-54.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.027861162088811398,
+          "_wall_s": 0.0281,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/54/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/54/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-54.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/54",
+          "file": "/home/user/canary/fixture-54.txt",
+          "fixture_mtime_ns": 1791930543224000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.22776158154010773,
+          "_wall_s": 0.2281,
+          "bytes": 28,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627"
+        },
+        "seq": 54,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.5931,
+              "screenshot": 0.3365,
+              "total": 0.9296
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5446,
+              "screenshot": 0.3341,
+              "total": 0.8787
+            }
+          }
+        ],
+        "text": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u0631\u062d\u0628\u0627",
+        "timing_s": 15.385,
+        "trial": 54,
+        "wait": {
+          "_elapsed_s": 7.195553234778345,
+          "_wall_s": 7.1958,
+          "editor_ready": true,
+          "elapsed_s": 7.143,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 4.04,
+            "windows": [
+              [
+                7,
+                13
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                7,
+                13
+              ],
+              [
+                7,
+                18
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                7,
+                1
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 291504131,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "terminal",
+        "cell": "terminal:key_kp_enter",
+        "close": {
+          "_elapsed_s": 0.5394113278016448,
+          "_wall_s": 0.5396,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": []
+        },
+        "entry": "key_kp_enter",
+        "errors": [],
+        "expect": "\n",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "gnome-terminal --window -- bash -c cat > /home/user/canary/out.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02807983849197626,
+          "_wall_s": 0.0283,
+          "app": "terminal",
+          "argv": [
+            "gnome-terminal",
+            "--window",
+            "--",
+            "bash",
+            "-c",
+            "cat > /home/user/canary/out.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/55",
+          "file": "/home/user/canary/out.txt",
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.030971487052738667,
+          "_wall_s": 0.0313,
+          "bytes": 1,
+          "mode": "readback",
+          "ok": true,
+          "saved": null,
+          "text": "\n"
+        },
+        "seq": 55,
+        "steps": [
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5322,
+              "screenshot": 0.4722,
+              "total": 1.0044
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5356,
+              "screenshot": 0.5543,
+              "total": 1.0899
+            }
+          }
+        ],
+        "text": "\n",
+        "timing_s": 4.521,
+        "trial": 55,
+        "wait": {
+          "_elapsed_s": 1.3241809559985995,
+          "_wall_s": 1.3244,
+          "elapsed_s": 1.265,
+          "geometry": [
+            234,
+            33,
+            786,
+            533
+          ],
+          "mode": "wait",
+          "ok": true,
+          "window": 295698442,
+          "wm_class": [
+            "gnome-terminal-server",
+            "gnome-terminal"
+          ]
+        }
+      },
+      {
+        "app": "chrome",
+        "cell": "chrome:type_plain",
+        "close": {
+          "_elapsed_s": 0.7435790486633778,
+          "_wall_s": 0.7439,
+          "killed": [],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            12479,
+            12496,
+            12497,
+            12500,
+            12528,
+            12529,
+            12553,
+            12587,
+            12598,
+            12624,
+            12702
+          ]
+        },
+        "entry": "type_plain",
+        "errors": [],
+        "expect": "plain text check",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "google-chrome --no-first-run --no-default-browser-check --force-renderer-accessibility --simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT --user-data-dir=/tmp/q2ap_canary/56/profile file:///home/"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02692132256925106,
+          "_wall_s": 0.0271,
+          "app": "chrome",
+          "argv": [
+            "google-chrome",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--force-renderer-accessibility",
+            "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT",
+            "--user-data-dir=/tmp/q2ap_canary/56/profile",
+            "file:///home/user/canary/textarea.html"
+          ],
+          "dir": "/tmp/q2ap_canary/56",
+          "file": "/home/user/canary/textarea.html",
+          "fixture_mtime_ns": 1791930563132000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.5615302510559559,
+          "_wall_s": 0.5619,
+          "mode": "readback",
+          "ok": true,
+          "text": "plain text check"
+        },
+        "seq": 56,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.6591,
+              "screenshot": 0.3337,
+              "total": 0.9928
+            }
+          }
+        ],
+        "text": "plain text check",
+        "timing_s": 5.659,
+        "trial": 56,
+        "wait": {
+          "_elapsed_s": 2.829834290780127,
+          "_wall_s": 2.8301,
+          "elapsed_s": 2.782,
+          "geometry": [
+            80,
+            37,
+            910,
+            1033
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 1.009,
+            "windows": [
+              [
+                11,
+                1
+              ],
+              [
+                11,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "title_ready": true,
+          "window": 297795588,
+          "wm_class": [
+            "google-chrome (/tmp/q2ap_canary/56/profile)",
+            "google-chrome"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:type_unicode_bmp",
+        "close": {
+          "_elapsed_s": 5.622346746735275,
+          "_wall_s": 5.6226,
+          "killed": [
+            12760,
+            12982,
+            12984
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            12760,
+            12798,
+            12834,
+            12867,
+            12884,
+            12885,
+            12904
+          ]
+        },
+        "entry": "type_unicode_bmp",
+        "errors": [],
+        "expect": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/57/data --extensions-dir /tmp/q2ap_canary/57/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-57.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.02755765989422798,
+          "_wall_s": 0.0278,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/57/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/57/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-57.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/57",
+          "file": "/home/user/canary/fixture-57.txt",
+          "fixture_mtime_ns": 1791930568792000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.22771994024515152,
+          "_wall_s": 0.2281,
+          "bytes": 53,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e"
+        },
+        "seq": 57,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 1.9119,
+              "screenshot": 0.3423,
+              "total": 2.2542
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.5535,
+              "screenshot": 0.3403,
+              "total": 0.8938
+            }
+          }
+        ],
+        "text": "cr\u00e8me br\u00fbl\u00e9e, \u00c6r\u00f8, \u03a9\u03bc\u03ad\u03b3\u03b1, \u0416\u0443\u043a, \u65e5\u672c\u8a9e",
+        "timing_s": 14.703,
+        "trial": 57,
+        "wait": {
+          "_elapsed_s": 5.173374257050455,
+          "_wall_s": 5.1736,
+          "editor_ready": true,
+          "elapsed_s": 5.127,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 2.022,
+            "windows": [
+              [
+                7,
+                159
+              ],
+              [
+                7,
+                86
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                7,
+                1
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 299892739,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:type_emoji",
+        "close": {
+          "_elapsed_s": 5.620624957606196,
+          "_wall_s": 5.6209,
+          "killed": [
+            13034,
+            13262,
+            13264
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            13034,
+            13071,
+            13113,
+            13141,
+            13159,
+            13160,
+            13181
+          ]
+        },
+        "entry": "type_emoji",
+        "errors": [],
+        "expect": "ok \ud83d\ude80 done \ud83c\udf89",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/58/data --extensions-dir /tmp/q2ap_canary/58/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-58.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.0277441693469882,
+          "_wall_s": 0.028,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/58/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/58/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-58.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/58",
+          "file": "/home/user/canary/fixture-58.txt",
+          "fixture_mtime_ns": 1791930583496000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.2289857529103756,
+          "_wall_s": 0.2294,
+          "bytes": 17,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "ok \ud83d\ude80 done \ud83c\udf89"
+        },
+        "seq": 58,
+        "steps": [
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.7339,
+              "screenshot": 0.3341,
+              "total": 1.068
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6931,
+              "screenshot": 0.3372,
+              "total": 1.0303
+            }
+          }
+        ],
+        "text": "ok \ud83d\ude80 done \ud83c\udf89",
+        "timing_s": 15.695,
+        "trial": 58,
+        "wait": {
+          "_elapsed_s": 7.214779972098768,
+          "_wall_s": 7.215,
+          "editor_ready": true,
+          "elapsed_s": 7.155,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 4.039,
+            "windows": [
+              [
+                7,
+                1
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                7,
+                10
+              ],
+              [
+                7,
+                14
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                7,
+                1
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 301989891,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      },
+      {
+        "app": "vscode",
+        "cell": "vscode:ctrl_home_insert",
+        "close": {
+          "_elapsed_s": 5.621104993857443,
+          "_wall_s": 5.6214,
+          "killed": [
+            13314,
+            13540,
+            13541
+          ],
+          "mode": "close",
+          "ok": true,
+          "terminated": [
+            13314,
+            13352,
+            13387,
+            13420,
+            13437,
+            13438,
+            13458
+          ]
+        },
+        "entry": "ctrl_home_insert",
+        "errors": [],
+        "expect": "Zline a\nline b",
+        "infra": [],
+        "launch": {
+          "status": 200,
+          "text": "code --user-data-dir /tmp/q2ap_canary/59/data --extensions-dir /tmp/q2ap_canary/59/ext --disable-extensions --password-store=basic --new-window /home/user/canary/fixture-59.txt launched successfully"
+        },
+        "no_input": false,
+        "pass": true,
+        "prepare": {
+          "_elapsed_s": 0.0285563375800848,
+          "_wall_s": 0.0288,
+          "app": "vscode",
+          "argv": [
+            "code",
+            "--user-data-dir",
+            "/tmp/q2ap_canary/59/data",
+            "--extensions-dir",
+            "/tmp/q2ap_canary/59/ext",
+            "--disable-extensions",
+            "--password-store=basic",
+            "--new-window",
+            "/home/user/canary/fixture-59.txt"
+          ],
+          "dir": "/tmp/q2ap_canary/59",
+          "file": "/home/user/canary/fixture-59.txt",
+          "fixture_mtime_ns": 1791930599192000000,
+          "mode": "prepare"
+        },
+        "readback": {
+          "_elapsed_s": 0.22858304530382156,
+          "_wall_s": 0.2289,
+          "bytes": 14,
+          "mode": "readback",
+          "ok": true,
+          "saved": true,
+          "text": "Zline a\nline b"
+        },
+        "seq": 59,
+        "steps": [
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.6249,
+              "screenshot": 0.337,
+              "total": 0.9619
+            }
+          },
+          {
+            "infra": [],
+            "op": "type",
+            "timing_s": {
+              "execute": 0.9344,
+              "screenshot": 0.3382,
+              "total": 1.2727
+            }
+          },
+          {
+            "infra": [],
+            "op": "key",
+            "timing_s": {
+              "execute": 0.7124,
+              "screenshot": 0.3333,
+              "total": 1.0457
+            }
+          }
+        ],
+        "text": "Zline a\nline b",
+        "timing_s": 17.107,
+        "trial": 59,
+        "wait": {
+          "_elapsed_s": 7.444217308424413,
+          "_wall_s": 7.4445,
+          "editor_ready": true,
+          "elapsed_s": 7.397,
+          "geometry": [
+            448,
+            193,
+            1024,
+            768
+          ],
+          "idle": {
+            "idle": true,
+            "waited_s": 4.545,
+            "windows": [
+              [
+                7,
+                0
+              ],
+              [
+                7,
+                16
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                7,
+                14
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                7,
+                0
+              ]
+            ]
+          },
+          "mode": "wait",
+          "ok": true,
+          "status_bar_bright": 430,
+          "window": 304087043,
+          "wm_class": [
+            "code",
+            "code"
+          ]
+        }
+      }
+    ],
+    "warmup": {
+      "_elapsed_s": 0.12450515013188124,
+      "check": null,
+      "elapsed_s": 0.0968,
+      "keycode": 248,
+      "mode": "warmup",
+      "server_pid": 1818,
+      "shell": {
+        "idle": true,
+        "replies": [
+          [
+            0.0465,
+            true
+          ],
+          [
+            0.005,
+            true
+          ]
+        ]
+      }
+    }
+  },
+  "runner_stderr_tail": "",
+  "t0": 1791930034.4508765,
+  "teardown": {
+    "anonymous_volumes": 1,
+    "container_gone": true,
+    "leaked_volumes": [],
+    "rm_rc": 0,
+    "stop_rc": 0
+  },
+  "token": "q2ap-1278-c02",
+  "vm_inspect": {
+    "cap_add": [
+      "CAP_NET_ADMIN"
+    ],
+    "cpuset_cpus": "0-3",
+    "cpuset_mems": "0",
+    "device_requests": null,
+    "devices": [
+      "/dev/kvm"
+    ],
+    "has_bridge_address": false,
+    "image": "sha256:fe8d9a5e5ad6c593d059887ea2c790481b3f32dd42fa961f2441cdbbe2c70cf4",
+    "labels": {
+      "cotcodec.campaign": "s2v5-confirm-er",
+      "cotcodec.cycle": "2",
+      "cotcodec.q2": "1",
+      "cotcodec.role": "vm",
+      "cotcodec.slurm_job": "1278"
+    },
+    "memory": 6442450944,
+    "mounts": [
+      {
+        "destination": "/System.qcow2",
+        "name": null,
+        "rw": false,
+        "type": "bind"
+      },
+      {
+        "destination": "/storage",
+        "name": "82dd1000abf9cacf648e056dc85feaf22b4fe19a28f17b02baae3c5346cbe615",
+        "rw": true,
+        "type": "volume"
+      }
+    ],
+    "network_mode": "none",
+    "networks": [
+      "none"
+    ],
+    "port_bindings": {},
+    "privileged": false,
+    "publish_all_ports": false,
+    "runtime": "runc",
+    "started_at": "2026-10-13T22:20:34.490397879Z"
+  },
+  "vm_measurements": {
+    "nat_rules": 2,
+    "nvidia": 0,
+    "overlay_alloc": 874127360,
+    "overlay_bytes": 874184704,
+    "rc": 0,
+    "storage_alloc": 7315456
+  }
+}

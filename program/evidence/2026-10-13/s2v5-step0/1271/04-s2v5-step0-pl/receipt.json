@@ -1,0 +1,312 @@
+{
+  "ap_delta": {
+    "cell": "PL",
+    "step0": true
+  },
+  "campaign_id": "s2v5-step0-pl",
+  "cpusets": {
+    "allocated": "0-5",
+    "runner": "4",
+    "vm": "0-3",
+    "vm_mems": "0",
+    "vm_numa_nodes": [
+      0
+    ]
+  },
+  "dangling_volumes_after": 0,
+  "dangling_volumes_before": 0,
+  "docker": {
+    "cgroup_version": "2",
+    "default_runtime": "runc",
+    "runtimes": [
+      "io.containerd.runc.v2",
+      "runc"
+    ],
+    "server_version": "28.3.1"
+  },
+  "driver_python": "3.10.12",
+  "finished_at": 1791883186.8143818,
+  "git_sha": "31854bc67596046c1412de1024b98a70a199baad",
+  "host_end": {
+    "containers_ours": 0,
+    "containers_running_total": 1,
+    "loadavg": [
+      "0.95",
+      "0.99",
+      "1.56"
+    ],
+    "squeue_foreign": [],
+    "t": 1791883186.7882965
+  },
+  "host_start": {
+    "containers_ours": 0,
+    "containers_running_total": 1,
+    "loadavg": [
+      "0.90",
+      "0.97",
+      "1.92"
+    ],
+    "squeue_foreign": [],
+    "t": 1791882691.335575
+  },
+  "job_id": "1271",
+  "labelled_containers_left": [],
+  "manifest_sha256": "227f8a6243aa0ef08475ce85dc7f71a515cabbbf2f27b1e5eb1def235f3f622b",
+  "qcow2_info": {
+    "actual-size": 24461426688,
+    "format": "qcow2",
+    "virtual-size": 53687091200
+  },
+  "qcow2_sha256_after": "5a4102eefbbaf9e4ad78d499267270c4fdb4671ccff4d6dba777196817aa6ed2",
+  "qcow2_sha256_before": "5a4102eefbbaf9e4ad78d499267270c4fdb4671ccff4d6dba777196817aa6ed2",
+  "qcow2_unchanged": true,
+  "schema": "cotcodec-vm-campaign-receipt-v1",
+  "session_plan_sha256": "db2b5e63443f529b50e97cb74da65d8008285fae510257ce2fca8ee97dd894ef",
+  "source_tree_sha256": "e0e91310f751b74da45b81ba8995589193bd87c394e3d0e1b2ff14f9f3ea19ed",
+  "started_at": 1791882674.3230507,
+  "summary": {
+    "boot_s": {
+      "max": 17.253,
+      "n": 5,
+      "p50": 17.143,
+      "p95": 17.253
+    },
+    "boots_ok": 5,
+    "containers_removed_all": true,
+    "cycles": 5,
+    "distinct_boot_ids": 5,
+    "errors": [],
+    "hmp_cycles_all_ok": 0,
+    "hmp_step_pass_counts": {},
+    "infra_gates_pass": true,
+    "latency_s": {
+      "accessibility_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "execute_noop_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "screenshot_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      }
+    },
+    "leaked_volumes": [],
+    "nat_modes": [
+      "nat"
+    ],
+    "no_gpu_all": true,
+    "no_published_ports_all": true,
+    "sentinel_pristine": 4,
+    "sentinel_readback_dconf": 0,
+    "sentinel_readback_file": 0,
+    "sentinel_readback_gsettings": 0,
+    "sentinel_reset_checks": 4,
+    "sessions": {
+      "accessibility_calls": 0,
+      "cell_counts": {
+        "FAIL": 0,
+        "FLAKY": 0,
+        "PASS": 6
+      },
+      "cells": {
+        "screenshot|chrome:drag_select_word": "PASS",
+        "screenshot|chrome:triple_click_line": "PASS",
+        "screenshot|vscode:drag_select_word": "PASS",
+        "screenshot|vscode:triple_click_line": "PASS",
+        "screenshot|writer:drag_select_word": "PASS",
+        "screenshot|writer:triple_click_line": "PASS"
+      },
+      "guest_server_restarts": 0,
+      "infra_failures": {},
+      "observation_retries": {},
+      "runner_errors": [],
+      "sessions": [
+        {
+          "accessibility_calls": 0,
+          "cycle": 0,
+          "guest_server_restarts": 0,
+          "passed": 6,
+          "probe_relaunches": null,
+          "setting": "screenshot",
+          "tap_relaunches": null,
+          "trials": 6,
+          "wall_s": 94.84
+        },
+        {
+          "accessibility_calls": 0,
+          "cycle": 1,
+          "guest_server_restarts": 0,
+          "passed": 6,
+          "probe_relaunches": null,
+          "setting": "screenshot",
+          "tap_relaunches": null,
+          "trials": 6,
+          "wall_s": 94.58
+        },
+        {
+          "accessibility_calls": 0,
+          "cycle": 2,
+          "guest_server_restarts": 0,
+          "passed": 6,
+          "probe_relaunches": null,
+          "setting": "screenshot",
+          "tap_relaunches": null,
+          "trials": 6,
+          "wall_s": 97.28
+        },
+        {
+          "accessibility_calls": 0,
+          "cycle": 3,
+          "guest_server_restarts": 0,
+          "passed": 6,
+          "probe_relaunches": null,
+          "setting": "screenshot",
+          "tap_relaunches": null,
+          "trials": 6,
+          "wall_s": 93.91
+        },
+        {
+          "accessibility_calls": 0,
+          "cycle": 4,
+          "guest_server_restarts": 0,
+          "passed": 6,
+          "probe_relaunches": null,
+          "setting": "screenshot",
+          "tap_relaunches": null,
+          "trials": 6,
+          "wall_s": 94.63
+        }
+      ],
+      "step_s": {
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "trial_s": {
+        "n": 30,
+        "p50": 10.799,
+        "p95": 18.497,
+        "sum": 372.17
+      }
+    },
+    "settled_s": {
+      "n": 5,
+      "p50": 20.353,
+      "p95": 22.818
+    },
+    "tap_selftest_ok": 0
+  },
+  "verdicts": [
+    {
+      "boot_id": "c67b37b0-9dae-49e9-a082-89e2c4f331da",
+      "boot_s": 17.053,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 0,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 20.181,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "85f1fb93-96ba-45dc-b35a-dd0bef0b9328",
+      "boot_s": 17.253,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 1,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 20.376,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "f9af58c6-6a4f-4ee7-9ba4-0a43ecc4ec67",
+      "boot_s": 17.143,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 2,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 22.818,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "19bbefeb-a037-4e66-bbdb-ac2dcee8066f",
+      "boot_s": 16.913,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 3,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 20.036,
+      "tap_selftest_ok": null
+    },
+    {
+      "boot_id": "0ec405b8-e653-428c-8b0c-36db888ce0b3",
+      "boot_s": 17.238,
+      "booted": true,
+      "container_removed": true,
+      "cycle": 4,
+      "error": null,
+      "hmp_ok": null,
+      "hmp_steps": {},
+      "leaked_volumes": [],
+      "nat_mode": "nat",
+      "no_gpu": true,
+      "no_published_ports": true,
+      "sentinel_leftovers": [],
+      "sentinel_pristine": true,
+      "sentinel_readback_dconf": false,
+      "sentinel_readback_file": false,
+      "sentinel_readback_gsettings": false,
+      "settled_s": 20.353,
+      "tap_selftest_ok": null
+    }
+  ]
+}

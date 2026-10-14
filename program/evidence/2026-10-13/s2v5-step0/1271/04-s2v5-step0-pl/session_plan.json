@@ -1,0 +1,152 @@
+[
+ {
+  "setting": "screenshot",
+  "index": 0,
+  "trials": [
+   [
+    0,
+    "chrome:drag_select_word"
+   ],
+   [
+    1,
+    "writer:drag_select_word"
+   ],
+   [
+    2,
+    "chrome:triple_click_line"
+   ],
+   [
+    3,
+    "vscode:triple_click_line"
+   ],
+   [
+    4,
+    "writer:triple_click_line"
+   ],
+   [
+    5,
+    "vscode:drag_select_word"
+   ]
+  ]
+ },
+ {
+  "setting": "screenshot",
+  "index": 1,
+  "trials": [
+   [
+    0,
+    "chrome:drag_select_word"
+   ],
+   [
+    1,
+    "writer:triple_click_line"
+   ],
+   [
+    2,
+    "chrome:triple_click_line"
+   ],
+   [
+    3,
+    "vscode:triple_click_line"
+   ],
+   [
+    4,
+    "vscode:drag_select_word"
+   ],
+   [
+    5,
+    "writer:drag_select_word"
+   ]
+  ]
+ },
+ {
+  "setting": "screenshot",
+  "index": 2,
+  "trials": [
+   [
+    0,
+    "chrome:drag_select_word"
+   ],
+   [
+    1,
+    "writer:drag_select_word"
+   ],
+   [
+    2,
+    "chrome:triple_click_line"
+   ],
+   [
+    3,
+    "writer:triple_click_line"
+   ],
+   [
+    4,
+    "vscode:triple_click_line"
+   ],
+   [
+    5,
+    "vscode:drag_select_word"
+   ]
+  ]
+ },
+ {
+  "setting": "screenshot",
+  "index": 3,
+  "trials": [
+   [
+    0,
+    "writer:drag_select_word"
+   ],
+   [
+    1,
+    "chrome:triple_click_line"
+   ],
+   [
+    2,
+    "chrome:drag_select_word"
+   ],
+   [
+    3,
+    "vscode:triple_click_line"
+   ],
+   [
+    4,
+    "vscode:drag_select_word"
+   ],
+   [
+    5,
+    "writer:triple_click_line"
+   ]
+  ]
+ },
+ {
+  "setting": "screenshot",
+  "index": 4,
+  "trials": [
+   [
+    0,
+    "writer:drag_select_word"
+   ],
+   [
+    1,
+    "chrome:drag_select_word"
+   ],
+   [
+    2,
+    "chrome:triple_click_line"
+   ],
+   [
+    3,
+    "writer:triple_click_line"
+   ],
+   [
+    4,
+    "vscode:drag_select_word"
+   ],
+   [
+    5,
+    "vscode:triple_click_line"
+   ]
+  ]
+ }
+]

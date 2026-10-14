@@ -1,0 +1,8317 @@
+{
+ "decision": "PROCEED to the v5 draft (D94)",
+ "exit_labels": [],
+ "reading": "(a)",
+ "tables": {
+  "A/chrome/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     140,
+     163
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      172,
+      151
+     ],
+     "to": [
+      225,
+      151
+     ]
+    },
+    "target_word": [
+     171,
+     226
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 3,
+   "offset_vs_reference": 0
+  },
+  "A/chrome/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     140,
+     163
+    ],
+    "target": {
+     "x": 242,
+     "y": 151
+    },
+    "target_word": [
+     216,
+     269
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 2,
+   "offset_vs_reference": 0
+  },
+  "A/vscode/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     278,
+     291
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      609,
+      284
+     ],
+     "to": [
+      639,
+      284
+     ]
+    },
+    "target_word": [
+     608,
+     640
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "A/vscode/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     278,
+     291
+    ],
+    "target": {
+     "x": 649,
+     "y": 284
+    },
+    "target_word": [
+     634,
+     665
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "A/writer/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       294
+      ],
+      "to": [
+       708,
+       294
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       294
+      ],
+      "to": [
+       708,
+       294
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       294
+      ],
+      "to": [
+       708,
+       294
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       294
+      ],
+      "to": [
+       708,
+       294
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       294
+      ],
+      "to": [
+       708,
+       294
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     289,
+     300
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      680,
+      294
+     ],
+     "to": [
+      708,
+      294
+     ]
+    },
+    "target_word": [
+     679,
+     709
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     1,
+     1
+    ]
+   },
+   "offset_vs_q2_frozen": 2,
+   "offset_vs_reference": 1
+  },
+  "A/writer/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 294
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 294
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 294
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 294
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 294
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     289,
+     300
+    ],
+    "target": {
+     "x": 718,
+     "y": 294
+    },
+    "target_word": [
+     704,
+     733
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     1,
+     1
+    ]
+   },
+   "offset_vs_q2_frozen": 2,
+   "offset_vs_reference": 1
+  },
+  "AR/chrome/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     140,
+     163
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      172,
+      151
+     ],
+     "to": [
+      225,
+      151
+     ]
+    },
+    "target_word": [
+     171,
+     226
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 3,
+   "offset_vs_reference": 0
+  },
+  "AR/chrome/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     140,
+     163
+    ],
+    "target": {
+     "x": 242,
+     "y": 151
+    },
+    "target_word": [
+     216,
+     269
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 2,
+   "offset_vs_reference": 0
+  },
+  "AR/vscode/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     278,
+     291
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      609,
+      284
+     ],
+     "to": [
+      639,
+      284
+     ]
+    },
+    "target_word": [
+     608,
+     640
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "AR/vscode/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     278,
+     291
+    ],
+    "target": {
+     "x": 649,
+     "y": 284
+    },
+    "target_word": [
+     634,
+     665
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "AR/writer/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": false,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       294
+      ],
+      "to": [
+       779,
+       294
+      ]
+     },
+     "target_word": [
+      750,
+      780
+     ],
+     "text": "Ykeep word keep",
+     "words": [
+      [
+       711,
+       740
+      ],
+      [
+       750,
+       780
+      ],
+      [
+       791,
+       820
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": false,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       294
+      ],
+      "to": [
+       779,
+       294
+      ]
+     },
+     "target_word": [
+      750,
+      780
+     ],
+     "text": "Ykeep word keep",
+     "words": [
+      [
+       711,
+       740
+      ],
+      [
+       750,
+       780
+      ],
+      [
+       791,
+       820
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": false,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       294
+      ],
+      "to": [
+       779,
+       294
+      ]
+     },
+     "target_word": [
+      750,
+      780
+     ],
+     "text": "Ykeep word keep",
+     "words": [
+      [
+       711,
+       740
+      ],
+      [
+       750,
+       780
+      ],
+      [
+       791,
+       820
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": false,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       294
+      ],
+      "to": [
+       779,
+       294
+      ]
+     },
+     "target_word": [
+      750,
+      780
+     ],
+     "text": "Ykeep word keep",
+     "words": [
+      [
+       711,
+       740
+      ],
+      [
+       750,
+       780
+      ],
+      [
+       791,
+       820
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": false,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       294
+      ],
+      "to": [
+       779,
+       294
+      ]
+     },
+     "target_word": [
+      750,
+      780
+     ],
+     "text": "Ykeep word keep",
+     "words": [
+      [
+       711,
+       740
+      ],
+      [
+       750,
+       780
+      ],
+      [
+       791,
+       820
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     289,
+     300
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      751,
+      294
+     ],
+     "to": [
+      779,
+      294
+     ]
+    },
+    "target_word": [
+     750,
+     780
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     71,
+     71
+    ],
+    "dy": [
+     1,
+     1
+    ]
+   },
+   "offset_vs_q2_frozen": 71,
+   "offset_vs_reference": 71
+  },
+  "AR/writer/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "x": 789,
+      "y": 294
+     },
+     "target_word": [
+      775,
+      804
+     ],
+     "text": "X",
+     "words": [
+      [
+       711,
+       764
+      ],
+      [
+       775,
+       804
+      ],
+      [
+       816,
+       844
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "x": 789,
+      "y": 294
+     },
+     "target_word": [
+      775,
+      804
+     ],
+     "text": "X",
+     "words": [
+      [
+       711,
+       764
+      ],
+      [
+       775,
+       804
+      ],
+      [
+       816,
+       844
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "x": 789,
+      "y": 294
+     },
+     "target_word": [
+      775,
+      804
+     ],
+     "text": "X",
+     "words": [
+      [
+       711,
+       764
+      ],
+      [
+       775,
+       804
+      ],
+      [
+       816,
+       844
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "x": 789,
+      "y": 294
+     },
+     "target_word": [
+      775,
+      804
+     ],
+     "text": "X",
+     "words": [
+      [
+       711,
+       764
+      ],
+      [
+       775,
+       804
+      ],
+      [
+       816,
+       844
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      289,
+      300
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       1,
+       1
+      ]
+     },
+     "target": {
+      "x": 789,
+      "y": 294
+     },
+     "target_word": [
+      775,
+      804
+     ],
+     "text": "X",
+     "words": [
+      [
+       711,
+       764
+      ],
+      [
+       775,
+       804
+      ],
+      [
+       816,
+       844
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     289,
+     300
+    ],
+    "target": {
+     "x": 789,
+     "y": 294
+    },
+    "target_word": [
+     775,
+     804
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     71,
+     71
+    ],
+    "dy": [
+     1,
+     1
+    ]
+   },
+   "offset_vs_q2_frozen": 71,
+   "offset_vs_reference": 71
+  },
+  "E/chrome/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     140,
+     163
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      172,
+      151
+     ],
+     "to": [
+      225,
+      151
+     ]
+    },
+    "target_word": [
+     171,
+     226
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 3,
+   "offset_vs_reference": 0
+  },
+  "E/chrome/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     140,
+     163
+    ],
+    "target": {
+     "x": 242,
+     "y": 151
+    },
+    "target_word": [
+     216,
+     269
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 2,
+   "offset_vs_reference": 0
+  },
+  "E/vscode/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     278,
+     291
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      609,
+      284
+     ],
+     "to": [
+      639,
+      284
+     ]
+    },
+    "target_word": [
+     608,
+     640
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "E/vscode/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     278,
+     291
+    ],
+    "target": {
+     "x": 649,
+     "y": 284
+    },
+    "target_word": [
+     634,
+     665
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "E/writer/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       293
+      ],
+      "to": [
+       708,
+       293
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       293
+      ],
+      "to": [
+       708,
+       293
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       293
+      ],
+      "to": [
+       708,
+       293
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       293
+      ],
+      "to": [
+       708,
+       293
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       293
+      ],
+      "to": [
+       708,
+       293
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     288,
+     299
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      680,
+      293
+     ],
+     "to": [
+      708,
+      293
+     ]
+    },
+    "target_word": [
+     679,
+     709
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "E/writer/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 293
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 293
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 293
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 293
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 293
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     288,
+     299
+    ],
+    "target": {
+     "x": 718,
+     "y": 293
+    },
+    "target_word": [
+     704,
+     733
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "ER/chrome/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     140,
+     163
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      172,
+      151
+     ],
+     "to": [
+      225,
+      151
+     ]
+    },
+    "target_word": [
+     171,
+     226
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 3,
+   "offset_vs_reference": 0
+  },
+  "ER/chrome/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     140,
+     163
+    ],
+    "target": {
+     "x": 242,
+     "y": 151
+    },
+    "target_word": [
+     216,
+     269
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 2,
+   "offset_vs_reference": 0
+  },
+  "ER/vscode/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     278,
+     291
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      609,
+      284
+     ],
+     "to": [
+      639,
+      284
+     ]
+    },
+    "target_word": [
+     608,
+     640
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "ER/vscode/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     278,
+     291
+    ],
+    "target": {
+     "x": 649,
+     "y": 284
+    },
+    "target_word": [
+     634,
+     665
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "ER/writer/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": false,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       293
+      ],
+      "to": [
+       779,
+       293
+      ]
+     },
+     "target_word": [
+      750,
+      780
+     ],
+     "text": "Ykeep word keep",
+     "words": [
+      [
+       711,
+       740
+      ],
+      [
+       750,
+       780
+      ],
+      [
+       791,
+       820
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": false,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       293
+      ],
+      "to": [
+       779,
+       293
+      ]
+     },
+     "target_word": [
+      750,
+      780
+     ],
+     "text": "Ykeep word keep",
+     "words": [
+      [
+       711,
+       740
+      ],
+      [
+       750,
+       780
+      ],
+      [
+       791,
+       820
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": false,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       293
+      ],
+      "to": [
+       779,
+       293
+      ]
+     },
+     "target_word": [
+      750,
+      780
+     ],
+     "text": "Ykeep word keep",
+     "words": [
+      [
+       711,
+       740
+      ],
+      [
+       750,
+       780
+      ],
+      [
+       791,
+       820
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": false,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       293
+      ],
+      "to": [
+       779,
+       293
+      ]
+     },
+     "target_word": [
+      750,
+      780
+     ],
+     "text": "Ykeep word keep",
+     "words": [
+      [
+       711,
+       740
+      ],
+      [
+       750,
+       780
+      ],
+      [
+       791,
+       820
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": false,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       751,
+       293
+      ],
+      "to": [
+       779,
+       293
+      ]
+     },
+     "target_word": [
+      750,
+      780
+     ],
+     "text": "Ykeep word keep",
+     "words": [
+      [
+       711,
+       740
+      ],
+      [
+       750,
+       780
+      ],
+      [
+       791,
+       820
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     288,
+     299
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      751,
+      293
+     ],
+     "to": [
+      779,
+      293
+     ]
+    },
+    "target_word": [
+     750,
+     780
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     71,
+     71
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 71,
+   "offset_vs_reference": 71
+  },
+  "ER/writer/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 789,
+      "y": 293
+     },
+     "target_word": [
+      775,
+      804
+     ],
+     "text": "X",
+     "words": [
+      [
+       711,
+       764
+      ],
+      [
+       775,
+       804
+      ],
+      [
+       816,
+       844
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 789,
+      "y": 293
+     },
+     "target_word": [
+      775,
+      804
+     ],
+     "text": "X",
+     "words": [
+      [
+       711,
+       764
+      ],
+      [
+       775,
+       804
+      ],
+      [
+       816,
+       844
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 789,
+      "y": 293
+     },
+     "target_word": [
+      775,
+      804
+     ],
+     "text": "X",
+     "words": [
+      [
+       711,
+       764
+      ],
+      [
+       775,
+       804
+      ],
+      [
+       816,
+       844
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 789,
+      "y": 293
+     },
+     "target_word": [
+      775,
+      804
+     ],
+     "text": "X",
+     "words": [
+      [
+       711,
+       764
+      ],
+      [
+       775,
+       804
+      ],
+      [
+       816,
+       844
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       71,
+       71
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 789,
+      "y": 293
+     },
+     "target_word": [
+      775,
+      804
+     ],
+     "text": "X",
+     "words": [
+      [
+       711,
+       764
+      ],
+      [
+       775,
+       804
+      ],
+      [
+       816,
+       844
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     288,
+     299
+    ],
+    "target": {
+     "x": 789,
+     "y": 293
+    },
+    "target_word": [
+     775,
+     804
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     71,
+     71
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 71,
+   "offset_vs_reference": 71
+  },
+  "PL/chrome/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       172,
+       151
+      ],
+      "to": [
+       225,
+       151
+      ]
+     },
+     "target_word": [
+      171,
+      226
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       102,
+       154
+      ],
+      [
+       171,
+       226
+      ],
+      [
+       246,
+       299
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     140,
+     163
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      172,
+      151
+     ],
+     "to": [
+      225,
+      151
+     ]
+    },
+    "target_word": [
+     171,
+     226
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 3,
+   "offset_vs_reference": 0
+  },
+  "PL/chrome/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      140,
+      163
+     ],
+     "seq": 2,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 242,
+      "y": 151
+     },
+     "target_word": [
+      216,
+      269
+     ],
+     "text": "X",
+     "words": [
+      [
+       103,
+       198
+      ],
+      [
+       216,
+       269
+      ],
+      [
+       288,
+       342
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     140,
+     163
+    ],
+    "target": {
+     "x": 242,
+     "y": 151
+    },
+    "target_word": [
+     216,
+     269
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 2,
+   "offset_vs_reference": 0
+  },
+  "PL/vscode/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       609,
+       284
+      ],
+      "to": [
+       639,
+       284
+      ]
+     },
+     "target_word": [
+      608,
+      640
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       568,
+       598
+      ],
+      [
+       608,
+       640
+      ],
+      [
+       652,
+       682
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     278,
+     291
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      609,
+      284
+     ],
+     "to": [
+      639,
+      284
+     ]
+    },
+    "target_word": [
+     608,
+     640
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "PL/vscode/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      278,
+      291
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 649,
+      "y": 284
+     },
+     "target_word": [
+      634,
+      665
+     ],
+     "text": "X",
+     "words": [
+      [
+       568,
+       623
+      ],
+      [
+       634,
+       665
+      ],
+      [
+       677,
+       707
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     278,
+     291
+    ],
+    "target": {
+     "x": 649,
+     "y": 284
+    },
+    "target_word": [
+     634,
+     665
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "PL/writer/drag_select_word": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       293
+      ],
+      "to": [
+       708,
+       293
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       293
+      ],
+      "to": [
+       708,
+       293
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       293
+      ],
+      "to": [
+       708,
+       293
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       293
+      ],
+      "to": [
+       708,
+       293
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 0,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "duration_ms": 500,
+      "from": [
+       680,
+       293
+      ],
+      "to": [
+       708,
+       293
+      ]
+     },
+     "target_word": [
+      679,
+      709
+     ],
+     "text": "keep Y keep",
+     "words": [
+      [
+       640,
+       669
+      ],
+      [
+       679,
+       709
+      ],
+      [
+       720,
+       749
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     288,
+     299
+    ],
+    "target": {
+     "duration_ms": 500,
+     "from": [
+      680,
+      293
+     ],
+     "to": [
+      708,
+      293
+     ]
+    },
+    "target_word": [
+     679,
+     709
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  },
+  "PL/writer/triple_click_line": {
+   "boots": [
+    {
+     "boot": 0,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 4,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 293
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 1,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 1,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 293
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 2,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 293
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 3,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 5,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 293
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    },
+    {
+     "boot": 4,
+     "infra": [],
+     "measured": true,
+     "pass": true,
+     "rows": [
+      288,
+      299
+     ],
+     "seq": 3,
+     "shift_vs_E_median": {
+      "dx": [
+       0,
+       0
+      ],
+      "dy": [
+       0,
+       0
+      ]
+     },
+     "target": {
+      "x": 718,
+      "y": 293
+     },
+     "target_word": [
+      704,
+      733
+     ],
+     "text": "X",
+     "words": [
+      [
+       640,
+       693
+      ],
+      [
+       704,
+       733
+      ],
+      [
+       745,
+       773
+      ]
+     ]
+    }
+   ],
+   "consensus": {
+    "rows": [
+     288,
+     299
+    ],
+    "target": {
+     "x": 718,
+     "y": 293
+    },
+    "target_word": [
+     704,
+     733
+    ]
+   },
+   "drift": {
+    "bottom": 0,
+    "top": 0,
+    "x0": 0,
+    "x1": 0
+   },
+   "median_shift_vs_E": {
+    "dx": [
+     0,
+     0
+    ],
+    "dy": [
+     0,
+     0
+    ]
+   },
+   "offset_vs_q2_frozen": 1,
+   "offset_vs_reference": 0
+  }
+ }
+}

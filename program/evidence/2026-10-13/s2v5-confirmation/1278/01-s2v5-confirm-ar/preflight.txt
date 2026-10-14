@@ -1,0 +1,5 @@
+job_id=1278
+manifest_sha256=22c076cc67a08aa93ab6ba77f5c34e30ebe95c59af326ecab9d9ceb2b2665c3c
+ap_delta=1
+cells=harness/s2_locale/canary_v5/suite_cells-AR.json
+driver_exit=0 labelled_containers_left=0

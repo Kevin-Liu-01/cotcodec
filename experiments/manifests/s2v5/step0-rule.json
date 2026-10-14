@@ -1,0 +1,89 @@
+{
+ "base_commit": "738a9da6d2effa94f38ab1cc7478eeb4ce236de2",
+ "decision": "D94",
+ "experiment_id": "s2-arabic-cua-locale-v5",
+ "files": {
+  "harness/s2_locale/ap_delta_step0.py": "4a3bb54f8e38ed46de2b4db87b7f1559993cd2bb5993557ff07416b2b4cbf188",
+  "harness/s2_locale/canary_targets_v5.py": "6a16a68c01d0ea010b716f33830ee14ed2095ec0d654caf73370e846e321fe1d",
+  "infra/slurm/host-single-node/s2v5-step0.sbatch": "f9829dabe4c74aff64684cce905e52ffdec01ba866e0e82e4a5b9ebf4a5d8204",
+  "program/preregistrations/s2-arabic-cua-locale-v5-step0.md": "384a9124aa026478a5c158fe312cdff77832f0405e1e7a467dfccb9b0ea6e775",
+  "tests/fixtures/s2v5_step0/run501-chrome-triple_click_line.png": "10aab34752b233630887e5cd100920723ca7f502db2884a0c13131b1c37477a0",
+  "tests/fixtures/s2v5_step0/run501-vscode-drag_select_word.png": "29fa5c3d05c44e166c8ea614112a24f61a33bfac977d069853d2c3693761e94f",
+  "tests/fixtures/s2v5_step0/run501-writer-drag_select_word.png": "74bfceea8f4a95977094f6ca95ee7c3938b41e42c77325d0553500355190d31e",
+  "tests/fixtures/s2v5_step0/run515-chrome-drag_select_word.png": "556f40ce13fb88335af7bbb46206c03dabbfc5eff1eca9d4bd6d40c72d4f0a2b",
+  "tests/fixtures/s2v5_step0/run515-chrome-triple_click_line.png": "fe3b3ea921c33de7e15eaf548dc01d9ac6e2d73d8427ea4d816c1cbc5a717a42",
+  "tests/fixtures/s2v5_step0/run515-vscode-drag_select_word.png": "50a689137eaf2a4b16f45aa34f93fe72576c209fb9aedac3592a8121dab94606",
+  "tests/fixtures/s2v5_step0/run515-vscode-triple_click_line.png": "53fd258d15ad416be4f8c7f3871e7e4d5ca59250838da60ab71dde224ed9250f",
+  "tests/fixtures/s2v5_step0/run515-writer-drag_select_word.png": "74bfceea8f4a95977094f6ca95ee7c3938b41e42c77325d0553500355190d31e",
+  "tests/fixtures/s2v5_step0/run515-writer-triple_click_line.png": "38f5cf31f9cc95e0794f458aa8f0cd85b392a4825419d1cfb49c82b5bdefcc64",
+  "tests/test_s2v5_canary_targets.py": "3dc0c1417bbbe57fd13d0aa015209f2457369345e8cbdf218c83a83b23c0c169",
+  "tests/test_s2v5_step0.py": "375e457542979c81e34254d316f33e0ee9c5934bb6ccc458e865d4c7fd9eea57"
+ },
+ "predictions": {
+  "chrome_vscode_vs_reference": [
+   "E",
+   "A",
+   "ER",
+   "AR",
+   "PL"
+  ],
+  "drift_max_px": 1,
+  "shift_dx": [
+   69,
+   73
+  ],
+  "shift_dy": [
+   0,
+   1
+  ],
+  "tolerance_px": 2,
+  "v4_readback_on_ER_AR": "Ykeep word keep",
+  "writer_vs_q2_frozen": [
+   "E",
+   "A",
+   "PL"
+  ]
+ },
+ "record": "program/preregistrations/s2-arabic-cua-locale-v5-step0.md",
+ "rule": {
+  "caret_run": 0.9,
+  "ink_delta": 80,
+  "line_coverage": 0.5,
+  "pitch_px": {
+   "chrome": 14.4,
+   "vscode": 8.43,
+   "writer": 7.94
+  },
+  "roi": {
+   "chrome": [
+    99,
+    136,
+    960,
+    230
+   ],
+   "vscode": [
+    548,
+    271,
+    1350,
+    330
+   ],
+   "writer": [
+    400,
+    230,
+    1600,
+    360
+   ]
+  },
+  "rounding": "(a + b) // 2",
+  "space_gap_max": 2.0,
+  "width_high": 0.5,
+  "width_low": 0.75,
+  "word_gap_px": {
+   "chrome": 11,
+   "vscode": 6,
+   "writer": 6
+  }
+ },
+ "schema": "s2v5-step0-rule-v1",
+ "status": "committed before step 0 measured anything; not a ledger registration"
+}

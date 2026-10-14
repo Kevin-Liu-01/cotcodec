@@ -1,0 +1,269 @@
+{
+  "boot_timeout_s": 300,
+  "canary_readback": false,
+  "cells_path": "/src/harness/q2/action_path/suite_cells.json",
+  "criterion": null,
+  "cycle": 1,
+  "fault_drop_modifier": null,
+  "guest_ip": "20.20.20.21",
+  "hmp_port": 7100,
+  "kill_guest_server_after_seq": null,
+  "kill_guest_server_during_seq": null,
+  "kind": "canary-development",
+  "layer": null,
+  "measure_targets": false,
+  "mutant": null,
+  "out": "/out/cycle-01.json",
+  "plan_path": "/src/harness/q2/action_path/rdev_plan.json",
+  "prev_token": "q2ap-1291-c00",
+  "reps": 5,
+  "server_port": 5000,
+  "session_index": 1,
+  "setting": "screenshot",
+  "settle_timeout_s": 60,
+  "t0": 1791941703.5455687,
+  "tap_duration_s": 8400,
+  "token": "q2ap-1291-c01",
+  "trials": [
+    [
+      0,
+      "vscode:type_symbols_shifted"
+    ],
+    [
+      1,
+      "chrome:ctrl_home_insert"
+    ],
+    [
+      2,
+      "writer:type_plain"
+    ],
+    [
+      3,
+      "terminal:type_symbols_shifted"
+    ],
+    [
+      4,
+      "terminal:type_digits"
+    ],
+    [
+      5,
+      "chrome:type_plain"
+    ],
+    [
+      6,
+      "terminal:type_plain"
+    ],
+    [
+      7,
+      "vscode:key_kp_enter"
+    ],
+    [
+      8,
+      "chrome:type_emoji"
+    ],
+    [
+      9,
+      "vscode:type_emoji"
+    ],
+    [
+      10,
+      "chrome:drag_select_word"
+    ],
+    [
+      11,
+      "writer:key_kp_enter"
+    ],
+    [
+      12,
+      "writer:type_spaces"
+    ],
+    [
+      13,
+      "writer:type_emoji"
+    ],
+    [
+      14,
+      "vscode:drag_select_word"
+    ],
+    [
+      15,
+      "chrome:key_kp_enter"
+    ],
+    [
+      16,
+      "chrome:select_all_copy_end_paste"
+    ],
+    [
+      17,
+      "chrome:type_spaces"
+    ],
+    [
+      18,
+      "chrome:type_digits"
+    ],
+    [
+      19,
+      "vscode:type_rtl"
+    ],
+    [
+      20,
+      "writer:type_symbols_shifted"
+    ],
+    [
+      21,
+      "vscode:type_plain"
+    ],
+    [
+      22,
+      "chrome:type_rtl"
+    ],
+    [
+      23,
+      "writer:type_with_correction"
+    ],
+    [
+      24,
+      "vscode:type_unicode_bmp"
+    ],
+    [
+      25,
+      "terminal:key_kp_enter"
+    ],
+    [
+      26,
+      "chrome:type_combining"
+    ],
+    [
+      27,
+      "writer:type_long_200"
+    ],
+    [
+      28,
+      "terminal:type_combining"
+    ],
+    [
+      29,
+      "vscode:select_all_copy_end_paste"
+    ],
+    [
+      30,
+      "terminal:type_emoji"
+    ],
+    [
+      31,
+      "writer:ctrl_home_insert"
+    ],
+    [
+      32,
+      "vscode:type_multiline_tabs"
+    ],
+    [
+      33,
+      "terminal:type_unicode_bmp"
+    ],
+    [
+      34,
+      "vscode:type_spaces"
+    ],
+    [
+      35,
+      "writer:triple_click_line"
+    ],
+    [
+      36,
+      "chrome:type_multiline_tabs"
+    ],
+    [
+      37,
+      "terminal:type_spaces"
+    ],
+    [
+      38,
+      "writer:type_digits"
+    ],
+    [
+      39,
+      "terminal:type_multiline_tabs"
+    ],
+    [
+      40,
+      "chrome:triple_click_line"
+    ],
+    [
+      41,
+      "chrome:type_symbols_shifted"
+    ],
+    [
+      42,
+      "chrome:type_long_200"
+    ],
+    [
+      43,
+      "writer:type_multiline_tabs"
+    ],
+    [
+      44,
+      "vscode:ctrl_home_insert"
+    ],
+    [
+      45,
+      "writer:type_rtl"
+    ],
+    [
+      46,
+      "chrome:type_unicode_bmp"
+    ],
+    [
+      47,
+      "writer:drag_select_word"
+    ],
+    [
+      48,
+      "vscode:type_digits"
+    ],
+    [
+      49,
+      "writer:type_unicode_bmp"
+    ],
+    [
+      50,
+      "writer:type_combining"
+    ],
+    [
+      51,
+      "vscode:triple_click_line"
+    ],
+    [
+      52,
+      "writer:select_all_copy_end_paste"
+    ],
+    [
+      53,
+      "vscode:type_combining"
+    ],
+    [
+      54,
+      "chrome:type_with_correction"
+    ],
+    [
+      55,
+      "terminal:type_with_correction"
+    ],
+    [
+      56,
+      "terminal:type_long_200"
+    ],
+    [
+      57,
+      "vscode:type_with_correction"
+    ],
+    [
+      58,
+      "vscode:type_long_200"
+    ],
+    [
+      59,
+      "terminal:type_rtl"
+    ]
+  ]
+}

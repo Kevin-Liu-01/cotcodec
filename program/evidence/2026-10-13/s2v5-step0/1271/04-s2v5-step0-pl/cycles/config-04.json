@@ -1,0 +1,53 @@
+{
+  "boot_timeout_s": 300,
+  "canary_readback": false,
+  "cells_path": "/src/harness/q2/action_path/suite_cells.json",
+  "criterion": null,
+  "cycle": 4,
+  "fault_drop_modifier": null,
+  "guest_ip": "20.20.20.21",
+  "hmp_port": 7100,
+  "kill_guest_server_after_seq": null,
+  "kill_guest_server_during_seq": null,
+  "kind": "canary-development",
+  "layer": null,
+  "measure_targets": true,
+  "mutant": null,
+  "out": "/out/cycle-04.json",
+  "plan_path": "/src/harness/q2/action_path/rdev_plan.json",
+  "prev_token": "q2ap-1271-c03",
+  "reps": 5,
+  "server_port": 5000,
+  "session_index": 4,
+  "setting": "screenshot",
+  "settle_timeout_s": 60,
+  "t0": 1791883074.761901,
+  "tap_duration_s": 19140,
+  "token": "q2ap-1271-c04",
+  "trials": [
+    [
+      0,
+      "writer:drag_select_word"
+    ],
+    [
+      1,
+      "chrome:drag_select_word"
+    ],
+    [
+      2,
+      "chrome:triple_click_line"
+    ],
+    [
+      3,
+      "writer:triple_click_line"
+    ],
+    [
+      4,
+      "vscode:drag_select_word"
+    ],
+    [
+      5,
+      "vscode:triple_click_line"
+    ]
+  ]
+}

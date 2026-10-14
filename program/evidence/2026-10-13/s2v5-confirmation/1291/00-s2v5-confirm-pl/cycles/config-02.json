@@ -1,0 +1,269 @@
+{
+  "boot_timeout_s": 300,
+  "canary_readback": false,
+  "cells_path": "/src/harness/q2/action_path/suite_cells.json",
+  "criterion": null,
+  "cycle": 2,
+  "fault_drop_modifier": null,
+  "guest_ip": "20.20.20.21",
+  "hmp_port": 7100,
+  "kill_guest_server_after_seq": null,
+  "kill_guest_server_during_seq": null,
+  "kind": "canary-development",
+  "layer": null,
+  "measure_targets": false,
+  "mutant": null,
+  "out": "/out/cycle-02.json",
+  "plan_path": "/src/harness/q2/action_path/rdev_plan.json",
+  "prev_token": "q2ap-1291-c01",
+  "reps": 5,
+  "server_port": 5000,
+  "session_index": 2,
+  "setting": "screenshot",
+  "settle_timeout_s": 60,
+  "t0": 1791942293.8507042,
+  "tap_duration_s": 8400,
+  "token": "q2ap-1291-c02",
+  "trials": [
+    [
+      0,
+      "vscode:key_kp_enter"
+    ],
+    [
+      1,
+      "terminal:type_spaces"
+    ],
+    [
+      2,
+      "chrome:type_unicode_bmp"
+    ],
+    [
+      3,
+      "terminal:type_with_correction"
+    ],
+    [
+      4,
+      "writer:type_multiline_tabs"
+    ],
+    [
+      5,
+      "chrome:type_emoji"
+    ],
+    [
+      6,
+      "chrome:type_multiline_tabs"
+    ],
+    [
+      7,
+      "vscode:type_with_correction"
+    ],
+    [
+      8,
+      "writer:key_kp_enter"
+    ],
+    [
+      9,
+      "terminal:type_combining"
+    ],
+    [
+      10,
+      "writer:type_symbols_shifted"
+    ],
+    [
+      11,
+      "chrome:type_digits"
+    ],
+    [
+      12,
+      "writer:type_unicode_bmp"
+    ],
+    [
+      13,
+      "writer:select_all_copy_end_paste"
+    ],
+    [
+      14,
+      "writer:ctrl_home_insert"
+    ],
+    [
+      15,
+      "terminal:type_emoji"
+    ],
+    [
+      16,
+      "vscode:drag_select_word"
+    ],
+    [
+      17,
+      "terminal:type_symbols_shifted"
+    ],
+    [
+      18,
+      "vscode:triple_click_line"
+    ],
+    [
+      19,
+      "writer:triple_click_line"
+    ],
+    [
+      20,
+      "vscode:type_digits"
+    ],
+    [
+      21,
+      "chrome:select_all_copy_end_paste"
+    ],
+    [
+      22,
+      "vscode:type_spaces"
+    ],
+    [
+      23,
+      "chrome:type_combining"
+    ],
+    [
+      24,
+      "terminal:type_plain"
+    ],
+    [
+      25,
+      "terminal:type_digits"
+    ],
+    [
+      26,
+      "chrome:type_symbols_shifted"
+    ],
+    [
+      27,
+      "chrome:drag_select_word"
+    ],
+    [
+      28,
+      "vscode:select_all_copy_end_paste"
+    ],
+    [
+      29,
+      "terminal:type_unicode_bmp"
+    ],
+    [
+      30,
+      "chrome:type_rtl"
+    ],
+    [
+      31,
+      "writer:type_plain"
+    ],
+    [
+      32,
+      "terminal:type_long_200"
+    ],
+    [
+      33,
+      "vscode:type_symbols_shifted"
+    ],
+    [
+      34,
+      "chrome:triple_click_line"
+    ],
+    [
+      35,
+      "vscode:type_combining"
+    ],
+    [
+      36,
+      "chrome:type_long_200"
+    ],
+    [
+      37,
+      "writer:type_combining"
+    ],
+    [
+      38,
+      "vscode:type_multiline_tabs"
+    ],
+    [
+      39,
+      "terminal:type_rtl"
+    ],
+    [
+      40,
+      "writer:type_digits"
+    ],
+    [
+      41,
+      "vscode:type_long_200"
+    ],
+    [
+      42,
+      "writer:type_spaces"
+    ],
+    [
+      43,
+      "writer:type_with_correction"
+    ],
+    [
+      44,
+      "writer:type_emoji"
+    ],
+    [
+      45,
+      "writer:type_rtl"
+    ],
+    [
+      46,
+      "chrome:ctrl_home_insert"
+    ],
+    [
+      47,
+      "vscode:type_plain"
+    ],
+    [
+      48,
+      "writer:type_long_200"
+    ],
+    [
+      49,
+      "writer:drag_select_word"
+    ],
+    [
+      50,
+      "chrome:type_with_correction"
+    ],
+    [
+      51,
+      "chrome:type_spaces"
+    ],
+    [
+      52,
+      "terminal:type_multiline_tabs"
+    ],
+    [
+      53,
+      "chrome:key_kp_enter"
+    ],
+    [
+      54,
+      "vscode:type_rtl"
+    ],
+    [
+      55,
+      "terminal:key_kp_enter"
+    ],
+    [
+      56,
+      "chrome:type_plain"
+    ],
+    [
+      57,
+      "vscode:type_unicode_bmp"
+    ],
+    [
+      58,
+      "vscode:type_emoji"
+    ],
+    [
+      59,
+      "vscode:ctrl_home_insert"
+    ]
+  ]
+}

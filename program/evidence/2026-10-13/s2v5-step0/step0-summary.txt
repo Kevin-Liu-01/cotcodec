@@ -1,0 +1,243 @@
+reading: (a)  decision: PROCEED to the v5 draft (D94)
+exit_labels: []
+
+## E writer triple_click_line
+  boot 0 seq 4: word x 704-733 rows 288-299 target (718,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 1: word x 704-733 rows 288-299 target (718,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 3: word x 704-733 rows 288-299 target (718,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 5: word x 704-733 rows 288-299 target (718,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 3: word x 704-733 rows 288-299 target (718,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (718,293) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (718,292) (offset 1) reference (718,293) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## E writer drag_select_word
+  boot 0 seq 1: word x 679-709 rows 288-299 target (680,293)->(708,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 5: word x 679-709 rows 288-299 target (680,293)->(708,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 1: word x 679-709 rows 288-299 target (680,293)->(708,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 0: word x 679-709 rows 288-299 target (680,293)->(708,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 0: word x 679-709 rows 288-299 target (680,293)->(708,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (680,293)->(708,293) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (680,292)->(709,292) (offset 1) reference (680,293)->(708,293) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## E chrome triple_click_line
+  boot 0 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 1: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (242,151) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (244,150) (offset 2) reference (242,151) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## E chrome drag_select_word
+  boot 0 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 2: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 1: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (172,151)->(225,151) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (172,150)->(228,150) (offset 3) reference (172,151)->(225,151) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## E vscode triple_click_line
+  boot 0 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 4: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 5: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (649,284) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (650,284) (offset 1) reference (649,284) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## E vscode drag_select_word
+  boot 0 seq 5: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 5: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (609,284)->(639,284) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (609,284)->(640,284) (offset 1) reference (609,284)->(639,284) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## A writer triple_click_line
+  boot 0 seq 4: word x 704-733 rows 289-300 target (718,294) shift-vs-E dx [0, 0] dy [1, 1] pass True text 'X' infra []
+  boot 1 seq 1: word x 704-733 rows 289-300 target (718,294) shift-vs-E dx [0, 0] dy [1, 1] pass True text 'X' infra []
+  boot 2 seq 3: word x 704-733 rows 289-300 target (718,294) shift-vs-E dx [0, 0] dy [1, 1] pass True text 'X' infra []
+  boot 3 seq 5: word x 704-733 rows 289-300 target (718,294) shift-vs-E dx [0, 0] dy [1, 1] pass True text 'X' infra []
+  boot 4 seq 3: word x 704-733 rows 289-300 target (718,294) shift-vs-E dx [0, 0] dy [1, 1] pass True text 'X' infra []
+  median (718,294) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (718,292) (offset 2) reference (718,293) (offset 1) median shift vs E {'dx': [0, 0], 'dy': [1, 1]}
+
+## A writer drag_select_word
+  boot 0 seq 1: word x 679-709 rows 289-300 target (680,294)->(708,294) shift-vs-E dx [0, 0] dy [1, 1] pass True text 'keep Y keep' infra []
+  boot 1 seq 5: word x 679-709 rows 289-300 target (680,294)->(708,294) shift-vs-E dx [0, 0] dy [1, 1] pass True text 'keep Y keep' infra []
+  boot 2 seq 1: word x 679-709 rows 289-300 target (680,294)->(708,294) shift-vs-E dx [0, 0] dy [1, 1] pass True text 'keep Y keep' infra []
+  boot 3 seq 0: word x 679-709 rows 289-300 target (680,294)->(708,294) shift-vs-E dx [0, 0] dy [1, 1] pass True text 'keep Y keep' infra []
+  boot 4 seq 0: word x 679-709 rows 289-300 target (680,294)->(708,294) shift-vs-E dx [0, 0] dy [1, 1] pass True text 'keep Y keep' infra []
+  median (680,294)->(708,294) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (680,292)->(709,292) (offset 2) reference (680,293)->(708,293) (offset 1) median shift vs E {'dx': [0, 0], 'dy': [1, 1]}
+
+## A chrome triple_click_line
+  boot 0 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 1: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (242,151) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (244,150) (offset 2) reference (242,151) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## A chrome drag_select_word
+  boot 0 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 2: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 1: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (172,151)->(225,151) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (172,150)->(228,150) (offset 3) reference (172,151)->(225,151) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## A vscode triple_click_line
+  boot 0 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 4: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 5: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (649,284) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (650,284) (offset 1) reference (649,284) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## A vscode drag_select_word
+  boot 0 seq 5: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 5: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (609,284)->(639,284) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (609,284)->(640,284) (offset 1) reference (609,284)->(639,284) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## ER writer triple_click_line
+  boot 0 seq 4: word x 775-804 rows 288-299 target (789,293) shift-vs-E dx [71, 71] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 1: word x 775-804 rows 288-299 target (789,293) shift-vs-E dx [71, 71] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 3: word x 775-804 rows 288-299 target (789,293) shift-vs-E dx [71, 71] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 5: word x 775-804 rows 288-299 target (789,293) shift-vs-E dx [71, 71] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 3: word x 775-804 rows 288-299 target (789,293) shift-vs-E dx [71, 71] dy [0, 0] pass True text 'X' infra []
+  median (789,293) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (718,292) (offset 71) reference (718,293) (offset 71) median shift vs E {'dx': [71, 71], 'dy': [0, 0]}
+
+## ER writer drag_select_word
+  boot 0 seq 1: word x 750-780 rows 288-299 target (751,293)->(779,293) shift-vs-E dx [71, 71] dy [0, 0] pass False text 'Ykeep word keep' infra []
+  boot 1 seq 5: word x 750-780 rows 288-299 target (751,293)->(779,293) shift-vs-E dx [71, 71] dy [0, 0] pass False text 'Ykeep word keep' infra []
+  boot 2 seq 1: word x 750-780 rows 288-299 target (751,293)->(779,293) shift-vs-E dx [71, 71] dy [0, 0] pass False text 'Ykeep word keep' infra []
+  boot 3 seq 0: word x 750-780 rows 288-299 target (751,293)->(779,293) shift-vs-E dx [71, 71] dy [0, 0] pass False text 'Ykeep word keep' infra []
+  boot 4 seq 0: word x 750-780 rows 288-299 target (751,293)->(779,293) shift-vs-E dx [71, 71] dy [0, 0] pass False text 'Ykeep word keep' infra []
+  median (751,293)->(779,293) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (680,292)->(709,292) (offset 71) reference (680,293)->(708,293) (offset 71) median shift vs E {'dx': [71, 71], 'dy': [0, 0]}
+
+## ER chrome triple_click_line
+  boot 0 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 1: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (242,151) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (244,150) (offset 2) reference (242,151) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## ER chrome drag_select_word
+  boot 0 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 2: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 1: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (172,151)->(225,151) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (172,150)->(228,150) (offset 3) reference (172,151)->(225,151) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## ER vscode triple_click_line
+  boot 0 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 4: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 5: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (649,284) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (650,284) (offset 1) reference (649,284) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## ER vscode drag_select_word
+  boot 0 seq 5: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 5: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (609,284)->(639,284) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (609,284)->(640,284) (offset 1) reference (609,284)->(639,284) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## AR writer triple_click_line
+  boot 0 seq 4: word x 775-804 rows 289-300 target (789,294) shift-vs-E dx [71, 71] dy [1, 1] pass True text 'X' infra []
+  boot 1 seq 1: word x 775-804 rows 289-300 target (789,294) shift-vs-E dx [71, 71] dy [1, 1] pass True text 'X' infra []
+  boot 2 seq 3: word x 775-804 rows 289-300 target (789,294) shift-vs-E dx [71, 71] dy [1, 1] pass True text 'X' infra []
+  boot 3 seq 5: word x 775-804 rows 289-300 target (789,294) shift-vs-E dx [71, 71] dy [1, 1] pass True text 'X' infra []
+  boot 4 seq 3: word x 775-804 rows 289-300 target (789,294) shift-vs-E dx [71, 71] dy [1, 1] pass True text 'X' infra []
+  median (789,294) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (718,292) (offset 71) reference (718,293) (offset 71) median shift vs E {'dx': [71, 71], 'dy': [1, 1]}
+
+## AR writer drag_select_word
+  boot 0 seq 1: word x 750-780 rows 289-300 target (751,294)->(779,294) shift-vs-E dx [71, 71] dy [1, 1] pass False text 'Ykeep word keep' infra []
+  boot 1 seq 5: word x 750-780 rows 289-300 target (751,294)->(779,294) shift-vs-E dx [71, 71] dy [1, 1] pass False text 'Ykeep word keep' infra []
+  boot 2 seq 1: word x 750-780 rows 289-300 target (751,294)->(779,294) shift-vs-E dx [71, 71] dy [1, 1] pass False text 'Ykeep word keep' infra []
+  boot 3 seq 0: word x 750-780 rows 289-300 target (751,294)->(779,294) shift-vs-E dx [71, 71] dy [1, 1] pass False text 'Ykeep word keep' infra []
+  boot 4 seq 0: word x 750-780 rows 289-300 target (751,294)->(779,294) shift-vs-E dx [71, 71] dy [1, 1] pass False text 'Ykeep word keep' infra []
+  median (751,294)->(779,294) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (680,292)->(709,292) (offset 71) reference (680,293)->(708,293) (offset 71) median shift vs E {'dx': [71, 71], 'dy': [1, 1]}
+
+## AR chrome triple_click_line
+  boot 0 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 1: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (242,151) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (244,150) (offset 2) reference (242,151) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## AR chrome drag_select_word
+  boot 0 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 2: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 1: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (172,151)->(225,151) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (172,150)->(228,150) (offset 3) reference (172,151)->(225,151) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## AR vscode triple_click_line
+  boot 0 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 4: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 5: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (649,284) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (650,284) (offset 1) reference (649,284) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## AR vscode drag_select_word
+  boot 0 seq 5: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 5: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (609,284)->(639,284) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (609,284)->(640,284) (offset 1) reference (609,284)->(639,284) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## PL writer triple_click_line
+  boot 0 seq 4: word x 704-733 rows 288-299 target (718,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 1: word x 704-733 rows 288-299 target (718,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 3: word x 704-733 rows 288-299 target (718,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 5: word x 704-733 rows 288-299 target (718,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 3: word x 704-733 rows 288-299 target (718,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (718,293) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (718,292) (offset 1) reference (718,293) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## PL writer drag_select_word
+  boot 0 seq 1: word x 679-709 rows 288-299 target (680,293)->(708,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 5: word x 679-709 rows 288-299 target (680,293)->(708,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 1: word x 679-709 rows 288-299 target (680,293)->(708,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 0: word x 679-709 rows 288-299 target (680,293)->(708,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 0: word x 679-709 rows 288-299 target (680,293)->(708,293) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (680,293)->(708,293) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (680,292)->(709,292) (offset 1) reference (680,293)->(708,293) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## PL chrome triple_click_line
+  boot 0 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 1: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 2: word x 216-269 rows 140-163 target (242,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (242,151) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (244,150) (offset 2) reference (242,151) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## PL chrome drag_select_word
+  boot 0 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 0: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 2: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 1: word x 171-226 rows 140-163 target (172,151)->(225,151) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (172,151)->(225,151) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (172,150)->(228,150) (offset 3) reference (172,151)->(225,151) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## PL vscode triple_click_line
+  boot 0 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 1 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 2 seq 4: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 3 seq 3: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  boot 4 seq 5: word x 634-665 rows 278-291 target (649,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'X' infra []
+  median (649,284) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (650,284) (offset 1) reference (649,284) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+
+## PL vscode drag_select_word
+  boot 0 seq 5: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 1 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 2 seq 5: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 3 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  boot 4 seq 4: word x 608-640 rows 278-291 target (609,284)->(639,284) shift-vs-E dx [0, 0] dy [0, 0] pass True text 'keep Y keep' infra []
+  median (609,284)->(639,284) drift {'bottom': 0, 'top': 0, 'x0': 0, 'x1': 0} q2 (609,284)->(640,284) (offset 1) reference (609,284)->(639,284) (offset 0) median shift vs E {'dx': [0, 0], 'dy': [0, 0]}
+

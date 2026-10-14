@@ -1,0 +1,17 @@
+❯ Starting QEMU for Docker v0.0...
+❯ For support visit https://github.com/qemus/qemu-docker
+❯ CPU: Intel Xeon Platinum 8480  | RAM: 1733/1772 GB | DISK: 19778 GB (ext4) | HOST: 6.8.0-60...
+
+Formatting '/boot.qcow2', fmt=qcow2 cluster_size=65536 extended_l2=off compression_type=zlib size=53687091200 backing_file=/System.qcow2 backing_fmt=qcow2 lazy_refcounts=off refcount_bits=16
+[1;34m❯ [1;36mCreating a 32G growable disk image in raw format...[0m
+[1;34m❯ [1;36mBooting image using QEMU v9.1.0...[0m
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01HBdsDxe: loading Boot0007 "ubuntu" from HD(2,GPT,58F534E5-6D50-4139-9981-DF9EC54B73F4,0x1000,0x100800)/\EFI\ubuntu\shimx64.efi
+BdsDxe: starting Boot0007 "ubuntu" from HD(2,GPT,58F534E5-6D50-4139-9981-DF9EC54B73F4,0x1000,0x100800)/\EFI\ubuntu\shimx64.efi
+[1;31m❯ Warning: unexpected clocksource: kvm-clock[0m
+WARNING: Image format was not specified for '/storage/uefi.rom' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+qemu-system-x86_64: warning: host doesn't support requested feature: CPUID.80000007H:EDX.invtsc [bit 8]
+qemu-system-x86_64: warning: host doesn't support requested feature: CPUID.80000007H:EDX.invtsc [bit 8]
+qemu-system-x86_64: warning: host doesn't support requested feature: CPUID.80000007H:EDX.invtsc [bit 8]
+qemu-system-x86_64: warning: host doesn't support requested feature: CPUID.80000007H:EDX.invtsc [bit 8]

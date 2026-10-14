@@ -1,0 +1,27 @@
+2026-10-13T18:03:12Z host read: squeue empty; E pairs e-9b-e4 and e-4b-e4 hold no collect tar (E4 not started); E3 later end 08:36:10Z (step-0 record), E4 earliest 20:41:10Z
+2026-10-13T18:05:28Z host: created ~/cotcodec-runs/stage0/s2v5/confirm/src/{f24557aa...,26a9477c...} (empty; neither existed)
+2026-10-13T18:05:35Z git archive f24557aa555987157b5b75049ec1cb1b8e0a81a2 | ssh host tar -x (GNU tar 1.34) rc=0, done 18:05:42Z
+2026-10-13T18:05:42Z git archive 26a9477cfa12da43f82e5fc78314804089cc0949 | ssh host tar -x (GNU tar 1.34) rc=0, done 18:05:51Z
+2026-10-13T18:06:00Z host tree digests equal local exports: f24557aa 8640 files + 27 symlinks tree 5b025dd7...; 26a9477c 8644 files + 27 symlinks tree e2b361d2...; harness/ 896c46a8... and infra/ 88954410... identical in both; no AppleDouble, no __pycache__
+2026-10-13T18:06:12Z host: .git_sha written in each export, both trees chmod -R a-w
+2026-10-13T18:06:29Z host: ap_delta_v5 validate p1 ok (434 min), p2 ok (366 min); submit --dry-run p1 canonical 1d7289f1..., p2 canonical 3e75de8c...; nothing written (confirm/ holds only src/)
+2026-10-13T20:42:10Z poll: E4 9B pair running (1272 VM, 1274 GPU; started 20:41:28Z)
+2026-10-13T21:20:41Z poll: E4 9B pair left the queue (1272 COMPLETED 0:0 end 21:20:17Z; 1274 COMPLETED 0:0 end 21:20:14Z); queue empty, inside E4 (not used)
+2026-10-13T21:22:24Z poll: E4 4B pair running (1275 VM, 1277 GPU; started 21:21:45Z)
+2026-10-13T21:58:46Z poll: E4 4B pair left the queue
+2026-10-13T21:59:01Z host read: 1275 COMPLETED 0:0 Start 21:21:45 End 21:58:06; 1277 COMPLETED 0:0 Start 21:21:45 End 21:58:03; lane 1275 t_end 21:58:01.58Z. E4's later end 21:58:06Z. E4 is E's last session (E1-E4), so --no-e-deadline applies
+2026-10-13T22:00:16Z poll: E's own post-session steps for E-4B-E4 done (dr0.json: fires false; e-4b-e4-collect.tar written 21:59:40Z); queue empty
+2026-10-13T22:00:32Z submitted p1: job 1278 (canonical 1d7289f1...), --no-e-deadline; q2 watcher record_slurm_end_states.sh started on 1278
+2026-10-13T22:00:33Z 1278 RUNNING (TRES cpu=6,mem=9G,node=1; no GPU)
+2026-10-13T22:50:09Z 1278: ER campaign done, 300 trials, 0 failed, driver_exit=0 labelled_containers_left=0; AR campaign started with its override record
+2026-10-13T23:40:05Z 1278 ended: COMPLETED 0:0 (q2 watcher record), RunTime 01:39:32, lane_exit=0 labelled_containers_left=0; AR campaign 300 trials, 0 failed, driver_exit=0
+2026-10-13T23:40:14Z E's analysis jobs 1279 (q2e-glmm) and 1280-1287 (q2e-rescore-*) submitted by E's operator 9 s after 1278 ended; p2 waits for an empty queue
+2026-10-13T23:40:14Z-2026-10-14T01:18:47Z E's analysis jobs ran (1279 q2e-glmm; 1280-1287 q2e-rescore-*, ended 01:18:3x-01:18:47Z); queue not empty, p2 held
+2026-10-14T01:20:42Z E's q2e-report job 1288 submitted after the rescores (seen running); p2 held
+2026-10-14T01:21:32Z queue empty again; watched until 01:24:41Z for further E follow-on jobs, none
+2026-10-14T01:21:39Z-01:21:50Z E's jobs 1289 (q2e-s15) and 1290 (q2e-joint) ran and ended (read after the fact; before p2's submission)
+2026-10-14T01:24:52Z submitted p2: job 1291 (canonical 3e75de8c...), --no-e-deadline, queue empty; q2 watcher started on 1291; RUNNING at once (TRES cpu=6,mem=9G,node=1)
+2026-10-14T02:14:43Z 1291: PL campaign done, 300 trials, 0 failed, driver_exit=0; E campaign 02:14:43-02:18:41Z 10 trials 0 failed; A campaign 02:18:42-02:22:42Z 10 trials 0 failed
+2026-10-14T02:22:42Z 1291 ended: COMPLETED 0:0 (q2 watcher record), RunTime 00:57:50, lane_exit=0 labelled_containers_left=0; queue empty; 0 labelled containers on the host
+2026-10-14T02:23:19Z host: confirm-read over runs/1278 runs/1291 from the f24557aa export: {"pass": true, "decision": "PROCEED to the pre-freeze audit (D96)"}; confirm-reading.json sha256 bb2adbe7...
+2026-10-14T02:25Z collected 1278 (earlier, 23:4xZ) and 1291 to Mac scratch (no PNG existed), host ops/ and reading/ copied; Mac confirm-read from the committed copies with the f24557aa and 26a9477c exports: both equal to the host's reading
