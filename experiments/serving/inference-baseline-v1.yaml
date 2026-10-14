@@ -1,0 +1,202 @@
+# Exploratory inference baseline on the 8xH100 node (D103 area 2: hardware memory and GPU
+# acceleration for inference). NOT a registered experiment: it has no preregistration, no
+# hypothesis and no decision rule. It measures where time and HBM go when vLLM 0.31.0 serves the
+# models on persistent storage, so that the question sweep has real numbers to start from.
+#
+# scripts/run_inference_baseline.py reads this file inside the digest-pinned cotcodec-vllm
+# overlay (docker-research lane, one Slurm job per entry under `jobs`). Every serving cell uses
+# vLLM's own `vllm bench serve` code (vllm.benchmarks.serve, called in-process by a long-lived
+# client) against a `vllm serve` engine; every offline cell uses vLLM's own `vllm bench
+# throughput` code (vllm.benchmarks.throughput: get_requests and _run_vllm_requests on one LLM).
+schema_version: 1
+experiment_id: inference-baseline-v1
+claim_level: exploratory
+
+vllm:
+  version: 0.31.0
+  commit: db9527a46873454610df6dbedf79a36d6bf1a7f6
+  env:
+    VLLM_ENABLE_CUDA_COMPATIBILITY: "0"
+
+# One fixed seed for every prompt set and every engine. Repeats reuse the same prompts; the
+# engine's prefix cache is reset (POST /reset_prefix_cache, offline: LLM.reset_prefix_cache)
+# before every measured run, and the per-run prefix-cache hit counters are recorded to show it.
+seed: 42
+repeats: 2
+
+hardware:
+  gpu: NVIDIA H100 80GB HBM3
+  hbm_bandwidth_tb_s: 3.35   # H100 SXM5 datasheet peak; the roofline for the decode estimate
+
+sampling:
+  nvml_interval_s: 0.2
+  metrics_interval_s: 0.5
+  settle_s: 2.0
+
+# Engine flags shared by every engine unless an engine overrides them.
+engine_defaults:
+  dtype: bfloat16
+  gpu_memory_utilization: 0.90
+  max_model_len: 32768
+  max_num_seqs: 256
+  max_num_batched_tokens: 8192
+  prefix_caching: true
+  kv_cache_dtype: auto
+
+models:
+  qwen3-0.6b-base:
+    family: dense-transformer
+    text_only_flags: []
+  qwen3-1.7b-base:
+    family: dense-transformer
+    text_only_flags: []
+  qwen3.5-4b:
+    family: gdn-attention-hybrid
+    text_only_flags: [--limit-mm-per-prompt, '{"image":0,"video":0}']
+  qwen3.5-9b:
+    family: gdn-attention-hybrid
+    text_only_flags: [--limit-mm-per-prompt, '{"image":0,"video":0}']
+  qwen3.6-35b-a3b:
+    family: gdn-attention-hybrid-moe
+    text_only_flags: [--limit-mm-per-prompt, '{"image":0,"video":0}']
+  qwen3-32b:
+    family: dense-transformer
+    text_only_flags: []
+
+# Request shapes (input tokens, output tokens). Output is forced with ignore_eos. 32k-in uses
+# 32,000 input tokens so that input plus output stays inside Qwen3-base's 32,768 positions.
+shapes:
+  chat: {input_len: 512, output_len: 256}
+  in8k: {input_len: 8192, output_len: 256}
+  in32k: {input_len: 32000, output_len: 256}
+  longout: {input_len: 512, output_len: 4096}
+
+# Prompts per (shape, concurrency). Closed loop: at most `concurrency` requests in flight.
+# 32k-in stops at 32 in flight: 128 x 32k tokens is past every single-engine KV capacity here
+# except the largest, so that cell would measure the queue, not the engine.
+num_prompts:
+  chat: {1: 4, 8: 16, 32: 64, 128: 256}
+  in8k: {1: 4, 8: 16, 32: 64, 128: 128}
+  in32k: {1: 3, 8: 8, 32: 32}
+  longout: {1: 1, 8: 8, 32: 32, 128: 128}
+
+# Shared-prefix workload for the prefix-caching on/off comparison (vLLM's prefix_repetition
+# dataset: 8 distinct 4,096-token prefixes, each followed by a fresh 256-token suffix).
+prefix_workload:
+  prefix_len: 4096
+  suffix_len: 256
+  num_prefixes: 8
+  output_len: 128
+  num_prompts: {8: 64, 32: 128}
+
+# Warm-up before the first measured run of every serving engine (discarded).
+warmup:
+  - {input_len: 8192, output_len: 64, num_prompts: 2, concurrency: 2}
+  - {input_len: 512, output_len: 128, num_prompts: 16, concurrency: 8}
+
+# Offline throughput (all prompts submitted at once). `offline_scale` on an engine multiplies
+# the prompt counts.
+offline_shapes:
+  chat: {input_len: 512, output_len: 256, num_prompts: 512}
+  in8k: {input_len: 8192, output_len: 256, num_prompts: 64}
+  decode: {input_len: 512, output_len: 2048, num_prompts: 128}
+offline_warmup_prompts: 8
+
+# Named cell lists. A cell is [shape, concurrency]; shape `prefix` is the shared-prefix load.
+grids:
+  core:
+    - [chat, 1]
+    - [chat, 8]
+    - [chat, 32]
+    - [chat, 128]
+    - [in8k, 1]
+    - [in8k, 8]
+    - [in8k, 32]
+    - [in8k, 128]
+    - [in32k, 1]
+    - [in32k, 8]
+    - [in32k, 32]
+    - [longout, 1]
+    - [longout, 8]
+    - [longout, 32]
+    - [longout, 128]
+  prefix:
+    - [prefix, 8]
+    - [prefix, 32]
+  core_and_prefix: [core, prefix]
+  kv_fp8:
+    - [chat, 128]
+    - [in8k, 32]
+    - [in32k, 32]
+    - [longout, 128]
+  tp1_dense32:
+    - [chat, 1]
+    - [chat, 8]
+    - [chat, 32]
+    - [chat, 128]
+    - [in8k, 1]
+    - [in8k, 8]
+    - [longout, 1]
+    - [longout, 8]
+  tp1_dense32_fp8:
+    - [chat, 8]
+    - [chat, 32]
+    - [chat, 128]
+    - [in8k, 1]
+    - [in8k, 8]
+    - [in32k, 1]
+    - [longout, 8]
+  tp1_moe_fit:
+    - [chat, 1]
+    - [chat, 32]
+    - [chat, 128]
+  tp4:
+    - [chat, 1]
+    - [chat, 128]
+    - [in8k, 1]
+    - [in8k, 128]
+    - [in32k, 1]
+    - [in32k, 32]
+    - [longout, 1]
+    - [longout, 128]
+
+# One Slurm job each (docker-research lane). Engines run in order; within an engine, repeat 1 of
+# every cell runs before repeat 2. A cell the allocation cannot fit is skipped and recorded.
+jobs:
+  a:
+    gpus: 1
+    primary_model: qwen3.5-4b
+    engines:
+      - {id: qwen3.5-4b-tp1, model: qwen3.5-4b, tp: 1, grid: core, offline: true}
+      - {id: qwen3-1.7b-tp1, model: qwen3-1.7b-base, tp: 1, grid: core_and_prefix, offline: true}
+      - {id: qwen3-1.7b-tp1-nopc, model: qwen3-1.7b-base, tp: 1, grid: prefix, prefix_caching: false}
+      - {id: qwen3-0.6b-tp1, model: qwen3-0.6b-base, tp: 1, grid: core, offline: true}
+  b:
+    gpus: 1
+    primary_model: qwen3.5-9b
+    engines:
+      - {id: qwen3.5-9b-tp1, model: qwen3.5-9b, tp: 1, grid: core_and_prefix, offline: true}
+      - {id: qwen3.5-9b-tp1-nopc, model: qwen3.5-9b, tp: 1, grid: prefix, prefix_caching: false}
+      - {id: qwen3.5-9b-tp1-kvfp8, model: qwen3.5-9b, tp: 1, grid: kv_fp8, kv_cache_dtype: fp8}
+  c:
+    gpus: 2
+    primary_model: qwen3.6-35b-a3b
+    engines:
+      - {id: qwen3.6-35b-a3b-tp2, model: qwen3.6-35b-a3b, tp: 2, grid: core, offline: true, offline_scale: 0.5}
+  d:
+    gpus: 2
+    primary_model: qwen3-32b
+    engines:
+      - {id: qwen3-32b-tp2, model: qwen3-32b, tp: 2, grid: core, offline: true, offline_scale: 0.5}
+  e:
+    gpus: 1
+    primary_model: qwen3-32b
+    engines:
+      - {id: qwen3-32b-tp1, model: qwen3-32b, tp: 1, grid: tp1_dense32, max_model_len: 16384}
+      - {id: qwen3-32b-tp1-kvfp8, model: qwen3-32b, tp: 1, grid: tp1_dense32_fp8, kv_cache_dtype: fp8}
+      - {id: qwen3.6-35b-a3b-tp1, model: qwen3.6-35b-a3b, tp: 1, grid: tp1_moe_fit}
+  f:
+    gpus: 4
+    primary_model: qwen3-32b
+    engines:
+      - {id: qwen3-32b-tp4, model: qwen3-32b, tp: 4, grid: tp4}

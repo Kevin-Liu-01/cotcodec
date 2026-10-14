@@ -189,6 +189,38 @@ models:
       Registered for its config and tokenizer only. It has Dr. Kernel-8B's layer shapes
       (decision D5), so its dummy-weight throughput stands in for the unlicensed Q1 policy.
       No weight download is planned.
+  qwen3-32b:
+    backend: huggingface
+    repo_id: Qwen/Qwen3-32B
+    revision: 9216db5781bf21249d130ec9da846c4624c16137
+    runtime: vllm
+    architecture_family: transformer
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - inference-baseline-dense-32b
+    metadata_files:
+    - LICENSE
+    - README.md
+    - config.json
+    - generation_config.json
+    - merges.txt
+    - tokenizer.json
+    - tokenizer_config.json
+    - vocab.json
+    required_files:
+    - LICENSE
+    - config.json
+    - model.safetensors.index.json
+    - tokenizer.json
+    source_url: https://huggingface.co/Qwen/Qwen3-32B
+    registered_at: '2026-10-14'
+    registered_for: >-
+      inference-baseline-v1 (exploratory, D103 area 2): the dense ~30B-class model served at
+      TP 1, 2 and 4. Full BF16 weights (65.5 GB, 17 shards) fetched under D1 by the GPU-less
+      fetch lane.
   qwen3.5-27b-fp8:
     backend: huggingface
     repo_id: Qwen/Qwen3.5-27B-FP8
