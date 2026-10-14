@@ -5595,25 +5595,113 @@ they say so.)
 - GPU jobs, each on a queue with no inference-baseline job: builds 1334, 1335, 1339, 1340;
   rollouts 1337 (attempt 1, no data: `LLM.enqueue` returns internal request ids, outputs carry
   external ones, so all 192 finished rollouts were dropped; the worker then hung at exit;
-  cancelled after 00:12:41) and 1342 (attempt 2, fixed: own ids via `LLMEngine.add_request`,
-  DELTA streaming, bounded exit); teacher forcing 1352. **0.4372 physical GPU-h of the 0.5
-  cap.** CPU: selftests 1331, 1332, 1338, 1343; fetch 1333.
+  cancelled after 00:12:52 by the lane's records) and 1342 (attempt 2, fixed: own ids via
+  `LLMEngine.add_request`, DELTA streaming, bounded exit); teacher forcing 1352. **0.4402
+  physical GPU-h of the 0.5 cap** (corrected 2026-10-14 from 0.4372, which took attempt 1
+  from an uncommitted RunTime of 00:12:41). CPU: selftests 1331, 1332, 1338, 1343; fetch 1333
+  (the CPU jobs 1331-1333 ran beside the baseline's GPU jobs g and h).
 - Scope run, cut by attempt 1's cost: 24 prompts; Qwen3.5-4B x seeds 42/43/44 (72 rollouts),
   Qwen3-8B x seed 42 (24); 120 s of generation per model (41 of 72 hybrid rollouts cut at
-  about 11.5K tokens); R1 (HF+FLA chunk bf16) on all, R3 (FLA fused_recurrent) and R4 (fp32
-  reference) on seed 42; R2 (packing), R5 (vLLM prefill) and the common-text arm not run.
-- Readings (exploratory): Qwen3.5-4B rollout vs trainer mean |dlogp| 0.0076, p99 0.11, k3
-  2.7e-4, 0.03% of ratios outside [0.8, 1.25]; up about 12% over the first 3K positions, then
-  flat to 11.5K; position slope with entropy-bin fixed effects +1.3e-5 per 1K [-2.3e-5,
-  +4.9e-5]. vLLM decode and the trainer sit equally far from fp32 (0.0073, 0.0076); swapping
-  chunk for fused_recurrent GDN changes the mismatch by under 1%. Qwen3-8B (not size-matched,
-  different text): 0.0123, p99 0.19, 1.2-1.9x the hybrid in every bin, falling with position.
-  On the dossier's kill criterion 1 this reads as the null; the p99 tail is nearly constant
-  across bins (an untested bf16-logit explanation; an fp32 LM-head arm would test it).
+  about 11.5K tokens); r1 (HF+FLA chunk bf16, unpacked, batch 1: the dossier's R2) on all,
+  R3 (FLA fused_recurrent) and R4 (fp32 reference) on seed 42; the dossier's packed R1, R5
+  (vLLM prefill) and the common-text arm not run. Prompts are MATH-500 level 5, not the
+  dossier's DAPO-Math.
+- Readings (exploratory; corrected 2026-10-14, see the next entry): Qwen3.5-4B rollout vs
+  trainer mean |dlogp| 0.0076, p99 0.11, k3 2.7e-4, 0.03% of ratios outside [0.8, 1.25]; up
+  about 12% over the first 3K positions as token entropy rises, then flat to 11.5K. Position
+  slope with entropy-bin fixed effects -5.2e-5 per 1K [-6.8e-5, -3.5e-5] (first written
+  +1.3e-5 [-2.3e-5, +4.9e-5] from string-binned entropies); within sequences +2.4e-5
+  [-2.8e-5, +7.5e-5]. vLLM decode and the trainer sit about equally far from fp32 (0.0073,
+  0.0076; the fp32 reference has no second implementation); swapping chunk for
+  fused_recurrent GDN changes the mismatch by under 1%, but every bf16 pair sits at the same
+  floor (about 0.0075), so the swap does not show the kernel has no effect. Qwen3-8B (not
+  size-matched, different text, one seed): 0.0123, p99 0.19, falling with position; it cannot
+  carry a hybrid-vs-dense comparison, and the pilot does not evaluate kill criterion 1 (first
+  written "reads as the null"; withdrawn). The p99 tail is nearly constant across bins (an
+  untested bf16-logit explanation; an fp32 LM-head arm would test it).
 - Evidence: `program/evidence/2026-10-14/g2-pilot/` (README with tables, figure and a "what
   it says and does not" section; per-token data, lane records, build and fetch receipts,
   manifests, operator log). Raw outputs stay on the host under
   `~/cotcodec-runs/stage0/g2-pilot/` with SHA-256 in the README.
+
+## 2026-10-14 — G2 pilot corrected after an independent check (branch `stage0/g2-pilot`, not merged; exploratory)
+
+- An independent checker reproduced the analysis byte for byte, recomputed it from the raw job
+  outputs on the host, and found one high, one medium and several low problems. All are fixed
+  in the README, `analysis/`, the figure, `program/state.json` and the entry above. Raw
+  records and `data/per-token.npz` are unchanged and no GPU job ran; the analysis reran on
+  the host from the committed `per-token.npz` and reproduces byte for byte
+  (`corrections/analysis-rerun.txt`).
+- Entropy binning (high). The config's top entropy edge `1.0e9` loads through PyYAML (YAML
+  1.1) as a string, so numpy binned entropies as text: 24.1% of the hybrid's and 24.9% of the
+  dense model's tokens were misbinned. Corrected, the hybrid's slope within entropy bins is
+  -5.16e-5 per 1K [-6.85e-5, -3.47e-5] (all seeds, dec vs r1; per seed -6.2e-5, -5.8e-5,
+  -3.5e-5, each CI excluding 0), not the null first reported; the dense model's is -2.4e-4
+  (first -3.3e-4). With 6, 20 and 50 entropy quantile bins it is -4.7e-5 to -5.4e-5. So the
+  raw early rise follows the entropy profile, and at fixed entropy the mismatch falls
+  slightly with position. The edge is now `1.0e+9`, `harness.g2_pilot.numeric_edges` refuses
+  non-numeric edges in `load_config` and in the analysis, and new tests fail on string edges
+  (`tests/test_g2_pilot.py`: 15 passed, locally and on the host).
+- Kill criterion 1 (medium). The "reads as the null" reading is withdrawn. Slopes per 1K
+  (hybrid, all seeds): pooled +7.6e-5 [+2.2e-5, +1.3e-4]; entropy fixed effects -5.16e-5
+  [-6.85e-5, -3.47e-5]; sequence fixed effects (new) +2.4e-5 [-2.8e-5, +7.5e-5];
+  sequence-by-entropy-bin -4.95e-5 [-6.76e-5, -3.01e-5]. The dense control (Qwen3-8B against
+  the 4B, different text, one seed) cannot carry a hybrid-vs-dense comparison.
+- Low items, now stated in the README: composition vs position (41 of 72 hybrid rollouts cut
+  at about 11.5K); the bf16-vs-bf16 noise floor under the chunk-vs-recurrent attribution; the
+  fp32 reference has no second implementation; dense-control comparability; the deviations
+  from the dossier (MATH-500 level 5, not DAPO-Math; r1 is the unpacked batch-1 HF forward,
+  the dossier's R2); attempt 1's GPU-h from the lane's records (0.2144; pilot total 0.4402);
+  the CPU jobs 1331-1333 beside the baseline's jobs g and h (also noted in the baseline
+  README); the miles PR #3597 aggregate is "consistent with", not "matched"; and the
+  `models/registry.yaml` qwen3-8b note now that its full weights are fetched.
+- Main merged into the branch first; `program/state.json`'s GPU-h ledger keeps every row from
+  both (77 rows) and `gpu_hours_spent_this_program` is the ledger sum, 20.8466.
+- The README opens with "Main takeaways (corrected)". Code: `scripts/analyze_g2_pilot.py`
+  (numeric bins, within-sequence slopes, entropy-standardized curve, by-entropy tables),
+  `harness/g2_pilot.py`, `experiments/g2/g2-pilot-v1.yaml`, `tests/test_g2_pilot.py`,
+  `program/evidence/2026-10-14/g2-pilot/corrections/robustness_checks.py`.
+
+## 2026-10-15 — AM1 Step 0 (exploratory): exact replay of the Qwen3-8B reader and the cost of exact subset tables (branch `stage0/am1-step0`, not merged)
+
+- What ran. EXPLORATORY Step 0 of AM1 (D104; dossier entry 3), 0.1978 physical GPU-h of the 1.5
+  cap: one cotcodec-vllm overlay build (job 1393, `b95ac22c`, image `sha256:51540dd5`) and one main
+  job (1397, 00:10:48 on 1 H100, 2026-10-14 23:01-23:12Z) with five vLLM 0.31.0 engine sessions
+  (batch-invariant `bi-a`, `bi-b` restart, `bi-c` reconfigured; default `default-a`, `default-b`
+  restart), 24 passes and 37,136 requests. CPU-only: LongMemEval-S fetch 1362, selftests 1383
+  and 1394. Both GPU jobs were submitted with no G2b job in the queue; two CPU jobs ran beside
+  G2b GPU jobs and G2b's CPU job 1398 ran beside the main job (README, Problems).
+- How batch invariance is enabled in v0.31.0 (read-only at `db9527a4`, line-pinned in the README):
+  `VLLM_BATCH_INVARIANT=1`, applied by the worker at start-up; on an H100 it routes every bf16
+  linear layer and the LM head through a Triton persistent matmul, sets FlashAttention
+  `num_splits=1`, overrides softmax/log-softmax/bmm/mean, keeps prefix caching with FLASH_ATTN,
+  and (no tuned Qwen3-8B tiles on Hopper) stays on torch.compile with CUDA graphs. The nine cited
+  files hash the same in the image as at the tag.
+- LongMemEval-S under D1: `xiaowu0162/longmemeval-cleaned` @ `98d7416c`,
+  `longmemeval_s_cleaned.json`, 277,383,467 bytes, SHA-256 `d6f21ea9...` (equal to the Hub's LFS
+  oid), MIT; on the host only.
+- Readings (exploratory): in batch-invariant mode every A/A comparison was identical in tokens
+  and log-prob bits (4,096 of 4,096 greedy requests under a shuffled order, a restart and a
+  reconfigured engine, each 95% CP [0.9991, 1]; 512 at concurrency 8, 96 one at a time, 512 from
+  a warm prefix cache; 1,024 of 1,024 seeded samples shuffled and restarted). The default mode
+  repeated all 4,096 replies on a same-schedule restart but changed 3 of 4,096 under a shuffled
+  order, 14 of 512 at concurrency 8 and 3 of 96 one at a time. Batch invariance cost 1.32-1.38x
+  wall time on batched passes and 2.5-3.1x at concurrency 8 or 1 (both modes power-capped at
+  700 W when batched). The 256-subset tables cost 2.8 GPU-s per question for both arms
+  (4,096 requests in 22.6 s; 405-token prompts, 64.5% prefix-cache hits): about 0.16 GPU-h per
+  pass for 200 questions, against the dossier's 4-6 GPU-h per arm. The demo's crude containment
+  utility cannot score the tables (a judge is required); a CPU census finds 416 of 500 questions
+  usable with user-turn memories, 84% of them with one or two required memories, and BM25 top-8
+  recall of gold turns 0.74.
+- Feasibility: AM1's full study is feasible on this node and GPU is not its constraint (about
+  1-2 GPU-h for the folded reader work at these memory units); the open work is the judge, the
+  estimators, the placebo arms, a cross-GPU A/A, and pools that produce mixed interaction
+  structures so that H2 can fire.
+- Evidence: `program/evidence/2026-10-15/am1-step0/` (README with "Main takeaways", identity,
+  throughput, cost, demo and census tables; fetch receipt; pools summary; lane records; every
+  pass's tokens and log-probs; host analysis rerun byte-identical to the in-job analysis). Raw
+  outputs, the study artifact and the dataset stay on the host under
+  `~/cotcodec-runs/stage0/am1-step0/`.
 
 ## 2026-10-15 — G2b exploratory: a bf16 GDN recurrent state in vLLM 0.31.0, concurrency and train-inference mismatch (branch `stage0/g2b-state-dtype`, not merged)
 

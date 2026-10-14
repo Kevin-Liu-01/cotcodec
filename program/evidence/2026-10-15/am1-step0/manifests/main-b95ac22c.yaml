@@ -1,0 +1,54 @@
+# AM1 Step 0 (EXPLORATORY), main job: scripts/memcredit_step0.py in the cotcodec-vllm cu129
+# overlay built from the same commit. Sessions bi-a, default-a, bi-b, default-b, bi-c
+# (experiments/am1/memcredit-step0-v1.yaml) on 1 H100; Slurm limit 75 min = 1.25 GPU-h cap.
+# The lane's model is a verification placeholder (the smallest full receipt in the lane's
+# receipt root); the reader, Qwen3-8B, is re-verified by the driver against its full receipt in
+# cotcodec-receipts-cpu-lane (fetch job 1333) before any engine starts.
+runtime: docker-single-node-discovery-v1
+name: am1-step0-main
+image_id: sha256:51540dd50e0ec28c2cb4a77b51a70ba4767d58edf0fc6673ff1c81678210c2a3
+git_sha: "b95ac22c64b68c1724b3669c3445d32fba0a2478"
+source_sha256: "ddfb85337a3d6200c84f294efe5668f694b690c79e390b1ff29b3ca52ecef803"
+run_root: /home/kevin/cotcodec-runs/stage0/am1-step0/runs/main
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 75
+budget:
+  max_gpu_hours: 1.25
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3-0.6b-base
+  revision: "da87bfb608c14b7cf20ba1ce41287e8de496c0cd"
+  receipt_sha256: "e7f36f05e6c87ec50b3736cf133fda60775abccb38f60fa9d3c134c432cf46df"
+  artifact_root_sha256: "7040f418762c61dd00b540e482527e0d8c8a916cce80eee56408bd10a6179ae0"
+study_artifact:
+  source_id: memcredit-step0-pools
+  revision: "b95ac22c64b68c1724b3669c3445d32fba0a2478"
+  license: MIT
+  host_path: /home/kevin/cotcodec-runs/stage0/am1-step0/prepare/study-artifact.json
+  sha256: "3b70f56ff8191cfb54f84f6a4ed8a37405160961a9d414894c77583a8620db06"
+  size_bytes: 91434
+command:
+  - python
+  - scripts/memcredit_step0.py
+  - run
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--output-dir"
+  - /outputs/am1
+  - "--allocation-minutes"
+  - "75"
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - "3b70f56ff8191cfb54f84f6a4ed8a37405160961a9d414894c77583a8620db06"

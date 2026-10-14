@@ -2402,3 +2402,64 @@ the new direction).**
 - These measurements bear directly on G2 and on G1, the alternate on
   hybrid-rollout memory levers. A low-precision recurrent state is a lever to
   test, and it is also a mismatch source to measure.
+
+**D106. G2 pilot (exploratory): the GDN hybrid's train-inference mismatch is
+small, sits at the bf16 noise floor, and does not grow with position at fixed
+entropy.**
+- What ran. Exploratory, 0.44 physical GPU-h. Qwen3.5-4B, a GDN hybrid,
+  generated 72 long reasoning rollouts in vLLM 0.31.0 (MATH-500 level 5,
+  seeds 42-44, up to about 11.5K tokens). They were teacher-forced through an
+  unpacked HF+FLA forward, FLA's recurrent kernel and an fp32 reference.
+  Qwen3-8B was a non-matched dense control. A fresh checker found an
+  entropy-binning bug (a string YAML edge) and several overreaches, all fixed
+  and rerun on the host (`7c4375a7`).
+- Findings:
+  - The rollout-vs-trainer mismatch is small: mean |Δlogp| 0.0076, p99 0.11,
+    k3 2.7e-4, and 0.03% of ratios outside [0.8, 1.25].
+  - Raw mismatch rises about 12% over the first 3K positions, as token
+    entropy rises.
+  - Held at a fixed entropy it falls slightly, by −5.2e-5 per 1K (95% CI
+    [−6.8e-5, −3.5e-5]), robust to finer bins. Within sequences the raw slope
+    includes 0.
+  - vLLM decode and the trainer sit about equally far from fp32.
+  - Every bf16 pair, chunk vs recurrent GDN included, differs by about 0.0075.
+    The design cannot see below that bf16 noise floor, so it does not show
+    that the kernel has no effect.
+  - The dense control cannot carry a hybrid-vs-dense comparison.
+- Reading. Up to 11.5K tokens, the unpacked path shows no
+  position-accumulating drift for the GDN hybrid. Not measured here: the
+  packed varlen trainer path, vLLM prefill, the 9B model and longer contexts.
+  Those, and the GDN state-dtype lever (D105), are the exploratory G2b
+  measurement now running.
+
+**D107. AM1 step 0 (exploratory): exact replay of the memory reader is
+achieved; exact credit tables are cheap; AM1's full study is feasible.**
+- What ran. Exploratory, 0.20 physical GPU-h. vLLM 0.31.0 ran the Qwen3-8B
+  reader in batch-invariant mode (`VLLM_BATCH_INVARIANT=1`, source cited at
+  tag v0.31.0): five engine sessions, 37,136 requests. LongMemEval-S was
+  fetched under D1: MIT, SHA-256 `d6f21ea9...` matching the Hub, kept on the
+  host. A fresh checker verified the mode took effect and recomputed every
+  rate.
+- Findings:
+  - Batch-invariant replay is bit-exact in tokens and log-probs. Greedy gave
+    4,096 of 4,096 under shuffled order, an engine restart and a
+    reconfigured engine; sampled gave 1,024 of 1,024. The per-request
+    difference rate is at most 0.09% (95% upper bound).
+  - Default mode differs: 0.07% under shuffling, about 3% at small
+    concurrency, and log-prob bits changed in 432 of 512 requests at
+    concurrency 8.
+  - The cost is 1.32-1.38x wall time when batched, and 2.5-3.1x at small
+    batch.
+  - Exact 256-subset tables cost about 1.4 GPU-s per question per arm. That is
+    about 0.16 GPU-h for 200 questions, against the dossier's estimate of 4-6
+    GPU-h.
+  - A CPU census of LongMemEval-S finds 416 usable questions: 84% need 1-2
+    memories, and BM25 top-8 gold recall is 0.74.
+- Reading. The legacy blocker, paired replay failing on nondeterministic
+  decoding (D103 context), is solved on this stack, and GPU is not AM1's
+  constraint. What remains:
+  - a proper answer judge (the containment utility in the demo is unusable);
+  - the credit estimators;
+  - a cross-GPU A/A check;
+  - pool designs that produce mixed interaction structures, so that H2 (the
+    keep-set regret against the exact optimum) can fire.

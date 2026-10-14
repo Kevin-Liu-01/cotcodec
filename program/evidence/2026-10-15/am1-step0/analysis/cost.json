@@ -1,0 +1,47 @@
+{
+  "bi-a": {
+    "batch_invariant": true,
+    "full_study_gpu_h_both_arms": 0.1568125,
+    "gpu_s_per_question_both_arms": 2.822625,
+    "gpu_s_per_table": 1.4113125,
+    "questions": 8,
+    "requests_per_question": 512,
+    "wall_s": 22.581
+  },
+  "bi-b": {
+    "batch_invariant": true,
+    "full_study_gpu_h_both_arms": 0.1567638888888889,
+    "gpu_s_per_question_both_arms": 2.82175,
+    "gpu_s_per_table": 1.410875,
+    "questions": 8,
+    "requests_per_question": 512,
+    "wall_s": 22.574
+  },
+  "bi-c": {
+    "batch_invariant": true,
+    "full_study_gpu_h_both_arms": 0.40147222222222223,
+    "gpu_s_per_question_both_arms": 7.2265,
+    "gpu_s_per_table": 3.61325,
+    "questions": 8,
+    "requests_per_question": 512,
+    "wall_s": 57.812
+  },
+  "default-a": {
+    "batch_invariant": false,
+    "full_study_gpu_h_both_arms": 0.11840972222222222,
+    "gpu_s_per_question_both_arms": 2.131375,
+    "gpu_s_per_table": 1.0656875,
+    "questions": 8,
+    "requests_per_question": 512,
+    "wall_s": 17.051
+  },
+  "default-b": {
+    "batch_invariant": false,
+    "full_study_gpu_h_both_arms": 0.1191875,
+    "gpu_s_per_question_both_arms": 2.145375,
+    "gpu_s_per_table": 1.0726875,
+    "questions": 8,
+    "requests_per_question": 512,
+    "wall_s": 17.163
+  }
+}

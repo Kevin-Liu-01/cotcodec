@@ -1,0 +1,17 @@
+[
+  "python",
+  "scripts/memcredit_step0.py",
+  "run",
+  "--seeds",
+  "42",
+  "43",
+  "44",
+  "--output-dir",
+  "/outputs/am1",
+  "--allocation-minutes",
+  "75",
+  "--evidence",
+  "/inputs/study-artifact.json",
+  "--expected-evidence-sha256",
+  "3b70f56ff8191cfb54f84f6a4ed8a37405160961a9d414894c77583a8620db06"
+]

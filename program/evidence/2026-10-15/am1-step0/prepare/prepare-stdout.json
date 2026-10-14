@@ -1,0 +1,48 @@
+{
+  "artifact_sha256": "3b70f56ff8191cfb54f84f6a4ed8a37405160961a9d414894c77583a8620db06",
+  "artifact_bytes": 91434,
+  "questions": [
+    "6e984301",
+    "gpt4_70e84552",
+    "09ba9854",
+    "e6041065",
+    "618f13b2",
+    "6aeb4375",
+    "25e5aa4f",
+    "3d86fd0a"
+  ],
+  "gold_in_pool": [
+    {
+      "retrieved": 2,
+      "gold": 2
+    },
+    {
+      "retrieved": 2,
+      "gold": 2
+    },
+    {
+      "retrieved": 2,
+      "gold": 2
+    },
+    {
+      "retrieved": 2,
+      "gold": 2
+    },
+    {
+      "retrieved": 2,
+      "gold": 2
+    },
+    {
+      "retrieved": 2,
+      "gold": 2
+    },
+    {
+      "retrieved": 0,
+      "gold": 1
+    },
+    {
+      "retrieved": 1,
+      "gold": 1
+    }
+  ]
+}

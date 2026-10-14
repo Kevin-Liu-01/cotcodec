@@ -1,0 +1,194 @@
+{
+  "engine_kwargs": {
+    "dtype": "bfloat16",
+    "enable_prefix_caching": true,
+    "gpu_memory_utilization": 0.85,
+    "logprobs_mode": "raw_logprobs",
+    "max_model_len": 4096,
+    "max_num_batched_tokens": 8192,
+    "max_num_seqs": 256,
+    "model": "/model-cache/cotcodec-models/qwen3-8b",
+    "seed": 42,
+    "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+    "trust_remote_code": false
+  },
+  "exit": 0,
+  "init_s": 62.8,
+  "passes": [
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.003,
+        "finished": 16,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 31,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 0.449
+      },
+      "name": "smoke",
+      "requests": 16,
+      "status": "complete"
+    },
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.482,
+        "finished": 4096,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 220,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 17.051
+      },
+      "name": "greedy-all-canonical",
+      "requests": 4096,
+      "status": "complete"
+    },
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.469,
+        "finished": 4096,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 264,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 17.913
+      },
+      "name": "greedy-all-shuffled",
+      "requests": 4096,
+      "status": "complete"
+    },
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.116,
+        "finished": 1024,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 74,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 5.67
+      },
+      "name": "sampled-canonical",
+      "requests": 1024,
+      "status": "complete"
+    },
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.114,
+        "finished": 1024,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 95,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 5.851
+      },
+      "name": "sampled-shuffled",
+      "requests": 1024,
+      "status": "complete"
+    },
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.001,
+        "finished": 512,
+        "max_inflight": 8,
+        "not_started": 0,
+        "steps": 869,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 7.3
+      },
+      "name": "greedy-throttled-c8",
+      "requests": 512,
+      "status": "complete"
+    },
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.0,
+        "finished": 96,
+        "max_inflight": 1,
+        "not_started": 0,
+        "steps": 1153,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 8.724
+      },
+      "name": "greedy-single",
+      "requests": 96,
+      "status": "complete"
+    }
+  ],
+  "prompt_ids_sha256": "5ca59c236c1437f1ebd9e680fd0dbdd81b83b39f329456221d08e67db0faf5dc",
+  "session": {
+    "batch_invariant": false,
+    "id": "default-a",
+    "max_num_batched_tokens": 8192,
+    "max_num_seqs": 256,
+    "min_start_s": 300,
+    "passes": [
+      {
+        "max_s": 120,
+        "name": "smoke",
+        "order": "canonical",
+        "sampling": "greedy",
+        "set": "smoke",
+        "smoke": true
+      },
+      {
+        "max_s": 600,
+        "name": "greedy-all-canonical",
+        "order": "canonical",
+        "sampling": "greedy",
+        "set": "all"
+      },
+      {
+        "max_s": 600,
+        "name": "greedy-all-shuffled",
+        "order": "shuffled",
+        "sampling": "greedy",
+        "set": "all"
+      },
+      {
+        "max_s": 300,
+        "name": "sampled-canonical",
+        "order": "canonical",
+        "sampling": "sampled",
+        "set": "sampled"
+      },
+      {
+        "max_s": 300,
+        "name": "sampled-shuffled",
+        "order": "shuffled",
+        "sampling": "sampled",
+        "set": "sampled"
+      },
+      {
+        "max_inflight": 8,
+        "max_s": 240,
+        "name": "greedy-throttled-c8",
+        "order": "shuffled",
+        "sampling": "greedy",
+        "set": "throttled"
+      },
+      {
+        "max_inflight": 1,
+        "max_s": 180,
+        "name": "greedy-single",
+        "order": "shuffled",
+        "sampling": "greedy",
+        "set": "single"
+      }
+    ],
+    "prefix_caching": true
+  }
+}

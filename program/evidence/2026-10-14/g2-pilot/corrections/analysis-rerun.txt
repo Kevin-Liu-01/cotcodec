@@ -1,0 +1,31 @@
+G2 pilot analysis rerun after the independent check (2026-10-14). CPU only, on the host, no GPU job.
+Each run: a clean checkout from a git bundle under ~/cotcodec-runs/stage0/g2-pilot/
+(checkout-7d936a20, detached at each commit below), uv sync --locked offline.
+
+Command (repository root):
+  uv run --locked python scripts/analyze_g2_pilot.py analyze \
+    --per-token program/evidence/2026-10-14/g2-pilot/data/per-token.npz --output-dir <dir>
+  uv run --locked python program/evidence/2026-10-14/g2-pilot/corrections/robustness_checks.py \
+    --per-token program/evidence/2026-10-14/g2-pilot/data/per-token.npz > robustness-checks.json
+  uv run --locked --extra dev python -m pytest -q tests/test_g2_pilot.py
+
+Run 1: 2026-10-14T21:57:24Z at 7d936a20044ecb23e467b5a693142f1ad2cfdc3a (analysis only; a second
+  analysis run into a separate directory gave the same three SHA-256 values; pytest 15 passed).
+Run 2: 2026-10-14T22:01:10Z at e10d35217fc4d99184620bdfa96a2b925afe6407 (analysis, robustness
+  checks, pytest 15 passed).
+Run 3: 2026-10-14T22:03:41Z at 6b0e88979637f67f56e1e4588fd8f93833f864cc (analysis, robustness
+  checks with the string-edge misbinning share added, pytest 15 passed). Committed outputs are
+  run 3's.
+Python 3.14.6, numpy 2.5.2, matplotlib 3.11.1.
+
+Input:
+3af2c8ce3464409fe1ebe7d4de410386004e8549b182b1f1117d9e7ee3258a5d  data/per-token.npz (unchanged since 75cdf18d)
+
+Outputs (the analysis files are identical in runs 1, 2 and 3):
+4ae5396c90ea1576a7268fec4ca9a0a6b53896f9c3fc42a80dc0e4b009682cd6  analysis/analysis.json
+aeef9f193a0bf04b34deb712e8c92599ba0b0c35b639ef3242d5b64611347567  analysis/tables.md
+3477ee768888634dd5396289705e3da27e2b880481798ce843c08b5bde0dd9d6  mismatch-by-position.png
+eaf8ef74ac3e157cc3780a9e4c3d08441e32ecae31ce11e35fc204cdef8ea274  corrections/robustness-checks.json (run 3)
+
+A local run (macOS, same numpy and matplotlib) gives the same tables.md; analysis.json differs
+from the host's in the last digit of 25 floats (k3 sums), from the platform's libm.
