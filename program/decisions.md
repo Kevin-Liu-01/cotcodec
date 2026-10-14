@@ -2284,3 +2284,29 @@ research".
   and they are not raised again unless Kevin asks.
 - None of them gates any experiment. The papers keep their "not disclosed,
   not published" status lines.
+
+**D102. New lead direction: are OSWorld leaderboard gaps within measurement
+noise?** On 2026-10-14 Kevin said he does not think the program has found
+anything important yet. The assessment he was given agreed:
+- the results so far are careful but narrow:
+  - E's bounded harness null on two small models;
+  - checker defects that move no observed agent score;
+  - a re-hosting caveat (R04);
+- the node has been badly under-used: about 25 GPU-h in eight days.
+Kevin chose the direction offered first.
+- The question. For strong open computer-use agents at 7B-72B, measure on
+  OSWorld, with repeated sessions:
+  - rerun noise;
+  - checker error;
+  - the environment drift found in R04.
+  Then compare that total noise with the score gaps between published
+  leaderboard entries.
+- What would matter. If typical claimed improvements fall inside measurement
+  noise, the result bears on everyone who reports OSWorld numbers.
+- Process. It runs the research gauntlet (`.claude/rules/research-gauntlet-loop.md`),
+  because it will exceed 8 GPU-h. Admission below 100 is allowed under D92.
+  The first step is a pilot of at most 8 GPU-h, and the full study uses the
+  node properly.
+- S2 v5's Phase 0 continues alongside, as S2's last registration.
+- Host order. S2's CPU jobs and this candidate's GPU jobs alternate on an
+  empty queue.
