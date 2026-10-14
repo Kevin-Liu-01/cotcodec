@@ -9,19 +9,21 @@ it, or keep it out of any circulated copy, before the report is shared.
 
 Indices are 0-based positions in `pending_decisions_for_kevin` at commit `360058d`. Each index
 points at the same item at `08033ba7`, against which revision 3 updated the checker-study rows
-and the successor-E row.
+and the successor-E row, and at `4ca30d03`, against which revision 6 updated the successor-E row
+again, the review row (index 12, which now reads "Done (D92)") and, for D92's carried-over
+sign-offs, the adjudication and blind-spec rows (indices 8 and 13).
 
 | Item | Index | What it affects in the report |
 |---|---:|---|
 | Publication of the report | (D71 (iii); not an index) | everything; an outward action |
 | Disclosure to xlang-ai of the checker defects (and the earlier OSWorld findings) | 3 | section 6; must be settled before publication (the owner may decline to disclose) |
-| Checker-mutation adjudication, 34 items: done under D80-D82 by an isolated model, not human-validated; the outward actions and the registration's carried-over sign-offs stay the owner's | 8 | section 6.7's before-and-after table; a human adjudication could change the gold-defect calls and the audit-confirmed counts |
+| Checker-mutation adjudication, 34 items: done under D80-D82 by an isolated model, not human-validated; the registration's carried-over sign-offs were given under D92, and the outward actions stay the owner's | 8 | section 6.7's before-and-after table; a human adjudication could change the gold-defect calls and the audit-confirmed counts |
 | Human spot check, 25 items (D9): optional, and the only independent validation; the isolated model that answered it under D80-D82 matched the Claude rater on all 25 | 6 | every audit-dependent output in section 6 |
-| Release of the checker study's blind specs, published before sign-off | 13 | the public checker-study materials |
-| Review of decisions D1-D82 (and D83) taken on the owner's behalf | 12 | D53 and D57 (action path accepted; S1a session-1 disclosures), D56 (S1a sign-off), D59-D62 (analysis-code defects), D66, D69, D79-D82 (K2 and the model adjudication, section 6) |
+| Release of the checker study's blind specs, published before sign-off: confirmed under D92 (the blind specs published early stay public); index 13 still asks for it (discrepancy D8) | 13 | the public checker-study materials; section 12 records the confirmation |
+| Review of decisions taken on the owner's behalf: done for D1-D91 under D92 (the owner approved all pending items on 2026-10-12); D93 onward, including D96 and D97 cited for successor E, are not covered by it | 12 | D96 and D97 (E's host-use departure and result; cited in "Authorship and process", sections 4.9-4.10, 5.2, 11 and 12 and limitation 12) await review. Revision 6 brings "Authorship and process", section 4.1, limitation 12 and section 12 up to D92: they say what D92 accepted (D1-D91, among them D53, D56, D57, D59-D62, D66, D69, D79-D82 and D85, and the blind-spec release) and that the decisions after it await review |
 | Action path: shell-side observation of grabbed chords; the job 851 guest-server restart; the A4/A7 governance deviation | 14 | sections 2.6-2.7 and 11 |
 | Host inotify limit (host administrator) | 16 | V* = 32 and the concurrency scope |
-| Successor E: decided under the owner's delegation (D80 (iii): registered, audited before its freeze, frozen and run); being registered, its registration in pre-freeze gates on its own branch; results pending. The item at index 17 still reads as the owner's choice and is stale against D80 | 17 | sections 5, 6.6 and 11 |
+| Successor E: decided under the owner's delegation (D80 (iii)), signed off and frozen (D85, ledger row 19), run and analysed; its result is verified (D97): DR2 Near-equivalent, DR5 NO-GO. Nothing here is the owner's unless he wants an observation-factor study proposed. The item at index 17 still says the results wait for a fresh verifier (discrepancy D7) | 17 | sections 4.9-4.10, 5, 6.6, 7.1 and 11, and the summary |
 | A valid Anthropic API key (the Claude rater ran through the agent harness, D25) | 9 | section 6's rater path |
 
 Also open, not the owner's:
@@ -66,3 +68,12 @@ before the report is circulated.
   which sum to 108,988.
 - **D6. A stale status line.** `harness/q2/README.md` still calls `q2-action-path-v2` a draft
   whose acceptance trials wait for its freeze. It was frozen and accepted on attempt 1 (D53).
+- **D7. E's verification status in `program/state.json`.** Pending item 17 at `4ca30d03` gives
+  E's result "(RESULTS pending a fresh verifier)". E's RESULTS (its verification status and
+  deviation 1) and D97 record that two fresh verifiers ran, reproduced every registered number
+  and outcome and found no blocking item, and that their wording items were fixed (`fddff98e`).
+  The report follows RESULTS.
+- **D8. The blind-spec release in `program/state.json`.** Pending item 13 at `4ca30d03` still
+  asks the owner to confirm the release of the checker study's blind specs or to ask for their
+  removal. D92 gave the checker-mutation registration's carried-over sign-offs, the spec release
+  among them ("the blind specs published early stay public"). The report follows D92.

@@ -2,7 +2,7 @@
  "schema": "checker-mutation-note-claims-v1",
  "note": "paper/checker-mutation-note/draft.md",
  "description": "Every number in the note's text, with the committed file and key it comes from. A JSON evidence item gives 'key' (keys and indexes) and 'fmt'; its value rendered with 'fmt' must equal 'expect'. A text evidence item gives 'match', a substring of the committed file. 'expect' must occur in the claim's 'text'. Formats: int, comma (thousands separator), len (length of a list or object), raw (str of the value), pct1/pct2 (value x 100, half-up), pct1z (as pct1 but 0 and 1 render as '0' and '100'), round1/round2/round3 (half-up). 'structural' lists phrases whose digits are references, not quantities. 'base_commit' is a commit on main at which every file in 'sources' resolves; the script does not read it. Checked by scripts/check_claims.py.",
- "base_commit": "9d320c6e",
+ "base_commit": "4ca30d03",
  "sources": {
   "ADJ_AN": "program/evidence/2026-10-11/q2-mutation-adjudication-v2/analysis/analysis.json",
   "ADJ_SUM": "program/evidence/2026-10-11/q2-mutation-adjudication-v2/summary.json",
@@ -40,7 +40,9 @@
   "NUI_README": "program/evidence/2026-10-12/r04-nuisance-confirm/README.md",
   "NUI_AN": "program/evidence/2026-10-12/r04-nuisance-confirm/r04-registered-v1/analysis.json",
   "NUI_K2": "program/evidence/2026-10-12/r04-nuisance-confirm/r04-registered-v1/analysis-k2.json",
-  "NUI_PENDING": "program/evidence/2026-10-12/r04-nuisance-confirm/r04-registered-v1/pending.json"
+  "NUI_PENDING": "program/evidence/2026-10-12/r04-nuisance-confirm/r04-registered-v1/pending.json",
+  "E_RES": "program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md",
+  "E_RESC": "program/evidence/2026-10-12/q2-stage1-successor-e-run/analysis/rescore-coverage.json"
  },
  "claims": [
   {
@@ -833,6 +835,32 @@
      "key": [
       "verdict_sources",
       "secondary",
+      "scored_final_records"
+     ],
+     "fmt": "comma",
+     "expect": "1,808"
+    }
+   ]
+  },
+  {
+   "id": "e-0-of-1808-summary",
+   "text": "and 0 of a further 1,808 in its registered",
+   "evidence": [
+    {
+     "file": "E_RESC",
+     "key": [
+      "verdict_sources",
+      "primary_113",
+      "flips_total"
+     ],
+     "fmt": "len",
+     "expect": "0"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "verdict_sources",
+      "primary_113",
       "scored_final_records"
      ],
      "fmt": "comma",
@@ -4823,6 +4851,186 @@
    ]
   },
   {
+   "id": "e-tasks",
+   "text": "same two policies and harnesses on all 113 of S1a's tasks",
+   "evidence": [
+    {
+     "file": "E_RES",
+     "match": "on all 113 eligible pool tasks",
+     "expect": "113"
+    }
+   ]
+  },
+  {
+   "id": "e-episodes",
+   "text": "and scored 1,808 new episodes with no infrastructure loss",
+   "evidence": [
+    {
+     "file": "E_RES",
+     "match": "No episode was lost to infrastructure in 1,808",
+     "expect": "1,808"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "verdict_sources",
+      "primary_113",
+      "scored_final_records"
+     ],
+     "fmt": "comma",
+     "expect": "1,808"
+    }
+   ]
+  },
+  {
+   "id": "e-288",
+   "text": "applied `zinv` to 36 `compare_pptx_files` episodes per job (288 in all)",
+   "evidence": [
+    {
+     "file": "E_RESC",
+     "key": [
+      "jobs",
+      "E-9B-E1",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "jobs",
+      "E-4B-E1",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "jobs",
+      "E-9B-E2",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "jobs",
+      "E-4B-E2",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "jobs",
+      "E-9B-E3",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "jobs",
+      "E-4B-E3",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "jobs",
+      "E-9B-E4",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "jobs",
+      "E-4B-E4",
+      "corrected_applies"
+     ],
+     "fmt": "int",
+     "expect": "36"
+    },
+    {
+     "file": "E_RES",
+     "match": "The corrected comparator applied to 36 episodes per job (288 in all",
+     "expect": "288"
+    }
+   ]
+  },
+  {
+   "id": "e-flips",
+   "text": "and changed **0 of 1,808 E verdicts**, with 0 live-against-offline replay mismatches; the 16",
+   "evidence": [
+    {
+     "file": "E_RESC",
+     "key": [
+      "verdict_sources",
+      "primary_113",
+      "flips_total"
+     ],
+     "fmt": "len",
+     "expect": "0"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "verdict_sources",
+      "primary_113",
+      "scored_final_records"
+     ],
+     "fmt": "comma",
+     "expect": "1,808"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "verdict_sources",
+      "primary_113",
+      "raw_replay_differs_from_live"
+     ],
+     "fmt": "int",
+     "expect": "0"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "verdict_sources",
+      "primary_113",
+      "fell_back_to_live_score"
+     ],
+     "fmt": "int",
+     "expect": "16"
+    }
+   ]
+  },
+  {
+   "id": "e-d82",
+   "text": "gold-defect tasks of section 3.3 (110 tasks), raw or corrected",
+   "evidence": [
+    {
+     "file": "E_RES",
+     "match": "| **D82 gold-defect tasks excluded, raw** | 110 tasks",
+     "expect": "110 tasks"
+    }
+   ]
+  },
+  {
    "id": "s1a-fallback",
    "text": "16 secondary verdicts, all of the live-state task",
    "evidence": [
@@ -5914,6 +6122,32 @@
      "key": [
       "verdict_sources",
       "secondary",
+      "scored_final_records"
+     ],
+     "fmt": "comma",
+     "expect": "1,808"
+    }
+   ]
+  },
+  {
+   "id": "lim-e",
+   "text": "and 0 of 1,808 verdicts of the same policies in successor E",
+   "evidence": [
+    {
+     "file": "E_RESC",
+     "key": [
+      "verdict_sources",
+      "primary_113",
+      "flips_total"
+     ],
+     "fmt": "len",
+     "expect": "0"
+    },
+    {
+     "file": "E_RESC",
+     "key": [
+      "verdict_sources",
+      "primary_113",
       "scored_final_records"
      ],
      "fmt": "comma",
@@ -9193,6 +9427,8 @@
   "ledger row 18",
   "Table 6",
   "revision 5",
-  "section 15"
+  "section 15",
+  "revision 6",
+  "ledger row 19"
  ]
 }

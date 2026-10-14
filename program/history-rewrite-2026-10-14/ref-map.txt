@@ -1,0 +1,9 @@
+old                                      new                                      ref
+876f0e86239adbfafb4ba6e196c7f94e6cf61acf bd46692c07f7accd5ca1bc37bd992601a3f11c67 refs/heads/main
+bc05cc496bcf98445b61db12a35f3a2b8de20f55 873b5d6ea22975edf2b77c81c0fec58d14b0c76a refs/heads/orx/d19-icl-rule-distillation-port-phase-0-cpu-docto
+caf9d9f467901661b833c2f48a5c70ea7dfc654d 2c0c1d4d70985f7e89653b69e72d1a0648873b3b refs/heads/orx/d20-semantic-clock-gate-parity-phase-0-cpu-docto
+011237acf800ac2936eb6ba994f770e4949c4ea3 cdcaaa93c6ddcd21ee0cf5b9151b7b768341cb2f refs/heads/orx/d21-translation-supervised-sparse-indexer-phase
+bb1eacd7ea9351489a4cc8128e75124c71877a3c 1494aca1ef93d7a23409e51461d3ddfdd44f263b refs/heads/orx/d22-translation-equivariant-state-writes-phase-0
+76d746a93ef2136fb3cf9b0a2a187b450b90a403 c491201dfc1dfc57f24ec9578069d3595bd1ac67 refs/heads/orx/openai-daybreak-blue-capability-doctor
+e74ba507b8ab04cfd64da1ddef6ccc8afffaa478 3351dc915061b012bc46a47c95c788b20b9ed3bc refs/heads/orx/qwen3-5-4b-base-recurrent-state-interface
+9c9acc1b718a180cd7279dae781afd8d1d54e5c8 af826d59a762555a835380c1ccef1576523226f2 refs/tags/legacy-2026-10-06

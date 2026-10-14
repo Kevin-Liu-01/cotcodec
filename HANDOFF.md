@@ -2,6 +2,11 @@
 
 ## Resume here (2026-10-11)
 
+- 2026-10-14: public history was rewritten (D99); commit ids from 2026-08-17 on changed.
+  Resolve any recorded id with `scripts/verify_history_map.py resolve
+  program/history-rewrite-2026-10-14/commit-map.tsv <id>`. Pre-purge clones cannot
+  fast-forward: re-clone. S2 v5 merges main and freezes next (D98).
+
 Kevin delegated his pending research decisions on 2026-10-11 ("do it yourself
 for whatever gains actual results"; D80). Under that delegation:
 - R04 is done (row 18; D89). OSWorld's office checkers are not invariant:
@@ -21,7 +26,7 @@ for whatever gains actual results"; D80). Under that delegation:
   - K4 no longer fires.
   R03, the checker-mutation note, can now be finished.
 - R03, the checker-mutation note, is drafted and verified, and not published
-  (D83; `paper/checker-mutation-note/`). The Q2 report is synced to revision 3.
+  (D83; `paper/checker-mutation-note/`). The Q2 report is at revision 6 (successor E included).
 - R03 part (b) is done (row 20; D86, D88). On the held-out reserve split,
   zinv's result is PASS, descriptive: it accepts 13 of 13 z-order equivalence
   mutants on 8 tasks and newly accepts none of 15 violation mutants. The
@@ -52,7 +57,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 21 rows). Decisions taken
-on Kevin's behalf are D1-D97 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D99 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |

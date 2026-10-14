@@ -2127,3 +2127,110 @@ question is answered at this design's resolution.**
 - Q2 next. With the harness effect bounded, the checker results (R03, R04,
   R03 (b)) and the noise floor are Q2's findings. A further Q2 step would have
   to show that the checker defects change real agent scores.
+
+**D98. S2 v5: the development confirmation passes; the pre-freeze audit's
+one blocking item is text. Order: text fix, then the history purge (D96),
+then the freeze.**
+- The draft (`stage0/s2-v5`, `26a9477c`) is v4 with A6's Writer targets
+  re-measured per image: ER uses a drag from (751,293) to (779,293) and a
+  click at (789,293), and AR a drag from (751,294) to (779,294) and a click at
+  (789,294). The change is delivered by per-image cells files with
+  harness/q2 byte-identical. K0's section is byte-identical (`ed38b953...`)
+  and unread.
+- The confirmation ran its one attempt: Slurm 1278 and 1291, CPU only, after
+  E4 ended, about 2.6 VM-h. It **passed**:
+  - full A6 was 300 of 300 on ER, AR and PL, with all 60 entries 5 of 5;
+  - Writer's composites were 10 of 10 on E and A;
+  - `writer:drag_select_word` at the shifted targets read back "keep Y keep"
+    5 of 5 on ER and on AR.
+  That is the positive observation D94 lacked: Writer places drags at the
+  drawn pixels under mirroring.
+- A fresh pre-freeze audit found one blocking item, text only, with no host
+  run needed. The draft says in three places that v4's V = 20 rung "passed".
+  It ran without aborting (2,400 of 2,400), but it never qualified, because
+  its per-image step condition needs each image's A1, which never ran (D93).
+  Its non-blocking items:
+  - the review-log section fails a structure test;
+  - v5's own files need pinning in the pins check;
+  - the confirmation's deviations belong in "Disclosures (v5)";
+  - the status wording;
+  - a `lane_v5 submit --dry-run` on the host is owed before the census;
+  - small wording items.
+- Order. The owner fixes the text and the cheap items, with no change to
+  code the confirmation ran. Then the history purge, option (a+), D96, runs
+  with every agent paused: Kevin confirms the exact commands first, and the
+  purge rewrites the v5 branch too. Then main is merged into the branch, v5's
+  pins are refilled, and v5 is frozen as the next ledger row. K1 (all jobs),
+  the census, the oracle and K0 follow, and Phase 1 only after its executor
+  addendum.
+
+**D99. Public history rewritten to remove the host address, an
+employer-internal inventory and an early `gate_b.py` (Kevin, 2026-10-14).**
+- Kevin's confirmation. The purge is reserved to Kevin (D2, D92), and he chose
+  option (a+) in D96. Shown the plan's summary on 2026-10-14, he answered
+  "Yes, run it" for: the rewrite on a fresh mirror and its verification, the
+  one atomic force-push to GitHub, rewriting the Mac repository in place, and
+  replacing `~/cotcodec-main` on the host. He files the GitHub Support request
+  himself. `~/cotcodec` on the host is not touched; it is his to decide.
+- What was removed (counts and hashes only; nothing is quoted):
+  - the H100 host's network address, with the login name: 28 blobs in five
+    documentation paths, held by 44 commits from `86ac9659` (2026-08-17) to
+    2026-09-23. It is replaced by a fixed placeholder. No hash of it is
+    recorded, because an address hash can be reversed;
+  - the employer-internal corpus inventory: one file, blob `f05bffb4`, held
+    by 32 of those 44 commits (2026-09-01 to the 2026-10-06 restart). Its path
+    is removed from every commit;
+  - the early `harness/q1/gates/gate_b.py` that transliterated KernelGYM code
+    (D95): blob `63770654`, held by 11 commits of 2026-10-07 from `b3e16d41`
+    to `acb3bc8f`. It is stripped, so those commits have no `gate_b.py`.
+  None of the three was on `main`'s tree, and no commit or tag message held
+  any of them.
+- How it was done.
+  - git filter-repo `a40bce548d2c`, `--sensitive-data-removal
+    --preserve-commit-hashes`, on a fresh mirror of GitHub at `876f0e86` (944
+    commits, 7 branches, 1 annotated tag). It rewrote 929 commits; the 15
+    earliest keep their ids. The first changed commit is `86ac9659`.
+  - Verified before the push: 0 of 17,695 objects hold the address or any of
+    five inventory phrases; both blobs are absent; `main`'s tree is unchanged
+    (`5d41ef01`) and no commit was dropped; 874 old ids are rebuilt exactly
+    from the map, and the other 55 are exactly the 44 and 11 commits above;
+    all 21 ledger rows map to the ids the plan predicted, and in each the new
+    freeze commit's only parent is the new head, with both trees unchanged.
+  - Force-pushed in one `--atomic` push with per-ref `--force-with-lease`.
+  - The pre-rewrite history (a GitHub mirror and a bundle of the local
+    branches) is kept privately, off this repository.
+- The map and its verifier. `program/history-rewrite-2026-10-14/` holds
+  `commit-map.tsv` (all 929 rewritten commits as `old new`), filter-repo's
+  `ref-map.txt` and `first-changed-commits.txt`, and a README.
+  `scripts/verify_history_map.py verify <map> --expect-changed 55` rebuilds
+  each old commit object from its new commit and checks its hash; `resolve`
+  maps an old id or prefix to its new id.
+- Effect.
+  - Every commit since 2026-08-17 has a new id. `main` at `876f0e86` became
+    `bd46692c`; this decision's commit follows it.
+  - Ledger rows, receipts, evidence, decisions and commit messages are
+    unchanged. They keep the pre-rewrite ids recorded at the time, and every
+    one resolves through the map. No ledger row's head or freeze commit is
+    among the 55, and `check-chain` passes unchanged (21 rows).
+  - Files quote 11 of the 55 (`0b3ecef0`, `f10a8571`, `2e5d695b`,
+    `999f5583`, `bc05cc49`, `bb1eacd7`; `acb3bc8f`, `adda2feb`, `66bc7cea`,
+    `1a02d4a5`, `243753f1`). They resolve, but their content differs by
+    design, so the verifier cannot vouch for them.
+  - Checks that resolve a ledger id with git (the K2 report's and S2's
+    `check_freeze_commit`, the Holo3 doctor's `code_unchanged_since_freeze`)
+    run unchanged only against the private pre-rewrite archive, because none
+    takes a mapped id. No frozen harness code is edited. Anyone can check the
+    same structure by hand on the public history after mapping the ids.
+    Registrations frozen after the rewrite record post-rewrite ids; S2 v5 is
+    next (D98).
+  - Until GitHub Support removes its cached views, old commits stay reachable
+    on GitHub by id.
+  - Clones. The Mac repository is rewritten in place with the same command,
+    which gives the same ids. Its linked worktrees are removed first, after any
+    uncommitted or ignored content is archived privately; `stage0/s2-v5` is
+    rewritten with its commits and its worktree is recreated. `~/cotcodec-main`
+    on the host is replaced by a fresh clone. `~/cotcodec`, the other host
+    copies and bundles, and the host-local image `cotcodec-q1-gates:adda2feb`
+    are untouched and remain Kevin's call.
+- Reversal: none. Restoring the old history would publish all three items
+  again; the pre-rewrite history is kept privately.
