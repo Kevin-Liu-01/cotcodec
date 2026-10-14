@@ -2127,3 +2127,39 @@ question is answered at this design's resolution.**
 - Q2 next. With the harness effect bounded, the checker results (R03, R04,
   R03 (b)) and the noise floor are Q2's findings. A further Q2 step would have
   to show that the checker defects change real agent scores.
+
+**D98. S2 v5: the development confirmation passes; the pre-freeze audit's
+one blocking item is text. Order: text fix, then the history purge (D96),
+then the freeze.**
+- The draft (`stage0/s2-v5`, `26a9477c`) is v4 with A6's Writer targets
+  re-measured per image: ER uses a drag from (751,293) to (779,293) and a
+  click at (789,293), and AR a drag from (751,294) to (779,294) and a click at
+  (789,294). The change is delivered by per-image cells files with
+  harness/q2 byte-identical. K0's section is byte-identical (`ed38b953...`)
+  and unread.
+- The confirmation ran its one attempt: Slurm 1278 and 1291, CPU only, after
+  E4 ended, about 2.6 VM-h. It **passed**:
+  - full A6 was 300 of 300 on ER, AR and PL, with all 60 entries 5 of 5;
+  - Writer's composites were 10 of 10 on E and A;
+  - `writer:drag_select_word` at the shifted targets read back "keep Y keep"
+    5 of 5 on ER and on AR.
+  That is the positive observation D94 lacked: Writer places drags at the
+  drawn pixels under mirroring.
+- A fresh pre-freeze audit found one blocking item, text only, with no host
+  run needed. The draft says in three places that v4's V = 20 rung "passed".
+  It ran without aborting (2,400 of 2,400), but it never qualified, because
+  its per-image step condition needs each image's A1, which never ran (D93).
+  Its non-blocking items:
+  - the review-log section fails a structure test;
+  - v5's own files need pinning in the pins check;
+  - the confirmation's deviations belong in "Disclosures (v5)";
+  - the status wording;
+  - a `lane_v5 submit --dry-run` on the host is owed before the census;
+  - small wording items.
+- Order. The owner fixes the text and the cheap items, with no change to
+  code the confirmation ran. Then the history purge, option (a+), D96, runs
+  with every agent paused: Kevin confirms the exact commands first, and the
+  purge rewrites the v5 branch too. Then main is merged into the branch, v5's
+  pins are refilled, and v5 is frozen as the next ledger row. K1 (all jobs),
+  the census, the oracle and K0 follow, and Phase 1 only after its executor
+  addendum.
