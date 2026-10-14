@@ -131,6 +131,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1300 | K1 A6 on E (cross-app canary: Writer, Chrome, VS Code, GNOME Terminal; seed 43; q2's targets) | 222 | 11:04:39 | 11:04:39-11:54:25 (49.8 min) | COMPLETED 0:0 | A6 pass (300 of 300, all 60 entries 5 of 5); the campaign counts |
 | 1301 | K1 C1 on A (H-GA-buggy, H-OSW-up; seed 42) | 154 | 11:55:21 | 11:55:21-12:01:48 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count |
 | 1302 | K1 C2 on A (L0-raw, seed 45) | 362 | 12:02:39 | 12:02:39-12:12:50 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
+| 1303 | K1 C3 on A, part 1 of 3 (17 mutant campaigns, M01-M11; seed 42) | 1,404 | 12:13:43 | 12:13:43-13:10:16 (56.6 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell; C3 is read once part 3 (the references) has run |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -235,6 +236,13 @@ and the last `scontrol` record):
   `chord_ctrl_alt_shift_r`, 5 each), carry a state-not-observed mark; 0 guest-server restarts.
   Cold boots at most 17.3 s; step p95 1.19 s. Driver exit 0, `infra_gates_pass` true, image
   unchanged, no labelled container left; no counting, foreign-abort or snapshot problem.
+- **1303 (C3, A, part 1).** Host snapshot: load 0.47, queue empty, 0 labelled containers. 17
+  campaigns (M01-M11 on their layers, as part 1 on E), 1,675 trials, one VM at a time; every
+  campaign counts (driver exit 0, `infra_gates_pass`, image unchanged, no labelled container; no
+  foreign-abort or snapshot problem); cold boots at most 17.9 s; step p95 at most 1.40 s. As on E,
+  the job-alone verdict cannot read C3 (no reference yet). Interim summary
+  (`c3-interim-1303.json`): every mutant run failed at least one cell (1 to 45 cells), none with
+  an infrastructure failure.
 
 ## Stint 1 stop (operator's record, 10:44Z on 2026-10-14)
 
