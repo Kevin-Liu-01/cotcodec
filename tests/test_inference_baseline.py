@@ -53,7 +53,7 @@ def test_every_job_resolves_within_limits(config: dict) -> None:
             for cell in engine["cells"]:
                 assert cell["input_len"] + cell["output_len"] <= engine["max_model_len"]
         gpu_minutes += plan["gpus"]
-    assert set(config["jobs"]) == {"a", "b", "c", "d", "e", "f"}
+    assert set(config["jobs"]) == {"a", "b", "c", "d", "e", "f", "g", "h"}
 
 
 def test_serve_argv_carries_engine_flags(config: dict) -> None:

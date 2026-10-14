@@ -150,6 +150,10 @@ grids:
     - [chat, 1]
     - [chat, 32]
     - [chat, 128]
+  # Follow-up (job g): job f's limit left in32k-c32 and longout-c128 with one repeat each.
+  tp4_completion:
+    - [in32k, 32]
+    - [longout, 128]
   tp4:
     - [chat, 1]
     - [chat, 128]
@@ -200,3 +204,17 @@ jobs:
     primary_model: qwen3-32b
     engines:
       - {id: qwen3-32b-tp4, model: qwen3-32b, tp: 4, grid: tp4}
+  # Follow-ups after jobs a-f (same image recipe, new commit). g completes TP 4's two cells that
+  # job f's limit cut to one repeat, on a fresh engine. h retries the 35B-A3B MoE on one GPU with
+  # max_num_seqs 128: job e's engine refused max_num_seqs 256 because only 181 GDN (Mamba) state
+  # blocks fit beside 64.7 GiB of weights at gpu_memory_utilization 0.90.
+  g:
+    gpus: 4
+    primary_model: qwen3-32b
+    engines:
+      - {id: qwen3-32b-tp4-rerun, model: qwen3-32b, tp: 4, grid: tp4_completion}
+  h:
+    gpus: 1
+    primary_model: qwen3.6-35b-a3b
+    engines:
+      - {id: qwen3.6-35b-a3b-tp1-seqs128, model: qwen3.6-35b-a3b, tp: 1, grid: tp1_moe_fit, max_num_seqs: 128}
