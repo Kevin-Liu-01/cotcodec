@@ -1,0 +1,42 @@
+{
+  "driver": "570.148.08",
+  "gpus": [
+    {
+      "gpm_supported": true,
+      "index": 0,
+      "max_mem_clock_mhz": 2619,
+      "max_sm_clock_mhz": 1980,
+      "memory_total_mib": 81559,
+      "name": "NVIDIA H100 80GB HBM3",
+      "power_limit_w": 700.0,
+      "uuid": "GPU-a485003c-eb56-c00a-5efc-ba2fb61d12d5"
+    },
+    {
+      "gpm_supported": true,
+      "index": 1,
+      "max_mem_clock_mhz": 2619,
+      "max_sm_clock_mhz": 1980,
+      "memory_total_mib": 81559,
+      "name": "NVIDIA H100 80GB HBM3",
+      "power_limit_w": 700.0,
+      "uuid": "GPU-0524ae85-a4b2-36bd-5769-d31e83c463e2"
+    }
+  ],
+  "lane": {
+    "COTCODEC_EXPECTED_GPUS": "2",
+    "COTCODEC_GIT_SHA": "f6eaf1b22f45e1f09b4a3ad844ad6a3f39988135",
+    "COTCODEC_MODEL_ID": "qwen3.6-35b-a3b",
+    "COTCODEC_SOURCE_SHA256": "97301983bda277977928e124ab9c535d4d14908d647bc8323e8403c47c35e616"
+  },
+  "nvidia_smi_q": "\n==============NVSMI LOG==============\n\nTimestamp                                 : Wed Oct 14 19:52:15 2026\nDriver Version                            : 570.148.08\nCUDA Version                              : 12.9\n\nAttached GPUs                             : 2\nGPU 00000000:63:00.0\n    Performance State                     : P0\n    Clocks Event Reasons\n        Idle                              : Active\n        Applications Clocks Setting       : Not Active\n        SW Power Cap                      : Not Active\n        HW Slowdown                       : Not Active\n            HW Thermal Slowdown           : Not Active\n            HW Power Brake Slowdown       : Not Active\n        Sync Boost                        : Not Active\n        SW Thermal Slowdown               : Not Active\n        Display Clock Setting             : Not Active\n    Sparse Operation Mode                 : Disabled\n    GPU Power Readings\n        Average Power Draw                : 70.71 W\n        Instantaneous Power Draw          : 70.17 W\n        Current Power Limit               : 700.00 W\n        Requested Power Limit             : 700.00 W\n        Default Power Limit               : 700.00 W\n        Min Power Limit                   : 200.00 W\n        Max Power Limit                   : 700.00 W\n    Power Samples\n        Duration                          : 2.36 sec\n        Number of Samples                 : 119\n        Max                               : 72.26 W\n        Min                               : 69.58 W\n        Avg                               : 70.75 W\n    GPU Memory Power Readings \n        Average Power Draw                : 38.85 W\n        Instantaneous Power Draw          : N/A\n    Module Power Readings\n        Average Power Draw                : N/A\n        Instantaneous Power Draw          : N/A\n        Current Power Limit               : N/A\n        Requested Power Limit             : N/A\n        Default Power Limit               : N/A\n        Min Power Limit                   : N/A\n        Max Power Limit                   : N/A\n    Clocks\n        Graphics                          : 345 MHz\n        SM                                : 345 MHz\n        Memory                            : 2619 MHz\n        Video                             : 765 MHz\n    Applications Clocks\n        Graphics                          : 1980 MHz\n        Memory                            : 2619 MHz\n    Default Applications Clocks\n        Graphics                          : 1980 MHz\n        Memory                            : 2619 MHz\n    Deferred Clocks\n        Memory                            : N/A\n    Max Clocks\n        Graphics                          : 1980 MHz\n        SM                                : 1980 MHz\n        Memory                            : 2619 MHz\n        Video                             : 1545 MHz\n    Max Customer Boost Clocks\n        Graphics                          : 1980 MHz\n    SM Clock Samples\n        Duration                          : Not Found\n        Number of Samples                 : Not Found\n        Max                               : Not Found\n        Min                               : Not Found\n        Avg                               : Not Found\n    Memory Clock Samples\n        Duration                          : Not Found\n        Number of Samples                 : Not Found\n        Max                               : Not Found\n        Min                               : Not Found\n        Avg                               : Not Found\n    Clock Policy\n        Auto Boost                        : N/A\n        Auto Boost Default                : N/A\n\nGPU 00000000:64:00.0\n    Performance State                     : P0\n    Clocks Event Reasons\n        Idle                              : Active\n        Applications Clocks Setting       : Not Active\n        SW Power Cap                      : Not Active\n        HW Slowdown                       : Not Active\n            HW Thermal Slowdown           : Not Active\n            HW Power Brake Slowdown       : Not Active\n        Sync Boost                        : Not Active\n        SW Thermal Slowdown               : Not Active\n        Display Clock Setting             : Not Active\n    Sparse Operation Mode                 : Disabled\n    GPU Power Readings\n        Average Power Draw                : 69.76 W\n        Instantaneous Power Draw          : 70.05 W\n        Current Power Limit               : 700.00 W\n        Requested Power Limit             : 700.00 W\n        Default Power Limit               : 700.00 W\n        Min Power Limit                   : 200.00 W\n        Max Power Limit                   : 700.00 W\n    Power Samples\n        Duration                          : 2.35 sec\n        Number of Samples                 : 119\n        Max                               : 70.71 W\n        Min                               : 69.02 W\n        Avg                               : 69.67 W\n    GPU Memory Power Readings \n        Average Power Draw                : 45.48 W\n        Instantaneous Power Draw          : N/A\n    Module Power Readings\n        Average Power Draw                : N/A\n        Instantaneous Power Draw          : N/A\n        Current Power Limit               : N/A\n        Requested Power Limit             : N/A\n        Default Power Limit               : N/A\n        Min Power Limit                   : N/A\n        Max Power Limit                   : N/A\n    Clocks\n        Graphics                          : 345 MHz\n        SM                                : 345 MHz\n        Memory                            : 2619 MHz\n        Video                             : 765 MHz\n    Applications Clocks\n        Graphics                          : 1980 MHz\n        Memory                            : 2619 MHz\n    Default Applications Clocks\n        Graphics                          : 1980 MHz\n        Memory                            : 2619 MHz\n    Deferred Clocks\n        Memory                            : N/A\n    Max Clocks\n        Graphics                          : 1980 MHz\n        SM                                : 1980 MHz\n        Memory                            : 2619 MHz\n        Video                             : 1545 MHz\n    Max Customer Boost Clocks\n        Graphics                          : 1980 MHz\n    SM Clock Samples\n        Duration                          : Not Found\n        Number of Samples                 : Not Found\n        Max                               : Not Found\n        Min                               : Not Found\n        Avg                               : Not Found\n    Memory Clock Samples\n        Duration                          : Not Found\n        Number of Samples                 : Not Found\n        Max                               : Not Found\n        Min                               : Not Found\n        Avg                               : Not Found\n    Clock Policy\n        Auto Boost                        : N/A\n        Auto Boost Default                : N/A\n\n",
+  "nvml": "12.570.148.08",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "torch": "2.13.0+cu129",
+  "torch_cuda": "12.9",
+  "utc": "2026-10-14T19:52:13Z",
+  "visible": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "NVIDIA_VISIBLE_DEVICES": "2,3"
+  },
+  "vllm": "0.31.0"
+}

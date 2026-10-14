@@ -1,0 +1,16 @@
+job,engine_id,status,ready_s,ranks,weights_gib_per_rank,non_torch_gib_per_rank,peak_activation_gib_per_rank,cuda_graph_gib_per_rank,kv_cache_gib_per_rank,kv_cache_tokens,max_concurrency_at_len,num_gpu_blocks,block_size,cache_dtype,gpu_memory_ready_mib,init_engine_s,torch_compile_s,weights_load_s,attention_backends,architecture
+a-1314,qwen3-0.6b-tp1,ready,48.0,1,1.12,0.45,0.81,0.28,68.89,644992,"{""len"": 32768, ""x"": 19.68}",40312,16,auto,[73720],24.04,11.85,4.010859,FLASH_ATTN,Qwen3ForCausalLM
+a-1314,qwen3-1.7b-tp1,ready,74.0,1,3.21,0.45,1.15,0.31,66.47,622288,"{""len"": 32768, ""x"": 18.99}",38893,16,auto,[73410],40.39,25.77,4.672293,FLASH_ATTN,Qwen3ForCausalLM
+a-1314,qwen3-1.7b-tp1-nopc,ready,36.0,1,3.21,0.45,0.93,0.31,66.69,624352,"{""len"": 32768, ""x"": 19.05}",39022,16,auto,[73636],11.98,0.32,4.15272,FLASH_ATTN,Qwen3ForCausalLM
+a-1314,qwen3.5-4b-tp1,ready,84.0,1,7.99,0.52,2.06,0.42,60.7,1788942,"{""len"": 32768, ""x"": 54.59}",3767,528,auto,[72668],45.75,16.02,5.991737,FLASH_ATTN,Qwen3_5ForConditionalGeneration
+b-1320,qwen3.5-9b-tp1,ready,94.0,1,16.8,0.53,2.84,0.44,51.1,1505903,"{""len"": 32768, ""x"": 45.96}",3171,528,auto,[71896],50.86,16.48,8.199778,FLASH_ATTN,Qwen3_5ForConditionalGeneration
+b-1320,qwen3.5-9b-tp1-kvfp8,ready,74.0,1,16.8,0.53,2.85,0.44,51.09,2733541,"{""len"": 32768, ""x"": 83.42}",3170,1056,fp8,[71884],41.59,13.67,8.180147,FLASH_ATTN,Qwen3_5ForConditionalGeneration
+b-1320,qwen3.5-9b-tp1-nopc,ready,70.0,1,16.8,0.53,2.84,0.44,51.1,1574353,"{""len"": 32768, ""x"": 48.05}",3171,528,auto,[71896],39.52,13.23,7.97173,FLASH_ATTN,Qwen3_5ForConditionalGeneration
+c-1321,qwen3.6-35b-a3b-tp2,ready,192.3,2,32.43,1.33,1.5,0.66,36.01,3082778,"{""len"": 32768, ""x"": 94.08}",3575,1056,auto,"[75748, 75748]",128.25,20.47,11.401729,FLASH_ATTN,Qwen3_5MoeForConditionalGeneration
+d-1322,qwen3-32b-tp2,ready,180.1,2,30.59,0.73,1.92,0.56,38.03,311552,"{""len"": 32768, ""x"": 9.51}",19472,16,auto,"[74508, 74508]",127.39,43.43,8.206639,FLASH_ATTN,Qwen3ForCausalLM
+e-1323,qwen3-32b-tp1,ready,120.0,1,61.03,0.42,2.94,0.7,6.89,28192,"{""len"": 16384, ""x"": 1.72}",1762,16,auto,[72348],74.63,39.71,15.676401,FLASH_ATTN,Qwen3ForCausalLM
+e-1323,qwen3-32b-tp1-kvfp8,ready,96.0,1,61.03,0.42,2.94,0.7,6.89,56400,"{""len"": 32768, ""x"": 1.72}",3525,16,fp8,[72348],60.12,34.33,14.669747,FLASH_ATTN,Qwen3ForCausalLM
+e-1323,qwen3.6-35b-a3b-tp1,failed-to-start,112.0,1,64.69,,,,3.65,156079,"{""len"": 32768, ""x"": 4.76}",,,,[469],,20.76,22.263435,FLASH_ATTN,Qwen3_5MoeForConditionalGeneration
+f-1324,qwen3-32b-tp4,ready,182.1,4,15.49,0.71,1.46,0.49,53.61,878400,"{""len"": 32768, ""x"": 26.81}",54900,16,auto,"[74912, 74912, 74912, 74912]",129.09,44.52,6.114423,FLASH_ATTN,Qwen3ForCausalLM
+g-1329,qwen3-32b-tp4-rerun,ready,164.1,4,15.49,0.71,1.46,0.49,53.61,878400,"{""len"": 32768, ""x"": 26.81}",54900,16,auto,"[74912, 74912, 74912, 74912]",113.02,39.9,5.382078,FLASH_ATTN,Qwen3ForCausalLM
+h-1330,qwen3.6-35b-a3b-tp1-seqs128,ready,116.0,1,64.69,0.88,1.53,0.37,4.17,178499,"{""len"": 32768, ""x"": 5.45}",207,1056,auto,[73460],62.14,19.23,20.718332,FLASH_ATTN,Qwen3_5MoeForConditionalGeneration

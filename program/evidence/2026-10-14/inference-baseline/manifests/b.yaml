@@ -1,0 +1,38 @@
+# inference-baseline-v1 job b: EXPLORATORY baseline, not a registered experiment.
+# Rendered by program/evidence/2026-10-14/inference-baseline/ops/render_manifests.py.
+# Slurm limit 42 min x 1 H100 = 0.7 GPU-h cap; the driver stops starting work
+# 200 s before the limit. Primary model is verified by the lane; the driver re-verifies others.
+runtime: docker-single-node-discovery-v1
+name: ib-v1-b
+image_id: sha256:16bea3e4af794246e3dd8a6e1f6866987bc795857b7ab3f0095c2767b6c8e961
+git_sha: "f6eaf1b22f45e1f09b4a3ad844ad6a3f39988135"
+source_sha256: "97301983bda277977928e124ab9c535d4d14908d647bc8323e8403c47c35e616"
+run_root: /home/kevin/cotcodec-runs/stage0/inference-baseline/runs/b
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 42
+budget:
+  max_gpu_hours: 0.7
+# Prompt and engine seed 42 come from experiments/serving/inference-baseline-v1.yaml.
+randomness_contract: deterministic
+seeds: []
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-9b
+  revision: "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+  receipt_sha256: "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3"
+  artifact_root_sha256: "9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1"
+command:
+  - python
+  - scripts/run_inference_baseline.py
+  - run
+  - --job
+  - b
+  - --output-dir
+  - /outputs/ib
+  - --allocation-minutes
+  - "42"

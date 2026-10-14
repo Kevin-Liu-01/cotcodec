@@ -1,0 +1,11 @@
+[
+  "python",
+  "scripts/run_inference_baseline.py",
+  "run",
+  "--job",
+  "c",
+  "--output-dir",
+  "/outputs/ib",
+  "--allocation-minutes",
+  "28"
+]

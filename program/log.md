@@ -5505,3 +5505,39 @@ they say so.)
 - Evidence: `program/evidence/2026-10-14/s2v5-phase0-run/` (README rows and notes for 1299-1307,
   `k1-jobs/1299`-`1306`, `k1-jobs/1307/submit-1307.txt`, `k1-jobs/c3-a-interim-1303-1305.json`,
   operator aids `campaign_summary.py` and `c3_parts.py`).
+
+## 2026-10-14 — Exploratory inference baseline `inference-baseline-v1`: where time and HBM go when vLLM serves on H100 (branch `stage0/inference-baseline`, not merged)
+
+- Kevin asked to "just straight up run inference" (D103 area 2). This is an exploratory baseline:
+  no registration, hypothesis or decision rule, and no confirmatory claim. It grounds the
+  question sweep running in parallel.
+- Ran vLLM 0.31.0's own `bench serve` and `bench throughput` code in the digest-pinned
+  `cotcodec-vllm` overlay, through the docker-research lane, with NVML and Prometheus sampling.
+  - Models: Qwen3-0.6B-Base, Qwen3-1.7B-Base, Qwen3.5-4B, Qwen3.5-9B, Qwen3.6-35B-A3B (MoE,
+    TP 1 and 2), and Qwen3-32B (dense, TP 1, 2 and 4).
+  - Qwen3-32B was downloaded under D1 by the GPU-less fetch lane (job 1310, receipt
+    `06e4a7e9...`) and registered in `models/registry.yaml`.
+  - Grid: chat, 8k-in, 32k-in and long-output shapes at concurrency 1-128. The ablations were
+    prefix caching on and off (1.7B, 9B) and FP8 KV (9B, 32B TP 1).
+  - Seed 42, two repeats per cell, prefix cache reset before every run.
+  - 258 of 258 serving runs ok, 36 offline runs.
+- Jobs: overlay builds 1311 and 1325, then jobs a-h (1314, 1320-1324, 1329, 1330). All COMPLETED
+  0:0. Physical total 4.7806 GPU-h, against a budget of 6. Fetch 1310 and selftests 1312 and
+  1326 were CPU-only.
+- Deviations:
+  - Job e's one-GPU MoE engine was refused, because `max_num_seqs` 256 exceeds the 181 GDN-state
+    blocks that fit. Job h reran it with 128.
+  - Job f's limit cut two TP 4 second repeats. Job g reran both cells twice on a fresh engine.
+- Exploratory reading (details and caveats in the README):
+  - Single-stream decode on the 9B and 32B streams weights at about 73-83% of 3.35 TB/s (an
+    analytical estimate) at TP 1-2. The small models and the 3B-active MoE are overhead-bound,
+    at 25-61%.
+  - KV capacity ranges from 28k tokens (32B TP 1) to 3.1M tokens (MoE TP 2), and binds only for
+    the dense models. FP8 KV doubles it and gives 1.3-1.5x where it binds.
+  - Prefix sharing gives about 2x throughput.
+  - Heavy cells often run at the 700 W power cap.
+  - Run-to-run spread: a median of about 1% (p90 4-5%) for throughput and TPOT.
+- Evidence: `program/evidence/2026-10-14/inference-baseline/` (README; raw JSON and CSV per job;
+  lane receipts; manifests; overlay, fetch and selftest records; `analysis/`). Code:
+  `scripts/run_inference_baseline.py`, `scripts/analyze_inference_baseline.py`,
+  `experiments/serving/inference-baseline-v1.yaml`, `tests/test_inference_baseline.py`.

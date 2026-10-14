@@ -1,0 +1,59 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.vllm-overlay
+#1 transferring dockerfile: 3.35kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 707B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 227.59MB 1.1s done
+#5 DONE 1.1s
+
+#6 [2/4] WORKDIR /workspace/cotcodec
+#6 CACHED
+
+#7 [3/4] COPY . /workspace/cotcodec
+#7 DONE 1.0s
+
+#8 [4/4] RUN ln -sf /usr/bin/python3 /usr/local/bin/python     && python infra/research/vllm_overlay_fixups.py /etc/cotcodec-vllm-overlay-fixups.json     && python -c "import httpx, numpy, PIL, yaml, vllm; assert vllm.__version__ == '0.31.0', vllm.__version__"     && test "db9527a46873454610df6dbedf79a36d6bf1a7f6" = "db9527a46873454610df6dbedf79a36d6bf1a7f6"     && python scripts/check_harness_env.py     && python scripts/run_vllm_throughput_probe.py plan --job a > /dev/null     && python scripts/run_vllm_throughput_probe_v2.py plan --job a > /dev/null     && GIT_SHA_VALUE="3343668a93d073f1caccec93f858c15f34b7da16" SOURCE_SHA_VALUE="e79093535cb5110fd102cc0378fd0b938be58a2fe8a19298b8b875f34b656d31"        python infra/research/write_provenance.py /etc/cotcodec-provenance.json     && chmod -R a+rX /workspace/cotcodec /etc/cotcodec-provenance.json        /etc/cotcodec-vllm-overlay-fixups.json
+#8 2.994 Found existing installation: torchcodec 0.17.0
+#8 2.998 Uninstalling torchcodec-0.17.0:
+#8 3.039   Successfully uninstalled torchcodec-0.17.0
+#8 13.85 W1014 20:32:13.306000 8 torch/utils/cpp_extension.py:178] No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda'
+#8 14.60 {"actions": 1, "status": "PASS"}
+#8 18.70 CoTCodec harness environment check
+#8 18.70 ================================
+#8 18.70 
+#8 18.70 Python modules
+#8 18.70 - yaml     OK      native YAML parsing
+#8 18.70 - rich     OK      rich terminal output
+#8 18.70 - tiktoken OK      token fertility measurement
+#8 18.70 - numpy    OK      degradation statistics
+#8 18.70 - scipy    MISSING McNemar/Fisher significance tests
+#8 18.70 - pandas   MISSING trace analysis
+#8 18.70 
+#8 18.70 Executables
+#8 18.70 - ruby     MISSING YAML fallback parser
+#8 18.70 - pdflatex MISSING paper compilation
+#8 18.70 
+#8 18.70 Readiness
+#8 18.70 - config parsing: ready
+#8 18.70 - canary smoke runs: ready
+#8 18.70 - full stats stack: blocked (missing: pandas, scipy)
+#8 DONE 29.9s
+
+#9 exporting to image
+#9 exporting layers
+#9 exporting layers 1.5s done
+#9 writing image sha256:9e411974772f044300795537d6f11aff553a0c6ebd82165d674950985282a6d8 done
+#9 naming to docker.io/library/cotcodec-vllm:e7909353-cu129-overlay done
+#9 DONE 1.5s

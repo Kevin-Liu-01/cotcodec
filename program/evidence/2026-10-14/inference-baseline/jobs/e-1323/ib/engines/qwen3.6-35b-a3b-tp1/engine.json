@@ -1,0 +1,81 @@
+{
+  "argv": [
+    "vllm",
+    "serve",
+    "/model-cache/cotcodec-models/qwen3.6-35b-a3b",
+    "--served-model-name",
+    "ib",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8000",
+    "--disable-uvicorn-access-log",
+    "--tensor-parallel-size",
+    "1",
+    "--dtype",
+    "bfloat16",
+    "--seed",
+    "42",
+    "--max-model-len",
+    "32768",
+    "--gpu-memory-utilization",
+    "0.9",
+    "--max-num-seqs",
+    "256",
+    "--max-num-batched-tokens",
+    "8192",
+    "--enable-prefix-caching",
+    "--kv-cache-dtype",
+    "auto",
+    "--generation-config",
+    "vllm",
+    "--load-format",
+    "auto",
+    "--limit-mm-per-prompt",
+    "{\"image\":0,\"video\":0}"
+  ],
+  "engine_id": "qwen3.6-35b-a3b-tp1",
+  "exit_code": 1,
+  "exit_code_at_ready": 1,
+  "final_metrics": null,
+  "gpu_memory_after_mib": [
+    469
+  ],
+  "gpu_memory_before_mib": [
+    469
+  ],
+  "gpu_memory_ready_mib": [
+    469
+  ],
+  "log_parse": {
+    "architecture": "Qwen3_5MoeForConditionalGeneration",
+    "attention_backends": [
+      "FLASH_ATTN"
+    ],
+    "cuda_graph_capture": [
+      {
+        "gib": 1.11,
+        "seconds": 19.0
+      }
+    ],
+    "kv_cache_gib_per_rank": [
+      3.65
+    ],
+    "kv_cache_tokens": 156079,
+    "max_concurrency_at_len": {
+      "len": 32768,
+      "x": 4.76
+    },
+    "torch_compile_s": 20.76,
+    "weights_gib_per_rank": [
+      64.69
+    ],
+    "weights_load_s": 22.263435
+  },
+  "ready": false,
+  "ready_s": 112.0,
+  "ready_t": 1792009414.8430414,
+  "start_t": 1792009302.81855,
+  "status": "failed-to-start",
+  "stop_t": 1792009414.8439543
+}

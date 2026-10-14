@@ -1,0 +1,155 @@
+== fetch-qwen3-32b at 2026-10-14T19:44:32Z
+-- squeue
+-- gpus
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- compute apps
+== overlay-build at 2026-10-14T19:44:55Z
+-- squeue
+1310 cotcodec-fetch-cpu RUNNING 0:23 N/A
+-- gpus
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- compute apps
+== job-a at 2026-10-14T19:48:46Z
+-- squeue
+1310 cotcodec-fetch-cpu RUNNING 4:14 N/A
+-- gpus
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- compute apps
+== job-b at 2026-10-14T19:51:15Z
+-- squeue
+1314 ib-v1-a RUNNING 2:29 gres:gpu:h100:1
+-- gpus
+0, 73853 MiB, 100 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- compute apps
+GPU-b23c3b4d-5413-4d75-cad3-74be85f8d058, 618995, 73844 MiB
+== job-c at 2026-10-14T19:51:17Z
+-- squeue
+1314 ib-v1-a RUNNING 2:31 gres:gpu:h100:1
+1320 ib-v1-b RUNNING 0:02 gres:gpu:h100:1
+-- gpus
+0, 73853 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- compute apps
+GPU-b23c3b4d-5413-4d75-cad3-74be85f8d058, 618995, 73844 MiB
+== job-d at 2026-10-14T19:51:20Z
+-- squeue
+1314 ib-v1-a RUNNING 2:34 gres:gpu:h100:1
+1320 ib-v1-b RUNNING 0:05 gres:gpu:h100:1
+1321 ib-v1-c RUNNING 0:01 gres:gpu:h100:2
+-- gpus
+0, 73853 MiB, 63 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- compute apps
+GPU-b23c3b4d-5413-4d75-cad3-74be85f8d058, 618995, 73844 MiB
+== job-e at 2026-10-14T19:51:22Z
+-- squeue
+1314 ib-v1-a RUNNING 2:36 gres:gpu:h100:1
+1320 ib-v1-b RUNNING 0:07 gres:gpu:h100:1
+1321 ib-v1-c RUNNING 0:03 gres:gpu:h100:2
+1322 ib-v1-d RUNNING 0:00 gres:gpu:h100:2
+-- gpus
+0, 73853 MiB, 100 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- compute apps
+GPU-b23c3b4d-5413-4d75-cad3-74be85f8d058, 618995, 73844 MiB
+== job-f at 2026-10-14T19:51:25Z
+-- squeue
+1323 ib-v1-e PENDING 0:00 gres:gpu:h100:1
+1314 ib-v1-a RUNNING 2:39 gres:gpu:h100:1
+1320 ib-v1-b RUNNING 0:10 gres:gpu:h100:1
+1321 ib-v1-c RUNNING 0:06 gres:gpu:h100:2
+1322 ib-v1-d RUNNING 0:03 gres:gpu:h100:2
+-- gpus
+0, 73853 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- compute apps
+GPU-b23c3b4d-5413-4d75-cad3-74be85f8d058, 618995, 73844 MiB
+== overlay-build-2 at 2026-10-14T20:31:43Z
+-- squeue
+-- gpus
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- compute apps
+== job-g at 2026-10-14T20:33:21Z
+-- squeue
+-- gpus
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- compute apps
+== job-h at 2026-10-14T20:33:23Z
+-- squeue
+1329 ib-v1-g RUNNING 0:01 gres:gpu:h100:4
+-- gpus
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- compute apps

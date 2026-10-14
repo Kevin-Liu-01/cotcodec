@@ -53,6 +53,9 @@ def load_nvml(path: Path) -> dict[int, list[dict[str, float]]]:
             ):  # fmt: skip
                 with contextlib.suppress(KeyError, ValueError):
                     sample[key] = float(row[key])
+            with contextlib.suppress(KeyError, ValueError, TypeError):
+                # NVML clocks-event reasons: 0x4 is the software power cap.
+                sample["power_capped"] = float(bool(int(row["throttle_reasons"], 16) & 0x4))
             series.setdefault(gpu, []).append(sample)
     return series
 
@@ -62,6 +65,7 @@ def window_stats(series: dict[int, list[dict[str, float]]], start: float, end: f
     if not series or end <= start:
         return out
     peak_mem, powers, energy, sm, util_gpu, util_mem, mem_clock = [], [], 0.0, [], [], [], []
+    capped: list[float] = []
     for samples in series.values():
         times = [s["t"] for s in samples]
         lo, hi = bisect_left(times, start), bisect_left(times, end)
@@ -78,6 +82,7 @@ def window_stats(series: dict[int, list[dict[str, float]]], start: float, end: f
         )
         util_gpu.append(statistics.fmean(s["util_gpu_pct"] for s in window if "util_gpu_pct" in s))
         util_mem.append(statistics.fmean(s["util_mem_pct"] for s in window if "util_mem_pct" in s))
+        capped += [s["power_capped"] for s in window if "power_capped" in s]
     if not peak_mem:
         return out
     out["peak_hbm_used_gib_max_gpu"] = round(max(peak_mem) / 1024, 2)
@@ -87,6 +92,8 @@ def window_stats(series: dict[int, list[dict[str, float]]], start: float, end: f
     out["mean_mem_clock_mhz"] = round(statistics.fmean(mem_clock), 0)
     out["mean_util_gpu_pct"] = round(statistics.fmean(util_gpu), 1)
     out["mean_util_mem_pct"] = round(statistics.fmean(util_mem), 1)
+    if capped:
+        out["power_capped_frac"] = round(statistics.fmean(capped), 3)
     return out
 
 
@@ -314,6 +321,7 @@ def aggregate(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "peak_kv_cache_usage_perc", "peak_num_requests_running",
             "delta_num_preemptions_total", "prefix_cache_hit_rate", "peak_hbm_used_gib_max_gpu",
             "mean_power_w_per_gpu", "joules_per_output_token", "mean_sm_clock_mhz",
+            "power_capped_frac",
             "est_hbm_tb_s_per_gpu", "est_frac_of_3_35_tb_s", "est_bytes_per_step_gb",
             "est_kv_gb", "est_state_gb", "est_weight_gb",
         ):  # fmt: skip
@@ -483,6 +491,8 @@ def markdown(cells: list[dict], engines: list[dict], offline: list[dict], serve:
                         c.get("delta_num_preemptions_total"),
                         pct(c.get("est_frac_of_3_35_tb_s")),
                         c.get("mean_power_w_per_gpu"),
+                        c.get("mean_sm_clock_mhz"),
+                        pct(c.get("power_capped_frac")),
                         c.get("joules_per_output_token"),
                     ]
                 )
@@ -503,11 +513,69 @@ def markdown(cells: list[dict], engines: list[dict], offline: list[dict], serve:
                 "preempt",
                 "est % BW",
                 "W/GPU",
+                "SM MHz",
+                "power-capped",
                 "J/out tok",
             ],
             rows,
         )
     )
+
+    out.append("\n### Qwen3-32B across tensor parallelism (same cells; mean of repeats)\n")
+    tp_engines = ["qwen3-32b-tp1", "qwen3-32b-tp1-kvfp8", "qwen3-32b-tp2", "qwen3-32b-tp4",
+                  "qwen3-32b-tp4-rerun"]  # fmt: skip
+    rows = []
+    for cid in ("chat-c1", "chat-c8", "chat-c32", "chat-c128", "in8k-c1", "in8k-c8", "in8k-c128",
+                "in32k-c1", "in32k-c32", "longout-c1", "longout-c8", "longout-c128"):  # fmt: skip
+        for eid in tp_engines:
+            c = by.get((eid, cid))
+            if c:
+                gpus = int(c["tp"])
+                rows.append([cid, eid, gpus, c.get("output_throughput"),
+                             c["output_throughput"] / gpus if c.get("output_throughput") else None,
+                             c.get("median_ttft_ms"), c.get("median_tpot_ms"),
+                             pct(c.get("peak_kv_cache_usage_perc")),
+                             c.get("delta_num_preemptions_total"),
+                             c.get("joules_per_output_token"), c.get("repeats")])  # fmt: skip
+    out.append(
+        md_table(
+            [
+                "cell",
+                "engine",
+                "GPUs",
+                "out tok/s",
+                "out tok/s per GPU",
+                "TTFT p50 ms",
+                "TPOT p50 ms",
+                "peak KV",
+                "preempt",
+                "J/out tok",
+                "repeats",
+            ],
+            rows,
+        )
+    )
+
+    out.append("\n### FP8 KV cache against BF16 KV cache (same model, same cells)\n")
+    rows = []
+    for base, fp8 in (("qwen3.5-9b-tp1", "qwen3.5-9b-tp1-kvfp8"),
+                      ("qwen3-32b-tp1", "qwen3-32b-tp1-kvfp8")):  # fmt: skip
+        for (eid, cid), c in sorted(by.items()):
+            if eid != fp8:
+                continue
+            b = by.get((base, cid))
+            ratio = (c["output_throughput"] / b["output_throughput"]
+                     if b and b.get("output_throughput") else None)  # fmt: skip
+            rows.append([cid, base, b.get("output_throughput") if b else None,
+                         b.get("median_tpot_ms") if b else None,
+                         pct(b.get("peak_kv_cache_usage_perc")) if b else "-",
+                         b.get("delta_num_preemptions_total") if b else None,
+                         c.get("output_throughput"), c.get("median_tpot_ms"),
+                         pct(c.get("peak_kv_cache_usage_perc")),
+                         c.get("delta_num_preemptions_total"), ratio])  # fmt: skip
+    out.append(md_table(["cell", "model", "BF16 out tok/s", "BF16 TPOT ms", "BF16 peak KV",
+                         "BF16 preempt", "FP8 out tok/s", "FP8 TPOT ms", "FP8 peak KV",
+                         "FP8 preempt", "FP8/BF16 tok/s"], rows))  # fmt: skip
 
     out.append("\n### Prefix caching on and off (shared 4,096-token prefixes; mean of repeats)\n")
     rows = []
@@ -589,6 +657,53 @@ def markdown(cells: list[dict], engines: list[dict], offline: list[dict], serve:
             rows,
         )
     )
+
+    home = ["qwen3-0.6b-tp1", "qwen3-1.7b-tp1", "qwen3.5-4b-tp1", "qwen3.5-9b-tp1",
+            "qwen3.6-35b-a3b-tp1-seqs128", "qwen3.6-35b-a3b-tp2", "qwen3-32b-tp1",
+            "qwen3-32b-tp2", "qwen3-32b-tp4"]  # fmt: skip
+    out.append("\n### Pivot: long output (512 in, 4,096 out) by concurrency\n")
+    rows = []
+    for eid in home:
+        cs = {k: by.get((eid, f"longout-c{k}")) for k in (1, 8, 32, 128)}
+        if not any(cs.values()):
+            continue
+
+        def get(k: int, key: str, cs: dict = cs) -> Any:
+            return cs[k].get(key) if cs[k] else None
+
+        top = cs[128]
+        rows.append(
+            [eid]
+            + [get(k, "output_throughput") for k in (1, 8, 32, 128)]
+            + [get(k, "median_tpot_ms") for k in (1, 128)]
+            + [pct(top.get("peak_kv_cache_usage_perc")) if top else "-"]
+            + [get(128, "delta_num_preemptions_total")]
+            + [get(k, "joules_per_output_token") for k in (1, 128)]
+        )
+    out.append(md_table(["engine", "tok/s c1", "tok/s c8", "tok/s c32", "tok/s c128", "TPOT c1 ms",
+                         "TPOT c128 ms", "peak KV c128", "preempt c128", "J/tok c1",
+                         "J/tok c128"], rows))  # fmt: skip
+    out.append("\n### Pivot: 8k-token prompts (8,192 in, 256 out) by concurrency\n")
+    rows = []
+    for eid in home:
+        cs = {k: by.get((eid, f"in8k-c{k}")) for k in (1, 8, 32, 128)}
+        if not any(cs.values()):
+            continue
+        peaks = [float(c.get("peak_kv_cache_usage_perc") or 0) for c in cs.values() if c]
+
+        def get8(k: int, key: str, cs: dict = cs) -> Any:
+            return cs[k].get(key) if cs[k] else None
+
+        rows.append(
+            [eid]
+            + [get8(k, "median_ttft_ms") for k in (1, 8, 32, 128)]
+            + [get8(k, "total_token_throughput") for k in (1, 128)]
+            + [get8(k, "median_tpot_ms") for k in (1, 32)]
+            + [pct(max(peaks)) if peaks else "-"]
+        )
+    out.append(md_table(["engine", "TTFT c1 ms", "TTFT c8 ms", "TTFT c32 ms", "TTFT c128 ms",
+                         "total tok/s c1", "total tok/s c128", "TPOT c1 ms", "TPOT c32 ms",
+                         "max peak KV"], rows))  # fmt: skip
 
     spreads = [
         c[k] for c in cells for k in ("output_throughput_rel_range",) if c.get(k) is not None

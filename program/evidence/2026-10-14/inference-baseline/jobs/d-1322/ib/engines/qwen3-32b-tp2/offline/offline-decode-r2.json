@@ -1,0 +1,21 @@
+{
+  "cell_id": "offline-decode",
+  "elapsed_s": 40.78751051612198,
+  "end_t": 1792009542.72284,
+  "engine_id": "qwen3-32b-tp2",
+  "input_len": 512,
+  "model": "qwen3-32b",
+  "num_prompts": 64,
+  "output_len": 2048,
+  "output_tokens_per_s": 3213.5327295396337,
+  "repeat": 2,
+  "requests_per_s": 1.5691077780955243,
+  "sampling": "vllm bench throughput default: temperature 1.0, top_p 1.0, ignore_eos",
+  "shape": "decode",
+  "start_t": 1792009501.9304235,
+  "tool": "vllm.benchmarks.throughput._run_vllm_requests (vLLM 0.31.0)",
+  "total_output_tokens": 131072,
+  "total_prompt_tokens": 32768,
+  "total_tokens_per_s": 4016.9159119245423,
+  "tp": 2
+}
