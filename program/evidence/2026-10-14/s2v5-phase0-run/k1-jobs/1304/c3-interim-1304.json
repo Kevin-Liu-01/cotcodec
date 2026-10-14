@@ -1,0 +1,274 @@
+[
+ {
+  "dir": "00-s2v5-k1-a-c3-l0-fixed-m11-unknown-key-dropped-42",
+  "layer": "L0-fixed",
+  "mutant": "M11-unknown-key-dropped",
+  "trials": 100,
+  "failed_cells": [
+   "caps_lock_roundtrip",
+   "chord_super_d",
+   "key_kp_add",
+   "key_kp_enter",
+   "key_menu"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "01-s2v5-k1-a-c3-h-ga-m12-triple-to-double-42",
+  "layer": "H-GA",
+  "mutant": "M12-triple-to-double",
+  "trials": 93,
+  "failed_cells": [
+   "R02",
+   "R04",
+   "R06",
+   "R08",
+   "R10",
+   "click_triple_left"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "02-s2v5-k1-a-c3-h-osw-fixed-m12-triple-to-double-42",
+  "layer": "H-OSW-fixed",
+  "mutant": "M12-triple-to-double",
+  "trials": 99,
+  "failed_cells": [
+   "R03",
+   "R09"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "03-s2v5-k1-a-c3-l0-fixed-m12-triple-to-double-42",
+  "layer": "L0-fixed",
+  "mutant": "M12-triple-to-double",
+  "trials": 100,
+  "failed_cells": [
+   "click_triple_left"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "04-s2v5-k1-a-c3-h-osw-fixed-m13-hscroll-to-vscroll-42",
+  "layer": "H-OSW-fixed",
+  "mutant": "M13-hscroll-to-vscroll",
+  "trials": 99,
+  "failed_cells": [
+   "R03",
+   "R09"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "05-s2v5-k1-a-c3-l0-fixed-m13-hscroll-to-vscroll-42",
+  "layer": "L0-fixed",
+  "mutant": "M13-hscroll-to-vscroll",
+  "trials": 100,
+  "failed_cells": [
+   "scroll_diagonal",
+   "scroll_left_3",
+   "scroll_right_3"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "06-s2v5-k1-a-c3-l0-fixed-m14-chord-release-order-42",
+  "layer": "L0-fixed",
+  "mutant": "M14-chord-release-order",
+  "trials": 100,
+  "failed_cells": [
+   "chord_alt_f4",
+   "chord_alt_tab",
+   "chord_ctrl_a",
+   "chord_ctrl_alt_shift_r",
+   "chord_ctrl_c",
+   "chord_ctrl_home",
+   "chord_ctrl_shift_arrow",
+   "chord_ctrl_shift_t",
+   "chord_shift_arrow_left",
+   "chord_shift_tab",
+   "chord_super_d",
+   "click_ctrl_shift_right"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "07-s2v5-k1-a-c3-l0-fixed-m15-duplicate-click-42",
+  "layer": "L0-fixed",
+  "mutant": "M15-duplicate-click",
+  "trials": 100,
+  "failed_cells": [
+   "click_alt_left",
+   "click_burst_5",
+   "click_button_back",
+   "click_button_forward",
+   "click_corner_bottomright",
+   "click_corner_topleft",
+   "click_ctrl_left",
+   "click_ctrl_shift_right",
+   "click_double_slow",
+   "click_left_center",
+   "click_middle",
+   "click_right",
+   "click_shift_left",
+   "click_then_type",
+   "click_two_positions_ordered",
+   "mixed_gesture_state",
+   "seq_drag_then_click",
+   "seq_long_mixed"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "08-s2v5-k1-a-c3-l0-fixed-m16-double-click-interval-600ms-42",
+  "layer": "L0-fixed",
+  "mutant": "M16-double-click-interval-600ms",
+  "trials": 100,
+  "failed_cells": [
+   "click_double_left",
+   "click_triple_left"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "09-s2v5-k1-a-c3-l0-fixed-m17-drag-teleport-42",
+  "layer": "L0-fixed",
+  "mutant": "M17-drag-teleport",
+  "trials": 100,
+  "failed_cells": [
+   "drag_alt_held",
+   "drag_ctrl_held",
+   "drag_long_diagonal",
+   "drag_middle_button",
+   "drag_multipoint_l_shape",
+   "drag_right_button",
+   "drag_shift_held",
+   "drag_short",
+   "drag_slow_small",
+   "drag_to_corner",
+   "drag_vertical",
+   "seq_drag_then_click"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "10-s2v5-k1-a-c3-h-ga-m18-first-tool-call-only-42",
+  "layer": "H-GA",
+  "mutant": "M18-first-tool-call-only",
+  "trials": 93,
+  "failed_cells": [
+   "R02",
+   "R04",
+   "R05",
+   "R06",
+   "R07",
+   "R10"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "11-s2v5-k1-a-c3-h-osw-fixed-m18-first-tool-call-only-42",
+  "layer": "H-OSW-fixed",
+  "mutant": "M18-first-tool-call-only",
+  "trials": 99,
+  "failed_cells": [
+   "R03",
+   "R05",
+   "R06",
+   "R07",
+   "R09"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "12-s2v5-k1-a-c3-h-ga-m19-last-tool-call-only-42",
+  "layer": "H-GA",
+  "mutant": "M19-last-tool-call-only",
+  "trials": 93,
+  "failed_cells": [
+   "R02",
+   "R04",
+   "R05",
+   "R06",
+   "R07",
+   "R10"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "13-s2v5-k1-a-c3-h-osw-fixed-m19-last-tool-call-only-42",
+  "layer": "H-OSW-fixed",
+  "mutant": "M19-last-tool-call-only",
+  "trials": 99,
+  "failed_cells": [
+   "R03",
+   "R05",
+   "R06",
+   "R07",
+   "R09"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "14-s2v5-k1-a-c3-h-ga-m20-terminate-failure-to-done-42",
+  "layer": "H-GA",
+  "mutant": "M20-terminate-failure-to-done",
+  "trials": 93,
+  "failed_cells": [
+   "R02",
+   "R04",
+   "R06",
+   "R10",
+   "R11"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "15-s2v5-k1-a-c3-h-osw-fixed-m20-terminate-failure-to-done-42",
+  "layer": "H-OSW-fixed",
+  "mutant": "M20-terminate-failure-to-done",
+  "trials": 99,
+  "failed_cells": [
+   "R03",
+   "R09",
+   "R11"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ },
+ {
+  "dir": "16-s2v5-k1-a-c3-l0-fixed-m21-hold-not-released-42",
+  "layer": "L0-fixed",
+  "mutant": "M21-hold-not-released",
+  "trials": 100,
+  "failed_cells": [
+   "click_alt_left",
+   "click_ctrl_left",
+   "click_ctrl_shift_right",
+   "click_shift_left",
+   "drag_alt_held",
+   "drag_ctrl_held",
+   "drag_shift_held",
+   "scroll_ctrl_down_3",
+   "scroll_shift_down_3"
+  ],
+  "infra_cells": [],
+  "counting_problems": []
+ }
+]

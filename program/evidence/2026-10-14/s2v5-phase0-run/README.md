@@ -132,6 +132,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1301 | K1 C1 on A (H-GA-buggy, H-OSW-up; seed 42) | 154 | 11:55:21 | 11:55:21-12:01:48 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count |
 | 1302 | K1 C2 on A (L0-raw, seed 45) | 362 | 12:02:39 | 12:02:39-12:12:50 (10.2 min) | COMPLETED 0:0 | C2 pass; the campaign counts |
 | 1303 | K1 C3 on A, part 1 of 3 (17 mutant campaigns, M01-M11; seed 42) | 1,404 | 12:13:43 | 12:13:43-13:10:16 (56.6 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell; C3 is read once part 3 (the references) has run |
+| 1304 | K1 C3 on A, part 2 of 3 (17 mutant campaigns, M11-M21) | 1,404 | 13:11:18 | 13:11:19-14:07:52 (56.6 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -243,6 +244,11 @@ and the last `scontrol` record):
   the job-alone verdict cannot read C3 (no reference yet). Interim summary
   (`c3-interim-1303.json`): every mutant run failed at least one cell (1 to 45 cells), none with
   an infrastructure failure.
+- **1304 (C3, A, part 2).** Host snapshot: load 0.40, queue empty, 0 labelled containers. 17
+  campaigns (M11 on L0-fixed to M21), 1,667 trials; every campaign counts; cold boots at most
+  17.9 s; step p95 at most 1.40 s. As for part 1, the job-alone verdict cannot read C3. Interim
+  summary (`c3-interim-1304.json`): every mutant run failed at least one cell (1 to 18 cells), none
+  with an infrastructure failure.
 
 ## Stint 1 stop (operator's record, 10:44Z on 2026-10-14)
 

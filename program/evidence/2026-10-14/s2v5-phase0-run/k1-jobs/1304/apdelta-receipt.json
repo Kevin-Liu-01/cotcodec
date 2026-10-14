@@ -1,0 +1,169 @@
+{
+ "campaigns": [
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m11-unknown-key-dropped-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "00-s2v5-k1-a-c3-l0-fixed-m11-unknown-key-dropped-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-ga-m12-triple-to-double-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "01-s2v5-k1-a-c3-h-ga-m12-triple-to-double-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m12-triple-to-double-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "02-s2v5-k1-a-c3-h-osw-fixed-m12-triple-to-double-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m12-triple-to-double-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "03-s2v5-k1-a-c3-l0-fixed-m12-triple-to-double-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m13-hscroll-to-vscroll-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "04-s2v5-k1-a-c3-h-osw-fixed-m13-hscroll-to-vscroll-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m13-hscroll-to-vscroll-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "05-s2v5-k1-a-c3-l0-fixed-m13-hscroll-to-vscroll-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m14-chord-release-order-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "06-s2v5-k1-a-c3-l0-fixed-m14-chord-release-order-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m15-duplicate-click-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "07-s2v5-k1-a-c3-l0-fixed-m15-duplicate-click-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m16-double-click-interval-600ms-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "08-s2v5-k1-a-c3-l0-fixed-m16-double-click-interval-600ms-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m17-drag-teleport-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "09-s2v5-k1-a-c3-l0-fixed-m17-drag-teleport-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-ga-m18-first-tool-call-only-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "10-s2v5-k1-a-c3-h-ga-m18-first-tool-call-only-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m18-first-tool-call-only-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "11-s2v5-k1-a-c3-h-osw-fixed-m18-first-tool-call-only-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-ga-m19-last-tool-call-only-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "12-s2v5-k1-a-c3-h-ga-m19-last-tool-call-only-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m19-last-tool-call-only-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "13-s2v5-k1-a-c3-h-osw-fixed-m19-last-tool-call-only-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-ga-m20-terminate-failure-to-done-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "14-s2v5-k1-a-c3-h-ga-m20-terminate-failure-to-done-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-h-osw-fixed-m20-terminate-failure-to-done-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "15-s2v5-k1-a-c3-h-osw-fixed-m20-terminate-failure-to-done-42",
+   "driver_exit": 0
+  },
+  {
+   "campaign_id": "s2v5-k1-a-c3-l0-fixed-m21-hold-not-released-42",
+   "cells": [
+    "A"
+   ],
+   "cells_file": null,
+   "dir": "16-s2v5-k1-a-c3-l0-fixed-m21-hold-not-released-42",
+   "driver_exit": 0
+  }
+ ],
+ "check": "C3",
+ "executor_commit": "7c963f51ad5a634c74c7ac2dff43f75a502656de",
+ "experiment_id": "s2-arabic-cua-locale-v5",
+ "job_id": "1304",
+ "part": {
+  "index": 2,
+  "of": 3
+ },
+ "purpose": "k1",
+ "schema": "s2v5-apdelta-receipt-v1",
+ "t_end": 1791986872.4089735,
+ "t_start": 1791983479.6786602
+}
