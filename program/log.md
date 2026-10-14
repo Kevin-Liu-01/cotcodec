@@ -5439,3 +5439,14 @@ they say so.)
   verifier's record is committed.
 - Evidence: `program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md` and
   `analysis/`.
+
+## 2026-10-14 — Public history rewritten (D99)
+
+- Public history rewritten (D99). The host address, the internal inventory and the early
+  `gate_b.py` are gone from every public ref. Commit ids from 2026-08-17 on changed; see
+  `program/history-rewrite-2026-10-14/`. No result, ledger row or evidence file changed.
+- Counts: 929 of 944 commits rewritten; 874 old ids rebuilt exactly by
+  `scripts/verify_history_map.py`; 55 tree-changed (44 address or inventory, 11 early
+  `gate_b.py`); `main`'s tree unchanged; all 21 ledger rows map as the plan predicted.
+- The early `gate_b.py` was in public history from 2026-10-07 (D95) until this rewrite; GitHub
+  may serve cached views of old commits until Support removes them.
