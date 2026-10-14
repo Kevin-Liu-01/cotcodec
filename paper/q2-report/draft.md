@@ -1,6 +1,6 @@
 # What an open computer-use benchmark comparison measures: a certified action path, a rerun noise floor and candidate checker defects on OSWorld
 
-Technical report, draft of 2026-10-12 (revision 5). CoTCodec research program, question Q2, "a
+Technical report, draft of 2026-10-14 (revision 6). CoTCodec research program, question Q2, "a
 calibrated computer-use instrument" (`program/questions/q2-calibrated-cua-instrument.md`).
 Program owner and author of record: Kevin Liu. The section "Authorship and process" says which
 steps AI agents carried out and what a human has and has not reviewed.
@@ -24,7 +24,12 @@ study of the checkers (the dossier's item R04). Its evidence ([NUI], [NUI-REG], 
 [LEDGER row 18], and the paths it adds in sections 10.1 and 10.3: the study's score rows, its
 code `harness/r04_nuisance/` and `infra/r04-nuisance/`, and the tests
 `tests/test_r04_nuisance.py` and `tests/test_r04_evidence.py`) resolves at `9d320c6e` on `main`,
-the base of the revision's branch `stage0/r04-text`.
+the base of the revision's branch `stage0/r04-text`. Revision 6 adds the result of the harness
+study's registered successor E. Its evidence ([E], [E-AN], [E-REG], [DEC D85, D96, D97],
+[LEDGER row 19], and the paths it adds in sections 9.4, 10.1 and 10.3: E's merged records,
+report, joint reading and plan, its code `harness/q2_stage1e/` and tests, and
+`ops/q2e-analysis/`) resolves at `4ca30d03` on `main`, the base of the revision's branch
+`stage0/q2-report-r6`.
 
 > **Status: DRAFT. Not published, not for circulation.**
 >
@@ -32,8 +37,8 @@ the base of the revision's branch `stage0/r04-text`.
 > - Section 6 reports candidate OSWorld checker defects that have not been disclosed to the
 >   OSWorld maintainers. Whether and how to disclose them is the owner's decision, and it must be
 >   settled before any publication.
-> - Every number from the harness study (section 4) carries the label **not externally
->   anchored**.
+> - Every number from the harness study and its successor E (section 4) carries the label **not
+>   externally anchored**.
 > - Every checker-study number (section 6) carries the analysis label **VM fidelity checked
 >   (K2)**: a registered rerun inside real VMs agreed with the offline verdicts. K2 checked a
 >   registered sample of 80 scoring jobs (78 compared) plus the 41 candidate events, not all
@@ -50,16 +55,16 @@ the base of the revision's branch `stage0/r04-text`.
 ## Summary
 
 Comparisons of computer-use agents on OSWorld are read as differences between agents. A measured
-difference also passes through three other parts of the measurement pipeline: the **action
-path** that turns a model's tool call into keyboard and mouse input; **run-to-run variation**,
-both between reruns of one episode and between serving sessions; and the benchmark's own
-**file-state checkers**. On one 8 x H100 host we measured each part, using two open-weight
-agents, Qwen3.5-4B and Qwen3.5-9B. The checker audit's two raters were Claude (Anthropic,
-`claude-opus-5-5`) and the open-weight Qwen3.6-35B-A3B. The action-path certification and the
-harness study ran under frozen preregistrations. The checker study is reported descriptively,
-because its rater-agreement gate failed, and the design study is model-based and was never
-registered. We also audited one public pair of leaderboard runs, under its own preregistration. Each item names the section it
-summarises and its main evidence keys.
+difference also passes through three other parts of the measurement pipeline: the **action path**
+that turns a model's tool call into keyboard and mouse input; **run-to-run variation**, both between
+reruns of one episode and between serving sessions; and the benchmark's own **file-state checkers**.
+On one 8 x H100 host we measured each part, using two open-weight agents, Qwen3.5-4B and Qwen3.5-9B.
+The checker audit's two raters were Claude (Anthropic, `claude-opus-5-5`) and the open-weight
+Qwen3.6-35B-A3B. The action-path certification, the harness study and its successor ran under frozen
+preregistrations. The checker study is reported descriptively, because its rater-agreement gate
+failed, and the design study is model-based and was never registered. We also audited one public
+pair of leaderboard runs, under its own preregistration. Each item names the section it summarises
+and its main evidence keys.
 
 1. **The action path can be certified; the first certification failed on its own measuring
    device** (section 2). Version 1 of a preregistered suite was invalidated when its key-event
@@ -74,26 +79,38 @@ summarises and its main evidence keys.
    over the catalog's actions as the plan weights them, at no more than 32 concurrent VMs on
    this host. The harness adapters' reply parsing has only 10 repetitions per tested case and 60
    per stress entry [AP2-VB].
-2. **No harness difference was detected, and none was ruled out** (section 4). For the two
-   realized serving sessions per size, on 32 primary tasks with 15-step episodes, the two
-   harness adapters differed by −3.1 pp in task success (H-GA minus H-OSW-fixed; 90% interval
-   −8.9 to +2.7 pp; 512 primary episodes, 1,808 with the registered 113-task secondary set; no
-   episode lost to infrastructure) [S1A]. A difference as large as the registered ±7.5 pp
-   margin is not excluded, so the registered classification is Inconclusive. Rerunning the same
-   episode changed its outcome in 11.3% of rerun pairs across sessions and 12.5% within a
-   session. The registered prediction that cross-session pairs disagree more than within-session
-   pairs is falsified (one-sided upper bound of the excess 0.78 pp). Yet 9B's success rose by
-   5.5 pp between its two sessions (p = 0.016; one of two per-size tests; no rule reads it; these
-   two sessions only). The harness's share of within-task outcome variance was 0.055 (one-sided
-   95% bounds 0 to 0.26). The registered rule for admitting a larger scale study needed both
-   bounds on one side of 0.13, so it was inconclusive and that study did not run.
+2. **The two certified harnesses differ in task success by at most about 2.4 points either way (90%
+   interval), for these two models in this configuration** (section 4). In the harness study S1a,
+   for two serving sessions per size on 32 primary tasks with 15-step episodes, the two harness
+   adapters differed by −3.1 pp in task success (H-GA minus H-OSW-fixed; 90% interval −8.9 to +2.7
+   pp; 512 primary episodes, 1,808 with the registered 113-task secondary set; no episode lost to
+   infrastructure) [S1A]. A difference as large as the registered ±7.5 pp margin was not excluded,
+   so the registered classification was Inconclusive. Its registered successor E ran the same design
+   on all 113 eligible tasks in four new sessions per size, one episode each (1,808 episodes, none
+   lost) [E]. There each harness succeeded in 263 of 904 episodes: δ = 0.00 pp, 90% interval −2.44
+   to +2.44 pp. Neither registered test rejects, which does not exclude an effect. The interval lies
+   within ±7.5 pp, and the harness share's one-sided 95% upper bound, 0.1187, is below the
+   registered 0.12 by about the bootstrap's Monte Carlo error, so the registered rule classifies the
+   pair **Near-equivalent**: a bounded-difference class, not a claim of no difference. Rerunning the
+   same episode changed its outcome in 11.3% of rerun pairs across sessions and 12.5% within a
+   session in S1a, and in 10.7% (8.0-13.5%) across E's sessions. S1a's registered prediction that
+   cross-session pairs disagree more than within-session pairs is falsified (one-sided upper bound
+   of the excess 0.78 pp). Yet 9B's success rose by 5.5 pp between S1a's two sessions (p = 0.016;
+   one of two per-size tests; no rule reads it; these two sessions only). The harness's share of
+   within-task outcome variance was 0.055 in both studies, with one-sided 95% bounds 0 to 0.26 in
+   S1a and 0.010 to 0.119 in E. The registered rule for admitting a larger scale study needs both
+   bounds on one side of 0.13: it was inconclusive in S1a and reads NO-GO in E, so that study stays
+   closed. That rule reads the mean of the two sizes' shares; 9B's alone is not shown below 0.13
+   (upper bound 0.177). These readings are not externally anchored, and they hold for two model
+   sizes, two certified harnesses and S1a's configuration.
 3. **(Model-based, not registered.) More tasks would have helped more than more sessions, and
    more sessions more than more reruns** (section 5). A CPU-only design study fitted a model to
    these records. In that model, at S1a's estimates, the probability of admitting the scale
    study is at most 0.03 for each of the 11 designs examined within 8 GPU-hours. Adding tasks
    raised the probability of a decisive harness verdict more than adding sessions, which raised
    it more than adding reruns. The calibrations were chosen after S1a's readings and are not
-   externally anchored [DS2].
+   externally anchored [DS2]. Design E, the successor taken forward from it, then ran (item 2)
+   and read Near-equivalent, the less likely of the two decisive outcomes in the study's model.
 4. **Candidate checker defects** (section 6). The audit is descriptive: its two model raters
    agreed at Cohen's κ = 0.343 against the registered 0.6 [MUT]. OSWorld's `compare_pptx_files`
    failed 35 of 39 edits that only swap the stacking order of two shapes that do not overlap,
@@ -129,24 +146,27 @@ summarises and its main evidence keys.
 
 ## Contributions
 
-The report contributes reusable artifacts and measured magnitudes for one stack. The artifacts
-are: an action-path certification suite with its acceptance procedure (a 100-entry catalog, 14
-regression cells, four validity controls, seven criteria and independent re-verification); a
-two-session, two-rerun noise-floor protocol with registered estimators and analysis code; a
-checker-mutation harness with blind requirement specs and a model-rater audit protocol; and a
-corrected comparator, `compare_pptx_files_zinv`, that ignores stacking-order swaps of shapes that
-cannot overlap and passed a small held-out test (section 6.2). The magnitudes, on this host with
-these agents, are these. The executor path costs at most about 1.5 pp per 20-action episode.
-About 11-13% of rerun pairs disagree. In the model-based split under the calibrations that
-pass the design study's check, task sampling explains about 70-75% of outcome variance, reruns
-about 21-27%, and harness-by-task at most about 4%. One checker family fails about 90% of
-equivalent shape reorders, and two LibreOffice builds newer than the image's flip about a fifth
-of the 92 reference golds' verdicts. A public same-agent rerun pair differs by 4.4 points, more
-than rerun noise predicts. Section 7 turns these into practices for anyone running an OSWorld
-comparison. Against the closest prior (cua-speedrun; section 1), the between-session floor
-with a registered within-against-between contrast, the task-by-harness share and the checker
-audit on the same certified stack are new as far as we know. The harness study's blind
-closest-prior check did not run, so this is not a verified novelty claim
+The report contributes reusable artifacts and measured magnitudes for one stack. The artifacts are:
+an action-path certification suite with its acceptance procedure (a 100-entry catalog, 14 regression
+cells, four validity controls, seven criteria and independent re-verification); a two-session,
+two-rerun noise-floor protocol with registered estimators and analysis code, and a four-session,
+one-episode successor design that reuses them; a checker-mutation harness with blind requirement
+specs and a model-rater audit protocol; and a corrected comparator, `compare_pptx_files_zinv`, that
+ignores stacking-order swaps of shapes that cannot overlap and passed a small held-out test (section
+6.2). The magnitudes, on this host with these agents, are these. The executor path costs at most
+about 1.5 pp per 20-action episode. About 11-13% of rerun pairs disagree (10.7% across the
+successor's sessions). Swapping the two certified harnesses changes task success by at most about
+2.4 pp either way (90% interval, 113 tasks, four sessions per size), a registered Near-equivalent
+reading that bounds the difference and does not show that it is zero. In the model-based split under
+the calibrations that pass the design study's check, task sampling explains about 70-75% of outcome
+variance, reruns about 21-27%, and harness-by-task at most about 4%. One checker family fails about
+90% of equivalent shape reorders, and two LibreOffice builds newer than the image's flip about a
+fifth of the 92 reference golds' verdicts. A public same-agent rerun pair differs by 4.4 points,
+more than rerun noise predicts. Section 7 turns these into practices for anyone running an OSWorld
+comparison. Against the closest prior (cua-speedrun; section 1), the between-session floor with a
+registered within-against-between contrast, the task-by-harness share and the checker audit on the
+same certified stack are new as far as we know. The harness study's blind closest-prior check did
+not run, so this is not a verified novelty claim
 (`program/proposals/2026-10-08-q2-stage1-rescoped.md`, wave 0). For the checker audit, the
 registered prior-art check K8 ran on 2026-10-11, after the checker-mutation note's first draft
 rather than before drafting as registered, and found no mutation audit of desktop computer-use
@@ -155,15 +175,18 @@ checkers [R03, section 6; DEC D83].
 ## Authorship and process
 
 The research program runs autonomously. AI agents (Claude, through Claude Code) wrote the
-preregistrations, built the harnesses, submitted and monitored the host jobs, ran the analyses,
-took the program decisions recorded in `program/decisions.md` on the owner's behalf, and drafted
-this report. Fresh agent sessions with no part in a run re-verified the action path (two
-verifiers, one per stage) [AP2-VA, AP2-VB] and the harness study (a recompute and a claims
-check) [S1A, disclosure 5]. The design study was attacked by an adversarial review [DS2]. The
-checker study's registered analysis was run by its operator from a fresh export of the frozen
-code [MUT]. A fresh verifier reproduced its rerun with the VM fidelity report [DEC D79], and two
-fresh verifiers reproduced the adjudication's isolation audit and, byte for byte from the frozen
-code, every audit summary and analysis of its record, its sensitivities and its controls [DEC
+preregistrations, built the harnesses, submitted and monitored the host jobs, ran the analyses, took
+the program decisions recorded in `program/decisions.md` on the owner's behalf, and drafted this
+report. Fresh agent sessions with no part in a run re-verified the action path (two verifiers, one
+per stage) [AP2-VA, AP2-VB] and the harness study (a recompute and a claims check) [S1A, disclosure
+5]. For successor E, a fresh verifier reran the frozen analysis code, which reproduced every
+registered output byte for byte, and reimplemented the analysis without the harness code; a second
+verifier checked the results file against the registration. Both ran after that file was first
+written, a disclosed deviation [E, deviation 1]. The design study was attacked by an adversarial
+review [DS2]. The checker study's registered analysis was run by its operator from a fresh export of
+the frozen code [MUT]. A fresh verifier reproduced its rerun with the VM fidelity report [DEC D79],
+and two fresh verifiers reproduced the adjudication's isolation audit and, byte for byte from the
+frozen code, every audit summary and analysis of its record, its sensitivities and its controls [DEC
 D82].
 One of the checker audit's two raters was Claude, run as one isolated agent per item [DEC D25].
 The checker study's adjudication pool and spot check were answered by isolated agents of the
@@ -196,8 +219,9 @@ pool or the spot check, and no human has re-run any analysis.
 | *development evidence* | from development runs before a freeze; never acceptance evidence |
 
 **Scope of the harness-study numbers.** Every estimand from the harness study (S1a) is
-conditional on the two realized serving sessions per size, on this host, image and lane, and on
-the stated decoding settings. Intervals resample tasks with the sessions held fixed.
+conditional on the two realized serving sessions per size, and every estimand from its
+successor E on E's four, on this host, image and lane, and on the stated decoding settings.
+Intervals resample tasks with the sessions held fixed.
 
 **Units and intervals.** "pp" is percentage points. Bootstrap intervals are task-cluster
 percentile intervals (10,000 resamples, seed 42) unless stated otherwise. A "one-sided 95%
@@ -220,7 +244,11 @@ sections 10.1 and 10.3's `harness/q2_zinv_reserve/` and section 10.3's
 `tests/test_q2_zinv_reserve.py` resolve at `b880275c`. The keys revision 5 adds ([NUI],
 [NUI-REG]), the citations [DEC D89] and [LEDGER row 18], and the paths it adds in sections 10.1
 and 10.3 (the study's score rows, `harness/r04_nuisance/`, `infra/r04-nuisance/`,
-`tests/test_r04_nuisance.py` and `tests/test_r04_evidence.py`) resolve at `9d320c6e`:
+`tests/test_r04_nuisance.py` and `tests/test_r04_evidence.py`) resolve at `9d320c6e`. The keys
+revision 6 adds ([E], [E-AN], [E-REG]), the citations [DEC D85, D96, D97] and [LEDGER row 19],
+and the paths it adds in sections 9.4, 10.1 and 10.3 (E's `e.jsonl`, `report.json`,
+`joint.json` and `plan-e.json`, `harness/q2_stage1e/`, `tests/test_q2_stage1e.py`,
+`tests/test_q2_stage1e_prereg.py` and `ops/q2e-analysis/`) resolve at `4ca30d03`:
 
 | Key | Path |
 |---|---|
@@ -231,6 +259,9 @@ and 10.3 (the study's score rows, `harness/r04_nuisance/`, `infra/r04-nuisance/`
 | [S1A] | `program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md` |
 | [S1A-AN] | `program/evidence/2026-10-10/q2-stage1-analysis/` (`report/report-guarded.json`, `s15.json`, `glmm-summary.json`, `post-review/post-review.json`, `a1.jsonl`) |
 | [S1A-REG] | `program/preregistrations/q2-stage1-rescoped-v1.md` (section numbers given) |
+| [E] | `program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md` (with `README.md` there, the per-job evidence) |
+| [E-AN] | the same directory, `analysis/` (`README.md`, `report.json`, `joint.json`, `s15.json`, `glmm-summary.json`, `rescore-coverage.json`, `e.jsonl`, and `verification/` with the verifiers' record and the Monte Carlo seed check) |
+| [E-REG] | `program/preregistrations/q2-stage1-successor-e-v1.md` (section numbers given) |
 | [ANCHOR] | `program/evidence/2026-10-08/q2-stage1-g0/anchor/evaluator-diff.json` |
 | [D59T] | `program/evidence/2026-10-10/q2-stage1-d59-tooling/README.md` |
 | [DS1] | `program/evidence/2026-10-10/q2-design-study/` (`README.md`, `summary.json`, `fit-*.json`) |
@@ -279,9 +310,11 @@ and 10.3 (the study's score rows, `harness/r04_nuisance/`, `infra/r04-nuisance/`
 | discordant pair | two reruns of one (size, task, harness) cell whose outcomes differ | 4.2 |
 | D_b, D_w | mean fraction of discordant rerun pairs across sessions (between) and within sessions | 4.2 |
 | δ; X; X⁺; X_c; π | harness difference in success; mean squared per-task harness effect; max(X, 0); X's task-specific part; harness share of within-task variance | 4.2 |
-| DR0-DR5, DR-A | S1a's registered decision rules (validity, 4B floor, harness pair, components, cost, admission of S1b, anchor) | 4.2 |
+| DR0-DR5, DR-A | S1a's registered decision rules (validity, 4B floor, harness pair, components, cost, admission of S1b, anchor), read again by successor E | 4.2, 4.9 |
 | M; M_9B | the admission thresholds for π_small (0.13) and for π_9B when 4B is dropped (0.18) | 4.2 |
 | S1a; S1b | the rescoped first stage of the harness study (section 4); the scale ladder it could have admitted, which never ran | 4.1 |
+| successor E; sessions E1-E4 | the registered successor of S1a: S1a's design on all 113 eligible tasks, with four new serving sessions per size and one episode per (size, task, harness, session); its four sessions | 4.9 |
+| Near-equivalent | DR2's registered bounded-difference class: not Present, δ's 90% interval within ±7.5 pp, and π_small's one-sided 95% upper bound below 0.12; not a claim of no difference | 4.2, 4.9 |
 | cost card | the pre-run price per episode from the serving probes: central 0.009020 and high 0.011274 GPU-h per episode at V = 20 | 4.6 |
 | postconfig | the task's own steps run on the agent's final state before the checker reads it (for example saving a file) | 4.6 |
 | cap-minutes | the sum of registered job time limits on one H100; 478 cap-minutes (7.967 GPU-h) is the largest sum S1a's registration allows under the 8 GPU-hour threshold | 5 |
@@ -319,7 +352,7 @@ flowchart LR
   M[model] --> H["harness<br/>(prompt, parser, history)"] --> A["action path<br/>(IR, executor, guest input)"] --> D[virtual desktop] --> E[end state] --> C[checker] --> V[verdict] --> G["average over tasks,<br/>reruns and sessions"]
   S2["Section 2: action-path certification<br/>executor loss at most ~1.5 pp per 20 actions;<br/>parser only 10-60 reps per case"] -.-> A
   S2 -.-> H
-  S4["Section 4: harness study S1a<br/>harness swap: δ = −3.1 pp, Inconclusive;<br/>rerun pairs disagree 11-13%"] -.-> H
+  S4["Section 4: harness study S1a and successor E<br/>harness swap in E: δ = 0.00 pp, 90% ±2.44 pp,<br/>Near-equivalent; rerun pairs disagree 11-13%"] -.-> H
   S4 -.-> G
   S3["Section 3: Holo3 audit<br/>same agent, two same-day runs: 4.4 points"] -.-> G
   S6["Section 6: checker mutation<br/>compare_pptx_files fails 35 of 39<br/>equivalent reorders (candidates)"] -.-> E
@@ -354,7 +387,8 @@ their own preregistrations in a hash-chained ledger [LEDGER]:
 
 1. an action-path certification (section 2);
 2. an audit of two public Holo3-35B-A3B runs, which motivated the session factor (section 3);
-3. a two-session noise-floor and harness study, S1a (section 4);
+3. a two-session noise-floor and harness study, S1a, and its four-session successor E (section
+   4);
 4. a CPU-only design study on S1a's records, not registered (section 5);
 5. a mutation audit of OSWorld's file-state checkers (section 6).
 
@@ -605,7 +639,11 @@ the prediction S1a-P1 that cross-session reruns disagree more than within-sessio
 their blinding is self-attested, and the narrow-L sensitivity gives the same verdict. The 5.75
 GB tarball was deleted after the run [H3].
 
-## 4. Component 2: the rerun noise floor and the harness screen (S1a)
+## 4. Component 2: the rerun noise floor and the harness comparison (S1a and successor E)
+
+Sections 4.1-4.8 report S1a, the registered two-session study. Its harness reading was
+Inconclusive, and sections 4.9-4.10 report its registered successor E, which ran the same
+design on more tasks and sessions and reads the harness pair decisively.
 
 ### 4.1 Design
 
@@ -813,7 +851,9 @@ between-session rerun floor. On the base it is π_4B = 0.027 and π_9B = 0.083 (
 one-sided upper bound 0.26; π_9B's one-sided upper bound 0.375). On the secondary set
 π_small = 0.084, one-sided upper bound 0.16 [S1A]. The point estimates are small; the upper
 bounds (0.26 base, 0.16 secondary) exceed the registered 0.12 near-equivalence line, so a small
-share is not shown.
+share is not shown. In successor E, on the 113 tasks over four new sessions per size,
+π_small = 0.055 with one-sided bounds [0.010, 0.119]: there the upper bound is below 0.12, by
+about the bootstrap's Monte Carlo error (section 4.9) [E].
 
 **(b) The GLMM** (*registered secondary*) [S1A; S1A-AN `glmm-summary.json`]:
 
@@ -826,7 +866,7 @@ share is not shown.
   0.023). That is non-confirmatory, and 93 of its 200 bootstrap refits did not converge.
 
 **(c) A probability-scale decomposition** comes from the design study's fitted model, so it is in
-section 5.3, which also reconciles the three harness-share numbers (Table 7).
+section 5.3, which also reconciles the three harness-share numbers (Table 9).
 
 ### 4.6 Infrastructure, cost and truncation
 
@@ -914,13 +954,224 @@ tasks, all not externally anchored [S1A]:
 - a first realized cost card;
 - an infrastructure record of 0 losses in 1,808 episodes.
 
-Section 8 lists what it does not license.
+Section 8 lists what it does not license. The harness reading S1a could not reach came from its
+successor (sections 4.9-4.10).
+
+### 4.9 Successor E: S1a's design on all 113 tasks, in four new sessions per size
+
+*Registered*, except where labelled. The design study of section 5 named design E its best
+successor within 8 GPU-hours (Table 7), and under the owner's delegation the program
+registered, audited and ran it [DEC D69, D80, D85]. E (`q2-stage1-successor-e-v1`,
+frozen 2026-10-12 01:02 UTC at commit `f6144d6b`) only adds data to S1a's design, so it needed
+a registration and a pre-freeze audit but no gauntlet [E-REG, preamble; LEDGER row 19]. Its
+design was chosen after S1a's readings, as the registration discloses [E-REG section 22]. E is
+its own sample: none of its estimates, tests, rules or predictions reads S1a's sessions. Every E
+number is **not externally anchored**, for the reason given in section 4.2 [E].
+
+**Design** [E-REG sections 3, 5, 10-14]:
+
+- **Unchanged from S1a.** The two models and engine, the two certified harnesses and their
+  prompts, the matched settings (screenshot only, 15 steps, a 2,048-token thinking budget,
+  greedy decoding, the same settle), the VM image and the lane; S1a's estimators, decision rules
+  with their thresholds, and its five predictions, read again as E-P1 to E-P5.
+- **Tasks.** All 113 eligible pool tasks form the primary set, with no draw. S1a's 32 base tasks
+  are the registered secondary set, which no rule reads.
+- **Sessions and episodes.** Four new serving sessions per size (E1-E4), at least 12 h 5 min
+  apart, 9B then 4B in each, with **one episode per (size, task, harness, session)**: eight jobs
+  of 226 episodes, 1,808 in all, at V = 20. D_b averages each cell's six cross-session pairs.
+  With one episode per session, D_w, the session excess D_b − D_w and so E-P1 are not
+  estimable.
+- **Sensitivities.** S1a's, plus one that leaves out the three gold-defect tasks of section 6.5
+  (110 tasks), raw and corrected.
+- **Power statement**, at S1a's estimates: P(DR2 decisive) 0.83-0.87 (Present 0.52-0.73,
+  Near-equivalent 0.12-0.34); P(DR5 NO-GO) 0.23-0.54 and P(GO) 0.00 [E-REG section 12].
+- **Cost.** 406 cap-minutes (6.77 GPU-h) under the registered caps, within the 8 GPU-hour
+  threshold.
+
+**Outcome.** All eight jobs ran, from 2026-10-12 04:28 to 2026-10-13 21:58 UTC, and each scored
+226 of 226 episodes. DR0 never fired, and no episode of 1,808 was lost to infrastructure [E].
+
+Table 5. Successor E's decision rules and predictions [E, decision rules and predictions; E-AN
+`report.json`].
+
+| Rule or prediction | Outcome | Numbers |
+|---|---|---|
+| DR0 validity | does not fire | 0 of 113 first attempts lost in every (size, harness) cell of every job; every job scored all 226 slots |
+| DR-A anchor | unavailable | label: not externally anchored |
+| DR1 4B floor | does not fire | 4B pooled success 123/452 (27.2%, H-OSW-fixed) and 119/452 (26.3%, H-GA) |
+| **DR2 harness pair** | **Near-equivalent** | not Present: p_δ = 1.000, p_X = 0.093 (Holm needs min p ≤ 0.025); near-equivalent: δ's 90% interval [−2.44, +2.44] pp lies within ±7.5 pp, and π_small's one-sided 95% upper bound, 0.1187, is below 0.12, by about the bootstrap's Monte Carlo error |
+| DR4 cost | does not fire | highest realized 0.003000 GPU-h per episode, against the high price 0.011274 |
+| **DR5 S1b admission** | **NO-GO** | π_small = 0.055, one-sided 95% bounds [0.010, 0.119], below M = 0.13 |
+| E-P1 session excess > 0 | not estimable | needs a within-session pair, and E has one episode per session (S1a-P1 was falsified) |
+| E-P2 D_b in 6-20% | not falsified | D_b = 10.69%, 95% [8.00, 13.53] |
+| E-P3 not Present | not falsified | DR2 Near-equivalent; the power statement forecast this prediction's falsification with probability 0.52-0.73 |
+| E-P4 4B not at floor | not falsified | 27.2% and 26.3% |
+| E-P5 cost at most high price | not falsified | 0.002659-0.003000 GPU-h per episode |
+
+Table 6. E's primary estimands (113 tasks, raw verdicts) [E, primary estimands; E-AN
+`report.json` `primary`]. Success counts are episodes with checker score 1.0, out of 452 per
+(size, harness).
+
+| Estimand | Estimate | Interval | Interval type | p |
+|---|---:|---|---|---|
+| Success, 4B: H-OSW-fixed / H-GA | 123/452 (27.2%) / 119/452 (26.3%) | | | |
+| Success, 9B: H-OSW-fixed / H-GA | 140/452 (31.0%) / 144/452 (31.9%) | | | |
+| δ pooled (H-GA − H-OSW-fixed) | 0.00 pp | [−2.44, +2.44] | two-sided 90%, paired t | 1.000 (paired t) |
+| | | [−2.77, +2.88] | two-sided 95%, bootstrap | |
+| δ_4B; δ_9B | −0.88 pp; +0.88 pp | [−4.42, +2.65]; [−2.88, +4.87] | two-sided 95%, bootstrap | 0.630; 0.664 (paired t, secondary) |
+| D_b pooled (4B; 9B) | 10.69% (11.06%; 10.32%) | [8.00, 13.53] | two-sided 95%, bootstrap | |
+| X pooled (X_4B; X_9B) | 0.0125 (0.0059; 0.0192) | [−0.0037, 0.0302] | two-sided 95%, bootstrap (X can be negative) | 0.093 (one-sided sign flip) |
+| π_4B; π_9B | 0.026; 0.085 | [0.000, 0.117]; [0.000, 0.177] | one-sided 95% bounds, bootstrap | |
+| π_small | 0.055 | [0.010, 0.119] | one-sided 95% bounds, bootstrap (read by DR2 and DR5) | |
+| | | [0.003, 0.130] | two-sided 95%, bootstrap | |
+| Scale screen δ_4B − δ_9B; π_4B − π_9B | −1.77 pp; −0.059 | [−6.86, +3.10]; [−0.176, +0.087] | two-sided 95%, bootstrap | |
+| D_w; D_b − D_w | not estimable at one episode per session | | | |
+
+**The harness pair.** On all 113 tasks each harness succeeded in 263 of 904 episodes, so δ is
+exactly 0.00 pp, and its 90% t interval, ±2.44 pp, is 4.89 pp wide, inside the power
+statement's median of 4.7-5.4 pp. Neither registered test rejects, and a test that does not
+reject does not exclude an effect. DR2 reads Near-equivalent because both registered margins
+hold. **Near-equivalent is the registered bounded-difference class, not a claim of no
+difference** [E].
+
+**The π_small margin is about the bootstrap's Monte Carlo error.** The bound clears 0.12 by
+0.0013. At the registered 10,000 resamples its Monte Carlo SD is about 0.001. With the frozen
+code at 20 other seeds it ranged from 0.1169 to 0.1211, and 2 of the 20 were at or above 0.12,
+which would read Inconclusive; at 200,000 resamples it is 0.1191. The registered reading is the
+primary set's at seed 42, and it is Near-equivalent. DR5's NO-GO holds at every seed tried
+(highest upper bound 0.1211, below 0.13). The seed check is the verifier's, outside the
+registration [E, disclosure 6; E-AN `verification/`].
+
+**Sessions** (*registered descriptive*). δ per session ranged from −3.54 to +0.88 pp at 4B and
+from −1.77 to +2.65 pp at 9B. No session pair's shift test rejects after Holm in either size
+(six tests per size); the largest shift is +3.10 pp, at 9B (p = 0.19 before Holm). In S1a the
+9B session test rejected for its two sessions (+5.5 pp, p = 0.016, on 32 base tasks). No rule
+reads either [E, DR3 components and pairwise session quantities].
+
+**Robustness.** *Registered sensitivities; none changes a decision* [E, sensitivities]:
+
+- Checker-corrected verdicts are identical to the primary: 0 flips (section 6.6).
+- No episode had a metric exception or a postconfig server error, so those two sensitivities
+  equal the primary.
+- Excluding S1a's seven flagged tasks (106 tasks) gives δ = +0.47 pp (90% t [−2.09, +3.03]) and
+  π_small = 0.051, one-sided [0.007, 0.119]: Near-equivalent and NO-GO.
+- Excluding the three gold-defect tasks (110 tasks), raw or corrected, gives δ = 0.00 pp (90% t
+  [−2.51, +2.51]) and π_small = 0.055, one-sided [0.010, 0.119]: Near-equivalent and NO-GO.
+  Which tasks are gold defects is adjudicated by an isolated model on the owner's instruction
+  (D80); not human-validated.
+- Scoring with the fractional score itself gives δ = −0.21 pp.
+
+**Registered secondary set** (S1a's 32 base tasks; *registered secondary*, enters no rule) [E]:
+δ = +0.39 pp, 90% t [−4.60, +5.38]; D_b = 13.93%, 95% [8.07, 20.44]; π_small = 0.045, one-sided
+[0.000, 0.121]; X sign-flip p = 0.369. DR2 computed on this set would read Inconclusive, because
+π_small's upper bound, 0.121, is not below 0.12. That bound is within Monte Carlo error of the
+line too: at 20 other seeds it ranged from 0.1170 to 0.1214, and 7 of the 20 were at or above
+0.12. So "Inconclusive on the base" is seed 42's reading, not a contrast with the primary set [E;
+E-AN `verification/`].
+
+**The GLMM** (*registered secondary*). The registered full fit did not converge: it has no
+positive-definite Hessian and no log-likelihood. So the GLMM gives no evidence either way on
+harness-specific task variance, and its likelihood-ratio test was not computed. 67 of the 113
+tasks have the same outcome in all 16 of their episodes (54 never succeed, 13 always do) [E,
+GLMM; E-AN `glmm-summary.json`].
+
+**The joint reading with S1a** (*registered descriptive*: E's registration fixes it, and no rule,
+test or prediction reads it) [E, the joint reading; E-AN `joint.json`]. On the same 113 tasks,
+E's estimates sit inside S1a's secondary-set intervals, and every E − S1a interval covers 0.
+S1a's secondary set showed a task-specific 9B signal (X_9B 0.038, π_9B 0.168); in E it is about
+half as large (X_9B 0.019, its interval covering 0). Over the six sessions together, δ is
+−0.37 pp, 95% [−2.99, +2.25], D_b is 10.23%, and the intervals of X_9B and π_9B lie above 0
+([0.0074, 0.0565] and [0.038, 0.237]). Those pool two samples of different design, E's chosen
+after S1a's readings, and carry no test. None of this changes DR2 or DR5.
+
+**Infrastructure, cost and truncation** [E]:
+
+- **Infrastructure.** Over 1,808 episodes: 0 losses of any type, 0 guest-server restarts, and 0
+  observations retried, slower than 30 s or undelivered (24,326 agent screenshots, 5,024 checker
+  reads). There were 0 postconfig server errors.
+- **Cost.** Realized cost was 0.002659-0.003000 GPU-h per episode, 24-27% of the cost card's
+  high price and about 7-8% more than S1a's per size; 0.049-0.052 VM-h per episode. The eight
+  runs used 5.0750 GPU-h physical (5.0908 with the post-freeze overlay build) and about 91.4
+  VM-h.
+- **Steps.** Mean steps per episode were 11.97-12.76 per (size, harness); 253-282 of 452
+  episodes per cell ended at the 15-step cap without `terminate`.
+- **Truncation.** Steps ending at 2,048 tokens without a complete tool call were 0.35-0.78% per
+  (size, harness), so neither size's δ is labelled truncation-confounded.
+
+**Deviation, disclosures and verification** [E, deviations and disclosures; E-AN
+`verification/verifier-record.json`]:
+
+- **The one deviation: the fresh verifier ran after the results were first written.** The
+  registration requires a fresh verifier to recompute the report from the SHA-256-checked raw
+  records before the results file is written. A single analyst ran the analysis, so the file's
+  first version preceded that verification and was labelled provisional. The fresh verifier
+  then rebuilt the merged records from checked copies of all eight jobs' raw records and reran
+  the frozen code: every registered output was byte-identical. Its own implementation, which
+  imports no harness module, reproduced every point estimate and every bootstrap bound on the
+  registered resamples to within 5e-7, and reached the same outcome for every rule, prediction
+  and sensitivity; it did not refit the GLMM. A second verifier checked the results file against
+  the registration and the outputs. Neither found a recomputation disagreement or a blocking
+  item, and the wording items they raised were fixed [E, deviation 1].
+- **A departure from E's host-use condition.** E's sign-off allowed other workstreams on the host
+  only in the gaps between E's sessions [DEC D85]. During session 3's 9B pair another workstream
+  staged files on the host. That was file staging, not a Slurm job, and the registration's
+  quiet-host rule counts Slurm jobs, so it is not a deviation from the registration's text, but
+  it departed from the sign-off's condition. The lane snapshots and queue watcher of the E job
+  then running show no foreign Slurm job, and the staging touched no E record [E, disclosure 8;
+  DEC D96].
+- **Restarts of the orchestrating session.** It restarted twice after the operator's machine
+  crashed. Later operators resumed from the host's run directories, and no job was rerun or
+  resubmitted [E, disclosure 2].
+- **Operator tooling.** A script written for the analysis checked digests, submitted the jobs
+  on an empty queue, ran the registered merge and counted rescoring coverage. It is not code of
+  record and had no separate review; the report is the registered command's own [E, disclosure
+  5].
+- **Other session disclosures** (operator handovers, failed queue polls, and engine start-up in
+  two 9B jobs that exceeded the time the caps assume by at most 1.1 s) touch no E record [E,
+  disclosure 8].
+
+### 4.10 What E licenses, and what it does not
+
+For E's four realized serving sessions per size, on the 113 eligible pool tasks, under S1a's
+configuration (greedy decoding, 15 steps, a 2,048-token thinking budget, screenshots only,
+V = 20), on this host, image and lane, all **not externally anchored** [E, what the result
+licenses; DEC D97]:
+
+- **DR2 Near-equivalent** for these two model sizes and these two certified harnesses: the
+  harness changes task success by no more than about 2.4 pp either way at 90% (δ = 0.00 pp, 90%
+  t interval [−2.44, +2.44]), and π_small's one-sided 95% upper bound, 0.1187, is below 0.12 by
+  about the bootstrap's Monte Carlo error. This is the decisive DR2 reading S1a could not reach.
+  At this resolution, harness choice is a small factor next to rerun noise.
+- **DR5 NO-GO**: π_small = 0.055, one-sided bounds [0.010, 0.119], below M = 0.13. The scale
+  study stays closed, as the design study forecast [DEC D69].
+- **A between-session rerun floor** of D_b = 10.7% (95% 8.0-13.5%; 4B 11.1%, 9B 10.3%), close
+  to S1a's (11.3% on its base, 10.4% on all 113 tasks).
+- 4B is not at the floor; a second realized cost card; a second infrastructure record of 0
+  losses in 1,808 episodes.
+
+It does not license:
+
+- **Equivalence in any wider sense, or no difference.** Near-equivalent is DR2's registered
+  class, with a ±7.5 pp margin on δ and a 0.12 bound on π_small, for these sessions. A test
+  that does not reject does not exclude an effect, and at another bootstrap seed DR2 could have
+  read Inconclusive (2 of 20 other seeds did).
+- **A per-size admission reading.** DR5 reads π_small, the mean of the two sizes' shares. π_9B
+  alone (0.085, one-sided upper bound 0.177) is not shown below 0.13.
+- **The absence of task-specific harness effects.** X_9B is 0.019 with a 95% interval reaching
+  0.046, the label-permutation sensitivity gives p = 0.047, and the frozen X test is
+  conservative at four sessions. A small share is not a zero share.
+- Any claim about the population of sessions (each interval holds E's sessions fixed, and a
+  harness effect common to a session's tasks is part of that session's δ); any pooled inference
+  with S1a; any GLMM evidence; any scale claim (δ_4B − δ_9B = −1.8 pp is a screen); or anything
+  about other models, harnesses, observation types, step caps, decoding, the online setting,
+  another host or image, or more than 32 concurrent VMs.
 
 ## 5. What more data would buy (design study)
 
 *Model-based.* This is a CPU-only study commissioned after S1a's result [DEC D66; DS1; DS2]. It
 is not a registered analysis. Its design and scenarios were chosen after S1a's readings, which
-it discloses. It informed the decision to close the scale question [DEC D69].
+it discloses. It informed the decision to close the scale question and the choice of successor
+E (section 4.9) [DEC D69].
 
 **Method.** The registration's own operating-characteristics model was fitted to S1a's records
 by maximum marginal likelihood: a logit model with task, harness, session, task-by-session and
@@ -958,7 +1209,7 @@ serving sessions with the harnesses interleaved; 450 simulated data sets per cel
 with the registered code [DS2 sections 4.1 and 5]. "Decisive" means DR2 reads Present or
 Near-equivalent; GO and NO-GO are DR5's outcomes.
 
-Table 5. Successor designs (model-based) [DS2 sections 4.1, 5].
+Table 7. Successor designs (model-based) [DS2 sections 4.1, 5].
 
 | Design | Sizes | Tasks K | Sessions S | Reruns R | Episodes | Cap-minutes (GPU-h) | P(DR2 decisive) | P(DR5 NO-GO) | P(DR5 GO) | δ 90% width (pp) |
 |---|---|---:|---:|---:|---:|---:|---|---|---|---|
@@ -993,7 +1244,8 @@ carried calibrations.
   or the study ran, conditional on these calibrations. E beats C, S1a's own secondary design, by
   0.08-0.17 on P(DR2 decisive). A decisive DR2 from E would most likely read Present
   (0.52-0.73), driven by task-specific effects at 9B through the X test; the δ test alone rejects
-  only 3-5% of the time [DS2 sections 4.1, 4.3, 6].
+  only 3-5% of the time [DS2 sections 4.1, 4.3, 6]. E then ran and read Near-equivalent, with
+  DR5 NO-GO (section 4.9) [E].
 - **The boundary is well calibrated.** At a true share of M, E's DR5 error rate is 0.06-0.09.
   With no harness effect, E gives Near-equivalent 0.95-0.97 and a false Present of 0.02-0.03.
 - **The registered cost rule must change for any 113-task design (and A6) to fit.** Under S1a's
@@ -1001,7 +1253,10 @@ carried calibrations.
   for design A but not for any 113-task design or A6 [DS2 section 5].
 
 **Decision.** The program closed the scale question on this study, and no successor GPU time is
-spent on it [DEC D69]. Section 11 gives the status of the one successor taken forward, design E.
+spent on it [DEC D69]. The one successor taken forward, design E, was registered and run later
+under the owner's delegation for a decisive harness reading, not to reopen the scale question;
+section 4.9 reports it, and its DR5 reading, NO-GO, agrees with this study's forecast [DEC D80,
+D85, D97].
 
 ### 5.3 The probability-scale variance split, and reconciling the harness shares
 
@@ -1013,7 +1268,7 @@ P4sf's shares are not in any committed fit file, so they were computed for this 
 committed function `model.prob_scale_components` with its defaults (4,000 tasks x 400 sessions,
 seed 42). The same call first reproduced P4's committed shares [VS].
 
-Table 6. Probability-scale shares of outcome variance by calibration (model-based).
+Table 8. Probability-scale shares of outcome variance by calibration (model-based).
 
 | Calibration (fit) | Extended check | Rerun 4B / 9B | Task 4B / 9B | Task x harness 4B / 9B | Session terms 4B / 9B |
 |---|---|---|---|---|---|
@@ -1050,12 +1305,12 @@ outcome variance and task-by-harness variance 3-4%" [DEC D69]. Those are N0's sh
 **Three harness-share numbers.** The report gives three numbers that each describe "how much the
 harness matters per task". They differ in scale, population and standing:
 
-Table 7. The three harness-share quantities.
+Table 9. The three harness-share quantities.
 
 | Quantity | Scale | Population | Standing | Value |
 |---|---|---|---|---|
-| π_small (harness share of within-task variance, against the rerun floor) | probability, within task | 32 base tasks (113 as secondary) | *registered* (read by DR2 and DR5) | 0.055, one-sided 95% [0.000, 0.260]; secondary 0.084 [0.020, 0.162] |
-| GLMM task:harness share | latent (logit) | 113 tasks (the registered 32-task fit did not converge) | *registered secondary* | 0.012 [0, 0.026] |
+| π_small (harness share of within-task variance, against the rerun floor) | probability, within task | S1a: 32 base tasks (113 as secondary); E: 113 tasks, four new sessions per size | *registered* (read by DR2 and DR5) | S1a 0.055, one-sided 95% [0.000, 0.260], secondary 0.084 [0.020, 0.162]; E 0.055 [0.010, 0.119] |
+| GLMM task:harness share | latent (logit) | 113 tasks in S1a's secondary set (S1a's registered 32-task fit and E's registered fit did not converge) | *registered secondary* | 0.012 [0, 0.026] |
 | Task x harness share of total outcome variance | probability, total variance | 113 pool tasks (model population) | *model-based* | 0.001-0.008 at 4B; 0.034-0.041 at 9B |
 
 **The headline number is the registered π_small.** The other two are smaller because they divide
@@ -1160,7 +1415,7 @@ Because *A* and *B* cannot paint the same pixel, the rendered slide is identical
 reference's *A* with the mutant's *B* and the reference's *B* with the mutant's *A*. Their kinds,
 text and positions differ, and the checker fails the mutant [ZINV].
 
-Table 8. Reorder mutants and candidate shares, in the evaluable population outside probe-touched
+Table 10. Reorder mutants and candidate shares, in the evaluable population outside probe-touched
 cells [MUT; ZINV; ADJ-AN `checker_candidates.false_negative`; ADJ, "What changed against the K2
 rerun"; outcomes in `released/confirm-mutants-v1/outcomes.jsonl`]. Shares are task-equal: each
 task's share of its mutants with the event, averaged over tasks with every task weighted equally
@@ -1307,7 +1562,7 @@ a forbidden tool; none of its answers is used [DEC D81]. The record is the secon
 - **Gold-defect tasks.** Of the 4 split gold shams, the adjudicator rejected 3: `5c1a6c3d`
   (`compare_pptx_files`), and `881deb30` and `8e116af7` (both `compare_table`); it accepted
   `035f41ba`. A task whose saved gold is rejected is a gold-defect task [DEC D34]. There were
-  none before adjudication, and their consequences are the main thing it changed (Table 9): the 3
+  none before adjudication, and their consequences are the main thing it changed (Table 11): the 3
   reorder candidates of `5c1a6c3d` became label contradicted, and all 10 alternative solutions
   on `881deb30` (6) and `8e116af7` (4) were rejected.
 - **A correlated judge.** The adjudicator is the same model as the Claude rater. On the 28 pool
@@ -1330,25 +1585,28 @@ a forbidden tool; none of its answers is used [DEC D81]. The record is the secon
 Both raters and the adjudicator are models. Nothing in this section is human-validated, and the
 study claims no rate.
 
-### 6.6 What the defects did to S1a
+### 6.6 What the defects did to S1a and E
 
-*Registered secondary.* Offline rescoring of every S1a final state applied the corrected
-comparator to 72 episodes per main run. It changed no verdict on the base or the secondary set:
-0 flips, and 0 live-against-offline replay mismatches [S1A]. So for Qwen3.5-4B and 9B at 15
-steps, the reorder defect did not move any S1a outcome. One of the three model-adjudicated
-gold-defect tasks, `5c1a6c3d`, is in S1a's libreoffice_impress extension set, and the other two,
-`881deb30` and `8e116af7`, are in its multi_apps extension set (Appendix B.2; none is in the
-base); S1a's readings are unchanged by them, because S1a reads raw verdicts, and any sensitivity
-to them belongs to successor E, whose registration in progress adds a sensitivity without the
-three gold-defect tasks (section 11) [DEC D80, D82]. Corrected verdicts stay secondary. The
-registration kept them secondary while the owner's adjudication and spot check were pending;
-the adjudication was then done by an isolated model, not the owner, and the human spot check is
-still pending; and here they equal the raw verdicts in any case [S1A-REG section 8; DEC D9,
-D82].
+*Registered secondary.* Offline rescoring of every S1a final state applied the corrected comparator
+to 72 episodes per main run. It changed no verdict on the base or the secondary set: 0 flips, and 0
+live-against-offline replay mismatches [S1A]. Successor E's rescoring did the same for its 1,808
+final states: the corrected comparator applied to 36 episodes per job (288 in all) and changed no
+verdict in any set, with 0 replay mismatches among the 1,792 replayed; the 16 episodes of
+`53ad5833`, whose checker needs live state, kept their live verdicts [E, offline rescoring; E-AN
+`rescore-coverage.json`]. So for Qwen3.5-4B and 9B at 15 steps, the reorder defect did not move any
+S1a or E outcome. One of the three model-adjudicated gold-defect tasks, `5c1a6c3d`, is in S1a's
+libreoffice_impress extension set, and the other two, `881deb30` and `8e116af7`, are in its
+multi_apps extension set (Appendix B.2; none is in the base); S1a's readings are unchanged by them,
+because S1a reads raw verdicts. E's primary set holds all three, and its registered sensitivity
+without them (110 tasks, raw and corrected) reads DR2 Near-equivalent and DR5 NO-GO, as its primary
+set does (section 4.9) [E; DEC D80, D82, D85]. Corrected verdicts stay secondary. The registration
+kept them secondary while the owner's adjudication and spot check were pending; the adjudication was
+then done by an isolated model, not the owner, and the human spot check is still pending; and here
+they equal the raw verdicts in any case [S1A-REG section 8; DEC D9, D82].
 
 ### 6.7 What the adjudication changed
 
-Table 9. Outputs before and after the adjudication [ADJ, "What changed against the K2 rerun"
+Table 11. Outputs before and after the adjudication [ADJ, "What changed against the K2 rerun"
 and "What did not change"; ADJ `summary.json` `before_after`; ADJ-AN]. "Before" is the K2
 rerun, which differs from the first analysis only in its label [K2]. "After" is adjudicated by
 an isolated model on the owner's instruction (D80); not human-validated, and the adjudicator is
@@ -1398,21 +1656,25 @@ warning for the pending human spot check (section 12).
 
 An OSWorld comparison between two agents measures the agents' difference plus the action path,
 run-to-run noise, the task draw and the checkers, and on this stack each has now been sized. The
-action path, once certified, contributes little: at most about 1.5 pp per 20-action episode for
-the executor, with the harness parser covered only by tens of repetitions per case. Run-to-run
-noise is large: about 11-13% of rerun pairs disagree, reruns carry about a fifth to a quarter of
-outcome variance, and a whole serving session shifted success by 5.5 pp at one of the two sizes.
-Which tasks are drawn dominates: about three quarters of outcome variance in the model-based
-split. The harness-by-task interaction, which a harness comparison hopes to read, is at most
-about 4% of outcome variance on these two closely related harnesses. Checkers add their own
-candidate errors, concentrated in specific families: one presentation comparator fails about 90%
-of equivalent shape reorders. And a score is tied to the benchmark revision it was taken at: 110
-of 116 tasks differ in config or in the code of a checker they reach between two revisions. It is
-tied to the image's LibreOffice build and locale too: two newer builds flip about a fifth of the
-reference golds' verdicts, and three of four other locales flip three or four (section 6.8). The
-action-path bound, the checker counts, the build and locale flips and the revision drift are
-properties of this stack; the noise, variance-split and harness numbers are estimates for
-Qwen3.5-4B and 9B at 15 steps, not externally anchored.
+action path, once certified, contributes little: at most about 1.5 pp per 20-action episode for the
+executor, with the harness parser covered only by tens of repetitions per case. Run-to-run noise is
+large: about 11-13% of rerun pairs disagree, reruns carry about a fifth to a quarter of outcome
+variance, and in S1a a whole serving session shifted success by 5.5 pp at one of the two sizes (no
+session pair of E's shifted after Holm). Which tasks are drawn dominates: about three quarters of
+outcome variance in the model-based split. The harness-by-task interaction, which a harness
+comparison hopes to read, is at most about 4% of outcome variance on these two closely related
+harnesses. Swapping one certified harness for the other changed task success by at most about 2.4 pp
+either way (90% interval), over all 113 tasks and four further sessions per size: a registered
+Near-equivalent reading, which bounds the difference and does not show that it is zero (section
+4.9). At this resolution the harness is a small factor next to rerun noise. Checkers add their own
+candidate errors, concentrated in specific families: one presentation comparator fails about 90% of
+equivalent shape reorders. And a score is tied to the benchmark revision it was taken at: 110 of 116
+tasks differ in config or in the code of a checker they reach between two revisions. It is tied to
+the image's LibreOffice build and locale too: two newer builds flip about a fifth of the reference
+golds' verdicts, and three of four other locales flip three or four (section 6.8). The action-path
+bound, the checker counts, the build and locale flips and the revision drift are properties of this
+stack; the noise, variance-split and harness numbers are estimates for Qwen3.5-4B and 9B at 15
+steps, not externally anchored.
 
 ### 7.2 Implications for comparisons (derived)
 
@@ -1424,7 +1686,7 @@ runs, and no task sampling (the comparison is about this fixed task set). The ru
 their success-rate difference is then sqrt(D_b / (K x R)), and the minimum detectable difference
 (two-sided 5%, 80% power) is about 2.8 times that.
 
-Table 10. Run-to-run SD and minimum detectable difference of a paired success-rate difference
+Table 12. Run-to-run SD and minimum detectable difference of a paired success-rate difference
 (derived; pp).
 
 | Tasks K | R = 1: SD, MDE | R = 2: SD, MDE | R = 4: SD, MDE |
@@ -1433,11 +1695,11 @@ Table 10. Run-to-run SD and minimum detectable difference of a paired success-ra
 | 113 (S1a's pool) | 3.2, 8.9 | 2.2, 6.3 | 1.6, 4.4 |
 | 361 (OSWorld-Verified, full) | 1.8, 5.0 | 1.25, 3.5 | 0.9, 2.5 |
 
-With the secondary set's D_b of 0.104, every entry is about 4% smaller. Three cautions apply.
-Rerun variance depends on the success level and the model, and these numbers are for Qwen3.5 at
-about 30% success. A session-wide shift like 9B's +5.5 pp adds directly to any comparison whose
-arms ran in different sessions, and it does not shrink with K. Task-by-agent variance must be
-added if the claim is about tasks beyond the benchmark.
+With the secondary set's D_b of 0.104, every entry is about 4% smaller, and with E's 0.107 about 3%
+smaller. Three cautions apply. Rerun variance depends on the success level and the model, and these
+numbers are for Qwen3.5 at about 30% success. A session-wide shift like 9B's +5.5 pp adds directly
+to any comparison whose arms ran in different sessions, and it does not shrink with K. Task-by-agent
+variance must be added if the claim is about tasks beyond the benchmark.
 
 **The Holo3 gap against this yardstick.** The two Holo3 runs are one run each on 359 tasks. At
 S1a's discordance a 4.4-point gap is about 2.5 rerun-noise SDs; at the pair's own discordance (34
@@ -1453,7 +1715,7 @@ agents cannot be read as an agent difference unless both ran interleaved in the 
    certified key set.
 2. **Report rerun discordance and run at least two reruns per task.** Give intervals that include
    rerun noise; at the full benchmark, one run per agent has a minimum detectable difference of
-   about 5 pp (Table 10).
+   about 5 pp (Table 12).
 3. **Interleave the arms being compared inside each serving session.** A whole-session shift as
    large as the effects usually reported happened at one of the two sizes here, and the public
    Holo3 pair shows a shift between two same-day runs.
@@ -1484,31 +1746,42 @@ agents cannot be read as an agent difference unless both ran interleaved in the 
 
 ## 8. Limitations and scope
 
-This is the single consolidated list; sections 2.7 and 4.8 give the component-specific limits.
+This is the single consolidated list; sections 2.7, 4.8 and 4.10 give the component-specific
+limits.
 
 1. **One host, one image, one lane.** Every result is for one 8 x H100 host as configured: the
    pinned VM image and guest disk, OSWorld `b138d348`, CPU-only VM jobs, at most 32 concurrent VMs
-   (S1a ran 20). The inotify limit that set V* = 32 is a host setting. The checker study's
+   (S1a and E ran 20). The inotify limit that set V* = 32 is a host setting. The checker study's
    verdicts are for the image's LibreOffice 7.3.7.2 under en_US; other builds and locales change
    some of them (section 6.8).
 2. **Two sizes, two closely related harnesses.** Qwen3.5-4B and 9B only. H-OSW-fixed and H-GA
-   share their history layout, thinking pass-back and Qwen3.5 lineage. A null harness contrast
-   between them says little about harness pairs that differ more, such as the coding harnesses of
-   [2609.07925](https://arxiv.org/abs/2609.07925). No agent is ranked.
+   share their history layout, thinking pass-back and Qwen3.5 lineage. E's Near-equivalent
+   reading of this pair, like S1a's null contrast, says little about harness pairs that differ
+   more, such as the coding harnesses of [2609.07925](https://arxiv.org/abs/2609.07925). No
+   agent is ranked.
 3. **Screenshot only.** Neither certified harness reads an accessibility tree, so the observation
    factor was not measured. A7 certifies the guest server's restart rate, not the observation's
    effect.
 4. **Fixed agent settings.** Greedy decoding (imposed on H-GA), 15 steps, a 2,048-token thinking
    budget, offline VMs with `--network none`. 57-75 of 128 base episodes per cell ended at the
-   step cap. Nothing is claimed about sampled decoding, longer step caps, larger models, the
-   online setting, or tasks outside the offline, web-free subset.
-5. **Small task sample, two sessions.** The primary set is 32 tasks. Every estimand is conditional
-   on two realized sessions per size; nothing is claimed about the population of sessions;
-   session-common harness effects cannot be separated from δ; the 9B session shift describes these
-   two sessions only.
-6. **No equivalence and no scale claim.** DR2 is Inconclusive, so the harnesses are not shown
-   equivalent. No confirmatory task-by-harness claim is made. The scale ladder never ran; the
-   scale screen's minimum detectable difference is about 17 pp and S1a makes no shrinkage claim.
+   step cap in S1a, and 253-282 of 452 per cell in E. Nothing is claimed about sampled
+   decoding, longer step caps, larger models, the online setting, or tasks outside the offline,
+   web-free subset.
+5. **Small task samples, few sessions.** S1a's primary set is 32 tasks; E's is the
+   113-task pool. Every estimand is conditional on the realized sessions (two per size in S1a,
+   four in E); nothing is claimed about the population of sessions; session-common harness
+   effects cannot be separated from δ; the 9B session shift describes S1a's two sessions only.
+   E has one episode per session, so D_w and the session excess are not estimable in it, and
+   its design was chosen after S1a's readings.
+6. **No equivalence and no scale claim.** S1a's DR2 is Inconclusive. E's is Near-equivalent,
+   DR2's registered bounded-difference class (δ's 90% interval within ±7.5 pp, π_small's
+   one-sided 95% upper bound below 0.12), not a claim of no difference or of equivalence in a
+   wider sense. Its π_small bound cleared 0.12 by about the bootstrap's Monte Carlo error, and 2
+   of 20 other seeds would read Inconclusive. E's DR5 NO-GO reads the mean of the two sizes'
+   shares; 9B's alone is not shown below 0.13. No confirmatory task-by-harness claim is made, and
+   the registered GLMM fit on each study's primary set did not converge. The scale ladder never
+   ran; S1a's scale screen's minimum detectable difference is about 17 pp, and neither study
+   makes a shrinkage claim.
 7. **Not externally anchored.** No output was compared with a public run, because 110 of 116
    tasks differ from the public runs' revision [ANCHOR]. Whether those differences change verdicts
    was not tested.
@@ -1600,12 +1873,17 @@ acceptance below at 0.794 (exact, one-sided 95%); it does not measure a rate on 
 The registered design is two serving sessions per (model, task, harness), at least 12 hours
 apart, each a fresh engine and VM pool, with two within-session reruns and the harnesses
 interleaved inside each session [S1A-REG section 5.5]. The lane is `harness/q2_stage1/lane.py`;
-episode records follow the `q2-stage1a-episode-v1` schema (one row per episode; Table 11). The
+episode records follow the `q2-stage1a-episode-v1` schema (one row per episode; Table 13). The
 registered analysis is `python -m harness.q2_stage1.analysis --records a1.jsonl --plan plan.json
 --costs costs.json --out report.json`. With fractional checker scores in the data, that command
 raises, and the wrapper of section 10.2 must be used. The estimators (D_b, D_w, δ, X, π) are in
 `harness/q2_stage1/estimators.py`. S1a's four main runs took about 70 minutes each at V = 20 (two
 per session, sessions at least 12 hours apart), 4.7 GPU-h and about 90 VM-h in all [S1A].
+Successor E's variant, four sessions per size with one episode per (size, task, harness,
+session), runs S1a's lane, estimators and rules through `harness/q2_stage1e/`, whose `analysis`
+module adds the per-job DR0, costs, report, section 15 and joint-reading commands [E-REG section
+23]. Its eight runs took 36-41 minutes each at V = 20, 5.1 GPU-h and about 91 VM-h in all; the
+registered commands as run are in [E-AN `README.md`].
 
 ## 10. Released data and reproducibility
 
@@ -1614,21 +1892,23 @@ per session, sessions at least 12 hours apart), 4.7 GPU-h and about 90 VM-h in a
 The raw run outputs stay on the host, but the per-episode and per-mutant records behind every
 table are committed.
 
-Table 11. Released data.
+Table 13. Released data.
 
 | File | One row is | Key fields | Rows | Regenerates |
 |---|---|---|---:|---|
 | `program/evidence/2026-10-10/q2-stage1-analysis/a1.jsonl` | one scored S1a episode | `task_id`, `size`, `harness`, `session`, `rerun`, `block`, `score`, `corrected_score`, `steps`, `tokens`, `ended`, `observations`, `uncertified_key_actions` | 1,808 | Tables 3-4, the secondary set, Figure 2, sections 4.5-4.6 (with the frozen plan) |
 | `program/evidence/2026-10-10/q2-stage1-analysis/merged-<job>.jsonl` | one episode of one main run, before concatenation | as above | 452 each (4 files) | `a1.jsonl` |
 | `program/evidence/2026-10-10/q2-stage1-analysis/report/report-guarded.json` | the registered report | every estimand, test, rule, prediction and sensitivity | 1 | every S1a number in this report |
-| `program/evidence/2026-10-08/q2-mutation-confirm/results/released/confirm-mutants-v1/outcomes.jsonl` | one mutant | `mutant_id`, `task_id`, `operator`, `label`, `checker_family`, `lock_status`, `lock_verdict`, `probe_touched`, `saved_via` | 1,289 | Tables 8-9 and section 6.4 (with the `analysis.json` files of [MUT], [K2] and [ADJ-AN] for audit decisions) |
-| `program/evidence/2026-10-11/q2-mutation-adjudication-v2/adjudications.jsonl`; `spot-check-answers.jsonl` | one adjudicated pool item; one spot-check item (adjudicated by an isolated model on the owner's instruction (D80); not human-validated) | `item_id`, `answer` | 34; 25 | Tables 8-9 and section 6.5 (with the frozen audit summary) |
+| `program/evidence/2026-10-12/q2-stage1-successor-e-run/analysis/e.jsonl` | one scored E episode (the eight runs' merged records, in the registered job order) | `task_id`, `size`, `harness`, `session`, `job`, `score`, `corrected_score`, `steps`, `tokens`, `ended`, `observations`, `uncertified_key_actions` | 1,808 | Tables 5-6 and section 4.9 (with E's frozen plan `program/evidence/2026-10-11/q2-stage1-successor-e/plan/plan-e.json`) |
+| `program/evidence/2026-10-12/q2-stage1-successor-e-run/analysis/report.json`; `joint.json` | E's registered report; the descriptive joint reading with S1a | every estimand, test, rule, prediction, sensitivity and the secondary set; the joint quantities | 1; 1 | every E number in this report |
+| `program/evidence/2026-10-08/q2-mutation-confirm/results/released/confirm-mutants-v1/outcomes.jsonl` | one mutant | `mutant_id`, `task_id`, `operator`, `label`, `checker_family`, `lock_status`, `lock_verdict`, `probe_touched`, `saved_via` | 1,289 | Tables 10-11 and section 6.4 (with the `analysis.json` files of [MUT], [K2] and [ADJ-AN] for audit decisions) |
+| `program/evidence/2026-10-11/q2-mutation-adjudication-v2/adjudications.jsonl`; `spot-check-answers.jsonl` | one adjudicated pool item; one spot-check item (adjudicated by an isolated model on the owner's instruction (D80); not human-validated) | `item_id`, `answer` | 34; 25 | Tables 10-11 and section 6.5 (with the frozen audit summary) |
 | `program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/report/k2-pairs.jsonl` | one K2 or K2-C pair | `pair`, `set`, `task_id`, `checker_family`, `offline_verdict`, `vm_verdicts`, `state` | 121 | section 6.1's K2 results |
 | `program/evidence/2026-10-12/q2-zinv-reserve-run/release/zinv-rows.json` (`rows`) | one rescored reserve item: a mutant, a saved gold or a saved do-nothing state (carries a blind warning; section 12) | `id`, `task_id`, `kind`, `label`, `operator`, `stored`, `raw`, `zinv`, `files_unchanged` | 106 | section 6.2's held-out test, through `harness/q2_zinv_reserve/run.py judge` (gives `release/judgement.json`) |
 | `program/evidence/2026-10-12/r04-nuisance-confirm/r04-registered-v1/main/scores/*/scores-<cell>.jsonl` (and the rounds' `round-1/`, `round-2/`) | one item saved and scored in one cell (carries a blind warning; section 12) | `item_id`, `task_id`, `population`, `cell`, `pinned`, `zinv`, `save`, `save_status` | 553 per main-run cell; 15,864 in all | section 6.8, through `python -m harness.r04_nuisance.analysis --run` (gives `analysis.json`) |
 | `program/evidence/2026-10-08/q2-action-path-v2-acceptance/acceptance/*.json` | one criterion's verdict, campaigns or state report | `pass`, `cells`, bounds and counts | 1 per file (3-4 files per criterion) | Table 1 and section 2.4 |
-| `program/evidence/2026-10-10/q2-next-step-design-study/designs-*.json`; `fit-*.json` there and in `q2-design-study/` | one calibration's design results; one fit | per design and scenario probabilities; parameters and `prob_scale_components` | 4 design files; 7 fit files | Tables 5-6 |
-| `paper/q2-report/data/variance-shares.json` | probability-scale shares per calibration | `shares` | 1 | Table 6, Figure 3 |
+| `program/evidence/2026-10-10/q2-next-step-design-study/designs-*.json`; `fit-*.json` there and in `q2-design-study/` | one calibration's design results; one fit | per design and scenario probabilities; parameters and `prob_scale_components` | 4 design files; 7 fit files | Tables 7-8 |
+| `paper/q2-report/data/variance-shares.json` | probability-scale shares per calibration | `shares` | 1 | Table 8, Figure 3 |
 
 ### 10.2 One command for the primary estimands
 
@@ -1662,6 +1942,10 @@ row, hash prefix and freeze time. Each registration pins its code by digest.
   `scripts/render_q2_action_path_manifest.py`, `infra/slurm/host-single-node/vm-campaign.sbatch`.
 - **S1a:** `harness/q2_stage1/` (estimators, rules, the zinv comparator), with the analysis
   tooling in `ops/s1a-analysis/` (`RUNBOOK.md`).
+- **Successor E:** `harness/q2_stage1e/` (plan, records, driver, lane and analysis on S1a's
+  unchanged code of record; tests: `tests/test_q2_stage1e.py` and
+  `tests/test_q2_stage1e_prereg.py`), with the analysis operator script in `ops/q2e-analysis/`,
+  which is not code of record [E-REG section 23; E-AN `README.md`].
 - **Design study:** `harness/q2_design/` (tests: `tests/test_q2_design.py`). `git diff d5f5798 --
   harness/q2_stage1` is empty for the design study [DS1].
 - **Checker study:** `harness/q2_mutation/`, `infra/q2-mutation/`, the K2 executor
@@ -1680,6 +1964,7 @@ GPU-hours are physical, from the ledger in [STATE] (`gpu_hours_ledger`).
 |---|---:|---|
 | Action-path versions 1 and 2 (development, controls, acceptance) | 0 | version 2 used 109.12 VM-hours, CPU only [AP2]; the verifier notes this total mixes two span definitions [AP2-VB] |
 | S1a (two overlay image builds, a pre-freeze check on development tasks, a post-freeze overlay build, the four main runs) | 4.8444 (main runs 4.7169) | about 90.0 VM-h for the main runs [S1A] |
+| Successor E (a post-freeze overlay build and the eight runs; 6.77 GPU-h by the registered caps) | 5.0908 (runs 5.0750) | about 91.4 VM-h for the runs; the pre-freeze development smoke and GLMM check and the whole analysis ran CPU only [E; E-AN `README.md`] |
 | Checker study (unregistered rater development and the confirm audit) | 0.939 | the mutant campaign itself was CPU only [MUT]; the registered K2 job ran CPU only for 65 minutes [K2]; the adjudication used no GPU and no host job [ADJ]; the held-out test of the corrected comparator ran CPU only, 0.221 lane-hours [ZR] |
 | Nuisance-invariance study | 0 | 24 CPU-only jobs, 10.27 lane-hours, 328.6 allocated CPU-h [NUI] |
 | Serving probes versions 1 and 2 (version 1 also priced another question) | 1.1513 | [SP2] |
@@ -1712,10 +1997,15 @@ GPU-hours are physical, from the ledger in [STATE] (`gpu_hours_ledger`).
 - **Observing the shell's side of a grabbed chord.** The tap records what the shell's grab held
   back, not what the shell received. **[PENDING: program owner]** Whether a later registration
   should observe the shell's side directly [DEC D43].
-- **A decisive harness reading.** One successor, design E (section 5.1), was decided under the
-  owner's delegation, for a decisive harness reading at 4B and 9B: it is to be registered,
-  audited before its freeze, frozen and run, with no gauntlet because it only adds data to S1a's
-  design [DEC D80]. It is being registered; results are pending.
+- **After the decisive harness reading.** Successor E, decided under the owner's delegation,
+  was registered, audited before its freeze, frozen and run, and its result is verified
+  (section 4.9) [DEC D80, D85, D97]. It answers the harness question at this design's
+  resolution: Near-equivalent for these two sizes and harnesses under S1a's configuration, and
+  DR5 NO-GO, so the scale ladder stays closed. As S1a's registration says, a NO-GO points to an
+  observation-factor study; that would be a new proposal with its own gauntlet, and whether to
+  write one is the owner's choice [E, decision rules; S1A-REG section 11]. A further step on the
+  checker side would have to show that the checker defects change real agent scores, which
+  neither S1a nor E shows (section 6.6) [DEC D97].
 
 ## 12. Pending human review
 
@@ -1732,13 +2022,12 @@ verdict per gold task and per S1a end state, and section 6.8 names one flipped g
 order applies to them [NUI]. Also still open: review of the program decisions taken on the
 owner's behalf; confirmation of the earlier release of the checker study's blind specs; and the
 three action-path items marked **[PENDING]** in sections 2.7 and 11. The registered action-path
-verdict and S1a's registered readings will not change. The candidate counts in section 6 do not
-depend on the audit, and neither does the held-out test, which reads the operators' labels, nor
-the nuisance-invariance study's readings, whose flips no rater, model or person has judged; the
-audit-confirmed counts, the label-error estimates and the gold-defect calls rest on model
-judgment and could change under human review. Also open without the owner: the S1a
-runbook's step-12 verification record and a second check of the session-2 lane checks [S1A,
-disclosures 4-5].
+verdict and the registered readings of S1a and E will not change. The candidate counts in section 6
+do not depend on the audit, and neither does the held-out test, which reads the operators' labels,
+nor the nuisance-invariance study's readings, whose flips no rater, model or person has judged; the
+audit-confirmed counts, the label-error estimates and the gold-defect calls rest on model judgment
+and could change under human review. Also open without the owner: the S1a runbook's step-12
+verification record and a second check of the session-2 lane checks [S1A, disclosures 4-5].
 
 ## References
 
@@ -1944,6 +2233,7 @@ each have state 0 and follow a processed press in their own window [AP2-REG sect
 | `q2-stage1-rescoped-v1` (S1a) | 16 | `bc5e88a0` | 2026-10-09 22:11 | [S1A], [S1A-AN]; freeze commit `d5f5798` |
 | `q2-evaluator-mutation-v1-k2` (the K2 addendum) | 17 | `7d03d928` | 2026-10-11 15:51 | [K2], [K2-REG]; freeze commit `7d9c881a` |
 | `r04-checker-nuisance-invariance-v1` (the nuisance-invariance study) | 18 | `f7b350a3` | 2026-10-11 18:27 | [NUI], [NUI-REG]; freeze commit `e312e996` |
+| `q2-stage1-successor-e-v1` (successor E) | 19 | `0da0a682` | 2026-10-12 01:02 | [E], [E-AN], [E-REG]; freeze commit `f6144d6b` |
 | `q2-zinv-reserve-validation-v1` (the corrected comparator's held-out test) | 20 | `57cf8861` | 2026-10-12 01:32 | [ZR], [ZR-REG]; freeze commit `ff802ca5` |
 
 ### D.2 Decisions cited
@@ -1973,13 +2263,17 @@ agents on the owner's behalf.
 | D66, D69 | S1a's registered outcome and the commissioning of the design study; the scale question closed on the design study |
 | D71 | This report is drafted; publication stays the owner's |
 | D79 | K2 verified: the checker study's verdicts hold inside real VMs; the analysis label becomes "VM fidelity checked (K2)" |
-| D80 | The owner delegates his pending research decisions; under the delegation, isolated model adjudicators answer the checker study's adjudication pool and spot check (a disclosed deviation from D9), and outward actions stay the owner's |
+| D80 | The owner delegates his pending research decisions; under the delegation, isolated model adjudicators answer the checker study's adjudication pool and spot check (a disclosed deviation from D9), successor E is registered, audited before its freeze and run, and outward actions stay the owner's |
 | D81 | The first adjudication run is void; the second run's rules and sensitivities are fixed before any of its answers exist |
 | D82 | The checker-study adjudication is complete, adjudicated by an isolated model on the owner's instruction (D80); not human-validated |
 | D83 | The checker-mutation note is drafted and verified, not published; the prior-art check K8 does not fire |
+| D85 | Successor E's registration is signed off for the freeze under the owner's delegation: all 113 tasks, four sessions per size, one episode per cell, D82's gold-defect tasks kept with one sensitivity without them; other workstreams use the host only in the gaps between E's sessions |
 | D86 | The held-out test of the corrected comparator on the reserve split (the dossier's R03 part (b)) is adopted under the owner's delegation and runs CPU only, in successor E's gaps |
 | D88 | That test passes at descriptive status (13 of 13 reorder mutants accepted, no violation newly accepted), and the original comparator's reorder defect replicates on the held-out tasks |
 | D89 | The nuisance-invariance study's result: the build and locale arms read DRIFT (LibreOffice 25.8 and 26.2; de_DE, ar_EG and tr_TR) and the route arm MINOR, under both checkers; no flip is adjudicated |
+| D92 | **The owner's own approval** of all pending items (2026-10-12), cited in the revision record: the review of D1-D91 is accepted, and each outward item, publication of this report among them, still needs his yes on its exact text |
+| D96 | (In the part cited) another workstream's file staging on the host during E's session-3 9B pair is disclosed as a departure from D85's host-use condition |
+| D97 | Successor E's result: DR2 Near-equivalent (δ = 0.00 pp, 90% interval [−2.44, +2.44]), DR5 NO-GO; two fresh verifiers reproduced it; Q2's harness question is answered at this design's resolution |
 
 ### D.3 Jobs cited
 
@@ -1995,17 +2289,65 @@ All Slurm jobs on the program's host.
 | S1a | pre-freeze overlay builds 1032 (failed) and 1033; pre-freeze check 1037/1039; post-freeze overlay 1044; main runs (VM/GPU) 1045/1047, 1048/1050, 1051/1053, 1062/1064; analysis 1065-1068, 1071-1075 |
 | Checker study K2 | registered job 1186 |
 | Corrected comparator's held-out test | registered jobs 1226 (targets), 1227 (build), 1228 (score), 1229 (rescore with the corrected comparator), CPU only |
+| Successor E | pre-freeze development smoke 1206 with rescoring 1208 and GLMM check 1210 (CPU only); post-freeze overlay build 1215; runs (VM/GPU) 1219/1221, 1222/1224, 1251/1253, 1254/1256, 1265/1267, 1268/1270, 1272/1274, 1275/1277; analysis 1279-1290 (CPU only) |
 | Nuisance-invariance study | registered jobs 1187 (items); 1188, 1190, 1191, 1193, 1194, 1196 and 1198 (saves); 1200, 1203, 1204, 1211, 1216 and 1225 (scores); 1230-1239 (the two confirmation rounds), CPU only |
 | Other program lines | reviewer jobs 1061 (in S1a's session-2 gap) and 1070 (queued during rescoring) |
 
-### D.4 S1a disclosures as recorded
+### D.4 S1a and E disclosures as recorded
 
 [S1A, "Deviations and disclosures", items 1-12] holds the full text, including the operator
 commands (item 3), the verification of the session-2 per-job checks (item 4), the runbook's
 verification record (item 5), host activity (item 6), the session-1 disclosures (item 8) and the
 reviewer job in the session-2 gap (item 9).
 
+[E, "Deviations and disclosures", items 1-10] holds E's: the late fresh verification (item 1),
+the orchestrator restarts (item 2), the analysis's wait for a quiet host (item 3), the
+analyst's self-check (item 4), the operator tooling (item 5), the π_small bound's Monte Carlo
+error (item 6), rescoring (item 7), the session-run disclosures and the departure from the
+host-use condition (item 8), and provenance (item 9). The per-job record is in E's
+`README.md`.
+
 ## Revision record
+
+Revision 6 (2026-10-14) adds the result of the harness study's registered successor E
+(`q2-stage1-successor-e-v1`, ledger row 19), which ran and was verified after revision 5 (D85,
+D97). Revision 5 still described E as decided and pending. Revision 6 states E as its results
+file does: DR2 Near-equivalent (δ = 0.00 pp, 90% t interval [−2.44, +2.44]; each harness 263 of
+904 episodes; π_small's one-sided upper bound 0.1187 against 0.12, a margin about the
+bootstrap's Monte Carlo error), DR5 NO-GO (π_small 0.055, one-sided [0.010, 0.119]; π_9B alone
+not shown below 0.13), D_b 10.7% (8.0-13.5%), not externally anchored, Near-equivalent as a
+bounded-difference class and not a claim of no difference, and the scope of two sizes, two
+certified harnesses and S1a's configuration. It changes no S1a, design-study or checker-study
+number. Changed: the header's date, revision number and evidence commit; the status block;
+summary items 2 and 3 and the summary's lead; "Contributions"; "Authorship and process" (E's
+verification); the scope paragraph, the evidence keys ([E], [E-AN], [E-REG]) and three glossary
+entries; Figure 1's section 4 node and section 1's list; section 4's title and lead, a sentence
+each in sections 4.5 and 4.8, and the new sections 4.9 (with Tables 5 and 6) and 4.10; section
+5's lead, its findings on E, its decision paragraph and the π_small and GLMM rows of Table 9;
+section 6.6, which now reports E's rescoring and gold-defect sensitivity; sections 7.1 and 7.2;
+limitations 1, 2, 4, 5 and 6 and the list's lead; sections 9.4, 10.1, 10.3 and 10.4; section 11,
+whose successor-E item is replaced by what follows E; section 12; Appendix D.1-D.4; and this
+record. The two new tables are numbered 5 and 6, so revision 5's Tables 5-11 are Tables 7-13
+here; the entries below for earlier revisions keep their own numbering. No figure or appendix
+table reads E's data, so none was regenerated; Figure 1 is Mermaid source and was edited by
+hand. The cover note's successor-E row and review row were updated, and its discrepancy D7
+records that `program/state.json` still gives E's results as waiting for a fresh verifier.
+
+Every E number revision 6 adds was checked against E's `RESULTS.md` and, for the estimates,
+intervals, tests and rule outcomes, against `analysis/report.json`; the rescoring counts against
+`analysis/rescore-coverage.json`; the seed check against `analysis/verification/`; the ledger
+row's hash, freeze time and commit against `ledger.jsonl` and the git log; the GPU-hours against
+`program/state.json`; and the job numbers against E's `README.md`, `analysis/README.md` and its
+registration's pre-freeze log. Table 6's success percentages and the 3% of section 7.2 are
+arithmetic on those counts and on D_b. The checker-mutation note's section 3.8, summary and
+limitations now carry E's rescoring too; every number added there is mapped in the note's
+`data/claims.json`, whose `base_commit` is now `4ca30d03`, and its `scripts/check_claims.py`
+passes with 0 claim errors and 0 uncovered numbers.
+
+Not changed in revision 6: the statements that the program decisions taken on the owner's
+behalf await his review ("Authorship and process", section 4.1, limitation 12 and section 12).
+They predate D92, under which the owner accepted D1-D91 on 2026-10-12, and the cover note flags
+them for the next revision.
 
 Revision 5 (2026-10-12) adds the registered nuisance-invariance study of the checkers (the
 question-renewal dossier's item R04, `r04-checker-nuisance-invariance-v1`), which ran after

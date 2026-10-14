@@ -1,7 +1,8 @@
 # Do OSWorld's file-state checkers accept equivalent end states? A descriptive mutation audit
 
 Research note, draft of 2026-10-11, revised on 2026-10-12 with the results of R03 part (b) and
-of R04. CoTCodec research program, question Q2
+of R04, and on 2026-10-14 with the offline rescoring of the harness study's successor E.
+CoTCodec research program, question Q2
 (`program/questions/q2-calibrated-cua-instrument.md`), item R03 of the question-renewal dossier
 (`program/evidence/2026-10-11/question-renewal/dossier.md`, section 3). Program owner: Kevin Liu.
 
@@ -13,10 +14,12 @@ check K8 (`program/evidence/2026-10-11/q2-mutation-k8-prior-art/`). The part (b)
 and run record ([ZR-REG], [ZR]) and decisions D86 and D88 resolve on `main` at `b880275c`, the
 base of the revision's branch `stage0/r03-partb-text`. The R04 registration and run record
 ([NUI-REG], [NUI]) and decision D89 resolve on `main` at `9d320c6e`, the base of the revision's
-branch `stage0/r04-text`. The note expands section 6 of the Q2 report draft
-(`paper/q2-report/draft.md`), whose first two revisions predate K2 (D79) and the adjudication
-(D82); its revision 3 took this note's numbers, its revision 4 adds part (b), and its revision 5
-adds R04. Where the two differ, the numbers here are the later ones.
+branch `stage0/r04-text`. Successor E's results ([E-RES], [E-RESC]) and decisions D85 and D97
+resolve on `main` at `4ca30d03`, the base of the revision's branch `stage0/q2-report-r6`. The
+note expands section 6 of the Q2 report draft (`paper/q2-report/draft.md`), whose first two
+revisions predate K2 (D79) and the adjudication (D82); its revision 3 took this note's numbers,
+its revision 4 adds part (b), its revision 5 adds R04, and its revision 6 adds successor E.
+Where the two differ, the numbers here are the later ones.
 
 > **Status: DRAFT. Not published, not for circulation.**
 >
@@ -103,7 +106,8 @@ both read against the label.
   mutants). The correction held on documents it was not developed on, at this size; this is not
   a 95% acceptance rate.
 - **No on-policy consequence is shown.** A corrected comparator changed 0 of 1,808 verdicts of
-  two Qwen3.5 policies in the program's S1a run.
+  two Qwen3.5 policies in the program's S1a run, and 0 of a further 1,808 in its registered
+  successor E.
 - **The audit rests on correlated models.** The two raters agree at Cohen's κ 0.343; the
   adjudicator is the same model as one rater and matched it on all 25 spot-check items. No
   human has validated any label.
@@ -564,9 +568,19 @@ all) changed **0 of 1,808 verdicts**, and 0 of the 512 primary ones [S1A-RESC]. 
 final state replays offline: 16 secondary verdicts, all of the live-state task `53ad5833`,
 kept their live scores, and one metric-exception episode scored 0 by the registered merge
 rule; their checkers are `compare_config` and `compare_images`, so no `compare_pptx_files`
-episode is among them [S1A; S1A-RESC; MUT `controls/`]. For these two policies at 15 steps,
-the reorder defect moved no outcome. A stronger agent that rebuilds or reorders slide shapes
-could meet it; S1a does not measure that.
+episode is among them [S1A; S1A-RESC; MUT `controls/`].
+
+The harness study's registered successor E (`q2-stage1-successor-e-v1`, ledger row 19) ran the
+same two policies and harnesses on all 113 of S1a's tasks, in four new serving sessions per
+size with one episode each, and scored 1,808 new episodes with no infrastructure loss [E-RES].
+Its offline rescoring applied `zinv` to 36 `compare_pptx_files` episodes per job (288 in all)
+and changed **0 of 1,808 E verdicts**, with 0 live-against-offline replay mismatches; the 16
+episodes of `53ad5833` again kept their live scores [E-RESC]. E's registered sensitivity
+without the three gold-defect tasks of section 3.3 (110 tasks), raw or corrected, reads the
+same harness classification (Near-equivalent) and admission outcome (NO-GO) as its primary set
+[E-RES; D97]. For these
+two policies at 15 steps, the reorder defect moved no outcome in either run. A stronger agent
+that rebuilds or reorders slide shapes could meet it; neither run measures that.
 
 ### 3.9 Verdicts under another LibreOffice build, locale or save route (R04, registered)
 
@@ -792,8 +806,9 @@ These bound every result above, and they are stated as plainly as the results.
   reserve decks come from the same OSWorld pool, and the study has no unseen pptx target left
   for another held-out test.
 - **No on-policy consequence shown.** The corrected comparator flipped 0 of 1,808 S1a verdicts
-  (two policies, 15 steps). The defect is real on constructed end states; this note does not
-  show that it changed any agent's score.
+  (two policies, 15 steps), and 0 of 1,808 verdicts of the same policies in successor E. The
+  defect is real on constructed end states; this note does not show that it changed any agent's
+  score.
 - **Mutants are not agent end states.** A mutant differs from its gold by one controlled edit.
   Real agent end states differ in many ways at once, so these counts are not rates of wrong
   verdicts on agent runs; R02 would measure those.
@@ -907,7 +922,9 @@ author from committed evidence only; the same agent ran the K8 searches. Decisio
 model. AI agents also ran R03 part (b) under its frozen addendum (D86, D88), and a later agent
 session added its result to this draft from the committed run record. AI agents ran R04 under
 its frozen registration (D89), and a later agent session added its result from the committed
-run record in the same way. No human has reviewed
+run record in the same way. AI agents ran the harness study's successor E under its frozen
+registration (D85, D97), and a later agent session added its rescoring (section 3.8) from the
+committed results. No human has reviewed
 this note, adjudicated an item or validated a label. Kevin Liu owns the program and every
 outward action, including any disclosure and publication.
 
@@ -938,13 +955,16 @@ Program evidence (paths from the repository root):
 - [S1A-REG] `program/preregistrations/q2-stage1-rescoped-v1.md`; [S1A]
   `program/evidence/2026-10-10/q2-stage1-a1/RESULTS.md`; [S1A-RESC]
   `program/evidence/2026-10-10/q2-stage1-analysis/rescore-coverage.json`.
+- [E-RES] `program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md`, the results of
+  successor E (`program/preregistrations/q2-stage1-successor-e-v1.md`, frozen, ledger row 19);
+  [E-RESC] its `analysis/rescore-coverage.json`.
 - [DER] `paper/checker-mutation-note/data/derived.json` (written by `scripts/figures.py`).
 - [K8] `program/evidence/2026-10-11/q2-mutation-k8-prior-art/README.md` and `k8-record.json`
   (added on this draft's branch).
 - [DOSSIER] `program/evidence/2026-10-11/question-renewal/dossier.md`; [SLATE] `slate.md`;
   [CLAIMS] `claim-registry.json` and `verification.json` in the same directory.
-- Decisions D2, D9, D23, D25, D27, D34, D35, D38, D72, D79, D80, D81, D82, D86, D88 and D89:
-  `program/decisions.md`.
+- Decisions D2, D9, D23, D25, D27, D34, D35, D38, D72, D79, D80, D81, D82, D85, D86, D88, D89
+  and D97: `program/decisions.md`.
 
 External sources (arXiv dates are first-version dates, as the program's verifier or K8's arXiv
 API read recorded them; where neither recorded one, the date the title was resolved):
