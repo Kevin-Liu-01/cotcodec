@@ -495,81 +495,92 @@ def run_main(args: argparse.Namespace) -> int:
             "precision": precision,
             "members": len(members[path]),
         }
-        if path == "r2":
-            budget = int(config["teacher_force"]["pack_tokens"])
-            member_lengths = [len(sequences[i]["prompt_ids"]) + lengths[i] for i in members[path]]
-            packs = [
-                [members[path][j] for j in pack] for pack in gb.greedy_packs(member_lengths, budget)
-            ]
-            record.update(packs=len(packs), pack_tokens=budget, varlen_backend=VARLEN["backend"])
-            # Single-sequence check: the packed path on one sequence against r1.
-            first = members[path][0] if members[path] else None
-            if first is not None and "logp_r1" in arrays:
-                s = sequences[first]
-                (lp, _), _ = score_pack(
-                    torch,
-                    model,
-                    [(s["prompt_ids"] + s["completion_ids"], len(s["prompt_ids"]))],
-                    chunk,
-                    device,
-                )
-                ref = arrays["logp_r1"][offsets[first] : offsets[first + 1]]
-                diff = np.abs(lp - ref)
-                record["single_sequence_vs_r1"] = {
-                    "sequence_id": s["sequence_id"],
-                    "mean_abs": float(diff.mean()),
-                    "max_abs": float(diff.max()),
-                }
-            for number, pack in enumerate(packs):
-                if stop.event.is_set() or time.time() > stop_at:
-                    status = "stopped: " + (stop.reason or "deadline")
-                    break
-                seqs = [
-                    (
-                        sequences[i]["prompt_ids"] + sequences[i]["completion_ids"],
-                        len(sequences[i]["prompt_ids"]),
-                    )
-                    for i in pack
+        try:
+            if path == "r2":
+                budget = int(config["teacher_force"]["pack_tokens"])
+                member_lengths = [
+                    len(sequences[i]["prompt_ids"]) + lengths[i] for i in members[path]
                 ]
-                calls0, packed0, attn0 = switch.calls, switch.packed_calls, VARLEN["calls"]
-                results, counters = score_pack(torch, model, seqs, chunk, device)
-                if (
-                    switch.calls - calls0 != gdn_layers
-                    or switch.packed_calls - packed0 != gdn_layers
-                    or counters["conv_segmented"] != gdn_layers
-                    or VARLEN["calls"] - attn0 != model_cfg["attention_layers"]
-                ):
-                    raise RuntimeError(
-                        f"r2: packed path not effective in pack {number}: "
-                        f"{switch.calls - calls0} GDN, {counters} conv, "
-                        f"{VARLEN['calls'] - attn0} attention calls"
+                packs = [
+                    [members[path][j] for j in pack]
+                    for pack in gb.greedy_packs(member_lengths, budget)
+                ]
+                record.update(
+                    packs=len(packs), pack_tokens=budget, varlen_backend=VARLEN["backend"]
+                )
+                # Single-sequence check: the packed path on one sequence against r1.
+                first = members[path][0] if members[path] else None
+                if first is not None and "logp_r1" in arrays:
+                    s = sequences[first]
+                    [(lp, _)], _ = score_pack(
+                        torch,
+                        model,
+                        [(s["prompt_ids"] + s["completion_ids"], len(s["prompt_ids"]))],
+                        chunk,
+                        device,
                     )
-                for slot, (i, (lp, _en)) in enumerate(zip(pack, results, strict=True)):
-                    put("logp_r2", i, lp)
-                    pack_id[i] = number
-                    pack_slot[i] = slot
+                    ref = arrays["logp_r1"][offsets[first] : offsets[first + 1]]
+                    diff = np.abs(lp - ref)
+                    record["single_sequence_vs_r1"] = {
+                        "sequence_id": s["sequence_id"],
+                        "mean_abs": float(diff.mean()),
+                        "max_abs": float(diff.max()),
+                    }
+                for number, pack in enumerate(packs):
+                    if stop.event.is_set() or time.time() > stop_at:
+                        status = "stopped: " + (stop.reason or "deadline")
+                        break
+                    seqs = [
+                        (
+                            sequences[i]["prompt_ids"] + sequences[i]["completion_ids"],
+                            len(sequences[i]["prompt_ids"]),
+                        )
+                        for i in pack
+                    ]
+                    calls0, packed0, attn0 = switch.calls, switch.packed_calls, VARLEN["calls"]
+                    results, counters = score_pack(torch, model, seqs, chunk, device)
+                    if (
+                        switch.calls - calls0 != gdn_layers
+                        or switch.packed_calls - packed0 != gdn_layers
+                        or counters["conv_segmented"] != gdn_layers
+                        or VARLEN["calls"] - attn0 != model_cfg["attention_layers"]
+                    ):
+                        raise RuntimeError(
+                            f"r2: packed path not effective in pack {number}: "
+                            f"{switch.calls - calls0} GDN, {counters} conv, "
+                            f"{VARLEN['calls'] - attn0} attention calls"
+                        )
+                    for slot, (i, (lp, _en)) in enumerate(zip(pack, results, strict=True)):
+                        put("logp_r2", i, lp)
+                        pack_id[i] = number
+                        pack_slot[i] = slot
+                        done += 1
+            else:
+                for i in members[path]:
+                    if stop.event.is_set() or time.time() > stop_at:
+                        status = "stopped: " + (stop.reason or "deadline")
+                        break
+                    s = sequences[i]
+                    ids = s["prompt_ids"] + s["completion_ids"]
+                    calls0 = switch.calls
+                    with base.sdpa_context(
+                        torch, "r4_torch_fp32" if path == "r4" else "r1_fla_chunk_bf16"
+                    ):
+                        lp, en = base.score_sequence(
+                            torch, model, ids, len(s["prompt_ids"]), chunk, device
+                        )
+                    if switch.calls - calls0 != gdn_layers:
+                        raise RuntimeError(
+                            f"{path}: GDN swap not effective ({switch.calls - calls0} calls)"
+                        )
+                    put(f"logp_{path}", i, lp)
+                    put(f"ent_{path}", i, en)
                     done += 1
-        else:
-            for i in members[path]:
-                if stop.event.is_set() or time.time() > stop_at:
-                    status = "stopped: " + (stop.reason or "deadline")
-                    break
-                s = sequences[i]
-                ids = s["prompt_ids"] + s["completion_ids"]
-                calls0 = switch.calls
-                with base.sdpa_context(
-                    torch, "r4_torch_fp32" if path == "r4" else "r1_fla_chunk_bf16"
-                ):
-                    lp, en = base.score_sequence(
-                        torch, model, ids, len(s["prompt_ids"]), chunk, device
-                    )
-                if switch.calls - calls0 != gdn_layers:
-                    raise RuntimeError(
-                        f"{path}: GDN swap not effective ({switch.calls - calls0} calls)"
-                    )
-                put(f"logp_{path}", i, lp)
-                put(f"ent_{path}", i, en)
-                done += 1
+        except Exception as exc:  # noqa: BLE001 - recorded; the other paths still run and save
+            status = f"failed: {type(exc).__name__}"
+            record["error"] = repr(exc)[:2000]
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
         record.update(
             status=status,
             sequences_scored=done,
