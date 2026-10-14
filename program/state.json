@@ -1248,7 +1248,7 @@
         "1379 research source-overlay rebuild 4555c647 (1 H100; COMPLETED 0:0, 00:00:17; image sha256:f8e136e4...)"
       ],
       "outcome": "vLLM overlay provenance PASS; offline builds from retained source capsules; CPU post-build selftests 1359 and 1380 pass",
-      "basis": "physical (scontrol RunTime x 1 H100, 101 s in all)"
+      "basis": "physical (x 1 H100, 101 s in all: 1357 and 1358 run times as the operator logged them at the time in ops/jobs.log, 1379's 17 s with no committed record beyond its jobs.log submit and done lines 24 s apart; no Slurm receipt is committed and Slurm accounting is off)"
     },
     {
       "experiment": "g2b-state-dtype-v1 (EXPLORATORY, not registered; D105 follow-up, GDN state fp32 vs bf16 in vLLM 0.31.0) smoke jobs (end-to-end checks, not data): 4B bf16 rollouts and waves, paired prefill, teacher forcing twice",
@@ -1260,7 +1260,7 @@
         "1382 smoke teacher forcing attempt 2 (1 H100; COMPLETED 0:0, 00:01:27)"
       ],
       "outcome": "1366 failed after r1 (the packed single-sequence check unpacked a list of results as a pair; fixed in 4555c647); the others passed",
-      "basis": "physical (scontrol RunTime x 1 H100, 422 s in all)"
+      "basis": "physical (lane job.env started_at to termination.env finished_at x 1 H100, 422 s in all as entered, against a lane sum of 419 s; the scontrol records expired before collection and Slurm accounting is off)"
     },
     {
       "experiment": "g2b-state-dtype-v1 (EXPLORATORY, not registered; D105 follow-up, GDN state fp32 vs bf16 in vLLM 0.31.0) Qwen3.5-4B phases R (72 long reasoning rollouts) and S (3 saturation waves), fp32 and bf16 state",
@@ -1270,7 +1270,7 @@
         "1370 bf16 (1 H100; COMPLETED 0:0, 00:11:56)"
       ],
       "outcome": "waves 14,947 vs 19,903 output tok/s (1.33x); bf16 rollouts ran longer (40 of 72 still running at 31.8K vs 15 capped); exploratory",
-      "basis": "physical (scontrol RunTime x 1 H100 each); Slurm limit 19 min each"
+      "basis": "physical (lane job.env started_at to termination.env finished_at x 1 H100 each; the scontrol records expired before collection and Slurm accounting is off); Slurm limit 19 min each"
     },
     {
       "experiment": "g2b-state-dtype-v1 (EXPLORATORY, not registered; D105 follow-up, GDN state fp32 vs bf16 in vLLM 0.31.0) Qwen3.5-9B phases R and S, fp32 and bf16 state",
@@ -1280,7 +1280,7 @@
         "1374 bf16 (1 H100; COMPLETED 0:0, 00:14:09)"
       ],
       "outcome": "waves 11,718 vs 16,202 tok/s (1.38x), 114 vs 0 preemptions per wave; 32K-cap hits 7 vs 35 of 72; exploratory",
-      "basis": "physical (scontrol RunTime x 1 H100 each); Slurm limit 22 min each"
+      "basis": "physical (lane job.env started_at to termination.env finished_at x 1 H100 each; the scontrol records expired before collection and Slurm accounting is off); Slurm limit 22 min each"
     },
     {
       "experiment": "g2b-state-dtype-v1 (EXPLORATORY, not registered; D105 follow-up, GDN state fp32 vs bf16 in vLLM 0.31.0) Qwen3.6-35B-A3B on one H100, phases R (64 rollouts, 180 s) and S, fp32 and bf16 state",
@@ -1290,7 +1290,7 @@
         "1378 bf16 (1 H100; COMPLETED 0:0, 00:08:17)"
       ],
       "outcome": "207 vs 402 blocks; peak running 51 vs 99 in waves, 2,346 vs 3,223 tok/s (1.37x); exploratory",
-      "basis": "physical (scontrol RunTime x 1 H100 each); Slurm limit 16 min each"
+      "basis": "physical (lane job.env started_at to termination.env finished_at x 1 H100 each; the scontrol records expired before collection and Slurm accounting is off); Slurm limit 16 min each"
     },
     {
       "experiment": "g2b-state-dtype-v1 (EXPLORATORY, not registered; D105 follow-up, GDN state fp32 vs bf16 in vLLM 0.31.0) paired vLLM prefill: both state dtypes re-score both arms' rollouts (4B, 9B)",
@@ -1300,7 +1300,7 @@
         "1389 Qwen3.5-9B (1 H100; COMPLETED, reason=completed exit 0; 00:05:32 by the lane records)"
       ],
       "outcome": "all 144 rollouts per model scored in both dtypes; prefill vs trainer 1.05-1.06x between arms; exploratory",
-      "basis": "physical; the Slurm records expired before collection, so run time is the lane's started_at to finished_at plus 1 s (lane and Slurm agree within 1 s for every other job)"
+      "basis": "physical; the Slurm records expired before collection, so run time is the lane's started_at to finished_at plus 1 s (the only committed Slurm RunTime, job 1391, is 1 s above its lane interval)"
     },
     {
       "experiment": "g2b-state-dtype-v1 (EXPLORATORY, not registered; D105 follow-up, GDN state fp32 vs bf16 in vLLM 0.31.0) HF+FLA teacher forcing: r1 unpacked, r2 packed varlen, r4 fp32 reference (4B, 9B)",
@@ -1310,7 +1310,7 @@
         "1391 Qwen3.5-9B (1 H100; COMPLETED 0:0, 00:12:28)"
       ],
       "outcome": "rollout vs trainer mean |dlogp| fp32 0.0077 / 0.0074 vs bf16 0.0357 / 0.0365, growing +1.3e-3 / +1.5e-3 per 1K within sequences; packed = unpacked (4B exactly); exploratory",
-      "basis": "physical (scontrol RunTime x 1 H100 each); Slurm limits 16 and 26 min"
+      "basis": "physical (x 1 H100 each: 1391 by its committed scontrol RunTime 00:12:28, 1 s above its lane interval; 1387 by the lane started_at to finished_at plus 1 s, its scontrol record having expired before collection); Slurm limits 16 and 26 min"
     }
   ],
   "results": [

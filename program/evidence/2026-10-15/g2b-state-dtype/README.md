@@ -11,7 +11,7 @@ Follows D105 (vLLM keeps the gated-DeltaNet state in the checkpoint's float32,
 `program/evidence/2026-10-14/inference-baseline/`) and the G2 pilot
 (`program/evidence/2026-10-14/g2-pilot/`).
 
-## Main takeaways (exploratory)
+## Main takeaways (exploratory; wording corrected after an independent check)
 
 - **The setting.** vLLM 0.31.0 exposes it as `--mamba-ssm-cache-dtype` (`mamba_ssm_cache_dtype`
   on `LLM`/`EngineArgs`). It accepts `auto`, `float32`, `float16` and `bfloat16`. `auto` copies
@@ -41,11 +41,13 @@ Follows D105 (vLLM keeps the gated-DeltaNet state in the checkpoint's float32,
   - The fp32 arm is flat in position. The bf16 arm grows by +1.3e-3 (4B) and +1.5e-3 (9B)
     per 1,000 tokens within sequences. Against fp32 it is 1.25x in the first 1K positions,
     about 5x at 16K and 7-8x at 28-32K, and it grows in every entropy bin.
-- **The drift is in vLLM's decode path.** Prefill in the same bf16 state stays as close to
-  the trainer as fp32 does (1.05x and 1.06x). Prefill rounds the state only at chunk
-  boundaries; decode rounds it at every token. The bf16 decode is also 0.034-0.037 from the
-  fp32 reference, while the trainer is 0.008 from it. So the rollout side moved, not the
-  trainer.
+- **The data place the drift in vLLM's bf16-state decode path.** Prefill in the same bf16
+  state stays as close to the trainer as fp32 does (1.05x and 1.06x). The bf16 decode is
+  0.034-0.037 from the fp32 reference, while the trainer is 0.008 from it. So the rollout side
+  moved, not the trainer. This is consistent with per-step state rounding: prefill rounds the
+  state only at chunk boundaries, and decode rounds it at every token. But the setting also
+  changes the block layout (528 to 272 tokens; 1,056 to 544 on the MoE) and the kernel
+  instance, and the design does not separate precision from those.
 - **The bf16 state also changed what the models generated: their reasoning ran much longer.**
   This uses the same 24 prompts and the same 3 seeds per arm.
   - Qwen3.5-9B: 35 of 72 rollouts hit the 32K cap with bf16, against 7 of 72 with fp32. By
@@ -61,14 +63,19 @@ Follows D105 (vLLM keeps the gated-DeltaNet state in the checkpoint's float32,
 - **Trainer side.** FLA 0.5.2's chunk kernel keeps the running state as an fp32 accumulator. It
   stores bf16 per-chunk state snapshots, which are used for outputs; a runtime probe confirms
   the dtypes. The packed varlen path (cu_seqlens, as in verl) reproduced the unpacked log-probs
-  exactly on 942,608 tokens of the 4B. On the 9B it matched to a mean of 1.7e-5. Packing is not
-  a mismatch source on this stack.
+  exactly on 942,608 tokens of the 4B. On the 9B the mean of 1.7e-5 is one whole sequence
+  that differs at noise level (mean 0.0054); every other packed 9B sequence, its pack
+  neighbours included, matches exactly. Packing is not a mismatch source on this stack. That
+  sequence and the smoke run's single-sequence check (0.0027) point to shape-dependent
+  trainer numerics of about 0.003-0.005 per sequence, which were not characterised.
 - **Reading.** A bf16 GDN state is a real 1.3-1.4x throughput lever for short, state-dominated
-  rollouts. For long-reasoning RL on these hybrids it is not free: it makes the rollouts about
-  5x more off-policy per token, increasingly so with length, and it makes them run longer. The
-  vLLM default (fp32) is the right choice for RL rollouts unless the trainer corrects for this.
+  rollouts. For long reasoning rollouts on these hybrids it is not free: their per-token
+  mismatch against the trainer is about 5x larger, more so with length, and they run longer.
+  No RL training ran, so nothing here measures how training would respond. The k3 and
+  importance-ratio numbers describe the off-policy gap a trainer would face.
+  - Not separated: precision against the changed block layout and kernel instance.
   - Not tested: `float16`, which vLLM also accepts at the same memory as bf16 with three more
-    mantissa bits. It is the natural next arm.
+    mantissa bits. It is the natural next arm, with a forced-block control.
 
 ## The setting, from the source (read-only checks, CPU jobs 1354 and 1355)
 
@@ -98,10 +105,19 @@ and `output_final_state=False`, since there is no cache.
 
 All GPU jobs used the docker-research lane through `scripts/submit_docker_research_job.py`
 (dry-run, test-only, then submit; `manifests/`), with digest-pinned images, Slurm GRES and time
-limits, and lane receipts (`jobs/`). GPU-h are physical: GPUs times run time. The run time is
-Slurm's `RunTime` where it was captured. For jobs 1385 and 1389, whose Slurm records had expired,
-it is the lane's `started_at` to `finished_at` plus 1 s; the lane and Slurm agree within 1 s
-wherever both exist.
+limits, and lane receipts (`jobs/`). GPU-h are physical: GPUs times run time.
+- For the lane jobs (1361-1391), the run time comes from the lane's `started_at` (`job.env`) to
+  `finished_at` (`termination.env`). Every lane job's `scontrol` record except 1391's had
+  expired by collection (its `scontrol.txt` says so), and Slurm accounting is off on the host,
+  so no Slurm `RunTime` is committed for them.
+- The times below are as first entered. They equal the lane interval for 1368-1378 and 1382,
+  and are 1 s above it for 1361, 1364, 1366, 1385, 1387, 1389 and 1391. Job 1391 is the only
+  one with a committed `RunTime` (00:12:28, against a lane interval of 00:12:27).
+- The lane intervals sum to 6,511 s against 6,518 s entered, 0.002 GPU-h less. The totals are
+  left as entered.
+- The build times (1357, 1358, 1379) are the operator's at the time, with no committed Slurm
+  receipt. `ops/jobs.log` gives 1357's and 1358's; 1379's 17 s has no committed record beyond
+  its submit and done lines in `ops/jobs.log`, 24 s apart.
 
 | Job | What | Image (commit) | Run time | GPU-h | Outcome |
 |---|---|---|---:|---:|---|
@@ -320,6 +336,13 @@ The fp32 arm's slopes in these bins are near zero or slightly negative (`tables.
   budget.
 - Engine-instance variance (D105) was not measured beyond these repeats. Each arm is one
   engine instance.
+- Scheduling in the saturation waves is deterministic (preemptions are identical in every wave
+  of an arm, for example 114 / 114 / 114 on the 9B fp32), so the three waves replicate timing
+  only, not scheduling or the engine instance.
+- The metric sampler's first sample in each phase repeats the previous phase's gauges (phase S
+  of job 1370 opens with the 40 rollouts aborted at the end of phase R) and is included in the
+  mean running, mean KV and peak values; it sets none of the reported peaks and moves the
+  means by about one sample in 76.
 
 ## Results: how the rollouts ended (phase R)
 
@@ -366,18 +389,22 @@ It says, for this stack and these prompts:
    share a GPU.
 2. For long reasoning rollouts it multiplies the per-token mismatch against the trainer about
    5x on average. The excess grows almost linearly with position and appears in every entropy
-   bin. It sits in vLLM's decode path, not the trainer, packing or prefill.
+   bin. The data place it in vLLM's bf16-state decode path, not the trainer, packing or
+   prefill. Within that path, precision is not separated from the block layout and kernel
+   instance (below).
 3. It changes generation. With the same prompts and seeds, bf16-state rollouts end with EOS far
    less often within 32K tokens.
 
 It does not say:
 - Anything confirmatory. There are 24 prompts, 72 rollouts per arm and model, one node, one
   vLLM build and one engine instance per arm, with no preregistration.
-- That precision alone causes the effects. The setting also changes the attention block size
-  (528 to 272 tokens) and the state-loading kernel instance. The design does not separate
-  these. `float16` (same memory, more mantissa) and a forced-block control would.
-- How RL training would respond. No training ran. The importance-ratio and k3 numbers say how
-  much off-policy correction a trainer would face, not whether it would cope.
+- That precision alone causes the effects, or that the mechanism is per-step state rounding.
+  The setting also changes the attention block size (528 to 272 tokens; 1,056 to 544 on the
+  MoE) and the state-loading kernel instance. The design does not separate these. `float16`
+  (same memory, more mantissa) and a forced-block control would.
+- How RL training would respond, or which state dtype RL rollouts should use. No training ran.
+  The importance-ratio and k3 numbers say how much off-policy correction a trainer would face,
+  not whether it would cope.
 - Anything about other GDN kernels (the fused CUDA decode path is not built in this image),
   prefix caching (off here), FP8 KV, or other models.
 - That the longer bf16 reasoning is worse reasoning. Accuracy was compared only on the rollouts
@@ -403,12 +430,30 @@ It does not say:
   running), and the "ended before" counts up to 28K are fully observed.
 - **Scope cuts, chosen before the run:** r2 on seed 42 only, r4 on seed 42 x 16 prompts. The
   question scoped the MoE to the concurrency arm; its fp32 reference would not fit on one GPU.
-- **Slurm records expired** for jobs 1385 and 1389 before collection. Their `scontrol.txt`
-  says so, and their run times come from the lane records.
+- **Slurm records expired** before collection for every lane job except 1391, and Slurm
+  accounting is off on the host. Their `scontrol.txt` says so. Their run times come from the
+  lane's `started_at` to `finished_at` (What ran), not from a Slurm `RunTime`.
 - **Packed vs unpacked:** the smoke (1382) showed a mean 0.0007 r2-r1 difference on 3,072
-  tokens. The main 4B run showed exactly 0 on 942,608 tokens, and the 9B a mean of 1.7e-5. The
-  likely source is Triton autotuning picking kernel configurations per launch shape. It was not
-  investigated.
+  tokens, and its single-sequence check (one sequence, so no packing) a mean of 0.0027 (max
+  0.21). The main 4B run showed exactly 0 on 942,608 tokens. On the 9B, the mean of 1.7e-5 is
+  one whole sequence: all 2,079 nonzero tokens of 924,026 are in `qwen3.5-9b/fp32/p015/s42`
+  (pack 1, slot 1, 2,853 tokens), from its first completion token, at noise level (mean 0.0054,
+  max 0.244). Its pack neighbours (slots 0, 2 and 3) are exactly 0, so this is not a packing
+  leak. Together these point to shape-dependent trainer numerics of about 0.003-0.005 per
+  sequence; Triton autotuning picking kernel configurations per launch shape is a likely
+  source. They were not characterised: r1 has no repeat.
+- **No fresh-job resume test (AGENTS.md hard rule 2).** Like the G2 pilot and the inference
+  baseline, these short exploratory jobs ran without one. As in the G2 pilot, on a stop signal
+  the drivers save the finished phases or paths and write the lane's checkpoint marker with a
+  "no resume" note (a rerun is a new job). No job was signalled (`checkpoint_marker_present=false`
+  in every `termination.env`). This is a disclosed exemption for short exploratory
+  measurements, not a resume capability.
+- **Corrections after an independent check** (it passed; text and records only, no GPU job, no
+  result changed). The mechanism is now stated as where the data place the drift, with
+  precision not separated from the block layout and kernel instance, and a prescriptive RL
+  line was removed. The GPU-h basis is relabelled as the lane records. The 9B packed residual
+  is described as one sequence. The sampler's first sample, wave determinism and the resume
+  exemption are recorded.
 
 ## Files
 
@@ -469,6 +514,7 @@ termination tables.
   drift.
 - A forced-block control, to separate precision from the block layout.
 - For G1 (rollout memory levers): count the bf16 state as a throughput lever with a measured
-  correctness cost, not a free one.
+  mismatch and generation-length cost, not a free one. Its effect on RL training is not
+  measured.
 - For G2: the position-resolved mismatch on the default (fp32) stack stays flat to 32K on both
   hybrids. This extends the pilot's 11.5K reading.
