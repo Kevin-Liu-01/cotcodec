@@ -2431,3 +2431,35 @@ entropy.**
   packed varlen trainer path, vLLM prefill, the 9B model and longer contexts.
   Those, and the GDN state-dtype lever (D105), are the exploratory G2b
   measurement now running.
+
+**D107. AM1 step 0 (exploratory): exact replay of the memory reader is
+achieved; exact credit tables are cheap; AM1's full study is feasible.**
+- What ran. Exploratory, 0.20 physical GPU-h. vLLM 0.31.0 ran the Qwen3-8B
+  reader in batch-invariant mode (`VLLM_BATCH_INVARIANT=1`, source cited at
+  tag v0.31.0): five engine sessions, 37,136 requests. LongMemEval-S was
+  fetched under D1: MIT, SHA-256 `d6f21ea9...` matching the Hub, kept on the
+  host. A fresh checker verified the mode took effect and recomputed every
+  rate.
+- Findings:
+  - Batch-invariant replay is bit-exact in tokens and log-probs. Greedy gave
+    4,096 of 4,096 under shuffled order, an engine restart and a
+    reconfigured engine; sampled gave 1,024 of 1,024. The per-request
+    difference rate is at most 0.09% (95% upper bound).
+  - Default mode differs: 0.07% under shuffling, about 3% at small
+    concurrency, and log-prob bits changed in 432 of 512 requests at
+    concurrency 8.
+  - The cost is 1.32-1.38x wall time when batched, and 2.5-3.1x at small
+    batch.
+  - Exact 256-subset tables cost about 1.4 GPU-s per question per arm. That is
+    about 0.16 GPU-h for 200 questions, against the dossier's estimate of 4-6
+    GPU-h.
+  - A CPU census of LongMemEval-S finds 416 usable questions: 84% need 1-2
+    memories, and BM25 top-8 gold recall is 0.74.
+- Reading. The legacy blocker, paired replay failing on nondeterministic
+  decoding (D103 context), is solved on this stack, and GPU is not AM1's
+  constraint. What remains:
+  - a proper answer judge (the containment utility in the demo is unusable);
+  - the credit estimators;
+  - a cross-GPU A/A check;
+  - pool designs that produce mixed interaction structures, so that H2 (the
+    keep-set regret against the exact optimum) can fire.
