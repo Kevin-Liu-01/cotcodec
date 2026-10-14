@@ -52,7 +52,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 21 rows). Decisions taken
-on Kevin's behalf are D1-D96 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D97 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
@@ -68,7 +68,7 @@ on Kevin's behalf are D1-D96 in `program/decisions.md`. GPU-hours are in
 | `q2-evaluator-mutation-v1` | Descriptive (D35): the z-order operator fails its checker on equivalent shape-order edits (`compare_pptx_files` 35 of 39); a GUI-faithful save flips 3 of 92 reference golds; kappa 0.34. **Adjudicated (D82), by an isolated model, not human-validated**: 33 confirmed false negatives (11.6%; `compare_pptx_files` 37.1%, z-order 85.4%), 3 gold-defect tasks, P2 12.4% on 337, false positives 2 | `program/evidence/2026-10-08/q2-mutation-confirm/`, `program/evidence/2026-10-11/q2-mutation-adjudication-v2/` |
 | `q2-evaluator-mutation-v1-k2` | **VERIFIED** (job 1186, CPU only, from the freeze commit `7d9c881a`): gate 2 of 80 K2 pairs excluded (one task's reopen timed out after LibreOffice did not quit); the 78 compared pairs agree with the offline verdicts in both runs; 41 of 41 candidate events reproduced; no family dropped; the parent analysis now carries "VM fidelity checked (K2)". Its outputs name verdicts per mutant: read after the adjudication | `program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/` |
 | `r04-checker-nuisance-invariance-v1` | **Build arm DRIFT, locale arm DRIFT, route arm MINOR** (D89). LibreOffice 25.8 flips 18 of 92 golds and 26.2 flips 20; builds up to 24.8 flip none. de_DE, ar_EG and tr_TR flip 3 `compare_table` golds; ja_JP flips none. Headless convert flips 1 gold. Every discordance reproduced in two rounds. Not adjudicated | `program/evidence/2026-10-12/r04-nuisance-confirm/` |
-| `q2-stage1-successor-e-v1` | Frozen (row 19; D85). Running: four sessions per size; E1 done | `ops/q2-successor-e` |
+| `q2-stage1-successor-e-v1` | **DR2 Near-equivalent** (δ 0.00 pp, 90% [−2.44, +2.44]; each harness 263 of 904; π_small upper bound 0.1187 vs 0.12, about the Monte Carlo error); **DR5 NO-GO** (π_small 0.055, [0.010, 0.119]); 1,808 episodes, 0 losses; not externally anchored; two verifiers (D97) | `program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md` |
 | `q2-zinv-reserve-validation-v1` | **PASS, descriptive** (D88). zinv accepts 13 of 13 held-out z-order equivalence mutants and newly accepts none of 15 violation mutants. The original comparator rejects 13 of 13 | `program/evidence/2026-10-12/q2-zinv-reserve-run/` |
 
 Gauntlet records: K1 v2 (45, honest exit), K1 v3 (51, 55, 56; honest exit, D54), Q1 Stage 0 (45, honest exit).
