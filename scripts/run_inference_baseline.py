@@ -30,6 +30,7 @@ import contextlib
 import csv
 import hashlib
 import json
+import math
 import os
 import queue
 import re
@@ -1001,10 +1002,15 @@ class Driver:
         return {"ok": False, "error": last}
 
     def estimate_s(self, engine_id: str, cell: dict[str, Any]) -> float:
+        """Repeat 1's wall time when known, else a deliberately rough token-count guess."""
         measured = self.durations.get((engine_id, cell["cell_id"]))
         if measured is not None:
             return measured * 1.15 + 15
-        return 60.0
+        waves = math.ceil(cell["num_prompts"] / cell["concurrency"])
+        guess = (
+            10 + cell["num_prompts"] * cell["input_len"] / 20000 + waves * cell["output_len"] * 0.03
+        )
+        return max(60.0, guess)
 
     def run_cell(
         self,
@@ -1186,9 +1192,7 @@ class Driver:
                         continue
                     self.summary["runs"].append(self.run_cell(engine, cell, repeat, runs_dir))
                     self.write_summary()
-        if self.client is not None:
-            self.stop_process(self.client, grace_s=5)
-            self.client = None
+        # The benchmark client is independent of the engine and stays up for the next one.
         record["final_metrics"] = scrape_metrics()
         record["exit_code"] = self.stop_process(self.server)
         self.server = None
