@@ -247,9 +247,7 @@ def bin_table(
             log_ratio = b[mask] - a[mask]  # log p_B - log p_dec
             row["k3"] = float(np.mean(np.expm1(log_ratio) - log_ratio))
             ratio = np.exp(log_ratio)
-            row["share_ratio_outside_band"] = float(
-                np.mean((ratio < band[0]) | (ratio > band[1]))
-            )
+            row["share_ratio_outside_band"] = float(np.mean((ratio < band[0]) | (ratio > band[1])))
         rows.append(row)
     return rows
 
@@ -317,7 +315,9 @@ def comparison_block(
         gmask = groups == group
         if gmask.sum() < 100:
             continue
-        s, slo, shi = bootstrap_slope(seq_stats(seq[gmask], x[gmask], absd[gmask], n_seq), reps, seed)
+        s, slo, shi = bootstrap_slope(
+            seq_stats(seq[gmask], x[gmask], absd[gmask], n_seq), reps, seed
+        )
         by_entropy.append(
             {
                 "entropy_lo": float(edges[group]),

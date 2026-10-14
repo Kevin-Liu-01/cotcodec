@@ -143,8 +143,7 @@ def prefill_logprobs(
     if prompt_logprobs is None or len(prompt_logprobs) != total:
         raise ValueError("prompt_logprobs missing or not aligned with the sequence")
     return [
-        float(prompt_logprobs[prompt_len + t][tok].logprob)
-        for t, tok in enumerate(completion_ids)
+        float(prompt_logprobs[prompt_len + t][tok].logprob) for t, tok in enumerate(completion_ids)
     ]
 
 
@@ -285,7 +284,9 @@ def worker_main(args: argparse.Namespace) -> int:
                 seed=seed,
                 stop_token_ids=[end_of_turn],
             )
-            items.append((seq_id, TokensPrompt(prompt_token_ids=prompt_ids[row["prompt_index"]]), params))
+            items.append(
+                (seq_id, TokensPrompt(prompt_token_ids=prompt_ids[row["prompt_index"]]), params)
+            )
             meta[seq_id] = {"prompt_index": row["prompt_index"], "seed": seed}
     log("rollouts-start", requests=len(items))
     finished, info = run_requests(llm, items, args.deadline, flag, log)
@@ -351,9 +352,7 @@ def worker_main(args: argparse.Namespace) -> int:
         out / "tokens.npz",
         offsets=np.asarray(offsets, dtype=np.int64),
         prompt_len=np.asarray([len(s["prompt_ids"]) for s in sequences], dtype=np.int32),
-        token_ids=np.asarray(
-            [t for s in sequences for t in s["completion_ids"]], dtype=np.int32
-        ),
+        token_ids=np.asarray([t for s in sequences for t in s["completion_ids"]], dtype=np.int32),
         logp_decode=np.asarray([v for s in sequences for v in s["logp_decode"]], dtype=np.float32),
         logp_prefill=np.asarray(
             [

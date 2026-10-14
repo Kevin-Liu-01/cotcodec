@@ -97,7 +97,9 @@ class GdnSwitch:
         for cell in getattr(self.original, "__closure__", None) or ():
             value = cell.cell_contents
             if callable(value) and value is not self.torch_chunk:
-                resolved = f"{getattr(value, '__module__', '?')}.{getattr(value, '__qualname__', '?')}"
+                resolved = (
+                    f"{getattr(value, '__module__', '?')}.{getattr(value, '__qualname__', '?')}"
+                )
         info["stock_resolution"] = resolved
         return info
 
@@ -160,7 +162,9 @@ def set_precision(torch: Any, path: str) -> dict[str, Any]:
         "allow_tf32": False,
         "float32_matmul_precision": "highest",
         "sdpa_gqa_flag": "off (repeat_kv)" if fp32 else "stock",
-        "sdpa_backends": ["EFFICIENT_ATTENTION"] if fp32 else ["FLASH_ATTENTION", "EFFICIENT_ATTENTION"],
+        "sdpa_backends": ["EFFICIENT_ATTENTION"]
+        if fp32
+        else ["FLASH_ATTENTION", "EFFICIENT_ATTENTION"],
     }
 
 
