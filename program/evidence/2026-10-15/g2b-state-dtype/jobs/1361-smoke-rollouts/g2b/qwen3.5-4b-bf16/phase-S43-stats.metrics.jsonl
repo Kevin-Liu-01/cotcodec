@@ -1,0 +1,3 @@
+{"generation_tokens": 17408.0, "kv_usage": 0.0, "preemptions": 0.0, "prompt_tokens": 9579.0, "running": 0.0, "t": 0.0, "waiting": 0.0}
+{"generation_tokens": 21122.0, "kv_usage": 0.03670484338346902, "preemptions": 0.0, "prompt_tokens": 17685.0, "running": 64.0, "t": 0.5, "waiting": 0.0}
+{"generation_tokens": 25600.0, "kv_usage": 0.0, "preemptions": 0.0, "prompt_tokens": 17685.0, "running": 0.0, "t": 0.9294, "waiting": 0.0}

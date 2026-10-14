@@ -1,0 +1,8 @@
+7e68ec07cd3efe95f02c05efa81b651333fe3c7947ef87c7f389d0e6e48c3256  ./qwen3.6-35b-a3b-fp32/phase-R-stats.npz
+66586cf5badec97d72b2355ff17870479d00133618f2bf82dff5fb4c072e0e27  ./qwen3.6-35b-a3b-fp32/phase-S42-stats.npz
+dabff920bfd20cd5b3cf208f860166ea0eb3e2f2e82bfe3e5d9dc047fd6ff748  ./qwen3.6-35b-a3b-fp32/phase-S43-stats.npz
+fed23aed1ae8ecbdb1ddf6ce7f6f76011262bd497b188b578bdab2b1e6c28932  ./qwen3.6-35b-a3b-fp32/phase-S44-stats.npz
+f3e7f5f5b168918b963b7cb449330ebc7f355ced8641751903e5719198057aa8  ./qwen3.6-35b-a3b-fp32/texts.jsonl.gz
+bbe02dcb99506e51d0059b051efbd2ffc2c03c860baac37fe7448f64e78bf794  ./qwen3.6-35b-a3b-fp32/tf-sequences.json
+b0d8b281f454168d160c0f9600468a1da6f87d6f103f4317224f3ad111ab87bf  ./qwen3.6-35b-a3b-fp32/tokens.npz
+3b2d20de940b9c1177c64e9c9c13a8e71b1df02f5fa5c80cb01a702d7d427141  ./tf-input.json

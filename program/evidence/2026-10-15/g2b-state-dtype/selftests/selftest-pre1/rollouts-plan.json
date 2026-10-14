@@ -1,0 +1,200 @@
+{
+  "claim_level": "exploratory",
+  "experiment_id": "g2b-state-dtype-v1",
+  "models": {
+    "qwen3.5-4b": {
+      "arms": {
+        "bf16": {
+          "engine_kwargs": {
+            "disable_log_stats": false,
+            "dtype": "bfloat16",
+            "enable_prefix_caching": false,
+            "gpu_memory_utilization": 0.9,
+            "limit_mm_per_prompt": {
+              "image": 0,
+              "video": 0
+            },
+            "logprobs_mode": "raw_logprobs",
+            "mamba_ssm_cache_dtype": "bfloat16",
+            "max_model_len": 33536,
+            "max_num_batched_tokens": 8192,
+            "max_num_seqs": 512,
+            "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+            "seed": 42,
+            "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+            "trust_remote_code": false
+          },
+          "rollout_max_tokens": 32768,
+          "rollout_requests": 72,
+          "saturation_requests_per_wave": {
+            "42": 512,
+            "43": 512,
+            "44": 512
+          },
+          "state_dtype": "bfloat16"
+        },
+        "fp32": {
+          "engine_kwargs": {
+            "disable_log_stats": false,
+            "dtype": "bfloat16",
+            "enable_prefix_caching": false,
+            "gpu_memory_utilization": 0.9,
+            "limit_mm_per_prompt": {
+              "image": 0,
+              "video": 0
+            },
+            "logprobs_mode": "raw_logprobs",
+            "mamba_ssm_cache_dtype": "auto",
+            "max_model_len": 33536,
+            "max_num_batched_tokens": 8192,
+            "max_num_seqs": 512,
+            "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+            "seed": 42,
+            "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+            "trust_remote_code": false
+          },
+          "rollout_max_tokens": 32768,
+          "rollout_requests": 72,
+          "saturation_requests_per_wave": {
+            "42": 512,
+            "43": 512,
+            "44": 512
+          },
+          "state_dtype": "auto"
+        }
+      },
+      "gen_seconds": 450
+    },
+    "qwen3.5-9b": {
+      "arms": {
+        "bf16": {
+          "engine_kwargs": {
+            "disable_log_stats": false,
+            "dtype": "bfloat16",
+            "enable_prefix_caching": false,
+            "gpu_memory_utilization": 0.9,
+            "limit_mm_per_prompt": {
+              "image": 0,
+              "video": 0
+            },
+            "logprobs_mode": "raw_logprobs",
+            "mamba_ssm_cache_dtype": "bfloat16",
+            "max_model_len": 33536,
+            "max_num_batched_tokens": 8192,
+            "max_num_seqs": 512,
+            "model": "/model-cache/cotcodec-models/qwen3.5-9b",
+            "seed": 42,
+            "tokenizer": "/model-cache/cotcodec-models/qwen3.5-9b",
+            "trust_remote_code": false
+          },
+          "rollout_max_tokens": 32768,
+          "rollout_requests": 72,
+          "saturation_requests_per_wave": {
+            "42": 512,
+            "43": 512,
+            "44": 512
+          },
+          "state_dtype": "bfloat16"
+        },
+        "fp32": {
+          "engine_kwargs": {
+            "disable_log_stats": false,
+            "dtype": "bfloat16",
+            "enable_prefix_caching": false,
+            "gpu_memory_utilization": 0.9,
+            "limit_mm_per_prompt": {
+              "image": 0,
+              "video": 0
+            },
+            "logprobs_mode": "raw_logprobs",
+            "mamba_ssm_cache_dtype": "auto",
+            "max_model_len": 33536,
+            "max_num_batched_tokens": 8192,
+            "max_num_seqs": 512,
+            "model": "/model-cache/cotcodec-models/qwen3.5-9b",
+            "seed": 42,
+            "tokenizer": "/model-cache/cotcodec-models/qwen3.5-9b",
+            "trust_remote_code": false
+          },
+          "rollout_max_tokens": 32768,
+          "rollout_requests": 72,
+          "saturation_requests_per_wave": {
+            "42": 512,
+            "43": 512,
+            "44": 512
+          },
+          "state_dtype": "auto"
+        }
+      },
+      "gen_seconds": 570
+    },
+    "qwen3.6-35b-a3b": {
+      "arms": {
+        "bf16": {
+          "engine_kwargs": {
+            "disable_log_stats": false,
+            "dtype": "bfloat16",
+            "enable_prefix_caching": false,
+            "gpu_memory_utilization": 0.9,
+            "limit_mm_per_prompt": {
+              "image": 0,
+              "video": 0
+            },
+            "logprobs_mode": "raw_logprobs",
+            "mamba_ssm_cache_dtype": "bfloat16",
+            "max_model_len": 33536,
+            "max_num_batched_tokens": 8192,
+            "max_num_seqs": 128,
+            "model": "/model-cache/cotcodec-models/qwen3.6-35b-a3b",
+            "seed": 42,
+            "tokenizer": "/model-cache/cotcodec-models/qwen3.6-35b-a3b",
+            "trust_remote_code": false
+          },
+          "rollout_max_tokens": 16384,
+          "rollout_requests": 64,
+          "saturation_requests_per_wave": {
+            "42": 128,
+            "43": 128,
+            "44": 128
+          },
+          "state_dtype": "bfloat16"
+        },
+        "fp32": {
+          "engine_kwargs": {
+            "disable_log_stats": false,
+            "dtype": "bfloat16",
+            "enable_prefix_caching": false,
+            "gpu_memory_utilization": 0.9,
+            "limit_mm_per_prompt": {
+              "image": 0,
+              "video": 0
+            },
+            "logprobs_mode": "raw_logprobs",
+            "mamba_ssm_cache_dtype": "auto",
+            "max_model_len": 33536,
+            "max_num_batched_tokens": 8192,
+            "max_num_seqs": 128,
+            "model": "/model-cache/cotcodec-models/qwen3.6-35b-a3b",
+            "seed": 42,
+            "tokenizer": "/model-cache/cotcodec-models/qwen3.6-35b-a3b",
+            "trust_remote_code": false
+          },
+          "rollout_max_tokens": 16384,
+          "rollout_requests": 64,
+          "saturation_requests_per_wave": {
+            "42": 128,
+            "43": 128,
+            "44": 128
+          },
+          "state_dtype": "auto"
+        }
+      },
+      "gen_seconds": 180
+    }
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ]
+}

@@ -1,0 +1,43 @@
+# g2b-state-dtype-v1 (EXPLORATORY) rollouts: phase R (long reasoning rollouts) and phase S (saturation waves), qwen3.6-35b-a3b, GDN state auto
+# Slurm limit 16 min x 1 H100 = 0.2667 GPU-h cap; the drivers stop starting work 210 s before it.
+runtime: docker-single-node-discovery-v1
+name: g2b-rs-q36-35b-a3b-fp32
+image_id: sha256:f86cd2c181940e9db5c49930750d6bcd496e532af2fa0401024675d372592ff1
+git_sha: "ef7ee50cb8145f55e776d7695fa4ef6985d165af"
+source_sha256: "9b4d30a890c2f13b2e32f08b9802db0ae7418374b1dc7dccd76830f36c1a7039"
+run_root: /home/kevin/cotcodec-runs/stage0/g2b-state-dtype/runs/rs
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 192
+  minutes: 16
+budget:
+  max_gpu_hours: 0.2667
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.6-35b-a3b
+  revision: "995ad96eacd98c81ed38be0c5b274b04031597b0"
+  receipt_sha256: "18c2a12881bf613c7110439b8e765ff89a4c060a1fb60aee62bb7250890ce1f9"
+  artifact_root_sha256: "8ac6d764b84034f4ed0df3f2388c9180afceab806f7e75f5d1e43a73bdd2736b"
+command:
+  - "python"
+  - "scripts/run_g2b_rollouts.py"
+  - "run"
+  - "--model"
+  - "qwen3.6-35b-a3b"
+  - "--state-dtype"
+  - "auto"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--output-dir"
+  - "/outputs/g2b"
+  - "--allocation-minutes"
+  - "16"

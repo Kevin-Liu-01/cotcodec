@@ -1,0 +1,17 @@
+[
+  "python",
+  "scripts/run_g2b_rollouts.py",
+  "run",
+  "--model",
+  "qwen3.5-4b",
+  "--state-dtype",
+  "bfloat16",
+  "--seeds",
+  "42",
+  "43",
+  "44",
+  "--output-dir",
+  "/outputs/g2b",
+  "--allocation-minutes",
+  "19"
+]

@@ -1,0 +1,190 @@
+== builds ef7ee50c at 2026-10-14T22:23:57Z
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== smoke rollouts 4B bf16 at 2026-10-14T22:26:06Z
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== smoke prefill 4B at 2026-10-14T22:28:18Z
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== smoke teacher-force 4B at 2026-10-14T22:28:18Z
+1364 g2b-smoke-prefill-4b PENDING 0:00 gres:gpu:h100:1
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== smoke teacher-force 4B at 2026-10-14T22:28:29Z
+1364 g2b-smoke-prefill-4b RUNNING 0:10 gres:gpu:h100:1
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main R+S rs-3.5-4b-fp32 at 2026-10-14T22:31:49Z
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main R+S q35-4b fp32 at 2026-10-14T22:31:56Z
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main R+S q35-4b bf16 at 2026-10-14T22:31:57Z
+1368 g2b-rs-q35-4b-fp32 PENDING 0:00 gres:gpu:h100:1
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main R+S q35-9b fp32 at 2026-10-14T22:31:57Z
+1368 g2b-rs-q35-4b-fp32 PENDING 0:00 gres:gpu:h100:1
+1370 g2b-rs-q35-4b-bf16 PENDING 0:00 gres:gpu:h100:1
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main R+S q35-9b bf16 at 2026-10-14T22:31:58Z
+1372 g2b-rs-q35-9b-fp32 PENDING 0:00 gres:gpu:h100:1
+1368 g2b-rs-q35-4b-fp32 RUNNING 0:00 gres:gpu:h100:1
+1370 g2b-rs-q35-4b-bf16 RUNNING 0:00 gres:gpu:h100:1
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main R+S q36-35b-a3b fp32 at 2026-10-14T22:31:58Z
+1372 g2b-rs-q35-9b-fp32 PENDING 0:00 gres:gpu:h100:1
+1374 g2b-rs-q35-9b-bf16 PENDING 0:00 gres:gpu:h100:1
+1368 g2b-rs-q35-4b-fp32 RUNNING 0:00 gres:gpu:h100:1
+1370 g2b-rs-q35-4b-bf16 RUNNING 0:00 gres:gpu:h100:1
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main R+S q36-35b-a3b bf16 at 2026-10-14T22:31:59Z
+1372 g2b-rs-q35-9b-fp32 PENDING 0:00 gres:gpu:h100:1
+1374 g2b-rs-q35-9b-bf16 PENDING 0:00 gres:gpu:h100:1
+1376 g2b-rs-q36-35b-a3b-fp32 PENDING 0:00 gres:gpu:h100:1
+1368 g2b-rs-q35-4b-fp32 RUNNING 0:01 gres:gpu:h100:1
+1370 g2b-rs-q35-4b-bf16 RUNNING 0:01 gres:gpu:h100:1
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== research build 4555c647 at 2026-10-14T22:32:40Z
+1368 g2b-rs-q35-4b-fp32 RUNNING 0:42
+1370 g2b-rs-q35-4b-bf16 RUNNING 0:42
+1372 g2b-rs-q35-9b-fp32 RUNNING 0:39
+1374 g2b-rs-q35-9b-bf16 RUNNING 0:39
+1376 g2b-rs-q36-35b-a3b-fp32 RUNNING 0:39
+1378 g2b-rs-q36-35b-a3b-bf16 RUNNING 0:39
+== smoke teacher-force 4B, attempt 2 at 2026-10-14T22:33:25Z
+1380 g2b-selftest-cpu PENDING 0:00 N/A
+1368 g2b-rs-q35-4b-fp32 RUNNING 1:27 gres:gpu:h100:1
+1370 g2b-rs-q35-4b-bf16 RUNNING 1:27 gres:gpu:h100:1
+1372 g2b-rs-q35-9b-fp32 RUNNING 1:24 gres:gpu:h100:1
+1374 g2b-rs-q35-9b-bf16 RUNNING 1:24 gres:gpu:h100:1
+1376 g2b-rs-q36-35b-a3b-fp32 RUNNING 1:24 gres:gpu:h100:1
+1378 g2b-rs-q36-35b-a3b-bf16 RUNNING 1:24 gres:gpu:h100:1
+0, 74629 MiB, 0 %
+1, 75153 MiB, 0 %
+2, 19883 MiB, 0 %
+3, 19885 MiB, 0 %
+4, 4 MiB, 0 %
+5, 4 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== prefill 4B at 2026-10-14T22:46:37Z
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== teacher-force 4B at 2026-10-14T22:46:37Z
+1385 g2b-prefill-q35-4b PENDING 0:00 gres:gpu:h100:1
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== prefill 9B at 2026-10-14T22:47:15Z
+1385 g2b-prefill-q35-4b RUNNING 0:38 gres:gpu:h100:1
+1387 g2b-tf-q35-4b RUNNING 0:35 gres:gpu:h100:1
+0, 4 MiB, 0 %
+1, 1071 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== teacher-force 9B at 2026-10-14T22:47:15Z
+1389 g2b-prefill-q35-9b PENDING 0:00 gres:gpu:h100:1
+1385 g2b-prefill-q35-4b RUNNING 0:38 gres:gpu:h100:1
+1387 g2b-tf-q35-4b RUNNING 0:35 gres:gpu:h100:1
+0, 4 MiB, 0 %
+1, 1071 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %

@@ -1,0 +1,9 @@
+{
+  "artifact_root_sha256": "8ac6d764b84034f4ed0df3f2388c9180afceab806f7e75f5d1e43a73bdd2736b",
+  "backend": "huggingface",
+  "mode": "full",
+  "model_id": "qwen3.6-35b-a3b",
+  "publication_eligible": true,
+  "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+  "total_bytes": 71926865825
+}
