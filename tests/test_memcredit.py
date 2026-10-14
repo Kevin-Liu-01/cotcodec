@@ -521,3 +521,19 @@ def test_stream_requests_stops_at_the_deadline(fake_vllm: None) -> None:
     assert info["stopped_by"] == "time budget"
     assert info["aborted"] == 2 and info["not_started"] == 4 and info["finished"] == 0
     assert sorted(engine.aborted) == ["r0", "r1"]
+
+
+def test_census_rows_and_summary() -> None:
+    census = _load("memcredit_census")
+    config = mc.load_config()
+    gold = {3: "My favourite paint colour for the car is blue", 9: "I repainted my car last May"}
+    rec = _record("q1", "multi-session", "What colour did I paint my car?", _haystack(20, gold))
+    abst = _record("q2_abs", "temporal-reasoning", "When?", _haystack(20, {4: "x"}))
+    rows = [census.question_row(rec, config), census.question_row(abst, config)]
+    assert rows[0]["gold_user_turns"] == 2 and rows[0]["full_study_eligible"]
+    assert rows[0]["gold_user_in_top_k"] == 2 and len(rows[0]["gold_user_ranks"]) == 2
+    assert rows[1]["ineligible_reason"] == "abstention"
+    summary = census.summarize(rows, 8)
+    assert summary["all"]["full_study_eligible"] == 1
+    assert summary["all"]["all_gold_in_top_8"] == 1 and summary["all"]["gold_recall_at_8"] == 1.0
+    assert summary["multi-session"]["required_count_distribution"] == {2: 1}
