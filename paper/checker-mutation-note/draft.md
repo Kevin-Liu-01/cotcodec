@@ -577,8 +577,13 @@ Its offline rescoring applied `zinv` to 36 `compare_pptx_files` episodes per job
 and changed **0 of 1,808 E verdicts**, with 0 live-against-offline replay mismatches; the 16
 episodes of `53ad5833` again kept their live scores [E-RESC]. E's registered sensitivity
 without the three gold-defect tasks of section 3.3 (110 tasks), raw or corrected, reads the
-same harness classification (Near-equivalent) and admission outcome (NO-GO) as its primary set
-[E-RES; D97]. For these
+same harness classification and admission outcome as its primary set [E-RES; D97]. The
+classification is Near-equivalent, the harness study's bounded-difference class: the
+harnesses' difference lies within the registered margins, which is not a claim of no
+difference. The admission outcome is NO-GO, which reads the mean of the two sizes' harness
+shares, not each size on its own. E's readings are not externally anchored (the registered
+external anchor was unavailable, as in S1a), and they hold only for these two sizes, these two
+certified harnesses and S1a's configuration [E-RES]. For these
 two policies at 15 steps, the reorder defect moved no outcome in either run. A stronger agent
 that rebuilds or reorders slide shapes could meet it; neither run measures that.
 

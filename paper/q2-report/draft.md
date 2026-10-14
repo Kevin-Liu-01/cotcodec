@@ -25,7 +25,7 @@ study of the checkers (the dossier's item R04). Its evidence ([NUI], [NUI-REG], 
 code `harness/r04_nuisance/` and `infra/r04-nuisance/`, and the tests
 `tests/test_r04_nuisance.py` and `tests/test_r04_evidence.py`) resolves at `9d320c6e` on `main`,
 the base of the revision's branch `stage0/r04-text`. Revision 6 adds the result of the harness
-study's registered successor E. Its evidence ([E], [E-AN], [E-REG], [DEC D85, D96, D97],
+study's registered successor E. Its evidence ([E], [E-AN], [E-REG], [DEC D85, D92, D96, D97],
 [LEDGER row 19], and the paths it adds in sections 9.4, 10.1 and 10.3: E's merged records,
 report, joint reading and plan, its code `harness/q2_stage1e/` and tests, and
 `ops/q2e-analysis/`) resolves at `4ca30d03` on `main`, the base of the revision's branch
@@ -179,28 +179,33 @@ preregistrations, built the harnesses, submitted and monitored the host jobs, ra
 the program decisions recorded in `program/decisions.md` on the owner's behalf, and drafted this
 report. Fresh agent sessions with no part in a run re-verified the action path (two verifiers, one
 per stage) [AP2-VA, AP2-VB] and the harness study (a recompute and a claims check) [S1A, disclosure
-5]. For successor E, a fresh verifier reran the frozen analysis code, which reproduced every
-registered output byte for byte, and reimplemented the analysis without the harness code; a second
-verifier checked the results file against the registration. Both ran after that file was first
-written, a disclosed deviation [E, deviation 1]. The design study was attacked by an adversarial
-review [DS2]. The checker study's registered analysis was run by its operator from a fresh export of
-the frozen code [MUT]. A fresh verifier reproduced its rerun with the VM fidelity report [DEC D79],
-and two fresh verifiers reproduced the adjudication's isolation audit and, byte for byte from the
-frozen code, every audit summary and analysis of its record, its sensitivities and its controls [DEC
-D82].
-One of the checker audit's two raters was Claude, run as one isolated agent per item [DEC D25].
-The checker study's adjudication pool and spot check were answered by isolated agents of the
-same Claude model (section 6.5) [DEC D80, D81]. The program's adversarial design reviews also use
-an open-weight reviewer model.
+5]. For successor E, a fresh verifier reran the frozen analysis code, which reproduced byte for
+byte every registered output it reran (it did not refit the GLMM), and reimplemented the analysis
+without the harness code; a second verifier checked the results file against the registration.
+Both ran after that file was first written, a disclosed deviation [E, deviation 1]. The design study
+was attacked by an adversarial review [DS2]. The checker study's registered analysis was run by its
+operator from a fresh export of the frozen code [MUT]. A fresh verifier reproduced its rerun with
+the VM fidelity report [DEC D79], and two fresh verifiers reproduced the adjudication's isolation
+audit and, byte for byte from the frozen code, every audit summary and analysis of its record, its
+sensitivities and its controls [DEC D82]. One of the checker audit's two raters was Claude, run as
+one isolated agent per item [DEC D25]. The checker study's adjudication pool and spot check were
+answered by isolated agents of the same Claude model (section 6.5) [DEC D80, D81]. The program's
+adversarial design reviews also use an open-weight reviewer model.
 
 The program owner, a human, made two rulings used here: accepting the harness study's
 replacement decision rules (DR1 and DR5, section 4.2) and its offline-setup task exclusion [DEC
 D55]. The owner also asked the program to continue its work, and on 2026-10-11 delegated his
 pending research decisions to the program [DEC D80]. Under that delegation an isolated model,
 not the owner, adjudicated the checker study's 34-item pool and answered its 25-item spot check,
-a disclosed deviation from the registered plan [DEC D9, D80]. The owner has not reviewed this
-draft or the other decisions taken on the owner's behalf. No human has answered the adjudication
-pool or the spot check, and no human has re-run any analysis.
+a disclosed deviation from the registered plan [DEC D9, D80]. On 2026-10-12 the owner replied in
+one line that he approved every item pending for him. Read as covering only the items with no
+outward effect, that approval accepted the decisions taken on his behalf until then and gave the
+checker study's carried-over registration sign-offs, the earlier release of its blind specs among
+them; each outward action, publication of this report among them, still needs his yes on its
+exact text [DEC D92]. The decisions taken after that approval, two cited here for successor E
+among them, have not been reviewed by the owner [DEC D96, D97]. The owner has not reviewed this
+draft. No human has answered the adjudication pool or the spot check, and no human has re-run any
+analysis.
 
 ## How to read this report
 
@@ -245,8 +250,8 @@ sections 10.1 and 10.3's `harness/q2_zinv_reserve/` and section 10.3's
 [NUI-REG]), the citations [DEC D89] and [LEDGER row 18], and the paths it adds in sections 10.1
 and 10.3 (the study's score rows, `harness/r04_nuisance/`, `infra/r04-nuisance/`,
 `tests/test_r04_nuisance.py` and `tests/test_r04_evidence.py`) resolve at `9d320c6e`. The keys
-revision 6 adds ([E], [E-AN], [E-REG]), the citations [DEC D85, D96, D97] and [LEDGER row 19],
-and the paths it adds in sections 9.4, 10.1 and 10.3 (E's `e.jsonl`, `report.json`,
+revision 6 adds ([E], [E-AN], [E-REG]), the citations [DEC D85, D92, D96, D97] and [LEDGER row
+19], and the paths it adds in sections 9.4, 10.1 and 10.3 (E's `e.jsonl`, `report.json`,
 `joint.json` and `plan-e.json`, `harness/q2_stage1e/`, `tests/test_q2_stage1e.py`,
 `tests/test_q2_stage1e_prereg.py` and `ops/q2e-analysis/`) resolve at `4ca30d03`:
 
@@ -681,8 +686,8 @@ GPU-h in every branch, so it needed none [S1A-REG sections 2 and 6; DEC D47, D49
   V = 20 concurrent VMs, within V* = 32 [S1A].
 - **Sign-off.** The owner ruled on the registration's two reserved items: the replacement rules
   DR1 and DR5 (section 4.2) and the offline-setup exclusion. The program's agents signed the
-  other design items on the owner's behalf, and the owner's review of them is pending [DEC D55,
-  D56].
+  other design items on the owner's behalf, and the owner accepted them on 2026-10-12, when he
+  approved every item pending for him [DEC D55, D56, D92].
 
 ### 4.2 Registered estimands, rules and predictions
 
@@ -1106,11 +1111,12 @@ after S1a's readings, and carry no test. None of this changes DR2 or DR5.
   records before the results file is written. A single analyst ran the analysis, so the file's
   first version preceded that verification and was labelled provisional. The fresh verifier
   then rebuilt the merged records from checked copies of all eight jobs' raw records and reran
-  the frozen code: every registered output was byte-identical. Its own implementation, which
-  imports no harness module, reproduced every point estimate and every bootstrap bound on the
-  registered resamples to within 5e-7, and reached the same outcome for every rule, prediction
-  and sensitivity; it did not refit the GLMM. A second verifier checked the results file against
-  the registration and the outputs. Neither found a recomputation disagreement or a blocking
+  the frozen code: every registered output it reran was byte-identical (it did not refit the
+  GLMM, but checked the fit's input, outputs and convergence fields). Its own implementation,
+  which imports no harness module, reproduced every point estimate and every bootstrap bound on
+  the registered resamples to within 5e-7, and reached the same outcome for every rule,
+  prediction and sensitivity. A second verifier checked the results file against the
+  registration and the outputs. Neither found a recomputation disagreement or a blocking
   item, and the wording items they raised were fixed [E, deviation 1].
 - **A departure from E's host-use condition.** E's sign-off allowed other workstreams on the host
   only in the gaps between E's sessions [DEC D85]. During session 3's 9B pair another workstream
@@ -1659,22 +1665,22 @@ run-to-run noise, the task draw and the checkers, and on this stack each has now
 action path, once certified, contributes little: at most about 1.5 pp per 20-action episode for the
 executor, with the harness parser covered only by tens of repetitions per case. Run-to-run noise is
 large: about 11-13% of rerun pairs disagree, reruns carry about a fifth to a quarter of outcome
-variance, and in S1a a whole serving session shifted success by 5.5 pp at one of the two sizes (no
-session pair of E's shifted after Holm). Which tasks are drawn dominates: about three quarters of
-outcome variance in the model-based split. The harness-by-task interaction, which a harness
-comparison hopes to read, is at most about 4% of outcome variance on these two closely related
-harnesses. Swapping one certified harness for the other changed task success by at most about 2.4 pp
-either way (90% interval), over all 113 tasks and four further sessions per size: a registered
-Near-equivalent reading, which bounds the difference and does not show that it is zero (section
-4.9). At this resolution the harness is a small factor next to rerun noise. Checkers add their own
-candidate errors, concentrated in specific families: one presentation comparator fails about 90% of
-equivalent shape reorders. And a score is tied to the benchmark revision it was taken at: 110 of 116
-tasks differ in config or in the code of a checker they reach between two revisions. It is tied to
-the image's LibreOffice build and locale too: two newer builds flip about a fifth of the reference
-golds' verdicts, and three of four other locales flip three or four (section 6.8). The action-path
-bound, the checker counts, the build and locale flips and the revision drift are properties of this
-stack; the noise, variance-split and harness numbers are estimates for Qwen3.5-4B and 9B at 15
-steps, not externally anchored.
+variance, and in S1a a whole serving session shifted success by 5.5 pp at one of the two sizes (in
+E, no session pair's shift test rejected after Holm). Which tasks are drawn dominates: about three
+quarters of outcome variance in the model-based split. The harness-by-task interaction, which a
+harness comparison hopes to read, is at most about 4% of outcome variance on these two closely
+related harnesses. Swapping one certified harness for the other changed task success by at most
+about 2.4 pp either way (90% interval), over all 113 tasks and four further sessions per size: a
+registered Near-equivalent reading, which bounds the difference and does not show that it is zero
+(section 4.9). At this resolution the harness is a small factor next to rerun noise. Checkers add
+their own candidate errors, concentrated in specific families: one presentation comparator fails
+about 90% of equivalent shape reorders. And a score is tied to the benchmark revision it was taken
+at: 110 of 116 tasks differ in config or in the code of a checker they reach between two revisions.
+It is tied to the image's LibreOffice build and locale too: two newer builds flip about a fifth of
+the reference golds' verdicts, and three of four other locales flip three or four (section 6.8). The
+action-path bound, the checker counts, the build and locale flips and the revision drift are
+properties of this stack; the noise, variance-split and harness numbers are estimates for Qwen3.5-4B
+and 9B at 15 steps, not externally anchored.
 
 ### 7.2 Implications for comparisons (derived)
 
@@ -1805,10 +1811,12 @@ limits.
 11. **Derived numbers.** Section 7.2's table is arithmetic on the measured floor under stated
     assumptions.
 12. **Decisions taken on the owner's behalf.** Most program decisions cited here were taken by
-    the program's agents on the owner's behalf and await the owner's review; only the two rulings
-    named in "Authorship and process" are the owner's own [DEC D55]. The delegation itself is the
-    owner's instruction, but the steps decided under it, the model adjudication among them, are
-    the agents' [DEC D80].
+    the program's agents on the owner's behalf. On 2026-10-12 the owner accepted those taken until
+    then, in a one-line approval of every item pending for him [DEC D92]; those taken after that
+    approval, two cited for successor E among them, await his review [DEC D96, D97]. The owner's
+    own acts are the two rulings, the delegation and that approval, all named in "Authorship and
+    process" [DEC D55, D80, D92]. The delegation itself is the owner's instruction, but the steps
+    decided under it, the model adjudication among them, are the agents' [DEC D80].
 
 ## 9. Reusing the instrument
 
@@ -2019,15 +2027,17 @@ verdict for every reserve mutant, so whoever answers the spot check should do so
 packets before reading them; no reserve mutant is in the spot check or the adjudication pool
 [ZR; DEC D88]. The nuisance-invariance study's analysis files and score rows name the checker's
 verdict per gold task and per S1a end state, and section 6.8 names one flipped gold, so the same
-order applies to them [NUI]. Also still open: review of the program decisions taken on the
-owner's behalf; confirmation of the earlier release of the checker study's blind specs; and the
-three action-path items marked **[PENDING]** in sections 2.7 and 11. The registered action-path
-verdict and the registered readings of S1a and E will not change. The candidate counts in section 6
-do not depend on the audit, and neither does the held-out test, which reads the operators' labels,
-nor the nuisance-invariance study's readings, whose flips no rater, model or person has judged; the
-audit-confirmed counts, the label-error estimates and the gold-defect calls rest on model judgment
-and could change under human review. Also open without the owner: the S1a runbook's step-12
-verification record and a second check of the session-2 lane checks [S1A, disclosures 4-5].
+order applies to them [NUI]. Also still open: the owner's review of the program decisions taken
+on his behalf after his approval of 2026-10-12, two cited for successor E among them (that
+approval accepted the earlier decisions and confirmed the earlier release of the checker study's
+blind specs) [DEC D92, D96, D97]; and the three action-path items marked **[PENDING]** in
+sections 2.7 and 11. The registered action-path verdict and the registered readings of S1a and E
+will not change. The candidate counts in section 6 do not depend on the audit, and neither does the
+held-out test, which reads the operators' labels, nor the nuisance-invariance study's readings,
+whose flips no rater, model or person has judged; the audit-confirmed counts, the label-error
+estimates and the gold-defect calls rest on model judgment and could change under human review. Also
+open without the owner: the S1a runbook's step-12 verification record and a second check of the
+session-2 lane checks [S1A, disclosures 4-5].
 
 ## References
 
@@ -2271,7 +2281,7 @@ agents on the owner's behalf.
 | D86 | The held-out test of the corrected comparator on the reserve split (the dossier's R03 part (b)) is adopted under the owner's delegation and runs CPU only, in successor E's gaps |
 | D88 | That test passes at descriptive status (13 of 13 reorder mutants accepted, no violation newly accepted), and the original comparator's reorder defect replicates on the held-out tasks |
 | D89 | The nuisance-invariance study's result: the build and locale arms read DRIFT (LibreOffice 25.8 and 26.2; de_DE, ar_EG and tr_TR) and the route arm MINOR, under both checkers; no flip is adjudicated |
-| D92 | **The owner's own approval** of all pending items (2026-10-12), cited in the revision record: the review of D1-D91 is accepted, and each outward item, publication of this report among them, still needs his yes on its exact text |
+| D92 | **The owner's own approval** of all pending items (2026-10-12), read as approving the internal ones: the review of D1-D91 is accepted, and the checker study's carried-over registration sign-offs, the blind-spec release among them, are given; each outward item, publication of this report among them, still needs his yes on its exact text |
 | D96 | (In the part cited) another workstream's file staging on the host during E's session-3 9B pair is disclosed as a departure from D85's host-use condition |
 | D97 | Successor E's result: DR2 Near-equivalent (δ = 0.00 pp, 90% interval [−2.44, +2.44]), DR5 NO-GO; two fresh verifiers reproduced it; Q2's harness question is answered at this design's resolution |
 
@@ -2318,20 +2328,22 @@ bootstrap's Monte Carlo error), DR5 NO-GO (π_small 0.055, one-sided [0.010, 0.1
 not shown below 0.13), D_b 10.7% (8.0-13.5%), not externally anchored, Near-equivalent as a
 bounded-difference class and not a claim of no difference, and the scope of two sizes, two
 certified harnesses and S1a's configuration. It changes no S1a, design-study or checker-study
-number. Changed: the header's date, revision number and evidence commit; the status block;
-summary items 2 and 3 and the summary's lead; "Contributions"; "Authorship and process" (E's
-verification); the scope paragraph, the evidence keys ([E], [E-AN], [E-REG]) and three glossary
-entries; Figure 1's section 4 node and section 1's list; section 4's title and lead, a sentence
-each in sections 4.5 and 4.8, and the new sections 4.9 (with Tables 5 and 6) and 4.10; section
-5's lead, its findings on E, its decision paragraph and the π_small and GLMM rows of Table 9;
-section 6.6, which now reports E's rescoring and gold-defect sensitivity; sections 7.1 and 7.2;
-limitations 1, 2, 4, 5 and 6 and the list's lead; sections 9.4, 10.1, 10.3 and 10.4; section 11,
+number. Changed: the header's date, revision number, evidence commit and evidence citations; the
+status block; summary items 2 and 3 and the summary's lead; "Contributions"; "Authorship and
+process" (E's verification and D92); the scope paragraph and its citations, the evidence keys
+([E], [E-AN], [E-REG]) and three glossary entries; Figure 1's section 4 node and section 1's
+list; section 4's title and lead, section 4.1's sign-off item (D92), a sentence each in sections
+4.5 and 4.8, and the new sections 4.9 (with Tables 5 and 6) and 4.10; section 5's lead, its
+findings on E, its decision paragraph and the π_small and GLMM rows of Table 9; section 6.6,
+which now reports E's rescoring and gold-defect sensitivity; sections 7.1 and 7.2; limitations
+1, 2, 4, 5, 6 and 12 and the list's lead; sections 9.4, 10.1, 10.3 and 10.4; section 11,
 whose successor-E item is replaced by what follows E; section 12; Appendix D.1-D.4; and this
 record. The two new tables are numbered 5 and 6, so revision 5's Tables 5-11 are Tables 7-13
 here; the entries below for earlier revisions keep their own numbering. No figure or appendix
 table reads E's data, so none was regenerated; Figure 1 is Mermaid source and was edited by
-hand. The cover note's successor-E row and review row were updated, and its discrepancy D7
-records that `program/state.json` still gives E's results as waiting for a fresh verifier.
+hand. The cover note's successor-E, review, adjudication and blind-spec rows were updated; its
+discrepancy D7 records that `program/state.json` still gives E's results as waiting for a fresh
+verifier, and D8 that it still lists the blind-spec release as open.
 
 Every E number revision 6 adds was checked against E's `RESULTS.md` and, for the estimates,
 intervals, tests and rule outcomes, against `analysis/report.json`; the rescoring counts against
@@ -2340,14 +2352,19 @@ row's hash, freeze time and commit against `ledger.jsonl` and the git log; the G
 `program/state.json`; and the job numbers against E's `README.md`, `analysis/README.md` and its
 registration's pre-freeze log. Table 6's success percentages and the 3% of section 7.2 are
 arithmetic on those counts and on D_b. The checker-mutation note's section 3.8, summary and
-limitations now carry E's rescoring too; every number added there is mapped in the note's
+limitations now carry E's rescoring too, and section 3.8 gives E's readings with their labels
+(Near-equivalent as a bounded-difference class, NO-GO on the mean of the two sizes' harness
+shares, not externally anchored, and E's scope); every number added there is mapped in the note's
 `data/claims.json`, whose `base_commit` is now `4ca30d03`, and its `scripts/check_claims.py`
 passes with 0 claim errors and 0 uncovered numbers.
 
-Not changed in revision 6: the statements that the program decisions taken on the owner's
-behalf await his review ("Authorship and process", section 4.1, limitation 12 and section 12).
-They predate D92, under which the owner accepted D1-D91 on 2026-10-12, and the cover note flags
-them for the next revision.
+Revision 6 also brings the report up to D92, under which the owner on 2026-10-12 approved every
+item then pending for him; the program read that as accepting the review of D1-D91 and giving
+the checker-mutation registration's carried-over sign-offs, the blind-spec release among them.
+Revision 5 said that the decisions taken on his behalf awaited his review and that the
+blind-spec release awaited confirmation ("Authorship and process", section 4.1, limitation 12
+and section 12). Those passages now say what D92 accepted and that the decisions taken after it,
+D96 and D97 among those cited, await his review.
 
 Revision 5 (2026-10-12) adds the registered nuisance-invariance study of the checkers (the
 question-renewal dossier's item R04, `r04-checker-nuisance-invariance-v1`), which ran after
