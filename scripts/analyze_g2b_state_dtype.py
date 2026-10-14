@@ -558,6 +558,145 @@ def series(stats_path: Path, step_s: float) -> dict[str, list[float]]:
     return out
 
 
+def last_boxed(text: str) -> str | None:
+    """The content of the last \\boxed{...} in a completion (balanced braces), if any."""
+
+    start = text.rfind("\\boxed{")
+    if start < 0:
+        return None
+    depth, out = 1, []
+    for char in text[start + 7 :]:
+        depth += (char == "{") - (char == "}")
+        if depth == 0:
+            break
+        out.append(char)
+    return "".join(out).strip() if depth == 0 else None
+
+
+def normalize_answer(value: str | None) -> str:
+    """A light normalization for string matching (spaces, \\left/\\right, dfrac/tfrac, $)."""
+
+    text = value or ""
+    for old, new in (
+        ("\\left", ""),
+        ("\\right", ""),
+        ("\\!", ""),
+        ("\\,", ""),
+        ("$", ""),
+        ("dfrac", "frac"),
+        ("tfrac", "frac"),
+    ):
+        text = text.replace(old, new)
+    return re.sub(r"\s+", "", text)
+
+
+def rollout_records(worker: Path, answers: dict[int, str]) -> list[dict[str, Any]]:
+    """Per rollout: prompt, seed, length, how it ended, and whether its last boxed answer matches
+    the reference by normalized string (approximate; not an equivalence checker)."""
+
+    import gzip
+
+    meta = json.loads((worker / "sequences.json").read_text(encoding="utf-8"))
+    texts = {}
+    path = worker / "texts.jsonl.gz"
+    if path.is_file():
+        with gzip.open(path, "rt", encoding="utf-8") as handle:
+            for line in handle:
+                row = json.loads(line)
+                texts[row["sequence_id"]] = row["text"]
+    out = []
+    for s in meta["sequences"]:
+        text = texts.get(s["sequence_id"], "")
+        boxed = last_boxed(text) if s["finish_reason"] == "stop" else None
+        match = None
+        if boxed is not None:
+            match = normalize_answer(boxed) == normalize_answer(answers.get(s["prompt_index"]))
+        out.append(
+            {
+                "prompt_index": s["prompt_index"],
+                "seed": s["seed"],
+                "completion_len": s["completion_len"],
+                "finish_reason": s["finish_reason"],
+                "boxed_matches_reference": match,
+            }
+        )
+    return out
+
+
+def sign_test(wins: int, losses: int) -> float:
+    """Exact two-sided binomial test of wins against losses at p = 1/2."""
+
+    n = wins + losses
+    if n == 0:
+        return float("nan")
+    k = min(wins, losses)
+    tail = sum(math.comb(n, i) for i in range(k + 1)) / 2**n
+    return min(1.0, 2 * tail)
+
+
+def termination_table(jobs: list[dict[str, Any]], lengths: list[int]) -> dict[str, Any]:
+    """Per model: how the two arms' phase-R rollouts ended, how many ended (EOS) before each
+    length, and a paired comparison over (prompt, seed): which arm's rollout ended first. A
+    rollout that did not end with EOS (cap or time budget) counts as running past every
+    observed EOS; a tie is both ending at one length or neither ending."""
+
+    out: dict[str, Any] = {}
+    for model_id in sorted({j["model"] for j in jobs if j.get("rollouts")}):
+        arms = {
+            j["arm"]: {(r["prompt_index"], r["seed"]): r for r in j["rollouts"]}
+            for j in jobs
+            if j["model"] == model_id and j.get("rollouts") and not j.get("smoke")
+        }
+        if set(arms) != set(ARMS):
+            continue
+        model: dict[str, Any] = {}
+        for arm, recs in arms.items():
+            vals = list(recs.values())
+            model[arm] = {
+                "rollouts": len(vals),
+                "ended_eos": sum(r["finish_reason"] == "stop" for r in vals),
+                "hit_cap": sum(r["finish_reason"] == "length" for r in vals),
+                "cut_at_time_budget": sum(r["finish_reason"] == "cut_at_time_budget" for r in vals),
+                "observed_to": max(r["completion_len"] for r in vals),
+                "ended_before": {
+                    str(n): sum(
+                        r["finish_reason"] == "stop" and r["completion_len"] < n for r in vals
+                    )
+                    for n in lengths
+                },
+                "boxed_matches_reference": sum(bool(r["boxed_matches_reference"]) for r in vals),
+            }
+        shared = sorted(set(arms["fp32"]) & set(arms["bf16"]))
+        bf16_longer = fp32_longer = 0
+        per_prompt: dict[int, int] = {}
+        for key in shared:
+            a, b = arms["fp32"][key], arms["bf16"][key]
+            a_end = a["completion_len"] if a["finish_reason"] == "stop" else math.inf
+            b_end = b["completion_len"] if b["finish_reason"] == "stop" else math.inf
+            per_prompt.setdefault(key[0], 0)
+            if a_end < b_end:
+                bf16_longer += 1
+                per_prompt[key[0]] += 1
+            elif b_end < a_end:
+                fp32_longer += 1
+                per_prompt[key[0]] -= 1
+        wins = sum(v > 0 for v in per_prompt.values())
+        losses = sum(v < 0 for v in per_prompt.values())
+        model["paired"] = {
+            "pairs": len(shared),
+            "bf16_ran_longer": bf16_longer,
+            "fp32_ran_longer": fp32_longer,
+            "neither": len(shared) - bf16_longer - fp32_longer,
+            "sign_test_p": sign_test(bf16_longer, fp32_longer),
+            "prompts_bf16_longer": wins,
+            "prompts_fp32_longer": losses,
+            "prompts_tied": len(per_prompt) - wins - losses,
+            "prompt_sign_test_p": sign_test(wins, losses),
+        }
+        out[model_id] = model
+    return out
+
+
 def throughput_job(job_dir: Path, config: dict[str, Any]) -> dict[str, Any]:
     summary = json.loads((job_dir / "summary.json").read_text(encoding="utf-8"))
     model_id, arm = summary["model"], summary["arm"]
@@ -597,6 +736,9 @@ def throughput_job(job_dir: Path, config: dict[str, Any]) -> dict[str, Any]:
             worker / f"phase-{name}-stats.npz", 1.0 if name.startswith("S") else 5.0
         )
     record["series"] = phases
+    if (worker / "sequences.json").is_file():
+        answers = {int(r["prompt_index"]): r["answer"] for r in g2.load_prompts(config)}
+        record["rollouts"] = rollout_records(worker, answers)
     return record
 
 
@@ -788,6 +930,35 @@ def markdown(result: dict[str, Any]) -> str:
             f"Packed path: {model['packs']}; r2 vs r1 by slot in pack: {model['packed_by_slot']}"
         )
         lines.append("")
+    term = result.get("termination", {})
+    if term:
+        lines.append("## Phase R rollouts: how they ended (both arms, same prompts and seeds)")
+        lines.append("")
+        lines.append(
+            "| model | arm | rollouts | ended (EOS) | hit 32K cap | cut by time | "
+            "ended before 8K / 16K / 24K / 28K | boxed answer = reference |"
+        )
+        lines.append("|---|---|---:|---:|---:|---:|---|---:|")
+        for model_id, model in term.items():
+            for arm in ARMS:
+                a = model[arm]
+                keys = ("8192", "16384", "24576", "28672")
+                ended = " / ".join(str(a["ended_before"][k]) for k in keys)
+                lines.append(
+                    f"| {model_id} | {arm} | {a['rollouts']} | {a['ended_eos']} | {a['hit_cap']} | "
+                    f"{a['cut_at_time_budget']} | {ended} | {a['boxed_matches_reference']} |"
+                )
+        lines.append("")
+        for model_id, model in term.items():
+            pr = model["paired"]
+            lines.append(
+                f"- {model_id}: of {pr['pairs']} (prompt, seed) pairs, the bf16-state rollout ran "
+                f"longer in {pr['bf16_ran_longer']} and the fp32 one in {pr['fp32_ran_longer']} "
+                f"({pr['neither']} ties; exact sign test p = {pr['sign_test_p']:.1e}); by prompt "
+                f"(net over 3 seeds) {pr['prompts_bf16_longer']} vs {pr['prompts_fp32_longer']}, "
+                f"{pr['prompts_tied']} tied (p = {pr['prompt_sign_test_p']:.1e})."
+            )
+        lines.append("")
     sat = result.get("saturation", {})
     if sat:
         lines.append(
@@ -814,6 +985,7 @@ def markdown(result: dict[str, Any]) -> str:
                 )
         lines.append("")
     jobs = result.get("throughput_jobs", [])
+    lengths = result.get("settings", {}).get("concurrency_lengths", [])
     if jobs:
         lines.append("## Engines: block pool and phase R")
         lines.append("")
@@ -828,7 +1000,7 @@ def markdown(result: dict[str, Any]) -> str:
             lines.append(
                 f"| {j['model']} | {j['arm']} | {j['gdn_state_mib_per_sequence']:.1f} | "
                 f"{fmt(j['engine'].get('num_gpu_blocks'))} | {fmt(j.get('block_tokens'))} | "
-                f"{fmt(j['log'].get('kv_cache_tokens'), 0)} | {' / '.join(str(v) for v in ms.values())} | "  # noqa: E501
+                f"{fmt(int(j['log']['kv_cache_tokens']) if j['log'].get('kv_cache_tokens') else None)} | {' / '.join(str(ms.get(str(n), 'n/a')) for n in lengths)} | "  # noqa: E501
                 f"{fmt(r.get('output_tok_per_s'), 0)} | {fmt(r.get('peak_running'), 0)} | "
                 f"{fmt(r.get('preemptions_delta'), 0)} | {fmt(r.get('peak_kv_usage'), 3)} | "
                 f"{r.get('finished')}/{r.get('requests')} |"
@@ -998,6 +1170,7 @@ def analyze_main(args: argparse.Namespace) -> int:
         jobs = json.loads(Path(args.throughput).read_text(encoding="utf-8"))["jobs"]
         result["throughput_jobs"] = jobs
         result["saturation"] = saturation_table(jobs, config)
+        result["termination"] = termination_table(jobs, [4096, 8192, 16384, 24576, 28672, 32768])
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
     g2.write_json(out / "analysis.json", result)

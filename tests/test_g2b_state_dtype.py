@@ -314,3 +314,33 @@ def test_parse_log(tmp_path: Path) -> None:
 def test_entry_points_avoid_archived_names() -> None:
     for name in ("run_g2b_rollouts", "run_g2b_teacher_force", "analyze_g2b_state_dtype"):
         assert "mem" not in name and "letta" not in name
+
+
+def test_boxed_answer_and_sign_test() -> None:
+    text = r"so \boxed{\frac{1}{2}} then \boxed{\dfrac{11}{2}}"
+    assert analysis.last_boxed(text) == r"\dfrac{11}{2}"
+    assert analysis.last_boxed("no answer") is None
+    assert analysis.last_boxed(r"\boxed{unclosed") is None
+    assert analysis.normalize_answer(r"\dfrac{11}{2}") == analysis.normalize_answer(r"\frac{11}{2}")
+    assert analysis.sign_test(5, 5) == 1.0
+    assert analysis.sign_test(10, 0) == pytest.approx(2 / 2**10)
+    assert analysis.sign_test(47, 10) < 1e-5
+
+
+def test_termination_table_pairs_by_prompt_and_seed() -> None:
+    def rec(p, s, n, f):
+        return {"prompt_index": p, "seed": s, "completion_len": n, "finish_reason": f,
+                "boxed_matches_reference": f == "stop"}  # fmt: skip
+
+    jobs = [
+        {"model": "m", "arm": "fp32", "rollouts": [rec(0, 42, 100, "stop"), rec(1, 42, 900, "stop"),
+                                                   rec(2, 42, 500, "length")]},
+        {"model": "m", "arm": "bf16", "rollouts": [rec(0, 42, 400, "stop"), rec(1, 42, 300, "stop"),
+                                                   rec(2, 42, 450, "cut_at_time_budget")]},
+    ]  # fmt: skip
+    t = analysis.termination_table(jobs, [200, 1000])["m"]
+    assert t["fp32"]["ended_eos"] == 2 and t["fp32"]["hit_cap"] == 1
+    assert t["bf16"]["cut_at_time_budget"] == 1
+    assert t["fp32"]["ended_before"] == {"200": 1, "1000": 2}
+    assert t["paired"]["bf16_ran_longer"] == 1 and t["paired"]["fp32_ran_longer"] == 1
+    assert t["paired"]["neither"] == 1
