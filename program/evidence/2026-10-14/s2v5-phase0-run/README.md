@@ -129,6 +129,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1298 | K1 A2 on E (H-OSW-fixed and H-GA, seed 43, both observation settings) | 1,344 | 09:11:16 | 09:11:17-10:43:02 (91.8 min) | COMPLETED 0:0 | A2 pass; both campaigns count |
 | 1299 | K1 A5 on E (boot reset and hygiene: 21 cold boots) | 192 | 10:46:09 | 10:46:09-11:03:24 (17.3 min) | COMPLETED 0:0 | A5 pass; the campaign counts |
 | 1300 | K1 A6 on E (cross-app canary: Writer, Chrome, VS Code, GNOME Terminal; seed 43; q2's targets) | 222 | 11:04:39 | 11:04:39-11:54:25 (49.8 min) | COMPLETED 0:0 | A6 pass (300 of 300, all 60 entries 5 of 5); the campaign counts |
+| 1301 | K1 C1 on A (H-GA-buggy, H-OSW-up; seed 42) | 154 | 11:55:21 | 11:55:21-12:01:48 (6.5 min) | COMPLETED 0:0 | C1 pass; both campaigns count |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -217,6 +218,12 @@ and the last `scontrol` record):
   `ap_delta_v5.verdict` on this job: A6 on E `pass`, no problem, and its cells-file check `pass`
   (the campaign read q2's file, as E must). The campaign counts (driver exit 0, `infra_gates_pass`,
   image unchanged, no labelled container; no foreign-abort or snapshot problem). As v4's job 1262.
+- **1301 (C1, A).** Host snapshot: load 0.37, queue empty, 0 labelled containers. H-GA-buggy: 70
+  trials (2 sessions), 20 passed; H-OSW-up: 70 trials, 40 passed; the known-defect cells fail 5 of
+  5 (H-GA-buggy R01, R02, R05, R06, R07; H-OSW-up R08-R11), as on E (`summary-1301.jsonl`). Cold
+  boots at most 17.3 s; step p95 1.39 s and 1.22 s. `ap_delta_v5.verdict` on this job: C1 on A
+  `pass`, no problem. Both campaigns count (driver exit 0, `infra_gates_pass`, image unchanged, no
+  labelled container; no foreign-abort or snapshot problem).
 
 ## Stint 1 stop (operator's record, 10:44Z on 2026-10-14)
 
