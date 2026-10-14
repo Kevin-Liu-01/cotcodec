@@ -135,7 +135,7 @@ for A6 on ER and AR); the cycle records and VM logs stay on the host under
 | 1304 | K1 C3 on A, part 2 of 3 (17 mutant campaigns, M11-M21) | 1,404 | 13:11:18 | 13:11:19-14:07:52 (56.6 min) | COMPLETED 0:0 | All 17 campaigns count; every mutant fails at least one cell |
 | 1305 | K1 C3 on A, part 3 of 3 (10 mutant campaigns, M22-M28, and the 3 unmutated references) | 1,076 | 14:08:30 | 14:08:31-14:51:53 (43.4 min) | COMPLETED 0:0 | All 13 campaigns count. **C3 on A pass** over parts 1-3 (1303-1305): 42 mutants killed, 2 equivalent, 0 survived |
 | 1306 | K1 A1 on A (L0-fixed at N = 1, seeds 43 and 44, both observation settings) | 1,394 | 14:53:01 | 14:53:02-16:20:12 (87.2 min) | COMPLETED 0:0 | A1 pass and C4 pass; both campaigns count; 2,000 of 2,000 trials |
-| 1307 | K1 A2 on A (H-OSW-fixed and H-GA, seed 43, both observation settings) | 1,344 | 16:20:55 | 16:20:55- (running at the stint-2 stop) | | Not yet collected (stint 3) |
+| 1307 | K1 A2 on A (H-OSW-fixed and H-GA, seed 43, both observation settings) | 1,344 | 16:20:55 | 16:20:56-17:52:35 (91.7 min) | COMPLETED 0:0 | A2 pass; both campaigns count |
 
 Per job (host snapshot before submission, from `submit-JOB.txt`; the outcome from `check-JOB.json`
 and the last `scontrol` record):
@@ -273,9 +273,16 @@ and the last `scontrol` record):
   sessions must have step p95 at most 2 x A1's). `ap_delta_v5.verdict` on this job: A1 on A `pass`
   and C4 on A `pass`, no problem. Both campaigns count (driver exit 0, `infra_gates_pass`, image
   unchanged, no labelled container; no foreign-abort or snapshot problem).
-- **1307 (A2, A).** Submitted at 16:20:55Z on an empty queue (host snapshot: load 0.73, 0 labelled
-  containers, K1 runs 1292-1306). Running at the stint-2 stop; its watch, collection and check
-  are stint 3's (`ops/watch_job.sh 1307`, then `ops/collect_k1.sh 1307`).
+- **1307 (A2, A; submitted in stint 2, collected in stint 3).** Host snapshot: load 0.73, queue
+  empty, 0 labelled containers, K1 runs 1292-1306. H-OSW-fixed: 18 sessions, 990 trials, 970
+  passed; H-GA: 16 sessions, 930 trials, 890 passed, as on E. Every failed trial is on a cell
+  outside its layer's spec (H-OSW-fixed R03 and R09; H-GA R02, R04, R06 and R10, each 0 of 10 over
+  both settings; `summary-1307.jsonl`), which A2 does not score. 0 guest-server restarts over 759
+  and 693 counting accessibility calls, 0 excused, retried or state-not-observed trials; 17 of 17
+  and 15 of 15 reset sentinels pristine. Cold boots at most 17.3 s; step p95 2.58 s and 2.62 s.
+  `ap_delta_v5.verdict` on this job: A2 on A `pass`, no problem. Both campaigns count (driver exit
+  0, `infra_gates_pass`, image unchanged, no labelled container; no foreign-abort or snapshot
+  problem).
 
 ## Stint 1 stop (operator's record, 10:44Z on 2026-10-14)
 
