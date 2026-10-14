@@ -1,0 +1,6 @@
+2026-10-14T22:26:36Z LongMemEval-S fetch job 1362 submitted (CPU, no GRES, git 859306c8)
+2026-10-14T22:42:42Z pre-image CPU selftest 1383 submitted (src a18fa56b mounted into vLLM overlay fabad633, no GRES)
+2026-10-14T22:59:56Z vLLM overlay build job 1393 submitted (git b95ac22c, archive ddfb8533, 1 H100, limit 5 min)
+2026-10-14T23:01:12Z vLLM overlay build 1393 COMPLETED (RunTime 00:01:04): sha256:51540dd50e0ec28c2cb4a77b51a70ba4767d58edf0fc6673ff1c81678210c2a3
+2026-10-14T23:01:12Z post-build CPU selftest 1394 submitted (baked b95ac22c in sha256:51540dd5, no GRES)
+2026-10-14T23:01:39Z main job submitted: 1397 (git b95ac22c, image 51540dd5, artifact 3b70f56f, 1 H100, limit 75 min)

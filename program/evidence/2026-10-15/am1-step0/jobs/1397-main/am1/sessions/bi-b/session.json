@@ -1,0 +1,100 @@
+{
+  "engine_kwargs": {
+    "dtype": "bfloat16",
+    "enable_prefix_caching": true,
+    "gpu_memory_utilization": 0.85,
+    "logprobs_mode": "raw_logprobs",
+    "max_model_len": 4096,
+    "max_num_batched_tokens": 8192,
+    "max_num_seqs": 256,
+    "model": "/model-cache/cotcodec-models/qwen3-8b",
+    "seed": 42,
+    "tokenizer": "/model-cache/cotcodec-models/qwen3-8b",
+    "trust_remote_code": false
+  },
+  "exit": 0,
+  "init_s": 37.9,
+  "passes": [
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.003,
+        "finished": 16,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 25,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 0.71
+      },
+      "name": "smoke",
+      "requests": 16,
+      "status": "complete"
+    },
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.488,
+        "finished": 4096,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 220,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 22.574
+      },
+      "name": "greedy-all-canonical",
+      "requests": 4096,
+      "status": "complete"
+    },
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.115,
+        "finished": 1024,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 74,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 7.603
+      },
+      "name": "sampled-canonical",
+      "requests": 1024,
+      "status": "complete"
+    }
+  ],
+  "prompt_ids_sha256": "5ca59c236c1437f1ebd9e680fd0dbdd81b83b39f329456221d08e67db0faf5dc",
+  "session": {
+    "batch_invariant": true,
+    "id": "bi-b",
+    "max_num_batched_tokens": 8192,
+    "max_num_seqs": 256,
+    "min_start_s": 300,
+    "passes": [
+      {
+        "max_s": 120,
+        "name": "smoke",
+        "order": "canonical",
+        "sampling": "greedy",
+        "set": "smoke",
+        "smoke": true
+      },
+      {
+        "max_s": 720,
+        "name": "greedy-all-canonical",
+        "order": "canonical",
+        "sampling": "greedy",
+        "set": "all"
+      },
+      {
+        "max_s": 300,
+        "name": "sampled-canonical",
+        "order": "canonical",
+        "sampling": "sampled",
+        "set": "sampled"
+      }
+    ],
+    "prefix_caching": true
+  }
+}

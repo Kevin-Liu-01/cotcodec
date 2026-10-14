@@ -1,0 +1,1739 @@
+{
+  "artifact_sha256": "3b70f56ff8191cfb54f84f6a4ed8a37405160961a9d414894c77583a8620db06",
+  "claim_level": "exploratory",
+  "eligibility": {
+    "eligible_by_type": {
+      "knowledge-update": 72,
+      "multi-session": 120,
+      "single-session-user": 62,
+      "temporal-reasoning": 127
+    },
+    "reasons": {
+      "a gold turn is not a user turn": 3,
+      "abstention": 30,
+      "eligible": 381,
+      "type not in the demo strata": 86
+    }
+  },
+  "experiment_id": "memcredit-step0-v1",
+  "pools_config": {
+    "arms": [
+      "retrieved",
+      "gold"
+    ],
+    "distractor_seed": 42,
+    "max_memory_chars": 1500,
+    "size": 8
+  },
+  "questions": [
+    {
+      "answer_sha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+      "gold_in_pool": {
+        "gold": 2,
+        "retrieved": 2
+      },
+      "gold_turns_total": 2,
+      "pools": {
+        "gold": [
+          {
+            "bm25_rank": 60,
+            "bm25_score": 0.0,
+            "chars": 206,
+            "date": "2023/01/17 (Tue) 13:41",
+            "is_gold": false,
+            "session_id": "e1527aa0",
+            "session_index": 8,
+            "text_sha256": "ceac0a2ca9a9e362c5917968f93eddb0cd0e650e2a526f9f9df1bc4a9526e44a",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 89,
+            "bm25_score": 0.0,
+            "chars": 49,
+            "date": "2023/01/21 (Sat) 17:34",
+            "is_gold": false,
+            "session_id": "sharegpt_zEn1M0Q_0",
+            "session_index": 13,
+            "text_sha256": "f0a0da9a7e114860455580494d93601a8f4e3ee6a94aff0bcf8b6cbaed1ba429",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 101,
+            "bm25_score": 0.0,
+            "chars": 452,
+            "date": "2023/01/24 (Tue) 05:36",
+            "is_gold": false,
+            "session_id": "31903f54",
+            "session_index": 16,
+            "text_sha256": "1f29e438c5d5211cce6410143b7bf107a9220d0b8d57b4c7cf7ff90d6c034377",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 11,
+            "bm25_score": 3.72481,
+            "chars": 213,
+            "date": "2023/02/07 (Tue) 18:44",
+            "is_gold": false,
+            "session_id": "018426a5",
+            "session_index": 35,
+            "text_sha256": "aa5e1162ec792598f74a5ac0521f90fee75add6d38feef1e181aa678c87da258",
+            "truncated": false,
+            "turn_index": 10
+          },
+          {
+            "bm25_rank": 2,
+            "bm25_score": 8.547432,
+            "chars": 375,
+            "date": "2023/02/11 (Sat) 18:51",
+            "is_gold": true,
+            "session_id": "answer_88841f26_1",
+            "session_index": 40,
+            "text_sha256": "a4bcf2b1e1e367e7da1f84d9528bea0e91c379cb34aa6ea072e49b9cea0d2277",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 222,
+            "bm25_score": 0.0,
+            "chars": 431,
+            "date": "2023/02/22 (Wed) 09:04",
+            "is_gold": false,
+            "session_id": "c285b705_2",
+            "session_index": 41,
+            "text_sha256": "300a471d5c4c839621e15f553ea9ba48d5561328d6766ff3b6926aef378015f2",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 15.923712,
+            "chars": 337,
+            "date": "2023/03/04 (Sat) 09:10",
+            "is_gold": true,
+            "session_id": "answer_88841f26_2",
+            "session_index": 44,
+            "text_sha256": "22efdd80c99df20a915dbc95c122b2ec00fe160ae95ecb08f3edcb9c57ee253e",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 235,
+            "bm25_score": 0.0,
+            "chars": 264,
+            "date": "2023/03/04 (Sat) 09:10",
+            "is_gold": false,
+            "session_id": "answer_88841f26_2",
+            "session_index": 44,
+            "text_sha256": "943a096a4bdd9ceae8b5b87b9e9196a70f7a8c295f1a69c75dbc5bba19584d19",
+            "truncated": false,
+            "turn_index": 10
+          }
+        ],
+        "retrieved": [
+          {
+            "bm25_rank": 3,
+            "bm25_score": 4.869856,
+            "chars": 97,
+            "date": "2023/01/25 (Wed) 17:04",
+            "is_gold": false,
+            "session_id": "ultrachat_504309",
+            "session_index": 20,
+            "text_sha256": "129f1d6d877d2a55d8eb81484c685f14b92713991f1cbec0032696aeb6db9df2",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 6,
+            "bm25_score": 4.586803,
+            "chars": 180,
+            "date": "2023/01/27 (Fri) 20:47",
+            "is_gold": false,
+            "session_id": "ultrachat_475380",
+            "session_index": 23,
+            "text_sha256": "182c20e44bc04f293d9eb312ca548b259adb9584e74d30b8855fdc8571db4f2d",
+            "truncated": false,
+            "turn_index": 10
+          },
+          {
+            "bm25_rank": 5,
+            "bm25_score": 4.603445,
+            "chars": 122,
+            "date": "2023/02/10 (Fri) 03:54",
+            "is_gold": false,
+            "session_id": "ultrachat_69484",
+            "session_index": 38,
+            "text_sha256": "bfd1e523f603a28c03f62fe932c8b2f72052a1d577ad1af27c9e7e638ed944de",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 2,
+            "bm25_score": 8.547432,
+            "chars": 375,
+            "date": "2023/02/11 (Sat) 18:51",
+            "is_gold": true,
+            "session_id": "answer_88841f26_1",
+            "session_index": 40,
+            "text_sha256": "a4bcf2b1e1e367e7da1f84d9528bea0e91c379cb34aa6ea072e49b9cea0d2277",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 1,
+            "bm25_score": 10.465504,
+            "chars": 501,
+            "date": "2023/02/11 (Sat) 18:51",
+            "is_gold": false,
+            "session_id": "answer_88841f26_1",
+            "session_index": 40,
+            "text_sha256": "af10f1b45c23fc8fe024b2275b27de6dc0ffab2ed585f51246a97ea56d34e9a4",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 7,
+            "bm25_score": 4.429962,
+            "chars": 123,
+            "date": "2023/02/11 (Sat) 23:37",
+            "is_gold": false,
+            "session_id": "ultrachat_561204",
+            "session_index": 39,
+            "text_sha256": "2af6ab5a28418f94fd88caaa26812c583884d824f2709c9f5b86d902f9a0a904",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 15.923712,
+            "chars": 337,
+            "date": "2023/03/04 (Sat) 09:10",
+            "is_gold": true,
+            "session_id": "answer_88841f26_2",
+            "session_index": 44,
+            "text_sha256": "22efdd80c99df20a915dbc95c122b2ec00fe160ae95ecb08f3edcb9c57ee253e",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 4,
+            "bm25_score": 4.71761,
+            "chars": 239,
+            "date": "2023/03/04 (Sat) 21:39",
+            "is_gold": false,
+            "session_id": "55c23a23_2",
+            "session_index": 43,
+            "text_sha256": "3437dac27d174065f2aacf9dc79b08f4deeeb0e99bd4dcba1fb9a5adf390fee2",
+            "truncated": false,
+            "turn_index": 10
+          }
+        ]
+      },
+      "question_id": "6e984301",
+      "question_sha256": "2251cdd616ee03b8d69ed624e110bf628c98c0da3fb5a4ec0d5232306602779f",
+      "question_type": "temporal-reasoning",
+      "user_turns_total": 255
+    },
+    {
+      "answer_sha256": "102a9a6de9f2d3373f97096db34d0a3afeebb5a87131a43427473bfc5cdc1502",
+      "gold_in_pool": {
+        "gold": 2,
+        "retrieved": 2
+      },
+      "gold_turns_total": 2,
+      "pools": {
+        "gold": [
+          {
+            "bm25_rank": 113,
+            "bm25_score": 0.0,
+            "chars": 224,
+            "date": "2023/05/25 (Thu) 01:37",
+            "is_gold": false,
+            "session_id": "67a8ef5f",
+            "session_index": 21,
+            "text_sha256": "ef45c2f32fab962bcfda205790889f434078c5e33ea0605d346c827d4611ab0a",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 43,
+            "bm25_score": 0.0,
+            "chars": 62,
+            "date": "2023/05/25 (Thu) 03:04",
+            "is_gold": false,
+            "session_id": "sharegpt_d7bP5fb_0",
+            "session_index": 4,
+            "text_sha256": "da2435a8e06098ef5caee9698a46e8bcd967439ccf3ca47dc9219275c55e99a9",
+            "truncated": false,
+            "turn_index": 22
+          },
+          {
+            "bm25_rank": 3,
+            "bm25_score": 4.45738,
+            "chars": 322,
+            "date": "2023/05/25 (Thu) 07:52",
+            "is_gold": true,
+            "session_id": "answer_b3070ec4_2",
+            "session_index": 10,
+            "text_sha256": "e82f00011675708871c8ff7c8dd707516f69be9b8fe0f6e9829f6e0ccece6bbf",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 7.525543,
+            "chars": 399,
+            "date": "2023/05/25 (Thu) 14:25",
+            "is_gold": true,
+            "session_id": "answer_b3070ec4_1",
+            "session_index": 40,
+            "text_sha256": "699656ccdcb8efec70e7c405a7bff41163f87a92d387d8d78fd978e451ace7da",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 63,
+            "bm25_score": 0.0,
+            "chars": 2769,
+            "date": "2023/05/25 (Thu) 18:43",
+            "is_gold": false,
+            "session_id": "sharegpt_uQMdL9t_0",
+            "session_index": 9,
+            "text_sha256": "f099a3c59cc7442cdbf7a8b4f1e418a5d23ad758e03948ce1791377e24d1746d",
+            "truncated": true,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 52,
+            "bm25_score": 0.0,
+            "chars": 129,
+            "date": "2023/05/25 (Thu) 20:03",
+            "is_gold": false,
+            "session_id": "ultrachat_270910",
+            "session_index": 7,
+            "text_sha256": "b1abb0fcf30236c2ce4d8d04b72cad261b789360a94ddf383141a304432454e5",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 226,
+            "bm25_score": 0.0,
+            "chars": 66,
+            "date": "2023/05/25 (Thu) 20:12",
+            "is_gold": false,
+            "session_id": "ultrachat_29758",
+            "session_index": 47,
+            "text_sha256": "975864d167205dac31e480d81cdfb673befdae44f6db3ba6c1e5a1c5702c2f62",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 172,
+            "bm25_score": 0.0,
+            "chars": 83,
+            "date": "2023/05/25 (Thu) 22:12",
+            "is_gold": false,
+            "session_id": "ultrachat_573894",
+            "session_index": 33,
+            "text_sha256": "aa4f6d257207485220ab1c13add609111e5b4fa614e8095f7640769df545d3cc",
+            "truncated": false,
+            "turn_index": 2
+          }
+        ],
+        "retrieved": [
+          {
+            "bm25_rank": 6,
+            "bm25_score": 3.234856,
+            "chars": 349,
+            "date": "2023/05/25 (Thu) 03:57",
+            "is_gold": false,
+            "session_id": "845e4b0b_2",
+            "session_index": 11,
+            "text_sha256": "7f6393e0051095f18d21dc1d4539256a79961ad84e37a48edb93f0860648bc92",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 3,
+            "bm25_score": 4.45738,
+            "chars": 322,
+            "date": "2023/05/25 (Thu) 07:52",
+            "is_gold": true,
+            "session_id": "answer_b3070ec4_2",
+            "session_index": 10,
+            "text_sha256": "e82f00011675708871c8ff7c8dd707516f69be9b8fe0f6e9829f6e0ccece6bbf",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 5,
+            "bm25_score": 3.613048,
+            "chars": 516,
+            "date": "2023/05/25 (Thu) 07:52",
+            "is_gold": false,
+            "session_id": "answer_b3070ec4_2",
+            "session_index": 10,
+            "text_sha256": "909b377b58d38f87d5baf1ebf8ba5809a50395b560435cd2a333396bd1943d78",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 1,
+            "bm25_score": 7.163052,
+            "chars": 424,
+            "date": "2023/05/25 (Thu) 09:19",
+            "is_gold": false,
+            "session_id": "3f787a78_1",
+            "session_index": 41,
+            "text_sha256": "af00d12d2b6527ee30e9478d69d80aa0200c5e1ba9a5f559914e79e98bca9770",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 7.525543,
+            "chars": 399,
+            "date": "2023/05/25 (Thu) 14:25",
+            "is_gold": true,
+            "session_id": "answer_b3070ec4_1",
+            "session_index": 40,
+            "text_sha256": "699656ccdcb8efec70e7c405a7bff41163f87a92d387d8d78fd978e451ace7da",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 2,
+            "bm25_score": 4.576493,
+            "chars": 291,
+            "date": "2023/05/25 (Thu) 14:25",
+            "is_gold": false,
+            "session_id": "answer_b3070ec4_1",
+            "session_index": 40,
+            "text_sha256": "f5a0024aae8ba84f0df5239b6e875c9ff70df540926aa8e3f16f52ac5e46581d",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 7,
+            "bm25_score": 3.143973,
+            "chars": 412,
+            "date": "2023/05/25 (Thu) 15:59",
+            "is_gold": false,
+            "session_id": "45b155ec_2",
+            "session_index": 25,
+            "text_sha256": "b323ccc833cfda1e0c499b6427eb85cb5974603084bd694480b5319395820535",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 4,
+            "bm25_score": 4.130313,
+            "chars": 250,
+            "date": "2023/05/25 (Thu) 15:59",
+            "is_gold": false,
+            "session_id": "45b155ec_2",
+            "session_index": 25,
+            "text_sha256": "ab83570c353ef2b3a1ac710d1de58bea8b6ad53aca220abbf16d01e80c681e52",
+            "truncated": false,
+            "turn_index": 4
+          }
+        ]
+      },
+      "question_id": "gpt4_70e84552",
+      "question_sha256": "3f062ae0ada19befe0c45bedab5b6ab69179cf4d3d3fca1580467b0d9e9e35a4",
+      "question_type": "temporal-reasoning",
+      "user_turns_total": 232
+    },
+    {
+      "answer_sha256": "a4bb5df8e940d605f1da0c93c8d6085681c561a9edd47904da0c8bbf59ef97dd",
+      "gold_in_pool": {
+        "gold": 2,
+        "retrieved": 2
+      },
+      "gold_turns_total": 2,
+      "pools": {
+        "gold": [
+          {
+            "bm25_rank": 37,
+            "bm25_score": 0.0,
+            "chars": 207,
+            "date": "2023/05/20 (Sat) 03:14",
+            "is_gold": false,
+            "session_id": "7a2bdd15_1",
+            "session_index": 2,
+            "text_sha256": "0cbe2cb55820405d5fd37e66728bb2f7dca116063344db70c20db3b680367b99",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 40,
+            "bm25_score": 0.0,
+            "chars": 133,
+            "date": "2023/05/20 (Sat) 09:25",
+            "is_gold": false,
+            "session_id": "ultrachat_177260",
+            "session_index": 3,
+            "text_sha256": "9a0fcc7b291dc369c5c1c7ed11bc418ca7d1d97b810f96d5c012db5a993fed2d",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 46,
+            "bm25_score": 0.0,
+            "chars": 160,
+            "date": "2023/05/20 (Sat) 09:49",
+            "is_gold": false,
+            "session_id": "ultrachat_29575",
+            "session_index": 4,
+            "text_sha256": "98c1b97813d685200f8c1583f7a0523a9fd481e8e589cfa9c6ff070e9cbe9dde",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 80,
+            "bm25_score": 0.0,
+            "chars": 89,
+            "date": "2023/05/22 (Mon) 02:06",
+            "is_gold": false,
+            "session_id": "ultrachat_256325",
+            "session_index": 12,
+            "text_sha256": "f954d57170fa7addfe3e4c551fbd5bcec9f8dc7a3eda680fc61088b27d92a681",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 19.409491,
+            "chars": 104,
+            "date": "2023/05/22 (Mon) 05:10",
+            "is_gold": true,
+            "session_id": "answer_96c743d0_2",
+            "session_index": 13,
+            "text_sha256": "152b96836c9634d7a8285be4019369d2894ce0658c3adb1deead1ae8e3fa54da",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 136,
+            "bm25_score": 0.0,
+            "chars": 191,
+            "date": "2023/05/24 (Wed) 14:58",
+            "is_gold": false,
+            "session_id": "69b2c1e6",
+            "session_index": 24,
+            "text_sha256": "27d5b6bffb0c863a6e71bcc955e3759a0bb20d4143f2cd1c2a2e19776ef0b34a",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 1,
+            "bm25_score": 18.772124,
+            "chars": 123,
+            "date": "2023/05/26 (Fri) 22:35",
+            "is_gold": true,
+            "session_id": "answer_96c743d0_1",
+            "session_index": 28,
+            "text_sha256": "19024696feae4450a269e494d020eb278c00f9cfc34fd3d7053d9dead8407a5e",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 231,
+            "bm25_score": 0.0,
+            "chars": 146,
+            "date": "2023/05/30 (Tue) 06:36",
+            "is_gold": false,
+            "session_id": "a65ae9ff",
+            "session_index": 42,
+            "text_sha256": "60038ec66f1d5c15feebbf1a1307b548a17ca2189cbee08873e7ead11c851ee6",
+            "truncated": false,
+            "turn_index": 8
+          }
+        ],
+        "retrieved": [
+          {
+            "bm25_rank": 7,
+            "bm25_score": 7.36674,
+            "chars": 152,
+            "date": "2023/05/22 (Mon) 05:10",
+            "is_gold": false,
+            "session_id": "answer_96c743d0_2",
+            "session_index": 13,
+            "text_sha256": "88cd86bf2307b6b3ee4c42f07d0994c259f267371559caf7348aff9c534e1f6d",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 6,
+            "bm25_score": 8.276564,
+            "chars": 123,
+            "date": "2023/05/22 (Mon) 05:10",
+            "is_gold": false,
+            "session_id": "answer_96c743d0_2",
+            "session_index": 13,
+            "text_sha256": "708594f1637ede53a9869c878c4708629f88f700ca80d38d952dc3f114db1429",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 19.409491,
+            "chars": 104,
+            "date": "2023/05/22 (Mon) 05:10",
+            "is_gold": true,
+            "session_id": "answer_96c743d0_2",
+            "session_index": 13,
+            "text_sha256": "152b96836c9634d7a8285be4019369d2894ce0658c3adb1deead1ae8e3fa54da",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 3,
+            "bm25_score": 13.041461,
+            "chars": 114,
+            "date": "2023/05/22 (Mon) 05:10",
+            "is_gold": false,
+            "session_id": "answer_96c743d0_2",
+            "session_index": 13,
+            "text_sha256": "f05bddc2cd3b820e41127724b57ff9414fa5b20b6c6bd3e90d68c14c0319e4a4",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 2,
+            "bm25_score": 15.413524,
+            "chars": 206,
+            "date": "2023/05/22 (Mon) 05:10",
+            "is_gold": false,
+            "session_id": "answer_96c743d0_2",
+            "session_index": 13,
+            "text_sha256": "107ef58a75339dfd8c3dfd55af4512042307de5632953fbd7b0cd1a041420f39",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 5,
+            "bm25_score": 11.607661,
+            "chars": 83,
+            "date": "2023/05/26 (Fri) 22:35",
+            "is_gold": false,
+            "session_id": "answer_96c743d0_1",
+            "session_index": 28,
+            "text_sha256": "1beb678c0f1ee28ae25cb032f00d00dbf16955ecc79fb3055921d686cb5808f3",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 1,
+            "bm25_score": 18.772124,
+            "chars": 123,
+            "date": "2023/05/26 (Fri) 22:35",
+            "is_gold": true,
+            "session_id": "answer_96c743d0_1",
+            "session_index": 28,
+            "text_sha256": "19024696feae4450a269e494d020eb278c00f9cfc34fd3d7053d9dead8407a5e",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 4,
+            "bm25_score": 12.45454,
+            "chars": 196,
+            "date": "2023/05/26 (Fri) 22:35",
+            "is_gold": false,
+            "session_id": "answer_96c743d0_1",
+            "session_index": 28,
+            "text_sha256": "4acb4455fdde4964e8b88aefb9bb718b5b27be2bd9fc3ef6af05b74f816301da",
+            "truncated": false,
+            "turn_index": 8
+          }
+        ]
+      },
+      "question_id": "09ba9854",
+      "question_sha256": "431e5f10c52659b7170cb724e0a5e21923ffc956bbaf26133f42a9fb184c9272",
+      "question_type": "multi-session",
+      "user_turns_total": 239
+    },
+    {
+      "answer_sha256": "b322f5a716ebd783d166094ab1fab818ca782f1c61ab0dd2bff11af2f743bde9",
+      "gold_in_pool": {
+        "gold": 2,
+        "retrieved": 2
+      },
+      "gold_turns_total": 2,
+      "pools": {
+        "gold": [
+          {
+            "bm25_rank": 34,
+            "bm25_score": 0.0,
+            "chars": 163,
+            "date": "2023/05/20 (Sat) 03:04",
+            "is_gold": false,
+            "session_id": "d79173aa_1",
+            "session_index": 2,
+            "text_sha256": "b3c5e9febcbd0f0ff72423b1f01f3180ba44b2be44b86f0556c0c73af394ae66",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 17.666708,
+            "chars": 247,
+            "date": "2023/05/20 (Sat) 07:46",
+            "is_gold": true,
+            "session_id": "answer_4eb6d671_2",
+            "session_index": 3,
+            "text_sha256": "b8a8a52e5c280449d96050ae9e73e2745cc54ccba9945a5a4a92731ad7149c71",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 67,
+            "bm25_score": 0.0,
+            "chars": 247,
+            "date": "2023/05/22 (Mon) 10:31",
+            "is_gold": false,
+            "session_id": "87aaee77",
+            "session_index": 8,
+            "text_sha256": "c10f0c573ef38f917f080353ff74a5f1aa9926170874f792dd9af8df7462d703",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 84,
+            "bm25_score": 0.0,
+            "chars": 318,
+            "date": "2023/05/22 (Mon) 18:49",
+            "is_gold": false,
+            "session_id": "5114b32e_2",
+            "session_index": 11,
+            "text_sha256": "839485faa32b6ad0c5bce4f6ed94eb0143541e1e1dd7dede975066b6aa1acb47",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 106,
+            "bm25_score": 0.0,
+            "chars": 188,
+            "date": "2023/05/23 (Tue) 09:57",
+            "is_gold": false,
+            "session_id": "ultrachat_10500",
+            "session_index": 15,
+            "text_sha256": "1f38f20726bce579cd876263beb37f2989a0b1c7ae92cdf9eeaf4cb95433df47",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 110,
+            "bm25_score": 0.0,
+            "chars": 297,
+            "date": "2023/05/23 (Tue) 09:57",
+            "is_gold": false,
+            "session_id": "ultrachat_10500",
+            "session_index": 15,
+            "text_sha256": "a20429b528bada58158ecb55f9a3f4d382635de46f94ad50eca89e61f9050f81",
+            "truncated": false,
+            "turn_index": 10
+          },
+          {
+            "bm25_rank": 1,
+            "bm25_score": 11.597097,
+            "chars": 524,
+            "date": "2023/05/29 (Mon) 17:24",
+            "is_gold": true,
+            "session_id": "answer_4eb6d671_1",
+            "session_index": 37,
+            "text_sha256": "8827502546dab6018eea5cd80c653dd357468e90506c4cdcc544ea8e87b5d364",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 236,
+            "bm25_score": 0.0,
+            "chars": 123,
+            "date": "2023/05/30 (Tue) 12:18",
+            "is_gold": false,
+            "session_id": "ultrachat_454267",
+            "session_index": 42,
+            "text_sha256": "bdfb309809a921effdfa28ae86a09dcb5e03043746d89275d5f7895006b91785",
+            "truncated": false,
+            "turn_index": 4
+          }
+        ],
+        "retrieved": [
+          {
+            "bm25_rank": 0,
+            "bm25_score": 17.666708,
+            "chars": 247,
+            "date": "2023/05/20 (Sat) 07:46",
+            "is_gold": true,
+            "session_id": "answer_4eb6d671_2",
+            "session_index": 3,
+            "text_sha256": "b8a8a52e5c280449d96050ae9e73e2745cc54ccba9945a5a4a92731ad7149c71",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 4,
+            "bm25_score": 4.159123,
+            "chars": 282,
+            "date": "2023/05/28 (Sun) 13:03",
+            "is_gold": false,
+            "session_id": "bdcee74e_3",
+            "session_index": 30,
+            "text_sha256": "4256593a54718224540099a75e25ab57b8d8a1b62d084aa08c4682db90136596",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 5,
+            "bm25_score": 4.105398,
+            "chars": 136,
+            "date": "2023/05/29 (Mon) 02:06",
+            "is_gold": false,
+            "session_id": "ultrachat_407355",
+            "session_index": 33,
+            "text_sha256": "3489989873636047c90c63e0625195867e2e8053038ab52e6d6e67079f866cb6",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 6,
+            "bm25_score": 3.308353,
+            "chars": 189,
+            "date": "2023/05/29 (Mon) 17:24",
+            "is_gold": false,
+            "session_id": "answer_4eb6d671_1",
+            "session_index": 37,
+            "text_sha256": "dfaa28115ebc70dbab177c312107152e8b364eab60313dd14638db294aa1a943",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 2,
+            "bm25_score": 7.894285,
+            "chars": 430,
+            "date": "2023/05/29 (Mon) 17:24",
+            "is_gold": false,
+            "session_id": "answer_4eb6d671_1",
+            "session_index": 37,
+            "text_sha256": "9c5e9371560502cf6c45d4b340a2db0a39a070c2e899fcf58da93f54641716f6",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 1,
+            "bm25_score": 11.597097,
+            "chars": 524,
+            "date": "2023/05/29 (Mon) 17:24",
+            "is_gold": true,
+            "session_id": "answer_4eb6d671_1",
+            "session_index": 37,
+            "text_sha256": "8827502546dab6018eea5cd80c653dd357468e90506c4cdcc544ea8e87b5d364",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 3,
+            "bm25_score": 6.54867,
+            "chars": 356,
+            "date": "2023/05/30 (Tue) 22:44",
+            "is_gold": false,
+            "session_id": "ec616e7e_4",
+            "session_index": 44,
+            "text_sha256": "d12d22a7aa5c3b045082646952659aeab0cf9fc60e4bb9ee96a1730e1489891a",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 7,
+            "bm25_score": 3.040072,
+            "chars": 266,
+            "date": "2023/05/30 (Tue) 22:44",
+            "is_gold": false,
+            "session_id": "ec616e7e_4",
+            "session_index": 44,
+            "text_sha256": "8068153d2d001938b6a28af51e7e1cd45a234de1c5307808fc365f0ee58e9978",
+            "truncated": false,
+            "turn_index": 6
+          }
+        ]
+      },
+      "question_id": "e6041065",
+      "question_sha256": "f061faf156d177d255361b4a9a041d391e8f944177b90defe90d4d96d9571e5c",
+      "question_type": "multi-session",
+      "user_turns_total": 245
+    },
+    {
+      "answer_sha256": "44778d82365e4af681c40d5f0eef5cf6f5899d3f0ac335050a7ed6779cf3f674",
+      "gold_in_pool": {
+        "gold": 2,
+        "retrieved": 2
+      },
+      "gold_turns_total": 2,
+      "pools": {
+        "gold": [
+          {
+            "bm25_rank": 49,
+            "bm25_score": 0.0,
+            "chars": 283,
+            "date": "2023/05/06 (Sat) 01:16",
+            "is_gold": false,
+            "session_id": "c51583cd_3",
+            "session_index": 3,
+            "text_sha256": "0e256a3b4fc090722b207ac1cb24aa2da80f6a901ac3a0df9d9dddf419d7fe36",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 177,
+            "bm25_score": 0.0,
+            "chars": 280,
+            "date": "2023/05/30 (Tue) 12:43",
+            "is_gold": false,
+            "session_id": "4f497ae2",
+            "session_index": 30,
+            "text_sha256": "6a580d98822d3f31a5ff91e839d9b8b73290362fa89ba22ac07bb294b3db2edf",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 2,
+            "bm25_score": 15.222566,
+            "chars": 335,
+            "date": "2023/05/30 (Tue) 17:45",
+            "is_gold": true,
+            "session_id": "answer_caf5b52e_2",
+            "session_index": 32,
+            "text_sha256": "23c9f8d658f462f4f32d490adaa9cf84ffc7b71eafee7a612d7d3a29d238f13c",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 105,
+            "bm25_score": 0.0,
+            "chars": 147,
+            "date": "2023/05/30 (Tue) 22:16",
+            "is_gold": false,
+            "session_id": "answer_caf5b52e_1",
+            "session_index": 17,
+            "text_sha256": "abfdfdd9738d8d393cbfb7beb78530688c3c3e6bde4c02b83fb2fb10c5c582cd",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 1,
+            "bm25_score": 24.783462,
+            "chars": 379,
+            "date": "2023/05/30 (Tue) 22:16",
+            "is_gold": true,
+            "session_id": "answer_caf5b52e_1",
+            "session_index": 17,
+            "text_sha256": "ef49d26f92b97c64f2c63a87799a9596884593e6b7413abe6574ffc814c8bef7",
+            "truncated": false,
+            "turn_index": 10
+          },
+          {
+            "bm25_rank": 213,
+            "bm25_score": 0.0,
+            "chars": 140,
+            "date": "2023/06/07 (Wed) 11:24",
+            "is_gold": false,
+            "session_id": "ultrachat_27073",
+            "session_index": 39,
+            "text_sha256": "5c403331fb86ec5aa989bae53831a5e4e129defc8a0c72865eeff33262117665",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 214,
+            "bm25_score": 0.0,
+            "chars": 137,
+            "date": "2023/06/07 (Wed) 11:24",
+            "is_gold": false,
+            "session_id": "ultrachat_27073",
+            "session_index": 39,
+            "text_sha256": "142b6da57551e58bb9dbd270cea2aca89c2798a605d06c37ed28fb519ca78f65",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 242,
+            "bm25_score": 0.0,
+            "chars": 110,
+            "date": "2023/06/16 (Fri) 22:50",
+            "is_gold": false,
+            "session_id": "ultrachat_270398",
+            "session_index": 45,
+            "text_sha256": "72fbe0b3c4c04d50a613d5d5277492caa459a41e977fb9df08c259f8f90fe70c",
+            "truncated": false,
+            "turn_index": 6
+          }
+        ],
+        "retrieved": [
+          {
+            "bm25_rank": 5,
+            "bm25_score": 5.605739,
+            "chars": 48,
+            "date": "2023/05/02 (Tue) 00:38",
+            "is_gold": false,
+            "session_id": "ultrachat_546105",
+            "session_index": 1,
+            "text_sha256": "580d3e1c7b31fd07352217b782284703ff84973485e416ef3ef92c6c55165b33",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 7,
+            "bm25_score": 4.650945,
+            "chars": 303,
+            "date": "2023/05/02 (Tue) 00:38",
+            "is_gold": false,
+            "session_id": "ultrachat_546105",
+            "session_index": 1,
+            "text_sha256": "53d966b776b79e6592266701879ef7e15ab5d01b857e91432a00147054f905e0",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 6,
+            "bm25_score": 4.794835,
+            "chars": 386,
+            "date": "2023/05/09 (Tue) 23:21",
+            "is_gold": false,
+            "session_id": "86b56135_2",
+            "session_index": 5,
+            "text_sha256": "c3daa66e98fb1024044eb0d67aad9ae77ca063e451b92ed8038bc565cf659447",
+            "truncated": false,
+            "turn_index": 10
+          },
+          {
+            "bm25_rank": 2,
+            "bm25_score": 15.222566,
+            "chars": 335,
+            "date": "2023/05/30 (Tue) 17:45",
+            "is_gold": true,
+            "session_id": "answer_caf5b52e_2",
+            "session_index": 32,
+            "text_sha256": "23c9f8d658f462f4f32d490adaa9cf84ffc7b71eafee7a612d7d3a29d238f13c",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 3,
+            "bm25_score": 7.490842,
+            "chars": 175,
+            "date": "2023/05/30 (Tue) 17:45",
+            "is_gold": false,
+            "session_id": "answer_caf5b52e_2",
+            "session_index": 32,
+            "text_sha256": "82370565423eae8c2904f8d3a97d44947f0685e1dbdbfc6acadbb5cac7535bbc",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 4,
+            "bm25_score": 6.043265,
+            "chars": 252,
+            "date": "2023/05/30 (Tue) 17:45",
+            "is_gold": false,
+            "session_id": "answer_caf5b52e_2",
+            "session_index": 32,
+            "text_sha256": "075ffb917fbd06ceb8c41cf388be905c88050f26bd673bf6568791e3389b1076",
+            "truncated": false,
+            "turn_index": 10
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 29.554913,
+            "chars": 302,
+            "date": "2023/05/30 (Tue) 22:16",
+            "is_gold": false,
+            "session_id": "answer_caf5b52e_1",
+            "session_index": 17,
+            "text_sha256": "d1f39aa1e2fcf4152a660314514ea20615afeb98ba1291d1a97957e64ff27279",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 1,
+            "bm25_score": 24.783462,
+            "chars": 379,
+            "date": "2023/05/30 (Tue) 22:16",
+            "is_gold": true,
+            "session_id": "answer_caf5b52e_1",
+            "session_index": 17,
+            "text_sha256": "ef49d26f92b97c64f2c63a87799a9596884593e6b7413abe6574ffc814c8bef7",
+            "truncated": false,
+            "turn_index": 10
+          }
+        ]
+      },
+      "question_id": "618f13b2",
+      "question_sha256": "68d99074c7f36c8bd84c2de29c1a5f208bd85ff1d2d06990ceee9c3bb45bb3ac",
+      "question_type": "knowledge-update",
+      "user_turns_total": 252
+    },
+    {
+      "answer_sha256": "04efaf080f5a3e74e1c29d1ca6a48569382cbbcd324e8d59d2b83ef21c039f00",
+      "gold_in_pool": {
+        "gold": 2,
+        "retrieved": 2
+      },
+      "gold_turns_total": 2,
+      "pools": {
+        "gold": [
+          {
+            "bm25_rank": 90,
+            "bm25_score": 0.0,
+            "chars": 84,
+            "date": "2023/07/28 (Fri) 07:09",
+            "is_gold": false,
+            "session_id": "sharegpt_FOYwfdK_0",
+            "session_index": 16,
+            "text_sha256": "a0dfcd837009df1f303088626ab1198559c07bded1fc2328e6c0e0609d36ce51",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 127,
+            "bm25_score": 0.0,
+            "chars": 206,
+            "date": "2023/08/06 (Sun) 19:22",
+            "is_gold": false,
+            "session_id": "93bed3d8_1",
+            "session_index": 23,
+            "text_sha256": "2bf8b7983fc30767479593291444785f86162a9c985a93790103d9df7acc8065",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 148,
+            "bm25_score": 0.0,
+            "chars": 375,
+            "date": "2023/08/08 (Tue) 06:29",
+            "is_gold": false,
+            "session_id": "8de5b7cf_1",
+            "session_index": 28,
+            "text_sha256": "88b1d510be65b4f0be805660ea093d7722ec2a3c45173076727a0733a764c7cc",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 18.032327,
+            "chars": 184,
+            "date": "2023/08/11 (Fri) 09:09",
+            "is_gold": true,
+            "session_id": "answer_3f9693b7_1",
+            "session_index": 35,
+            "text_sha256": "f964c9aa81ce2b21bc9e7bbe31a27b16eef190e5ba77bf1e147ccd0f3da8682a",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 184,
+            "bm25_score": 0.0,
+            "chars": 416,
+            "date": "2023/08/31 (Thu) 11:29",
+            "is_gold": false,
+            "session_id": "9a8dc073",
+            "session_index": 37,
+            "text_sha256": "9258b77dda7d56f39b4389148cbcfd949e8d053761239dff77723abbf58a0560",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 206,
+            "bm25_score": 0.0,
+            "chars": 147,
+            "date": "2023/09/05 (Tue) 09:25",
+            "is_gold": false,
+            "session_id": "03105808_2",
+            "session_index": 41,
+            "text_sha256": "ae52e378ce83a82ab84591a14d82a6f73e03a27af8072deba2a3e4c7b3d2bad6",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 226,
+            "bm25_score": 0.0,
+            "chars": 220,
+            "date": "2023/09/28 (Thu) 04:56",
+            "is_gold": false,
+            "session_id": "baaaeb00",
+            "session_index": 44,
+            "text_sha256": "31901336585545bd64944a5a838006a2ed1d5b86db2ed53f1a9d2c9d5ee9ccb9",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 1,
+            "bm25_score": 16.406092,
+            "chars": 204,
+            "date": "2023/09/30 (Sat) 15:06",
+            "is_gold": true,
+            "session_id": "answer_3f9693b7_2",
+            "session_index": 46,
+            "text_sha256": "e0c44f33ea191c2861c71de50ff9dd3a0a2d735b030bf38e427941ef7c614290",
+            "truncated": false,
+            "turn_index": 2
+          }
+        ],
+        "retrieved": [
+          {
+            "bm25_rank": 3,
+            "bm25_score": 4.934266,
+            "chars": 258,
+            "date": "2023/07/21 (Fri) 15:51",
+            "is_gold": false,
+            "session_id": "1bc87711_1",
+            "session_index": 10,
+            "text_sha256": "2eb6f99701ee8fe7418014a2a3e7035915d9c69ee42e19afd4533db3b6d0b57d",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 4,
+            "bm25_score": 4.310101,
+            "chars": 164,
+            "date": "2023/07/21 (Fri) 15:51",
+            "is_gold": false,
+            "session_id": "1bc87711_1",
+            "session_index": 10,
+            "text_sha256": "acc2d56625099aedb604dcf642111215686c10f0a2cc96dbb908c026d5e29f71",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 7,
+            "bm25_score": 4.073082,
+            "chars": 205,
+            "date": "2023/08/08 (Tue) 23:23",
+            "is_gold": false,
+            "session_id": "sharegpt_wbbH6cZ_0",
+            "session_index": 29,
+            "text_sha256": "09c9aac00ba0d34f97841797201d2815bc413aa152371c0d0300a10725327502",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 5,
+            "bm25_score": 4.244508,
+            "chars": 61,
+            "date": "2023/08/09 (Wed) 22:08",
+            "is_gold": false,
+            "session_id": "sharegpt_MWlvrvZ_0",
+            "session_index": 30,
+            "text_sha256": "07c646caac1298b5913333fdc219c40e6755b8da4a855714b69b9507bc76ddf2",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 6,
+            "bm25_score": 4.244508,
+            "chars": 79,
+            "date": "2023/08/09 (Wed) 22:08",
+            "is_gold": false,
+            "session_id": "sharegpt_MWlvrvZ_0",
+            "session_index": 30,
+            "text_sha256": "7f3538613bfefc72019ffd8e2bcaefecdcb894adf6eabdb0cec6ce21bc25447c",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 18.032327,
+            "chars": 184,
+            "date": "2023/08/11 (Fri) 09:09",
+            "is_gold": true,
+            "session_id": "answer_3f9693b7_1",
+            "session_index": 35,
+            "text_sha256": "f964c9aa81ce2b21bc9e7bbe31a27b16eef190e5ba77bf1e147ccd0f3da8682a",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 2,
+            "bm25_score": 5.055545,
+            "chars": 160,
+            "date": "2023/08/15 (Tue) 16:50",
+            "is_gold": false,
+            "session_id": "ultrachat_115445",
+            "session_index": 36,
+            "text_sha256": "3e569c1a49cc337a88ba395820c38b8afdfff6e048ab6d8e33bd03eb4b9167e9",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 1,
+            "bm25_score": 16.406092,
+            "chars": 204,
+            "date": "2023/09/30 (Sat) 15:06",
+            "is_gold": true,
+            "session_id": "answer_3f9693b7_2",
+            "session_index": 46,
+            "text_sha256": "e0c44f33ea191c2861c71de50ff9dd3a0a2d735b030bf38e427941ef7c614290",
+            "truncated": false,
+            "turn_index": 2
+          }
+        ]
+      },
+      "question_id": "6aeb4375",
+      "question_sha256": "d7642046a689225d027d511f0ab809e017eee742995e0a74a1091a8641d663c2",
+      "question_type": "knowledge-update",
+      "user_turns_total": 232
+    },
+    {
+      "answer_sha256": "23d29dbd3e629dfa0bb56adb025c2eba9d81152dff08beccd9f7e1e72d426cd1",
+      "gold_in_pool": {
+        "gold": 1,
+        "retrieved": 0
+      },
+      "gold_turns_total": 1,
+      "pools": {
+        "gold": [
+          {
+            "bm25_rank": 79,
+            "bm25_score": 0.0,
+            "chars": 172,
+            "date": "2023/05/20 (Sat) 03:25",
+            "is_gold": false,
+            "session_id": "13ad258b",
+            "session_index": 0,
+            "text_sha256": "742ffd197348da12a5bc8275e497376394fb35bfd847a6dcf86ac82a5b128634",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 115,
+            "bm25_score": 0.0,
+            "chars": 196,
+            "date": "2023/05/23 (Tue) 01:53",
+            "is_gold": false,
+            "session_id": "47183c60_2",
+            "session_index": 9,
+            "text_sha256": "a6232e3f498bca3054387a77001c9a881793867baa07f0d75fe48ecd7e6c2995",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 136,
+            "bm25_score": 0.0,
+            "chars": 4,
+            "date": "2023/05/23 (Tue) 16:52",
+            "is_gold": false,
+            "session_id": "sharegpt_efcAzKB_0",
+            "session_index": 13,
+            "text_sha256": "187897ce0afcf20b50ba2b37dca84a951b7046f29ed5ab94f010619f69d6e189",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 154,
+            "bm25_score": 0.0,
+            "chars": 82,
+            "date": "2023/05/24 (Wed) 20:15",
+            "is_gold": false,
+            "session_id": "ultrachat_381447",
+            "session_index": 17,
+            "text_sha256": "1caa6a41a296847b3df832003c14a6491ac440ecec64ae35bc0a18d8724b8eb5",
+            "truncated": false,
+            "turn_index": 12
+          },
+          {
+            "bm25_rank": 201,
+            "bm25_score": 0.0,
+            "chars": 69,
+            "date": "2023/05/28 (Sun) 07:09",
+            "is_gold": false,
+            "session_id": "sharegpt_8cFNcVG_0",
+            "session_index": 30,
+            "text_sha256": "18bcfe670547bbcb4c146ef75e314b892e211a5e528395e70512152a4cad0223",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 69,
+            "bm25_score": 0.952439,
+            "chars": 356,
+            "date": "2023/05/29 (Mon) 04:50",
+            "is_gold": true,
+            "session_id": "answer_986de8c3",
+            "session_index": 35,
+            "text_sha256": "7bf40ab58cd21133d9ede80315c42a6f9b324237169b285934f0719c71de13b5",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 223,
+            "bm25_score": 0.0,
+            "chars": 5,
+            "date": "2023/05/29 (Mon) 06:24",
+            "is_gold": false,
+            "session_id": "sharegpt_UM2wLW9_0",
+            "session_index": 36,
+            "text_sha256": "85d992fe4b47fc93b0ea729ec9eb70dbd8af3e80edb8b59495094a8b6d8de3a9",
+            "truncated": false,
+            "turn_index": 10
+          },
+          {
+            "bm25_rank": 246,
+            "bm25_score": 0.0,
+            "chars": 149,
+            "date": "2023/05/30 (Tue) 10:54",
+            "is_gold": false,
+            "session_id": "48f804a3",
+            "session_index": 42,
+            "text_sha256": "47ced9f5ec259ae7cebe55a5bd3ec886def0f88d3ce0f666f6d6f62d43940d8c",
+            "truncated": false,
+            "turn_index": 8
+          }
+        ],
+        "retrieved": [
+          {
+            "bm25_rank": 0,
+            "bm25_score": 10.558366,
+            "chars": 201,
+            "date": "2023/05/29 (Mon) 04:50",
+            "is_gold": false,
+            "session_id": "answer_986de8c3",
+            "session_index": 35,
+            "text_sha256": "5cf9b7e323075bf089c5d13d633f02a77faad062987cbd9a54eea87e7448f73f",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 5,
+            "bm25_score": 3.281134,
+            "chars": 304,
+            "date": "2023/05/29 (Mon) 04:50",
+            "is_gold": false,
+            "session_id": "answer_986de8c3",
+            "session_index": 35,
+            "text_sha256": "83d8b9bfb2835bcb069add0cc53ec964cf081ee3b4c87da893e6f9be39f24b51",
+            "truncated": false,
+            "turn_index": 10
+          },
+          {
+            "bm25_rank": 6,
+            "bm25_score": 1.933839,
+            "chars": 140,
+            "date": "2023/05/30 (Tue) 03:06",
+            "is_gold": false,
+            "session_id": "2769b367_3",
+            "session_index": 41,
+            "text_sha256": "22333dac407495e26467b9eecd57bcf965f645bef72747e117d4ae83e954f8a9",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 7,
+            "bm25_score": 1.873343,
+            "chars": 243,
+            "date": "2023/05/30 (Tue) 13:47",
+            "is_gold": false,
+            "session_id": "d22ef93f",
+            "session_index": 43,
+            "text_sha256": "416906110ae422a935bfd9076e4196de5994dd68442c7a4e7a03e6f0cb253adb",
+            "truncated": false,
+            "turn_index": 10
+          },
+          {
+            "bm25_rank": 1,
+            "bm25_score": 4.568223,
+            "chars": 132,
+            "date": "2023/05/30 (Tue) 14:44",
+            "is_gold": false,
+            "session_id": "18807892_4",
+            "session_index": 44,
+            "text_sha256": "c59478f827f2a9a5bd0fd484fa8c6cf30bde5e878afd3b7f4b17b9166e43db18",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 2,
+            "bm25_score": 4.451803,
+            "chars": 160,
+            "date": "2023/05/30 (Tue) 14:44",
+            "is_gold": false,
+            "session_id": "18807892_4",
+            "session_index": 44,
+            "text_sha256": "f48a743e0a9d5401d238f2e1db508377b992fc05d591737546aad37396b82686",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 3,
+            "bm25_score": 4.2359,
+            "chars": 199,
+            "date": "2023/05/30 (Tue) 14:44",
+            "is_gold": false,
+            "session_id": "18807892_4",
+            "session_index": 44,
+            "text_sha256": "f34cd1ba3dd7e3e924b376928645bf8d4733806c0f33de01def4d3897a21b586",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 4,
+            "bm25_score": 3.861365,
+            "chars": 216,
+            "date": "2023/05/30 (Tue) 14:44",
+            "is_gold": false,
+            "session_id": "18807892_4",
+            "session_index": 44,
+            "text_sha256": "bf87f7c3153388fedd4b19c53af6c816a529adcaad0c6dccc062c31e10d11559",
+            "truncated": false,
+            "turn_index": 10
+          }
+        ]
+      },
+      "question_id": "25e5aa4f",
+      "question_sha256": "8e446a384bc2975a85d38efa731cc659bdac3cc04659a88d0e70398b04872efc",
+      "question_type": "single-session-user",
+      "user_turns_total": 252
+    },
+    {
+      "answer_sha256": "91c9e02468e405e8441a953ae26636517710165904115fede9056e6a64fea8e7",
+      "gold_in_pool": {
+        "gold": 1,
+        "retrieved": 1
+      },
+      "gold_turns_total": 1,
+      "pools": {
+        "gold": [
+          {
+            "bm25_rank": 14,
+            "bm25_score": 0.0,
+            "chars": 194,
+            "date": "2023/05/20 (Sat) 06:25",
+            "is_gold": false,
+            "session_id": "ultrachat_58198",
+            "session_index": 2,
+            "text_sha256": "db435e0d860a1a3a21f23622549f73413b0362afc0851222e8aed71d89dba7e4",
+            "truncated": false,
+            "turn_index": 10
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 6.460715,
+            "chars": 146,
+            "date": "2023/05/21 (Sun) 16:24",
+            "is_gold": true,
+            "session_id": "answer_19c24c11",
+            "session_index": 8,
+            "text_sha256": "bc9d523563a364594ce546d8eb1e29fc71d3c17755963b621a05b9ab1a67b827",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 64,
+            "bm25_score": 0.0,
+            "chars": 23,
+            "date": "2023/05/22 (Mon) 12:33",
+            "is_gold": false,
+            "session_id": "sharegpt_fIIZB3W_31",
+            "session_index": 13,
+            "text_sha256": "1538f8aa07ad149d982600fb6c61ba922dcb57078ff1c2719563c0705b5b883e",
+            "truncated": false,
+            "turn_index": 3
+          },
+          {
+            "bm25_rank": 77,
+            "bm25_score": 0.0,
+            "chars": 246,
+            "date": "2023/05/22 (Mon) 13:45",
+            "is_gold": false,
+            "session_id": "ultrachat_357116",
+            "session_index": 15,
+            "text_sha256": "8f093020e7ca64a581ad3987a9d9e5dfce73df5b49f18183912421ac1eaa107b",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 96,
+            "bm25_score": 0.0,
+            "chars": 205,
+            "date": "2023/05/22 (Mon) 18:35",
+            "is_gold": false,
+            "session_id": "69674f25",
+            "session_index": 19,
+            "text_sha256": "65a80b8ba07f30ed042871426a29a0b73fdffced083257d4163edb475934bd49",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 116,
+            "bm25_score": 0.0,
+            "chars": 101,
+            "date": "2023/05/23 (Tue) 19:55",
+            "is_gold": false,
+            "session_id": "4ff568ba_2",
+            "session_index": 23,
+            "text_sha256": "c932bb1464f0de1c40c64985bcd1e1a8bd7d85413051bb159f51c2e8afe1edc0",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 126,
+            "bm25_score": 0.0,
+            "chars": 81,
+            "date": "2023/05/24 (Wed) 06:57",
+            "is_gold": false,
+            "session_id": "sharegpt_W471uz2_0",
+            "session_index": 25,
+            "text_sha256": "806e9325f1fa6e02f15f497f7bb77eb778837be3f70d48461663aa72713d570b",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 163,
+            "bm25_score": 0.0,
+            "chars": 136,
+            "date": "2023/05/25 (Thu) 13:45",
+            "is_gold": false,
+            "session_id": "6d0b1e59_2",
+            "session_index": 32,
+            "text_sha256": "0dd448b4dfb9a12c874a9688d94e588da8ae3b46c0630dca9f483feb6ea94f8e",
+            "truncated": false,
+            "turn_index": 4
+          }
+        ],
+        "retrieved": [
+          {
+            "bm25_rank": 1,
+            "bm25_score": 0.0,
+            "chars": 338,
+            "date": "2023/05/20 (Sat) 05:45",
+            "is_gold": false,
+            "session_id": "7e4dab66_2",
+            "session_index": 0,
+            "text_sha256": "2bcf7d33cf084bdee332d530f829c09f49dc30a551a5babbe37321bace262d9c",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 2,
+            "bm25_score": 0.0,
+            "chars": 415,
+            "date": "2023/05/20 (Sat) 05:45",
+            "is_gold": false,
+            "session_id": "7e4dab66_2",
+            "session_index": 0,
+            "text_sha256": "18fa3330211b1a61fbe7dba96e42942156a4f6e894584132609980f89fa9fc41",
+            "truncated": false,
+            "turn_index": 2
+          },
+          {
+            "bm25_rank": 3,
+            "bm25_score": 0.0,
+            "chars": 248,
+            "date": "2023/05/20 (Sat) 05:45",
+            "is_gold": false,
+            "session_id": "7e4dab66_2",
+            "session_index": 0,
+            "text_sha256": "c8459b76838aa5aca3485e72150ffbf8603570e29375ea0093283ae0221ce5f9",
+            "truncated": false,
+            "turn_index": 4
+          },
+          {
+            "bm25_rank": 4,
+            "bm25_score": 0.0,
+            "chars": 299,
+            "date": "2023/05/20 (Sat) 05:45",
+            "is_gold": false,
+            "session_id": "7e4dab66_2",
+            "session_index": 0,
+            "text_sha256": "68d3c18fcbd72e7d65c7dc846096055d7d71632283961b936f5d6516e2f61996",
+            "truncated": false,
+            "turn_index": 6
+          },
+          {
+            "bm25_rank": 5,
+            "bm25_score": 0.0,
+            "chars": 451,
+            "date": "2023/05/20 (Sat) 05:45",
+            "is_gold": false,
+            "session_id": "7e4dab66_2",
+            "session_index": 0,
+            "text_sha256": "31671b46de6f615271e8178ae7bbea12927bfb65704e198d9e51f3b44567334c",
+            "truncated": false,
+            "turn_index": 8
+          },
+          {
+            "bm25_rank": 6,
+            "bm25_score": 0.0,
+            "chars": 30,
+            "date": "2023/05/20 (Sat) 05:45",
+            "is_gold": false,
+            "session_id": "7e4dab66_2",
+            "session_index": 0,
+            "text_sha256": "eb2ebf5ef4f1289d937901916a2b68decd1ca65e8b3f9867ddbc202c2076d715",
+            "truncated": false,
+            "turn_index": 10
+          },
+          {
+            "bm25_rank": 7,
+            "bm25_score": 0.0,
+            "chars": 208,
+            "date": "2023/05/20 (Sat) 05:48",
+            "is_gold": false,
+            "session_id": "sharegpt_BzV4Iba_0",
+            "session_index": 1,
+            "text_sha256": "275d9539188823c06ba767127ca4bee5504bc42e8ccb9c0946b3dc9ead63ade4",
+            "truncated": false,
+            "turn_index": 0
+          },
+          {
+            "bm25_rank": 0,
+            "bm25_score": 6.460715,
+            "chars": 146,
+            "date": "2023/05/21 (Sun) 16:24",
+            "is_gold": true,
+            "session_id": "answer_19c24c11",
+            "session_index": 8,
+            "text_sha256": "bc9d523563a364594ce546d8eb1e29fc71d3c17755963b621a05b9ab1a67b827",
+            "truncated": false,
+            "turn_index": 2
+          }
+        ]
+      },
+      "question_id": "3d86fd0a",
+      "question_sha256": "fc86aebf8bc85af0f8377de8eddc404e61f277d0f0ac17e05de95f7dc5aa7f98",
+      "question_type": "single-session-user",
+      "user_turns_total": 261
+    }
+  ],
+  "retriever": {
+    "b": 0.75,
+    "k1": 1.5,
+    "name": "bm25-okapi-lucene-idf",
+    "unit": "user-turn"
+  },
+  "selection": {
+    "exclude_abstention": true,
+    "gold_roles": [
+      "user"
+    ],
+    "max_gold_turns": 6,
+    "pool_size": 8,
+    "seed": 42,
+    "types": {
+      "knowledge-update": 2,
+      "multi-session": 2,
+      "single-session-user": 2,
+      "temporal-reasoning": 2
+    }
+  },
+  "source": {
+    "dataset": "xiaowu0162/longmemeval-cleaned",
+    "file": "longmemeval_s_cleaned.json",
+    "license": "MIT",
+    "revision": "98d7416c24c778c2fee6e6f3006e7a073259d48f",
+    "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "size_bytes": 277383467
+  }
+}
