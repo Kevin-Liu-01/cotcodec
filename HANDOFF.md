@@ -21,7 +21,7 @@ for whatever gains actual results"; D80). Under that delegation:
   - K4 no longer fires.
   R03, the checker-mutation note, can now be finished.
 - R03, the checker-mutation note, is drafted and verified, and not published
-  (D83; `paper/checker-mutation-note/`). The Q2 report is synced to revision 3.
+  (D83; `paper/checker-mutation-note/`). The Q2 report is at revision 6 (successor E included).
 - R03 part (b) is done (row 20; D86, D88). On the held-out reserve split,
   zinv's result is PASS, descriptive: it accepts 13 of 13 z-order equivalence
   mutants on 8 tasks and newly accepts none of 15 violation mutants. The
