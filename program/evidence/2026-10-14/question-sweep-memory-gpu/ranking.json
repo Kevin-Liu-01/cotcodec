@@ -1,0 +1,509 @@
+{
+ "date": "2026-10-14",
+ "method": "three judges, 0-10; gates: lowest correctness >= 5 and lowest citability >= 6; passers ordered by mean significance, then mean novelty residual, then mean feasibility; failers follow in the same order; OCCUPIED candidates were not scored",
+ "score_order": [
+  "sig",
+  "corr",
+  "cite",
+  "nov",
+  "feas"
+ ],
+ "leads": {
+  "overall": "G2",
+  "memory": "AM1",
+  "gpu": "G2"
+ },
+ "ranked": [
+  {
+   "id": "G2",
+   "per_judge": {
+    "J1": {
+     "sig": 7,
+     "corr": 7,
+     "cite": 8,
+     "nov": 6,
+     "feas": 8
+    },
+    "J2": {
+     "sig": 6,
+     "corr": 7.5,
+     "cite": 7.5,
+     "nov": 6,
+     "feas": 7.5
+    },
+    "J3": {
+     "sig": 7,
+     "corr": 7,
+     "cite": 8,
+     "nov": 6.5,
+     "feas": 9
+    }
+   },
+   "mean": {
+    "sig": 6.667,
+    "corr": 7.167,
+    "cite": 7.833,
+    "nov": 6.167,
+    "feas": 8.167
+   },
+   "min": {
+    "sig": 6,
+    "corr": 7,
+    "cite": 7.5,
+    "nov": 6,
+    "feas": 7.5
+   },
+   "passes_corr_gate": true,
+   "passes_cite_gate": true,
+   "passes": true,
+   "rank": 1,
+   "area": "gpu",
+   "title": "GDN train-inference mismatch by token position",
+   "verifier_verdict": "STILL_OPEN",
+   "owner_disposition": "RECOMMEND: overall lead and GPU-area lead",
+   "first_experiment_gpu_h": "about 3 (cap 4)"
+  },
+  {
+   "id": "G1",
+   "per_judge": {
+    "J1": {
+     "sig": 6,
+     "corr": 6,
+     "cite": 8,
+     "nov": 5,
+     "feas": 8
+    },
+    "J2": {
+     "sig": 5.5,
+     "corr": 6,
+     "cite": 8,
+     "nov": 5,
+     "feas": 7
+    },
+    "J3": {
+     "sig": 6.5,
+     "corr": 7,
+     "cite": 8,
+     "nov": 5.5,
+     "feas": 9
+    }
+   },
+   "mean": {
+    "sig": 6.0,
+    "corr": 6.333,
+    "cite": 8.0,
+    "nov": 5.167,
+    "feas": 8.0
+   },
+   "min": {
+    "sig": 5.5,
+    "corr": 6,
+    "cite": 8,
+    "nov": 5,
+    "feas": 7
+   },
+   "passes_corr_gate": true,
+   "passes_cite_gate": true,
+   "passes": true,
+   "rank": 2,
+   "area": "gpu",
+   "title": "Memory levers for hybrid RL rollouts on H100",
+   "verifier_verdict": "STILL_OPEN",
+   "owner_disposition": "ALTERNATE (GPU area); absorbs G4's quantized-KV arms",
+   "first_experiment_gpu_h": "about 6 (cap 8)"
+  },
+  {
+   "id": "AM1",
+   "per_judge": {
+    "J1": {
+     "sig": 6,
+     "corr": 7,
+     "cite": 8,
+     "nov": 5,
+     "feas": 7
+    },
+    "J2": {
+     "sig": 6,
+     "corr": 7.5,
+     "cite": 8,
+     "nov": 4.5,
+     "feas": 7
+    },
+    "J3": {
+     "sig": 6,
+     "corr": 7,
+     "cite": 8,
+     "nov": 4.5,
+     "feas": 8
+    }
+   },
+   "mean": {
+    "sig": 6.0,
+    "corr": 7.167,
+    "cite": 8.0,
+    "nov": 4.667,
+    "feas": 7.333
+   },
+   "min": {
+    "sig": 6,
+    "corr": 7,
+    "cite": 8,
+    "nov": 4.5,
+    "feas": 7
+   },
+   "passes_corr_gate": true,
+   "passes_cite_gate": true,
+   "passes": true,
+   "rank": 3,
+   "area": "memory",
+   "title": "Exact subset tables for agent-memory credit",
+   "verifier_verdict": "NARROWED",
+   "owner_disposition": "RECOMMEND: memory-area lead; folds AM2 and AM6",
+   "first_experiment_gpu_h": "Step 0 about 1; pilot 4-6"
+  },
+  {
+   "id": "AM4",
+   "per_judge": {
+    "J1": {
+     "sig": 6,
+     "corr": 5,
+     "cite": 7,
+     "nov": 5.5,
+     "feas": 5
+    },
+    "J2": {
+     "sig": 5.5,
+     "corr": 5,
+     "cite": 7.5,
+     "nov": 5,
+     "feas": 4.5
+    },
+    "J3": {
+     "sig": 6,
+     "corr": 5,
+     "cite": 7,
+     "nov": 5.5,
+     "feas": 5
+    }
+   },
+   "mean": {
+    "sig": 5.833,
+    "corr": 5.0,
+    "cite": 7.167,
+    "nov": 5.333,
+    "feas": 4.833
+   },
+   "min": {
+    "sig": 5.5,
+    "corr": 5,
+    "cite": 7,
+    "nov": 5,
+    "feas": 4.5
+   },
+   "passes_corr_gate": true,
+   "passes_cite_gate": true,
+   "passes": true,
+   "rank": 4,
+   "area": "memory",
+   "title": "Single-write interventions in self-written memory",
+   "verifier_verdict": "STILL_OPEN",
+   "owner_disposition": "ALTERNATE (memory area), after repairs",
+   "first_experiment_gpu_h": "4-6 (judges expect more)"
+  },
+  {
+   "id": "AM2",
+   "per_judge": {
+    "J1": {
+     "sig": 5,
+     "corr": 6,
+     "cite": 7,
+     "nov": 4,
+     "feas": 8
+    },
+    "J2": {
+     "sig": 5,
+     "corr": 5.5,
+     "cite": 7.5,
+     "nov": 4.5,
+     "feas": 7.5
+    },
+    "J3": {
+     "sig": 5,
+     "corr": 6,
+     "cite": 7,
+     "nov": 4,
+     "feas": 9
+    }
+   },
+   "mean": {
+    "sig": 5.0,
+    "corr": 5.833,
+    "cite": 7.167,
+    "nov": 4.167,
+    "feas": 8.167
+   },
+   "min": {
+    "sig": 5,
+    "corr": 5.5,
+    "cite": 7,
+    "nov": 4,
+    "feas": 7.5
+   },
+   "passes_corr_gate": true,
+   "passes_cite_gate": true,
+   "passes": true,
+   "rank": 5,
+   "area": "memory",
+   "title": "Placebo share of deletion credit",
+   "verifier_verdict": "NARROWED",
+   "owner_disposition": "FOLD into AM1 as placebo arms",
+   "first_experiment_gpu_h": "2-3"
+  },
+  {
+   "id": "AM6",
+   "per_judge": {
+    "J1": {
+     "sig": 4,
+     "corr": 6,
+     "cite": 7,
+     "nov": 4,
+     "feas": 7
+    },
+    "J2": {
+     "sig": 4,
+     "corr": 6.5,
+     "cite": 7.5,
+     "nov": 3.5,
+     "feas": 7
+    },
+    "J3": {
+     "sig": 4.5,
+     "corr": 6,
+     "cite": 7,
+     "nov": 3.5,
+     "feas": 7
+    }
+   },
+   "mean": {
+    "sig": 4.167,
+    "corr": 6.167,
+    "cite": 7.167,
+    "nov": 3.667,
+    "feas": 7.0
+   },
+   "min": {
+    "sig": 4,
+    "corr": 6,
+    "cite": 7,
+    "nov": 3.5,
+    "feas": 7
+   },
+   "passes_corr_gate": true,
+   "passes_cite_gate": true,
+   "passes": true,
+   "rank": 6,
+   "area": "memory",
+   "title": "One-pass signals of memory use vs exact labels",
+   "verifier_verdict": "NARROWED",
+   "owner_disposition": "FOLD into AM1 as an analysis section",
+   "first_experiment_gpu_h": "2-4"
+  },
+  {
+   "id": "AM3",
+   "per_judge": {
+    "J1": {
+     "sig": 7,
+     "corr": 5,
+     "cite": 7,
+     "nov": 7,
+     "feas": 5
+    },
+    "J2": {
+     "sig": 6.5,
+     "corr": 4.5,
+     "cite": 7.5,
+     "nov": 6,
+     "feas": 5
+    },
+    "J3": {
+     "sig": 7,
+     "corr": 6,
+     "cite": 8,
+     "nov": 6.5,
+     "feas": 6
+    }
+   },
+   "mean": {
+    "sig": 6.833,
+    "corr": 5.167,
+    "cite": 7.5,
+    "nov": 6.5,
+    "feas": 5.333
+   },
+   "min": {
+    "sig": 6.5,
+    "corr": 4.5,
+    "cite": 7,
+    "nov": 6,
+    "feas": 5
+   },
+   "passes_corr_gate": false,
+   "passes_cite_gate": true,
+   "passes": false,
+   "rank": 7,
+   "area": "memory",
+   "title": "Placebo memory in memory-augmented RL",
+   "verifier_verdict": "STILL_OPEN",
+   "owner_disposition": "HOLD: fails the correctness gate; identification repair first",
+   "first_experiment_gpu_h": "Stage 1 4-6; Stage 2 60-150"
+  },
+  {
+   "id": "G4",
+   "per_judge": {
+    "J1": {
+     "sig": 5,
+     "corr": 6,
+     "cite": 7,
+     "nov": 4,
+     "feas": 6
+    },
+    "J2": {
+     "sig": 5,
+     "corr": 4.5,
+     "cite": 8,
+     "nov": 4.5,
+     "feas": 5
+    },
+    "J3": {
+     "sig": 5.5,
+     "corr": 6,
+     "cite": 7,
+     "nov": 4.5,
+     "feas": 6
+    }
+   },
+   "mean": {
+    "sig": 5.167,
+    "corr": 5.5,
+    "cite": 7.333,
+    "nov": 4.333,
+    "feas": 5.667
+   },
+   "min": {
+    "sig": 5,
+    "corr": 4.5,
+    "cite": 7,
+    "nov": 4,
+    "feas": 5
+   },
+   "passes_corr_gate": false,
+   "passes_cite_gate": true,
+   "passes": false,
+   "rank": 8,
+   "area": "gpu",
+   "title": "Reasoning KV eviction vs quantized-KV baseline",
+   "verifier_verdict": "NARROWED",
+   "owner_disposition": "FAILS GATE: quantized-KV arms fold into G1; eviction comparison dropped",
+   "first_experiment_gpu_h": "about 6 (cap 8)"
+  },
+  {
+   "id": "G5",
+   "per_judge": {
+    "J1": {
+     "sig": 4,
+     "corr": 5,
+     "cite": 6,
+     "nov": 4,
+     "feas": 4
+    },
+    "J2": {
+     "sig": 4.5,
+     "corr": 4.5,
+     "cite": 7,
+     "nov": 4,
+     "feas": 4
+    },
+    "J3": {
+     "sig": 5,
+     "corr": 6,
+     "cite": 7,
+     "nov": 4,
+     "feas": 5
+    }
+   },
+   "mean": {
+    "sig": 4.5,
+    "corr": 5.167,
+    "cite": 6.667,
+    "nov": 4.0,
+    "feas": 4.333
+   },
+   "min": {
+    "sig": 4,
+    "corr": 4.5,
+    "cite": 6,
+    "nov": 4,
+    "feas": 4
+   },
+   "passes_corr_gate": false,
+   "passes_cite_gate": true,
+   "passes": false,
+   "rank": 9,
+   "area": "gpu",
+   "title": "Single-node GRPO step anatomy and async ceiling",
+   "verifier_verdict": "STILL_OPEN",
+   "owner_disposition": "FAILS GATE: drop as a line",
+   "first_experiment_gpu_h": "Stage 1 about 7"
+  }
+ ],
+ "not_ranked_occupied": [
+  {
+   "id": "AM5",
+   "area": "memory",
+   "title": "Reader transfer of per-memory effects",
+   "verifier_verdict": "OCCUPIED",
+   "occupied_by": [
+    "https://arxiv.org/abs/2608.17781"
+   ],
+   "rank": null,
+   "owner_disposition": "DROP; a second reader is optional inside AM1"
+  },
+  {
+   "id": "AM7",
+   "area": "memory",
+   "title": "Append-only vs in-place memory edits under prefix caching",
+   "verifier_verdict": "OCCUPIED",
+   "occupied_by": [
+    "https://arxiv.org/abs/2609.33759",
+    "https://arxiv.org/abs/2608.30647"
+   ],
+   "rank": null,
+   "owner_disposition": "DROP"
+  },
+  {
+   "id": "G3",
+   "area": "gpu",
+   "title": "Native MTP speculative decoding in hybrid rollouts",
+   "verifier_verdict": "OCCUPIED",
+   "occupied_by": [
+    "https://arxiv.org/abs/2606.12370",
+    "https://arxiv.org/abs/2609.16648"
+   ],
+   "rank": null,
+   "owner_disposition": "DROP; an H100 batch crossover is at most one row of G1"
+  },
+  {
+   "id": "G6",
+   "area": "gpu",
+   "title": "Deterministic serving for paired replay",
+   "verifier_verdict": "OCCUPIED",
+   "occupied_by": [
+    "https://arxiv.org/abs/2609.38981",
+    "https://arxiv.org/abs/2609.04748",
+    "https://github.com/vllm-project/vllm/pull/60033"
+   ],
+   "rank": null,
+   "owner_disposition": "DROP as a question; the dense A/A gate becomes AM1 Step 0"
+  }
+ ]
+}
